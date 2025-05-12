@@ -1,0 +1,5 @@
+export enum TYPE_MODAL_GROUP {
+    UPDATE = 'UPDATE_GROUP',
+    CREATE = 'CREATE_GROUP',
+    DELETE = 'DELETE',
+}

@@ -1,0 +1,56 @@
+import { SCREEN } from '@/enums/common';
+import { useWindowSize } from '@uidotdev/usehooks';
+import { Empty, Spin } from 'antd';
+import { OrderData } from '../../types';
+import GridTableCard from './grid-table-card';
+
+type Props = {
+    data: OrderData[];
+    loading?: boolean;
+};
+
+export default function OrderGridTable({ data, loading }: Props) {
+    const { height, width } = useWindowSize();
+    const isSmallDevice = Number(width) <= SCREEN.MD;
+
+    const scrollY = () => {
+        if (isSmallDevice) return undefined;
+        if (!height) return undefined;
+        const minHeight = 300;
+        const headerFooterHeight = 170;
+        const value = height - headerFooterHeight;
+        if (value > minHeight) return value;
+        return minHeight;
+    };
+
+    if (!data?.length) {
+        if (loading) {
+            return (
+                <Spin spinning={true} delay={200}>
+                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                </Spin>
+            );
+        }
+        return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
+    }
+
+    return (
+        <Spin spinning={loading} delay={200}>
+            <div
+                className="grid grid-cols-1 gap-4 px-4 py-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6"
+                style={{
+                    maxHeight: scrollY(),
+                    overflowY: 'auto',
+                }}
+            >
+                {data?.map((item) => {
+                    return (
+                        <>
+                            <GridTableCard key={item.id} data={item} />
+                        </>
+                    );
+                })}
+            </div>
+        </Spin>
+    );
+}
