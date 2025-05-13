@@ -5,9 +5,10 @@ import { useTranslations } from 'next-intl';
 
 type Props = {
     canCreate: boolean;
+    text?: string;
 } & ButtonProps;
 
-function CreateButton({ canCreate, ...props }: Props) {
+function CreateButton({ text, canCreate, ...props }: Props) {
     const messages = useTranslations();
     if (!canCreate) return null;
     return (
@@ -17,7 +18,7 @@ function CreateButton({ canCreate, ...props }: Props) {
             type="primary"
             className="flex items-center justify-center"
         >
-            {messages('common.create')}
+            {text ?? messages('common.create')}
         </Button>
     );
 }

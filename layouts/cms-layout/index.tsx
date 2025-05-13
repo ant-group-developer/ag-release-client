@@ -104,7 +104,7 @@ export default function CMSLayout({ children, accessToken }: Props) {
 
     return (
         <SocketProvider accessToken={accessToken}>
-            <div className="mx-auto max-w-[150rem] overflow-x-hidden border-x">
+            <div className="mx-auto max-w-[150rem] overflow-x-hidden border-x border-l-0">
                 {getChildren()}
             </div>
         </SocketProvider>

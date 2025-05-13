@@ -33,9 +33,11 @@
         "create": "Thêm mới",
         "view": "Xem",
         "edit": "Sửa",
-        "cancel": "Hủy"
+        "cancel": "Hủy",
+        "quickActions": "Hành động nhanh"
     },
     "common": {
+        "search": "Tìm kiếm",
         "approver": "Người duyệt",
         "motion": "Chuyển động",
         "reSearch": "Nghiên cứu",
@@ -381,7 +383,7 @@
         }
     },
     "dashboard": {
-        "label": "Dashboard"
+        "label": "Tổng quan"
     },
     "image": {
         "label": "Hình ảnh",
@@ -634,5 +636,15 @@
             "createSuccessfully": "Tạo mới thành công",
             "updateSuccessfully": "Cập nhật thành công"
         }
+    },
+    "theme": {
+        "dark": "Tối",
+        "light": "Sáng",
+        "system": "Hệ thống"
+    },
+
+    "release": {
+        "create": "Tạo phát hành ",
+        "lastedRelease": "Phát hành gần đây"
     }
 }

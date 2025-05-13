@@ -34,11 +34,11 @@ export const adminRoutes: AdminRoutesType[] = [
         label: 'common.management',
         children: [
             {
-                id: 'blankPage',
-                label: 'Blank Page',
-                href: APP_ROUTES.BLANK,
+                id: 'dashboard',
+                label: 'dashboard.label',
+                href: APP_ROUTES.DASHBOARD,
                 icon: House,
-                title: 'Blank Page',
+                title: 'dashboard',
                 permission: PERMISSION.STATISTIC.READ,
             },
         ],

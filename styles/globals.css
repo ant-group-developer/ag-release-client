@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    --card-bg: #f2f2f2;
+    --card-bg-hover: #e5e5e5;
+    --card-bg-dark: #2a2a2a;
+    --card-bg-hover-dark: #3a3a3a;
+    --text-primary: #252525;
+    --text-secondary: #666666;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f0f2f5;
+
+    --bg-dark: #141414;
+}
+
+/* [data-theme='dark'] {
+    --card-bg: #2a2a2a;
+    --card-bg-hover: #3a3a3a;
+} */
+
 body {
     /*font-family: Arial, Helvetica, sans-serif;*/
 }
@@ -99,6 +117,6 @@ body {
     flex: 1 !important;
 }
 
-.ant-table-pagination.mr-4{
+.ant-table-pagination.mr-4 {
     margin-right: 16px !important;
 }

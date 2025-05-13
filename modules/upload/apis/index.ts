@@ -1,13 +1,8 @@
 import axiosAuth from '@/api/axios-auth';
 import axiosUpload from '@/api/axios-upload';
-import { FileData } from '@/modules/order/types';
-import {
-    DetailResponse,
-    GetUrlUploadParams,
-    SubmitUploadParams,
-} from '@/types/api';
+import { DetailResponse, GetUrlUploadParams } from '@/types/api';
 import { GOOGLE_ROOT_FOLDER_DRIVE_ID } from '../constants/folder';
-import { UploadResponse, UploadResponseV2 } from '../types/data';
+import { FileData, UploadResponse, UploadResponseV2 } from '../types/data';
 
 export const uploadApi = {
     uploadFile: async ({ infoFile, file }: GetUrlUploadParams) => {
@@ -42,9 +37,9 @@ export const uploadApi = {
         }
     },
 
-    uploadFileSubmit: async (params: SubmitUploadParams) => {
-        return axiosAuth.post('/file/submit-upload', params);
-    },
+    // uploadFileSubmit: async (params: SubmitUploadParams) => {
+    //     return axiosAuth.post('/file/submit-upload', params);
+    // },
 
     getDownloadLink: (fileId: string) => {
         return axiosAuth.get(`/file/get-download-url/${fileId}`);

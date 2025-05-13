@@ -1,6 +1,10 @@
-import { DATE_FORMAT, LOCALE, ORDER, UPLOAD_TYPE } from '@/enums/common';
-import { ORDER_STATUS } from '@/modules/order/enums';
-import { FILE_ORIENTATION, PRODUCT_TYPE } from '@/modules/product/enums';
+import {
+    DATE_FORMAT,
+    LOCALE,
+    ORDER,
+    ORIENTATION,
+    UPLOAD_TYPE,
+} from '@/enums/common';
 import { presetPalettes } from '@ant-design/colors';
 import { DatePickerProps, GetProp, UploadProps } from 'antd';
 import clsx, { ClassValue } from 'clsx';
@@ -23,7 +27,7 @@ export const getMediaInfoVideo = async (
     height: number;
     frameRate: number;
     encoding: string;
-    orientation: FILE_ORIENTATION;
+    orientation: ORIENTATION;
 }> => {
     return new Promise((resolve, reject) => {
         MediaInfoFactory({
@@ -87,8 +91,8 @@ export const getMediaInfoVideo = async (
                         encoding: videoTrack.Format ?? 'unknown',
                         orientation:
                             width > height
-                                ? FILE_ORIENTATION.HORIZONTAL
-                                : FILE_ORIENTATION.VERTICAL,
+                                ? ORIENTATION.HORIZONTAL
+                                : ORIENTATION.VERTICAL,
                         // orientation:
                         //     width > height
                         //         ? 'horizontal'
@@ -107,7 +111,7 @@ export const getImageDimensions = (
 ): Promise<{
     width: number;
     height: number;
-    orientation: FILE_ORIENTATION;
+    orientation: ORIENTATION;
 }> => {
     return new Promise((resolve, reject) => {
         const img = new Image();
@@ -115,9 +119,7 @@ export const getImageDimensions = (
             const width = img.width;
             const height = img.height;
             const orientation =
-                width > height
-                    ? FILE_ORIENTATION.HORIZONTAL
-                    : FILE_ORIENTATION.VERTICAL;
+                width > height ? ORIENTATION.HORIZONTAL : ORIENTATION.VERTICAL;
 
             resolve({
                 width,
@@ -362,51 +364,6 @@ export function formatFileSize(bytes: number) {
     return `${parseFloat(mb.toFixed(2))} MB`;
 }
 
-type OrderStatusMessageKey =
-    | 'order.status.completed'
-    | 'order.status.inProgress'
-    | 'order.status.new'
-    | 'order.status.deadline'
-    | 'order.status.pendingApproval'
-    | 'order.status.reject'
-    | 'order.status.cancel'
-    | 'order.status.pendingLeaderApproval'
-    | 'order.status.leaderReject';
-
-export const getIntlCodeByStatus = (
-    value: ORDER_STATUS
-): OrderStatusMessageKey => {
-    const statusToIntlCodeMap: Record<ORDER_STATUS, OrderStatusMessageKey> = {
-        [ORDER_STATUS.COMPLETED]: 'order.status.completed',
-        [ORDER_STATUS.IN_PROGRESS]: 'order.status.inProgress',
-        [ORDER_STATUS.NEW]: 'order.status.new',
-        [ORDER_STATUS.OVERDUE]: 'order.status.deadline',
-        [ORDER_STATUS.PENDING_APPROVAL]: 'order.status.pendingApproval',
-        [ORDER_STATUS.REJECT]: 'order.status.reject',
-        [ORDER_STATUS.CANCEL]: 'order.status.cancel',
-        [ORDER_STATUS.PENDING_LEADER_APPROVAL]:
-            'order.status.pendingLeaderApproval',
-        [ORDER_STATUS.LEADER_REJECT]: 'order.status.leaderReject',
-    };
-    return statusToIntlCodeMap[value] || 'order.status.new';
-};
-
-export const getColorByStatus = (value: string) => {
-    const defaultColor = 'blue';
-    const colorSets: Record<string, string> = {
-        [ORDER_STATUS.COMPLETED]: 'green',
-        [ORDER_STATUS.IN_PROGRESS]: 'gold',
-        [ORDER_STATUS.NEW]: 'blue',
-        [ORDER_STATUS.OVERDUE]: 'volcano',
-        [ORDER_STATUS.PENDING_APPROVAL]: 'purple',
-        [ORDER_STATUS.REJECT]: 'red',
-        [ORDER_STATUS.CANCEL]: 'red',
-        [ORDER_STATUS.PENDING_LEADER_APPROVAL]: 'magenta',
-        [ORDER_STATUS.LEADER_REJECT]: 'red',
-    };
-    return colorSets[value] || defaultColor;
-};
-
 export const getColorByUploadType = (value: string) => {
     const defaultColor = 'blue';
     const colorSets: Record<string, string> = {
@@ -433,26 +390,6 @@ export const getIntlCodeByTypeUpload = (
         [UPLOAD_TYPE.THUMB_VIDEO]: 'common.videoAndImage',
         [UPLOAD_TYPE.SOURCE]: 'common.source',
         [UPLOAD_TYPE.MP3]: 'common.mp3',
-    };
-
-    return uploadTypeToMessageMap[value] || 'common.image';
-};
-
-type ProductUploadMessageKey =
-    | 'common.image'
-    | 'common.video'
-    | 'common.source';
-
-export const getIntlCodeByProductType = (
-    value: PRODUCT_TYPE
-): ProductUploadMessageKey => {
-    const uploadTypeToMessageMap: Record<
-        PRODUCT_TYPE,
-        ProductUploadMessageKey
-    > = {
-        [UPLOAD_TYPE.IMAGE]: 'common.image',
-        [UPLOAD_TYPE.VIDEO]: 'common.video',
-        [UPLOAD_TYPE.SOURCE]: 'common.source',
     };
 
     return uploadTypeToMessageMap[value] || 'common.image';

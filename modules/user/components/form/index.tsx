@@ -1,4 +1,4 @@
-import { Button, DatePicker, Input, Switch } from 'antd';
+import { DatePicker, Input, Switch } from 'antd';
 
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
@@ -7,7 +7,6 @@ import { formattedDate } from '@/helpers/common';
 import { useActive } from '@/hooks/use-active';
 import { useLoading, UseLoadingType } from '@/hooks/use-loading';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
-import { useGetSettingPublic } from '@/modules/setting/hooks/use-get-setting';
 import { Form, Spin } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
@@ -24,7 +23,7 @@ export default function UserForm({}: Props) {
     const { profile } = useAuth();
     const { updateUser } = useUpdateUser();
     const { active, isActive, deActive } = useActive();
-    const { data: dataSetting } = useGetSettingPublic();
+    // const { data: dataSetting } = useGetSettingPublic();
 
     const onFinish = async (values: UpdateUserPayload) => {
         active();
@@ -141,7 +140,7 @@ export default function UserForm({}: Props) {
                                 placeholder={messages('validation.input')}
                             />
                         </AppFormItem>
-                        {dataSetting?.linkStartBot && (
+                        {/* {dataSetting?.linkStartBot && (
                             <Button
                                 type="default"
                                 href={dataSetting?.linkStartBot}
@@ -150,7 +149,7 @@ export default function UserForm({}: Props) {
                             >
                                 {messages('user.clickHereToGetTelegramId')}
                             </Button>
-                        )}
+                        )} */}
                     </div>
                 </AppFormItem>
                 <AppFormItem

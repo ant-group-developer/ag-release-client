@@ -1,7 +1,6 @@
 import { defaultConfig } from '@/constants/env';
 import { HOME_ROUTE } from '@/enums/routes';
 import { cn } from '@/helpers/common';
-import { useGetSettingPublic } from '@/modules/setting/hooks/use-get-setting';
 import { Image } from 'antd';
 import Link from 'next/link';
 import { AppLogoProps } from './app-logo';
@@ -13,9 +12,12 @@ type Props = {
 } & AppLogoProps;
 
 function AppLogoWithText({ className, wrapperClassName, size = 70 }: Props) {
-    const { data } = useGetSettingPublic();
-    const companyName = data?.website || defaultConfig.APP_SHORT_NAME;
-    const companyLogo = data?.logoUrl || '/logo.png';
+    // const { data } = useGetSettingPublic();
+    // const companyName = data?.website || defaultConfig.APP_SHORT_NAME;
+    // const companyLogo = data?.logoUrl || '/logo.png';
+
+    const companyName = defaultConfig.APP_SHORT_NAME;
+    const companyLogo = '/logo.png';
 
     return (
         <Link

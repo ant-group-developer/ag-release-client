@@ -33,9 +33,11 @@
         "create": "Create",
         "view": "View",
         "edit": "Edit",
-        "cancel": "cancel"
+        "cancel": "cancel",
+        "quickActions": "Quick actions"
     },
     "common": {
+        "search": "Search",
         "approver": "Approver",
         "motion": "motion",
         "reSearch": "Research",
@@ -630,5 +632,15 @@
             "createSuccessfully": "Create topic topic assignee successfully",
             "updateSuccessfully": "Update topic topic assignee successfully"
         }
+    },
+    "theme": {
+        "dark": "Dark",
+        "light": "Light",
+        "system": "System"
+    },
+
+    "release": {
+        "create": "Create release",
+        "lastedRelease": "Lasted release"
     }
 }

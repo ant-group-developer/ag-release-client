@@ -6,6 +6,7 @@ export enum LOCALE {
 export enum THEME {
     LIGHT = 'light',
     DARK = 'dark',
+    SYSTEM = 'system',
 }
 
 export enum PASSWORD_LENGTH {
@@ -114,14 +115,6 @@ export enum TYPE_FILTER {
     PRODUCT_TYPE = 'productType',
 }
 
-export enum COMMENT_RATING_TAB_KEY {
-    IMAGE = 'image',
-    VIDEO = 'video',
-    VIDEO_AND_THUMBNAIL = 'thumb_video',
-    SOURCE = 'source',
-    HISTORY = 'history',
-}
-
 export enum UPLOAD_TYPE {
     IMAGE = 'image',
     VIDEO = 'video',
@@ -149,18 +142,12 @@ export enum MODULE_NAME {
 }
 
 export enum LOCAL_STORAGE_KEY {
-    VISIBLE_COLUMNS_ORDER = 'visible_columns_order',
-    VISIBLE_COLUMNS_PRODUCT = 'visible_columns_product',
     OPEN_SIDE_BAR = 'open_side_bar',
     LAYOUT_TABLE = 'layout_table',
-    TOPIC_SETTING_TAB_VALUE = 'topic_setting_tab_value',
+    THEME = 'theme',
 }
 
-export enum SESSION_STORAGE_KEY {
-    VISIBLE_COLUMNS_ORDER = 'visible_columns_order',
-    VISIBLE_COLUMNS_PRODUCT = 'visible_columns_product',
-    TOPIC_SETTING_TAB_VALUE = 'topic_setting_tab_value',
-}
+export enum SESSION_STORAGE_KEY {}
 
 export enum FIELD_TYPE {
     INPUT = 'input',
@@ -175,4 +162,13 @@ export enum ACCEPT_FILE {
 export enum LAYOUT_TABLE {
     LIST = 'list',
     GRID = 'grid',
+}
+
+export enum ORIENTATION {
+    HORIZONTAL = 'horizontal',
+    VERTICAL = 'vertical',
+}
+
+export enum TYPE_MODAL {
+    SEARCH = 'SEARCH',
 }
