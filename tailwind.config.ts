@@ -22,6 +22,7 @@ const config: Config = {
                 foreground: 'var(--foreground)',
                 'card-bg': 'var(--card-bg)',
                 'card-bg-hover': 'var(--card-bg-hover)',
+                'card-bg-opacity': 'var(--card-bg-opacity)',
                 'text-primary': 'var(--text-primary)',
                 'text-secondary': 'var(--text-secondary)',
                 'bg-primary': 'var(--bg-primary)',

@@ -37,6 +37,12 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "release": "Release",
+        "plays": "Plays",
+        "dark": "Dark",
+        "light": "Light",
+        "displayMode": "Display mode",
+        "seeMore": "See more",
         "search": "Search",
         "approver": "Approver",
         "motion": "motion",
@@ -639,7 +645,8 @@
         "system": "System"
     },
 
-    "release": {
+    "releases": {
+        "label": "Release",
         "create": "Create release",
         "lastedRelease": "Lasted release"
     }

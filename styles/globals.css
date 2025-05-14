@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 :root {
+    --card-bg-opacity: rgba(227, 227, 227, 0.6);
     --card-bg: #f2f2f2;
     --card-bg-hover: #e5e5e5;
     --card-bg-dark: #2a2a2a;
@@ -11,7 +12,6 @@
     --text-secondary: #666666;
     --bg-primary: #ffffff;
     --bg-secondary: #f0f2f5;
-
     --bg-dark: #141414;
 }
 
@@ -89,34 +89,10 @@ body {
     }
 }
 
-/* Hiệu ứng slide down */
-.slide-down-enter {
-    transform: translateY(-100%);
-    opacity: 0;
-}
-.slide-down-enter-active {
-    transform: translateY(0);
-    opacity: 1;
-    transition:
-        transform 300ms,
-        opacity 300ms;
-}
-.slide-down-exit {
-    transform: translateY(0);
-    opacity: 1;
-}
-.slide-down-exit-active {
-    transform: translateY(-100%);
-    opacity: 0;
-    transition:
-        transform 300ms,
-        opacity 300ms;
+.custom-card-body .ant-card-body {
+    padding: 8px !important;
 }
 
-.ant-table-pagination.management .ant-pagination-total-text {
-    flex: 1 !important;
-}
-
-.ant-table-pagination.mr-4 {
-    margin-right: 16px !important;
+.custom-card-body .ant-card-body .ant-card-meta-title {
+    margin-bottom: 0px !important;
 }

@@ -37,6 +37,12 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "release": "Bản cập nhật",
+        "plays": "Lượt phát",
+        "dark": "Tối",
+        "light": "Sáng",
+        "displayMode": "Chế độ hiển thị",
+        "seeMore": "Xem thêm",
         "search": "Tìm kiếm",
         "approver": "Người duyệt",
         "motion": "Chuyển động",
@@ -643,7 +649,8 @@
         "system": "Hệ thống"
     },
 
-    "release": {
+    "releases": {
+        "label": "Phát hành",
         "create": "Tạo phát hành ",
         "lastedRelease": "Phát hành gần đây"
     }

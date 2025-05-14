@@ -4,6 +4,7 @@ import {
     House,
     LockKeyhole,
     LucideProps,
+    Music,
     StickyNote,
     Upload,
 } from 'lucide-react';
@@ -40,6 +41,14 @@ export const adminRoutes: AdminRoutesType[] = [
                 icon: House,
                 title: 'dashboard',
                 permission: PERMISSION.STATISTIC.READ,
+            },
+            {
+                id: 'releases',
+                label: 'releases.label',
+                href: APP_ROUTES.RELEASES,
+                icon: Music,
+                title: 'releases',
+                permission: PERMISSION.RELEASE.READ,
             },
         ],
     },
