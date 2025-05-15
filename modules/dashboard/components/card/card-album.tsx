@@ -1,13 +1,25 @@
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { DATE_FORMAT } from '@/enums/common';
+import { formattedDate } from '@/helpers/common';
+import { RELEASES_STATUS } from '@/modules/releases/enums';
+import { ReleasesData } from '@/modules/releases/types';
 import { Card, CardProps } from 'antd';
 import Meta from 'antd/es/card/Meta';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
 type Props = CardProps & {
-    album: AlbumData;
+    album: ReleasesData;
 };
 
 export default function CardAlbum({ album, ...props }: Props) {
+    const messages = useTranslations();
+
+    const albumStatus =
+        album.status === RELEASES_STATUS.PUBLISHED
+            ? 'Đã sản xuất'
+            : 'Đang xử lý';
+
     return (
         <Card
             {...props}
@@ -17,12 +29,12 @@ export default function CardAlbum({ album, ...props }: Props) {
                     <Image
                         className="cursor-pointer overflow-hidden object-cover duration-300 hover:scale-110"
                         alt="example"
-                        src={album.image}
+                        src={album.thumbnail}
                         width={300}
                         height={300}
                     />
-                    <div className="bg-card-bg-opacity absolute left-0 top-4 rounded-r-xl p-1 text-xs font-bold">
-                        <span> {album.status} </span>
+                    <div className="absolute right-2 top-2 rounded-lg bg-black/80 p-1 px-2 text-xs font-medium text-white">
+                        <span> {albumStatus} </span>
                     </div>
                 </div>
             }
@@ -38,8 +50,15 @@ export default function CardAlbum({ album, ...props }: Props) {
                         <p> {album.artist} </p>
 
                         <p className="flex justify-between">
-                            <span> {album.date} </span>
-                            <span> {album.tracks} TRACKS </span>
+                            <span>
+                                {formattedDate(
+                                    album.releaseDate,
+                                    DATE_FORMAT.DATE_ONLY
+                                )}
+                            </span>
+                            <span>
+                                {`${album.trackCount} ${messages('common.track')}`}
+                            </span>
                         </p>
                     </div>
                 }

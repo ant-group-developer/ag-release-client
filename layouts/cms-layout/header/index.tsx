@@ -41,7 +41,7 @@ function Header({ collapsed, toggleCollapsed }: Props) {
             </div>
 
             <div className="flex flex-1 items-center justify-end gap-2">
-                <CreateButton canCreate text={messages('release.create')} />
+                <CreateButton canCreate text={messages('releases.create')} />
                 {/* <LocaleSelect /> */}
                 {/* <ThemeToggle /> */}
                 <AppSupport />

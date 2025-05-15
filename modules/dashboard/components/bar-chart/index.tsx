@@ -6,7 +6,7 @@ import { useEffect, useRef } from 'react';
 // Dữ liệu mẫu cho biểu đồ
 
 type Props = {
-    data: { category: string; value: number }[];
+    data: { category: string; value: number; color?: string }[];
 };
 
 export default function BarChart({ data }: Props) {
@@ -71,21 +71,62 @@ export default function BarChart({ data }: Props) {
                     categoryXField: 'category',
                     tooltip: am5.Tooltip.new(root, {
                         labelText: '{valueY}',
+                        getFillFromSprite: false,
+                        autoTextColor: false,
                     }),
                 })
             );
+
+            // Tùy chỉnh tooltip
+            const tooltip = series.get('tooltip');
+            if (tooltip) {
+                const background = tooltip.get('background');
+                if (background) {
+                    background.setAll({
+                        fill: am5.color(0xffffff), // Nền trắng
+                        fillOpacity: 1,
+                        stroke: am5.color(0xcccccc), // Viền xám nhạt
+                        strokeWidth: 1,
+                    });
+
+                    // Ép kiểu background thành PointedRectangle để thiết lập cornerRadius
+                    (background as any).set('cornerRadius', 5);
+                }
+
+                tooltip.label.setAll({
+                    fill: am5.color(0x000000), // Chữ đen
+                });
+            }
 
             series.columns.template.setAll({
                 cornerRadiusTL: 5,
                 cornerRadiusTR: 5,
                 strokeOpacity: 0,
+                maxWidth: 60, // Giới hạn chiều rộng tối đa của cột
             });
 
             // Thêm dữ liệu vào series
             series.data.setAll(data);
 
             // Thêm cursor cho tương tác
-            chart.set('cursor', am5xy.XYCursor.new(root, {}));
+            chart.set(
+                'cursor',
+                am5xy.XYCursor.new(root, {
+                    xAxis: xAxis,
+                    yAxis: yAxis,
+                    behavior: 'none',
+                })
+            );
+
+            // Tắt đường kẻ đứt trên cursor
+            const cursor = chart.get('cursor');
+            if (cursor) {
+                cursor.lineX.set('visible', false);
+                cursor.lineY.set('visible', false);
+            }
+
+            // Hiệu ứng animation
+            series.appear(1000, 100);
         }
 
         // Dọn dẹp khi component unmount

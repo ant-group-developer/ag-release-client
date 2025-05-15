@@ -1,4 +1,6 @@
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { DATE_FORMAT } from '@/enums/common';
+import { formattedDate } from '@/helpers/common';
 import { NewsData } from '@/modules/news/types';
 import { Card, CardProps } from 'antd';
 import Meta from 'antd/es/card/Meta';
@@ -34,7 +36,10 @@ export default function CardNews({ data, ...props }: Props) {
                 }
                 description={
                     <div className="flex flex-col gap-1">
-                        <p>{data.date} | 30 lượt xem</p>
+                        <p>
+                            {formattedDate(data.date, DATE_FORMAT.DATE_ONLY)} |
+                            30 lượt xem
+                        </p>
                     </div>
                 }
             />

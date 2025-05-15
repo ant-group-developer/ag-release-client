@@ -33,15 +33,22 @@ export default function ListNews({}: Props) {
             image: 'https://cms.revelator.com/assets/3c43b946-82e8-43fa-8fc0-dc923cba0302',
             date: 'May 6, 2025',
         },
+        {
+            id: 5,
+            title: 'Meet Chordal: Now in the Revelator Pro Marketplace',
+            description: '',
+            image: 'https://cms.revelator.com/assets/3c43b946-82e8-43fa-8fc0-dc923cba0302',
+            date: 'May 6, 2025',
+        },
     ];
 
     return (
-        <div className="mt-4">
+        <div className="mt-8">
             <div className="flex items-center justify-between pb-2">
                 <p className="text-lg font-bold">{'Tin tức sản phẩm mới'}</p>
                 <SeeMoreButton />
             </div>
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-5 gap-5">
                 {listNews.map((item, index) => (
                     <CardNews key={index} data={item} />
                 ))}

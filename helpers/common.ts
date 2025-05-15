@@ -11,6 +11,7 @@ import clsx, { ClassValue } from 'clsx';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import MediaInfoFactory from 'mediainfo.js';
+import { useTranslations } from 'next-intl';
 import { twMerge } from 'tailwind-merge';
 dayjs.extend(utc);
 /**
@@ -494,4 +495,20 @@ export const genPreset = (preset = presetPalettes) => {
         colors: colors.slice(2),
         key: label,
     }));
+};
+
+export const getTitleChipDisplay = (dataFilterType: string | undefined) => {
+    const messages = useTranslations();
+    if (!dataFilterType) return '';
+    const MAX_CHIP_DISPLAY = 2;
+    const dataFilterValue = dataFilterType.split(',');
+
+    if (dataFilterValue.length <= MAX_CHIP_DISPLAY)
+        return dataFilterValue.join(',');
+
+    const displayDataFilter = dataFilterValue
+        .slice(0, MAX_CHIP_DISPLAY)
+        .join(',');
+    const remainingDataFilter = dataFilterValue.length - MAX_CHIP_DISPLAY;
+    return `${displayDataFilter} ...+${remainingDataFilter} ${messages('common.other')}`;
 };

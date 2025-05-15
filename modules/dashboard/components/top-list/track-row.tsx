@@ -1,24 +1,40 @@
 import { SIZE_ICON } from '@/constants/common';
+import { cn } from '@/helpers/common';
 import { Music } from 'lucide-react';
 import Image from 'next/image';
 import { TopListRowData } from '../../types';
 
 type Props = {
     data: TopListRowData;
+    typeShapeImage?: 'circle' | 'square';
+    index: number;
 };
 
-export default function TopListRow({ data }: Props) {
+export default function TopListRow({
+    data,
+    typeShapeImage = 'square',
+    index,
+}: Props) {
     return (
         <div className="flex cursor-pointer items-center justify-between rounded-lg px-5 py-2 hover:bg-gray-100">
             <div className="flex items-center">
-                <div className="w-6 text-gray-500"> {data?.id} </div>
-                <div className="h-12 w-12 cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-card-bg">
+                <div className="w-6 text-gray-500"> {index + 1} </div>
+                <div
+                    className={cn(
+                        'h-12 w-12 cursor-pointer items-center justify-center overflow-hidden bg-card-bg',
+                        {
+                            'rounded-full': typeShapeImage === 'circle',
+                            'rounded-lg': typeShapeImage === 'square',
+                        }
+                    )}
+                >
                     {data?.image ? (
                         <Image
                             src={data.image}
                             alt={''}
                             width={48}
                             height={48}
+                            className="h-12 w-12 object-cover"
                         />
                     ) : (
                         <div className="flex h-12 items-center justify-center">
@@ -30,16 +46,14 @@ export default function TopListRow({ data }: Props) {
                     <p className="font-semibold hover:underline">
                         {data?.title}
                     </p>
-                    {data?.artist && (
-                        <p className="text-gray-500 hover:underline">
-                            {data?.artist}
-                        </p>
-                    )}
+                    <p className="text-gray-500 hover:underline">
+                        {data?.artist}
+                    </p>
                 </div>
             </div>
             <div>
-                <span>15.132 </span>
-                <span className="text-gray-500">(15,8%)</span>
+                <span> {data?.plays} </span>
+                {/* <span className="text-gray-500">(15,8%)</span> */}
             </div>
         </div>
     );

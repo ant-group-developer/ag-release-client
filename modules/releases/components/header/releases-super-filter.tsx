@@ -1,13 +1,36 @@
+import DateCreatedDialog from '@/components/filter-dialog/date-create-dialog';
+import DateReleaseDialog from '@/components/filter-dialog/date-release-dialog';
+import GenresDialog from '@/components/filter-dialog/genres-dialog';
+import StatusReleaseDialog from '@/components/filter-dialog/status-releases-dialog';
+import TypeReleaseDialog from '@/components/filter-dialog/type-releases-dialog';
+import SearchDialog from '@/components/shared/search-dialog';
+import IconButton from '@/components/ui/button/icon-button';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { SIZE_ICON } from '@/constants/common';
 import { TYPE_FILTER } from '@/enums/common';
-import { ListFilter } from 'lucide-react';
+import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
+import { ListFilter, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
+import { ReleasesDataFilter } from '../../types';
+import ReleasesHeaderDropdown from '../dropdown/releases-header-dropdown';
 
-type Props = {};
+type Props = {
+    dataFilter: ReleasesDataFilter;
+    onChangeFilter: OnChangeFilter<ReleasesDataFilter>;
+    canClearFilter: boolean;
+    removeFilter: RemoveFilter;
+};
 
-export default function ReleasesSuperFilter({}: Props) {
+export default function ReleasesSuperFilter({
+    dataFilter,
+    onChangeFilter,
+    canClearFilter,
+    removeFilter,
+}: Props) {
     const ref = useRef<HTMLDivElement>(null);
     const messages = useTranslations();
+
     const [typeFilter, setTypeFilter] = useState<TYPE_FILTER>();
 
     const handleChangeTypeFilter = (value?: TYPE_FILTER) => {
@@ -53,21 +76,76 @@ export default function ReleasesSuperFilter({}: Props) {
                 <ListFilter />
             </button>
 
-            <div className="flex flex-1 flex-wrap gap-1">
-                <div className="grow"></div>
+            <div className="flex flex-1 flex-wrap items-center gap-1">
+                <SearchDialog
+                    title={messages('form.searchPlaceholder')}
+                    open={typeFilter === TYPE_FILTER.KEYWORD}
+                    handleChangeTypeFilter={handleChangeTypeFilter}
+                    dataFilter={dataFilter}
+                    onChangeFilter={onChangeFilter}
+                />
+
+                <TypeReleaseDialog
+                    title={messages('common.type')}
+                    open={typeFilter === TYPE_FILTER.TYPE}
+                    handleChangeTypeFilter={handleChangeTypeFilter}
+                    dataFilter={dataFilter}
+                    onChangeFilter={onChangeFilter}
+                />
+
+                <StatusReleaseDialog
+                    title={messages('common.status')}
+                    open={typeFilter === TYPE_FILTER.STATUS}
+                    handleChangeTypeFilter={handleChangeTypeFilter}
+                    dataFilter={dataFilter}
+                    onChangeFilter={onChangeFilter}
+                />
+
+                <GenresDialog
+                    title={messages('common.genres')}
+                    open={typeFilter === TYPE_FILTER.GENRES}
+                    handleChangeTypeFilter={handleChangeTypeFilter}
+                    dataFilter={dataFilter}
+                    onChangeFilter={onChangeFilter}
+                />
+
+                <DateCreatedDialog
+                    title={messages('common.dateCreated')}
+                    open={typeFilter === TYPE_FILTER.DATE_CREATED}
+                    handleChangeTypeFilter={handleChangeTypeFilter}
+                    dataFilter={dataFilter}
+                    onChangeFilter={onChangeFilter}
+                />
+
+                <DateReleaseDialog
+                    title={messages('common.dateRelease')}
+                    open={typeFilter === TYPE_FILTER.DATE_RELEASE}
+                    handleChangeTypeFilter={handleChangeTypeFilter}
+                    dataFilter={dataFilter}
+                    onChangeFilter={onChangeFilter}
+                />
+
+                <div className="grow">
+                    <ReleasesHeaderDropdown
+                        open={typeFilter === TYPE_FILTER.DROPDOWN}
+                        dataFilter={dataFilter}
+                        onChangeFilter={onChangeFilter}
+                        handleChangeTypeFilter={handleChangeTypeFilter}
+                    />
+                </div>
             </div>
-            {/* {canClearFilter && (
-                <div>
-                    <Tooltip title={messages('common.removeFilter')}>
+            {canClearFilter && (
+                <div className="flex items-center">
+                    <CustomTooltip title={messages('common.removeFilter')}>
                         <IconButton
                             className="clear-filter-btn"
                             onClick={removeFilter}
                         >
                             <X size={SIZE_ICON} />
                         </IconButton>
-                    </Tooltip>
+                    </CustomTooltip>
                 </div>
-            )} */}
+            )}
         </div>
         // </div>
     );

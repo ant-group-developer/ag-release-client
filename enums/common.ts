@@ -98,21 +98,15 @@ export enum TYPE_NOTIFICATION {
 }
 
 export enum TYPE_FILTER {
-    GROUP = 'group',
     KEYWORD = 'keyword',
-    TOPIC = 'topic',
     IS_ACTIVE = 'is_active',
     CREATOR = 'creator',
-    ASSIGNEE = 'assignee',
-    APPROVER = 'approver',
     STATUS = 'status',
     TYPE = 'type',
-    DEADLINE = 'deadline',
     DROPDOWN = 'dropdown',
-    USE_STATUS = 'usedStatus',
     DATE_CREATED = 'dateCreated',
-    PRIORITY = 'priority',
-    PRODUCT_TYPE = 'productType',
+    DATE_RELEASE = 'dateRelease',
+    GENRES = 'genres',
 }
 
 export enum UPLOAD_TYPE {
@@ -147,7 +141,9 @@ export enum LOCAL_STORAGE_KEY {
     THEME = 'theme',
 }
 
-export enum SESSION_STORAGE_KEY {}
+export enum SESSION_STORAGE_KEY {
+    VISIBLE_COLUMNS_RELEASES = 'visible_columns_releases',
+}
 
 export enum FIELD_TYPE {
     INPUT = 'input',
@@ -171,4 +167,18 @@ export enum ORIENTATION {
 
 export enum TYPE_MODAL {
     SEARCH = 'SEARCH',
+}
+
+export enum GENRES {
+    POP = 'pop',
+    ROCK = 'rock',
+    JAZZ = 'jazz',
+    HIP_HOP = 'hip hop',
+    CLASSICAL = 'classical',
+    ELECTRONIC = 'electronic',
+    RAP = 'rap',
+    COUNTRY = 'country',
+    REGGAE = 'reggae',
+    BLUES = 'blues',
+    R_B = 'r&b',
 }
