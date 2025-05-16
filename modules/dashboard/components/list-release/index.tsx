@@ -1,4 +1,5 @@
 import SeeMoreButton from '@/components/ui/button/see-more-button';
+import AppGrid from '@/components/ui/grid/app-grid';
 import { useTranslations } from 'next-intl';
 import { fakeReleasesData } from '../../constants/mockData';
 import CardAlbum from '../card/card-album';
@@ -19,11 +20,11 @@ export default function ListRelease({}: Props) {
                     <SeeMoreButton />
                 </div>
             </div>
-            <div className="grid grid-cols-7 gap-5 overflow-hidden">
+            <AppGrid className="overflow-hidden">
                 {fakeReleasesData.map((item, index) => (
                     <CardAlbum key={index} album={item} />
                 ))}
-            </div>
+            </AppGrid>
         </div>
     );
 }

@@ -1,6 +1,7 @@
 import { APP_ROUTES } from '@/enums/routes';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import {
+    DiscAlbum,
     House,
     LockKeyhole,
     LucideProps,
@@ -46,9 +47,17 @@ export const adminRoutes: AdminRoutesType[] = [
                 id: 'releases',
                 label: 'releases.label',
                 href: APP_ROUTES.RELEASES,
-                icon: Music,
+                icon: DiscAlbum,
                 title: 'releases',
                 permission: PERMISSION.RELEASE.READ,
+            },
+            {
+                id: 'tracks',
+                label: 'tracks.label',
+                href: APP_ROUTES.TRACKS,
+                icon: Music,
+                title: 'tracks',
+                permission: PERMISSION.TRACK.READ,
             },
         ],
     },

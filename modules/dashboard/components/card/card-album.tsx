@@ -1,7 +1,6 @@
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { DATE_FORMAT } from '@/enums/common';
-import { formattedDate } from '@/helpers/common';
-import { RELEASES_STATUS } from '@/modules/releases/enums';
+import { formattedDate, getIntlCodeByReleaseStatus } from '@/helpers/common';
 import { ReleasesData } from '@/modules/releases/types';
 import { Card, CardProps } from 'antd';
 import Meta from 'antd/es/card/Meta';
@@ -15,15 +14,12 @@ type Props = CardProps & {
 export default function CardAlbum({ album, ...props }: Props) {
     const messages = useTranslations();
 
-    const albumStatus =
-        album.status === RELEASES_STATUS.PUBLISHED
-            ? 'Đã sản xuất'
-            : 'Đang xử lý';
+    const albumStatus = messages(getIntlCodeByReleaseStatus(album.status));
 
     return (
         <Card
             {...props}
-            className="custom-card-body !border-gray-200"
+            className="custom-card-body !bg-card-bg dark:!bg-card-bg-dark"
             cover={
                 <div className="relative overflow-hidden">
                     <Image
@@ -42,11 +38,14 @@ export default function CardAlbum({ album, ...props }: Props) {
             <Meta
                 title={
                     <CustomTooltip title={album.title}>
-                        <span className="cursor-pointer"> {album.title}</span>
+                        <span className="cursor-pointer text-sm">
+                            {' '}
+                            {album.title}
+                        </span>
                     </CustomTooltip>
                 }
                 description={
-                    <div className="flex flex-col">
+                    <div className="flex flex-col font-medium">
                         <p> {album.artist} </p>
 
                         <p className="flex justify-between">

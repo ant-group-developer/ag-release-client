@@ -27,6 +27,7 @@ import { ToastContainer } from 'react-toastify';
 
 const openSans = Open_Sans({
     subsets: ['latin'],
+    weight: ['400', '500', '600', '700', '800'],
     variable: '--font-open-sans',
     display: 'swap',
 });
@@ -36,7 +37,13 @@ const boston = localFont({
     variable: '--font-boston',
 });
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({
+    subsets: ['latin'],
+    weight: ['400', '500', '600', '700', '800', '900'],
+    variable: '--font-inter',
+    display: 'swap',
+    preload: true,
+});
 
 interface RootLayoutProps extends PropsWithChildren {
     params: Promise<{ locale: string }>;
@@ -144,7 +151,7 @@ export default async function RootLayout({
     return (
         <html lang={locale} suppressHydrationWarning>
             <body
-                className={`${boston.variable} ${openSans.variable} ${openSans.className} ${inter.className} text-sm antialiased`}
+                className={`${boston.variable} ${openSans.variable} ${openSans.className} ${inter.variable} ${inter.className} text-sm antialiased`}
             >
                 <GoogleAnalytics />
                 <NextIntlClientProvider locale={locale} messages={messages}>

@@ -1,6 +1,7 @@
-import { GENRES, TYPE_FILTER } from '@/enums/common';
+import { TYPE_FILTER } from '@/enums/common';
 import { getTitleChipDisplay } from '@/helpers/common';
 import { ReleasesDataFilter } from '@/modules/releases/types';
+import { GENRES } from '@/modules/tracks/enums';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { AppPopover } from '../shared/app-popover';

@@ -1,3 +1,4 @@
+import AppGrid from '@/components/ui/grid/app-grid';
 import { SCREEN } from '@/enums/common';
 import { useWindowSize } from '@uidotdev/usehooks';
 import { Spin } from 'antd';
@@ -24,8 +25,8 @@ export default function ReleasesGridTable({ data, loading }: Props) {
     };
     return (
         <Spin spinning={loading} delay={200}>
-            <div
-                className="grid grid-cols-1 gap-5 px-4 py-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7"
+            <AppGrid
+                className="px-4 py-4"
                 style={{
                     maxHeight: scrollY(),
                     overflowY: 'auto',
@@ -35,11 +36,10 @@ export default function ReleasesGridTable({ data, loading }: Props) {
                     return (
                         <>
                             <GridCardRelease key={item.id} data={item} />
-                            <GridCardRelease key={item.id} data={item} />
                         </>
                     );
                 })}
-            </div>
+            </AppGrid>
         </Spin>
     );
 }

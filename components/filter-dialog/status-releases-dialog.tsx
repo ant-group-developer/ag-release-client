@@ -1,5 +1,8 @@
 import { TYPE_FILTER } from '@/enums/common';
-import { getTitleChipDisplay } from '@/helpers/common';
+import {
+    getIntlCodeByReleaseStatus,
+    getTitleChipDisplay,
+} from '@/helpers/common';
 import { RELEASES_STATUS } from '@/modules/releases/enums';
 import { ReleasesDataFilter } from '@/modules/releases/types';
 import { useTranslations } from 'next-intl';
@@ -76,7 +79,7 @@ export default function StatusReleaseDialog({
             >
                 <FilterCheckbox
                     data={Object.values(RELEASES_STATUS).map((item) => ({
-                        name: item,
+                        name: messages(getIntlCodeByReleaseStatus(item)),
                         value: item,
                     }))}
                     value={value}

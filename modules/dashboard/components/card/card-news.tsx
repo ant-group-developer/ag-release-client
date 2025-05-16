@@ -14,7 +14,7 @@ export default function CardNews({ data, ...props }: Props) {
     return (
         <Card
             {...props}
-            className="!border-gray-200"
+            className="!bg-card-bg dark:!bg-card-bg-dark"
             cover={
                 <div className="overflow-hidden">
                     <Image

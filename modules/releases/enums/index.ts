@@ -6,8 +6,11 @@ export enum RELEASES_TYPE {
 
 export enum RELEASES_STATUS {
     DRAFT = 'draft',
-    PUBLISHED = 'published',
-    INPROGRESS = 'inprogress',
+    PROCESSING = 'processing',
+    ISSUES = 'issues',
+    NEVER_DISTRIBUTED = 'never_distributed',
+    DISTRIBUTED = 'distributed',
+    TAKEN_DOWN = 'taken_down',
 }
 
 export enum RELEASES_COLUMNS_DISPLAY {

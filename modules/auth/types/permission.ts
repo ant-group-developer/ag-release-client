@@ -15,4 +15,10 @@ export interface Permission {
         canUpdate: boolean;
         canDelete: boolean;
     };
+    tracks: {
+        canRead: boolean;
+        canCreate: boolean;
+        canUpdate: boolean;
+        canDelete: boolean;
+    };
 }

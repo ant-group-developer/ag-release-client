@@ -37,6 +37,16 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "releaseDate": "Ngày phát hành",
+        "duration": "Thời lượng",
+        "draft": "Bản nháp",
+        "processing": "Đang xử lý",
+        "issues": "Vấn đề",
+        "neverDistributed": "Không phát hành",
+        "distributed": "Đã phát hành",
+        "takenDown": "Đã hủy bỏ",
+        "minutes": "phút",
+        "hours": "giờ",
         "dateRelease": "Ngày phát hành",
         "genres": "Thể loại",
         "track": "Bài hát",
@@ -663,7 +673,26 @@
         "releaseDate": "Ngày phát hành",
         "duration": "Thời lượng",
         "trackCount": "Số bài hát",
-        "upc": "Mã số UPC",
         "publisher": "Hãng phát hành"
+    },
+    "tracks": {
+        "label": "Bài hát",
+        "create": "Tạo bài hát",
+        "lastedTrack": "Bài hát gần đây",
+        "name": "Tên bài hát",
+        "id": "Mã bài hát"
+    },
+    "genres": {
+        "pop": "Pop",
+        "rock": "Rock",
+        "jazz": "Jazz",
+        "country": "Đồng quê",
+        "hipHop": "Hip Hop",
+        "rB": "R&B",
+        "electronic": "Điện tử",
+        "reggae": "Reggae",
+        "rap": "Rap",
+        "classical": "Cổ điển",
+        "blues": "Blues"
     }
 }

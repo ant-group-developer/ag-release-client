@@ -13,9 +13,23 @@ const config: Config = {
         extend: {
             fontFamily: {
                 sans: [
+                    'var(--font-inter)',
                     'var(--font-open-sans)',
                     ...defaultTheme.fontFamily.sans,
                 ],
+                inter: ['var(--font-inter)', ...defaultTheme.fontFamily.sans],
+                opensans: [
+                    'var(--font-open-sans)',
+                    ...defaultTheme.fontFamily.sans,
+                ],
+            },
+            fontWeight: {
+                normal: '400',
+                medium: '500',
+                semibold: '600',
+                bold: '700',
+                extrabold: '800',
+                black: '900',
             },
             colors: {
                 background: 'var(--background)',

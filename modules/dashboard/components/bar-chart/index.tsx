@@ -7,9 +7,15 @@ import { useEffect, useRef } from 'react';
 
 type Props = {
     data: { category: string; value: number; color?: string }[];
+    maxBarWidth?: number;
+    maxLabelWidth?: number; // Thuậm thuộc tính để giới hạn số ký tự trên nhãn trên cột X
 };
 
-export default function BarChart({ data }: Props) {
+export default function BarChart({
+    data,
+    maxBarWidth = 40,
+    maxLabelWidth = 60,
+}: Props) {
     const chartRef = useRef(null);
     const chartInstanceRef = useRef<am5.Root | null>(null);
 
@@ -48,6 +54,38 @@ export default function BarChart({ data }: Props) {
             );
 
             xAxis.get('renderer').grid.template.set('visible', false);
+
+            // Cuộn huỳnh labels trên cột X để tránh nhãn quá dài và thêm tooltip
+            xAxis.get('renderer').labels.template.setAll({
+                oversizedBehavior: 'truncate', // Trượt động cắt nguồn text quá dài
+                maxWidth: maxLabelWidth, // Giới hạn độ rộng label bắng vuông thanh
+                textAlign: 'center', // Căn giữa text
+                tooltipText: '{category}', // Hiển thị tooltip với nội dung đầy đủ để định
+            });
+
+            // Tạo tooltip cho labels
+            const labelTooltip = xAxis
+                .get('renderer')
+                .labels.template.get('tooltip');
+            if (labelTooltip) {
+                labelTooltip.set('getFillFromSprite', false);
+                labelTooltip.set('autoTextColor', false);
+
+                const background = labelTooltip.get('background');
+                if (background) {
+                    background.setAll({
+                        fill: am5.color(0xffffff),
+                        fillOpacity: 0.9,
+                        stroke: am5.color(0xcccccc),
+                        strokeWidth: 1,
+                    });
+                }
+
+                labelTooltip.label.setAll({
+                    fill: am5.color(0x000000),
+                    fontSize: 12,
+                });
+            }
 
             xAxis.data.setAll(data);
 
@@ -102,7 +140,7 @@ export default function BarChart({ data }: Props) {
                 cornerRadiusTL: 5,
                 cornerRadiusTR: 5,
                 strokeOpacity: 0,
-                maxWidth: 60, // Giới hạn chiều rộng tối đa của cột
+                maxWidth: maxBarWidth, // Giới hạn chiều rộng tối đa của cột
             });
 
             // Thêm dữ liệu vào series
@@ -135,7 +173,7 @@ export default function BarChart({ data }: Props) {
                 chartInstanceRef.current.dispose();
             }
         };
-    }, []);
+    }, [data, maxBarWidth, maxLabelWidth]);
 
     return (
         <div ref={chartRef} style={{ width: '100%', height: '400px' }}></div>

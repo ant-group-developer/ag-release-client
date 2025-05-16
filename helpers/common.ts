@@ -5,6 +5,8 @@ import {
     ORIENTATION,
     UPLOAD_TYPE,
 } from '@/enums/common';
+import { RELEASES_STATUS } from '@/modules/releases/enums';
+import { GENRES } from '@/modules/tracks/enums';
 import { presetPalettes } from '@ant-design/colors';
 import { DatePickerProps, GetProp, UploadProps } from 'antd';
 import clsx, { ClassValue } from 'clsx';
@@ -19,6 +21,7 @@ dayjs.extend(utc);
  * @param file - The File object from an `<input type="file">`
  * @returns Promise with metadata
  */
+
 export const getMediaInfoVideo = async (
     file: File
 ): Promise<{
@@ -503,12 +506,102 @@ export const getTitleChipDisplay = (dataFilterType: string | undefined) => {
     const MAX_CHIP_DISPLAY = 2;
     const dataFilterValue = dataFilterType.split(',');
 
-    if (dataFilterValue.length <= MAX_CHIP_DISPLAY)
-        return dataFilterValue.join(',');
+    const translateDataFilterValue = dataFilterValue.map((item) =>
+        messages(getIntlCodeByReleaseStatus(item))
+    );
 
-    const displayDataFilter = dataFilterValue
+    if (translateDataFilterValue.length <= MAX_CHIP_DISPLAY)
+        return translateDataFilterValue.join(',');
+
+    const displayDataFilter = translateDataFilterValue
         .slice(0, MAX_CHIP_DISPLAY)
         .join(',');
-    const remainingDataFilter = dataFilterValue.length - MAX_CHIP_DISPLAY;
+    const remainingDataFilter =
+        translateDataFilterValue.length - MAX_CHIP_DISPLAY;
     return `${displayDataFilter} ...+${remainingDataFilter} ${messages('common.other')}`;
 };
+
+export const convertSecondsToHoursMinutes = (seconds: number) => {
+    if (isNaN(Number(seconds)) || seconds < 0) {
+        return '00:00';
+    }
+
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = Math.floor(seconds % 60);
+
+    const pad = (num: number) => num.toString().padStart(2, '0');
+
+    if (hrs > 0) {
+        // Format: HH:mm:ss
+        return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+    } else if (mins > 0) {
+        // Format: mm:ss
+        return `${pad(mins)}:${pad(secs)}`;
+    } else {
+        // Format: 00:ss
+        return `00:${pad(secs)}`;
+    }
+};
+
+type ReleaseStatusMessageKey =
+    | 'common.processing'
+    | 'common.issues'
+    | 'common.neverDistributed'
+    | 'common.distributed'
+    | 'common.takenDown'
+    | 'common.draft';
+export const getIntlCodeByReleaseStatus = (
+    value: string
+): ReleaseStatusMessageKey => {
+    const releaseStatusToMessageMap: Record<string, ReleaseStatusMessageKey> = {
+        [RELEASES_STATUS.PROCESSING]: 'common.processing',
+        [RELEASES_STATUS.ISSUES]: 'common.issues',
+        [RELEASES_STATUS.NEVER_DISTRIBUTED]: 'common.neverDistributed',
+        [RELEASES_STATUS.DISTRIBUTED]: 'common.distributed',
+        [RELEASES_STATUS.TAKEN_DOWN]: 'common.takenDown',
+        [RELEASES_STATUS.DRAFT]: 'common.draft',
+    };
+    return releaseStatusToMessageMap[value] || 'common.processing';
+};
+
+type GenresMessageKey =
+    | 'genres.pop'
+    | 'genres.rock'
+    | 'genres.jazz'
+    | 'genres.country'
+    | 'genres.hipHop'
+    | 'genres.rB'
+    | 'genres.electronic'
+    | 'genres.reggae'
+    | 'genres.rap'
+    | 'genres.blues'
+    | 'genres.classical';
+export const getIntlCodeByGenres = (value: string): GenresMessageKey => {
+    const genresToMessageMap: Record<string, GenresMessageKey> = {
+        [GENRES.POP]: 'genres.pop',
+        [GENRES.ROCK]: 'genres.rock',
+        [GENRES.JAZZ]: 'genres.jazz',
+        [GENRES.COUNTRY]: 'genres.country',
+        [GENRES.HIP_HOP]: 'genres.hipHop',
+        [GENRES.R_B]: 'genres.rB',
+        [GENRES.ELECTRONIC]: 'genres.electronic',
+        [GENRES.REGGAE]: 'genres.reggae',
+        [GENRES.BLUES]: 'genres.blues',
+        [GENRES.CLASSICAL]: 'genres.classical',
+        [GENRES.RAP]: 'genres.rap',
+    };
+    return genresToMessageMap[value] || 'common.pop';
+};
+
+// type ReleaseTypeMessageKey = 'common.album' | 'common.single' | 'common.ep';
+// export const getIntlCodeByReleaseType = (
+//     value: string
+// ): ReleaseTypeMessageKey => {
+//     const releaseTypeToMessageMap: Record<string, ReleaseTypeMessageKey> = {
+//         [RELEASES_TYPE.ALBUM]: 'common.album',
+//         [RELEASES_TYPE.SINGLE]: 'common.single',
+//         [RELEASES_TYPE.EP]: 'common.ep',
+//     };
+//     return releaseTypeToMessageMap[value] || 'common.album';
+// };

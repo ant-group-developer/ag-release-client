@@ -50,11 +50,6 @@ export default function ReleasesHeader({
                             DATE_FORMAT.HOUR_MINUTE
                         )}
                     />
-                    {/* <ColumnProductDisplayDropdown
-                            visible={layoutTable === LAYOUT_TABLE.LIST}
-                            visibleColumns={visibleColumns}
-                            handleSetVisibleColumns={handleSetVisibleColumns}
-                        /> */}
 
                     {layoutTable === LAYOUT_TABLE.LIST && (
                         <ShowColumnOptionDropdown

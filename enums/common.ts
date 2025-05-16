@@ -143,6 +143,7 @@ export enum LOCAL_STORAGE_KEY {
 
 export enum SESSION_STORAGE_KEY {
     VISIBLE_COLUMNS_RELEASES = 'visible_columns_releases',
+    VISIBLE_COLUMNS_TRACKS = 'visible_columns_tracks',
 }
 
 export enum FIELD_TYPE {
@@ -167,18 +168,4 @@ export enum ORIENTATION {
 
 export enum TYPE_MODAL {
     SEARCH = 'SEARCH',
-}
-
-export enum GENRES {
-    POP = 'pop',
-    ROCK = 'rock',
-    JAZZ = 'jazz',
-    HIP_HOP = 'hip hop',
-    CLASSICAL = 'classical',
-    ELECTRONIC = 'electronic',
-    RAP = 'rap',
-    COUNTRY = 'country',
-    REGGAE = 'reggae',
-    BLUES = 'blues',
-    R_B = 'r&b',
 }

@@ -13,6 +13,7 @@
     --bg-primary: #ffffff;
     --bg-secondary: #f0f2f5;
     --bg-dark: #141414;
+    --font-family-inter: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
 /* [data-theme='dark'] {
@@ -20,8 +21,41 @@
     --card-bg-hover: #3a3a3a;
 } */
 
+/* Áp dụng font Inter cho toàn trang */
+@layer base {
+    html {
+        font-family: var(--font-family-inter);
+    }
+}
+
+/* Cấu hình rõ font-weight cho Inter */
+.font-inter {
+    font-family: var(--font-family-inter);
+}
+
+.font-opensans {
+    font-family: var(--font-open-sans), system-ui, sans-serif;
+}
+
+.font-boston {
+    font-family: var(--font-boston), serif;
+}
+
+.font-medium {
+    font-weight: 500 !important;
+}
+
+.font-semibold {
+    font-weight: 600 !important;
+}
+
+.font-bold {
+    font-weight: 700 !important;
+}
+
 body {
     /*font-family: Arial, Helvetica, sans-serif;*/
+    @apply dark:!text-gray-300;
 }
 
 .ant-timeline-item-last {

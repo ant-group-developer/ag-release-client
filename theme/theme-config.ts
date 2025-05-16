@@ -15,7 +15,7 @@ export const lightThemeTokens = {
     colorBorder: '#d9d9d9',
     cardBg: '#f2f2f2',
     cardBgHover: '#e5e5e5',
-    fontFamily: 'Inter, sans-serif',
+    fontFamily: 'var(--font-inter), Inter, sans-serif',
 };
 
 export const darkThemeTokens = {
@@ -31,7 +31,7 @@ export const darkThemeTokens = {
     colorBorder: '#424242',
     cardBg: '#2a2a2a',
     cardBgHover: '#3a3a3a',
-    fontFamily: 'Inter, sans-serif',
+    fontFamily: 'var(--font-inter), Inter, sans-serif',
 };
 
 export const getThemeConfig = (mode: THEME): ThemeConfig => {

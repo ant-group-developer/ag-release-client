@@ -34,8 +34,11 @@ function Header({ collapsed, toggleCollapsed }: Props) {
                 <Logo />
             </div>
 
-            <div className="flex flex-1 items-center gap-2">
-                <AppSearch onClick={() => openModal(TYPE_MODAL.SEARCH)} />
+            <div className="flex max-w-[400px] flex-1 items-center">
+                <AppSearch
+                    onClick={() => openModal(TYPE_MODAL.SEARCH)}
+                    onSearch={() => openModal(TYPE_MODAL.SEARCH)}
+                />
 
                 {typeModal === TYPE_MODAL.SEARCH && <AppSearchModal />}
             </div>

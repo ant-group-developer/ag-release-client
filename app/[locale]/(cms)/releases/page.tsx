@@ -56,7 +56,7 @@ export default function Releases({}: Props) {
         removeFilter,
     } = useFilter<ReleasesDataFilter>({
         page: 1,
-        pageSize: 20,
+        pageSize: 21,
     });
     const { height, width } = useWindowSize();
 
@@ -127,7 +127,7 @@ export default function Releases({}: Props) {
                 showTotalText
                 showSizeChanger
                 showQuickJumper
-                pageSizeOptions={[12, 24, 60]}
+                pageSizeOptions={[21, 28, 35]}
             />
         </div>
     );

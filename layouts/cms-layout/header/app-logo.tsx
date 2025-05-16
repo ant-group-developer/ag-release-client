@@ -8,7 +8,7 @@ function Logo({}: Props) {
     return (
         <AppLogoWithText
             size={logoHeight}
-            className="text-text-color hidden text-2xl md:block"
+            className="hidden text-2xl md:block"
         />
     );
 }
