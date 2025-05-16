@@ -14,6 +14,7 @@ function Sidebar({ collapsed, onBreakpoint, ...props }: Props) {
 
     return (
         <Sider
+            className="border-r dark:border-zinc-800"
             collapsible
             width={255}
             collapsedWidth={isSmallDevice ? 0 : 50}

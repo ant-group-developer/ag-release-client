@@ -19,3 +19,11 @@ export type UploadResponseV2 = DetailResponse<string>;
 export interface UploadProgressCallback {
     (progress: number): void;
 }
+
+export interface FileData {
+    id: string;
+    url: string;
+    name: string;
+    contentType: string;
+    size: number;
+}

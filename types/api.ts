@@ -1,5 +1,3 @@
-import { ProductData } from '@/modules/product/types';
-
 export interface PaginationResponse<T = any> {
     data: {
         items: T[];
@@ -108,10 +106,4 @@ export interface GetUrlUploadParams {
         typeKey?: string;
     };
     file: File;
-}
-
-export interface SubmitUploadParams {
-    submitKey: string;
-    orderProduct: Pick<ProductData, 'id' | 'note'>;
-    product?: object;
 }

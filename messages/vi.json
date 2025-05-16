@@ -33,9 +33,21 @@
         "create": "Thêm mới",
         "view": "Xem",
         "edit": "Sửa",
-        "cancel": "Hủy"
+        "cancel": "Hủy",
+        "quickActions": "Hành động nhanh"
     },
     "common": {
+        "dateRelease": "Ngày phát hành",
+        "genres": "Thể loại",
+        "track": "Bài hát",
+        "artist": "Nghệ sĩ",
+        "release": "Bản cập nhật",
+        "plays": "Lượt phát",
+        "dark": "Tối",
+        "light": "Sáng",
+        "displayMode": "Chế độ hiển thị",
+        "seeMore": "Xem thêm",
+        "search": "Tìm kiếm",
         "approver": "Người duyệt",
         "motion": "Chuyển động",
         "reSearch": "Nghiên cứu",
@@ -381,7 +393,7 @@
         }
     },
     "dashboard": {
-        "label": "Dashboard"
+        "label": "Tổng quan"
     },
     "image": {
         "label": "Hình ảnh",
@@ -634,5 +646,24 @@
             "createSuccessfully": "Tạo mới thành công",
             "updateSuccessfully": "Cập nhật thành công"
         }
+    },
+    "theme": {
+        "dark": "Tối",
+        "light": "Sáng",
+        "system": "Hệ thống"
+    },
+
+    "releases": {
+        "label": "Phát hành",
+        "create": "Tạo phát hành ",
+        "lastedRelease": "Phát hành gần đây",
+        "name": "Tên phát hành",
+        "id": "Mã phát hành",
+        "type": "Loại phát hành",
+        "releaseDate": "Ngày phát hành",
+        "duration": "Thời lượng",
+        "trackCount": "Số bài hát",
+        "upc": "Mã số UPC",
+        "publisher": "Hãng phát hành"
     }
 }

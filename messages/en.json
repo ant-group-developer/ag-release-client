@@ -33,9 +33,21 @@
         "create": "Create",
         "view": "View",
         "edit": "Edit",
-        "cancel": "cancel"
+        "cancel": "cancel",
+        "quickActions": "Quick actions"
     },
     "common": {
+        "dateRelease": "Date release",
+        "genres": "Genres",
+        "track": "Bài hát",
+        "artist": "Artist",
+        "release": "Release",
+        "plays": "Plays",
+        "dark": "Dark",
+        "light": "Light",
+        "displayMode": "Display mode",
+        "seeMore": "See more",
+        "search": "Search",
         "approver": "Approver",
         "motion": "motion",
         "reSearch": "Research",
@@ -630,5 +642,24 @@
             "createSuccessfully": "Create topic topic assignee successfully",
             "updateSuccessfully": "Update topic topic assignee successfully"
         }
+    },
+    "theme": {
+        "dark": "Dark",
+        "light": "Light",
+        "system": "System"
+    },
+
+    "releases": {
+        "label": "Release",
+        "create": "Create release",
+        "lastedRelease": "Lasted release",
+        "name": "Release name",
+        "id": "Release ID",
+        "type": "Release type",
+        "releaseDate": "Release date",
+        "duration": "Duration",
+        "trackCount": "Track count",
+        "upc": "UPC",
+        "publisher": "Publisher release"
     }
 }

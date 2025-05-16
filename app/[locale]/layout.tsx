@@ -1,4 +1,5 @@
 import GoogleAnalytics from '@/components/google-analytics';
+import ThemeProvider from '@/components/theme-provider';
 import { defaultConfig } from '@/constants/env';
 import { DEFAULT_ROUTE } from '@/enums/routes';
 import { flattenData } from '@/helpers/common';
@@ -20,6 +21,7 @@ import { Inter, Open_Sans } from 'next/font/google';
 import localFont from 'next/font/local';
 import { cookies } from 'next/headers';
 import NextTopLoader from 'nextjs-toploader';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { PropsWithChildren } from 'react';
 import { ToastContainer } from 'react-toastify';
 
@@ -137,7 +139,6 @@ export default async function RootLayout({
         const defaultLocale = await getLocale();
         redirect({ href: DEFAULT_ROUTE, locale: defaultLocale });
     }
-
     const messages = await getMessages({ locale });
 
     return (
@@ -147,7 +148,10 @@ export default async function RootLayout({
             >
                 <GoogleAnalytics />
                 <NextIntlClientProvider locale={locale} messages={messages}>
-                    <AntdProvider>{children}</AntdProvider>
+                    <ThemeProvider />
+                    <AntdProvider>
+                        <NuqsAdapter>{children}</NuqsAdapter>
+                    </AntdProvider>
                 </NextIntlClientProvider>
                 <ToastContainer
                     pauseOnFocusLoss={false}
