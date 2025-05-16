@@ -1,0 +1,40 @@
+services:
+    app-prod:
+        # image: ag-music-client/prod:latest
+        image: ag-music-client/prod:${TAG:-latest}
+        build:
+            context: .
+            args:
+                API_URL: ${API_URL}
+                WEBSITE_URL: ${WEBSITE_URL}
+                ANT_GROUP_WEBSITE: ${ANT_GROUP_WEBSITE}
+                EMAIL: ${EMAIL}
+                APP_NAME: ${APP_NAME}
+                APP_SHORT_NAME: ${APP_SHORT_NAME}
+                SLOGAN: ${SLOGAN}
+                APP_IMAGE: ${APP_IMAGE}
+                APP_DESCRIPTION: ${APP_DESCRIPTION}
+                APP_KEYWORDS: ${APP_KEYWORDS}
+                PRIMARY_COLOR: ${PRIMARY_COLOR}
+                TEXT_COLOR: ${TEXT_COLOR}
+                BACKGROUND_COLOR: ${BACKGROUND_COLOR}
+                CLIENT: ${CLIENT}
+                REDIRECT_URI: ${REDIRECT_URI}
+                LOGIN_URL: ${LOGIN_URL}
+                SUPPORT: ${SUPPORT}
+                CMS_API: ${CMS_API}
+                CMS_URL: ${CMS_URL}
+                AG_API: ${AG_API}
+                ANT_TASK_API: ${ANT_TASK_API}
+                API_UPLOAD: ${API_UPLOAD}
+                GOOGLE_ROOT_FOLDER_DRIVE_ID: ${GOOGLE_ROOT_FOLDER_DRIVE_ID}
+                GOOGLE_ILLUSTRATIVE_FOLDER_ID: ${GOOGLE_ILLUSTRATIVE_FOLDER_ID}
+                GOOGLE_THUMBNAIL_FOLDER_ID: ${GOOGLE_THUMBNAIL_FOLDER_ID}
+                APP_UPLOAD_X_API_KEY: ${APP_UPLOAD_X_API_KEY}
+                GOOGLE_RESEARCH_FOLDER_ID: ${GOOGLE_RESEARCH_FOLDER_ID}
+        ports:
+            - '${HOST_PORT:-3000}:3000'
+        env_file:
+            - .env
+        command: yarn start
+        restart: unless-stopped

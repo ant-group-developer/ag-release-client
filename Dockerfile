@@ -1,0 +1,85 @@
+# syntax=docker/dockerfile:1
+
+# 1. Install dependencies (including local ckeditor)
+FROM node:20-alpine AS deps
+WORKDIR /app
+COPY package.json yarn.lock ./
+# COPY ckeditor ./ckeditor
+RUN yarn install --frozen-lockfile --production=false
+
+# 2. Build application (inject build‑time envs)
+FROM node:20-alpine AS builder
+WORKDIR /app
+ARG API_URL
+ARG WEBSITE_URL
+ARG ANT_GROUP_WEBSITE
+ARG EMAIL
+ARG APP_NAME
+ARG APP_SHORT_NAME
+ARG SLOGAN
+ARG APP_IMAGE
+ARG APP_DESCRIPTION
+ARG APP_KEYWORDS
+ARG PRIMARY_COLOR
+ARG TEXT_COLOR
+ARG BACKGROUND_COLOR
+ARG CLIENT
+ARG REDIRECT_URI
+ARG LOGIN_URL
+ARG SUPPORT
+ARG CMS_API
+ARG CMS_URL
+ARG AG_API
+ARG ANT_TASK_API
+ARG API_UPLOAD
+ARG GOOGLE_ROOT_FOLDER_DRIVE_ID
+ARG GOOGLE_ILLUSTRATIVE_FOLDER_ID
+ARG GOOGLE_THUMBNAIL_FOLDER_ID
+ARG APP_UPLOAD_X_API_KEY
+ARG GOOGLE_RESEARCH_FOLDER_ID
+ENV API_URL=${API_URL} \
+    WEBSITE_URL=${WEBSITE_URL} \
+    ANT_GROUP_WEBSITE=${ANT_GROUP_WEBSITE} \
+    EMAIL=${EMAIL} \
+    APP_NAME=${APP_NAME} \
+    APP_SHORT_NAME=${APP_SHORT_NAME} \
+    SLOGAN=${SLOGAN} \
+    APP_IMAGE=${APP_IMAGE} \
+    APP_DESCRIPTION=${APP_DESCRIPTION} \
+    APP_KEYWORDS=${APP_KEYWORDS} \
+    PRIMARY_COLOR=${PRIMARY_COLOR} \
+    TEXT_COLOR=${TEXT_COLOR} \
+    BACKGROUND_COLOR=${BACKGROUND_COLOR} \
+    CLIENT=${CLIENT} \
+    REDIRECT_URI=${REDIRECT_URI} \
+    LOGIN_URL=${LOGIN_URL} \
+    SUPPORT=${SUPPORT} \
+    CMS_API=${CMS_API} \
+    CMS_URL=${CMS_URL} \
+    AG_API=${AG_API} \
+    ANT_TASK_API=${ANT_TASK_API} \
+    API_UPLOAD=${API_UPLOAD} \
+    GOOGLE_ROOT_FOLDER_DRIVE_ID=${GOOGLE_ROOT_FOLDER_DRIVE_ID} \
+    GOOGLE_ILLUSTRATIVE_FOLDER_ID=${GOOGLE_ILLUSTRATIVE_FOLDER_ID} \
+    GOOGLE_THUMBNAIL_FOLDER_ID=${GOOGLE_THUMBNAIL_FOLDER_ID} \
+    APP_UPLOAD_X_API_KEY=${APP_UPLOAD_X_API_KEY} \
+    GOOGLE_RESEARCH_FOLDER_ID=${GOOGLE_RESEARCH_FOLDER_ID} \
+    NODE_ENV=production \
+    NEXT_TELEMETRY_DISABLED=1
+COPY . .
+COPY --from=deps /app/node_modules ./node_modules
+RUN yarn build
+
+# 3. Production image
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+COPY --from=builder /app/next.config.mjs ./
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
+# expose port & start
+EXPOSE 3000
+CMD ["yarn", "start"]

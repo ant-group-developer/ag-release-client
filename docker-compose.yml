@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+    app:
+        # image: ag-music-client:latest
+        image: ag-music-client:${TAG:-latest}
+        build:
+            context: .
+            target: ${TARGET:-builder}
+        ports:
+            - '3000:3000'
+        volumes:
+            - .:/app
+            - /app/node_modules
+            - /app/.next
+        environment:
+            - NODE_ENV=${NODE_ENV:-production}
+        command: ${COMMAND:-yarn start}
+        restart: unless-stopped
+        env_file:
+            - .env

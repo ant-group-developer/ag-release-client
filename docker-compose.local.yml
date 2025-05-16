@@ -1,0 +1,15 @@
+services:
+    app-local:
+        # image: ag-music-client/local:latest
+        image: ag-music-client/local:${TAG:-latest}
+        build:
+            context: .
+            args:
+                API_URL: ${API_URL}
+                CMS_API: ${CMS_API}
+        ports:
+            - '${HOST_PORT:-3000}:3000'
+        env_file:
+            - .env
+        command: yarn start
+        restart: unless-stopped
