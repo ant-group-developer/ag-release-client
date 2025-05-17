@@ -16,7 +16,7 @@ export default function TopListRow({
     index,
 }: Props) {
     return (
-        <div className="flex cursor-pointer items-center justify-between rounded-lg px-5 py-2 hover:bg-gray-100">
+        <div className="flex cursor-pointer items-center justify-between px-5 py-2 hover:bg-gray-100 dark:hover:bg-card-bg-dark">
             <div className="flex items-center">
                 <div className="w-6 text-gray-500"> {index + 1} </div>
                 <div
@@ -24,7 +24,6 @@ export default function TopListRow({
                         'h-12 w-12 cursor-pointer items-center justify-center overflow-hidden bg-card-bg',
                         {
                             'rounded-full': typeShapeImage === 'circle',
-                            'rounded-lg': typeShapeImage === 'square',
                         }
                     )}
                 >

@@ -1,10 +1,12 @@
 import { APP_ROUTES } from '@/enums/routes';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import {
+    DiscAlbum,
     House,
     LockKeyhole,
     LucideProps,
     Music,
+    Plus,
     StickyNote,
     Upload,
 } from 'lucide-react';
@@ -35,6 +37,14 @@ export const adminRoutes: AdminRoutesType[] = [
         label: 'common.management',
         children: [
             {
+                id: 'release-detail',
+                label: 'releases.create',
+                href: APP_ROUTES.CREATE_RELEASE,
+                icon: Plus,
+                title: 'release-detail',
+                permission: PERMISSION.RELEASE.CREATE,
+            },
+            {
                 id: 'dashboard',
                 label: 'dashboard.label',
                 href: APP_ROUTES.DASHBOARD,
@@ -46,9 +56,17 @@ export const adminRoutes: AdminRoutesType[] = [
                 id: 'releases',
                 label: 'releases.label',
                 href: APP_ROUTES.RELEASES,
-                icon: Music,
+                icon: DiscAlbum,
                 title: 'releases',
                 permission: PERMISSION.RELEASE.READ,
+            },
+            {
+                id: 'tracks',
+                label: 'tracks.label',
+                href: APP_ROUTES.TRACKS,
+                icon: Music,
+                title: 'tracks',
+                permission: PERMISSION.TRACK.READ,
             },
         ],
     },

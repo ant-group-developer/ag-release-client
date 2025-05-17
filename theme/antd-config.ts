@@ -4,7 +4,7 @@ import type { ThemeConfig } from 'antd';
 const theme: ThemeConfig = {
     token: {
         // colorPrimary: '#ff4757',
-        fontFamily: 'Inter, sans-serif',
+        fontFamily: 'var(--font-inter), Inter, sans-serif',
         colorText: defaultConfig.TEXT_COLOR,
         // fontSize: 13,
         colorLink: defaultConfig.TEXT_COLOR,

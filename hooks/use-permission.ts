@@ -31,6 +31,12 @@ const defaultPermission: Permission = {
         canUpdate: false,
         canDelete: false,
     },
+    tracks: {
+        canRead: true,
+        canCreate: false,
+        canUpdate: false,
+        canDelete: false,
+    },
 };
 
 const usePermissionStore = create<PermissionState>((set) => {
@@ -56,6 +62,12 @@ const usePermissionStore = create<PermissionState>((set) => {
                 canCreate: checkPermission(PERMISSION.RELEASE.CREATE),
                 canUpdate: checkPermission(PERMISSION.RELEASE.UPDATE),
                 canDelete: checkPermission(PERMISSION.RELEASE.DELETE),
+            },
+            tracks: {
+                canRead: checkPermission(PERMISSION.TRACK.READ),
+                canCreate: checkPermission(PERMISSION.TRACK.CREATE),
+                canUpdate: checkPermission(PERMISSION.TRACK.UPDATE),
+                canDelete: checkPermission(PERMISSION.TRACK.DELETE),
             },
         };
 

@@ -10,6 +10,8 @@ export enum APP_ROUTES {
     HOME = '/',
     DASHBOARD = '/dashboard',
     RELEASES = '/releases',
+    TRACKS = '/tracks',
+    CREATE_RELEASE = '/release-detail',
 }
 
 export const AUTH_ROUTES: string[] = [APP_ROUTES.LOGIN];

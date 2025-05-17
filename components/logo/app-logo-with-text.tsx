@@ -34,7 +34,7 @@ function AppLogoWithText({ className, wrapperClassName, size = 70 }: Props) {
             />
             <h2
                 className={cn(
-                    'logo-font text-title-color text-4xl uppercase',
+                    'logo-font text-4xl uppercase text-[#3f4254] hover:text-[#1677ff] dark:text-[#fff]',
                     className
                 )}
             >

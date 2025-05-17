@@ -37,6 +37,16 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "releaseDate": "Release date",
+        "duration": "Duration",
+        "draft": "Draft",
+        "processing": "Processing",
+        "issues": "Issues",
+        "neverDistributed": "Never distributed",
+        "distributed": "Distributed",
+        "takenDown": "Taken down",
+        "minutes": "minutes",
+        "hours": "hours",
         "dateRelease": "Date release",
         "genres": "Genres",
         "track": "Bài hát",
@@ -659,7 +669,26 @@
         "releaseDate": "Release date",
         "duration": "Duration",
         "trackCount": "Track count",
-        "upc": "UPC",
         "publisher": "Publisher release"
+    },
+    "tracks": {
+        "label": "Track",
+        "create": "Create track",
+        "lastedTrack": "Lasted track",
+        "name": "Track name",
+        "id": "Track ID"
+    },
+    "genres": {
+        "pop": "Pop",
+        "rock": "Rock",
+        "jazz": "Jazz",
+        "country": "Country",
+        "hipHop": "Hip Hop",
+        "rB": "R&B",
+        "electronic": "Electronic",
+        "reggae": "Reggae",
+        "rap": "Rap",
+        "classical": "Classical",
+        "blues": "Blues"
     }
 }

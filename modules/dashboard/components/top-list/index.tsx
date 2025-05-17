@@ -20,6 +20,7 @@ type Props = {
     }[];
     initialTab: TOP_LIST_TYPE;
     typeShapeImage?: 'circle' | 'square';
+    onClickSeeAll?: () => void;
 };
 
 export default function TopList({
@@ -29,18 +30,22 @@ export default function TopList({
     description,
     initialTab = TOP_LIST_TYPE.LIST,
     typeShapeImage = 'square',
+    onClickSeeAll,
 }: Props) {
     const messages = useTranslations();
     const [activeTab, setActiveTab] = useState<TOP_LIST_TYPE>(initialTab);
 
     return (
-        <div className={cn('rounded-lg border bg-white', className)}>
+        <div
+            className={cn('rounded-lg border dark:border-zinc-800', className)}
+        >
             <div className="p-4">
                 <TopListHeader
                     title={title}
                     initialTab={initialTab}
                     setActiveTab={setActiveTab}
                     activeTab={activeTab}
+                    onClickSeeAll={onClickSeeAll}
                 />
             </div>
 

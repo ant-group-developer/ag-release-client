@@ -30,4 +30,10 @@ export const PERMISSION = {
         UPDATE: 'task.releases.update',
         DELETE: 'task.releases.delete',
     },
+    TRACK: {
+        READ: 'task.tracks.read',
+        CREATE: 'task.tracks.create',
+        UPDATE: 'task.tracks.update',
+        DELETE: 'task.tracks.delete',
+    },
 };

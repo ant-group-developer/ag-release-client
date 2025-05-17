@@ -36,30 +36,37 @@ export default function ShowColumnOptionDropdown({
         {
             key: RELEASES_COLUMNS_DISPLAY.THUMBNAIL,
             label: messages('common.thumbnail'),
-        },
-        {
-            key: RELEASES_COLUMNS_DISPLAY.TITLE,
-            label: messages('releases.label'),
-        },
-        {
-            key: RELEASES_COLUMNS_DISPLAY.ARTIST,
-            label: messages('common.artist'),
+            alwaysVisible: true,
         },
         {
             key: RELEASES_COLUMNS_DISPLAY.RELEASE_ID,
             label: messages('releases.id'),
+            alwaysVisible: true,
         },
         {
-            key: RELEASES_COLUMNS_DISPLAY.TYPE,
-            label: messages('releases.type'),
+            key: RELEASES_COLUMNS_DISPLAY.TITLE,
+            label: messages('releases.name'),
         },
         {
             key: RELEASES_COLUMNS_DISPLAY.PUBLISHER,
             label: messages('releases.publisher'),
         },
         {
+            key: RELEASES_COLUMNS_DISPLAY.ARTIST,
+            label: messages('common.artist'),
+        },
+
+        {
+            key: RELEASES_COLUMNS_DISPLAY.TYPE,
+            label: messages('releases.type'),
+        },
+        {
             key: RELEASES_COLUMNS_DISPLAY.UPC,
             label: 'UPC',
+        },
+        {
+            key: RELEASES_COLUMNS_DISPLAY.STATUS,
+            label: messages('common.status'),
         },
         {
             key: RELEASES_COLUMNS_DISPLAY.TRACK_COUNT,
@@ -80,6 +87,7 @@ export default function ShowColumnOptionDropdown({
         {
             key: RELEASES_COLUMNS_DISPLAY.ACTIONS,
             label: messages('common.action'),
+            alwaysVisible: true,
         },
     ];
 

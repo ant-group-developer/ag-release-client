@@ -1,15 +1,19 @@
 'use client';
 
+import { useRouter } from '@/i18n/routing';
+import DashboardHeader from '@/modules/dashboard/components/header';
 import ListNews from '@/modules/dashboard/components/list-news';
 import ListRelease from '@/modules/dashboard/components/list-release';
 import CardStatistic from '@/modules/dashboard/components/list-statistic';
 import TopList from '@/modules/dashboard/components/top-list';
 import { fakeReleasesData } from '@/modules/dashboard/constants/mockData';
 import { TOP_LIST_TYPE } from '@/modules/dashboard/enums';
+import { fakeTrackData } from '@/modules/tracks/constants/mockdata';
 
 type Props = {};
 
 function Dashboard({}: Props) {
+    const router = useRouter();
     const regionData = [
         {
             id: 1,
@@ -98,62 +102,81 @@ function Dashboard({}: Props) {
             plays: item.plays,
         }));
 
+    const sortListTrack = fakeTrackData
+        .slice(0, 5)
+        .sort((a, b) => b.plays - a.plays)
+        .map((item) => ({
+            id: item.id,
+            image: item.thumbnail,
+            title: item.title,
+            artist: item.artist,
+            value: item.plays,
+            plays: item.plays,
+        }));
+
     return (
-        <div className="flex flex-col gap-4 px-4 py-4">
-            <CardStatistic />
+        <div>
+            <DashboardHeader />
 
-            <div className="gap flex w-full gap-4">
-                <TopList
-                    data={sortListRelease}
-                    title="Bài hát hàng đầu"
-                    description="Bài hát"
-                    className="flex-1"
-                    initialTab={TOP_LIST_TYPE.LIST}
-                />
-                <TopList
-                    data={sortListRelease}
-                    title="Bản phát hành hàng đầu"
-                    description="Bản phát hành"
-                    className="flex-1"
-                    initialTab={TOP_LIST_TYPE.LIST}
-                />
+            <div className="flex flex-col gap-4 px-4 py-4">
+                <CardStatistic />
+
+                <div className="grid w-full grid-cols-4 gap-4">
+                    <TopList
+                        data={sortListTrack}
+                        title="Bài hát hàng đầu"
+                        description="Bài hát"
+                        className="flex-1"
+                        initialTab={TOP_LIST_TYPE.LIST}
+                        onClickSeeAll={() => {
+                            router.push('/tracks');
+                        }}
+                    />
+                    <TopList
+                        data={sortListRelease}
+                        title="Bản phát hành hàng đầu"
+                        description="Bản phát hành"
+                        className="flex-1"
+                        initialTab={TOP_LIST_TYPE.LIST}
+                        onClickSeeAll={() => {
+                            router.push('/releases');
+                        }}
+                    />
+                    <TopList
+                        data={regionData.map((item) => ({
+                            id: item.id,
+                            title: item.name,
+                            value: item.value,
+                            image: item.image,
+                            plays: item.plays,
+                        }))}
+                        title="Quốc gia hàng đầu"
+                        description="Quốc gia"
+                        className="flex-1"
+                        initialTab={TOP_LIST_TYPE.LIST}
+                        typeShapeImage="circle"
+                    />
+
+                    <TopList
+                        data={dspData.map((item) => ({
+                            id: item.id,
+                            title: item.name,
+                            value: item.value,
+                            image: item.image,
+                            plays: item.plays,
+                        }))}
+                        title="DSP hàng đầu"
+                        description="DSP"
+                        className="flex-1"
+                        initialTab={TOP_LIST_TYPE.LIST}
+                        typeShapeImage="circle"
+                    />
+                </div>
+
+                <ListRelease />
+
+                <ListNews />
             </div>
-
-            <div className="flex w-full gap-4">
-                <TopList
-                    data={regionData.map((item) => ({
-                        id: item.id,
-                        title: item.name,
-                        value: item.value,
-                        image: item.image,
-                        plays: item.plays,
-                    }))}
-                    title="Quốc gia hàng đầu"
-                    description="Quốc gia"
-                    className="flex-1"
-                    initialTab={TOP_LIST_TYPE.LIST}
-                    typeShapeImage="circle"
-                />
-
-                <TopList
-                    data={dspData.map((item) => ({
-                        id: item.id,
-                        title: item.name,
-                        value: item.value,
-                        image: item.image,
-                        plays: item.plays,
-                    }))}
-                    title="DSP hàng đầu"
-                    description="DSP"
-                    className="flex-1"
-                    initialTab={TOP_LIST_TYPE.LIST}
-                    typeShapeImage="circle"
-                />
-            </div>
-
-            <ListRelease />
-
-            <ListNews />
         </div>
     );
 }
