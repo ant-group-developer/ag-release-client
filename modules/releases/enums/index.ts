@@ -4,6 +4,13 @@ export enum RELEASES_TYPE {
     EP = 'ep',
 }
 
+export enum RELEASES_TABS {
+    CORE_DETAIL = 'core_detail',
+    TRACKS = 'tracks',
+    SCHEDULE = 'schedule',
+    REVIEW = 'review',
+}
+
 export enum RELEASES_STATUS {
     DRAFT = 'draft',
     PROCESSING = 'processing',

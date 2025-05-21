@@ -131,3 +131,12 @@ body {
     margin-bottom: 0px !important;
 }
 
+.release-detail-header-upload .ant-upload {
+    width: 200px !important;
+    height: 200px !important;
+}
+
+.release-detail-header-upload .ant-upload-list-item-container {
+    width: 200px !important;
+    height: 200px !important;
+}

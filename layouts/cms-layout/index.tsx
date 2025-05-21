@@ -72,28 +72,25 @@ export default function CMSLayout({ children, accessToken }: Props) {
             return <AppLoader className="bg-white" />;
         }
 
-        if (canAccessCurrentRoute) {
-            return (
+        // if (canAccessCurrentRoute) {
+        return (
+            <Layout>
+                <Header collapsed={isActive} toggleCollapsed={toggleActive} />
                 <Layout>
-                    <Header
+                    <Sidebar
                         collapsed={isActive}
-                        toggleCollapsed={toggleActive}
+                        onBreakpoint={changeActive}
+                        trigger={null}
                     />
                     <Layout>
-                        <Sidebar
-                            collapsed={isActive}
-                            onBreakpoint={changeActive}
-                            trigger={null}
-                        />
-                        <Layout>
-                            <div className="relative h-[calc(100vh-4rem)] overflow-y-hidden">
-                                <Content>{children}</Content>
-                            </div>
-                        </Layout>
+                        <div className="relative h-[calc(100vh-4rem)] overflow-y-hidden">
+                            <Content>{children}</Content>
+                        </div>
                     </Layout>
                 </Layout>
-            );
-        }
+            </Layout>
+        );
+        // }
 
         if (routeCanAccess) {
             return <AppLoader className="bg-white" />;

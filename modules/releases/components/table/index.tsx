@@ -1,11 +1,13 @@
 import ActionButton from '@/components/ui/button/action-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { APP_ROUTES } from '@/enums/routes';
 import {
     convertSecondsToHoursMinutes,
     formattedDate,
     getIntlCodeByReleaseStatus,
 } from '@/helpers/common';
+import { useRouter } from '@/i18n/routing';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
@@ -18,6 +20,7 @@ type Props = Omit<AppTableProps<ReleasesData>, 'columns'> & {
 
 export default function ReleasesTable({ visibleColumns, ...props }: Props) {
     const messages = useTranslations();
+    const router = useRouter();
     const column: ColumnType<ReleasesData>[] = [
         {
             title: messages('common.iNo'),
@@ -33,8 +36,15 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             align: 'center',
             width: 100,
             fixed: 'left',
-            render: (value) => (
-                <div className="flex items-center justify-center">
+            render: (value, record) => (
+                <div
+                    className="flex items-center justify-center"
+                    onClick={() =>
+                        router.push(
+                            `${APP_ROUTES.RELEASES}/detail/core-detail/${record.releaseId}`
+                        )
+                    }
+                >
                     <Image
                         src={value}
                         alt="thumbnail"
@@ -58,34 +68,6 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             ),
         },
         {
-            title: messages('releases.id'),
-            key: 'releaseId',
-            dataIndex: 'releaseId',
-            align: 'center',
-            fixed: 'left',
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
-                </CustomTooltip>
-            ),
-        },
-
-        {
-            title: messages('releases.publisher'),
-            key: 'publisher',
-            dataIndex: 'publisher',
-            align: 'left',
-            width: 170,
-            ellipsis: true,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
-                        {value}
-                    </span>
-                </CustomTooltip>
-            ),
-        },
-        {
             title: messages('common.artist'),
             key: 'artist',
             dataIndex: 'artist',
@@ -101,10 +83,40 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             ),
         },
         {
+            title: messages('releases.id'),
+            key: 'releaseId',
+            dataIndex: 'releaseId',
+            align: 'center',
+            fixed: 'left',
+            render: (value) => (
+                <CustomTooltip size="small" title={value}>
+                    <span className="truncate"> {value} </span>
+                </CustomTooltip>
+            ),
+        },
+
+        {
+            title: 'Label',
+            key: 'publisher',
+            dataIndex: 'publisher',
+            align: 'left',
+            width: 170,
+            ellipsis: true,
+            render: (value) => (
+                <CustomTooltip size="small" title={value}>
+                    <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
+                        {value}
+                    </span>
+                </CustomTooltip>
+            ),
+        },
+
+        {
             title: messages('releases.type'),
             key: 'type',
             dataIndex: 'type',
             align: 'left',
+            width: 120,
             render: (value) => {
                 return (
                     <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
@@ -130,6 +142,7 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             key: 'status',
             dataIndex: 'status',
             align: 'center',
+            width: 120,
             render: (value) => (
                 <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
                     {messages(getIntlCodeByReleaseStatus(value))}
@@ -149,6 +162,7 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             key: 'duration',
             dataIndex: 'duration',
             align: 'center',
+            width: 100,
             render: (value) => {
                 const duration = convertSecondsToHoursMinutes(Number(value));
 

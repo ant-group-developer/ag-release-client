@@ -60,11 +60,27 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
             ),
         },
         {
+            title: messages('common.artist'),
+            key: 'artist',
+            dataIndex: 'artist',
+            align: 'left',
+            ellipsis: true,
+            width: 200,
+            render: (value) => (
+                <CustomTooltip size="small" title={value}>
+                    <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
+                        {' '}
+                        {value}{' '}
+                    </span>
+                </CustomTooltip>
+            ),
+        },
+        {
             title: messages('tracks.id'),
             key: 'trackId',
             dataIndex: 'trackId',
             align: 'left',
-            width: 200,
+            width: 100,
             render: (value) => (
                 <CustomTooltip size="small" title={value}>
                     <span className="truncate"> {value} </span>
@@ -83,22 +99,7 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
                 </CustomTooltip>
             ),
         },
-        {
-            title: messages('common.artist'),
-            key: 'artist',
-            dataIndex: 'artist',
-            align: 'left',
-            ellipsis: true,
-            width: 200,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
-                        {' '}
-                        {value}{' '}
-                    </span>
-                </CustomTooltip>
-            ),
-        },
+
         {
             title: messages('common.type'),
             key: 'genres',
