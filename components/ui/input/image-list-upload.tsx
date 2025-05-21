@@ -7,9 +7,14 @@ import { useState } from 'react';
 
 type Props = UploadProps & {
     value?: any;
+    placeholder?: string;
 };
 
-export default function ImageListUpload({ value, ...props }: Props) {
+export default function ImageListUpload({
+    placeholder,
+    value,
+    ...props
+}: Props) {
     const messages = useTranslations();
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
@@ -41,12 +46,15 @@ export default function ImageListUpload({ value, ...props }: Props) {
     const uploadButton = (
         <button className="flex flex-col items-center" type="button">
             <Plus />
-            <div style={{ marginTop: 8 }}> {messages('common.upload')} </div>
+            <div style={{ marginTop: 8 }}>
+                {' '}
+                {placeholder ?? messages('common.upload')}{' '}
+            </div>
         </button>
     );
 
     return (
-        <>
+        <div>
             <Upload
                 listType="picture-card"
                 multiple
@@ -71,6 +79,6 @@ export default function ImageListUpload({ value, ...props }: Props) {
                     src={previewImage}
                 />
             )}
-        </>
+        </div>
     );
 }

@@ -6,7 +6,6 @@ import {
     LockKeyhole,
     LucideProps,
     Music,
-    Plus,
     StickyNote,
     Upload,
 } from 'lucide-react';
@@ -36,14 +35,14 @@ export const adminRoutes: AdminRoutesType[] = [
         id: 'management',
         label: 'common.management',
         children: [
-            {
-                id: 'release-detail',
-                label: 'releases.create',
-                href: APP_ROUTES.CREATE_RELEASE,
-                icon: Plus,
-                title: 'release-detail',
-                permission: PERMISSION.RELEASE.CREATE,
-            },
+            // {
+            //     id: 'release-detail',
+            //     label: 'releases.create',
+            //     href: APP_ROUTES.CREATE_RELEASE,
+            //     icon: Plus,
+            //     title: 'release-detail',
+            //     permission: PERMISSION.RELEASE.CREATE,
+            // },
             {
                 id: 'dashboard',
                 label: 'dashboard.label',

@@ -1,6 +1,8 @@
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { DATE_FORMAT } from '@/enums/common';
+import { APP_ROUTES } from '@/enums/routes';
 import { formattedDate, getIntlCodeByReleaseStatus } from '@/helpers/common';
+import { useRouter } from '@/i18n/routing';
 import { ReleasesData } from '@/modules/releases/types';
 import { Card, CardProps } from 'antd';
 import Meta from 'antd/es/card/Meta';
@@ -13,7 +15,7 @@ type Props = CardProps & {
 
 export default function CardAlbum({ album, ...props }: Props) {
     const messages = useTranslations();
-
+    const router = useRouter();
     const albumStatus = messages(getIntlCodeByReleaseStatus(album.status));
 
     return (
@@ -23,6 +25,11 @@ export default function CardAlbum({ album, ...props }: Props) {
             cover={
                 <div className="relative overflow-hidden">
                     <Image
+                        onClick={() =>
+                            router.push(
+                                `${APP_ROUTES.RELEASES}/detail/core-detail/${album.releaseId}`
+                            )
+                        }
                         className="cursor-pointer overflow-hidden object-cover duration-300 hover:scale-110"
                         alt="example"
                         src={album.thumbnail}

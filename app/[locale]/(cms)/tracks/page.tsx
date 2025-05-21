@@ -3,7 +3,6 @@ import AppPagination from '@/components/ui/pagination';
 import { LAYOUT_TABLE, SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
-import { fakeReleasesData } from '@/modules/dashboard/constants/mockData';
 import { ReleasesDataFilter } from '@/modules/releases/types';
 import TracksHeader from '@/modules/tracks/components/header';
 import TracksTable from '@/modules/tracks/components/table';
@@ -55,7 +54,7 @@ export default function Tracks({}: Props) {
         removeFilter,
     } = useFilter<ReleasesDataFilter>({
         page: 1,
-        pageSize: 20,
+        pageSize: 21,
     });
     const { height, width } = useWindowSize();
 
@@ -118,7 +117,7 @@ export default function Tracks({}: Props) {
                 align="end"
                 current={dataFilter.page}
                 pageSize={dataFilter.pageSize}
-                total={fakeReleasesData.length}
+                total={fakeTrackData.length}
                 onChange={onChangePage}
                 showTotalText
                 showSizeChanger
