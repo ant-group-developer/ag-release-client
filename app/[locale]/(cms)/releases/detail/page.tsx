@@ -2,11 +2,12 @@
 
 import { useRouter } from '@/i18n/routing';
 import ReleaseDetailForm from '@/modules/release-detail/release-detail-form';
-import { Button, Form } from 'antd';
+import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { Button } from 'antd';
 
 export default function CoreDetail() {
     const router = useRouter();
-    const [form] = Form.useForm();
+    const formStore = useReleaseFormStore((state) => state.form);
 
     const fakeIdRelease = 'id-123-456-789';
 
@@ -20,7 +21,7 @@ export default function CoreDetail() {
 
     return (
         <div>
-            <ReleaseDetailForm form={form} />
+            {formStore && <ReleaseDetailForm form={formStore} />}
 
             <div className="flex justify-end p-4">
                 <Button type="primary" onClick={handleSubmit}>

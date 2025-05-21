@@ -22,7 +22,7 @@ export default function ReleaseDetailHeader({ form }: Props) {
         <div>
             <AppForm form={form} layout="vertical" showSubmit={false}>
                 <div className="flex justify-between px-4 py-2">
-                    <div className="flex gap-4">
+                    <div className="flex w-full gap-4">
                         <div>
                             <AppFormItem
                                 name="thumbnail"
@@ -42,17 +42,17 @@ export default function ReleaseDetailHeader({ form }: Props) {
                                 />
                             </AppFormItem>
                         </div>
-                        <div>
-                            <div className="flex h-full flex-col gap-2">
-                                <div className="text-sm">
-                                    <span>Label: </span>
-                                    <span className="font-bold">{label}</span>
-                                </div>
+                        <div className="">
+                            <div className="full grid grid-cols-1 gap-4">
                                 <div className="text-sm">
                                     <span>Tên phát hành: </span>
                                     <span className="font-bold">
                                         {nameRelease}
                                     </span>
+                                </div>
+                                <div className="text-sm">
+                                    <span>Label: </span>
+                                    <span className="font-bold">{label}</span>
                                 </div>
                                 <div className="text-sm">
                                     <span>Nghệ sĩ: </span>

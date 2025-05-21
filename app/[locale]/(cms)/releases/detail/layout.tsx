@@ -2,14 +2,11 @@
 import { useRouter } from '@/i18n/routing';
 import ReleaseDetailHeader from '@/modules/release-detail/header';
 import { RELEASES_TABS } from '@/modules/releases/enums';
+import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { Tabs, TabsProps } from 'antd';
 import { useForm } from 'antd/es/form/Form';
-import { useParams } from 'next/navigation';
-import { PropsWithChildren } from 'react';
-import CoreDetail from './[release-id]/core-detail/page';
-import Review from './[release-id]/review/page';
-import Schedule from './[release-id]/schedule/page';
-import Tracks from './[release-id]/tracks/page';
+import { useParams, usePathname } from 'next/navigation';
+import { PropsWithChildren, useEffect } from 'react';
 
 type Props = {};
 
@@ -19,66 +16,63 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const params = useParams();
     const releaseId = params['release-id'] ? `/${params['release-id']}` : '';
     const isDisableTab = releaseId == '';
+    const setForm = useReleaseFormStore((state) => state.setForm);
+    const pathname = usePathname();
+
+    // Lưu form vào store khi component mount
+    useEffect(() => {
+        setForm(form);
+    }, [form, setForm]);
 
     const items: TabsProps['items'] = [
         {
             key: RELEASES_TABS.CORE_DETAIL,
             label: <span className="font-medium">Thông tin chung</span>,
-            children: <CoreDetail form={form} />,
             disabled: isDisableTab,
         },
         {
             key: RELEASES_TABS.TRACKS,
             label: <span className="font-medium">Bản nhạc</span>,
-            children: <Tracks form={form} />,
             disabled: isDisableTab,
         },
         {
             key: RELEASES_TABS.SCHEDULE,
             label: <span className="font-medium">Lên lịch</span>,
-            children: <Schedule form={form} />,
             disabled: isDisableTab,
         },
         {
             key: RELEASES_TABS.REVIEW,
             label: <span className="font-medium">Review</span>,
-            children: <Review form={form} />,
             disabled: isDisableTab,
         },
     ];
-
-    // Xác định active tab dựa trên đường dẫn hiện tại
     const getActiveTab = () => {
         const path = window.location.pathname;
-        if (path.includes('/tracks/')) return RELEASES_TABS.TRACKS;
-        if (path.includes('/schedule/')) return RELEASES_TABS.SCHEDULE;
-        if (path.includes('/review/')) return RELEASES_TABS.REVIEW;
+        if (path.includes('/tracks')) return RELEASES_TABS.TRACKS;
+        if (path.includes('/schedule')) return RELEASES_TABS.SCHEDULE;
+        if (path.includes('/review')) return RELEASES_TABS.REVIEW;
         return RELEASES_TABS.CORE_DETAIL;
     };
 
-    const handleChangeTab = (key: string) => {
-        if (key === RELEASES_TABS.CORE_DETAIL) {
-            router.push(`/releases/detail${releaseId}/core-detail`);
-        } else if (key === RELEASES_TABS.TRACKS) {
-            router.push(`/releases/detail/${releaseId}/tracks`);
-        } else if (key === RELEASES_TABS.SCHEDULE) {
-            router.push(`/releases/detail/${releaseId}/schedule`);
-        } else if (key === RELEASES_TABS.REVIEW) {
-            router.push(`/releases/detail/${releaseId}/review`);
-        }
+    const handleTabChange = (key: string) => {
+        // key là tên tab, ví dụ: 'core-detail', 'tracks', ...
+        router.push(`/releases/detail/${releaseId}/${key}`);
     };
 
     return (
-        <div className="sticky top-0 z-10">
+        <div>
             {/* <SidebarSecondary /> */}
-            <ReleaseDetailHeader form={form} />
-            <div className="p-4">
-                <Tabs
-                    items={items}
-                    onChange={handleChangeTab}
-                    defaultActiveKey={getActiveTab()}
-                />
+            <div className="sticky top-0 z-10 bg-white">
+                <ReleaseDetailHeader form={form} />
+                <div className="px-4">
+                    <Tabs
+                        items={items}
+                        defaultActiveKey={getActiveTab()}
+                        onChange={handleTabChange}
+                    />
+                </div>
             </div>
+            {children}
         </div>
     );
 }

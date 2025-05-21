@@ -2,20 +2,16 @@
 
 import { useRouter } from '@/i18n/routing';
 import ReleaseDetailForm from '@/modules/release-detail/release-detail-form';
+import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { Button } from 'antd';
-import { FormInstance } from 'antd/es/form/Form';
 import { useParams } from 'next/navigation';
 
-type Props = {
-    form: FormInstance;
-};
-
-export default function CoreDetail({ form }: Props) {
+export default function CoreDetail() {
     const router = useRouter();
     const params = useParams();
     const releaseId = params['release-id'];
-
     const fakeIdRelease = releaseId;
+    const form = useReleaseFormStore((state) => state.form);
 
     if (releaseId) {
         // Khởi tạo dữ liệu ban đầu cho form
@@ -48,12 +44,12 @@ export default function CoreDetail({ form }: Props) {
         };
 
         // Áp dụng dữ liệu ban đầu vào form
-        form.setFieldsValue(initialData);
+        form?.setFieldsValue(initialData);
     }
 
     const handleSubmit = async () => {
         try {
-            const values = await form.validateFields();
+            const values = await form?.validateFields();
 
             router.push(`/releases/detail/${fakeIdRelease}/core-detail`);
         } catch (error) {
@@ -63,7 +59,7 @@ export default function CoreDetail({ form }: Props) {
 
     return (
         <div>
-            <ReleaseDetailForm form={form} />
+            {form && <ReleaseDetailForm form={form} />}
 
             <div className="flex justify-end p-4">
                 <Button type="primary" onClick={handleSubmit}>

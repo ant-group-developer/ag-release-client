@@ -1,9 +1,3 @@
-import { FormInstance } from 'antd';
-
-type Props = {
-    form: FormInstance;
-};
-
-export default function Schedule({ form }: Props) {
+export default function Schedule() {
     return <div>Schedule</div>;
 }

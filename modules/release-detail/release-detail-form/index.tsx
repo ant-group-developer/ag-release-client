@@ -69,7 +69,7 @@ export default function ReleaseDetailForm({ form }: Props) {
     ];
 
     return (
-        <div className="px-2 py-4">
+        <div className="px-4 py-4">
             <AppForm form={form} layout="vertical" showSubmit={false}>
                 <div className="flex flex-col gap-4">
                     <div>
@@ -178,7 +178,7 @@ export default function ReleaseDetailForm({ form }: Props) {
                             <Select options={languageList} />
                         </AppFormItem>
 
-                        <AppFormItem label="Hãng thu âm" name="label">
+                        <AppFormItem label="Label" name="label">
                             <Select options={labelList} />
                         </AppFormItem>
 

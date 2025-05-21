@@ -5,7 +5,7 @@ export enum RELEASES_TYPE {
 }
 
 export enum RELEASES_TABS {
-    CORE_DETAIL = 'core_detail',
+    CORE_DETAIL = 'core-detail',
     TRACKS = 'tracks',
     SCHEDULE = 'schedule',
     REVIEW = 'review',
