@@ -104,6 +104,11 @@ body {
     scrollbar-width: none; /* Firefox */
 }
 
+a {
+    color: inherit !important;
+    text-decoration: none !important;
+}
+
 .ant-table-body {
     overflow-y: overlay !important;
 }
@@ -131,12 +136,21 @@ body {
     margin-bottom: 0px !important;
 }
 
-.release-detail-header-upload .ant-upload {
-    width: 200px !important;
-    height: 200px !important;
+.release-detail-header-upload .ant-upload,
+.release-detail-header-upload .ant-upload-list-picture-card,
+.release-detail-header-upload .ant-upload-list-item-container {
+    width: 100% !important;
+    height: 100% !important;
 }
 
-.release-detail-header-upload .ant-upload-list-item-container {
-    width: 200px !important;
-    height: 200px !important;
+.release-detail-header-upload .ant-upload-list-item {
+    padding: 0 !important;
 }
+
+.tab-release-detail .ant-tabs-nav {
+    margin-bottom: 0 !important;
+}
+
+/* .release-review-collapse .ant-collapse-item {
+    margin-bottom: 4px !important;
+} */

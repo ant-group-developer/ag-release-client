@@ -14,7 +14,7 @@ function AppFormItem({
     ...props
 }: AppFormItemProps) {
     const customLabel = label ? (
-        <span className="font-bold">
+        <span className="flex gap-1 font-bold">
             {label}
             {required && <span style={{ color: 'red' }}> *</span>}
         </span>

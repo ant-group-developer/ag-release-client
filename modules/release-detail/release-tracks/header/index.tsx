@@ -1,31 +1,32 @@
 import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
-import Refresh from '@/components/refresh';
-import { DATE_FORMAT } from '@/enums/common';
-import { formattedDate } from '@/helpers/common';
-import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
-import { useTableLayoutToggle } from '@/hooks/use-layout-table';
-import { TrackDataFilter } from '@/modules/tracks/types';
-import ListTracksReleaseSuperFilter from './tracks-super-filter';
+import useModalStore from '@/hooks/use-modal';
+import { TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
+import { Button } from 'antd';
+import AddNewTrackModal from '../modal/add-new-track-modal';
 
 type Props = {
-    dataFilter: TrackDataFilter;
-    onChangeFilter: OnChangeFilter<TrackDataFilter>;
-    canClearFilter: boolean;
-    removeFilter: RemoveFilter;
-    handleRefresh: () => void;
+    // dataFilter: TrackDataFilter;
+    // onChangeFilter: OnChangeFilter<TrackDataFilter>;
+    // canClearFilter: boolean;
+    // removeFilter: RemoveFilter;
+    // handleRefresh: () => void;
 };
 
-export default function ListTracksReleaseHeader({
-    dataFilter,
-    onChangeFilter,
-    canClearFilter,
-    removeFilter,
-    handleRefresh,
-}: Props) {
-    const { layoutTable, toggleLayoutTable } = useTableLayoutToggle();
+export default function ListTracksReleaseHeader(
+    {
+        // dataFilter,
+        // onChangeFilter,
+        // canClearFilter,
+        // removeFilter,
+        // handleRefresh,
+    }: Props
+) {
+    // const { layoutTable, toggleLayoutTable } = useTableLayoutToggle();
+    const openModal = useModalStore((state) => state.openModal);
+    const typeModal = useModalStore((state) => state.typeModal);
     return (
         <AppHeader className="px-4 py-1">
-            <AppHeaderGroup>
+            {/* <AppHeaderGroup>
                 <ListTracksReleaseSuperFilter
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
@@ -44,6 +45,17 @@ export default function ListTracksReleaseHeader({
                         )}
                     />
                 </div>
+            </AppHeaderGroup> */}
+            <AppHeaderGroup position="end" className="flex-1 px-4">
+                {typeModal === TYPE_MODAL_RELEASE.ADD_TRACK && (
+                    <AddNewTrackModal open />
+                )}
+                <Button
+                    onClick={() => openModal(TYPE_MODAL_RELEASE.ADD_TRACK)}
+                    type="primary"
+                >
+                    Thêm bài hát
+                </Button>
             </AppHeaderGroup>
         </AppHeader>
     );

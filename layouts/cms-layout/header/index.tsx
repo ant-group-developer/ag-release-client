@@ -50,7 +50,7 @@ function Header({ collapsed, toggleCollapsed }: Props) {
                 <CreateButton
                     canCreate
                     text={messages('releases.create')}
-                    onClick={() => router.push('/releases/detail')}
+                    onClick={() => router.push('/releases/create')}
                 />
                 {/* <LocaleSelect /> */}
                 {/* <ThemeToggle /> */}

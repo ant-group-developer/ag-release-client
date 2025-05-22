@@ -1,5 +1,12 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
+import {
+    artistList,
+    genresList,
+    labelList,
+    languageList,
+    yearList,
+} from '@/constants/fakeData';
 import { FormInstance, Input, Radio, Select } from 'antd';
 import { useTranslations } from 'next-intl';
 
@@ -9,67 +16,9 @@ type Props = {
 
 export default function ReleaseDetailForm({ form }: Props) {
     const messages = useTranslations();
-    const artistList = [
-        {
-            label: 'Nghệ sĩ 1',
-            value: 'artist-1',
-        },
-        {
-            label: 'Nghệ sĩ 2',
-            value: 'artist-2',
-        },
-    ];
-
-    const genresList = [
-        {
-            label: 'Hip-Hop',
-            value: 'genre-1',
-        },
-        {
-            label: 'Rap',
-            value: 'genre-2',
-        },
-    ];
-
-    const languageList = [
-        {
-            label: 'Tiếng Việt',
-            value: 'vi',
-        },
-        {
-            label: 'Tiếng Anh',
-            value: 'en',
-        },
-    ];
-
-    const labelList = [
-        {
-            label: 'Hãng thu âm 1',
-            value: 'label-1',
-        },
-        {
-            label: 'Hãng thu âm 2',
-            value: 'label-2',
-        },
-    ];
-
-    const yearList = [
-        {
-            label: '2026',
-            value: '2026',
-        },
-        {
-            label: '2025',
-            value: '2020',
-        },
-        {
-            label: '2024',
-            value: '2021',
-        },
-    ];
 
     return (
-        <div className="px-4 py-4">
+        <div className="px-40 py-4">
             <AppForm form={form} layout="vertical" showSubmit={false}>
                 <div className="flex flex-col gap-4">
                     <div>
@@ -165,7 +114,7 @@ export default function ReleaseDetailForm({ form }: Props) {
                         </AppFormItem>
 
                         <AppFormItem
-                            label="Ngôn ngữ"
+                            label="Ngôn ngữ metadata"
                             name="language"
                             required
                             rules={[
@@ -192,7 +141,7 @@ export default function ReleaseDetailForm({ form }: Props) {
 
                         <AppFormItem
                             label="Bản quyền"
-                            name="coppyRight"
+                            name="copyRight"
                             required
                             rules={[
                                 {
@@ -213,7 +162,7 @@ export default function ReleaseDetailForm({ form }: Props) {
 
                         <AppFormItem
                             label="Bản quyền"
-                            name="coppyRight2"
+                            name="copyRight2"
                             required
                             rules={[
                                 {

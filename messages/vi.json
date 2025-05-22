@@ -466,6 +466,9 @@
     "form": {
         "searchPlaceholder": "Tìm kiếm"
     },
+    "placeholder": {
+        "dragAndDropAudio": "Kéo thả tệp âm thanh vào đây!"
+    },
     "status": {
         "label": "Trạng thái",
         "active": "Kích hoạt",

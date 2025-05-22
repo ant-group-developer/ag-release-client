@@ -461,6 +461,9 @@
     "form": {
         "searchPlaceholder": "Search"
     },
+    "placeholder": {
+        "dragAndDropAudio": "Drag and drop audio file here!"
+    },
     "status": {
         "label": "Status",
         "active": "Active",

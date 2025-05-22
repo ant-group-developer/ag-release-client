@@ -35,15 +35,15 @@ export default function ReleaseDetailHeader({ form }: Props) {
                                 ]}
                             >
                                 <ImageListUpload
-                                    className="release-detail-header-upload"
+                                    className="release-detail-header-upload h-40 w-40"
                                     accept="image/*"
                                     maxCount={1}
                                     placeholder="Kéo và thả ảnh vào đây!"
                                 />
                             </AppFormItem>
                         </div>
-                        <div className="">
-                            <div className="full grid grid-cols-1 gap-4">
+                        <div className="lg:w-1/2">
+                            <div className="grid grid-cols-2 gap-4">
                                 <div className="text-sm">
                                     <span>Tên phát hành: </span>
                                     <span className="font-bold">
