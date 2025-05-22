@@ -2,12 +2,13 @@
 import { cn } from '@/helpers/common';
 import { Link, useRouter } from '@/i18n/routing';
 import ReleaseDetailHeader from '@/modules/release-detail/header';
+import RightSidebar from '@/modules/release-detail/right-sidebar';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { Button, Tabs, TabsProps } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import { useParams, usePathname } from 'next/navigation';
-import { PropsWithChildren, useEffect } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 
 type Props = {};
 
@@ -20,10 +21,31 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const isDisableTab = releaseId == '';
     const setForm = useReleaseFormStore((state) => state.setForm);
     const pathname = usePathname();
+    const [activeTab, setActiveTab] = useState<string>(
+        RELEASES_TABS.CORE_DETAIL
+    );
 
     useEffect(() => {
         setForm(form);
     }, [form, setForm]);
+
+    useEffect(() => {
+        // Cập nhật tab active khi đường dẫn thay đổi
+        if (pathname) {
+            if (pathname.includes('/tracks')) {
+                setActiveTab(RELEASES_TABS.TRACKS);
+            } else if (pathname.includes('/schedule')) {
+                setActiveTab(RELEASES_TABS.SCHEDULE);
+            } else if (pathname.includes('/review')) {
+                setActiveTab(RELEASES_TABS.REVIEW);
+            } else if (
+                pathname.includes('/core-detail') ||
+                pathname.includes('/create')
+            ) {
+                setActiveTab(RELEASES_TABS.CORE_DETAIL);
+            }
+        }
+    }, [pathname]);
 
     const coreDetailTabsNavigate = isCreate
         ? '/releases/create'
@@ -56,15 +78,6 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             ),
             disabled: isDisableTab,
         },
-        // {
-        //     key: RELEASES_TABS.SCHEDULE,
-        //     label: (
-        //         <Link className={cn(isDisableTab ? 'pointer-events-none' : '')} href={`/releases/detail/${releaseId}/schedule`}>
-        //             <span className="font-medium">Lên lịch</span>
-        //         </Link>
-        //     ),
-        //     disabled: isDisableTab,
-        // },
         {
             key: RELEASES_TABS.REVIEW,
             label: (
@@ -79,24 +92,13 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         },
     ];
 
-    const getActiveTab = () => {
-        const path = window.location.pathname;
-        if (path.includes('/tracks')) return RELEASES_TABS.TRACKS;
-        if (path.includes('/schedule')) return RELEASES_TABS.SCHEDULE;
-        if (path.includes('/review')) return RELEASES_TABS.REVIEW;
-        if (path.includes('/create')) return RELEASES_TABS.CORE_DETAIL;
-        return RELEASES_TABS.CORE_DETAIL;
-    };
-
     const handleTabChange = (key: string) => {
-        // key là tên tab, ví dụ: 'core-detail', 'tracks', ...
         router.push(`/releases/detail/${releaseId}/${key}`);
     };
 
     const handleSubmit = async () => {
         try {
             const values = await form?.validateFields();
-
             router.push(`/releases/detail/341239532/core-detail`);
         } catch (error) {
             console.error('Lỗi khi xác thực form:', error);
@@ -112,21 +114,21 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     );
 
     return (
-        <div>
-            {/* <SidebarSecondary /> */}
+        <div className="pr-[50px]">
             <div className="sticky top-0 z-10 bg-white">
                 <ReleaseDetailHeader form={form} />
                 <div className="px-4">
                     <Tabs
                         className="tab-release-detail"
                         items={items}
-                        defaultActiveKey={getActiveTab()}
+                        activeKey={activeTab}
                         onChange={handleTabChange}
                         tabBarExtraContent={buttonSave}
                     />
                 </div>
             </div>
             {children}
+            <RightSidebar />
         </div>
     );
 }
