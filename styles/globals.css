@@ -139,16 +139,29 @@ a {
 .release-detail-header-upload .ant-upload,
 .release-detail-header-upload .ant-upload-list-picture-card,
 .release-detail-header-upload .ant-upload-list-item-container {
-    width: 100% !important;
-    height: 100% !important;
+    @apply !size-full !rounded-lg;
+}
+
+.release-detail-header-upload
+    .ant-upload-list-item-container
+    .ant-upload-list-item {
+    @apply overflow-hidden !rounded-lg;
+}
+
+.release-detail-header-upload .ant-upload-select {
+    @apply overflow-hidden !rounded-lg;
 }
 
 .release-detail-header-upload .ant-upload-list-item {
-    padding: 0 !important;
+    @apply rounded-lg !border-none !p-0;
+}
+
+.release-detail-header-upload .ant-upload-list-item::before {
+    @apply !size-full;
 }
 
 .tab-release-detail .ant-tabs-nav {
-    margin-bottom: 0 !important;
+    @apply !mb-0;
 }
 
 /* .release-review-collapse .ant-collapse-item {

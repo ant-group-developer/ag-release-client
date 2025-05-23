@@ -60,7 +60,6 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             align: 'left',
             width: 150,
             render: (value, record) => {
-                console.log(value);
                 return <Input defaultValue={value} />;
             },
         },
@@ -69,7 +68,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             dataIndex: 'artist',
             key: 'artist',
             align: 'left',
-            width: 150,
+            width: 120,
             render: (value) => {
                 return (
                     <Select
@@ -85,7 +84,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             dataIndex: '',
             key: '',
             align: 'left',
-            width: 100,
+            width: 120,
             render: (value) => {
                 return (
                     <Select
@@ -97,11 +96,18 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             },
         },
         {
-            title: 'Ngôn ngữ',
+            title: (
+                <div className="flex items-center justify-between">
+                    <span>Ngôn ngữ</span>
+                    <div>
+                        <IconInfoTooltip title="Ngôn ngữ chính được thể hiện trong bài hát" />
+                    </div>
+                </div>
+            ),
             dataIndex: '',
             key: '',
             align: 'left',
-            width: 100,
+            width: 120,
             render: (value) => {
                 return (
                     <Select
@@ -113,16 +119,22 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             },
         },
         {
-            title: 'Nội dung nhạy cảm',
+            title: (
+                <div className="flex items-center justify-between">
+                    <span>Nội dung nhạy cảm</span>
+                    <div>
+                        <IconInfoTooltip title="Tích nếu nội dung bài hát này có chứa nội dung nhạy cảm" />
+                    </div>
+                </div>
+            ),
             dataIndex: '',
             key: '',
             align: 'center',
-            width: 60,
+            width: 80,
             render: (value) => {
                 return (
                     <div className="flex items-center justify-center gap-2">
                         <Checkbox />
-                        <IconInfoTooltip title="Tích nếu nội dung bài hát này có chứa nội dung nhạy cảm" />
                     </div>
                 );
             },
@@ -161,6 +173,14 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             </div>
         );
     };
+    // const { height, width } = useWindowSize();
+    // const isSmallDevice = Number(width) <= SCREEN.MD;
+    // const scrollY = () => {
+    //     if (isSmallDevice) return undefined;
+    //     if (!height) return undefined;
+    //     return height - 140 - 64;
+    // };
+
     return (
         <SortableTable
             key="main"
@@ -173,6 +193,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                 expandedRowRender,
                 expandedRowClassName: () => '!z-0',
             }}
+            scroll={{ y: 49 * 11.8 }}
         />
     );
 }

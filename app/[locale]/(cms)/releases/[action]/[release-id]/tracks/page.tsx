@@ -1,6 +1,8 @@
 'use client';
-import ListTracksReleaseHeader from '@/modules/release-detail/release-tracks/header';
+import useModalStore from '@/hooks/use-modal';
+import AddNewTrackModal from '@/modules/release-detail/release-tracks/modal/add-new-track-modal';
 import ReleaseTracksTable from '@/modules/release-detail/release-tracks/table';
+import { TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { fakeTrackData } from '@/modules/tracks/constants/mockdata';
 import { useParams } from 'next/navigation';
@@ -10,6 +12,7 @@ export default function Tracks() {
     const form = useReleaseFormStore((state) => state.form);
     const [selectedRow, setSelectedRow] = useState<Key[]>([]);
     const params = useParams();
+    const typeModal = useModalStore((state) => state.typeModal);
     const releaseId = params['release-id'];
     const handleRowSelection = (selectedRowKeys: Key[]) => {
         setSelectedRow(selectedRowKeys);
@@ -55,11 +58,15 @@ export default function Tracks() {
 
     return (
         <div>
-            <ListTracksReleaseHeader />
+            {/* <ListTracksReleaseHeader /> */}
             <ReleaseTracksTable
                 dataSource={fakeTrackData}
                 rowSelection={rowSelection}
             />
+
+            {typeModal === TYPE_MODAL_RELEASE.ADD_TRACK && (
+                <AddNewTrackModal open />
+            )}
         </div>
     );
 }

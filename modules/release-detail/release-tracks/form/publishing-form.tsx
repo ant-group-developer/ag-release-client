@@ -44,6 +44,10 @@ export default function PublishingForm({}: Props) {
                                     value: '3',
                                 },
                             ]}
+                            allowClear
+                            placeholder={messages(
+                                'releases.placeholder.selectPublishType'
+                            )}
                         />
                     </AppFormItem>
 
@@ -71,6 +75,10 @@ export default function PublishingForm({}: Props) {
                                         value: '2',
                                     },
                                 ]}
+                                allowClear
+                                placeholder={messages(
+                                    'releases.placeholder.selectLabel'
+                                )}
                             />
                         </AppFormItem>
                     )}
@@ -102,6 +110,10 @@ export default function PublishingForm({}: Props) {
                                     value: '3',
                                 },
                             ]}
+                            allowClear
+                            placeholder={messages(
+                                'releases.placeholder.selectRole'
+                            )}
                         />
                     </AppFormItem>
                     <AppFormItem
@@ -127,6 +139,10 @@ export default function PublishingForm({}: Props) {
                                     value: '2',
                                 },
                             ]}
+                            allowClear
+                            placeholder={messages(
+                                'releases.placeholder.selectMusician'
+                            )}
                         />
                     </AppFormItem>
                     <AppFormItem
@@ -139,7 +155,7 @@ export default function PublishingForm({}: Props) {
                             },
                         ]}
                     >
-                        <Input />
+                        <Input allowClear placeholder="Nhập tỷ lệ cổ phần" />
                     </AppFormItem>
                 </div>
             </AppForm>

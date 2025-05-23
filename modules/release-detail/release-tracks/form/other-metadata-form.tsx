@@ -42,11 +42,25 @@ export default function OtherMetadataForm({}: Props) {
                             },
                         ]}
                     >
-                        <Select options={genresList} showSearch />
+                        <Select
+                            options={genresList}
+                            showSearch
+                            allowClear
+                            placeholder={messages(
+                                'tracks.placeholder.selectGenres'
+                            )}
+                        />
                     </AppFormItem>
 
                     <AppFormItem label="Thể loại phụ" name="subGenres">
-                        <Select options={genresList} />
+                        <Select
+                            options={genresList}
+                            showSearch
+                            allowClear
+                            placeholder={messages(
+                                'tracks.placeholder.selectSubGenres'
+                            )}
+                        />
                     </AppFormItem>
                     <AppFormItem
                         label="Nội dung nhạy cảm"
@@ -65,6 +79,10 @@ export default function OtherMetadataForm({}: Props) {
                                 { label: 'Có', value: 'true' },
                                 { label: 'Không', value: 'false' },
                             ]}
+                            allowClear
+                            placeholder={messages(
+                                'tracks.placeholder.selectSensitiveContent'
+                            )}
                         />
                     </AppFormItem>
                     <AppFormItem
@@ -78,7 +96,14 @@ export default function OtherMetadataForm({}: Props) {
                             },
                         ]}
                     >
-                        <Select showSearch options={languageList} />
+                        <Select
+                            showSearch
+                            options={languageList}
+                            allowClear
+                            placeholder={messages(
+                                'tracks.placeholder.selectLanguage'
+                            )}
+                        />
                     </AppFormItem>
                     <AppFormItem
                         label="Ngôn ngữ quốc gia"
@@ -91,7 +116,14 @@ export default function OtherMetadataForm({}: Props) {
                             },
                         ]}
                     >
-                        <Select showSearch options={languageList} />
+                        <Select
+                            showSearch
+                            options={languageList}
+                            allowClear
+                            placeholder={messages(
+                                'tracks.placeholder.selectLanguage'
+                            )}
+                        />
                     </AppFormItem>
                     <AppFormItem
                         label="Ngôn ngữ metadata"
@@ -104,7 +136,14 @@ export default function OtherMetadataForm({}: Props) {
                             },
                         ]}
                     >
-                        <Select showSearch options={languageList} />
+                        <Select
+                            showSearch
+                            options={languageList}
+                            allowClear
+                            placeholder={messages(
+                                'tracks.placeholder.selectLanguage'
+                            )}
+                        />
                     </AppFormItem>
                 </div>
             </AppForm>

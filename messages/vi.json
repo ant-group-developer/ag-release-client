@@ -676,14 +676,35 @@
         "releaseDate": "Ngày phát hành",
         "duration": "Thời lượng",
         "trackCount": "Số bài hát",
-        "publisher": "Hãng phát hành"
+        "publisher": "Hãng phát hành",
+        "placeholder": {
+            "selectArtist": "Chọn nghệ sĩ",
+            "selectSubArtist": "Chọn nghệ sĩ phụ",
+            "selectGenres": "Chọn thể loại",
+            "selectSubGenres": "Chọn thể loại phụ",
+            "selectLanguage": "Chọn ngôn ngữ",
+            "selectLabel": "Chọn hãng phát hành",
+            "selectPublishType": "Chọn loại xuất bản",
+            "selectRole": "Chọn vai trò",
+            "selectMusician": "Chọn nhạc sĩ",
+            "selectLanguageMetadata": "Chọn ngôn ngữ metadata"
+        }
     },
     "tracks": {
         "label": "Bài hát",
         "create": "Tạo bài hát",
         "lastedTrack": "Bài hát gần đây",
         "name": "Tên bài hát",
-        "id": "Mã bài hát"
+        "id": "Mã bài hát",
+        "placeholder": {
+            "selectArtist": "Chọn nghệ sĩ",
+            "selectSubArtist": "Chọn nghệ sĩ phụ",
+            "selectGenres": "Chọn thể loại",
+            "selectSubGenres": "Chọn thể loại phụ",
+            "selectLanguage": "Chọn ngôn ngữ",
+            "selectLabel": "Chọn hãng phát hành",
+            "selectSensitiveContent": "Lựa chọn nội dung"
+        }
     },
     "genres": {
         "pop": "Pop",

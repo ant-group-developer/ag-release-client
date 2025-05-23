@@ -19,7 +19,7 @@ export default function RightSidebar() {
     return (
         <div
             className={cn(
-                'fixed right-0 top-16 z-20 h-screen border-l bg-white transition-all duration-300',
+                'fixed right-0 top-16 z-20 h-screen border-x bg-white transition-all duration-300',
                 isActive ? 'w-[250px]' : 'w-[50px]'
             )}
         >

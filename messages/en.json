@@ -672,14 +672,35 @@
         "releaseDate": "Release date",
         "duration": "Duration",
         "trackCount": "Track count",
-        "publisher": "Publisher release"
+        "publisher": "Publisher release",
+        "placeholder": {
+            "selectArtist": "Select artist",
+            "selectSubArtist": "Select sub artist",
+            "selectGenres": "Select genres",
+            "selectSubGenres": "Select sub genres",
+            "selectLanguage": "Select language",
+            "selectLabel": "Select label",
+            "selectPublishType": "Select publish type",
+            "selectRole": "Select role",
+            "selectMusician": "Select musician",
+            "selectLanguageMetadata": "Select language metadata"
+        }
     },
     "tracks": {
         "label": "Track",
         "create": "Create track",
         "lastedTrack": "Lasted track",
         "name": "Track name",
-        "id": "Track ID"
+        "id": "Track ID",
+        "placeholder": {
+            "selectArtist": "Select artist",
+            "selectSubArtist": "Select sub artist",
+            "selectGenres": "Select genres",
+            "selectSubGenres": "Select sub genres",
+            "selectLanguage": "Select language",
+            "selectLabel": "Select label",
+            "selectSensitiveContent": "Select content"
+        }
     },
     "genres": {
         "pop": "Pop",

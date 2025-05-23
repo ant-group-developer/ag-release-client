@@ -1,9 +1,10 @@
 'use client';
 import { cn } from '@/helpers/common';
+import useModalStore from '@/hooks/use-modal';
 import { Link, useRouter } from '@/i18n/routing';
 import ReleaseDetailHeader from '@/modules/release-detail/header';
 import RightSidebar from '@/modules/release-detail/right-sidebar';
-import { RELEASES_TABS } from '@/modules/releases/enums';
+import { RELEASES_TABS, TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { Button, Tabs, TabsProps } from 'antd';
 import { useForm } from 'antd/es/form/Form';
@@ -21,6 +22,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const isDisableTab = releaseId == '';
     const setForm = useReleaseFormStore((state) => state.setForm);
     const pathname = usePathname();
+    const openModal = useModalStore((state) => state.openModal);
     const [activeTab, setActiveTab] = useState<string>(
         RELEASES_TABS.CORE_DETAIL
     );
@@ -79,6 +81,18 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             disabled: isDisableTab,
         },
         {
+            key: RELEASES_TABS.SCHEDULE,
+            label: (
+                <Link
+                    className={cn(isDisableTab ? 'pointer-events-none' : '')}
+                    href={`/releases/detail/${releaseId}/schedule`}
+                >
+                    <span className="font-medium">Lên lịch</span>
+                </Link>
+            ),
+            disabled: isDisableTab,
+        },
+        {
             key: RELEASES_TABS.REVIEW,
             label: (
                 <Link
@@ -99,14 +113,27 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const handleSubmit = async () => {
         try {
             const values = await form?.validateFields();
+            // Lưu giá trị form vào store
+            form.setFieldsValue(values);
             router.push(`/releases/detail/341239532/core-detail`);
         } catch (error) {
             console.error('Lỗi khi xác thực form:', error);
         }
     };
 
+    const isTracksPage = pathname.includes('/tracks');
+
     const buttonSave = (
-        <div className="flex justify-end p-4">
+        <div className="flex justify-end gap-2 p-4">
+            {isTracksPage && (
+                <Button
+                    onClick={() => openModal(TYPE_MODAL_RELEASE.ADD_TRACK)}
+                    type="primary"
+                >
+                    Thêm bài hát
+                </Button>
+            )}
+
             <Button type="primary" onClick={handleSubmit}>
                 Lưu thông tin
             </Button>

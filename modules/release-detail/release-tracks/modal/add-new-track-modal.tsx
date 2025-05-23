@@ -39,9 +39,7 @@ export default function AddNewTrackModal({ ...props }: Props) {
             onCancel={closeModal}
             confirmLoading={isActive}
             width={750}
-            maskClosable={false}
-            cancelButtonProps={{ disabled: isActive, onClick: closeModal }}
-            style={{ top: '1rem' }}
+            style={{ top: '10rem' }}
         >
             <AppForm
                 form={form}

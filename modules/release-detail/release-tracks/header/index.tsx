@@ -1,8 +1,5 @@
-import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
+import AppHeader from '@/components/cms/app-header';
 import useModalStore from '@/hooks/use-modal';
-import { TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
-import { Button } from 'antd';
-import AddNewTrackModal from '../modal/add-new-track-modal';
 
 type Props = {
     // dataFilter: TrackDataFilter;
@@ -26,6 +23,7 @@ export default function ListTracksReleaseHeader(
     const typeModal = useModalStore((state) => state.typeModal);
     return (
         <AppHeader className="px-4 py-1">
+            <div></div>
             {/* <AppHeaderGroup>
                 <ListTracksReleaseSuperFilter
                     dataFilter={dataFilter}
@@ -46,17 +44,6 @@ export default function ListTracksReleaseHeader(
                     />
                 </div>
             </AppHeaderGroup> */}
-            <AppHeaderGroup position="end" className="flex-1 px-4">
-                {typeModal === TYPE_MODAL_RELEASE.ADD_TRACK && (
-                    <AddNewTrackModal open />
-                )}
-                <Button
-                    onClick={() => openModal(TYPE_MODAL_RELEASE.ADD_TRACK)}
-                    type="primary"
-                >
-                    Thêm bài hát
-                </Button>
-            </AppHeaderGroup>
         </AppHeader>
     );
 }

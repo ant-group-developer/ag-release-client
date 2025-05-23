@@ -9,8 +9,8 @@ export default function CoreDetail() {
     const router = useRouter();
     const params = useParams();
     const releaseId = params['release-id'];
-    const fakeIdRelease = releaseId;
     const form = useReleaseFormStore((state) => state.form);
+    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
 
     // fake data
     if (releaseId) {
@@ -44,6 +44,7 @@ export default function CoreDetail() {
         };
 
         form?.setFieldsValue(initialData);
+        setFormValues(initialData);
     }
 
     return <div>{form && <ReleaseDetailForm form={form} />}</div>;

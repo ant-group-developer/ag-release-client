@@ -1,9 +1,11 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
+import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { FormInstance } from 'antd';
 import { useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
+import { useEffect } from 'react';
 
 type Props = {
     form: FormInstance;
@@ -11,12 +13,25 @@ type Props = {
 
 export default function ReleaseDetailHeader({ form }: Props) {
     const messages = useTranslations();
-    const nameRelease = useWatch('nameRelease', form);
-    const artist = useWatch('artist', form);
-    const genres = useWatch('genres', form);
-    const language = useWatch('language', form);
-    const label = useWatch('label', form);
-    const releaseDate = useWatch('releaseDate', form);
+    const storeForm = useReleaseFormStore((state) => state.form);
+    // console.log(
+    //     '🚀 ~ ReleaseDetailHeader ~ storeForm:',
+    //     storeForm?.getFieldsValue()
+    // );
+    const formValues = useReleaseFormStore((state) => state.formValues);
+    // console.log('🚀 ~ ReleaseDetailHeader ~ formValues:', formValues);
+    const actualForm = form || storeForm;
+    const nameRelease = useWatch('nameRelease', actualForm);
+    const artist = useWatch('artist', actualForm);
+    const genres = useWatch('genres', actualForm);
+    const language = useWatch('language', actualForm);
+    const label = useWatch('label', actualForm);
+    const releaseDate = useWatch('releaseDate', actualForm);
+
+    // Sử dụng formValues từ store
+    useEffect(() => {
+        storeForm?.setFieldsValue(formValues);
+    }, [actualForm, formValues]);
 
     return (
         <div>
@@ -35,7 +50,8 @@ export default function ReleaseDetailHeader({ form }: Props) {
                                 ]}
                             >
                                 <ImageListUpload
-                                    className="release-detail-header-upload h-40 w-40"
+                                    // className="release-detail-header-upload size-20 !border-0 !p-0"
+                                    className="release-detail-header-upload size-28 !rounded-lg !border-0 !p-0"
                                     accept="image/*"
                                     maxCount={1}
                                     placeholder="Kéo và thả ảnh vào đây!"
@@ -43,7 +59,7 @@ export default function ReleaseDetailHeader({ form }: Props) {
                             </AppFormItem>
                         </div>
                         <div className="lg:w-1/2">
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-2 gap-2">
                                 <div className="text-sm">
                                     <span>Tên phát hành: </span>
                                     <span className="font-bold">
