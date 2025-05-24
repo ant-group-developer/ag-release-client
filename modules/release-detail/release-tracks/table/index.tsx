@@ -191,7 +191,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             onDragEnd={handleDragEnd}
             expandable={{
                 expandedRowRender,
-                expandedRowClassName: () => '!z-0',
+                expandedRowClassName: () => '!z-0 custom-track-expanded',
             }}
             scroll={{ y: 49 * 11.8 }}
         />

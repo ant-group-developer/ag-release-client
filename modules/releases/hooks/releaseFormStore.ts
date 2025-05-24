@@ -1,16 +1,20 @@
-import { FormInstance } from 'antd';
 import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 interface ReleaseFormState {
-    form: FormInstance | null;
-    formValues: any; // Thêm trường này để lưu giá trị form
-    setForm: (form: FormInstance) => void;
-    setFormValues: (values: any) => void; // Thêm action này
+    formValues: Record<string, any>;
+    setFormValues: (values: Record<string, any>) => void;
 }
 
-export const useReleaseFormStore = create<ReleaseFormState>((set) => ({
-    form: null,
-    formValues: {},
-    setForm: (form) => set({ form }),
-    setFormValues: (values) => set({ formValues: values }),
-}));
+export const useReleaseFormStore = create<ReleaseFormState>()(
+    persist(
+        (set) => ({
+            formValues: {},
+            setFormValues: (values) => set({ formValues: values }),
+        }),
+        {
+            name: 'release-form-storage',
+            storage: createJSONStorage(() => sessionStorage),
+        }
+    )
+);

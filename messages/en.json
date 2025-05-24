@@ -462,7 +462,8 @@
         "searchPlaceholder": "Search"
     },
     "placeholder": {
-        "dragAndDropAudio": "Drag and drop audio file here!"
+        "dragAndDropAudio": "Drag and drop audio file here!",
+        "selectArtist": "Select artist"
     },
     "status": {
         "label": "Status",
@@ -673,6 +674,8 @@
         "duration": "Duration",
         "trackCount": "Track count",
         "publisher": "Publisher release",
+        "createArtist": "Create artist",
+        "labelName": "Label name",
         "placeholder": {
             "selectArtist": "Select artist",
             "selectSubArtist": "Select sub artist",
@@ -714,5 +717,11 @@
         "rap": "Rap",
         "classical": "Classical",
         "blues": "Blues"
+    },
+    "artist": {
+        "label": "Artist",
+        "create": "Create artist",
+        "name": "Artist name",
+        "id": "Artist ID"
     }
 }

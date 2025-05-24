@@ -467,7 +467,8 @@
         "searchPlaceholder": "Tìm kiếm"
     },
     "placeholder": {
-        "dragAndDropAudio": "Kéo thả tệp âm thanh vào đây!"
+        "dragAndDropAudio": "Kéo thả tệp âm thanh vào đây!",
+        "selectArtist": "Chọn nghệ sĩ"
     },
     "status": {
         "label": "Trạng thái",
@@ -677,6 +678,10 @@
         "duration": "Thời lượng",
         "trackCount": "Số bài hát",
         "publisher": "Hãng phát hành",
+        "createArtist": "Tạo nghệ sĩ",
+        "createLabel": "Tạo hãng phát hành",
+        "labelName": "Tên label",
+
         "placeholder": {
             "selectArtist": "Chọn nghệ sĩ",
             "selectSubArtist": "Chọn nghệ sĩ phụ",
@@ -718,5 +723,11 @@
         "rap": "Rap",
         "classical": "Cổ điển",
         "blues": "Blues"
+    },
+    "artist": {
+        "label": "Nghệ sĩ",
+        "create": "Tạo nghệ sĩ",
+        "name": "Tên nghệ sĩ",
+        "id": "Mã nghệ sĩ"
     }
 }

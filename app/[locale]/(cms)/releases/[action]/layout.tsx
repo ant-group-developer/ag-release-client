@@ -7,29 +7,24 @@ import RightSidebar from '@/modules/release-detail/right-sidebar';
 import { RELEASES_TABS, TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { Button, Tabs, TabsProps } from 'antd';
-import { useForm } from 'antd/es/form/Form';
 import { useParams, usePathname } from 'next/navigation';
 import { PropsWithChildren, useEffect, useState } from 'react';
 
 type Props = {};
 
 export default function ReleaseDetail({ children }: PropsWithChildren) {
-    const [form] = useForm();
     const router = useRouter();
     const params = useParams();
     const releaseId = params['release-id'] ? `/${params['release-id']}` : '';
     const isCreate = params['action'] === 'create';
     const isDisableTab = releaseId == '';
-    const setForm = useReleaseFormStore((state) => state.setForm);
+    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
+    const formValues = useReleaseFormStore((state) => state.formValues);
     const pathname = usePathname();
     const openModal = useModalStore((state) => state.openModal);
     const [activeTab, setActiveTab] = useState<string>(
         RELEASES_TABS.CORE_DETAIL
     );
-
-    useEffect(() => {
-        setForm(form);
-    }, [form, setForm]);
 
     useEffect(() => {
         // Cập nhật tab active khi đường dẫn thay đổi
@@ -87,7 +82,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     className={cn(isDisableTab ? 'pointer-events-none' : '')}
                     href={`/releases/detail/${releaseId}/schedule`}
                 >
-                    <span className="font-medium">Lên lịch</span>
+                    <span className="font-medium">Lên lịch & phân phối</span>
                 </Link>
             ),
             disabled: isDisableTab,
@@ -112,9 +107,6 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
 
     const handleSubmit = async () => {
         try {
-            const values = await form?.validateFields();
-            // Lưu giá trị form vào store
-            form.setFieldsValue(values);
             router.push(`/releases/detail/341239532/core-detail`);
         } catch (error) {
             console.error('Lỗi khi xác thực form:', error);
@@ -141,9 +133,9 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     );
 
     return (
-        <div className="pr-[50px]">
+        <div className="pr-[250px]">
             <div className="sticky top-0 z-10 bg-white">
-                <ReleaseDetailHeader form={form} />
+                <ReleaseDetailHeader />
                 <div className="px-4">
                     <Tabs
                         className="tab-release-detail"

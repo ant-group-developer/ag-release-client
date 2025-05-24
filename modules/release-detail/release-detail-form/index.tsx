@@ -1,25 +1,49 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
+import ArtistSelect from '@/components/ui/select/artist-select';
+import LabelSelect from '@/components/ui/select/label-select';
 import {
     artistList,
     genresList,
-    labelList,
     languageList,
     yearList,
 } from '@/constants/fakeData';
-import { FormInstance, Input, Radio, Select } from 'antd';
+import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { Input, Radio, Select } from 'antd';
+import { useForm } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
+import { useEffect } from 'react';
 
-type Props = {
-    form: FormInstance;
-};
-
-export default function ReleaseDetailForm({ form }: Props) {
+export default function ReleaseDetailForm() {
+    const [form] = useForm();
     const messages = useTranslations();
+    const formValues = useReleaseFormStore((state) => state.formValues);
+    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
+
+    useEffect(() => {
+        // Nếu formValues rỗng, reset form
+        if (Object.keys(formValues).length === 0) {
+            form.resetFields();
+        } else {
+            // Nếu có formValues, set vào form
+            form.setFieldsValue(formValues);
+        }
+    }, [form, formValues]);
+
+    // Hàm xử lý khi form thay đổi
+    const handleValuesChange = (_: any, allValues: any) => {
+        // Cập nhật giá trị mới vào zustand
+        setFormValues(allValues);
+    };
 
     return (
-        <div className="px-40 py-4">
-            <AppForm form={form} layout="vertical" showSubmit={false}>
+        <div className="p-4">
+            <AppForm
+                form={form}
+                layout="vertical"
+                showSubmit={false}
+                onValuesChange={handleValuesChange}
+            >
                 <div className="flex flex-col gap-4">
                     <div>
                         <AppFormItem
@@ -55,17 +79,7 @@ export default function ReleaseDetailForm({ form }: Props) {
                         >
                             <Input allowClear />
                         </AppFormItem>
-                        <AppFormItem
-                            label="Tên hiển thị"
-                            name="nameDisplay"
-                            required
-                            rules={[
-                                {
-                                    required: true,
-                                    message: messages('validation.input'),
-                                },
-                            ]}
-                        >
+                        <AppFormItem label="Phiên bản" name="version">
                             <Input allowClear />
                         </AppFormItem>
 
@@ -80,8 +94,8 @@ export default function ReleaseDetailForm({ form }: Props) {
                                 },
                             ]}
                         >
-                            <Select
-                                options={artistList}
+                            <ArtistSelect
+                                // options={artistList}
                                 showSearch
                                 allowClear
                             />
@@ -128,7 +142,7 @@ export default function ReleaseDetailForm({ form }: Props) {
                         </AppFormItem>
 
                         <AppFormItem label="Label" name="label">
-                            <Select options={labelList} />
+                            <LabelSelect />
                         </AppFormItem>
 
                         <AppFormItem label="UPC/EAN/JAN" name="upc">

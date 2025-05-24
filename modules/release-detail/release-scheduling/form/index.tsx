@@ -109,17 +109,14 @@ export default function ReleaseSchedulingForm({}: Props) {
         form.resetFields();
     };
     return (
-        <div className="rounded-lg bg-white p-6">
-            <h2 className="mb-4 text-lg font-medium">
-                Thêm lịch phát hành mới
-            </h2>
+        <div className="rounded-lg bg-white p-4">
             <AppForm
                 form={form}
                 layout="vertical"
                 onFinish={handleSubmit}
                 showSubmit={false}
             >
-                <div className="flex flex-col gap-8">
+                <div className="flex flex-col gap-4">
                     <div className="grid grid-cols-3 gap-8">
                         <AppFormItem
                             label="Ngày phát hành sản phẩm"

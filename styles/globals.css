@@ -164,6 +164,10 @@ a {
     @apply !mb-0;
 }
 
+.custom-track-expanded .ant-table-cell {
+    @apply !bg-white;
+}
+
 /* .release-review-collapse .ant-collapse-item {
     margin-bottom: 4px !important;
 } */
