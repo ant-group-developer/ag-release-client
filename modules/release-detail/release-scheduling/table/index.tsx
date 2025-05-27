@@ -102,28 +102,28 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
             title: 'PD',
             dataIndex: 'pd',
             key: 'pd',
-            width: 80,
+            width: 40,
             align: 'center',
         },
         {
             title: 'ETU',
             dataIndex: 'etu',
             key: 'etu',
-            width: 80,
+            width: 40,
             align: 'center',
         },
         {
             title: 'Ad SS',
             dataIndex: 'adSs',
             key: 'adSs',
-            width: 80,
+            width: 40,
             align: 'center',
         },
         {
             title: 'UGC',
             dataIndex: 'ugc',
             key: 'ugc',
-            width: 80,
+            width: 100,
             align: 'left',
             render: (value) => {
                 return (

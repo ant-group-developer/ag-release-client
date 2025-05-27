@@ -101,26 +101,32 @@ export const territoryList = [
 
 export const platformList = [
     {
+        id: 1,
         label: 'Spotify',
         value: 'Spotify',
     },
     {
+        id: 2,
         label: 'Apple Music',
         value: 'AppleMusic',
     },
     {
+        id: 3,
         label: 'YouTube Music',
         value: 'YouTubeMusic',
     },
     {
+        id: 4,
         label: 'Amazon Music',
         value: 'AmazonMusic',
     },
     {
+        id: 5,
         label: 'Deezer',
         value: 'Deezer',
     },
     {
+        id: 6,
         label: 'Tidal',
         value: 'Tidal',
     },

@@ -1,7 +1,8 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
-import { platformList, territoryList } from '@/constants/fakeData';
-import { DatePicker, Form, Radio, Select } from 'antd';
+import PlatformSelect from '@/components/ui/select/platform-select';
+import RegionSelect from '@/components/ui/select/region-select';
+import { DatePicker, Form } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
@@ -90,12 +91,6 @@ export default function ReleaseSchedulingForm({}: Props) {
         }
     }, [territoryType, form]);
 
-    useEffect(() => {
-        if (platformType === 'ALL') {
-            form.setFieldValue('platform', undefined);
-        }
-    }, [platformType, form]);
-
     const handleSubmit = (values: any) => {
         const newSchedule = {
             key: String(releaseSchedulingData.length + 1),
@@ -170,19 +165,10 @@ export default function ReleaseSchedulingForm({}: Props) {
                                     },
                                 ]}
                             >
-                                <Radio.Group className="w-full">
-                                    <Radio value="Worldwide">Worldwide</Radio>
-                                    <Radio value="OnlyIn">Only In</Radio>
-                                    <Radio value="WorldExcluding">
-                                        World Excluding
-                                    </Radio>
-                                    <Radio value="ExistingGroups">
-                                        Existing Distribution Groups
-                                    </Radio>
-                                </Radio.Group>
+                                <RegionSelect multiple allowClear />
                             </AppFormItem>
 
-                            {territoryType && territoryType !== 'Worldwide' && (
+                            {/* {territoryType && territoryType !== 'Worldwide' && (
                                 <AppFormItem
                                     label="Khu vực cụ thể"
                                     name="territory"
@@ -202,7 +188,7 @@ export default function ReleaseSchedulingForm({}: Props) {
                                         placeholder="Chọn khu vực"
                                     />
                                 </AppFormItem>
-                            )}
+                            )} */}
                         </div>
 
                         <div className="flex flex-col gap-4">
@@ -218,36 +204,13 @@ export default function ReleaseSchedulingForm({}: Props) {
                                     },
                                 ]}
                             >
-                                <Radio.Group className="w-full">
-                                    <Radio value="ALL">All platforms</Radio>
-                                    <Radio value="OnlyTo">Only to</Radio>
-                                    <Radio value="AllExcluding">
-                                        All platforms excluding
-                                    </Radio>
-                                </Radio.Group>
+                                <PlatformSelect
+                                    className="w-full"
+                                    placeholder="Chọn nền tảng"
+                                    mode="multiple"
+                                    allowClear
+                                />
                             </AppFormItem>
-
-                            {platformType && platformType !== 'ALL' && (
-                                <AppFormItem
-                                    label="Nền tảng cụ thể"
-                                    name="platform"
-                                    className="col-span-2"
-                                    required
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message:
-                                                messages('validation.select'),
-                                        },
-                                    ]}
-                                >
-                                    <Select
-                                        mode="multiple"
-                                        options={platformList}
-                                        placeholder="Chọn nền tảng"
-                                    />
-                                </AppFormItem>
-                            )}
                         </div>
                     </div>
 

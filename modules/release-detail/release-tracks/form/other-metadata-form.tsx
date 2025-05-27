@@ -46,9 +46,9 @@ export default function OtherMetadataForm({}: Props) {
                             options={genresList}
                             showSearch
                             allowClear
-                            placeholder={messages(
-                                'tracks.placeholder.selectGenres'
-                            )}
+                            // placeholder={messages(
+                            //     'tracks.placeholder.selectGenres'
+                            // )}
                         />
                     </AppFormItem>
 
@@ -57,9 +57,9 @@ export default function OtherMetadataForm({}: Props) {
                             options={genresList}
                             showSearch
                             allowClear
-                            placeholder={messages(
-                                'tracks.placeholder.selectSubGenres'
-                            )}
+                            // placeholder={messages(
+                            //     'tracks.placeholder.selectSubGenres'
+                            // )}
                         />
                     </AppFormItem>
                     <AppFormItem
@@ -80,9 +80,9 @@ export default function OtherMetadataForm({}: Props) {
                                 { label: 'Không', value: 'false' },
                             ]}
                             allowClear
-                            placeholder={messages(
-                                'tracks.placeholder.selectSensitiveContent'
-                            )}
+                            // placeholder={messages(
+                            //     'tracks.placeholder.selectSensitiveContent'
+                            // )}
                         />
                     </AppFormItem>
                     <AppFormItem
@@ -100,9 +100,9 @@ export default function OtherMetadataForm({}: Props) {
                             showSearch
                             options={languageList}
                             allowClear
-                            placeholder={messages(
-                                'tracks.placeholder.selectLanguage'
-                            )}
+                            // placeholder={messages(
+                            //     'tracks.placeholder.selectLanguage'
+                            // )}
                         />
                     </AppFormItem>
                     <AppFormItem
@@ -120,9 +120,9 @@ export default function OtherMetadataForm({}: Props) {
                             showSearch
                             options={languageList}
                             allowClear
-                            placeholder={messages(
-                                'tracks.placeholder.selectLanguage'
-                            )}
+                            // placeholder={messages(
+                            //     'tracks.placeholder.selectLanguage'
+                            // )}
                         />
                     </AppFormItem>
                     <AppFormItem
@@ -140,9 +140,9 @@ export default function OtherMetadataForm({}: Props) {
                             showSearch
                             options={languageList}
                             allowClear
-                            placeholder={messages(
-                                'tracks.placeholder.selectLanguage'
-                            )}
+                            // placeholder={messages(
+                            //     'tracks.placeholder.selectLanguage'
+                            // )}
                         />
                     </AppFormItem>
                 </div>

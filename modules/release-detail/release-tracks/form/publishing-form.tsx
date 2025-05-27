@@ -45,9 +45,9 @@ export default function PublishingForm({}: Props) {
                                 },
                             ]}
                             allowClear
-                            placeholder={messages(
-                                'releases.placeholder.selectPublishType'
-                            )}
+                            // placeholder={messages(
+                            //     'releases.placeholder.selectPublishType'
+                            // )}
                         />
                     </AppFormItem>
 
@@ -76,9 +76,9 @@ export default function PublishingForm({}: Props) {
                                     },
                                 ]}
                                 allowClear
-                                placeholder={messages(
-                                    'releases.placeholder.selectLabel'
-                                )}
+                                // placeholder={messages(
+                                //     'releases.placeholder.selectLabel'
+                                // )}
                             />
                         </AppFormItem>
                     )}
@@ -111,9 +111,9 @@ export default function PublishingForm({}: Props) {
                                 },
                             ]}
                             allowClear
-                            placeholder={messages(
-                                'releases.placeholder.selectRole'
-                            )}
+                            // placeholder={messages(
+                            //     'releases.placeholder.selectRole'
+                            // )}
                         />
                     </AppFormItem>
                     <AppFormItem
@@ -140,9 +140,9 @@ export default function PublishingForm({}: Props) {
                                 },
                             ]}
                             allowClear
-                            placeholder={messages(
-                                'releases.placeholder.selectMusician'
-                            )}
+                            // placeholder={messages(
+                            //     'releases.placeholder.selectMusician'
+                            // )}
                         />
                     </AppFormItem>
                     <AppFormItem
@@ -155,7 +155,10 @@ export default function PublishingForm({}: Props) {
                             },
                         ]}
                     >
-                        <Input allowClear placeholder="Nhập tỷ lệ cổ phần" />
+                        <Input
+                            allowClear
+                            //  placeholder="Nhập tỷ lệ cổ phần"
+                        />
                     </AppFormItem>
                 </div>
             </AppForm>

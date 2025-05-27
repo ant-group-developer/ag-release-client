@@ -61,7 +61,7 @@ export default function TracksForm({ trackData }: Props) {
                     </AppFormItem>
 
                     <AppFormItem label="ISRC" name="isrc">
-                        <Input allowClear placeholder="Nhập ISRC nếu có" />
+                        <Input allowClear />
                     </AppFormItem>
                     {/* <AppFormItem
                         label="Tên hiển thị"
@@ -92,7 +92,6 @@ export default function TracksForm({ trackData }: Props) {
                             options={artistList}
                             showSearch
                             allowClear
-                            placeholder="Chọn nghệ sĩ"
                         />
                     </AppFormItem>
                     <AppFormItem label="Chọn nghệ sĩ phụ" name="subArtist">
@@ -101,7 +100,6 @@ export default function TracksForm({ trackData }: Props) {
                             options={artistList}
                             showSearch
                             allowClear
-                            placeholder="Chọn nghệ sĩ phụ"
                         />
                     </AppFormItem>
 
@@ -118,7 +116,6 @@ export default function TracksForm({ trackData }: Props) {
                     >
                         <Select
                             className="w-full"
-                            placeholder="Chọn nguồn gốc"
                             options={originalSourceList}
                             allowClear
                         />
@@ -137,7 +134,6 @@ export default function TracksForm({ trackData }: Props) {
                     >
                         <Select
                             className="w-full"
-                            placeholder="Chọn ngôn ngữ"
                             options={languageList}
                             allowClear
                             showSearch

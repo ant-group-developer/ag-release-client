@@ -37,6 +37,11 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "platforms": "Nền tảng",
+        "copyRight": "Bản quyền",
+        "language": "Ngôn ngữ",
+        "subGenres": "Thể loại phụ",
+        "subArtist": "Nghệ sĩ phụ",
         "releaseDate": "Ngày phát hành",
         "duration": "Thời lượng",
         "draft": "Bản nháp",
@@ -468,7 +473,8 @@
     },
     "placeholder": {
         "dragAndDropAudio": "Kéo thả tệp âm thanh vào đây!",
-        "selectArtist": "Chọn nghệ sĩ"
+        "selectArtist": "Chọn nghệ sĩ",
+        "selectRegion": "Chọn khu vực"
     },
     "status": {
         "label": "Trạng thái",
@@ -681,6 +687,12 @@
         "createArtist": "Tạo nghệ sĩ",
         "createLabel": "Tạo hãng phát hành",
         "labelName": "Tên label",
+        "version": "Phiên bản",
+
+        "select": {
+            "artist": "Chọn nghệ sĩ",
+            "subArtist": "Chọn nghệ sĩ phụ"
+        },
 
         "placeholder": {
             "selectArtist": "Chọn nghệ sĩ",

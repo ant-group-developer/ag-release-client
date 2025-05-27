@@ -193,7 +193,7 @@ export default function Schedule() {
     ];
 
     return (
-        <div className="p-4">
+        <div>
             <ReleaseSchedulingForm />
             <ReleaseSchedulingTable dataSource={releaseSchedulingData} />
         </div>

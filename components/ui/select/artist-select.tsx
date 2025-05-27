@@ -33,7 +33,7 @@ export default function ArtistSelect({ ...props }: Props) {
                 return (
                     <div>
                         {menu}
-                        <div className="flex justify-end pt-2">
+                        <div className="flex justify-end py-2">
                             <Button
                                 type="primary"
                                 onClick={() =>

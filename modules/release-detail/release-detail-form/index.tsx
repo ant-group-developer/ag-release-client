@@ -2,12 +2,8 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ArtistSelect from '@/components/ui/select/artist-select';
 import LabelSelect from '@/components/ui/select/label-select';
-import {
-    artistList,
-    genresList,
-    languageList,
-    yearList,
-} from '@/constants/fakeData';
+import { genresList, languageList, yearList } from '@/constants/fakeData';
+import { RELEASES_TYPE } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { Input, Radio, Select } from 'antd';
 import { useForm } from 'antd/es/form/Form';
@@ -58,16 +54,20 @@ export default function ReleaseDetailForm() {
                             ]}
                         >
                             <Radio.Group>
-                                <Radio value="album">Album</Radio>
-                                <Radio value="single">Single</Radio>
-                                <Radio value="ep">EP</Radio>
+                                {Object.values(RELEASES_TYPE).map((type) => {
+                                    return (
+                                        <Radio key={type} value={type}>
+                                            {type}
+                                        </Radio>
+                                    );
+                                })}
                             </Radio.Group>
                         </AppFormItem>
                     </div>
 
                     <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                         <AppFormItem
-                            label="Tên phát hành"
+                            label={messages('releases.name')}
                             name="nameRelease"
                             required
                             rules={[
@@ -79,12 +79,15 @@ export default function ReleaseDetailForm() {
                         >
                             <Input allowClear />
                         </AppFormItem>
-                        <AppFormItem label="Phiên bản" name="version">
+                        <AppFormItem
+                            label={messages('releases.version')}
+                            name="version"
+                        >
                             <Input allowClear />
                         </AppFormItem>
 
                         <AppFormItem
-                            label="Chọn nghệ sĩ chính"
+                            label={messages('common.artist')}
                             name="artist"
                             required
                             rules={[
@@ -100,17 +103,20 @@ export default function ReleaseDetailForm() {
                                 allowClear
                             />
                         </AppFormItem>
-                        <AppFormItem label="Chọn nghệ sĩ phụ" name="subArtist">
-                            <Select
-                                mode="multiple"
-                                options={artistList}
+                        <AppFormItem
+                            label={messages('common.subArtist')}
+                            name="subArtist"
+                        >
+                            <ArtistSelect
+                                // options={artistList}
                                 showSearch
                                 allowClear
+                                mode="multiple"
                             />
                         </AppFormItem>
 
                         <AppFormItem
-                            label="Thể loại"
+                            label={messages('common.genres')}
                             name="genres"
                             required
                             rules={[
@@ -123,12 +129,15 @@ export default function ReleaseDetailForm() {
                             <Select options={genresList} />
                         </AppFormItem>
 
-                        <AppFormItem label="Thể loại phụ" name="subGenres">
+                        <AppFormItem
+                            label={messages('common.subGenres')}
+                            name="subGenres"
+                        >
                             <Select options={genresList} />
                         </AppFormItem>
 
                         <AppFormItem
-                            label="Ngôn ngữ metadata"
+                            label={messages('common.language') + ' metadata'}
                             name="language"
                             required
                             rules={[
@@ -149,14 +158,15 @@ export default function ReleaseDetailForm() {
                             <Input allowClear />
                         </AppFormItem>
 
-                        <AppFormItem label="ID danh mục" name="catalogId">
+                        <AppFormItem label="ID category" name="catalogId">
                             <Input allowClear />
                         </AppFormItem>
 
                         <AppFormItem
-                            label="Bản quyền"
+                            label="C Line year"
                             name="copyRight"
                             required
+                            tooltipInfo="The year of first publication of this release anywhere in the world."
                             rules={[
                                 {
                                     required: true,
@@ -175,8 +185,9 @@ export default function ReleaseDetailForm() {
                         </AppFormItem>
 
                         <AppFormItem
-                            label="Bản quyền"
+                            label="P Line year"
                             name="copyRight2"
+                            tooltipInfo="The year the sound recording was first released anywhere in the world."
                             required
                             rules={[
                                 {

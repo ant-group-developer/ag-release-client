@@ -37,6 +37,11 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "platforms": "Platforms",
+        "copyRight": "CopyRight",
+        "language": "Language",
+        "subGenres": "Sub genres",
+        "subArtist": "Sub artist",
         "releaseDate": "Release date",
         "duration": "Duration",
         "draft": "Draft",
@@ -463,7 +468,8 @@
     },
     "placeholder": {
         "dragAndDropAudio": "Drag and drop audio file here!",
-        "selectArtist": "Select artist"
+        "selectArtist": "Select artist",
+        "selectRegion": "Select region"
     },
     "status": {
         "label": "Status",
@@ -676,6 +682,13 @@
         "publisher": "Publisher release",
         "createArtist": "Create artist",
         "labelName": "Label name",
+        "version": "Version",
+
+        "select": {
+            "artist": "Select artist",
+            "subArtist": "Select sub artist"
+        },
+
         "placeholder": {
             "selectArtist": "Select artist",
             "selectSubArtist": "Select sub artist",
