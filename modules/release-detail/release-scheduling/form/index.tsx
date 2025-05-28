@@ -2,6 +2,8 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import PlatformSelect from '@/components/ui/select/platform-select';
 import RegionSelect from '@/components/ui/select/region-select';
+import TimezoneSelect from '@/components/ui/select/timezone-select';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { DatePicker, Form } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
@@ -151,67 +153,76 @@ export default function ReleaseSchedulingForm({}: Props) {
                         </AppFormItem>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-8">
-                        <div className="flex flex-col gap-4">
-                            <AppFormItem
-                                label="Loại khu vực"
-                                name="territoryType"
-                                required
-                                className="col-span-2"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: messages('validation.select'),
-                                    },
-                                ]}
-                            >
-                                <RegionSelect multiple allowClear />
-                            </AppFormItem>
+                    <div className="grid grid-cols-3 gap-8">
+                        <AppFormItem
+                            label="Loại khu vực"
+                            name="territoryType"
+                            required
+                            rules={[
+                                {
+                                    required: true,
+                                    message: messages('validation.select'),
+                                },
+                            ]}
+                        >
+                            <RegionSelect
+                                multiple
+                                allowClear
+                                maxTagCount="responsive"
+                                maxTagPlaceholder={(value) => (
+                                    <CustomTooltip
+                                        title={value
+                                            .map((item: any) => item.label)
+                                            .join(', ')}
+                                    >
+                                        +{value.length}
+                                    </CustomTooltip>
+                                )}
+                            />
+                        </AppFormItem>
 
-                            {/* {territoryType && territoryType !== 'Worldwide' && (
-                                <AppFormItem
-                                    label="Khu vực cụ thể"
-                                    name="territory"
-                                    className="col-span-2"
-                                    required
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message:
-                                                messages('validation.select'),
-                                        },
-                                    ]}
-                                >
-                                    <Select
-                                        mode="multiple"
-                                        options={territoryList}
-                                        placeholder="Chọn khu vực"
-                                    />
-                                </AppFormItem>
-                            )} */}
-                        </div>
+                        <AppFormItem
+                            label="Loại nền tảng"
+                            name="platformType"
+                            required
+                            rules={[
+                                {
+                                    required: true,
+                                    message: messages('validation.select'),
+                                },
+                            ]}
+                        >
+                            <PlatformSelect
+                                className="w-full"
+                                placeholder="Chọn nền tảng"
+                                mode="multiple"
+                                allowClear
+                                maxTagCount="responsive"
+                                maxTagPlaceholder={(value) => (
+                                    <CustomTooltip
+                                        title={value
+                                            .map((item: any) => item.label)
+                                            .join(', ')}
+                                    >
+                                        +{value.length}
+                                    </CustomTooltip>
+                                )}
+                            />
+                        </AppFormItem>
 
-                        <div className="flex flex-col gap-4">
-                            <AppFormItem
-                                label="Loại nền tảng"
-                                name="platformType"
-                                required
-                                className="col-span-2"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: messages('validation.select'),
-                                    },
-                                ]}
-                            >
-                                <PlatformSelect
-                                    className="w-full"
-                                    placeholder="Chọn nền tảng"
-                                    mode="multiple"
-                                    allowClear
-                                />
-                            </AppFormItem>
-                        </div>
+                        <AppFormItem
+                            label="Timezone"
+                            name="timezone"
+                            required
+                            rules={[
+                                {
+                                    required: true,
+                                    message: messages('validation.select'),
+                                },
+                            ]}
+                        >
+                            <TimezoneSelect className="w-full" />
+                        </AppFormItem>
                     </div>
 
                     {/* <AppFormItem

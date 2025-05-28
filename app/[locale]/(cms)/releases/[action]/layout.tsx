@@ -1,5 +1,6 @@
 'use client';
 import { cn } from '@/helpers/common';
+import { showNotification } from '@/helpers/messages-helper';
 import useModalStore from '@/hooks/use-modal';
 import { Link, useRouter } from '@/i18n/routing';
 import ReleaseDetailHeader from '@/modules/release-detail/header';
@@ -16,7 +17,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const router = useRouter();
     const params = useParams();
     const releaseId = params['release-id'] ? `/${params['release-id']}` : '';
-    const isCreate = params['action'] === 'create';
+    const isCreateReleasePage = params['action'] === 'create';
     const isDisableTab = releaseId == '';
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const formValues = useReleaseFormStore((state) => state.formValues);
@@ -44,7 +45,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         }
     }, [pathname]);
 
-    const coreDetailTabsNavigate = isCreate
+    const coreDetailTabsNavigate = isCreateReleasePage
         ? '/releases/create'
         : `/releases/detail/${releaseId}/core-detail`;
 
@@ -54,7 +55,9 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             label: (
                 <Link
                     className={cn(
-                        !isDisableTab || isCreate ? '' : 'pointer-events-none'
+                        !isDisableTab || isCreateReleasePage
+                            ? ''
+                            : 'pointer-events-none'
                     )}
                     href={coreDetailTabsNavigate}
                 >
@@ -108,6 +111,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const handleSubmit = async () => {
         try {
             router.push(`/releases/detail/341239532/core-detail`);
+            showNotification('success', 'Thông tin đã được lưu thành công');
         } catch (error) {
             console.error('Lỗi khi xác thực form:', error);
         }

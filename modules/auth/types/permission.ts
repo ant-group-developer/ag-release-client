@@ -21,4 +21,10 @@ export interface Permission {
         canUpdate: boolean;
         canDelete: boolean;
     };
+    labels: {
+        canRead: boolean;
+        canCreate: boolean;
+        canUpdate: boolean;
+        canDelete: boolean;
+    };
 }

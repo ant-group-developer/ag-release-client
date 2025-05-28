@@ -57,7 +57,7 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
             title: 'Price Code',
             dataIndex: 'priceCode',
             key: 'priceCode',
-            width: 100,
+            width: 140,
             align: 'left',
             render: (value) => {
                 return (
@@ -151,7 +151,7 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
             rowClassName={'group'}
             columns={columns}
             className="custom-scrollbar"
-            scroll={{ y: 49 * 6 }}
+            scroll={{ y: 49 * 8 }}
         />
     );
 }

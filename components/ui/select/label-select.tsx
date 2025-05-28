@@ -1,5 +1,5 @@
 import useModalStore from '@/hooks/use-modal';
-import { TYPE_MODAL_LABEL } from '@/modules/label/enum';
+import { TYPE_MODAL_LABEL } from '@/modules/labels/enum';
 import { Button, Select, SelectProps } from 'antd';
 import { useTranslations } from 'next-intl';
 

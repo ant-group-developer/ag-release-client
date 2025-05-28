@@ -56,7 +56,11 @@ export default function ReleaseDetailForm() {
                             <Radio.Group>
                                 {Object.values(RELEASES_TYPE).map((type) => {
                                     return (
-                                        <Radio key={type} value={type}>
+                                        <Radio
+                                            key={type}
+                                            value={type}
+                                            className="capitalize"
+                                        >
                                             {type}
                                         </Radio>
                                     );
@@ -166,7 +170,7 @@ export default function ReleaseDetailForm() {
                             label="C Line year"
                             name="copyRight"
                             required
-                            tooltipInfo="The year of first publication of this release anywhere in the world."
+                            tooltipInfo="Năm đầu tiên xuất bản bản phát hành này trên toàn thế giới."
                             rules={[
                                 {
                                     required: true,
@@ -187,7 +191,7 @@ export default function ReleaseDetailForm() {
                         <AppFormItem
                             label="P Line year"
                             name="copyRight2"
-                            tooltipInfo="The year the sound recording was first released anywhere in the world."
+                            tooltipInfo="Năm bản ghi âm đầu tiên được phát hành trên toàn thế giới."
                             required
                             rules={[
                                 {

@@ -2,10 +2,10 @@
 
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
-import CreateArtistModal from '@/modules/artist/components/modal/create-artist';
+import ArtistFormModal from '@/modules/artist/components/modal/create-artist';
 import { TYPE_MODAL_ARTIST } from '@/modules/artist/enum';
-import CreateLabelModal from '@/modules/label/components/modal/create-label';
-import { TYPE_MODAL_LABEL } from '@/modules/label/enum';
+import LabelFormModal from '@/modules/labels/components/modal/create-label';
+import { TYPE_MODAL_LABEL } from '@/modules/labels/enum';
 import ReleaseDetailForm from '@/modules/release-detail/release-detail-form';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { useParams } from 'next/navigation';
@@ -57,8 +57,8 @@ export default function CoreDetail() {
     return (
         <div>
             <ReleaseDetailForm />
-            {typeModal === TYPE_MODAL_ARTIST.CREATE && <CreateArtistModal />}
-            {typeModal === TYPE_MODAL_LABEL.CREATE && <CreateLabelModal />}
+            {typeModal === TYPE_MODAL_ARTIST.CREATE && <ArtistFormModal />}
+            {typeModal === TYPE_MODAL_LABEL.CREATE && <LabelFormModal />}
         </div>
     );
 }

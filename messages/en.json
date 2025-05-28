@@ -708,6 +708,7 @@
         "lastedTrack": "Lasted track",
         "name": "Track name",
         "id": "Track ID",
+        "count": "Track count",
         "placeholder": {
             "selectArtist": "Select artist",
             "selectSubArtist": "Select sub artist",
@@ -735,6 +736,12 @@
         "label": "Artist",
         "create": "Create artist",
         "name": "Artist name",
-        "id": "Artist ID"
+        "id": "Artist ID",
+        "delete": "Delete artist"
+    },
+    "labels": {
+        "create": "Create label",
+        "name": "Label name",
+        "id": "Label ID"
     }
 }

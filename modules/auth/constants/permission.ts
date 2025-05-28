@@ -36,4 +36,16 @@ export const PERMISSION = {
         UPDATE: 'task.tracks.update',
         DELETE: 'task.tracks.delete',
     },
+    LABEL: {
+        READ: 'task.labels.read',
+        CREATE: 'task.labels.create',
+        UPDATE: 'task.labels.update',
+        DELETE: 'task.labels.delete',
+    },
+    ARTIST: {
+        READ: 'task.artists.read',
+        CREATE: 'task.artists.create',
+        UPDATE: 'task.artists.update',
+        DELETE: 'task.artists.delete',
+    },
 };

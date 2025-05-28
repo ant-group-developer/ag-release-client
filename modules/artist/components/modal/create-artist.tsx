@@ -9,7 +9,7 @@ import Image from 'next/image';
 
 type Props = Omit<AppModalProps, 'children'> & {};
 
-export default function CreateArtistModal({ ...props }: Props) {
+export default function ArtistFormModal({ ...props }: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
     const closeModal = useModalStore((state) => state.closeModal);

@@ -1,3 +1,5 @@
 export enum TYPE_MODAL_LABEL {
     CREATE = 'CREATE_LABEL',
+    EDIT = 'EDIT_LABEL',
+    DELETE = 'DELETE_LABEL',
 }

@@ -713,6 +713,7 @@
         "lastedTrack": "Bài hát gần đây",
         "name": "Tên bài hát",
         "id": "Mã bài hát",
+        "count": "Số lượng bài hát",
         "placeholder": {
             "selectArtist": "Chọn nghệ sĩ",
             "selectSubArtist": "Chọn nghệ sĩ phụ",
@@ -740,6 +741,12 @@
         "label": "Nghệ sĩ",
         "create": "Tạo nghệ sĩ",
         "name": "Tên nghệ sĩ",
-        "id": "Mã nghệ sĩ"
+        "id": "Mã nghệ sĩ",
+        "delete": "Xóa nghệ sĩ"
+    },
+    "labels": {
+        "create": "Tạo label",
+        "name": "Tên label",
+        "id": "Mã label"
     }
 }

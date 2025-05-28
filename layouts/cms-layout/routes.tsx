@@ -7,7 +7,9 @@ import {
     LucideProps,
     Music,
     StickyNote,
+    Tag,
     Upload,
+    User,
 } from 'lucide-react';
 import { ForwardRefExoticComponent, RefAttributes } from 'react';
 
@@ -66,6 +68,22 @@ export const adminRoutes: AdminRoutesType[] = [
                 icon: Music,
                 title: 'tracks',
                 permission: PERMISSION.TRACK.READ,
+            },
+            {
+                id: 'labels',
+                label: 'Labels',
+                href: APP_ROUTES.LABELS,
+                icon: Tag,
+                title: 'labels',
+                permission: PERMISSION.LABEL.READ,
+            },
+            {
+                id: 'artists',
+                label: 'Artists',
+                href: APP_ROUTES.ARTISTS,
+                icon: User,
+                title: 'artists',
+                permission: PERMISSION.ARTIST.READ,
             },
         ],
     },
