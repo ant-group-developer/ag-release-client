@@ -3,12 +3,16 @@ import { Tooltip, TooltipProps } from 'antd';
 
 type TOOLTIP_SIZE = 'small' | 'medium';
 
-type Props = TooltipProps & {
+export type CustomTooltipProps = TooltipProps & {
     size?: TOOLTIP_SIZE;
     className?: string;
 };
 
-export default function CustomTooltip({ size, className, ...props }: Props) {
+export default function CustomTooltip({
+    size,
+    className,
+    ...props
+}: CustomTooltipProps) {
     const smallOverlayInnerStyle =
         size == 'small'
             ? {

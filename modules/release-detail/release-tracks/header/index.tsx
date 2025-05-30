@@ -1,31 +1,30 @@
-import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
-import Refresh from '@/components/refresh';
-import { DATE_FORMAT } from '@/enums/common';
-import { formattedDate } from '@/helpers/common';
-import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
-import { useTableLayoutToggle } from '@/hooks/use-layout-table';
-import { TrackDataFilter } from '@/modules/tracks/types';
-import ListTracksReleaseSuperFilter from './tracks-super-filter';
+import AppHeader from '@/components/cms/app-header';
+import useModalStore from '@/hooks/use-modal';
 
 type Props = {
-    dataFilter: TrackDataFilter;
-    onChangeFilter: OnChangeFilter<TrackDataFilter>;
-    canClearFilter: boolean;
-    removeFilter: RemoveFilter;
-    handleRefresh: () => void;
+    // dataFilter: TrackDataFilter;
+    // onChangeFilter: OnChangeFilter<TrackDataFilter>;
+    // canClearFilter: boolean;
+    // removeFilter: RemoveFilter;
+    // handleRefresh: () => void;
 };
 
-export default function ListTracksReleaseHeader({
-    dataFilter,
-    onChangeFilter,
-    canClearFilter,
-    removeFilter,
-    handleRefresh,
-}: Props) {
-    const { layoutTable, toggleLayoutTable } = useTableLayoutToggle();
+export default function ListTracksReleaseHeader(
+    {
+        // dataFilter,
+        // onChangeFilter,
+        // canClearFilter,
+        // removeFilter,
+        // handleRefresh,
+    }: Props
+) {
+    // const { layoutTable, toggleLayoutTable } = useTableLayoutToggle();
+    const openModal = useModalStore((state) => state.openModal);
+    const typeModal = useModalStore((state) => state.typeModal);
     return (
         <AppHeader className="px-4 py-1">
-            <AppHeaderGroup>
+            <div></div>
+            {/* <AppHeaderGroup>
                 <ListTracksReleaseSuperFilter
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
@@ -44,7 +43,7 @@ export default function ListTracksReleaseHeader({
                         )}
                     />
                 </div>
-            </AppHeaderGroup>
+            </AppHeaderGroup> */}
         </AppHeader>
     );
 }

@@ -13,7 +13,6 @@ import clsx, { ClassValue } from 'clsx';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import MediaInfoFactory from 'mediainfo.js';
-import { useTranslations } from 'next-intl';
 import { twMerge } from 'tailwind-merge';
 dayjs.extend(utc);
 /**
@@ -500,8 +499,10 @@ export const genPreset = (preset = presetPalettes) => {
     }));
 };
 
-export const getTitleChipDisplay = (dataFilterType: string | undefined) => {
-    const messages = useTranslations();
+export const getTitleChipDisplay = (
+    dataFilterType: string | undefined,
+    messages: any
+) => {
     if (!dataFilterType) return '';
     const MAX_CHIP_DISPLAY = 2;
     const dataFilterValue = dataFilterType.split(',');

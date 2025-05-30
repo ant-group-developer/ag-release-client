@@ -1,13 +1,16 @@
 import { APP_ROUTES } from '@/enums/routes';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import {
+    Box,
     DiscAlbum,
     House,
     LockKeyhole,
     LucideProps,
     Music,
     StickyNote,
+    Tag,
     Upload,
+    User,
 } from 'lucide-react';
 import { ForwardRefExoticComponent, RefAttributes } from 'react';
 
@@ -66,6 +69,30 @@ export const adminRoutes: AdminRoutesType[] = [
                 icon: Music,
                 title: 'tracks',
                 permission: PERMISSION.TRACK.READ,
+            },
+            {
+                id: 'labels',
+                label: 'Labels',
+                href: APP_ROUTES.LABELS,
+                icon: Tag,
+                title: 'labels',
+                permission: PERMISSION.LABEL.READ,
+            },
+            {
+                id: 'artists',
+                label: 'artist.label',
+                href: APP_ROUTES.ARTISTS,
+                icon: User,
+                title: 'artists',
+                permission: PERMISSION.ARTIST.READ,
+            },
+            {
+                id: 'distribution',
+                label: 'distribution.label',
+                href: APP_ROUTES.DISTRIBUTION,
+                icon: Box,
+                title: 'distribution',
+                permission: PERMISSION.DISTRIBUTION.READ,
             },
         ],
     },

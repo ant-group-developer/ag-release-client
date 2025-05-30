@@ -27,7 +27,7 @@ export default function CardAlbum({ album, ...props }: Props) {
                     <Image
                         onClick={() =>
                             router.push(
-                                `${APP_ROUTES.RELEASES}/detail/core-detail/${album.releaseId}`
+                                `${APP_ROUTES.RELEASES}/detail/${album.releaseId}/core-detail`
                             )
                         }
                         className="cursor-pointer overflow-hidden object-cover duration-300 hover:scale-110"

@@ -41,7 +41,7 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
                     className="flex items-center justify-center"
                     onClick={() =>
                         router.push(
-                            `${APP_ROUTES.RELEASES}/detail/core-detail/${record.releaseId}`
+                            `${APP_ROUTES.RELEASES}/detail/${record.releaseId}/core-detail`
                         )
                     }
                 >

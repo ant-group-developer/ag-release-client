@@ -1,76 +1,45 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
-import { FormInstance, Input, Radio, Select } from 'antd';
+import ArtistSelect from '@/components/ui/select/artist-select';
+import LabelSelect from '@/components/ui/select/label-select';
+import { genresList, languageList, yearList } from '@/constants/fakeData';
+import { RELEASES_TYPE } from '@/modules/releases/enums';
+import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { Input, Radio, Select } from 'antd';
+import { useForm } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
+import { useEffect } from 'react';
 
-type Props = {
-    form: FormInstance;
-};
-
-export default function ReleaseDetailForm({ form }: Props) {
+export default function ReleaseDetailForm() {
+    const [form] = useForm();
     const messages = useTranslations();
-    const artistList = [
-        {
-            label: 'Nghệ sĩ 1',
-            value: 'artist-1',
-        },
-        {
-            label: 'Nghệ sĩ 2',
-            value: 'artist-2',
-        },
-    ];
+    const formValues = useReleaseFormStore((state) => state.formValues);
+    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
 
-    const genresList = [
-        {
-            label: 'Hip-Hop',
-            value: 'genre-1',
-        },
-        {
-            label: 'Rap',
-            value: 'genre-2',
-        },
-    ];
+    useEffect(() => {
+        // Nếu formValues rỗng, reset form
+        if (Object.keys(formValues).length === 0) {
+            form.resetFields();
+        } else {
+            // Nếu có formValues, set vào form
+            form.setFieldsValue(formValues);
+        }
+    }, [form, formValues]);
 
-    const languageList = [
-        {
-            label: 'Tiếng Việt',
-            value: 'vi',
-        },
-        {
-            label: 'Tiếng Anh',
-            value: 'en',
-        },
-    ];
-
-    const labelList = [
-        {
-            label: 'Hãng thu âm 1',
-            value: 'label-1',
-        },
-        {
-            label: 'Hãng thu âm 2',
-            value: 'label-2',
-        },
-    ];
-
-    const yearList = [
-        {
-            label: '2026',
-            value: '2026',
-        },
-        {
-            label: '2025',
-            value: '2020',
-        },
-        {
-            label: '2024',
-            value: '2021',
-        },
-    ];
+    // Hàm xử lý khi form thay đổi
+    const handleValuesChange = (_: any, allValues: any) => {
+        // Cập nhật giá trị mới vào zustand
+        setFormValues(allValues);
+    };
 
     return (
-        <div className="px-2 py-4">
-            <AppForm form={form} layout="vertical" showSubmit={false}>
+        <div className="px-4 pt-4">
+            <AppForm
+                form={form}
+                layout="vertical"
+                showSubmit={false}
+                onValuesChange={handleValuesChange}
+            >
                 <div className="flex flex-col gap-4">
                     <div>
                         <AppFormItem
@@ -85,16 +54,24 @@ export default function ReleaseDetailForm({ form }: Props) {
                             ]}
                         >
                             <Radio.Group>
-                                <Radio value="album">Album</Radio>
-                                <Radio value="single">Single</Radio>
-                                <Radio value="ep">EP</Radio>
+                                {Object.values(RELEASES_TYPE).map((type) => {
+                                    return (
+                                        <Radio
+                                            key={type}
+                                            value={type}
+                                            className="capitalize"
+                                        >
+                                            {type}
+                                        </Radio>
+                                    );
+                                })}
                             </Radio.Group>
                         </AppFormItem>
                     </div>
 
                     <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                         <AppFormItem
-                            label="Tên phát hành"
+                            label={messages('releases.name')}
                             name="nameRelease"
                             required
                             rules={[
@@ -107,21 +84,14 @@ export default function ReleaseDetailForm({ form }: Props) {
                             <Input allowClear />
                         </AppFormItem>
                         <AppFormItem
-                            label="Tên hiển thị"
-                            name="nameDisplay"
-                            required
-                            rules={[
-                                {
-                                    required: true,
-                                    message: messages('validation.input'),
-                                },
-                            ]}
+                            label={messages('releases.version')}
+                            name="version"
                         >
                             <Input allowClear />
                         </AppFormItem>
 
                         <AppFormItem
-                            label="Chọn nghệ sĩ chính"
+                            label={messages('common.artist')}
                             name="artist"
                             required
                             rules={[
@@ -131,23 +101,26 @@ export default function ReleaseDetailForm({ form }: Props) {
                                 },
                             ]}
                         >
-                            <Select
-                                options={artistList}
+                            <ArtistSelect
+                                // options={artistList}
                                 showSearch
                                 allowClear
                             />
                         </AppFormItem>
-                        <AppFormItem label="Chọn nghệ sĩ phụ" name="subArtist">
-                            <Select
-                                mode="multiple"
-                                options={artistList}
+                        <AppFormItem
+                            label={messages('common.subArtist')}
+                            name="subArtist"
+                        >
+                            <ArtistSelect
+                                // options={artistList}
                                 showSearch
                                 allowClear
+                                mode="multiple"
                             />
                         </AppFormItem>
 
                         <AppFormItem
-                            label="Thể loại"
+                            label={messages('common.genres')}
                             name="genres"
                             required
                             rules={[
@@ -160,12 +133,15 @@ export default function ReleaseDetailForm({ form }: Props) {
                             <Select options={genresList} />
                         </AppFormItem>
 
-                        <AppFormItem label="Thể loại phụ" name="subGenres">
+                        <AppFormItem
+                            label={messages('common.subGenres')}
+                            name="subGenres"
+                        >
                             <Select options={genresList} />
                         </AppFormItem>
 
                         <AppFormItem
-                            label="Ngôn ngữ"
+                            label={messages('common.language') + ' metadata'}
                             name="language"
                             required
                             rules={[
@@ -178,22 +154,23 @@ export default function ReleaseDetailForm({ form }: Props) {
                             <Select options={languageList} />
                         </AppFormItem>
 
-                        <AppFormItem label="Hãng thu âm" name="label">
-                            <Select options={labelList} />
+                        <AppFormItem label="Label" name="label">
+                            <LabelSelect />
                         </AppFormItem>
 
                         <AppFormItem label="UPC/EAN/JAN" name="upc">
                             <Input allowClear />
                         </AppFormItem>
 
-                        <AppFormItem label="ID danh mục" name="catalogId">
+                        <AppFormItem label="ID category" name="catalogId">
                             <Input allowClear />
                         </AppFormItem>
 
                         <AppFormItem
-                            label="Bản quyền"
-                            name="coppyRight"
+                            label="C Line year"
+                            name="copyRight"
                             required
+                            tooltipInfo="Năm đầu tiên xuất bản bản phát hành này trên toàn thế giới."
                             rules={[
                                 {
                                     required: true,
@@ -212,8 +189,9 @@ export default function ReleaseDetailForm({ form }: Props) {
                         </AppFormItem>
 
                         <AppFormItem
-                            label="Bản quyền"
-                            name="coppyRight2"
+                            label="P Line year"
+                            name="copyRight2"
+                            tooltipInfo="Năm bản ghi âm đầu tiên được phát hành trên toàn thế giới."
                             required
                             rules={[
                                 {

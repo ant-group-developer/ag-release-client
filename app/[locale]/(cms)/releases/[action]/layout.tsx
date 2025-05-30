@@ -1,0 +1,157 @@
+'use client';
+import { cn } from '@/helpers/common';
+import { showNotification } from '@/helpers/messages-helper';
+import useModalStore from '@/hooks/use-modal';
+import { Link, useRouter } from '@/i18n/routing';
+import ReleaseDetailHeader from '@/modules/release-detail/header';
+import RightSidebar from '@/modules/release-detail/right-sidebar';
+import { RELEASES_TABS, TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
+import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { Button, Tabs, TabsProps } from 'antd';
+import { useParams, usePathname } from 'next/navigation';
+import { PropsWithChildren, useEffect, useState } from 'react';
+
+type Props = {};
+
+export default function ReleaseDetail({ children }: PropsWithChildren) {
+    const router = useRouter();
+    const params = useParams();
+    const releaseId = params['release-id'] ? `/${params['release-id']}` : '';
+    const isCreateReleasePage = params['action'] === 'create';
+    const isDisableTab = releaseId == '';
+    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
+    const formValues = useReleaseFormStore((state) => state.formValues);
+    const pathname = usePathname();
+    const openModal = useModalStore((state) => state.openModal);
+    const [activeTab, setActiveTab] = useState<string>(
+        RELEASES_TABS.CORE_DETAIL
+    );
+
+    useEffect(() => {
+        // Cập nhật tab active khi đường dẫn thay đổi
+        if (pathname) {
+            if (pathname.includes('/tracks')) {
+                setActiveTab(RELEASES_TABS.TRACKS);
+            } else if (pathname.includes('/schedule')) {
+                setActiveTab(RELEASES_TABS.SCHEDULE);
+            } else if (pathname.includes('/review')) {
+                setActiveTab(RELEASES_TABS.REVIEW);
+            } else if (
+                pathname.includes('/core-detail') ||
+                pathname.includes('/create')
+            ) {
+                setActiveTab(RELEASES_TABS.CORE_DETAIL);
+            }
+        }
+    }, [pathname]);
+
+    const coreDetailTabsNavigate = isCreateReleasePage
+        ? '/releases/create'
+        : `/releases/detail/${releaseId}/core-detail`;
+
+    const items: TabsProps['items'] = [
+        {
+            key: RELEASES_TABS.CORE_DETAIL,
+            label: (
+                <Link
+                    className={cn(
+                        !isDisableTab || isCreateReleasePage
+                            ? ''
+                            : 'pointer-events-none'
+                    )}
+                    href={coreDetailTabsNavigate}
+                >
+                    <span className="font-medium">Thông tin chung</span>
+                </Link>
+            ),
+            disabled: isDisableTab,
+        },
+        {
+            key: RELEASES_TABS.TRACKS,
+            label: (
+                <Link
+                    className={cn(isDisableTab ? 'pointer-events-none' : '')}
+                    href={`releases/detail/${releaseId}/tracks`}
+                >
+                    <span className="font-medium">Bản nhạc</span>
+                </Link>
+            ),
+            disabled: isDisableTab,
+        },
+        {
+            key: RELEASES_TABS.SCHEDULE,
+            label: (
+                <Link
+                    className={cn(isDisableTab ? 'pointer-events-none' : '')}
+                    href={`/releases/detail/${releaseId}/schedule`}
+                >
+                    <span className="font-medium">Lên lịch & phân phối</span>
+                </Link>
+            ),
+            disabled: isDisableTab,
+        },
+        {
+            key: RELEASES_TABS.REVIEW,
+            label: (
+                <Link
+                    className={cn(isDisableTab ? 'pointer-events-none' : '')}
+                    href={`/releases/detail/${releaseId}/review`}
+                >
+                    <span className="font-medium">Review</span>
+                </Link>
+            ),
+            disabled: isDisableTab,
+        },
+    ];
+
+    const handleTabChange = (key: string) => {
+        router.push(`/releases/detail/${releaseId}/${key}`);
+    };
+
+    const handleSubmit = async () => {
+        try {
+            router.push(`/releases/detail/341239532/core-detail`);
+            showNotification('success', 'Thông tin đã được lưu thành công');
+        } catch (error) {
+            console.error('Lỗi khi xác thực form:', error);
+        }
+    };
+
+    const isTracksPage = pathname.includes('/tracks');
+
+    const buttonSave = (
+        <div className="flex justify-end gap-2 p-4">
+            {isTracksPage && (
+                <Button
+                    onClick={() => openModal(TYPE_MODAL_RELEASE.ADD_TRACK)}
+                    type="primary"
+                >
+                    Thêm bài hát
+                </Button>
+            )}
+
+            <Button type="primary" onClick={handleSubmit}>
+                Lưu thông tin
+            </Button>
+        </div>
+    );
+
+    return (
+        <div className="pr-[250px]">
+            <div className="sticky top-0 z-10 bg-white">
+                <ReleaseDetailHeader />
+                <div className="px-4">
+                    <Tabs
+                        className="tab-release-detail"
+                        items={items}
+                        activeKey={activeTab}
+                        onChange={handleTabChange}
+                        tabBarExtraContent={buttonSave}
+                    />
+                </div>
+            </div>
+            {children}
+            <RightSidebar />
+        </div>
+    );
+}

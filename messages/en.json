@@ -37,6 +37,11 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "platforms": "Platforms",
+        "copyRight": "CopyRight",
+        "language": "Language",
+        "subGenres": "Sub genres",
+        "subArtist": "Sub artist",
         "releaseDate": "Release date",
         "duration": "Duration",
         "draft": "Draft",
@@ -461,6 +466,11 @@
     "form": {
         "searchPlaceholder": "Search"
     },
+    "placeholder": {
+        "dragAndDropAudio": "Drag and drop audio file here!",
+        "selectArtist": "Select artist",
+        "selectRegion": "Select region"
+    },
     "status": {
         "label": "Status",
         "active": "Active",
@@ -669,14 +679,45 @@
         "releaseDate": "Release date",
         "duration": "Duration",
         "trackCount": "Track count",
-        "publisher": "Publisher release"
+        "publisher": "Publisher release",
+        "createArtist": "Create artist",
+        "labelName": "Label name",
+        "version": "Version",
+
+        "select": {
+            "artist": "Select artist",
+            "subArtist": "Select sub artist"
+        },
+
+        "placeholder": {
+            "selectArtist": "Select artist",
+            "selectSubArtist": "Select sub artist",
+            "selectGenres": "Select genres",
+            "selectSubGenres": "Select sub genres",
+            "selectLanguage": "Select language",
+            "selectLabel": "Select label",
+            "selectPublishType": "Select publish type",
+            "selectRole": "Select role",
+            "selectMusician": "Select musician",
+            "selectLanguageMetadata": "Select language metadata"
+        }
     },
     "tracks": {
         "label": "Track",
         "create": "Create track",
         "lastedTrack": "Lasted track",
         "name": "Track name",
-        "id": "Track ID"
+        "id": "Track ID",
+        "count": "Track count",
+        "placeholder": {
+            "selectArtist": "Select artist",
+            "selectSubArtist": "Select sub artist",
+            "selectGenres": "Select genres",
+            "selectSubGenres": "Select sub genres",
+            "selectLanguage": "Select language",
+            "selectLabel": "Select label",
+            "selectSensitiveContent": "Select content"
+        }
     },
     "genres": {
         "pop": "Pop",
@@ -690,5 +731,23 @@
         "rap": "Rap",
         "classical": "Classical",
         "blues": "Blues"
+    },
+    "artist": {
+        "label": "Artist",
+        "create": "Create artist",
+        "name": "Artist name",
+        "id": "Artist ID",
+        "delete": "Delete artist"
+    },
+    "labels": {
+        "create": "Create label",
+        "name": "Label name",
+        "id": "Label ID"
+    },
+    "distribution": {
+        "label": "Distribution",
+        "create": "Create distribution",
+        "name": "Distribution name",
+        "id": "Distribution ID"
     }
 }

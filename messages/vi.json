@@ -37,6 +37,11 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "platforms": "Nền tảng",
+        "copyRight": "Bản quyền",
+        "language": "Ngôn ngữ",
+        "subGenres": "Thể loại phụ",
+        "subArtist": "Nghệ sĩ phụ",
         "releaseDate": "Ngày phát hành",
         "duration": "Thời lượng",
         "draft": "Bản nháp",
@@ -44,7 +49,7 @@
         "issues": "Vấn đề",
         "neverDistributed": "Không phát hành",
         "distributed": "Đã phát hành",
-        "takenDown": "Đã hủy bỏ",
+        "takenDown": "Đã gỡ xuống",
         "minutes": "phút",
         "hours": "giờ",
         "dateRelease": "Ngày phát hành",
@@ -466,6 +471,11 @@
     "form": {
         "searchPlaceholder": "Tìm kiếm"
     },
+    "placeholder": {
+        "dragAndDropAudio": "Kéo thả tệp âm thanh vào đây!",
+        "selectArtist": "Chọn nghệ sĩ",
+        "selectRegion": "Chọn khu vực"
+    },
     "status": {
         "label": "Trạng thái",
         "active": "Kích hoạt",
@@ -673,14 +683,46 @@
         "releaseDate": "Ngày phát hành",
         "duration": "Thời lượng",
         "trackCount": "Số bài hát",
-        "publisher": "Hãng phát hành"
+        "publisher": "Hãng phát hành",
+        "createArtist": "Tạo nghệ sĩ",
+        "createLabel": "Tạo hãng phát hành",
+        "labelName": "Tên label",
+        "version": "Phiên bản",
+
+        "select": {
+            "artist": "Chọn nghệ sĩ",
+            "subArtist": "Chọn nghệ sĩ phụ"
+        },
+
+        "placeholder": {
+            "selectArtist": "Chọn nghệ sĩ",
+            "selectSubArtist": "Chọn nghệ sĩ phụ",
+            "selectGenres": "Chọn thể loại",
+            "selectSubGenres": "Chọn thể loại phụ",
+            "selectLanguage": "Chọn ngôn ngữ",
+            "selectLabel": "Chọn hãng phát hành",
+            "selectPublishType": "Chọn loại xuất bản",
+            "selectRole": "Chọn vai trò",
+            "selectMusician": "Chọn nhạc sĩ",
+            "selectLanguageMetadata": "Chọn ngôn ngữ metadata"
+        }
     },
     "tracks": {
         "label": "Bài hát",
         "create": "Tạo bài hát",
         "lastedTrack": "Bài hát gần đây",
         "name": "Tên bài hát",
-        "id": "Mã bài hát"
+        "id": "Mã bài hát",
+        "count": "Số lượng bài hát",
+        "placeholder": {
+            "selectArtist": "Chọn nghệ sĩ",
+            "selectSubArtist": "Chọn nghệ sĩ phụ",
+            "selectGenres": "Chọn thể loại",
+            "selectSubGenres": "Chọn thể loại phụ",
+            "selectLanguage": "Chọn ngôn ngữ",
+            "selectLabel": "Chọn hãng phát hành",
+            "selectSensitiveContent": "Lựa chọn nội dung"
+        }
     },
     "genres": {
         "pop": "Pop",
@@ -694,5 +736,23 @@
         "rap": "Rap",
         "classical": "Cổ điển",
         "blues": "Blues"
+    },
+    "artist": {
+        "label": "Nghệ sĩ",
+        "create": "Tạo nghệ sĩ",
+        "name": "Tên nghệ sĩ",
+        "id": "Mã nghệ sĩ",
+        "delete": "Xóa nghệ sĩ"
+    },
+    "labels": {
+        "create": "Tạo label",
+        "name": "Tên label",
+        "id": "Mã label"
+    },
+    "distribution": {
+        "label": "Phân phối",
+        "create": "Tạo phân phối",
+        "name": "Tên phân phối",
+        "id": "Mã phân phối"
     }
 }

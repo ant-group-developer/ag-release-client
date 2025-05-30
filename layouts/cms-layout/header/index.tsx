@@ -3,6 +3,7 @@ import IconButton from '@/components/ui/button/icon-button';
 import AppSearch from '@/components/ui/input/search';
 import { TYPE_MODAL } from '@/enums/common';
 import useModalStore from '@/hooks/use-modal';
+import { useRouter } from '@/i18n/routing';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Layout } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -22,6 +23,8 @@ function Header({ collapsed, toggleCollapsed }: Props) {
     const messages = useTranslations();
     const typeModal = useModalStore((state) => state.typeModal);
     const openModal = useModalStore((state) => state.openModal);
+    const router = useRouter();
+
     return (
         <AntdHeader
             id="layout-header"
@@ -44,7 +47,11 @@ function Header({ collapsed, toggleCollapsed }: Props) {
             </div>
 
             <div className="flex flex-1 items-center justify-end gap-2">
-                <CreateButton canCreate text={messages('releases.create')} />
+                <CreateButton
+                    canCreate
+                    text={messages('releases.create')}
+                    onClick={() => router.push('/releases/create')}
+                />
                 {/* <LocaleSelect /> */}
                 {/* <ThemeToggle /> */}
                 <AppSupport />

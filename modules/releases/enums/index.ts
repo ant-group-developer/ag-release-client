@@ -4,8 +4,16 @@ export enum RELEASES_TYPE {
     EP = 'ep',
 }
 
+export enum TYPE_MODAL_RELEASE {
+    CREATE = 'CREATE_RELEASE',
+    UPDATE = 'UPDATE_RELEASE',
+    DELETE = 'DELETE_RELEASE',
+    DETAIL = 'DETAIL_RELEASE',
+    ADD_TRACK = 'ADD_TRACK_RELEASE',
+}
+
 export enum RELEASES_TABS {
-    CORE_DETAIL = 'core_detail',
+    CORE_DETAIL = 'core-detail',
     TRACKS = 'tracks',
     SCHEDULE = 'schedule',
     REVIEW = 'review',
