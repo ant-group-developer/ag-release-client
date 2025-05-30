@@ -37,7 +37,7 @@ export default function GenresReleaseDialog({
         handleChangeTypeFilter();
     };
 
-    const displayTitle = getTitleChipDisplay(dataFilter.genres);
+    const displayTitle = getTitleChipDisplay(dataFilter.genres, messages);
 
     useEffect(() => {
         if (dataFilter.genres) {

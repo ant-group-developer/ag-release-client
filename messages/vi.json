@@ -49,7 +49,7 @@
         "issues": "Vấn đề",
         "neverDistributed": "Không phát hành",
         "distributed": "Đã phát hành",
-        "takenDown": "Đã hủy bỏ",
+        "takenDown": "Đã gỡ xuống",
         "minutes": "phút",
         "hours": "giờ",
         "dateRelease": "Ngày phát hành",
@@ -748,5 +748,11 @@
         "create": "Tạo label",
         "name": "Tên label",
         "id": "Mã label"
+    },
+    "distribution": {
+        "label": "Phân phối",
+        "create": "Tạo phân phối",
+        "name": "Tên phân phối",
+        "id": "Mã phân phối"
     }
 }

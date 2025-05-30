@@ -37,7 +37,7 @@ export default function TypeReleaseDialog({
         handleChangeTypeFilter();
     };
 
-    const displayTitle = getTitleChipDisplay(dataFilter.type);
+    const displayTitle = getTitleChipDisplay(dataFilter.type, messages);
 
     useEffect(() => {
         if (dataFilter.type) {

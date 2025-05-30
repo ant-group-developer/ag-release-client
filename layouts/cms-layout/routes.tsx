@@ -1,6 +1,7 @@
 import { APP_ROUTES } from '@/enums/routes';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import {
+    Box,
     DiscAlbum,
     House,
     LockKeyhole,
@@ -79,11 +80,19 @@ export const adminRoutes: AdminRoutesType[] = [
             },
             {
                 id: 'artists',
-                label: 'Artists',
+                label: 'artist.label',
                 href: APP_ROUTES.ARTISTS,
                 icon: User,
                 title: 'artists',
                 permission: PERMISSION.ARTIST.READ,
+            },
+            {
+                id: 'distribution',
+                label: 'distribution.label',
+                href: APP_ROUTES.DISTRIBUTION,
+                icon: Box,
+                title: 'distribution',
+                permission: PERMISSION.DISTRIBUTION.READ,
             },
         ],
     },

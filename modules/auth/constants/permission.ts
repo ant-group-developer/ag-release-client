@@ -48,4 +48,8 @@ export const PERMISSION = {
         UPDATE: 'task.artists.update',
         DELETE: 'task.artists.delete',
     },
+    DISTRIBUTION: {
+        READ: 'task.distribution.read',
+        UPDATE: 'task.distribution.update',
+    },
 };

@@ -743,5 +743,11 @@
         "create": "Create label",
         "name": "Label name",
         "id": "Label ID"
+    },
+    "distribution": {
+        "label": "Distribution",
+        "create": "Create distribution",
+        "name": "Distribution name",
+        "id": "Distribution ID"
     }
 }

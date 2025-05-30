@@ -144,6 +144,7 @@ export enum LOCAL_STORAGE_KEY {
 export enum SESSION_STORAGE_KEY {
     VISIBLE_COLUMNS_RELEASES = 'visible_columns_releases',
     VISIBLE_COLUMNS_TRACKS = 'visible_columns_tracks',
+    VISIBLE_COLUMNS_DISTRIBUTION = 'visible_columns_distribution',
 }
 
 export enum FIELD_TYPE {

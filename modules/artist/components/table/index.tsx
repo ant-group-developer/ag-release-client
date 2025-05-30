@@ -57,7 +57,7 @@ export const ArtistsTable = ({ ...props }: Props) => {
         },
 
         {
-            title: messages('labels.id'),
+            title: messages('artist.id'),
             key: 'id',
             dataIndex: 'id',
             align: 'left',
