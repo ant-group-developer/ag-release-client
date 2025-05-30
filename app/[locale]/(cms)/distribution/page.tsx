@@ -74,16 +74,10 @@ export default function Distribution({}: Props) {
         const header = 64;
         const pageHeader = 49;
         const pageFilter = 49;
-        const pagination = 57;
+        const pagination = 58;
         const headerTable = 39;
-        const headerButton = 49;
         const headerFooterHeight =
-            header +
-            pageHeader +
-            pageFilter +
-            pagination +
-            headerTable +
-            headerButton;
+            header + pageHeader + pageFilter + pagination + headerTable;
         const value = height - headerFooterHeight;
         if (value > minHeight) return value;
         return minHeight;

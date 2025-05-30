@@ -229,9 +229,6 @@ export default function DistributionTable({ visibleColumns, ...props }: Props) {
                 onClick: () =>
                     openModal(TYPE_MODAL_DISTRIBUTION.DETAIL, record),
             })}
-            scroll={{
-                x: 1000,
-            }}
         />
     );
 }
