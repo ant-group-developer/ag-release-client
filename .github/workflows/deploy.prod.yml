@@ -37,18 +37,3 @@ jobs:
                         echo "Build và chạy Docker Compose với tag: $TAG"
                         sudo TAG=$TAG docker compose -f docker-compose.prod.yml up --build -d
                     '
-    notify:
-        needs: build
-        runs-on: ubuntu-latest
-        steps:
-            - name: Gửi Telegram qua Action
-              uses: appleboy/telegram-action@master
-              with:
-                  to: ${{ secrets.TELEGRAM_CHAT_ID }}
-                  token: ${{ secrets.TELEGRAM_TOKEN }}
-                  message: |
-                      Repository: ${{ github.server_url }}/${{ github.repository }}
-                      Action: *${{ github.workflow }}* (#${{ github.run_number }})
-                      Status: *${{ needs.build.result }}*
-                      Link: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-                  format: markdown
