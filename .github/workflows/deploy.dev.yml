@@ -16,13 +16,13 @@ jobs:
             - name: Start SSH agent
               uses: webfactory/ssh-agent@v0.9.0
               with:
-                  ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
+                  ssh-private-key: ${{ secrets.VPS_SSH_KEY_DEV }}
 
             - name: Deploy via SSH
               env:
-                  HOST: ${{ secrets.VPS_HOST }}
-                  USER: ${{ secrets.VPS_USER }}
-                  PORT: ${{ secrets.VPS_PORT }} # omit or set to 22
+                  HOST: ${{ secrets.VPS_HOST_DEV }}
+                  USER: ${{ secrets.VPS_USER_DEV }}
+                  PORT: ${{ secrets.VPS_PORT_DEV }} # omit or set to 22
               run: |
                   # disable host checking (only if you trust the server)
                   # run each step with sudo
@@ -37,18 +37,3 @@ jobs:
                         echo "Build và chạy Docker Compose với tag: $TAG"
                         sudo TAG=$TAG docker compose -f docker-compose.dev.yml up --build -d
                     '
-    notify:
-        needs: build
-        runs-on: ubuntu-latest
-        steps:
-            - name: Gửi Telegram qua Action
-              uses: appleboy/telegram-action@master
-              with:
-                  to: ${{ secrets.TELEGRAM_CHAT_ID }}
-                  token: ${{ secrets.TELEGRAM_TOKEN }}
-                  message: |
-                      Repository: ${{ github.server_url }}/${{ github.repository }}
-                      Action: *${{ github.workflow }}* (#${{ github.run_number }})
-                      Status: *${{ needs.build.result }}*
-                      Link: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-                  format: markdown
