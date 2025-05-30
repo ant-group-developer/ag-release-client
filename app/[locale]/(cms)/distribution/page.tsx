@@ -70,7 +70,6 @@ export default function Distribution({}: Props) {
         if (isSmallDevice) return undefined;
         if (!height) return undefined;
         const minHeight = 300;
-        // const headerFooterHeight = 216;
         const header = 64;
         const pageHeader = 49;
         const pageFilter = 49;
@@ -107,7 +106,7 @@ export default function Distribution({}: Props) {
                         <Button className="" type="primary">
                             <span>Phân phối hàng loạt</span>
                         </Button>
-                        <Button>
+                        <Button danger>
                             <span>Gỡ xuống hàng loạt</span>
                         </Button>
                     </div>
