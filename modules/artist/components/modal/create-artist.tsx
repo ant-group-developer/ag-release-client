@@ -28,7 +28,7 @@ export default function ArtistFormModal({ ...props }: Props) {
                         <ImageListUpload maxCount={1} />
                     </AppFormItem>
                     <p className="flex-1 text-center text-sm text-gray-500">
-                        Chúng tôi hỗ trợ định dạng ảnh PNG, JFIF, JPEG, or JPG
+                        Hỗ trợ định dạng ảnh PNG, JFIF, JPEG, or JPG
                     </p>
                 </div>
                 <AppFormItem
