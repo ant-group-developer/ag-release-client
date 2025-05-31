@@ -7,6 +7,8 @@ import StreamsAnalysisCard from '@/modules/artist/components/artist-detail/overv
 import TopOfReleaseCard from '@/modules/artist/components/artist-detail/overview/card/top-of-release';
 import TopOfTrackCard from '@/modules/artist/components/artist-detail/overview/card/top-of-track';
 import ArtistDetailHeader from '@/modules/artist/components/artist-detail/overview/header';
+import ListRelease from '@/modules/dashboard/components/list-release';
+import { fakeReleasesData } from '@/modules/dashboard/constants/mockData';
 
 type Props = {};
 
@@ -22,6 +24,9 @@ export default function Overview({}: Props) {
             <div className="mt-4 grid grid-cols-2 gap-4">
                 <StreamsAnalysisCard />
                 <RevenueAnalysisCard />
+            </div>
+            <div>
+                <ListRelease data={fakeReleasesData.slice(0, 7)} />
             </div>
         </AppContainer>
     );

@@ -1,11 +1,11 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
-import ArtistSelect from '@/components/ui/select/artist-select';
+import ImageFallback from '@/components/ui/image/image-fallback';
 import LabelSelect from '@/components/ui/select/label-select';
 import { genresList, languageList, yearList } from '@/constants/fakeData';
 import { RELEASES_TYPE } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
-import { Input, Radio, Select } from 'antd';
+import { Button, Input, Radio, Select } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
@@ -17,9 +17,12 @@ export default function ReleaseDetailForm() {
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
 
     useEffect(() => {
-        // Nếu formValues rỗng, reset form
+        // Nếu formValues rỗng, reset form với giá trị mặc định
         if (Object.keys(formValues).length === 0) {
             form.resetFields();
+            form.setFieldsValue({
+                contributors: [{ role: undefined, artist: undefined }],
+            });
         } else {
             // Nếu có formValues, set vào form
             form.setFieldsValue(formValues);
@@ -30,6 +33,16 @@ export default function ReleaseDetailForm() {
     const handleValuesChange = (_: any, allValues: any) => {
         // Cập nhật giá trị mới vào zustand
         setFormValues(allValues);
+    };
+
+    const handleAddContributor = () => {
+        const contributors = form.getFieldValue('contributors') || [];
+        form.setFieldsValue({
+            contributors: [
+                ...contributors,
+                { role: undefined, artist: undefined },
+            ],
+        });
     };
 
     return (
@@ -90,34 +103,55 @@ export default function ReleaseDetailForm() {
                             <Input allowClear />
                         </AppFormItem>
 
-                        <AppFormItem
-                            label={messages('common.artist')}
-                            name="artist"
-                            required
-                            rules={[
-                                {
-                                    required: true,
-                                    message: messages('validation.select'),
-                                },
-                            ]}
-                        >
-                            <ArtistSelect
-                                // options={artistList}
-                                showSearch
-                                allowClear
-                            />
-                        </AppFormItem>
-                        <AppFormItem
-                            label={messages('common.subArtist')}
-                            name="subArtist"
-                        >
-                            <ArtistSelect
-                                // options={artistList}
-                                showSearch
-                                allowClear
-                                mode="multiple"
-                            />
-                        </AppFormItem>
+                        {/* <div className="col-span-2">
+                            <DynamicFieldContributor />
+                        </div> */}
+
+                        <div className="col-span-2">
+                            <AppFormItem
+                                label="Artists and Contributors"
+                                name="contributors"
+                            >
+                                <div>
+                                    <Button shape="round" className="mb-4">
+                                        Thêm nghệ sĩ chính
+                                    </Button>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        {Array.from({ length: 3 }).map(
+                                            (_, index) => (
+                                                <div
+                                                    key={index}
+                                                    className="flex items-center gap-4 rounded-lg bg-gray-100 px-3 py-2"
+                                                >
+                                                    <div>
+                                                        <ImageFallback
+                                                            src="https://placehold.co/100x100"
+                                                            alt="artist"
+                                                            width={40}
+                                                            height={40}
+                                                            className="rounded-full"
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <p className="font-bold">
+                                                            Ant group
+                                                        </p>
+                                                        <p>
+                                                            <span>
+                                                                1569468 |
+                                                            </span>
+                                                            <span>
+                                                                Main Artist
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            )
+                                        )}
+                                    </div>
+                                </div>
+                            </AppFormItem>
+                        </div>
 
                         <AppFormItem
                             label={messages('common.genres')}

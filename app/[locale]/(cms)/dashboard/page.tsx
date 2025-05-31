@@ -138,7 +138,7 @@ function Dashboard({}: Props) {
                     />
                 </div>
 
-                <ListRelease />
+                <ListRelease data={fakeReleasesData.slice(0, 14)} />
 
                 <ListNews />
             </div>

@@ -51,7 +51,7 @@ function AppAvatar({}: Props) {
             label: (
                 <div className="flex w-[250px] items-center justify-between pl-2 text-sm">
                     <span className="font-bold">
-                        {messages('common.displayMode')}:
+                        {messages('common.displayMode')}
                     </span>
                     <span> {themeIntl} </span>
                 </div>

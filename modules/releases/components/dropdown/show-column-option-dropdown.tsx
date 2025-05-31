@@ -39,23 +39,21 @@ export default function ShowColumnOptionDropdown({
             alwaysVisible: true,
         },
         {
-            key: RELEASES_COLUMNS_DISPLAY.RELEASE_ID,
-            label: messages('releases.id'),
-            alwaysVisible: true,
-        },
-        {
             key: RELEASES_COLUMNS_DISPLAY.TITLE,
             label: messages('releases.name'),
+        },
+        {
+            key: RELEASES_COLUMNS_DISPLAY.ARTIST,
+            label: messages('common.artist'),
         },
         {
             key: RELEASES_COLUMNS_DISPLAY.PUBLISHER,
             label: messages('releases.publisher'),
         },
         {
-            key: RELEASES_COLUMNS_DISPLAY.ARTIST,
-            label: messages('common.artist'),
+            key: RELEASES_COLUMNS_DISPLAY.RELEASE_ID,
+            label: messages('releases.id'),
         },
-
         {
             key: RELEASES_COLUMNS_DISPLAY.TYPE,
             label: messages('releases.type'),
@@ -82,7 +80,7 @@ export default function ShowColumnOptionDropdown({
         },
         {
             key: RELEASES_COLUMNS_DISPLAY.CREATION_DATE,
-            label: messages('releases.releaseDate'),
+            label: messages('common.dateCreated'),
         },
         {
             key: RELEASES_COLUMNS_DISPLAY.ACTIONS,

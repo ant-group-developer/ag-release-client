@@ -70,7 +70,12 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             key: RELEASES_TABS.TRACKS,
             label: (
                 <Link
-                    className={cn(isDisableTab ? 'invisible' : 'visible')}
+                    // className={cn(isDisableTab ? 'invisible' : 'visible')}
+                    className={cn(
+                        !isDisableTab || isCreateReleasePage
+                            ? ''
+                            : 'pointer-events-none'
+                    )}
                     href={`releases/detail/${releaseId}/tracks`}
                 >
                     <span className="font-medium">Bản nhạc</span>

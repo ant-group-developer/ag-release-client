@@ -2,7 +2,7 @@ import { Button, Image } from 'antd';
 
 type Props = {};
 
-export default function ArtistDetailHeader({}: Props) {
+export default function LabelDetailHeader({}: Props) {
     return (
         <div className="flex items-center justify-between pb-4">
             <div className="flex items-center gap-4">

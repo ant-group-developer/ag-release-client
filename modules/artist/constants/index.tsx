@@ -182,3 +182,26 @@ export const fakeArtistData: ArtistData[] = [
         createdAt: new Date('2023-01-15T10:20:30Z'),
     },
 ];
+
+export const roleArtist = [
+    {
+        id: 'a1',
+        name: 'Main Artist',
+    },
+    {
+        id: 'a2',
+        name: 'Songwriter',
+    },
+    {
+        id: 'a3',
+        name: 'Composer',
+    },
+    {
+        id: 'a4',
+        name: 'Vocalist',
+    },
+    {
+        id: 'a5',
+        name: 'Guitarist',
+    },
+];
