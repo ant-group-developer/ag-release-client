@@ -171,3 +171,37 @@ a {
 /* .release-review-collapse .ant-collapse-item {
     margin-bottom: 4px !important;
 } */
+
+/* Custom Scrollbar Style */
+.custom-scrollbar {
+    overflow-y: hidden;
+    transition: overflow 0.2s;
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: #bdbdbd #f5f5f5; /* Firefox */
+}
+
+.custom-scrollbar:hover {
+    overflow-y: auto;
+}
+
+/* Chrome, Edge, Safari */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 7px;
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(180, 180, 180, 0.3);
+    border-radius: 12px;
+    transition: background 0.25s;
+}
+
+/* Hover thumb: đậm hơn và rõ hơn */
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(120, 120, 120, 0.55);
+}
+
+/* Ẩn thanh cuộn khi không hover */
+.custom-scrollbar:not(:hover)::-webkit-scrollbar-thumb {
+    background: transparent;
+}
