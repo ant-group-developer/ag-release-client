@@ -17,6 +17,7 @@ export enum RELEASES_TABS {
     TRACKS = 'tracks',
     SCHEDULE = 'schedule',
     REVIEW = 'review',
+    DISTRIBUTION = 'distribution',
 }
 
 export enum RELEASES_STATUS {

@@ -1,10 +1,11 @@
+import ImageFallback from '@/components/ui/image/image-fallback';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { FALLBACK_IMAGE } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
 import { NewsData } from '@/modules/news/types';
 import { Card, CardProps } from 'antd';
 import Meta from 'antd/es/card/Meta';
-import Image from 'next/image';
 
 type Props = CardProps & {
     data: NewsData;
@@ -16,13 +17,14 @@ export default function CardNews({ data, ...props }: Props) {
             {...props}
             className="!bg-card-bg dark:!bg-card-bg-dark"
             cover={
-                <div className="overflow-hidden">
-                    <Image
-                        className="cursor-pointer overflow-hidden object-cover duration-300 hover:scale-110"
+                <div className="h-[180px] w-[350px] overflow-hidden">
+                    <ImageFallback
+                        fallbackSrc={FALLBACK_IMAGE}
+                        className="h-full w-full cursor-pointer overflow-hidden object-cover duration-300 hover:scale-110"
                         alt="example"
                         src={data.image}
-                        width={500}
-                        height={500}
+                        width={350}
+                        height={200}
                     />
                 </div>
             }

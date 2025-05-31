@@ -70,7 +70,12 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             key: RELEASES_TABS.TRACKS,
             label: (
                 <Link
-                    className={cn(isDisableTab ? 'pointer-events-none' : '')}
+                    // className={cn(isDisableTab ? 'invisible' : 'visible')}
+                    className={cn(
+                        !isDisableTab || isCreateReleasePage
+                            ? ''
+                            : 'pointer-events-none'
+                    )}
                     href={`releases/detail/${releaseId}/tracks`}
                 >
                     <span className="font-medium">Bản nhạc</span>
@@ -86,6 +91,18 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     href={`/releases/detail/${releaseId}/schedule`}
                 >
                     <span className="font-medium">Lên lịch & phân phối</span>
+                </Link>
+            ),
+            disabled: isDisableTab,
+        },
+        {
+            key: RELEASES_TABS.DISTRIBUTION,
+            label: (
+                <Link
+                    className={cn(isDisableTab ? 'pointer-events-none' : '')}
+                    href={`/releases/detail/${releaseId}/distribution`}
+                >
+                    <span className="font-medium">Phân phối</span>
                 </Link>
             ),
             disabled: isDisableTab,

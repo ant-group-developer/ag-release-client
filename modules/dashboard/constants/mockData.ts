@@ -507,3 +507,41 @@ export const fakeReleasesData: ReleasesData[] = [
         publisher: 'Spin Entertainment',
     },
 ];
+
+export const fakeDspData = [
+    {
+        id: 1,
+        name: 'Spotify',
+        value: 100,
+        image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/2048px-Spotify_logo_without_text.svg.png',
+        plays: 232,
+    },
+    {
+        id: 2,
+        name: 'Apple Music',
+        value: 130,
+        image: 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/571e5943-4616-4654-bf99-10b3c98f8686/d982zrj-a9acb6b3-4e6b-4dda-a381-74fa8a25de00.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzU3MWU1OTQzLTQ2MTYtNDY1NC1iZjk5LTEwYjNjOThmODY4NlwvZDk4Mnpyai1hOWFjYjZiMy00ZTZiLTRkZGEtYTM4MS03NGZhOGEyNWRlMDAucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.W197gqXaEzvXa10JXk0NdtrbS4__XYKfhQ323esSjvw',
+        plays: 634,
+    },
+    {
+        id: 3,
+        name: 'TikTok',
+        value: 110,
+        image: 'https://inkythuatso.com/uploads/thumbnails/800/2021/11/logo-tiktok-inkythuatso-2-mesa-de-trabajo-1-27-09-13-05.jpg',
+        plays: 122,
+    },
+    {
+        id: 4,
+        name: 'Amazon Music',
+        value: 120,
+        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbhvKe4ebnX7xrphoWADoK-wteStypzRFKWQ&s',
+        plays: 232,
+    },
+    {
+        id: 5,
+        name: 'YouTube Music',
+        value: 105,
+        image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Youtube_Music_icon.svg/2048px-Youtube_Music_icon.svg.png',
+        plays: 322,
+    },
+].sort((a, b) => b.plays - a.plays);

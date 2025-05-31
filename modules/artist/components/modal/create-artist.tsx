@@ -3,9 +3,10 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import useModalStore from '@/hooks/use-modal';
-import { Button, Form, Input } from 'antd';
+import { fakeDspData } from '@/modules/dashboard/constants/mockData';
+import { Form, Input } from 'antd';
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
+import ArtistProfilesList from '../list/artist-profiles';
 
 type Props = Omit<AppModalProps, 'children'> & {};
 
@@ -28,7 +29,7 @@ export default function ArtistFormModal({ ...props }: Props) {
                         <ImageListUpload maxCount={1} />
                     </AppFormItem>
                     <p className="flex-1 text-center text-sm text-gray-500">
-                        Chúng tôi hỗ trợ định dạng ảnh PNG, JFIF, JPEG, or JPG
+                        Hỗ trợ định dạng ảnh PNG, JFIF, JPEG, or JPG
                     </p>
                 </div>
                 <AppFormItem
@@ -48,7 +49,7 @@ export default function ArtistFormModal({ ...props }: Props) {
                 <div className="space-y-4">
                     <AppFormItem name="profiles" label="Artist Profiles">
                         <div className="flex flex-col gap-2 rounded-md border p-2">
-                            <AppFormItem name="spotify" className="!mb-0">
+                            {/* <AppFormItem name="spotify" className="!mb-0">
                                 <div className="flex cursor-pointer items-center justify-between rounded-md bg-card-bg p-3 hover:bg-card-bg-hover">
                                     <div className="flex items-center gap-2">
                                         <Image
@@ -65,43 +66,14 @@ export default function ArtistFormModal({ ...props }: Props) {
                                         Link Profile
                                     </Button>
                                 </div>
-                            </AppFormItem>
-                            <AppFormItem name="spotify" className="!mb-0">
-                                <div className="flex cursor-pointer items-center justify-between rounded-md bg-card-bg p-3 hover:bg-card-bg-hover">
-                                    <div className="flex items-center gap-2">
-                                        <Image
-                                            src="/icon/platform-icon/spotify.svg"
-                                            alt="Spotify"
-                                            width={78}
-                                            height={24}
-                                        />
-                                    </div>
-                                    <Button
-                                        type="default"
-                                        className="font-medium"
-                                    >
-                                        Link Profile
-                                    </Button>
-                                </div>
-                            </AppFormItem>
-                            <AppFormItem name="spotify" className="!mb-0">
-                                <div className="flex cursor-pointer items-center justify-between rounded-md bg-card-bg p-3 hover:bg-card-bg-hover">
-                                    <div className="flex items-center gap-2">
-                                        <Image
-                                            src="/icon/platform-icon/spotify.svg"
-                                            alt="Spotify"
-                                            width={78}
-                                            height={24}
-                                        />
-                                    </div>
-                                    <Button
-                                        type="default"
-                                        className="font-medium"
-                                    >
-                                        Link Profile
-                                    </Button>
-                                </div>
-                            </AppFormItem>
+                            </AppFormItem> */}
+
+                            <ArtistProfilesList
+                                list={fakeDspData.map((item) => ({
+                                    icon: item.image,
+                                    name: item.name,
+                                }))}
+                            />
                         </div>
                     </AppFormItem>
                 </div>
