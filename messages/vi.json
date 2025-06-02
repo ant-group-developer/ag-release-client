@@ -37,6 +37,8 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "role": "Vai trò",
+        "test": "Thử",
         "platforms": "Nền tảng",
         "copyRight": "Bản quyền",
         "language": "Ngôn ngữ",
@@ -743,7 +745,10 @@
         "create": "Tạo nghệ sĩ",
         "name": "Tên nghệ sĩ",
         "id": "Mã nghệ sĩ",
-        "delete": "Xóa nghệ sĩ"
+        "delete": "Xóa nghệ sĩ",
+        "add": "Thêm nghệ sĩ",
+        "select": "Chọn nghệ sĩ",
+        "profiles": "Hồ sơ nghệ sĩ"
     },
     "labels": {
         "create": "Tạo label",

@@ -1,12 +1,16 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
-import ImageFallback from '@/components/ui/image/image-fallback';
+import IconButton from '@/components/ui/button/icon-button';
 import LabelSelect from '@/components/ui/select/label-select';
+import { SIZE_ICON } from '@/constants/common';
 import { genresList, languageList, yearList } from '@/constants/fakeData';
+import useModalStore from '@/hooks/use-modal';
+import { TYPE_MODAL_ARTIST } from '@/modules/artist/enum';
 import { RELEASES_TYPE } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
-import { Button, Input, Radio, Select } from 'antd';
+import { Avatar, Button, Input, Radio, Select } from 'antd';
 import { useForm } from 'antd/es/form/Form';
+import { Trash2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 
@@ -15,6 +19,7 @@ export default function ReleaseDetailForm() {
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
+    const openModal = useModalStore((state) => state.openModal);
 
     useEffect(() => {
         // Nếu formValues rỗng, reset form với giá trị mặc định
@@ -109,42 +114,63 @@ export default function ReleaseDetailForm() {
 
                         <div className="col-span-2">
                             <AppFormItem
-                                label="Artists and Contributors"
+                                label="Nghệ sĩ chính và người đóng góp"
                                 name="contributors"
                             >
                                 <div>
-                                    <Button shape="round" className="mb-4">
+                                    <Button
+                                        onClick={() =>
+                                            openModal(
+                                                TYPE_MODAL_ARTIST.ADD_ARTIST
+                                            )
+                                        }
+                                        shape="round"
+                                        className="mb-4"
+                                    >
                                         Thêm nghệ sĩ chính
                                     </Button>
                                     <div className="grid grid-cols-2 gap-4">
-                                        {Array.from({ length: 3 }).map(
+                                        {Array.from({ length: 4 }).map(
                                             (_, index) => (
                                                 <div
                                                     key={index}
-                                                    className="flex items-center gap-4 rounded-lg bg-gray-100 px-3 py-2"
+                                                    className="flex items-center justify-between rounded-lg bg-gray-100 px-3 py-2"
                                                 >
-                                                    <div>
-                                                        <ImageFallback
-                                                            src="https://placehold.co/100x100"
-                                                            alt="artist"
-                                                            width={40}
-                                                            height={40}
-                                                            className="rounded-full"
-                                                        />
+                                                    <div className="flex items-center gap-4">
+                                                        <div>
+                                                            <Avatar
+                                                                size={40}
+                                                                shape="circle"
+                                                                src="/logo.png"
+                                                            >
+                                                                {'A'}
+                                                            </Avatar>
+                                                        </div>
+                                                        <div>
+                                                            <p className="font-bold">
+                                                                Ant group
+                                                            </p>
+                                                            <p>
+                                                                <span>
+                                                                    1569468 |
+                                                                </span>
+                                                                <span>
+                                                                    {` ${index === 0 ? 'Main Artist' : 'Featured Artist'}`}
+                                                                </span>
+                                                            </p>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <p className="font-bold">
-                                                            Ant group
-                                                        </p>
-                                                        <p>
-                                                            <span>
-                                                                1569468 |
-                                                            </span>
-                                                            <span>
-                                                                Main Artist
-                                                            </span>
-                                                        </p>
-                                                    </div>
+                                                    {index !== 0 && (
+                                                        <div>
+                                                            <IconButton>
+                                                                <Trash2
+                                                                    size={
+                                                                        SIZE_ICON
+                                                                    }
+                                                                />
+                                                            </IconButton>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             )
                                         )}

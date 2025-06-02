@@ -37,6 +37,8 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "role": "Role",
+        "test": "Test",
         "platforms": "Platforms",
         "copyRight": "CopyRight",
         "language": "Language",
@@ -737,7 +739,10 @@
         "create": "Create artist",
         "name": "Artist name",
         "id": "Artist ID",
-        "delete": "Delete artist"
+        "delete": "Delete artist",
+        "add": "Add artist",
+        "select": "Select artist",
+        "profiles": "Artist profiles"
     },
     "labels": {
         "create": "Create label",

@@ -33,9 +33,10 @@ export default function ArtistSelect({ ...props }: Props) {
                 return (
                     <div>
                         {menu}
-                        <div className="flex justify-end py-2">
+                        <div className="py-1">
                             <Button
                                 type="primary"
+                                className="w-full"
                                 onClick={() =>
                                     openModal(TYPE_MODAL_ARTIST.CREATE)
                                 }

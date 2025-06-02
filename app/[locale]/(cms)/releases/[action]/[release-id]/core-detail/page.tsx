@@ -2,6 +2,7 @@
 
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
+import AddArtistModal from '@/modules/artist/components/modal/add-artist';
 import ArtistFormModal from '@/modules/artist/components/modal/create-artist';
 import { TYPE_MODAL_ARTIST } from '@/modules/artist/enum';
 import LabelFormModal from '@/modules/labels/components/modal/create-label';
@@ -57,6 +58,10 @@ export default function CoreDetail() {
     return (
         <div>
             <ReleaseDetailForm />
+            {(typeModal === TYPE_MODAL_ARTIST.ADD_ARTIST ||
+                typeModal === TYPE_MODAL_ARTIST.ADD_CONTRIBUTOR) && (
+                <AddArtistModal />
+            )}
             {typeModal === TYPE_MODAL_ARTIST.CREATE && <ArtistFormModal />}
             {typeModal === TYPE_MODAL_LABEL.CREATE && <LabelFormModal />}
         </div>
