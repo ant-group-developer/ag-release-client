@@ -1,18 +1,18 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
-import IconButton from '@/components/ui/button/icon-button';
 import LabelSelect from '@/components/ui/select/label-select';
-import { SIZE_ICON } from '@/constants/common';
 import { genresList, languageList, yearList } from '@/constants/fakeData';
 import useModalStore from '@/hooks/use-modal';
-import { TYPE_MODAL_ARTIST } from '@/modules/artist/enum';
-import { RELEASES_TYPE } from '@/modules/releases/enums';
+import {
+    RELEASES_TYPE,
+    TYPE_MODAL_RELEASE_ARTIST_LIST,
+} from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
-import { Avatar, Button, Input, Radio, Select } from 'antd';
-import { useForm } from 'antd/es/form/Form';
-import { Trash2 } from 'lucide-react';
+import { Button, Input, Radio, Select } from 'antd';
+import { useForm, useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
+import ArtistCard from './artist-card';
 
 export default function ReleaseDetailForm() {
     const [form] = useForm();
@@ -21,12 +21,18 @@ export default function ReleaseDetailForm() {
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const openModal = useModalStore((state) => state.openModal);
 
+    // Di chuyển việc lấy giá trị vào trong component
+    const isMoreThan4Artists = useWatch('isMoreThan4Artists', form);
+
+    const artists = formValues.artists || [];
+
     useEffect(() => {
         // Nếu formValues rỗng, reset form với giá trị mặc định
         if (Object.keys(formValues).length === 0) {
             form.resetFields();
             form.setFieldsValue({
                 contributors: [{ role: undefined, artist: undefined }],
+                isMoreThan4Artists: false, // Set giá trị mặc định
             });
         } else {
             // Nếu có formValues, set vào form
@@ -38,16 +44,6 @@ export default function ReleaseDetailForm() {
     const handleValuesChange = (_: any, allValues: any) => {
         // Cập nhật giá trị mới vào zustand
         setFormValues(allValues);
-    };
-
-    const handleAddContributor = () => {
-        const contributors = form.getFieldValue('contributors') || [];
-        form.setFieldsValue({
-            contributors: [
-                ...contributors,
-                { role: undefined, artist: undefined },
-            ],
-        });
     };
 
     return (
@@ -87,7 +83,7 @@ export default function ReleaseDetailForm() {
                         </AppFormItem>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                    <div className="grid grid-cols-2 gap-4">
                         <AppFormItem
                             label={messages('releases.name')}
                             name="nameRelease"
@@ -114,69 +110,57 @@ export default function ReleaseDetailForm() {
 
                         <div className="col-span-2">
                             <AppFormItem
-                                label="Nghệ sĩ chính và người đóng góp"
-                                name="contributors"
+                                label=" Có nhiều hơn 4 nghệ sĩ hay không ?"
+                                name="isMoreThan4Artists"
+                                required
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: messages('validation.select'),
+                                    },
+                                ]}
                             >
+                                <Radio.Group>
+                                    <Radio value={false}>Không</Radio>
+                                    <Radio value={true}>
+                                        {`Có (Tên hiển thị sẽ là "Nhiều nghệ sĩ")`}
+                                    </Radio>
+                                </Radio.Group>
+                            </AppFormItem>
+                            {!isMoreThan4Artists && (
                                 <div>
-                                    <Button
-                                        onClick={() =>
-                                            openModal(
-                                                TYPE_MODAL_ARTIST.ADD_ARTIST
-                                            )
-                                        }
-                                        shape="round"
-                                        className="mb-4"
-                                    >
-                                        Thêm nghệ sĩ chính
-                                    </Button>
+                                    <div>
+                                        <Button
+                                            onClick={() =>
+                                                openModal(
+                                                    TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST
+                                                )
+                                            }
+                                            shape="round"
+                                            className="mb-4"
+                                        >
+                                            Thêm nghệ sĩ chính
+                                        </Button>
+                                    </div>
                                     <div className="grid grid-cols-2 gap-4">
-                                        {Array.from({ length: 4 }).map(
-                                            (_, index) => (
-                                                <div
+                                        {artists.map(
+                                            (artist: any, index: number) => (
+                                                <ArtistCard
+                                                    data={artist}
+                                                    onClick={() =>
+                                                        openModal(
+                                                            TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST,
+                                                            artist
+                                                        )
+                                                    }
                                                     key={index}
-                                                    className="flex items-center justify-between rounded-lg bg-gray-100 px-3 py-2"
-                                                >
-                                                    <div className="flex items-center gap-4">
-                                                        <div>
-                                                            <Avatar
-                                                                size={40}
-                                                                shape="circle"
-                                                                src="/logo.png"
-                                                            >
-                                                                {'A'}
-                                                            </Avatar>
-                                                        </div>
-                                                        <div>
-                                                            <p className="font-bold">
-                                                                Ant group
-                                                            </p>
-                                                            <p>
-                                                                <span>
-                                                                    1569468 |
-                                                                </span>
-                                                                <span>
-                                                                    {` ${index === 0 ? 'Main Artist' : 'Featured Artist'}`}
-                                                                </span>
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                    {index !== 0 && (
-                                                        <div>
-                                                            <IconButton>
-                                                                <Trash2
-                                                                    size={
-                                                                        SIZE_ICON
-                                                                    }
-                                                                />
-                                                            </IconButton>
-                                                        </div>
-                                                    )}
-                                                </div>
+                                                    index={index}
+                                                />
                                             )
                                         )}
                                     </div>
                                 </div>
-                            </AppFormItem>
+                            )}
                         </div>
 
                         <AppFormItem

@@ -5,11 +5,13 @@ import ArtistSelect from '@/components/ui/select/artist-select';
 import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import useModalStore from '@/hooks/use-modal';
 import { fakeDspData } from '@/modules/dashboard/constants/mockData';
+import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '@/modules/releases/enums';
+import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { Form } from 'antd';
 import { useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
+import { useEffect } from 'react';
 import { roleArtist } from '../../constants';
-import { TYPE_MODAL_ARTIST } from '../../enum';
 import ArtistProfilesList from '../list/artist-profiles';
 
 type Props = {};
@@ -26,10 +28,56 @@ export default function AddArtistModal({}: Props) {
     const closeModal = useModalStore((state) => state.closeModal);
     const watchArtistName = useWatch(['name'], form);
     const typeModal = useModalStore((state) => state.typeModal);
-    const isContributorModal = typeModal === TYPE_MODAL_ARTIST.ADD_CONTRIBUTOR;
+    const formValues = useReleaseFormStore((state) => state.formValues);
+    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
+    const isArtistEditModal =
+        typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST;
+    const dataEdit = useModalStore((state) => state.dataEdit);
+
+    const handleSubmit = async () => {
+        try {
+            const values = await form.validateFields();
+            const artist = {
+                name: values.name,
+                role: values.role,
+                id: values.name,
+            };
+            const currentArtists = formValues.artists || [];
+
+            // Nếu là thêm mới
+            if (typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST) {
+                setFormValues({
+                    ...formValues,
+                    artists: [...currentArtists, artist],
+                });
+            }
+
+            closeModal();
+        } catch (error) {
+            console.error('Validation failed:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (isArtistEditModal) {
+            form.setFieldsValue({
+                name: dataEdit?.name,
+                role: dataEdit?.role,
+            });
+        }
+    }, [isArtistEditModal, dataEdit, form]);
 
     return (
-        <AppModal open title={messages('artist.add')} onCancel={closeModal}>
+        <AppModal
+            open
+            title={
+                isArtistEditModal
+                    ? messages('artist.update')
+                    : messages('artist.add')
+            }
+            onCancel={closeModal}
+            onOk={handleSubmit}
+        >
             <AppForm form={form} layout="vertical" showSubmit={false}>
                 <AppFormItem
                     name="name"
@@ -42,27 +90,28 @@ export default function AddArtistModal({}: Props) {
                         },
                     ]}
                 >
-                    <ArtistSelect placeholder={messages('artist.select')} />
+                    <ArtistSelect
+                        showSearch
+                        placeholder={messages('artist.select')}
+                    />
                 </AppFormItem>
 
-                {isContributorModal && (
-                    <AppFormItem
-                        name="role"
-                        label={messages('common.role')}
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.select'),
-                            },
-                        ]}
-                    >
-                        <RoleArtistSelect
-                            placeholder={messages('common.role')}
-                            options={roleArtist}
-                        />
-                    </AppFormItem>
-                )}
+                <AppFormItem
+                    name="role"
+                    label={messages('common.role')}
+                    required
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.select'),
+                        },
+                    ]}
+                >
+                    <RoleArtistSelect
+                        placeholder={messages('common.role')}
+                        options={roleArtist}
+                    />
+                </AppFormItem>
 
                 {watchArtistName && (
                     <div>

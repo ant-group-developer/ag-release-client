@@ -12,7 +12,6 @@ type MenuItem = Required<MenuProps>['items'][number];
 
 function SidebarMenu({}: Props) {
     const pathname = usePathname();
-    console.log('🚀 ~ SidebarMenu ~ pathname:', pathname);
     const messages = useTranslations();
     const { isAdmin } = useAuth();
     const { checkPermission } = usePermission();

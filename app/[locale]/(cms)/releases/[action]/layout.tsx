@@ -154,20 +154,22 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     );
 
     return (
-        <div className="pr-[250px]">
-            <div className="sticky top-0 z-10 bg-white">
-                <ReleaseDetailHeader />
-                <div className="px-4">
-                    <Tabs
-                        className="tab-release-detail"
-                        items={items}
-                        activeKey={activeTab}
-                        onChange={handleTabChange}
-                        tabBarExtraContent={buttonSave}
-                    />
+        <div className="flex pr-[250px]">
+            <div className="flex-1">
+                <div className="sticky top-0 z-10 bg-white">
+                    <ReleaseDetailHeader />
+                    <div className="px-4">
+                        <Tabs
+                            className="tab-release-detail"
+                            items={items}
+                            activeKey={activeTab}
+                            onChange={handleTabChange}
+                            tabBarExtraContent={buttonSave}
+                        />
+                    </div>
                 </div>
+                {children}
             </div>
-            {children}
             <RightSidebar />
         </div>
     );

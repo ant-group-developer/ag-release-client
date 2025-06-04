@@ -29,7 +29,7 @@ export default function LinkProfileArtist({
     return (
         <AppModal
             open={open}
-            title={`Liên kết hồ sơ nghệ sĩ ${platformData?.name}`}
+            title={`Liên kết hồ sơ nghệ sĩ trên ${platformData?.name}`}
             onCancel={onClose}
             footer={false}
             maskStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}
@@ -59,7 +59,7 @@ export default function LinkProfileArtist({
                                 }
                             />
                         </CustomTooltip>
-                        <CustomTooltip title={messages('common.test')}>
+                        <CustomTooltip title={messages('message.openNewTab')}>
                             <Button
                                 className="!px-2"
                                 type="primary"

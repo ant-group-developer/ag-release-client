@@ -463,7 +463,8 @@
         "phoneNumber": "Phone number must be 10 digits",
         "inputPhoneNumber": "Enter phone number",
         "selectUsedStatus": "Select used status",
-        "minWithValid": "Must be min at least {number} valid characters"
+        "minWithValid": "Must be min at least {number} valid characters",
+        "onlyTheFollowingFormatsAreAccepted": "Only the following formats are accepted: {accept}"
     },
     "form": {
         "searchPlaceholder": "Search"
@@ -471,7 +472,8 @@
     "placeholder": {
         "dragAndDropAudio": "Drag and drop audio file here!",
         "selectArtist": "Select artist",
-        "selectRegion": "Select region"
+        "selectRegion": "Select region",
+        "supportFormats": "Support formats: {accept}"
     },
     "status": {
         "label": "Status",
@@ -740,7 +742,9 @@
         "name": "Artist name",
         "id": "Artist ID",
         "delete": "Delete artist",
+        "update": "Update artist",
         "add": "Add artist",
+
         "select": "Select artist",
         "profiles": "Artist profiles"
     },

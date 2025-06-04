@@ -11,18 +11,18 @@ export default function ArtistSelect({ ...props }: Props) {
     const fakeArtist: SelectProps['options'] = [
         {
             id: 1,
-            value: 'Artist 1',
-            label: 'Artist 1',
+            value: 'Sơn Tùng MTP',
+            label: 'Sơn Tùng MTP',
         },
         {
             id: 2,
-            value: 'Artist 2',
-            label: 'Artist 2',
+            value: 'Dương Hoàng Phúc',
+            label: 'Dương Hoàng Phúc',
         },
         {
             id: 3,
-            value: 'Artist 3',
-            label: 'Artist 3',
+            value: 'Soobin Hoàng Sơn',
+            label: 'Soobin Hoàng Sơn',
         },
     ];
     return (

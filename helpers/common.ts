@@ -595,6 +595,14 @@ export const getIntlCodeByGenres = (value: string): GenresMessageKey => {
     return genresToMessageMap[value] || 'common.pop';
 };
 
+export function parsePeakData(data = '') {
+    return data.split(';');
+}
+
+export function convertPeakData(data = []) {
+    return data.join(';');
+}
+
 // type ReleaseTypeMessageKey = 'common.album' | 'common.single' | 'common.ep';
 // export const getIntlCodeByReleaseType = (
 //     value: string

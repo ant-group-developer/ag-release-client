@@ -1,6 +1,5 @@
 import { SIZE_ICON } from '@/constants/common';
 import { cn } from '@/helpers/common';
-import useModalStore from '@/hooks/use-modal';
 import { Button } from 'antd';
 import { Check, Pen, SquareArrowOutUpRight } from 'lucide-react';
 import Image from 'next/image';
@@ -26,7 +25,6 @@ export default function ArtistProfilesList({
     className,
 }: Props) {
     const [selectedPlatform, setSelectedPlatform] = useState<any>(null);
-    const openModal = useModalStore((state) => state.openModal);
     if (list.length === 0) return null;
 
     const isLinked = (platformId: string) => {
@@ -36,7 +34,7 @@ export default function ArtistProfilesList({
     return (
         <div
             className={cn(
-                'custom-scrollbar flex max-h-[245px] flex-col gap-2 overflow-y-auto rounded-md',
+                'flex max-h-[245px] flex-col gap-2 overflow-y-auto rounded-md',
                 className
             )}
         >

@@ -1,16 +1,20 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
+import ArtistSelect from '@/components/ui/select/artist-select';
 import IconInfoTooltip from '@/components/ui/tooltip/icon-info-tooltip';
 import { artistList, languageList } from '@/constants/fakeData';
+import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { TrackData } from '@/modules/tracks/types';
-import { Input, Select } from 'antd';
+import { FormInstance, Input, Select } from 'antd';
 import { useTranslations } from 'next-intl';
+import { useEffect } from 'react';
 
 type Props = {
     trackData: TrackData;
+    form: FormInstance<any>;
 };
 
-export default function TracksForm({ trackData }: Props) {
+export default function TracksForm({ trackData, form }: Props) {
     const originalSourceList = [
         {
             label: (
@@ -40,11 +44,22 @@ export default function TracksForm({ trackData }: Props) {
             value: 'remix',
         },
     ];
+    const formValues = useReleaseFormStore((state) => state.formValues);
+
+    const mainArtist = formValues?.artists?.find(
+        (artist: any) => artist.role === 'Main Artist'
+    );
+
+    useEffect(() => {
+        form.setFieldsValue({
+            artist: mainArtist?.id,
+        });
+    }, []);
 
     const messages = useTranslations();
     return (
         <div>
-            <AppForm layout="vertical" showSubmit={false}>
+            <AppForm form={form} layout="vertical" showSubmit={false}>
                 <div className="grid grid-cols-2 gap-4">
                     <AppFormItem
                         label="Tên bài hát"
@@ -87,12 +102,7 @@ export default function TracksForm({ trackData }: Props) {
                             },
                         ]}
                     >
-                        <Select
-                            defaultValue={trackData.artist}
-                            options={artistList}
-                            showSearch
-                            allowClear
-                        />
+                        <ArtistSelect />
                     </AppFormItem>
                     <AppFormItem label="Chọn nghệ sĩ phụ" name="subArtist">
                         <Select

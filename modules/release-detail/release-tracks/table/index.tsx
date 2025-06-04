@@ -1,17 +1,16 @@
 import ActionButton from '@/components/ui/button/action-button';
+import ArtistSelect from '@/components/ui/select/artist-select';
 import SortableTable, {
     OnDragEnd,
     SortableTableProps,
 } from '@/components/ui/table/sortable-table';
 import IconInfoTooltip from '@/components/ui/tooltip/icon-info-tooltip';
-import {
-    artistList,
-    languageList,
-    originalSourceList,
-} from '@/constants/fakeData';
+import WaveformElement from '@/components/ui/wave-form-element/wave-form-element';
+import { originalSourceList } from '@/constants/fakeData';
+import { SCREEN } from '@/enums/common';
 import useModalStore from '@/hooks/use-modal';
 import { TrackData } from '@/modules/tracks/types';
-import { Checkbox, Input, Select, Tabs } from 'antd';
+import { Checkbox, Form, Input, Select, Tabs } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useLocale, useTranslations } from 'next-intl';
 import OtherMetadataForm from '../form/other-metadata-form';
@@ -21,6 +20,7 @@ import TracksForm from '../form/track-form';
 type Props = {} & Omit<SortableTableProps<TrackData>, 'columns'>;
 
 export default function ReleaseTracksTable({ ...props }: Props) {
+    const [form] = Form.useForm();
     const locale = useLocale();
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
@@ -31,6 +31,18 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             order: index + 1,
         }));
     };
+
+    const TEST_PEAKS = [
+        0.04, 0.99, 0.54, 0.74, 0.76, 0.52, 0.79, 0.72, 0.83, 0.67, 0.88, 0.99,
+        0.95, 0.9399999999999999, 0.91, 0.82, 0.96, 0.91, 0.93, 0.93, 0.98,
+        0.99, 0.98, 0.99, 0.98, 0.98, 0.98, 0.98, 0.98, 0.98, 0.98, 0.85, 0.82,
+        0.96, 0.99, 0.99, 0.99, 0.97, 0.97, 0.98, 1, 0.98, 0.98, 0.98, 0.98,
+        0.99, 0.99, 0.98, 0.98, 0.98, 0.99, 0.98, 0.99, 0.99, 0.98, 0.99, 0.9,
+        0.8, 0.91, 0.9, 0.88, 0.97, 0.98, 0.92, 0.98, 0.98, 0.99, 0.99, 0.98,
+        0.99, 0.99, 0.98, 0.98, 0.97, 0.98, 0.98, 0.98, 0.99, 0.99, 0.98, 0.99,
+        0.98, 0.99, 0.99, 0.98, 0.99, 0.98, 0.98, 0.99, 0.99, 0.98, 0.99, 0.99,
+        1, 0.99, 0.93, 0.96, 0.83, 0.9399999999999999, 0.98, 0,
+    ];
 
     const columns: ColumnType<TrackData>[] = [
         {
@@ -52,13 +64,22 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             key: 'name',
             align: 'center',
             width: 200,
+            render: () => {
+                return (
+                    <WaveformElement
+                        peakData={TEST_PEAKS.join(';')}
+                        playedTime={100}
+                        songDuration={300}
+                    />
+                );
+            },
         },
         {
             title: messages('tracks.label'),
             dataIndex: 'title',
             key: 'title',
             align: 'left',
-            width: 150,
+            width: 200,
             render: (value, record) => {
                 return <Input defaultValue={value} />;
             },
@@ -68,13 +89,13 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             dataIndex: 'artist',
             key: 'artist',
             align: 'left',
-            width: 120,
+            width: 150,
             render: (value) => {
                 return (
-                    <Select
-                        className="w-full"
+                    <ArtistSelect
                         placeholder="Chọn nghệ sĩ"
-                        options={artistList}
+                        value={value}
+                        className="w-full"
                     />
                 );
             },
@@ -84,7 +105,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             dataIndex: '',
             key: '',
             align: 'left',
-            width: 120,
+            width: 150,
             render: (value) => {
                 return (
                     <Select
@@ -95,29 +116,29 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                 );
             },
         },
-        {
-            title: (
-                <div className="flex items-center justify-between">
-                    <span>Ngôn ngữ</span>
-                    <div>
-                        <IconInfoTooltip title="Ngôn ngữ chính được thể hiện trong bài hát" />
-                    </div>
-                </div>
-            ),
-            dataIndex: '',
-            key: '',
-            align: 'left',
-            width: 120,
-            render: (value) => {
-                return (
-                    <Select
-                        className="w-full"
-                        placeholder="Chọn ngôn ngữ"
-                        options={languageList}
-                    />
-                );
-            },
-        },
+        // {
+        //     title: (
+        //         <div className="flex items-center justify-between">
+        //             <span>Ngôn ngữ</span>
+        //             <div>
+        //                 <IconInfoTooltip title="Ngôn ngữ chính được thể hiện trong bài hát" />
+        //             </div>
+        //         </div>
+        //     ),
+        //     dataIndex: '',
+        //     key: '',
+        //     align: 'left',
+        //     width: 120,
+        //     render: (value) => {
+        //         return (
+        //             <Select
+        //                 className="w-full"
+        //                 placeholder="Chọn ngôn ngữ"
+        //                 options={languageList}
+        //             />
+        //         );
+        //     },
+        // },
         {
             title: (
                 <div className="flex items-center justify-between">
@@ -130,7 +151,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             dataIndex: '',
             key: '',
             align: 'center',
-            width: 80,
+            width: 90,
             render: (value) => {
                 return (
                     <div className="flex items-center justify-center gap-2">
@@ -144,7 +165,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             dataIndex: 'action',
             key: 'action',
             align: 'center',
-            width: 50,
+            width: 40,
             render: () => <ActionButton showDelete />,
         },
     ];
@@ -154,7 +175,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             {
                 key: '1',
                 label: <span className="font-medium">Bản nhạc & nghệ sĩ</span>,
-                children: <TracksForm trackData={record} />,
+                children: <TracksForm form={form} trackData={record} />,
             },
             {
                 key: '2',
@@ -182,18 +203,20 @@ export default function ReleaseTracksTable({ ...props }: Props) {
     // };
 
     return (
-        <SortableTable
-            key="main"
-            {...props}
-            pagination={false}
-            columns={columns}
-            rowClassName={() => 'group'}
-            onDragEnd={handleDragEnd}
-            expandable={{
-                expandedRowRender,
-                expandedRowClassName: () => '!z-0 custom-track-expanded',
-            }}
-            scroll={{ y: 49 * 11.8 }}
-        />
+        <div className="w-full">
+            <SortableTable
+                key="main"
+                {...props}
+                pagination={false}
+                columns={columns}
+                rowClassName={() => 'group'}
+                onDragEnd={handleDragEnd}
+                expandable={{
+                    expandedRowRender,
+                    expandedRowClassName: () => '!z-0 custom-track-expanded',
+                }}
+                scroll={{ x: SCREEN.XXL }}
+            />
+        </div>
     );
 }
