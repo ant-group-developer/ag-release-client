@@ -1,29 +1,35 @@
-import ActionButton from '@/components/ui/button/action-button';
 import ArtistSelect from '@/components/ui/select/artist-select';
 import SortableTable, {
     OnDragEnd,
     SortableTableProps,
 } from '@/components/ui/table/sortable-table';
 import IconInfoTooltip from '@/components/ui/tooltip/icon-info-tooltip';
-import WaveformElement from '@/components/ui/wave-form-element/wave-form-element';
 import { originalSourceList } from '@/constants/fakeData';
 import { SCREEN } from '@/enums/common';
 import useModalStore from '@/hooks/use-modal';
+import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { TrackData } from '@/modules/tracks/types';
 import { Checkbox, Form, Input, Select, Tabs } from 'antd';
 import { ColumnType } from 'antd/es/table';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
+import TrackActionButton from '../button/track-action';
 import OtherMetadataForm from '../form/other-metadata-form';
 import PublishingForm from '../form/publishing-form';
 import TracksForm from '../form/track-form';
+import { TrackWaveform } from '../track-wave-form';
 
-type Props = {} & Omit<SortableTableProps<TrackData>, 'columns'>;
+type Props = {
+    handleRemoveTrack: (trackId: string) => void;
+} & Omit<SortableTableProps<TrackData>, 'columns'>;
 
-export default function ReleaseTracksTable({ ...props }: Props) {
+export default function ReleaseTracksTable({
+    handleRemoveTrack,
+    ...props
+}: Props) {
     const [form] = Form.useForm();
-    const locale = useLocale();
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
+    const formValues = useReleaseFormStore((state) => state.formValues);
 
     const handleDragEnd: OnDragEnd<TrackData[]> = (newData) => {
         const payload = newData.map((item, index) => ({
@@ -31,18 +37,6 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             order: index + 1,
         }));
     };
-
-    const TEST_PEAKS = [
-        0.04, 0.99, 0.54, 0.74, 0.76, 0.52, 0.79, 0.72, 0.83, 0.67, 0.88, 0.99,
-        0.95, 0.9399999999999999, 0.91, 0.82, 0.96, 0.91, 0.93, 0.93, 0.98,
-        0.99, 0.98, 0.99, 0.98, 0.98, 0.98, 0.98, 0.98, 0.98, 0.98, 0.85, 0.82,
-        0.96, 0.99, 0.99, 0.99, 0.97, 0.97, 0.98, 1, 0.98, 0.98, 0.98, 0.98,
-        0.99, 0.99, 0.98, 0.98, 0.98, 0.99, 0.98, 0.99, 0.99, 0.98, 0.99, 0.9,
-        0.8, 0.91, 0.9, 0.88, 0.97, 0.98, 0.92, 0.98, 0.98, 0.99, 0.99, 0.98,
-        0.99, 0.99, 0.98, 0.98, 0.97, 0.98, 0.98, 0.98, 0.99, 0.99, 0.98, 0.99,
-        0.98, 0.99, 0.99, 0.98, 0.99, 0.98, 0.98, 0.99, 0.99, 0.98, 0.99, 0.99,
-        1, 0.99, 0.93, 0.96, 0.83, 0.9399999999999999, 0.98, 0,
-    ];
 
     const columns: ColumnType<TrackData>[] = [
         {
@@ -64,13 +58,11 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             key: 'name',
             align: 'center',
             width: 200,
-            render: () => {
+            render: (value, record) => {
                 return (
-                    <WaveformElement
-                        peakData={TEST_PEAKS.join(';')}
-                        playedTime={100}
-                        songDuration={300}
-                    />
+                    <div className="w-full">
+                        <TrackWaveform key={record.id} data={record} />
+                    </div>
                 );
             },
         },
@@ -151,7 +143,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             dataIndex: '',
             key: '',
             align: 'center',
-            width: 90,
+            width: 125,
             render: (value) => {
                 return (
                     <div className="flex items-center justify-center gap-2">
@@ -166,7 +158,13 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             key: 'action',
             align: 'center',
             width: 40,
-            render: () => <ActionButton showDelete />,
+            render: (value, record) => (
+                <TrackActionButton
+                    showDelete
+                    onShowDelete={() => handleRemoveTrack(record?.id)}
+                    showDownload
+                />
+            ),
         },
     ];
 

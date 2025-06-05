@@ -1,7 +1,8 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
+import GenresSelect from '@/components/ui/select/genres-select';
 import LabelSelect from '@/components/ui/select/label-select';
-import { genresList, languageList, yearList } from '@/constants/fakeData';
+import { languageList, yearList } from '@/constants/fakeData';
 import useModalStore from '@/hooks/use-modal';
 import {
     RELEASES_TYPE,
@@ -174,14 +175,14 @@ export default function ReleaseDetailForm() {
                                 },
                             ]}
                         >
-                            <Select options={genresList} />
+                            <GenresSelect />
                         </AppFormItem>
 
                         <AppFormItem
                             label={messages('common.subGenres')}
                             name="subGenres"
                         >
-                            <Select options={genresList} />
+                            <GenresSelect />
                         </AppFormItem>
 
                         <AppFormItem

@@ -33,12 +33,13 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
         try {
             const values = await form.validateFields();
             const files = values.tracks?.fileList || [];
+
             const newTracks: TrackData[] = files.map(
                 (file: any, index: number) => ({
                     id: Date.now() + index,
                     title: getFileName(file),
                     file: file.originFileObj,
-                    artist: mainArtist.id,
+                    artist: mainArtist.id ?? '',
                 })
             );
             onAddTracks?.(newTracks);

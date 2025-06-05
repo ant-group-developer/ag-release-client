@@ -1,35 +1,37 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
+import GenresSelect from '@/components/ui/select/genres-select';
+import { languageList } from '@/constants/fakeData';
+import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { Select } from 'antd';
+import { useForm } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
+import { useEffect } from 'react';
 
 type Props = {};
 
 export default function OtherMetadataForm({}: Props) {
+    const [form] = useForm();
     const messages = useTranslations();
-    const genresList = [
-        {
-            label: 'Hip-Hop',
-            value: 'genre-1',
-        },
-        {
-            label: 'Rap',
-            value: 'genre-2',
-        },
-    ];
-    const languageList = [
-        {
-            label: 'Tiếng Việt',
-            value: 'vi',
-        },
-        {
-            label: 'Tiếng Anh',
-            value: 'en',
-        },
-    ];
+    const formValues = useReleaseFormStore((state) => state.formValues);
+
+    console.log('formValues:', formValues);
+    useEffect(() => {
+        form.setFieldsValue({
+            genres: formValues.genres,
+            subGenres: formValues.subGenres,
+            sensitiveContent: formValues.sensitiveContent,
+        });
+    }, [formValues, form]);
+
     return (
         <div>
-            <AppForm layout="vertical" showSubmit={false}>
+            <AppForm
+                form={form}
+                initialValues={formValues}
+                layout="vertical"
+                showSubmit={false}
+            >
                 <div className="grid grid-cols-2 gap-4">
                     <AppFormItem
                         label="Thể loại"
@@ -42,8 +44,7 @@ export default function OtherMetadataForm({}: Props) {
                             },
                         ]}
                     >
-                        <Select
-                            options={genresList}
+                        <GenresSelect
                             showSearch
                             allowClear
                             // placeholder={messages(
@@ -53,8 +54,7 @@ export default function OtherMetadataForm({}: Props) {
                     </AppFormItem>
 
                     <AppFormItem label="Thể loại phụ" name="subGenres">
-                        <Select
-                            options={genresList}
+                        <GenresSelect
                             showSearch
                             allowClear
                             // placeholder={messages(
@@ -64,7 +64,7 @@ export default function OtherMetadataForm({}: Props) {
                     </AppFormItem>
                     <AppFormItem
                         label="Nội dung nhạy cảm"
-                        name=""
+                        name="sensitiveContent"
                         required
                         rules={[
                             {

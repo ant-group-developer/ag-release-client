@@ -15,6 +15,7 @@ export interface TrackData {
     thumbnail: string;
     artist: string;
     plays: number;
+    file: File;
 }
 
 export interface TrackDataFilter extends CommonParams {

@@ -603,6 +603,31 @@ export function convertPeakData(data = []) {
     return data.join(';');
 }
 
+export const getPeakData = async (audioFile: any) => {
+    try {
+        const audioContext = new AudioContext();
+        const buffer = await audioFile.arrayBuffer();
+        const audioBuffer = await audioContext.decodeAudioData(buffer);
+        const channelData = audioBuffer.getChannelData(0);
+        const peaks = [];
+        const step = Math.ceil(channelData.length / 1024);
+        for (let i = 0; i < channelData.length; i += step) {
+            let max = 0;
+            for (let j = 0; j < step; j++) {
+                const val = Math.abs(channelData[i + j]);
+                if (val > max) {
+                    max = val;
+                }
+            }
+            peaks.push(max);
+        }
+        const duration = audioBuffer.duration;
+        return { peakData: peaks, songDuration: duration };
+    } catch {
+        return { peakData: [], songDuration: 0 };
+    }
+};
+
 // type ReleaseTypeMessageKey = 'common.album' | 'common.single' | 'common.ep';
 // export const getIntlCodeByReleaseType = (
 //     value: string

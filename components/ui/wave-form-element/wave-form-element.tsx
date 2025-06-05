@@ -1,5 +1,8 @@
+'use client';
+import { SIZE_ICON } from '@/constants/common';
 import { convertSecondsToTime, parsePeakData } from '@/helpers/common';
-import { Col, Row } from 'antd';
+import { Button, Col, Row } from 'antd';
+import { Pause, Play } from 'lucide-react';
 import PropTypes from 'prop-types';
 import Waveform from 'react-audio-waveform';
 // import { StyledSongItemDuration, StyledSongItemPlayback } from './index.styled';
@@ -10,24 +13,29 @@ const WaveformElement = ({
     playedTime = 0,
     playing = false,
     togglePlayback = () => {},
-    handleSeeking = () => {},
+    handleSeeking = (value: any) => {},
 }) => {
     // const peaks = (peakData && peakData.split(';')) || [];
     const peaks = parsePeakData(peakData);
 
     return (
         <Row align="middle" wrap={false}>
-            <Col className="block lg:hidden" flex="50px">
-                {/* <StyledSongItemPlayback
+            <Col className="block" flex="50px">
+                <Button
+                    shape="circle"
                     onClick={togglePlayback}
                     icon={
                         playing ? (
-                            <Pause size={SIZE_ICON} />
+                            <div>
+                                <Pause size={SIZE_ICON} />
+                            </div>
                         ) : (
-                            <Play size={SIZE_ICON} />
+                            <div>
+                                <Play size={SIZE_ICON} />
+                            </div>
                         )
                     }
-                /> */}
+                />
             </Col>
             <Col flex="50px">
                 {/* <StyledSongItemDuration className="text-left"> */}
@@ -44,17 +52,17 @@ const WaveformElement = ({
                             duration={songDuration}
                             onClick={handleSeeking}
                             color="#c7c7c9"
-                            progressColor="tomato"
+                            progressColor="#009AEE"
                             transitionDuration={100}
                         />
                     )) ||
                         null}
                 </div>
             </Col>
-            <Col flex="70px">
-                {/* <StyledSongItemDuration>
-                    {convertSecondsToTime(songDuration)}
-                </StyledSongItemDuration> */}
+            <Col flex="50px">
+                {/* <StyledSongItemDuration> */}
+                {convertSecondsToTime(songDuration)}
+                {/* </StyledSongItemDuration> */}
             </Col>
         </Row>
     );
@@ -68,5 +76,8 @@ WaveformElement.propTypes = {
     playing: PropTypes.bool,
     playedTime: PropTypes.number,
     togglePlayback: PropTypes.func,
+    /**
+     * Hàm callback khi seek, nhận giá trị seek từ waveform
+     */
     handleSeeking: PropTypes.func,
 };

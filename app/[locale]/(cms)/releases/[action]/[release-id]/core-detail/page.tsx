@@ -34,16 +34,18 @@ export default function CoreDetail() {
 
     useEffect(() => {
         // Chỉ set initialData nếu chưa có data trong store
-        if (releaseId && Object.keys(formValues).length === 0) {
+
+        if (releaseId && (!formValues || !formValues.nameRelease)) {
             // fake data
             const initialData = {
                 type: 'album',
                 nameRelease: 'Album Mới 2024',
+                isMoreThan4Artists: false,
                 nameDisplay: 'Album Mới 2024 - Phát Hành Chính Thức',
                 artist: 'artist-1',
                 subArtist: ['artist-2'],
-                genres: 'genre-1',
-                subGenres: 'genre-2',
+                genres: 'Hip-hop',
+                subGenres: 'Rap',
                 language: 'vi',
                 label: 'label-1',
                 upc: '123456789012',
