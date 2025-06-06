@@ -76,7 +76,10 @@ export default function ReleaseDetailHeader() {
                                 <div className="text-sm">
                                     <span>Nghệ sĩ: </span>
                                     <span className="font-bold">
-                                        {formValues.artist}
+                                        {formValues?.artists &&
+                                        formValues.artists.length > 0
+                                            ? formValues.artists[0]?.name
+                                            : ''}
                                     </span>
                                 </div>
                                 <div className="text-sm">

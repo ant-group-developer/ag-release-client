@@ -5,6 +5,7 @@ import {
     ORIENTATION,
     UPLOAD_TYPE,
 } from '@/enums/common';
+import { AudioMetadata } from '@/modules/release-detail/release-tracks/form/audio-specifications';
 import { RELEASES_STATUS } from '@/modules/releases/enums';
 import { GENRES } from '@/modules/tracks/enums';
 import { presetPalettes } from '@ant-design/colors';
@@ -13,6 +14,7 @@ import clsx, { ClassValue } from 'clsx';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import MediaInfoFactory from 'mediainfo.js';
+import { parseBlob } from 'music-metadata';
 import { twMerge } from 'tailwind-merge';
 dayjs.extend(utc);
 /**
@@ -627,6 +629,42 @@ export const getPeakData = async (audioFile: any) => {
         return { peakData: [], songDuration: 0 };
     }
 };
+
+const extractAudioMetadata = async (file: File): Promise<AudioMetadata> => {
+    try {
+        const metadata = await parseBlob(file); // Phân tích file âm thanh từ Blob
+        if (!metadata.format) {
+            throw new Error('No metadata found');
+        }
+        const audioInfo: AudioMetadata = {
+            codec: metadata.format.codec ?? 'unknown', // Định dạng codec (WAV, MP3, v.v.)
+            format: metadata.format.container ?? 'unknown', // Định dạng container (WAV, MP3, v.v.)
+            bitrate: metadata.format.bitrate ?? 0, // Bitrate của file âm thanh
+            sampleRate: metadata.format.sampleRate ?? 0, // Tần số mẫu (Sample Rate)
+            channels: metadata.format.numberOfChannels ?? 0, // Số kênh (Mono/Stereo)
+            duration: Math.round(metadata.format.duration ?? 0), // Thời gian của bài hát (tính bằng giây)
+            bitDepth: metadata.format.bitsPerSample ?? 0, // Bit Depth (nếu có)
+            mqs:
+                (metadata?.format?.sampleRate ?? 0) >= 96000 &&
+                (metadata?.format?.bitrate ?? 0) >= 320000
+                    ? 'Yes'
+                    : 'No', // MQS (Ước tính dựa trên sample rate và bitrate)
+        };
+
+        return audioInfo;
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.error('Error extracting metadata:', error.message);
+        } else {
+            console.error(
+                'An unknown error occurred during metadata extraction'
+            );
+        }
+        throw error; // Đẩy lỗi ra nếu có vấn đề trong quá trình phân tích
+    }
+};
+
+export default extractAudioMetadata;
 
 // type ReleaseTypeMessageKey = 'common.album' | 'common.single' | 'common.ep';
 // export const getIntlCodeByReleaseType = (

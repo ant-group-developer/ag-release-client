@@ -28,21 +28,18 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     );
 
     useEffect(() => {
-        // Cập nhật tab active khi đường dẫn thay đổi
-        if (pathname) {
-            if (pathname.includes('/tracks')) {
-                setActiveTab(RELEASES_TABS.TRACKS);
-            } else if (pathname.includes('/schedule')) {
-                setActiveTab(RELEASES_TABS.SCHEDULE);
-            } else if (pathname.includes('/review')) {
-                setActiveTab(RELEASES_TABS.REVIEW);
-            } else if (
-                pathname.includes('/core-detail') ||
-                pathname.includes('/create')
-            ) {
-                setActiveTab(RELEASES_TABS.CORE_DETAIL);
-            }
-        }
+        const getActiveTab = () => {
+            const map: Record<string, string> = {
+                [RELEASES_TABS.CORE_DETAIL]: RELEASES_TABS.CORE_DETAIL,
+                [RELEASES_TABS.TRACKS]: RELEASES_TABS.TRACKS,
+                [RELEASES_TABS.SCHEDULE]: RELEASES_TABS.SCHEDULE,
+                [RELEASES_TABS.REVIEW]: RELEASES_TABS.REVIEW,
+                [RELEASES_TABS.DISTRIBUTION]: RELEASES_TABS.DISTRIBUTION,
+            };
+            const tabKey = pathname.split('/').pop();
+            return map[tabKey ?? ''] || RELEASES_TABS.CORE_DETAIL;
+        };
+        setActiveTab(getActiveTab());
     }, [pathname]);
 
     const coreDetailTabsNavigate = isCreateReleasePage
@@ -90,19 +87,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     className={cn(isDisableTab ? 'pointer-events-none' : '')}
                     href={`/releases/detail/${releaseId}/schedule`}
                 >
-                    <span className="font-medium">Lên lịch & phân phối</span>
-                </Link>
-            ),
-            disabled: isDisableTab,
-        },
-        {
-            key: RELEASES_TABS.DISTRIBUTION,
-            label: (
-                <Link
-                    className={cn(isDisableTab ? 'pointer-events-none' : '')}
-                    href={`/releases/detail/${releaseId}/distribution`}
-                >
-                    <span className="font-medium">Phân phối</span>
+                    <span className="font-medium">Lên lịch</span>
                 </Link>
             ),
             disabled: isDisableTab,
@@ -115,6 +100,18 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     href={`/releases/detail/${releaseId}/review`}
                 >
                     <span className="font-medium">Review</span>
+                </Link>
+            ),
+            disabled: isDisableTab,
+        },
+        {
+            key: RELEASES_TABS.DISTRIBUTION,
+            label: (
+                <Link
+                    className={cn(isDisableTab ? 'pointer-events-none' : '')}
+                    href={`/releases/detail/${releaseId}/distribution`}
+                >
+                    <span className="font-medium">Phân phối</span>
                 </Link>
             ),
             disabled: isDisableTab,

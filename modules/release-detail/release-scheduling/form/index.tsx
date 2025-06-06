@@ -1,10 +1,10 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
-import PlatformSelect from '@/components/ui/select/platform-select';
 import RegionSelect from '@/components/ui/select/region-select';
 import TimezoneSelect from '@/components/ui/select/timezone-select';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { DatePicker, Form } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
@@ -181,7 +181,7 @@ export default function ReleaseSchedulingForm({}: Props) {
                             />
                         </AppFormItem>
 
-                        <AppFormItem
+                        {/* <AppFormItem
                             label="Loại nền tảng"
                             name="platformType"
                             required
@@ -208,7 +208,7 @@ export default function ReleaseSchedulingForm({}: Props) {
                                     </CustomTooltip>
                                 )}
                             />
-                        </AppFormItem>
+                        </AppFormItem> */}
 
                         <AppFormItem
                             label="Timezone"
@@ -222,6 +222,10 @@ export default function ReleaseSchedulingForm({}: Props) {
                             ]}
                         >
                             <TimezoneSelect className="w-full" />
+                        </AppFormItem>
+
+                        <AppFormItem label="Ghi chú" name="note" required>
+                            <TextArea autoSize={{ minRows: 1, maxRows: 20 }} />
                         </AppFormItem>
                     </div>
 

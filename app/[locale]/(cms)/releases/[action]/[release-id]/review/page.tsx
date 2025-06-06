@@ -7,7 +7,7 @@ export default function Review() {
         <div className="flex flex-col gap-8 p-4">
             <ReviewProgress />
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-1">
                 <MetadataInfo />
                 <TracksInfo />
             </div>

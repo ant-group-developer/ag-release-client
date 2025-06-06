@@ -42,7 +42,13 @@ export default function CoreDetail() {
                 nameRelease: 'Album Mới 2024',
                 isMoreThan4Artists: false,
                 nameDisplay: 'Album Mới 2024 - Phát Hành Chính Thức',
-                artist: 'artist-1',
+                artists: [
+                    {
+                        id: 'Sơn Tùng MTP',
+                        name: 'Sơn Tùng MTP',
+                        role: 'Main Artist',
+                    },
+                ],
                 subArtist: ['artist-2'],
                 genres: 'Hip-hop',
                 subGenres: 'Rap',

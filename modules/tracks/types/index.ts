@@ -16,6 +16,10 @@ export interface TrackData {
     artist: string;
     plays: number;
     file: File;
+    songInfo: {
+        duration: number;
+        peakData: number[];
+    };
 }
 
 export interface TrackDataFilter extends CommonParams {

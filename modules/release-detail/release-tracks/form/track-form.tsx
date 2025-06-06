@@ -5,16 +5,15 @@ import IconInfoTooltip from '@/components/ui/tooltip/icon-info-tooltip';
 import { artistList, languageList } from '@/constants/fakeData';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { TrackData } from '@/modules/tracks/types';
-import { FormInstance, Input, Select } from 'antd';
+import { Form, Input, Select } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 
 type Props = {
     trackData: TrackData;
-    form: FormInstance<any>;
 };
 
-export default function TracksForm({ trackData, form }: Props) {
+export default function TracksForm({ trackData }: Props) {
     const originalSourceList = [
         {
             label: (
@@ -44,8 +43,8 @@ export default function TracksForm({ trackData, form }: Props) {
             value: 'remix',
         },
     ];
+    const [form] = Form.useForm();
     const formValues = useReleaseFormStore((state) => state.formValues);
-
     const mainArtist = formValues?.artists?.find(
         (artist: any) => artist.role === 'Main Artist'
     );
@@ -53,6 +52,7 @@ export default function TracksForm({ trackData, form }: Props) {
     useEffect(() => {
         form.setFieldsValue({
             artist: mainArtist?.id,
+            trackName: trackData.title,
         });
     }, []);
 
@@ -63,7 +63,7 @@ export default function TracksForm({ trackData, form }: Props) {
                 <div className="grid grid-cols-2 gap-4">
                     <AppFormItem
                         label="Tên bài hát"
-                        name="nameRelease"
+                        name="trackName"
                         required
                         rules={[
                             {
@@ -72,7 +72,7 @@ export default function TracksForm({ trackData, form }: Props) {
                             },
                         ]}
                     >
-                        <Input defaultValue={trackData.title} allowClear />
+                        <Input allowClear />
                     </AppFormItem>
 
                     <AppFormItem label="ISRC" name="isrc">

@@ -7,7 +7,7 @@ import { useTranslations } from 'next-intl';
 
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import DndAudioUpload from '@/components/ui/input/dnd-audio-upload';
-import { getFileName } from '@/helpers/common';
+import { getFileName, getPeakData } from '@/helpers/common';
 import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
@@ -34,14 +34,30 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
             const values = await form.validateFields();
             const files = values.tracks?.fileList || [];
 
-            const newTracks: TrackData[] = files.map(
-                (file: any, index: number) => ({
-                    id: Date.now() + index,
-                    title: getFileName(file),
-                    file: file.originFileObj,
-                    artist: mainArtist.id ?? '',
-                })
+            const newTracksPromises: Promise<TrackData>[] = files.map(
+                async (file: any, index: number) => {
+                    let songDuration = 0;
+                    let peakData: number[] = [];
+                    if (file.originFileObj) {
+                        const { peakData: data, songDuration: duration } =
+                            await getPeakData(file.originFileObj);
+                        peakData = data;
+                        songDuration = duration;
+                    }
+
+                    return {
+                        id: Date.now() + index,
+                        title: getFileName(file),
+                        file: file.originFileObj,
+                        artist: mainArtist?.id ?? '',
+                        songInfo: {
+                            duration: songDuration,
+                            peakData: peakData,
+                        },
+                    };
+                }
             );
+            const newTracks = await Promise.all(newTracksPromises);
             onAddTracks?.(newTracks);
             closeModal();
         } catch (error) {

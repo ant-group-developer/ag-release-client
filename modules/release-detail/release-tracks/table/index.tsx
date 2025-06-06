@@ -13,6 +13,7 @@ import { Checkbox, Form, Input, Select, Tabs } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import TrackActionButton from '../button/track-action';
+import AudioSpecifications from '../form/audio-specifications';
 import OtherMetadataForm from '../form/other-metadata-form';
 import PublishingForm from '../form/publishing-form';
 import TracksForm from '../form/track-form';
@@ -59,6 +60,7 @@ export default function ReleaseTracksTable({
             align: 'center',
             width: 200,
             render: (value, record) => {
+                console.log('first', record);
                 return (
                     <div className="w-full">
                         <TrackWaveform key={record.id} data={record} />
@@ -173,7 +175,7 @@ export default function ReleaseTracksTable({
             {
                 key: '1',
                 label: <span className="font-medium">Bản nhạc & nghệ sĩ</span>,
-                children: <TracksForm form={form} trackData={record} />,
+                children: <TracksForm trackData={record} />,
             },
             {
                 key: '2',
@@ -182,6 +184,11 @@ export default function ReleaseTracksTable({
             },
             {
                 key: '3',
+                label: <span className="font-medium">Thông số kỹ thuật</span>,
+                children: <AudioSpecifications trackData={record} />,
+            },
+            {
+                key: '4',
                 label: <span className="font-medium">Xuất bản</span>,
                 children: <PublishingForm />,
             },

@@ -22,7 +22,6 @@ export default function LinkProfileArtist({
     const [form] = Form.useForm();
 
     const handleSubmit = (values: any) => {
-        console.log(values);
         onClose();
     };
 

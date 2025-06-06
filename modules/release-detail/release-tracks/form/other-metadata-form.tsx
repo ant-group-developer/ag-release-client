@@ -1,10 +1,11 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import GenresSelect from '@/components/ui/select/genres-select';
-import { languageList } from '@/constants/fakeData';
+import { languageList, originalSourceList } from '@/constants/fakeData';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { Select } from 'antd';
 import { useForm } from 'antd/es/form/Form';
+import TextArea from 'antd/es/input/TextArea';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 
@@ -15,7 +16,6 @@ export default function OtherMetadataForm({}: Props) {
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
 
-    console.log('formValues:', formValues);
     useEffect(() => {
         form.setFieldsValue({
             genres: formValues.genres,
@@ -143,6 +143,31 @@ export default function OtherMetadataForm({}: Props) {
                             // placeholder={messages(
                             //     'tracks.placeholder.selectLanguage'
                             // )}
+                        />
+                    </AppFormItem>
+                    <AppFormItem
+                        label="Nguồn gốc"
+                        name="originalSource"
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.select'),
+                            },
+                        ]}
+                    >
+                        <Select
+                            className="w-full"
+                            placeholder="Chọn nguồn gốc"
+                            options={originalSourceList}
+                        />
+                    </AppFormItem>
+                    <AppFormItem label="Lời bài hát" name="lyrics">
+                        <TextArea
+                            className="w-full"
+                            placeholder="Nhập lời bài hát"
+                            rows={1}
+                            autoSize={{ minRows: 1, maxRows: 20 }}
                         />
                     </AppFormItem>
                 </div>

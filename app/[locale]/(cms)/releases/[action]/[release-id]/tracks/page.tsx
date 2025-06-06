@@ -9,20 +9,29 @@ import { TrackData } from '@/modules/tracks/types';
 import { Key, useState } from 'react';
 
 export default function Tracks() {
-    const [tracks, setTracks] = useState<TrackData[]>([]);
+    const formValues = useReleaseFormStore((state) => state.formValues);
     const [selectedRow, setSelectedRow] = useState<Key[]>([]);
     const typeModal = useModalStore((state) => state.typeModal);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
+
     const handleRowSelection = (selectedRowKeys: Key[]) => {
         setSelectedRow(selectedRowKeys);
     };
 
     const handleRemoveTrack = (trackId: string) => {
-        setTracks(tracks?.filter((track) => track?.id !== trackId));
+        // setTracks(tracks?.filter((track) => track?.id !== trackId));
     };
 
     const handleAddTracks = (newTracks: TrackData[]) => {
-        setTracks([...tracks, ...newTracks]);
+        setFormValues({
+            ...formValues,
+            tracks: [
+                ...(Array.isArray(formValues?.tracks)
+                    ? formValues.tracks
+                    : Object.values(formValues?.tracks || {})),
+                ...newTracks,
+            ],
+        });
     };
 
     const rowSelection = {
@@ -34,7 +43,7 @@ export default function Tracks() {
         <div>
             {/* <ListTracksReleaseHeader /> */}
             <ReleaseTracksTable
-                dataSource={tracks}
+                dataSource={formValues?.tracks || []}
                 rowSelection={rowSelection}
                 handleRemoveTrack={handleRemoveTrack}
             />
