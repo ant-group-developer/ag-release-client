@@ -17,8 +17,8 @@ function SidebarMenu({}: Props) {
     const { checkPermission } = usePermission();
 
     const getChildrenRoutes = (children: AdminRoutesChildType[]) => {
-        // return children;
-        if (isAdmin) return children;
+        return children;
+        // if (isAdmin) return children;
 
         const result = children.filter((item) =>
             checkPermission(item.permission)

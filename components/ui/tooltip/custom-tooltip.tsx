@@ -27,7 +27,9 @@ export default function CustomTooltip({
         <Tooltip
             {...props}
             className={cn(className)}
-            overlayClassName={cn({ '!text-xs': size === 'small' })}
+            overlayClassName={cn(props?.overlayClassName, {
+                '!text-xs': size === 'small',
+            })}
             overlayInnerStyle={{ ...smallOverlayInnerStyle }}
         />
     );

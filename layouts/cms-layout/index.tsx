@@ -2,7 +2,6 @@
 
 import AppLoader from '@/components/app-loader';
 import { LOCAL_STORAGE_KEY } from '@/enums/common';
-import { APP_ROUTES } from '@/enums/routes';
 import { useActive } from '@/hooks/use-active';
 import usePermissionStore from '@/hooks/use-permission';
 import { useRouter } from '@/i18n/routing';
@@ -36,23 +35,23 @@ export default function CMSLayout({ children, accessToken }: Props) {
 
     const setPermission = usePermissionStore((state) => state.setPermission);
 
-    useEffect(() => {
-        function verify() {
-            if (isLoading) return;
+    // useEffect(() => {
+    //     function verify() {
+    //         if (isLoading) return;
 
-            if (isAdmin) return;
+    //         if (isAdmin) return;
 
-            if (canAccessCurrentRoute) return;
+    //         if (canAccessCurrentRoute) return;
 
-            if (routeCanAccess) {
-                return router.push(routeCanAccess.href);
-            }
+    //         if (routeCanAccess) {
+    //             return router.push(routeCanAccess.href);
+    //         }
 
-            return router.push(APP_ROUTES.FORBIDDEN);
-        }
+    //         return router.push(APP_ROUTES.FORBIDDEN);
+    //     }
 
-        verify();
-    }, [isLoading, isAdmin, canAccessCurrentRoute, routeCanAccess, router]);
+    //     verify();
+    // }, [isLoading, isAdmin, canAccessCurrentRoute, routeCanAccess, router]);
 
     useEffect(() => {
         setPermission(permission, isAdmin);

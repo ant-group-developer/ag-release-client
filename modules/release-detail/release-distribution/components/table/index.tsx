@@ -18,14 +18,13 @@ export default function DistributionTable({ ...props }: Props) {
         {
             title: messages('common.iNo'),
             key: 'iNo',
-            width: 50,
+            width: 80,
             align: 'center',
             render: (_, __, index) => index + 1,
         },
         {
             title: 'Platform',
             dataIndex: 'platform',
-            width: 200,
             render: (value, record) => {
                 return (
                     <div className="flex items-center gap-2">
@@ -48,7 +47,6 @@ export default function DistributionTable({ ...props }: Props) {
             key: 'releaseDate',
             dataIndex: 'releaseDate',
             align: 'center',
-            width: 180,
             render: (value) => (
                 <span className="truncate text-wrap">
                     {' '}
@@ -61,7 +59,6 @@ export default function DistributionTable({ ...props }: Props) {
             key: 'creationDate',
             dataIndex: 'creationDate',
             align: 'center',
-            width: 180,
             render: (value) => (
                 <span className="truncate text-wrap">
                     {' '}
@@ -75,7 +72,6 @@ export default function DistributionTable({ ...props }: Props) {
             key: 'status',
             dataIndex: 'status',
             align: 'center',
-            width: 120,
             render: (value) => (
                 <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
                     {messages(getIntlCodeByReleaseStatus(value))}
@@ -86,14 +82,17 @@ export default function DistributionTable({ ...props }: Props) {
         {
             key: 'actions',
             align: 'center',
-            width: 50,
             fixed: 'right',
-            render: () => (
+            width: 100,
+            render: (value, record) => (
                 <DistributionActionButton
                     showDistribute
                     showDelete
                     onShowDistribute={() => {
-                        openModal(TYPE_MODAL_RELEASE_DISTRIBUTION.DISTRIBUTION);
+                        openModal(
+                            TYPE_MODAL_RELEASE_DISTRIBUTION.DISTRIBUTION,
+                            record
+                        );
                     }}
                     onShowDelete={() => {}}
                 />

@@ -426,17 +426,17 @@ export default function TracksInfo({}: Props) {
     ];
 
     return (
-        <div>
+        <div className="my-1">
             <p className="text-lg font-medium">Bài hát</p>
             <div className="flex flex-col gap-1">
                 <Collapse
-                    className="release-review-collapse !rounded-none !border-none !bg-card-bg !py-2"
+                    className="release-review-collapse !border-none !bg-card-bg !py-2"
                     items={items}
                     size="small"
                     bordered={false}
                 />
                 <Collapse
-                    className="release-review-collapse !rounded-none !border-none !bg-card-bg !py-2"
+                    className="release-review-collapse !border-none !bg-card-bg !py-2"
                     items={items2}
                     size="small"
                     bordered={false}

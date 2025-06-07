@@ -7,7 +7,6 @@ import useModalStore from '@/hooks/use-modal';
 import { DISTRIBUTION_COLUMNS_DISPLAY } from '@/modules/distribution/enum';
 import { DistributionDataFilter } from '@/modules/distribution/types';
 import { useTranslations } from 'next-intl';
-import ShowColumnOptionDropdown from '../dropdown/show-column-option-dropdown';
 import DistributionSuperFilter from './distribution-super-filter';
 
 type Props = {
@@ -54,10 +53,10 @@ export default function DistributionHeader({
                         )}
                     />
 
-                    <ShowColumnOptionDropdown
+                    {/* <ShowColumnOptionDropdown
                         visibleColumns={visibleColumn}
                         handleSetVisibleColumns={handleChangeVisibleColumns}
-                    />
+                    /> */}
                 </div>
             </AppHeaderGroup>
         </AppHeader>

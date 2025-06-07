@@ -1,11 +1,15 @@
 import { Avatar, Select, SelectProps } from 'antd';
+import { ReactNode } from 'react';
+import { CustomTooltipProps } from '../tooltip/custom-tooltip';
 import IconInfoTooltip from '../tooltip/icon-info-tooltip';
 
 type Props = {
     selectProps?: SelectProps;
     title: string;
-    tooltipInfo?: string;
+    tooltipInfo?: ReactNode;
     avatarSrc?: string;
+    tooltipProps?: CustomTooltipProps;
+    options: SelectProps['options'];
 };
 
 export default function CustomSelectIcon({
@@ -13,6 +17,8 @@ export default function CustomSelectIcon({
     title,
     tooltipInfo,
     avatarSrc,
+    tooltipProps,
+    options,
 }: Props) {
     return (
         <div className="space-y-2 rounded-lg border p-2">
@@ -25,28 +31,9 @@ export default function CustomSelectIcon({
                     />
                 )}
                 <span className="font-bold">{title}</span>
-                <IconInfoTooltip
-                    title={tooltipInfo}
-                    // title="Bạn có thể thiết lập giá tuỳ chỉnh cho bản phát hành trên Amazon"
-                />
+                <IconInfoTooltip {...tooltipProps} title={tooltipInfo} />
             </div>
-            <Select
-                options={[
-                    {
-                        title: '$0.67',
-                        value: 0.67,
-                    },
-                    {
-                        title: '$0.99',
-                        value: 0.99,
-                    },
-                    {
-                        title: '$1.2',
-                        value: 1.2,
-                    },
-                ]}
-                {...selectProps}
-            />
+            <Select {...selectProps} options={options} />
         </div>
     );
 }

@@ -9,7 +9,7 @@ import { RELEASES_TABS, TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { Button, Tabs, TabsProps } from 'antd';
 import { useParams, usePathname } from 'next/navigation';
-import { PropsWithChildren, useEffect, useState } from 'react';
+import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 
 type Props = {};
 
@@ -26,6 +26,8 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const [activeTab, setActiveTab] = useState<string>(
         RELEASES_TABS.CORE_DETAIL
     );
+    const [isScrolled, setIsScrolled] = useState(false);
+    const childrenRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const getActiveTab = () => {
@@ -150,14 +152,33 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         </div>
     );
 
+    useEffect(() => {
+        const handleScroll = () => {
+            if (!childrenRef.current) return; // Đảm bảo childrenRef.current không phải null
+            const newIsScrolled = childrenRef.current.scrollTop > 10;
+            if (newIsScrolled !== isScrolled) {
+                setIsScrolled(newIsScrolled);
+            }
+        };
+
+        if (childrenRef.current) {
+            childrenRef.current.addEventListener('scroll', handleScroll);
+        }
+        return () => {
+            if (childrenRef.current) {
+                childrenRef.current.removeEventListener('scroll', handleScroll);
+            }
+        };
+    }, [isScrolled]);
+
     return (
-        <div className="flex pr-[250px]">
-            <div className="flex-1">
+        <div className="flex h-full pr-[250px]">
+            <div className="flex h-full flex-1 flex-col">
                 <div className="sticky top-0 z-10 bg-white">
-                    <ReleaseDetailHeader />
+                    <ReleaseDetailHeader isScrolled={isScrolled} />
                     <div className="px-4">
                         <Tabs
-                            className="tab-release-detail"
+                            className="tab-release-detail !pt-0"
                             items={items}
                             activeKey={activeTab}
                             onChange={handleTabChange}
@@ -165,7 +186,9 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                         />
                     </div>
                 </div>
-                {children}
+                <div ref={childrenRef} className="flex-1 overflow-y-auto">
+                    {children}
+                </div>
             </div>
             <RightSidebar />
         </div>

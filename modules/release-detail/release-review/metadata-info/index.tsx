@@ -6,12 +6,11 @@ export default function MetadataInfo({}: Props) {
     return (
         <div>
             <p className="text-lg font-medium">MetaData</p>
-            <div className="flex flex-col gap-1">
-                <div className="bg-card-bg p-4">
-                    <p className="text-base font-medium">Thông tin chung</p>
-                </div>
-
-                <div className="grid grid-cols-6 bg-card-bg p-4">
+            <div className="my-1 rounded-lg bg-card-bg p-4">
+                <p className="text-base font-medium">Thông tin chung</p>
+            </div>
+            <div className="grid grid-cols-1 gap-1">
+                <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
                     <span className="col-span-2 font-medium">
                         Tên phát hành
                     </span>
@@ -28,18 +27,14 @@ export default function MetadataInfo({}: Props) {
                         </div>
                         <div className="flex justify-between">
                             <div>
-                                <p className="text-red-500">Tên hiển thị *</p>
-                                <p className="text-gray-500">Bắt buộc</p>
+                                <p className="">Phiên bản</p>
+                                <p className="text-gray-500">Tuỳ chọn</p>
                             </div>
-                            <CircleAlert
-                                className="text-red-500"
-                                size={SIZE_ICON}
-                            />
                         </div>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-6 bg-card-bg p-4">
+                <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
                     <span className="col-span-2 font-medium">Nghệ sĩ</span>
                     <div className="col-span-4 flex flex-col gap-2">
                         <div className="flex justify-between">
@@ -61,7 +56,7 @@ export default function MetadataInfo({}: Props) {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-6 bg-card-bg p-4">
+                <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
                     <span className="col-span-2 font-medium">Thể loại</span>
                     <div className="col-span-4 flex flex-col gap-2">
                         <div className="flex justify-between">
@@ -83,7 +78,7 @@ export default function MetadataInfo({}: Props) {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-6 bg-card-bg p-4">
+                <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
                     <span className="col-span-2 font-medium">Ngôn ngữ</span>
                     <div className="col-span-4 flex flex-col gap-2">
                         <div className="flex justify-between">
@@ -101,7 +96,7 @@ export default function MetadataInfo({}: Props) {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-6 bg-card-bg p-4">
+                <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
                     <span className="col-span-2 font-medium">Label</span>
                     <div className="col-span-4 flex flex-col gap-2">
                         <div className="flex justify-between">
@@ -113,7 +108,7 @@ export default function MetadataInfo({}: Props) {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-6 bg-card-bg p-4">
+                <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
                     <span className="col-span-2 font-medium">UPC</span>
                     <div className="col-span-4 flex flex-col gap-2">
                         <div className="flex justify-between">
@@ -125,7 +120,7 @@ export default function MetadataInfo({}: Props) {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-6 bg-card-bg p-4">
+                <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
                     <span className="col-span-2 font-medium">ID danh mục</span>
                     <div className="col-span-4 flex flex-col gap-2">
                         <div className="flex justify-between">
@@ -137,7 +132,7 @@ export default function MetadataInfo({}: Props) {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-6 bg-card-bg p-4">
+                <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
                     <span className="col-span-2 font-medium">Bản quyền</span>
                     <div className="col-span-4 flex flex-col gap-2">
                         <div className="flex justify-between">

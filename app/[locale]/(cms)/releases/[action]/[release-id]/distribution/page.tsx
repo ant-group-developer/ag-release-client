@@ -1,9 +1,9 @@
 'use client';
+import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { fakeReleasesData } from '@/modules/dashboard/constants/mockData';
 import {
     defaultVisibleColumnsDistribution,
     distributionData,
@@ -81,18 +81,25 @@ export default function Distribution({}: Props) {
     const { height, width } = useWindowSize();
     const isSmallDevice = Number(width) <= SCREEN.MD;
     const typeModal = useModalStore((state) => state.typeModal);
+    const closeModal = useModalStore((state) => state.closeModal);
 
     const scrollY = () => {
         if (isSmallDevice) return undefined;
         if (!height) return undefined;
         const minHeight = 300;
         const header = 64;
-        const pageHeader = 49;
+        const pageHeader = 204;
+        const pageAction = 49;
         const pageFilter = 49;
         const pagination = 58;
         const headerTable = 39;
         const headerFooterHeight =
-            header + pageHeader + pageFilter + pagination + headerTable;
+            header +
+            pageHeader +
+            pageFilter +
+            pagination +
+            headerTable +
+            pageAction;
         const value = height - headerFooterHeight;
         if (value > minHeight) return value;
         return minHeight;
@@ -101,7 +108,7 @@ export default function Distribution({}: Props) {
 
     return (
         <div className="flex h-full flex-col justify-between">
-            <div className="flex-1">
+            <div className="">
                 <div className="flex justify-between border-b">
                     <DistributionStatus
                         onChangeFilter={onChangeFilter}
@@ -122,7 +129,14 @@ export default function Distribution({}: Props) {
                             >
                                 <span>Phân phối</span>
                             </Button>
-                            <Button danger>
+                            <Button
+                                onClick={() => {
+                                    openModal(
+                                        TYPE_MODAL_RELEASE_DISTRIBUTION.TAKE_DOWN
+                                    );
+                                }}
+                                danger
+                            >
                                 <span>Gỡ xuống</span>
                             </Button>
                         </div>
@@ -140,22 +154,32 @@ export default function Distribution({}: Props) {
 
                 <DistributionTable
                     dataSource={distributionData}
-                    scroll={{ x: SCREEN.XXL }}
+                    scroll={{ y: 65 * 6.6 }}
                     rowSelection={rowSelection}
                     size="large"
                 />
             </div>
 
             {typeModal === TYPE_MODAL_RELEASE_DISTRIBUTION.DISTRIBUTION && (
-                <DistributionReleaseModal />
+                <DistributionReleaseModal platformIds={selectedRow} />
+            )}
+
+            {typeModal === TYPE_MODAL_RELEASE_DISTRIBUTION.TAKE_DOWN && (
+                <AppConfirm
+                    open
+                    onOk={closeModal}
+                    onCancel={closeModal}
+                    modalTitle="Gỡ xuống bản phát hành"
+                    paragraph="Bạn có chắc chắn muốn gỡ xuống bản phát hành này không?"
+                />
             )}
 
             <AppPagination
-                className="border-b border-t"
+                className="border-t"
                 align="end"
                 current={dataFilter.page}
                 pageSize={dataFilter.pageSize}
-                total={fakeReleasesData.length}
+                total={distributionData.length}
                 onChange={onChangePage}
                 showTotalText
                 showSizeChanger
