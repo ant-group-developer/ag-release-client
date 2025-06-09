@@ -1,7 +1,7 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import GenresSelect from '@/components/ui/select/genres-select';
-import { languageList, originalSourceList } from '@/constants/fakeData';
+import { languageList } from '@/constants/fakeData';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { Select } from 'antd';
 import { useForm } from 'antd/es/form/Form';
@@ -85,7 +85,7 @@ export default function OtherMetadataForm({}: Props) {
                             // )}
                         />
                     </AppFormItem>
-                    <AppFormItem
+                    {/* <AppFormItem
                         label="Ngôn ngữ bài hát"
                         name="language1"
                         required
@@ -104,10 +104,10 @@ export default function OtherMetadataForm({}: Props) {
                             //     'tracks.placeholder.selectLanguage'
                             // )}
                         />
-                    </AppFormItem>
+                    </AppFormItem> */}
                     <AppFormItem
                         label="Ngôn ngữ quốc gia"
-                        name="language2"
+                        name="countryLanguage"
                         required
                         rules={[
                             {
@@ -127,7 +127,7 @@ export default function OtherMetadataForm({}: Props) {
                     </AppFormItem>
                     <AppFormItem
                         label="Ngôn ngữ metadata"
-                        name="language3"
+                        name="MetadataLanguage"
                         required
                         rules={[
                             {
@@ -145,7 +145,7 @@ export default function OtherMetadataForm({}: Props) {
                             // )}
                         />
                     </AppFormItem>
-                    <AppFormItem
+                    {/* <AppFormItem
                         label="Nguồn gốc"
                         name="originalSource"
                         required
@@ -161,7 +161,7 @@ export default function OtherMetadataForm({}: Props) {
                             placeholder="Chọn nguồn gốc"
                             options={originalSourceList}
                         />
-                    </AppFormItem>
+                    </AppFormItem> */}
                     <AppFormItem label="Lời bài hát" name="lyrics">
                         <TextArea
                             className="w-full"

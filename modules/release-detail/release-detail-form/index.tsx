@@ -4,20 +4,42 @@ import GenresSelect from '@/components/ui/select/genres-select';
 import LabelSelect from '@/components/ui/select/label-select';
 import { languageList, yearList } from '@/constants/fakeData';
 import useModalStore from '@/hooks/use-modal';
+import { useRouter } from '@/i18n/routing';
 import {
     RELEASES_TYPE,
     TYPE_MODAL_RELEASE_ARTIST_LIST,
 } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { releaseSchema } from '@/modules/releases/schemas/schema';
 import { Button, Input, Radio, Select } from 'antd';
 import { useForm, useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
+import { z } from 'zod';
 import ArtistCard from './artist-card';
 
 export default function ReleaseDetailForm() {
-    const [form] = useForm();
     const messages = useTranslations();
+    const basicInfoSchema = releaseSchema(messages as any).pick({
+        type: true,
+        nameRelease: true,
+        isMoreThan4Artists: true,
+        version: true,
+        artists: true,
+        genres: true,
+        subGenres: true,
+        language: true,
+        label: true,
+        upc: true,
+        catalogId: true,
+        cLineYear: true,
+        pLineYear: true,
+        thumbnail: true,
+    });
+
+    type BasicInfoSchema = z.infer<typeof basicInfoSchema>;
+    const [form] = useForm<BasicInfoSchema>();
+    const router = useRouter();
     const formValues = useReleaseFormStore((state) => state.formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const openModal = useModalStore((state) => state.openModal);
@@ -32,7 +54,6 @@ export default function ReleaseDetailForm() {
         if (Object.keys(formValues).length === 0) {
             form.resetFields();
             form.setFieldsValue({
-                contributors: [{ role: undefined, artist: undefined }],
                 isMoreThan4Artists: false, // Set giá trị mặc định
             });
         } else {
@@ -47,12 +68,29 @@ export default function ReleaseDetailForm() {
         setFormValues(allValues);
     };
 
+    const handleNext = () => {
+        try {
+            form.validateFields().then((values) => {
+                setFormValues(values);
+                router.push('/releases/detail/123456/tracks');
+            });
+        } catch (error) {
+            console.error('Validation failed:', error);
+        }
+    };
+
     return (
-        <div className="px-4 pt-4">
+        <div className="p-4">
             <AppForm
                 form={form}
                 layout="vertical"
-                showSubmit={false}
+                showSubmit
+                submitText={messages('common.next')}
+                submitProps={{
+                    onClick: () => {
+                        handleNext();
+                    },
+                }}
                 onValuesChange={handleValuesChange}
             >
                 <div className="flex flex-col gap-4">

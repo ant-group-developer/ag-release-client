@@ -1,11 +1,10 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import CountrySelect from '@/components/ui/select/country-select';
-import { languageList } from '@/constants/fakeData';
 import extractAudioMetadata from '@/helpers/common';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { TrackData } from '@/modules/tracks/types';
-import { Input, Select } from 'antd';
+import { Input } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
@@ -106,46 +105,6 @@ export default function AudioSpecifications({ trackData }: Props) {
                             ]}
                         >
                             <Input />
-                        </AppFormItem>
-                        <AppFormItem
-                            label="Ngôn ngữ quốc gia"
-                            name="language2"
-                            required
-                            rules={[
-                                {
-                                    required: true,
-                                    message: messages('validation.select'),
-                                },
-                            ]}
-                        >
-                            <Select
-                                showSearch
-                                options={languageList}
-                                allowClear
-                                // placeholder={messages(
-                                //     'tracks.placeholder.selectLanguage'
-                                // )}
-                            />
-                        </AppFormItem>
-                        <AppFormItem
-                            label="Ngôn ngữ metadata"
-                            name="language3"
-                            required
-                            rules={[
-                                {
-                                    required: true,
-                                    message: messages('validation.select'),
-                                },
-                            ]}
-                        >
-                            <Select
-                                showSearch
-                                options={languageList}
-                                allowClear
-                                // placeholder={messages(
-                                //     'tracks.placeholder.selectLanguage'
-                                // )}
-                            />
                         </AppFormItem>
                     </div>
                     <div className="grid grid-cols-7 rounded-md border p-2">

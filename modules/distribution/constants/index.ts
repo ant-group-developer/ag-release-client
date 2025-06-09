@@ -49,7 +49,7 @@ export const distributionData = [
         id: 4,
         thumbnail:
             'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbhvKe4ebnX7xrphoWADoK-wteStypzRFKWQ&s',
-        platform: 'YouTube',
+        platform: 'Amazon',
         status: 'Delivered',
         creationDate: '2025-04-13T00:00:00.000Z',
         releaseDate: '2025-04-13T00:00:00.000Z',
@@ -59,7 +59,7 @@ export const distributionData = [
         thumbnail:
             'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Youtube_Music_icon.svg/2048px-Youtube_Music_icon.svg.png',
 
-        platform: 'Amazon Music',
+        platform: 'Youtube',
         status: 'Delivered',
         creationDate: '2025-04-13T00:00:00.000Z',
         releaseDate: '2025-04-13T00:00:00.000Z',

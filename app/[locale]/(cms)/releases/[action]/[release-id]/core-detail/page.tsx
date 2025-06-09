@@ -1,5 +1,4 @@
 'use client';
-
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
@@ -73,7 +72,7 @@ export default function CoreDetail() {
             };
             setFormValues(initialData);
         }
-    }, [releaseId, formValues, setFormValues]);
+    }, [releaseId, setFormValues]);
 
     return (
         <div>

@@ -127,7 +127,10 @@ export default function Distribution({}: Props) {
                                 className=""
                                 type="primary"
                             >
-                                <span>Phân phối</span>
+                                <span>
+                                    Phân phối {selectedRow.length}/
+                                    {distributionData.length}
+                                </span>
                             </Button>
                             <Button
                                 onClick={() => {
@@ -137,7 +140,10 @@ export default function Distribution({}: Props) {
                                 }}
                                 danger
                             >
-                                <span>Gỡ xuống</span>
+                                <span>
+                                    Gỡ xuống {selectedRow.length}/
+                                    {distributionData.length}
+                                </span>
                             </Button>
                         </div>
                     )}

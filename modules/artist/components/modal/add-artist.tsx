@@ -37,20 +37,30 @@ export default function AddArtistModal({}: Props) {
     const handleSubmit = async () => {
         try {
             const values = await form.validateFields();
-            const artist = {
+            const newArtistData = {
                 name: values.name,
                 role: values.role,
                 id: values.name,
             };
             const currentArtists = formValues.artists || [];
 
-            // Nếu là thêm mới
-            if (typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST) {
-                setFormValues({
-                    ...formValues,
-                    artists: [...currentArtists, artist],
-                });
+            let updatedArtists;
+
+            if (isArtistEditModal) {
+                updatedArtists = currentArtists.map((artist: any) =>
+                    artist.name === dataEdit?.name
+                        ? { ...artist, ...newArtistData }
+                        : artist
+                );
+            } else {
+                // If adding new, always add a new entry with a unique ID
+                updatedArtists = [...currentArtists, newArtistData];
             }
+
+            setFormValues({
+                ...formValues,
+                artists: updatedArtists,
+            });
 
             closeModal();
         } catch (error) {

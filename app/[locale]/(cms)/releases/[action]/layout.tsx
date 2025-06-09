@@ -21,6 +21,9 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const isDisableTab = releaseId == '';
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const formValues = useReleaseFormStore((state) => state.formValues);
+    const validationErrors = useReleaseFormStore(
+        (state) => state.validationErrors
+    );
     const pathname = usePathname();
     const openModal = useModalStore((state) => state.openModal);
     const [activeTab, setActiveTab] = useState<string>(
@@ -34,7 +37,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             const map: Record<string, string> = {
                 [RELEASES_TABS.CORE_DETAIL]: RELEASES_TABS.CORE_DETAIL,
                 [RELEASES_TABS.TRACKS]: RELEASES_TABS.TRACKS,
-                [RELEASES_TABS.SCHEDULE]: RELEASES_TABS.SCHEDULE,
+                // [RELEASES_TABS.SCHEDULE]: RELEASES_TABS.SCHEDULE,
                 [RELEASES_TABS.REVIEW]: RELEASES_TABS.REVIEW,
                 [RELEASES_TABS.DISTRIBUTION]: RELEASES_TABS.DISTRIBUTION,
             };
@@ -82,18 +85,18 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             ),
             disabled: isDisableTab,
         },
-        {
-            key: RELEASES_TABS.SCHEDULE,
-            label: (
-                <Link
-                    className={cn(isDisableTab ? 'pointer-events-none' : '')}
-                    href={`/releases/detail/${releaseId}/schedule`}
-                >
-                    <span className="font-medium">Lên lịch</span>
-                </Link>
-            ),
-            disabled: isDisableTab,
-        },
+        // {
+        //     key: RELEASES_TABS.SCHEDULE,
+        //     label: (
+        //         <Link
+        //             className={cn(isDisableTab ? 'pointer-events-none' : '')}
+        //             href={`/releases/detail/${releaseId}/schedule`}
+        //         >
+        //             <span className="font-medium">Lên lịch</span>
+        //         </Link>
+        //     ),
+        //     disabled: isDisableTab,
+        // },
         {
             key: RELEASES_TABS.REVIEW,
             label: (
@@ -190,7 +193,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     {children}
                 </div>
             </div>
-            <RightSidebar />
+            <RightSidebar errors={validationErrors} />
         </div>
     );
 }

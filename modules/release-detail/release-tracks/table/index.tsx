@@ -3,13 +3,11 @@ import SortableTable, {
     OnDragEnd,
     SortableTableProps,
 } from '@/components/ui/table/sortable-table';
-import IconInfoTooltip from '@/components/ui/tooltip/icon-info-tooltip';
-import { originalSourceList } from '@/constants/fakeData';
 import { SCREEN } from '@/enums/common';
 import useModalStore from '@/hooks/use-modal';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { TrackData } from '@/modules/tracks/types';
-import { Checkbox, Form, Input, Select, Tabs } from 'antd';
+import { Form, Input, Tabs } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import TrackActionButton from '../button/track-action';
@@ -58,7 +56,7 @@ export default function ReleaseTracksTable({
             dataIndex: '',
             key: 'name',
             align: 'center',
-            width: 200,
+            width: 300,
             render: (value, record) => {
                 console.log('first', record);
                 return (
@@ -73,7 +71,7 @@ export default function ReleaseTracksTable({
             dataIndex: 'title',
             key: 'title',
             align: 'left',
-            width: 200,
+            width: 300,
             render: (value, record) => {
                 return <Input defaultValue={value} />;
             },
@@ -83,7 +81,7 @@ export default function ReleaseTracksTable({
             dataIndex: 'artist',
             key: 'artist',
             align: 'left',
-            width: 150,
+            width: 200,
             render: (value) => {
                 return (
                     <ArtistSelect
@@ -94,22 +92,22 @@ export default function ReleaseTracksTable({
                 );
             },
         },
-        {
-            title: 'Nguồn gốc',
-            dataIndex: '',
-            key: '',
-            align: 'left',
-            width: 150,
-            render: (value) => {
-                return (
-                    <Select
-                        className="w-full"
-                        placeholder="Chọn nguồn gốc"
-                        options={originalSourceList}
-                    />
-                );
-            },
-        },
+        // {
+        //     title: 'Nguồn gốc',
+        //     dataIndex: '',
+        //     key: '',
+        //     align: 'left',
+        //     width: 150,
+        //     render: (value) => {
+        //         return (
+        //             <Select
+        //                 className="w-full"
+        //                 placeholder="Chọn nguồn gốc"
+        //                 options={originalSourceList}
+        //             />
+        //         );
+        //     },
+        // },
         // {
         //     title: (
         //         <div className="flex items-center justify-between">
@@ -133,24 +131,38 @@ export default function ReleaseTracksTable({
         //         );
         //     },
         // },
+        // {
+        //     title: (
+        //         <div className="flex items-center justify-between">
+        //             <span>Nội dung nhạy cảm</span>
+        //             <div>
+        //                 <IconInfoTooltip title="Tích nếu nội dung bài hát này có chứa nội dung nhạy cảm" />
+        //             </div>
+        //         </div>
+        //     ),
+        //     dataIndex: '',
+        //     key: '',
+        //     align: 'center',
+        //     width: 125,
+        //     render: (value) => {
+        //         return (
+        //             <div className="flex items-center justify-center gap-2">
+        //                 <Checkbox />
+        //             </div>
+        //         );
+        //     },
+        // },
         {
-            title: (
-                <div className="flex items-center justify-between">
-                    <span>Nội dung nhạy cảm</span>
-                    <div>
-                        <IconInfoTooltip title="Tích nếu nội dung bài hát này có chứa nội dung nhạy cảm" />
-                    </div>
-                </div>
-            ),
+            title: messages('common.status'),
             dataIndex: '',
             key: '',
             align: 'center',
-            width: 125,
+            width: 200,
             render: (value) => {
                 return (
-                    <div className="flex items-center justify-center gap-2">
-                        <Checkbox />
-                    </div>
+                    <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
+                        {messages('common.draft')}
+                    </span>
                 );
             },
         },

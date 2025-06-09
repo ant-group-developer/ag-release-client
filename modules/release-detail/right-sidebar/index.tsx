@@ -2,14 +2,19 @@
 import { SIZE_ICON } from '@/constants/common';
 import { cn } from '@/helpers/common';
 import { useActive } from '@/hooks/use-active';
-import { AlertTriangle, XCircle } from 'lucide-react';
+import { XCircle } from 'lucide-react';
+import { ZodIssue } from 'zod';
 
-export default function RightSidebar() {
+interface RightSidebarProps {
+    errors: ZodIssue[];
+}
+
+export default function RightSidebar({ errors }: RightSidebarProps) {
     const { isActive, toggleActive } = useActive(false);
 
     // Số lượng lỗi và cảnh báo (có thể thay bằng dữ liệu thực tế)
-    const errorCount = 2;
-    const warningCount = 1;
+    const errorCount = errors.length;
+    const warningCount = 0;
 
     return (
         <div
@@ -35,7 +40,7 @@ export default function RightSidebar() {
             </div>
 
             {/* Content */}
-            <div className="h-[calc(100%-4rem)] overflow-auto">
+            <div className="h-[calc(100%-8rem)] overflow-auto">
                 <div className="p-3">
                     {/* Errors */}
                     <div className="mb-4">
@@ -44,42 +49,47 @@ export default function RightSidebar() {
                             Errors ({errorCount})
                         </h4>
                         <ul className="space-y-2">
-                            <li className="rounded-md border border-red-200 bg-red-50 p-2 text-sm">
-                                <p className="text-red-700">
-                                    Release title is required
-                                </p>
-                                <p className="text-xs text-red-500">
-                                    Field: title
-                                </p>
-                            </li>
-                            <li className="rounded-md border border-red-200 bg-red-50 p-2 text-sm">
-                                <p className="text-red-700">
-                                    Invalid release date
-                                </p>
-                                <p className="text-xs text-red-500">
-                                    Field: releaseDate
-                                </p>
-                            </li>
+                            {errors.length > 0 ? (
+                                errors.map((err, index) => (
+                                    <li
+                                        key={index}
+                                        className="rounded-md border border-red-200 bg-red-50 p-2 text-sm"
+                                    >
+                                        <p className="text-red-700">
+                                            {err.message}
+                                        </p>
+                                        {err.path.length > 0 && (
+                                            <p className="text-xs text-red-500">
+                                                Field: {err.path.join('.')}
+                                            </p>
+                                        )}
+                                    </li>
+                                ))
+                            ) : (
+                                <li className="text-sm text-gray-500">
+                                    Không có lỗi xác thực.
+                                </li>
+                            )}
                         </ul>
                     </div>
 
                     {/* Warnings */}
-                    <div>
+                    {/* <div>
                         <h4 className="mb-2 flex items-center gap-2 font-semibold text-amber-500">
                             <AlertTriangle size={SIZE_ICON} />
                             Warnings ({warningCount})
                         </h4>
                         <ul className="space-y-2">
-                            <li className="rounded-md border border-amber-200 bg-amber-50 p-2 text-sm">
-                                <p className="text-amber-700">
-                                    Cover art resolution is low
-                                </p>
-                                <p className="text-xs text-amber-500">
-                                    Field: coverArt
-                                </p>
-                            </li>
+                            {warningCount === 0 ? (
+                                <li className="text-sm text-gray-500">
+                                    Không có cảnh báo.
+                                </li>
+                            ) : (
+                                <>
+                                </>
+                            )}
                         </ul>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>

@@ -67,9 +67,9 @@ export default function CMSLayout({ children, accessToken }: Props) {
     }, [isActive]);
 
     const getChildren = () => {
-        if (isLoading) {
-            return <AppLoader className="bg-white" />;
-        }
+        // if (isLoading) {
+        //     return <AppLoader className="bg-white" />;
+        // }
 
         // if (canAccessCurrentRoute) {
         return (
