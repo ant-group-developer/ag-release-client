@@ -1,5 +1,6 @@
 import ReactQueryProviders from '@/providers/react-query';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
+import { Auth0Provider } from '@auth0/nextjs-auth0';
 import { ReactNode } from 'react';
 
 type Props = {
@@ -10,8 +11,10 @@ type Props = {
 // is required, even if it's just passing children through.
 export default function RootLayout({ children }: Props) {
     return (
-        <ReactQueryProviders>
-            <AntdRegistry>{children}</AntdRegistry>
-        </ReactQueryProviders>
+        <Auth0Provider>
+            <ReactQueryProviders>
+                <AntdRegistry>{children}</AntdRegistry>
+            </ReactQueryProviders>
+        </Auth0Provider>
     );
 }
