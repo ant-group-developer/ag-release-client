@@ -12,6 +12,7 @@ type MenuItem = Required<MenuProps>['items'][number];
 
 function SidebarMenu({}: Props) {
     const pathname = usePathname();
+    console.log('🚀 ~ SidebarMenu ~ pathname:', pathname);
     const messages = useTranslations();
     const { isAdmin } = useAuth();
     const { checkPermission } = usePermission();
@@ -77,7 +78,7 @@ function SidebarMenu({}: Props) {
             className="!border-none"
             items={items.filter((item) => Number(item.children?.length) > 0)}
             mode="inline"
-            selectedKeys={[pathname]}
+            selectedKeys={[`/${pathname.split('/')[1]}`]}
         />
     );
 }

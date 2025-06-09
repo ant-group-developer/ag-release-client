@@ -1,4 +1,6 @@
+import ImageFallback from '@/components/ui/image/image-fallback';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { FALLBACK_IMAGE } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedDate, getIntlCodeByReleaseStatus } from '@/helpers/common';
@@ -7,13 +9,12 @@ import { ReleasesData } from '@/modules/releases/types';
 import { Card, CardProps } from 'antd';
 import Meta from 'antd/es/card/Meta';
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
 
 type Props = CardProps & {
     album: ReleasesData;
 };
 
-export default function CardAlbum({ album, ...props }: Props) {
+export default function CardRelease({ album, ...props }: Props) {
     const messages = useTranslations();
     const router = useRouter();
     const albumStatus = messages(getIntlCodeByReleaseStatus(album.status));
@@ -24,12 +25,13 @@ export default function CardAlbum({ album, ...props }: Props) {
             className="custom-card-body !bg-card-bg dark:!bg-card-bg-dark"
             cover={
                 <div className="relative overflow-hidden">
-                    <Image
+                    <ImageFallback
                         onClick={() =>
                             router.push(
                                 `${APP_ROUTES.RELEASES}/detail/${album.releaseId}/core-detail`
                             )
                         }
+                        fallbackSrc={FALLBACK_IMAGE}
                         className="cursor-pointer overflow-hidden object-cover duration-300 hover:scale-110"
                         alt="example"
                         src={album.thumbnail}

@@ -3,3 +3,9 @@ export enum TYPE_MODAL_LABEL {
     EDIT = 'EDIT_LABEL',
     DELETE = 'DELETE_LABEL',
 }
+
+export enum LABEL_DETAIL_TABS {
+    OVERVIEW = 'OVERVIEW',
+    RELEASES = 'RELEASES',
+    TRACKS = 'TRACKS',
+}

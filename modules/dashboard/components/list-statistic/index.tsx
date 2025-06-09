@@ -18,6 +18,7 @@ export default function ListStatistic({}: Props) {
                             height={48}
                             src="/icon/deal.png"
                             alt=""
+                            className="rounded-full"
                         />
                         {/* <BriefcaseBusiness
                             className="text-[#f56015]"
@@ -40,8 +41,9 @@ export default function ListStatistic({}: Props) {
                         <Image
                             width={48}
                             height={48}
-                            src="/icon/deal.png"
+                            src="/icon/wallet.png"
                             alt=""
+                            className="rounded-full"
                         />
                         {/* <BriefcaseBusiness
                             className="text-[#f56015]"
@@ -64,7 +66,7 @@ export default function ListStatistic({}: Props) {
                         <Image
                             width={48}
                             height={48}
-                            src="/icon/deal.png"
+                            src="/icon/warning.png"
                             alt=""
                         />
                         {/* <BriefcaseBusiness
@@ -88,7 +90,7 @@ export default function ListStatistic({}: Props) {
                         <Image
                             width={48}
                             height={48}
-                            src="/icon/deal.png"
+                            src="/icon/group.png"
                             alt=""
                         />
                         {/* <BriefcaseBusiness

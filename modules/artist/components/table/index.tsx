@@ -3,6 +3,7 @@ import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { formattedDate } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
+import { useRouter } from '@/i18n/routing';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
@@ -13,6 +14,7 @@ type Props = Omit<AppTableProps<ArtistData>, 'columns'> & {};
 
 export const ArtistsTable = ({ ...props }: Props) => {
     const messages = useTranslations();
+    const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
     const column: ColumnType<ArtistData>[] = [
         {
@@ -29,8 +31,13 @@ export const ArtistsTable = ({ ...props }: Props) => {
             align: 'center',
             width: 30,
             fixed: 'left',
-            render: (value) => (
-                <div className="flex items-center justify-center">
+            render: (value, record) => (
+                <div
+                    className="flex items-center justify-center"
+                    onClick={() => {
+                        router.push(`/artists/detail/${record.id}/overview`);
+                    }}
+                >
                     <Image
                         src={value || '/images/default-image.png'}
                         alt="thumbnail"
@@ -117,7 +124,7 @@ export const ArtistsTable = ({ ...props }: Props) => {
             {...props}
             pagination={false}
             columns={column}
-            rowClassName={'group'}
+            rowClassName={'group cursor-pointer'}
         />
     );
 };

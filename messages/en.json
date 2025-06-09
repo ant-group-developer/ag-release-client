@@ -683,7 +683,7 @@
         "createArtist": "Create artist",
         "labelName": "Label name",
         "version": "Version",
-
+        "role": "Role",
         "select": {
             "artist": "Select artist",
             "subArtist": "Select sub artist"

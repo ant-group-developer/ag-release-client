@@ -688,6 +688,7 @@
         "createLabel": "Tạo hãng phát hành",
         "labelName": "Tên label",
         "version": "Phiên bản",
+        "role": "Vai trò",
 
         "select": {
             "artist": "Chọn nghệ sĩ",

@@ -6,7 +6,10 @@ import ListNews from '@/modules/dashboard/components/list-news';
 import ListRelease from '@/modules/dashboard/components/list-release';
 import CardStatistic from '@/modules/dashboard/components/list-statistic';
 import TopList from '@/modules/dashboard/components/top-list';
-import { fakeReleasesData } from '@/modules/dashboard/constants/mockData';
+import {
+    fakeDspData,
+    fakeReleasesData,
+} from '@/modules/dashboard/constants/mockData';
 import { TOP_LIST_TYPE } from '@/modules/dashboard/enums';
 import { fakeTrackData } from '@/modules/tracks/constants/mockdata';
 
@@ -49,44 +52,6 @@ function Dashboard({}: Props) {
             value: 105,
             image: 'data:image/png;base64,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',
             plays: 2111,
-        },
-    ].sort((a, b) => b.plays - a.plays);
-
-    const dspData = [
-        {
-            id: 1,
-            name: 'Spotify',
-            value: 100,
-            image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/2048px-Spotify_logo_without_text.svg.png',
-            plays: 232,
-        },
-        {
-            id: 2,
-            name: 'Apple Music',
-            value: 130,
-            image: 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/571e5943-4616-4654-bf99-10b3c98f8686/d982zrj-a9acb6b3-4e6b-4dda-a381-74fa8a25de00.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzU3MWU1OTQzLTQ2MTYtNDY1NC1iZjk5LTEwYjNjOThmODY4NlwvZDk4Mnpyai1hOWFjYjZiMy00ZTZiLTRkZGEtYTM4MS03NGZhOGEyNWRlMDAucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.W197gqXaEzvXa10JXk0NdtrbS4__XYKfhQ323esSjvw',
-            plays: 634,
-        },
-        {
-            id: 3,
-            name: 'TikTok',
-            value: 110,
-            image: 'https://inkythuatso.com/uploads/thumbnails/800/2021/11/logo-tiktok-inkythuatso-2-mesa-de-trabajo-1-27-09-13-05.jpg',
-            plays: 122,
-        },
-        {
-            id: 4,
-            name: 'Amazon Music',
-            value: 120,
-            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbhvKe4ebnX7xrphoWADoK-wteStypzRFKWQ&s',
-            plays: 232,
-        },
-        {
-            id: 5,
-            name: 'YouTube Music',
-            value: 105,
-            image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Youtube_Music_icon.svg/2048px-Youtube_Music_icon.svg.png',
-            plays: 322,
         },
     ].sort((a, b) => b.plays - a.plays);
 
@@ -158,7 +123,7 @@ function Dashboard({}: Props) {
                     />
 
                     <TopList
-                        data={dspData.map((item) => ({
+                        data={fakeDspData.map((item) => ({
                             id: item.id,
                             title: item.name,
                             value: item.value,
@@ -173,7 +138,7 @@ function Dashboard({}: Props) {
                     />
                 </div>
 
-                <ListRelease />
+                <ListRelease data={fakeReleasesData.slice(0, 14)} />
 
                 <ListNews />
             </div>

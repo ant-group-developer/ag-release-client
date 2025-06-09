@@ -1,7 +1,6 @@
-import { SIZE_ICON } from '@/constants/common';
+import ImageFallback from '@/components/ui/image/image-fallback';
+import { FALLBACK_IMAGE } from '@/constants/common';
 import { cn } from '@/helpers/common';
-import { Music } from 'lucide-react';
-import Image from 'next/image';
 import { TopListRowData } from '../../types';
 
 type Props = {
@@ -27,19 +26,20 @@ export default function TopListRow({
                         }
                     )}
                 >
-                    {data?.image ? (
-                        <Image
-                            src={data.image}
-                            alt={''}
-                            width={48}
-                            height={48}
-                            className="h-12 w-12 object-cover"
-                        />
-                    ) : (
+                    {/* {data?.image ? ( */}
+                    <ImageFallback
+                        fallbackSrc={FALLBACK_IMAGE}
+                        src={data?.image as string}
+                        alt={''}
+                        width={48}
+                        height={48}
+                        className="h-12 w-12 object-cover"
+                    />
+                    {/* ) : (
                         <div className="flex h-12 items-center justify-center">
                             <Music size={SIZE_ICON} />
                         </div>
-                    )}
+                    )} */}
                 </div>
                 <div className="ml-2">
                     <p className="font-semibold hover:underline">

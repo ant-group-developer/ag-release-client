@@ -40,7 +40,7 @@ export default function StatusReleaseDialog({
         handleChangeTypeFilter();
     };
 
-    const displayTitle = getTitleChipDisplay(dataFilter.status);
+    const displayTitle = getTitleChipDisplay(dataFilter.status, messages);
 
     useEffect(() => {
         if (dataFilter.status) {

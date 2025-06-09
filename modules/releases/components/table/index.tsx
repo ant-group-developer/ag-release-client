@@ -61,6 +61,7 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             dataIndex: 'title',
             ellipsis: true,
             align: 'left',
+            width: 200,
             render: (value) => (
                 <CustomTooltip size="small" title={value}>
                     <span className="truncate"> {value} </span>
@@ -73,6 +74,7 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             dataIndex: 'artist',
             align: 'left',
             ellipsis: true,
+            width: 200,
             render: (value) => (
                 <CustomTooltip size="small" title={value}>
                     <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
@@ -83,24 +85,11 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             ),
         },
         {
-            title: messages('releases.id'),
-            key: 'releaseId',
-            dataIndex: 'releaseId',
-            align: 'center',
-            fixed: 'left',
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
-                </CustomTooltip>
-            ),
-        },
-
-        {
             title: 'Label',
             key: 'publisher',
             dataIndex: 'publisher',
             align: 'left',
-            width: 170,
+            width: 200,
             ellipsis: true,
             render: (value) => (
                 <CustomTooltip size="small" title={value}>
@@ -110,12 +99,25 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
                 </CustomTooltip>
             ),
         },
+        {
+            title: messages('releases.id'),
+            key: 'releaseId',
+            dataIndex: 'releaseId',
+            align: 'center',
+            fixed: 'left',
+            width: 120,
+            render: (value) => (
+                <CustomTooltip size="small" title={value}>
+                    <span className="truncate"> {value} </span>
+                </CustomTooltip>
+            ),
+        },
 
         {
             title: messages('releases.type'),
             key: 'type',
             dataIndex: 'type',
-            align: 'left',
+            align: 'center',
             width: 120,
             render: (value) => {
                 return (
@@ -131,6 +133,7 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             key: 'upc',
             dataIndex: 'UPC',
             align: 'center',
+            width: 120,
             render: (value) => (
                 <CustomTooltip size="small" title={value}>
                     <span className="truncate"> {value} </span>
