@@ -2,16 +2,11 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import CustomSelectIcon from '@/components/ui/select/custom-select-icon';
-import RegionSelect from '@/components/ui/select/region-select';
-import TimezoneSelect from '@/components/ui/select/timezone-select';
 import AppTable from '@/components/ui/table/normal-table';
-import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import IconInfoTooltip from '@/components/ui/tooltip/icon-info-tooltip';
 import useModalStore from '@/hooks/use-modal';
 import { distributionData } from '@/modules/distribution/constants';
-import { DatePicker } from 'antd';
 import { useForm } from 'antd/es/form/Form';
-import TextArea from 'antd/es/input/TextArea';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
@@ -253,21 +248,18 @@ export default function DistributionReleaseModal({
         (item) => item.platform === 'Apple Music'
     );
 
-    console.log(dataTable, 'dataTable');
-
     return (
         <AppModal
             open
             {...props}
             width={'60vw'}
-            height={'80vh'}
             title="Phân phối bản phát hành"
             onCancel={closeModal}
             maskClosable={false}
             className="!top-5"
         >
-            <AppForm form={form} layout="horizontal" showSubmit={false}>
-                <div className="flex h-[80vh] flex-col gap-y-8 overflow-auto">
+            <AppForm form={form} layout="vertical" showSubmit={false}>
+                <div className="flex flex-col gap-y-8 overflow-auto">
                     <div className="space-y-2">
                         <p className="text-base font-bold text-gray-500">
                             Chọn nền tảng
@@ -280,237 +272,147 @@ export default function DistributionReleaseModal({
                         />
                     </div>
 
-                    {(isHasFacebookPlatform ||
-                        isHasTiktokPlatform ||
-                        isHasYoutubePlatform) && (
-                        <div className="space-y-2">
-                            <p className="text-base font-bold text-gray-500">
-                                Cài đặt UGC nền tảng phát hành
-                            </p>
-                            <div className="grid grid-cols-1 gap-4">
-                                {isHasFacebookPlatform && (
-                                    <AppFormItem
-                                        label="Chính sách kiếm tiền facebook"
-                                        name="platform"
-                                        required
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    messages(
-                                                        'validation.select'
-                                                    ),
-                                            },
-                                        ]}
-                                    >
-                                        <CustomSelectIcon
-                                            title="Facebook Rights Manager"
-                                            tooltipInfo="Xem mô tả các chính sách kiếm tiền facebook ở ô chọn"
-                                            avatarSrc="https://images.vexels.com/content/137253/preview/facebook-icon-logo-205182.png"
-                                            tooltipProps={{
-                                                overlayClassName:
-                                                    'w-tooltip-300',
-                                            }}
-                                            options={facebookOptions}
-                                        />
-                                    </AppFormItem>
-                                )}
-                                {isHasTiktokPlatform && (
-                                    <AppFormItem
-                                        label="Chính sách kiếm tiền Tiktok"
-                                        name="platform"
-                                        required
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    messages(
-                                                        'validation.select'
-                                                    ),
-                                            },
-                                        ]}
-                                    >
-                                        <CustomSelectIcon
-                                            title="Tiktok"
-                                            tooltipInfo="Xem mô tả các chính sách kiếm tiền Tiktok ở ô chọn"
-                                            avatarSrc="https://www.citypng.com/public/uploads/preview/round-tiktok-icon-logo-transparent-background-701751695033010oraha4pc0r.png"
-                                            options={tiktokOptions}
-                                        />
-                                    </AppFormItem>
-                                )}
-                                {isHasYoutubePlatform && (
-                                    <AppFormItem
-                                        label="Chính sách kiếm tiền Youtube"
-                                        name="platform"
-                                        required
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    messages(
-                                                        'validation.select'
-                                                    ),
-                                            },
-                                        ]}
-                                    >
-                                        <CustomSelectIcon
-                                            title="Youtube Content ID"
-                                            tooltipInfo="Xem mô tả các chính sách kiếm tiền youtube ở ô chọn"
-                                            avatarSrc="https://static.vecteezy.com/system/resources/thumbnails/018/930/575/small_2x/youtube-logo-youtube-icon-transparent-free-png.png"
-                                            options={youtubeOptions}
-                                        />
-                                    </AppFormItem>
-                                )}
+                    <div className="flex gap-4">
+                        {(isHasFacebookPlatform ||
+                            isHasTiktokPlatform ||
+                            isHasYoutubePlatform) && (
+                            <div className="flex-1 space-y-2">
+                                <p className="text-base font-bold text-gray-500">
+                                    Cài đặt UGC nền tảng phát hành
+                                </p>
+                                <div className="grid grid-cols-1 gap-4">
+                                    {isHasFacebookPlatform && (
+                                        <AppFormItem
+                                            label="Chính sách kiếm tiền facebook"
+                                            name="platform"
+                                            required
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message:
+                                                        messages(
+                                                            'validation.select'
+                                                        ),
+                                                },
+                                            ]}
+                                        >
+                                            <CustomSelectIcon
+                                                title="Facebook Rights Manager"
+                                                tooltipInfo="Xem mô tả các chính sách kiếm tiền facebook ở ô chọn"
+                                                avatarSrc="https://images.vexels.com/content/137253/preview/facebook-icon-logo-205182.png"
+                                                tooltipProps={{
+                                                    overlayClassName:
+                                                        'w-tooltip-300',
+                                                }}
+                                                options={facebookOptions}
+                                            />
+                                        </AppFormItem>
+                                    )}
+                                    {isHasTiktokPlatform && (
+                                        <AppFormItem
+                                            label="Chính sách kiếm tiền Tiktok"
+                                            name="platform"
+                                            required
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message:
+                                                        messages(
+                                                            'validation.select'
+                                                        ),
+                                                },
+                                            ]}
+                                        >
+                                            <CustomSelectIcon
+                                                title="Tiktok"
+                                                tooltipInfo="Xem mô tả các chính sách kiếm tiền Tiktok ở ô chọn"
+                                                avatarSrc="https://www.citypng.com/public/uploads/preview/round-tiktok-icon-logo-transparent-background-701751695033010oraha4pc0r.png"
+                                                options={tiktokOptions}
+                                            />
+                                        </AppFormItem>
+                                    )}
+                                    {isHasYoutubePlatform && (
+                                        <AppFormItem
+                                            label="Chính sách kiếm tiền Youtube"
+                                            name="platform"
+                                            required
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message:
+                                                        messages(
+                                                            'validation.select'
+                                                        ),
+                                                },
+                                            ]}
+                                        >
+                                            <CustomSelectIcon
+                                                title="Youtube Content ID"
+                                                tooltipInfo="Xem mô tả các chính sách kiếm tiền youtube ở ô chọn"
+                                                avatarSrc="https://static.vecteezy.com/system/resources/thumbnails/018/930/575/small_2x/youtube-logo-youtube-icon-transparent-free-png.png"
+                                                options={youtubeOptions}
+                                            />
+                                        </AppFormItem>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    )}
+                        )}
 
-                    {(isHasAmazonPlatform || isHasAppleMusicPlatform) && (
-                        <div className="space-y-2">
-                            <p className="text-base font-bold text-gray-500">
-                                Cài đặt cửa hàng Tải xuống
-                            </p>
-                            <div className="grid grid-cols-1 gap-4">
-                                {isHasAmazonPlatform && (
-                                    <AppFormItem
-                                        label="Giá bán lẻ trên Amazon"
-                                        name="platform"
-                                        required
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    messages(
-                                                        'validation.select'
-                                                    ),
-                                            },
-                                        ]}
-                                    >
-                                        <CustomSelectIcon
-                                            title="Amazon"
-                                            tooltipInfo="Bạn có thể thiết lập giá tuỳ chỉnh cho bản phát hành trên Amazon"
-                                            avatarSrc="https://mic.mediacdn.vn/Upload_Moi/2020_vn/20200715-pg5.jpg"
-                                            options={amazonOptions}
-                                        />
-                                    </AppFormItem>
-                                )}
-                                {isHasAppleMusicPlatform && (
-                                    <AppFormItem
-                                        label="Giá bán lẻ trên Apple Music"
-                                        name="platform"
-                                        required
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    messages(
-                                                        'validation.select'
-                                                    ),
-                                            },
-                                        ]}
-                                    >
-                                        <CustomSelectIcon
-                                            title="Apple Music"
-                                            tooltipInfo="Bạn có thể thiết lập giá tuỳ chỉnh cho bản phát hành trên Apple Music"
-                                            avatarSrc="https://getnhanh.net/wp-content/uploads/2023/12/tai-khoan-apple-music.png"
-                                            options={appleMusicOptions}
-                                        />
-                                    </AppFormItem>
-                                )}
+                        {(isHasAmazonPlatform || isHasAppleMusicPlatform) && (
+                            <div className="flex-1 space-y-2">
+                                <p className="text-base font-bold text-gray-500">
+                                    Cài đặt cửa hàng Tải xuống
+                                </p>
+                                <div className="grid grid-cols-1 gap-4">
+                                    {isHasAmazonPlatform && (
+                                        <AppFormItem
+                                            label="Giá bán lẻ trên Amazon"
+                                            name="platform"
+                                            required
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message:
+                                                        messages(
+                                                            'validation.select'
+                                                        ),
+                                                },
+                                            ]}
+                                        >
+                                            <CustomSelectIcon
+                                                title="Amazon"
+                                                tooltipInfo="Bạn có thể thiết lập giá tuỳ chỉnh cho bản phát hành trên Amazon"
+                                                avatarSrc="https://mic.mediacdn.vn/Upload_Moi/2020_vn/20200715-pg5.jpg"
+                                                options={amazonOptions}
+                                            />
+                                        </AppFormItem>
+                                    )}
+                                    {isHasAppleMusicPlatform && (
+                                        <AppFormItem
+                                            label="Giá bán lẻ trên Apple Music"
+                                            name="platform"
+                                            required
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message:
+                                                        messages(
+                                                            'validation.select'
+                                                        ),
+                                                },
+                                            ]}
+                                        >
+                                            <CustomSelectIcon
+                                                title="Apple Music"
+                                                tooltipInfo="Bạn có thể thiết lập giá tuỳ chỉnh cho bản phát hành trên Apple Music"
+                                                avatarSrc="https://getnhanh.net/wp-content/uploads/2023/12/tai-khoan-apple-music.png"
+                                                options={appleMusicOptions}
+                                            />
+                                        </AppFormItem>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    )}
-
-                    <div className="space-y-2">
-                        <p className="text-base font-bold text-gray-500">
-                            Cài đặt lịch & lãnh thổ phát hành
-                        </p>
-                        <div className="grid grid-cols-1">
-                            <div>
-                                {/* <AppFormItem label="Ngày phát hành">
-                                    <Radio.Group>
-                                        <Radio value={true}>
-                                            Sớm nhất có thể
-                                        </Radio>
-                                        <Radio value={false}>
-                                            Thời điểm cụ thể
-                                        </Radio>
-                                    </Radio.Group>
-                                </AppFormItem> */}
-                                <AppFormItem
-                                    label="Ngày phát hành sản phẩm"
-                                    name="releaseDate"
-                                    required
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message:
-                                                messages('validation.select'),
-                                        },
-                                    ]}
-                                >
-                                    <DatePicker className="w-full" showTime />
-                                </AppFormItem>
-
-                                <AppFormItem
-                                    label="Ngày đặt trước sản phẩm"
-                                    name="preOrderDate"
-                                >
-                                    <DatePicker className="w-full" showTime />
-                                </AppFormItem>
-                                <AppFormItem
-                                    label="Timezone"
-                                    name="timezone"
-                                    required
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message:
-                                                messages('validation.select'),
-                                        },
-                                    ]}
-                                >
-                                    <TimezoneSelect className="w-full" />
-                                </AppFormItem>
-                            </div>
-                            <div>
-                                <AppFormItem
-                                    label="Loại khu vực"
-                                    name="territoryType"
-                                    required
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message:
-                                                messages('validation.select'),
-                                        },
-                                    ]}
-                                >
-                                    <RegionSelect
-                                        multiple
-                                        allowClear
-                                        maxTagCount="responsive"
-                                        maxTagPlaceholder={(value) => (
-                                            <CustomTooltip
-                                                title={value
-                                                    .map(
-                                                        (item: any) =>
-                                                            item.label
-                                                    )
-                                                    .join(', ')}
-                                            >
-                                                +{value.length}
-                                            </CustomTooltip>
-                                        )}
-                                    />
-                                </AppFormItem>
-                                <AppFormItem label="Ghi chú" name="note">
-                                    <TextArea
-                                        autoSize={{ minRows: 4, maxRows: 20 }}
-                                    />
-                                </AppFormItem>
-                            </div>
-                        </div>
+                        )}
                     </div>
                 </div>
             </AppForm>

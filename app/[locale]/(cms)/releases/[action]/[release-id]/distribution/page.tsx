@@ -15,16 +15,17 @@ import {
 import { DistributionDataFilter } from '@/modules/distribution/types';
 import DistributionHeader from '@/modules/release-detail/release-distribution/components/header';
 import DistributionStatus from '@/modules/release-detail/release-distribution/components/header-action/distribution-status';
-import DistributionReleaseModal from '@/modules/release-detail/release-distribution/components/modal/distribution-release';
 import DistributionTable from '@/modules/release-detail/release-distribution/components/table';
 import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
 import { useWindowSize } from '@uidotdev/usehooks';
 import { Button } from 'antd';
 import dayjs from 'dayjs';
+import { useTranslations } from 'next-intl';
 import { Key, useState } from 'react';
 type Props = {};
 
 export default function Distribution({}: Props) {
+    const messages = useTranslations();
     const [selectedRow, setSelectedRow] = useState<Key[]>([]);
     const [visibleColumns, setVisibleColumns] = useState<
         DISTRIBUTION_COLUMNS_DISPLAY[]
@@ -106,15 +107,184 @@ export default function Distribution({}: Props) {
     };
     const handleRefresh = () => {};
 
+    // const facebookOptions = [
+    //     {
+    //         label: (
+    //             <p className="flex items-center justify-between">
+    //                 <span>Claim Ad Earnings</span>
+    //                 <IconInfoTooltip title=" Quét tất cả video/câu chuyện sử dụng nhạc của bạn và bật kiếm tiền (nhận tiền bản quyền)" />
+    //             </p>
+    //         ),
+    //         value: 'Claim Ad Earnings',
+    //     },
+    //     {
+    //         label: (
+    //             <p className="flex items-center justify-between">
+    //                 <span>Block</span>
+    //                 <IconInfoTooltip title="Quét tất cả video/câu chuyện sử dụng nhạc của bạn và chặn chúng." />
+    //             </p>
+    //         ),
+    //         value: 'Block',
+    //     },
+    //     {
+    //         label: (
+    //             <p className="flex items-center justify-between">
+    //                 <span>Monitor</span>
+    //                 <IconInfoTooltip title="Quét tất cả video/câu chuyện sử dụng nhạc của bạn nhưng không bật kiếm tiền. Chỉ thu thập dữ liệu phân tích." />
+    //             </p>
+    //         ),
+    //         value: 'Monitor',
+    //     },
+    // ];
+
+    // const tiktokOptions = [
+    //     {
+    //         label: (
+    //             <p className="flex items-center justify-between">
+    //                 <span>NoTiktokScanning</span>
+    //                 <IconInfoTooltip title="Không quét TikTok để tìm các video chứa nhạc của bạn vì bản thu này không đáp ứng đầy đủ các yêu cầu (xem Thuộc tính bản nhạc). Lưu ý rằng nhạc của bạn vẫn sẽ có sẵn để người dùng TikTok thêm vào video của họ." />
+    //             </p>
+    //         ),
+    //         value: 'NoTiktokScanning',
+    //     },
+    //     {
+    //         label: (
+    //             <p className="flex items-center justify-between">
+    //                 <span>Block</span>
+    //                 <IconInfoTooltip title="Quét tất cả video/câu chuyện sử dụng nhạc của bạn và chặn chúng." />
+    //             </p>
+    //         ),
+    //         value: 'Block',
+    //     },
+    //     {
+    //         label: (
+    //             <p className="flex items-center justify-between">
+    //                 <span>Monetize</span>
+    //                 <IconInfoTooltip title="Quét tất cả các video sử dụng nhạc của bạn và bật kiếm tiền cho chúng (nhận tiền bản quyền)." />
+    //             </p>
+    //         ),
+    //         value: 'Monitor',
+    //     },
+    // ];
+
+    // const youtubeOptions = [
+    //     {
+    //         label: (
+    //             <p className="flex items-center justify-between">
+    //                 <span>Monetize in all countries</span>
+    //                 <IconInfoTooltip title="Quét tất cả các video sử dụng nhạc của bạn và bật kiếm tiền cho chúng (nhận tiền bản quyền)." />
+    //             </p>
+    //         ),
+    //         value: 'Monetize in all',
+    //     },
+    //     {
+    //         label: (
+    //             <p className="flex items-center justify-between">
+    //                 <span>Track in all countries</span>
+    //                 <IconInfoTooltip title="Quét tất cả các video sử dụng nhạc của bạn nhưng không bật kiếm tiền. Chỉ thu thập dữ liệu phân tích về chúng." />
+    //             </p>
+    //         ),
+    //         value: 'rack in all countries',
+    //     },
+    //     {
+    //         label: (
+    //             <p className="flex items-center justify-between">
+    //                 <span>Block in all countries</span>
+    //                 <IconInfoTooltip title="Quét tất cả các video sử dụng nhạc của bạn và chặn chúng." />
+    //             </p>
+    //         ),
+    //         value: 'Block in all countries',
+    //     },
+    // ];
+
+    // const amazonOptions = [
+    //     {
+    //         label: (
+    //             <p className="flex items-center justify-between">
+    //                 <span>$0.6</span>
+    //                 <span>Back</span>
+    //             </p>
+    //         ),
+    //         value: 0.6,
+    //     },
+    //     {
+    //         label: (
+    //             <p className="flex items-center justify-between">
+    //                 <span>$0.8</span>
+    //                 <span>Mid</span>
+    //             </p>
+    //         ),
+    //         value: 0.8,
+    //     },
+    //     {
+    //         label: (
+    //             <p className="flex items-center justify-between">
+    //                 <span>$1.2</span>
+    //                 <span>Front</span>
+    //             </p>
+    //         ),
+    //         value: 1.2,
+    //     },
+    // ];
+
+    // const appleMusicOptions = [
+    //     {
+    //         label: (
+    //             <p className="flex items-center justify-between">
+    //                 <span>$0.6</span>
+    //                 <span>Back</span>
+    //             </p>
+    //         ),
+    //         value: 0.6,
+    //     },
+    //     {
+    //         label: (
+    //             <p className="flex items-center justify-between">
+    //                 <span>$0.8</span>
+    //                 <span>Mid</span>
+    //             </p>
+    //         ),
+    //         value: 0.8,
+    //     },
+    //     {
+    //         label: (
+    //             <p className="flex items-center justify-between">
+    //                 <span>$1.2</span>
+    //                 <span>Front</span>
+    //             </p>
+    //         ),
+    //         value: 1.2,
+    //     },
+    // ];
+
+    const dataTable = distributionData.filter((item) => {
+        return selectedRow.includes(item.id);
+    });
+
+    const isHasTiktokPlatform = dataTable.some(
+        (item) => item.platform === 'TikTok'
+    );
+    const isHasYoutubePlatform = dataTable.some(
+        (item) => item.platform === 'Youtube'
+    );
+    const isHasFacebookPlatform = dataTable.some(
+        (item) => item.platform === 'Facebook'
+    );
+
+    const isHasAmazonPlatform = dataTable.some(
+        (item) => item.platform === 'Amazon'
+    );
+    const isHasAppleMusicPlatform = dataTable.some(
+        (item) => item.platform === 'Apple Music'
+    );
+
     return (
         <div className="flex h-full flex-col justify-between">
             <div className="">
                 <div className="flex justify-between border-b">
                     <DistributionStatus
                         onChangeFilter={onChangeFilter}
-                        value={
-                            dataFilter.status ?? DISTRIBUTION_STATUS.PROGRESS
-                        }
+                        value={dataFilter.status ?? DISTRIBUTION_STATUS.ALL}
                     />
                     {selectedRow.length > 0 && (
                         <div className="flex items-center gap-4 px-4 font-medium">
@@ -148,6 +318,7 @@ export default function Distribution({}: Props) {
                         </div>
                     )}
                 </div>
+
                 <DistributionHeader
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
@@ -160,14 +331,21 @@ export default function Distribution({}: Props) {
 
                 <DistributionTable
                     dataSource={distributionData}
-                    scroll={{ y: 65 * 6.6 }}
+                    scroll={{ x: 'max-content' }}
                     rowSelection={rowSelection}
                     size="large"
                 />
             </div>
 
             {typeModal === TYPE_MODAL_RELEASE_DISTRIBUTION.DISTRIBUTION && (
-                <DistributionReleaseModal platformIds={selectedRow} />
+                // <DistributionReleaseModal platformIds={selectedRow} />
+                <AppConfirm
+                    open
+                    onOk={closeModal}
+                    onCancel={closeModal}
+                    modalTitle="Phát hành"
+                    paragraph="Bạn có chắc chắn muốn phát hành trên nền tảng này không?"
+                />
             )}
 
             {typeModal === TYPE_MODAL_RELEASE_DISTRIBUTION.TAKE_DOWN && (
@@ -175,8 +353,8 @@ export default function Distribution({}: Props) {
                     open
                     onOk={closeModal}
                     onCancel={closeModal}
-                    modalTitle="Gỡ xuống bản phát hành"
-                    paragraph="Bạn có chắc chắn muốn gỡ xuống bản phát hành này không?"
+                    modalTitle="Gỡ khỏi nền tảng"
+                    paragraph="Bạn có chắc chắn muốn gỡ khỏi nền tảng này không?"
                 />
             )}
 

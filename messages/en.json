@@ -37,6 +37,7 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "number": "Number",
         "takeDown": "Take down",
         "role": "Role",
         "test": "Test",

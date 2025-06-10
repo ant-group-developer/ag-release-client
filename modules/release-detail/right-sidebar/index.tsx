@@ -1,8 +1,9 @@
 'use client';
 import { SIZE_ICON } from '@/constants/common';
 import { cn } from '@/helpers/common';
-import { useActive } from '@/hooks/use-active';
+import { fieldLabels } from '@/modules/releases/constants/fieldLabels';
 import { XCircle } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { ZodIssue } from 'zod';
 
 interface RightSidebarProps {
@@ -10,16 +11,24 @@ interface RightSidebarProps {
 }
 
 export default function RightSidebar({ errors }: RightSidebarProps) {
-    const { isActive, toggleActive } = useActive(false);
-
-    // Số lượng lỗi và cảnh báo (có thể thay bằng dữ liệu thực tế)
+    const messages = useTranslations();
     const errorCount = errors.length;
-    const warningCount = 0;
+
+    const getFieldLabel = (path: (string | number)[]) => {
+        if (!path.length) return;
+
+        if (path[0] === 'tracks' && path[1] === 'number') {
+            const trackNum = Number(path[1]) + 1;
+            const field = path[2];
+            const fieldKey = `tracks.${field}`;
+            return `${fieldLabels[fieldKey] || field} (${messages('tracks.label').toLocaleLowerCase()} ${messages('common.number').toLocaleLowerCase()} ${trackNum})`;
+        }
+    };
 
     return (
         <div
             className={cn(
-                'fixed right-0 top-16 z-20 h-screen w-[250px] border-x bg-white transition-all duration-300'
+                'h-screen w-[250px] border-x bg-white transition-all duration-300'
                 // isActive ? 'w-[250px]' : 'w-[50px]'
             )}
         >
@@ -55,11 +64,11 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
                                         key={index}
                                         className="rounded-md border border-red-200 bg-red-50 p-2 text-sm"
                                     >
-                                        <p className="text-red-700">
+                                        <p className="text-xs text-red-500">
                                             {err.message}
                                         </p>
                                         {err.path.length > 0 && (
-                                            <p className="text-xs text-red-500">
+                                            <p className="text-red-600">
                                                 Field: {err.path.join('.')}
                                             </p>
                                         )}

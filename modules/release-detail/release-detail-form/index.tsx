@@ -10,35 +10,16 @@ import {
     TYPE_MODAL_RELEASE_ARTIST_LIST,
 } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
-import { releaseSchema } from '@/modules/releases/schemas/schema';
 import { Button, Input, Radio, Select } from 'antd';
 import { useForm, useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
-import { z } from 'zod';
 import ArtistCard from './artist-card';
 
 export default function ReleaseDetailForm() {
     const messages = useTranslations();
-    const basicInfoSchema = releaseSchema(messages as any).pick({
-        type: true,
-        nameRelease: true,
-        isMoreThan4Artists: true,
-        version: true,
-        artists: true,
-        genres: true,
-        subGenres: true,
-        language: true,
-        label: true,
-        upc: true,
-        catalogId: true,
-        cLineYear: true,
-        pLineYear: true,
-        thumbnail: true,
-    });
 
-    type BasicInfoSchema = z.infer<typeof basicInfoSchema>;
-    const [form] = useForm<BasicInfoSchema>();
+    const [form] = useForm();
     const router = useRouter();
     const formValues = useReleaseFormStore((state) => state.formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
@@ -251,7 +232,7 @@ export default function ReleaseDetailForm() {
 
                         <AppFormItem
                             label="C Line year"
-                            name="copyRight"
+                            name="cLineYear"
                             required
                             tooltipInfo="Năm đầu tiên xuất bản bản phát hành này trên toàn thế giới."
                             rules={[
@@ -273,7 +254,7 @@ export default function ReleaseDetailForm() {
 
                         <AppFormItem
                             label="P Line year"
-                            name="copyRight2"
+                            name="pLineYear"
                             tooltipInfo="Năm bản ghi âm đầu tiên được phát hành trên toàn thế giới."
                             required
                             rules={[

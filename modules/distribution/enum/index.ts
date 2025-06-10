@@ -16,6 +16,7 @@ export enum DISTRIBUTION_COLUMNS_DISPLAY {
 }
 
 export enum DISTRIBUTION_STATUS {
+    ALL = 'all',
     PROGRESS = 'progress',
     ISSUE = 'issue',
     DISTRIBUTED = 'distributed',

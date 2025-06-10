@@ -25,6 +25,8 @@ export default function DistributionTable({ ...props }: Props) {
         {
             title: 'Platform',
             dataIndex: 'platform',
+            key: 'platform',
+            width: 250,
             render: (value, record) => {
                 return (
                     <div className="flex items-center gap-2">
@@ -47,6 +49,7 @@ export default function DistributionTable({ ...props }: Props) {
             key: 'releaseDate',
             dataIndex: 'releaseDate',
             align: 'center',
+            width: 250,
             render: (value) => (
                 <span className="truncate text-wrap">
                     {' '}
@@ -59,6 +62,7 @@ export default function DistributionTable({ ...props }: Props) {
             key: 'creationDate',
             dataIndex: 'creationDate',
             align: 'center',
+            width: 250,
             render: (value) => (
                 <span className="truncate text-wrap">
                     {' '}
@@ -72,6 +76,7 @@ export default function DistributionTable({ ...props }: Props) {
             key: 'status',
             dataIndex: 'status',
             align: 'center',
+            width: 250,
             render: (value) => (
                 <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
                     {messages(getIntlCodeByReleaseStatus(value))}
