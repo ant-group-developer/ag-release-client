@@ -14,7 +14,9 @@ import { useEffect } from 'react';
 import { roleArtist } from '../../constants';
 import ArtistProfilesList from '../list/artist-profiles';
 
-type Props = {};
+type Props = {
+    onSubmit: (values: any) => void;
+};
 
 // Dữ liệu mẫu cho các platform đã liên kết
 const fakeLinkedPlatforms = [
@@ -22,7 +24,7 @@ const fakeLinkedPlatforms = [
     { id: '5', name: 'Youtube Music' },
 ];
 
-export default function AddArtistModal({}: Props) {
+export default function AddArtistModal({ onSubmit }: Props) {
     const [form] = Form.useForm();
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
@@ -32,36 +34,14 @@ export default function AddArtistModal({}: Props) {
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const isArtistEditModal =
         typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST;
+    const isAddArtistReleaseModal =
+        typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST;
     const dataEdit = useModalStore((state) => state.dataEdit);
 
     const handleSubmit = async () => {
         try {
             const values = await form.validateFields();
-            const newArtistData = {
-                name: values.name,
-                role: values.role,
-                id: values.name,
-            };
-            const currentArtists = formValues.artists || [];
-
-            let updatedArtists;
-
-            if (isArtistEditModal) {
-                updatedArtists = currentArtists.map((artist: any) =>
-                    artist.name === dataEdit?.name
-                        ? { ...artist, ...newArtistData }
-                        : artist
-                );
-            } else {
-                // If adding new, always add a new entry with a unique ID
-                updatedArtists = [...currentArtists, newArtistData];
-            }
-
-            setFormValues({
-                ...formValues,
-                artists: updatedArtists,
-            });
-
+            onSubmit(values);
             closeModal();
         } catch (error) {
             console.error('Validation failed:', error);

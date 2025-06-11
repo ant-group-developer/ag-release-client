@@ -46,10 +46,18 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                     }
 
                     return {
-                        id: Date.now() + index,
+                        id: index++,
                         title: getFileName(file),
                         file: file.originFileObj,
-                        artist: mainArtist?.id ?? '',
+                        artists: mainArtist
+                            ? [
+                                  {
+                                      name: mainArtist.name,
+                                      role: mainArtist.role,
+                                      id: mainArtist.name,
+                                  },
+                              ]
+                            : [],
                         songInfo: {
                             duration: songDuration,
                             peakData: peakData,

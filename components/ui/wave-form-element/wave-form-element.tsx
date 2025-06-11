@@ -1,8 +1,8 @@
 'use client';
-import { SIZE_ICON } from '@/constants/common';
+import { SIZE_ICON_BIG } from '@/constants/common';
 import { convertSecondsToTime, parsePeakData } from '@/helpers/common';
 import { Button, Col, Row } from 'antd';
-import { Pause, Play } from 'lucide-react';
+import { CirclePause, CirclePlay } from 'lucide-react';
 import PropTypes from 'prop-types';
 import Waveform from 'react-audio-waveform';
 // import { StyledSongItemDuration, StyledSongItemPlayback } from './index.styled';
@@ -22,16 +22,17 @@ const WaveformElement = ({
         <Row align="middle" wrap={false}>
             <Col className="block" flex="50px">
                 <Button
+                    type="text"
                     shape="circle"
                     onClick={togglePlayback}
                     icon={
                         playing ? (
                             <div>
-                                <Pause size={SIZE_ICON} />
+                                <CirclePause size={SIZE_ICON_BIG} />
                             </div>
                         ) : (
                             <div>
-                                <Play size={SIZE_ICON} />
+                                <CirclePlay size={SIZE_ICON_BIG} />
                             </div>
                         )
                     }

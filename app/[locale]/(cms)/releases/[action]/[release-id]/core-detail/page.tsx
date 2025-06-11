@@ -31,6 +31,38 @@ export default function CoreDetail() {
         closeModal();
     };
 
+    const handleAddArtistRelease = (values: any) => {
+        const isArtistEditModal =
+            typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST;
+        try {
+            const newArtistData = {
+                name: values.name,
+                role: values.role,
+                id: values.name,
+            };
+            const releaseArtists = formValues.artists || [];
+
+            let updatedArtists;
+
+            if (isArtistEditModal) {
+                updatedArtists = releaseArtists.map((artist: any) =>
+                    artist.name === dataEdit?.name
+                        ? { ...artist, ...newArtistData }
+                        : artist
+                );
+            } else {
+                updatedArtists = [...releaseArtists, newArtistData];
+            }
+
+            setFormValues({
+                ...formValues,
+                artists: updatedArtists,
+            });
+        } catch (error) {
+            console.error('Validation failed:', error);
+        }
+    };
+
     useEffect(() => {
         // Chỉ set initialData nếu chưa có data trong store
 
@@ -79,19 +111,21 @@ export default function CoreDetail() {
             <ReleaseDetailForm />
             {(typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST ||
                 typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST) && (
-                <AddArtistModal />
+                <AddArtistModal onSubmit={handleAddArtistRelease} />
             )}
+
+            {typeModal === TYPE_MODAL_ARTIST.CREATE && <ArtistFormModal />}
+            {typeModal === TYPE_MODAL_LABEL.CREATE && <LabelFormModal />}
+
             {typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST && (
                 <AppConfirm
                     open
                     modalTitle="Xóa nghệ sĩ"
-                    paragraph="Bạn có chắc chắn muốn xóa nghệ sĩ này không?"
-                    onOk={() => handleRemoveArtistList(dataEdit.id)}
+                    paragraph="Bạn có chắc chắn muốn xóa nghệ sĩ ra khỏi phát hành này không?"
                     onCancel={closeModal}
+                    onOk={() => handleRemoveArtistList(dataEdit.id)}
                 />
             )}
-            {typeModal === TYPE_MODAL_ARTIST.CREATE && <ArtistFormModal />}
-            {typeModal === TYPE_MODAL_LABEL.CREATE && <LabelFormModal />}
         </div>
     );
 }

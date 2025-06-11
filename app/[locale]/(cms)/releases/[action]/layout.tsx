@@ -59,6 +59,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     }, [pathname, isDetailPage]);
 
     useEffect(() => {
+        console.log(isScrolledOnDetailPage);
         const handleScroll = () => {
             if (!childrenRef.current || !isDetailPage) return;
 
@@ -130,18 +131,6 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             disabled: isDisableTab,
         },
         {
-            key: RELEASES_TABS.REVIEW,
-            label: (
-                <Link
-                    className={cn(isDisableTab ? 'pointer-events-none' : '')}
-                    href={`/releases/detail/${releaseId}/review`}
-                >
-                    <span className="font-medium">Review</span>
-                </Link>
-            ),
-            disabled: isDisableTab,
-        },
-        {
             key: RELEASES_TABS.DISTRIBUTION,
             label: (
                 <Link
@@ -149,6 +138,18 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     href={`/releases/detail/${releaseId}/distribution`}
                 >
                     <span className="font-medium">Phân phối</span>
+                </Link>
+            ),
+            disabled: isDisableTab,
+        },
+        {
+            key: RELEASES_TABS.REVIEW,
+            label: (
+                <Link
+                    className={cn(isDisableTab ? 'pointer-events-none' : '')}
+                    href={`/releases/detail/${releaseId}/review`}
+                >
+                    <span className="font-medium">Review</span>
                 </Link>
             ),
             disabled: isDisableTab,
@@ -191,7 +192,10 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
 
     return (
         <div className="flex h-full overflow-hidden">
-            <div className="flex h-full flex-1 flex-col">
+            <div
+                ref={childrenRef}
+                className="flex h-full flex-1 flex-col overflow-y-auto"
+            >
                 <div className="sticky top-0 z-10 bg-white">
                     <ReleaseDetailHeader isScrolled={headerIsScrolled} />
                     <div className="px-4">
@@ -204,9 +208,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                         />
                     </div>
                 </div>
-                <div ref={childrenRef} className="flex-1 overflow-y-auto">
-                    {children}
-                </div>
+                <div className="flex-1">{children}</div>
             </div>
             <RightSidebar errors={validationErrors} />
         </div>

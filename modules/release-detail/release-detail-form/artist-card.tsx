@@ -1,7 +1,6 @@
 import IconButton from '@/components/ui/button/icon-button';
 import { SIZE_ICON } from '@/constants/common';
 import useModalStore from '@/hooks/use-modal';
-import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '@/modules/releases/enums';
 import { Avatar } from 'antd';
 import { Trash2 } from 'lucide-react';
 import { HTMLAttributes } from 'react';
@@ -9,9 +8,10 @@ import { HTMLAttributes } from 'react';
 type Props = HTMLAttributes<HTMLDivElement> & {
     index: number;
     data: any;
+    onDelete?: () => void;
 };
 
-export default function ArtistCard({ index, data, ...props }: Props) {
+export default function ArtistCard({ index, data, onDelete, ...props }: Props) {
     const openModal = useModalStore((state) => state.openModal);
     return (
         <div
@@ -58,10 +58,11 @@ export default function ArtistCard({ index, data, ...props }: Props) {
                     <IconButton
                         onClick={(e) => {
                             e.stopPropagation();
-                            openModal(
-                                TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST,
-                                data
-                            );
+                            onDelete?.();
+                            // openModal(
+                            //     TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST,
+                            //     data
+                            // );
                         }}
                     >
                         <Trash2 size={SIZE_ICON} className="text-red-500" />

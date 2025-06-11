@@ -1,19 +1,28 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
-import ArtistSelect from '@/components/ui/select/artist-select';
+import AppConfirm from '@/components/ui/modal/confirm-modal';
 import IconInfoTooltip from '@/components/ui/tooltip/icon-info-tooltip';
-import { artistList, languageList } from '@/constants/fakeData';
+import { languageList } from '@/constants/fakeData';
+import useModalStore from '@/hooks/use-modal';
+import {
+    TYPE_MODAL_RELEASE_ARTIST_LIST,
+    TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST,
+} from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { TrackData } from '@/modules/tracks/types';
-import { Form, Input, Select } from 'antd';
+import { Button, Form, Input, Select, Switch } from 'antd';
+import { useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
+import ArtistCard from '../../release-detail-form/artist-card';
 
 type Props = {
     trackData: TrackData;
 };
 
 export default function TracksForm({ trackData }: Props) {
+    const messages = useTranslations();
+
     const originalSourceList = [
         {
             label: (
@@ -45,18 +54,37 @@ export default function TracksForm({ trackData }: Props) {
     ];
     const [form] = Form.useForm();
     const formValues = useReleaseFormStore((state) => state.formValues);
-    const mainArtist = formValues?.artists?.find(
-        (artist: any) => artist.role === 'Main Artist'
-    );
+    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
+    const TrackArtists = trackData.artists;
+    const openModal = useModalStore((state) => state.openModal);
+    const isAddArtistsFromRelease = useWatch('isAddArtistsFromRelease', form);
+    const typeModal = useModalStore((state) => state.typeModal);
+    const closeModal = useModalStore((state) => state.closeModal);
+    const dataEdit = useModalStore((state) => state.dataEdit);
 
     useEffect(() => {
         form.setFieldsValue({
-            artist: mainArtist?.id,
             trackName: trackData.title,
+            artists: TrackArtists,
         });
-    }, []);
+    }, [trackData, TrackArtists]);
 
-    const messages = useTranslations();
+    const handleDeleteArtistTrack = (artistId: string) => {
+        const updatedArtist = TrackArtists.filter(
+            (artist) => artist.id !== artistId
+        );
+
+        setFormValues({
+            ...formValues,
+            tracks: formValues.tracks.map((track: any) =>
+                track.id === trackData.id
+                    ? { ...track, artists: updatedArtist }
+                    : track
+            ),
+        });
+        closeModal();
+    };
+
     return (
         <div>
             <AppForm form={form} layout="vertical" showSubmit={false}>
@@ -91,27 +119,6 @@ export default function TracksForm({ trackData }: Props) {
                     >
                         <Input allowClear />
                     </AppFormItem> */}
-                    <AppFormItem
-                        label="Chọn nghệ sĩ chính"
-                        name="artist"
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.select'),
-                            },
-                        ]}
-                    >
-                        <ArtistSelect />
-                    </AppFormItem>
-                    <AppFormItem label="Chọn nghệ sĩ phụ" name="subArtist">
-                        <Select
-                            mode="multiple"
-                            options={artistList}
-                            showSearch
-                            allowClear
-                        />
-                    </AppFormItem>
 
                     <AppFormItem
                         label="Nguồn gốc"
@@ -149,8 +156,67 @@ export default function TracksForm({ trackData }: Props) {
                             showSearch
                         />
                     </AppFormItem>
+
+                    <div className="col-span-2">
+                        <AppFormItem
+                            label="Thêm tất cả nghệ sĩ từ phát hành ?"
+                            name="isAddArtistsFromRelease"
+                        >
+                            <Switch />
+                        </AppFormItem>
+                        {!isAddArtistsFromRelease && (
+                            <div>
+                                <div>
+                                    <Button
+                                        onClick={() =>
+                                            openModal(
+                                                TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.ADD_ARTIST,
+                                                trackData
+                                            )
+                                        }
+                                        shape="round"
+                                        className="mb-4"
+                                    >
+                                        Thêm nghệ sĩ
+                                    </Button>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    {TrackArtists.map(
+                                        (artist: any, index: number) => (
+                                            <ArtistCard
+                                                data={artist}
+                                                onDelete={() =>
+                                                    openModal(
+                                                        TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST,
+                                                        artist
+                                                    )
+                                                }
+                                                onClick={() =>
+                                                    openModal(
+                                                        TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.EDIT_ARTIST,
+                                                        artist
+                                                    )
+                                                }
+                                                key={index}
+                                                index={index}
+                                            />
+                                        )
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </AppForm>
+            {typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST && (
+                <AppConfirm
+                    open
+                    modalTitle="Xóa nghệ sĩ"
+                    paragraph="Bạn có chắc chắn muốn xóa nghệ sĩ này không?"
+                    onCancel={closeModal}
+                    onOk={() => handleDeleteArtistTrack(dataEdit.id)}
+                />
+            )}
         </div>
     );
 }

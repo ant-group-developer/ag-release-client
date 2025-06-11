@@ -13,7 +13,6 @@ import { useTranslations } from 'next-intl';
 import TrackActionButton from '../button/track-action';
 import AudioSpecifications from '../form/audio-specifications';
 import OtherMetadataForm from '../form/other-metadata-form';
-import PublishingForm from '../form/publishing-form';
 import TracksForm from '../form/track-form';
 import { TrackWaveform } from '../track-wave-form';
 
@@ -58,7 +57,6 @@ export default function ReleaseTracksTable({
             align: 'center',
             width: 300,
             render: (value, record) => {
-                console.log('first', record);
                 return (
                     <div className="w-full">
                         <TrackWaveform key={record.id} data={record} />
@@ -67,7 +65,7 @@ export default function ReleaseTracksTable({
             },
         },
         {
-            title: messages('tracks.label'),
+            title: messages('tracks.name'),
             dataIndex: 'title',
             key: 'title',
             align: 'left',
@@ -199,11 +197,11 @@ export default function ReleaseTracksTable({
                 label: <span className="font-medium">Thông số kỹ thuật</span>,
                 children: <AudioSpecifications trackData={record} />,
             },
-            {
-                key: '4',
-                label: <span className="font-medium">Xuất bản</span>,
-                children: <PublishingForm />,
-            },
+            // {
+            //     key: '4',
+            //     label: <span className="font-medium">Xuất bản</span>,
+            //     children: <PublishingForm />,
+            // },
         ];
         return (
             <div className="px-20 py-4">

@@ -1,10 +1,11 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
+import TimeInput from '@/components/ui/input/time-input';
 import CountrySelect from '@/components/ui/select/country-select';
 import extractAudioMetadata from '@/helpers/common';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { TrackData } from '@/modules/tracks/types';
-import { Input } from 'antd';
+import { Input, Select } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
@@ -43,7 +44,7 @@ export default function AudioSpecifications({ trackData }: Props) {
     useEffect(() => {
         form.setFieldsValue({
             ...formValues,
-            trackName: file.name,
+            fileName: file.name,
         });
         getMetadata().then((metadata) => {
             setMetadata(metadata);
@@ -62,7 +63,7 @@ export default function AudioSpecifications({ trackData }: Props) {
                     <div className="grid grid-cols-2 gap-4">
                         <AppFormItem
                             label="Tên File"
-                            name="trackName"
+                            name="fileName"
                             required
                             rules={[
                                 {
@@ -74,12 +75,12 @@ export default function AudioSpecifications({ trackData }: Props) {
                             <Input />
                         </AppFormItem>
 
-                        <AppFormItem
+                        {/* <AppFormItem
                             label="WMG Registered Filename"
                             name="registeredFilename"
                         >
                             <Input />
-                        </AppFormItem>
+                        </AppFormItem> */}
                         <AppFormItem
                             label="Quốc gia ghi âm"
                             name="countryRecording"
@@ -93,19 +94,64 @@ export default function AudioSpecifications({ trackData }: Props) {
                         >
                             <CountrySelect showSearch allowClear />
                         </AppFormItem>
-                        <AppFormItem
-                            label="Đoạn nghe trước"
-                            name="previewTrack"
-                            required
-                            rules={[
-                                {
-                                    required: true,
-                                    message: messages('validation.select'),
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </AppFormItem>
+                        <div className="col-span-2 grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-2">
+                                <AppFormItem
+                                    label="Đoạn nghe mẫu"
+                                    name="previewTrack"
+                                    required
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                messages('validation.select'),
+                                        },
+                                    ]}
+                                >
+                                    <TimeInput />
+                                </AppFormItem>
+                                <AppFormItem
+                                    label="Hook bài hát"
+                                    name="previewTrack"
+                                    required
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                messages('validation.select'),
+                                        },
+                                    ]}
+                                >
+                                    <TimeInput />
+                                </AppFormItem>
+                            </div>
+                            <AppFormItem
+                                label="Thể loại bản ghi"
+                                name="previewTrack"
+                                required
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: messages('validation.select'),
+                                    },
+                                ]}
+                            >
+                                <Select
+                                    options={[
+                                        {
+                                            label: 'Sound Recording (Music work)',
+                                            value: '1',
+                                        },
+                                        {
+                                            label: 'Sound Recording (Non music work)',
+                                            value: '2',
+                                        },
+                                    ]}
+                                    showSearch
+                                    allowClear
+                                />
+                            </AppFormItem>
+                        </div>
                     </div>
                     <div className="grid grid-cols-7 rounded-md border p-2">
                         <div>

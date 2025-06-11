@@ -147,6 +147,7 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
 
     return (
         <AppTable
+            bordered
             pagination={false}
             rowClassName={'group'}
             columns={columns}

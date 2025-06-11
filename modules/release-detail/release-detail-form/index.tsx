@@ -129,39 +129,47 @@ export default function ReleaseDetailForm() {
                         </div> */}
 
                         <div className="col-span-2">
-                            <AppFormItem
-                                label=" Có nhiều hơn 4 nghệ sĩ hay không ?"
-                                name="isMoreThan4Artists"
-                                required
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: messages('validation.select'),
-                                    },
-                                ]}
-                            >
-                                <Radio.Group>
-                                    <Radio value={false}>Không</Radio>
-                                    <Radio value={true}>
-                                        {`Có (Tên hiển thị sẽ là "Nhiều nghệ sĩ")`}
-                                    </Radio>
-                                </Radio.Group>
-                            </AppFormItem>
+                            <div>
+                                <div className="flex items-center justify-between">
+                                    <AppFormItem
+                                        label=" Có nhiều hơn 4 nghệ sĩ hay không ?"
+                                        name="isMoreThan4Artists"
+                                        required
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message:
+                                                    messages(
+                                                        'validation.select'
+                                                    ),
+                                            },
+                                        ]}
+                                    >
+                                        <Radio.Group>
+                                            <Radio value={false}>Không</Radio>
+                                            <Radio value={true}>
+                                                {`Có (Tên hiển thị sẽ là "Nhiều nghệ sĩ")`}
+                                            </Radio>
+                                        </Radio.Group>
+                                    </AppFormItem>
+                                    {!isMoreThan4Artists && (
+                                        <div className="pt-5">
+                                            <Button
+                                                onClick={() =>
+                                                    openModal(
+                                                        TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST
+                                                    )
+                                                }
+                                            >
+                                                Thêm nghệ sĩ chính
+                                            </Button>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
                             {!isMoreThan4Artists && (
                                 <div>
-                                    <div>
-                                        <Button
-                                            onClick={() =>
-                                                openModal(
-                                                    TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST
-                                                )
-                                            }
-                                            shape="round"
-                                            className="mb-4"
-                                        >
-                                            Thêm nghệ sĩ chính
-                                        </Button>
-                                    </div>
                                     <div className="grid grid-cols-2 gap-4">
                                         {artists.map(
                                             (artist: any, index: number) => (
@@ -170,6 +178,12 @@ export default function ReleaseDetailForm() {
                                                     onClick={() =>
                                                         openModal(
                                                             TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST,
+                                                            artist
+                                                        )
+                                                    }
+                                                    onDelete={() =>
+                                                        openModal(
+                                                            TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST,
                                                             artist
                                                         )
                                                     }
