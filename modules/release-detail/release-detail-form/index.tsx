@@ -30,23 +30,10 @@ export default function ReleaseDetailForm() {
 
     const artists = formValues.artists || [];
 
-    useEffect(() => {
-        // Nếu formValues rỗng, reset form với giá trị mặc định
-        if (Object.keys(formValues).length === 0) {
-            form.resetFields();
-            form.setFieldsValue({
-                isMoreThan4Artists: false, // Set giá trị mặc định
-            });
-        } else {
-            // Nếu có formValues, set vào form
-            form.setFieldsValue(formValues);
-        }
-    }, [form, formValues]);
-
     // Hàm xử lý khi form thay đổi
     const handleValuesChange = (_: any, allValues: any) => {
         // Cập nhật giá trị mới vào zustand
-        setFormValues(allValues);
+        setFormValues({ ...formValues, ...allValues });
     };
 
     const handleNext = () => {
@@ -60,12 +47,25 @@ export default function ReleaseDetailForm() {
         }
     };
 
+    useEffect(() => {
+        console.log(formValues);
+        // Nếu formValues rỗng, reset form với giá trị mặc định
+        if (Object.keys(formValues).length === 0) {
+            form.resetFields();
+            form.setFieldsValue({
+                isMoreThan4Artists: false, // Set giá trị mặc định
+            });
+        } else {
+            // Nếu có formValues, set vào form
+            form.setFieldsValue(formValues);
+        }
+    }, [form, formValues]);
     return (
-        <div className="p-4">
+        <div className="px-4 pt-4">
             <AppForm
                 form={form}
                 layout="vertical"
-                showSubmit
+                showSubmit={false}
                 submitText={messages('common.next')}
                 submitProps={{
                     onClick: () => {
@@ -189,6 +189,7 @@ export default function ReleaseDetailForm() {
                                                     }
                                                     key={index}
                                                     index={index}
+                                                    showApplyToAllTracks
                                                 />
                                             )
                                         )}
@@ -220,7 +221,7 @@ export default function ReleaseDetailForm() {
 
                         <AppFormItem
                             label={messages('common.language') + ' metadata'}
-                            name="language"
+                            name="metadataLanguage"
                             required
                             rules={[
                                 {

@@ -8,8 +8,13 @@ import { TYPE_MODAL_ARTIST } from '@/modules/artist/enum';
 import LabelFormModal from '@/modules/labels/components/modal/create-label';
 import { TYPE_MODAL_LABEL } from '@/modules/labels/enum';
 import ReleaseDetailForm from '@/modules/release-detail/release-detail-form';
-import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '@/modules/releases/enums';
+import {
+    RELEASES_TYPE,
+    TYPE_MODAL_RELEASE_ARTIST_LIST,
+} from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { ReleaseFormValuesData } from '@/modules/releases/types';
+import { GENRES } from '@/modules/tracks/enums';
 import { useParams } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -24,7 +29,7 @@ export default function CoreDetail() {
     const closeModal = useModalStore((state) => state.closeModal);
 
     const handleRemoveArtistList = (artistId: string) => {
-        const newArtistList = formValues.artists.filter(
+        const newArtistList = formValues?.artists?.filter(
             (artist: any) => artist.id !== artistId
         );
         setFormValues({ ...formValues, artists: newArtistList });
@@ -51,7 +56,20 @@ export default function CoreDetail() {
                         : artist
                 );
             } else {
-                updatedArtists = [...releaseArtists, newArtistData];
+                const isAlreadyHaveMainArtist = releaseArtists?.some(
+                    (artist) => artist.role === newArtistData.role
+                );
+
+                if (isAlreadyHaveMainArtist) {
+                    return (updatedArtists = [
+                        newArtistData,
+                        ...releaseArtists.filter(
+                            (artist) => artist.role !== newArtistData.role
+                        ),
+                    ]);
+                } else {
+                    updatedArtists = [...releaseArtists, newArtistData];
+                }
             }
 
             setFormValues({
@@ -68,11 +86,10 @@ export default function CoreDetail() {
 
         if (releaseId && (!formValues || !formValues.nameRelease)) {
             // fake data
-            const initialData = {
-                type: 'album',
+            const initialData: ReleaseFormValuesData = {
+                releaseType: RELEASES_TYPE.ALBUM,
                 nameRelease: 'Album Mới 2024',
                 isMoreThan4Artists: false,
-                nameDisplay: 'Album Mới 2024 - Phát Hành Chính Thức',
                 artists: [
                     {
                         id: 'Sơn Tùng MTP',
@@ -80,15 +97,13 @@ export default function CoreDetail() {
                         role: 'Main Artist',
                     },
                 ],
-                subArtist: ['artist-2'],
-                genres: 'Hip-hop',
-                subGenres: 'Rap',
-                language: 'vi',
-                label: 'label-1',
+                genres: GENRES.HIP_HOP,
+                subGenres: GENRES.HIP_HOP,
+                label: 'ANT-MUSIC',
                 upc: '123456789012',
                 catalogId: 'CAT-2024-001',
-                copyRight: 'Công ty Âm nhạc XYZ',
-                copyRight2: 'Bản quyền thuộc về XYZ Music',
+                cLineYear: 'ANT-MUSIC',
+                pLineYear: 'ANT-MUSIC',
                 thumbnail: {
                     fileList: [
                         {
@@ -101,6 +116,13 @@ export default function CoreDetail() {
                         },
                     ],
                 },
+                version: '',
+                metaDataLanguage: 'vi',
+                tracks: [],
+                releaseDate: '',
+                timeZone: '',
+                territory: undefined,
+                platform: [],
             };
             setFormValues(initialData);
         }
@@ -111,7 +133,10 @@ export default function CoreDetail() {
             <ReleaseDetailForm />
             {(typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST ||
                 typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST) && (
-                <AddArtistModal onSubmit={handleAddArtistRelease} />
+                <AddArtistModal
+                    isSetMainArtist={formValues?.artists?.length === 0}
+                    onSubmit={handleAddArtistRelease}
+                />
             )}
 
             {typeModal === TYPE_MODAL_ARTIST.CREATE && <ArtistFormModal />}

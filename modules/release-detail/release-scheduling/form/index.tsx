@@ -214,7 +214,7 @@ export default function ReleaseSchedulingForm({}: Props) {
                         </AppFormItem>
 
                         <AppFormItem
-                            label="Loại khu vực"
+                            label="Khu vực"
                             name="territoryType"
                             required
                             rules={[

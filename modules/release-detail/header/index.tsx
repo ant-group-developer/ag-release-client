@@ -17,6 +17,10 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     const formValues = useReleaseFormStore((state) => state.formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
 
+    const mainArtist = formValues?.artists?.find(
+        (artist: any) => artist.role === 'Main Artist'
+    );
+
     const handleValuesChange = (_: any, allValues: any) => {
         setFormValues({ ...formValues, ...allValues });
     };
@@ -63,7 +67,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                 />
                             </AppFormItem>
                         </div>
-                        <div className="lg:w-1/2">
+                        <div className="">
                             <div
                                 className={cn('grid grid-cols-2 gap-2', {
                                     'grid-cols-3': isScrolled,
@@ -87,9 +91,8 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                 <div className="text-sm">
                                     <span>Nghệ sĩ: </span>
                                     <span className="font-bold">
-                                        {formValues?.artists &&
-                                        formValues.artists.length > 0
-                                            ? formValues.artists[0]?.name
+                                        {formValues?.artists
+                                            ? mainArtist?.name
                                             : ''}
                                     </span>
                                 </div>
@@ -102,7 +105,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                 <div className="text-sm">
                                     <span>Ngôn ngữ: </span>
                                     <span className="font-bold">
-                                        {formValues.language}
+                                        {formValues.metaDataLanguage}
                                     </span>
                                 </div>
                             </div>

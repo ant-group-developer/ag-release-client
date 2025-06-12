@@ -28,7 +28,7 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
     return (
         <div
             className={cn(
-                'h-screen w-[250px] border-x bg-white transition-all duration-300'
+                'h-screen w-[300px] border-x bg-white transition-all duration-300'
                 // isActive ? 'w-[250px]' : 'w-[50px]'
             )}
         >

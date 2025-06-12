@@ -1,3 +1,6 @@
+import { ArtistData } from '@/modules/artist/types';
+import { GENRES } from '@/modules/tracks/enums';
+import { TrackData } from '@/modules/tracks/types';
 import { CommonParams } from '@/types/api';
 import { RELEASES_STATUS, RELEASES_TYPE } from '../enums';
 
@@ -27,4 +30,26 @@ export interface ReleasesDataFilter extends CommonParams {
     startDateRelease?: string;
     endDateRelease?: string;
     genres?: string;
+}
+
+export interface ReleaseFormValuesData {
+    thumbnail: any;
+    releaseType: RELEASES_TYPE | null;
+    nameRelease: string;
+    version: string;
+    isMoreThan4Artists: boolean;
+    artists: Pick<ArtistData, 'id' | 'name' | 'role'>[];
+    genres: GENRES | null;
+    subGenres: GENRES | null;
+    metaDataLanguage: string;
+    label: string;
+    upc: string;
+    catalogId: string;
+    cLineYear: string;
+    pLineYear: string;
+    tracks: TrackData[];
+    releaseDate: string;
+    timeZone: string;
+    territory: any;
+    platform: any[];
 }

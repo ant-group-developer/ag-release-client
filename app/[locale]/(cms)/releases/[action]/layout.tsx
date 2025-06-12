@@ -34,52 +34,6 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const [isScrolledOnDetailPage, setIsScrolledOnDetailPage] = useState(false);
     const childrenRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        const getActiveTab = () => {
-            const map: Record<string, string> = {
-                [RELEASES_TABS.CORE_DETAIL]: RELEASES_TABS.CORE_DETAIL,
-                [RELEASES_TABS.TRACKS]: RELEASES_TABS.TRACKS,
-                [RELEASES_TABS.SCHEDULE]: RELEASES_TABS.SCHEDULE,
-                [RELEASES_TABS.REVIEW]: RELEASES_TABS.REVIEW,
-                [RELEASES_TABS.DISTRIBUTION]: RELEASES_TABS.DISTRIBUTION,
-            };
-            const tabKey = pathname.split('/').pop();
-            return map[tabKey ?? ''] || RELEASES_TABS.CORE_DETAIL;
-        };
-        setActiveTab(getActiveTab());
-
-        // Set initial scroll state if it's a detail page and already scrolled
-        if (isDetailPage) {
-            if (childrenRef.current && childrenRef.current.scrollTop > 10) {
-                setIsScrolledOnDetailPage(true);
-            } else {
-                setIsScrolledOnDetailPage(false);
-            }
-        }
-    }, [pathname, isDetailPage]);
-
-    useEffect(() => {
-        console.log(isScrolledOnDetailPage);
-        const handleScroll = () => {
-            if (!childrenRef.current || !isDetailPage) return;
-
-            const newIsScrolled = childrenRef.current.scrollTop > 10;
-            if (newIsScrolled !== isScrolledOnDetailPage) {
-                setIsScrolledOnDetailPage(newIsScrolled);
-            }
-        };
-
-        const currentRef = childrenRef.current;
-        if (currentRef && isDetailPage) {
-            currentRef.addEventListener('scroll', handleScroll);
-        }
-        return () => {
-            if (currentRef) {
-                currentRef.removeEventListener('scroll', handleScroll);
-            }
-        };
-    }, [isScrolledOnDetailPage, isDetailPage]);
-
     const coreDetailTabsNavigate = isCreateReleasePage
         ? '/releases/create'
         : `/releases/detail/${releaseId}/core-detail`;
@@ -189,6 +143,55 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     );
 
     const headerIsScrolled = isDetailPage ? isScrolledOnDetailPage : true;
+
+    useEffect(() => {
+        const getActiveTab = () => {
+            const map: Record<string, string> = {
+                [RELEASES_TABS.CORE_DETAIL]: RELEASES_TABS.CORE_DETAIL,
+                [RELEASES_TABS.TRACKS]: RELEASES_TABS.TRACKS,
+                [RELEASES_TABS.SCHEDULE]: RELEASES_TABS.SCHEDULE,
+                [RELEASES_TABS.REVIEW]: RELEASES_TABS.REVIEW,
+                [RELEASES_TABS.DISTRIBUTION]: RELEASES_TABS.DISTRIBUTION,
+            };
+            const tabKey = pathname.split('/').pop();
+            return map[tabKey ?? ''] || RELEASES_TABS.CORE_DETAIL;
+        };
+        setActiveTab(getActiveTab());
+
+        // Set initial scroll state if it's a detail page and already scrolled
+        if (isDetailPage) {
+            if (childrenRef.current && childrenRef.current.scrollTop > 10) {
+                setIsScrolledOnDetailPage(true);
+            } else {
+                setIsScrolledOnDetailPage(false);
+            }
+        }
+    }, [pathname, isDetailPage]);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (!childrenRef.current || !isDetailPage) return;
+            if (
+                childrenRef.current.scrollHeight >
+                childrenRef.current.clientHeight
+            ) {
+                const newIsScrolled = childrenRef.current.scrollTop > 0;
+                if (newIsScrolled !== isScrolledOnDetailPage) {
+                    setIsScrolledOnDetailPage(newIsScrolled);
+                }
+            }
+        };
+
+        const currentRef = childrenRef.current;
+        if (currentRef && isDetailPage) {
+            currentRef.addEventListener('scroll', handleScroll);
+        }
+        return () => {
+            if (currentRef) {
+                currentRef.removeEventListener('scroll', handleScroll);
+            }
+        };
+    }, [isScrolledOnDetailPage, isDetailPage]);
 
     return (
         <div className="flex h-full overflow-hidden">

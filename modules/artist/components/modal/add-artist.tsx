@@ -16,6 +16,7 @@ import ArtistProfilesList from '../list/artist-profiles';
 
 type Props = {
     onSubmit: (values: any) => void;
+    isSetMainArtist?: boolean;
 };
 
 // Dữ liệu mẫu cho các platform đã liên kết
@@ -24,7 +25,7 @@ const fakeLinkedPlatforms = [
     { id: '5', name: 'Youtube Music' },
 ];
 
-export default function AddArtistModal({ onSubmit }: Props) {
+export default function AddArtistModal({ isSetMainArtist, onSubmit }: Props) {
     const [form] = Form.useForm();
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
@@ -41,6 +42,9 @@ export default function AddArtistModal({ onSubmit }: Props) {
     const handleSubmit = async () => {
         try {
             const values = await form.validateFields();
+            if (isSetMainArtist) {
+                values.role = 'Main Artist';
+            }
             onSubmit(values);
             closeModal();
         } catch (error) {
@@ -86,22 +90,24 @@ export default function AddArtistModal({ onSubmit }: Props) {
                     />
                 </AppFormItem>
 
-                <AppFormItem
-                    name="role"
-                    label={messages('common.role')}
-                    required
-                    rules={[
-                        {
-                            required: true,
-                            message: messages('validation.select'),
-                        },
-                    ]}
-                >
-                    <RoleArtistSelect
-                        placeholder={messages('common.role')}
-                        options={roleArtist}
-                    />
-                </AppFormItem>
+                {!isSetMainArtist && (
+                    <AppFormItem
+                        name="role"
+                        label={messages('common.role')}
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.select'),
+                            },
+                        ]}
+                    >
+                        <RoleArtistSelect
+                            placeholder={messages('common.role')}
+                            options={roleArtist}
+                        />
+                    </AppFormItem>
+                )}
 
                 {watchArtistName && (
                     <div>

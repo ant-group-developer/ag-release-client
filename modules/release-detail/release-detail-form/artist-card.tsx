@@ -1,7 +1,7 @@
 import IconButton from '@/components/ui/button/icon-button';
 import { SIZE_ICON } from '@/constants/common';
 import useModalStore from '@/hooks/use-modal';
-import { Avatar } from 'antd';
+import { Avatar, Checkbox } from 'antd';
 import { Trash2 } from 'lucide-react';
 import { HTMLAttributes } from 'react';
 
@@ -9,9 +9,16 @@ type Props = HTMLAttributes<HTMLDivElement> & {
     index: number;
     data: any;
     onDelete?: () => void;
+    showApplyToAllTracks?: boolean;
 };
 
-export default function ArtistCard({ index, data, onDelete, ...props }: Props) {
+export default function ArtistCard({
+    showApplyToAllTracks,
+    index,
+    data,
+    onDelete,
+    ...props
+}: Props) {
     const openModal = useModalStore((state) => state.openModal);
     return (
         <div
@@ -30,6 +37,12 @@ export default function ArtistCard({ index, data, onDelete, ...props }: Props) {
                         <span>1569468 | </span>
                         <span>{data?.role}</span>
                     </p>
+                    {showApplyToAllTracks && (
+                        <div onClick={(e) => e.stopPropagation()}>
+                            <Checkbox defaultChecked={true} /> Thêm nghệ sĩ vào
+                            các bài hát
+                        </div>
+                    )}
                 </div>
             </div>
             <div className="flex items-center gap-2">
