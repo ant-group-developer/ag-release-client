@@ -3,6 +3,7 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import GenresSelect from '@/components/ui/select/genres-select';
 import LabelSelect from '@/components/ui/select/label-select';
 import { languageList, yearList } from '@/constants/fakeData';
+import { showNotification } from '@/helpers/messages-helper';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
 import {
@@ -47,6 +48,46 @@ export default function ReleaseDetailForm() {
         }
     };
 
+    const handleApplyAllTracks = (checked: boolean, artist: any) => {
+        if (!checked) {
+            setFormValues({
+                ...formValues,
+                artistsApplyAllTracks:
+                    formValues?.artistsApplyAllTracks?.filter(
+                        (item: any) => item.name !== artist.name
+                    ),
+            });
+            return;
+        }
+
+        const isArtistExists = formValues?.artistsApplyAllTracks?.some(
+            (item: any) => item.name === artist.name
+        );
+
+        const updatedTracks = formValues?.tracks?.map((track: any) => {
+            const isArtistExistsInTrack = track.artists?.some(
+                (item: any) => item.name === artist.name
+            );
+
+            if (isArtistExistsInTrack) return track;
+
+            return {
+                ...track,
+                artists: [...track.artists, artist],
+            };
+        });
+
+        setFormValues({
+            ...formValues,
+            artistsApplyAllTracks: isArtistExists
+                ? formValues?.artistsApplyAllTracks
+                : [...(formValues?.artistsApplyAllTracks || []), artist],
+            tracks: updatedTracks,
+        });
+
+        showNotification('success', 'Đã thêm nghệ sĩ vào tất cả bài hát');
+    };
+
     useEffect(() => {
         console.log(formValues);
         // Nếu formValues rỗng, reset form với giá trị mặc định
@@ -60,6 +101,7 @@ export default function ReleaseDetailForm() {
             form.setFieldsValue(formValues);
         }
     }, [form, formValues]);
+
     return (
         <div className="px-4 pt-4">
             <AppForm
@@ -190,6 +232,14 @@ export default function ReleaseDetailForm() {
                                                     key={index}
                                                     index={index}
                                                     showApplyToAllTracks
+                                                    onApplyToAllTracks={(
+                                                        checked
+                                                    ) => {
+                                                        handleApplyAllTracks(
+                                                            checked,
+                                                            artist
+                                                        );
+                                                    }}
                                                 />
                                             )
                                         )}

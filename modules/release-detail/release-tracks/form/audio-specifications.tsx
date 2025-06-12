@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 
 type Props = {
     trackData: TrackData;
+    checkTrackValid: (boolean: boolean) => void;
 };
 
 export interface AudioMetadata {
@@ -25,7 +26,10 @@ export interface AudioMetadata {
     mqs: string;
 }
 
-export default function AudioSpecifications({ trackData }: Props) {
+export default function AudioSpecifications({
+    trackData,
+    checkTrackValid,
+}: Props) {
     const [metadata, setMetadata] = useState<AudioMetadata | null>(null);
     const { file } = trackData;
     const [form] = useForm();
@@ -41,6 +45,21 @@ export default function AudioSpecifications({ trackData }: Props) {
             return null;
         }
     };
+
+    const handleValuesChange = () => {
+        setTimeout(() => {
+            form.validateFields()
+                .then((values) => {
+                    console.log('audio valid', values);
+                    checkTrackValid(true);
+                })
+                .catch((error) => {
+                    console.log('audio invalid', error);
+                    checkTrackValid(false);
+                });
+        }, 0);
+    };
+
     useEffect(() => {
         form.setFieldsValue({
             ...formValues,
@@ -49,6 +68,15 @@ export default function AudioSpecifications({ trackData }: Props) {
         getMetadata().then((metadata) => {
             setMetadata(metadata);
         });
+
+        form.validateFields()
+            .then((values) => {
+                console.log('audio valid');
+                checkTrackValid(true);
+            })
+            .catch((error) => {
+                checkTrackValid(false);
+            });
     }, [formValues, form]);
 
     return (
@@ -58,6 +86,7 @@ export default function AudioSpecifications({ trackData }: Props) {
                 initialValues={formValues}
                 layout="vertical"
                 showSubmit={false}
+                onValuesChange={() => handleValuesChange()}
             >
                 <div className="space-y-2">
                     <div className="grid grid-cols-2 gap-4">

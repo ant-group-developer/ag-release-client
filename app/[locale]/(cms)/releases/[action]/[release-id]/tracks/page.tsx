@@ -1,6 +1,8 @@
 'use client';
+import AppConfirm from '@/components/ui/modal/confirm-modal';
 import useModalStore from '@/hooks/use-modal';
 import AddArtistModal from '@/modules/artist/components/modal/add-artist';
+import { ArtistData } from '@/modules/artist/types';
 import AudioPlayer from '@/modules/release-detail/release-tracks/audio-player';
 import AddNewTrackModal from '@/modules/release-detail/release-tracks/modal/add-new-track-modal';
 import ReleaseTracksTable from '@/modules/release-detail/release-tracks/table';
@@ -25,7 +27,12 @@ export default function Tracks() {
     };
 
     const handleRemoveTrack = (trackId: string) => {
-        // setTracks(tracks?.filter((track) => track?.id !== trackId));
+        setFormValues({
+            ...formValues,
+            tracks: formValues?.tracks?.filter(
+                (track) => track?.id !== trackId
+            ),
+        });
     };
 
     const handleAddTracks = (newTracks: any[]) => {
@@ -60,27 +67,36 @@ export default function Tracks() {
 
     const handleAddArtistTrack = (values: any) => {
         try {
-            const newArtistData = {
+            const newArtistData: ArtistData = {
                 name: values.name,
                 role: values.role,
                 id: values.name,
+                artistId: '',
+                thumbnail: '',
+                trackCount: 0,
+                createdAt: new Date(),
             };
 
-            const updatedTracks = formValues.tracks.map((track: TrackData) => {
-                if (track.id === dataEdit?.id) {
-                    const isArtistExists = track.artists?.some(
-                        (artist) => artist.name === newArtistData.name
-                    );
+            const updatedTracks = formValues?.tracks?.map(
+                (track: TrackData) => {
+                    if (track.id === dataEdit?.id) {
+                        const isArtistExists = track.artists?.some(
+                            (artist) => artist.name === newArtistData.name
+                        );
 
-                    if (!isArtistExists) {
-                        return {
-                            ...track,
-                            artists: [...(track.artists || []), newArtistData],
-                        };
+                        if (!isArtistExists) {
+                            return {
+                                ...track,
+                                artists: [
+                                    ...(track.artists || []),
+                                    newArtistData,
+                                ],
+                            };
+                        }
                     }
+                    return track;
                 }
-                return track;
-            });
+            );
 
             setFormValues({
                 ...formValues,
@@ -90,6 +106,27 @@ export default function Tracks() {
         } catch (error) {
             console.error('Validation failed:', error);
         }
+    };
+
+    const handleRemoveArtistTrack = (values: any) => {
+        const { trackData, artist } = values;
+        const updatedTracks = formValues?.tracks?.map((track: TrackData) => {
+            if (track.id === trackData?.id) {
+                return {
+                    ...track,
+                    artists: track.artists?.filter(
+                        (item) => item.id !== artist.id
+                    ),
+                };
+            }
+            return track;
+        });
+
+        setFormValues({
+            ...formValues,
+            tracks: updatedTracks,
+        });
+        closeModal();
     };
 
     // const handleAddArtistRelease = (values: any) => {
@@ -164,6 +201,17 @@ export default function Tracks() {
                 typeModal ===
                     TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.EDIT_ARTIST) && (
                 <AddArtistModal onSubmit={handleAddArtistTrack} />
+            )}
+
+            {typeModal ===
+                TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.DELETE_ARTIST && (
+                <AppConfirm
+                    open
+                    modalTitle="Xóa nghệ sĩ"
+                    paragraph="Bạn có chắc chắn muốn xóa nghệ sĩ ra khỏi bài hát này không?"
+                    onCancel={closeModal}
+                    onOk={() => handleRemoveArtistTrack(dataEdit)}
+                />
             )}
         </div>
     );

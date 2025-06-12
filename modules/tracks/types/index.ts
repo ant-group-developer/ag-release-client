@@ -14,6 +14,7 @@ export interface TrackData {
     releaseDate: string;
     duration: number;
     thumbnail: string;
+    isSensitiveContent: boolean;
     artists: ArtistData[];
     plays: number;
     file: File;

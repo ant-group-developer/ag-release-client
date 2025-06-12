@@ -30,6 +30,7 @@ const initialValue: ReleaseFormValuesData = {
     timeZone: '',
     territory: undefined,
     platform: [],
+    artistsApplyAllTracks: [],
 };
 
 export const useReleaseFormStore = create<ReleaseFormState>()(

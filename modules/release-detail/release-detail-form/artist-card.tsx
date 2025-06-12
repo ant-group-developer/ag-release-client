@@ -1,7 +1,7 @@
 import IconButton from '@/components/ui/button/icon-button';
 import { SIZE_ICON } from '@/constants/common';
-import useModalStore from '@/hooks/use-modal';
-import { Avatar, Checkbox } from 'antd';
+import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { Avatar, Checkbox, CheckboxChangeEvent } from 'antd';
 import { Trash2 } from 'lucide-react';
 import { HTMLAttributes } from 'react';
 
@@ -10,16 +10,21 @@ type Props = HTMLAttributes<HTMLDivElement> & {
     data: any;
     onDelete?: () => void;
     showApplyToAllTracks?: boolean;
+    onApplyToAllTracks?: (checked: boolean) => void;
 };
 
 export default function ArtistCard({
     showApplyToAllTracks,
+    onApplyToAllTracks,
     index,
     data,
     onDelete,
     ...props
 }: Props) {
-    const openModal = useModalStore((state) => state.openModal);
+    const handleChangeChecked = (e: CheckboxChangeEvent) => {
+        onApplyToAllTracks?.(e.target.checked);
+    };
+    const formValues = useReleaseFormStore((state) => state.formValues);
     return (
         <div
             className="flex cursor-pointer items-center justify-between rounded-lg bg-gray-100 px-3 py-2 hover:bg-gray-200"
@@ -38,9 +43,20 @@ export default function ArtistCard({
                         <span>{data?.role}</span>
                     </p>
                     {showApplyToAllTracks && (
-                        <div onClick={(e) => e.stopPropagation()}>
-                            <Checkbox defaultChecked={true} /> Thêm nghệ sĩ vào
-                            các bài hát
+                        <div
+                            onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+                                e.stopPropagation();
+                            }}
+                        >
+                            <Checkbox
+                                defaultChecked={formValues?.artistsApplyAllTracks?.some(
+                                    (item: any) => item.name === data.name
+                                )}
+                                onChange={(e: CheckboxChangeEvent) => {
+                                    handleChangeChecked(e);
+                                }}
+                            />
+                            <span> Thêm nghệ sĩ vào các bài hát</span>
                         </div>
                     )}
                 </div>

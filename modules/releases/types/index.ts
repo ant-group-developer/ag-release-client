@@ -47,9 +47,10 @@ export interface ReleaseFormValuesData {
     catalogId: string;
     cLineYear: string;
     pLineYear: string;
-    tracks: TrackData[];
+    tracks: TrackData[] | null;
     releaseDate: string;
     timeZone: string;
     territory: any;
     platform: any[];
+    artistsApplyAllTracks: ArtistData[];
 }

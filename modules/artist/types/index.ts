@@ -6,7 +6,7 @@ export interface ArtistData {
     role: string;
     artistId: string;
     thumbnail: string;
-    trackCount: number;
+    trackCount?: number;
     createdAt: Date;
 }
 

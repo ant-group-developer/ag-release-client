@@ -1,15 +1,16 @@
-import ArtistSelect from '@/components/ui/select/artist-select';
 import SortableTable, {
     OnDragEnd,
     SortableTableProps,
 } from '@/components/ui/table/sortable-table';
-import { SCREEN } from '@/enums/common';
 import useModalStore from '@/hooks/use-modal';
+import { ArtistData } from '@/modules/artist/types';
+import { TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { TrackData } from '@/modules/tracks/types';
-import { Form, Input, Tabs } from 'antd';
+import { Input, Tabs, Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 import TrackActionButton from '../button/track-action';
 import AudioSpecifications from '../form/audio-specifications';
 import OtherMetadataForm from '../form/other-metadata-form';
@@ -24,7 +25,13 @@ export default function ReleaseTracksTable({
     handleRemoveTrack,
     ...props
 }: Props) {
-    const [form] = Form.useForm();
+    const [formValidity, setFormValidity] = useState({
+        trackForm: false,
+        metadataForm: false,
+        audioSpecsForm: false,
+    });
+    const [isReady, setIsReady] = useState(false);
+
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const formValues = useReleaseFormStore((state) => state.formValues);
@@ -34,6 +41,20 @@ export default function ReleaseTracksTable({
             id: item.id,
             order: index + 1,
         }));
+    };
+
+    const checkFormValidity = (formName: string, valid: boolean) => {
+        setFormValidity((prevValidity) => {
+            const updatedValidity = { ...prevValidity, [formName]: valid };
+
+            // Kiểm tra nếu tất cả các form hợp lệ thì set "ready" thành true
+            const allValid = Object.values(updatedValidity).every(
+                (validity) => validity === true
+            );
+
+            setIsReady(allValid);
+            return updatedValidity;
+        });
     };
 
     const columns: ColumnType<TrackData>[] = [
@@ -58,7 +79,7 @@ export default function ReleaseTracksTable({
             width: 300,
             render: (value, record) => {
                 return (
-                    <div className="w-full">
+                    <div className="w-[330px]">
                         <TrackWaveform key={record.id} data={record} />
                     </div>
                 );
@@ -76,17 +97,40 @@ export default function ReleaseTracksTable({
         },
         {
             title: messages('common.artist'),
-            dataIndex: 'artist',
-            key: 'artist',
+            dataIndex: 'artists',
+            key: 'artists',
             align: 'left',
-            width: 200,
-            render: (value) => {
+            width: 300,
+            render: (value, record) => {
                 return (
-                    <ArtistSelect
-                        placeholder="Chọn nghệ sĩ"
-                        value={value}
-                        className="w-full"
-                    />
+                    <div className="flex flex-wrap gap-y-2">
+                        {record.artists.map((artist: ArtistData) => (
+                            <Tag
+                                key={artist.id}
+                                closeIcon
+                                onClose={(e) => {
+                                    e.preventDefault();
+                                    openModal(
+                                        TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.DELETE_ARTIST,
+                                        { trackData: record, artist }
+                                    );
+                                }}
+                            >
+                                {artist.name}
+                            </Tag>
+                        ))}
+                        <Tag
+                            className="border-dashed"
+                            onClick={() =>
+                                openModal(
+                                    TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.ADD_ARTIST,
+                                    record
+                                )
+                            }
+                        >
+                            + Thêm nghệ sĩ
+                        </Tag>
+                    </div>
                 );
             },
         },
@@ -155,12 +199,16 @@ export default function ReleaseTracksTable({
             dataIndex: '',
             key: '',
             align: 'center',
-            width: 200,
+            width: 150,
             render: (value) => {
+                const color = isReady ? 'green' : 'red';
                 return (
-                    <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
-                        {messages('common.draft')}
-                    </span>
+                    <Tag bordered color={color}>
+                        {/* <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline"> */}
+                        {/* {messages('common.draft')} */}
+                        {isReady ? 'Sẵn sàng' : 'Lỗi'}
+                        {/* </span> */}
+                    </Tag>
                 );
             },
         },
@@ -185,17 +233,37 @@ export default function ReleaseTracksTable({
             {
                 key: '1',
                 label: <span className="font-medium">Bản nhạc & nghệ sĩ</span>,
-                children: <TracksForm trackData={record} />,
+                children: (
+                    <TracksForm
+                        trackData={record}
+                        checkTrackValid={(valid) =>
+                            checkFormValidity('trackForm', valid)
+                        }
+                    />
+                ),
             },
             {
                 key: '2',
                 label: <span className="font-medium">Các metadata khác</span>,
-                children: <OtherMetadataForm />,
+                children: (
+                    <OtherMetadataForm
+                        checkTrackValid={(valid) =>
+                            checkFormValidity('metadataForm', valid)
+                        }
+                    />
+                ),
             },
             {
                 key: '3',
                 label: <span className="font-medium">Thông số kỹ thuật</span>,
-                children: <AudioSpecifications trackData={record} />,
+                children: (
+                    <AudioSpecifications
+                        trackData={record}
+                        checkTrackValid={(valid) =>
+                            checkFormValidity('audioSpecsForm', valid)
+                        }
+                    />
+                ),
             },
             // {
             //     key: '4',
@@ -230,7 +298,7 @@ export default function ReleaseTracksTable({
                     expandedRowRender,
                     expandedRowClassName: () => '!z-0 custom-track-expanded',
                 }}
-                scroll={{ x: SCREEN.XXL }}
+                scroll={{ x: 'max-content' }}
             />
         </div>
     );

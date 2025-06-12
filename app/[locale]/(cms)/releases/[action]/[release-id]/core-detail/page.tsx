@@ -123,6 +123,7 @@ export default function CoreDetail() {
                 timeZone: '',
                 territory: undefined,
                 platform: [],
+                artistsApplyAllTracks: [],
             };
             setFormValues(initialData);
         }

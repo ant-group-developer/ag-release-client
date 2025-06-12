@@ -9,19 +9,44 @@ import TextArea from 'antd/es/input/TextArea';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 
-type Props = {};
+type Props = {
+    checkTrackValid: (boolean: boolean) => void;
+};
 
-export default function OtherMetadataForm({}: Props) {
+export default function OtherMetadataForm({ checkTrackValid }: Props) {
     const [form] = useForm();
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
+
+    const handleValuesChange = () => {
+        setTimeout(() => {
+            form.validateFields()
+                .then((values) => {
+                    console.log('other valid', values);
+                    checkTrackValid(true);
+                })
+                .catch((error) => {
+                    console.log('other invalid', error);
+                    checkTrackValid(false);
+                });
+        }, 0);
+    };
 
     useEffect(() => {
         form.setFieldsValue({
             genres: formValues.genres,
             subGenres: formValues.subGenres,
-            sensitiveContent: formValues.sensitiveContent,
+            // sensitiveContent: formValues.sensitiveContent,
         });
+
+        form.validateFields()
+            .then((values) => {
+                console.log('other valid');
+                checkTrackValid(true);
+            })
+            .catch((error) => {
+                checkTrackValid(false);
+            });
     }, [formValues, form]);
 
     return (
@@ -31,6 +56,7 @@ export default function OtherMetadataForm({}: Props) {
                 initialValues={formValues}
                 layout="vertical"
                 showSubmit={false}
+                onValuesChange={() => handleValuesChange()}
             >
                 <div className="grid grid-cols-2 gap-4">
                     <AppFormItem

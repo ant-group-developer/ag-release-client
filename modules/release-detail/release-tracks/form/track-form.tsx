@@ -1,13 +1,9 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
-import AppConfirm from '@/components/ui/modal/confirm-modal';
 import IconInfoTooltip from '@/components/ui/tooltip/icon-info-tooltip';
 import { languageList } from '@/constants/fakeData';
 import useModalStore from '@/hooks/use-modal';
-import {
-    TYPE_MODAL_RELEASE_ARTIST_LIST,
-    TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST,
-} from '@/modules/releases/enums';
+import { TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { TrackData } from '@/modules/tracks/types';
 import { Button, Form, Input, Select, Switch } from 'antd';
@@ -18,9 +14,10 @@ import ArtistCard from '../../release-detail-form/artist-card';
 
 type Props = {
     trackData: TrackData;
+    checkTrackValid: (boolean: boolean) => void;
 };
 
-export default function TracksForm({ trackData }: Props) {
+export default function TracksForm({ trackData, checkTrackValid }: Props) {
     const messages = useTranslations();
 
     const originalSourceList = [
@@ -62,32 +59,35 @@ export default function TracksForm({ trackData }: Props) {
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit);
 
+    const handleValuesChange = () => {
+        setTimeout(() => {
+            form.validateFields()
+                .then((values) => {
+                    console.log('track valid', values);
+                    checkTrackValid(true);
+                })
+                .catch((error) => {
+                    console.log('track invalid', error);
+                    checkTrackValid(false);
+                });
+        }, 0);
+    };
+
     useEffect(() => {
         form.setFieldsValue({
             trackName: trackData.title,
             artists: TrackArtists,
         });
-    }, [trackData, TrackArtists]);
-
-    const handleDeleteArtistTrack = (artistId: string) => {
-        const updatedArtist = TrackArtists.filter(
-            (artist) => artist.id !== artistId
-        );
-
-        setFormValues({
-            ...formValues,
-            tracks: formValues.tracks.map((track: any) =>
-                track.id === trackData.id
-                    ? { ...track, artists: updatedArtist }
-                    : track
-            ),
-        });
-        closeModal();
-    };
+    }, [trackData, TrackArtists, form]);
 
     return (
         <div>
-            <AppForm form={form} layout="vertical" showSubmit={false}>
+            <AppForm
+                form={form}
+                layout="vertical"
+                showSubmit={false}
+                onValuesChange={() => handleValuesChange()}
+            >
                 <div className="grid grid-cols-2 gap-4">
                     <AppFormItem
                         label="Tên bài hát"
@@ -187,8 +187,8 @@ export default function TracksForm({ trackData }: Props) {
                                                 data={artist}
                                                 onDelete={() =>
                                                     openModal(
-                                                        TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST,
-                                                        artist
+                                                        TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.DELETE_ARTIST,
+                                                        { trackData, artist }
                                                     )
                                                 }
                                                 onClick={() =>
@@ -208,15 +208,6 @@ export default function TracksForm({ trackData }: Props) {
                     </div>
                 </div>
             </AppForm>
-            {typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST && (
-                <AppConfirm
-                    open
-                    modalTitle="Xóa nghệ sĩ"
-                    paragraph="Bạn có chắc chắn muốn xóa nghệ sĩ này không?"
-                    onCancel={closeModal}
-                    onOk={() => handleDeleteArtistTrack(dataEdit.id)}
-                />
-            )}
         </div>
     );
 }
