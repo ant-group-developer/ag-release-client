@@ -5,7 +5,8 @@ import { GENRES } from '../enums';
 
 export interface TrackData {
     id: string;
-    title: string;
+    title: string; // Kiem tra va xoa
+    trackName: string;
     trackId: string;
     genres: GENRES;
     labelName: string;
@@ -18,6 +19,7 @@ export interface TrackData {
     artists: ArtistData[];
     plays: number;
     file: File;
+    fileName: string;
     songInfo: {
         duration: number;
         peakData: number[];

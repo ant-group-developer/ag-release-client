@@ -6,6 +6,7 @@ import useModalStore from '@/hooks/use-modal';
 import { ArtistData } from '@/modules/artist/types';
 import { TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { useTrackReadyStore } from '@/modules/releases/hooks/trackReadyStore';
 import { TrackData } from '@/modules/tracks/types';
 import { Input, Tabs, Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
@@ -17,6 +18,12 @@ import OtherMetadataForm from '../form/other-metadata-form';
 import TracksForm from '../form/track-form';
 import { TrackWaveform } from '../track-wave-form';
 
+type FormValidationStatus = {
+    trackForm: boolean;
+    metadataForm: boolean;
+    audioSpecsForm: boolean;
+};
+
 type Props = {
     handleRemoveTrack: (trackId: string) => void;
 } & Omit<SortableTableProps<TrackData>, 'columns'>;
@@ -25,16 +32,16 @@ export default function ReleaseTracksTable({
     handleRemoveTrack,
     ...props
 }: Props) {
-    const [formValidity, setFormValidity] = useState({
-        trackForm: false,
-        metadataForm: false,
-        audioSpecsForm: false,
-    });
-    const [isReady, setIsReady] = useState(false);
-
+    const [trackValidationMap, setTrackValidationMap] = useState<
+        Record<string, FormValidationStatus>
+    >({});
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const formValues = useReleaseFormStore((state) => state.formValues);
+    const trackReadyMap = useTrackReadyStore((state) => state.trackReadyMap);
+    const setTrackReadyMap = useTrackReadyStore(
+        (state) => state.setTrackReadyMap
+    );
 
     const handleDragEnd: OnDragEnd<TrackData[]> = (newData) => {
         const payload = newData.map((item, index) => ({
@@ -43,17 +50,30 @@ export default function ReleaseTracksTable({
         }));
     };
 
-    const checkFormValidity = (formName: string, valid: boolean) => {
-        setFormValidity((prevValidity) => {
-            const updatedValidity = { ...prevValidity, [formName]: valid };
+    const checkFormValidity = (
+        trackId: string,
+        formName: string,
+        valid: boolean
+    ) => {
+        setTrackValidationMap((prev) => {
+            const trackValid = prev[trackId] || {
+                trackForm: false,
+                metadataForm: false,
+                audioSpecsForm: false,
+            };
 
-            // Kiểm tra nếu tất cả các form hợp lệ thì set "ready" thành true
-            const allValid = Object.values(updatedValidity).every(
-                (validity) => validity === true
+            const updatedTrackValid = { ...trackValid, [formName]: valid };
+
+            const allValid = Object.values(updatedTrackValid).every(
+                (value) => value === true
             );
 
-            setIsReady(allValid);
-            return updatedValidity;
+            setTrackReadyMap(trackId, allValid);
+
+            return {
+                ...prev,
+                [trackId]: updatedTrackValid,
+            };
         });
     };
 
@@ -200,7 +220,8 @@ export default function ReleaseTracksTable({
             key: '',
             align: 'center',
             width: 150,
-            render: (value) => {
+            render: (value, record) => {
+                const isReady = trackReadyMap[record.id] || false;
                 const color = isReady ? 'green' : 'red';
                 return (
                     <Tag bordered color={color}>
@@ -237,7 +258,7 @@ export default function ReleaseTracksTable({
                     <TracksForm
                         trackData={record}
                         checkTrackValid={(valid) =>
-                            checkFormValidity('trackForm', valid)
+                            checkFormValidity(record.id, 'trackForm', valid)
                         }
                     />
                 ),
@@ -247,8 +268,9 @@ export default function ReleaseTracksTable({
                 label: <span className="font-medium">Các metadata khác</span>,
                 children: (
                     <OtherMetadataForm
+                        trackData={record}
                         checkTrackValid={(valid) =>
-                            checkFormValidity('metadataForm', valid)
+                            checkFormValidity(record.id, 'metadataForm', valid)
                         }
                     />
                 ),
@@ -260,7 +282,11 @@ export default function ReleaseTracksTable({
                     <AudioSpecifications
                         trackData={record}
                         checkTrackValid={(valid) =>
-                            checkFormValidity('audioSpecsForm', valid)
+                            checkFormValidity(
+                                record.id,
+                                'audioSpecsForm',
+                                valid
+                            )
                         }
                     />
                 ),

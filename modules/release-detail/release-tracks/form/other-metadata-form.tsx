@@ -3,6 +3,7 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import GenresSelect from '@/components/ui/select/genres-select';
 import { languageList } from '@/constants/fakeData';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { TrackData } from '@/modules/tracks/types';
 import { Select } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import TextArea from 'antd/es/input/TextArea';
@@ -11,19 +12,36 @@ import { useEffect } from 'react';
 
 type Props = {
     checkTrackValid: (boolean: boolean) => void;
+    trackData: TrackData;
 };
 
-export default function OtherMetadataForm({ checkTrackValid }: Props) {
+export default function OtherMetadataForm({
+    checkTrackValid,
+    trackData,
+}: Props) {
     const [form] = useForm();
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
+    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
 
-    const handleValuesChange = () => {
+    const handleValuesChange = (changedValues: any) => {
         setTimeout(() => {
             form.validateFields()
                 .then((values) => {
-                    console.log('other valid', values);
                     checkTrackValid(true);
+                    const newValue = {
+                        ...formValues,
+                        tracks: formValues?.tracks?.map((track: any) => {
+                            if (track.id === trackData.id) {
+                                return {
+                                    ...track,
+                                    ...changedValues,
+                                };
+                            }
+                            return track;
+                        }),
+                    };
+                    setFormValues(newValue);
                 })
                 .catch((error) => {
                     console.log('other invalid', error);
@@ -34,9 +52,11 @@ export default function OtherMetadataForm({ checkTrackValid }: Props) {
 
     useEffect(() => {
         form.setFieldsValue({
+            ...formValues?.tracks?.find(
+                (track: TrackData) => track.id === trackData.id
+            ),
             genres: formValues.genres,
             subGenres: formValues.subGenres,
-            // sensitiveContent: formValues.sensitiveContent,
         });
 
         form.validateFields()
@@ -56,7 +76,9 @@ export default function OtherMetadataForm({ checkTrackValid }: Props) {
                 initialValues={formValues}
                 layout="vertical"
                 showSubmit={false}
-                onValuesChange={() => handleValuesChange()}
+                onValuesChange={(changedValues) =>
+                    handleValuesChange(changedValues)
+                }
             >
                 <div className="grid grid-cols-2 gap-4">
                     <AppFormItem
@@ -90,7 +112,7 @@ export default function OtherMetadataForm({ checkTrackValid }: Props) {
                     </AppFormItem>
                     <AppFormItem
                         label="Nội dung nhạy cảm"
-                        name="sensitiveContent"
+                        name="isSensitiveContent"
                         required
                         rules={[
                             {
@@ -102,8 +124,8 @@ export default function OtherMetadataForm({ checkTrackValid }: Props) {
                         <Select
                             showSearch
                             options={[
-                                { label: 'Có', value: 'true' },
-                                { label: 'Không', value: 'false' },
+                                { label: 'Có', value: true },
+                                { label: 'Không', value: false },
                             ]}
                             allowClear
                             // placeholder={messages(
@@ -153,7 +175,7 @@ export default function OtherMetadataForm({ checkTrackValid }: Props) {
                     </AppFormItem>
                     <AppFormItem
                         label="Ngôn ngữ metadata"
-                        name="MetadataLanguage"
+                        name="metadataLanguage"
                         required
                         rules={[
                             {

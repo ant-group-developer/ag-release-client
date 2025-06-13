@@ -59,15 +59,27 @@ export default function TracksForm({ trackData, checkTrackValid }: Props) {
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit);
 
-    const handleValuesChange = () => {
+    const handleValuesChange = (changedValues: any) => {
         setTimeout(() => {
             form.validateFields()
                 .then((values) => {
-                    console.log('track valid', values);
                     checkTrackValid(true);
+                    const newValue = {
+                        ...formValues,
+                        tracks: formValues?.tracks?.map((track: TrackData) => {
+                            if (track.id === trackData.id) {
+                                return {
+                                    ...track,
+                                    ...changedValues,
+                                };
+                            }
+                            return track;
+                        }),
+                    };
+                    setFormValues(newValue);
                 })
                 .catch((error) => {
-                    console.log('track invalid', error);
+                    console.log('Track validation failed:', error);
                     checkTrackValid(false);
                 });
         }, 0);
@@ -77,8 +89,28 @@ export default function TracksForm({ trackData, checkTrackValid }: Props) {
         form.setFieldsValue({
             trackName: trackData.title,
             artists: TrackArtists,
+            isAddArtistsFromRelease: false,
+            isrc: '',
+            isSensitiveContent: false,
+            metadataLanguage: '',
+            ...formValues?.tracks?.find(
+                (track: any) => track.id === trackData.id
+            ),
         });
-    }, [trackData, TrackArtists, form]);
+
+        setTimeout(() => {
+            form.validateFields()
+                .then((values) => {
+                    checkTrackValid(true);
+                    console.log('track valid');
+                })
+                .catch((error) => {
+                    console.log('track invalid');
+                    console.log('🚀 ~ useEffect ~ error:', error);
+                    checkTrackValid(false);
+                });
+        }, 0);
+    }, []);
 
     return (
         <div>
@@ -86,7 +118,9 @@ export default function TracksForm({ trackData, checkTrackValid }: Props) {
                 form={form}
                 layout="vertical"
                 showSubmit={false}
-                onValuesChange={() => handleValuesChange()}
+                onValuesChange={(changedValues, allValues) =>
+                    handleValuesChange(changedValues)
+                }
             >
                 <div className="grid grid-cols-2 gap-4">
                     <AppFormItem
@@ -102,7 +136,6 @@ export default function TracksForm({ trackData, checkTrackValid }: Props) {
                     >
                         <Input allowClear />
                     </AppFormItem>
-
                     <AppFormItem label="ISRC" name="isrc">
                         <Input allowClear />
                     </AppFormItem>
@@ -119,7 +152,6 @@ export default function TracksForm({ trackData, checkTrackValid }: Props) {
                     >
                         <Input allowClear />
                     </AppFormItem> */}
-
                     <AppFormItem
                         label="Nguồn gốc"
                         name="source"
@@ -137,7 +169,6 @@ export default function TracksForm({ trackData, checkTrackValid }: Props) {
                             allowClear
                         />
                     </AppFormItem>
-
                     <AppFormItem
                         label="Ngôn ngữ bài hát"
                         name="languageTrack"
@@ -156,7 +187,6 @@ export default function TracksForm({ trackData, checkTrackValid }: Props) {
                             showSearch
                         />
                     </AppFormItem>
-
                     <div className="col-span-2">
                         <AppFormItem
                             label="Thêm tất cả nghệ sĩ từ phát hành ?"

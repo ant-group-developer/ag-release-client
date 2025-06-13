@@ -2,8 +2,11 @@
 import { SIZE_ICON } from '@/constants/common';
 import { cn } from '@/helpers/common';
 import { fieldLabels } from '@/modules/releases/constants/fieldLabels';
+import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { releaseSchema } from '@/modules/releases/schemas/schema';
 import { XCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useEffect } from 'react';
 import { ZodIssue } from 'zod';
 
 interface RightSidebarProps {
@@ -17,13 +20,38 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
     const getFieldLabel = (path: (string | number)[]) => {
         if (!path.length) return;
 
-        if (path[0] === 'tracks' && path[1] === 'number') {
+        if (path.length >= 3 && path[0] === 'tracks') {
             const trackNum = Number(path[1]) + 1;
             const field = path[2];
             const fieldKey = `tracks.${field}`;
-            return `${fieldLabels[fieldKey] || field} (${messages('tracks.label').toLocaleLowerCase()} ${messages('common.number').toLocaleLowerCase()} ${trackNum})`;
+
+            // Sử dụng fieldLabels để ánh xạ trường vào tên dễ hiểu
+            const fieldLabel = fieldLabels[field] || field;
+            return `Bài hát số ${trackNum}: ${fieldLabel} `;
         }
+
+        // Ánh xạ các trường khác vào fieldLabels
+        const fieldKey = path.join('.');
+        return fieldLabels[fieldKey] || path.join(' ');
     };
+
+    const formValues = useReleaseFormStore((state) => state.formValues);
+    const setValidationErrors = useReleaseFormStore(
+        (state) => state.setValidationErrors
+    );
+
+    useEffect(() => {
+        // Thực hiện xác thực
+        const validationResult = releaseSchema(messages as any).safeParse(
+            formValues
+        );
+
+        if (!validationResult.success) {
+            setValidationErrors(validationResult.error.errors);
+        } else {
+            setValidationErrors([]);
+        }
+    }, [formValues]);
 
     return (
         <div
@@ -64,14 +92,14 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
                                         key={index}
                                         className="rounded-md border border-red-200 bg-red-50 p-2 text-sm"
                                     >
+                                        {err.path.length > 0 && (
+                                            <p className="text-red-600">
+                                                {getFieldLabel(err.path)}
+                                            </p>
+                                        )}
                                         <p className="text-xs text-red-500">
                                             {err.message}
                                         </p>
-                                        {err.path.length > 0 && (
-                                            <p className="text-red-600">
-                                                Field: {err.path.join('.')}
-                                            </p>
-                                        )}
                                     </li>
                                 ))
                             ) : (

@@ -8,6 +8,8 @@ interface ReleaseFormState {
     setFormValues: (values: Partial<ReleaseFormValuesData>) => void;
     validationErrors: ZodIssue[];
     setValidationErrors: (errors: ZodIssue[]) => void;
+    trackReadyMap: Record<string, boolean>;
+    setTrackReadyMap: (trackId: string, isReady: boolean) => void;
 }
 
 const initialValue: ReleaseFormValuesData = {
@@ -40,6 +42,14 @@ export const useReleaseFormStore = create<ReleaseFormState>()(
             setFormValues: (values) => set({ formValues: values }),
             validationErrors: [],
             setValidationErrors: (errors) => set({ validationErrors: errors }),
+            trackReadyMap: {},
+            setTrackReadyMap: (trackId, isReady) =>
+                set((state) => ({
+                    trackReadyMap: {
+                        ...state.trackReadyMap,
+                        [trackId]: isReady,
+                    },
+                })),
         }),
         {
             name: 'release-form-storage',

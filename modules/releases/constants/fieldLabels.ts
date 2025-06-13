@@ -24,7 +24,7 @@ export const fieldLabels: Record<string, string> = {
     subGenresTrack: 'Thể loại phụ',
     sensitiveContent: 'Nội dung nhạy cảm',
     countryLanguage: 'Quốc gia',
-    MetadataLanguage: 'Ngôn ngữ',
+    metadataLanguage: 'Ngôn ngữ',
     lyrics: 'Lời bài hát',
     audioSpecifications: 'Thông số kỹ thuật',
     format: 'Định dạng',
@@ -39,4 +39,5 @@ export const fieldLabels: Record<string, string> = {
     role: 'Vai trò',
     musicianName: 'Tên nhạc sĩ',
     percent: 'Phần trăm',
+    trackName: 'Tên bài hát',
 };

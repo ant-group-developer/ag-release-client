@@ -35,6 +35,7 @@ export default function AudioSpecifications({
     const [form] = useForm();
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
+    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
 
     const getMetadata = async () => {
         try {
@@ -46,12 +47,24 @@ export default function AudioSpecifications({
         }
     };
 
-    const handleValuesChange = () => {
+    const handleValuesChange = (changedValues: any) => {
         setTimeout(() => {
             form.validateFields()
                 .then((values) => {
-                    console.log('audio valid', values);
                     checkTrackValid(true);
+                    const newValue = {
+                        ...formValues,
+                        tracks: formValues?.tracks?.map((track: any) => {
+                            if (track.id === trackData.id) {
+                                return {
+                                    ...track,
+                                    ...changedValues,
+                                };
+                            }
+                            return track;
+                        }),
+                    };
+                    setFormValues(newValue);
                 })
                 .catch((error) => {
                     console.log('audio invalid', error);
@@ -64,6 +77,9 @@ export default function AudioSpecifications({
         form.setFieldsValue({
             ...formValues,
             fileName: file.name,
+            ...formValues?.tracks?.find(
+                (track: any) => track.id === trackData.id
+            ),
         });
         getMetadata().then((metadata) => {
             setMetadata(metadata);
@@ -86,7 +102,9 @@ export default function AudioSpecifications({
                 initialValues={formValues}
                 layout="vertical"
                 showSubmit={false}
-                onValuesChange={() => handleValuesChange()}
+                onValuesChange={(changedValues) =>
+                    handleValuesChange(changedValues)
+                }
             >
                 <div className="space-y-2">
                     <div className="grid grid-cols-2 gap-4">

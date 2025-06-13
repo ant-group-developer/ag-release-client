@@ -5,6 +5,7 @@ import TracksInfo from '@/modules/release-detail/release-review/tracks-info/page
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { releaseSchema } from '@/modules/releases/schemas/schema';
 import { useTranslations } from 'next-intl';
+import { useEffect } from 'react';
 
 export default function Review() {
     const messages = useTranslations();
@@ -13,21 +14,21 @@ export default function Review() {
         (state) => state.setValidationErrors
     );
 
-    console.log('first');
+    useEffect(() => {
+        // Thực hiện xác thực
+        const validationResult = releaseSchema(messages as any).safeParse(
+            formValues
+        );
 
-    // Thực hiện xác thực
-    const validationResult = releaseSchema(messages as any).safeParse(
-        formValues
-    );
-
-    if (!validationResult.success) {
-        console.error('Các trường chưa được xác thực:');
-        console.log(validationResult);
-        setValidationErrors(validationResult.error.errors);
-    } else {
-        console.log('Tất cả các trường đã được xác thực thành công.');
-        setValidationErrors([]);
-    }
+        if (!validationResult.success) {
+            console.error('Các trường chưa được xác thực:');
+            console.log(validationResult);
+            setValidationErrors(validationResult.error.errors);
+        } else {
+            console.log('Tất cả các trường đã được xác thực thành công.');
+            setValidationErrors([]);
+        }
+    }, [formValues]);
 
     return (
         <div className="flex flex-col gap-8 p-4">
