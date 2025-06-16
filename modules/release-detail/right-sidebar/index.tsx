@@ -45,7 +45,6 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
         const validationResult = releaseSchema(messages as any).safeParse(
             formValues
         );
-        console.log('🚀 ~ useEffect ~ validationResult:', validationResult);
 
         if (!validationResult.success) {
             setValidationErrors(validationResult.error.errors);

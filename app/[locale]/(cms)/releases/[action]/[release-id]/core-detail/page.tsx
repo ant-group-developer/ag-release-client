@@ -1,7 +1,6 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import useModalStore from '@/hooks/use-modal';
-import { useRouter } from '@/i18n/routing';
 import AddArtistModal from '@/modules/artist/components/modal/add-artist';
 import ArtistFormModal from '@/modules/artist/components/modal/create-artist';
 import { TYPE_MODAL_ARTIST } from '@/modules/artist/enum';
@@ -13,9 +12,7 @@ import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { useParams } from 'next/navigation';
 
 export default function CoreDetail() {
-    const router = useRouter();
     const params = useParams();
-    const releaseId = params['release-id'];
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const formValues = useReleaseFormStore((state) => state.formValues);
     const typeModal = useModalStore((state) => state.typeModal);

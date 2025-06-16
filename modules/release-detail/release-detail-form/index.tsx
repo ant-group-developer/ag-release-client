@@ -1,79 +1,115 @@
-import AppForm from '@/components/ui/antd-form/form';
-import AppFormItem from '@/components/ui/antd-form/form-Item';
+// React Hook Form version using Controller
+import { LabelForm } from '@/components/ui/label/labelForm';
 import GenresSelect from '@/components/ui/select/genres-select';
 import LabelSelect from '@/components/ui/select/label-select';
+import ErrorText from '@/components/ui/text/error-text';
 import { languageList, yearList } from '@/constants/fakeData';
 import { showNotification } from '@/helpers/messages-helper';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
+import { ArtistData } from '@/modules/artist/types';
 import {
     RELEASES_TYPE,
     TYPE_MODAL_RELEASE_ARTIST_LIST,
 } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { ReleaseFormValuesData } from '@/modules/releases/types';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Input, Radio, Select } from 'antd';
-import { useForm, useWatch } from 'antd/es/form/Form';
+import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
+import { z } from 'zod';
 import ArtistCard from './artist-card';
+
+export const releaseDetailSchema = z.object({
+    releaseType: z
+        .nativeEnum(RELEASES_TYPE, {
+            required_error: 'Release type is required',
+        })
+        .nullable(),
+    nameRelease: z.string().nonempty('Release name is required'),
+    version: z.string().optional(),
+    isMoreThan4Artists: z.boolean(),
+    artists: z.array(
+        z.object({
+            id: z.string(),
+            name: z.string().nonempty('Artist name is required'),
+            role: z.string().nonempty('Artist role is required'),
+            // artistId: z.string(),
+            // thumbnail: z.string(),
+            // createdAt: z.date(),
+        })
+    ),
+    genres: z.string().nullable(),
+    subGenres: z.string().nullable(),
+    metaDataLanguage: z.string().nonempty('Metadata language is required'),
+    label: z.string().optional(),
+    upc: z.string().optional(),
+    catalogId: z.string().optional(),
+    cLineYear: z.string().nonempty('C line year is required'),
+    pLineYear: z.string().nonempty('P line year is required'),
+});
+
+export type ReleaseDetailSchema = z.infer<typeof releaseDetailSchema>;
 
 export default function ReleaseDetailForm() {
     const messages = useTranslations();
-
-    const [form] = useForm();
-    const router = useRouter();
     const formValues = useReleaseFormStore((state) => state.formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
+    const isEmptyFormValues = Object.keys(formValues).length === 0;
+
+    const formMethods = useForm<ReleaseDetailSchema>({
+        defaultValues: isEmptyFormValues ? undefined : formValues,
+        resolver: zodResolver(releaseDetailSchema),
+    });
+
+    const {
+        control,
+        handleSubmit,
+        trigger,
+        watch,
+        formState: { errors },
+    } = formMethods;
+
+    const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
-
-    // Di chuyển việc lấy giá trị vào trong component
-    const isMoreThan4Artists = useWatch('isMoreThan4Artists', form);
-
+    const isMoreThan4Artists = watch('isMoreThan4Artists');
     const artists = formValues.artists || [];
 
-    // Hàm xử lý khi form thay đổi
-    const handleValuesChange = (_: any, allValues: any) => {
-        // Cập nhật giá trị mới vào zustand
-        setFormValues({ ...formValues, ...allValues });
+    const handleNext = async (data: ReleaseDetailSchema) => {
+        setFormValues(data as Partial<ReleaseFormValuesData>);
+        router.push('/releases/detail/123456/tracks');
     };
 
-    const handleNext = () => {
-        try {
-            form.validateFields().then((values) => {
-                setFormValues(values);
-                router.push('/releases/detail/123456/tracks');
-            });
-        } catch (error) {
-            console.error('Validation failed:', error);
-        }
-    };
-
-    const handleApplyAllTracks = (checked: boolean, artist: any) => {
+    const handleApplyAllTracks = (
+        checked: boolean,
+        artist: Pick<ArtistData, 'id' | 'name' | 'role'>
+    ) => {
         if (!checked) {
             setFormValues({
                 ...formValues,
                 artistsApplyAllTracks:
                     formValues?.artistsApplyAllTracks?.filter(
-                        (item: any) => item.name !== artist.name
+                        (item) => item.name !== artist.name
                     ),
             });
             return;
         }
 
         const isArtistExists = formValues?.artistsApplyAllTracks?.some(
-            (item: any) => item.name === artist.name
+            (item) => item.name === artist.name
         );
 
-        const updatedTracks = formValues?.tracks?.map((track: any) => {
+        const updatedTracks = formValues?.tracks?.map((track) => {
             const isArtistExistsInTrack = track.artists?.some(
-                (item: any) => item.name === artist.name
+                (item) => item.name === artist.name
             );
-
             if (isArtistExistsInTrack) return track;
-
             return {
                 ...track,
-                artists: [...track.artists, artist],
+                artists: [...track.artists, artist as ArtistData],
             };
         });
 
@@ -81,266 +117,466 @@ export default function ReleaseDetailForm() {
             ...formValues,
             artistsApplyAllTracks: isArtistExists
                 ? formValues?.artistsApplyAllTracks
-                : [...(formValues?.artistsApplyAllTracks || []), artist],
+                : [
+                      ...(formValues?.artistsApplyAllTracks || []),
+                      artist as ArtistData,
+                  ],
             tracks: updatedTracks,
         });
 
         showNotification('success', 'Đã thêm nghệ sĩ vào tất cả bài hát');
     };
 
+    const debouncedSetFormValues = useMemo(
+        () =>
+            debounce((values: ReleaseDetailSchema) => {
+                setFormValues(values as Partial<ReleaseFormValuesData>);
+            }, 300),
+        [setFormValues]
+    );
+
+    const watchedAllFields = useWatch({ control });
+
     useEffect(() => {
-        console.log(formValues);
-        // Nếu formValues rỗng, reset form với giá trị mặc định
-        if (Object.keys(formValues).length === 0) {
-            form.resetFields();
-            form.setFieldsValue({
-                isMoreThan4Artists: false, // Set giá trị mặc định
-            });
-        } else {
-            // Nếu có formValues, set vào form
-            form.setFieldsValue(formValues);
+        // Chỉ update khi có thay đổi thực sự
+        if (JSON.stringify(watchedAllFields) !== JSON.stringify(formValues)) {
+            debouncedSetFormValues(watchedAllFields as ReleaseDetailSchema);
         }
-    }, [form, formValues]);
 
+        // Cleanup function
+        return () => {
+            debouncedSetFormValues.cancel();
+        };
+    }, [watchedAllFields, formValues, debouncedSetFormValues]);
     return (
-        <div className="px-4 pt-4">
-            <AppForm
-                form={form}
-                layout="vertical"
-                showSubmit={false}
-                submitText={messages('common.next')}
-                submitProps={{
-                    onClick: () => {
-                        handleNext();
-                    },
-                }}
-                onValuesChange={handleValuesChange}
+        <FormProvider {...formMethods}>
+            <form
+                className="px-4 pt-4"
+                onSubmit={handleSubmit(handleNext, (err) =>
+                    console.log('❌ Errors:', err)
+                )}
             >
-                <div className="flex flex-col gap-4">
-                    <div>
-                        <AppFormItem
-                            label="Thể loại phát hành"
-                            name="releaseType"
-                            required
-                            rules={[
-                                {
-                                    required: true,
-                                    message: messages('validation.select'),
-                                },
-                            ]}
-                        >
-                            <Radio.Group>
-                                {Object.values(RELEASES_TYPE).map((type) => {
-                                    return (
-                                        <Radio
-                                            key={type}
-                                            value={type}
-                                            className="capitalize"
-                                        >
-                                            {type}
-                                        </Radio>
-                                    );
-                                })}
-                            </Radio.Group>
-                        </AppFormItem>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <AppFormItem
-                            label={messages('releases.name')}
-                            name="nameRelease"
-                            required
-                            rules={[
-                                {
-                                    required: true,
-                                    message: messages('validation.input'),
-                                },
-                            ]}
-                        >
-                            <Input allowClear />
-                        </AppFormItem>
-                        <AppFormItem
-                            label={messages('releases.version')}
-                            name="version"
-                        >
-                            <Input allowClear />
-                        </AppFormItem>
-
-                        {/* <div className="col-span-2">
-                            <DynamicFieldContributor />
-                        </div> */}
+                <div className="flex flex-col">
+                    <div className="grid grid-cols-2 gap-8">
+                        <div className="col-span-2 flex flex-col">
+                            <LabelForm
+                                htmlFor="releaseType"
+                                required
+                                label="Thể loại phát hành"
+                            />
+                            <Controller
+                                control={control}
+                                name="releaseType"
+                                render={({ field }) => (
+                                    <Radio.Group {...field}>
+                                        {Object.values(RELEASES_TYPE).map(
+                                            (type) => (
+                                                <Radio
+                                                    key={type}
+                                                    value={type}
+                                                    className="capitalize"
+                                                >
+                                                    {type}
+                                                </Radio>
+                                            )
+                                        )}
+                                    </Radio.Group>
+                                )}
+                            />
+                            <ErrorText
+                                isError={!!errors.releaseType}
+                                message={errors.releaseType?.message}
+                            />
+                        </div>
+                        <div>
+                            <LabelForm
+                                htmlFor="nameRelease"
+                                required
+                                label={messages('releases.name')}
+                            />
+                            <Controller
+                                control={control}
+                                name="nameRelease"
+                                render={({ field }) => (
+                                    <div>
+                                        <Input
+                                            id="nameRelease"
+                                            {...field}
+                                            allowClear
+                                            status={
+                                                errors.nameRelease
+                                                    ? 'error'
+                                                    : undefined
+                                            }
+                                        />
+                                    </div>
+                                )}
+                            />
+                            <ErrorText
+                                isError={!!errors.nameRelease}
+                                message={errors.nameRelease?.message}
+                            />
+                        </div>
+                        <div>
+                            <LabelForm
+                                htmlFor="version"
+                                label={messages('releases.version')}
+                            />
+                            <Controller
+                                control={control}
+                                name="version"
+                                render={({ field }) => (
+                                    <div>
+                                        <Input
+                                            id="version"
+                                            {...field}
+                                            allowClear
+                                            status={
+                                                errors.version
+                                                    ? 'error'
+                                                    : undefined
+                                            }
+                                        />
+                                    </div>
+                                )}
+                            />
+                            <ErrorText
+                                isError={!!errors.version}
+                                message={errors.version?.message}
+                            />
+                        </div>
 
                         <div className="col-span-2">
-                            <div>
-                                <div className="flex items-center justify-between">
-                                    <AppFormItem
-                                        label=" Có nhiều hơn 4 nghệ sĩ hay không ?"
-                                        name="isMoreThan4Artists"
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <LabelForm
+                                        htmlFor="isMoreThan4Artists"
                                         required
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    messages(
-                                                        'validation.select'
-                                                    ),
-                                            },
-                                        ]}
-                                    >
-                                        <Radio.Group>
-                                            <Radio value={false}>Không</Radio>
-                                            <Radio value={true}>
-                                                {`Có (Tên hiển thị sẽ là "Nhiều nghệ sĩ")`}
-                                            </Radio>
-                                        </Radio.Group>
-                                    </AppFormItem>
-                                    {!isMoreThan4Artists && (
-                                        <div className="pt-5">
-                                            <Button
-                                                onClick={() =>
-                                                    openModal(
-                                                        TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST
-                                                    )
-                                                }
-                                            >
-                                                Thêm nghệ sĩ chính
-                                            </Button>
-                                        </div>
-                                    )}
+                                        label="Có nhiều hơn 4 nghệ sĩ hay không?"
+                                    />
+                                    <Controller
+                                        control={control}
+                                        name="isMoreThan4Artists"
+                                        render={({ field }) => (
+                                            <div className="pb-2 pt-1">
+                                                <Radio.Group {...field}>
+                                                    <Radio value={false}>
+                                                        Không
+                                                    </Radio>
+                                                    <Radio value={true}>
+                                                        {`Có (Tên hiển thị sẽ là "Nhiều nghệ sĩ")`}
+                                                    </Radio>
+                                                </Radio.Group>
+                                            </div>
+                                        )}
+                                    />
+                                    <ErrorText
+                                        isError={!!errors.isMoreThan4Artists}
+                                        message={
+                                            errors.isMoreThan4Artists?.message
+                                        }
+                                    />
                                 </div>
+                                {!isMoreThan4Artists && (
+                                    <div className="pt-5">
+                                        <Button
+                                            onClick={() =>
+                                                openModal(
+                                                    TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST
+                                                )
+                                            }
+                                        >
+                                            Thêm nghệ sĩ chính
+                                        </Button>
+                                        <ErrorText
+                                            isError={
+                                                errors.artists?.length === 0
+                                            }
+                                            message={errors.artists?.message}
+                                        />
+                                    </div>
+                                )}
                             </div>
 
                             {!isMoreThan4Artists && (
-                                <div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        {artists.map(
-                                            (artist: any, index: number) => (
-                                                <ArtistCard
-                                                    data={artist}
-                                                    onClick={() =>
-                                                        openModal(
-                                                            TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST,
-                                                            artist
-                                                        )
-                                                    }
-                                                    onDelete={() =>
-                                                        openModal(
-                                                            TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST,
-                                                            artist
-                                                        )
-                                                    }
-                                                    key={index}
-                                                    index={index}
-                                                    showApplyToAllTracks
-                                                    onApplyToAllTracks={(
-                                                        checked
-                                                    ) => {
-                                                        handleApplyAllTracks(
-                                                            checked,
-                                                            artist
-                                                        );
-                                                    }}
-                                                />
-                                            )
-                                        )}
-                                    </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    {artists.map((artist, index) => (
+                                        <ArtistCard
+                                            key={index}
+                                            index={index}
+                                            data={artist}
+                                            onClick={() =>
+                                                openModal(
+                                                    TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST,
+                                                    artist
+                                                )
+                                            }
+                                            onDelete={() =>
+                                                openModal(
+                                                    TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST,
+                                                    artist
+                                                )
+                                            }
+                                            showApplyToAllTracks
+                                            onApplyToAllTracks={(checked) =>
+                                                handleApplyAllTracks(
+                                                    checked,
+                                                    artist
+                                                )
+                                            }
+                                        />
+                                    ))}
                                 </div>
                             )}
                         </div>
 
-                        <AppFormItem
-                            label={messages('common.genres')}
-                            name="genres"
-                            required
-                            rules={[
-                                {
-                                    required: true,
-                                    message: messages('validation.select'),
-                                },
-                            ]}
-                        >
-                            <GenresSelect />
-                        </AppFormItem>
-
-                        <AppFormItem
-                            label={messages('common.subGenres')}
-                            name="subGenres"
-                        >
-                            <GenresSelect />
-                        </AppFormItem>
-
-                        <AppFormItem
-                            label={messages('common.language') + ' metadata'}
-                            name="metaDataLanguage"
-                            required
-                            rules={[
-                                {
-                                    required: true,
-                                    message: messages('validation.select'),
-                                },
-                            ]}
-                        >
-                            <Select options={languageList} />
-                        </AppFormItem>
-
-                        <AppFormItem label="Label" name="label">
-                            <LabelSelect />
-                        </AppFormItem>
-
-                        <AppFormItem label="UPC/EAN/JAN" name="upc">
-                            <Input allowClear />
-                        </AppFormItem>
-
-                        <AppFormItem label="ID category" name="catalogId">
-                            <Input allowClear />
-                        </AppFormItem>
-
-                        <AppFormItem
-                            label="C Line year"
-                            name="cLineYear"
-                            required
-                            tooltipInfo="Năm đầu tiên xuất bản bản phát hành này trên toàn thế giới."
-                            rules={[
-                                {
-                                    required: true,
-                                    message: messages('validation.input'),
-                                },
-                            ]}
-                        >
-                            <Input
-                                addonBefore={
-                                    <Select
-                                        defaultValue={'2026'}
-                                        options={yearList}
-                                    />
-                                }
+                        <div>
+                            <LabelForm
+                                htmlFor="genres"
+                                required
+                                label={messages('common.genres')}
                             />
-                        </AppFormItem>
-
-                        <AppFormItem
-                            label="P Line year"
-                            name="pLineYear"
-                            tooltipInfo="Năm bản ghi âm đầu tiên được phát hành trên toàn thế giới."
-                            required
-                            rules={[
-                                {
-                                    required: true,
-                                    message: messages('validation.input'),
-                                },
-                            ]}
-                        >
-                            <Input
-                                addonBefore={
-                                    <Select
-                                        defaultValue={'2026'}
-                                        options={yearList}
-                                    />
-                                }
+                            <Controller
+                                control={control}
+                                name="genres"
+                                render={({ field }) => (
+                                    <div>
+                                        <GenresSelect
+                                            className="w-full"
+                                            id="genres"
+                                            {...field}
+                                            status={
+                                                errors.genres
+                                                    ? 'error'
+                                                    : undefined
+                                            }
+                                        />
+                                    </div>
+                                )}
                             />
-                        </AppFormItem>
+                            <ErrorText
+                                isError={!!errors.genres}
+                                message={errors.genres?.message}
+                            />
+                        </div>
+
+                        <div>
+                            <LabelForm
+                                htmlFor="subGenres"
+                                label={messages('common.subGenres')}
+                            />
+                            <Controller
+                                control={control}
+                                name="subGenres"
+                                render={({ field }) => (
+                                    <div>
+                                        <GenresSelect
+                                            className="w-full"
+                                            id="subGenres"
+                                            {...field}
+                                            status={
+                                                errors.subGenres
+                                                    ? 'error'
+                                                    : undefined
+                                            }
+                                        />
+                                    </div>
+                                )}
+                            />
+                            <ErrorText
+                                isError={!!errors.subGenres}
+                                message={errors.subGenres?.message}
+                            />
+                        </div>
+
+                        <div>
+                            <LabelForm
+                                htmlFor="metaDataLanguage"
+                                required
+                                label={`${messages('common.language')} metadata`}
+                            />
+                            <Controller
+                                control={control}
+                                name="metaDataLanguage"
+                                render={({ field }) => (
+                                    <div>
+                                        <Select
+                                            className="w-full"
+                                            id="metaDataLanguage"
+                                            {...field}
+                                            options={languageList}
+                                            status={
+                                                errors.metaDataLanguage
+                                                    ? 'error'
+                                                    : undefined
+                                            }
+                                        />
+                                    </div>
+                                )}
+                            />
+                            <ErrorText
+                                isError={!!errors.metaDataLanguage}
+                                message={errors.metaDataLanguage?.message}
+                            />
+                        </div>
+
+                        <div>
+                            <LabelForm htmlFor="label" label="Label" />
+                            <Controller
+                                control={control}
+                                name="label"
+                                render={({ field }) => (
+                                    <div>
+                                        <LabelSelect
+                                            className="w-full"
+                                            id="label"
+                                            {...field}
+                                            status={
+                                                errors.label
+                                                    ? 'error'
+                                                    : undefined
+                                            }
+                                        />
+                                    </div>
+                                )}
+                            />
+                            <ErrorText
+                                isError={!!errors.label}
+                                message={errors.label?.message}
+                            />
+                        </div>
+
+                        <div>
+                            <LabelForm htmlFor="upc" label="UPC/EAN/JAN" />
+                            <Controller
+                                control={control}
+                                name="upc"
+                                render={({ field }) => (
+                                    <div>
+                                        <Input
+                                            id="upc"
+                                            {...field}
+                                            allowClear
+                                            status={
+                                                errors.upc ? 'error' : undefined
+                                            }
+                                        />
+                                    </div>
+                                )}
+                            />
+                            <ErrorText
+                                isError={!!errors.upc}
+                                message={errors.upc?.message}
+                            />
+                        </div>
+
+                        <div>
+                            <LabelForm
+                                htmlFor="catalogId"
+                                label="ID category"
+                            />
+                            <Controller
+                                control={control}
+                                name="catalogId"
+                                render={({ field }) => (
+                                    <div>
+                                        <Input
+                                            id="catalogId"
+                                            {...field}
+                                            allowClear
+                                            status={
+                                                errors.catalogId
+                                                    ? 'error'
+                                                    : undefined
+                                            }
+                                        />
+                                    </div>
+                                )}
+                            />
+                            <ErrorText
+                                isError={!!errors.catalogId}
+                                message={errors.catalogId?.message}
+                            />
+                        </div>
+
+                        <div>
+                            <LabelForm
+                                htmlFor="cLineYear"
+                                required
+                                label="C Line year"
+                            />
+                            <Controller
+                                control={control}
+                                name="cLineYear"
+                                render={({ field }) => (
+                                    <div>
+                                        <Input
+                                            id="cLineYear"
+                                            {...field}
+                                            addonBefore={
+                                                <Select
+                                                    defaultValue={'2026'}
+                                                    options={yearList}
+                                                />
+                                            }
+                                            status={
+                                                errors.cLineYear
+                                                    ? 'error'
+                                                    : undefined
+                                            }
+                                        />
+                                    </div>
+                                )}
+                            />
+                            <ErrorText
+                                isError={!!errors.cLineYear}
+                                message={errors.cLineYear?.message}
+                            />
+                        </div>
+
+                        <div>
+                            <LabelForm
+                                htmlFor="pLineYear"
+                                required
+                                label="P Line year"
+                            />
+                            <Controller
+                                control={control}
+                                name="pLineYear"
+                                render={({ field }) => (
+                                    <div>
+                                        <Input
+                                            id="pLineYear"
+                                            {...field}
+                                            addonBefore={
+                                                <Select
+                                                    defaultValue={'2026'}
+                                                    options={yearList}
+                                                />
+                                            }
+                                            status={
+                                                errors.pLineYear
+                                                    ? 'error'
+                                                    : undefined
+                                            }
+                                        />
+                                    </div>
+                                )}
+                            />
+                            <ErrorText
+                                isError={!!errors.pLineYear}
+                                message={errors.pLineYear?.message}
+                            />
+                        </div>
                     </div>
                 </div>
-            </AppForm>
-        </div>
+
+                <div className="flex w-full justify-end">
+                    <Button htmlType="submit" type="primary" className="my-8">
+                        {messages('common.next')}
+                    </Button>
+                </div>
+            </form>
+        </FormProvider>
     );
 }

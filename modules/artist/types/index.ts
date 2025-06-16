@@ -4,10 +4,10 @@ export interface ArtistData {
     id: string;
     name: string;
     role?: string;
-    artistId: string;
-    thumbnail: string;
+    artistId?: string;
+    thumbnail?: string;
     trackCount?: number;
-    createdAt: Date;
+    createdAt?: Date;
 }
 
 export interface ArtistDataFilter extends CommonParams {

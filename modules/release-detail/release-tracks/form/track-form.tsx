@@ -1,16 +1,40 @@
-import AppForm from '@/components/ui/antd-form/form';
-import AppFormItem from '@/components/ui/antd-form/form-Item';
+import { LabelForm } from '@/components/ui/label/labelForm';
+import ErrorText from '@/components/ui/text/error-text';
 import IconInfoTooltip from '@/components/ui/tooltip/icon-info-tooltip';
 import { languageList } from '@/constants/fakeData';
 import useModalStore from '@/hooks/use-modal';
+import { ArtistData } from '@/modules/artist/types';
 import { TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { TrackData } from '@/modules/tracks/types';
-import { Button, Form, Input, Select, Switch } from 'antd';
-import { useWatch } from 'antd/es/form/Form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button, Input, Select, Switch } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
+import { z } from 'zod';
 import ArtistCard from '../../release-detail-form/artist-card';
+
+export const releaseTrackSchema = z.object({
+    trackName: z.string().nonempty('Track name is required'),
+    isrc: z.string().optional(),
+    source: z.string().nonempty('Source is required'),
+    languageTrack: z.string().nonempty('Language is required'),
+    isAddArtistsFromRelease: z.boolean(),
+    artists: z.array(
+        z.object({
+            id: z.string(),
+            name: z.string().nonempty('Artist name is required'),
+            role: z.string().nonempty('Artist role is required'),
+            // artistId: z.string().optional(),
+            // thumbnail: z.string().optional(),
+            // trackCount: z.number().optional(),
+            // createdAt: z.date().optional(),
+        })
+    ),
+});
+
+type ReleaseTrackSchema = z.infer<typeof releaseTrackSchema>;
 
 type Props = {
     trackData: TrackData;
@@ -19,6 +43,30 @@ type Props = {
 
 export default function TracksForm({ trackData, checkTrackValid }: Props) {
     const messages = useTranslations();
+    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
+    const formValues = useReleaseFormStore((state) => state.formValues);
+    const openModal = useModalStore((state) => state.openModal);
+
+    const formMethods = useForm<ReleaseTrackSchema>({
+        defaultValues: {
+            trackName: trackData.title,
+            artists: trackData.artists,
+            isAddArtistsFromRelease: false,
+        },
+        resolver: zodResolver(releaseTrackSchema),
+        mode: 'onChange',
+        // reValidateMode: 'onChange',
+    });
+
+    const {
+        control,
+        handleSubmit,
+        formState: { errors },
+        watch,
+        trigger,
+    } = formMethods;
+
+    const isAddArtistsFromRelease = watch('isAddArtistsFromRelease');
 
     const originalSourceList = [
         {
@@ -33,7 +81,7 @@ export default function TracksForm({ trackData, checkTrackValid }: Props) {
         {
             label: (
                 <span className="flex items-center justify-between gap-1">
-                    Bản cover
+                    Bản cover{' '}
                     <IconInfoTooltip title="Bản cover là bản nhạc được cover lại từ tác phẩm gốc, có thể có sự thay đổi về âm nhạc, lời bài hát, hoặc cả hai." />
                 </span>
             ),
@@ -42,251 +90,204 @@ export default function TracksForm({ trackData, checkTrackValid }: Props) {
         {
             label: (
                 <span className="flex items-center justify-between gap-1">
-                    Bản remix
+                    Bản remix{' '}
                     <IconInfoTooltip title="Bản remix là bản nhạc được tạo ra từ tác phẩm gốc, có thể có sự thay đổi về âm nhạc, lời bài hát, hoặc cả hai." />
                 </span>
             ),
             value: 'remix',
         },
     ];
-    const [form] = Form.useForm();
-    const formValues = useReleaseFormStore((state) => state.formValues);
-    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
-    const TrackArtists = trackData.artists;
-    const openModal = useModalStore((state) => state.openModal);
-    const isAddArtistsFromRelease = useWatch('isAddArtistsFromRelease', form);
-    const typeModal = useModalStore((state) => state.typeModal);
-    const closeModal = useModalStore((state) => state.closeModal);
-    const dataEdit = useModalStore((state) => state.dataEdit);
 
-    const handleValuesChange = (changedValues: any) => {
-        setTimeout(() => {
-            form.validateFields()
-                .then((values) => {
-                    console.log('🚀 ~ .then ~ values:', values);
-                    checkTrackValid(true);
-                    const newValue = {
-                        ...formValues,
-                        tracks: formValues?.tracks?.map((track: TrackData) => {
-                            if (track.id === trackData.id) {
-                                return {
-                                    ...track,
-                                    ...values,
-                                };
-                            }
-                            return track;
-                        }),
-                    };
-                    setFormValues(newValue);
-                    console.log('then');
-                })
-                .catch((error) => {
-                    checkTrackValid(false);
-                });
-        }, 0);
-    };
-
-    // const handleFieldChange = (changedFields: any, allFields: any) => {
-    //     const hasErrors = allFields.some(
-    //         (field: any) => field.errors.length > 0
-    //     );
-    //     if (!hasErrors) return checkTrackValid(!hasErrors);
-
-    //     if (!hasErrors) {
-    //         // Lấy changed values
-    //         const changedValues = changedFields.reduce(
-    //             (acc: any, field: any) => {
-    //                 if (field.name && field.name.length > 0) {
-    //                     acc[field.name[0]] = field.value;
-    //                 }
-    //                 return acc;
-    //             },
-    //             {}
-    //         );
-
-    //         // Update store
-    //         const newValue = {
-    //             ...formValues,
-    //             tracks: formValues?.tracks?.map((track: TrackData) => {
-    //                 if (track.id === trackData.id) {
-    //                     return {
-    //                         ...track,
-    //                         ...changedValues,
-    //                     };
-    //                 }
-    //                 return track;
-    //             }),
-    //         };
-    //         setFormValues(newValue);
-    //     }
-    // };
+    const watchedAllFields = useWatch({ control });
 
     useEffect(() => {
-        form.setFieldsValue({
-            ...formValues?.tracks?.find(
-                (track: any) => track.id === trackData.id
-            ),
-            trackName: trackData.title,
-            artists: TrackArtists,
-            isAddArtistsFromRelease: false,
-        });
-
         setFormValues({
             ...formValues,
-            tracks: formValues?.tracks?.map((track: TrackData) => {
-                if (track.id === trackData.id) {
-                    return {
-                        ...track,
-                        trackName: trackData.title,
-                        artists: TrackArtists,
-                        isAddArtistsFromRelease: false,
-                        genres: trackData.genres,
-                    };
-                }
-                return track;
-            }),
+            tracks: formValues?.tracks?.map((track: TrackData) =>
+                track.id === trackData.id
+                    ? {
+                          ...track,
+                          ...watchedAllFields,
+                          artists: watchedAllFields.artists as ArtistData[],
+                      }
+                    : track
+            ),
         });
+    }, [watchedAllFields]);
 
-        setTimeout(() => {
-            form.validateFields()
-                .then((values) => {
-                    checkTrackValid(true);
-                })
-                .catch((error) => {
-                    checkTrackValid(false);
-                });
-        }, 0);
+    useEffect(() => {
+        trigger();
+        setFormValues({
+            ...formValues,
+            tracks: formValues?.tracks?.map((track: TrackData) =>
+                track.id === trackData.id
+                    ? {
+                          ...track,
+                          trackName: trackData.title,
+                          artists: trackData.artists,
+                          isAddArtistsFromRelease: false,
+                          genres: trackData.genres,
+                      }
+                    : track
+            ),
+        });
     }, []);
 
     return (
-        <div>
-            <AppForm
-                form={form}
-                layout="vertical"
-                showSubmit={false}
-                onValuesChange={(changedValues, allValues) =>
-                    handleValuesChange(changedValues)
-                }
-                // onFieldsChange={(changedFields, allFields) => {
-                //     handleFieldChange(changedFields, allFields);
-                // }}
-            >
-                <div className="grid grid-cols-2 gap-4">
-                    <AppFormItem
+        <FormProvider {...formMethods}>
+            <form className="grid grid-cols-2 gap-4">
+                <div>
+                    <LabelForm
+                        htmlFor="trackName"
+                        required
                         label="Tên bài hát"
+                    />
+                    <Controller
+                        control={control}
                         name="trackName"
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.input'),
-                            },
-                        ]}
-                    >
-                        <Input allowClear />
-                    </AppFormItem>
-                    <AppFormItem label="ISRC" name="isrc">
-                        <Input allowClear />
-                    </AppFormItem>
-                    {/* <AppFormItem
-                        label="Tên hiển thị"
-                        name="nameDisplay"
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.input'),
-                            },
-                        ]}
-                    >
-                        <Input allowClear />
-                    </AppFormItem> */}
-                    <AppFormItem
-                        label="Nguồn gốc"
+                        render={({ field }) => (
+                            <Input
+                                id="trackName"
+                                {...field}
+                                allowClear
+                                status={errors.trackName ? 'error' : undefined}
+                            />
+                        )}
+                    />
+                    <ErrorText
+                        isError={!!errors.trackName}
+                        message={errors.trackName?.message}
+                    />
+                </div>
+
+                <div>
+                    <LabelForm htmlFor="isrc" label="ISRC" />
+                    <Controller
+                        control={control}
+                        name="isrc"
+                        render={({ field }) => (
+                            <Input
+                                id="isrc"
+                                {...field}
+                                allowClear
+                                status={errors.isrc ? 'error' : undefined}
+                            />
+                        )}
+                    />
+                    <ErrorText
+                        isError={!!errors.isrc}
+                        message={errors.isrc?.message}
+                    />
+                </div>
+
+                <div>
+                    <LabelForm htmlFor="source" required label="Nguồn gốc" />
+                    <Controller
+                        control={control}
                         name="source"
+                        render={({ field }) => (
+                            <Select
+                                id="source"
+                                {...field}
+                                options={originalSourceList}
+                                allowClear
+                                className="w-full"
+                                status={errors.source ? 'error' : undefined}
+                            />
+                        )}
+                    />
+                    <ErrorText
+                        isError={!!errors.source}
+                        message={errors.source?.message}
+                    />
+                </div>
+
+                <div>
+                    <LabelForm
+                        htmlFor="languageTrack"
                         required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.select'),
-                            },
-                        ]}
-                    >
-                        <Select
-                            className="w-full"
-                            options={originalSourceList}
-                            allowClear
-                        />
-                    </AppFormItem>
-                    <AppFormItem
                         label="Ngôn ngữ bài hát"
+                    />
+                    <Controller
+                        control={control}
                         name="languageTrack"
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.select'),
-                            },
-                        ]}
-                    >
-                        <Select
-                            className="w-full"
-                            options={languageList}
-                            allowClear
-                            showSearch
-                        />
-                    </AppFormItem>
+                        render={({ field }) => (
+                            <Select
+                                id="languageTrack"
+                                {...field}
+                                options={languageList}
+                                allowClear
+                                showSearch
+                                className="w-full"
+                                status={
+                                    errors.languageTrack ? 'error' : undefined
+                                }
+                            />
+                        )}
+                    />
+                    <ErrorText
+                        isError={!!errors.languageTrack}
+                        message={errors.languageTrack?.message}
+                    />
+                </div>
+
+                <div className="col-span-2">
+                    <LabelForm
+                        htmlFor="isAddArtistsFromRelease"
+                        label="Thêm tất cả nghệ sĩ từ phát hành ?"
+                    />
+                    <Controller
+                        control={control}
+                        name="isAddArtistsFromRelease"
+                        render={({ field }) => (
+                            <Switch {...field} checked={field.value} />
+                        )}
+                    />
+                </div>
+
+                {!isAddArtistsFromRelease && (
                     <div className="col-span-2">
-                        <AppFormItem
-                            label="Thêm tất cả nghệ sĩ từ phát hành ?"
-                            name="isAddArtistsFromRelease"
+                        <Button
+                            onClick={() =>
+                                openModal(
+                                    TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.ADD_ARTIST,
+                                    trackData
+                                )
+                            }
+                            shape="round"
+                            className="mb-4"
                         >
-                            <Switch />
-                        </AppFormItem>
-                        {!isAddArtistsFromRelease && (
-                            <div>
-                                <div>
-                                    <Button
-                                        onClick={() =>
+                            Thêm nghệ sĩ
+                        </Button>
+                        <div className="grid grid-cols-2 gap-4">
+                            {trackData.artists.map(
+                                (artist: any, index: number) => (
+                                    <ArtistCard
+                                        key={index}
+                                        data={artist}
+                                        onDelete={() =>
                                             openModal(
-                                                TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.ADD_ARTIST,
-                                                trackData
+                                                TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.DELETE_ARTIST,
+                                                {
+                                                    trackData,
+                                                    artist,
+                                                }
                                             )
                                         }
-                                        shape="round"
-                                        className="mb-4"
-                                    >
-                                        Thêm nghệ sĩ
-                                    </Button>
-                                </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    {TrackArtists.map(
-                                        (artist: any, index: number) => (
-                                            <ArtistCard
-                                                data={artist}
-                                                onDelete={() =>
-                                                    openModal(
-                                                        TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.DELETE_ARTIST,
-                                                        { trackData, artist }
-                                                    )
-                                                }
-                                                onClick={() =>
-                                                    openModal(
-                                                        TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.EDIT_ARTIST,
-                                                        artist
-                                                    )
-                                                }
-                                                key={index}
-                                                index={index}
-                                            />
-                                        )
-                                    )}
-                                </div>
-                            </div>
-                        )}
+                                        onClick={() =>
+                                            openModal(
+                                                TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.EDIT_ARTIST,
+                                                artist
+                                            )
+                                        }
+                                        index={index}
+                                    />
+                                )
+                            )}
+                        </div>
                     </div>
-                </div>
-            </AppForm>
-        </div>
+                )}
+            </form>
+        </FormProvider>
     );
 }
