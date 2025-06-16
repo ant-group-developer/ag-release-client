@@ -72,6 +72,7 @@ export default function ArtistFormModal({ ...props }: Props) {
                                 list={fakeDspData.map((item) => ({
                                     icon: item.image,
                                     name: item.name,
+                                    id: item.id.toString(),
                                 }))}
                             />
                         </div>

@@ -1,10 +1,12 @@
+import { ArtistData } from '@/modules/artist/types';
 import { RELEASES_STATUS, RELEASES_TYPE } from '@/modules/releases/enums';
 import { CommonParams } from '@/types/api';
 import { GENRES } from '../enums';
 
 export interface TrackData {
     id: string;
-    title: string;
+    title: string; // Kiem tra va xoa
+    trackName: string;
     trackId: string;
     genres: GENRES;
     labelName: string;
@@ -13,8 +15,15 @@ export interface TrackData {
     releaseDate: string;
     duration: number;
     thumbnail: string;
-    artist: string;
+    isSensitiveContent: boolean;
+    artists: ArtistData[];
     plays: number;
+    file: File;
+    fileName: string;
+    songInfo: {
+        duration: number;
+        peakData: number[];
+    };
 }
 
 export interface TrackDataFilter extends CommonParams {

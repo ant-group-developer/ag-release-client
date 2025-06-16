@@ -21,7 +21,8 @@ export default function CoreDetailCreate() {
         <div>
             <ReleaseDetailForm />
 
-            {typeModal === TYPE_MODAL_ARTIST.CREATE && <ArtistFormModal />}
+            {(typeModal === TYPE_MODAL_ARTIST.CREATE ||
+                typeModal === TYPE_MODAL_ARTIST.UPDATE) && <ArtistFormModal />}
             {typeModal === TYPE_MODAL_LABEL.CREATE && <LabelFormModal />}
         </div>
     );

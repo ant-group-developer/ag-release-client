@@ -12,11 +12,11 @@ export const artistList = [
 export const genresList = [
     {
         label: 'Hip-Hop',
-        value: 'genre-1',
+        value: 'Hip-Hop',
     },
     {
         label: 'Rap',
-        value: 'genre-2',
+        value: 'Rap',
     },
 ];
 

@@ -1,15 +1,22 @@
 'use client';
+import { LOCALE } from '@/enums/common';
 import { cn } from '@/helpers/common';
 import { showNotification } from '@/helpers/messages-helper';
 import useModalStore from '@/hooks/use-modal';
 import { Link, useRouter } from '@/i18n/routing';
 import ReleaseDetailHeader from '@/modules/release-detail/header';
 import RightSidebar from '@/modules/release-detail/right-sidebar';
-import { RELEASES_TABS, TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
+import {
+    RELEASES_TABS,
+    RELEASES_TYPE,
+    TYPE_MODAL_RELEASE,
+} from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { ReleaseFormValuesData } from '@/modules/releases/types';
+import { GENRES } from '@/modules/tracks/enums';
 import { Button, Tabs, TabsProps } from 'antd';
 import { useParams, usePathname } from 'next/navigation';
-import { PropsWithChildren, useEffect, useState } from 'react';
+import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 
 type Props = {};
 
@@ -21,29 +28,18 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const isDisableTab = releaseId == '';
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const formValues = useReleaseFormStore((state) => state.formValues);
+    const validationErrors = useReleaseFormStore(
+        (state) => state.validationErrors
+    );
     const pathname = usePathname();
     const openModal = useModalStore((state) => state.openModal);
     const [activeTab, setActiveTab] = useState<string>(
         RELEASES_TABS.CORE_DETAIL
     );
 
-    useEffect(() => {
-        // Cập nhật tab active khi đường dẫn thay đổi
-        if (pathname) {
-            if (pathname.includes('/tracks')) {
-                setActiveTab(RELEASES_TABS.TRACKS);
-            } else if (pathname.includes('/schedule')) {
-                setActiveTab(RELEASES_TABS.SCHEDULE);
-            } else if (pathname.includes('/review')) {
-                setActiveTab(RELEASES_TABS.REVIEW);
-            } else if (
-                pathname.includes('/core-detail') ||
-                pathname.includes('/create')
-            ) {
-                setActiveTab(RELEASES_TABS.CORE_DETAIL);
-            }
-        }
-    }, [pathname]);
+    const isDetailPage = pathname.includes('/core-detail');
+    const [isScrolledOnDetailPage, setIsScrolledOnDetailPage] = useState(false);
+    const childrenRef = useRef<HTMLDivElement>(null);
 
     const coreDetailTabsNavigate = isCreateReleasePage
         ? '/releases/create'
@@ -90,7 +86,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     className={cn(isDisableTab ? 'pointer-events-none' : '')}
                     href={`/releases/detail/${releaseId}/schedule`}
                 >
-                    <span className="font-medium">Lên lịch & phân phối</span>
+                    <span className="font-medium">Lên lịch</span>
                 </Link>
             ),
             disabled: isDisableTab,
@@ -153,22 +149,127 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         </div>
     );
 
+    const headerIsScrolled = isDetailPage ? isScrolledOnDetailPage : true;
+
+    useEffect(() => {
+        const getActiveTab = () => {
+            const map: Record<string, string> = {
+                [RELEASES_TABS.CORE_DETAIL]: RELEASES_TABS.CORE_DETAIL,
+                [RELEASES_TABS.TRACKS]: RELEASES_TABS.TRACKS,
+                [RELEASES_TABS.SCHEDULE]: RELEASES_TABS.SCHEDULE,
+                [RELEASES_TABS.REVIEW]: RELEASES_TABS.REVIEW,
+                [RELEASES_TABS.DISTRIBUTION]: RELEASES_TABS.DISTRIBUTION,
+            };
+            const tabKey = pathname.split('/').pop();
+            return map[tabKey ?? ''] || RELEASES_TABS.CORE_DETAIL;
+        };
+        setActiveTab(getActiveTab());
+
+        // Set initial scroll state if it's a detail page and already scrolled
+        if (isDetailPage) {
+            if (childrenRef.current && childrenRef.current.scrollTop > 10) {
+                setIsScrolledOnDetailPage(true);
+            } else {
+                setIsScrolledOnDetailPage(false);
+            }
+        }
+    }, [pathname, isDetailPage]);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (!childrenRef.current || !isDetailPage) return;
+            if (
+                childrenRef.current.scrollHeight >
+                childrenRef.current.clientHeight
+            ) {
+                const newIsScrolled = childrenRef.current.scrollTop > 0;
+                if (newIsScrolled !== isScrolledOnDetailPage) {
+                    setIsScrolledOnDetailPage(newIsScrolled);
+                }
+            }
+        };
+
+        const currentRef = childrenRef.current;
+        if (currentRef && isDetailPage) {
+            currentRef.addEventListener('scroll', handleScroll);
+        }
+        return () => {
+            if (currentRef) {
+                currentRef.removeEventListener('scroll', handleScroll);
+            }
+        };
+    }, [isScrolledOnDetailPage, isDetailPage]);
+
+    useEffect(() => {
+        // Chỉ set initialData nếu chưa có data trong store
+        const releaseId = params['release-id'];
+
+        if (releaseId && (!formValues || !formValues.nameRelease)) {
+            // fake data
+            const initialData: ReleaseFormValuesData = {
+                releaseType: RELEASES_TYPE.ALBUM,
+                nameRelease: 'Album Mới 2024',
+                isMoreThan4Artists: false,
+                artists: [
+                    {
+                        id: 'Sơn Tùng MTP',
+                        name: 'Sơn Tùng MTP',
+                        role: 'Main Artist',
+                    },
+                ],
+                genres: GENRES.HIP_HOP,
+                subGenres: GENRES.HIP_HOP,
+                label: 'ANT-MUSIC',
+                upc: '123456789012',
+                catalogId: 'CAT-2024-001',
+                cLineYear: 'ANT-MUSIC',
+                pLineYear: 'ANT-MUSIC',
+                thumbnail: {
+                    fileList: [
+                        {
+                            uid: '-1',
+                            name: 'album-cover.jpg',
+                            status: 'done',
+                            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+                            thumbUrl:
+                                'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+                        },
+                    ],
+                },
+                version: '',
+                metaDataLanguage: LOCALE.VI,
+                tracks: [],
+                releaseDate: '',
+                timeZone: '',
+                territory: undefined,
+                platform: [],
+                artistsApplyAllTracks: [],
+            };
+            setFormValues(initialData);
+        }
+    }, [releaseId]);
+
     return (
-        <div className="pr-[250px]">
-            <div className="sticky top-0 z-10 bg-white">
-                <ReleaseDetailHeader />
-                <div className="px-4">
-                    <Tabs
-                        className="tab-release-detail"
-                        items={items}
-                        activeKey={activeTab}
-                        onChange={handleTabChange}
-                        tabBarExtraContent={buttonSave}
-                    />
+        <div className="flex h-full overflow-hidden">
+            <div
+                ref={childrenRef}
+                className="flex h-full flex-1 flex-col overflow-y-auto"
+            >
+                <div className="sticky top-0 z-10 bg-white">
+                    <ReleaseDetailHeader isScrolled={headerIsScrolled} />
+                    <div className="px-4">
+                        <Tabs
+                            className="tab-release-detail !pt-0"
+                            items={items}
+                            activeKey={activeTab}
+                            onChange={handleTabChange}
+                            tabBarExtraContent={buttonSave}
+                        />
+                    </div>
                 </div>
+                <div className="flex-1">{children}</div>
             </div>
-            {children}
-            <RightSidebar />
+            <RightSidebar errors={validationErrors} />
         </div>
     );
 }

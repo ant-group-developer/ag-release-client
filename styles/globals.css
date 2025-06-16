@@ -205,3 +205,9 @@ a {
 .custom-scrollbar:not(:hover)::-webkit-scrollbar-thumb {
     background: transparent;
 }
+
+.w-tooltip-300 .ant-tooltip-inner {
+    min-width: 380px !important;
+    max-width: 550px;
+    width: fit-content;
+}

@@ -1,16 +1,25 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
+import { cn } from '@/helpers/tailwind';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { Form } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 
-export default function ReleaseDetailHeader() {
+type Props = {
+    isScrolled: boolean;
+};
+
+export default function ReleaseDetailHeader({ isScrolled }: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
     const formValues = useReleaseFormStore((state) => state.formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
+
+    const mainArtist = formValues?.artists?.find(
+        (artist: any) => artist.role === 'Main Artist'
+    );
 
     const handleValuesChange = (_: any, allValues: any) => {
         setFormValues({ ...formValues, ...allValues });
@@ -43,21 +52,27 @@ export default function ReleaseDetailHeader() {
                                         message: messages('validation.image'),
                                     },
                                 ]}
-                                initialValue={formValues.thumbnail}
                             >
                                 <ImageListUpload
-                                    className="release-detail-header-upload size-28 !rounded-lg !border-0 !p-0"
+                                    className={cn(
+                                        'release-detail-header-upload size-28 !rounded-lg !border-0 !p-0 transition-all duration-300',
+                                        {
+                                            'size-12 transition-all duration-300':
+                                                isScrolled,
+                                        }
+                                    )}
                                     accept="image/*"
                                     maxCount={1}
                                     placeholder="Tải ảnh lên"
-                                    defaultFileList={
-                                        formValues.thumbnail?.fileList
-                                    }
                                 />
                             </AppFormItem>
                         </div>
-                        <div className="lg:w-1/2">
-                            <div className="grid grid-cols-2 gap-2">
+                        <div className="">
+                            <div
+                                className={cn('grid grid-cols-2 gap-2', {
+                                    'grid-cols-3': isScrolled,
+                                })}
+                            >
                                 <div className="text-sm">
                                     <span>Tên phát hành: </span>
                                     <span className="font-bold">
@@ -76,7 +91,9 @@ export default function ReleaseDetailHeader() {
                                 <div className="text-sm">
                                     <span>Nghệ sĩ: </span>
                                     <span className="font-bold">
-                                        {formValues.artist}
+                                        {formValues?.artists
+                                            ? mainArtist?.name
+                                            : ''}
                                     </span>
                                 </div>
                                 <div className="text-sm">
@@ -88,7 +105,7 @@ export default function ReleaseDetailHeader() {
                                 <div className="text-sm">
                                     <span>Ngôn ngữ: </span>
                                     <span className="font-bold">
-                                        {formValues.language}
+                                        {formValues.metaDataLanguage}
                                     </span>
                                 </div>
                             </div>

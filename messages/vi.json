@@ -37,6 +37,10 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "number": "Số",
+        "takeDown": "Gỡ xuống",
+        "role": "Vai trò",
+        "test": "Thử",
         "platforms": "Nền tảng",
         "copyRight": "Bản quyền",
         "language": "Ngôn ngữ",
@@ -466,7 +470,8 @@
         "video": "Xin vui lòng chọn video hợp lệ",
         "phoneNumber": "Số điện thoại phải gồm đúng 10 số",
         "inputPhoneNumber": "Nhập số điện thoại",
-        "selectUsedStatus": "Chọn trạng thái sử dụng"
+        "selectUsedStatus": "Chọn trạng thái sử dụng",
+        "onlyTheFollowingFormatsAreAccepted": "Chỉ chấp nhận các định dạng: {accept}"
     },
     "form": {
         "searchPlaceholder": "Tìm kiếm"
@@ -474,7 +479,8 @@
     "placeholder": {
         "dragAndDropAudio": "Kéo thả tệp âm thanh vào đây!",
         "selectArtist": "Chọn nghệ sĩ",
-        "selectRegion": "Chọn khu vực"
+        "selectRegion": "Chọn khu vực",
+        "supportFormats": "Định dạng hỗ trợ: {accept}"
     },
     "status": {
         "label": "Trạng thái",
@@ -743,7 +749,11 @@
         "create": "Tạo nghệ sĩ",
         "name": "Tên nghệ sĩ",
         "id": "Mã nghệ sĩ",
-        "delete": "Xóa nghệ sĩ"
+        "delete": "Xóa nghệ sĩ",
+        "add": "Thêm nghệ sĩ",
+        "update": "Cập nhật nghệ sĩ",
+        "select": "Chọn nghệ sĩ",
+        "profiles": "Hồ sơ nghệ sĩ"
     },
     "labels": {
         "create": "Tạo label",

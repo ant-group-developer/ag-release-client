@@ -12,14 +12,13 @@ type MenuItem = Required<MenuProps>['items'][number];
 
 function SidebarMenu({}: Props) {
     const pathname = usePathname();
-    console.log('🚀 ~ SidebarMenu ~ pathname:', pathname);
     const messages = useTranslations();
     const { isAdmin } = useAuth();
     const { checkPermission } = usePermission();
 
     const getChildrenRoutes = (children: AdminRoutesChildType[]) => {
-        // return children;
-        if (isAdmin) return children;
+        return children;
+        // if (isAdmin) return children;
 
         const result = children.filter((item) =>
             checkPermission(item.permission)

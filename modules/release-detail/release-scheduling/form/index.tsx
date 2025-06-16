@@ -1,6 +1,5 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
-import PlatformSelect from '@/components/ui/select/platform-select';
 import RegionSelect from '@/components/ui/select/region-select';
 import TimezoneSelect from '@/components/ui/select/timezone-select';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
@@ -114,8 +113,8 @@ export default function ReleaseSchedulingForm({}: Props) {
                 showSubmit={false}
             >
                 <div className="flex flex-col gap-4">
-                    <div className="grid grid-cols-3 gap-8">
-                        <AppFormItem
+                    {/* <div className="grid grid-cols-3 gap-8"> */}
+                    {/* <AppFormItem
                             label="Ngày phát hành sản phẩm"
                             name="releaseDate"
                             required
@@ -130,8 +129,8 @@ export default function ReleaseSchedulingForm({}: Props) {
                                 className="w-full"
                                 format="YYYY-MM-DD"
                             />
-                        </AppFormItem>
-
+                        </AppFormItem> */}
+                    {/* 
                         <AppFormItem
                             label="Ngày đặt trước sản phẩm"
                             name="preOrderDate"
@@ -150,13 +149,13 @@ export default function ReleaseSchedulingForm({}: Props) {
                                 className="w-full"
                                 format="YYYY-MM-DD"
                             />
-                        </AppFormItem>
-                    </div>
+                        </AppFormItem> */}
+                    {/* </div> */}
 
                     <div className="grid grid-cols-3 gap-8">
                         <AppFormItem
-                            label="Loại khu vực"
-                            name="territoryType"
+                            label="Thời gian phát hành"
+                            name="releaseDate"
                             required
                             rules={[
                                 {
@@ -165,23 +164,13 @@ export default function ReleaseSchedulingForm({}: Props) {
                                 },
                             ]}
                         >
-                            <RegionSelect
-                                multiple
-                                allowClear
-                                maxTagCount="responsive"
-                                maxTagPlaceholder={(value) => (
-                                    <CustomTooltip
-                                        title={value
-                                            .map((item: any) => item.label)
-                                            .join(', ')}
-                                    >
-                                        +{value.length}
-                                    </CustomTooltip>
-                                )}
+                            <DatePicker
+                                className="w-full"
+                                format="YYYY-MM-DD"
                             />
                         </AppFormItem>
 
-                        <AppFormItem
+                        {/* <AppFormItem
                             label="Loại nền tảng"
                             name="platformType"
                             required
@@ -208,7 +197,7 @@ export default function ReleaseSchedulingForm({}: Props) {
                                     </CustomTooltip>
                                 )}
                             />
-                        </AppFormItem>
+                        </AppFormItem> */}
 
                         <AppFormItem
                             label="Timezone"
@@ -223,6 +212,37 @@ export default function ReleaseSchedulingForm({}: Props) {
                         >
                             <TimezoneSelect className="w-full" />
                         </AppFormItem>
+
+                        <AppFormItem
+                            label="Khu vực"
+                            name="territoryType"
+                            required
+                            rules={[
+                                {
+                                    required: true,
+                                    message: messages('validation.select'),
+                                },
+                            ]}
+                        >
+                            <RegionSelect
+                                multiple
+                                allowClear
+                                maxTagCount="responsive"
+                                maxTagPlaceholder={(value) => (
+                                    <CustomTooltip
+                                        title={value
+                                            .map((item: any) => item.label)
+                                            .join(', ')}
+                                    >
+                                        +{value.length}
+                                    </CustomTooltip>
+                                )}
+                            />
+                        </AppFormItem>
+
+                        {/* <AppFormItem label="Ghi chú" name="note" required>
+                            <TextArea autoSize={{ minRows: 1, maxRows: 20 }} />
+                        </AppFormItem> */}
                     </div>
 
                     {/* <AppFormItem
