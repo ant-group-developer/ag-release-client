@@ -7,7 +7,10 @@ import { useTranslations } from 'next-intl';
 
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import DndAudioUpload from '@/components/ui/input/dnd-audio-upload';
-import { getFileName, getPeakData } from '@/helpers/common';
+import extractAudioMetadata, {
+    getFileName,
+    getPeakData,
+} from '@/helpers/common';
 import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
@@ -45,6 +48,15 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                         songDuration = duration;
                     }
 
+                    const metadata = await extractAudioMetadata(
+                        file.originFileObj
+                    );
+
+                    const fileData: TrackData['fileData'] = {
+                        fileName: file.name,
+                        metadata,
+                    };
+
                     return {
                         id: index++,
                         title: getFileName(file),
@@ -62,6 +74,7 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                             duration: songDuration,
                             peakData: peakData,
                         },
+                        fileData,
                     };
                 }
             );
@@ -69,6 +82,7 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
             onAddTracks?.(newTracks);
             closeModal();
         } catch (error) {
+            console.log('🚀 ~ onFinish ~ error:', error);
             showNotification(
                 'error',
                 messages('file.message.uploadFileFailed')

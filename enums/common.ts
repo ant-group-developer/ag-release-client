@@ -117,22 +117,9 @@ export enum UPLOAD_TYPE {
     MP3 = 'mp3',
 }
 
-export enum Orientation {
-    HORIZONTAL = 'horizontal',
-    VERTICAL = 'vertical',
-}
-
 export enum ACTIVE_TYPE {
     ON = 'true',
     OFF = 'false',
-}
-
-export enum MODULE_NAME {
-    ORDER = 'order',
-    PRODUCT = 'product',
-    TOPIC = 'topic',
-    STATISTIC = 'statistic',
-    PERMISSION = 'permission',
 }
 
 export enum LOCAL_STORAGE_KEY {
@@ -170,3 +157,4 @@ export enum ORIENTATION {
 export enum TYPE_MODAL {
     SEARCH = 'SEARCH',
 }
+

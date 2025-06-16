@@ -57,6 +57,9 @@ export const releaseSchema = (messages: (key: string) => string) =>
                 countryRecording: z
                     .string()
                     .nonempty(messages('validation.input')),
+                recordingType: z
+                    .string()
+                    .nonempty(messages('validation.input')),
                 countryLanguage: z
                     .string()
                     .nonempty(messages('validation.input')),
@@ -64,6 +67,33 @@ export const releaseSchema = (messages: (key: string) => string) =>
                     .string()
                     .nonempty(messages('validation.input')),
                 lyrics: z.string().optional(),
+                fileData: z.object({
+                    fileName: z.string().nonempty(messages('validation.input')),
+                    metadata: z.object({
+                        format: z
+                            .string()
+                            .nonempty(messages('validation.input')),
+                        codec: z
+                            .string()
+                            .nonempty(messages('validation.input')),
+                        bitrate: z
+                            .number()
+                            .nonnegative('Bitrate must be non-negative'),
+                        sampleRate: z
+                            .number()
+                            .nonnegative('Sample rate must be non-negative'),
+                        channels: z
+                            .number()
+                            .nonnegative('Channels must be non-negative'),
+                        duration: z
+                            .number()
+                            .nonnegative('Duration must be non-negative'),
+                        bitDepth: z
+                            .number()
+                            .nonnegative('Bit depth must be non-negative'),
+                        mqs: z.string().nonempty('MQS is required'),
+                    }),
+                }),
                 // audioSpecifications: z.object({
                 // format: z.string().nonempty(messages('validation.input')),
                 // codec: z.string().nonempty(messages('validation.input')),

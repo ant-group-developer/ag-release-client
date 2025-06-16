@@ -59,68 +59,67 @@ export default function TracksForm({ trackData, checkTrackValid }: Props) {
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit);
 
-    // const handleValuesChange = (changedValues: any) => {
-    //     // setTimeout(() => {
-    //     form.validateFields()
-    //         .then((values) => {
-    //             console.log('🚀 ~ .then ~ values:', values);
-    //             checkTrackValid(true);
-    //             const newValue = {
-    //                 ...formValues,
-    //                 tracks: formValues?.tracks?.map((track: TrackData) => {
-    //                     if (track.id === trackData.id) {
-    //                         return {
-    //                             ...track,
-    //                             ...values,
-    //                         };
-    //                     }
-    //                     return track;
-    //                 }),
-    //             };
-    //             setFormValues(newValue);
-    //             console.log('then');
-    //         })
-    //         .catch((error) => {
-    //             checkTrackValid(false);
-    //             console.log('catch');
-    //         });
-    //     // }, 0);
-    // };
-
-    const handleFieldChange = (changedFields: any, allFields: any) => {
-        const hasErrors = allFields.some(
-            (field: any) => field.errors.length > 0
-        );
-        if (!hasErrors) return checkTrackValid(!hasErrors);
-
-        if (!hasErrors) {
-            // Lấy changed values
-            const changedValues = changedFields.reduce(
-                (acc: any, field: any) => {
-                    if (field.name && field.name.length > 0) {
-                        acc[field.name[0]] = field.value;
-                    }
-                    return acc;
-                },
-                {}
-            );
-
-            // Update store
-            const newValue = {
-                ...formValues,
-                tracks: formValues?.tracks?.map((track: TrackData) => {
-                    if (track.id === trackData.id) {
-                        return {
-                            ...track,
-                            ...changedValues,
-                        };
-                    }
-                    return track;
-                }),
-            };
-            setFormValues(newValue);
-        }
+    const handleValuesChange = (changedValues: any) => {
+        setTimeout(() => {
+            form.validateFields()
+                .then((values) => {
+                    console.log('🚀 ~ .then ~ values:', values);
+                    checkTrackValid(true);
+                    const newValue = {
+                        ...formValues,
+                        tracks: formValues?.tracks?.map((track: TrackData) => {
+                            if (track.id === trackData.id) {
+                                return {
+                                    ...track,
+                                    ...values,
+                                };
+                            }
+                            return track;
+                        }),
+                    };
+                    setFormValues(newValue);
+                    console.log('then');
+                })
+                .catch((error) => {
+                    checkTrackValid(false);
+                });
+        }, 0);
     };
+
+    // const handleFieldChange = (changedFields: any, allFields: any) => {
+    //     const hasErrors = allFields.some(
+    //         (field: any) => field.errors.length > 0
+    //     );
+    //     if (!hasErrors) return checkTrackValid(!hasErrors);
+
+    //     if (!hasErrors) {
+    //         // Lấy changed values
+    //         const changedValues = changedFields.reduce(
+    //             (acc: any, field: any) => {
+    //                 if (field.name && field.name.length > 0) {
+    //                     acc[field.name[0]] = field.value;
+    //                 }
+    //                 return acc;
+    //             },
+    //             {}
+    //         );
+
+    //         // Update store
+    //         const newValue = {
+    //             ...formValues,
+    //             tracks: formValues?.tracks?.map((track: TrackData) => {
+    //                 if (track.id === trackData.id) {
+    //                     return {
+    //                         ...track,
+    //                         ...changedValues,
+    //                     };
+    //                 }
+    //                 return track;
+    //             }),
+    //         };
+    //         setFormValues(newValue);
+    //     }
+    // };
 
     useEffect(() => {
         form.setFieldsValue({
@@ -165,12 +164,12 @@ export default function TracksForm({ trackData, checkTrackValid }: Props) {
                 form={form}
                 layout="vertical"
                 showSubmit={false}
-                // onValuesChange={(changedValues, allValues) =>
-                //     handleValuesChange(changedValues)
-                // }
-                onFieldsChange={(changedFields, allFields) => {
-                    handleFieldChange(changedFields, allFields);
-                }}
+                onValuesChange={(changedValues, allValues) =>
+                    handleValuesChange(changedValues)
+                }
+                // onFieldsChange={(changedFields, allFields) => {
+                //     handleFieldChange(changedFields, allFields);
+                // }}
             >
                 <div className="grid grid-cols-2 gap-4">
                     <AppFormItem

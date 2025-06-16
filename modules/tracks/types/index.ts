@@ -24,6 +24,19 @@ export interface TrackData {
         duration: number;
         peakData: number[];
     };
+    fileData?: {
+        fileName: string;
+        metadata: {
+            format: string;
+            codec: string;
+            bitrate: number;
+            sampleRate: number;
+            channels: number;
+            duration: number;
+            bitDepth: number;
+            mqs: string;
+        };
+    };
 }
 
 export interface TrackDataFilter extends CommonParams {

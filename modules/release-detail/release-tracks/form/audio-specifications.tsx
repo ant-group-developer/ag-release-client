@@ -2,13 +2,12 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import TimeInput from '@/components/ui/input/time-input';
 import CountrySelect from '@/components/ui/select/country-select';
-import extractAudioMetadata from '@/helpers/common';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { TrackData } from '@/modules/tracks/types';
 import { Input, Select } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 type Props = {
     trackData: TrackData;
@@ -30,22 +29,23 @@ export default function AudioSpecifications({
     trackData,
     checkTrackValid,
 }: Props) {
-    const [metadata, setMetadata] = useState<AudioMetadata | null>(null);
-    const { file } = trackData;
+    // const [metadata, setMetadata] = useState<AudioMetadata | null>(null);
+    const { fileData } = trackData;
+    const metadata = fileData?.metadata;
     const [form] = useForm();
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
 
-    const getMetadata = async () => {
-        try {
-            const metadata = await extractAudioMetadata(file);
-            return metadata;
-        } catch (error) {
-            console.error('Error extracting metadata:', error);
-            return null;
-        }
-    };
+    // const getMetadata = async () => {
+    //     try {
+    //         const metadata = await extractAudioMetadata(file);
+    //         return metadata;
+    //     } catch (error) {
+    //         console.error('Error extracting metadata:', error);
+    //         return null;
+    //     }
+    // };
 
     const handleValuesChange = (changedValues: any) => {
         setTimeout(() => {
@@ -76,14 +76,26 @@ export default function AudioSpecifications({
     useEffect(() => {
         form.setFieldsValue({
             ...formValues,
-            fileName: file.name,
+            fileName: fileData?.fileName,
             ...formValues?.tracks?.find(
                 (track: any) => track.id === trackData.id
             ),
         });
-        getMetadata().then((metadata) => {
-            setMetadata(metadata);
-        });
+        // getMetadata().then((metadata) => {
+        //     setFormValues({
+        //         ...formValues,
+        //         tracks: formValues?.tracks?.map((track: any) => {
+        //             if (track.id === trackData.id) {
+        //                 return {
+        //                     ...track,
+        //                     ...metadata,
+        //                 };
+        //             }
+        //             return track;
+        //         }),
+        //     });
+        //     setMetadata(metadata);
+        // });
 
         form.validateFields()
             .then((values) => {
@@ -161,7 +173,7 @@ export default function AudioSpecifications({
                             </div>
                             <AppFormItem
                                 label="Thể loại bản ghi"
-                                name="hookTrack"
+                                name="recordingType"
                                 required
                                 rules={[
                                     {
