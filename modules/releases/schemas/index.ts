@@ -1,7 +1,7 @@
 import { z } from 'zod';
 export const releaseSchema = (messages: (key: string) => string) =>
     z.object({
-        type: z.string().nonempty(messages('validation.select')),
+        releaseType: z.string().nonempty(messages('validation.select')),
         nameRelease: z.string().nonempty(messages('validation.input')),
         version: z.string().optional(),
         isMoreThan4Artists: z.boolean(),
@@ -15,7 +15,7 @@ export const releaseSchema = (messages: (key: string) => string) =>
             .nonempty(messages('validation.input')),
         genres: z.string().nonempty(messages('validation.select')),
         subGenres: z.string().optional(),
-        metadataLanguage: z.string().nonempty(messages('validation.select')),
+        metaDataLanguage: z.string().nonempty(messages('validation.select')),
         label: z.string().optional(),
         catalogId: z.string().optional(),
         cLineYear: z.string().nonempty(messages('validation.input')),
@@ -54,6 +54,9 @@ export const releaseSchema = (messages: (key: string) => string) =>
                 genres: z.string().nonempty(messages('validation.input')),
                 subGenres: z.string().optional(),
                 isSensitiveContent: z.boolean(),
+                countryRecording: z
+                    .string()
+                    .nonempty(messages('validation.input')),
                 countryLanguage: z
                     .string()
                     .nonempty(messages('validation.input')),

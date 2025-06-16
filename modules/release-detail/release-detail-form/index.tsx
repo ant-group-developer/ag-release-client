@@ -120,7 +120,7 @@ export default function ReleaseDetailForm() {
                     <div>
                         <AppFormItem
                             label="Thể loại phát hành"
-                            name="type"
+                            name="releaseType"
                             required
                             rules={[
                                 {
@@ -271,7 +271,7 @@ export default function ReleaseDetailForm() {
 
                         <AppFormItem
                             label={messages('common.language') + ' metadata'}
-                            name="metadataLanguage"
+                            name="metaDataLanguage"
                             required
                             rules={[
                                 {

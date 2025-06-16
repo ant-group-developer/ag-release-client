@@ -3,10 +3,10 @@ import { DropdownItem } from '@/components/ui/dropdown/drop-down-item';
 import { TYPE_FILTER } from '@/enums/common';
 import { toNonAccentVietnamese } from '@/helpers/string';
 import { OnChangeFilter, UseFilterProps } from '@/hooks/use-filter';
+import { DistributionDataFilter } from '@/modules/distribution/types';
 import { Input } from 'antd';
 import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
-import { DistributionDataFilter } from '../../types';
 
 interface Props
     extends Pick<

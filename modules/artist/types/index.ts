@@ -3,7 +3,7 @@ import { CommonParams } from '@/types/api';
 export interface ArtistData {
     id: string;
     name: string;
-    role: string;
+    role?: string;
     artistId: string;
     thumbnail: string;
     trackCount?: number;

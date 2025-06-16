@@ -40,7 +40,7 @@ export default function GridCardTracks({ data, ...props }: Props) {
                 }
                 description={
                     <div className="flex justify-between font-medium">
-                        <span> {data.artist} </span>
+                        <span> {data.artists[0].name} </span>
 
                         <p className="flex justify-between">
                             <span>

@@ -1,61 +1,79 @@
 import { InputNumber } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import AppFormItem from '../antd-form/form-Item';
 
-const TimeInput = () => {
+interface TimeInputProps {
+    value?: { hours: number; minutes: number; seconds: number };
+    onChange?: (value: {
+        hours: number;
+        minutes: number;
+        seconds: number;
+    }) => void;
+    name: string;
+}
+
+const TimeInput = ({ value, onChange, name }: TimeInputProps) => {
     const [time, setTime] = useState({ hours: 0, minutes: 0, seconds: 0 });
 
-    // Hàm kiểm tra và chỉ cho phép nhập số hợp lệ
+    useEffect(() => {
+        if (value) {
+            setTime(value);
+        }
+    }, [value]);
+
     const handleChange = (type: string, value: string) => {
-        // Chỉ cho phép giá trị là số và trong phạm vi hợp lệ
         const numericValue = parseInt(value, 10);
 
         if (!isNaN(numericValue)) {
+            let newTime = { ...time };
             if (type === 'hours' && numericValue >= 0 && numericValue <= 23) {
-                setTime((prevTime) => ({
-                    ...prevTime,
-                    [type]: numericValue,
-                }));
+                newTime = { ...newTime, [type]: numericValue };
             } else if (
                 (type === 'minutes' || type === 'seconds') &&
                 numericValue >= 0 &&
                 numericValue <= 59
             ) {
-                setTime((prevTime) => ({
-                    ...prevTime,
-                    [type]: numericValue,
-                }));
+                newTime = { ...newTime, [type]: numericValue };
             }
+            setTime(newTime);
+            onChange?.(newTime);
         }
     };
 
     return (
         <div style={{ display: 'flex', alignItems: 'center' }}>
-            <InputNumber
-                min={0}
-                max={23}
-                value={time.hours}
-                onChange={(value) => handleChange('hours', String(value))}
-                style={{ width: 60, marginRight: 5 }}
-                formatter={(value) => String(value).padStart(2, '0')}
-            />
+            <AppFormItem name={`${name}Hours`} className="!mb-0">
+                <InputNumber
+                    min={0}
+                    max={23}
+                    value={time.hours}
+                    onChange={(value) => handleChange('hours', String(value))}
+                    style={{ width: 60, marginRight: 5 }}
+                    formatter={(value) => String(value).padStart(2, '0')}
+                />
+            </AppFormItem>
             <span style={{ marginRight: 5 }}> : </span>
-            <InputNumber
-                min={0}
-                max={59}
-                value={time.minutes}
-                onChange={(value) => handleChange('minutes', String(value))}
-                style={{ width: 60, marginRight: 5 }}
-                formatter={(value) => String(value).padStart(2, '0')}
-            />
+            <AppFormItem name={`${name}Minutes`} className="!mb-0">
+                <InputNumber
+                    min={0}
+                    max={59}
+                    value={time.minutes}
+                    onChange={(value) => handleChange('minutes', String(value))}
+                    style={{ width: 60, marginRight: 5 }}
+                    formatter={(value) => String(value).padStart(2, '0')}
+                />
+            </AppFormItem>
             <span style={{ marginRight: 5 }}> : </span>
-            <InputNumber
-                min={0}
-                max={59}
-                value={time.seconds}
-                onChange={(value) => handleChange('seconds', String(value))}
-                style={{ width: 60 }}
-                formatter={(value) => String(value).padStart(2, '0')}
-            />
+            <AppFormItem name={`${name}Seconds`} className="!mb-0">
+                <InputNumber
+                    min={0}
+                    max={59}
+                    value={time.seconds}
+                    onChange={(value) => handleChange('seconds', String(value))}
+                    style={{ width: 60 }}
+                    formatter={(value) => String(value).padStart(2, '0')}
+                />
+            </AppFormItem>
         </div>
     );
 };

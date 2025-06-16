@@ -5,10 +5,10 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
 import { TYPE_FILTER } from '@/enums/common';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
+import { DistributionDataFilter } from '@/modules/distribution/types';
 import { ListFilter, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
-import { DistributionDataFilter } from '../../types';
 import DistributionHeaderDropdown from '../dropdown/distribution-header-dropdown';
 
 type Props = {

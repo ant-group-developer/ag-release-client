@@ -2,7 +2,7 @@ import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
 import { COOKIES_KEY } from './constants/common';
 import { defaultConfig } from './constants/env';
-import { APP_ROUTES, DEFAULT_ROUTE, PUBLIC_ROUTES } from './enums/routes';
+import { APP_ROUTES, DEFAULT_ROUTE } from './enums/routes';
 import { routing } from './i18n/routing';
 
 const PUBLIC_FILE = /\.(.*)$/;
@@ -42,14 +42,14 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(url);
     }
 
-    if (!cookieToken && !PUBLIC_ROUTES.includes(req.nextUrl.pathname as any)) {
-        return NextResponse.redirect(
-            `${LOGIN_URL}?client=${CLIENT}&redirect_uri=${REDIRECT_URI}`
-        );
-        // return NextResponse.redirect(
-        //     `${LOGIN_URL}/${cookieLocale}?client=${CLIENT}&redirect_uri=${REDIRECT_URI}`
-        // );
-    }
+    // if (!cookieToken && !PUBLIC_ROUTES.includes(req.nextUrl.pathname as any)) {
+    //     return NextResponse.redirect(
+    //         `${LOGIN_URL}?client=${CLIENT}&redirect_uri=${REDIRECT_URI}`
+    //     );
+    // return NextResponse.redirect(
+    //     `${LOGIN_URL}/${cookieLocale}?client=${CLIENT}&redirect_uri=${REDIRECT_URI}`
+    // );
+    // }
 
     // if (cookieLocale && req.nextUrl.locale !== cookieLocale) {
     //     const newURL = `/${cookieLocale}${req.nextUrl.pathname}${req.nextUrl.search}`;

@@ -3,7 +3,7 @@ import { SIZE_ICON } from '@/constants/common';
 import { cn } from '@/helpers/common';
 import { fieldLabels } from '@/modules/releases/constants/fieldLabels';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
-import { releaseSchema } from '@/modules/releases/schemas/schema';
+import { releaseSchema } from '@/modules/releases/schemas';
 import { XCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
@@ -45,6 +45,7 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
         const validationResult = releaseSchema(messages as any).safeParse(
             formValues
         );
+        console.log('🚀 ~ useEffect ~ validationResult:', validationResult);
 
         if (!validationResult.success) {
             setValidationErrors(validationResult.error.errors);

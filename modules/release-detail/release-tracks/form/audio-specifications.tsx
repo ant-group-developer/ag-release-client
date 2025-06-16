@@ -99,6 +99,9 @@ export default function AudioSpecifications({
         <div>
             <AppForm
                 form={form}
+                onFinish={(values) => {
+                    console.log('audio submit', values);
+                }}
                 initialValues={formValues}
                 layout="vertical"
                 showSubmit={false}
@@ -146,35 +149,19 @@ export default function AudioSpecifications({
                                 <AppFormItem
                                     label="Đoạn nghe mẫu"
                                     name="previewTrack"
-                                    required
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message:
-                                                messages('validation.select'),
-                                        },
-                                    ]}
                                 >
-                                    <TimeInput />
+                                    <TimeInput name="previewTrack" />
                                 </AppFormItem>
                                 <AppFormItem
                                     label="Hook bài hát"
-                                    name="previewTrack"
-                                    required
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message:
-                                                messages('validation.select'),
-                                        },
-                                    ]}
+                                    name="hookTrack"
                                 >
-                                    <TimeInput />
+                                    <TimeInput name="hookTrack" />
                                 </AppFormItem>
                             </div>
                             <AppFormItem
                                 label="Thể loại bản ghi"
-                                name="previewTrack"
+                                name="hookTrack"
                                 required
                                 rules={[
                                     {

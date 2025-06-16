@@ -74,7 +74,7 @@ function Dashboard({}: Props) {
             id: item.id,
             image: item.thumbnail,
             title: item.title,
-            artist: item.artist,
+            artist: item.artists[0].name,
             value: item.plays,
             plays: item.plays,
         }));

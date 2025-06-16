@@ -1,4 +1,4 @@
-import { DISTRIBUTION_COLUMNS_DISPLAY } from '../enum';
+import { DISTRIBUTION_COLUMNS_DISPLAY } from '@/modules/distribution/enum';
 
 export const defaultVisibleColumnsDistribution = [
     DISTRIBUTION_COLUMNS_DISPLAY.THUMBNAIL,

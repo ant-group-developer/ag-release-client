@@ -3,7 +3,7 @@ import MetadataInfo from '@/modules/release-detail/release-review/metadata-info'
 import ReviewProgress from '@/modules/release-detail/release-review/review-progress';
 import TracksInfo from '@/modules/release-detail/release-review/tracks-info/page';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
-import { releaseSchema } from '@/modules/releases/schemas/schema';
+import { releaseSchema } from '@/modules/releases/schemas';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 
