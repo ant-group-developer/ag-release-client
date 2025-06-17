@@ -13,12 +13,10 @@ import {
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { TrackData } from '@/modules/tracks/types';
 import { Key, useState } from 'react';
-import { z } from 'zod';
-
-
 
 export default function Tracks() {
     const formValues = useReleaseFormStore((state) => state.formValues);
+    console.log('🚀 ~ Tracks ~ formValues:', formValues);
     const [selectedRow, setSelectedRow] = useState<Key[]>([]);
     const typeModal = useModalStore((state) => state.typeModal);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);

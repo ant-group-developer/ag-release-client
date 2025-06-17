@@ -765,5 +765,48 @@
         "create": "Tạo phân phối",
         "name": "Tên phân phối",
         "id": "Mã phân phối"
+    },
+
+    "formFields": {
+        "artists": "Nghệ sĩ",
+        "releaseDate": "Ngày phát hành",
+        "territoryType": "Khu vực",
+        "cLineYear": "C line year",
+        "pLineYear": "P line year",
+        "nameRelease": "Tên phát hành",
+        "timezone": "Múi giờ",
+        "tracks": {
+            "track": "Bài hát",
+            "type": "Thể loại",
+            "nameRelease": "Tên phát hành",
+            "version": "Phiên bản",
+            "isMoreThan4Artists": "Có nhiều hơn 4 nghệ sĩ hay không",
+            "artists": "Nghệ sĩ",
+            "subArtists": "Nghệ sĩ phụ",
+            "genres": "Thể loại",
+            "subGenres": "Thể loại phụ",
+            "language": "Ngôn ngữ",
+            "label": "Label",
+            "upc": "UPC/EAN/JAN",
+            "catalogId": "ID category",
+            "cLineYear": "C line year",
+            "pLineYear": "P line year",
+            "thumbnail": "Thumbnail",
+            "title": "Tên bài hát",
+            "isrc": "ISRC",
+            "mainArtist": "Nghệ sĩ chính",
+            "originalSource": "Nguồn gốc",
+            "languageTrack": "Ngôn ngữ bài hát",
+            "genresTrack": "Thể loại bài hát",
+            "subGenresTrack": "Thể loại phụ bài hát",
+            "sensitiveContent": "Nội dung nhạy cảm",
+            "countryLanguage": "Ngôn ngữ quốc gia",
+            "metadataLanguage": "Ngôn ngữ metadata",
+            "lyrics": "Lời bài hát",
+            "source": "Nguồn gốc",
+            "countryRecording": "Quốc gia ghi âm",
+            "recordingType": "Loại ghi âm",
+            "isSensitiveContent": "Nội dung nhạy cảm"
+        }
     }
 }

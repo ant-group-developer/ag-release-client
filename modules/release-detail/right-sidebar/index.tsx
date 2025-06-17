@@ -1,7 +1,6 @@
 'use client';
 import { SIZE_ICON } from '@/constants/common';
 import { cn } from '@/helpers/common';
-import { fieldLabels } from '@/modules/releases/constants/fieldLabels';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { releaseSchema } from '@/modules/releases/schemas';
 import { XCircle } from 'lucide-react';
@@ -20,19 +19,24 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
     const getFieldLabel = (path: (string | number)[]) => {
         if (!path.length) return;
 
+        if (path.length === 1 && path[0] === 'tracks') {
+            return messages('formFields.tracks.track' as any);
+        }
+
         if (path.length >= 3 && path[0] === 'tracks') {
             const trackNum = Number(path[1]) + 1;
             const field = path[2];
             const fieldKey = `tracks.${field}`;
 
             // Sử dụng fieldLabels để ánh xạ trường vào tên dễ hiểu
-            const fieldLabel = fieldLabels[field] || field;
-            return `Bài hát số ${trackNum}: ${fieldLabel} `;
+            // const fieldLabel = fieldLabels[field] || field;
+            return `Bài hát số ${trackNum}: ${messages(`formFields.${fieldKey}` as any) || field}`;
         }
 
         // Ánh xạ các trường khác vào fieldLabels
         const fieldKey = path.join('.');
-        return fieldLabels[fieldKey] || path.join(' ');
+        // return  fieldLabels[fieldKey] || path.join(' ');
+        return messages(`formFields.${fieldKey}` as any) || path.join(' ');
     };
 
     const formValues = useReleaseFormStore((state) => state.formValues);

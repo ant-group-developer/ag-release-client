@@ -31,6 +31,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const validationErrors = useReleaseFormStore(
         (state) => state.validationErrors
     );
+    console.log('🚀 ~ ReleaseDetail ~ validationErrors:', validationErrors);
     const pathname = usePathname();
     const openModal = useModalStore((state) => state.openModal);
     const [activeTab, setActiveTab] = useState<string>(
@@ -207,6 +208,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         if (releaseId && (!formValues || !formValues.nameRelease)) {
             // fake data
             const initialData: ReleaseFormValuesData = {
+                id: 'R100000001',
                 releaseType: RELEASES_TYPE.ALBUM,
                 nameRelease: 'Album Mới 2024',
                 isMoreThan4Artists: false,
@@ -240,9 +242,9 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                 metaDataLanguage: LOCALE.VI,
                 tracks: [],
                 releaseDate: '',
-                timeZone: '',
+                timezone: '',
                 territory: undefined,
-                platform: [],
+                platforms: [],
                 artistsApplyAllTracks: [],
             };
             setFormValues(initialData);

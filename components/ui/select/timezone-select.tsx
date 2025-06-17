@@ -17,6 +17,7 @@ export default function TimezoneSelect({
 }: TimezoneSelectProps) {
     return (
         <Select
+            {...props}
             showSearch
             placeholder={placeholder}
             optionFilterProp="label"

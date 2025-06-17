@@ -57,6 +57,7 @@ export type ReleaseDetailSchema = z.infer<typeof releaseDetailSchema>;
 export default function ReleaseDetailForm() {
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
+    console.log('🚀 ~ ReleaseDetailForm ~ formValues:', formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const isEmptyFormValues = Object.keys(formValues).length === 0;
 
@@ -130,16 +131,26 @@ export default function ReleaseDetailForm() {
     const debouncedSetFormValues = useMemo(
         () =>
             debounce((values: ReleaseDetailSchema) => {
-                setFormValues(values as Partial<ReleaseFormValuesData>);
+                // Giữ lại danh sách nghệ sĩ hiện tại nếu có
+                const currentArtists = formValues.artists || [];
+                setFormValues({
+                    ...(values as Partial<ReleaseFormValuesData>),
+                    artists: currentArtists,
+                });
             }, 300),
-        [setFormValues]
+        [setFormValues, formValues.artists]
     );
 
     const watchedAllFields = useWatch({ control });
 
     useEffect(() => {
-        // Chỉ update khi có thay đổi thực sự
-        if (JSON.stringify(watchedAllFields) !== JSON.stringify(formValues)) {
+        // Chỉ update các trường khác ngoài artists
+        const { artists, ...otherFields } = watchedAllFields;
+        const { artists: currentArtists, ...currentOtherFields } = formValues;
+
+        if (
+            JSON.stringify(otherFields) !== JSON.stringify(currentOtherFields)
+        ) {
             debouncedSetFormValues(watchedAllFields as ReleaseDetailSchema);
         }
 
@@ -305,12 +316,13 @@ export default function ReleaseDetailForm() {
                                             key={index}
                                             index={index}
                                             data={artist}
-                                            onClick={() =>
-                                                openModal(
-                                                    TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST,
-                                                    artist
-                                                )
-                                            }
+                                            onClick={(e) => {
+                                                e.stopPropagation(),
+                                                    openModal(
+                                                        TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST,
+                                                        artist
+                                                    );
+                                            }}
                                             onDelete={() =>
                                                 openModal(
                                                     TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST,
@@ -572,7 +584,11 @@ export default function ReleaseDetailForm() {
                 </div>
 
                 <div className="flex w-full justify-end">
-                    <Button htmlType="submit" type="primary" className="my-8">
+                    <Button
+                        onClick={handleSubmit(handleNext)}
+                        type="primary"
+                        className="my-8"
+                    >
                         {messages('common.next')}
                     </Button>
                 </div>

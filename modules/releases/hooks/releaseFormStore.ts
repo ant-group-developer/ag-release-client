@@ -13,6 +13,7 @@ interface ReleaseFormState {
 }
 
 const initialValue: ReleaseFormValuesData = {
+    id: '',
     thumbnail: undefined,
     releaseType: null,
     nameRelease: '',
@@ -27,11 +28,10 @@ const initialValue: ReleaseFormValuesData = {
     catalogId: '',
     cLineYear: '',
     pLineYear: '',
-    tracks: [],
     releaseDate: '',
-    timeZone: '',
+    timezone: '',
     territory: undefined,
-    platform: [],
+    platforms: [],
     artistsApplyAllTracks: [],
 };
 

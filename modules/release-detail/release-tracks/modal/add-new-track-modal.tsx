@@ -58,7 +58,7 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                     };
 
                     return {
-                        id: index++,
+                        id: index,
                         title: getFileName(file),
                         file: file.originFileObj,
                         artists: mainArtist

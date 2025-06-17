@@ -38,24 +38,28 @@ type ReleaseTrackSchema = z.infer<typeof releaseTrackSchema>;
 
 type Props = {
     trackData: TrackData;
-    checkTrackValid: (boolean: boolean) => void;
 };
 
-export default function TracksForm({ trackData, checkTrackValid }: Props) {
+export default function TracksForm({ trackData }: Props) {
     const messages = useTranslations();
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const formValues = useReleaseFormStore((state) => state.formValues);
     const openModal = useModalStore((state) => state.openModal);
+    const thisTrackData = formValues?.tracks?.find(
+        (track: TrackData) => track.id === trackData.id
+    );
 
     const formMethods = useForm<ReleaseTrackSchema>({
         defaultValues: {
             trackName: trackData.title,
             artists: trackData.artists,
             isAddArtistsFromRelease: false,
+            source: thisTrackData?.source,
+            languageTrack: thisTrackData?.languageTrack,
         },
         resolver: zodResolver(releaseTrackSchema),
         mode: 'onChange',
-        // reValidateMode: 'onChange',
+        reValidateMode: 'onChange',
     });
 
     const {
@@ -64,6 +68,7 @@ export default function TracksForm({ trackData, checkTrackValid }: Props) {
         formState: { errors },
         watch,
         trigger,
+        setValue,
     } = formMethods;
 
     const isAddArtistsFromRelease = watch('isAddArtistsFromRelease');
@@ -101,7 +106,7 @@ export default function TracksForm({ trackData, checkTrackValid }: Props) {
     const watchedAllFields = useWatch({ control });
 
     useEffect(() => {
-        setFormValues({
+        const updatedFormValues = {
             ...formValues,
             tracks: formValues?.tracks?.map((track: TrackData) =>
                 track.id === trackData.id
@@ -112,7 +117,9 @@ export default function TracksForm({ trackData, checkTrackValid }: Props) {
                       }
                     : track
             ),
-        });
+        };
+
+        setFormValues(updatedFormValues);
     }, [watchedAllFields]);
 
     useEffect(() => {

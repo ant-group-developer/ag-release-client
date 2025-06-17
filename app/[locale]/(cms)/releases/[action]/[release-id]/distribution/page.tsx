@@ -4,6 +4,7 @@ import AppPagination from '@/components/ui/pagination';
 import { SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { useRouter } from '@/i18n/routing';
 import {
     defaultVisibleColumnsDistribution,
     distributionData,
@@ -17,6 +18,7 @@ import DistributionHeader from '@/modules/release-detail/release-distribution/co
 import DistributionStatus from '@/modules/release-detail/release-distribution/components/header-action/distribution-status';
 import DistributionTable from '@/modules/release-detail/release-distribution/components/table';
 import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
+import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { useWindowSize } from '@uidotdev/usehooks';
 import { Button } from 'antd';
 import dayjs from 'dayjs';
@@ -83,6 +85,11 @@ export default function Distribution({}: Props) {
     const isSmallDevice = Number(width) <= SCREEN.MD;
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
+    const formValues = useReleaseFormStore((state) => state.formValues);
+    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
+    const releaseId = formValues?.id || '';
+    console.log(formValues);
+    const router = useRouter();
 
     const scrollY = () => {
         if (isSmallDevice) return undefined;
@@ -271,6 +278,14 @@ export default function Distribution({}: Props) {
         (item) => item.platform === 'Facebook'
     );
 
+    const handleDistribution = () => {
+        setFormValues({
+            ...formValues,
+            platforms: selectedRow as string[],
+        });
+        router.push(`/releases/detail/${releaseId}/review`);
+    };
+
     const isHasAmazonPlatform = dataTable.some(
         (item) => item.platform === 'Amazon'
     );
@@ -341,7 +356,7 @@ export default function Distribution({}: Props) {
                 // <DistributionReleaseModal platformIds={selectedRow} />
                 <AppConfirm
                     open
-                    onOk={closeModal}
+                    onOk={handleDistribution}
                     onCancel={closeModal}
                     modalTitle="Phát hành"
                     paragraph="Bạn có chắc chắn muốn phát hành trên nền tảng này không?"

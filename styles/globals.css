@@ -211,3 +211,9 @@ a {
     max-width: 550px;
     width: fit-content;
 }
+
+.custom-medium-badge .ant-badge-count {
+    min-width: 16px !important;
+    height: 16px !important;
+    line-height: 16px !important;
+}

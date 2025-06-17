@@ -760,5 +760,47 @@
         "create": "Create distribution",
         "name": "Distribution name",
         "id": "Distribution ID"
+    },
+
+    "formFields": {
+        "artists": "Artists",
+        "releaseDate": "Release date",
+        "territoryType": "Territory type",
+        "cLineYear": "C line year",
+        "pLineYear": "P line year",
+        "nameRelease": "Release name",
+        "tracks": {
+            "type": "Type",
+            "nameRelease": "Release name",
+            "version": "Version",
+            "isMoreThan4Artists": "Is more than 4 artists",
+            "artists": "Artists",
+            "subArtists": "Sub artists",
+            "genres": "Genres",
+            "subGenres": "Sub genres",
+            "language": "Language",
+            "label": "Label",
+            "upc": "UPC/EAN/JAN",
+            "catalogId": "Catalog ID",
+            "cLineYear": "C line year",
+            "pLineYear": "P line year",
+            "thumbnail": "Thumbnail",
+            "tracks": "Tracks",
+            "title": "Title",
+            "isrc": "ISRC",
+            "mainArtist": "Main artist",
+            "originalSource": "Original source",
+            "languageTrack": "Language track",
+            "genresTrack": "Genres track",
+            "subGenresTrack": "Sub genres track",
+            "sensitiveContent": "Sensitive content",
+            "countryLanguage": "Country language",
+            "metadataLanguage": "Metadata language",
+            "lyrics": "Lyrics",
+            "source": "Source",
+            "countryRecording": "Country recording",
+            "recordingType": "Recording type",
+            "isSensitiveContent": "Is sensitive content"
+        }
     }
 }

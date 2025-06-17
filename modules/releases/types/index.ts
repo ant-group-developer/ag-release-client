@@ -1,4 +1,5 @@
 import { ArtistData } from '@/modules/artist/types';
+import { PlatformData } from '@/modules/platform/types';
 import { GENRES } from '@/modules/tracks/enums';
 import { TrackData } from '@/modules/tracks/types';
 import { CommonParams } from '@/types/api';
@@ -33,6 +34,7 @@ export interface ReleasesDataFilter extends CommonParams {
 }
 
 export interface ReleaseFormValuesData {
+    id: string;
     thumbnail: any;
     releaseType: RELEASES_TYPE | null;
     nameRelease: string;
@@ -47,10 +49,10 @@ export interface ReleaseFormValuesData {
     catalogId: string;
     cLineYear: string;
     pLineYear: string;
-    tracks: TrackData[] | null;
+    tracks?: TrackData[] | null;
     releaseDate: string;
-    timeZone: string;
+    timezone: string;
     territory: any;
-    platform: any[];
     artistsApplyAllTracks: ArtistData[];
+    platforms: PlatformData['id'][];
 }

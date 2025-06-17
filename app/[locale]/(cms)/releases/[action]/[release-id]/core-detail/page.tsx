@@ -47,20 +47,7 @@ export default function CoreDetail() {
                         : artist
                 );
             } else {
-                const isAlreadyHaveMainArtist = releaseArtists?.some(
-                    (artist) => artist.role === newArtistData.role
-                );
-
-                if (isAlreadyHaveMainArtist) {
-                    return (updatedArtists = [
-                        newArtistData,
-                        ...releaseArtists.filter(
-                            (artist) => artist.role !== newArtistData.role
-                        ),
-                    ]);
-                } else {
-                    updatedArtists = [...releaseArtists, newArtistData];
-                }
+                updatedArtists = [...releaseArtists, newArtistData];
             }
 
             setFormValues({
