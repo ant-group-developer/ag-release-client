@@ -6,7 +6,7 @@ import { Form } from 'antd';
 import { useTranslations } from 'next-intl';
 
 import AppFormItem from '@/components/ui/antd-form/form-Item';
-import DndAudioUpload from '@/components/ui/input/dnd-audio-upload';
+import WaveAudioUpload from '@/components/ui/input/wave-audio-upload';
 import extractAudioMetadata, {
     getFileName,
     getPeakData,
@@ -36,6 +36,7 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
         try {
             const values = await form.validateFields();
             const files = values.tracks?.fileList || [];
+            console.log('🚀 ~ onFinish ~ files:', files);
 
             const newTracksPromises: Promise<TrackData>[] = files.map(
                 async (file: any, index: number) => {
@@ -108,7 +109,7 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                 disabled={isActive}
             >
                 <AppFormItem name="tracks">
-                    <DndAudioUpload
+                    <WaveAudioUpload
                         multiple
                         accept="audio/wav"
                         placeholder={

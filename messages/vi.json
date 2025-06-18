@@ -137,13 +137,9 @@
         "detail": "Chi tiết ",
         "delete": "Xoá",
         "upload": "Tải lên",
+        "uploadImage": "Tải ảnh lên",
         "dateCreated": "Ngày tạo",
         "dateUpdated": "Ngày cập nhật",
-        "uploadSubTitle": "hoặc kéo thả tệp vào đây",
-        "uploadTitleMp3": "Chọn tệp MP3 để tải lên",
-        "uploadTitleMp4": "Chọn tệp MP4 để tải lên",
-        "uploadTitleImage": "Chọn hình ảnh để tải lên",
-        "uploadTitleDocument": "Chọn tài liệu để tải lên",
         "removeFilter": "Xoá bộ lọc",
         "filter": "Bộ lọc",
         "submit": "Đồng ý",
@@ -171,7 +167,8 @@
     },
     "country": {
         "label": "Quốc gia",
-        "city": "Thành phố"
+        "city": "Thành phố",
+        "language": "Ngôn ngữ quốc gia"
     },
     "filter": {
         "keyword": "Từ khoá",
@@ -695,7 +692,9 @@
         "labelName": "Tên label",
         "version": "Phiên bản",
         "role": "Vai trò",
-
+        "isMoreThan4Artists": "Có nhiều hơn 4 nghệ sĩ hay không",
+        "cLineYearDescription": "Năm đầu tiên xuất bản phiên bản này ở bất kỳ nơi nào trên thế giới.",
+        "pLineYearDescription": "Năm bản ghi âm đầu tiên được phát hành trên toàn thế giới.",
         "select": {
             "artist": "Chọn nghệ sĩ",
             "subArtist": "Chọn nghệ sĩ phụ"
@@ -751,9 +750,12 @@
         "id": "Mã nghệ sĩ",
         "delete": "Xóa nghệ sĩ",
         "add": "Thêm nghệ sĩ",
+        "addToTracks": "Thêm nghệ sĩ vào các bài hát",
         "update": "Cập nhật nghệ sĩ",
         "select": "Chọn nghệ sĩ",
-        "profiles": "Hồ sơ nghệ sĩ"
+        "profiles": "Hồ sơ nghệ sĩ",
+        "variousArtists": "Nhiều nghệ sĩ",
+        "descriptionVariantArtists": "Tên hiển thị sẽ là 'Nhiều nghệ sĩ'"
     },
     "labels": {
         "create": "Tạo label",

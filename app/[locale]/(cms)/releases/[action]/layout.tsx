@@ -31,7 +31,6 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const validationErrors = useReleaseFormStore(
         (state) => state.validationErrors
     );
-    console.log('🚀 ~ ReleaseDetail ~ validationErrors:', validationErrors);
     const pathname = usePathname();
     const openModal = useModalStore((state) => state.openModal);
     const [activeTab, setActiveTab] = useState<string>(
@@ -144,9 +143,11 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                 </Button>
             )}
 
-            <Button type="primary" onClick={handleSubmit}>
-                Lưu thông tin
-            </Button>
+            {isDetailPage && (
+                <Button type="primary" onClick={handleSubmit}>
+                    Lưu thông tin
+                </Button>
+            )}
         </div>
     );
 

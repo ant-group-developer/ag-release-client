@@ -5,7 +5,6 @@ import {
     ORIENTATION,
     UPLOAD_TYPE,
 } from '@/enums/common';
-import { AudioMetadata } from '@/modules/release-detail/release-tracks/form/audio-specifications';
 import { RELEASES_STATUS } from '@/modules/releases/enums';
 import { GENRES } from '@/modules/tracks/enums';
 import { presetPalettes } from '@ant-design/colors';
@@ -629,6 +628,17 @@ export const getPeakData = async (audioFile: any) => {
         return { peakData: [], songDuration: 0 };
     }
 };
+
+export interface AudioMetadata {
+    codec: string;
+    format: string;
+    bitrate: number;
+    sampleRate: number;
+    channels: number;
+    duration: number;
+    bitDepth: number;
+    mqs: string;
+}
 
 const extractAudioMetadata = async (file: File): Promise<AudioMetadata> => {
     try {

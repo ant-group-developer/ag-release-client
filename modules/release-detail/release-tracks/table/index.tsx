@@ -10,7 +10,9 @@ import { useTrackReadyStore } from '@/modules/releases/hooks/trackReadyStore';
 import { TrackData } from '@/modules/tracks/types';
 import { Input, Tabs, Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
+import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
+import { useCallback, useMemo } from 'react';
 import TrackActionButton from '../button/track-action';
 import AudioSpecifications from '../form/audio-specifications';
 import OtherMetadataForm from '../form/other-metadata-form';
@@ -32,6 +34,8 @@ export default function ReleaseTracksTable({
     ...props
 }: Props) {
     const messages = useTranslations();
+    const formValues = useReleaseFormStore((state) => state.formValues);
+    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const openModal = useModalStore((state) => state.openModal);
     const formErrors = useReleaseFormStore((state) => state.validationErrors);
     const setTrackReadyMap = useTrackReadyStore(
@@ -44,6 +48,26 @@ export default function ReleaseTracksTable({
             order: index + 1,
         }));
     };
+
+    const debouncedSetFormValues = useMemo(
+        () =>
+            debounce((track: TrackData, value: string) => {
+                setFormValues({
+                    ...formValues,
+                    tracks: formValues?.tracks?.map((item) =>
+                        item.id === track.id ? { ...item, title: value } : item
+                    ),
+                });
+            }, 300),
+        [formValues, setFormValues]
+    );
+
+    const handleChangeTitle = useCallback(
+        (track: TrackData, value: string) => {
+            debouncedSetFormValues(track, value);
+        },
+        [debouncedSetFormValues]
+    );
 
     const columns: ColumnType<TrackData>[] = [
         {
@@ -80,7 +104,14 @@ export default function ReleaseTracksTable({
             align: 'left',
             width: 300,
             render: (value, record) => {
-                return <Input defaultValue={value} />;
+                return (
+                    <Input
+                        defaultValue={value}
+                        onChange={(e) =>
+                            handleChangeTitle(record, e.target.value)
+                        }
+                    />
+                );
             },
         },
         {

@@ -1,5 +1,6 @@
 import { LabelForm } from '@/components/ui/label/labelForm';
 import GenresSelect from '@/components/ui/select/genres-select';
+import IsSensitiveContentSelect from '@/components/ui/select/isSensitiveContent-select';
 import ErrorText from '@/components/ui/text/error-text';
 import { languageList } from '@/constants/fakeData';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
@@ -12,16 +13,19 @@ import { useEffect } from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
-const otherMetadataSchema = z.object({
-    genres: z.string().nonempty('Genres is required'),
-    subGenres: z.string().optional(),
-    isSensitiveContent: z.boolean(),
-    countryLanguage: z.string().nonempty('Country language is required'),
-    metadataLanguage: z.string().nonempty('Metadata language is required'),
-    lyrics: z.string().optional(),
-});
+const otherMetadataSchema = (messages: any) =>
+    z.object({
+        genres: z.string().min(1, messages('validation.select')),
+        subGenres: z.string().optional(),
+        isSensitiveContent: z.string().min(1, messages('validation.select')),
+        countryLanguage: z.string().min(1, messages('validation.select')),
+        metadataLanguage: z.string().min(1, messages('validation.select')),
+        lyrics: z.string().optional(),
+    });
 
-export type OtherMetadataSchema = z.infer<typeof otherMetadataSchema>;
+export type OtherMetadataSchema = z.infer<
+    ReturnType<typeof otherMetadataSchema>
+>;
 
 type Props = {
     trackData: TrackData;
@@ -30,22 +34,20 @@ type Props = {
 export default function OtherMetadataForm({ trackData }: Props) {
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
-    const thisTrackData = formValues?.tracks?.find(
-        (track: TrackData) => track.id === trackData.id
-    );
 
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const formMethods = useForm<OtherMetadataSchema>({
         defaultValues: {
-            genres: trackData.genres,
+            genres: trackData.genres ?? '',
             subGenres: trackData?.subGenres,
-            isSensitiveContent: trackData?.isSensitiveContent,
-            countryLanguage: trackData?.countryLanguage,
-            metadataLanguage: trackData?.metadataLanguage,
+            isSensitiveContent:
+                trackData?.isSensitiveContent?.toString() ?? 'false',
+            countryLanguage: trackData?.countryLanguage ?? '',
+            metadataLanguage: trackData?.metadataLanguage ?? '',
             lyrics: trackData?.lyrics,
         },
-        resolver: zodResolver(otherMetadataSchema),
-        mode: 'onChange',
+        resolver: zodResolver(otherMetadataSchema(messages)),
+        mode: 'onTouched',
     });
 
     const {
@@ -144,14 +146,11 @@ export default function OtherMetadataForm({ trackData }: Props) {
                         name="isSensitiveContent"
                         control={control}
                         render={({ field }) => (
-                            <Select
-                                className="w-full"
-                                showSearch
+                            <IsSensitiveContentSelect
                                 {...field}
-                                options={[
-                                    { label: 'Có', value: true },
-                                    { label: 'Không', value: false },
-                                ]}
+                                className="w-full"
+                                allowClear
+                                showSearch
                                 status={
                                     errors.isSensitiveContent
                                         ? 'error'
@@ -170,7 +169,7 @@ export default function OtherMetadataForm({ trackData }: Props) {
                     <LabelForm
                         htmlFor="countryLanguage"
                         required
-                        label="Ngôn ngữ quốc gia"
+                        label={messages('country.language')}
                     />
                     <Controller
                         name="countryLanguage"
@@ -180,6 +179,7 @@ export default function OtherMetadataForm({ trackData }: Props) {
                                 className="w-full"
                                 showSearch
                                 options={languageList}
+                                allowClear
                                 {...field}
                                 status={
                                     errors.countryLanguage ? 'error' : undefined
@@ -207,6 +207,7 @@ export default function OtherMetadataForm({ trackData }: Props) {
                                 className="w-full"
                                 showSearch
                                 options={languageList}
+                                allowClear
                                 {...field}
                                 status={
                                     errors.metadataLanguage

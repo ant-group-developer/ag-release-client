@@ -1,4 +1,6 @@
 import ImageListUpload from '@/components/ui/input/image-list-upload';
+import { DATE_FORMAT } from '@/enums/common';
+import { formattedDate } from '@/helpers/common';
 import { cn } from '@/helpers/tailwind';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { useTranslations } from 'next-intl';
@@ -48,7 +50,9 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                         )}
                                         accept="image/*"
                                         maxCount={1}
-                                        placeholder="Tải ảnh lên"
+                                        placeholder={messages(
+                                            'common.uploadImage'
+                                        )}
                                         {...field}
                                     />
                                 )}
@@ -61,7 +65,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                 })}
                             >
                                 <div className="text-sm">
-                                    <span>Tên phát hành: </span>
+                                    <span>{messages('releases.name')}: </span>
                                     <span className="font-bold">
                                         {formValues.nameRelease}{' '}
                                         {formValues.version &&
@@ -76,7 +80,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                     </span>
                                 </div>
                                 <div className="text-sm">
-                                    <span>Nghệ sĩ: </span>
+                                    <span>{messages('artist.label')}: </span>
                                     <span className="font-bold">
                                         {formValues?.artists
                                             ? mainArtist?.name
@@ -84,17 +88,34 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                     </span>
                                 </div>
                                 <div className="text-sm">
-                                    <span>Thể loại: </span>
+                                    <span>{messages('common.genres')}: </span>
                                     <span className="font-bold">
                                         {formValues.genres}
                                     </span>
                                 </div>
-                                <div className="text-sm">
-                                    <span>Ngôn ngữ: </span>
-                                    <span className="font-bold">
-                                        {formValues.metaDataLanguage}
-                                    </span>
-                                </div>
+                                {formValues.releaseDate && (
+                                    <div>
+                                        <span>
+                                            {messages('common.releaseDate')}
+                                            :{' '}
+                                        </span>
+                                        <span className="font-bold">
+                                            {formattedDate(
+                                                formValues.releaseDate,
+                                                DATE_FORMAT.DATE_ONLY
+                                            )}
+                                        </span>
+                                    </div>
+                                )}
+
+                                {formValues.upc && (
+                                    <div>
+                                        <span>UPC: </span>
+                                        <span className="font-bold">
+                                            {formValues.upc}
+                                        </span>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

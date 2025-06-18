@@ -137,13 +137,9 @@
         "detail": "Detail",
         "delete": "Delete",
         "upload": "Upload",
+        "uploadImage": "Upload image",
         "dateCreated": "Date created",
         "dateUpdated": "Date updated",
-        "uploadSubTitle": "or drag and drop it here",
-        "uploadTitleMp3": "Select a MP3 file to upload",
-        "uploadTitleMp4": "Select a MP4 file to upload",
-        "uploadTitleImage": "Select a image file to upload",
-        "uploadTitleDocument": "Select a document file to upload",
         "removeFilter": "Remove filter",
         "filter": "Filter",
         "submit": "Submit",
@@ -171,7 +167,8 @@
     },
     "country": {
         "label": "Country",
-        "city": "City"
+        "city": "City",
+        "language": "Country language"
     },
     "filter": {
         "keyword": "Keyword",
@@ -690,10 +687,13 @@
         "labelName": "Label name",
         "version": "Version",
         "role": "Role",
+        "isMoreThan4Artists": "Is more than 4 artists",
         "select": {
             "artist": "Select artist",
             "subArtist": "Select sub artist"
         },
+        "cLineYearDescription": "The first year this version was released anywhere in the world.",
+        "pLineYearDescription": "The first year this recording was released worldwide.",
 
         "placeholder": {
             "selectArtist": "Select artist",
@@ -746,9 +746,11 @@
         "delete": "Delete artist",
         "update": "Update artist",
         "add": "Add artist",
-
+        "addToTracks": "Add artist to tracks",
         "select": "Select artist",
-        "profiles": "Artist profiles"
+        "profiles": "Artist profiles",
+        "variousArtists": "Various artists",
+        "descriptionVariantArtists": "Display name will be 'Various artists'"
     },
     "labels": {
         "create": "Create label",

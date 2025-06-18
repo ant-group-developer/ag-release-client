@@ -3,6 +3,7 @@ import { SIZE_ICON } from '@/constants/common';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { Avatar, Checkbox, CheckboxChangeEvent } from 'antd';
 import { Trash2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { HTMLAttributes } from 'react';
 
 type Props = HTMLAttributes<HTMLDivElement> & {
@@ -21,6 +22,7 @@ export default function ArtistCard({
     onDelete,
     ...props
 }: Props) {
+    const messages = useTranslations();
     const handleChangeChecked = (e: CheckboxChangeEvent) => {
         onApplyToAllTracks?.(e.target.checked);
     };
@@ -36,7 +38,7 @@ export default function ArtistCard({
                         {'A'}
                     </Avatar>
                 </div>
-                <div>
+                <div className="flex flex-col gap-1">
                     <p className="font-bold">{data?.name}</p>
                     <p>
                         <span>1569468 | </span>
@@ -56,7 +58,7 @@ export default function ArtistCard({
                                     handleChangeChecked(e);
                                 }}
                             />
-                            <span> Thêm nghệ sĩ vào các bài hát</span>
+                            <span> {messages('artist.addToTracks')}</span>
                         </div>
                     )}
                 </div>
@@ -82,21 +84,16 @@ export default function ArtistCard({
                     </Avatar.Group>
                 </div>
 
-                <div className="w-8">
-                    {/* {index !== 0 && ( */}
+                <div className="w-8" onClick={(e) => e.stopPropagation()}>
                     <IconButton
                         onClick={(e) => {
+                            e.preventDefault();
                             e.stopPropagation();
                             onDelete?.();
-                            // openModal(
-                            //     TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST,
-                            //     data
-                            // );
                         }}
                     >
                         <Trash2 size={SIZE_ICON} className="text-red-500" />
                     </IconButton>
-                    {/* )} */}
                 </div>
             </div>
         </div>

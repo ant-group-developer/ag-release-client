@@ -3,6 +3,7 @@ import ErrorText from '@/components/ui/text/error-text';
 import IconInfoTooltip from '@/components/ui/tooltip/icon-info-tooltip';
 import { languageList } from '@/constants/fakeData';
 import useModalStore from '@/hooks/use-modal';
+import { artistSchema } from '@/modules/artist/schema';
 import { ArtistData } from '@/modules/artist/types';
 import { TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
@@ -15,26 +16,17 @@ import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 import ArtistCard from '../../release-detail-form/artist-card';
 
-export const releaseTrackSchema = z.object({
-    trackName: z.string().nonempty('Track name is required'),
-    isrc: z.string().optional(),
-    source: z.string().nonempty('Source is required'),
-    languageTrack: z.string().nonempty('Language is required'),
-    isAddArtistsFromRelease: z.boolean(),
-    artists: z.array(
-        z.object({
-            id: z.string(),
-            name: z.string().nonempty('Artist name is required'),
-            role: z.string().nonempty('Artist role is required'),
-            // artistId: z.string().optional(),
-            // thumbnail: z.string().optional(),
-            // trackCount: z.number().optional(),
-            // createdAt: z.date().optional(),
-        })
-    ),
-});
+export const releaseTrackSchema = (messages: any) =>
+    z.object({
+        trackName: z.string().nonempty(messages('validation.input')),
+        isrc: z.string().optional(),
+        source: z.string().nonempty(messages('validation.input')),
+        languageTrack: z.string().nonempty(messages('validation.input')),
+        isAddArtistsFromRelease: z.boolean(),
+        artists: z.array(artistSchema(messages)),
+    });
 
-type ReleaseTrackSchema = z.infer<typeof releaseTrackSchema>;
+type ReleaseTrackSchema = z.infer<ReturnType<typeof releaseTrackSchema>>;
 
 type Props = {
     trackData: TrackData;
@@ -51,13 +43,13 @@ export default function TracksForm({ trackData }: Props) {
 
     const formMethods = useForm<ReleaseTrackSchema>({
         defaultValues: {
-            trackName: trackData.title,
+            trackName: trackData.title ?? '',
             artists: trackData.artists,
             isAddArtistsFromRelease: false,
-            source: thisTrackData?.source,
-            languageTrack: thisTrackData?.languageTrack,
+            source: thisTrackData?.source ?? '',
+            languageTrack: thisTrackData?.languageTrack ?? '',
         },
-        resolver: zodResolver(releaseTrackSchema),
+        resolver: zodResolver(releaseTrackSchema(messages)),
         mode: 'onChange',
         reValidateMode: 'onChange',
     });
@@ -281,12 +273,12 @@ export default function TracksForm({ trackData }: Props) {
                                                 }
                                             )
                                         }
-                                        onClick={() =>
+                                        onClick={() => {
                                             openModal(
                                                 TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.EDIT_ARTIST,
                                                 artist
-                                            )
-                                        }
+                                            );
+                                        }}
                                         index={index}
                                     />
                                 )

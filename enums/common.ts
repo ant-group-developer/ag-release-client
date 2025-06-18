@@ -157,4 +157,3 @@ export enum ORIENTATION {
 export enum TYPE_MODAL {
     SEARCH = 'SEARCH',
 }
-

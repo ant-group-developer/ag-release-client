@@ -25,6 +25,7 @@ interface PlaySongState extends CurrentSong {
     onStop: (stop: boolean) => void;
     setReactPlayerRef: (ref: any) => void;
     reactPlayerRef: any;
+    songTimeMap: Map<string, number>;
 }
 
 const defaultValue = {
@@ -38,19 +39,29 @@ const defaultValue = {
 export const usePlaySongStore = create<PlaySongState>((set, get) => ({
     ...defaultValue,
     reactPlayerRef: null,
+    songTimeMap: new Map(),
     setReactPlayerRef: (ref) => set({ reactPlayerRef: ref }),
     onPlay: ({ url, songId }) => {
+        const state = get();
+        const savedTime = state.songTimeMap.get(songId) || 0;
+
         set((state) => ({
             ...state,
             isPlaying: true,
             url: url ?? state.url,
             songId: songId ?? state.songId,
+            currentTimePlaying: savedTime,
         }));
     },
     onStop: (close) => {
+        const state = get();
         if (close) {
             set(defaultValue);
         } else {
+            // Lưu thời gian hiện tại của bài hát trước khi dừng
+            if (state.songId) {
+                state.songTimeMap.set(state.songId, state.currentTimePlaying);
+            }
             set((state) => ({
                 ...state,
                 isPlaying: false,
@@ -59,6 +70,10 @@ export const usePlaySongStore = create<PlaySongState>((set, get) => ({
     },
     onSeek: ({ second, url, songId }) => {
         get().reactPlayerRef?.seekTo(second, 'seconds');
+        // Lưu thời gian mới khi seek
+        const state = get();
+        state.songTimeMap.set(songId, second);
+
         set((state) => ({
             ...state,
             isPlaying: true,

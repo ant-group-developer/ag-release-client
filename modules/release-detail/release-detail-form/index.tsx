@@ -1,5 +1,6 @@
 // React Hook Form version using Controller
 import { LabelForm } from '@/components/ui/label/labelForm';
+import FormItem from '@/components/ui/react-hook-form/form-item';
 import GenresSelect from '@/components/ui/select/genres-select';
 import LabelSelect from '@/components/ui/select/label-select';
 import ErrorText from '@/components/ui/text/error-text';
@@ -7,6 +8,7 @@ import { languageList, yearList } from '@/constants/fakeData';
 import { showNotification } from '@/helpers/messages-helper';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
+import { artistSchema } from '@/modules/artist/schema';
 import { ArtistData } from '@/modules/artist/types';
 import {
     RELEASES_TYPE,
@@ -23,47 +25,42 @@ import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 import ArtistCard from './artist-card';
 
-export const releaseDetailSchema = z.object({
-    releaseType: z
-        .nativeEnum(RELEASES_TYPE, {
-            required_error: 'Release type is required',
-        })
-        .nullable(),
-    nameRelease: z.string().nonempty('Release name is required'),
-    version: z.string().optional(),
-    isMoreThan4Artists: z.boolean(),
-    artists: z.array(
-        z.object({
-            id: z.string(),
-            name: z.string().nonempty('Artist name is required'),
-            role: z.string().nonempty('Artist role is required'),
-            // artistId: z.string(),
-            // thumbnail: z.string(),
-            // createdAt: z.date(),
-        })
-    ),
-    genres: z.string().nullable(),
-    subGenres: z.string().nullable(),
-    metaDataLanguage: z.string().nonempty('Metadata language is required'),
-    label: z.string().optional(),
-    upc: z.string().optional(),
-    catalogId: z.string().optional(),
-    cLineYear: z.string().nonempty('C line year is required'),
-    pLineYear: z.string().nonempty('P line year is required'),
-});
+export const releaseDetailSchema = (messages: any) =>
+    z.object({
+        releaseType: z
+            .nativeEnum(RELEASES_TYPE, {
+                required_error: messages('validation.select'),
+            })
+            .nullable(),
+        nameRelease: z.string().nonempty(messages('validation.input')),
+        version: z.string().optional(),
+        isMoreThan4Artists: z.boolean(),
+        artists: z.array(artistSchema(messages)),
+        genres: z.string().nullable(),
+        subGenres: z.string().nullable(),
+        metaDataLanguage: z.string().nonempty(messages('validation.select')),
+        label: z.string().optional(),
+        upc: z.string().optional(),
+        catalogId: z.string().optional(),
+        cLineYear: z.string().nonempty(messages('validation.input')),
+        pLineYear: z.string().nonempty(messages('validation.input')),
+    });
 
-export type ReleaseDetailSchema = z.infer<typeof releaseDetailSchema>;
+export type ReleaseDetailSchema = z.infer<
+    ReturnType<typeof releaseDetailSchema>
+>;
 
 export default function ReleaseDetailForm() {
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
-    console.log('🚀 ~ ReleaseDetailForm ~ formValues:', formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const isEmptyFormValues = Object.keys(formValues).length === 0;
 
     const formMethods = useForm<ReleaseDetailSchema>({
         defaultValues: isEmptyFormValues ? undefined : formValues,
-        resolver: zodResolver(releaseDetailSchema),
+        resolver: zodResolver(releaseDetailSchema(messages)),
+        mode: 'onChange',
+        reValidateMode: 'onChange',
     });
 
     const {
@@ -161,43 +158,36 @@ export default function ReleaseDetailForm() {
     }, [watchedAllFields, formValues, debouncedSetFormValues]);
     return (
         <FormProvider {...formMethods}>
-            <form
-                className="px-4 pt-4"
-                onSubmit={handleSubmit(handleNext, (err) =>
-                    console.log('❌ Errors:', err)
-                )}
-            >
+            <form className="px-4 pt-4" onSubmit={handleSubmit(handleNext)}>
                 <div className="flex flex-col">
                     <div className="grid grid-cols-2 gap-8">
                         <div className="col-span-2 flex flex-col">
-                            <LabelForm
-                                htmlFor="releaseType"
-                                required
-                                label="Thể loại phát hành"
-                            />
-                            <Controller
-                                control={control}
+                            <FormItem
                                 name="releaseType"
-                                render={({ field }) => (
-                                    <Radio.Group {...field}>
-                                        {Object.values(RELEASES_TYPE).map(
-                                            (type) => (
-                                                <Radio
-                                                    key={type}
-                                                    value={type}
-                                                    className="capitalize"
-                                                >
-                                                    {type}
-                                                </Radio>
-                                            )
-                                        )}
-                                    </Radio.Group>
-                                )}
-                            />
-                            <ErrorText
-                                isError={!!errors.releaseType}
-                                message={errors.releaseType?.message}
-                            />
+                                label={messages('releases.type')}
+                                required
+                                ErrorMessage={errors.releaseType?.message}
+                            >
+                                <Controller
+                                    control={control}
+                                    name="releaseType"
+                                    render={({ field }) => (
+                                        <Radio.Group {...field}>
+                                            {Object.values(RELEASES_TYPE).map(
+                                                (type) => (
+                                                    <Radio
+                                                        key={type}
+                                                        value={type}
+                                                        className="capitalize"
+                                                    >
+                                                        {type}
+                                                    </Radio>
+                                                )
+                                            )}
+                                        </Radio.Group>
+                                    )}
+                                />
+                            </FormItem>
                         </div>
                         <div>
                             <LabelForm
@@ -228,43 +218,40 @@ export default function ReleaseDetailForm() {
                                 message={errors.nameRelease?.message}
                             />
                         </div>
-                        <div>
-                            <LabelForm
-                                htmlFor="version"
-                                label={messages('releases.version')}
-                            />
+
+                        <FormItem
+                            name="version"
+                            label={messages('releases.version')}
+                            ErrorMessage={errors.version?.message}
+                        >
                             <Controller
                                 control={control}
                                 name="version"
                                 render={({ field }) => (
-                                    <div>
-                                        <Input
-                                            id="version"
-                                            {...field}
-                                            allowClear
-                                            status={
-                                                errors.version
-                                                    ? 'error'
-                                                    : undefined
-                                            }
-                                        />
-                                    </div>
+                                    <Input
+                                        id="version"
+                                        {...field}
+                                        allowClear
+                                        status={
+                                            errors.version ? 'error' : undefined
+                                        }
+                                    />
                                 )}
                             />
-                            <ErrorText
-                                isError={!!errors.version}
-                                message={errors.version?.message}
-                            />
-                        </div>
+                        </FormItem>
 
                         <div className="col-span-2">
                             <div className="flex items-center justify-between">
-                                <div>
-                                    <LabelForm
-                                        htmlFor="isMoreThan4Artists"
-                                        required
-                                        label="Có nhiều hơn 4 nghệ sĩ hay không?"
-                                    />
+                                <FormItem
+                                    name="isMoreThan4Artists"
+                                    label={messages(
+                                        'releases.isMoreThan4Artists'
+                                    )}
+                                    required
+                                    ErrorMessage={
+                                        errors.isMoreThan4Artists?.message
+                                    }
+                                >
                                     <Controller
                                         control={control}
                                         name="isMoreThan4Artists"
@@ -272,22 +259,19 @@ export default function ReleaseDetailForm() {
                                             <div className="pb-2 pt-1">
                                                 <Radio.Group {...field}>
                                                     <Radio value={false}>
-                                                        Không
+                                                        {messages('common.no')}
                                                     </Radio>
                                                     <Radio value={true}>
-                                                        {`Có (Tên hiển thị sẽ là "Nhiều nghệ sĩ")`}
+                                                        {messages('common.yes')}
+                                                        {` (${messages(
+                                                            'artist.descriptionVariantArtists'
+                                                        )})`}
                                                     </Radio>
                                                 </Radio.Group>
                                             </div>
                                         )}
                                     />
-                                    <ErrorText
-                                        isError={!!errors.isMoreThan4Artists}
-                                        message={
-                                            errors.isMoreThan4Artists?.message
-                                        }
-                                    />
-                                </div>
+                                </FormItem>
                                 {!isMoreThan4Artists && (
                                     <div className="pt-5">
                                         <Button
@@ -297,7 +281,7 @@ export default function ReleaseDetailForm() {
                                                 )
                                             }
                                         >
-                                            Thêm nghệ sĩ chính
+                                            {messages('artist.add')}
                                         </Button>
                                         <ErrorText
                                             isError={
@@ -310,7 +294,7 @@ export default function ReleaseDetailForm() {
                             </div>
 
                             {!isMoreThan4Artists && (
-                                <div className="grid grid-cols-2 gap-4">
+                                <div className="grid grid-cols-2 gap-8">
                                     {artists.map((artist, index) => (
                                         <ArtistCard
                                             key={index}
@@ -342,244 +326,212 @@ export default function ReleaseDetailForm() {
                             )}
                         </div>
 
-                        <div>
-                            <LabelForm
-                                htmlFor="genres"
-                                required
-                                label={messages('common.genres')}
-                            />
+                        <FormItem
+                            name="genres"
+                            label={messages('common.genres')}
+                            required
+                            ErrorMessage={errors.genres?.message}
+                        >
                             <Controller
                                 control={control}
                                 name="genres"
                                 render={({ field }) => (
-                                    <div>
-                                        <GenresSelect
-                                            className="w-full"
-                                            id="genres"
-                                            {...field}
-                                            status={
-                                                errors.genres
-                                                    ? 'error'
-                                                    : undefined
-                                            }
-                                        />
-                                    </div>
+                                    <GenresSelect
+                                        showSearch
+                                        className="w-full"
+                                        id="genres"
+                                        {...field}
+                                        status={
+                                            errors.genres ? 'error' : undefined
+                                        }
+                                    />
                                 )}
                             />
-                            <ErrorText
-                                isError={!!errors.genres}
-                                message={errors.genres?.message}
-                            />
-                        </div>
+                        </FormItem>
 
-                        <div>
-                            <LabelForm
-                                htmlFor="subGenres"
-                                label={messages('common.subGenres')}
-                            />
+                        <FormItem
+                            name="subGenres"
+                            label={messages('common.subGenres')}
+                            ErrorMessage={errors.subGenres?.message}
+                        >
                             <Controller
                                 control={control}
                                 name="subGenres"
                                 render={({ field }) => (
-                                    <div>
-                                        <GenresSelect
-                                            className="w-full"
-                                            id="subGenres"
-                                            {...field}
-                                            status={
-                                                errors.subGenres
-                                                    ? 'error'
-                                                    : undefined
-                                            }
-                                        />
-                                    </div>
+                                    <GenresSelect
+                                        className="w-full"
+                                        allowClear
+                                        showSearch
+                                        id="subGenres"
+                                        {...field}
+                                        status={
+                                            errors.subGenres
+                                                ? 'error'
+                                                : undefined
+                                        }
+                                    />
                                 )}
                             />
-                            <ErrorText
-                                isError={!!errors.subGenres}
-                                message={errors.subGenres?.message}
-                            />
-                        </div>
+                        </FormItem>
 
-                        <div>
-                            <LabelForm
-                                htmlFor="metaDataLanguage"
-                                required
-                                label={`${messages('common.language')} metadata`}
-                            />
+                        <FormItem
+                            name="metaDataLanguage"
+                            label={`${messages('common.language')} metadata`}
+                            required
+                            ErrorMessage={errors.metaDataLanguage?.message}
+                        >
                             <Controller
                                 control={control}
                                 name="metaDataLanguage"
                                 render={({ field }) => (
-                                    <div>
-                                        <Select
-                                            className="w-full"
-                                            id="metaDataLanguage"
-                                            {...field}
-                                            options={languageList}
-                                            status={
-                                                errors.metaDataLanguage
-                                                    ? 'error'
-                                                    : undefined
-                                            }
-                                        />
-                                    </div>
+                                    <Select
+                                        className="w-full"
+                                        id="metaDataLanguage"
+                                        showSearch
+                                        {...field}
+                                        options={languageList}
+                                        status={
+                                            errors.metaDataLanguage
+                                                ? 'error'
+                                                : undefined
+                                        }
+                                    />
                                 )}
                             />
-                            <ErrorText
-                                isError={!!errors.metaDataLanguage}
-                                message={errors.metaDataLanguage?.message}
-                            />
-                        </div>
+                        </FormItem>
 
-                        <div>
-                            <LabelForm htmlFor="label" label="Label" />
+                        <FormItem
+                            name="label"
+                            label="Label"
+                            ErrorMessage={errors.label?.message}
+                        >
                             <Controller
                                 control={control}
                                 name="label"
                                 render={({ field }) => (
-                                    <div>
-                                        <LabelSelect
-                                            className="w-full"
-                                            id="label"
-                                            {...field}
-                                            status={
-                                                errors.label
-                                                    ? 'error'
-                                                    : undefined
-                                            }
-                                        />
-                                    </div>
+                                    <LabelSelect
+                                        className="w-full"
+                                        showSearch
+                                        allowClear
+                                        id="label"
+                                        {...field}
+                                        status={
+                                            errors.label ? 'error' : undefined
+                                        }
+                                    />
                                 )}
                             />
-                            <ErrorText
-                                isError={!!errors.label}
-                                message={errors.label?.message}
-                            />
-                        </div>
+                        </FormItem>
 
-                        <div>
-                            <LabelForm htmlFor="upc" label="UPC/EAN/JAN" />
+                        <FormItem
+                            name="upc"
+                            label="UPC/EAN/JAN"
+                            ErrorMessage={errors.upc?.message}
+                        >
                             <Controller
                                 control={control}
                                 name="upc"
                                 render={({ field }) => (
-                                    <div>
-                                        <Input
-                                            id="upc"
-                                            {...field}
-                                            allowClear
-                                            status={
-                                                errors.upc ? 'error' : undefined
-                                            }
-                                        />
-                                    </div>
+                                    <Input
+                                        id="upc"
+                                        {...field}
+                                        allowClear
+                                        status={
+                                            errors.upc ? 'error' : undefined
+                                        }
+                                    />
                                 )}
                             />
-                            <ErrorText
-                                isError={!!errors.upc}
-                                message={errors.upc?.message}
-                            />
-                        </div>
+                        </FormItem>
 
-                        <div>
-                            <LabelForm
-                                htmlFor="catalogId"
-                                label="ID category"
-                            />
+                        <FormItem
+                            name="catalogId"
+                            label="ID category"
+                            ErrorMessage={errors.catalogId?.message}
+                        >
                             <Controller
                                 control={control}
                                 name="catalogId"
                                 render={({ field }) => (
-                                    <div>
-                                        <Input
-                                            id="catalogId"
-                                            {...field}
-                                            allowClear
-                                            status={
-                                                errors.catalogId
-                                                    ? 'error'
-                                                    : undefined
-                                            }
-                                        />
-                                    </div>
+                                    <Input
+                                        id="catalogId"
+                                        {...field}
+                                        allowClear
+                                        status={
+                                            errors.catalogId
+                                                ? 'error'
+                                                : undefined
+                                        }
+                                    />
                                 )}
                             />
-                            <ErrorText
-                                isError={!!errors.catalogId}
-                                message={errors.catalogId?.message}
-                            />
-                        </div>
+                        </FormItem>
 
-                        <div>
-                            <LabelForm
-                                htmlFor="cLineYear"
-                                required
-                                label="C Line year"
-                            />
+                        <FormItem
+                            name="cLineYear"
+                            label="C Line year"
+                            required
+                            tooltipInfor={messages(
+                                'releases.cLineYearDescription'
+                            )}
+                            ErrorMessage={errors.cLineYear?.message}
+                        >
                             <Controller
                                 control={control}
                                 name="cLineYear"
                                 render={({ field }) => (
-                                    <div>
-                                        <Input
-                                            id="cLineYear"
-                                            {...field}
-                                            addonBefore={
-                                                <Select
-                                                    defaultValue={'2026'}
-                                                    options={yearList}
-                                                />
-                                            }
-                                            status={
-                                                errors.cLineYear
-                                                    ? 'error'
-                                                    : undefined
-                                            }
-                                        />
-                                    </div>
+                                    <Input
+                                        id="cLineYear"
+                                        allowClear
+                                        {...field}
+                                        addonBefore={
+                                            <Select
+                                                defaultValue={'2026'}
+                                                options={yearList}
+                                            />
+                                        }
+                                        status={
+                                            errors.cLineYear
+                                                ? 'error'
+                                                : undefined
+                                        }
+                                    />
                                 )}
                             />
-                            <ErrorText
-                                isError={!!errors.cLineYear}
-                                message={errors.cLineYear?.message}
-                            />
-                        </div>
+                        </FormItem>
 
-                        <div>
-                            <LabelForm
-                                htmlFor="pLineYear"
-                                required
-                                label="P Line year"
-                            />
+                        <FormItem
+                            name="pLineYear"
+                            label="P Line year"
+                            required
+                            tooltipInfor={messages(
+                                'releases.pLineYearDescription'
+                            )}
+                            ErrorMessage={errors.pLineYear?.message}
+                        >
                             <Controller
                                 control={control}
                                 name="pLineYear"
                                 render={({ field }) => (
-                                    <div>
-                                        <Input
-                                            id="pLineYear"
-                                            {...field}
-                                            addonBefore={
-                                                <Select
-                                                    defaultValue={'2026'}
-                                                    options={yearList}
-                                                />
-                                            }
-                                            status={
-                                                errors.pLineYear
-                                                    ? 'error'
-                                                    : undefined
-                                            }
-                                        />
-                                    </div>
+                                    <Input
+                                        id="pLineYear"
+                                        allowClear
+                                        {...field}
+                                        addonBefore={
+                                            <Select
+                                                defaultValue={'2026'}
+                                                options={yearList}
+                                            />
+                                        }
+                                        status={
+                                            errors.pLineYear
+                                                ? 'error'
+                                                : undefined
+                                        }
+                                    />
                                 )}
                             />
-                            <ErrorText
-                                isError={!!errors.pLineYear}
-                                message={errors.pLineYear?.message}
-                            />
-                        </div>
+                        </FormItem>
                     </div>
                 </div>
 
