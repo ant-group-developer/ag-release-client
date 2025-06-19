@@ -15,12 +15,14 @@ import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { ReleaseFormValuesData } from '@/modules/releases/types';
 import { GENRES } from '@/modules/tracks/enums';
 import { Button, Tabs, TabsProps } from 'antd';
+import { useTranslations } from 'next-intl';
 import { useParams, usePathname } from 'next/navigation';
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 
 type Props = {};
 
 export default function ReleaseDetail({ children }: PropsWithChildren) {
+    const messages = useTranslations();
     const router = useRouter();
     const params = useParams();
     const releaseId = params['release-id'] ? `/${params['release-id']}` : '';
@@ -30,6 +32,9 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const formValues = useReleaseFormStore((state) => state.formValues);
     const validationErrors = useReleaseFormStore(
         (state) => state.validationErrors
+    );
+    const resetFormValues = useReleaseFormStore(
+        (state) => state.resetFormValues
     );
     const pathname = usePathname();
     const openModal = useModalStore((state) => state.openModal);
@@ -57,7 +62,9 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     )}
                     href={coreDetailTabsNavigate}
                 >
-                    <span className="font-medium">Thông tin chung</span>
+                    <span className="font-medium">
+                        {messages('common.coreInfo')}
+                    </span>
                 </Link>
             ),
             disabled: isDisableTab,
@@ -74,7 +81,9 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     )}
                     href={`releases/detail/${releaseId}/tracks`}
                 >
-                    <span className="font-medium">Bản nhạc</span>
+                    <span className="font-medium">
+                        {messages('tracks.label')}
+                    </span>
                 </Link>
             ),
             disabled: isDisableTab,
@@ -86,7 +95,9 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     className={cn(isDisableTab ? 'pointer-events-none' : '')}
                     href={`/releases/detail/${releaseId}/schedule`}
                 >
-                    <span className="font-medium">Lên lịch</span>
+                    <span className="font-medium">
+                        {messages('releases.scheduling.label')}
+                    </span>
                 </Link>
             ),
             disabled: isDisableTab,
@@ -98,7 +109,9 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     className={cn(isDisableTab ? 'pointer-events-none' : '')}
                     href={`/releases/detail/${releaseId}/distribution`}
                 >
-                    <span className="font-medium">Phân phối</span>
+                    <span className="font-medium">
+                        {messages('distribute.label')}
+                    </span>
                 </Link>
             ),
             disabled: isDisableTab,
@@ -139,13 +152,13 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     onClick={() => openModal(TYPE_MODAL_RELEASE.ADD_TRACK)}
                     type="primary"
                 >
-                    Thêm bài hát
+                    {messages('tracks.add')}
                 </Button>
             )}
 
             {isDetailPage && (
                 <Button type="primary" onClick={handleSubmit}>
-                    Lưu thông tin
+                    {messages('common.saveInfo')}
                 </Button>
             )}
         </div>
@@ -159,8 +172,8 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                 [RELEASES_TABS.CORE_DETAIL]: RELEASES_TABS.CORE_DETAIL,
                 [RELEASES_TABS.TRACKS]: RELEASES_TABS.TRACKS,
                 [RELEASES_TABS.SCHEDULE]: RELEASES_TABS.SCHEDULE,
-                [RELEASES_TABS.REVIEW]: RELEASES_TABS.REVIEW,
                 [RELEASES_TABS.DISTRIBUTION]: RELEASES_TABS.DISTRIBUTION,
+                [RELEASES_TABS.REVIEW]: RELEASES_TABS.REVIEW,
             };
             const tabKey = pathname.split('/').pop();
             return map[tabKey ?? ''] || RELEASES_TABS.CORE_DETAIL;
@@ -203,9 +216,14 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     }, [isScrolledOnDetailPage, isDetailPage]);
 
     useEffect(() => {
+        if (isCreateReleasePage) {
+            resetFormValues();
+        }
+    }, []);
+
+    useEffect(() => {
         // Chỉ set initialData nếu chưa có data trong store
         const releaseId = params['release-id'];
-
         if (releaseId && (!formValues || !formValues.nameRelease)) {
             // fake data
             const initialData: ReleaseFormValuesData = {

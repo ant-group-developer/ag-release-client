@@ -12,13 +12,18 @@ import { useEffect } from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
-const releaseSchedulingSchema = z.object({
-    releaseDate: z.string().nonempty('Release date is required'),
-    territoryType: z.array(z.string()).nonempty('Territory type is required'),
-    timezone: z.string().nonempty('Timezone is required'),
-});
+const releaseSchedulingSchema = (messages: any) =>
+    z.object({
+        releaseDate: z.string().nonempty(messages('validation.input')),
+        territoryType: z
+            .array(z.string())
+            .min(1, messages('validation.select')),
+        timezone: z.string().nonempty(messages('validation.input')),
+    });
 
-export type ReleaseSchedulingSchema = z.infer<typeof releaseSchedulingSchema>;
+export type ReleaseSchedulingSchema = z.infer<
+    ReturnType<typeof releaseSchedulingSchema>
+>;
 
 type Props = {};
 
@@ -34,7 +39,7 @@ export default function ReleaseSchedulingForm({}: Props) {
             territoryType: formValues?.territory || [],
             timezone: formValues?.timezone || '',
         },
-        resolver: zodResolver(releaseSchedulingSchema),
+        resolver: zodResolver(releaseSchedulingSchema(messages)),
         mode: 'onChange',
         reValidateMode: 'onChange',
     });

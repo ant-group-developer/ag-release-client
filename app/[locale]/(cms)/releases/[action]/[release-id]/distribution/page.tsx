@@ -1,7 +1,7 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
-import { SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
+import { SESSION_STORAGE_KEY } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
@@ -19,7 +19,6 @@ import DistributionStatus from '@/modules/release-detail/release-distribution/co
 import DistributionTable from '@/modules/release-detail/release-distribution/components/table';
 import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
-import { useWindowSize } from '@uidotdev/usehooks';
 import { Button } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
@@ -81,37 +80,37 @@ export default function Distribution({}: Props) {
         pageSize: 21,
     });
 
-    const { height, width } = useWindowSize();
-    const isSmallDevice = Number(width) <= SCREEN.MD;
+    // const { height, width } = useWindowSize();
+    // const isSmallDevice = Number(width) <= SCREEN.MD;
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const formValues = useReleaseFormStore((state) => state.formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const releaseId = formValues?.id || '';
-    console.log(formValues);
     const router = useRouter();
 
-    const scrollY = () => {
-        if (isSmallDevice) return undefined;
-        if (!height) return undefined;
-        const minHeight = 300;
-        const header = 64;
-        const pageHeader = 204;
-        const pageAction = 49;
-        const pageFilter = 49;
-        const pagination = 58;
-        const headerTable = 39;
-        const headerFooterHeight =
-            header +
-            pageHeader +
-            pageFilter +
-            pagination +
-            headerTable +
-            pageAction;
-        const value = height - headerFooterHeight;
-        if (value > minHeight) return value;
-        return minHeight;
-    };
+    // const scrollY = () => {
+    //     if (isSmallDevice) return undefined;
+    //     if (!height) return undefined;
+    //     const minHeight = 300;
+    //     const header = 64;
+    //     const pageHeader = 204;
+    //     const pageAction = 49;
+    //     const pageFilter = 49;
+    //     const pagination = 58;
+    //     const headerTable = 39;
+    //     const headerFooterHeight =
+    //         header +
+    //         pageHeader +
+    //         pageFilter +
+    //         pagination +
+    //         headerTable +
+    //         pageAction;
+    //     const value = height - headerFooterHeight;
+    //     if (value > minHeight) return value;
+    //     return minHeight;
+    // };
+
     const handleRefresh = () => {};
 
     // const facebookOptions = [
@@ -268,30 +267,14 @@ export default function Distribution({}: Props) {
         return selectedRow.includes(item.id);
     });
 
-    const isHasTiktokPlatform = dataTable.some(
-        (item) => item.platform === 'TikTok'
-    );
-    const isHasYoutubePlatform = dataTable.some(
-        (item) => item.platform === 'Youtube'
-    );
-    const isHasFacebookPlatform = dataTable.some(
-        (item) => item.platform === 'Facebook'
-    );
-
     const handleDistribution = () => {
         setFormValues({
             ...formValues,
             platforms: selectedRow as string[],
         });
+        closeModal();
         router.push(`/releases/detail/${releaseId}/review`);
     };
-
-    const isHasAmazonPlatform = dataTable.some(
-        (item) => item.platform === 'Amazon'
-    );
-    const isHasAppleMusicPlatform = dataTable.some(
-        (item) => item.platform === 'Apple Music'
-    );
 
     return (
         <div className="flex h-full flex-col justify-between">

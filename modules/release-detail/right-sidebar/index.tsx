@@ -30,7 +30,7 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
 
             // Sử dụng fieldLabels để ánh xạ trường vào tên dễ hiểu
             // const fieldLabel = fieldLabels[field] || field;
-            return `Bài hát số ${trackNum}: ${messages(`formFields.${fieldKey}` as any) || field}`;
+            return `${messages('tracks.number')} ${trackNum}: ${messages(`formFields.${fieldKey}` as any) || field}`;
         }
 
         // Ánh xạ các trường khác vào fieldLabels
@@ -68,7 +68,9 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
             <div className="flex h-16 items-center border-b px-3">
                 {/* {isActive ? ( */}
                 <>
-                    <h3 className="grow font-semibold">Validation Issues</h3>
+                    <h3 className="grow font-semibold">
+                        {messages('validation.error')}
+                    </h3>
                     {/* <button onClick={toggleActive}>
                         <ChevronRight size={SIZE_ICON} />
                     </button> */}
@@ -87,7 +89,7 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
                     <div className="mb-4">
                         <h4 className="mb-2 flex items-center gap-2 font-semibold text-red-500">
                             <XCircle size={SIZE_ICON} />
-                            Errors ({errorCount})
+                            {messages('common.error')} ({errorCount})
                         </h4>
                         <ul className="space-y-2">
                             {errors.length > 0 ? (
@@ -108,7 +110,7 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
                                 ))
                             ) : (
                                 <li className="text-sm text-gray-500">
-                                    Không có lỗi xác thực.
+                                    {messages('validation.noError')}
                                 </li>
                             )}
                         </ul>

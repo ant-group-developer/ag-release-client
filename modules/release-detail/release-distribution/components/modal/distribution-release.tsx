@@ -79,8 +79,6 @@ export default function DistributionReleaseModal({
               return platformIds.includes(item.id);
           });
 
-    console.log(dataTable, 'dataTable');
-
     const facebookOptions = [
         {
             label: (

@@ -72,7 +72,7 @@ export const adminRoutes: AdminRoutesType[] = [
             },
             {
                 id: 'labels',
-                label: 'Labels',
+                label: 'labels.label',
                 href: APP_ROUTES.LABELS,
                 icon: Tag,
                 title: 'labels',

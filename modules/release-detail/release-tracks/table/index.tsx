@@ -220,16 +220,16 @@ export default function ReleaseTracksTable({
             key: 'status',
             align: 'center',
             width: 150,
-            render: (value, record) => {
+            render: (value, record, index) => {
                 const isTrackError = formErrors.some(
-                    (error) => error.path[1] === record.id
+                    (error) => error.path[1] === index
                 );
                 const color = isTrackError ? 'red' : 'green';
                 return (
                     <Tag bordered color={color}>
                         {/* <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline"> */}
                         {/* {messages('common.draft')} */}
-                        {isTrackError ? 'Lỗi' : 'Sẵn sàng'}
+                        {isTrackError ? 'Thiếu thông tin' : 'Sẵn sàng'}
                         {/* </span> */}
                     </Tag>
                 );

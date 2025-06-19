@@ -36,7 +36,6 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
         try {
             const values = await form.validateFields();
             const files = values.tracks?.fileList || [];
-            console.log('🚀 ~ onFinish ~ files:', files);
 
             const newTracksPromises: Promise<TrackData>[] = files.map(
                 async (file: any, index: number) => {

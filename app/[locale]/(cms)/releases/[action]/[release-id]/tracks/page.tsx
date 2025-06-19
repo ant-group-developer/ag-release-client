@@ -36,27 +36,59 @@ export default function Tracks() {
     };
 
     const handleAddTracks = (newTracks: any[]) => {
+        const artistsFromApplyAllTracks =
+            formValues?.artistsApplyAllTracks || [];
+
         const currentTracks = formValues.tracks || [];
-        const normalizedTracks = currentTracks.map((track: any) => {
-            if (track.artist && !track.artists) {
+        const normalizedTracks = currentTracks.map((track: TrackData) => {
+            if (!track.artists) {
                 return {
                     ...track,
-                    artists: [
-                        {
-                            name: track.artist,
-                            role: 'Main Artist',
-                            id: track.artist,
-                        },
-                    ],
-                    artist: undefined,
+                    artists: [...artistsFromApplyAllTracks],
                 };
             }
             return track;
         });
 
+        const initialValueTrack: TrackData = {
+            id: '',
+            title: '',
+            trackName: '',
+            trackId: '',
+            genres: '',
+            labelName: '',
+            isrc: '',
+            creationDate: '',
+            releaseDate: '',
+            duration: 0,
+            thumbnail: '',
+            isSensitiveContent: false,
+            plays: 0,
+            fileName: '',
+            source: '',
+            languageTrack: '',
+            countryLanguage: '',
+            metadataLanguage: '',
+            lyrics: '',
+            countryRecording: '',
+            recordingType: '',
+            songInfo: {
+                duration: 0,
+                peakData: [],
+            },
+            artists: [...artistsFromApplyAllTracks],
+        };
+
+        const newTracksWithArtists = newTracks.map((track: TrackData) => {
+            return {
+                ...initialValueTrack,
+                ...track,
+            };
+        });
+
         setFormValues({
             ...formValues,
-            tracks: [...normalizedTracks, ...newTracks],
+            tracks: [...normalizedTracks, ...newTracksWithArtists],
         });
     };
 

@@ -1,3 +1,4 @@
+import { fakeDspData } from '@/modules/dashboard/constants/mockData';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { Progress } from 'antd';
 
@@ -46,25 +47,44 @@ export default function ReviewProgress({}: Props) {
 
         const requiredTrackFields = [
             'title',
-            'artists',
-            'genres',
             'source',
             'languageTrack',
-            'countryRecording',
-            'recordingType',
+            'artists',
+            'genres',
             'isSensitiveContent',
+            'countryLanguage',
+            'countryRecording',
             'metadataLanguage',
+            'recordingType',
+            'fileName',
         ];
 
         let totalCompleted = 0;
         const totalFields =
             formValues.tracks.length * requiredTrackFields.length;
 
-        formValues.tracks.forEach((track) => {
+        formValues.tracks.forEach((track, idx) => {
+            console.log(`Track ${idx + 1} - artists:`, track.artists);
+        });
+
+        formValues.tracks.forEach((track, idx) => {
             const completedFields = requiredTrackFields.filter((field) => {
                 const value = track[field as keyof typeof track];
                 if (Array.isArray(value)) {
+                    if (value.length === 0) {
+                        console.log(
+                            `Track ${idx + 1} thiếu trường:`,
+                            field,
+                            value
+                        );
+                    }
                     return value.length > 0;
+                }
+                if (typeof value === 'boolean') {
+                    if (value === undefined) {
+                        return false;
+                    }
+                    return true;
                 }
                 return !!value;
             }).length;
@@ -97,6 +117,19 @@ export default function ReviewProgress({}: Props) {
         };
     };
 
+    const calculateDistributionProgress = () => {
+        if (!formValues) return { completed: 0, total: 0 };
+
+        const totalPlatforms = fakeDspData.length;
+
+        const selectedPlatform = formValues.platforms?.length || 0;
+
+        return {
+            completed: selectedPlatform,
+            total: totalPlatforms,
+        };
+    };
+
     const coreInfo = calculateCoreInfoProgress();
     const coreInfoPercent =
         coreInfo.total === 0
@@ -114,6 +147,14 @@ export default function ReviewProgress({}: Props) {
         scheduleInfo.total === 0
             ? 0
             : Math.round((scheduleInfo.completed / scheduleInfo.total) * 100);
+
+    const distributionInfo = calculateDistributionProgress();
+    const distributionPercent =
+        distributionInfo.total === 0
+            ? 0
+            : Math.round(
+                  (distributionInfo.completed / distributionInfo.total) * 100
+              );
 
     // Tính toán tổng phần trăm hoàn thành
     const totalPercent = Math.round(
@@ -135,6 +176,7 @@ export default function ReviewProgress({}: Props) {
                     <span> Thông tin chính </span>
                     <span>Bài hát</span>
                     <span>Lịch phát hành</span>
+                    <span>Nền tảng phân phối </span>
                 </div>
                 <div className="col-span-4 flex flex-col justify-center gap-4">
                     <div className="flex items-center gap-2">
@@ -153,6 +195,16 @@ export default function ReviewProgress({}: Props) {
                         <Progress percent={schedulePercent} showInfo={false} />
                         <span>
                             {scheduleInfo.completed}/{scheduleInfo.total}
+                        </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Progress
+                            percent={distributionPercent}
+                            showInfo={false}
+                        />
+                        <span>
+                            {distributionInfo.completed}/
+                            {distributionInfo.total}
                         </span>
                     </div>
                 </div>

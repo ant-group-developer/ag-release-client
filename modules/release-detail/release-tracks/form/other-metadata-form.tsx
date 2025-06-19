@@ -1,6 +1,5 @@
 import { LabelForm } from '@/components/ui/label/labelForm';
 import GenresSelect from '@/components/ui/select/genres-select';
-import IsSensitiveContentSelect from '@/components/ui/select/isSensitiveContent-select';
 import ErrorText from '@/components/ui/text/error-text';
 import { languageList } from '@/constants/fakeData';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
@@ -17,7 +16,7 @@ const otherMetadataSchema = (messages: any) =>
     z.object({
         genres: z.string().min(1, messages('validation.select')),
         subGenres: z.string().optional(),
-        isSensitiveContent: z.string().min(1, messages('validation.select')),
+        isSensitiveContent: z.boolean(messages('validation.input')),
         countryLanguage: z.string().min(1, messages('validation.select')),
         metadataLanguage: z.string().min(1, messages('validation.select')),
         lyrics: z.string().optional(),
@@ -40,14 +39,13 @@ export default function OtherMetadataForm({ trackData }: Props) {
         defaultValues: {
             genres: trackData.genres ?? '',
             subGenres: trackData?.subGenres,
-            isSensitiveContent:
-                trackData?.isSensitiveContent?.toString() ?? 'false',
+            isSensitiveContent: trackData?.isSensitiveContent ?? false,
             countryLanguage: trackData?.countryLanguage ?? '',
             metadataLanguage: trackData?.metadataLanguage ?? '',
             lyrics: trackData?.lyrics,
         },
         resolver: zodResolver(otherMetadataSchema(messages)),
-        mode: 'onTouched',
+        mode: 'onChange',
     });
 
     const {
@@ -76,8 +74,6 @@ export default function OtherMetadataForm({ trackData }: Props) {
     }, [watchedAllFields]);
 
     useEffect(() => {
-        formMethods.setValue('genres', formValues?.genres || '');
-        formMethods.setValue('subGenres', formValues?.subGenres || '');
         trigger();
     }, [trackData]);
 
@@ -146,11 +142,20 @@ export default function OtherMetadataForm({ trackData }: Props) {
                         name="isSensitiveContent"
                         control={control}
                         render={({ field }) => (
-                            <IsSensitiveContentSelect
-                                {...field}
+                            <Select
                                 className="w-full"
-                                allowClear
                                 showSearch
+                                options={[
+                                    {
+                                        label: messages('common.yes'),
+                                        value: true,
+                                    },
+                                    {
+                                        label: messages('common.no'),
+                                        value: false,
+                                    },
+                                ]}
+                                {...field}
                                 status={
                                     errors.isSensitiveContent
                                         ? 'error'
@@ -179,7 +184,6 @@ export default function OtherMetadataForm({ trackData }: Props) {
                                 className="w-full"
                                 showSearch
                                 options={languageList}
-                                allowClear
                                 {...field}
                                 status={
                                     errors.countryLanguage ? 'error' : undefined
@@ -207,7 +211,6 @@ export default function OtherMetadataForm({ trackData }: Props) {
                                 className="w-full"
                                 showSearch
                                 options={languageList}
-                                allowClear
                                 {...field}
                                 status={
                                     errors.metadataLanguage

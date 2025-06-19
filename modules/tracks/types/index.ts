@@ -8,7 +8,7 @@ export interface TrackData {
     title: string; // Kiem tra va xoa
     trackName: string;
     trackId: string;
-    genres: GENRES;
+    genres: GENRES | string;
     subGenres?: GENRES;
     labelName: string;
     isrc: string;
@@ -26,7 +26,7 @@ export interface TrackData {
     recordingType?: string;
     artists: ArtistData[];
     plays: number;
-    file: File;
+    file?: File;
     fileName: string;
     songInfo: {
         duration: number;

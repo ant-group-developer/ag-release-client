@@ -81,10 +81,9 @@ export default function ReleaseDetailForm() {
         router.push('/releases/detail/123456/tracks');
     };
 
-    const handleApplyAllTracks = (
-        checked: boolean,
-        artist: Pick<ArtistData, 'id' | 'name' | 'role'>
-    ) => {
+    console.log('formValues', formValues.artistsApplyAllTracks);
+
+    const handleApplyAllTracks = (checked: boolean, artist: ArtistData) => {
         if (!checked) {
             setFormValues({
                 ...formValues,
@@ -128,11 +127,9 @@ export default function ReleaseDetailForm() {
     const debouncedSetFormValues = useMemo(
         () =>
             debounce((values: ReleaseDetailSchema) => {
-                // Giữ lại danh sách nghệ sĩ hiện tại nếu có
-                const currentArtists = formValues.artists || [];
                 setFormValues({
+                    ...formValues,
                     ...(values as Partial<ReleaseFormValuesData>),
-                    artists: currentArtists,
                 });
             }, 300),
         [setFormValues, formValues.artists]
@@ -143,19 +140,26 @@ export default function ReleaseDetailForm() {
     useEffect(() => {
         // Chỉ update các trường khác ngoài artists
         const { artists, ...otherFields } = watchedAllFields;
-        const { artists: currentArtists, ...currentOtherFields } = formValues;
+        const {
+            artists: currentArtists,
+            artistsApplyAllTracks,
+            ...currentOtherFields
+        } = formValues;
 
         if (
             JSON.stringify(otherFields) !== JSON.stringify(currentOtherFields)
         ) {
-            debouncedSetFormValues(watchedAllFields as ReleaseDetailSchema);
+            debouncedSetFormValues({
+                ...watchedAllFields,
+                artistsApplyAllTracks,
+            } as ReleaseDetailSchema);
         }
 
         // Cleanup function
         return () => {
             debouncedSetFormValues.cancel();
         };
-    }, [watchedAllFields, formValues, debouncedSetFormValues]);
+    }, [watchedAllFields]);
     return (
         <FormProvider {...formMethods}>
             <form className="px-4 pt-4" onSubmit={handleSubmit(handleNext)}>

@@ -189,7 +189,6 @@ export default function TracksForm({ trackData }: Props) {
                                 id="source"
                                 {...field}
                                 options={originalSourceList}
-                                allowClear
                                 className="w-full"
                                 status={errors.source ? 'error' : undefined}
                             />
@@ -215,7 +214,6 @@ export default function TracksForm({ trackData }: Props) {
                                 id="languageTrack"
                                 {...field}
                                 options={languageList}
-                                allowClear
                                 showSearch
                                 className="w-full"
                                 status={

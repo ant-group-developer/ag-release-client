@@ -3,10 +3,12 @@ import { cn } from '@/helpers/tailwind';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { ReleaseFormValuesData } from '@/modules/releases/types';
 import { CircleAlert } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 type Props = {};
 
 export default function MetadataInfo({}: Props) {
+    const messages = useTranslations();
     const formValue = useReleaseFormStore((state) => state.formValues);
     const formErrors = useReleaseFormStore((state) => state.validationErrors);
 
@@ -50,26 +52,33 @@ export default function MetadataInfo({}: Props) {
         <div>
             <p className="text-lg font-medium">MetaData</p>
             <div className="my-1 rounded-lg bg-card-bg p-4">
-                <p className="text-base font-medium">Thông tin chung</p>
+                <p className="text-base font-medium">
+                    {messages('common.coreInfo')}
+                </p>
             </div>
             <div className="grid grid-cols-1 gap-1">
                 <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
                     <span className="col-span-2 font-medium">
-                        Tên phát hành
+                        {messages('releases.name')}
                     </span>
                     <div className="col-span-4 flex flex-col gap-2">
-                        {renderField('Tên phát hành', 'nameRelease', true)}
-                        {renderField('Phiên bản', 'version')}
+                        {renderField(
+                            messages('releases.name'),
+                            'nameRelease',
+                            true
+                        )}
+                        {renderField(messages('releases.version'), 'version')}
                     </div>
                 </div>
 
                 <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
-                    <span className="col-span-2 font-medium">Nghệ sĩ</span>
+                    <span className="col-span-2 font-medium">
+                        {' '}
+                        {messages('common.artist')}{' '}
+                    </span>
                     <div className="col-span-4 flex flex-col gap-2">
                         {formValue.artists?.length === 0 && (
-                            <p className="font-semibold text-red-500">
-                                Bắt buộc
-                            </p>
+                            <p className="font-semibold text-red-500"></p>
                         )}
                         {formValue.artists?.map((artist, index) => (
                             <div key={index} className="flex justify-between">

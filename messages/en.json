@@ -37,6 +37,12 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "required": "Required",
+        "error": "Error",
+        "policy": "Policy",
+        "price": "Price",
+        "saveInfo": "Save information",
+        "coreInfo": "Core information",
         "number": "Number",
         "takeDown": "Take down",
         "role": "Role",
@@ -442,6 +448,8 @@
         "label": "System"
     },
     "validation": {
+        "error": "Validation error",
+        "noError": "No validation error",
         "emailFormat": "Please enter a valid email!",
         "select": "Please select information!",
         "radio": "Please choose information!",
@@ -706,9 +714,15 @@
             "selectRole": "Select role",
             "selectMusician": "Select musician",
             "selectLanguageMetadata": "Select language metadata"
+        },
+
+        "scheduling": {
+            "label": "Scheduling"
         }
     },
     "tracks": {
+        "number": "Track number",
+        "add": "Add track",
         "label": "Track",
         "create": "Create track",
         "lastedTrack": "Lasted track",
@@ -753,6 +767,7 @@
         "descriptionVariantArtists": "Display name will be 'Various artists'"
     },
     "labels": {
+        "label": "Label",
         "create": "Create label",
         "name": "Label name",
         "id": "Label ID"
@@ -771,7 +786,11 @@
         "cLineYear": "C line year",
         "pLineYear": "P line year",
         "nameRelease": "Release name",
+        "version": "Version",
+        "timezone": "Timezone",
         "tracks": {
+            "track": "Bài hát",
+            "trackName": "Track name",
             "type": "Type",
             "nameRelease": "Release name",
             "version": "Version",
@@ -804,5 +823,12 @@
             "recordingType": "Recording type",
             "isSensitiveContent": "Is sensitive content"
         }
+    },
+
+    "distribute": {
+        "label": "Distribute",
+        "create": "Create distribute",
+        "name": "Distribute name",
+        "id": "Distribute ID"
     }
 }

@@ -37,6 +37,12 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "required": "Bắt buộc",
+        "error": "Lỗi",
+        "policy": "Chính sách",
+        "price": "Giá",
+        "saveInfo": "Lưu thông tin",
+        "coreInfo": "Thông tin cơ bản",
         "number": "Số",
         "takeDown": "Gỡ xuống",
         "role": "Vai trò",
@@ -447,6 +453,8 @@
         "label": "Hệ thống"
     },
     "validation": {
+        "error": "Lỗi xác thực",
+        "noError": "Không có lỗi xác thực",
         "emailFormat": "Vui lòng nhập đúng định dạng Email!",
         "select": "Vui lòng chọn thông tin!",
         "radio": "Vui lòng chọn thông tin!",
@@ -711,9 +719,15 @@
             "selectRole": "Chọn vai trò",
             "selectMusician": "Chọn nhạc sĩ",
             "selectLanguageMetadata": "Chọn ngôn ngữ metadata"
+        },
+
+        "scheduling": {
+            "label": "Lên lịch"
         }
     },
     "tracks": {
+        "number": "Bài hát số",
+        "add": "Thêm bài hát",
         "label": "Bài hát",
         "create": "Tạo bài hát",
         "lastedTrack": "Bài hát gần đây",
@@ -758,6 +772,7 @@
         "descriptionVariantArtists": "Tên hiển thị sẽ là 'Nhiều nghệ sĩ'"
     },
     "labels": {
+        "label": "Label",
         "create": "Tạo label",
         "name": "Tên label",
         "id": "Mã label"
@@ -778,6 +793,7 @@
         "nameRelease": "Tên phát hành",
         "timezone": "Múi giờ",
         "tracks": {
+            "trackName": "Tên bài hát",
             "track": "Bài hát",
             "type": "Thể loại",
             "nameRelease": "Tên phát hành",
@@ -810,5 +826,12 @@
             "recordingType": "Loại ghi âm",
             "isSensitiveContent": "Nội dung nhạy cảm"
         }
+    },
+
+    "distribute": {
+        "label": "Phân phối",
+        "create": "Tạo phân phối",
+        "name": "Tên phân phối",
+        "id": "Mã phân phối"
     }
 }

@@ -55,7 +55,6 @@ export default function AudioSpecifications({ trackData }: Props) {
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
 
     const onSubmit = (data: AudioSpecificationsSchema) => {
-        console.log('Submitted Data:', data);
         const newValue = {
             ...formValues,
             tracks: formValues?.tracks?.map((track: any) => {
@@ -89,7 +88,6 @@ export default function AudioSpecifications({ trackData }: Props) {
     }, [watchedAllFields]);
 
     useEffect(() => {
-        formMethods.setValue('fileName', fileData?.fileName || '');
         formMethods.trigger();
     }, [fileData, trackData, formMethods]);
 
@@ -125,7 +123,6 @@ export default function AudioSpecifications({ trackData }: Props) {
                                     className="w-full"
                                     {...field}
                                     showSearch
-                                    allowClear
                                 />
                             )}
                         />
@@ -193,7 +190,6 @@ export default function AudioSpecifications({ trackData }: Props) {
                                         },
                                     ]}
                                     showSearch
-                                    allowClear
                                 />
                             )}
                         />
