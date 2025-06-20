@@ -20,7 +20,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Input, Radio, Select } from 'antd';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { useEffect, useMemo } from 'react';
+import { useParams } from 'next/navigation';
+import { useEffect, useMemo, useRef } from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 import ArtistCard from './artist-card';
@@ -54,10 +55,14 @@ export default function ReleaseDetailForm() {
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
-    const isEmptyFormValues = Object.keys(formValues).length === 0;
+    const formUpdateRef = useRef(false);
+
+    const params = useParams();
+    const releaseId = params['release-id'];
+    const isCreateReleasePage = params['action'] === 'create';
 
     const formMethods = useForm<ReleaseDetailSchema>({
-        defaultValues: isEmptyFormValues ? undefined : formValues,
+        // defaultValues: isEmptyFormValues ? undefined : formValues,
         resolver: zodResolver(releaseDetailSchema(messages)),
         mode: 'onChange',
         reValidateMode: 'onChange',
@@ -69,19 +74,21 @@ export default function ReleaseDetailForm() {
         trigger,
         watch,
         formState: { errors },
+        reset,
     } = formMethods;
 
     const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
     const isMoreThan4Artists = watch('isMoreThan4Artists');
     const artists = formValues.artists || [];
+    const resetFormValues = useReleaseFormStore(
+        (state) => state.resetFormValues
+    );
 
     const handleNext = async (data: ReleaseDetailSchema) => {
         setFormValues(data as Partial<ReleaseFormValuesData>);
         router.push('/releases/detail/123456/tracks');
     };
-
-    console.log('formValues', formValues.artistsApplyAllTracks);
 
     const handleApplyAllTracks = (checked: boolean, artist: ArtistData) => {
         if (!checked) {
@@ -138,6 +145,13 @@ export default function ReleaseDetailForm() {
     const watchedAllFields = useWatch({ control });
 
     useEffect(() => {
+        if (formUpdateRef.current) {
+            formUpdateRef.current = false; // Reset flag khi form đã được reset
+
+            // Không cần set lại giá trị trong store khi form đang được reset
+            return;
+        }
+
         // Chỉ update các trường khác ngoài artists
         const { artists, ...otherFields } = watchedAllFields;
         const {
@@ -160,6 +174,22 @@ export default function ReleaseDetailForm() {
             debouncedSetFormValues.cancel();
         };
     }, [watchedAllFields]);
+
+    useEffect(() => {
+        // console.log(
+        //     '🚀 ~ useEffect ~ isCreateReleasePage:',
+        //     isCreateReleasePage
+        // );
+
+        if (isCreateReleasePage) {
+            reset();
+        } else {
+            // console.log('formvalue', formValues);
+            reset(formValues);
+        }
+        formUpdateRef.current = true;
+    }, [releaseId, formValues?.id]);
+
     return (
         <FormProvider {...formMethods}>
             <form className="px-4 pt-4" onSubmit={handleSubmit(handleNext)}>

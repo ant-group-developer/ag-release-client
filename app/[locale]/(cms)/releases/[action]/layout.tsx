@@ -76,8 +76,8 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     // className={cn(isDisableTab ? 'invisible' : 'visible')}
                     className={cn(
                         !isDisableTab || isCreateReleasePage
-                            ? ''
-                            : 'pointer-events-none'
+                            ? 'pointer-events-none'
+                            : ''
                     )}
                     href={`releases/detail/${releaseId}/tracks`}
                 >
@@ -215,57 +215,53 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         };
     }, [isScrolledOnDetailPage, isDetailPage]);
 
-    useEffect(() => {
-        if (isCreateReleasePage) {
-            resetFormValues();
-        }
-    }, []);
+    const initialData: ReleaseFormValuesData = {
+        id: 'R100000001',
+        releaseType: RELEASES_TYPE.ALBUM,
+        nameRelease: 'Album Mới 2024',
+        isMoreThan4Artists: false,
+        artists: [
+            {
+                id: 'Sơn Tùng MTP',
+                name: 'Sơn Tùng MTP',
+                role: 'Main Artist',
+            },
+        ],
+        genres: GENRES.HIP_HOP,
+        subGenres: GENRES.HIP_HOP,
+        label: 'ANT-MUSIC',
+        upc: '123456789012',
+        catalogId: 'CAT-2024-001',
+        cLineYear: 'ANT-MUSIC',
+        pLineYear: 'ANT-MUSIC',
+        thumbnail: {
+            fileList: [
+                {
+                    uid: '-1',
+                    name: 'album-cover.jpg',
+                    status: 'done',
+                    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+                    thumbUrl:
+                        'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+                },
+            ],
+        },
+        version: '',
+        metaDataLanguage: LOCALE.VI,
+        tracks: [],
+        releaseDate: '',
+        timezone: '',
+        territory: undefined,
+        platforms: [],
+        artistsApplyAllTracks: [],
+    };
 
     useEffect(() => {
-        // Chỉ set initialData nếu chưa có data trong store
-        const releaseId = params['release-id'];
-        if (releaseId && (!formValues || !formValues.nameRelease)) {
-            // fake data
-            const initialData: ReleaseFormValuesData = {
-                id: 'R100000001',
-                releaseType: RELEASES_TYPE.ALBUM,
-                nameRelease: 'Album Mới 2024',
-                isMoreThan4Artists: false,
-                artists: [
-                    {
-                        id: 'Sơn Tùng MTP',
-                        name: 'Sơn Tùng MTP',
-                        role: 'Main Artist',
-                    },
-                ],
-                genres: GENRES.HIP_HOP,
-                subGenres: GENRES.HIP_HOP,
-                label: 'ANT-MUSIC',
-                upc: '123456789012',
-                catalogId: 'CAT-2024-001',
-                cLineYear: 'ANT-MUSIC',
-                pLineYear: 'ANT-MUSIC',
-                thumbnail: {
-                    fileList: [
-                        {
-                            uid: '-1',
-                            name: 'album-cover.jpg',
-                            status: 'done',
-                            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-                            thumbUrl:
-                                'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-                        },
-                    ],
-                },
-                version: '',
-                metaDataLanguage: LOCALE.VI,
-                tracks: [],
-                releaseDate: '',
-                timezone: '',
-                territory: undefined,
-                platforms: [],
-                artistsApplyAllTracks: [],
-            };
+        if (!releaseId) {
+            resetFormValues();
+        }
+
+        if (releaseId) {
             setFormValues(initialData);
         }
     }, [releaseId]);

@@ -788,6 +788,10 @@
         "nameRelease": "Release name",
         "version": "Version",
         "timezone": "Timezone",
+        "releaseType": "Release type",
+        "genres": "Genres",
+        "subGenres": "Sub genres",
+        "metaDataLanguage": "Metadata language",
         "tracks": {
             "track": "Bài hát",
             "trackName": "Track name",

@@ -792,6 +792,10 @@
         "pLineYear": "P line year",
         "nameRelease": "Tên phát hành",
         "timezone": "Múi giờ",
+        "releaseType": "Thể loại phát hành",
+        "genres": "Thể loại",
+        "subGenres": "Thể loại phụ",
+        "metaDataLanguage": "Ngôn ngữ metadata",
         "tracks": {
             "trackName": "Tên bài hát",
             "track": "Bài hát",

@@ -1,9 +1,7 @@
 'use client';
-import { SIZE_ICON } from '@/constants/common';
 import { cn } from '@/helpers/common';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { releaseSchema } from '@/modules/releases/schemas';
-import { XCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { ZodIssue } from 'zod';
@@ -68,8 +66,8 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
             <div className="flex h-16 items-center border-b px-3">
                 {/* {isActive ? ( */}
                 <>
-                    <h3 className="grow font-semibold">
-                        {messages('validation.error')}
+                    <h3 className="grow font-semibold text-red-500">
+                        {`${messages('validation.error')} (${errorCount})`}
                     </h3>
                     {/* <button onClick={toggleActive}>
                         <ChevronRight size={SIZE_ICON} />
@@ -87,10 +85,9 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
                 <div className="p-3">
                     {/* Errors */}
                     <div className="mb-4">
-                        <h4 className="mb-2 flex items-center gap-2 font-semibold text-red-500">
+                        {/* <h4 className="mb-2 flex items-center gap-2 font-semibold text-red-500">
                             <XCircle size={SIZE_ICON} />
-                            {messages('common.error')} ({errorCount})
-                        </h4>
+                        </h4> */}
                         <ul className="space-y-2">
                             {errors.length > 0 ? (
                                 errors.map((err, index) => (

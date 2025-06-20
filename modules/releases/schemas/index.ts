@@ -1,7 +1,14 @@
+import { GENRES } from '@/modules/tracks/enums';
 import { z } from 'zod';
+import { RELEASES_TYPE } from '../enums';
 export const releaseSchema = (messages: (key: string) => string) =>
     z.object({
-        releaseType: z.string().nonempty(messages('validation.select')),
+        releaseType: z
+            .nativeEnum(RELEASES_TYPE)
+            .nullable()
+            .refine((val) => val !== null, {
+                message: messages('validation.input'),
+            }),
         nameRelease: z.string().nonempty(messages('validation.input')),
         version: z.string().optional(),
         isMoreThan4Artists: z.boolean(),
@@ -13,7 +20,12 @@ export const releaseSchema = (messages: (key: string) => string) =>
                 })
             )
             .nonempty(messages('validation.input')),
-        genres: z.string().nonempty(messages('validation.select')),
+        genres: z
+            .nativeEnum(GENRES)
+            .nullable()
+            .refine((val) => val !== null, {
+                message: messages('validation.input'),
+            }),
         subGenres: z.string().optional(),
         metaDataLanguage: z.string().nonempty(messages('validation.select')),
         label: z.string().optional(),
