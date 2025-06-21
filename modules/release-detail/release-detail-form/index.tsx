@@ -8,7 +8,6 @@ import { languageList, yearList } from '@/constants/fakeData';
 import { showNotification } from '@/helpers/messages-helper';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
-import { artistSchema } from '@/modules/artist/schema';
 import { ArtistData } from '@/modules/artist/types';
 import {
     RELEASES_TYPE,
@@ -16,6 +15,7 @@ import {
 } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { ReleaseFormValuesData } from '@/modules/releases/types';
+import { GENRES } from '@/modules/tracks/enums';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Input, Radio, Select } from 'antd';
 import { debounce } from 'lodash';
@@ -36,9 +36,9 @@ export const releaseDetailSchema = (messages: any) =>
         nameRelease: z.string().nonempty(messages('validation.input')),
         version: z.string().optional(),
         isMoreThan4Artists: z.boolean(),
-        artists: z.array(artistSchema(messages)),
-        genres: z.string().nullable(),
-        subGenres: z.string().nullable(),
+        // artists: z.array(artistSchema(messages)),
+        genres: z.nativeEnum(GENRES).nullable(),
+        subGenres: z.nativeEnum(GENRES).nullable().optional(),
         metaDataLanguage: z.string().nonempty(messages('validation.select')),
         label: z.string().optional(),
         upc: z.string().optional(),
@@ -88,6 +88,11 @@ export default function ReleaseDetailForm() {
     const handleNext = async (data: ReleaseDetailSchema) => {
         setFormValues(data as Partial<ReleaseFormValuesData>);
         router.push('/releases/detail/123456/tracks');
+    };
+
+    // Thêm handler để debug form errors
+    const handleFormError = (errors: any) => {
+        console.log('❌ Form có lỗi validation:', errors);
     };
 
     const handleApplyAllTracks = (checked: boolean, artist: ArtistData) => {
@@ -147,13 +152,13 @@ export default function ReleaseDetailForm() {
     useEffect(() => {
         if (formUpdateRef.current) {
             formUpdateRef.current = false; // Reset flag khi form đã được reset
-
             // Không cần set lại giá trị trong store khi form đang được reset
             return;
         }
 
         // Chỉ update các trường khác ngoài artists
-        const { artists, ...otherFields } = watchedAllFields;
+        // const { artists, ...otherFields } = watchedAllFields;
+        const { ...otherFields } = watchedAllFields;
         const {
             artists: currentArtists,
             artistsApplyAllTracks,
@@ -192,7 +197,10 @@ export default function ReleaseDetailForm() {
 
     return (
         <FormProvider {...formMethods}>
-            <form className="px-4 pt-4" onSubmit={handleSubmit(handleNext)}>
+            <form
+                className="px-4 pt-4"
+                onSubmit={handleSubmit(handleNext, handleFormError)}
+            >
                 <div className="flex flex-col">
                     <div className="grid grid-cols-2 gap-8">
                         <div className="col-span-2 flex flex-col">
@@ -317,12 +325,12 @@ export default function ReleaseDetailForm() {
                                         >
                                             {messages('artist.add')}
                                         </Button>
-                                        <ErrorText
+                                        {/* <ErrorText
                                             isError={
                                                 errors.artists?.length === 0
                                             }
                                             message={errors.artists?.message}
-                                        />
+                                        /> */}
                                     </div>
                                 )}
                             </div>
@@ -570,11 +578,7 @@ export default function ReleaseDetailForm() {
                 </div>
 
                 <div className="flex w-full justify-end">
-                    <Button
-                        onClick={handleSubmit(handleNext)}
-                        type="primary"
-                        className="my-8"
-                    >
+                    <Button type="primary" className="my-8" htmlType="submit">
                         {messages('common.next')}
                     </Button>
                 </div>

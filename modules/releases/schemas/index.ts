@@ -26,7 +26,7 @@ export const releaseSchema = (messages: (key: string) => string) =>
             .refine((val) => val !== null, {
                 message: messages('validation.input'),
             }),
-        subGenres: z.string().optional(),
+        subGenres: z.nativeEnum(GENRES).nullable().optional(),
         metaDataLanguage: z.string().nonempty(messages('validation.select')),
         label: z.string().optional(),
         catalogId: z.string().optional(),

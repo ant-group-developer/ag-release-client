@@ -4,6 +4,7 @@ import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { TrackData } from '@/modules/tracks/types';
 import { Collapse } from 'antd';
 import { CircleAlert } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface TrackError {
     trackIndex: number;
@@ -16,6 +17,7 @@ interface TrackError {
 type Props = {};
 
 export default function TracksInfo({}: Props) {
+    const messages = useTranslations();
     const formValue = useReleaseFormStore((state) => state.formValues);
     const formErrors = useReleaseFormStore((state) => state.validationErrors);
 
@@ -109,7 +111,9 @@ export default function TracksInfo({}: Props) {
 
     return (
         <div className="my-1">
-            {isHasTrack > 0 && <p className="text-lg font-medium">Bài hát</p>}
+            {isHasTrack > 0 && (
+                <p className="font-semibold"> {messages('tracks.label')} </p>
+            )}
             <div className="flex flex-col gap-1">
                 {formValue.tracks?.map((track, index) => (
                     <Collapse

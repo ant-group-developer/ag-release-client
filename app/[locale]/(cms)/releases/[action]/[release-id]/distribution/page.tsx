@@ -86,6 +86,10 @@ export default function Distribution({}: Props) {
     const closeModal = useModalStore((state) => state.closeModal);
     const formValues = useReleaseFormStore((state) => state.formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
+    const validationErrors = useReleaseFormStore(
+        (state) => state.validationErrors
+    );
+    const errorsLength = validationErrors?.length;
     const releaseId = formValues?.id || '';
     const router = useRouter();
 
@@ -294,6 +298,7 @@ export default function Distribution({}: Props) {
                                 }}
                                 className=""
                                 type="primary"
+                                disabled={errorsLength > 0}
                             >
                                 <span>
                                     Phân phối {selectedRow.length}/
@@ -307,6 +312,7 @@ export default function Distribution({}: Props) {
                                     );
                                 }}
                                 danger
+                                disabled={errorsLength > 0}
                             >
                                 <span>
                                     Gỡ xuống {selectedRow.length}/

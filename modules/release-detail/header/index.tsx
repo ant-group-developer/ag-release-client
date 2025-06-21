@@ -58,11 +58,14 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                 )}
                             />
                         </div>
-                        <div className="">
+                        <div>
                             <div
-                                className={cn('grid grid-cols-2 gap-2', {
-                                    'grid-cols-3': isScrolled,
-                                })}
+                                className={cn(
+                                    'grid grid-cols-2 gap-x-8 gap-y-4',
+                                    {
+                                        'grid-cols-3': isScrolled,
+                                    }
+                                )}
                             >
                                 <div className="text-sm">
                                     <span>{messages('releases.name')}: </span>

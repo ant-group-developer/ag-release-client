@@ -50,7 +50,7 @@ export default function MetadataInfo({}: Props) {
 
     return (
         <div>
-            <p className="text-lg font-medium">MetaData</p>
+            <p className="font-semibold">MetaData</p>
             <div className="my-1 rounded-lg bg-card-bg p-4">
                 <p className="text-base font-medium">
                     {messages('common.coreInfo')}

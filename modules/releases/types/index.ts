@@ -52,7 +52,7 @@ export interface ReleaseFormValuesData {
     tracks?: TrackData[] | null;
     releaseDate: string;
     timezone: string;
-    territory: any;
+    territoryType: any;
     artistsApplyAllTracks: ArtistData[];
     platforms: PlatformData['id'][];
 }

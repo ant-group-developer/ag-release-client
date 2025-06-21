@@ -1,10 +1,17 @@
+import { LabelForm } from '@/components/ui/label/labelForm';
+import RegionSelect from '@/components/ui/select/region-select';
+import TimezoneSelect from '@/components/ui/select/timezone-select';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { fakeDspData } from '@/modules/dashboard/constants/mockData';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
-import { Progress } from 'antd';
+import { DatePicker } from 'antd';
+import dayjs from 'dayjs';
+import { useTranslations } from 'next-intl';
 
 type Props = {};
 
 export default function ReviewProgress({}: Props) {
+    const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
 
     // Tính toán số trường đã nhập trong thông tin chính
@@ -162,51 +169,116 @@ export default function ReviewProgress({}: Props) {
     );
 
     return (
+        // <div>
+        //     <p className="text-lg font-medium">Tiến trình nhập dữ liệu</p>
+        //     <div className="grid grid-cols-12 px-8 py-4">
+        //         <div className="col-span-2">
+        //             <Progress
+        //                 type="circle"
+        //                 percent={totalPercent}
+        //                 status={totalPercent === 100 ? 'success' : 'active'}
+        //             />
+        //         </div>
+        //         <div className="col-span-2 flex flex-col justify-center gap-4">
+        //             <span> Thông tin chính </span>
+        //             <span>Bài hát</span>
+        //             <span>Lịch phát hành</span>
+        //             <span>Nền tảng phân phối </span>
+        //         </div>
+        //         <div className="col-span-4 flex flex-col justify-center gap-4">
+        //             <div className="flex items-center gap-2">
+        //                 <Progress percent={coreInfoPercent} showInfo={false} />
+        //                 <span>
+        //                     {coreInfo.completed}/{coreInfo.total}
+        //                 </span>
+        //             </div>
+        //             <div className="flex items-center gap-2">
+        //                 <Progress percent={tracksPercent} showInfo={false} />
+        //                 <span>
+        //                     {tracksInfo.completed}/{tracksInfo.total}
+        //                 </span>
+        //             </div>
+        //             <div className="flex items-center gap-2">
+        //                 <Progress percent={schedulePercent} showInfo={false} />
+        //                 <span>
+        //                     {scheduleInfo.completed}/{scheduleInfo.total}
+        //                 </span>
+        //             </div>
+        //             <div className="flex items-center gap-2">
+        //                 <Progress
+        //                     percent={distributionPercent}
+        //                     showInfo={false}
+        //                 />
+        //                 <span>
+        //                     {distributionInfo.completed}/
+        //                     {distributionInfo.total}
+        //                 </span>
+        //             </div>
+        //         </div>
+        //     </div>
+        // </div>
         <div>
-            <p className="text-lg font-medium">Tiến trình nhập dữ liệu</p>
-            <div className="grid grid-cols-12 px-8 py-4">
-                <div className="col-span-2">
-                    <Progress
-                        type="circle"
-                        percent={totalPercent}
-                        status={totalPercent === 100 ? 'success' : 'active'}
+            <div className="grid grid-cols-3 gap-4">
+                <div>
+                    <LabelForm
+                        htmlFor="releaseDate"
+                        required
+                        label="Thời gian phát hành"
+                    />
+                    <DatePicker
+                        id="releaseDate"
+                        className="w-full"
+                        format="DD/MM/YYYY"
+                        disabled
+                        value={
+                            formValues?.releaseDate
+                                ? dayjs(formValues.releaseDate, 'DD/MM/YYYY')
+                                : null
+                        }
                     />
                 </div>
-                <div className="col-span-2 flex flex-col justify-center gap-4">
-                    <span> Thông tin chính </span>
-                    <span>Bài hát</span>
-                    <span>Lịch phát hành</span>
-                    <span>Nền tảng phân phối </span>
+
+                <div>
+                    <LabelForm htmlFor="timezone" required label="timezone" />
+
+                    <TimezoneSelect
+                        value={
+                            formValues?.timezone == ''
+                                ? undefined
+                                : formValues?.timezone
+                        }
+                        id="timezone"
+                        className="w-full"
+                        disabled
+                        placeholder={messages('validation.select')}
+                    />
                 </div>
-                <div className="col-span-4 flex flex-col justify-center gap-4">
-                    <div className="flex items-center gap-2">
-                        <Progress percent={coreInfoPercent} showInfo={false} />
-                        <span>
-                            {coreInfo.completed}/{coreInfo.total}
-                        </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <Progress percent={tracksPercent} showInfo={false} />
-                        <span>
-                            {tracksInfo.completed}/{tracksInfo.total}
-                        </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <Progress percent={schedulePercent} showInfo={false} />
-                        <span>
-                            {scheduleInfo.completed}/{scheduleInfo.total}
-                        </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <Progress
-                            percent={distributionPercent}
-                            showInfo={false}
-                        />
-                        <span>
-                            {distributionInfo.completed}/
-                            {distributionInfo.total}
-                        </span>
-                    </div>
+
+                <div>
+                    <LabelForm
+                        htmlFor="territoryType"
+                        required
+                        label="Khu vực"
+                    />
+
+                    <RegionSelect
+                        className="w-full"
+                        id="territoryType"
+                        value={formValues?.territoryType}
+                        multiple
+                        allowClear
+                        maxTagCount="responsive"
+                        maxTagPlaceholder={(value) => (
+                            <CustomTooltip
+                                title={value
+                                    .map((item: any) => item.label)
+                                    .join(', ')}
+                            >
+                                +{value.length}
+                            </CustomTooltip>
+                        )}
+                        disabled
+                    />
                 </div>
             </div>
         </div>

@@ -73,7 +73,6 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             key: RELEASES_TABS.TRACKS,
             label: (
                 <Link
-                    // className={cn(isDisableTab ? 'invisible' : 'visible')}
                     className={cn(
                         !isDisableTab || isCreateReleasePage
                             ? 'pointer-events-none'
@@ -146,7 +145,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const isTracksPage = pathname.includes('/tracks');
 
     const buttonSave = (
-        <div className="flex justify-end gap-2 p-4">
+        <div className="flex justify-end gap-2">
             {isTracksPage && (
                 <Button
                     onClick={() => openModal(TYPE_MODAL_RELEASE.ADD_TRACK)}
@@ -251,7 +250,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         tracks: [],
         releaseDate: '',
         timezone: '',
-        territory: undefined,
+        territoryType: undefined,
         platforms: [],
         artistsApplyAllTracks: [],
     };

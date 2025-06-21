@@ -29,7 +29,7 @@ const initialValue: ReleaseFormValuesData = {
     pLineYear: '',
     releaseDate: '',
     timezone: '',
-    territory: undefined,
+    territoryType: undefined,
     platforms: [],
     artistsApplyAllTracks: [],
     tracks: [],

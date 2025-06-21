@@ -36,7 +36,7 @@ export default function ReleaseSchedulingForm({}: Props) {
     const formMethods = useForm<ReleaseSchedulingSchema>({
         defaultValues: {
             releaseDate: formValues?.releaseDate || '',
-            territoryType: formValues?.territory || [],
+            territoryType: formValues?.territoryType || [],
             timezone: formValues?.timezone || '',
         },
         resolver: zodResolver(releaseSchedulingSchema(messages)),
@@ -89,19 +89,11 @@ export default function ReleaseSchedulingForm({}: Props) {
                                         format="DD/MM/YYYY"
                                         value={
                                             field.value
-                                                ? dayjs(
-                                                      field.value,
-                                                      'DD/MM/YYYY'
-                                                  )
+                                                ? dayjs(field.value)
                                                 : null
                                         }
-                                        onChange={(date) => {
-                                            const formattedDate = date
-                                                ? dayjs(date).format(
-                                                      'DD/MM/YYYY'
-                                                  )
-                                                : '';
-                                            field.onChange(formattedDate);
+                                        onChange={(date, dateString) => {
+                                            field.onChange(dateString);
                                         }}
                                         status={
                                             errors.releaseDate
