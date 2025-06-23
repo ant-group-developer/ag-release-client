@@ -3,7 +3,11 @@ import { useEffect, useState } from 'react';
 import AppFormItem from '../antd-form/form-Item';
 
 interface TimeInputProps {
-    value?: { hours: number; minutes: number; seconds: number };
+    value?: {
+        hours: number;
+        minutes: number;
+        seconds: number;
+    };
     onChange?: (value: {
         hours: number;
         minutes: number;
@@ -17,7 +21,8 @@ const TimeInput = ({ value, onChange, name }: TimeInputProps) => {
 
     useEffect(() => {
         if (value) {
-            setTime(value);
+            const { hours, minutes, seconds } = value;
+            setTime({ hours, minutes, seconds });
         }
     }, [value]);
 
@@ -36,6 +41,7 @@ const TimeInput = ({ value, onChange, name }: TimeInputProps) => {
                 newTime = { ...newTime, [type]: numericValue };
             }
             setTime(newTime);
+
             onChange?.(newTime);
         }
     };

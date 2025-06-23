@@ -1,3 +1,4 @@
+import { cn } from '@/helpers/common';
 import * as am5 from '@amcharts/amcharts5';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 import * as am5xy from '@amcharts/amcharts5/xy';
@@ -8,12 +9,14 @@ type Props = {
     data: any[];
     series: { name: string; field: string }[];
     maxLineWidth?: number;
+    className?: string;
 };
 
 export default function LineChart({
     data,
     series: seriesData,
     maxLineWidth = 2,
+    className,
 }: Props) {
     const chartRef = useRef(null); // Tham chiếu đến DOM của biểu đồ
     const chartInstanceRef = useRef<am5.Root | null>(null); // Tham chiếu đến instance của biểu đồ
@@ -60,6 +63,8 @@ export default function LineChart({
                     renderer: am5xy.AxisRendererX.new(root, {
                         minGridDistance: 40,
                     }),
+                    extraMin: -0.05, // thu nhỏ về trái
+                    extraMax: -0.05, // thu nhỏ về phải
                 })
             );
             xAxis.get('renderer').labels.template.setAll({
@@ -68,6 +73,7 @@ export default function LineChart({
             xAxis.get('renderer').grid.template.setAll({
                 stroke: am5.color(0xcccccc),
                 strokeOpacity: 0.5,
+                visible: false,
             });
 
             // Tạo trục Y (ValueAxis)
@@ -182,14 +188,9 @@ export default function LineChart({
     }, [data, seriesData, maxLineWidth]);
 
     return (
-        <div className="rounded-lg border bg-white p-4 shadow-sm">
-            <h3 className="mb-4 text-lg font-semibold text-gray-800">
-                Streaming Performance
-            </h3>
-            <div
-                ref={chartRef}
-                style={{ width: '100%', height: '400px' }}
-            ></div>
-        </div>
+        <div
+            ref={chartRef}
+            className={cn('w-full, h-[400px]', className)}
+        ></div>
     );
 }

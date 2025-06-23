@@ -83,12 +83,11 @@ export default function TracksInfo({}: Props) {
                     >
                         {label} {isRequired && '*'}
                     </p>
-                    {!value && (
+                    {value === undefined || value === null ? (
                         <p className="text-gray-500">
                             {isRequired ? 'Bắt buộc' : 'Tuỳ chọn'}
                         </p>
-                    )}
-                    {value && (
+                    ) : (
                         <p className="mt-1">
                             {typeof value === 'boolean'
                                 ? value

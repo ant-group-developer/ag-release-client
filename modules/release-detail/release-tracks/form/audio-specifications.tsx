@@ -1,26 +1,46 @@
-import TimeInput from '@/components/ui/input/time-input';
 import { LabelForm } from '@/components/ui/label/labelForm';
 import CountrySelect from '@/components/ui/select/country-select';
 import ErrorText from '@/components/ui/text/error-text';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { TrackData } from '@/modules/tracks/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Input, Select } from 'antd';
+import { Input, Select, TimePicker } from 'antd';
+import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
-const audioSpecificationsSchema = z.object({
-    fileName: z.string().nonempty('File name is required'),
-    countryRecording: z.string().nonempty('Country recording is required'),
-    previewTrack: z.string().optional(),
-    hookTrack: z.string().optional(),
-    recordingType: z.string().nonempty('Recording type is required'),
-});
+function timeStringToSeconds(time: string) {
+    console.log('🚀 ~ timeStringToSeconds ~ time:', time);
+    if (!time) return 0;
+    const [h = '0', m = '0', s = '0'] = time.split(':');
+    const result = Number(h) * 3600 + Number(m) * 60 + Number(s);
+    console.log('🚀 ~ timeStringToSeconds ~ result:', result);
+    return result;
+}
+
+const audioSpecificationsSchema = (messages: any, maxDuration: number) =>
+    z.object({
+        fileName: z.string().nonempty(messages('validation.input')),
+        countryRecording: z.string().nonempty(messages('validation.input')),
+        previewTrack: z
+            .string()
+            .optional()
+            .refine((val) => !val || timeStringToSeconds(val) > maxDuration, {
+                message: 'Thời gian không được lớn hơn thời lượng bài hát',
+            }),
+        hookTrack: z
+            .string()
+            .optional()
+            .refine((val) => !val || timeStringToSeconds(val) > maxDuration, {
+                message: 'Thời gian không được lớn hơn thời lượng bài hát',
+            }),
+        recordingType: z.string().nonempty(messages('validation.input')),
+    });
 
 export type AudioSpecificationsSchema = z.infer<
-    typeof audioSpecificationsSchema
+    ReturnType<typeof audioSpecificationsSchema>
 >;
 
 type Props = {
@@ -28,6 +48,7 @@ type Props = {
 };
 
 export default function AudioSpecifications({ trackData }: Props) {
+    const messages = useTranslations();
     const { fileData } = trackData;
     const metadata = fileData?.metadata;
     const formValues = useReleaseFormStore((state) => state.formValues);
@@ -43,7 +64,9 @@ export default function AudioSpecifications({ trackData }: Props) {
             // hookTrack: thisTrackData?.hookTrack,
             recordingType: thisTrackData?.recordingType,
         },
-        resolver: zodResolver(audioSpecificationsSchema),
+        resolver: zodResolver(
+            audioSpecificationsSchema(messages, trackData.songInfo.duration)
+        ),
     });
 
     const {
@@ -51,7 +74,6 @@ export default function AudioSpecifications({ trackData }: Props) {
         handleSubmit,
         formState: { errors },
     } = formMethods;
-    const messages = useTranslations();
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
 
     const onSubmit = (data: AudioSpecificationsSchema) => {
@@ -71,6 +93,8 @@ export default function AudioSpecifications({ trackData }: Props) {
     };
 
     const watchedAllFields = useWatch({ control });
+    console.log('Đoạn nghe mẫu', watchedAllFields.previewTrack); // "00:00:00"
+    console.log('Hook bài hát', watchedAllFields.hookTrack); // "00:00:00"
 
     useEffect(() => {
         setFormValues({
@@ -86,6 +110,8 @@ export default function AudioSpecifications({ trackData }: Props) {
             }),
         });
     }, [watchedAllFields]);
+
+    console.log(trackData?.songInfo.duration);
 
     useEffect(() => {
         formMethods.trigger();
@@ -142,7 +168,26 @@ export default function AudioSpecifications({ trackData }: Props) {
                                 control={control}
                                 name="previewTrack"
                                 render={({ field }) => (
-                                    <TimeInput name="previewTrack" />
+                                    <TimePicker
+                                        {...field}
+                                        value={
+                                            field.value
+                                                ? dayjs(field.value, 'HH:mm:ss')
+                                                : null
+                                        }
+                                        onChange={(time) => {
+                                            field.onChange(
+                                                time
+                                                    ? time.format('HH:mm:ss')
+                                                    : ''
+                                            );
+                                        }}
+                                        defaultValue={dayjs(
+                                            '00:00:00',
+                                            'HH:mm:ss'
+                                        )}
+                                        size="large"
+                                    />
                                 )}
                             />
                         </div>
@@ -156,7 +201,26 @@ export default function AudioSpecifications({ trackData }: Props) {
                                 control={control}
                                 name="hookTrack"
                                 render={({ field }) => (
-                                    <TimeInput name="hookTrack" />
+                                    <TimePicker
+                                        {...field}
+                                        value={
+                                            field.value
+                                                ? dayjs(field.value, 'HH:mm:ss')
+                                                : null
+                                        }
+                                        onChange={(time) => {
+                                            field.onChange(
+                                                time
+                                                    ? time.format('HH:mm:ss')
+                                                    : ''
+                                            );
+                                        }}
+                                        defaultValue={dayjs(
+                                            '00:00:00',
+                                            'HH:mm:ss'
+                                        )}
+                                        size="large"
+                                    />
                                 )}
                             />
                         </div>

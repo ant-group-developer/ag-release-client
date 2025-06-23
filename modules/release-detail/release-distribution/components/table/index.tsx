@@ -1,5 +1,5 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
-import { formattedDate, getIntlCodeByReleaseStatus } from '@/helpers/common';
+import { formattedDate } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
 import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
@@ -83,7 +83,8 @@ export default function DistributionTable({ ...props }: Props) {
                 //     {messages(getIntlCodeByReleaseStatus(value))}
                 // </span>
                 <Tag color="blue">
-                    {messages(getIntlCodeByReleaseStatus(value))}
+                    {/* {messages(getIntlCodeByReleaseStatus(''))} */}
+                    Chưa phân phối
                 </Tag>
             ),
         },

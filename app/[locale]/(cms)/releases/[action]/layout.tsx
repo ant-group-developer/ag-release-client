@@ -1,6 +1,7 @@
 'use client';
 import { LOCALE } from '@/enums/common';
 import { cn } from '@/helpers/common';
+import { getReleaseDetailTabRoute } from '@/helpers/link';
 import { showNotification } from '@/helpers/messages-helper';
 import useModalStore from '@/hooks/use-modal';
 import { Link, useRouter } from '@/i18n/routing';
@@ -48,7 +49,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
 
     const coreDetailTabsNavigate = isCreateReleasePage
         ? '/releases/create'
-        : `/releases/detail/${releaseId}/core-detail`;
+        : getReleaseDetailTabRoute('R100000001', RELEASES_TABS.CORE_DETAIL);
 
     const items: TabsProps['items'] = [
         {
@@ -78,7 +79,10 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                             ? 'pointer-events-none'
                             : ''
                     )}
-                    href={`releases/detail/${releaseId}/tracks`}
+                    href={getReleaseDetailTabRoute(
+                        'R100000001',
+                        RELEASES_TABS.TRACKS
+                    )}
                 >
                     <span className="font-medium">
                         {messages('tracks.label')}
@@ -92,7 +96,10 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             label: (
                 <Link
                     className={cn(isDisableTab ? 'pointer-events-none' : '')}
-                    href={`/releases/detail/${releaseId}/schedule`}
+                    href={getReleaseDetailTabRoute(
+                        'R100000001',
+                        RELEASES_TABS.SCHEDULE
+                    )}
                 >
                     <span className="font-medium">
                         {messages('releases.scheduling.label')}
@@ -106,7 +113,10 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             label: (
                 <Link
                     className={cn(isDisableTab ? 'pointer-events-none' : '')}
-                    href={`/releases/detail/${releaseId}/distribution`}
+                    href={getReleaseDetailTabRoute(
+                        'R100000001',
+                        RELEASES_TABS.DISTRIBUTION
+                    )}
                 >
                     <span className="font-medium">
                         {messages('distribute.label')}
@@ -120,7 +130,10 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             label: (
                 <Link
                     className={cn(isDisableTab ? 'pointer-events-none' : '')}
-                    href={`/releases/detail/${releaseId}/review`}
+                    href={getReleaseDetailTabRoute(
+                        'R100000001',
+                        RELEASES_TABS.REVIEW
+                    )}
                 >
                     <span className="font-medium">Review</span>
                 </Link>
@@ -130,7 +143,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     ];
 
     const handleTabChange = (key: string) => {
-        router.push(`/releases/detail/${releaseId}/${key}`);
+        router.push(getReleaseDetailTabRoute(releaseId, key as RELEASES_TABS));
     };
 
     const handleSubmit = async () => {
