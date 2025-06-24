@@ -1,0 +1,123 @@
+import ActionButton from '@/components/ui/button/action-button';
+import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { formattedDate } from '@/helpers/common';
+import useModalStore from '@/hooks/use-modal';
+import { TYPE_MODAL_LANGUAGES } from '@/modules/languages/enums';
+import { ColumnType } from 'antd/es/table';
+import { useTranslations } from 'next-intl';
+import { CountryData } from '../../types';
+
+// Table cho Countries
+
+type Props = Omit<AppTableProps<CountryData>, 'columns'> & {};
+
+export const CountriesTable = ({ ...props }: Props) => {
+    const messages = useTranslations();
+    const openModal = useModalStore((state) => state.openModal);
+    const column: ColumnType<CountryData>[] = [
+        {
+            title: messages('common.iNo'),
+            key: 'iNo',
+            width: 30,
+            align: 'center',
+            render: (_, __, index) => index + 1,
+        },
+        {
+            title: 'Tên quốc gia',
+            key: 'name',
+            dataIndex: 'name',
+            ellipsis: true,
+            align: 'left',
+            width: 110,
+            render: (value) => (
+                <CustomTooltip size="small" title={value}>
+                    <span className="truncate"> {value} </span>
+                </CustomTooltip>
+            ),
+        },
+        {
+            title: 'ISO3',
+            key: 'iso3',
+            dataIndex: 'iso3',
+            align: 'left',
+            width: 60,
+        },
+        {
+            title: 'ISO2',
+            key: 'iso2',
+            dataIndex: 'iso2',
+            align: 'left',
+            width: 50,
+        },
+        {
+            title: 'Mã số',
+            key: 'numeric_code',
+            dataIndex: 'numeric_code',
+            align: 'left',
+            width: 60,
+        },
+        {
+            title: 'Thủ đô',
+            key: 'capital',
+            dataIndex: 'capital',
+            align: 'left',
+            width: 100,
+        },
+        {
+            title: 'Tiền tệ',
+            key: 'currency',
+            dataIndex: 'currency',
+            align: 'left',
+            width: 80,
+        },
+        {
+            title: messages('common.dateCreated'),
+            key: 'dateCreated',
+            dataIndex: 'dateCreated',
+            align: 'center',
+            width: 100,
+            render: (value) => (
+                <span className="truncate text-wrap">
+                    {formattedDate(value)}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.dateUpdated'),
+            key: 'dateUpdated',
+            dataIndex: 'dateUpdated',
+            align: 'center',
+            width: 100,
+            render: (value) => (
+                <span className="truncate text-wrap">
+                    {formattedDate(value)}
+                </span>
+            ),
+        },
+        {
+            key: 'actions',
+            align: 'center',
+            width: 20,
+            fixed: 'right',
+            render: (_, record) => (
+                <ActionButton
+                    showDelete
+                    showUpdate
+                    onShowUpdate={() =>
+                        openModal(TYPE_MODAL_LANGUAGES.UPDATE, record)
+                    }
+                />
+            ),
+        },
+    ];
+
+    return (
+        <AppTable
+            {...props}
+            pagination={false}
+            columns={column}
+            rowClassName={'group cursor-pointer'}
+        />
+    );
+};

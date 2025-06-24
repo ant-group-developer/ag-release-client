@@ -1,11 +1,11 @@
 import { LabelForm } from '@/components/ui/label/labelForm';
 import GenresSelect from '@/components/ui/select/genres-select';
 import ErrorText from '@/components/ui/text/error-text';
-import { languageList } from '@/constants/fakeData';
+import { languageList, yearList } from '@/constants/fakeData';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { TrackData } from '@/modules/tracks/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Select } from 'antd';
+import { Input, Select } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
@@ -20,6 +20,21 @@ const otherMetadataSchema = (messages: any) =>
         countryLanguage: z.string().min(1, messages('validation.select')),
         metadataLanguage: z.string().min(1, messages('validation.select')),
         lyrics: z.string().optional(),
+        pLine: z
+            .object({
+                year: z.string().nonempty(messages('validation.input')),
+                name: z.string().nonempty(messages('validation.input')),
+            })
+            .refine(
+                (val) =>
+                    val &&
+                    typeof val === 'object' &&
+                    val.year !== undefined &&
+                    val.name !== undefined,
+                {
+                    message: messages('validation.input'),
+                }
+            ),
     });
 
 export type OtherMetadataSchema = z.infer<
@@ -43,6 +58,7 @@ export default function OtherMetadataForm({ trackData }: Props) {
             countryLanguage: trackData?.countryLanguage ?? '',
             metadataLanguage: trackData?.metadataLanguage ?? '',
             lyrics: trackData?.lyrics,
+            pLine: trackData?.pLine ?? { year: '', name: '' },
         },
         resolver: zodResolver(otherMetadataSchema(messages)),
         mode: 'onChange',
@@ -136,7 +152,7 @@ export default function OtherMetadataForm({ trackData }: Props) {
                     <LabelForm
                         htmlFor="isSensitiveContent"
                         required
-                        label="Nội dung nhạy cảm"
+                        label={messages('formFields.tracks.sensitiveContent')}
                     />
                     <Controller
                         name="isSensitiveContent"
@@ -243,6 +259,58 @@ export default function OtherMetadataForm({ trackData }: Props) {
                     <ErrorText
                         isError={!!errors.lyrics}
                         message={errors.lyrics?.message}
+                    />
+                </div>
+
+                <div>
+                    <LabelForm
+                        htmlFor="pLine"
+                        required
+                        label="Bản quyền ghi âm"
+                    />
+                    <Controller
+                        name="pLine"
+                        control={control}
+                        render={({ field }) => (
+                            <Input
+                                id="pLine"
+                                value={field.value?.name || ''}
+                                onChange={(e) =>
+                                    field.onChange({
+                                        ...field.value,
+                                        name: e.target.value,
+                                    })
+                                }
+                                allowClear
+                                addonBefore={
+                                    <Select
+                                        defaultValue={
+                                            field.value?.year || '2026'
+                                        }
+                                        value={field.value?.year}
+                                        options={yearList}
+                                        onChange={(year) =>
+                                            field.onChange({
+                                                ...field.value,
+                                                year,
+                                            })
+                                        }
+                                        style={{ width: 90 }}
+                                    />
+                                }
+                                status={
+                                    errors.pLine?.name ? 'error' : undefined
+                                }
+                            />
+                        )}
+                    />
+                    {/* <ErrorText
+                        isError={!!errors.pLine?.year}
+                        message={errors.pLine?.year?.message}
+                    /> */}
+                    <ErrorText
+                        isError={!!errors.pLine?.name}
+                        message={errors.pLine?.name?.message}
                     />
                 </div>
             </form>

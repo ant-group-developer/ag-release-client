@@ -2,7 +2,7 @@
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import useModalStore from '@/hooks/use-modal';
 import AddArtistModal from '@/modules/artist/components/modal/add-artist';
-import ArtistFormModal from '@/modules/artist/components/modal/create-artist';
+import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
 import { TYPE_MODAL_ARTIST } from '@/modules/artist/enum';
 import LabelFormModal from '@/modules/labels/components/modal/create-label';
 import { TYPE_MODAL_LABEL } from '@/modules/labels/enum';

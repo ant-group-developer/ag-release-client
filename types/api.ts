@@ -40,8 +40,8 @@ export interface SuccessResponse {
 }
 
 export interface CommonAttribute {
-    dateCreated: Date;
-    dateUpdated: Date | null;
+    dateCreated: string;
+    dateUpdated: string | null;
     id: number;
 }
 
@@ -81,12 +81,6 @@ export interface CommonParams {
     // language: LOCALE;
 }
 
-export interface CommonDataSidebar {
-    id: string;
-    name: string;
-    count?: number;
-}
-
 export interface CreateFile {
     key: string;
     contentType: string; // fix -> enum
@@ -94,16 +88,4 @@ export interface CreateFile {
     fileSizeInByte: number;
     fileName: string; // fix -> khong co khoang trong, ky tu dac biet
     googleDriveFileId?: string;
-}
-
-export interface GetUrlUploadParams {
-    infoFile: {
-        contentType: string;
-        extension: string;
-        fileSizeInByte: number;
-        fileName: string;
-        type?: string;
-        typeKey?: string;
-    };
-    file: File;
 }

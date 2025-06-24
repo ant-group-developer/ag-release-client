@@ -101,9 +101,7 @@ export default function Distribution({}: Props) {
                 <div className="flex justify-between border-b">
                     <DistributionStatus
                         onChangeFilter={onChangeFilter}
-                        value={
-                            dataFilter.status ?? DISTRIBUTION_STATUS.PROGRESS
-                        }
+                        value={dataFilter.status ?? DISTRIBUTION_STATUS.ALL}
                     />
                     <div className="flex items-center gap-4 px-4 font-medium">
                         <Button className="" type="primary">

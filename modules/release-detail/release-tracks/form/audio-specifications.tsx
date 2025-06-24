@@ -1,6 +1,7 @@
 import { LabelForm } from '@/components/ui/label/labelForm';
 import CountrySelect from '@/components/ui/select/country-select';
 import ErrorText from '@/components/ui/text/error-text';
+import { timeStringToSeconds } from '@/helpers/common';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { TrackData } from '@/modules/tracks/types';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,31 +12,22 @@ import { useEffect } from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
-function timeStringToSeconds(time: string) {
-    console.log('🚀 ~ timeStringToSeconds ~ time:', time);
-    if (!time) return 0;
-    const [h = '0', m = '0', s = '0'] = time.split(':');
-    const result = Number(h) * 3600 + Number(m) * 60 + Number(s);
-    console.log('🚀 ~ timeStringToSeconds ~ result:', result);
-    return result;
-}
-
 const audioSpecificationsSchema = (messages: any, maxDuration: number) =>
     z.object({
         fileName: z.string().nonempty(messages('validation.input')),
         countryRecording: z.string().nonempty(messages('validation.input')),
         previewTrack: z
             .string()
-            .optional()
-            .refine((val) => !val || timeStringToSeconds(val) > maxDuration, {
+            .nonempty('Đoạn nghe mẫu là bắt buộc')
+            .refine((val) => timeStringToSeconds(val) <= maxDuration, {
                 message: 'Thời gian không được lớn hơn thời lượng bài hát',
             }),
-        hookTrack: z
-            .string()
-            .optional()
-            .refine((val) => !val || timeStringToSeconds(val) > maxDuration, {
-                message: 'Thời gian không được lớn hơn thời lượng bài hát',
-            }),
+        // hookTrack: z
+        //     .string()
+        //     .nonempty('Hook bài hát là bắt buộc')
+        //     .refine((val) => timeStringToSeconds(val) <= maxDuration, {
+        //         message: 'Thời gian không được lớn hơn thời lượng bài hát',
+        //     }),
         recordingType: z.string().nonempty(messages('validation.input')),
     });
 
@@ -60,10 +52,11 @@ export default function AudioSpecifications({ trackData }: Props) {
         defaultValues: {
             fileName: fileData?.fileName,
             countryRecording: thisTrackData?.countryRecording,
-            // previewTrack: thisTrackData?.previewTrack,
-            // hookTrack: thisTrackData?.hookTrack,
+            previewTrack: '',
+            // hookTrack: '00:00:00',
             recordingType: thisTrackData?.recordingType,
         },
+        mode: 'onChange',
         resolver: zodResolver(
             audioSpecificationsSchema(messages, trackData.songInfo.duration)
         ),
@@ -93,8 +86,6 @@ export default function AudioSpecifications({ trackData }: Props) {
     };
 
     const watchedAllFields = useWatch({ control });
-    console.log('Đoạn nghe mẫu', watchedAllFields.previewTrack); // "00:00:00"
-    console.log('Hook bài hát', watchedAllFields.hookTrack); // "00:00:00"
 
     useEffect(() => {
         setFormValues({
@@ -110,8 +101,6 @@ export default function AudioSpecifications({ trackData }: Props) {
             }),
         });
     }, [watchedAllFields]);
-
-    console.log(trackData?.songInfo.duration);
 
     useEffect(() => {
         formMethods.trigger();
@@ -162,6 +151,7 @@ export default function AudioSpecifications({ trackData }: Props) {
                         <div>
                             <LabelForm
                                 label="Đoạn nghe mẫu"
+                                required
                                 htmlFor="previewTrack"
                             />
                             <Controller
@@ -182,19 +172,27 @@ export default function AudioSpecifications({ trackData }: Props) {
                                                     : ''
                                             );
                                         }}
-                                        defaultValue={dayjs(
-                                            '00:00:00',
-                                            'HH:mm:ss'
-                                        )}
+                                        onBlur={field.onBlur}
                                         size="large"
+                                        format="HH:mm:ss"
+                                        status={
+                                            !!errors.previewTrack
+                                                ? 'error'
+                                                : undefined
+                                        }
                                     />
                                 )}
                             />
+                            <ErrorText
+                                isError={!!errors.previewTrack}
+                                message={errors.previewTrack?.message}
+                            />
                         </div>
 
-                        <div>
+                        {/* <div>
                             <LabelForm
                                 label="Hook bài hát"
+                                required
                                 htmlFor="hookTrack"
                             />
                             <Controller
@@ -215,15 +213,21 @@ export default function AudioSpecifications({ trackData }: Props) {
                                                     : ''
                                             );
                                         }}
+                                        onBlur={field.onBlur}
                                         defaultValue={dayjs(
                                             '00:00:00',
                                             'HH:mm:ss'
                                         )}
                                         size="large"
+                                        format="HH:mm:ss"
                                     />
                                 )}
                             />
-                        </div>
+                            <ErrorText
+                                isError={!!errors.hookTrack}
+                                message={errors.hookTrack?.message}
+                            />
+                        </div> */}
                     </div>
                     <div>
                         <LabelForm

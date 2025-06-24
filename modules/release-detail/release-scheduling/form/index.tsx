@@ -49,6 +49,7 @@ export default function ReleaseSchedulingForm({}: Props) {
         formState: { errors },
         watch,
         trigger,
+        setValue,
     } = formMethods;
 
     const watchedAllFields = useWatch({ control });
@@ -87,13 +88,24 @@ export default function ReleaseSchedulingForm({}: Props) {
                                         id="releaseDate"
                                         className="w-full"
                                         format="DD/MM/YYYY"
+                                        disabledDate={(date) =>
+                                            date &&
+                                            date < dayjs().startOf('day')
+                                        }
                                         value={
                                             field.value
-                                                ? dayjs(field.value)
+                                                ? dayjs(
+                                                      field.value,
+                                                      'YYYY-MM-DD'
+                                                  )
                                                 : null
                                         }
                                         onChange={(date, dateString) => {
-                                            field.onChange(dateString);
+                                            field.onChange(
+                                                date
+                                                    ? date.format('YYYY-MM-DD')
+                                                    : ''
+                                            );
                                         }}
                                         status={
                                             errors.releaseDate

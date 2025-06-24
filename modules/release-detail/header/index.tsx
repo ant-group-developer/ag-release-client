@@ -44,7 +44,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                         className={cn(
                                             'release-detail-header-upload size-28 !rounded-lg !border-0 !p-0 transition-all duration-300',
                                             {
-                                                'size-12 transition-all duration-300':
+                                                'size-14 transition-all duration-300':
                                                     isScrolled,
                                             }
                                         )}

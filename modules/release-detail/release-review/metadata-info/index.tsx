@@ -1,4 +1,5 @@
 import { SIZE_ICON } from '@/constants/common';
+import { getLanguageLabel } from '@/helpers/common';
 import { cn } from '@/helpers/tailwind';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { ReleaseFormValuesData } from '@/modules/releases/types';
@@ -22,7 +23,14 @@ export default function MetadataInfo({}: Props) {
         isRequired: boolean = false
     ) => {
         const error = getFieldError(fieldPath);
-        const value = formValue[fieldPath] || '';
+        let value = formValue[fieldPath] || '';
+
+        if (fieldPath === 'metaDataLanguage') {
+            value = getLanguageLabel(value);
+        }
+        if ((fieldPath === 'cLine' || fieldPath === 'pLine') && value) {
+            value = `${value.year || ''} ${value.name || ''}`.trim();
+        }
 
         return (
             <div className="flex justify-between">
@@ -109,16 +117,26 @@ export default function MetadataInfo({}: Props) {
                 <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
                     <span className="col-span-2 font-medium">Thể loại</span>
                     <div className="col-span-4 flex flex-col gap-2">
-                        {renderField('Thể loại chính', 'genres', true)}
-                        {renderField('Thể loại phụ', 'subGenres')}
+                        {renderField(
+                            messages('formFields.tracks.genres'),
+                            'genres',
+                            true
+                        )}
+                        {renderField(
+                            messages('formFields.tracks.subGenres'),
+                            'subGenres'
+                        )}
                     </div>
                 </div>
 
                 <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
-                    <span className="col-span-2 font-medium">Ngôn ngữ</span>
+                    <span className="col-span-2 font-medium">
+                        {' '}
+                        {messages('common.language')}{' '}
+                    </span>
                     <div className="col-span-4 flex flex-col gap-2">
                         {renderField(
-                            'Ngôn ngữ metadata',
+                            messages('formFields.tracks.metadataLanguage'),
                             'metaDataLanguage',
                             true
                         )}
@@ -140,25 +158,20 @@ export default function MetadataInfo({}: Props) {
                 </div>
 
                 <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
-                    <span className="col-span-2 font-medium">ID danh mục</span>
+                    <span className="col-span-2 font-medium">ID category</span>
                     <div className="col-span-4 flex flex-col gap-2">
-                        {renderField('ID danh mục', 'catalogId')}
+                        {renderField('ID Category', 'catalogId')}
                     </div>
                 </div>
 
                 <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
-                    <span className="col-span-2 font-medium">Bản quyền</span>
+                    <span className="col-span-2 font-medium">
+                        {' '}
+                        {messages('common.copyRight')}{' '}
+                    </span>
                     <div className="col-span-4 flex flex-col gap-2">
-                        {renderField(
-                            'Năm cấp bản quyền tác phẩm',
-                            'pLineYear',
-                            true
-                        )}
-                        {renderField(
-                            'Năm cấp bản quyền ghi âm',
-                            'cLineYear',
-                            true
-                        )}
+                        {renderField('Bản quyền tác phẩm', 'cLine', true)}
+                        {renderField('Bản quyền ghi âm', 'pLine', true)}
                     </div>
                 </div>
             </div>

@@ -41,7 +41,11 @@ export default function ListReport({
                 <span className="text-lg font-semibold text-gray-800">
                     {title}
                 </span>
-                <Select options={options} placeholder="Chọn báo cáo theo" />
+                <Select
+                    className="min-w-44"
+                    options={options}
+                    placeholder="Chọn báo cáo theo"
+                />
             </div>
             <div className="flex-1">
                 <div className="divide-y divide-gray-200">

@@ -190,7 +190,7 @@ export default function LineChart({
     return (
         <div
             ref={chartRef}
-            className={cn('w-full, h-[400px]', className)}
+            className={cn('w-full, h-[300px]', className)}
         ></div>
     );
 }

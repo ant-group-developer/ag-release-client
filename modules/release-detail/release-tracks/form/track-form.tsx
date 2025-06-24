@@ -20,7 +20,7 @@ export const releaseTrackSchema = (messages: any) =>
     z.object({
         trackName: z.string().nonempty(messages('validation.input')),
         isrc: z.string().optional(),
-        source: z.string().nonempty(messages('validation.input')),
+        trackOrigin: z.string().nonempty(messages('validation.input')),
         languageTrack: z.string().nonempty(messages('validation.input')),
         isAddArtistsFromRelease: z.boolean(),
         artists: z.array(artistSchema(messages)),
@@ -46,7 +46,7 @@ export default function TracksForm({ trackData }: Props) {
             trackName: trackData.title ?? '',
             artists: trackData.artists,
             isAddArtistsFromRelease: false,
-            source: thisTrackData?.source ?? '',
+            trackOrigin: thisTrackData?.trackOrigin ?? '',
             languageTrack: thisTrackData?.languageTrack ?? '',
         },
         resolver: zodResolver(releaseTrackSchema(messages)),
@@ -180,23 +180,29 @@ export default function TracksForm({ trackData }: Props) {
                 </div>
 
                 <div>
-                    <LabelForm htmlFor="source" required label="Nguồn gốc" />
+                    <LabelForm
+                        htmlFor="trackOrigin"
+                        required
+                        label="Nguồn gốc"
+                    />
                     <Controller
                         control={control}
-                        name="source"
+                        name="trackOrigin"
                         render={({ field }) => (
                             <Select
-                                id="source"
+                                id="trackOrigin"
                                 {...field}
                                 options={originalSourceList}
                                 className="w-full"
-                                status={errors.source ? 'error' : undefined}
+                                status={
+                                    errors.trackOrigin ? 'error' : undefined
+                                }
                             />
                         )}
                     />
                     <ErrorText
-                        isError={!!errors.source}
-                        message={errors.source?.message}
+                        isError={!!errors.trackOrigin}
+                        message={errors.trackOrigin?.message}
                     />
                 </div>
 

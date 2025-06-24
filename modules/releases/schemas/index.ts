@@ -30,8 +30,14 @@ export const releaseSchema = (messages: (key: string) => string) =>
         metaDataLanguage: z.string().nonempty(messages('validation.select')),
         label: z.string().optional(),
         catalogId: z.string().optional(),
-        cLineYear: z.string().nonempty(messages('validation.input')),
-        pLineYear: z.string().nonempty(messages('validation.input')),
+        cLine: z.object({
+            year: z.string().nonempty(messages('validation.input')),
+            name: z.string().nonempty(messages('validation.input')),
+        }),
+        pLine: z.object({
+            year: z.string().nonempty(messages('validation.input')),
+            name: z.string().nonempty(messages('validation.input')),
+        }),
         releaseDate: z.string().nonempty(messages('validation.input')),
         territoryType: z
             .array(z.string())
@@ -55,19 +61,9 @@ export const releaseSchema = (messages: (key: string) => string) =>
                         .string()
                         .nonempty(messages('validation.input')),
                     isrc: z.string().optional(),
-                    artists: z
-                        .array(
-                            z.object({
-                                name: z
-                                    .string()
-                                    .nonempty(messages('validation.select')),
-                                role: z
-                                    .string()
-                                    .nonempty(messages('validation.select')),
-                            })
-                        )
+                    trackOrigin: z
+                        .string()
                         .nonempty(messages('validation.input')),
-                    source: z.string().nonempty(messages('validation.input')),
                     languageTrack: z
                         .string()
                         .nonempty(messages('validation.input')),
@@ -81,6 +77,9 @@ export const releaseSchema = (messages: (key: string) => string) =>
                         .string()
                         .nonempty(messages('validation.input')),
                     countryLanguage: z
+                        .string()
+                        .nonempty(messages('validation.input')),
+                    previewTrack: z
                         .string()
                         .nonempty(messages('validation.input')),
                     metadataLanguage: z
@@ -117,6 +116,10 @@ export const releaseSchema = (messages: (key: string) => string) =>
                                 .nonnegative('Bit depth must be non-negative'),
                             mqs: z.string().nonempty('MQS is required'),
                         }),
+                    }),
+                    pLine: z.object({
+                        year: z.string().nonempty(messages('validation.input')),
+                        name: z.string().nonempty(messages('validation.input')),
                     }),
                 })
             )

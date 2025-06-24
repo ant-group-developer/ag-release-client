@@ -1,4 +1,5 @@
 import { SIZE_ICON } from '@/constants/common';
+import { getLanguageLabel } from '@/helpers/common';
 import { cn } from '@/helpers/tailwind';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { TrackData } from '@/modules/tracks/types';
@@ -71,7 +72,25 @@ export default function TracksInfo({}: Props) {
     ) => {
         const error = getFieldError(trackIndex, field);
         const track = formValue.tracks?.[trackIndex];
-        const value = track?.[field];
+        let value = track?.[field];
+
+        if (field === 'languageTrack') {
+            value = getLanguageLabel(typeof value === 'string' ? value : '');
+        }
+
+        if (
+            field === 'pLine' &&
+            value &&
+            typeof value === 'object' &&
+            'year' in value &&
+            'name' in value
+        ) {
+            if (value.year && value.name) {
+                value = `${value.year} ${value.name}`;
+            } else {
+                value = 'Thiếu năm hoặc tên bản quyền';
+            }
+        }
 
         return (
             <div className="flex justify-between">
@@ -85,14 +104,16 @@ export default function TracksInfo({}: Props) {
                     </p>
                     {value === undefined || value === null ? (
                         <p className="text-gray-500">
-                            {isRequired ? 'Bắt buộc' : 'Tuỳ chọn'}
+                            {isRequired
+                                ? messages('common.required')
+                                : messages('common.optional')}
                         </p>
                     ) : (
                         <p className="mt-1">
                             {typeof value === 'boolean'
                                 ? value
-                                    ? 'Có'
-                                    : 'Không'
+                                    ? messages('common.yes')
+                                    : messages('common.no')
                                 : Array.isArray(value)
                                   ? value.map((v) => v.name).join(', ')
                                   : String(value)}
@@ -132,32 +153,41 @@ export default function TracksInfo({}: Props) {
                             <div>
                                 <div className="grid grid-cols-6 bg-card-bg p-4">
                                     <span className="col-span-2 font-medium">
-                                        Bản nhạc & nghệ sĩ
+                                        {messages('tracks.label')} &{' '}
+                                        {messages('artist.label')}
                                     </span>
                                     <div className="col-span-4 flex flex-col gap-2">
                                         {renderField(
                                             index,
-                                            'Tên bài hát',
+                                            messages('tracks.name'),
                                             'trackName',
                                             true
                                         )}
                                         {renderField(index, 'ISRC', 'isrc')}
                                         {renderField(
                                             index,
-                                            'Nghệ sĩ chính',
+                                            messages('artist.label'),
                                             'artists',
                                             true
                                         )}
                                         {renderField(
                                             index,
-                                            'Nguồn gốc',
-                                            'source',
+                                            messages('common.source'),
+                                            'trackOrigin',
                                             true
                                         )}
                                         {renderField(
                                             index,
-                                            'Ngôn ngữ bài hát',
+                                            messages(
+                                                'formFields.tracks.languageTrack'
+                                            ),
                                             'languageTrack',
+                                            true
+                                        )}
+                                        {renderField(
+                                            index,
+                                            'Bản quyền ghi âm',
+                                            'pLine',
                                             true
                                         )}
                                     </div>
@@ -165,23 +195,29 @@ export default function TracksInfo({}: Props) {
 
                                 <div className="grid grid-cols-6 bg-card-bg p-4">
                                     <span className="col-span-2 font-medium">
-                                        Các metadata khác
+                                        {messages('releases.otherMetadata')}
                                     </span>
                                     <div className="col-span-4 flex flex-col gap-2">
                                         {renderField(
                                             index,
-                                            'Thể loại chính',
+                                            messages(
+                                                'formFields.tracks.genres'
+                                            ),
                                             'genres',
                                             true
                                         )}
                                         {renderField(
                                             index,
-                                            'Thể loại phụ',
+                                            messages(
+                                                'formFields.tracks.subGenres'
+                                            ),
                                             'subGenres'
                                         )}
                                         {renderField(
                                             index,
-                                            'Nội dung nhạy cảm',
+                                            messages(
+                                                'formFields.tracks.sensitiveContent'
+                                            ),
                                             'isSensitiveContent',
                                             true
                                         )}

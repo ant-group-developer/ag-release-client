@@ -47,8 +47,8 @@ export interface ReleaseFormValuesData {
     label: string;
     upc: string;
     catalogId: string;
-    cLineYear: string;
-    pLineYear: string;
+    cLine: { year: string; name: string };
+    pLine: { year: string; name: string };
     tracks?: TrackData[] | null;
     releaseDate: string;
     timezone: string;

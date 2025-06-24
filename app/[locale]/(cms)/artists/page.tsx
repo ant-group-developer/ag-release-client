@@ -5,7 +5,7 @@ import { SCREEN } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import ArtistsHeader from '@/modules/artist/components/header';
-import ArtistFormModal from '@/modules/artist/components/modal/create-artist';
+import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
 import { ArtistsTable } from '@/modules/artist/components/table';
 import { fakeArtistData } from '@/modules/artist/constants';
 import { TYPE_MODAL_ARTIST } from '@/modules/artist/enum';

@@ -71,20 +71,9 @@ export default function ReviewProgress({}: Props) {
             formValues.tracks.length * requiredTrackFields.length;
 
         formValues.tracks.forEach((track, idx) => {
-            console.log(`Track ${idx + 1} - artists:`, track.artists);
-        });
-
-        formValues.tracks.forEach((track, idx) => {
             const completedFields = requiredTrackFields.filter((field) => {
                 const value = track[field as keyof typeof track];
                 if (Array.isArray(value)) {
-                    if (value.length === 0) {
-                        console.log(
-                            `Track ${idx + 1} thiếu trường:`,
-                            field,
-                            value
-                        );
-                    }
                     return value.length > 0;
                 }
                 if (typeof value === 'boolean') {
@@ -231,8 +220,8 @@ export default function ReviewProgress({}: Props) {
                         format="DD/MM/YYYY"
                         disabled
                         value={
-                            formValues?.releaseDate
-                                ? dayjs(formValues.releaseDate, 'DD/MM/YYYY')
+                            formValues.releaseDate
+                                ? dayjs(formValues.releaseDate, 'YYYY-MM-DD')
                                 : null
                         }
                     />

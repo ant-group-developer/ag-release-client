@@ -687,3 +687,19 @@ export default extractAudioMetadata;
 //     };
 //     return releaseTypeToMessageMap[value] || 'common.album';
 // };
+
+export const timeStringToSeconds = (time: string) => {
+    if (!time) return 0;
+    const [h = '0', m = '0', s = '0'] = time.split(':');
+    const result = Number(h) * 3600 + Number(m) * 60 + Number(s);
+    return result;
+};
+
+
+export function getLanguageLabel(code: string) {
+    const languageMap: Record<string, string> = {
+        vi: 'Tiếng Việt',
+        en: 'English',
+    };
+    return languageMap[code] || code;
+}

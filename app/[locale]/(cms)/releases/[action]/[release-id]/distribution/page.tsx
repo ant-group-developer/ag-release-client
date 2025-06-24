@@ -278,6 +278,7 @@ export default function Distribution({}: Props) {
         });
         closeModal();
         router.push(`/releases/detail/${releaseId}/review`);
+        console.log(formValues);
     };
 
     return (

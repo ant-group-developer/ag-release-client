@@ -65,7 +65,7 @@ export default function Tracks() {
             isSensitiveContent: false,
             plays: 0,
             fileName: '',
-            source: '',
+            trackOrigin: '',
             languageTrack: '',
             countryLanguage: '',
             metadataLanguage: '',
@@ -76,6 +76,8 @@ export default function Tracks() {
                 duration: 0,
                 peakData: [],
             },
+            previewTrack: '',
+            territoryType: [],
             artists: [...artistsFromApplyAllTracks],
         };
 
@@ -161,57 +163,8 @@ export default function Tracks() {
         closeModal();
     };
 
-    // const handleAddArtistRelease = (values: any) => {
-    //     const isArtistEditModal =
-    //         typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST;
-    //     try {
-    //         const newArtistData = {
-    //             name: values.name,
-    //             role: values.role,
-    //             id: values.name,
-    //         };
-    //         const releaseArtists = formValues.artists || [];
-
-    //         let updatedArtists;
-
-    //         if (isArtistEditModal) {
-    //             updatedArtists = releaseArtists.map((artist: any) =>
-    //                 artist.name === dataEdit?.name
-    //                     ? { ...artist, ...newArtistData }
-    //                     : artist
-    //             );
-    //         } else {
-    //             updatedArtists = [...releaseArtists, newArtistData];
-    //         }
-
-    //         setFormValues({
-    //             ...formValues,
-    //             artists: updatedArtists,
-    //         });
-    //     } catch (error) {
-    //         console.error('Validation failed:', error);
-    //     }
-    // };
-
-    // const handleRemoveArtistTrack = () => {
-    //     const track = formValues?.tracks?.find(
-    //         (track: TrackData) => track.id === dataEdit?.id
-    //     );
-    //     const newArtists = track?.filter(
-    //         (artist: any) => artist.id !== dataEdit?.id
-    //     );
-
-    //     setFormValues({
-    //         ...formValues,
-    //         tracks: formValues.tracks?.filter(
-    //             (track: TrackData) => track.id !== dataEdit?.id
-    //         ),
-    //     });
-    // };
-
     return (
         <div>
-            {/* <ListTracksReleaseHeader /> */}
             <ReleaseTracksTable
                 dataSource={formValues?.tracks || []}
                 rowSelection={rowSelection}
@@ -223,11 +176,6 @@ export default function Tracks() {
             {typeModal === TYPE_MODAL_RELEASE.ADD_TRACK && (
                 <AddNewTrackModal open onAddTracks={handleAddTracks} />
             )}
-
-            {/* {(typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST ||
-                typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST) && (
-                <AddArtistModal onSubmit={handleAddArtistRelease} />
-            )} */}
 
             {(typeModal === TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.ADD_ARTIST ||
                 typeModal ===

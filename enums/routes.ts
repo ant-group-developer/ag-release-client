@@ -15,6 +15,8 @@ export enum APP_ROUTES {
     LABELS = '/labels',
     ARTISTS = '/artists',
     DISTRIBUTION = '/distribution',
+    LANGUAGES = '/languages',
+    COUNTRIES = '/countries',
 }
 
 export const AUTH_ROUTES: string[] = [APP_ROUTES.LOGIN];

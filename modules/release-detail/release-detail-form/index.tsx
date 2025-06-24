@@ -43,8 +43,14 @@ export const releaseDetailSchema = (messages: any) =>
         label: z.string().optional(),
         upc: z.string().optional(),
         catalogId: z.string().optional(),
-        cLineYear: z.string().nonempty(messages('validation.input')),
-        pLineYear: z.string().nonempty(messages('validation.input')),
+        cLine: z.object({
+            year: z.string().nonempty(messages('validation.input')),
+            name: z.string().nonempty(messages('validation.input')),
+        }),
+        pLine: z.object({
+            year: z.string().nonempty(messages('validation.input')),
+            name: z.string().nonempty(messages('validation.input')),
+        }),
     });
 
 export type ReleaseDetailSchema = z.infer<
@@ -86,6 +92,7 @@ export default function ReleaseDetailForm() {
     );
 
     const handleNext = async (data: ReleaseDetailSchema) => {
+        console.log('🚀 ~ handleNext ~ data:', data);
         setFormValues(data as Partial<ReleaseFormValuesData>);
         router.push('/releases/detail/123456/tracks');
     };
@@ -326,11 +333,11 @@ export default function ReleaseDetailForm() {
                                             {messages('artist.add')}
                                         </Button>
                                         {/* <ErrorText
-                                            isError={
-                                                errors.artists?.length === 0
-                                            }
-                                            message={errors.artists?.message}
-                                        /> */}
+                                                isError={
+                                                    errors.artists?.length === 0
+                                                }
+                                                message={errors.artists?.message}
+                                            /> */}
                                     </div>
                                 )}
                             </div>
@@ -343,11 +350,11 @@ export default function ReleaseDetailForm() {
                                             index={index}
                                             data={artist}
                                             onClick={(e) => {
-                                                e.stopPropagation(),
-                                                    openModal(
-                                                        TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST,
-                                                        artist
-                                                    );
+                                                e.stopPropagation();
+                                                openModal(
+                                                    TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST,
+                                                    artist
+                                                );
                                             }}
                                             onDelete={() =>
                                                 openModal(
@@ -510,30 +517,50 @@ export default function ReleaseDetailForm() {
                         </FormItem>
 
                         <FormItem
-                            name="cLineYear"
-                            label="C Line year"
+                            name="cLine"
+                            label="Bản quyền tác phẩm"
                             required
                             tooltipInfor={messages(
                                 'releases.cLineYearDescription'
                             )}
-                            ErrorMessage={errors.cLineYear?.message}
+                            ErrorMessage={errors.cLine?.message}
                         >
                             <Controller
                                 control={control}
-                                name="cLineYear"
+                                name="cLine"
                                 render={({ field }) => (
                                     <Input
-                                        id="cLineYear"
+                                        id="cLine"
+                                        value={field.value?.name || ''}
+                                        onChange={(e) =>
+                                            field.onChange({
+                                                ...field.value,
+                                                name: e.target.value,
+                                                year:
+                                                    field.value?.year || '2026',
+                                            })
+                                        }
                                         allowClear
-                                        {...field}
                                         addonBefore={
                                             <Select
-                                                defaultValue={'2026'}
+                                                value={
+                                                    field.value?.year || '2026'
+                                                }
+                                                onChange={(year) =>
+                                                    field.onChange({
+                                                        ...field.value,
+                                                        year: year || '2026',
+                                                        name:
+                                                            field.value?.name ||
+                                                            '',
+                                                    })
+                                                }
                                                 options={yearList}
+                                                style={{ width: 90 }}
                                             />
                                         }
                                         status={
-                                            errors.cLineYear
+                                            errors.cLine?.name
                                                 ? 'error'
                                                 : undefined
                                         }
@@ -543,30 +570,50 @@ export default function ReleaseDetailForm() {
                         </FormItem>
 
                         <FormItem
-                            name="pLineYear"
-                            label="P Line year"
+                            name="pLine"
+                            label="Bản quyền ghi âm"
                             required
                             tooltipInfor={messages(
                                 'releases.pLineYearDescription'
                             )}
-                            ErrorMessage={errors.pLineYear?.message}
+                            ErrorMessage={errors.pLine?.message}
                         >
                             <Controller
                                 control={control}
-                                name="pLineYear"
+                                name="pLine"
                                 render={({ field }) => (
                                     <Input
-                                        id="pLineYear"
+                                        id="pLine"
+                                        value={field.value?.name || ''}
+                                        onChange={(e) =>
+                                            field.onChange({
+                                                ...field.value,
+                                                name: e.target.value,
+                                                year:
+                                                    field.value?.year || '2026',
+                                            })
+                                        }
                                         allowClear
-                                        {...field}
                                         addonBefore={
                                             <Select
-                                                defaultValue={'2026'}
+                                                value={
+                                                    field.value?.year || '2026'
+                                                }
+                                                onChange={(year) =>
+                                                    field.onChange({
+                                                        ...field.value,
+                                                        year: year || '2026',
+                                                        name:
+                                                            field.value?.name ||
+                                                            '',
+                                                    })
+                                                }
                                                 options={yearList}
+                                                style={{ width: 90 }}
                                             />
                                         }
                                         status={
-                                            errors.pLineYear
+                                            errors.pLine?.name
                                                 ? 'error'
                                                 : undefined
                                         }

@@ -244,8 +244,14 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         label: 'ANT-MUSIC',
         upc: '123456789012',
         catalogId: 'CAT-2024-001',
-        cLineYear: 'ANT-MUSIC',
-        pLineYear: 'ANT-MUSIC',
+        cLine: {
+            year: '2026',
+            name: 'AMG',
+        },
+        pLine: {
+            year: '2026',
+            name: 'AMG',
+        },
         thumbnail: {
             fileList: [
                 {
@@ -273,7 +279,8 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             resetFormValues();
         }
 
-        if (releaseId) {
+        const releaseAlreadyHasValue = formValues?.id;
+        if (releaseId && !releaseAlreadyHasValue) {
             setFormValues(initialData);
         }
     }, [releaseId]);

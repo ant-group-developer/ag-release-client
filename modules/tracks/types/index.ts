@@ -12,7 +12,7 @@ export interface TrackData {
     subGenres?: GENRES;
     labelName: string;
     isrc: string;
-    source?: string;
+    trackOrigin?: string;
     languageTrack?: string;
     creationDate: string;
     releaseDate: string;
@@ -28,6 +28,8 @@ export interface TrackData {
     plays: number;
     file?: File;
     fileName: string;
+    previewTrack?: string;
+    territoryType?: [];
     songInfo: {
         duration: number;
         peakData: number[];
@@ -45,6 +47,7 @@ export interface TrackData {
             mqs: string;
         };
     };
+    pLine?: { year: string; name: string };
 }
 
 export interface TrackDataFilter extends CommonParams {
