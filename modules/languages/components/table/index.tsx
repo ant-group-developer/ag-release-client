@@ -50,8 +50,8 @@ export const LanguagesTable = ({ ...props }: Props) => {
         },
         {
             title: messages('common.dateCreated'),
-            key: 'dateCreated',
-            dataIndex: 'dateCreated',
+            key: 'createdAt',
+            dataIndex: 'createdAt',
             align: 'center',
             width: 100,
             render: (value) => (
@@ -62,8 +62,8 @@ export const LanguagesTable = ({ ...props }: Props) => {
         },
         {
             title: messages('common.dateUpdated'),
-            key: 'dateUpdated',
-            dataIndex: 'dateUpdated',
+            key: 'updatedAt',
+            dataIndex: 'updatedAt',
             align: 'center',
             width: 100,
             render: (value) => (

@@ -8,19 +8,17 @@ import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
 import { ListFilter, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
-import { CountryDataFilter } from '../../types';
-import CountryHeaderDropdown from '../dropdown/country-header-dropdown';
-
-// Nếu muốn dropdown riêng cho country thì tạo CountryHeaderDropdown, tạm thời bỏ qua
+import { GenresDataFilter } from '../../types';
+import GenresHeaderDropdown from './genres-header-dropdown';
 
 type Props = {
-    dataFilter: CountryDataFilter;
-    onChangeFilter: OnChangeFilter<CountryDataFilter>;
+    dataFilter: GenresDataFilter;
+    onChangeFilter: OnChangeFilter<GenresDataFilter>;
     canClearFilter: boolean;
     removeFilter: RemoveFilter;
 };
 
-export default function CountrySuperFilter({
+export default function GenresSuperFilter({
     dataFilter,
     onChangeFilter,
     canClearFilter,
@@ -28,7 +26,6 @@ export default function CountrySuperFilter({
 }: Props) {
     const ref = useRef<HTMLDivElement>(null);
     const messages = useTranslations();
-
     const [typeFilter, setTypeFilter] = useState<TYPE_FILTER>();
 
     const handleChangeTypeFilter = (value?: TYPE_FILTER) => {
@@ -90,7 +87,7 @@ export default function CountrySuperFilter({
                     onChangeFilter={onChangeFilter}
                 />
 
-                <CountryHeaderDropdown
+                <GenresHeaderDropdown
                     open={typeFilter === TYPE_FILTER.DROPDOWN}
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}

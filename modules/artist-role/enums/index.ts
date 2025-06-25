@@ -1,0 +1,4 @@
+export enum TYPE_MODAL_ARTIST_ROLE {
+    CREATE = 'CREATE',
+    UPDATE = 'UPDATE',
+}

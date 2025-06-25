@@ -40,9 +40,9 @@ export interface SuccessResponse {
 }
 
 export interface CommonAttribute {
-    dateCreated: string;
-    dateUpdated: string | null;
-    id: number;
+    id: string;
+    createdAt: string;
+    updatedAt: string | null;
 }
 
 export interface UUIDCommonAttribute {
@@ -88,4 +88,22 @@ export interface CreateFile {
     fileSizeInByte: number;
     fileName: string; // fix -> khong co khoang trong, ky tu dac biet
     googleDriveFileId?: string;
+}
+
+export interface GetUrlUploadParams {
+    infoFile: {
+        contentType: string;
+        extension: string;
+        fileSizeInByte: number;
+        fileName: string;
+        type?: string;
+        typeKey?: string;
+    };
+    file: File;
+}
+
+export interface CommonDataSidebar {
+    id: string;
+    name: string;
+    count?: number;
 }

@@ -1,12 +1,10 @@
-import { CommonParams } from '@/types/api';
+import { CommonAttribute, CommonParams } from '@/types/api';
 
-export interface LabelData {
-    id: string;
+export interface LabelData extends CommonAttribute {
     thumbnail: string | null;
     name: string;
     labelId: string;
     trackCount: number;
-    createdAt: Date;
 }
 
 export interface LabelDataFilter extends CommonParams {

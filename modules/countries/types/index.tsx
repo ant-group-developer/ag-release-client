@@ -1,6 +1,6 @@
 import { CommonAttribute, CommonParams } from '@/types/api';
 
-export interface CountryData extends CommonAttribute {
+export interface CountriesData extends CommonAttribute {
     name: string;
     iso3: string;
     iso2: string;
@@ -13,7 +13,7 @@ export interface CountryData extends CommonAttribute {
     nationality: string;
 }
 
-export interface CountryDataFilter extends CommonParams {
+export interface CountriesDataFilter extends CommonParams {
     keyword?: string;
     dateCreated?: string;
 }

@@ -3,19 +3,19 @@ import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { formattedDate } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
-import { TYPE_MODAL_LANGUAGES } from '@/modules/languages/enums';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
-import { CountryData } from '../../types';
+import { TYPE_MODAL_COUNTRIES } from '../../enums';
+import { CountriesData } from '../../types';
 
 // Table cho Countries
 
-type Props = Omit<AppTableProps<CountryData>, 'columns'> & {};
+type Props = Omit<AppTableProps<CountriesData>, 'columns'> & {};
 
 export const CountriesTable = ({ ...props }: Props) => {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
-    const column: ColumnType<CountryData>[] = [
+    const column: ColumnType<CountriesData>[] = [
         {
             title: messages('common.iNo'),
             key: 'iNo',
@@ -73,8 +73,8 @@ export const CountriesTable = ({ ...props }: Props) => {
         },
         {
             title: messages('common.dateCreated'),
-            key: 'dateCreated',
-            dataIndex: 'dateCreated',
+            key: 'createdAt',
+            dataIndex: 'createdAt',
             align: 'center',
             width: 100,
             render: (value) => (
@@ -85,8 +85,8 @@ export const CountriesTable = ({ ...props }: Props) => {
         },
         {
             title: messages('common.dateUpdated'),
-            key: 'dateUpdated',
-            dataIndex: 'dateUpdated',
+            key: 'updatedAt',
+            dataIndex: 'updatedAt',
             align: 'center',
             width: 100,
             render: (value) => (
@@ -105,7 +105,7 @@ export const CountriesTable = ({ ...props }: Props) => {
                     showDelete
                     showUpdate
                     onShowUpdate={() =>
-                        openModal(TYPE_MODAL_LANGUAGES.UPDATE, record)
+                        openModal(TYPE_MODAL_COUNTRIES.UPDATE, record)
                     }
                 />
             ),

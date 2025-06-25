@@ -7,7 +7,8 @@ export const fakeLabelData: LabelData[] = [
         name: 'Label Alpha',
         labelId: 'LA001',
         trackCount: 15,
-        createdAt: new Date('2023-01-15T10:20:30Z'),
+        createdAt: '2023-01-15T10:20:30Z',
+        updatedAt: '2023-01-15T10:20:30Z',
     },
     {
         id: '1a2b3c4d-0002',
@@ -15,7 +16,8 @@ export const fakeLabelData: LabelData[] = [
         name: 'Label Beta',
         labelId: 'LB002',
         trackCount: 27,
-        createdAt: new Date('2023-02-20T11:30:00Z'),
+        createdAt: '2023-02-20T11:30:00Z',
+        updatedAt: '2023-02-20T11:30:00Z',
     },
     {
         id: '1a2b3c4d-0003',
@@ -23,7 +25,8 @@ export const fakeLabelData: LabelData[] = [
         name: 'Label Gamma',
         labelId: 'LG003',
         trackCount: 8,
-        createdAt: new Date('2023-03-05T09:15:45Z'),
+        createdAt: '2023-03-05T09:15:45Z',
+        updatedAt: '2023-03-05T09:15:45Z',
     },
     {
         id: '1a2b3c4d-0004',
@@ -31,7 +34,8 @@ export const fakeLabelData: LabelData[] = [
         name: 'Label Delta',
         labelId: 'LD004',
         trackCount: 33,
-        createdAt: new Date('2023-04-12T14:05:10Z'),
+        createdAt: '2023-04-12T14:05:10Z',
+        updatedAt: '2023-04-12T14:05:10Z',
     },
     {
         id: '1a2b3c4d-0005',
@@ -39,7 +43,8 @@ export const fakeLabelData: LabelData[] = [
         name: 'Label Epsilon',
         labelId: 'LE005',
         trackCount: 21,
-        createdAt: new Date('2023-05-18T08:50:25Z'),
+        createdAt: '2023-05-18T08:50:25Z',
+        updatedAt: '2023-05-18T08:50:25Z',
     },
     {
         id: '1a2b3c4d-0006',
@@ -47,7 +52,8 @@ export const fakeLabelData: LabelData[] = [
         name: 'Label Zeta',
         labelId: 'LZ006',
         trackCount: 5,
-        createdAt: new Date('2023-06-30T12:00:00Z'),
+        createdAt: '2023-06-30T12:00:00Z',
+        updatedAt: '2023-06-30T12:00:00Z',
     },
     {
         id: '1a2b3c4d-0007',
@@ -55,7 +61,8 @@ export const fakeLabelData: LabelData[] = [
         name: 'Label Eta',
         labelId: 'LE007',
         trackCount: 40,
-        createdAt: new Date('2023-07-21T16:40:00Z'),
+        createdAt: '2023-07-21T16:40:00Z',
+        updatedAt: '2023-07-21T16:40:00Z',
     },
     {
         id: '1a2b3c4d-0008',
@@ -63,7 +70,8 @@ export const fakeLabelData: LabelData[] = [
         name: 'Label Theta',
         labelId: 'LT008',
         trackCount: 13,
-        createdAt: new Date('2023-08-10T13:20:10Z'),
+        createdAt: '2023-08-10T13:20:10Z',
+        updatedAt: '2023-08-10T13:20:10Z',
     },
     {
         id: '1a2b3c4d-0009',
@@ -71,7 +79,8 @@ export const fakeLabelData: LabelData[] = [
         name: 'Label Iota',
         labelId: 'LI009',
         trackCount: 18,
-        createdAt: new Date('2023-09-03T07:10:50Z'),
+        createdAt: '2023-09-03T07:10:50Z',
+        updatedAt: '2023-09-03T07:10:50Z',
     },
     {
         id: '1a2b3c4d-0010',
@@ -79,7 +88,8 @@ export const fakeLabelData: LabelData[] = [
         name: 'Label Kappa',
         labelId: 'LK010',
         trackCount: 22,
-        createdAt: new Date('2023-10-25T19:45:00Z'),
+        createdAt: '2023-10-25T19:45:00Z',
+        updatedAt: '2023-10-25T19:45:00Z',
     },
     {
         id: '1a2b3c4d-0001',
@@ -87,7 +97,8 @@ export const fakeLabelData: LabelData[] = [
         name: 'Label Alpha',
         labelId: 'LA001',
         trackCount: 15,
-        createdAt: new Date('2023-01-15T10:20:30Z'),
+        createdAt: '2023-01-15T10:20:30Z',
+        updatedAt: '2023-01-15T10:20:30Z',
     },
     {
         id: '1a2b3c4d-0002',
@@ -95,7 +106,8 @@ export const fakeLabelData: LabelData[] = [
         name: 'Label Beta',
         labelId: 'LB002',
         trackCount: 27,
-        createdAt: new Date('2023-02-20T11:30:00Z'),
+        createdAt: '2023-02-20T11:30:00Z',
+        updatedAt: '2023-02-20T11:30:00Z',
     },
     {
         id: '1a2b3c4d-0003',
@@ -103,7 +115,8 @@ export const fakeLabelData: LabelData[] = [
         name: 'Label Gamma',
         labelId: 'LG003',
         trackCount: 8,
-        createdAt: new Date('2023-03-05T09:15:45Z'),
+        createdAt: '2023-03-05T09:15:45Z',
+        updatedAt: '2023-03-05T09:15:45Z',
     },
     {
         id: '1a2b3c4d-0004',
@@ -111,7 +124,8 @@ export const fakeLabelData: LabelData[] = [
         name: 'Label Delta',
         labelId: 'LD004',
         trackCount: 33,
-        createdAt: new Date('2023-04-12T14:05:10Z'),
+        createdAt: '2023-04-12T14:05:10Z',
+        updatedAt: '2023-04-12T14:05:10Z',
     },
     {
         id: '1a2b3c4d-0005',
@@ -119,7 +133,8 @@ export const fakeLabelData: LabelData[] = [
         name: 'Label Epsilon',
         labelId: 'LE005',
         trackCount: 21,
-        createdAt: new Date('2023-05-18T08:50:25Z'),
+        createdAt: '2023-05-18T08:50:25Z',
+        updatedAt: '2023-05-18T08:50:25Z',
     },
     {
         id: '1a2b3c4d-0006',
@@ -127,7 +142,8 @@ export const fakeLabelData: LabelData[] = [
         name: 'Label Zeta',
         labelId: 'LZ006',
         trackCount: 5,
-        createdAt: new Date('2023-06-30T12:00:00Z'),
+        createdAt: '2023-06-30T12:00:00Z',
+        updatedAt: '2023-06-30T12:00:00Z',
     },
     {
         id: '1a2b3c4d-0007',
@@ -135,7 +151,8 @@ export const fakeLabelData: LabelData[] = [
         name: 'Label Eta',
         labelId: 'LE007',
         trackCount: 40,
-        createdAt: new Date('2023-07-21T16:40:00Z'),
+        createdAt: '2023-07-21T16:40:00Z',
+        updatedAt: '2023-07-21T16:40:00Z',
     },
     {
         id: '1a2b3c4d-0008',
@@ -143,7 +160,8 @@ export const fakeLabelData: LabelData[] = [
         name: 'Label Theta',
         labelId: 'LT008',
         trackCount: 13,
-        createdAt: new Date('2023-08-10T13:20:10Z'),
+        createdAt: '2023-08-10T13:20:10Z',
+        updatedAt: '2023-08-10T13:20:10Z',
     },
     {
         id: '1a2b3c4d-0009',
@@ -151,7 +169,8 @@ export const fakeLabelData: LabelData[] = [
         name: 'Label Iota',
         labelId: 'LI009',
         trackCount: 18,
-        createdAt: new Date('2023-09-03T07:10:50Z'),
+        createdAt: '2023-09-03T07:10:50Z',
+        updatedAt: '2023-09-03T07:10:50Z',
     },
     {
         id: '1a2b3c4d-0010',
@@ -159,6 +178,7 @@ export const fakeLabelData: LabelData[] = [
         name: 'Label Kappa',
         labelId: 'LK010',
         trackCount: 22,
-        createdAt: new Date('2023-10-25T19:45:00Z'),
+        createdAt: '2023-10-25T19:45:00Z',
+        updatedAt: '2023-10-25T19:45:00Z',
     },
 ];

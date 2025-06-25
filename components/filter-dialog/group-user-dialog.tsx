@@ -51,7 +51,7 @@ const GroupUserDialog = <T extends Record<string, any>>({
         const selectedGroup = groupIds
             .map((id: string) => {
                 const group = dataGroup?.find(
-                    (item: GroupData) => item.id === Number(id)
+                    (item: GroupData) => item.id === id
                 );
                 return group ? group.name : null;
             })

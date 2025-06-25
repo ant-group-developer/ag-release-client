@@ -65,7 +65,7 @@
         "minutes": "phút",
         "hours": "giờ",
         "dateRelease": "Ngày phát hành",
-        "genres": "Thể loại",
+        "genres": "Thể loại nhạc",
         "track": "Bài hát",
         "artist": "Nghệ sĩ",
         "release": "Bản cập nhật",
@@ -176,7 +176,8 @@
     "country": {
         "label": "Quốc gia",
         "city": "Thành phố",
-        "language": "Ngôn ngữ quốc gia"
+        "language": "Ngôn ngữ quốc gia",
+        "name": "Tên quốc gia"
     },
     "filter": {
         "keyword": "Từ khoá",
@@ -597,6 +598,11 @@
         "descriptionVariantArtists": "Tên hiển thị sẽ là 'Nhiều nghệ sĩ'",
         "role": "Vai trò nghệ sĩ"
     },
+
+    "role": {
+        "add": "Thêm vai trò"
+    },
+
     "labels": {
         "label": "Label",
         "create": "Tạo label",

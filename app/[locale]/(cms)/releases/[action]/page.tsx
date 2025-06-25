@@ -4,7 +4,7 @@ import useModalStore from '@/hooks/use-modal';
 import AddArtistModal from '@/modules/artist/components/modal/add-artist';
 import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
 import { TYPE_MODAL_ARTIST } from '@/modules/artist/enum';
-import LabelFormModal from '@/modules/labels/components/modal/create-label';
+import LabelFormModal from '@/modules/labels/components/modal/label-form';
 import { TYPE_MODAL_LABEL } from '@/modules/labels/enum';
 import ReleaseDetailForm from '@/modules/release-detail/release-detail-form';
 import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '@/modules/releases/enums';

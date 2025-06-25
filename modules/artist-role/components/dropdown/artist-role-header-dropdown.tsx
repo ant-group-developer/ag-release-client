@@ -6,20 +6,20 @@ import { OnChangeFilter, UseFilterProps } from '@/hooks/use-filter';
 import { Input } from 'antd';
 import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
-import { CountryDataFilter } from '../../types';
+import { ArtistRoleDataFilter } from '../../types';
 
 interface Props
     extends Pick<
-        UseFilterProps<CountryDataFilter>,
+        UseFilterProps<ArtistRoleDataFilter>,
         'onChangeFilter' | 'dataFilter'
     > {
     open?: boolean;
-    dataFilter: CountryDataFilter;
-    onChangeFilter: OnChangeFilter<CountryDataFilter>;
+    dataFilter: ArtistRoleDataFilter;
+    onChangeFilter: OnChangeFilter<ArtistRoleDataFilter>;
     handleChangeTypeFilter: (value?: TYPE_FILTER) => void;
 }
 
-export default function CountryHeaderDropdown({
+export default function ArtistRoleHeaderDropdown({
     open,
     dataFilter,
     onChangeFilter,
@@ -46,10 +46,9 @@ export default function CountryHeaderDropdown({
         {
             label: messages('common.dateCreated'),
             value: TYPE_FILTER.DATE_CREATED,
-            visible: !dataFilter.dateCreated,
+            visible: !dataFilter.createdAt,
             onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_CREATED),
         },
-        // Có thể thêm filter riêng cho country ở đây
     ];
 
     const options = dropdownItems.filter(

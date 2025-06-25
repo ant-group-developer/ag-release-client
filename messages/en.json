@@ -65,8 +65,8 @@
         "minutes": "minutes",
         "hours": "hours",
         "dateRelease": "Date release",
-        "genres": "Genres",
-        "track": "Bài hát",
+        "genres": "Song genre",
+        "track": "Track",
         "artist": "Artist",
         "release": "Release",
         "plays": "Plays",
@@ -176,7 +176,8 @@
     "country": {
         "label": "Country",
         "city": "City",
-        "language": "Country language"
+        "language": "Country language",
+        "name": "Country name"
     },
     "filter": {
         "keyword": "Keyword",
@@ -592,8 +593,14 @@
         "select": "Select artist",
         "profiles": "Artist profiles",
         "variousArtists": "Various artists",
-        "descriptionVariantArtists": "Display name will be 'Various artists'"
+        "descriptionVariantArtists": "Display name will be 'Various artists'",
+        "role": "Artist role"
     },
+
+    "role": {
+        "add": "Add role artist"
+    },
+
     "labels": {
         "label": "Label",
         "create": "Create label",

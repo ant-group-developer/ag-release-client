@@ -1,8 +1,8 @@
-import { CountryData } from './types';
+import { CountriesData } from './types';
 
-export const fakeCountryData: CountryData[] = [
+export const fakeCountriesData: CountriesData[] = [
     {
-        id: 1,
+        id: '1',
         name: 'Việt Nam',
         iso3: 'VNM',
         iso2: 'VN',
@@ -13,11 +13,11 @@ export const fakeCountryData: CountryData[] = [
         currencyName: 'Vietnamese dong',
         currencySymbol: '₫',
         nationality: 'Vietnamese',
-        dateCreated: '2023-01-15T10:20:30Z',
-        dateUpdated: '2023-01-15T10:20:30Z',
+        createdAt: '2023-01-15T10:20:30Z',
+        updatedAt: '2023-01-15T10:20:30Z',
     },
     {
-        id: 2,
+        id: '2',
         name: 'United States',
         iso3: 'USA',
         iso2: 'US',
@@ -28,7 +28,7 @@ export const fakeCountryData: CountryData[] = [
         currencyName: 'US Dollar',
         currencySymbol: '$',
         nationality: 'American',
-        dateCreated: '2023-01-15T10:20:30Z',
-        dateUpdated: '2023-01-15T10:20:30Z',
+        createdAt: '2023-01-15T10:20:30Z',
+        updatedAt: '2023-01-15T10:20:30Z',
     },
 ];

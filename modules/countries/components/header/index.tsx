@@ -3,14 +3,13 @@ import CreateButton from '@/components/ui/button/create-button';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { useTranslations } from 'next-intl';
-import { CountryDataFilter } from '../../types';
-import CountrySuperFilter from './country-super-filter';
-
-// TODO: Tạo CountriesSuperFilter nếu cần
+import { TYPE_MODAL_COUNTRIES } from '../../enums';
+import { CountriesDataFilter } from '../../types';
+import CountriesSuperFilter from './countries-super-filter';
 
 type Props = {
-    dataFilter: CountryDataFilter;
-    onChangeFilter: OnChangeFilter<CountryDataFilter>;
+    dataFilter: CountriesDataFilter;
+    onChangeFilter: OnChangeFilter<CountriesDataFilter>;
     canClearFilter: boolean;
     removeFilter: RemoveFilter;
     handleRefresh: () => void;
@@ -28,7 +27,7 @@ export default function CountriesHeader({
     return (
         <AppHeader className="px-4 py-1">
             <AppHeaderGroup>
-                <CountrySuperFilter
+                <CountriesSuperFilter
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
                     canClearFilter={canClearFilter}
@@ -40,7 +39,9 @@ export default function CountriesHeader({
                     <CreateButton
                         canCreate={true}
                         text="Thêm quốc gia"
-                        onClick={() => openModal && openModal('CREATE_COUNTRY')}
+                        onClick={() =>
+                            openModal && openModal(TYPE_MODAL_COUNTRIES.CREATE)
+                        }
                     />
                 </div>
             </AppHeaderGroup>
