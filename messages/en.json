@@ -37,6 +37,10 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "capital": "Capital",
+        "numericCode": "Numeric code",
+        "title": "Title",
+        "send": "Send",
         "mainArtist": "Main artist",
         "optional": "Optional",
         "required": "Required",
@@ -177,7 +181,9 @@
         "label": "Country",
         "city": "City",
         "language": "Country language",
-        "name": "Country name"
+        "name": "Country name",
+        "delete": "Delete country",
+        "add": "Add new country"
     },
     "filter": {
         "keyword": "Keyword",
@@ -477,7 +483,8 @@
             "submitUploadUrlSuccessfully": "Upload successfully",
             "getFileByIdFailed": "Get file by id failed",
             "uploadFileFailed": "Upload file failed"
-        }
+        },
+        "fileAttach": "File attach"
     },
     "rating": {
         "label": "Rating",
@@ -598,7 +605,9 @@
     },
 
     "role": {
-        "add": "Add role artist"
+        "add": "Add role artist",
+        "update": "Update role",
+        "name": "Role name"
     },
 
     "labels": {

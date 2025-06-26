@@ -22,15 +22,17 @@ export default function ArtistRoleFormModal({ ...props }: Props) {
         form.setFieldsValue(initialData);
     }, [dataEdit]);
 
+    function renderTitle() {
+        return dataEdit?.id ? messages('role.update') : messages('role.add');
+    }
+
+    const titleModal = renderTitle();
+
     return (
         <AppModal
             width={500}
             {...props}
-            title={
-                messages('common.create') +
-                ' ' +
-                messages('artistRole.label', { default: 'vai trò nghệ sĩ' })
-            }
+            title={titleModal}
             open
             onCancel={closeModal}
             onOk={form.submit}
@@ -38,9 +40,7 @@ export default function ArtistRoleFormModal({ ...props }: Props) {
             <AppForm form={form} showSubmit={false} layout="vertical">
                 <AppFormItem
                     name="name"
-                    label={messages('artistRole.name', {
-                        default: 'Tên vai trò',
-                    })}
+                    label={messages('role.name')}
                     required
                     rules={[
                         {
@@ -55,12 +55,7 @@ export default function ArtistRoleFormModal({ ...props }: Props) {
                         },
                     ]}
                 >
-                    <Input
-                        placeholder={messages('artistRole.name', {
-                            default: 'Tên vai trò',
-                        })}
-                        allowClear
-                    />
+                    <Input placeholder={messages('role.name')} allowClear />
                 </AppFormItem>
             </AppForm>
         </AppModal>

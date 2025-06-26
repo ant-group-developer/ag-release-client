@@ -24,7 +24,7 @@ export const CountriesTable = ({ ...props }: Props) => {
             render: (_, __, index) => index + 1,
         },
         {
-            title: 'Tên quốc gia',
+            title: messages('country.name'),
             key: 'name',
             dataIndex: 'name',
             ellipsis: true,
@@ -51,14 +51,14 @@ export const CountriesTable = ({ ...props }: Props) => {
             width: 50,
         },
         {
-            title: 'Mã số',
-            key: 'numeric_code',
-            dataIndex: 'numeric_code',
+            title: messages('common.numericCode'),
+            key: 'numericCode',
+            dataIndex: 'numericCode',
             align: 'left',
             width: 60,
         },
         {
-            title: 'Thủ đô',
+            title: messages('common.capital'),
             key: 'capital',
             dataIndex: 'capital',
             align: 'left',
@@ -103,6 +103,9 @@ export const CountriesTable = ({ ...props }: Props) => {
             render: (_, record) => (
                 <ActionButton
                     showDelete
+                    onShowDelete={() => {
+                        openModal(TYPE_MODAL_COUNTRIES.DELETE, record);
+                    }}
                     showUpdate
                     onShowUpdate={() =>
                         openModal(TYPE_MODAL_COUNTRIES.UPDATE, record)

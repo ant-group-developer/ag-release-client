@@ -37,6 +37,10 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "capital": "Thủ đô",
+        "numericCode": "Mã số",
+        "title": "Tiêu đề",
+        "send": "Gửi",
         "mainArtist": "Nghệ sĩ chính",
         "optional": "Tuỳ chọn",
         "required": "Bắt buộc",
@@ -177,7 +181,9 @@
         "label": "Quốc gia",
         "city": "Thành phố",
         "language": "Ngôn ngữ quốc gia",
-        "name": "Tên quốc gia"
+        "name": "Tên quốc gia",
+        "delete": "Xoá quốc gia",
+        "add": "Thêm quốc gia"
     },
     "filter": {
         "keyword": "Từ khoá",
@@ -202,7 +208,7 @@
     },
     "delete": {
         "confirmTitle": "Xác nhận xoá",
-        "confirmMessage": "Bạn có chắc muốn xoá?"
+        "confirmMessage": "Bạn có chắc muốn xoá {value} ?"
     },
     "cancel": {
         "confirmTitle": "Xác nhận huỷ",
@@ -327,7 +333,7 @@
         "passwordMisMatch": "Mật khẩu không khớp!",
         "passwordFormat": "Mật khẩu bao gồm chữ cái viết hoa và có ít nhất 6 kí tự",
         "unique": "Dữ liệu không được trùng nhau",
-        "mustBeNumber": "Must be number",
+        "mustBeNumber": "Phải là chữ số",
         "min": "Tối thiểu {number} ký tự",
         "minValid": "Tối thiểu {number} ký tự hợp lệ",
         "minWithValid": "Tối thiểu {number} ký tự hợp lệ",
@@ -478,7 +484,8 @@
             "submitUploadUrlSuccessfully": "Tải lên thành công",
             "getFileByIdFailed": "Tải xuống thất bại",
             "uploadFileFailed": "Tải lên thất bại"
-        }
+        },
+        "fileAttach": "Tệp đính kèm"
     },
     "rating": {
         "label": "Đánh giá",
@@ -600,7 +607,9 @@
     },
 
     "role": {
-        "add": "Thêm vai trò"
+        "add": "Thêm vai trò",
+        "update": "Cập nhật vai trò",
+        "name": "Tên vai trò"
     },
 
     "labels": {

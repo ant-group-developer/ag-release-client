@@ -20,6 +20,7 @@ export enum APP_ROUTES {
     GENRES = '/genres',
     DSP = '/dsp',
     ARTIST_ROLE = 'artist-role',
+    EMAIL_SENDER = 'email-sender',
 }
 
 export const AUTH_ROUTES: string[] = [APP_ROUTES.LOGIN];

@@ -10,6 +10,7 @@ import {
     Library,
     LockKeyhole,
     LucideProps,
+    Mail,
     MicVocal,
     Music,
     SquareActivity,
@@ -83,6 +84,12 @@ export const adminRoutes: AdminRoutesType[] = [
                 title: 'distribution',
                 permission: PERMISSION.DISTRIBUTION.READ,
             },
+        ],
+    },
+    {
+        id: 'general',
+        label: 'common.general',
+        children: [
             {
                 id: 'labels',
                 label: 'labels.label',
@@ -99,7 +106,14 @@ export const adminRoutes: AdminRoutesType[] = [
                 title: 'artists',
                 permission: PERMISSION.ARTIST.READ,
             },
-
+            {
+                id: 'artist-role',
+                label: 'artist.role',
+                href: APP_ROUTES.ARTIST_ROLE,
+                icon: Contact,
+                title: 'artist-role',
+                permission: PERMISSION.DISTRIBUTION.READ,
+            },
             {
                 id: 'languages',
                 label: 'common.language',
@@ -133,11 +147,11 @@ export const adminRoutes: AdminRoutesType[] = [
                 permission: PERMISSION.DISTRIBUTION.READ,
             },
             {
-                id: 'artist-role',
-                label: 'artist.role',
-                href: APP_ROUTES.ARTIST_ROLE,
-                icon: Contact,
-                title: 'artist-role',
+                id: 'email-sender',
+                label: 'Email Sender',
+                href: APP_ROUTES.EMAIL_SENDER,
+                icon: Mail,
+                title: 'email-sender',
                 permission: PERMISSION.DISTRIBUTION.READ,
             },
         ],

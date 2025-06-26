@@ -12,7 +12,6 @@ type Props = {
     onChangeFilter: OnChangeFilter<CountriesDataFilter>;
     canClearFilter: boolean;
     removeFilter: RemoveFilter;
-    handleRefresh: () => void;
 };
 
 export default function CountriesHeader({
@@ -20,7 +19,6 @@ export default function CountriesHeader({
     onChangeFilter,
     canClearFilter,
     removeFilter,
-    handleRefresh,
 }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
@@ -38,7 +36,7 @@ export default function CountriesHeader({
                 <div className="flex items-center gap-2">
                     <CreateButton
                         canCreate={true}
-                        text="Thêm quốc gia"
+                        text={messages('country.add')}
                         onClick={() =>
                             openModal && openModal(TYPE_MODAL_COUNTRIES.CREATE)
                         }

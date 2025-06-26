@@ -54,7 +54,7 @@ export const defaultData: ListResponse = {
     total: 0,
 };
 
-export const defaultDataPagination: PaginationResponse['data'] = {
+export const DEFAULT_DATA_PAGINATION: PaginationResponse['data'] = {
     items: [],
     metadata: {
         currentPage: 0,

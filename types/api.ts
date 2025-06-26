@@ -107,3 +107,16 @@ export interface CommonDataSidebar {
     name: string;
     count?: number;
 }
+
+export interface CreateVariables<T> extends CommonFunction {
+    payload: T;
+}
+
+export interface UpdateVariables<T, K> extends CommonFunction {
+    id: T;
+    payload: K;
+}
+
+export interface DeleteVariables<T> extends CommonFunction {
+    id: T;
+}
