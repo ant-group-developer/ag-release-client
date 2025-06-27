@@ -3,7 +3,7 @@ import {
     FileLoader,
     UploadAdapter,
 } from '@ckeditor/ckeditor5-upload/src/filerepository';
-import { uploadFileToBucket } from './api';
+// import { uploadFileToBucket } from './api';
 
 function uploadAdapter(loader: FileLoader): UploadAdapter {
     return {
@@ -13,10 +13,10 @@ function uploadAdapter(loader: FileLoader): UploadAdapter {
                     const file = await loader.file;
 
                     if (file) {
-                        const url = await uploadFileToBucket(file);
-                        resolve({
-                            default: url,
-                        });
+                        // const url = await uploadFileToBucket(file);
+                        // resolve({
+                        //     default: url,
+                        // });
                     } else {
                         reject('Upload error');
                     }
