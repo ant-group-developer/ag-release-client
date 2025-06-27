@@ -1,275 +1,199 @@
-import AppForm from '@/components/ui/antd-form/form';
-import AppFormItem from '@/components/ui/antd-form/form-Item';
+import { LabelForm } from '@/components/ui/label/labelForm';
 import RegionSelect from '@/components/ui/select/region-select';
 import TimezoneSelect from '@/components/ui/select/timezone-select';
+import ErrorText from '@/components/ui/text/error-text';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { DatePicker, Form } from 'antd';
+import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { DatePicker } from 'antd';
+import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
+import { z } from 'zod';
+
+const releaseSchedulingSchema = (messages: any) =>
+    z.object({
+        releaseDate: z.string().nonempty(messages('validation.input')),
+        territoryType: z
+            .array(z.string())
+            .min(1, messages('validation.select')),
+        timezone: z.string().nonempty(messages('validation.input')),
+    });
+
+export type ReleaseSchedulingSchema = z.infer<
+    ReturnType<typeof releaseSchedulingSchema>
+>;
 
 type Props = {};
 
 export default function ReleaseSchedulingForm({}: Props) {
     const messages = useTranslations();
 
-    const [form] = Form.useForm();
-    const territoryType = Form.useWatch('territoryType', form);
-    const platformType = Form.useWatch('platformType', form);
+    const formValues = useReleaseFormStore((state) => state.formValues);
+    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
 
-    const [releaseSchedulingData, setReleaseSchedulingData] = useState([
-        {
-            key: '1',
-            territory: 'Worldwide',
-            territoryType: 'Worldwide',
-            platform: 'ALL',
-            platformType: 'ALL',
-            track: 'Dreamscape',
-            releaseDate: '2025-05-30',
-            preOrderDate: '2025-05-25',
-            originalReleaseDate: '2025-05-20',
-            pd: 'Yes',
-            etu: 'Yes',
-            adSs: 'Yes',
-            ugc: 'Monetize',
+    const formMethods = useForm<ReleaseSchedulingSchema>({
+        defaultValues: {
+            releaseDate: formValues?.releaseDate || '',
+            territoryType: formValues?.territoryType || [],
+            timezone: formValues?.timezone || '',
         },
-        {
-            key: '2',
-            territory: 'Worldwide',
-            exclusivity: 'Exclusive',
-            track: 'Lullaby',
-            releaseDate: '2025-05-30',
-            preOrderDate: '2025-05-25',
-            instGratDate: '2025-05-27',
-            pd: 'Yes',
-            etu: 'Yes',
-            adSs: 'Yes',
-            ugc: 'Monetize',
-        },
-        {
-            key: '3',
-            territory: 'Worldwide',
-            exclusivity: 'Exclusive',
-            track: 'Serenity',
-            releaseDate: '2025-05-30',
-            preOrderDate: '2025-05-25',
-            instGratDate: null, // không có IG Date
-            pd: 'Yes',
-            etu: 'Yes',
-            adSs: 'Yes',
-            ugc: 'Monetize',
-        },
-        {
-            key: '4',
-            territory: 'Worldwide',
-            exclusivity: 'Exclusive',
-            track: 'Awakening',
-            releaseDate: '2025-05-30',
-            preOrderDate: '2025-05-25',
-            instGratDate: '2025-05-28',
-            pd: 'Yes',
-            etu: 'Yes',
-            adSs: 'Yes',
-            ugc: 'Monetize',
-        },
-        {
-            key: '5',
-            territory: 'Worldwide',
-            exclusivity: 'Exclusive',
-            track: 'Echoes',
-            releaseDate: '2025-05-30',
-            preOrderDate: '2025-05-25',
-            instGratDate: '2025-05-29',
-            pd: 'Yes',
-            etu: 'Yes',
-            adSs: 'Yes',
-            ugc: 'Monetize',
-        },
-    ]);
+        resolver: zodResolver(releaseSchedulingSchema(messages)),
+        mode: 'onChange',
+        reValidateMode: 'onChange',
+    });
+
+    const {
+        control,
+        formState: { errors },
+        watch,
+        trigger,
+        setValue,
+    } = formMethods;
+
+    const watchedAllFields = useWatch({ control });
 
     useEffect(() => {
-        if (territoryType === 'Worldwide') {
-            form.setFieldValue('territory', undefined);
-        }
-    }, [territoryType, form]);
-
-    const handleSubmit = (values: any) => {
-        const newSchedule = {
-            key: String(releaseSchedulingData.length + 1),
-            ...values,
-            pd: values.pd ? 'Yes' : 'No',
-            etu: values.etu ? 'Yes' : 'No',
-            adSs: values.adSs ? 'Yes' : 'No',
+        const updatedFormValues = {
+            ...formValues,
+            releaseDate: watchedAllFields.releaseDate,
+            territoryType: watchedAllFields.territoryType,
+            timezone: watchedAllFields.timezone,
         };
 
-        setReleaseSchedulingData([...releaseSchedulingData, newSchedule]);
-        form.resetFields();
-    };
+        setFormValues(updatedFormValues);
+    }, [watchedAllFields]);
+
+    useEffect(() => {
+        trigger();
+    }, []);
+
     return (
         <div className="rounded-lg bg-white p-4">
-            <AppForm
-                form={form}
-                layout="vertical"
-                onFinish={handleSubmit}
-                showSubmit={false}
-            >
-                <div className="flex flex-col gap-4">
-                    {/* <div className="grid grid-cols-3 gap-8"> */}
-                    {/* <AppFormItem
-                            label="Ngày phát hành sản phẩm"
-                            name="releaseDate"
-                            required
-                            rules={[
-                                {
-                                    required: true,
-                                    message: messages('validation.select'),
-                                },
-                            ]}
-                        >
-                            <DatePicker
-                                className="w-full"
-                                format="YYYY-MM-DD"
-                            />
-                        </AppFormItem> */}
-                    {/* 
-                        <AppFormItem
-                            label="Ngày đặt trước sản phẩm"
-                            name="preOrderDate"
-                        >
-                            <DatePicker
-                                className="w-full"
-                                format="YYYY-MM-DD"
-                            />
-                        </AppFormItem>
-
-                        <AppFormItem
-                            label="Ngày phát hành ban đầu"
-                            name="originalReleaseDate"
-                        >
-                            <DatePicker
-                                className="w-full"
-                                format="YYYY-MM-DD"
-                            />
-                        </AppFormItem> */}
-                    {/* </div> */}
-
+            <FormProvider {...formMethods}>
+                <form className="flex flex-col gap-4">
                     <div className="grid grid-cols-3 gap-8">
-                        <AppFormItem
-                            label="Thời gian phát hành"
-                            name="releaseDate"
-                            required
-                            rules={[
-                                {
-                                    required: true,
-                                    message: messages('validation.select'),
-                                },
-                            ]}
-                        >
-                            <DatePicker
-                                className="w-full"
-                                format="YYYY-MM-DD"
+                        <div>
+                            <LabelForm
+                                htmlFor="releaseDate"
+                                required
+                                label="Thời gian phát hành"
                             />
-                        </AppFormItem>
-
-                        {/* <AppFormItem
-                            label="Loại nền tảng"
-                            name="platformType"
-                            required
-                            rules={[
-                                {
-                                    required: true,
-                                    message: messages('validation.select'),
-                                },
-                            ]}
-                        >
-                            <PlatformSelect
-                                className="w-full"
-                                placeholder="Chọn nền tảng"
-                                mode="multiple"
-                                allowClear
-                                maxTagCount="responsive"
-                                maxTagPlaceholder={(value) => (
-                                    <CustomTooltip
-                                        title={value
-                                            .map((item: any) => item.label)
-                                            .join(', ')}
-                                    >
-                                        +{value.length}
-                                    </CustomTooltip>
+                            <Controller
+                                control={control}
+                                name="releaseDate"
+                                render={({ field }) => (
+                                    <DatePicker
+                                        id="releaseDate"
+                                        className="w-full"
+                                        format="DD/MM/YYYY"
+                                        disabledDate={(date) =>
+                                            date &&
+                                            date < dayjs().startOf('day')
+                                        }
+                                        value={
+                                            field.value
+                                                ? dayjs(
+                                                      field.value,
+                                                      'YYYY-MM-DD'
+                                                  )
+                                                : null
+                                        }
+                                        onChange={(date, dateString) => {
+                                            field.onChange(
+                                                date
+                                                    ? date.format('YYYY-MM-DD')
+                                                    : ''
+                                            );
+                                        }}
+                                        status={
+                                            errors.releaseDate
+                                                ? 'error'
+                                                : undefined
+                                        }
+                                    />
                                 )}
                             />
-                        </AppFormItem> */}
+                            <ErrorText
+                                isError={!!errors.releaseDate}
+                                message={errors.releaseDate?.message}
+                            />
+                        </div>
 
-                        <AppFormItem
-                            label="Timezone"
-                            name="timezone"
-                            required
-                            rules={[
-                                {
-                                    required: true,
-                                    message: messages('validation.select'),
-                                },
-                            ]}
-                        >
-                            <TimezoneSelect className="w-full" />
-                        </AppFormItem>
-
-                        <AppFormItem
-                            label="Khu vực"
-                            name="territoryType"
-                            required
-                            rules={[
-                                {
-                                    required: true,
-                                    message: messages('validation.select'),
-                                },
-                            ]}
-                        >
-                            <RegionSelect
-                                multiple
-                                allowClear
-                                maxTagCount="responsive"
-                                maxTagPlaceholder={(value) => (
-                                    <CustomTooltip
-                                        title={value
-                                            .map((item: any) => item.label)
-                                            .join(', ')}
-                                    >
-                                        +{value.length}
-                                    </CustomTooltip>
+                        <div>
+                            <LabelForm
+                                htmlFor="timezone"
+                                required
+                                label="timezone"
+                            />
+                            <Controller
+                                control={control}
+                                name="timezone"
+                                render={({ field }) => (
+                                    <TimezoneSelect
+                                        id="timezone"
+                                        className="w-full"
+                                        {...field}
+                                        status={
+                                            errors.timezone
+                                                ? 'error'
+                                                : undefined
+                                        }
+                                    />
                                 )}
                             />
-                        </AppFormItem>
+                            <ErrorText
+                                isError={!!errors.timezone}
+                                message={errors.timezone?.message}
+                            />
+                        </div>
 
-                        {/* <AppFormItem label="Ghi chú" name="note" required>
-                            <TextArea autoSize={{ minRows: 1, maxRows: 20 }} />
-                        </AppFormItem> */}
+                        <div>
+                            <LabelForm
+                                htmlFor="territoryType"
+                                required
+                                label="Khu vực"
+                            />
+                            <Controller
+                                control={control}
+                                name="territoryType"
+                                render={({ field }) => (
+                                    <RegionSelect
+                                        className="w-full"
+                                        id="territoryType"
+                                        multiple
+                                        allowClear
+                                        maxTagCount="responsive"
+                                        maxTagPlaceholder={(value) => (
+                                            <CustomTooltip
+                                                title={value
+                                                    .map(
+                                                        (item: any) =>
+                                                            item.label
+                                                    )
+                                                    .join(', ')}
+                                            >
+                                                +{value.length}
+                                            </CustomTooltip>
+                                        )}
+                                        {...field}
+                                        status={
+                                            errors.territoryType
+                                                ? 'error'
+                                                : undefined
+                                        }
+                                    />
+                                )}
+                            />
+                            <ErrorText
+                                isError={!!errors.territoryType}
+                                message={errors.territoryType?.message}
+                            />
+                        </div>
                     </div>
-
-                    {/* <AppFormItem
-                label="UGC"
-                name="ugc"
-                required
-                rules={[
-                    {
-                        required: true,
-                        message: messages('validation.select'),
-                    },
-                ]}
-            >
-                <Select
-                    options={[
-                        {
-                            label: 'Monetize',
-                            value: 'Monetize',
-                        },
-                        { label: 'Block', value: 'Block' },
-                        { label: 'Track', value: 'Track' },
-                    ]}
-                    placeholder="Chọn UGC"
-                />
-            </AppFormItem> */}
-                </div>
-            </AppForm>
+                </form>
+            </FormProvider>
         </div>
     );
 }

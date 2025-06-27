@@ -1,7 +1,6 @@
 import { Select, SelectProps } from 'antd';
 
 const timezoneOptions = [
-    { label: 'UTC', value: 'UTC' },
     { label: 'Asia/Ho_Chi_Minh (GMT+7)', value: 'Asia/Ho_Chi_Minh' },
     { label: 'America/New_York (GMT-4)', value: 'America/New_York' },
     { label: 'Europe/London (GMT+1)', value: 'Europe/London' },
@@ -17,6 +16,7 @@ export default function TimezoneSelect({
 }: TimezoneSelectProps) {
     return (
         <Select
+            {...props}
             showSearch
             placeholder={placeholder}
             optionFilterProp="label"

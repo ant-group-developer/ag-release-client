@@ -1,10 +1,7 @@
 'use client';
-import { SIZE_ICON } from '@/constants/common';
 import { cn } from '@/helpers/common';
-import { fieldLabels } from '@/modules/releases/constants/fieldLabels';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { releaseSchema } from '@/modules/releases/schemas';
-import { XCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { ZodIssue } from 'zod';
@@ -20,19 +17,24 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
     const getFieldLabel = (path: (string | number)[]) => {
         if (!path.length) return;
 
+        if (path.length === 1 && path[0] === 'tracks') {
+            return messages('formFields.tracks.track' as any);
+        }
+
         if (path.length >= 3 && path[0] === 'tracks') {
             const trackNum = Number(path[1]) + 1;
             const field = path[2];
             const fieldKey = `tracks.${field}`;
 
             // Sử dụng fieldLabels để ánh xạ trường vào tên dễ hiểu
-            const fieldLabel = fieldLabels[field] || field;
-            return `Bài hát số ${trackNum}: ${fieldLabel} `;
+            // const fieldLabel = fieldLabels[field] || field;
+            return `${messages('tracks.number')} ${trackNum}: ${messages(`formFields.${fieldKey}` as any) || field}`;
         }
 
         // Ánh xạ các trường khác vào fieldLabels
         const fieldKey = path.join('.');
-        return fieldLabels[fieldKey] || path.join(' ');
+        // return  fieldLabels[fieldKey] || path.join(' ');
+        return messages(`formFields.${fieldKey}` as any) || path.join(' ');
     };
 
     const formValues = useReleaseFormStore((state) => state.formValues);
@@ -45,7 +47,6 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
         const validationResult = releaseSchema(messages as any).safeParse(
             formValues
         );
-        console.log('🚀 ~ useEffect ~ validationResult:', validationResult);
 
         if (!validationResult.success) {
             setValidationErrors(validationResult.error.errors);
@@ -65,7 +66,9 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
             <div className="flex h-16 items-center border-b px-3">
                 {/* {isActive ? ( */}
                 <>
-                    <h3 className="grow font-semibold">Validation Issues</h3>
+                    <h3 className="grow font-semibold text-red-500">
+                        {`${messages('validation.error')} (${errorCount})`}
+                    </h3>
                     {/* <button onClick={toggleActive}>
                         <ChevronRight size={SIZE_ICON} />
                     </button> */}
@@ -82,10 +85,9 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
                 <div className="p-3">
                     {/* Errors */}
                     <div className="mb-4">
-                        <h4 className="mb-2 flex items-center gap-2 font-semibold text-red-500">
+                        {/* <h4 className="mb-2 flex items-center gap-2 font-semibold text-red-500">
                             <XCircle size={SIZE_ICON} />
-                            Errors ({errorCount})
-                        </h4>
+                        </h4> */}
                         <ul className="space-y-2">
                             {errors.length > 0 ? (
                                 errors.map((err, index) => (
@@ -105,7 +107,7 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
                                 ))
                             ) : (
                                 <li className="text-sm text-gray-500">
-                                    Không có lỗi xác thực.
+                                    {messages('validation.noError')}
                                 </li>
                             )}
                         </ul>

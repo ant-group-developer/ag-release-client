@@ -64,6 +64,20 @@ export const LabelsTable = ({ ...props }: Props) => {
         },
 
         {
+            title: messages('common.description'),
+            key: 'description',
+            dataIndex: 'description',
+            ellipsis: true,
+            align: 'left',
+            width: 150,
+            render: (value) => (
+                <CustomTooltip size="small" title={value}>
+                    <span className="truncate"> {value} </span>
+                </CustomTooltip>
+            ),
+        },
+
+        {
             title: messages('labels.id'),
             key: 'id',
             dataIndex: 'id',
@@ -81,7 +95,7 @@ export const LabelsTable = ({ ...props }: Props) => {
             key: 'trackCount',
             dataIndex: 'trackCount',
             align: 'center',
-            width: 40,
+            width: 50,
             render: (value) => <span className="truncate"> {value} </span>,
         },
 

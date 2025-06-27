@@ -3,7 +3,7 @@
 // import { userQueryKeys } from '../constants';
 // import { DataFilterUser, UserData } from '../types';
 
-import { defaultDataPagination } from '@/constants/common';
+import { DEFAULT_DATA_PAGINATION } from '@/constants/common';
 import { useQuery } from '@tanstack/react-query';
 import { userApi } from '../api';
 import { userQueryKeys } from '../constants';
@@ -18,7 +18,7 @@ export function useUserList(params: DataFilterUser) {
 
     return {
         ...restResponse,
-        data: data?.data?.data ?? defaultDataPagination,
+        data: data?.data?.data ?? DEFAULT_DATA_PAGINATION,
     };
 }
 

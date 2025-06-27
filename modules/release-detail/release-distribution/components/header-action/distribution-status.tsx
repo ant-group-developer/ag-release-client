@@ -31,6 +31,7 @@ export default function DistributionStatus({ onChangeFilter, value }: Props) {
                                     )}
                                 </span>
                                 <Badge
+                                    className="custom-medium-badge"
                                     color={item === value ? 'blue' : '#ccc'}
                                     count={index === 0 ? '20' : index + 1}
                                 />

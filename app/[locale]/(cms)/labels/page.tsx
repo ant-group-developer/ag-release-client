@@ -6,7 +6,7 @@ import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 
 import LabelsHeader from '@/modules/labels/components/header';
-import LabelFormModal from '@/modules/labels/components/modal/create-label';
+import LabelFormModal from '@/modules/labels/components/modal/label-form';
 import { LabelsTable } from '@/modules/labels/components/table';
 import { fakeLabelData } from '@/modules/labels/constants';
 import { TYPE_MODAL_LABEL } from '@/modules/labels/enum';

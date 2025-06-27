@@ -1,11 +1,10 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import useModalStore from '@/hooks/use-modal';
-import { useRouter } from '@/i18n/routing';
 import AddArtistModal from '@/modules/artist/components/modal/add-artist';
-import ArtistFormModal from '@/modules/artist/components/modal/create-artist';
+import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
 import { TYPE_MODAL_ARTIST } from '@/modules/artist/enum';
-import LabelFormModal from '@/modules/labels/components/modal/create-label';
+import LabelFormModal from '@/modules/labels/components/modal/label-form';
 import { TYPE_MODAL_LABEL } from '@/modules/labels/enum';
 import ReleaseDetailForm from '@/modules/release-detail/release-detail-form';
 import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '@/modules/releases/enums';
@@ -13,9 +12,7 @@ import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { useParams } from 'next/navigation';
 
 export default function CoreDetail() {
-    const router = useRouter();
     const params = useParams();
-    const releaseId = params['release-id'];
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const formValues = useReleaseFormStore((state) => state.formValues);
     const typeModal = useModalStore((state) => state.typeModal);
@@ -50,20 +47,7 @@ export default function CoreDetail() {
                         : artist
                 );
             } else {
-                const isAlreadyHaveMainArtist = releaseArtists?.some(
-                    (artist) => artist.role === newArtistData.role
-                );
-
-                if (isAlreadyHaveMainArtist) {
-                    return (updatedArtists = [
-                        newArtistData,
-                        ...releaseArtists.filter(
-                            (artist) => artist.role !== newArtistData.role
-                        ),
-                    ]);
-                } else {
-                    updatedArtists = [...releaseArtists, newArtistData];
-                }
+                updatedArtists = [...releaseArtists, newArtistData];
             }
 
             setFormValues({

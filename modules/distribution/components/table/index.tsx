@@ -1,7 +1,6 @@
 import ActionButton from '@/components/ui/button/action-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { APP_ROUTES } from '@/enums/routes';
 import {
     convertSecondsToHoursMinutes,
     formattedDate,
@@ -44,11 +43,11 @@ export default function DistributionTable({ visibleColumns, ...props }: Props) {
             render: (value, record) => (
                 <div
                     className="flex items-center justify-center"
-                    onClick={() =>
-                        router.push(
-                            `${APP_ROUTES.RELEASES}/detail/${record.releaseId}/core-detail`
-                        )
-                    }
+                    // onClick={() =>
+                    //     router.push(
+                    //         `${APP_ROUTES.RELEASES}/detail/${record.releaseId}/core-detail`
+                    //     )
+                    // }
                 >
                     <Image
                         src={value}
@@ -66,6 +65,7 @@ export default function DistributionTable({ visibleColumns, ...props }: Props) {
             dataIndex: 'title',
             ellipsis: true,
             align: 'left',
+            fixed: 'left',
             width: 300,
             render: (value) => (
                 <CustomTooltip size="small" title={value}>
@@ -79,7 +79,7 @@ export default function DistributionTable({ visibleColumns, ...props }: Props) {
             dataIndex: 'artist',
             align: 'left',
             ellipsis: true,
-            width: 200,
+            width: 300,
             render: (value) => (
                 <CustomTooltip size="small" title={value}>
                     <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
@@ -131,46 +131,6 @@ export default function DistributionTable({ visibleColumns, ...props }: Props) {
             ),
         },
         {
-            title: messages('releases.id'),
-            key: 'releaseId',
-            dataIndex: 'releaseId',
-            align: 'center',
-            fixed: 'left',
-            width: 120,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
-                </CustomTooltip>
-            ),
-        },
-        {
-            title: messages('releases.type'),
-            key: 'type',
-            dataIndex: 'type',
-            align: 'center',
-            width: 120,
-            render: (value) => {
-                return (
-                    <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
-                        {' '}
-                        {value}{' '}
-                    </span>
-                );
-            },
-        },
-        {
-            title: 'UPC',
-            key: 'upc',
-            dataIndex: 'UPC',
-            align: 'center',
-            width: 120,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
-                </CustomTooltip>
-            ),
-        },
-        {
             title: messages('common.status'),
             key: 'status',
             dataIndex: 'status',
@@ -190,6 +150,48 @@ export default function DistributionTable({ visibleColumns, ...props }: Props) {
             width: 100,
             render: (value) => <span className="truncate"> {value} </span>,
         },
+        {
+            title: messages('releases.type'),
+            key: 'type',
+            dataIndex: 'type',
+            align: 'center',
+            width: 120,
+            render: (value) => {
+                return (
+                    <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
+                        {' '}
+                        {value}{' '}
+                    </span>
+                );
+            },
+        },
+        {
+            title: messages('releases.id'),
+            key: 'releaseId',
+            dataIndex: 'releaseId',
+            align: 'center',
+            fixed: 'left',
+            width: 120,
+            render: (value) => (
+                <CustomTooltip size="small" title={value}>
+                    <span className="truncate"> {value} </span>
+                </CustomTooltip>
+            ),
+        },
+
+        {
+            title: 'UPC',
+            key: 'upc',
+            dataIndex: 'UPC',
+            align: 'center',
+            width: 120,
+            render: (value) => (
+                <CustomTooltip size="small" title={value}>
+                    <span className="truncate"> {value} </span>
+                </CustomTooltip>
+            ),
+        },
+
         {
             title: messages('releases.duration'),
             key: 'duration',

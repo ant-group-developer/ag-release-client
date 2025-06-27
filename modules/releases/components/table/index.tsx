@@ -62,6 +62,7 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             ellipsis: true,
             align: 'left',
             width: 200,
+            fixed: 'left',
             render: (value) => (
                 <CustomTooltip size="small" title={value}>
                     <span className="truncate"> {value} </span>

@@ -6,13 +6,13 @@ import { ReleaseFormValuesData } from '../types';
 interface ReleaseFormState {
     formValues: Partial<ReleaseFormValuesData>;
     setFormValues: (values: Partial<ReleaseFormValuesData>) => void;
+    resetFormValues: () => void;
     validationErrors: ZodIssue[];
     setValidationErrors: (errors: ZodIssue[]) => void;
-    trackReadyMap: Record<string, boolean>;
-    setTrackReadyMap: (trackId: string, isReady: boolean) => void;
 }
 
 const initialValue: ReleaseFormValuesData = {
+    id: '',
     thumbnail: undefined,
     releaseType: null,
     nameRelease: '',
@@ -25,14 +25,20 @@ const initialValue: ReleaseFormValuesData = {
     label: '',
     upc: '',
     catalogId: '',
-    cLineYear: '',
-    pLineYear: '',
-    tracks: [],
+    cLine: {
+        year: '',
+        name: '',
+    },
+    pLine: {
+        year: '',
+        name: '',
+    },
     releaseDate: '',
-    timeZone: '',
-    territory: undefined,
-    platform: [],
+    timezone: '',
+    territoryType: [],
+    platforms: [],
     artistsApplyAllTracks: [],
+    tracks: [],
 };
 
 export const useReleaseFormStore = create<ReleaseFormState>()(
@@ -40,16 +46,9 @@ export const useReleaseFormStore = create<ReleaseFormState>()(
         (set) => ({
             formValues: initialValue,
             setFormValues: (values) => set({ formValues: values }),
+            resetFormValues: () => set({ formValues: initialValue }),
             validationErrors: [],
             setValidationErrors: (errors) => set({ validationErrors: errors }),
-            trackReadyMap: {},
-            setTrackReadyMap: (trackId, isReady) =>
-                set((state) => ({
-                    trackReadyMap: {
-                        ...state.trackReadyMap,
-                        [trackId]: isReady,
-                    },
-                })),
         }),
         {
             name: 'release-form-storage',

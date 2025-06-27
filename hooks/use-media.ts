@@ -1,3 +1,4 @@
+'use client';
 import { useMediaQuery as useMedia } from '@uidotdev/usehooks';
 
 export const useMediaQuery = () => {

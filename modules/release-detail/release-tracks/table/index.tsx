@@ -10,8 +10,9 @@ import { useTrackReadyStore } from '@/modules/releases/hooks/trackReadyStore';
 import { TrackData } from '@/modules/tracks/types';
 import { Input, Tabs, Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
+import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import TrackActionButton from '../button/track-action';
 import AudioSpecifications from '../form/audio-specifications';
 import OtherMetadataForm from '../form/other-metadata-form';
@@ -32,13 +33,11 @@ export default function ReleaseTracksTable({
     handleRemoveTrack,
     ...props
 }: Props) {
-    const [trackValidationMap, setTrackValidationMap] = useState<
-        Record<string, FormValidationStatus>
-    >({});
     const messages = useTranslations();
-    const openModal = useModalStore((state) => state.openModal);
     const formValues = useReleaseFormStore((state) => state.formValues);
-    const trackReadyMap = useTrackReadyStore((state) => state.trackReadyMap);
+    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
+    const openModal = useModalStore((state) => state.openModal);
+    const formErrors = useReleaseFormStore((state) => state.validationErrors);
     const setTrackReadyMap = useTrackReadyStore(
         (state) => state.setTrackReadyMap
     );
@@ -50,32 +49,25 @@ export default function ReleaseTracksTable({
         }));
     };
 
-    const checkFormValidity = (
-        trackId: string,
-        formName: string,
-        valid: boolean
-    ) => {
-        setTrackValidationMap((prev) => {
-            const trackValid = prev[trackId] || {
-                trackForm: false,
-                metadataForm: false,
-                audioSpecsForm: false,
-            };
+    const debouncedSetFormValues = useMemo(
+        () =>
+            debounce((track: TrackData, value: string) => {
+                setFormValues({
+                    ...formValues,
+                    tracks: formValues?.tracks?.map((item) =>
+                        item.id === track.id ? { ...item, title: value } : item
+                    ),
+                });
+            }, 300),
+        [formValues, setFormValues]
+    );
 
-            const updatedTrackValid = { ...trackValid, [formName]: valid };
-
-            const allValid = Object.values(updatedTrackValid).every(
-                (value) => value === true
-            );
-
-            setTrackReadyMap(trackId, allValid);
-
-            return {
-                ...prev,
-                [trackId]: updatedTrackValid,
-            };
-        });
-    };
+    const handleChangeTitle = useCallback(
+        (track: TrackData, value: string) => {
+            debouncedSetFormValues(track, value);
+        },
+        [debouncedSetFormValues]
+    );
 
     const columns: ColumnType<TrackData>[] = [
         {
@@ -85,16 +77,16 @@ export default function ReleaseTracksTable({
         },
         {
             title: messages('common.iNo'),
-            dataIndex: '',
-            key: '',
+            dataIndex: 'index',
+            key: 'index',
             align: 'center',
             width: 50,
             render: (_, __, index) => index + 1,
         },
         {
             title: '',
-            dataIndex: '',
-            key: 'name',
+            dataIndex: 'waveform',
+            key: 'waveform',
             align: 'center',
             width: 300,
             render: (value, record) => {
@@ -112,7 +104,14 @@ export default function ReleaseTracksTable({
             align: 'left',
             width: 300,
             render: (value, record) => {
-                return <Input defaultValue={value} />;
+                return (
+                    <Input
+                        defaultValue={value}
+                        onChange={(e) =>
+                            handleChangeTitle(record, e.target.value)
+                        }
+                    />
+                );
             },
         },
         {
@@ -126,7 +125,7 @@ export default function ReleaseTracksTable({
                     <div className="flex flex-wrap gap-y-2">
                         {record.artists.map((artist: ArtistData) => (
                             <Tag
-                                key={artist.id}
+                                key={`${record.id}-${artist.id}`}
                                 closeIcon
                                 onClose={(e) => {
                                     e.preventDefault();
@@ -140,6 +139,7 @@ export default function ReleaseTracksTable({
                             </Tag>
                         ))}
                         <Tag
+                            key={`${record.id}-add-artist`}
                             className="border-dashed"
                             onClick={() =>
                                 openModal(
@@ -216,18 +216,20 @@ export default function ReleaseTracksTable({
         // },
         {
             title: messages('common.status'),
-            dataIndex: '',
-            key: '',
+            dataIndex: 'status',
+            key: 'status',
             align: 'center',
             width: 150,
-            render: (value, record) => {
-                const isReady = trackReadyMap[record.id] || false;
-                const color = isReady ? 'green' : 'red';
+            render: (value, record, index) => {
+                const isTrackError = formErrors.some(
+                    (error) => error.path[1] === index
+                );
+                const color = isTrackError ? 'red' : 'green';
                 return (
                     <Tag bordered color={color}>
                         {/* <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline"> */}
                         {/* {messages('common.draft')} */}
-                        {isReady ? 'Sẵn sàng' : 'Lỗi'}
+                        {isTrackError ? 'Thiếu thông tin' : 'Sẵn sàng'}
                         {/* </span> */}
                     </Tag>
                 );
@@ -252,50 +254,35 @@ export default function ReleaseTracksTable({
     const expandedRowRender = (record: TrackData) => {
         const items = [
             {
-                key: '1',
+                key: `${record.id}-track-form`,
                 label: <span className="font-medium">Bản nhạc & nghệ sĩ</span>,
                 children: (
                     <TracksForm
+                        key={`${record.id}-track-form-content`}
                         trackData={record}
-                        checkTrackValid={(valid) =>
-                            checkFormValidity(record.id, 'trackForm', valid)
-                        }
                     />
                 ),
             },
             {
-                key: '2',
+                key: `${record.id}-metadata-form`,
                 label: <span className="font-medium">Các metadata khác</span>,
                 children: (
                     <OtherMetadataForm
+                        key={`${record.id}-metadata-form-content`}
                         trackData={record}
-                        checkTrackValid={(valid) =>
-                            checkFormValidity(record.id, 'metadataForm', valid)
-                        }
                     />
                 ),
             },
             {
-                key: '3',
+                key: `${record.id}-audio-specs`,
                 label: <span className="font-medium">Thông số kỹ thuật</span>,
                 children: (
                     <AudioSpecifications
+                        key={`${record.id}-audio-specs-content`}
                         trackData={record}
-                        checkTrackValid={(valid) =>
-                            checkFormValidity(
-                                record.id,
-                                'audioSpecsForm',
-                                valid
-                            )
-                        }
                     />
                 ),
             },
-            // {
-            //     key: '4',
-            //     label: <span className="font-medium">Xuất bản</span>,
-            //     children: <PublishingForm />,
-            // },
         ];
         return (
             <div className="px-20 py-4">
@@ -314,7 +301,6 @@ export default function ReleaseTracksTable({
     return (
         <div className="w-full">
             <SortableTable
-                key="main"
                 {...props}
                 pagination={false}
                 columns={columns}

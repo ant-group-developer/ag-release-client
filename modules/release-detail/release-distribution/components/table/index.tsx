@@ -1,8 +1,9 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
-import { formattedDate, getIntlCodeByReleaseStatus } from '@/helpers/common';
+import { formattedDate } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
 import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
+import { Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
@@ -78,9 +79,13 @@ export default function DistributionTable({ ...props }: Props) {
             align: 'center',
             width: 250,
             render: (value) => (
-                <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
-                    {messages(getIntlCodeByReleaseStatus(value))}
-                </span>
+                // <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
+                //     {messages(getIntlCodeByReleaseStatus(value))}
+                // </span>
+                <Tag color="blue">
+                    {/* {messages(getIntlCodeByReleaseStatus(''))} */}
+                    Chưa phân phối
+                </Tag>
             ),
         },
 

@@ -36,27 +36,61 @@ export default function Tracks() {
     };
 
     const handleAddTracks = (newTracks: any[]) => {
+        const artistsFromApplyAllTracks =
+            formValues?.artistsApplyAllTracks || [];
+
         const currentTracks = formValues.tracks || [];
-        const normalizedTracks = currentTracks.map((track: any) => {
-            if (track.artist && !track.artists) {
+        const normalizedTracks = currentTracks.map((track: TrackData) => {
+            if (!track.artists) {
                 return {
                     ...track,
-                    artists: [
-                        {
-                            name: track.artist,
-                            role: 'Main Artist',
-                            id: track.artist,
-                        },
-                    ],
-                    artist: undefined,
+                    artists: [...artistsFromApplyAllTracks],
                 };
             }
             return track;
         });
 
+        const initialValueTrack: TrackData = {
+            id: '',
+            title: '',
+            trackName: '',
+            trackId: '',
+            genres: '',
+            labelName: '',
+            isrc: '',
+            creationDate: '',
+            releaseDate: '',
+            duration: 0,
+            thumbnail: '',
+            isSensitiveContent: false,
+            plays: 0,
+            fileName: '',
+            trackOrigin: '',
+            languageTrack: '',
+            countryLanguage: '',
+            metadataLanguage: '',
+            lyrics: '',
+            countryRecording: '',
+            recordingType: '',
+            songInfo: {
+                duration: 0,
+                peakData: [],
+            },
+            previewTrack: '',
+            territoryType: [],
+            artists: [...artistsFromApplyAllTracks],
+        };
+
+        const newTracksWithArtists = newTracks.map((track: TrackData) => {
+            return {
+                ...initialValueTrack,
+                ...track,
+            };
+        });
+
         setFormValues({
             ...formValues,
-            tracks: [...normalizedTracks, ...newTracks],
+            tracks: [...normalizedTracks, ...newTracksWithArtists],
         });
     };
 
@@ -129,57 +163,8 @@ export default function Tracks() {
         closeModal();
     };
 
-    // const handleAddArtistRelease = (values: any) => {
-    //     const isArtistEditModal =
-    //         typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST;
-    //     try {
-    //         const newArtistData = {
-    //             name: values.name,
-    //             role: values.role,
-    //             id: values.name,
-    //         };
-    //         const releaseArtists = formValues.artists || [];
-
-    //         let updatedArtists;
-
-    //         if (isArtistEditModal) {
-    //             updatedArtists = releaseArtists.map((artist: any) =>
-    //                 artist.name === dataEdit?.name
-    //                     ? { ...artist, ...newArtistData }
-    //                     : artist
-    //             );
-    //         } else {
-    //             updatedArtists = [...releaseArtists, newArtistData];
-    //         }
-
-    //         setFormValues({
-    //             ...formValues,
-    //             artists: updatedArtists,
-    //         });
-    //     } catch (error) {
-    //         console.error('Validation failed:', error);
-    //     }
-    // };
-
-    // const handleRemoveArtistTrack = () => {
-    //     const track = formValues?.tracks?.find(
-    //         (track: TrackData) => track.id === dataEdit?.id
-    //     );
-    //     const newArtists = track?.filter(
-    //         (artist: any) => artist.id !== dataEdit?.id
-    //     );
-
-    //     setFormValues({
-    //         ...formValues,
-    //         tracks: formValues.tracks?.filter(
-    //             (track: TrackData) => track.id !== dataEdit?.id
-    //         ),
-    //     });
-    // };
-
     return (
         <div>
-            {/* <ListTracksReleaseHeader /> */}
             <ReleaseTracksTable
                 dataSource={formValues?.tracks || []}
                 rowSelection={rowSelection}
@@ -191,11 +176,6 @@ export default function Tracks() {
             {typeModal === TYPE_MODAL_RELEASE.ADD_TRACK && (
                 <AddNewTrackModal open onAddTracks={handleAddTracks} />
             )}
-
-            {/* {(typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST ||
-                typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST) && (
-                <AddArtistModal onSubmit={handleAddArtistRelease} />
-            )} */}
 
             {(typeModal === TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.ADD_ARTIST ||
                 typeModal ===

@@ -1,9 +1,10 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
-import { SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
+import { SESSION_STORAGE_KEY } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { useRouter } from '@/i18n/routing';
 import {
     defaultVisibleColumnsDistribution,
     distributionData,
@@ -17,7 +18,7 @@ import DistributionHeader from '@/modules/release-detail/release-distribution/co
 import DistributionStatus from '@/modules/release-detail/release-distribution/components/header-action/distribution-status';
 import DistributionTable from '@/modules/release-detail/release-distribution/components/table';
 import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
-import { useWindowSize } from '@uidotdev/usehooks';
+import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { Button } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
@@ -79,32 +80,41 @@ export default function Distribution({}: Props) {
         pageSize: 21,
     });
 
-    const { height, width } = useWindowSize();
-    const isSmallDevice = Number(width) <= SCREEN.MD;
+    // const { height, width } = useWindowSize();
+    // const isSmallDevice = Number(width) <= SCREEN.MD;
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
+    const formValues = useReleaseFormStore((state) => state.formValues);
+    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
+    const validationErrors = useReleaseFormStore(
+        (state) => state.validationErrors
+    );
+    const errorsLength = validationErrors?.length;
+    const releaseId = formValues?.id || '';
+    const router = useRouter();
 
-    const scrollY = () => {
-        if (isSmallDevice) return undefined;
-        if (!height) return undefined;
-        const minHeight = 300;
-        const header = 64;
-        const pageHeader = 204;
-        const pageAction = 49;
-        const pageFilter = 49;
-        const pagination = 58;
-        const headerTable = 39;
-        const headerFooterHeight =
-            header +
-            pageHeader +
-            pageFilter +
-            pagination +
-            headerTable +
-            pageAction;
-        const value = height - headerFooterHeight;
-        if (value > minHeight) return value;
-        return minHeight;
-    };
+    // const scrollY = () => {
+    //     if (isSmallDevice) return undefined;
+    //     if (!height) return undefined;
+    //     const minHeight = 300;
+    //     const header = 64;
+    //     const pageHeader = 204;
+    //     const pageAction = 49;
+    //     const pageFilter = 49;
+    //     const pagination = 58;
+    //     const headerTable = 39;
+    //     const headerFooterHeight =
+    //         header +
+    //         pageHeader +
+    //         pageFilter +
+    //         pagination +
+    //         headerTable +
+    //         pageAction;
+    //     const value = height - headerFooterHeight;
+    //     if (value > minHeight) return value;
+    //     return minHeight;
+    // };
+
     const handleRefresh = () => {};
 
     // const facebookOptions = [
@@ -261,22 +271,15 @@ export default function Distribution({}: Props) {
         return selectedRow.includes(item.id);
     });
 
-    const isHasTiktokPlatform = dataTable.some(
-        (item) => item.platform === 'TikTok'
-    );
-    const isHasYoutubePlatform = dataTable.some(
-        (item) => item.platform === 'Youtube'
-    );
-    const isHasFacebookPlatform = dataTable.some(
-        (item) => item.platform === 'Facebook'
-    );
-
-    const isHasAmazonPlatform = dataTable.some(
-        (item) => item.platform === 'Amazon'
-    );
-    const isHasAppleMusicPlatform = dataTable.some(
-        (item) => item.platform === 'Apple Music'
-    );
+    const handleDistribution = () => {
+        setFormValues({
+            ...formValues,
+            platforms: selectedRow as string[],
+        });
+        closeModal();
+        router.push(`/releases/detail/${releaseId}/review`);
+        console.log(formValues);
+    };
 
     return (
         <div className="flex h-full flex-col justify-between">
@@ -296,6 +299,7 @@ export default function Distribution({}: Props) {
                                 }}
                                 className=""
                                 type="primary"
+                                disabled={errorsLength > 0}
                             >
                                 <span>
                                     Phân phối {selectedRow.length}/
@@ -309,6 +313,7 @@ export default function Distribution({}: Props) {
                                     );
                                 }}
                                 danger
+                                disabled={errorsLength > 0}
                             >
                                 <span>
                                     Gỡ xuống {selectedRow.length}/
@@ -341,7 +346,7 @@ export default function Distribution({}: Props) {
                 // <DistributionReleaseModal platformIds={selectedRow} />
                 <AppConfirm
                     open
-                    onOk={closeModal}
+                    onOk={handleDistribution}
                     onCancel={closeModal}
                     modalTitle="Phát hành"
                     paragraph="Bạn có chắc chắn muốn phát hành trên nền tảng này không?"

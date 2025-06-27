@@ -37,6 +37,18 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "capital": "Capital",
+        "numericCode": "Numeric code",
+        "title": "Title",
+        "send": "Send",
+        "mainArtist": "Main artist",
+        "optional": "Optional",
+        "required": "Required",
+        "error": "Error",
+        "policy": "Policy",
+        "price": "Price",
+        "saveInfo": "Save information",
+        "coreInfo": "Core information",
         "number": "Number",
         "takeDown": "Take down",
         "role": "Role",
@@ -57,8 +69,8 @@
         "minutes": "minutes",
         "hours": "hours",
         "dateRelease": "Date release",
-        "genres": "Genres",
-        "track": "Bài hát",
+        "genres": "Song genre",
+        "track": "Track",
         "artist": "Artist",
         "release": "Release",
         "plays": "Plays",
@@ -137,13 +149,9 @@
         "detail": "Detail",
         "delete": "Delete",
         "upload": "Upload",
+        "uploadImage": "Upload image",
         "dateCreated": "Date created",
         "dateUpdated": "Date updated",
-        "uploadSubTitle": "or drag and drop it here",
-        "uploadTitleMp3": "Select a MP3 file to upload",
-        "uploadTitleMp4": "Select a MP4 file to upload",
-        "uploadTitleImage": "Select a image file to upload",
-        "uploadTitleDocument": "Select a document file to upload",
         "removeFilter": "Remove filter",
         "filter": "Filter",
         "submit": "Submit",
@@ -171,7 +179,11 @@
     },
     "country": {
         "label": "Country",
-        "city": "City"
+        "city": "City",
+        "language": "Country language",
+        "name": "Country name",
+        "delete": "Delete country",
+        "add": "Add new country"
     },
     "filter": {
         "keyword": "Keyword",
@@ -216,89 +228,6 @@
         "decreaseComparePercent": "Decrease {value}% compare to previous time",
         "exportStatisticOrder": "Export statistic order"
     },
-    "order": {
-        "activeOrder": "Active order",
-        "deleteOrder": "Delete order",
-        "cancelOrder": "Cancel order",
-        "displayedColumn": "displayed Column",
-        "illustrativeImage": "Illustrative Image",
-        "label": "Order",
-        "title": "Order",
-        "deadline": "Deadline",
-        "createOrder": "Create Order",
-        "updateOrder": "Update Order",
-        "detailOrder": "Detail Order",
-        "orderManagement": "Order management",
-        "statistic": "Order statistic",
-        "orderList": "Order list",
-        "orderQuantity": "Order quantity",
-        "orderQuantityCreate": "Order quantity create",
-        "orderGroup": "Order group",
-        "groupCreator": "Group creator",
-        "statisticsByDepartment": "Order statistic by department",
-        "personInCharge": {
-            "label": "Person in charge",
-            "select": "Select person in charge"
-        },
-        "user": {
-            "creator": "User creator order"
-        },
-        "type": {
-            "label": "Order type",
-            "video": "Video",
-            "image": "Image",
-            "document": "Document"
-        },
-        "message": {
-            "createOrderSuccessfully": "Get all orders successfully",
-            "createOrderFailed": "Create order failed",
-            "updateOrderSuccessfully": "Update order successfully",
-            "updateOrderFailed": "Update order failed",
-            "deleteOrderSuccessfully": "Delete order successfully",
-            "deleteOrderFailed": "Delete order failed",
-            "onlyAdminCanDeleteIfHasProduct": "Only admin can delete if has product",
-            "onlyUpdateWhenStatusNew": "Only update when status is new",
-            "ratingBelow5Star": "Products scoring above 5 will be considered as passing.",
-            "selectCommentImageOrVideo": "Select comment with image or video",
-            "cannotCancelWhenStatusCompleted": "Cannot cancel when status is completed",
-            "cancelSuccess": "Cancel successfully",
-            "confirmContinue": "Are you sure you want to continue this order ?",
-            "confirmCancel": "Are you sure you want to cancel this order ?",
-            "confirmDelete": "Are you sure you want to delete this order ?",
-            "restoreSuccess": "Active order successfully",
-            "cannotRestoreWhenStatusNotFound": "Cannot active this order",
-            "orderNotFound": "Order not found",
-            "bulkUpdateUsedStatusSuccessfully": "Update used status successfully"
-        },
-        "status": {
-            "reject": "Reject",
-            "completed": "Complete",
-            "inProgress": "In progress",
-            "new": "New",
-            "pendingApproval": "Pending approval",
-            "deadline": "Deadline",
-            "success": "Success",
-            "error": "Error",
-            "overdue": "Overdue",
-            "pendingLeaderApproval": "Pending leader approval",
-            "leaderReject": "Leader reject",
-            "cancel": "Cancel"
-        },
-        "description": {
-            "orderNote": "Order note",
-            "contentNote": "Content note",
-            "assigneeNote": "Assignee note"
-        }
-    },
-
-    "orderOrderProduct": {
-        "label": "Order product",
-        "message": {
-            "createSuccessfully": "Create order successfully",
-            "updateSuccessfully": "Update order successfully",
-            "deleteSuccessfully": "Delete order successfully"
-        }
-    },
 
     "product": {
         "label": "Product",
@@ -318,15 +247,7 @@
         "groupUserAssignee": "Group user assignee",
         "statisticsByDepartment": "Product statistic by department"
     },
-    "orderProduct": {
-        "message": {
-            "taskAssignedSuccessfully": "Task assigned successfully",
-            "taskAssignedFailed": "Task assigned failed",
-            "removeAssigneeSuccessfully": "Remove assignee successfully",
-            "removeAssigneeFailed": "Remove assignee failed",
-            "updateOrderProductSuccessfully": "Update successfully"
-        }
-    },
+
     "video": {
         "label": "Video",
         "thumbnail": "Thumbnail",
@@ -348,36 +269,7 @@
         "encoding": "Video Encoding",
         "tag": "Tags"
     },
-    "topic": {
-        "bigTopic": "Big topic",
-        "label": "Topic",
-        "name": "Topic",
-        "description": "Description",
-        "code": "Code",
-        "dateCreated": "Date created",
-        "dateUpdated": "Date updated",
-        "order": "Order",
-        "folder": "Folder",
-        "topicSetting": "Topic Setting",
-        "message": {
-            "createTopicSuccessfully": "Create topic successfully",
-            "createTopicFailed": "Create topic failed",
-            "updateTopicSuccessfully": "Update topic successfully",
-            "updateTopicFailed": "Update topic failed",
-            "deleteTopicSuccessfully": "Delete topic successfully",
-            "deleteTopicFailed": "Delete topic failed",
-            "topicNotFound": "Topic not found",
-            "updateTopicsPositionSuccessfully": "Update topics position successfully",
-            "topicIsExists": "Topic is exists",
-            "parentTopicNotFound": "Parent topic not found",
-            "topicChildrenExists": "Topic children exists",
-            "topicIsRoot": "Topic is root",
-            "orderExists": "Order exists"
-        },
-        "createTopic": "Create Topic",
-        "updateTopic": "Update Topic",
-        "overWriteExistingValues": "Over write existing values"
-    },
+
     "dashboard": {
         "label": "Dashboard"
     },
@@ -389,26 +281,7 @@
             "notAuthorizedToRate": "Not authorized to rate"
         }
     },
-    "priority": {
-        "label": "Priority",
-        "name": "Priority name",
-        "color": "Color",
-        "orderCount": "Order count",
-        "note": "Note",
-        "action": {
-            "create": "Create priority",
-            "update": "Update priority",
-            "delete": "Delete priority"
-        },
-        "message": {
-            "createSuccessfully": "Create priority successfully",
-            "updateSuccessfully": "Update priority successfully",
-            "deleteSuccessfully": "Delete priority successfully"
-        },
-        "select": {
-            "placeholder": "Select priority"
-        }
-    },
+
     "image": {
         "label": "Image",
         "dimensions": "Dimensions"
@@ -434,6 +307,8 @@
     "language": {
         "english": "English",
         "label": "Language",
+        "name": "Language name",
+        "code": "Code language",
         "vietnamese": "Tiếng Việt",
         "select": "Select language"
     },
@@ -445,6 +320,8 @@
         "label": "System"
     },
     "validation": {
+        "error": "Validation error",
+        "noError": "No validation error",
         "emailFormat": "Please enter a valid email!",
         "select": "Please select information!",
         "radio": "Please choose information!",
@@ -606,7 +483,8 @@
             "submitUploadUrlSuccessfully": "Upload successfully",
             "getFileByIdFailed": "Get file by id failed",
             "uploadFileFailed": "Upload file failed"
-        }
+        },
+        "fileAttach": "File attach"
     },
     "rating": {
         "label": "Rating",
@@ -625,50 +503,12 @@
             "updateSuccessfully": "Update successfully!"
         }
     },
-    "topicConfig": {
-        "source": "Source"
-    },
-    "productType": {
-        "label": "Product type",
-        "name": "Product type name",
-        "note": "Note",
-        "productCount": "Product count",
-        "isUseThumbailable": "Is use as thumbailable",
-        "field": {
-            "fieldType": "Field type",
-            "acceptFile": "Accept file",
-            "note": "Note"
-        },
-        "action": {
-            "create": "Create product type",
-            "update": "Update product type",
-            "delete": "Delete product type"
-        },
-        "message": {
-            "createSuccessfully": "Create product type successfully",
-            "updateSuccessfully": "Update product type successfully",
-            "deleteSuccessfully": "Delete product type successfully",
-            "productTypeCodeAlreadyExists": "Product type code already exists"
-        }
-    },
+
     "select": {
         "date": "Select date",
         "approver": "Select approver"
     },
-    "topicAssignee": {
-        "message": {
-            "createTopicSuccessButSubmitAssigneeFailed": "Create topic success but submit assignee failed",
-            "topicDataOrListConfigTopicIsRequired": "topicData or listConfigTopic is required",
-            "updateTopicSuccessButSubmitAssigneeFailed": "Update topic success but submit assignee failed",
-            "parentTopicNotFound": "Parent topic not found"
-        }
-    },
-    "topicTopicAssignee": {
-        "message": {
-            "createSuccessfully": "Create topic topic assignee successfully",
-            "updateSuccessfully": "Update topic topic assignee successfully"
-        }
-    },
+
     "theme": {
         "dark": "Dark",
         "light": "Light",
@@ -676,6 +516,7 @@
     },
 
     "releases": {
+        "otherMetadata": "Other metadata",
         "label": "Release",
         "create": "Create release",
         "lastedRelease": "Lasted release",
@@ -690,10 +531,13 @@
         "labelName": "Label name",
         "version": "Version",
         "role": "Role",
+        "isMoreThan4Artists": "Is more than 4 artists",
         "select": {
             "artist": "Select artist",
             "subArtist": "Select sub artist"
         },
+        "cLineYearDescription": "The first year this version was released anywhere in the world.",
+        "pLineYearDescription": "The first year this recording was released worldwide.",
 
         "placeholder": {
             "selectArtist": "Select artist",
@@ -706,9 +550,15 @@
             "selectRole": "Select role",
             "selectMusician": "Select musician",
             "selectLanguageMetadata": "Select language metadata"
+        },
+
+        "scheduling": {
+            "label": "Scheduling"
         }
     },
     "tracks": {
+        "number": "Track number",
+        "add": "Add track",
         "label": "Track",
         "create": "Create track",
         "lastedTrack": "Lasted track",
@@ -746,11 +596,22 @@
         "delete": "Delete artist",
         "update": "Update artist",
         "add": "Add artist",
-
+        "addToTracks": "Add artist to tracks",
         "select": "Select artist",
-        "profiles": "Artist profiles"
+        "profiles": "Artist profiles",
+        "variousArtists": "Various artists",
+        "descriptionVariantArtists": "Display name will be 'Various artists'",
+        "role": "Artist role"
     },
+
+    "role": {
+        "add": "Add role artist",
+        "update": "Update role",
+        "name": "Role name"
+    },
+
     "labels": {
+        "label": "Label",
         "create": "Create label",
         "name": "Label name",
         "id": "Label ID"
@@ -760,5 +621,65 @@
         "create": "Create distribution",
         "name": "Distribution name",
         "id": "Distribution ID"
+    },
+
+    "formFields": {
+        "artists": "Artists",
+        "releaseDate": "Release date",
+        "territoryType": "Territory type",
+        "cLineYear": "C line year",
+        "pLineYear": "P line year",
+        "nameRelease": "Release name",
+        "version": "Version",
+        "timezone": "Timezone",
+        "releaseType": "Release type",
+        "genres": "Genres",
+        "subGenres": "Sub genres",
+        "metaDataLanguage": "Metadata language",
+        "tracks": {
+            "pLine": "Recoding copyright",
+            "previewTrack": "Preview track",
+            "trackOrigin": "Track origin",
+            "track": "Track",
+            "trackName": "Track name",
+            "type": "Type",
+            "nameRelease": "Release name",
+            "version": "Version",
+            "isMoreThan4Artists": "Is more than 4 artists",
+            "artists": "Artists",
+            "subArtists": "Sub artists",
+            "genres": "Genres",
+            "subGenres": "Sub genres",
+            "language": "Language",
+            "label": "Label",
+            "upc": "UPC/EAN/JAN",
+            "catalogId": "Catalog ID",
+            "cLineYear": "C line year",
+            "pLineYear": "P line year",
+            "thumbnail": "Thumbnail",
+            "tracks": "Tracks",
+            "title": "Title",
+            "isrc": "ISRC",
+            "mainArtist": "Main artist",
+            "originalSource": "Original source",
+            "languageTrack": "Language track",
+            "genresTrack": "Genres track",
+            "subGenresTrack": "Sub genres track",
+            "sensitiveContent": "Sensitive content",
+            "countryLanguage": "Country language",
+            "metadataLanguage": "Metadata language",
+            "lyrics": "Lyrics",
+            "source": "Source",
+            "countryRecording": "Country recording",
+            "recordingType": "Recording type",
+            "isSensitiveContent": "Is sensitive content"
+        }
+    },
+
+    "distribute": {
+        "label": "Distribute",
+        "create": "Create distribute",
+        "name": "Distribute name",
+        "id": "Distribute ID"
     }
 }

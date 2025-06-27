@@ -16,6 +16,7 @@ interface DonutChartProps {
     showCenterLabel?: boolean;
     centerLabelText?: string;
     showLabels?: boolean; // Thêm prop để kiểm soát việc hiển thị labels
+    onColors?: (colors: string[]) => void;
 }
 
 const DonutChart = ({
@@ -26,6 +27,7 @@ const DonutChart = ({
     showCenterLabel = true,
     centerLabelText = 'Tổng cộng',
     showLabels = false, // Mặc định không hiển thị labels
+    onColors,
 }: DonutChartProps) => {
     const chartRef = useRef<HTMLDivElement>(null);
     const chartInstanceRef = useRef<am5.Root | null>(null);
@@ -153,6 +155,16 @@ const DonutChart = ({
 
             // Hiệu ứng animation
             series.appear(1000, 100);
+
+            // Lấy màu sau khi render
+            setTimeout(() => {
+                if (onColors) {
+                    const colorArr = series.slices.values.map(
+                        (slice) => slice.get('fill')?.toCSSHex() || '#d1d5db'
+                    );
+                    onColors(colorArr);
+                }
+            }, 300);
         }
 
         // Cleanup khi component unmount
@@ -169,6 +181,7 @@ const DonutChart = ({
         showCenterLabel,
         centerLabelText,
         showLabels,
+        onColors,
     ]);
 
     return (

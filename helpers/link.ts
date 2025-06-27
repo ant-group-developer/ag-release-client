@@ -7,6 +7,7 @@ import {
     ICON_VIDEO,
 } from '@/constants/common';
 import { UPLOAD_TYPE } from '@/enums/common';
+import { RELEASES_TABS } from '@/modules/releases/enums';
 
 export const getLinkDrive = (fileId: string) =>
     `https://drive.google.com/uc?export=view&id=${fileId}`;
@@ -76,3 +77,8 @@ export const getIconByType = (type: string) => {
     };
     return icons[type] || ICON_IMAGE;
 };
+
+export const getReleaseDetailTabRoute = (
+    releaseId: string,
+    tab: RELEASES_TABS
+) => `/releases/detail/${releaseId}/${tab}`;

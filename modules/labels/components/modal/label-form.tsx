@@ -28,10 +28,10 @@ export default function LabelFormModal({ ...props }: Props) {
             <AppForm form={form} showSubmit={false} layout="vertical">
                 <div className="flex items-center gap-4">
                     <AppFormItem name="thumbnail" label={'Logo'}>
-                        <ImageListUpload maxCount={1} />
+                        <ImageListUpload maxCount={1} accept="image/*" />
                     </AppFormItem>
                     <p className="flex-1 text-center text-sm text-gray-500">
-                        Chúng tôi hỗ trợ định dạng ảnh PNG, JFIF, JPEG, or JPG
+                        Hỗ trợ định dạng ảnh PNG, JFIF, JPEG, or JPG
                     </p>
                 </div>
                 <AppFormItem
@@ -42,6 +42,31 @@ export default function LabelFormModal({ ...props }: Props) {
                         {
                             required: true,
                             message: messages('validation.input'),
+                        },
+                        {
+                            max: 100,
+                            message: messages('validation.max', {
+                                number: 100,
+                            }),
+                        },
+                    ]}
+                >
+                    <Input allowClear />
+                </AppFormItem>
+                <AppFormItem
+                    name="description"
+                    label={messages('common.description')}
+                    required
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.input'),
+                        },
+                        {
+                            max: 200,
+                            message: messages('validation.max', {
+                                number: 200,
+                            }),
                         },
                     ]}
                 >

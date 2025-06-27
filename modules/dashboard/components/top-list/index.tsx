@@ -3,7 +3,7 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { TOP_LIST_TYPE } from '../../enums';
 import BarChart from '../bar-chart';
-import DonutChart from '../donut-chart';
+import DonutChart from '../donut-chart/donut-chart';
 import TopListHeader from './top-list-header';
 import TopListRow from './track-row';
 

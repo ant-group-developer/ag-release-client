@@ -60,14 +60,14 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
         //     align: 'left',
         // },
         {
-            title: 'Track',
+            title: messages('tracks.name'),
             dataIndex: 'track',
             key: 'track',
             width: 250,
             align: 'left',
         },
         {
-            title: 'Price Code',
+            title: messages('common.price'),
             dataIndex: 'priceCode',
             key: 'priceCode',
             width: 150,
@@ -113,7 +113,7 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
         //     },
         // },
         {
-            title: 'Policy',
+            title: messages('common.policy'),
             colSpan: 3, // Spans across 3 columns (TikTok, Facebook, YouTube)
             align: 'center',
             children: [
