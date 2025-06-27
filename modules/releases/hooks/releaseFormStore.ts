@@ -1,16 +1,54 @@
+import { ZodIssue } from 'zod';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
+import { ReleaseFormValuesData } from '../types';
 
 interface ReleaseFormState {
-    formValues: Record<string, any>;
-    setFormValues: (values: Record<string, any>) => void;
+    formValues: Partial<ReleaseFormValuesData>;
+    setFormValues: (values: Partial<ReleaseFormValuesData>) => void;
+    resetFormValues: () => void;
+    validationErrors: ZodIssue[];
+    setValidationErrors: (errors: ZodIssue[]) => void;
 }
+
+const initialValue: ReleaseFormValuesData = {
+    id: '',
+    thumbnail: undefined,
+    releaseType: null,
+    nameRelease: '',
+    version: '',
+    isMoreThan4Artists: false,
+    artists: [],
+    genres: null,
+    subGenres: null,
+    metaDataLanguage: '',
+    label: '',
+    upc: '',
+    catalogId: '',
+    cLine: {
+        year: '',
+        name: '',
+    },
+    pLine: {
+        year: '',
+        name: '',
+    },
+    releaseDate: '',
+    timezone: '',
+    territoryType: [],
+    platforms: [],
+    artistsApplyAllTracks: [],
+    tracks: [],
+};
 
 export const useReleaseFormStore = create<ReleaseFormState>()(
     persist(
         (set) => ({
-            formValues: {},
+            formValues: initialValue,
             setFormValues: (values) => set({ formValues: values }),
+            resetFormValues: () => set({ formValues: initialValue }),
+            validationErrors: [],
+            setValidationErrors: (errors) => set({ validationErrors: errors }),
         }),
         {
             name: 'release-form-storage',

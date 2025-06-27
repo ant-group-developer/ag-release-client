@@ -101,6 +101,7 @@ const nextConfig = {
     //     'rc-tree',
     //     'rc-table',
     // ],
+    output: 'standalone',
 };
 
 export default withNextIntl(nextConfig);

@@ -37,6 +37,22 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "capital": "Thủ đô",
+        "numericCode": "Mã số",
+        "title": "Tiêu đề",
+        "send": "Gửi",
+        "mainArtist": "Nghệ sĩ chính",
+        "optional": "Tuỳ chọn",
+        "required": "Bắt buộc",
+        "error": "Lỗi",
+        "policy": "Chính sách",
+        "price": "Giá",
+        "saveInfo": "Lưu thông tin",
+        "coreInfo": "Thông tin cơ bản",
+        "number": "Số",
+        "takeDown": "Gỡ xuống",
+        "role": "Vai trò",
+        "test": "Thử",
         "platforms": "Nền tảng",
         "copyRight": "Bản quyền",
         "language": "Ngôn ngữ",
@@ -53,7 +69,7 @@
         "minutes": "phút",
         "hours": "giờ",
         "dateRelease": "Ngày phát hành",
-        "genres": "Thể loại",
+        "genres": "Thể loại nhạc",
         "track": "Bài hát",
         "artist": "Nghệ sĩ",
         "release": "Bản cập nhật",
@@ -133,13 +149,9 @@
         "detail": "Chi tiết ",
         "delete": "Xoá",
         "upload": "Tải lên",
+        "uploadImage": "Tải ảnh lên",
         "dateCreated": "Ngày tạo",
         "dateUpdated": "Ngày cập nhật",
-        "uploadSubTitle": "hoặc kéo thả tệp vào đây",
-        "uploadTitleMp3": "Chọn tệp MP3 để tải lên",
-        "uploadTitleMp4": "Chọn tệp MP4 để tải lên",
-        "uploadTitleImage": "Chọn hình ảnh để tải lên",
-        "uploadTitleDocument": "Chọn tài liệu để tải lên",
         "removeFilter": "Xoá bộ lọc",
         "filter": "Bộ lọc",
         "submit": "Đồng ý",
@@ -167,7 +179,11 @@
     },
     "country": {
         "label": "Quốc gia",
-        "city": "Thành phố"
+        "city": "Thành phố",
+        "language": "Ngôn ngữ quốc gia",
+        "name": "Tên quốc gia",
+        "delete": "Xoá quốc gia",
+        "add": "Thêm quốc gia"
     },
     "filter": {
         "keyword": "Từ khoá",
@@ -192,7 +208,7 @@
     },
     "delete": {
         "confirmTitle": "Xác nhận xoá",
-        "confirmMessage": "Bạn có chắc muốn xoá?"
+        "confirmMessage": "Bạn có chắc muốn xoá {value} ?"
     },
     "cancel": {
         "confirmTitle": "Xác nhận huỷ",
@@ -211,89 +227,6 @@
         "increaseComparePercent": "Tăng {value}% so với thời gian trước",
         "decreaseComparePercent": "Giảm {value}% so với thời gian trước",
         "exportStatisticOrder": "Xuất thống kê đơn hàng"
-    },
-    "order": {
-        "activeOrder": "Kích hoạt đơn hàng",
-        "deleteOrder": "Xoá đơn hàng",
-        "cancelOrder": "Huỷ đơn hàng",
-        "displayedColumn": "Cột hiển thị",
-        "illustrativeImage": "Hình minh họa",
-        "label": "Đặt hàng",
-        "title": "Đơn hàng",
-        "deadline": "Thời hạn",
-        "createOrder": "Thêm mới đơn hàng",
-        "updateOrder": "Cập nhật đơn hàng",
-        "detailOrder": "Chi tiết đơn hàng",
-        "orderList": "Danh sách đơn hàng",
-        "orderManagement": "Quản lý đơn hàng",
-        "statistic": "Thống kê đơn hàng",
-        "orderQuantity": "Số lượng đơn",
-        "orderQuantityCreate": "Số lượng đơn tạo",
-        "orderGroup": "Nhóm đơn hàng",
-        "groupCreator": "Nhóm người tạo",
-        "statisticsByDepartment": "Thống kê đơn hàng theo phòng ban",
-        "user": {
-            "creator": "Người tạo đơn hàng"
-        },
-        "personInCharge": {
-            "label": "Người thực hiện",
-            "select": "Chọn người thực hiện"
-        },
-        "type": {
-            "label": "Loại đặt hàng",
-            "video": "Video",
-            "image": "Hình ảnh",
-            "document": "Tài liệu"
-        },
-        "message": {
-            "createOrderSuccessfully": "Tạo đơn đặt hàng thành công",
-            "createOrderFailed": "Tạo đơn đặt hàng thất bại",
-            "updateOrderSuccessfully": "Cập nhật đơn đặt hàng thành công",
-            "updateOrderFailed": "Cập nhật đơn đặt hàng thất bại",
-            "deleteOrderSuccessfully": "Xoá đơn đặt hàng thành công",
-            "deleteOrderFailed": "Xóa đơn đặt hàng thất bại",
-            "onlyAdminCanDeleteIfHasProduct": "Chỉ admin mới được xoá đơn đặt hàng nếu có sản phẩm",
-            "onlyUpdateWhenStatusNew": "Chỉ cập nhật được thể loại khác khi trạng thái là mới",
-            "ratingBelow5Star": "Sản phẩm trên 5 điểm sẽ được tính là đạt",
-            "selectCommentImageOrVideo": "Chọn bình luận ảnh hoặc video",
-            "cannotCancelWhenStatusCompleted": "Không thể huỷ khi đã hoàn thành",
-            "cancelSuccess": "Huỷ thành công đơn hàng",
-            "confirmContinue": "Bạn có chắc chắn muốn kích hoạt ?",
-            "confirmCancel": "Bạn có chắc chắn muốn huỷ ?",
-            "confirmDelete": "Bạn có chắc chắn muốn xoá ?",
-            "restoreSuccess": "Kích hoạt đơn hàng thành công",
-            "cannotRestoreWhenStatusNotFound": "Không thể kích hoạt đơn hàng",
-            "orderNotFound": "Không tìm thấy đơn hàng",
-            "bulkUpdateUsedStatusSuccessfully": "Cập nhật trạng thái sử dụng thành công"
-        },
-        "status": {
-            "reject": "Không duyệt",
-            "completed": "Hoàn thành",
-            "inProgress": "Đang làm",
-            "new": "Mới",
-            "pendingApproval": "Chờ duyệt",
-            "deadline": "Quá hạn",
-            "success": "Thành công",
-            "error": "Lỗi",
-            "overdue": "Quá hạn",
-            "pendingLeaderApproval": "Chờ quản lý duyệt",
-            "leaderReject": "Quản lý không duyệt",
-            "cancel": "Huỷ"
-        },
-        "description": {
-            "orderNote": "Ghi chú đơn hàng",
-            "contentNote": "Nội dung đơn hàng",
-            "assigneeNote": "Ghi chú người tải lên"
-        }
-    },
-
-    "orderOrderProduct": {
-        "label": "Sản phẩm trong đơn hàng",
-        "message": {
-            "createSuccessfully": "Tạo đơn hàng thành công",
-            "updateSuccessfully": "Cập nhật đơn hàng thành công",
-            "deleteSuccessfully": "Xoá đơn hàng thành công"
-        }
     },
 
     "product": {
@@ -314,15 +247,6 @@
         "productGroup": "Nhóm sản phẩm",
         "groupUserAssignee": "Nhóm người thực hiện",
         "statisticsByDepartment": "Thống kê sản phẩm theo phòng ban"
-    },
-    "orderProduct": {
-        "message": {
-            "taskAssignedSuccessfully": "Giao người thực hiện thành công",
-            "taskAssignedFailed": "Giao người thực hiện thất bại",
-            "removeAssigneeSuccessfully": "Gỡ bỏ người thực hiện",
-            "removeAssigneeFailed": "Gỡ bỏ người thực hiện thất bại",
-            "updateOrderProductSuccessfully": "Cập nhật thành công"
-        }
     },
 
     "video": {
@@ -346,35 +270,7 @@
         "encoding": "Video Encoding",
         "tag": "Từ khoá"
     },
-    "topic": {
-        "bigTopic": "Chủ đề lớn",
-        "label": "Chủ đề",
-        "description": "Mô tả",
-        "code": "Code",
-        "dateCreated": "Ngày tạo",
-        "dateUpdated": "Ngày cập nhật",
-        "order": "Thứ tự",
-        "folder": "Thư mục",
-        "topicSetting": "Cài đặt chủ đề",
-        "message": {
-            "createTopicSuccessfully": "Tạo chủ đề thành công",
-            "createTopicFailed": "Tạo chủ đề không thành công",
-            "updateTopicSuccessfully": "Cập nhật chủ đề thành công",
-            "updateTopicFailed": "Cập nhật chủ đề thất bại",
-            "deleteTopicSuccessfully": "Xoá chủ đề thành công",
-            "deleteTopicFailed": "Xóa chủ đề thất bại",
-            "topicNotFound": "Không tìm thấy chủ đề",
-            "updateTopicsPositionSuccessfully": "Thay đổi vị trí thành công",
-            "topicIsExists": "Chủ đề đã tồn tại",
-            "parentTopicNotFound": "Không tìm thấy chủ đề lớn",
-            "topicChildrenExists": "Chủ đề con đã tồn tại",
-            "topicIsRoot": "Chủ đề là chủ đề lớn",
-            "orderExists": "Đơn hàng tồn tại"
-        },
-        "createTopic": "Thêm mới chủ đề",
-        "updateTopic": "Cập nhật chủ đề",
-        "overWriteExistingValues": "Ghi đè các giá trị đã có"
-    },
+
     "review": {
         "message": {
             "createReviewSuccessfully": "Thêm bình luận thành công",
@@ -384,29 +280,7 @@
             "notAuthorizedToRate": "Không có quyền đánh giá"
         }
     },
-    "priority": {
-        "label": "Mức độ ưu tiên",
-        "name": "Tên mức độ",
-        "color": "Màu sắc",
-        "orderCount": "Số lượng đơn hàng",
-        "note": "Ghi chú",
-        "action": {
-            "create": "Thêm mới mức độ ưu tiên",
-            "update": "Cập nhật mức độ ưu tiên",
-            "delete": "Xóa mức độ ưu tiên"
-        },
-        "high": "Cao",
-        "medium": "Trung bình",
-        "low": "Thấp",
-        "message": {
-            "createSuccessfully": "Thêm mới mức độ ưu tiên thành công",
-            "updateSuccessfully": "Cập nhật mức độ ưu tiên thành công",
-            "deleteSuccessfully": "Xóa mức độ ưu tiên thành công"
-        },
-        "select": {
-            "placeholder": "Chọn mức độ ưu tiên"
-        }
-    },
+
     "dashboard": {
         "label": "Tổng quan"
     },
@@ -435,6 +309,8 @@
     "language": {
         "english": "English",
         "label": "Ngôn ngữ",
+        "name": "Tên ngôn ngữ",
+        "code": "Mã ngôn ngữ",
         "vietnamese": "Tiếng Việt",
         "select": "Chọn ngôn ngữ"
     },
@@ -446,6 +322,8 @@
         "label": "Hệ thống"
     },
     "validation": {
+        "error": "Lỗi xác thực",
+        "noError": "Không có lỗi xác thực",
         "emailFormat": "Vui lòng nhập đúng định dạng Email!",
         "select": "Vui lòng chọn thông tin!",
         "radio": "Vui lòng chọn thông tin!",
@@ -455,7 +333,7 @@
         "passwordMisMatch": "Mật khẩu không khớp!",
         "passwordFormat": "Mật khẩu bao gồm chữ cái viết hoa và có ít nhất 6 kí tự",
         "unique": "Dữ liệu không được trùng nhau",
-        "mustBeNumber": "Must be number",
+        "mustBeNumber": "Phải là chữ số",
         "min": "Tối thiểu {number} ký tự",
         "minValid": "Tối thiểu {number} ký tự hợp lệ",
         "minWithValid": "Tối thiểu {number} ký tự hợp lệ",
@@ -466,7 +344,8 @@
         "video": "Xin vui lòng chọn video hợp lệ",
         "phoneNumber": "Số điện thoại phải gồm đúng 10 số",
         "inputPhoneNumber": "Nhập số điện thoại",
-        "selectUsedStatus": "Chọn trạng thái sử dụng"
+        "selectUsedStatus": "Chọn trạng thái sử dụng",
+        "onlyTheFollowingFormatsAreAccepted": "Chỉ chấp nhận các định dạng: {accept}"
     },
     "form": {
         "searchPlaceholder": "Tìm kiếm"
@@ -474,7 +353,8 @@
     "placeholder": {
         "dragAndDropAudio": "Kéo thả tệp âm thanh vào đây!",
         "selectArtist": "Chọn nghệ sĩ",
-        "selectRegion": "Chọn khu vực"
+        "selectRegion": "Chọn khu vực",
+        "supportFormats": "Định dạng hỗ trợ: {accept}"
     },
     "status": {
         "label": "Trạng thái",
@@ -604,7 +484,8 @@
             "submitUploadUrlSuccessfully": "Tải lên thành công",
             "getFileByIdFailed": "Tải xuống thất bại",
             "uploadFileFailed": "Tải lên thất bại"
-        }
+        },
+        "fileAttach": "Tệp đính kèm"
     },
     "rating": {
         "label": "Đánh giá",
@@ -623,50 +504,12 @@
             "updateSuccessfully": "Cập nhật thông tin thành công!"
         }
     },
-    "topicConfig": {
-        "source": "Tài nguyên"
-    },
-    "productType": {
-        "label": "Sản phẩm yêu cầu",
-        "name": "Tên loại sản phẩm",
-        "note": "Ghi chú",
-        "productCount": "Số lượng sản phẩm",
-        "isUseThumbailable": "Sử dụng làm ảnh thu nhỏ",
-        "field": {
-            "fieldType": "Định dạng",
-            "acceptFile": "Loại file",
-            "note": "Ghi chú"
-        },
-        "action": {
-            "create": "Thêm mới loại sản phẩm",
-            "update": "Cập nhật loại sản phẩm",
-            "delete": "Xóa loại sản phẩm"
-        },
-        "message": {
-            "createSuccessfully": "Thêm mới loại sản phẩm thành công",
-            "updateSuccessfully": "Cập nhật loại sản phẩm thành công",
-            "deleteSuccessfully": "Xóa loại sản phẩm thành công",
-            "productTypeCodeAlreadyExists": "Mã loại sản phẩm đã tồn tại"
-        }
-    },
+
     "select": {
         "date": "Chọn ngày",
         "approver": "Chọn người duyệt"
     },
-    "topicAssignee": {
-        "message": {
-            "createTopicSuccessButSubmitAssigneeFailed": "Tạo chủ đề thành công nhưng giao người thực hiện thất bại",
-            "topicDataOrListConfigTopicIsRequired": "topicData hoặc listConfigTopic là bắt buộc",
-            "updateTopicSuccessButSubmitAssigneeFailed": "Cập nhật chủ đề thành công nhưng giao người thực hiện thất bại",
-            "parentTopicNotFound": "Không tìm thấy chủ đề lớn"
-        }
-    },
-    "topicTopicAssignee": {
-        "message": {
-            "createSuccessfully": "Tạo mới thành công",
-            "updateSuccessfully": "Cập nhật thành công"
-        }
-    },
+
     "theme": {
         "dark": "Tối",
         "light": "Sáng",
@@ -674,6 +517,7 @@
     },
 
     "releases": {
+        "otherMetadata": "Các metadata khác",
         "label": "Phát hành",
         "create": "Tạo phát hành ",
         "lastedRelease": "Phát hành gần đây",
@@ -689,7 +533,9 @@
         "labelName": "Tên label",
         "version": "Phiên bản",
         "role": "Vai trò",
-
+        "isMoreThan4Artists": "Có nhiều hơn 4 nghệ sĩ hay không",
+        "cLineYearDescription": "Năm đầu tiên xuất bản phiên bản này ở bất kỳ nơi nào trên thế giới.",
+        "pLineYearDescription": "Năm bản ghi âm đầu tiên được phát hành trên toàn thế giới.",
         "select": {
             "artist": "Chọn nghệ sĩ",
             "subArtist": "Chọn nghệ sĩ phụ"
@@ -706,9 +552,15 @@
             "selectRole": "Chọn vai trò",
             "selectMusician": "Chọn nhạc sĩ",
             "selectLanguageMetadata": "Chọn ngôn ngữ metadata"
+        },
+
+        "scheduling": {
+            "label": "Lên lịch"
         }
     },
     "tracks": {
+        "number": "Bài hát số",
+        "add": "Thêm bài hát",
         "label": "Bài hát",
         "create": "Tạo bài hát",
         "lastedTrack": "Bài hát gần đây",
@@ -743,14 +595,90 @@
         "create": "Tạo nghệ sĩ",
         "name": "Tên nghệ sĩ",
         "id": "Mã nghệ sĩ",
-        "delete": "Xóa nghệ sĩ"
+        "delete": "Xóa nghệ sĩ",
+        "add": "Thêm nghệ sĩ",
+        "addToTracks": "Thêm nghệ sĩ vào các bài hát",
+        "update": "Cập nhật nghệ sĩ",
+        "select": "Chọn nghệ sĩ",
+        "profiles": "Hồ sơ nghệ sĩ",
+        "variousArtists": "Nhiều nghệ sĩ",
+        "descriptionVariantArtists": "Tên hiển thị sẽ là 'Nhiều nghệ sĩ'",
+        "role": "Vai trò nghệ sĩ"
     },
+
+    "role": {
+        "add": "Thêm vai trò",
+        "update": "Cập nhật vai trò",
+        "name": "Tên vai trò"
+    },
+
     "labels": {
+        "label": "Label",
         "create": "Tạo label",
         "name": "Tên label",
         "id": "Mã label"
     },
     "distribution": {
+        "label": "Phân phối",
+        "create": "Tạo phân phối",
+        "name": "Tên phân phối",
+        "id": "Mã phân phối"
+    },
+
+    "formFields": {
+        "artists": "Nghệ sĩ",
+        "releaseDate": "Ngày phát hành",
+        "territoryType": "Khu vực",
+        "cLineYear": "C line year",
+        "pLineYear": "P line year",
+        "nameRelease": "Tên phát hành",
+        "timezone": "Múi giờ",
+        "releaseType": "Thể loại phát hành",
+        "genres": "Thể loại",
+        "subGenres": "Thể loại phụ",
+        "metaDataLanguage": "Ngôn ngữ metadata",
+        "cLine": "Bản quyền tác phẩm",
+        "pLine": "Bản quyền ghi âm",
+        "tracks": {
+            "pLine": "Bản quyền ghi âm",
+            "previewTrack": "Đoạn nghe trước",
+            "trackOrigin": "Nguồn gốc bài hát",
+            "trackName": "Tên bài hát",
+            "track": "Bài hát",
+            "type": "Thể loại",
+            "nameRelease": "Tên phát hành",
+            "version": "Phiên bản",
+            "isMoreThan4Artists": "Có nhiều hơn 4 nghệ sĩ hay không",
+            "artists": "Nghệ sĩ",
+            "subArtists": "Nghệ sĩ phụ",
+            "genres": "Thể loại",
+            "subGenres": "Thể loại phụ",
+            "language": "Ngôn ngữ",
+            "label": "Label",
+            "upc": "UPC/EAN/JAN",
+            "catalogId": "ID category",
+            "cLineYear": "C line year",
+            "pLineYear": "P line year",
+            "thumbnail": "Thumbnail",
+            "title": "Tên bài hát",
+            "isrc": "ISRC",
+            "mainArtist": "Nghệ sĩ chính",
+            "originalSource": "Nguồn gốc",
+            "languageTrack": "Ngôn ngữ bài hát",
+            "genresTrack": "Thể loại bài hát",
+            "subGenresTrack": "Thể loại phụ bài hát",
+            "sensitiveContent": "Nội dung nhạy cảm",
+            "countryLanguage": "Ngôn ngữ quốc gia",
+            "metadataLanguage": "Ngôn ngữ metadata",
+            "lyrics": "Lời bài hát",
+            "source": "Nguồn gốc",
+            "countryRecording": "Quốc gia ghi âm",
+            "recordingType": "Loại ghi âm",
+            "isSensitiveContent": "Nội dung nhạy cảm"
+        }
+    },
+
+    "distribute": {
         "label": "Phân phối",
         "create": "Tạo phân phối",
         "name": "Tên phân phối",

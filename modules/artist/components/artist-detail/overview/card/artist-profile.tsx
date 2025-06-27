@@ -10,6 +10,7 @@ export default function ArtistProfileCard({}: Props) {
             <div>
                 <ArtistProfilesList
                     list={fakeDspData.map((item) => ({
+                        id: item.id.toString(),
                         icon: item.image,
                         name: item.name,
                     }))}

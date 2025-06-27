@@ -167,7 +167,7 @@ export default function ShowColumnOptionDropdown({
                     >
                         <div className="p-2">
                             <div className="mb-2">
-                                <b>{messages('order.displayedColumn')}</b>
+                                <b> Cột hiển thị </b>
                             </div>
                             <div className="flex flex-col gap-2">
                                 {/* Checkbox "Tất cả" */}

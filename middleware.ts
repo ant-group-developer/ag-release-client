@@ -1,16 +1,18 @@
 import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
-import { getAccessToken } from './helpers/auth';
+import { COOKIES_KEY } from './constants/common';
+import { defaultConfig } from './constants/env';
+import { APP_ROUTES, DEFAULT_ROUTE } from './enums/routes';
 import { routing } from './i18n/routing';
-import { auth0 } from './lib/auth0';
 
 const PUBLIC_FILE = /\.(.*)$/;
+const LOGIN_URL = defaultConfig.LOGIN_URL;
+const REDIRECT_URI = defaultConfig.REDIRECT_URI;
+const CLIENT = defaultConfig.CLIENT;
 
 export default createMiddleware(routing);
 
 export async function middleware(req: NextRequest) {
-    const authRes = await auth0.middleware(req);
-
     if (
         req.nextUrl.pathname.startsWith('/_next') ||
         PUBLIC_FILE.test(req.nextUrl.pathname)
@@ -18,26 +20,41 @@ export async function middleware(req: NextRequest) {
         return;
     }
 
-    // authentication routes — let the middleware handle it
-    if (req.nextUrl.pathname.startsWith('/auth')) {
-        return authRes;
+    if (/^\/api/.test(req.nextUrl.pathname)) {
+        // if sending a request to /api/...
+        const newResponse = NextResponse.next(); // prepare a new response
+
+        // modify your response if needed
+        const bearerToken = req.cookies.get(COOKIES_KEY.TOKEN)?.value;
+        newResponse.headers.set('Authorization', 'Bearer ' + bearerToken);
+        // ...
+
+        return newResponse; // return the modified response
     }
 
-    const { origin } = new URL(req.url);
-    const accessToken = await getAccessToken();
+    const cookieToken = req.cookies.get(COOKIES_KEY.TOKEN)?.value;
+    // const cookieLocale =
+    //     req.cookies.get(COOKIES_KEY.LOCALE)?.value ?? DEFAULT_LOCALE;
 
-    // user does not have a session — redirect to login
-    if (!accessToken) {
-        return NextResponse.redirect(`${origin}/auth/login`);
+    if (cookieToken && APP_ROUTES.LOGIN === req.nextUrl.pathname) {
+        const url = req.nextUrl.clone();
+        url.pathname = DEFAULT_ROUTE;
+        return NextResponse.redirect(url);
     }
 
-    if (/^\/api\/(cms|account)/.test(req.nextUrl.pathname)) {
-        const newResponse = NextResponse.next();
-        newResponse.headers.set('Authorization', 'Bearer ' + accessToken);
-        return newResponse;
-    }
+    // if (!cookieToken && !PUBLIC_ROUTES.includes(req.nextUrl.pathname as any)) {
+    //     return NextResponse.redirect(
+    //         `${LOGIN_URL}?client=${CLIENT}&redirect_uri=${REDIRECT_URI}`
+    //     );
+    // return NextResponse.redirect(
+    //     `${LOGIN_URL}/${cookieLocale}?client=${CLIENT}&redirect_uri=${REDIRECT_URI}`
+    // );
+    // }
 
-    return authRes;
+    // if (cookieLocale && req.nextUrl.locale !== cookieLocale) {
+    //     const newURL = `/${cookieLocale}${req.nextUrl.pathname}${req.nextUrl.search}`;
+    //     return NextResponse.redirect(new URL(newURL, req.url));
+    // }
 }
 
 export const config = {

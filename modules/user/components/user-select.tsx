@@ -27,7 +27,7 @@ function UserSelect({
 
     const options = dataUser.items
         // .toSorted((a, b) => a.department.name.localeCompare(b.department.name))
-        .map((data) => {
+        .map((data: any) => {
             // const firstName = data.firstname;
             // const lastName = data.lastname;
             // const userName = `${firstName} ${lastName}`;

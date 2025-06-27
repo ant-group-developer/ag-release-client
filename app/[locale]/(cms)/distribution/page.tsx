@@ -11,6 +11,7 @@ import DistributionTable from '@/modules/distribution/components/table';
 import { defaultVisibleColumnsDistribution } from '@/modules/distribution/constants';
 import {
     DISTRIBUTION_COLUMNS_DISPLAY,
+    DISTRIBUTION_STATUS,
     TYPE_MODAL_DISTRIBUTION,
 } from '@/modules/distribution/enum';
 import { DistributionDataFilter } from '@/modules/distribution/types';
@@ -100,7 +101,7 @@ export default function Distribution({}: Props) {
                 <div className="flex justify-between border-b">
                     <DistributionStatus
                         onChangeFilter={onChangeFilter}
-                        value={dataFilter.status}
+                        value={dataFilter.status ?? DISTRIBUTION_STATUS.ALL}
                     />
                     <div className="flex items-center gap-4 px-4 font-medium">
                         <Button className="" type="primary">

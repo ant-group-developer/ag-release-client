@@ -147,7 +147,7 @@ export default function PublishingForm({}: Props) {
                     </AppFormItem>
                     <AppFormItem
                         label="Tỷ lệ cổ phần"
-                        name="label"
+                        name="percent"
                         rules={[
                             {
                                 pattern: /^\d+$/,

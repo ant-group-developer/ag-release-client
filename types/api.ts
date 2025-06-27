@@ -40,9 +40,9 @@ export interface SuccessResponse {
 }
 
 export interface CommonAttribute {
-    dateCreated: Date;
-    dateUpdated: Date | null;
-    id: number;
+    id: string;
+    createdAt: string;
+    updatedAt: string | null;
 }
 
 export interface UUIDCommonAttribute {
@@ -81,12 +81,6 @@ export interface CommonParams {
     // language: LOCALE;
 }
 
-export interface CommonDataSidebar {
-    id: string;
-    name: string;
-    count?: number;
-}
-
 export interface CreateFile {
     key: string;
     contentType: string; // fix -> enum
@@ -106,4 +100,23 @@ export interface GetUrlUploadParams {
         typeKey?: string;
     };
     file: File;
+}
+
+export interface CommonDataSidebar {
+    id: string;
+    name: string;
+    count?: number;
+}
+
+export interface CreateVariables<T> extends CommonFunction {
+    payload: T;
+}
+
+export interface UpdateVariables<T, K> extends CommonFunction {
+    id: T;
+    payload: K;
+}
+
+export interface DeleteVariables<T> extends CommonFunction {
+    id: T;
 }

@@ -1,65 +1,78 @@
+import FacebookPolicySelect from '@/components/ui/select/facebook-policy-select';
+import TikTokPolicySelect from '@/components/ui/select/tiktok-policy-select';
+import YoutubePolicySelect from '@/components/ui/select/youtube-policy-select';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
-import { DATE_FORMAT } from '@/enums/common';
-import { DatePicker, Select } from 'antd';
-import { ColumnType } from 'antd/es/table';
+import { Select, TableColumnsType } from 'antd';
 import { useTranslations } from 'next-intl';
 
-type Props = Omit<AppTableProps<any>, 'columns'> & {};
+interface ReleaseSchedulingTableDataItem {
+    key: string;
+    track: string;
+    priceCode: string;
+    tikTokPolicy: string;
+    facebookPolicy: string;
+    youtubePolicy: string;
+}
+
+type Props = Omit<
+    AppTableProps<ReleaseSchedulingTableDataItem>,
+    'columns'
+> & {};
 
 export default function ReleaseSchedulingTable({ ...props }: Props) {
     const messages = useTranslations();
     const priceCodeList = [
         {
-            label: '1 Low Track Single',
+            label: '0.69$',
             value: '0.69',
         },
         {
-            label: '1 Mid Track Single',
+            label: '0.99$',
             value: '0.99',
         },
         {
-            label: '1 Premium Track Single',
+            label: '1.29$',
             value: '1.29',
         },
     ];
 
-    const columns: ColumnType<any>[] = [
+    const columns: TableColumnsType<ReleaseSchedulingTableDataItem> = [
         {
             title: messages('common.iNo'),
             dataIndex: '',
-            key: '',
+            key: 'ino',
             width: 50,
             align: 'center',
-            render: (_, __, index) => index + 1,
+            render: (_: any, __: any, index: number) => index + 1,
         },
+        // {
+        //     title: 'Territory',
+        //     dataIndex: 'territory',
+        //     key: 'territory',
+        //     width: 120,
+        //     align: 'left',
+        // },
+        // {
+        //     title: 'Exclusivity',
+        //     dataIndex: 'exclusivity',
+        //     key: 'exclusivity',
+        //     width: 120,
+        //     align: 'left',
+        // },
         {
-            title: 'Territory',
-            dataIndex: 'territory',
-            key: 'territory',
-            width: 120,
-            align: 'left',
-        },
-        {
-            title: 'Exclusivity',
-            dataIndex: 'exclusivity',
-            key: 'exclusivity',
-            width: 120,
-            align: 'left',
-        },
-        {
-            title: 'Track',
+            title: messages('tracks.name'),
             dataIndex: 'track',
             key: 'track',
-            width: 180,
+            width: 250,
             align: 'left',
         },
         {
-            title: 'Price Code',
+            title: messages('common.price'),
             dataIndex: 'priceCode',
             key: 'priceCode',
-            width: 140,
+            width: 150,
             align: 'left',
-            render: (value) => {
+            render: (value: string) => {
                 return (
                     <Select
                         options={priceCodeList}
@@ -69,6 +82,7 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
                 );
             },
         },
+
         // {
         //     title: 'Release Date',
         //     dataIndex: 'releaseDate',
@@ -83,75 +97,61 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
         //     width: 120,
         //     align: 'center',
         // },
+        // {
+        //     title: 'Inst Grat Date',
+        //     dataIndex: 'instGratDate',
+        //     key: 'instGratDate',
+        //     width: 200,
+        //     align: 'left',
+        //     render: (value) => {
+        //         return (
+        //             <DatePicker
+        //                 className="w-full"
+        //                 format={DATE_FORMAT.DATE_ONLY}
+        //             />
+        //         );
+        //     },
+        // },
         {
-            title: 'Inst Grat Date',
-            dataIndex: 'instGratDate',
-            key: 'instGratDate',
-            width: 120,
+            title: messages('common.policy'),
+            colSpan: 3, // Spans across 3 columns (TikTok, Facebook, YouTube)
             align: 'center',
-            render: (value) => {
-                return (
-                    <DatePicker
-                        className="w-full"
-                        format={DATE_FORMAT.DATE_ONLY}
-                    />
-                );
-            },
-        },
-        {
-            title: 'PD',
-            dataIndex: 'pd',
-            key: 'pd',
-            width: 40,
-            align: 'center',
-        },
-        {
-            title: 'ETU',
-            dataIndex: 'etu',
-            key: 'etu',
-            width: 40,
-            align: 'center',
-        },
-        {
-            title: 'Ad SS',
-            dataIndex: 'adSs',
-            key: 'adSs',
-            width: 40,
-            align: 'center',
-        },
-        {
-            title: 'UGC',
-            dataIndex: 'ugc',
-            key: 'ugc',
-            width: 100,
-            align: 'left',
-            render: (value) => {
-                return (
-                    <Select
-                        className="w-full"
-                        options={[
-                            {
-                                label: 'Monetize',
-                                value: 'Monetize',
-                            },
-                            { label: 'Block', value: 'Block' },
-                            { label: 'Track', value: 'Track' },
-                        ]}
-                        defaultValue="Monetize"
-                    />
-                );
-            },
+            children: [
+                {
+                    title: 'TikTok',
+                    dataIndex: 'tikTokPolicy',
+                    key: 'tikTokPolicy',
+                    width: 200,
+                    align: 'left',
+                    render: (value: string) => <TikTokPolicySelect />,
+                },
+                {
+                    title: 'Facebook',
+                    dataIndex: 'facebookPolicy',
+                    key: 'facebookPolicy',
+                    width: 200,
+                    align: 'left',
+                    render: (value: string) => <FacebookPolicySelect />,
+                },
+                {
+                    title: 'YouTube',
+                    dataIndex: 'youtubePolicy',
+                    key: 'youtubePolicy',
+                    width: 250,
+                    align: 'left',
+                    render: (value: string) => <YoutubePolicySelect />,
+                },
+            ],
         },
     ];
 
     return (
         <AppTable
-            {...props}
+            bordered
             pagination={false}
             rowClassName={'group'}
             columns={columns}
-            className="custom-scrollbar"
-            scroll={{ y: 49 * 8 }}
+            {...props}
         />
     );
 }
