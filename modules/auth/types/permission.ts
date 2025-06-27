@@ -9,41 +9,21 @@ export interface Permission {
     permission: {
         canUpdate: boolean;
     };
-    topic: {
-        canCreate: boolean;
+    releases: {
         canRead: boolean;
+        canCreate: boolean;
         canUpdate: boolean;
         canDelete: boolean;
     };
-    topicSetting: {
+    tracks: {
         canRead: boolean;
-        canUpdate: boolean;
-    };
-    approverSetting: {
-        canRead: boolean;
-        canUpdate: boolean;
-    };
-    order: {
         canCreate: boolean;
-        canRead: boolean;
-        canUpdate: boolean;
-        canDelete: boolean;
-        canReview: boolean;
-    };
-    product: {
-        canRead: boolean;
-        canUploadFile: boolean;
-        canManage: boolean;
-    };
-    productType: {
-        canCreate: boolean;
-        canRead: boolean;
         canUpdate: boolean;
         canDelete: boolean;
     };
-    priority: {
-        canCreate: boolean;
+    labels: {
         canRead: boolean;
+        canCreate: boolean;
         canUpdate: boolean;
         canDelete: boolean;
     };

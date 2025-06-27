@@ -17,8 +17,8 @@ function SidebarMenu({}: Props) {
     const { checkPermission } = usePermission();
 
     const getChildrenRoutes = (children: AdminRoutesChildType[]) => {
-        // return children;
-        if (isAdmin) return children;
+        return children;
+        // if (isAdmin) return children;
 
         const result = children.filter((item) =>
             checkPermission(item.permission)
@@ -77,7 +77,7 @@ function SidebarMenu({}: Props) {
             className="!border-none"
             items={items.filter((item) => Number(item.children?.length) > 0)}
             mode="inline"
-            selectedKeys={[pathname]}
+            selectedKeys={[`/${pathname.split('/')[1]}`]}
         />
     );
 }

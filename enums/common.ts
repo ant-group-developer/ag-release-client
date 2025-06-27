@@ -6,6 +6,7 @@ export enum LOCALE {
 export enum THEME {
     LIGHT = 'light',
     DARK = 'dark',
+    SYSTEM = 'system',
 }
 
 export enum PASSWORD_LENGTH {
@@ -97,29 +98,15 @@ export enum TYPE_NOTIFICATION {
 }
 
 export enum TYPE_FILTER {
-    GROUP = 'group',
     KEYWORD = 'keyword',
-    TOPIC = 'topic',
     IS_ACTIVE = 'is_active',
     CREATOR = 'creator',
-    ASSIGNEE = 'assignee',
-    APPROVER = 'approver',
     STATUS = 'status',
     TYPE = 'type',
-    DEADLINE = 'deadline',
     DROPDOWN = 'dropdown',
-    USE_STATUS = 'usedStatus',
     DATE_CREATED = 'dateCreated',
-    PRIORITY = 'priority',
-    PRODUCT_TYPE = 'productType',
-}
-
-export enum COMMENT_RATING_TAB_KEY {
-    IMAGE = 'image',
-    VIDEO = 'video',
-    VIDEO_AND_THUMBNAIL = 'thumb_video',
-    SOURCE = 'source',
-    HISTORY = 'history',
+    DATE_RELEASE = 'dateRelease',
+    GENRES = 'genres',
 }
 
 export enum UPLOAD_TYPE {
@@ -130,36 +117,21 @@ export enum UPLOAD_TYPE {
     MP3 = 'mp3',
 }
 
-export enum Orientation {
-    HORIZONTAL = 'horizontal',
-    VERTICAL = 'vertical',
-}
-
 export enum ACTIVE_TYPE {
     ON = 'true',
     OFF = 'false',
 }
 
-export enum MODULE_NAME {
-    ORDER = 'order',
-    PRODUCT = 'product',
-    TOPIC = 'topic',
-    STATISTIC = 'statistic',
-    PERMISSION = 'permission',
-}
-
 export enum LOCAL_STORAGE_KEY {
-    VISIBLE_COLUMNS_ORDER = 'visible_columns_order',
-    VISIBLE_COLUMNS_PRODUCT = 'visible_columns_product',
     OPEN_SIDE_BAR = 'open_side_bar',
     LAYOUT_TABLE = 'layout_table',
-    TOPIC_SETTING_TAB_VALUE = 'topic_setting_tab_value',
+    THEME = 'theme',
 }
 
 export enum SESSION_STORAGE_KEY {
-    VISIBLE_COLUMNS_ORDER = 'visible_columns_order',
-    VISIBLE_COLUMNS_PRODUCT = 'visible_columns_product',
-    TOPIC_SETTING_TAB_VALUE = 'topic_setting_tab_value',
+    VISIBLE_COLUMNS_RELEASES = 'visible_columns_releases',
+    VISIBLE_COLUMNS_TRACKS = 'visible_columns_tracks',
+    VISIBLE_COLUMNS_DISTRIBUTION = 'visible_columns_distribution',
 }
 
 export enum FIELD_TYPE {
@@ -175,4 +147,13 @@ export enum ACCEPT_FILE {
 export enum LAYOUT_TABLE {
     LIST = 'list',
     GRID = 'grid',
+}
+
+export enum ORIENTATION {
+    HORIZONTAL = 'horizontal',
+    VERTICAL = 'vertical',
+}
+
+export enum TYPE_MODAL {
+    SEARCH = 'SEARCH',
 }

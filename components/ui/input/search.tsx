@@ -10,24 +10,28 @@ type Props = {
     onChange?: OnSearchType;
     wrapperClassName?: string;
     delay?: number;
+    onSearch?: (value: string) => void;
 } & InputProps;
 
 export default function AppSearch({
     onChange = () => {},
     wrapperClassName,
     delay = 300,
+    onSearch,
     ...props
 }: Props) {
     const messages = useTranslations();
 
     const debounceSearchChange = _.debounce(onChange, delay);
     return (
-        <div className={cn('w-full lg:w-48', wrapperClassName)}>
-            <Input
+        <div className={cn('flex w-full items-center', wrapperClassName)}>
+            <Input.Search
+                // prefix={<Search size={SIZE_ICON} />}
                 id={props.defaultValue?.toString() ?? Math.random().toString()}
                 onChange={(e) => debounceSearchChange(e)}
                 placeholder={messages('form.searchPlaceholder')}
                 allowClear
+                onSearch={onSearch}
                 {...props}
             />
         </div>

@@ -1,4 +1,5 @@
 import GoogleAnalytics from '@/components/google-analytics';
+import ThemeProvider from '@/components/theme-provider';
 import { defaultConfig } from '@/constants/env';
 import { DEFAULT_ROUTE } from '@/enums/routes';
 import { flattenData } from '@/helpers/common';
@@ -20,11 +21,13 @@ import { Inter, Open_Sans } from 'next/font/google';
 import localFont from 'next/font/local';
 import { cookies } from 'next/headers';
 import NextTopLoader from 'nextjs-toploader';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { PropsWithChildren } from 'react';
 import { ToastContainer } from 'react-toastify';
 
 const openSans = Open_Sans({
     subsets: ['latin'],
+    weight: ['400', '500', '600', '700', '800'],
     variable: '--font-open-sans',
     display: 'swap',
 });
@@ -34,7 +37,13 @@ const boston = localFont({
     variable: '--font-boston',
 });
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({
+    subsets: ['latin'],
+    weight: ['400', '500', '600', '700', '800', '900'],
+    variable: '--font-inter',
+    display: 'swap',
+    preload: true,
+});
 
 interface RootLayoutProps extends PropsWithChildren {
     params: Promise<{ locale: string }>;
@@ -137,17 +146,19 @@ export default async function RootLayout({
         const defaultLocale = await getLocale();
         redirect({ href: DEFAULT_ROUTE, locale: defaultLocale });
     }
-
     const messages = await getMessages({ locale });
 
     return (
         <html lang={locale} suppressHydrationWarning>
             <body
-                className={`${boston.variable} ${openSans.variable} ${openSans.className} ${inter.className} text-sm antialiased`}
+                className={`${boston.variable} ${openSans.variable} ${openSans.className} ${inter.variable} ${inter.className} text-sm antialiased`}
             >
                 <GoogleAnalytics />
                 <NextIntlClientProvider locale={locale} messages={messages}>
-                    <AntdProvider>{children}</AntdProvider>
+                    <ThemeProvider />
+                    <AntdProvider>
+                        <NuqsAdapter>{children}</NuqsAdapter>
+                    </AntdProvider>
                 </NextIntlClientProvider>
                 <ToastContainer
                     pauseOnFocusLoss={false}

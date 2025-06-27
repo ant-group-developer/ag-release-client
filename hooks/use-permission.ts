@@ -24,41 +24,22 @@ const defaultPermission: Permission = {
     permission: {
         canUpdate: false,
     },
-    topic: {
-        canCreate: false,
+
+    releases: {
         canRead: true,
+        canCreate: false,
         canUpdate: false,
         canDelete: false,
     },
-    topicSetting: {
+    tracks: {
         canRead: true,
-        canUpdate: false,
-    },
-    approverSetting: {
-        canRead: true,
-        canUpdate: false,
-    },
-    order: {
         canCreate: false,
-        canRead: true,
-        canUpdate: false,
-        canDelete: false,
-        canReview: false,
-    },
-    product: {
-        canRead: true,
-        canUploadFile: false,
-        canManage: false,
-    },
-    productType: {
-        canCreate: false,
-        canRead: true,
         canUpdate: false,
         canDelete: false,
     },
-    priority: {
-        canCreate: false,
+    labels: {
         canRead: true,
+        canCreate: false,
         canUpdate: false,
         canDelete: false,
     },
@@ -82,43 +63,23 @@ const usePermissionStore = create<PermissionState>((set) => {
             permission: {
                 canUpdate: checkPermission(PERMISSION.PERMISSION.UPDATE),
             },
-            topic: {
-                canCreate: checkPermission(PERMISSION.TOPIC.CREATE),
-                canRead: checkPermission(PERMISSION.TOPIC.READ),
-                canUpdate: checkPermission(PERMISSION.TOPIC.UPDATE),
-                canDelete: checkPermission(PERMISSION.TOPIC.DELETE),
+            releases: {
+                canRead: checkPermission(PERMISSION.RELEASE.READ),
+                canCreate: checkPermission(PERMISSION.RELEASE.CREATE),
+                canUpdate: checkPermission(PERMISSION.RELEASE.UPDATE),
+                canDelete: checkPermission(PERMISSION.RELEASE.DELETE),
             },
-            topicSetting: {
-                canRead: checkPermission(PERMISSION.TOPIC_SETTING.READ),
-                canUpdate: checkPermission(PERMISSION.TOPIC_SETTING.UPDATE),
+            tracks: {
+                canRead: checkPermission(PERMISSION.TRACK.READ),
+                canCreate: checkPermission(PERMISSION.TRACK.CREATE),
+                canUpdate: checkPermission(PERMISSION.TRACK.UPDATE),
+                canDelete: checkPermission(PERMISSION.TRACK.DELETE),
             },
-            order: {
-                canCreate: checkPermission(PERMISSION.ORDER.CREATE),
-                canRead: checkPermission(PERMISSION.ORDER.READ),
-                canUpdate: checkPermission(PERMISSION.ORDER.UPDATE),
-                canReview: checkPermission(PERMISSION.ORDER.REVIEW),
-                canDelete: checkPermission(PERMISSION.ORDER.DELETE),
-            },
-            product: {
-                canRead: checkPermission(PERMISSION.PRODUCT.READ),
-                canManage: checkPermission(PERMISSION.PRODUCT.MANAGE),
-                canUploadFile: checkPermission(PERMISSION.PRODUCT.UPLOAD_FILE),
-            },
-            productType: {
-                canCreate: checkPermission(PERMISSION.PRODUCT_TYPE.CREATE),
-                canRead: checkPermission(PERMISSION.PRODUCT_TYPE.READ),
-                canUpdate: checkPermission(PERMISSION.PRODUCT_TYPE.UPDATE),
-                canDelete: checkPermission(PERMISSION.PRODUCT_TYPE.DELETE),
-            },
-            priority: {
-                canCreate: checkPermission(PERMISSION.PRIORITY.CREATE),
-                canRead: checkPermission(PERMISSION.PRIORITY.READ),
-                canUpdate: checkPermission(PERMISSION.PRIORITY.UPDATE),
-                canDelete: checkPermission(PERMISSION.PRIORITY.DELETE),
-            },
-            approverSetting: {
-                canRead: checkPermission(PERMISSION.APPROVER_SETTING.READ),
-                canUpdate: checkPermission(PERMISSION.APPROVER_SETTING.UPDATE),
+            labels: {
+                canRead: checkPermission(PERMISSION.LABEL.READ),
+                canCreate: checkPermission(PERMISSION.LABEL.CREATE),
+                canUpdate: checkPermission(PERMISSION.LABEL.UPDATE),
+                canDelete: checkPermission(PERMISSION.LABEL.DELETE),
             },
         };
 

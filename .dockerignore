@@ -1,0 +1,16 @@
+# Node.js
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Thư mục build local, IDE
+.next
+.vscode/
+.idea/
+.history
+
+# dotenv environment variable files
+*.pem
+
+# Log
+*.log

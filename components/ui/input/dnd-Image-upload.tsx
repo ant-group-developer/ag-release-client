@@ -16,6 +16,7 @@ const getBase64 = (file: any) =>
 
 interface DndImageUploadProps extends UploadProps {
     value?: any;
+    placeholder?: string;
 }
 
 const { Dragger } = Upload;
@@ -25,6 +26,7 @@ const DndImageUpload = ({
     onChange,
     maxCount = 1,
     disabled,
+    placeholder,
     ...props
 }: DndImageUploadProps) => {
     const [previewOpen, setPreviewOpen] = useState(false);
@@ -79,7 +81,7 @@ const DndImageUpload = ({
                     <UploadIcon />
                 </p>
                 <p className="ant-upload-text">
-                    {message('message.dragAndDropImage')}
+                    {placeholder ?? message('message.dragAndDropImage')}
                 </p>
             </Dragger>
 

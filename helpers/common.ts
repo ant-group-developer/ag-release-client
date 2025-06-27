@@ -1,12 +1,19 @@
-import { DATE_FORMAT, LOCALE, ORDER, UPLOAD_TYPE } from '@/enums/common';
-import { ORDER_STATUS } from '@/modules/order/enums';
-import { FILE_ORIENTATION, PRODUCT_TYPE } from '@/modules/product/enums';
+import {
+    DATE_FORMAT,
+    LOCALE,
+    ORDER,
+    ORIENTATION,
+    UPLOAD_TYPE,
+} from '@/enums/common';
+import { RELEASES_STATUS } from '@/modules/releases/enums';
+import { GENRES } from '@/modules/tracks/enums';
 import { presetPalettes } from '@ant-design/colors';
 import { DatePickerProps, GetProp, UploadProps } from 'antd';
 import clsx, { ClassValue } from 'clsx';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import MediaInfoFactory from 'mediainfo.js';
+import { parseBlob } from 'music-metadata';
 import { twMerge } from 'tailwind-merge';
 dayjs.extend(utc);
 /**
@@ -14,6 +21,7 @@ dayjs.extend(utc);
  * @param file - The File object from an `<input type="file">`
  * @returns Promise with metadata
  */
+
 export const getMediaInfoVideo = async (
     file: File
 ): Promise<{
@@ -23,7 +31,7 @@ export const getMediaInfoVideo = async (
     height: number;
     frameRate: number;
     encoding: string;
-    orientation: FILE_ORIENTATION;
+    orientation: ORIENTATION;
 }> => {
     return new Promise((resolve, reject) => {
         MediaInfoFactory({
@@ -87,8 +95,8 @@ export const getMediaInfoVideo = async (
                         encoding: videoTrack.Format ?? 'unknown',
                         orientation:
                             width > height
-                                ? FILE_ORIENTATION.HORIZONTAL
-                                : FILE_ORIENTATION.VERTICAL,
+                                ? ORIENTATION.HORIZONTAL
+                                : ORIENTATION.VERTICAL,
                         // orientation:
                         //     width > height
                         //         ? 'horizontal'
@@ -107,7 +115,7 @@ export const getImageDimensions = (
 ): Promise<{
     width: number;
     height: number;
-    orientation: FILE_ORIENTATION;
+    orientation: ORIENTATION;
 }> => {
     return new Promise((resolve, reject) => {
         const img = new Image();
@@ -115,9 +123,7 @@ export const getImageDimensions = (
             const width = img.width;
             const height = img.height;
             const orientation =
-                width > height
-                    ? FILE_ORIENTATION.HORIZONTAL
-                    : FILE_ORIENTATION.VERTICAL;
+                width > height ? ORIENTATION.HORIZONTAL : ORIENTATION.VERTICAL;
 
             resolve({
                 width,
@@ -362,51 +368,6 @@ export function formatFileSize(bytes: number) {
     return `${parseFloat(mb.toFixed(2))} MB`;
 }
 
-type OrderStatusMessageKey =
-    | 'order.status.completed'
-    | 'order.status.inProgress'
-    | 'order.status.new'
-    | 'order.status.deadline'
-    | 'order.status.pendingApproval'
-    | 'order.status.reject'
-    | 'order.status.cancel'
-    | 'order.status.pendingLeaderApproval'
-    | 'order.status.leaderReject';
-
-export const getIntlCodeByStatus = (
-    value: ORDER_STATUS
-): OrderStatusMessageKey => {
-    const statusToIntlCodeMap: Record<ORDER_STATUS, OrderStatusMessageKey> = {
-        [ORDER_STATUS.COMPLETED]: 'order.status.completed',
-        [ORDER_STATUS.IN_PROGRESS]: 'order.status.inProgress',
-        [ORDER_STATUS.NEW]: 'order.status.new',
-        [ORDER_STATUS.OVERDUE]: 'order.status.deadline',
-        [ORDER_STATUS.PENDING_APPROVAL]: 'order.status.pendingApproval',
-        [ORDER_STATUS.REJECT]: 'order.status.reject',
-        [ORDER_STATUS.CANCEL]: 'order.status.cancel',
-        [ORDER_STATUS.PENDING_LEADER_APPROVAL]:
-            'order.status.pendingLeaderApproval',
-        [ORDER_STATUS.LEADER_REJECT]: 'order.status.leaderReject',
-    };
-    return statusToIntlCodeMap[value] || 'order.status.new';
-};
-
-export const getColorByStatus = (value: string) => {
-    const defaultColor = 'blue';
-    const colorSets: Record<string, string> = {
-        [ORDER_STATUS.COMPLETED]: 'green',
-        [ORDER_STATUS.IN_PROGRESS]: 'gold',
-        [ORDER_STATUS.NEW]: 'blue',
-        [ORDER_STATUS.OVERDUE]: 'volcano',
-        [ORDER_STATUS.PENDING_APPROVAL]: 'purple',
-        [ORDER_STATUS.REJECT]: 'red',
-        [ORDER_STATUS.CANCEL]: 'red',
-        [ORDER_STATUS.PENDING_LEADER_APPROVAL]: 'magenta',
-        [ORDER_STATUS.LEADER_REJECT]: 'red',
-    };
-    return colorSets[value] || defaultColor;
-};
-
 export const getColorByUploadType = (value: string) => {
     const defaultColor = 'blue';
     const colorSets: Record<string, string> = {
@@ -433,26 +394,6 @@ export const getIntlCodeByTypeUpload = (
         [UPLOAD_TYPE.THUMB_VIDEO]: 'common.videoAndImage',
         [UPLOAD_TYPE.SOURCE]: 'common.source',
         [UPLOAD_TYPE.MP3]: 'common.mp3',
-    };
-
-    return uploadTypeToMessageMap[value] || 'common.image';
-};
-
-type ProductUploadMessageKey =
-    | 'common.image'
-    | 'common.video'
-    | 'common.source';
-
-export const getIntlCodeByProductType = (
-    value: PRODUCT_TYPE
-): ProductUploadMessageKey => {
-    const uploadTypeToMessageMap: Record<
-        PRODUCT_TYPE,
-        ProductUploadMessageKey
-    > = {
-        [UPLOAD_TYPE.IMAGE]: 'common.image',
-        [UPLOAD_TYPE.VIDEO]: 'common.video',
-        [UPLOAD_TYPE.SOURCE]: 'common.source',
     };
 
     return uploadTypeToMessageMap[value] || 'common.image';
@@ -558,3 +499,207 @@ export const genPreset = (preset = presetPalettes) => {
         key: label,
     }));
 };
+
+export const getTitleChipDisplay = (
+    dataFilterType: string | undefined,
+    messages: any
+) => {
+    if (!dataFilterType) return '';
+    const MAX_CHIP_DISPLAY = 2;
+    const dataFilterValue = dataFilterType.split(',');
+
+    const translateDataFilterValue = dataFilterValue.map((item) =>
+        messages(getIntlCodeByReleaseStatus(item))
+    );
+
+    if (translateDataFilterValue.length <= MAX_CHIP_DISPLAY)
+        return translateDataFilterValue.join(',');
+
+    const displayDataFilter = translateDataFilterValue
+        .slice(0, MAX_CHIP_DISPLAY)
+        .join(',');
+    const remainingDataFilter =
+        translateDataFilterValue.length - MAX_CHIP_DISPLAY;
+    return `${displayDataFilter} ...+${remainingDataFilter} ${messages('common.other')}`;
+};
+
+export const convertSecondsToHoursMinutes = (seconds: number) => {
+    if (isNaN(Number(seconds)) || seconds < 0) {
+        return '00:00';
+    }
+
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = Math.floor(seconds % 60);
+
+    const pad = (num: number) => num.toString().padStart(2, '0');
+
+    if (hrs > 0) {
+        // Format: HH:mm:ss
+        return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+    } else if (mins > 0) {
+        // Format: mm:ss
+        return `${pad(mins)}:${pad(secs)}`;
+    } else {
+        // Format: 00:ss
+        return `00:${pad(secs)}`;
+    }
+};
+
+type ReleaseStatusMessageKey =
+    | 'common.processing'
+    | 'common.issues'
+    | 'common.neverDistributed'
+    | 'common.distributed'
+    | 'common.takenDown'
+    | 'common.draft';
+export const getIntlCodeByReleaseStatus = (
+    value: string
+): ReleaseStatusMessageKey => {
+    const releaseStatusToMessageMap: Record<string, ReleaseStatusMessageKey> = {
+        [RELEASES_STATUS.PROCESSING]: 'common.processing',
+        [RELEASES_STATUS.ISSUES]: 'common.issues',
+        [RELEASES_STATUS.NEVER_DISTRIBUTED]: 'common.neverDistributed',
+        [RELEASES_STATUS.DISTRIBUTED]: 'common.distributed',
+        [RELEASES_STATUS.TAKEN_DOWN]: 'common.takenDown',
+        [RELEASES_STATUS.DRAFT]: 'common.draft',
+    };
+    return releaseStatusToMessageMap[value] || 'common.processing';
+};
+
+type GenresMessageKey =
+    | 'genres.pop'
+    | 'genres.rock'
+    | 'genres.jazz'
+    | 'genres.country'
+    | 'genres.hipHop'
+    | 'genres.rB'
+    | 'genres.electronic'
+    | 'genres.reggae'
+    | 'genres.rap'
+    | 'genres.blues'
+    | 'genres.classical';
+export const getIntlCodeByGenres = (value: string): GenresMessageKey => {
+    const genresToMessageMap: Record<string, GenresMessageKey> = {
+        [GENRES.POP]: 'genres.pop',
+        [GENRES.ROCK]: 'genres.rock',
+        [GENRES.JAZZ]: 'genres.jazz',
+        [GENRES.COUNTRY]: 'genres.country',
+        [GENRES.HIP_HOP]: 'genres.hipHop',
+        [GENRES.R_B]: 'genres.rB',
+        [GENRES.ELECTRONIC]: 'genres.electronic',
+        [GENRES.REGGAE]: 'genres.reggae',
+        [GENRES.BLUES]: 'genres.blues',
+        [GENRES.CLASSICAL]: 'genres.classical',
+        [GENRES.RAP]: 'genres.rap',
+    };
+    return genresToMessageMap[value] || 'common.pop';
+};
+
+export function parsePeakData(data = '') {
+    return data.split(';');
+}
+
+export function convertPeakData(data = []) {
+    return data.join(';');
+}
+
+export const getPeakData = async (audioFile: any) => {
+    try {
+        const audioContext = new AudioContext();
+        const buffer = await audioFile.arrayBuffer();
+        const audioBuffer = await audioContext.decodeAudioData(buffer);
+        const channelData = audioBuffer.getChannelData(0);
+        const peaks = [];
+        const step = Math.ceil(channelData.length / 1024);
+        for (let i = 0; i < channelData.length; i += step) {
+            let max = 0;
+            for (let j = 0; j < step; j++) {
+                const val = Math.abs(channelData[i + j]);
+                if (val > max) {
+                    max = val;
+                }
+            }
+            peaks.push(max);
+        }
+        const duration = audioBuffer.duration;
+        return { peakData: peaks, songDuration: duration };
+    } catch {
+        return { peakData: [], songDuration: 0 };
+    }
+};
+
+export interface AudioMetadata {
+    codec: string;
+    format: string;
+    bitrate: number;
+    sampleRate: number;
+    channels: number;
+    duration: number;
+    bitDepth: number;
+    mqs: string;
+}
+
+const extractAudioMetadata = async (file: File): Promise<AudioMetadata> => {
+    try {
+        const metadata = await parseBlob(file); // Phân tích file âm thanh từ Blob
+        if (!metadata.format) {
+            throw new Error('No metadata found');
+        }
+        const audioInfo: AudioMetadata = {
+            codec: metadata.format.codec ?? 'unknown', // Định dạng codec (WAV, MP3, v.v.)
+            format: metadata.format.container ?? 'unknown', // Định dạng container (WAV, MP3, v.v.)
+            bitrate: metadata.format.bitrate ?? 0, // Bitrate của file âm thanh
+            sampleRate: metadata.format.sampleRate ?? 0, // Tần số mẫu (Sample Rate)
+            channels: metadata.format.numberOfChannels ?? 0, // Số kênh (Mono/Stereo)
+            duration: Math.round(metadata.format.duration ?? 0), // Thời gian của bài hát (tính bằng giây)
+            bitDepth: metadata.format.bitsPerSample ?? 0, // Bit Depth (nếu có)
+            mqs:
+                (metadata?.format?.sampleRate ?? 0) >= 96000 &&
+                (metadata?.format?.bitrate ?? 0) >= 320000
+                    ? 'Yes'
+                    : 'No', // MQS (Ước tính dựa trên sample rate và bitrate)
+        };
+
+        return audioInfo;
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.error('Error extracting metadata:', error.message);
+        } else {
+            console.error(
+                'An unknown error occurred during metadata extraction'
+            );
+        }
+        throw error; // Đẩy lỗi ra nếu có vấn đề trong quá trình phân tích
+    }
+};
+
+export default extractAudioMetadata;
+
+// type ReleaseTypeMessageKey = 'common.album' | 'common.single' | 'common.ep';
+// export const getIntlCodeByReleaseType = (
+//     value: string
+// ): ReleaseTypeMessageKey => {
+//     const releaseTypeToMessageMap: Record<string, ReleaseTypeMessageKey> = {
+//         [RELEASES_TYPE.ALBUM]: 'common.album',
+//         [RELEASES_TYPE.SINGLE]: 'common.single',
+//         [RELEASES_TYPE.EP]: 'common.ep',
+//     };
+//     return releaseTypeToMessageMap[value] || 'common.album';
+// };
+
+export const timeStringToSeconds = (time: string) => {
+    if (!time) return 0;
+    const [h = '0', m = '0', s = '0'] = time.split(':');
+    const result = Number(h) * 3600 + Number(m) * 60 + Number(s);
+    return result;
+};
+
+
+export function getLanguageLabel(code: string) {
+    const languageMap: Record<string, string> = {
+        vi: 'Tiếng Việt',
+        en: 'English',
+    };
+    return languageMap[code] || code;
+}
