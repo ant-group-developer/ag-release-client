@@ -1,85 +1,55 @@
-# syntax=docker/dockerfile:1
+# syntax=docker.io/docker/dockerfile:1
 
-# 1. Install dependencies (including local ckeditor)
-FROM node:20-alpine AS deps
-WORKDIR /app
-COPY package.json yarn.lock ./
-# COPY ckeditor ./ckeditor
-RUN yarn install --frozen-lockfile --production=false
+FROM node:20-alpine AS base
 
-# 2. Build application (inject build‑time envs)
-FROM node:20-alpine AS builder
+# 1. Install dependencies only when needed
+FROM base AS deps
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+RUN apk add --no-cache libc6-compat
+
 WORKDIR /app
-ARG API_URL
-ARG WEBSITE_URL
-ARG ANT_GROUP_WEBSITE
-ARG EMAIL
-ARG APP_NAME
-ARG APP_SHORT_NAME
-ARG SLOGAN
-ARG APP_IMAGE
-ARG APP_DESCRIPTION
-ARG APP_KEYWORDS
-ARG PRIMARY_COLOR
-ARG TEXT_COLOR
-ARG BACKGROUND_COLOR
-ARG CLIENT
-ARG REDIRECT_URI
-ARG LOGIN_URL
-ARG SUPPORT
-ARG CMS_API
-ARG CMS_URL
-ARG AG_API
-ARG ANT_TASK_API
-ARG API_UPLOAD
-ARG GOOGLE_ROOT_FOLDER_DRIVE_ID
-ARG GOOGLE_ILLUSTRATIVE_FOLDER_ID
-ARG GOOGLE_THUMBNAIL_FOLDER_ID
-ARG APP_UPLOAD_X_API_KEY
-ARG GOOGLE_RESEARCH_FOLDER_ID
-ENV API_URL=${API_URL} \
-    WEBSITE_URL=${WEBSITE_URL} \
-    ANT_GROUP_WEBSITE=${ANT_GROUP_WEBSITE} \
-    EMAIL=${EMAIL} \
-    APP_NAME=${APP_NAME} \
-    APP_SHORT_NAME=${APP_SHORT_NAME} \
-    SLOGAN=${SLOGAN} \
-    APP_IMAGE=${APP_IMAGE} \
-    APP_DESCRIPTION=${APP_DESCRIPTION} \
-    APP_KEYWORDS=${APP_KEYWORDS} \
-    PRIMARY_COLOR=${PRIMARY_COLOR} \
-    TEXT_COLOR=${TEXT_COLOR} \
-    BACKGROUND_COLOR=${BACKGROUND_COLOR} \
-    CLIENT=${CLIENT} \
-    REDIRECT_URI=${REDIRECT_URI} \
-    LOGIN_URL=${LOGIN_URL} \
-    SUPPORT=${SUPPORT} \
-    CMS_API=${CMS_API} \
-    CMS_URL=${CMS_URL} \
-    AG_API=${AG_API} \
-    ANT_TASK_API=${ANT_TASK_API} \
-    API_UPLOAD=${API_UPLOAD} \
-    GOOGLE_ROOT_FOLDER_DRIVE_ID=${GOOGLE_ROOT_FOLDER_DRIVE_ID} \
-    GOOGLE_ILLUSTRATIVE_FOLDER_ID=${GOOGLE_ILLUSTRATIVE_FOLDER_ID} \
-    GOOGLE_THUMBNAIL_FOLDER_ID=${GOOGLE_THUMBNAIL_FOLDER_ID} \
-    APP_UPLOAD_X_API_KEY=${APP_UPLOAD_X_API_KEY} \
-    GOOGLE_RESEARCH_FOLDER_ID=${GOOGLE_RESEARCH_FOLDER_ID} \
-    NODE_ENV=production \
-    NEXT_TELEMETRY_DISABLED=1
-COPY . .
+
+# Install dependencies based on the preferred package manager
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc* ./
+COPY ckeditor* ./ckeditor
+RUN \
+  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+  elif [ -f package-lock.json ]; then npm ci; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
+
+
+# 2. Rebuild the source code only when needed
+FROM base AS builder
+WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-RUN yarn build
+COPY . .
+# Build Next.js based on the preferred package manager
+RUN \
+  if [ -f yarn.lock ]; then yarn build; \
+  elif [ -f package-lock.json ]; then npm run build; \
+  elif [ -f pnpm-lock.yaml ]; then pnpm build; \
+  else npm run build; \
+  fi
 
-# 3. Production image
-FROM node:20-alpine AS runner
+# 3. Production image, copy all the files and run next
+FROM base AS runner
 WORKDIR /app
+
 ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
-COPY --from=builder /app/next.config.mjs ./
+
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
+USER nextjs
+
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-# expose port & start
-EXPOSE 3000
-CMD ["yarn", "start"]
+
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+
+
+CMD ["node", "--max-http-header-size=16384", "server.js"]
