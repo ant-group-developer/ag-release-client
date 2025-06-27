@@ -26,8 +26,8 @@ export const LabelsTable = ({ ...props }: Props) => {
         },
         {
             // title: messages('common.thumbnail'),
-            key: 'thumbnail',
-            dataIndex: 'thumbnail',
+            key: 'picture',
+            dataIndex: 'picture',
             align: 'center',
             width: 30,
             fixed: 'left',
@@ -62,7 +62,6 @@ export const LabelsTable = ({ ...props }: Props) => {
                 </CustomTooltip>
             ),
         },
-
         {
             title: messages('common.description'),
             key: 'description',
@@ -76,33 +75,23 @@ export const LabelsTable = ({ ...props }: Props) => {
                 </CustomTooltip>
             ),
         },
-
-        {
-            title: messages('labels.id'),
-            key: 'id',
-            dataIndex: 'id',
-            align: 'left',
-            width: 100,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
-                </CustomTooltip>
-            ),
-        },
-
-        {
-            title: messages('tracks.count'),
-            key: 'trackCount',
-            dataIndex: 'trackCount',
-            align: 'center',
-            width: 50,
-            render: (value) => <span className="truncate"> {value} </span>,
-        },
-
         {
             title: messages('common.dateCreated'),
             key: 'createdAt',
             dataIndex: 'createdAt',
+            align: 'center',
+            width: 100,
+            render: (value) => (
+                <span className="truncate text-wrap">
+                    {' '}
+                    {formattedDate(value)}{' '}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.dateUpdated'),
+            key: 'updatedAt',
+            dataIndex: 'updatedAt',
             align: 'center',
             width: 100,
             render: (value) => (

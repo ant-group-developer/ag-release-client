@@ -8,8 +8,8 @@ import useModalStore from '@/hooks/use-modal';
 import LabelsHeader from '@/modules/labels/components/header';
 import LabelFormModal from '@/modules/labels/components/modal/label-form';
 import { LabelsTable } from '@/modules/labels/components/table';
-import { fakeLabelData } from '@/modules/labels/constants';
 import { TYPE_MODAL_LABEL } from '@/modules/labels/enum';
+import { useGetListLabels } from '@/modules/labels/hooks/use-get-list-labels';
 import { LabelDataFilter } from '@/modules/labels/types';
 import { useWindowSize } from '@uidotdev/usehooks';
 import { useTranslations } from 'next-intl';
@@ -28,6 +28,8 @@ export default function Labels({}: Props) {
         page: 1,
         pageSize: 21,
     });
+
+    const { labelsData } = useGetListLabels(dataFilter);
 
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
@@ -60,7 +62,7 @@ export default function Labels({}: Props) {
                     handleRefresh={handleRefresh}
                 />
                 <LabelsTable
-                    dataSource={fakeLabelData}
+                    dataSource={labelsData?.items}
                     scroll={{ x: SCREEN.XXL, y: scrollY() }}
                 />
             </div>
@@ -80,9 +82,9 @@ export default function Labels({}: Props) {
             <AppPagination
                 className="border-b border-t"
                 align="end"
-                current={dataFilter.page}
+                current={labelsData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}
-                total={fakeLabelData.length}
+                total={labelsData.metadata?.totalItems}
                 onChange={onChangePage}
                 showTotalText
                 showSizeChanger

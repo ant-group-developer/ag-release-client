@@ -156,4 +156,9 @@ export const QUERY_KEY = {
         GET_LIST: 'GET_LIST',
         GET_DETAIL: 'GET_DETAIL',
     },
+    LABELS: {
+        KEY: 'LABELS',
+        GET_LIST: 'GET_LIST',
+        GET_DETAIL: 'GET_DETAIL',
+    },
 };
