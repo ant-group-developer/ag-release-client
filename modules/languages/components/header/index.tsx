@@ -38,7 +38,7 @@ export default function LanguagesHeader({
                 <div className="flex items-center gap-2">
                     <CreateButton
                         canCreate={true}
-                        text="Thêm ngôn ngữ"
+                        text={messages('language.add')}
                         onClick={() => openModal(TYPE_MODAL_LANGUAGES.CREATE)}
                     />
                 </div>

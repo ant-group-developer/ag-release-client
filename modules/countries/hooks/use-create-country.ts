@@ -18,7 +18,7 @@ export const useCreateCountry = () => {
             queryKey: [countriesQueryKeys.getList],
         });
 
-        const responseMessages = messages(data?.data?.message);
+        const responseMessages = messages(data?.data?.messageCode);
 
         onSuccess?.();
         showNotification('success', responseMessages);
@@ -28,7 +28,7 @@ export const useCreateCountry = () => {
         data: any,
         { onError }: CreateVariables<CreateCountryPayload>
     ) => {
-        const responseMessages = messages(data?.response?.data?.message);
+        const responseMessages = messages(data?.response?.data?.messageCode);
 
         onError?.();
         showNotification('error', responseMessages);

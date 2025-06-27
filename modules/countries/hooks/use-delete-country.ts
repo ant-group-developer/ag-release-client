@@ -15,10 +15,10 @@ export const useDeleteCountry = () => {
         { onSuccess }: DeleteVariables<CountriesData['id']>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [countriesQueryKeys.getList],
+            queryKey: [...countriesQueryKeys.getList],
         });
 
-        showNotification('success', messages(data.data.message));
+        showNotification('success', messages(data.data.messageCode));
         onSuccess?.();
     };
 
@@ -26,7 +26,7 @@ export const useDeleteCountry = () => {
         data: any,
         { onError }: DeleteVariables<CountriesData['id']>
     ) => {
-        showNotification('error', messages(data?.response?.data?.message));
+        showNotification('error', messages(data?.response?.data?.messageCode));
         onError?.();
     };
 

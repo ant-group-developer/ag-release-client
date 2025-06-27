@@ -1,6 +1,7 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
+import { PAGE_SIZE_OPTIONS } from '@/constants/common';
 import { SCREEN } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
@@ -72,7 +73,10 @@ export default function Languages({}: Props) {
     const handleRefresh = () => {};
 
     const { languagesData, isLoading } = useGetListLanguage(dataFilter);
-    console.log('🚀 ~ Languages ~ languagesData:', languagesData);
+    console.log(
+        '🚀 ~ Languages ~ languagesData:',
+        languagesData.metadata?.totalItems
+    );
 
     return (
         <div className="flex h-full flex-col justify-between overflow-hidden">
@@ -93,14 +97,14 @@ export default function Languages({}: Props) {
             <AppPagination
                 className="border-b border-t"
                 align="end"
-                current={dataFilter.page}
+                current={languagesData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}
                 total={languagesData?.metadata?.totalItems}
                 onChange={onChangePage}
                 showTotalText
                 showSizeChanger
                 showQuickJumper
-                pageSizeOptions={[21, 28, 32]}
+                pageSizeOptions={PAGE_SIZE_OPTIONS}
             />
 
             {typeModal === TYPE_MODAL_LANGUAGES.DELETE && (

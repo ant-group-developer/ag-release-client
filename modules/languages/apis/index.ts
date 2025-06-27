@@ -25,7 +25,7 @@ export const languageApi = {
         id: LanguagesData['id'],
         payload: UpdateLanguagePayload
     ) => {
-        return axiosAuth.patch(`/language/${id}`, payload);
+        return axiosAuth.put(`/language/${id}`, payload);
     },
 
     deleteLanguage: (id: LanguagesData['id']) => {

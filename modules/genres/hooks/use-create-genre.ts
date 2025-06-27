@@ -2,53 +2,48 @@ import { showNotification } from '@/helpers/messages-helper';
 import { CreateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
-import { languageApi } from '../apis';
-import { languageQueryKeys } from '../constants/query-keys';
-import { CreateLanguagePayload } from '../types/payload';
+import { genresApi } from '../apis';
+import { genreQueryKeys } from '../constants/query-keys';
+import { CreateGenrePayload } from '../types/payload';
 
-export const useCreateLanguage = () => {
+export const useCreateGenre = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
 
     const onSuccess = (
         data: any,
-        { onSuccess }: CreateVariables<CreateLanguagePayload>
+        { onSuccess }: CreateVariables<CreateGenrePayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...languageQueryKeys.getList],
+            queryKey: [...genreQueryKeys.getList],
         });
-
         const responseMessages = messages(data?.data?.messageCode);
-
-        onSuccess?.();
         showNotification('success', responseMessages);
+        onSuccess?.();
     };
 
     const onError = (
         data: any,
-        { onError }: CreateVariables<CreateLanguagePayload>
+        { onError }: CreateVariables<CreateGenrePayload>
     ) => {
-        const responseMessages = messages(data?.response?.data?.messageCode);
-
-        onError?.();
+        const responseMessages = messages(data?.response.data.messageCode);
         showNotification('error', responseMessages);
+        onError?.();
     };
 
     const mutation = useMutation({
-        mutationFn: ({ payload }: CreateVariables<CreateLanguagePayload>) =>
-            languageApi.createLanguage(payload),
+        mutationFn: ({ payload }: CreateVariables<CreateGenrePayload>) =>
+            genresApi.createGenre(payload),
         onSuccess,
         onError,
     });
 
-    const createLanguage = (
-        variable: CreateVariables<CreateLanguagePayload>
-    ) => {
-        mutation.mutate(variable);
+    const createGenre = (variables: CreateVariables<CreateGenrePayload>) => {
+        mutation.mutate(variables);
     };
 
     return {
-        createLanguage,
+        createGenre,
         ...mutation,
     };
 };

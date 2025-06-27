@@ -1,6 +1,7 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
+import { PAGE_SIZE_OPTIONS } from '@/constants/common';
 import { SCREEN } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
@@ -100,7 +101,7 @@ export default function Countries({}: {}) {
                 showTotalText
                 showSizeChanger
                 showQuickJumper
-                pageSizeOptions={[21, 28, 32]}
+                pageSizeOptions={PAGE_SIZE_OPTIONS}
             />
 
             {(typeModal === TYPE_MODAL_COUNTRIES.CREATE ||

@@ -18,10 +18,10 @@ export const useUpdateLanguage = () => {
         }: UpdateVariables<LanguagesData['id'], UpdateLanguagePayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [languageQueryKeys.getList],
+            queryKey: [...languageQueryKeys.getList],
         });
 
-        const responseMessages = messages(data?.data?.message);
+        const responseMessages = messages(data?.data?.messageCode);
 
         onSuccess?.();
         showNotification('success', responseMessages);
@@ -31,7 +31,7 @@ export const useUpdateLanguage = () => {
         data: any,
         { onError }: UpdateVariables<LanguagesData['id'], UpdateLanguagePayload>
     ) => {
-        const responseMessages = messages(data?.response?.data?.message);
+        const responseMessages = messages(data?.response?.data?.messageCode);
 
         onError?.();
         showNotification('error', responseMessages);

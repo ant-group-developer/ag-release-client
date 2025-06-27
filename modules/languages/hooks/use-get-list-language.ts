@@ -7,8 +7,9 @@ import { LanguageDataFilter, LanguagesData } from '../types';
 
 export const useGetListLanguage = (params: LanguageDataFilter) => {
     const { data, ...res } = useQuery({
-        queryKey: [languageQueryKeys.getList, params],
+        queryKey: [...languageQueryKeys.getList, params],
         queryFn: () => languageApi.getList(params),
+        placeholderData: (previousData) => previousData,
         refetchOnWindowFocus: false,
     });
 
