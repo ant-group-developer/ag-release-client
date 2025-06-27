@@ -3,7 +3,7 @@ import { UpdateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { countriesApi } from '../apis';
-import { countriesQueryKeys } from '../constants/query-key';
+import { countriesQueryKeys } from '../constants/query-keys';
 import { CountriesData } from '../types';
 import { UpdateCountryPayload } from '../types/payload';
 

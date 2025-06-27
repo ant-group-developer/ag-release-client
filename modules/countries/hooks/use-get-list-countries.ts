@@ -2,7 +2,7 @@ import { DEFAULT_DATA_PAGINATION } from '@/constants/common';
 import { PaginationResponse } from '@/types/api';
 import { useQuery } from '@tanstack/react-query';
 import { countriesApi } from '../apis';
-import { countriesQueryKeys } from '../constants/query-key';
+import { countriesQueryKeys } from '../constants/query-keys';
 import { CountriesData, CountriesDataFilter } from '../types';
 
 export const useGetListCountries = (params: CountriesDataFilter) => {
@@ -16,7 +16,7 @@ export const useGetListCountries = (params: CountriesDataFilter) => {
         data?.data?.data ?? DEFAULT_DATA_PAGINATION;
 
     return {
-        CountriesData: dataCountries,
+        countriesData: dataCountries,
         ...res,
     };
 };

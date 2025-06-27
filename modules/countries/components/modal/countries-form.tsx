@@ -28,8 +28,8 @@ export default function CountriesFormModal({ ...props }: Props) {
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as CountriesData);
     const isFormUpdate = dataEdit?.id;
-    const { createCountry } = useCreateCountry();
-    const { updateCountry } = useUpdateCountry();
+    const { createCountry, isPending: createPending } = useCreateCountry();
+    const { updateCountry, isPending: updatePending } = useUpdateCountry();
 
     const handleCreate = (values: CountriesFormValues) => {
         const variables: CreateVariables<CreateCountryPayload> = {
@@ -81,6 +81,7 @@ export default function CountriesFormModal({ ...props }: Props) {
             onCancel={closeModal}
             onOk={form.submit}
             className="!top-4"
+            loading={createPending || updatePending}
         >
             <AppForm
                 form={form}

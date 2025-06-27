@@ -23,7 +23,7 @@ export default function CountriesHeader({
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     return (
-        <AppHeader className="px-4 py-1">
+        <AppHeader className="px-4 py-0">
             <AppHeaderGroup>
                 <CountriesSuperFilter
                     dataFilter={dataFilter}

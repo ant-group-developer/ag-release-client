@@ -1,4 +1,4 @@
-import { LanguagesData } from './types';
+import { LanguagesData } from '../types';
 
 export const fakeLanguageData: LanguagesData[] = [
     {

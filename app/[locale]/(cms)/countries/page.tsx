@@ -33,7 +33,7 @@ export default function Countries({}: {}) {
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit);
 
-    const { CountriesData } = useGetListCountries(dataFilter);
+    const { countriesData, isLoading } = useGetListCountries(dataFilter);
 
     const { deleteCountry } = useDeleteCountry();
 
@@ -82,8 +82,9 @@ export default function Countries({}: {}) {
                     removeFilter={removeFilter}
                 />
                 <CountriesTable
-                    dataSource={CountriesData.items ?? fakeCountriesData}
+                    dataSource={countriesData.items ?? fakeCountriesData}
                     scroll={{ x: SCREEN.MD, y: scrollY() }}
+                    loading={isLoading}
                 />
             </div>
             <AppPagination
@@ -92,7 +93,7 @@ export default function Countries({}: {}) {
                 current={dataFilter.page}
                 pageSize={dataFilter.pageSize}
                 total={
-                    CountriesData?.metadata?.totalItems ??
+                    countriesData?.metadata?.totalItems ??
                     fakeCountriesData.length
                 }
                 onChange={onChangePage}

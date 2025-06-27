@@ -2,20 +2,20 @@ import { showNotification } from '@/helpers/messages-helper';
 import { CreateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
-import { countriesApi } from '../apis';
-import { countriesQueryKeys } from '../constants/query-keys';
-import { CreateCountryPayload } from '../types/payload';
+import { languageApi } from '../apis';
+import { languageQueryKeys } from '../constants/query-keys';
+import { CreateLanguagePayload } from '../types/payload';
 
-export const useCreateCountry = () => {
+export const useCreateLanguage = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
 
     const onSuccess = (
         data: any,
-        { onSuccess }: CreateVariables<CreateCountryPayload>
+        { onSuccess }: CreateVariables<CreateLanguagePayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [countriesQueryKeys.getList],
+            queryKey: [languageQueryKeys.getList],
         });
 
         const responseMessages = messages(data?.data?.message);
@@ -26,7 +26,7 @@ export const useCreateCountry = () => {
 
     const onError = (
         data: any,
-        { onError }: CreateVariables<CreateCountryPayload>
+        { onError }: CreateVariables<CreateLanguagePayload>
     ) => {
         const responseMessages = messages(data?.response?.data?.message);
 
@@ -35,17 +35,20 @@ export const useCreateCountry = () => {
     };
 
     const mutation = useMutation({
-        mutationFn: ({ payload }: CreateVariables<CreateCountryPayload>) =>
-            countriesApi.createCountry(payload),
+        mutationFn: ({ payload }: CreateVariables<CreateLanguagePayload>) =>
+            languageApi.createLanguage(payload),
         onSuccess,
         onError,
     });
 
-    const createCountry = (
-        variables: CreateVariables<CreateCountryPayload>
+    const createLanguage = (
+        variable: CreateVariables<CreateLanguagePayload>
     ) => {
-        mutation.mutate(variables);
+        mutation.mutate(variable);
     };
 
-    return { createCountry, ...mutation };
+    return {
+        createLanguage,
+        ...mutation,
+    };
 };

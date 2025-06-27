@@ -8,8 +8,6 @@ import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_LANGUAGES } from '../../enums';
 import { LanguagesData } from '../../types';
 
-// Không có thumbnail, trackCount như artist
-
 type Props = Omit<AppTableProps<LanguagesData>, 'columns'> & {};
 
 export const LanguagesTable = ({ ...props }: Props) => {

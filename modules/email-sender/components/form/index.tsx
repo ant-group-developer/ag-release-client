@@ -1,7 +1,7 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import FileUpload from '@/components/ui/input/fileUpload';
-import TextEditor from '@/components/ui/textEditor';
+import TextEditor from '@/components/ui/text-editor';
 import { Input } from 'antd';
 import { useTranslations } from 'next-intl';
 

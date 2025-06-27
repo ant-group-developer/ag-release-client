@@ -2,18 +2,58 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import useModalStore from '@/hooks/use-modal';
+import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form, Input } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
+import { useCreateLanguage } from '../../hooks/use-create-language';
+import { useUpdateLanguage } from '../../hooks/use-update-language';
 import { LanguagesData } from '../../types';
+import {
+    CreateLanguagePayload,
+    UpdateLanguagePayload,
+} from '../../types/payload';
+
+type LanguageFormValues = Omit<LanguagesData, 'id' | 'createdAt' | 'updatedAt'>;
 
 type Props = Omit<AppModalProps, 'children'> & {};
 
 export default function LanguageFormModal({ ...props }: Props) {
     const messages = useTranslations();
-    const [form] = Form.useForm();
+    const [form] = Form.useForm<LanguageFormValues>();
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as LanguagesData);
+    const isUpdateForm = !!dataEdit?.id;
+
+    const { createLanguage, isPending: isCreatePending } = useCreateLanguage();
+    const { updateLanguage, isPending: isUpdatePending } = useUpdateLanguage();
+
+    const handleCreateLanguage = (values: LanguageFormValues) => {
+        const variables: CreateVariables<CreateLanguagePayload> = {
+            payload: values,
+            onSuccess: () => {
+                form.resetFields();
+            },
+        };
+        createLanguage(variables);
+    };
+
+    const handleUpdateLanguage = (values: LanguageFormValues) => {
+        const variables: UpdateVariables<
+            LanguagesData['id'],
+            UpdateLanguagePayload
+        > = {
+            id: dataEdit?.id,
+            payload: values,
+        };
+        updateLanguage(variables);
+    };
+
+    const onfinish = (values: LanguageFormValues) => {
+        return isUpdateForm
+            ? handleUpdateLanguage(values)
+            : handleCreateLanguage(values);
+    };
 
     useEffect(() => {
         const initialData = {
@@ -30,8 +70,14 @@ export default function LanguageFormModal({ ...props }: Props) {
             open
             onCancel={closeModal}
             onOk={form.submit}
+            loading={isCreatePending || isUpdatePending}
         >
-            <AppForm form={form} showSubmit={false} layout="vertical">
+            <AppForm
+                form={form}
+                showSubmit={false}
+                onFinish={onfinish}
+                layout="vertical"
+            >
                 <AppFormItem
                     name="name"
                     label={messages('language.name')}

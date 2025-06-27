@@ -2,20 +2,20 @@ import { showNotification } from '@/helpers/messages-helper';
 import { DeleteVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
-import { countriesApi } from '../apis';
-import { countriesQueryKeys } from '../constants/query-keys';
-import { CountriesData } from '../types';
+import { languageApi } from '../apis';
+import { languageQueryKeys } from '../constants/query-keys';
+import { LanguagesData } from '../types';
 
-export const useDeleteCountry = () => {
+export const useDeleteLanguage = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
 
     const onSuccess = (
         data: any,
-        { onSuccess }: DeleteVariables<CountriesData['id']>
+        { onSuccess }: DeleteVariables<LanguagesData['id']>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [countriesQueryKeys.getList],
+            queryKey: [languageQueryKeys.getList],
         });
 
         showNotification('success', messages(data.data.message));
@@ -24,22 +24,27 @@ export const useDeleteCountry = () => {
 
     const onError = (
         data: any,
-        { onError }: DeleteVariables<CountriesData['id']>
+        { onError }: DeleteVariables<LanguagesData['id']>
     ) => {
         showNotification('error', messages(data?.response?.data?.message));
         onError?.();
     };
 
     const mutation = useMutation({
-        mutationFn: ({ id }: DeleteVariables<CountriesData['id']>) =>
-            countriesApi.deleteCountry(id),
+        mutationFn: ({ id }: DeleteVariables<LanguagesData['id']>) =>
+            languageApi.deleteLanguage(id),
         onSuccess,
         onError,
     });
 
-    const deleteCountry = (variables: DeleteVariables<CountriesData['id']>) => {
+    const deleteLanguage = (
+        variables: DeleteVariables<LanguagesData['id']>
+    ) => {
         mutation.mutate(variables);
     };
 
-    return { deleteCountry, ...mutation };
+    return {
+        deleteLanguage,
+        ...mutation,
+    };
 };

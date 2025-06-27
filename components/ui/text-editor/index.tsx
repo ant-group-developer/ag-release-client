@@ -1,10 +1,10 @@
 import { cn } from '@/helpers/common';
 import dynamic from 'next/dynamic';
-import { CustomEditorProps } from './ckEditor';
+import { CustomEditorProps } from './ck-editor';
 
 const CustomEditor = dynamic(
     () => {
-        return import('./ckEditor');
+        return import('./ck-editor');
     },
     { ssr: false }
 );
