@@ -5,6 +5,7 @@ import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import useModalStore from '@/hooks/use-modal';
 import { Form, Input } from 'antd';
 import { useTranslations } from 'next-intl';
+import { useEffect } from 'react';
 import { TYPE_MODAL_LABEL } from '../../enum';
 
 type Props = Omit<AppModalProps, 'children'> & {};
@@ -14,8 +15,17 @@ export default function LabelFormModal({ ...props }: Props) {
     const [form] = Form.useForm();
     const closeModal = useModalStore((state) => state.closeModal);
     const typeModal = useModalStore((state) => state.typeModal);
+    const dataEdit = useModalStore((state) => state.dataEdit);
     const isUpdateModal = typeModal === TYPE_MODAL_LABEL.EDIT;
     const isCreateModal = typeModal === TYPE_MODAL_LABEL.CREATE;
+
+    useEffect(() => {
+        const initialData = {
+            ...dataEdit,
+        };
+        form.setFieldsValue(initialData);
+    });
+
     return (
         <AppModal
             width={600}

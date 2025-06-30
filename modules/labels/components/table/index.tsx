@@ -25,7 +25,6 @@ export const LabelsTable = ({ ...props }: Props) => {
             render: (_, __, index) => index + 1,
         },
         {
-            // title: messages('common.thumbnail'),
             key: 'picture',
             dataIndex: 'picture',
             align: 'center',
@@ -106,16 +105,16 @@ export const LabelsTable = ({ ...props }: Props) => {
             align: 'center',
             width: 20,
             fixed: 'right',
-            render: () => (
+            render: (_, record) => (
                 <ActionButton
                     showUpdate
                     showDetail
                     showDelete
                     onShowUpdate={() => {
-                        openModal(TYPE_MODAL_LABEL.EDIT);
+                        openModal(TYPE_MODAL_LABEL.EDIT, record);
                     }}
                     onShowDelete={() => {
-                        openModal(TYPE_MODAL_LABEL.DELETE);
+                        openModal(TYPE_MODAL_LABEL.DELETE, record);
                     }}
                 />
             ),

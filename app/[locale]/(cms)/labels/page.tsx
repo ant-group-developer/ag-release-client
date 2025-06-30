@@ -9,8 +9,10 @@ import LabelsHeader from '@/modules/labels/components/header';
 import LabelFormModal from '@/modules/labels/components/modal/label-form';
 import { LabelsTable } from '@/modules/labels/components/table';
 import { TYPE_MODAL_LABEL } from '@/modules/labels/enum';
+import { useDeleteLabel } from '@/modules/labels/hooks/use-delete-label';
 import { useGetListLabels } from '@/modules/labels/hooks/use-get-list-labels';
-import { LabelDataFilter } from '@/modules/labels/types';
+import { LabelData, LabelDataFilter } from '@/modules/labels/types';
+import { DeleteVariables } from '@/types/api';
 import { useWindowSize } from '@uidotdev/usehooks';
 import { useTranslations } from 'next-intl';
 
@@ -30,15 +32,19 @@ export default function Labels({}: Props) {
     });
 
     const { labelsData } = useGetListLabels(dataFilter);
+    const { deleteLabel } = useDeleteLabel();
 
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
+    const dataEdit = useModalStore((state) => state.dataEdit);
+    console.log('🚀 ~ Labels ~ dataEdit:', dataEdit);
 
     const handleRefresh = () => {};
 
     const { height, width } = useWindowSize();
-
     const isSmallDevice = Number(width) <= SCREEN.MD;
+
+    const modalParagraph = `${messages('delete.confirmMessage', { value: dataEdit?.name })}`;
 
     const scrollY = () => {
         if (isSmallDevice) return undefined;
@@ -49,6 +55,17 @@ export default function Labels({}: Props) {
         const value = height - headerFooterHeight;
         if (value > minHeight) return value;
         return minHeight;
+    };
+
+    const handleDeleteLabel = () => {
+        const variables: DeleteVariables<LabelData['id']> = {
+            id: dataEdit?.id,
+            onSuccess: () => {
+                closeModal();
+            },
+        };
+
+        deleteLabel(variables);
     };
 
     return (
@@ -73,9 +90,10 @@ export default function Labels({}: Props) {
             {typeModal === TYPE_MODAL_LABEL.DELETE && (
                 <AppConfirm
                     open
+                    onOk={() => handleDeleteLabel()}
                     onCancel={closeModal}
                     modalTitle={`${messages('common.delete')} label`}
-                    paragraph="Bạn có chắc chắn muốn xóa label này không?"
+                    paragraph={modalParagraph}
                 />
             )}
 

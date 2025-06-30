@@ -46,7 +46,7 @@ export default function LabelsHeaderDropdown({
         {
             label: messages('common.dateCreated'),
             value: TYPE_FILTER.DATE_CREATED,
-            visible: !dataFilter.dateCreated,
+            visible: !dataFilter.createdAt,
             onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_CREATED),
         },
     ];
