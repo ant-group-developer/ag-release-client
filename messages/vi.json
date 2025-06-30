@@ -332,7 +332,17 @@
         "code": "Mã ngôn ngữ",
         "vietnamese": "Tiếng Việt",
         "select": "Chọn ngôn ngữ",
-        "add": "Thêm ngôn ngữ"
+        "add": "Thêm ngôn ngữ",
+        "message": {
+            "success": {
+                "create": "Thêm mới ngôn ngữ thành công",
+                "update": "cập nhật ngôn ngữ thành công",
+                "delete": "Xoá ngôn ngữ thành công"
+            },
+            "error": {
+                "duplicateNameLanguage": "Tên ngôn ngữ đã tồn tại"
+            }
+        }
     },
     "channel": {
         "code": "Mã kênh",
@@ -611,6 +621,18 @@
         "classical": "Cổ điển",
         "blues": "Blues"
     },
+    "genre": {
+        "message": {
+            "success": {
+                "create": "Thêm mới thể loại nhạc thành công",
+                "delete": "Xoá thể loại nhạc thành công",
+                "update": "Cập nhật thể loại nhạc thành công"
+            },
+            "error": {
+                "duplicateNameGenre": "Thể loại nhạc này đã tồn tại"
+            }
+        }
+    },
     "artist": {
         "label": "Nghệ sĩ",
         "create": "Tạo nghệ sĩ",
@@ -624,7 +646,17 @@
         "profiles": "Hồ sơ nghệ sĩ",
         "variousArtists": "Nhiều nghệ sĩ",
         "descriptionVariantArtists": "Tên hiển thị sẽ là 'Nhiều nghệ sĩ'",
-        "role": "Vai trò nghệ sĩ"
+        "role": "Vai trò nghệ sĩ",
+        "message": {
+            "success": {
+                "create": "Thêm mới nghệ sĩ thành công",
+                "update": "Cập nhật nghệ sĩ thành công",
+                "delete": "xoá nghệ sĩ thành công"
+            },
+            "error": {
+                "duplicateNameArtist": "Nghệ sĩ này đã tồn tại"
+            }
+        }
     },
 
     "role": {
@@ -638,6 +670,15 @@
         "create": "Tạo label",
         "name": "Tên label",
         "id": "Mã label"
+    },
+    "label": {
+        "message": {
+            "success": {
+                "create": "Thêm mới label thành công",
+                "delete": "Xoá label thành công",
+                "update": "Cập nhật label thành công"
+            }
+        }
     },
     "distribution": {
         "label": "Phân phối",
@@ -704,5 +745,13 @@
         "create": "Tạo phân phối",
         "name": "Tên phân phối",
         "id": "Mã phân phối"
+    },
+
+    "emailSender": {
+        "label": "Email sender"
+    },
+
+    "dsp": {
+        "label": "DSP"
     }
 }

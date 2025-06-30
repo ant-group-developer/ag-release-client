@@ -37,7 +37,6 @@ export default function Labels({}: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit);
-    console.log('🚀 ~ Labels ~ dataEdit:', dataEdit);
 
     const handleRefresh = () => {};
 

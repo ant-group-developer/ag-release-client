@@ -1,21 +1,22 @@
 import { showNotification } from '@/helpers/messages-helper';
-import { CreateVariables } from '@/types/api';
+import { UpdateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
-import { countriesApi } from '../apis';
-import { countriesQueryKeys } from '../constants/query-keys';
-import { CreateCountryPayload } from '../types/payload';
+import { artistApi } from '../apis';
+import { artistQueryKeys } from '../constants/query-keys';
+import { ArtistData } from '../types';
+import { UpdateArtistPayload } from '../types/payload';
 
-export const useCreateCountry = () => {
+export const useUpdateArtist = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
 
     const onSuccess = (
         data: any,
-        { onSuccess }: CreateVariables<CreateCountryPayload>
+        { onSuccess }: UpdateVariables<ArtistData['id'], UpdateArtistPayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...countriesQueryKeys.getList],
+            queryKey: [...artistQueryKeys.getList],
         });
 
         const responseMessages = messages(data?.data?.messageCode);
@@ -26,7 +27,7 @@ export const useCreateCountry = () => {
 
     const onError = (
         data: any,
-        { onError }: CreateVariables<CreateCountryPayload>
+        { onError }: UpdateVariables<ArtistData['id'], UpdateArtistPayload>
     ) => {
         const responseMessages = messages(data?.response?.data?.messageCode);
 
@@ -35,17 +36,23 @@ export const useCreateCountry = () => {
     };
 
     const mutation = useMutation({
-        mutationFn: ({ payload }: CreateVariables<CreateCountryPayload>) =>
-            countriesApi.createCountry(payload),
+        mutationFn: ({
+            id,
+            payload,
+        }: UpdateVariables<ArtistData['id'], UpdateArtistPayload>) =>
+            artistApi.updateArtist(id, payload),
         onSuccess,
         onError,
     });
 
-    const createCountry = (
-        variables: CreateVariables<CreateCountryPayload>
+    const updateArtist = (
+        variables: UpdateVariables<ArtistData['id'], UpdateArtistPayload>
     ) => {
         mutation.mutate(variables);
     };
 
-    return { createCountry, ...mutation };
+    return {
+        updateArtist,
+        ...mutation,
+    };
 };

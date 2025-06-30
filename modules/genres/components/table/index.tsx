@@ -13,7 +13,12 @@ import { GenresData } from '../../types';
 
 // Table cho Genres
 
-type Props = Omit<AppTableProps<GenresData>, 'columns'> & {};
+type Props = Omit<AppTableProps<GenresData>, 'columns'> & {
+    pagination: {
+        pageSize: number;
+        current: number;
+    };
+};
 
 export const GenresTable = ({ ...props }: Props) => {
     const messages = useTranslations();

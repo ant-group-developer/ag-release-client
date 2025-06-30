@@ -22,7 +22,7 @@ export default function ImageFallback({
         <Image
             {...rest}
             alt={rest.alt}
-            src={imgSrc}
+            src={imgSrc ? imgSrc : fallbackSrc}
             onLoadingComplete={(result: {
                 naturalWidth: number;
                 naturalHeight: number;

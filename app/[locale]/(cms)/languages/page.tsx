@@ -2,6 +2,7 @@
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_OPTIONS } from '@/constants/common';
+import { PAGE_SIZE } from '@/constants/page-size';
 import { SCREEN } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
@@ -73,10 +74,6 @@ export default function Languages({}: Props) {
     const handleRefresh = () => {};
 
     const { languagesData, isLoading } = useGetListLanguage(dataFilter);
-    console.log(
-        '🚀 ~ Languages ~ languagesData:',
-        languagesData.metadata?.totalItems
-    );
 
     return (
         <div className="flex h-full flex-col justify-between overflow-hidden">
@@ -92,6 +89,11 @@ export default function Languages({}: Props) {
                     dataSource={languagesData?.items}
                     scroll={{ x: SCREEN.MD, y: scrollY() }}
                     loading={isLoading}
+                    pagination={{
+                        pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
+                        current: languagesData.metadata.currentPage,
+                        total: languagesData.metadata.totalItems,
+                    }}
                 />
             </div>
             <AppPagination

@@ -55,6 +55,10 @@ export default function LanguageFormModal({ ...props }: Props) {
             : handleCreateLanguage(values);
     };
 
+    const modalTitle = () => {
+        return `${isUpdateForm ? messages('common.update') : messages('common.create')} ${messages('language.label').toLocaleLowerCase()}`;
+    };
+
     useEffect(() => {
         const initialData = {
             ...dataEdit,
@@ -66,7 +70,7 @@ export default function LanguageFormModal({ ...props }: Props) {
         <AppModal
             width={500}
             {...props}
-            title={messages('common.create') + ' ' + messages('language.label')}
+            title={modalTitle()}
             open
             onCancel={closeModal}
             onOk={form.submit}
@@ -104,7 +108,7 @@ export default function LanguageFormModal({ ...props }: Props) {
                     rules={[
                         {
                             required: true,
-                            message: messages('common.error'),
+                            message: messages('validation.input'),
                         },
                         {
                             max: 10,

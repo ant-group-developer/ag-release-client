@@ -92,14 +92,12 @@ export interface CreateFile {
     googleDriveFileId?: string;
 }
 
-export interface GetUrlUploadParams {
+export interface UploadPayload {
     infoFile: {
-        contentType: string;
-        extension: string;
-        fileSizeInByte: number;
+        entityType: string;
         fileName: string;
-        type?: string;
-        typeKey?: string;
+        contentType: string;
+        fileSize: number;
     };
     file: File;
 }

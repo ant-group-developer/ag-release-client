@@ -2,7 +2,7 @@ import { CommonAttribute, CommonParams } from '@/types/api';
 
 export interface GenresData extends CommonAttribute {
     name: string;
-    picture: string;
+    picture?: string | null;
     description: string;
 }
 

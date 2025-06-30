@@ -143,22 +143,27 @@ export const QUERY_KEY = {
     },
     COUNTRIES: {
         KEY: 'COUNTRIES',
-        GET_LIST: 'GET_LIST',
-        GET_DETAIL: 'GET_DETAIL',
+        GET_LIST: 'GET_LIST_COUNTRIES',
+        GET_DETAIL: 'GET_DETAIL_COUNTRIES',
     },
     LANGUAGE: {
         KEY: 'LANGUAGE',
-        GET_LIST: 'GET_LIST',
-        GET_DETAIL: 'GET_DETAIL',
+        GET_LIST: 'GET_LIST_LANGUAGE',
+        GET_DETAIL: 'GET_DETAIL_LANGUAGE',
     },
     GENRE: {
         KEY: 'GENRE',
-        GET_LIST: 'GET_LIST',
-        GET_DETAIL: 'GET_DETAIL',
+        GET_LIST: 'GET_LIST_GENRE',
+        GET_DETAIL: 'GET_DETAIL_GENRE',
     },
     LABELS: {
         KEY: 'LABELS',
-        GET_LIST: 'GET_LIST',
-        GET_DETAIL: 'GET_DETAIL',
+        GET_LIST: 'GET_LIST_LABELS',
+        GET_DETAIL: 'GET_DETAIL_LABELS',
+    },
+    ARTIST: {
+        KEY: 'ARTIST',
+        GET_LIST: 'GET_LIST_ARTIST',
+        GET_DETAIL: 'GET_LIST_ARTIST',
     },
 };

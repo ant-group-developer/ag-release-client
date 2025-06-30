@@ -1,15 +1,19 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
+import { PAGE_SIZE_OPTIONS } from '@/constants/common';
+import { PAGE_SIZE } from '@/constants/page-size';
 import { SCREEN } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import ArtistsHeader from '@/modules/artist/components/header';
 import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
 import { ArtistsTable } from '@/modules/artist/components/table';
-import { fakeArtistData } from '@/modules/artist/constants';
 import { TYPE_MODAL_ARTIST } from '@/modules/artist/enum';
-import { ArtistDataFilter } from '@/modules/artist/types';
+import { useDeleteArtist } from '@/modules/artist/hooks/use-delete-artist';
+import { useGetListArtist } from '@/modules/artist/hooks/use-get-list-artists';
+import { ArtistData, ArtistDataFilter } from '@/modules/artist/types';
+import { DeleteVariables } from '@/types/api';
 
 import { useWindowSize } from '@uidotdev/usehooks';
 import { useTranslations } from 'next-intl';
@@ -31,12 +35,30 @@ export default function Artists({}: Props) {
 
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
+    const dataEdit = useModalStore((state) => state.dataEdit);
+    const { deleteArtist } = useDeleteArtist();
 
     const handleRefresh = () => {};
 
     const { height, width } = useWindowSize();
 
     const isSmallDevice = Number(width) <= SCREEN.MD;
+
+    const { artistsData } = useGetListArtist(dataFilter);
+
+    const modalParagraph = messages('delete.confirmMessage', {
+        value: dataEdit?.name,
+    });
+
+    const handleDeleteArtist = () => {
+        const variables: DeleteVariables<ArtistData['id']> = {
+            id: dataEdit?.id,
+            onSuccess: () => {
+                closeModal();
+            },
+        };
+        deleteArtist(variables);
+    };
 
     const scrollY = () => {
         if (isSmallDevice) return undefined;
@@ -60,8 +82,13 @@ export default function Artists({}: Props) {
                     handleRefresh={handleRefresh}
                 />
                 <ArtistsTable
-                    dataSource={fakeArtistData}
+                    dataSource={artistsData?.items}
                     scroll={{ x: SCREEN.XXL, y: scrollY() }}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: artistsData.metadata.currentPage,
+                        total: artistsData.metadata.totalItems,
+                    }}
                 />
             </div>
 
@@ -71,23 +98,24 @@ export default function Artists({}: Props) {
             {typeModal === TYPE_MODAL_ARTIST.DELETE && (
                 <AppConfirm
                     open
+                    onOk={() => handleDeleteArtist()}
                     onCancel={closeModal}
                     modalTitle={`${messages('artist.delete')} `}
-                    paragraph="Bạn có chắc chắn muốn xóa nghệ sĩ này không?"
+                    paragraph={modalParagraph}
                 />
             )}
 
             <AppPagination
                 className="border-b border-t"
                 align="end"
-                current={dataFilter.page}
+                current={artistsData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}
-                total={1}
+                total={artistsData?.metadata?.totalItems}
                 onChange={onChangePage}
                 showTotalText
                 showSizeChanger
                 showQuickJumper
-                pageSizeOptions={[21, 28, 32]}
+                pageSizeOptions={PAGE_SIZE_OPTIONS}
             />
         </div>
     );
