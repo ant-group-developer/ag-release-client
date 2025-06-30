@@ -8,11 +8,13 @@ import { useState } from 'react';
 type Props = UploadProps & {
     value?: any;
     placeholder?: string;
+    maxSizeMB?: number;
 };
 
 export default function ImageListUpload({
     placeholder,
     value,
+    maxSizeMB = 5,
     ...props
 }: Props) {
     const messages = useTranslations();
@@ -24,6 +26,14 @@ export default function ImageListUpload({
         const isImage = file.type.startsWith('image/');
         if (!isImage) {
             showNotification('error', messages('validation.image'));
+            return Upload.LIST_IGNORE;
+        }
+        const isLessThanMaxSize = file.size / 1024 / 1024 < maxSizeMB;
+        if (!isLessThanMaxSize) {
+            showNotification(
+                'error',
+                `${messages('image.validation.mustBeLessThanMB', { value: maxSizeMB })}`
+            );
             return Upload.LIST_IGNORE;
         }
         return false;

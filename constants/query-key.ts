@@ -149,6 +149,16 @@ export const QUERY_KEY = {
     LANGUAGE: {
         KEY: 'LANGUAGE',
         GET_LIST: 'GET_LIST',
-        DETAIL: 'GET_DETAIL',
+        GET_DETAIL: 'GET_DETAIL',
+    },
+    GENRE: {
+        KEY: 'GENRE',
+        GET_LIST: 'GET_LIST',
+        GET_DETAIL: 'GET_DETAIL',
+    },
+    LABELS: {
+        KEY: 'LABELS',
+        GET_LIST: 'GET_LIST',
+        GET_DETAIL: 'GET_DETAIL',
     },
 };

@@ -11,7 +11,6 @@ import { fakeArtistData } from '@/modules/artist/constants';
 import { TYPE_MODAL_ARTIST } from '@/modules/artist/enum';
 import { ArtistDataFilter } from '@/modules/artist/types';
 
-import { fakeLabelData } from '@/modules/labels/constants';
 import { useWindowSize } from '@uidotdev/usehooks';
 import { useTranslations } from 'next-intl';
 
@@ -83,7 +82,7 @@ export default function Artists({}: Props) {
                 align="end"
                 current={dataFilter.page}
                 pageSize={dataFilter.pageSize}
-                total={fakeLabelData.length}
+                total={1}
                 onChange={onChangePage}
                 showTotalText
                 showSizeChanger

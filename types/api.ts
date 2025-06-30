@@ -9,6 +9,7 @@ export interface PaginationResponse<T = any> {
         };
     };
     message: string;
+    messagesCode?: string;
     statusCode: number;
 }
 
@@ -22,6 +23,7 @@ export interface ListResponse<T = any> {
 export interface DetailResponse<T> {
     statusCode?: number;
     message?: string;
+    messagesCode?: string;
     data: T;
 }
 

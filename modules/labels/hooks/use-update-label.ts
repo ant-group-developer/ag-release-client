@@ -2,23 +2,21 @@ import { showNotification } from '@/helpers/messages-helper';
 import { UpdateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
-import { languageApi } from '../apis';
-import { languageQueryKeys } from '../constants/query-keys';
-import { LanguagesData } from '../types';
-import { UpdateLanguagePayload } from '../types/payload';
+import { labelsApi } from '../apis';
+import { labelsQueryKeys } from '../constants/query-keys';
+import { LabelData } from '../types';
+import { UpdateLabelPayload } from '../types/payload';
 
-export const useUpdateLanguage = () => {
+export const useUpdateLabel = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
 
     const onSuccess = (
         data: any,
-        {
-            onSuccess,
-        }: UpdateVariables<LanguagesData['id'], UpdateLanguagePayload>
+        { onSuccess }: UpdateVariables<LabelData['id'], UpdateLabelPayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...languageQueryKeys.getList],
+            queryKey: [...labelsQueryKeys.getList],
         });
 
         const responseMessages = messages(data?.data?.messageCode);
@@ -29,7 +27,7 @@ export const useUpdateLanguage = () => {
 
     const onError = (
         data: any,
-        { onError }: UpdateVariables<LanguagesData['id'], UpdateLanguagePayload>
+        { onError }: UpdateVariables<LabelData['id'], UpdateLabelPayload>
     ) => {
         const responseMessages = messages(data?.response?.data?.messageCode);
 
@@ -41,20 +39,20 @@ export const useUpdateLanguage = () => {
         mutationFn: ({
             id,
             payload,
-        }: UpdateVariables<LanguagesData['id'], UpdateLanguagePayload>) =>
-            languageApi.updateLanguage(id, payload),
+        }: UpdateVariables<LabelData['id'], UpdateLabelPayload>) =>
+            labelsApi.updateLabel(id, payload),
         onSuccess,
         onError,
     });
 
-    const updateLanguage = (
-        variable: UpdateVariables<LanguagesData['id'], UpdateLanguagePayload>
+    const updateLabel = (
+        variables: UpdateVariables<LabelData['id'], UpdateLabelPayload>
     ) => {
-        mutation.mutate(variable);
+        mutation.mutate(variables);
     };
 
     return {
-        updateLanguage,
+        updateLabel,
         ...mutation,
     };
 };

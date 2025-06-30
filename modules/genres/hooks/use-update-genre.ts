@@ -2,23 +2,21 @@ import { showNotification } from '@/helpers/messages-helper';
 import { UpdateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
-import { countriesApi } from '../apis';
-import { countriesQueryKeys } from '../constants/query-keys';
-import { CountriesData } from '../types';
-import { UpdateCountryPayload } from '../types/payload';
+import { genresApi } from '../apis';
+import { genreQueryKeys } from '../constants/query-keys';
+import { GenresData } from '../types';
+import { UpdateGenrePayload } from '../types/payload';
 
-export const useUpdateCountry = () => {
+export const useUpdateGenre = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
 
     const onSuccess = (
         data: any,
-        {
-            onSuccess,
-        }: UpdateVariables<CountriesData['id'], UpdateCountryPayload>
+        { onSuccess }: UpdateVariables<GenresData['id'], UpdateGenrePayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...countriesQueryKeys.getList],
+            queryKey: [...genreQueryKeys.getList],
         });
         const responseMessages = messages(data?.data?.messageCode);
         showNotification('success', responseMessages);
@@ -27,7 +25,7 @@ export const useUpdateCountry = () => {
 
     const onError = (
         data: any,
-        { onError }: UpdateVariables<CountriesData['id'], UpdateCountryPayload>
+        { onError }: UpdateVariables<GenresData['id'], UpdateGenrePayload>
     ) => {
         const responseMessages = messages(data?.response.data.messageCode);
         showNotification('error', responseMessages);
@@ -38,17 +36,20 @@ export const useUpdateCountry = () => {
         mutationFn: ({
             id,
             payload,
-        }: UpdateVariables<CountriesData['id'], UpdateCountryPayload>) =>
-            countriesApi.updateCountry(id, payload),
+        }: UpdateVariables<GenresData['id'], UpdateGenrePayload>) =>
+            genresApi.updateGenre(id, payload),
         onSuccess,
         onError,
     });
 
-    const updateCountry = (
-        variables: UpdateVariables<CountriesData['id'], UpdateCountryPayload>
+    const updateGenre = (
+        variables: UpdateVariables<GenresData['id'], UpdateGenrePayload>
     ) => {
         mutation.mutate(variables);
     };
 
-    return { updateCountry, ...mutation };
+    return {
+        updateGenre,
+        ...mutation,
+    };
 };

@@ -12,12 +12,12 @@ export const useUpdateUser = () => {
     const onSuccess = (data: any, { onSuccess }: UpdateUser) => {
         queryClient.invalidateQueries({ queryKey: userQueryKeys.getDetail });
         queryClient.invalidateQueries({ queryKey: userQueryKeys.getInfo });
-        showNotification('success', messages(data?.data?.message));
+        showNotification('success', messages(data?.data?.messageCode));
         onSuccess?.();
     };
 
     const onError = (data: any, { onError }: UpdateUser) => {
-        showNotification('error', messages(data?.response?.data.message));
+        showNotification('error', messages(data?.response?.data.messageCode));
         onError?.(data);
     };
 

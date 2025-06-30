@@ -25,9 +25,8 @@ export const LabelsTable = ({ ...props }: Props) => {
             render: (_, __, index) => index + 1,
         },
         {
-            // title: messages('common.thumbnail'),
-            key: 'thumbnail',
-            dataIndex: 'thumbnail',
+            key: 'picture',
+            dataIndex: 'picture',
             align: 'center',
             width: 30,
             fixed: 'left',
@@ -62,7 +61,6 @@ export const LabelsTable = ({ ...props }: Props) => {
                 </CustomTooltip>
             ),
         },
-
         {
             title: messages('common.description'),
             key: 'description',
@@ -76,29 +74,6 @@ export const LabelsTable = ({ ...props }: Props) => {
                 </CustomTooltip>
             ),
         },
-
-        {
-            title: messages('labels.id'),
-            key: 'id',
-            dataIndex: 'id',
-            align: 'left',
-            width: 100,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
-                </CustomTooltip>
-            ),
-        },
-
-        {
-            title: messages('tracks.count'),
-            key: 'trackCount',
-            dataIndex: 'trackCount',
-            align: 'center',
-            width: 50,
-            render: (value) => <span className="truncate"> {value} </span>,
-        },
-
         {
             title: messages('common.dateCreated'),
             key: 'createdAt',
@@ -113,20 +88,33 @@ export const LabelsTable = ({ ...props }: Props) => {
             ),
         },
         {
+            title: messages('common.dateUpdated'),
+            key: 'updatedAt',
+            dataIndex: 'updatedAt',
+            align: 'center',
+            width: 100,
+            render: (value) => (
+                <span className="truncate text-wrap">
+                    {' '}
+                    {formattedDate(value)}{' '}
+                </span>
+            ),
+        },
+        {
             key: 'actions',
             align: 'center',
             width: 20,
             fixed: 'right',
-            render: () => (
+            render: (_, record) => (
                 <ActionButton
                     showUpdate
                     showDetail
                     showDelete
                     onShowUpdate={() => {
-                        openModal(TYPE_MODAL_LABEL.EDIT);
+                        openModal(TYPE_MODAL_LABEL.EDIT, record);
                     }}
                     onShowDelete={() => {
-                        openModal(TYPE_MODAL_LABEL.DELETE);
+                        openModal(TYPE_MODAL_LABEL.DELETE, record);
                     }}
                 />
             ),

@@ -65,7 +65,7 @@ export const CountriesTable = ({ ...props }: Props) => {
             width: 100,
         },
         {
-            title: 'Tiền tệ',
+            title: messages('common.currency'),
             key: 'currency',
             dataIndex: 'currency',
             align: 'left',

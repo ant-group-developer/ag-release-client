@@ -6,7 +6,8 @@ import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 // import { TYPE_MODAL_GENRES } from '../../enums';
 import ActionButton from '@/components/ui/button/action-button';
-import Image from 'next/image';
+import ImageFallback from '@/components/ui/image/image-fallback';
+import { FALLBACK_IMAGE } from '@/constants/common';
 import { TYPE_MODAL_GENRES } from '../../enums';
 import { GenresData } from '../../types';
 
@@ -30,24 +31,27 @@ export const GenresTable = ({ ...props }: Props) => {
             key: 'picture',
             dataIndex: 'picture',
             align: 'center',
-            width: 50,
+            width: 48,
             render: (value) => (
-                <Image
-                    src={value}
-                    alt="genre"
-                    width={48}
-                    height={48}
-                    className="rounded-lg"
-                />
+                <div className="flex justify-center">
+                    <ImageFallback
+                        fallbackSrc={FALLBACK_IMAGE}
+                        src={value ?? ''}
+                        alt="genre"
+                        width={48}
+                        height={48}
+                        className="aspect-square rounded-lg object-cover"
+                    />
+                </div>
             ),
         },
         {
-            title: 'Tên thể loại',
+            title: messages('genres.name'),
             key: 'name',
             dataIndex: 'name',
             ellipsis: true,
             align: 'left',
-            width: 300,
+            width: 200,
             render: (value) => (
                 <CustomTooltip size="small" title={value}>
                     <span className="truncate"> {value} </span>
@@ -55,11 +59,12 @@ export const GenresTable = ({ ...props }: Props) => {
             ),
         },
         {
-            title: 'Mô tả',
+            title: messages('common.description'),
             key: 'description',
             dataIndex: 'description',
             align: 'left',
             width: 300,
+            ellipsis: true,
             render: (value) => <span className="truncate">{value}</span>,
         },
         {
@@ -67,7 +72,7 @@ export const GenresTable = ({ ...props }: Props) => {
             key: 'createdAt',
             dataIndex: 'createdAt',
             align: 'center',
-            width: 300,
+            width: 150,
             render: (value) => (
                 <span className="truncate text-wrap">
                     {formattedDate(value)}
@@ -79,7 +84,7 @@ export const GenresTable = ({ ...props }: Props) => {
             key: 'updatedAt',
             dataIndex: 'updatedAt',
             align: 'center',
-            width: 300,
+            width: 150,
             render: (value) => (
                 <span className="truncate text-wrap">
                     {formattedDate(value)}
@@ -94,6 +99,9 @@ export const GenresTable = ({ ...props }: Props) => {
             render: (_, record) => (
                 <ActionButton
                     showDelete
+                    onShowDelete={() =>
+                        openModal(TYPE_MODAL_GENRES.DELETE, record)
+                    }
                     showUpdate
                     onShowUpdate={() =>
                         openModal(TYPE_MODAL_GENRES.UPDATE, record)

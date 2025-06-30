@@ -37,6 +37,11 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "nationality": "Quốc tịch",
+        "currencyName": "Tên tiền tệ",
+        "currencySymbol": "Ký hiệu tiền tệ",
+        "currency": "Tiền tệ",
+        "phoneNumberCode": "Mã điện thoại",
         "capital": "Thủ đô",
         "numericCode": "Mã số",
         "title": "Tiêu đề",
@@ -183,7 +188,17 @@
         "language": "Ngôn ngữ quốc gia",
         "name": "Tên quốc gia",
         "delete": "Xoá quốc gia",
-        "add": "Thêm quốc gia"
+        "add": "Thêm quốc gia",
+        "message": {
+            "success": {
+                "create": "Thêm quốc gia thành công",
+                "update": "Cập nhật quốc gia thành công",
+                "delete": "Xoá quốc gia thành công"
+            },
+            "error": {
+                "notFound": "Không tìm thấy quốc gia"
+            }
+        }
     },
     "filter": {
         "keyword": "Từ khoá",
@@ -286,7 +301,11 @@
     },
     "image": {
         "label": "Hình ảnh",
-        "dimensions": "Kích thước"
+        "dimensions": "Kích thước",
+        "validation": {
+            "mustBeLessThanMB": "Ảnh phải nhỏ hơn {value} MB",
+            "supportImageFormat": "Hỗ trợ ảnh định dạng {value}"
+        }
     },
     "document": {
         "label": "Tài liệu"
@@ -312,7 +331,8 @@
         "name": "Tên ngôn ngữ",
         "code": "Mã ngôn ngữ",
         "vietnamese": "Tiếng Việt",
-        "select": "Chọn ngôn ngữ"
+        "select": "Chọn ngôn ngữ",
+        "add": "Thêm ngôn ngữ"
     },
     "channel": {
         "code": "Mã kênh",
@@ -578,6 +598,7 @@
         }
     },
     "genres": {
+        "name": "Tên thể loại",
         "pop": "Pop",
         "rock": "Rock",
         "jazz": "Jazz",

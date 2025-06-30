@@ -37,6 +37,11 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "nationality": "Nationality",
+        "currencyName": "Currency name",
+        "currencySymbol": "Currency symbol",
+        "currency": "Currency",
+        "phoneNumberCode": "Phone number code",
         "capital": "Capital",
         "numericCode": "Numeric code",
         "title": "Title",
@@ -183,7 +188,17 @@
         "language": "Country language",
         "name": "Country name",
         "delete": "Delete country",
-        "add": "Add new country"
+        "add": "Add new country",
+        "message": {
+            "success": {
+                "create": "Add new country successfully",
+                "update": "Update country successfully",
+                "delete": "Delete successfully"
+            },
+            "error": {
+                "notFound": "Cannot found country"
+            }
+        }
     },
     "filter": {
         "keyword": "Keyword",
@@ -284,7 +299,11 @@
 
     "image": {
         "label": "Image",
-        "dimensions": "Dimensions"
+        "dimensions": "Dimensions",
+        "validation": {
+            "mustBeLessThanMB": "Image must be less than {value} MB",
+            "supportImageFormat": "Support image formats {value}"
+        }
     },
     "document": {
         "label": "Document"
@@ -310,7 +329,8 @@
         "name": "Language name",
         "code": "Code language",
         "vietnamese": "Tiếng Việt",
-        "select": "Select language"
+        "select": "Select language",
+        "add": "Add language"
     },
     "channel": {
         "code": "Channel code",
@@ -576,6 +596,7 @@
         }
     },
     "genres": {
+        "name": "Genre name",
         "pop": "Pop",
         "rock": "Rock",
         "jazz": "Jazz",

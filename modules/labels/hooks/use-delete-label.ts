@@ -1,21 +1,21 @@
 import { showNotification } from '@/helpers/messages-helper';
-import { CreateVariables } from '@/types/api';
+import { DeleteVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
-import { languageApi } from '../apis';
-import { languageQueryKeys } from '../constants/query-keys';
-import { CreateLanguagePayload } from '../types/payload';
+import { labelsApi } from '../apis';
+import { labelsQueryKeys } from '../constants/query-keys';
+import { LabelData } from '../types';
 
-export const useCreateLanguage = () => {
+export const useDeleteLabel = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
 
     const onSuccess = (
         data: any,
-        { onSuccess }: CreateVariables<CreateLanguagePayload>
+        { onSuccess }: DeleteVariables<LabelData['id']>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...languageQueryKeys.getList],
+            queryKey: [...labelsQueryKeys.getList],
         });
 
         const responseMessages = messages(data?.data?.messageCode);
@@ -26,7 +26,7 @@ export const useCreateLanguage = () => {
 
     const onError = (
         data: any,
-        { onError }: CreateVariables<CreateLanguagePayload>
+        { onError }: DeleteVariables<LabelData['id']>
     ) => {
         const responseMessages = messages(data?.response?.data?.messageCode);
 
@@ -35,20 +35,18 @@ export const useCreateLanguage = () => {
     };
 
     const mutation = useMutation({
-        mutationFn: ({ payload }: CreateVariables<CreateLanguagePayload>) =>
-            languageApi.createLanguage(payload),
+        mutationFn: ({ id }: DeleteVariables<LabelData['id']>) =>
+            labelsApi.deleteLabel(id),
         onSuccess,
         onError,
     });
 
-    const createLanguage = (
-        variable: CreateVariables<CreateLanguagePayload>
-    ) => {
-        mutation.mutate(variable);
+    const deleteLabel = (variables: DeleteVariables<LabelData['id']>) => {
+        mutation.mutate(variables);
     };
 
     return {
-        createLanguage,
+        deleteLabel,
         ...mutation,
     };
 };

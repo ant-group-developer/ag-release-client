@@ -2,20 +2,20 @@ import { showNotification } from '@/helpers/messages-helper';
 import { DeleteVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
-import { languageApi } from '../apis';
-import { languageQueryKeys } from '../constants/query-keys';
-import { LanguagesData } from '../types';
+import { genresApi } from '../apis';
+import { genreQueryKeys } from '../constants/query-keys';
+import { GenresData } from '../types';
 
-export const useDeleteLanguage = () => {
+export const useDeleteGenre = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
 
     const onSuccess = (
         data: any,
-        { onSuccess }: DeleteVariables<LanguagesData['id']>
+        { onSuccess }: DeleteVariables<GenresData['id']>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...languageQueryKeys.getList],
+            queryKey: [...genreQueryKeys.getList],
         });
 
         showNotification('success', messages(data.data.message));
@@ -24,27 +24,25 @@ export const useDeleteLanguage = () => {
 
     const onError = (
         data: any,
-        { onError }: DeleteVariables<LanguagesData['id']>
+        { onError }: DeleteVariables<GenresData['id']>
     ) => {
         showNotification('error', messages(data?.response?.data?.message));
         onError?.();
     };
 
     const mutation = useMutation({
-        mutationFn: ({ id }: DeleteVariables<LanguagesData['id']>) =>
-            languageApi.deleteLanguage(id),
+        mutationFn: ({ id }: DeleteVariables<GenresData['id']>) =>
+            genresApi.deleteGenre(id),
         onSuccess,
         onError,
     });
 
-    const deleteLanguage = (
-        variables: DeleteVariables<LanguagesData['id']>
-    ) => {
+    const deleteGenre = (variables: DeleteVariables<GenresData['id']>) => {
         mutation.mutate(variables);
     };
 
     return {
-        deleteLanguage,
+        deleteGenre,
         ...mutation,
     };
 };

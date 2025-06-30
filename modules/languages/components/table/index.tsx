@@ -35,7 +35,7 @@ export const LanguagesTable = ({ ...props }: Props) => {
             ),
         },
         {
-            title: 'Mã',
+            title: messages('common.code'),
             key: 'code',
             dataIndex: 'code',
             align: 'left',
@@ -78,6 +78,9 @@ export const LanguagesTable = ({ ...props }: Props) => {
             render: (_, record) => (
                 <ActionButton
                     showDelete
+                    onShowDelete={() =>
+                        openModal(TYPE_MODAL_LANGUAGES.DELETE, record)
+                    }
                     showUpdate
                     onShowUpdate={() =>
                         openModal(TYPE_MODAL_LANGUAGES.UPDATE, record)

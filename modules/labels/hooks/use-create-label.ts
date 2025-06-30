@@ -2,20 +2,20 @@ import { showNotification } from '@/helpers/messages-helper';
 import { CreateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
-import { languageApi } from '../apis';
-import { languageQueryKeys } from '../constants/query-keys';
-import { CreateLanguagePayload } from '../types/payload';
+import { labelsApi } from '../apis';
+import { labelsQueryKeys } from '../constants/query-keys';
+import { CreateLabelPayload } from '../types/payload';
 
-export const useCreateLanguage = () => {
+export const useCreateLabel = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
 
     const onSuccess = (
         data: any,
-        { onSuccess }: CreateVariables<CreateLanguagePayload>
+        { onSuccess }: CreateVariables<CreateLabelPayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...languageQueryKeys.getList],
+            queryKey: [...labelsQueryKeys.getList],
         });
 
         const responseMessages = messages(data?.data?.messageCode);
@@ -26,7 +26,7 @@ export const useCreateLanguage = () => {
 
     const onError = (
         data: any,
-        { onError }: CreateVariables<CreateLanguagePayload>
+        { onError }: CreateVariables<CreateLabelPayload>
     ) => {
         const responseMessages = messages(data?.response?.data?.messageCode);
 
@@ -35,20 +35,18 @@ export const useCreateLanguage = () => {
     };
 
     const mutation = useMutation({
-        mutationFn: ({ payload }: CreateVariables<CreateLanguagePayload>) =>
-            languageApi.createLanguage(payload),
+        mutationFn: ({ payload }: CreateVariables<CreateLabelPayload>) =>
+            labelsApi.createLabel(payload),
         onSuccess,
         onError,
     });
 
-    const createLanguage = (
-        variable: CreateVariables<CreateLanguagePayload>
-    ) => {
-        mutation.mutate(variable);
+    const createLabel = (variables: CreateVariables<CreateLabelPayload>) => {
+        mutation.mutate(variables);
     };
 
     return {
-        createLanguage,
+        createLabel,
         ...mutation,
     };
 };

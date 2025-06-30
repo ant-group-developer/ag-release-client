@@ -148,7 +148,7 @@ export default function CountriesFormModal({ ...props }: Props) {
                 </AppFormItem>
                 <AppFormItem
                     name="numericCode"
-                    label="Mã số"
+                    label={messages('common.numericCode')}
                     required
                     rules={[
                         {
@@ -171,7 +171,7 @@ export default function CountriesFormModal({ ...props }: Props) {
                 </AppFormItem>
                 <AppFormItem
                     name="phoneCode"
-                    label="Mã điện thoại"
+                    label={messages('common.phoneNumberCode')}
                     required
                     rules={[
                         {
@@ -190,7 +190,7 @@ export default function CountriesFormModal({ ...props }: Props) {
                 </AppFormItem>
                 <AppFormItem
                     name="capital"
-                    label="Thủ đô"
+                    label={messages('common.capital')}
                     required
                     rules={[
                         {
@@ -209,7 +209,7 @@ export default function CountriesFormModal({ ...props }: Props) {
                 </AppFormItem>
                 <AppFormItem
                     name="currency"
-                    label="Tiền tệ"
+                    label={messages('common.currency')}
                     required
                     rules={[
                         {
@@ -228,7 +228,7 @@ export default function CountriesFormModal({ ...props }: Props) {
                 </AppFormItem>
                 <AppFormItem
                     name="currencyName"
-                    label="Tên tiền tệ"
+                    label={messages('common.currencyName')}
                     required
                     rules={[
                         {
@@ -247,7 +247,7 @@ export default function CountriesFormModal({ ...props }: Props) {
                 </AppFormItem>
                 <AppFormItem
                     name="currencySymbol"
-                    label="Ký hiệu tiền tệ"
+                    label={messages('common.currencySymbol')}
                     required
                     rules={[
                         {
@@ -266,10 +266,13 @@ export default function CountriesFormModal({ ...props }: Props) {
                 </AppFormItem>
                 <AppFormItem
                     name="nationality"
-                    label="Quốc tịch"
+                    label={messages('common.nationality')}
                     required
                     rules={[
-                        { required: true, message: 'Vui lòng nhập quốc tịch' },
+                        {
+                            required: true,
+                            message: messages('validation.input'),
+                        },
                         {
                             max: 30,
                             message: messages('validation.max', {
