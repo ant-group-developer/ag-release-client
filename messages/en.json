@@ -37,6 +37,7 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "biography": "biography",
         "nationality": "Nationality",
         "currencyName": "Currency name",
         "currencySymbol": "Currency symbol",
@@ -328,13 +329,23 @@
         "label": "Language",
         "name": "Language name",
         "code": "Code language",
-        "vietnamese": "Tiếng Việt",
+        "vietnamese": "vietnamese",
         "select": "Select language",
-        "add": "Add language"
+        "add": "Add language",
+        "message": {
+            "success": {
+                "create": "Add new language successfully",
+                "update": "Update language successfully",
+                "delete": "Delete language successfully"
+            },
+            "error": {
+                "duplicateNameLanguage": "This language name already exists"
+            }
+        }
     },
     "channel": {
         "code": "Channel code",
-        "lable": "Channel"
+        "label": "Channel"
     },
     "system": {
         "label": "System"
@@ -609,6 +620,18 @@
         "classical": "Classical",
         "blues": "Blues"
     },
+    "genre": {
+        "message": {
+            "success": {
+                "create": "Create new genre successfully",
+                "delete": "Delete genre successfully",
+                "update": "Update genre successfully"
+            },
+            "error": {
+                "duplicateNameGenre": "This genres already exist"
+            }
+        }
+    },
     "artist": {
         "label": "Artist",
         "create": "Create artist",
@@ -622,7 +645,18 @@
         "profiles": "Artist profiles",
         "variousArtists": "Various artists",
         "descriptionVariantArtists": "Display name will be 'Various artists'",
-        "role": "Artist role"
+        "role": "Artist role",
+        "canLinkArtistProfile": "Can link artist profile",
+        "message": {
+            "success": {
+                "create": "Add new artist successfully",
+                "update": "Update artist successfully",
+                "delete": "Delete artist successfully"
+            },
+            "error": {
+                "duplicateNameArtist": "This artist already exist"
+            }
+        }
     },
 
     "role": {
@@ -636,6 +670,15 @@
         "create": "Create label",
         "name": "Label name",
         "id": "Label ID"
+    },
+    "label": {
+        "message": {
+            "success": {
+                "create": "Create label successfully",
+                "delete": "Delete label successfully",
+                "update": "Update label successfully"
+            }
+        }
     },
     "distribution": {
         "label": "Distribution",
@@ -702,5 +745,37 @@
         "create": "Create distribute",
         "name": "Distribute name",
         "id": "Distribute ID"
+    },
+
+    "emailSender": {
+        "label": "Email sender"
+    },
+
+    "dsp": {
+        "label": "DSP",
+        "name": "plat form name",
+        "message": {
+            "success": {
+                "create": "Create platform successfully",
+                "update": "Update platform successfully",
+                "delete": "Delete platform successfully"
+            },
+            "error": {
+                "duplicateNameDsp": "This platform already exist"
+            }
+        }
+    },
+
+    "artistRole": {
+        "message": {
+            "success": {
+                "create": "Add new role successfully",
+                "delete": "Delete role successfully",
+                "update": "Update role successfully"
+            },
+            "error": {
+                "duplicateNameArtistRole": "This role already exist"
+            }
+        }
     }
 }

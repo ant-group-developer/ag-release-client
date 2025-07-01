@@ -2,7 +2,9 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
+import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
+import { uploadApi } from '@/modules/upload/apis';
 import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form, Input } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -12,7 +14,9 @@ import { useUpdateGenre } from '../../hooks/use-update-genre';
 import { GenresData } from '../../types';
 import { CreateGenrePayload, UpdateGenrePayload } from '../../types/payload';
 
-type GenreFormValues = Omit<GenresData, 'id' | 'createdAt' | 'updatedAt'> & {};
+type GenreFormValues = Omit<GenresData, 'id' | 'createdAt' | 'updatedAt'> & {
+    pictureFile?: any;
+};
 
 type Props = Omit<AppModalProps, 'children'> & {};
 
@@ -21,52 +25,84 @@ export default function GenresFormModal({ ...props }: Props) {
     const [form] = Form.useForm();
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as GenresData);
+    const { active, isActive, deActive } = useActive();
     const isUpdateForm = !!dataEdit?.id;
     const { createGenre } = useCreateGenre();
     const { updateGenre } = useUpdateGenre();
 
     function renderTitle() {
         const isUpdate = !!dataEdit?.id;
-        return `${isUpdate ? messages('common.update') : messages('common.create')} Thể loại nhạc`;
+        return `${isUpdate ? messages('common.update') : messages('common.create')} ${messages('common.genres').toLocaleLowerCase()}`;
     }
     const titleModal = renderTitle();
 
     const handleUpdateGenre = (values: GenreFormValues) => {
-        const { picture, ...res } = values;
         const variables: UpdateVariables<GenresData['id'], UpdateGenrePayload> =
             {
                 id: dataEdit?.id,
-                payload: {
-                    ...res,
-                    picture:
-                        'https://img.freepik.com/free-vector/elegant-musical-notes-music-chord-background_1017-20759.jpg?semt=ais_hybrid&w=740',
+                payload: values,
+                onSuccess: () => {
+                    deActive();
+                },
+                onError: () => {
+                    deActive();
                 },
             };
         updateGenre(variables);
     };
 
     const handleCreateGenre = (values: GenreFormValues) => {
-        const { picture, ...res } = values;
         const variables: CreateVariables<CreateGenrePayload> = {
-            payload: {
-                ...res,
-                picture:
-                    'https://img.freepik.com/free-vector/elegant-musical-notes-music-chord-background_1017-20759.jpg?semt=ais_hybrid&w=740',
+            payload: values,
+            onSuccess: () => {
+                deActive();
+                form.resetFields();
+            },
+            onError: () => {
+                deActive();
             },
         };
         createGenre(variables);
     };
 
-    const onFinish = (values: GenreFormValues) => {
+    const onFinish = async (values: GenreFormValues) => {
+        const { pictureFile, ...res } = values;
+        const file = values?.pictureFile?.fileList[0]?.originFileObj;
+        const oldFile = values?.pictureFile?.fileList[0]?.url;
+        active();
+        const payloadValues = res;
+        if (file) {
+            const dataPayload = {
+                entityType: 'genres',
+                fileName: file.name,
+                contentType: file.type,
+                fileSize: file.size,
+            };
+
+            try {
+                const urlPublic = await uploadApi.uploadFile({
+                    infoFile: dataPayload,
+                    file: file,
+                });
+                if (urlPublic) {
+                    payloadValues.picture = urlPublic;
+                }
+            } catch (error) {
+                deActive();
+            }
+        } else if (!file && !oldFile) {
+            payloadValues.picture = null;
+        }
+
         return isUpdateForm
-            ? handleUpdateGenre(values)
-            : handleCreateGenre(values);
+            ? handleUpdateGenre(payloadValues)
+            : handleCreateGenre(payloadValues);
     };
 
     useEffect(() => {
         const initialData = {
             ...dataEdit,
-            picture: dataEdit?.picture
+            pictureFile: dataEdit?.picture
                 ? {
                       fileList: [
                           {
@@ -90,6 +126,7 @@ export default function GenresFormModal({ ...props }: Props) {
             open
             onCancel={closeModal}
             onOk={form.submit}
+            loading={isActive}
             className="!top-4"
         >
             <AppForm
@@ -100,15 +137,15 @@ export default function GenresFormModal({ ...props }: Props) {
             >
                 <div className="flex items-center gap-4">
                     <AppFormItem
-                        name="picture"
+                        name="pictureFile"
                         label={messages('common.image')}
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.input'),
-                            },
-                        ]}
+                        // required
+                        // rules={[
+                        //     {
+                        //         required: true,
+                        //         message: messages('validation.input'),
+                        //     },
+                        // ]}
                     >
                         <ImageListUpload
                             maxCount={1}

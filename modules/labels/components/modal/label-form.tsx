@@ -2,11 +2,22 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
+import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
+import { uploadApi } from '@/modules/upload/apis';
+import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form, Input } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { TYPE_MODAL_LABEL } from '../../enum';
+import { useCreateLabel } from '../../hooks/use-create-label';
+import { useUpdateLabel } from '../../hooks/use-update-label';
+import { LabelData } from '../../types';
+import { CreateLabelPayload, UpdateLabelPayload } from '../../types/payload';
+
+type labelFormValues = Omit<LabelData, 'id' | 'createdAt' | 'updatedAt'> & {
+    pictureFile?: any;
+};
 
 type Props = Omit<AppModalProps, 'children'> & {};
 
@@ -15,16 +26,89 @@ export default function LabelFormModal({ ...props }: Props) {
     const [form] = Form.useForm();
     const closeModal = useModalStore((state) => state.closeModal);
     const typeModal = useModalStore((state) => state.typeModal);
-    const dataEdit = useModalStore((state) => state.dataEdit);
+    const dataEdit = useModalStore((state) => state.dataEdit as LabelData);
+    const { active, isActive, deActive } = useActive();
     const isUpdateModal = typeModal === TYPE_MODAL_LABEL.EDIT;
     const isCreateModal = typeModal === TYPE_MODAL_LABEL.CREATE;
+
+    const { createLabel } = useCreateLabel();
+    const { updateLabel } = useUpdateLabel();
+
+    const handleUpdateLabel = (value: labelFormValues) => {
+        const variables: UpdateVariables<LabelData['id'], UpdateLabelPayload> =
+            {
+                id: dataEdit?.id,
+                payload: value,
+                onSuccess: () => {
+                    deActive();
+                },
+            };
+        updateLabel(variables);
+    };
+
+    const handleCreateLabel = (value: labelFormValues) => {
+        const variables: CreateVariables<CreateLabelPayload> = {
+            payload: value,
+            onSuccess: () => {
+                deActive();
+                form.resetFields();
+            },
+        };
+        createLabel(variables);
+    };
+
+    const onFinish = async (values: labelFormValues) => {
+        const { pictureFile, ...res } = values;
+        const file = values?.pictureFile?.fileList[0]?.originFileObj;
+        const oldFile = values?.pictureFile?.fileList[0]?.url;
+        active();
+        const payloadValues = res;
+        if (file) {
+            const dataPayload = {
+                entityType: 'labels',
+                fileName: file.name,
+                contentType: file.type,
+                fileSize: file.size,
+            };
+
+            try {
+                const urlPublic = await uploadApi.uploadFile({
+                    infoFile: dataPayload,
+                    file: file,
+                });
+                if (urlPublic) {
+                    payloadValues.picture = urlPublic;
+                }
+            } catch (error) {
+                deActive();
+            }
+        } else if (!file && !oldFile) {
+            payloadValues.picture = null;
+        }
+
+        return isCreateModal
+            ? handleCreateLabel(payloadValues)
+            : handleUpdateLabel(payloadValues);
+    };
 
     useEffect(() => {
         const initialData = {
             ...dataEdit,
+            pictureFile: dataEdit?.picture
+                ? {
+                      fileList: [
+                          {
+                              uid: dataEdit?.id,
+                              thumbUrl: dataEdit?.picture,
+                              url: dataEdit?.picture,
+                              name: dataEdit?.name,
+                          },
+                      ],
+                  }
+                : undefined,
         };
         form.setFieldsValue(initialData);
-    });
+    }, [dataEdit]);
 
     return (
         <AppModal
@@ -34,14 +118,36 @@ export default function LabelFormModal({ ...props }: Props) {
             open
             onCancel={closeModal}
             onOk={form.submit}
+            loading={isActive}
         >
-            <AppForm form={form} showSubmit={false} layout="vertical">
+            <AppForm
+                form={form}
+                onFinish={onFinish}
+                showSubmit={false}
+                layout="vertical"
+            >
                 <div className="flex items-center gap-4">
-                    <AppFormItem name="thumbnail" label={'Logo'}>
-                        <ImageListUpload maxCount={1} accept="image/*" />
+                    <AppFormItem
+                        name="pictureFile"
+                        label={'Logo'}
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <ImageListUpload
+                            maxCount={1}
+                            accept="image/*"
+                            maxSizeMB={3}
+                        />
                     </AppFormItem>
                     <p className="flex-1 text-center text-sm text-gray-500">
-                        Hỗ trợ định dạng ảnh PNG, JFIF, JPEG, or JPG
+                        {messages('image.validation.supportImageFormat', {
+                            value: 'PNG, JPG, JPEG',
+                        })}
                     </p>
                 </div>
                 <AppFormItem

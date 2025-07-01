@@ -15,7 +15,7 @@ export const useCreateCountry = () => {
         { onSuccess }: CreateVariables<CreateCountryPayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [countriesQueryKeys.getList],
+            queryKey: [...countriesQueryKeys.getList],
         });
 
         const responseMessages = messages(data?.data?.messageCode);

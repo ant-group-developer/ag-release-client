@@ -4,7 +4,8 @@ import AppModal from '@/components/ui/modal/normal-modal';
 import ArtistSelect from '@/components/ui/select/artist-select';
 import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import useModalStore from '@/hooks/use-modal';
-import { fakeDspData } from '@/modules/dashboard/constants/mockData';
+import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
+import { DspData } from '@/modules/dsp/types';
 import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { Form } from 'antd';
@@ -38,6 +39,8 @@ export default function AddArtistModal({ isSetMainArtist, onSubmit }: Props) {
     const isAddArtistReleaseModal =
         typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST;
     const dataEdit = useModalStore((state) => state.dataEdit);
+
+    const { dspData } = useGetListDsp({});
 
     const handleSubmit = async () => {
         try {
@@ -115,10 +118,10 @@ export default function AddArtistModal({ isSetMainArtist, onSubmit }: Props) {
                             {messages('artist.profiles')}
                         </p>
                         <ArtistProfilesList
-                            list={fakeDspData.map((item) => ({
-                                icon: item.image,
+                            list={dspData?.items.map((item: DspData) => ({
+                                icon: item.picture ?? '',
                                 name: item.name,
-                                id: item.id.toString(),
+                                id: item.id,
                             }))}
                             linkedPlatforms={fakeLinkedPlatforms}
                         />

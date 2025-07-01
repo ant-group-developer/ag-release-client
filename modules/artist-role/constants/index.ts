@@ -1,4 +1,4 @@
-import { ArtistRoleData } from './types';
+import { ArtistRoleData } from '../types';
 
 export const fakeArtistRoleData: ArtistRoleData[] = [
     {

@@ -1,6 +1,8 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
+import { PAGE_SIZE_OPTIONS } from '@/constants/common';
+import { PAGE_SIZE } from '@/constants/page-size';
 import { SCREEN } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
@@ -37,7 +39,6 @@ export default function Labels({}: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit);
-    console.log('🚀 ~ Labels ~ dataEdit:', dataEdit);
 
     const handleRefresh = () => {};
 
@@ -81,6 +82,11 @@ export default function Labels({}: Props) {
                 <LabelsTable
                     dataSource={labelsData?.items}
                     scroll={{ x: SCREEN.XXL, y: scrollY() }}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: labelsData.metadata.currentPage,
+                        total: labelsData.metadata.totalItems,
+                    }}
                 />
             </div>
 
@@ -107,7 +113,7 @@ export default function Labels({}: Props) {
                 showTotalText
                 showSizeChanger
                 showQuickJumper
-                pageSizeOptions={[21, 28, 32]}
+                pageSizeOptions={PAGE_SIZE_OPTIONS}
             />
         </div>
     );

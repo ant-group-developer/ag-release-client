@@ -140,7 +140,7 @@ export const adminRoutes: AdminRoutesType[] = [
             },
             {
                 id: 'dsp',
-                label: 'DSP',
+                label: 'dsp.label',
                 href: APP_ROUTES.DSP,
                 icon: SquareActivity,
                 title: 'dsp',
@@ -148,7 +148,7 @@ export const adminRoutes: AdminRoutesType[] = [
             },
             {
                 id: 'email-sender',
-                label: 'Email Sender',
+                label: 'emailSender.label',
                 href: APP_ROUTES.EMAIL_SENDER,
                 icon: Mail,
                 title: 'email-sender',

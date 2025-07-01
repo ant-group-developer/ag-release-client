@@ -65,7 +65,7 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                             ? [
                                   {
                                       name: mainArtist.name,
-                                      role: mainArtist.role,
+                                      //   role: mainArtist.role,
                                       id: mainArtist.name,
                                   },
                               ]

@@ -1,5 +1,5 @@
 export interface CreateLabelPayload {
-    picture: string;
+    picture: string | null;
     name: string;
     description: string;
 }

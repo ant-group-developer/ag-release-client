@@ -4,7 +4,6 @@ import IconInfoTooltip from '@/components/ui/tooltip/icon-info-tooltip';
 import { languageList } from '@/constants/fakeData';
 import useModalStore from '@/hooks/use-modal';
 import { artistSchema } from '@/modules/artist/schema';
-import { ArtistData } from '@/modules/artist/types';
 import { TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { TrackData } from '@/modules/tracks/types';
@@ -44,7 +43,7 @@ export default function TracksForm({ trackData }: Props) {
     const formMethods = useForm<ReleaseTrackSchema>({
         defaultValues: {
             trackName: trackData.title ?? '',
-            artists: trackData.artists,
+            // artists: trackData.artists,
             isAddArtistsFromRelease: false,
             trackOrigin: thisTrackData?.trackOrigin ?? '',
             languageTrack: thisTrackData?.languageTrack ?? '',
@@ -105,13 +104,13 @@ export default function TracksForm({ trackData }: Props) {
                     ? {
                           ...track,
                           ...watchedAllFields,
-                          artists: watchedAllFields.artists as ArtistData[],
+                          //   artists: watchedAllFields.artists as ArtistData[],
                       }
                     : track
             ),
         };
 
-        setFormValues(updatedFormValues);
+        // setFormValues(updatedFormValues);
     }, [watchedAllFields]);
 
     useEffect(() => {

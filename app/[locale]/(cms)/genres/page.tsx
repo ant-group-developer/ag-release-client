@@ -1,8 +1,9 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
-import { PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { SCREEN } from '@/enums/common';
+import { useActive } from '@/hooks/use-active';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import GenresHeader from '@/modules/genres/components/header';
@@ -67,6 +68,8 @@ export default function Genres({}: {}) {
             onSuccess: () => {
                 closeModal();
             },
+            onError: () => {
+            }
         };
 
         deleteGenre(variables);
@@ -89,6 +92,11 @@ export default function Genres({}: {}) {
                     dataSource={genresData.items}
                     scroll={{ x: SCREEN.MD, y: scrollY() }}
                     loading={isLoading}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: genresData.metadata.currentPage,
+                        total: genresData.metadata.totalItems,
+                    }}
                 />
             </div>
             <AppPagination

@@ -1,14 +1,14 @@
 import axiosAuth from '@/api/axios-auth';
 import axiosUpload from '@/api/axios-upload';
-import { DetailResponse, GetUrlUploadParams } from '@/types/api';
+import { DetailResponse, UploadPayload } from '@/types/api';
 import { GOOGLE_ROOT_FOLDER_DRIVE_ID } from '../constants/folder';
 import { FileData, UploadResponse, UploadResponseV2 } from '../types/data';
 
 export const uploadApi = {
-    uploadFile: async ({ infoFile, file }: GetUrlUploadParams) => {
+    uploadFile: async ({ infoFile, file }: UploadPayload) => {
         try {
             const response = await axiosAuth.post(
-                '/file/get-upload-url',
+                '/bucket/gcs/public/upload/picture-url',
                 infoFile
             );
             if (response.status !== 201) {
@@ -16,9 +16,9 @@ export const uploadApi = {
                     'Failed to get upload URL. Please try again later.'
                 );
             }
-            const { submitKey, url } = response?.data?.data;
+            const { urlPublic, urlUpload } = response?.data;
 
-            const uploadResponse = await fetch(url, {
+            const uploadResponse = await fetch(urlUpload, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': infoFile.contentType,
@@ -31,7 +31,7 @@ export const uploadApi = {
                     'Failed to upload file. Please try again later.'
                 );
             }
-            return submitKey;
+            return urlPublic;
         } catch (error) {
             throw error;
         }

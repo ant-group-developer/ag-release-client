@@ -1,16 +1,22 @@
 import ActionButton from '@/components/ui/button/action-button';
+import ImageFallback from '@/components/ui/image/image-fallback';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { formattedDate } from '@/helpers/common';
+import { FALLBACK_IMAGE } from '@/constants/common';
+import { formattedDate, getIndex } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
 import { TYPE_MODAL_ARTIST } from '../../enum';
 import { ArtistData } from '../../types';
 
-type Props = Omit<AppTableProps<ArtistData>, 'columns'> & {};
+type Props = Omit<AppTableProps<ArtistData>, 'columns'> & {
+    pagination: {
+        pageSize: number;
+        current: number;
+    };
+};
 
 export const ArtistsTable = ({ ...props }: Props) => {
     const messages = useTranslations();
@@ -22,12 +28,16 @@ export const ArtistsTable = ({ ...props }: Props) => {
             key: 'iNo',
             width: 30,
             align: 'center',
-            render: (_, __, index) => index + 1,
+            render: (_, __, index) =>
+                getIndex(
+                    props.pagination.pageSize,
+                    props.pagination.current,
+                    index
+                ),
         },
         {
-            // title: messages('common.thumbnail'),
-            key: 'thumbnail',
-            dataIndex: 'thumbnail',
+            key: 'picture',
+            dataIndex: 'picture',
             align: 'center',
             width: 30,
             fixed: 'left',
@@ -38,12 +48,13 @@ export const ArtistsTable = ({ ...props }: Props) => {
                         router.push(`/artists/detail/${record.id}/overview`);
                     }}
                 >
-                    <Image
-                        src={value || '/images/default-image.png'}
-                        alt="thumbnail"
-                        width={200}
-                        height={200}
-                        className="h-12 w-12 cursor-pointer rounded-lg object-cover"
+                    <ImageFallback
+                        fallbackSrc={FALLBACK_IMAGE}
+                        src={value ?? ''}
+                        alt="genre"
+                        width={48}
+                        height={48}
+                        className="aspect-square rounded-lg object-cover"
                     />
                 </div>
             ),
@@ -75,16 +86,6 @@ export const ArtistsTable = ({ ...props }: Props) => {
                 </CustomTooltip>
             ),
         },
-
-        {
-            title: messages('tracks.count'),
-            key: 'trackCount',
-            dataIndex: 'trackCount',
-            align: 'center',
-            width: 40,
-            render: (value) => <span className="truncate"> {value} </span>,
-        },
-
         {
             title: messages('common.dateCreated'),
             key: 'createdAt',
@@ -99,20 +100,33 @@ export const ArtistsTable = ({ ...props }: Props) => {
             ),
         },
         {
+            title: messages('common.dateUpdated'),
+            key: 'updatedAt',
+            dataIndex: 'updatedAt',
+            align: 'center',
+            width: 100,
+            render: (value) => (
+                <span className="truncate text-wrap">
+                    {' '}
+                    {formattedDate(value)}{' '}
+                </span>
+            ),
+        },
+        {
             key: 'actions',
             align: 'center',
             width: 20,
             fixed: 'right',
-            render: () => (
+            render: (_, record) => (
                 <ActionButton
                     showUpdate
                     showDetail
                     showDelete
                     onShowUpdate={() => {
-                        openModal(TYPE_MODAL_ARTIST.UPDATE);
+                        openModal(TYPE_MODAL_ARTIST.UPDATE, record);
                     }}
                     onShowDelete={() => {
-                        openModal(TYPE_MODAL_ARTIST.DELETE);
+                        openModal(TYPE_MODAL_ARTIST.DELETE, record);
                     }}
                 />
             ),

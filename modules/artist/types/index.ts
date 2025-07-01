@@ -1,13 +1,11 @@
-import { CommonParams } from '@/types/api';
+import { CommonAttribute, CommonParams } from '@/types/api';
 
-export interface ArtistData {
-    id: string;
+export interface ArtistData extends CommonAttribute {
     name: string;
-    role?: string;
-    artistId?: string;
-    thumbnail?: string;
-    trackCount?: number;
-    createdAt?: Date;
+    picture?: string | null;
+    biography: string;
+    creatorId: string;
+    modifierId?: string;
 }
 
 export interface ArtistDataFilter extends CommonParams {
