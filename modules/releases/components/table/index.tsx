@@ -1,7 +1,6 @@
 import ActionButton from '@/components/ui/button/action-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { APP_ROUTES } from '@/enums/routes';
 import {
     convertSecondsToHoursMinutes,
     formattedDate,
@@ -39,11 +38,11 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             render: (value, record) => (
                 <div
                     className="flex items-center justify-center"
-                    onClick={() =>
-                        router.push(
-                            `${APP_ROUTES.RELEASES}/detail/${record.releaseId}/core-detail`
-                        )
-                    }
+                    // onClick={() =>
+                    //     router.push(
+                    //         `${APP_ROUTES.RELEASES}/detail/${record.releaseId}/core-detail`
+                    //     )
+                    // }
                 >
                     <Image
                         src={value}

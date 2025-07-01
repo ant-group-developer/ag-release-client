@@ -2,17 +2,19 @@
 
 import AppContainer from '@/components/ant-music/app-container';
 import ListRelease from '@/modules/dashboard/components/list-release';
-import { fakeReleasesData } from '@/modules/dashboard/constants/mockData';
+
 import RevenueAnalysisCard from '@/modules/labels/components/label-detail/overview/card/revenue-analysis';
 import StreamsAnalysisCard from '@/modules/labels/components/label-detail/overview/card/streams-analysis';
 import TopOfReleaseCard from '@/modules/labels/components/label-detail/overview/card/top-of-release';
 import TopOfTrackCard from '@/modules/labels/components/label-detail/overview/card/top-of-track';
 
 import LabelDetailHeader from '@/modules/labels/components/label-detail/overview/header';
+import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 
 type Props = {};
 
 export default function Overview({}: Props) {
+    const { releasesData } = useGetListReleases({});
     return (
         <AppContainer>
             <LabelDetailHeader />
@@ -25,7 +27,7 @@ export default function Overview({}: Props) {
                 <RevenueAnalysisCard />
             </div>
             <div>
-                <ListRelease data={fakeReleasesData.slice(0, 7)} />
+                <ListRelease data={releasesData.items.slice(0, 7)} />
             </div>
         </AppContainer>
     );

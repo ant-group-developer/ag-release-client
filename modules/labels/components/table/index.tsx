@@ -3,7 +3,7 @@ import ImageFallback from '@/components/ui/image/image-fallback';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
-import { formattedDate } from '@/helpers/common';
+import { formattedDate, getIndex } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
 import { ColumnType } from 'antd/es/table';
@@ -11,7 +11,12 @@ import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_LABEL } from '../../enum';
 import { LabelData } from '../../types';
 
-type Props = Omit<AppTableProps<LabelData>, 'columns'> & {};
+type Props = Omit<AppTableProps<LabelData>, 'columns'> & {
+    pagination: {
+        pageSize: number;
+        current: number;
+    };
+};
 
 export const LabelsTable = ({ ...props }: Props) => {
     const messages = useTranslations();
@@ -23,7 +28,12 @@ export const LabelsTable = ({ ...props }: Props) => {
             key: 'iNo',
             width: 30,
             align: 'center',
-            render: (_, __, index) => index + 1,
+            render: (_, __, index) =>
+                getIndex(
+                    props.pagination.pageSize,
+                    props.pagination.current,
+                    index
+                ),
         },
         {
             key: 'picture',

@@ -4,7 +4,7 @@ export interface DspData extends CommonAttribute {
     creatorId: string;
     modifierId?: string;
     name: string;
-    picture?: string;
+    picture?: string | null;
     canLinkArtistProfile: boolean;
 }
 

@@ -166,4 +166,19 @@ export const QUERY_KEY = {
         GET_LIST: 'GET_LIST_ARTIST',
         GET_DETAIL: 'GET_LIST_ARTIST',
     },
+    ARTIST_ROLE: {
+        KEY: 'ARTIST_ROLE',
+        GET_LIST: 'GET_LIST_ARTIST_ROLE',
+        GET_DETAIL: 'GET_DETAIL_ARTIST_ROLE',
+    },
+    DSP: {
+        KEY: 'DPS',
+        GET_LIST: 'GET_LIST_DSP',
+        GET_DETAIL: 'GET_DETAIL_DSP',
+    },
+    RELEASES: {
+        KEY: 'RELEASES',
+        GET_LIST: 'GET_LIST_RELEASES',
+        GET_DETAIL: 'GET_DETAIL_RELEASES',
+    },
 };

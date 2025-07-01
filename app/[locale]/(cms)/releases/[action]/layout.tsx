@@ -1,5 +1,4 @@
 'use client';
-import { LOCALE } from '@/enums/common';
 import { cn } from '@/helpers/common';
 import { getReleaseDetailTabRoute } from '@/helpers/link';
 import { showNotification } from '@/helpers/messages-helper';
@@ -7,14 +6,8 @@ import useModalStore from '@/hooks/use-modal';
 import { Link, useRouter } from '@/i18n/routing';
 import ReleaseDetailHeader from '@/modules/release-detail/header';
 import RightSidebar from '@/modules/release-detail/right-sidebar';
-import {
-    RELEASES_TABS,
-    RELEASES_TYPE,
-    TYPE_MODAL_RELEASE,
-} from '@/modules/releases/enums';
+import { RELEASES_TABS, TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
-import { ReleaseFormValuesData } from '@/modules/releases/types';
-import { GENRES } from '@/modules/tracks/enums';
 import { Button, Tabs, TabsProps } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname } from 'next/navigation';
@@ -227,52 +220,52 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         };
     }, [isScrolledOnDetailPage, isDetailPage]);
 
-    const initialData: ReleaseFormValuesData = {
-        id: 'R100000001',
-        releaseType: RELEASES_TYPE.ALBUM,
-        nameRelease: 'Album Mới 2024',
-        isMoreThan4Artists: false,
-        artists: [
-            {
-                id: 'Sơn Tùng MTP',
-                name: 'Sơn Tùng MTP',
-                role: 'Main Artist',
-            },
-        ],
-        genres: GENRES.HIP_HOP,
-        subGenres: GENRES.HIP_HOP,
-        label: 'ANT-MUSIC',
-        upc: '123456789012',
-        catalogId: 'CAT-2024-001',
-        cLine: {
-            year: '2026',
-            name: 'AMG',
-        },
-        pLine: {
-            year: '2026',
-            name: 'AMG',
-        },
-        thumbnail: {
-            fileList: [
-                {
-                    uid: '-1',
-                    name: 'album-cover.jpg',
-                    status: 'done',
-                    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-                    thumbUrl:
-                        'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-                },
-            ],
-        },
-        version: '',
-        metaDataLanguage: LOCALE.VI,
-        tracks: [],
-        releaseDate: '',
-        timezone: '',
-        territoryType: undefined,
-        platforms: [],
-        artistsApplyAllTracks: [],
-    };
+    // const initialData: ReleaseFormValuesData = {
+    //     id: 'R100000001',
+    //     releaseType: RELEASES_TYPE.ALBUM,
+    //     nameRelease: 'Album Mới 2024',
+    //     isMoreThan4Artists: false,
+    //     artists: [
+    //         {
+    //             id: 'Sơn Tùng MTP',
+    //             name: 'Sơn Tùng MTP',
+    //             role: 'Main Artist',
+    //         },
+    //     ],
+    //     genres: GENRES.HIP_HOP,
+    //     subGenres: GENRES.HIP_HOP,
+    //     label: 'ANT-MUSIC',
+    //     upc: '123456789012',
+    //     catalogId: 'CAT-2024-001',
+    //     cLine: {
+    //         year: '2026',
+    //         name: 'AMG',
+    //     },
+    //     pLine: {
+    //         year: '2026',
+    //         name: 'AMG',
+    //     },
+    //     thumbnail: {
+    //         fileList: [
+    //             {
+    //                 uid: '-1',
+    //                 name: 'album-cover.jpg',
+    //                 status: 'done',
+    //                 url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    //                 thumbUrl:
+    //                     'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    //             },
+    //         ],
+    //     },
+    //     version: '',
+    //     metaDataLanguage: LOCALE.VI,
+    //     tracks: [],
+    //     releaseDate: '',
+    //     timezone: '',
+    //     territoryType: undefined,
+    //     platforms: [],
+    //     artistsApplyAllTracks: [],
+    // };
 
     useEffect(() => {
         if (!releaseId) {
@@ -281,7 +274,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
 
         const releaseAlreadyHasValue = formValues?.id;
         if (releaseId && !releaseAlreadyHasValue) {
-            setFormValues(initialData);
+            // setFormValues(initialData);
         }
     }, [releaseId]);
 

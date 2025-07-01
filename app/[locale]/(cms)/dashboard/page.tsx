@@ -1,5 +1,6 @@
 'use client';
 
+import { useFilter } from '@/hooks/use-filter';
 import { useRouter } from '@/i18n/routing';
 import DashboardHeader from '@/modules/dashboard/components/header';
 import LineChart from '@/modules/dashboard/components/line-chart/line-chart';
@@ -7,16 +8,29 @@ import ListNews from '@/modules/dashboard/components/list-news';
 import ListRelease from '@/modules/dashboard/components/list-release';
 import ListReport from '@/modules/dashboard/components/list-report/list-report';
 import CardStatistic from '@/modules/dashboard/components/list-statistic';
-import {
-    fakeDspData,
-    fakeReleasesData,
-} from '@/modules/dashboard/constants/mockData';
-import { fakeTrackData } from '@/modules/tracks/constants/mockdata';
+import { RELEASES_STATUS, RELEASES_TYPE } from '@/modules/releases/enums';
+import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
+import { ReleasesDataFilter } from '@/modules/releases/types';
+import { GENRES } from '@/modules/tracks/enums';
 
 type Props = {};
 
 function Dashboard({}: Props) {
     const router = useRouter();
+
+    const {
+        dataFilter,
+        onChangeFilter,
+        onChangePage,
+        canClearFilter,
+        removeFilter,
+    } = useFilter<ReleasesDataFilter>({
+        page: 1,
+        pageSize: 21,
+    });
+
+    const { releasesData } = useGetListReleases(dataFilter);
+
     const regionData = [
         {
             id: 1,
@@ -54,30 +68,6 @@ function Dashboard({}: Props) {
             plays: 2111,
         },
     ].sort((a, b) => b.plays - a.plays);
-
-    const sortListRelease = fakeReleasesData
-        .slice(0, 5)
-        .sort((a, b) => b.plays - a.plays)
-        .map((item) => ({
-            id: item.id,
-            image: item.thumbnail,
-            title: item.title,
-            artist: item.artist,
-            value: item.plays,
-            plays: item.plays,
-        }));
-
-    const sortListTrack = fakeTrackData
-        .slice(0, 5)
-        .sort((a, b) => b.plays - a.plays)
-        .map((item) => ({
-            id: item.id,
-            image: item.thumbnail,
-            title: item.title,
-            artist: item.artists[0].name,
-            value: item.plays,
-            plays: item.plays,
-        }));
 
     // Dữ liệu cho biểu đồ so sánh số plays của 5 quốc gia hàng đầu theo tháng
     const lineChartData = [
@@ -165,6 +155,127 @@ function Dashboard({}: Props) {
     const top5Countries = regionData
         .slice(0, 5)
         .map((c) => ({ name: c.name, field: c.name }));
+
+    // Fake DSP data cho ListReport
+    const fakeDspData = [
+        {
+            id: '1',
+            name: 'Spotify',
+            value: 3200,
+            percent: '+32%',
+            image: 'https://picsum.photos/seed/spotify/60/60',
+        },
+        {
+            id: '2',
+            name: 'Apple Music',
+            value: 2100,
+            percent: '+21%',
+            image: 'https://picsum.photos/seed/applemusic/60/60',
+        },
+        {
+            id: '3',
+            name: 'YouTube Music',
+            value: 1800,
+            percent: '+18%',
+            image: 'https://picsum.photos/seed/youtubemusic/60/60',
+        },
+        {
+            id: '4',
+            name: 'Amazon Music',
+            value: 900,
+            percent: '+9%',
+            image: 'https://picsum.photos/seed/amazonmusic/60/60',
+        },
+        {
+            id: '5',
+            name: 'Deezer',
+            value: 600,
+            percent: '+6%',
+            image: 'https://picsum.photos/seed/deezer/60/60',
+        },
+    ];
+
+    // Fake ReleasesData cho ListRelease
+    const fakeReleasesData = [
+        {
+            id: 'rel_001',
+            creatorId: 'admin',
+            modifierId: 'admin',
+            upc: '123456789012',
+            primaryGenreId: 'genre_01',
+            subGenreId: 'genre_02',
+            labelId: 'label_01',
+            title: 'Lost Echoes',
+            version: null,
+            status: RELEASES_STATUS.DISTRIBUTED,
+            type: RELEASES_TYPE.ALBUM,
+            tracks: [],
+            releaseArtists: [],
+            primaryGenre: {
+                id: 'genre_01',
+                name: 'Pop',
+                description: '',
+                picture: '',
+                createdAt: '2024-01-01T00:00:00.000Z',
+                updatedAt: '2024-01-02T00:00:00.000Z',
+            },
+            subGenre: GENRES.POP,
+            createdAt: '2024-01-01T00:00:00.000Z',
+            updatedAt: '2024-01-02T00:00:00.000Z',
+        },
+        {
+            id: 'rel_002',
+            creatorId: 'admin',
+            modifierId: 'admin',
+            upc: '987654321098',
+            primaryGenreId: 'genre_02',
+            subGenreId: 'genre_03',
+            labelId: 'label_02',
+            title: 'Through the Storm',
+            version: null,
+            status: RELEASES_STATUS.DRAFT,
+            type: RELEASES_TYPE.SINGLE,
+            tracks: [],
+            releaseArtists: [],
+            primaryGenre: {
+                id: 'genre_02',
+                name: 'Rock',
+                description: '',
+                picture: '',
+                createdAt: '2024-02-01T00:00:00.000Z',
+                updatedAt: '2024-02-02T00:00:00.000Z',
+            },
+            subGenre: GENRES.ROCK,
+            createdAt: '2024-02-01T00:00:00.000Z',
+            updatedAt: '2024-02-02T00:00:00.000Z',
+        },
+        {
+            id: 'rel_003',
+            creatorId: 'admin',
+            modifierId: 'admin',
+            upc: '555555555555',
+            primaryGenreId: 'genre_03',
+            subGenreId: 'genre_04',
+            labelId: 'label_03',
+            title: 'Sunset Lullaby',
+            version: null,
+            status: RELEASES_STATUS.PROCESSING,
+            type: RELEASES_TYPE.EP,
+            tracks: [],
+            releaseArtists: [],
+            primaryGenre: {
+                id: 'genre_03',
+                name: 'Jazz',
+                description: '',
+                picture: '',
+                createdAt: '2024-03-01T00:00:00.000Z',
+                updatedAt: '2024-03-02T00:00:00.000Z',
+            },
+            subGenre: GENRES.JAZZ,
+            createdAt: '2024-03-01T00:00:00.000Z',
+            updatedAt: '2024-03-02T00:00:00.000Z',
+        },
+    ];
 
     // Chuẩn bị data cho DonutChartWithList
     const totalDspValue = fakeDspData.reduce(

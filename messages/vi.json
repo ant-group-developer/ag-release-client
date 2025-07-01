@@ -37,6 +37,7 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "biography": "Tiểu sử",
         "nationality": "Quốc tịch",
         "currencyName": "Tên tiền tệ",
         "currencySymbol": "Ký hiệu tiền tệ",
@@ -647,6 +648,7 @@
         "variousArtists": "Nhiều nghệ sĩ",
         "descriptionVariantArtists": "Tên hiển thị sẽ là 'Nhiều nghệ sĩ'",
         "role": "Vai trò nghệ sĩ",
+        "canLinkArtistProfile": "Có thể liên kết hồ sơ nghệ sĩ",
         "message": {
             "success": {
                 "create": "Thêm mới nghệ sĩ thành công",
@@ -752,6 +754,30 @@
     },
 
     "dsp": {
-        "label": "DSP"
+        "label": "DSP",
+        "name": "Tên nền tảng",
+        "message": {
+            "success": {
+                "create": "Thêm nền tảng thành công",
+                "update": "Cập nhật nền tảng thành công",
+                "delete": "Xoá nền tảng thành công"
+            },
+            "error": {
+                "duplicateNameDsp": "Nền tảng này đã tồn tại"
+            }
+        }
+    },
+
+    "artistRole": {
+        "message": {
+            "success": {
+                "create": "Thêm vai trò mới thành công",
+                "delete": "Xoá vài trò thành công",
+                "update": "Cập nhật vài trò thành công"
+            },
+            "error": {
+                "duplicateNameArtistRole": "Vài trò này đã tồn tại"
+            }
+        }
     }
 }

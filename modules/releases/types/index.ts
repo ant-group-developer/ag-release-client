@@ -1,26 +1,27 @@
+import { ArtistRoleData } from '@/modules/artist-role/types';
 import { ArtistData } from '@/modules/artist/types';
+import { GenresData } from '@/modules/genres/types';
 import { PlatformData } from '@/modules/platform/types';
 import { GENRES } from '@/modules/tracks/enums';
 import { TrackData } from '@/modules/tracks/types';
-import { CommonParams } from '@/types/api';
+import { CommonAttribute, CommonParams } from '@/types/api';
 import { RELEASES_STATUS, RELEASES_TYPE } from '../enums';
 
-export interface ReleasesData {
-    id: string;
+export interface ReleasesData extends CommonAttribute {
+    creatorId: string;
+    modifierId: string;
+    upc: string;
+    primaryGenreId: string;
+    subGenreId: string;
+    labelId: string;
     title: string;
-    releaseId: string;
-    type: RELEASES_TYPE;
-    labelName: string;
-    UPC: string;
-    creationDate: string;
-    releaseDate: string;
+    version: string | null;
     status: RELEASES_STATUS;
-    trackCount: number;
-    duration: number;
-    thumbnail: string; // Đánh dấu check
-    artist: string;
-    publisher: string;
-    plays: number;
+    type: RELEASES_TYPE;
+    tracks: TrackData[];
+    releaseArtists: ReleaseArtists[];
+    primaryGenre: GenresData;
+    subGenre: GENRES;
 }
 
 export interface ReleasesDataFilter extends CommonParams {
@@ -40,7 +41,7 @@ export interface ReleaseFormValuesData {
     nameRelease: string;
     version: string;
     isMoreThan4Artists: boolean;
-    artists: Pick<ArtistData, 'id' | 'name' | 'role'>[];
+    artists: ArtistData[];
     genres: GENRES | null;
     subGenres: GENRES | null;
     metaDataLanguage: string;
@@ -55,4 +56,12 @@ export interface ReleaseFormValuesData {
     territoryType: any;
     artistsApplyAllTracks: ArtistData[];
     platforms: PlatformData['id'][];
+}
+
+export interface ReleaseArtists extends CommonAttribute {
+    artistRoleId: string;
+    artistId: string;
+    releaseId: string;
+    artist: ArtistData;
+    artistRole: ArtistRoleData;
 }

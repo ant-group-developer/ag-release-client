@@ -2,7 +2,6 @@
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import useModalStore from '@/hooks/use-modal';
 import AddArtistModal from '@/modules/artist/components/modal/add-artist';
-import { ArtistData } from '@/modules/artist/types';
 import AudioPlayer from '@/modules/release-detail/release-tracks/audio-player';
 import AddNewTrackModal from '@/modules/release-detail/release-tracks/modal/add-new-track-modal';
 import ReleaseTracksTable from '@/modules/release-detail/release-tracks/table';
@@ -100,46 +99,39 @@ export default function Tracks() {
     };
 
     const handleAddArtistTrack = (values: any) => {
-        try {
-            const newArtistData: ArtistData = {
-                name: values.name,
-                role: values.role,
-                id: values.name,
-                artistId: '',
-                thumbnail: '',
-                trackCount: 0,
-                createdAt: new Date(),
-            };
-
-            const updatedTracks = formValues?.tracks?.map(
-                (track: TrackData) => {
-                    if (track.id === dataEdit?.id) {
-                        const isArtistExists = track.artists?.some(
-                            (artist) => artist.name === newArtistData.name
-                        );
-
-                        if (!isArtistExists) {
-                            return {
-                                ...track,
-                                artists: [
-                                    ...(track.artists || []),
-                                    newArtistData,
-                                ],
-                            };
-                        }
-                    }
-                    return track;
-                }
-            );
-
-            setFormValues({
-                ...formValues,
-                tracks: updatedTracks,
-            });
-            closeModal();
-        } catch (error) {
-            console.error('Validation failed:', error);
-        }
+        // try {
+        //     const newArtistData: ArtistData = {
+        //         name: values.name,
+        //         id: values.name,
+        //         createdAt: new Date().toDateString(),
+        //     };
+        //     const updatedTracks = formValues?.tracks?.map(
+        //         (track: TrackData) => {
+        //             if (track.id === dataEdit?.id) {
+        //                 const isArtistExists = track.artists?.some(
+        //                     (artist) => artist.name === newArtistData.name
+        //                 );
+        //                 if (!isArtistExists) {
+        //                     return {
+        //                         ...track,
+        //                         artists: [
+        //                             ...(track.artists || []),
+        //                             newArtistData,
+        //                         ],
+        //                     };
+        //                 }
+        //             }
+        //             return track;
+        //         }
+        //     );
+        //     setFormValues({
+        //         ...formValues,
+        //         tracks: updatedTracks,
+        //     });
+        //     closeModal();
+        // } catch (error) {
+        //     console.error('Validation failed:', error);
+        // }
     };
 
     const handleRemoveArtistTrack = (values: any) => {

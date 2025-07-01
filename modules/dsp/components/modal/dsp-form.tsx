@@ -2,34 +2,123 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
+import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
-import { Checkbox, Form, Input } from 'antd';
+import { uploadApi } from '@/modules/upload/apis';
+import { CreateVariables, UpdateVariables } from '@/types/api';
+import { Form, Input, Radio } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
+import { useCreateDsp } from '../../hooks/use-create-dsp';
+import { useUpdateDsp } from '../../hooks/use-update-dsp';
 import { DspData } from '../../types';
+import { CreateDspPayload, UpdateDspPayload } from '../../types/payload';
 
-// Modal tạo/sửa DSP
+type DspFormValues = Omit<DspData, 'id' | 'createdAt' | 'updatedAt'> & {
+    pictureFile?: any;
+};
 
 type Props = Omit<AppModalProps, 'children'> & {};
 
 export default function DspFormModal({ ...props }: Props) {
     const messages = useTranslations();
+    const { active, isActive, deActive } = useActive();
     const [form] = Form.useForm();
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as DspData);
-
-    useEffect(() => {
-        const initialData = {
-            ...dataEdit,
-        };
-        form.setFieldsValue(initialData);
-    }, [dataEdit]);
 
     function renderTitle() {
         const isUpdate = !!dataEdit?.id;
         return `${isUpdate ? messages('common.update') : messages('common.create')} DSP`;
     }
     const titleModal = renderTitle();
+    const isUpdateForm = dataEdit?.id;
+
+    const { createDsp } = useCreateDsp();
+    const { updateDsp } = useUpdateDsp();
+
+    const handleCreateDsp = (values: DspFormValues) => {
+        const variables: CreateVariables<CreateDspPayload> = {
+            payload: values,
+            onSuccess: () => {
+                form.resetFields();
+                deActive();
+            },
+            onError: () => {
+                deActive();
+            },
+        };
+        createDsp(variables);
+    };
+
+    const handleUpdateDsp = (values: DspFormValues) => {
+        const variables: UpdateVariables<DspData['id'], UpdateDspPayload> = {
+            id: dataEdit?.id,
+            payload: values,
+            onSuccess: () => {
+                deActive();
+            },
+            onError: () => {
+                deActive();
+            },
+        };
+        updateDsp(variables);
+    };
+
+    const onFinish = async (values: DspFormValues) => {
+        const { pictureFile, ...res } = values;
+        const file = values?.pictureFile?.fileList[0]?.originFileObj;
+        const oldFile = values?.pictureFile?.fileList[0]?.url;
+        active();
+        const payloadValues = res;
+        if (file) {
+            const dataPayload = {
+                entityType: 'dsps',
+                fileName: file.name,
+                contentType: file.type,
+                fileSize: file.size,
+            };
+
+            try {
+                const urlPublic = await uploadApi.uploadFile({
+                    infoFile: dataPayload,
+                    file: file,
+                });
+                if (urlPublic) {
+                    payloadValues.picture = urlPublic;
+                }
+            } catch (error) {
+                deActive();
+                return;
+            }
+        } else if (!file && !oldFile) {
+            payloadValues.picture = null;
+        }
+
+        return isUpdateForm
+            ? handleUpdateDsp(payloadValues)
+            : handleCreateDsp(payloadValues);
+    };
+
+    useEffect(() => {
+        const initialData = {
+            ...dataEdit,
+            pictureFile: dataEdit?.picture
+                ? {
+                      fileList: [
+                          {
+                              uid: dataEdit?.id,
+                              thumbUrl: dataEdit?.picture,
+                              url: dataEdit?.picture,
+                              name: dataEdit?.name,
+                          },
+                      ],
+                  }
+                : undefined,
+        };
+
+        form.setFieldsValue(initialData);
+    }, [dataEdit]);
 
     return (
         <AppModal
@@ -40,29 +129,41 @@ export default function DspFormModal({ ...props }: Props) {
             onCancel={closeModal}
             onOk={form.submit}
             className="!top-4"
+            loading={isActive}
         >
-            <AppForm form={form} showSubmit={false} layout="vertical">
+            <AppForm
+                form={form}
+                onFinish={onFinish}
+                showSubmit={false}
+                layout="vertical"
+            >
                 <div className="flex items-center gap-4">
                     <AppFormItem
-                        name="picture"
-                        label={'Ảnh'}
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.input'),
-                            },
-                        ]}
+                        name="pictureFile"
+                        label={messages('common.image')}
+                        // required
+                        // rules={[
+                        //     {
+                        //         required: true,
+                        //         message: messages('validation.input'),
+                        //     },
+                        // ]}
                     >
-                        <ImageListUpload maxCount={1} accept="image/*" />
+                        <ImageListUpload
+                            maxCount={1}
+                            accept="image/*"
+                            maxSizeMB={3}
+                        />
                     </AppFormItem>
                     <p className="flex-1 text-center text-sm text-gray-500">
-                        Hỗ trợ định dạng ảnh PNG, JFIF, JPEG, JPG
+                        {messages('image.validation.supportImageFormat', {
+                            value: 'PNG, JPG, JPEG',
+                        })}
                     </p>
                 </div>
                 <AppFormItem
                     name="name"
-                    label={'Tên DSP'}
+                    label={messages('dsp.name')}
                     required
                     rules={[
                         {
@@ -77,15 +178,24 @@ export default function DspFormModal({ ...props }: Props) {
                         },
                     ]}
                 >
-                    <Input placeholder={'Tên DSP'} allowClear />
+                    <Input allowClear />
                 </AppFormItem>
 
                 <AppFormItem
                     name="canLinkArtistProfile"
-                    valuePropName="checked"
-                    label={'Có liên kết nghệ sĩ?'}
+                    label={messages('artist.canLinkArtistProfile')}
+                    required
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.input'),
+                        },
+                    ]}
                 >
-                    <Checkbox>{'Có liên kết nghệ sĩ?'}</Checkbox>
+                    <Radio.Group>
+                        <Radio value={true}>{messages('common.yes')}</Radio>
+                        <Radio value={false}>{messages('common.no')}</Radio>
+                    </Radio.Group>
                 </AppFormItem>
             </AppForm>
         </AppModal>

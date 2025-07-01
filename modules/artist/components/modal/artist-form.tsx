@@ -67,6 +67,7 @@ export default function ArtistFormModal({ ...props }: Props) {
     const onFinish = async (values: ArtistFormValues) => {
         const { pictureFile, ...res } = values;
         const file = values?.pictureFile?.fileList[0]?.originFileObj;
+        const oldFile = values?.pictureFile?.fileList[0]?.url;
         active();
         const payloadValues = res;
         if (file) {
@@ -88,7 +89,7 @@ export default function ArtistFormModal({ ...props }: Props) {
             } catch (error) {
                 deActive();
             }
-        } else if (!file) {
+        } else if (!file && !oldFile) {
             payloadValues.picture = null;
         }
 
@@ -96,6 +97,10 @@ export default function ArtistFormModal({ ...props }: Props) {
             ? handleUpdateArtist(payloadValues)
             : handleCreateArtist(payloadValues);
     };
+
+    const titleModal = isUpdateForm
+        ? messages('artist.update')
+        : messages('artist.create');
 
     useEffect(() => {
         const initialData = {
@@ -120,7 +125,7 @@ export default function ArtistFormModal({ ...props }: Props) {
         <AppModal
             width={600}
             {...props}
-            title={messages('artist.create')}
+            title={titleModal}
             open
             onCancel={closeModal}
             onOk={form.submit}
@@ -134,7 +139,11 @@ export default function ArtistFormModal({ ...props }: Props) {
             >
                 <div className="flex items-center gap-4">
                     <AppFormItem name="pictureFile" label={'Avatar'}>
-                        <ImageListUpload maxCount={1} accept="image/*" />
+                        <ImageListUpload
+                            maxCount={1}
+                            accept="image/*"
+                            maxSizeMB={3}
+                        />
                     </AppFormItem>
                     <p className="flex-1 text-center text-sm text-gray-500">
                         {messages('image.validation.supportImageFormat', {
@@ -164,7 +173,7 @@ export default function ArtistFormModal({ ...props }: Props) {
 
                 <AppFormItem
                     name="biography"
-                    label={'Biography'}
+                    label={messages('common.biography')}
                     required
                     rules={[
                         {
@@ -179,7 +188,12 @@ export default function ArtistFormModal({ ...props }: Props) {
                         },
                     ]}
                 >
-                    <TextArea allowClear />
+                    <TextArea
+                        showCount
+                        autoSize={{ minRows: 4, maxRows: 6 }}
+                        allowClear
+                        className="mb-2"
+                    />
                 </AppFormItem>
 
                 {/* <div className="space-y-4"> 

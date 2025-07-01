@@ -37,6 +37,7 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "biography": "biography",
         "nationality": "Nationality",
         "currencyName": "Currency name",
         "currencySymbol": "Currency symbol",
@@ -645,6 +646,7 @@
         "variousArtists": "Various artists",
         "descriptionVariantArtists": "Display name will be 'Various artists'",
         "role": "Artist role",
+        "canLinkArtistProfile": "Can link artist profile",
         "message": {
             "success": {
                 "create": "Add new artist successfully",
@@ -750,6 +752,30 @@
     },
 
     "dsp": {
-        "label": "DSP"
+        "label": "DSP",
+        "name": "plat form name",
+        "message": {
+            "success": {
+                "create": "Create platform successfully",
+                "update": "Update platform successfully",
+                "delete": "Delete platform successfully"
+            },
+            "error": {
+                "duplicateNameDsp": "This platform already exist"
+            }
+        }
+    },
+
+    "artistRole": {
+        "message": {
+            "success": {
+                "create": "Add new role successfully",
+                "delete": "Delete role successfully",
+                "update": "Update role successfully"
+            },
+            "error": {
+                "duplicateNameArtistRole": "This role already exist"
+            }
+        }
     }
 }

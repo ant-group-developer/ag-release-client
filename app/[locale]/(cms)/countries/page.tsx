@@ -2,6 +2,7 @@
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_OPTIONS } from '@/constants/common';
+import { PAGE_SIZE } from '@/constants/page-size';
 import { SCREEN } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
@@ -86,6 +87,11 @@ export default function Countries({}: {}) {
                     dataSource={countriesData.items ?? fakeCountriesData}
                     scroll={{ x: SCREEN.MD, y: scrollY() }}
                     loading={isLoading}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: countriesData.metadata.currentPage,
+                        total: countriesData.metadata.totalItems,
+                    }}
                 />
             </div>
             <AppPagination

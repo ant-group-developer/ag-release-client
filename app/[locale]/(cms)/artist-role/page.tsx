@@ -1,17 +1,29 @@
 'use client';
+import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
+import { PAGE_SIZE_OPTIONS } from '@/constants/common';
+import { PAGE_SIZE } from '@/constants/page-size';
+import { SCREEN } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import ArtistRoleHeader from '@/modules/artist-role/components/header';
 import ArtistRoleFormModal from '@/modules/artist-role/components/modal/artist-role-form';
 import { ArtistRoleTable } from '@/modules/artist-role/components/table';
-import { fakeArtistRoleData } from '@/modules/artist-role/constants';
 import { TYPE_MODAL_ARTIST_ROLE } from '@/modules/artist-role/enums';
-import { ArtistRoleDataFilter } from '@/modules/artist-role/types';
+import { useDeleteArtistRole } from '@/modules/artist-role/hooks/use-delete-artist-role';
+import { useGetListArtistRole } from '@/modules/artist-role/hooks/use-get-list-artist-role';
+import {
+    ArtistRoleData,
+    ArtistRoleDataFilter,
+} from '@/modules/artist-role/types';
+import { DeleteVariables } from '@/types/api';
+import { useWindowSize } from '@uidotdev/usehooks';
+import { useTranslations } from 'next-intl';
 
 type Props = {};
 
 export default function ArtistRole({}: Props) {
+    const messages = useTranslations();
     const {
         dataFilter,
         onChangeFilter,
@@ -24,8 +36,44 @@ export default function ArtistRole({}: Props) {
         createdAt: '',
     });
     const typeModal = useModalStore((state) => state.typeModal);
+    const dataEdit = useModalStore((state) => state.dataEdit as ArtistRoleData);
+    const closeModal = useModalStore((state) => state.closeModal);
+    const { artistsRolesData, isLoading } = useGetListArtistRole(dataFilter);
+    const { deleteArtistRole } = useDeleteArtistRole();
+
+    const { height, width } = useWindowSize();
+    const isSmallDevice = Number(width) <= SCREEN.MD;
+    const scrollY = () => {
+        if (isSmallDevice) return undefined;
+        if (!height) return undefined;
+        const minHeight = 300;
+        const appHeaderHeight = 65;
+        const pageHeaderHeight = 53;
+        const tableHeaderHeight = 39;
+        const paginationHeight = 55;
+        const value =
+            height -
+            appHeaderHeight -
+            pageHeaderHeight -
+            tableHeaderHeight -
+            paginationHeight;
+
+        return value > minHeight ? value : minHeight;
+    };
 
     const handleRefresh = () => {};
+
+    const handleDeleteArtistRole = () => {
+        const variables: DeleteVariables<ArtistRoleData['id']> = {
+            id: dataEdit?.id,
+            onSuccess: () => closeModal(),
+        };
+
+        deleteArtistRole(variables);
+    };
+
+    const modalTitle = `${messages('delete.confirmTitle')}`;
+    const modalParagraph = `${messages('delete.confirmMessage', { value: dataEdit?.name })}`;
 
     return (
         <div className="flex h-full flex-col justify-between overflow-hidden">
@@ -38,26 +86,44 @@ export default function ArtistRole({}: Props) {
                     handleRefresh={handleRefresh}
                 />
                 <ArtistRoleTable
-                    dataSource={fakeArtistRoleData}
-                    scroll={{ x: 600, y: 400 }}
+                    dataSource={artistsRolesData.items}
+                    scroll={{ x: SCREEN.MD, y: scrollY() }}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: artistsRolesData.metadata.currentPage,
+                        total: artistsRolesData.metadata.totalItems,
+                    }}
+                    loading={isLoading}
                 />
             </div>
             <AppPagination
                 className="border-b border-t"
                 align="end"
-                current={dataFilter.page}
+                current={artistsRolesData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}
-                total={fakeArtistRoleData.length}
+                total={artistsRolesData.metadata.totalItems}
                 onChange={onChangePage}
                 showTotalText
                 showSizeChanger
                 showQuickJumper
-                pageSizeOptions={[21, 28, 32]}
+                pageSizeOptions={PAGE_SIZE_OPTIONS}
             />
 
             {(typeModal === TYPE_MODAL_ARTIST_ROLE.CREATE ||
                 typeModal === TYPE_MODAL_ARTIST_ROLE.UPDATE) && (
                 <ArtistRoleFormModal />
+            )}
+
+            {typeModal === TYPE_MODAL_ARTIST_ROLE.DELETE && (
+                <AppConfirm
+                    open
+                    onCancel={closeModal}
+                    onOk={() => {
+                        handleDeleteArtistRole();
+                    }}
+                    modalTitle={modalTitle}
+                    paragraph={modalParagraph}
+                />
             )}
         </div>
     );

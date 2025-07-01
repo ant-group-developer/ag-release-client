@@ -3,7 +3,7 @@ import AppPagination from '@/components/ui/pagination';
 import { SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { fakeReleasesData } from '@/modules/dashboard/constants/mockData';
+
 import DistributionHeader from '@/modules/distribution/components/header';
 import DistributionStatus from '@/modules/distribution/components/header-action/distribution-status';
 import DetailDistributionModal from '@/modules/distribution/components/modal/detail-distribution';
@@ -15,6 +15,7 @@ import {
     TYPE_MODAL_DISTRIBUTION,
 } from '@/modules/distribution/enum';
 import { DistributionDataFilter } from '@/modules/distribution/types';
+import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { useWindowSize } from '@uidotdev/usehooks';
 import { Button } from 'antd';
 import dayjs from 'dayjs';
@@ -84,6 +85,8 @@ export default function Distribution({}: Props) {
     };
     const handleRefresh = () => {};
 
+    const { releasesData } = useGetListReleases({});
+
     useEffect(() => {
         if (typeof window !== 'undefined') {
             sessionStorage.setItem(
@@ -123,7 +126,7 @@ export default function Distribution({}: Props) {
                 />
                 <DistributionTable
                     visibleColumns={visibleColumns}
-                    dataSource={fakeReleasesData}
+                    dataSource={releasesData?.items}
                     scroll={{ x: SCREEN.XXL, y: scrollY() }}
                 />
             </div>
@@ -135,9 +138,9 @@ export default function Distribution({}: Props) {
             <AppPagination
                 className="border-b border-t"
                 align="end"
-                current={dataFilter.page}
+                current={releasesData.metadata.currentPage}
                 pageSize={dataFilter.pageSize}
-                total={fakeReleasesData.length}
+                total={releasesData.metadata.totalItems}
                 onChange={onChangePage}
                 showTotalText
                 showSizeChanger

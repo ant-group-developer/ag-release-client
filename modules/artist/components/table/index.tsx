@@ -3,7 +3,7 @@ import ImageFallback from '@/components/ui/image/image-fallback';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
-import { formattedDate } from '@/helpers/common';
+import { formattedDate, getIndex } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
 import { ColumnType } from 'antd/es/table';
@@ -28,7 +28,12 @@ export const ArtistsTable = ({ ...props }: Props) => {
             key: 'iNo',
             width: 30,
             align: 'center',
-            render: (_, __, index) => index + 1,
+            render: (_, __, index) =>
+                getIndex(
+                    props.pagination.pageSize,
+                    props.pagination.current,
+                    index
+                ),
         },
         {
             key: 'picture',

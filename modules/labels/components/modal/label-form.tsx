@@ -60,6 +60,7 @@ export default function LabelFormModal({ ...props }: Props) {
     const onFinish = async (values: labelFormValues) => {
         const { pictureFile, ...res } = values;
         const file = values?.pictureFile?.fileList[0]?.originFileObj;
+        const oldFile = values?.pictureFile?.fileList[0]?.url;
         active();
         const payloadValues = res;
         if (file) {
@@ -81,7 +82,7 @@ export default function LabelFormModal({ ...props }: Props) {
             } catch (error) {
                 deActive();
             }
-        } else if (!file) {
+        } else if (!file && !oldFile) {
             payloadValues.picture = null;
         }
 

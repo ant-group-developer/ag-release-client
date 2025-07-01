@@ -1,6 +1,6 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { formattedDate } from '@/helpers/common';
+import { formattedDate, getIndex } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
@@ -29,7 +29,12 @@ export const GenresTable = ({ ...props }: Props) => {
             key: 'iNo',
             width: 50,
             align: 'center',
-            render: (_, __, index) => index + 1,
+            render: (_, __, index) =>
+                getIndex(
+                    props.pagination.pageSize,
+                    props.pagination.current,
+                    index
+                ),
         },
         {
             title: '',

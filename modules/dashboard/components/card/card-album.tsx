@@ -1,9 +1,7 @@
 import ImageFallback from '@/components/ui/image/image-fallback';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
-import { DATE_FORMAT } from '@/enums/common';
-import { APP_ROUTES } from '@/enums/routes';
-import { formattedDate, getIntlCodeByReleaseStatus } from '@/helpers/common';
+import { getIntlCodeByReleaseStatus } from '@/helpers/common';
 import { useRouter } from '@/i18n/routing';
 import { ReleasesData } from '@/modules/releases/types';
 import { Card, CardProps } from 'antd';
@@ -26,15 +24,15 @@ export default function CardRelease({ album, ...props }: Props) {
             cover={
                 <div className="relative overflow-hidden">
                     <ImageFallback
-                        onClick={() =>
-                            router.push(
-                                `${APP_ROUTES.RELEASES}/detail/${album.releaseId}/core-detail`
-                            )
-                        }
+                        // onClick={() =>
+                        //     router.push(
+                        //         `${APP_ROUTES.RELEASES}/detail/${album.releaseId}/core-detail`
+                        //     )
+                        // }
                         fallbackSrc={FALLBACK_IMAGE}
                         className="cursor-pointer overflow-hidden object-cover duration-300 hover:scale-110"
                         alt="example"
-                        src={album.thumbnail}
+                        src={''}
                         width={300}
                         height={300}
                     />
@@ -55,17 +53,19 @@ export default function CardRelease({ album, ...props }: Props) {
                 }
                 description={
                     <div className="flex flex-col font-medium">
-                        <p> {album.artist} </p>
+                        <p> {'artist'} </p>
 
                         <p className="flex justify-between">
                             <span>
-                                {formattedDate(
+                                {/* {formattedDate(
                                     album.releaseDate,
                                     DATE_FORMAT.DATE_ONLY
-                                )}
+                                )} */}{' '}
+                                Date
                             </span>
                             <span>
-                                {`${album.trackCount} ${messages('common.track')}`}
+                                {/* {`${album.trackCount} ${messages('common.track')}`} */}
+                                Date
                             </span>
                         </p>
                     </div>

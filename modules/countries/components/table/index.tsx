@@ -1,7 +1,7 @@
 import ActionButton from '@/components/ui/button/action-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { formattedDate } from '@/helpers/common';
+import { formattedDate, getIndex } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
@@ -10,7 +10,12 @@ import { CountriesData } from '../../types';
 
 // Table cho Countries
 
-type Props = Omit<AppTableProps<CountriesData>, 'columns'> & {};
+type Props = Omit<AppTableProps<CountriesData>, 'columns'> & {
+    pagination: {
+        pageSize: number;
+        current: number;
+    };
+};
 
 export const CountriesTable = ({ ...props }: Props) => {
     const messages = useTranslations();
@@ -21,7 +26,12 @@ export const CountriesTable = ({ ...props }: Props) => {
             key: 'iNo',
             width: 30,
             align: 'center',
-            render: (_, __, index) => index + 1,
+            render: (_, __, index) =>
+                getIndex(
+                    props.pagination.pageSize,
+                    props.pagination.current,
+                    index
+                ),
         },
         {
             title: messages('country.name'),

@@ -100,7 +100,7 @@ export default function MetadataInfo({}: Props) {
                                         {artist.name} {index === 0 && '*'}
                                     </p>
                                     <p className="text-gray-500">
-                                        {artist.role}
+                                        {/* {artist.role} */} Role
                                     </p>
                                 </div>
                                 {getFieldError('artists') && (

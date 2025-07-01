@@ -68,6 +68,7 @@ export default function GenresFormModal({ ...props }: Props) {
     const onFinish = async (values: GenreFormValues) => {
         const { pictureFile, ...res } = values;
         const file = values?.pictureFile?.fileList[0]?.originFileObj;
+        const oldFile = values?.pictureFile?.fileList[0]?.url;
         active();
         const payloadValues = res;
         if (file) {
@@ -89,7 +90,7 @@ export default function GenresFormModal({ ...props }: Props) {
             } catch (error) {
                 deActive();
             }
-        } else if (!file) {
+        } else if (!file && !oldFile) {
             payloadValues.picture = null;
         }
 
@@ -138,13 +139,13 @@ export default function GenresFormModal({ ...props }: Props) {
                     <AppFormItem
                         name="pictureFile"
                         label={messages('common.image')}
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.input'),
-                            },
-                        ]}
+                        // required
+                        // rules={[
+                        //     {
+                        //         required: true,
+                        //         message: messages('validation.input'),
+                        //     },
+                        // ]}
                     >
                         <ImageListUpload
                             maxCount={1}
