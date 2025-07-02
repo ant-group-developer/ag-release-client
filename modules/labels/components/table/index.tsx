@@ -153,7 +153,6 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             key: 'actions',
             align: 'center',
             width: 20,
-            fixed: 'right',
             render: (_, record) => (
                 <ActionButton
                     showUpdate

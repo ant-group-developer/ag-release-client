@@ -34,7 +34,7 @@ export default function Labels({}: Props) {
         pageSize: 21,
     });
 
-    const { labelsData } = useGetListLabels(dataFilter);
+    const { labelsData, isLoading } = useGetListLabels(dataFilter);
     const { deleteLabel } = useDeleteLabel();
 
     const typeModal = useModalStore((state) => state.typeModal);
@@ -100,6 +100,7 @@ export default function Labels({}: Props) {
                         current: labelsData.metadata.currentPage,
                         total: labelsData.metadata.totalItems,
                     }}
+                    loading={isLoading}
                     dataFilter={dataFilter}
                     onChange={onChangeSort}
                 />

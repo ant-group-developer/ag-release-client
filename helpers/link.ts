@@ -90,16 +90,16 @@ export const getAvatarUrl = (
     textColor = 'fff'
 ) => {
     const DARK_BG_COLORS = [
-        '263238', // Blue Gray
-        '6a1b9a', // Purple
-        '1565c0', // Blue
-        '00897b', // Teal
-        '2e7d32', // Green
-        'f9a825', // Yellow/Gold (vẫn đủ đậm, chữ trắng rõ)
-        'c62828', // Red
-        'd84315', // Orange
-        '5d4037', // Brown
-        '37474f', // Dark Blue Gray (khác tone với 1)
+        '42a5f5', // Medium Blue
+        'ffd600', // Vivid Yellow
+        'ffb300', // Amber/Gold
+        '66bb6a', // Medium Green
+        'ec407a', // Medium Pink
+        'ab47bc', // Medium Purple
+        'ffee58', // Lemon Yellow
+        '29b6f6', // Sky Blue
+        '9ccc65', // Leaf Green
+        'ff7043', // Coral/Orange
     ];
 
     function getRandomDarkColor() {

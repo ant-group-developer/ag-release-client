@@ -1,12 +1,12 @@
 import ActionButton from '@/components/ui/button/action-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { formattedDate, getIndex } from '@/helpers/common';
+import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_COUNTRIES } from '../../enums';
-import { CountriesData } from '../../types';
+import { CountriesData, CountriesDataFilter } from '../../types';
 
 // Table cho Countries
 
@@ -15,9 +15,10 @@ type Props = Omit<AppTableProps<CountriesData>, 'columns'> & {
         pageSize: number;
         current: number;
     };
+    dataFilter: CountriesDataFilter;
 };
 
-export const CountriesTable = ({ ...props }: Props) => {
+export const CountriesTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const column: ColumnType<CountriesData>[] = [
@@ -40,6 +41,12 @@ export const CountriesTable = ({ ...props }: Props) => {
             ellipsis: true,
             align: 'left',
             width: 110,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'name'
+            ),
             render: (value) => (
                 <CustomTooltip size="small" title={value}>
                     <span className="truncate"> {value} </span>
@@ -52,6 +59,12 @@ export const CountriesTable = ({ ...props }: Props) => {
             dataIndex: 'iso3',
             align: 'left',
             width: 60,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'iso3'
+            ),
         },
         {
             title: 'ISO2',
@@ -59,6 +72,12 @@ export const CountriesTable = ({ ...props }: Props) => {
             dataIndex: 'iso2',
             align: 'left',
             width: 50,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'iso2'
+            ),
         },
         {
             title: messages('common.numericCode'),
@@ -66,6 +85,12 @@ export const CountriesTable = ({ ...props }: Props) => {
             dataIndex: 'numericCode',
             align: 'left',
             width: 60,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'numericCode'
+            ),
         },
         {
             title: messages('common.capital'),
@@ -73,6 +98,12 @@ export const CountriesTable = ({ ...props }: Props) => {
             dataIndex: 'capital',
             align: 'left',
             width: 100,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'capital'
+            ),
         },
         {
             title: messages('common.currency'),
@@ -80,6 +111,12 @@ export const CountriesTable = ({ ...props }: Props) => {
             dataIndex: 'currency',
             align: 'left',
             width: 80,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'currency'
+            ),
         },
         {
             title: messages('common.dateCreated'),
@@ -87,6 +124,12 @@ export const CountriesTable = ({ ...props }: Props) => {
             dataIndex: 'createdAt',
             align: 'center',
             width: 100,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'createdAt'
+            ),
             render: (value) => (
                 <span className="truncate text-wrap">
                     {formattedDate(value)}
@@ -99,6 +142,12 @@ export const CountriesTable = ({ ...props }: Props) => {
             dataIndex: 'updatedAt',
             align: 'center',
             width: 100,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'updatedAt'
+            ),
             render: (value) => (
                 <span className="truncate text-wrap">
                     {formattedDate(value)}
@@ -109,7 +158,6 @@ export const CountriesTable = ({ ...props }: Props) => {
             key: 'actions',
             align: 'center',
             width: 20,
-            fixed: 'right',
             render: (_, record) => (
                 <ActionButton
                     showDelete

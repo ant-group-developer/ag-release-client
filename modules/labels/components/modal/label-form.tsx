@@ -44,6 +44,9 @@ export default function LabelFormModal({ ...props }: Props) {
                 onSuccess: () => {
                     deActive();
                 },
+                onError: () => {
+                    deActive();
+                },
             };
         updateLabel(variables);
     };
@@ -54,6 +57,9 @@ export default function LabelFormModal({ ...props }: Props) {
             onSuccess: () => {
                 deActive();
                 form.resetFields();
+            },
+            onError: () => {
+                deActive();
             },
         };
         createLabel(variables);

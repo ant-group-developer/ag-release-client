@@ -1,6 +1,6 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { formattedDate, getIndex } from '@/helpers/common';
+import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
@@ -9,7 +9,7 @@ import ActionButton from '@/components/ui/button/action-button';
 import ImageFallback from '@/components/ui/image/image-fallback';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { TYPE_MODAL_GENRES } from '../../enums';
-import { GenresData } from '../../types';
+import { GenresData, GenresDataFilter } from '../../types';
 
 // Table cho Genres
 
@@ -18,9 +18,10 @@ type Props = Omit<AppTableProps<GenresData>, 'columns'> & {
         pageSize: number;
         current: number;
     };
+    dataFilter: GenresDataFilter;
 };
 
-export const GenresTable = ({ ...props }: Props) => {
+export const GenresTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const column: ColumnType<GenresData>[] = [
@@ -62,6 +63,12 @@ export const GenresTable = ({ ...props }: Props) => {
             ellipsis: true,
             align: 'left',
             width: 200,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'name'
+            ),
             render: (value, record) => (
                 <div className="flex items-center gap-4">
                     <div>
@@ -95,6 +102,12 @@ export const GenresTable = ({ ...props }: Props) => {
             dataIndex: 'createdAt',
             align: 'center',
             width: 150,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'createdAt'
+            ),
             render: (value) => (
                 <span className="truncate text-wrap">
                     {formattedDate(value)}
@@ -107,6 +120,12 @@ export const GenresTable = ({ ...props }: Props) => {
             dataIndex: 'updatedAt',
             align: 'center',
             width: 150,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'updatedAt'
+            ),
             render: (value) => (
                 <span className="truncate text-wrap">
                     {formattedDate(value)}
