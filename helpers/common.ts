@@ -405,12 +405,9 @@ export function formatDatesToUTC(
 ): [string, string] {
     // const startDateFormatted = dayjs(startDate).startOf('day').toISOString();
     // const endDateFormatted = dayjs(endDate).endOf('day').toISOString();
-    const startDateFormatted = dayjs(startDate)
-        .startOf('day')
-        .format(DATE_FORMAT.YEAR_MONTH_DAY_TIME);
-    const endDateFormatted = dayjs(endDate)
-        .endOf('day')
-        .format(DATE_FORMAT.YEAR_MONTH_DAY_TIME);
+    const startDateFormatted = dayjs(startDate).startOf('day').toISOString();
+    // .format(DATE_FORMAT.YEAR_MONTH_DAY_TIME);
+    const endDateFormatted = dayjs(endDate).endOf('day').toISOString();
     // .format(DATE_FORMAT.YEAR_MONTH_DAY_TIME);
     return [startDateFormatted, endDateFormatted];
 }
@@ -694,7 +691,6 @@ export const timeStringToSeconds = (time: string) => {
     const result = Number(h) * 3600 + Number(m) * 60 + Number(s);
     return result;
 };
-
 
 export function getLanguageLabel(code: string) {
     const languageMap: Record<string, string> = {

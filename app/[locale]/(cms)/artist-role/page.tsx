@@ -39,7 +39,8 @@ export default function ArtistRole({}: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as ArtistRoleData);
     const closeModal = useModalStore((state) => state.closeModal);
-    const { artistsRolesData, isLoading } = useGetListArtistRole(dataFilter);
+    const { artistsRolesData, isLoading, refetch, lastUpdatedAt } =
+        useGetListArtistRole(dataFilter);
     const { deleteArtistRole } = useDeleteArtistRole();
 
     const { height, width } = useWindowSize();
@@ -62,7 +63,9 @@ export default function ArtistRole({}: Props) {
         return value > minHeight ? value : minHeight;
     };
 
-    const handleRefresh = () => {};
+    const handleRefresh = () => {
+        refetch();
+    };
 
     const handleDeleteArtistRole = () => {
         const variables: DeleteVariables<ArtistRoleData['id']> = {
@@ -97,6 +100,7 @@ export default function ArtistRole({}: Props) {
                     canClearFilter={canClearFilter}
                     removeFilter={removeFilter}
                     handleRefresh={handleRefresh}
+                    lastUpdatedAt={lastUpdatedAt}
                 />
                 <ArtistRoleTable
                     dataSource={artistsRolesData.items}

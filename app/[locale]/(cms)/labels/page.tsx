@@ -34,14 +34,17 @@ export default function Labels({}: Props) {
         pageSize: 21,
     });
 
-    const { labelsData, isLoading } = useGetListLabels(dataFilter);
+    const { labelsData, isLoading, lastUpdatedAt, refetch } =
+        useGetListLabels(dataFilter);
     const { deleteLabel } = useDeleteLabel();
 
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit);
 
-    const handleRefresh = () => {};
+    const handleRefresh = () => {
+        refetch();
+    };
 
     const { height, width } = useWindowSize();
     const isSmallDevice = Number(width) <= SCREEN.MD;
@@ -91,10 +94,11 @@ export default function Labels({}: Props) {
                     canClearFilter={canClearFilter}
                     removeFilter={removeFilter}
                     handleRefresh={handleRefresh}
+                    lastUpdatedAt={lastUpdatedAt}
                 />
                 <LabelsTable
                     dataSource={labelsData?.items}
-                    scroll={{ x: SCREEN.XXL, y: scrollY() }}
+                    scroll={{ y: scrollY() }}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
                         current: labelsData.metadata.currentPage,

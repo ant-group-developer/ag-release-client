@@ -105,8 +105,10 @@ export enum TYPE_FILTER {
     TYPE = 'type',
     DROPDOWN = 'dropdown',
     DATE_CREATED = 'dateCreated',
+    DATE_UPDATED = 'dateUpdated',
     DATE_RELEASE = 'dateRelease',
     GENRES = 'genres',
+    ID = 'ID',
 }
 
 export enum UPLOAD_TYPE {

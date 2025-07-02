@@ -1,4 +1,6 @@
 import { DEFAULT_DATA_PAGINATION } from '@/constants/common';
+import { DATE_FORMAT } from '@/enums/common';
+import { formattedDate } from '@/helpers/common';
 import { PaginationResponse } from '@/types/api';
 import { useQuery } from '@tanstack/react-query';
 import { languageApi } from '../apis';
@@ -16,8 +18,14 @@ export const useGetListLanguage = (params: LanguageDataFilter) => {
     const languagesData: PaginationResponse<LanguagesData>['data'] =
         data?.data?.data ?? DEFAULT_DATA_PAGINATION;
 
+    const lastUpdatedAt = formattedDate(
+        res.dataUpdatedAt,
+        DATE_FORMAT.HOUR_MINUTE
+    );
+
     return {
         languagesData: languagesData,
+        lastUpdatedAt,
         ...res,
     };
 };

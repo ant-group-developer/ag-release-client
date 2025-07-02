@@ -1,4 +1,6 @@
 import { DEFAULT_DATA_PAGINATION } from '@/constants/common';
+import { DATE_FORMAT } from '@/enums/common';
+import { formattedDate } from '@/helpers/common';
 import { ArtistDataFilter } from '@/modules/artist/types';
 import { useQuery } from '@tanstack/react-query';
 import { artistRoleApi } from '../apis';
@@ -12,8 +14,14 @@ export const useGetListArtistRole = (params: ArtistDataFilter) => {
 
     const artistsRolesData = data?.data?.data ?? DEFAULT_DATA_PAGINATION;
 
+    const lastUpdatedAt = formattedDate(
+        res.dataUpdatedAt,
+        DATE_FORMAT.HOUR_MINUTE
+    );
+
     return {
         artistsRolesData,
+        lastUpdatedAt,
         ...res,
     };
 };

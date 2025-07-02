@@ -60,6 +60,7 @@ export default function CoreDetailCreate() {
             console.error('Validation failed:', error);
         }
     };
+
     useEffect(() => {
         resetFormValues();
     }, []);

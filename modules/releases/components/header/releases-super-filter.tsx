@@ -1,9 +1,9 @@
 import DateCreatedDialog from '@/components/filter-dialog/date-create-dialog';
 import DateReleaseDialog from '@/components/filter-dialog/date-release-dialog';
 import GenresDialog from '@/components/filter-dialog/genres-dialog';
+import SearchDialog from '@/components/filter-dialog/search-dialog';
 import StatusReleaseDialog from '@/components/filter-dialog/status-releases-dialog';
 import TypeReleaseDialog from '@/components/filter-dialog/type-releases-dialog';
-import SearchDialog from '@/components/shared/search-dialog';
 import IconButton from '@/components/ui/button/icon-button';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';

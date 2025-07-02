@@ -1,8 +1,6 @@
 import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
 import Refresh from '@/components/refresh';
 import CreateButton from '@/components/ui/button/create-button';
-import { DATE_FORMAT } from '@/enums/common';
-import { formattedDate } from '@/helpers/common';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { useTranslations } from 'next-intl';
@@ -16,6 +14,7 @@ type Props = {
     canClearFilter: boolean;
     removeFilter: RemoveFilter;
     handleRefresh: () => void;
+    lastUpdatedAt: string;
 };
 
 export default function LabelsHeader({
@@ -24,6 +23,7 @@ export default function LabelsHeader({
     canClearFilter,
     removeFilter,
     handleRefresh,
+    lastUpdatedAt,
 }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
@@ -42,10 +42,7 @@ export default function LabelsHeader({
                 <div className="flex items-center gap-2">
                     <Refresh
                         handleRefresh={handleRefresh}
-                        lastTimeUpdated={formattedDate(
-                            new Date(),
-                            DATE_FORMAT.HOUR_MINUTE
-                        )}
+                        lastTimeUpdated={lastUpdatedAt}
                     />
                     <CreateButton
                         canCreate={true}

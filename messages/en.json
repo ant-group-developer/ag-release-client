@@ -618,7 +618,8 @@
         "reggae": "Reggae",
         "rap": "Rap",
         "classical": "Classical",
-        "blues": "Blues"
+        "blues": "Blues",
+        "add": "Add new genre"
     },
     "genre": {
         "message": {

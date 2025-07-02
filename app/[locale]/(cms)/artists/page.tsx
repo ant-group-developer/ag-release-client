@@ -39,13 +39,16 @@ export default function Artists({}: Props) {
     const dataEdit = useModalStore((state) => state.dataEdit);
     const { deleteArtist } = useDeleteArtist();
 
-    const handleRefresh = () => {};
+    const handleRefresh = () => {
+        refetch();
+    };
 
     const { height, width } = useWindowSize();
 
     const isSmallDevice = Number(width) <= SCREEN.MD;
 
-    const { artistsData } = useGetListArtist(dataFilter);
+    const { artistsData, isLoading, lastUpdatedAt, refetch } =
+        useGetListArtist(dataFilter);
 
     const modalParagraph = messages('delete.confirmMessage', {
         value: dataEdit?.name,
@@ -93,6 +96,7 @@ export default function Artists({}: Props) {
                     canClearFilter={canClearFilter}
                     removeFilter={removeFilter}
                     handleRefresh={handleRefresh}
+                    lastUpdatedAt={lastUpdatedAt}
                 />
                 <ArtistsTable
                     dataSource={artistsData?.items}
@@ -102,6 +106,7 @@ export default function Artists({}: Props) {
                         current: artistsData.metadata.currentPage,
                         total: artistsData.metadata.totalItems,
                     }}
+                    loading={isLoading}
                     onChange={onChangeSort}
                     dataFilter={dataFilter}
                 />

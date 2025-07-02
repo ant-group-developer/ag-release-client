@@ -46,8 +46,14 @@ export default function CountriesHeaderDropdown({
         {
             label: messages('common.dateCreated'),
             value: TYPE_FILTER.DATE_CREATED,
-            visible: !dataFilter.dateCreated,
+            visible: !dataFilter.startCreatedAt,
             onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_CREATED),
+        },
+        {
+            label: messages('common.dateUpdated'),
+            value: TYPE_FILTER.DATE_UPDATED,
+            visible: !dataFilter.startUpdatedAt,
+            onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_UPDATED),
         },
     ];
 

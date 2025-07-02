@@ -33,14 +33,17 @@ export default function Genres({}: {}) {
         pageSize: 21,
     });
 
-    const { genresData, isLoading } = useGetListGenres(dataFilter);
+    const { genresData, isLoading, refetch, lastUpdatedAt } =
+        useGetListGenres(dataFilter);
     const { deleteGenre } = useDeleteGenre();
 
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as GenresData);
     const isUpdateForm = !!dataEdit?.id;
-    const handleRefresh = () => {};
+    const handleRefresh = () => {
+        refetch();
+    };
 
     const { height, width } = useWindowSize();
     const isSmallDevice = Number(width) <= SCREEN.MD;
@@ -98,6 +101,7 @@ export default function Genres({}: {}) {
                     canClearFilter={canClearFilter}
                     removeFilter={removeFilter}
                     handleRefresh={handleRefresh}
+                    lastUpdatedAt={lastUpdatedAt}
                 />
                 <GenresTable
                     dataSource={genresData.items}

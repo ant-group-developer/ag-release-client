@@ -9,5 +9,5 @@ export interface ArtistData extends CommonAttribute {
 }
 
 export interface ArtistDataFilter extends CommonParams {
-    dateCreated?: string;
+    id?: string;
 }

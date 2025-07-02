@@ -1,6 +1,6 @@
 import ActionButton from '@/components/ui/button/action-button';
+import CopyText from '@/components/ui/copy-text/copy-text';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
-import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { ColumnType } from 'antd/es/table';
@@ -48,9 +48,9 @@ export const CountriesTable = ({ dataFilter, ...props }: Props) => {
                 'name'
             ),
             render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
-                </CustomTooltip>
+                <CopyText tooltipProps={{ placement: 'right' }} text={value}>
+                    <p>{value}</p>
+                </CopyText>
             ),
         },
         {

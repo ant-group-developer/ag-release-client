@@ -2,7 +2,7 @@ import { AppPopover } from '@/components/shared/app-popover';
 import { Chip } from '@/components/ui/chip';
 import DateRangePicker from '@/components/ui/input/date-range-picker';
 import { DATE_FORMAT, TYPE_FILTER } from '@/enums/common';
-import { formatDatesToUTC, formattedDate } from '@/helpers/common';
+import { formattedDate } from '@/helpers/common';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useEffect, useState } from 'react';
@@ -16,7 +16,7 @@ type Props = {
     onChangeFilter: (value?: any) => void;
 };
 
-const DateCreatedDialog = ({
+const DateUpdateDialog = ({
     open,
     title,
     handleChangeTypeFilter,
@@ -28,23 +28,19 @@ const DateCreatedDialog = ({
 
     useEffect(() => {
         if (open) {
-            setTempStartDate(dataFilter.startDate || '');
-            setTempEndDate(dataFilter.endDate || '');
+            setTempStartDate(dataFilter.startUpdatedAt || '');
+            setTempEndDate(dataFilter.endUpdatedAt || '');
         }
-    }, [open, dataFilter.startCreatedAt, dataFilter.endCreatedAt]);
+    }, [open, dataFilter.startUpdatedAt, dataFilter.endUpdatedAt]);
 
     const onCancel = () => {
         handleChangeTypeFilter();
     };
 
     const onSubmit = () => {
-        const [startDateCreated, endDateCreated] = formatDatesToUTC(
-            tempStartDate,
-            tempEndDate
-        );
         onChangeFilter({
-            startCreatedAt: startDateCreated,
-            endCreatedAt: endDateCreated,
+            startUpdatedAt: tempStartDate,
+            endUpdatedAt: tempEndDate,
         });
         onCancel();
     };
@@ -63,31 +59,31 @@ const DateCreatedDialog = ({
 
     const hasSelectedDates = tempStartDate && tempEndDate;
 
-    if (!(dataFilter.startCreatedAt || !dataFilter.endCreatedAt) && !open)
+    if (!(dataFilter.startUpdatedAt || !dataFilter.endUpdatedAt) && !open)
         return null;
 
     return (
         <div className="relative">
-            {dataFilter.startCreatedAt && dataFilter.endCreatedAt && (
+            {dataFilter.startUpdatedAt && dataFilter.endUpdatedAt && (
                 <Chip
                     onClick={() =>
                         handleChangeTypeFilter(TYPE_FILTER.DATE_CREATED)
                     }
                     onRemove={() =>
                         onChangeFilter({
-                            startCreatedAt: undefined,
-                            endCreatedAt: undefined,
+                            startUpdatedAt: undefined,
+                            endUpdatedAt: undefined,
                         })
                     }
                 >
                     {title}:{' '}
                     {formattedDate(
-                        dataFilter.startCreatedAt,
+                        dataFilter.startUpdatedAt,
                         DATE_FORMAT.DATE_ONLY
                     )}{' '}
                     -{' '}
                     {formattedDate(
-                        dataFilter.endCreatedAt,
+                        dataFilter.endUpdatedAt,
                         DATE_FORMAT.DATE_ONLY
                     )}
                 </Chip>
@@ -130,4 +126,4 @@ const DateCreatedDialog = ({
     );
 };
 
-export default DateCreatedDialog;
+export default DateUpdateDialog;

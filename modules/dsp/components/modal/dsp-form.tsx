@@ -157,11 +157,18 @@ export default function DspFormModal({ ...props }: Props) {
                             maxSizeMB={3}
                         />
                     </AppFormItem>
-                    <p className="flex-1 text-sm text-gray-500">
-                        {messages('image.validation.supportImageFormat', {
-                            value: 'PNG, JPG, JPEG',
-                        })}
-                    </p>
+                    <div>
+                        <p className="flex-1 text-sm text-gray-500">
+                            {messages('image.validation.supportImageFormat', {
+                                value: 'PNG, JPG, JPEG',
+                            })}
+                        </p>
+                        <p className="flex-1 text-sm text-gray-500">
+                            {messages('image.validation.mustBeLessThanMB', {
+                                value: '3',
+                            })}
+                        </p>
+                    </div>
                 </div>
                 <AppFormItem
                     name="name"

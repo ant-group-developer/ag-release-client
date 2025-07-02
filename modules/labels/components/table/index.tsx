@@ -1,4 +1,5 @@
 import ActionButton from '@/components/ui/button/action-button';
+import CopyText from '@/components/ui/copy-text/copy-text';
 import ImageFallback from '@/components/ui/image/image-fallback';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
@@ -92,9 +93,13 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
                             className="aspect-square rounded-lg object-cover"
                         />
                     </div>
-                    <CustomTooltip size="small" title={value}>
-                        <span className="truncate"> {value} </span>
-                    </CustomTooltip>
+                    <CopyText
+                        tooltipProps={{ placement: 'right' }}
+                        text={value}
+                        label={messages('labels.name')}
+                    >
+                        <p>{value}</p>
+                    </CopyText>
                 </div>
             ),
         },
@@ -107,7 +112,10 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             width: 150,
             render: (value) => (
                 <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
+                    <span className="line-clamp-3 truncate whitespace-pre-line">
+                        {' '}
+                        {value}{' '}
+                    </span>
                 </CustomTooltip>
             ),
         },
