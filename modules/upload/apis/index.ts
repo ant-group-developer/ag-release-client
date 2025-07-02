@@ -7,16 +7,16 @@ import { FileData, UploadResponse, UploadResponseV2 } from '../types/data';
 export const uploadApi = {
     uploadFile: async ({ infoFile, file }: UploadPayload) => {
         try {
-            const response = await axiosAuth.post(
-                '/bucket/gcs/public/upload/picture-url',
-                infoFile
-            );
+            const response = await axiosAuth.post<
+                DetailResponse<{ urlPublic: string; urlUpload: string }>
+            >('/bucket/gcs/public/upload/presigned-url', infoFile);
             if (response.status !== 201) {
                 throw new Error(
                     'Failed to get upload URL. Please try again later.'
                 );
             }
-            const { urlPublic, urlUpload } = response?.data;
+
+            const { urlPublic, urlUpload } = response.data.data;
 
             const uploadResponse = await fetch(urlUpload, {
                 method: 'PUT',

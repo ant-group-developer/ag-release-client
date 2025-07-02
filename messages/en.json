@@ -677,6 +677,9 @@
                 "create": "Create label successfully",
                 "delete": "Delete label successfully",
                 "update": "Update label successfully"
+            },
+            "error": {
+                "duplicateNameLabel": "This Label already exist"
             }
         }
     },

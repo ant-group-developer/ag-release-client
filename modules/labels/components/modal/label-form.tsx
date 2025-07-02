@@ -2,11 +2,13 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
+import { getAvatarUrl } from '@/helpers/link';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { uploadApi } from '@/modules/upload/apis';
 import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form, Input } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { TYPE_MODAL_LABEL } from '../../enum';
@@ -42,6 +44,9 @@ export default function LabelFormModal({ ...props }: Props) {
                 onSuccess: () => {
                     deActive();
                 },
+                onError: () => {
+                    deActive();
+                },
             };
         updateLabel(variables);
     };
@@ -52,6 +57,9 @@ export default function LabelFormModal({ ...props }: Props) {
             onSuccess: () => {
                 deActive();
                 form.resetFields();
+            },
+            onError: () => {
+                deActive();
             },
         };
         createLabel(variables);
@@ -83,7 +91,9 @@ export default function LabelFormModal({ ...props }: Props) {
                 deActive();
             }
         } else if (!file && !oldFile) {
-            payloadValues.picture = null;
+            // payloadValues.picture = null;
+            const defaultImage = getAvatarUrl(values.name);
+            payloadValues.picture = defaultImage;
         }
 
         return isCreateModal
@@ -130,13 +140,13 @@ export default function LabelFormModal({ ...props }: Props) {
                     <AppFormItem
                         name="pictureFile"
                         label={'Logo'}
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.input'),
-                            },
-                        ]}
+                        // required
+                        // rules={[
+                        //     {
+                        //         required: true,
+                        //         message: messages('validation.input'),
+                        //     },
+                        // ]}
                     >
                         <ImageListUpload
                             maxCount={1}
@@ -144,7 +154,7 @@ export default function LabelFormModal({ ...props }: Props) {
                             maxSizeMB={3}
                         />
                     </AppFormItem>
-                    <p className="flex-1 text-center text-sm text-gray-500">
+                    <p className="flex-1 text-sm text-gray-500">
                         {messages('image.validation.supportImageFormat', {
                             value: 'PNG, JPG, JPEG',
                         })}
@@ -172,12 +182,12 @@ export default function LabelFormModal({ ...props }: Props) {
                 <AppFormItem
                     name="description"
                     label={messages('common.description')}
-                    required
+                    // required
                     rules={[
-                        {
-                            required: true,
-                            message: messages('validation.input'),
-                        },
+                        // {
+                        //     required: true,
+                        //     message: messages('validation.input'),
+                        // },
                         {
                             max: 200,
                             message: messages('validation.max', {
@@ -186,7 +196,13 @@ export default function LabelFormModal({ ...props }: Props) {
                         },
                     ]}
                 >
-                    <Input allowClear />
+                    <TextArea
+                        autoSize={{
+                            minRows: 4,
+                            maxRows: 6,
+                        }}
+                        allowClear
+                    />
                 </AppFormItem>
             </AppForm>
         </AppModal>

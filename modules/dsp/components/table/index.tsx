@@ -33,25 +33,25 @@ export const DspTable = ({ ...props }: Props) => {
                     index
                 ),
         },
-        {
-            title: '',
-            key: 'picture',
-            dataIndex: 'picture',
-            align: 'center',
-            width: 50,
-            render: (value) => (
-                <div className="flex justify-center">
-                    <ImageFallback
-                        fallbackSrc={FALLBACK_IMAGE}
-                        src={value ?? ''}
-                        alt="genre"
-                        width={48}
-                        height={48}
-                        className="aspect-square rounded-lg object-cover"
-                    />
-                </div>
-            ),
-        },
+        // {
+        //     title: '',
+        //     key: 'picture',
+        //     dataIndex: 'picture',
+        //     align: 'center',
+        //     width: 50,
+        //     render: (value) => (
+        //         <div className="flex justify-center">
+        //             <ImageFallback
+        //                 fallbackSrc={FALLBACK_IMAGE}
+        //                 src={value ?? ''}
+        //                 alt="genre"
+        //                 width={48}
+        //                 height={48}
+        //                 className="aspect-square rounded-lg object-cover"
+        //             />
+        //         </div>
+        //     ),
+        // },
         {
             title: messages('dsp.name'),
             key: 'name',
@@ -59,10 +59,22 @@ export const DspTable = ({ ...props }: Props) => {
             ellipsis: true,
             align: 'left',
             width: 300,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
-                </CustomTooltip>
+            render: (value, record) => (
+                <div className="flex items-center gap-4">
+                    <div>
+                        <ImageFallback
+                            fallbackSrc={FALLBACK_IMAGE}
+                            src={record?.picture ?? ''}
+                            alt="genre"
+                            width={48}
+                            height={48}
+                            className="aspect-square rounded-lg object-cover"
+                        />
+                    </div>
+                    <CustomTooltip size="small" title={value}>
+                        <span className="truncate"> {value} </span>
+                    </CustomTooltip>
+                </div>
             ),
         },
         {

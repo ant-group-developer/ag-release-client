@@ -2,6 +2,7 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
+import { getAvatarUrl } from '@/helpers/link';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { uploadApi } from '@/modules/upload/apis';
@@ -91,7 +92,8 @@ export default function GenresFormModal({ ...props }: Props) {
                 deActive();
             }
         } else if (!file && !oldFile) {
-            payloadValues.picture = null;
+            // payloadValues.picture = null;
+            payloadValues.picture = getAvatarUrl(values?.name);
         }
 
         return isUpdateForm
@@ -153,7 +155,7 @@ export default function GenresFormModal({ ...props }: Props) {
                             accept="image/*"
                         />
                     </AppFormItem>
-                    <p className="flex-1 text-center text-sm text-gray-500">
+                    <p className="flex-1 text-sm text-gray-500">
                         {messages('image.validation.supportImageFormat', {
                             value: 'PNG, JPG, JPEG',
                         })}

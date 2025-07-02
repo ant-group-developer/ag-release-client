@@ -3,7 +3,8 @@ import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_OPTIONS } from '@/constants/common';
 import { PAGE_SIZE } from '@/constants/page-size';
-import { SCREEN } from '@/enums/common';
+import { ORDER, SCREEN } from '@/enums/common';
+import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import ArtistRoleHeader from '@/modules/artist-role/components/header';
@@ -72,6 +73,18 @@ export default function ArtistRole({}: Props) {
         deleteArtistRole(variables);
     };
 
+    const onChangeSort = (pagination: any, filters: any, sort: any) => {
+        const orderBy = setSortOrder(sort, ORDER.ASC);
+        const fieldOrder = sort.field;
+        onChangeFilter(
+            {
+                orderBy,
+                fieldOrder,
+            },
+            false
+        );
+    };
+
     const modalTitle = `${messages('delete.confirmTitle')}`;
     const modalParagraph = `${messages('delete.confirmMessage', { value: dataEdit?.name })}`;
 
@@ -94,6 +107,8 @@ export default function ArtistRole({}: Props) {
                         total: artistsRolesData.metadata.totalItems,
                     }}
                     loading={isLoading}
+                    dataFilter={dataFilter}
+                    onChange={onChangeSort}
                 />
             </div>
             <AppPagination

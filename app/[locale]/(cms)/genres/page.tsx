@@ -2,8 +2,8 @@
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
-import { SCREEN } from '@/enums/common';
-import { useActive } from '@/hooks/use-active';
+import { ORDER, SCREEN } from '@/enums/common';
+import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import GenresHeader from '@/modules/genres/components/header';
@@ -68,11 +68,22 @@ export default function Genres({}: {}) {
             onSuccess: () => {
                 closeModal();
             },
-            onError: () => {
-            }
+            onError: () => {},
         };
 
         deleteGenre(variables);
+    };
+
+    const onChangeSort = (pagination: any, filters: any, sort: any) => {
+        const orderBy = setSortOrder(sort, ORDER.ASC);
+        const fieldOrder = sort.field;
+        onChangeFilter(
+            {
+                orderBy,
+                fieldOrder,
+            },
+            false
+        );
     };
 
     const modalTitle = `${messages('delete.confirmTitle')}`;
@@ -97,6 +108,8 @@ export default function Genres({}: {}) {
                         current: genresData.metadata.currentPage,
                         total: genresData.metadata.totalItems,
                     }}
+                    dataFilter={dataFilter}
+                    onChange={onChangeSort}
                 />
             </div>
             <AppPagination

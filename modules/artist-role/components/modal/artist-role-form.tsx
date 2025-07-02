@@ -1,6 +1,7 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
+import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form, Input } from 'antd';
@@ -19,6 +20,7 @@ type Props = Omit<AppModalProps, 'children'> & {};
 export default function ArtistRoleFormModal({ ...props }: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
+    const { active, deActive, isActive } = useActive();
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as ArtistRoleData);
     const isUpdateForm = dataEdit?.id;

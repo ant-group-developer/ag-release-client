@@ -3,22 +3,23 @@ import ImageFallback from '@/components/ui/image/image-fallback';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
-import { formattedDate, getIndex } from '@/helpers/common';
+import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_LABEL } from '../../enum';
-import { LabelData } from '../../types';
+import { LabelData, LabelDataFilter } from '../../types';
 
 type Props = Omit<AppTableProps<LabelData>, 'columns'> & {
     pagination: {
         pageSize: number;
         current: number;
     };
+    dataFilter: LabelDataFilter;
 };
 
-export const LabelsTable = ({ ...props }: Props) => {
+export const LabelsTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
     const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
@@ -35,32 +36,32 @@ export const LabelsTable = ({ ...props }: Props) => {
                     index
                 ),
         },
-        {
-            key: 'picture',
-            dataIndex: 'picture',
-            align: 'center',
-            width: 30,
-            fixed: 'left',
-            render: (value, record) => {
-                return (
-                    <div
-                        className="flex cursor-pointer justify-center"
-                        onClick={() => {
-                            router.push(`/labels/detail/${record.id}/overview`);
-                        }}
-                    >
-                        <ImageFallback
-                            fallbackSrc={FALLBACK_IMAGE}
-                            src={value ?? ''}
-                            alt="genre"
-                            width={48}
-                            height={48}
-                            className="aspect-square rounded-lg object-cover"
-                        />
-                    </div>
-                );
-            },
-        },
+        // {
+        //     key: 'picture',
+        //     dataIndex: 'picture',
+        //     align: 'center',
+        //     width: 30,
+        //     fixed: 'left',
+        //     render: (value, record) => {
+        //         return (
+        //             <div
+        //                 className="flex cursor-pointer justify-center"
+        //                 onClick={() => {
+        //                     router.push(`/labels/detail/${record.id}/overview`);
+        //                 }}
+        //             >
+        //                 <ImageFallback
+        //                     fallbackSrc={FALLBACK_IMAGE}
+        //                     src={value ?? ''}
+        //                     alt="genre"
+        //                     width={48}
+        //                     height={48}
+        //                     className="aspect-square rounded-full object-cover"
+        //                 />
+        //             </div>
+        //         );
+        //     },
+        // },
         {
             title: messages('labels.name'),
             key: 'name',
@@ -69,10 +70,32 @@ export const LabelsTable = ({ ...props }: Props) => {
             align: 'left',
             fixed: 'left',
             width: 110,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
-                </CustomTooltip>
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'name'
+            ),
+            render: (value, record) => (
+                <div className="flex items-center gap-4">
+                    <div
+                        onClick={() => {
+                            router.push(`/labels/detail/${record.id}/overview`);
+                        }}
+                    >
+                        <ImageFallback
+                            fallbackSrc={FALLBACK_IMAGE}
+                            src={record?.picture ?? ''}
+                            alt="genre"
+                            width={48}
+                            height={48}
+                            className="aspect-square rounded-lg object-cover"
+                        />
+                    </div>
+                    <CustomTooltip size="small" title={value}>
+                        <span className="truncate"> {value} </span>
+                    </CustomTooltip>
+                </div>
             ),
         },
         {
@@ -100,6 +123,12 @@ export const LabelsTable = ({ ...props }: Props) => {
                     {formattedDate(value)}{' '}
                 </span>
             ),
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'createdAt'
+            ),
         },
         {
             title: messages('common.dateUpdated'),
@@ -107,6 +136,12 @@ export const LabelsTable = ({ ...props }: Props) => {
             dataIndex: 'updatedAt',
             align: 'center',
             width: 100,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'updatedAt'
+            ),
             render: (value) => (
                 <span className="truncate text-wrap">
                     {' '}
@@ -118,7 +153,6 @@ export const LabelsTable = ({ ...props }: Props) => {
             key: 'actions',
             align: 'center',
             width: 20,
-            fixed: 'right',
             render: (_, record) => (
                 <ActionButton
                     showUpdate
