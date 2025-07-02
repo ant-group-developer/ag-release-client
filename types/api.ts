@@ -1,3 +1,5 @@
+import { ORDER } from '@/enums/common';
+
 export interface PaginationResponse<T = any> {
     data: {
         items: T[];
@@ -80,7 +82,8 @@ export interface CommonParams {
     page?: number;
     pageSize?: number;
     keyword?: string;
-    // language: LOCALE;
+    fieldOrder?: string;
+    orderBy?: ORDER;
 }
 
 export interface CreateFile {

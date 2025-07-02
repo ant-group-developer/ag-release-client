@@ -679,6 +679,9 @@
                 "create": "Thêm mới label thành công",
                 "delete": "Xoá label thành công",
                 "update": "Cập nhật label thành công"
+            },
+            "error": {
+                "duplicateNameLabel": "Label này đã tồn tại"
             }
         }
     },

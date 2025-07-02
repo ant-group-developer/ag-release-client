@@ -82,3 +82,46 @@ export const getReleaseDetailTabRoute = (
     releaseId: string,
     tab: RELEASES_TABS
 ) => `/releases/detail/${releaseId}/${tab}`;
+
+export const getAvatarUrl = (
+    name: string,
+    size = 128,
+    bgColor?: string,
+    textColor = 'fff'
+) => {
+    const DARK_BG_COLORS = [
+        '263238', // Blue Gray
+        '6a1b9a', // Purple
+        '1565c0', // Blue
+        '00897b', // Teal
+        '2e7d32', // Green
+        'f9a825', // Yellow/Gold (vẫn đủ đậm, chữ trắng rõ)
+        'c62828', // Red
+        'd84315', // Orange
+        '5d4037', // Brown
+        '37474f', // Dark Blue Gray (khác tone với 1)
+    ];
+
+    function getRandomDarkColor() {
+        const index = Math.floor(Math.random() * DARK_BG_COLORS.length);
+        return DARK_BG_COLORS[index];
+    }
+
+    // Nếu bgColor không truyền hoặc là 'random', sẽ random màu tối
+    const background =
+        !bgColor || bgColor === 'random' ? getRandomDarkColor() : bgColor;
+
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(
+        name
+    )}&background=${background}&color=${textColor}&size=${size}&bold=true&length=1`;
+};
+
+// export const getGravatarUrl = (email: string, size = 128, name?: string) => {
+//     const hash = md5(email.trim().toLowerCase());
+//     let url = `https://www.gravatar.com/avatar/${hash}?s=${size}&d=initials&color=fff&background=999999`;
+
+//     if (name) {
+//         url += `&name=${encodeURIComponent(name)}`;
+//     }
+//     return url;
+// };

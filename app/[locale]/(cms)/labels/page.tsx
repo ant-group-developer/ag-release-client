@@ -3,7 +3,8 @@ import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_OPTIONS } from '@/constants/common';
 import { PAGE_SIZE } from '@/constants/page-size';
-import { SCREEN } from '@/enums/common';
+import { ORDER, SCREEN } from '@/enums/common';
+import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 
@@ -69,6 +70,18 @@ export default function Labels({}: Props) {
         deleteLabel(variables);
     };
 
+    const onChangeSort = (pagination: any, filters: any, sort: any) => {
+        const orderBy = setSortOrder(sort, ORDER.ASC);
+        const fieldOrder = sort.field;
+        onChangeFilter(
+            {
+                orderBy,
+                fieldOrder,
+            },
+            false
+        );
+    };
+
     return (
         <div className="flex h-full flex-col justify-between overflow-hidden">
             <div className="flex-1">
@@ -87,6 +100,8 @@ export default function Labels({}: Props) {
                         current: labelsData.metadata.currentPage,
                         total: labelsData.metadata.totalItems,
                     }}
+                    dataFilter={dataFilter}
+                    onChange={onChangeSort}
                 />
             </div>
 

@@ -3,22 +3,23 @@ import ImageFallback from '@/components/ui/image/image-fallback';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
-import { formattedDate, getIndex } from '@/helpers/common';
+import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_ARTIST } from '../../enum';
-import { ArtistData } from '../../types';
+import { ArtistData, ArtistDataFilter } from '../../types';
 
 type Props = Omit<AppTableProps<ArtistData>, 'columns'> & {
     pagination: {
         pageSize: number;
         current: number;
     };
+    dataFilter: ArtistDataFilter;
 };
 
-export const ArtistsTable = ({ ...props }: Props) => {
+export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
     const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
@@ -35,30 +36,30 @@ export const ArtistsTable = ({ ...props }: Props) => {
                     index
                 ),
         },
-        {
-            key: 'picture',
-            dataIndex: 'picture',
-            align: 'center',
-            width: 30,
-            fixed: 'left',
-            render: (value, record) => (
-                <div
-                    className="flex items-center justify-center"
-                    onClick={() => {
-                        router.push(`/artists/detail/${record.id}/overview`);
-                    }}
-                >
-                    <ImageFallback
-                        fallbackSrc={FALLBACK_IMAGE}
-                        src={value ?? ''}
-                        alt="genre"
-                        width={48}
-                        height={48}
-                        className="aspect-square rounded-lg object-cover"
-                    />
-                </div>
-            ),
-        },
+        // {
+        //     key: 'picture',
+        //     dataIndex: 'picture',
+        //     align: 'center',
+        //     width: 30,
+        //     fixed: 'left',
+        //     render: (value, record) => (
+        //         <div
+        //             className="flex items-center justify-center"
+        //             onClick={() => {
+        //                 router.push(`/artists/detail/${record.id}/overview`);
+        //             }}
+        //         >
+        //             <ImageFallback
+        //                 fallbackSrc={FALLBACK_IMAGE}
+        //                 src={value ?? ''}
+        //                 alt="genre"
+        //                 width={48}
+        //                 height={48}
+        //                 className="aspect-square rounded-full object-cover"
+        //             />
+        //         </div>
+        //     ),
+        // },
         {
             title: messages('artist.name'),
             key: 'name',
@@ -67,13 +68,43 @@ export const ArtistsTable = ({ ...props }: Props) => {
             align: 'left',
             fixed: 'left',
             width: 110,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
-                </CustomTooltip>
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'name'
+            ),
+            render: (value, record) => (
+                <div className="flex items-center gap-4">
+                    <div
+                        onClick={() => {
+                            router.push(
+                                `/artists/detail/${record.id}/overview`
+                            );
+                        }}
+                    >
+                        <ImageFallback
+                            fallbackSrc={FALLBACK_IMAGE}
+                            src={record?.picture ?? ''}
+                            alt="genre"
+                            width={48}
+                            height={48}
+                            className="aspect-square rounded-full object-cover"
+                        />
+                    </div>
+                    <CustomTooltip size="small" title={value}>
+                        <span className="truncate"> {value} </span>
+                    </CustomTooltip>
+                </div>
             ),
         },
-
+        {
+            title: messages('common.biography'),
+            key: 'biography',
+            dataIndex: 'biography',
+            align: 'left',
+            width: 200,
+        },
         {
             title: messages('artist.id'),
             key: 'id',
@@ -92,6 +123,12 @@ export const ArtistsTable = ({ ...props }: Props) => {
             dataIndex: 'createdAt',
             align: 'center',
             width: 100,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'createdAt'
+            ),
             render: (value) => (
                 <span className="truncate text-wrap">
                     {' '}
@@ -105,6 +142,12 @@ export const ArtistsTable = ({ ...props }: Props) => {
             dataIndex: 'updatedAt',
             align: 'center',
             width: 100,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'updatedAt'
+            ),
             render: (value) => (
                 <span className="truncate text-wrap">
                     {' '}
