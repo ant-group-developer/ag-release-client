@@ -1,5 +1,5 @@
 import DateCreatedDialog from '@/components/filter-dialog/date-create-dialog';
-import SearchDialog from '@/components/shared/search-dialog';
+import SearchDialog from '@/components/filter-dialog/search-dialog';
 import IconButton from '@/components/ui/button/icon-button';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';

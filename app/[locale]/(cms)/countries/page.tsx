@@ -36,7 +36,8 @@ export default function Countries({}: {}) {
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit);
 
-    const { countriesData, isLoading } = useGetListCountries(dataFilter);
+    const { countriesData, isLoading, refetch, lastUpdatedAt } =
+        useGetListCountries(dataFilter);
 
     const { deleteCountry } = useDeleteCountry();
 
@@ -73,7 +74,9 @@ export default function Countries({}: {}) {
     const modalTitle = `${messages('delete.confirmTitle')}`;
     const modalParagraph = `${messages('delete.confirmMessage', { value: dataEdit?.name })}`;
 
-    const handleRefresh = () => {};
+    const handleRefresh = () => {
+        refetch();
+    };
 
     const onChangeSort = (pagination: any, filters: any, sort: any) => {
         const orderBy = setSortOrder(sort, ORDER.ASC);
@@ -95,6 +98,8 @@ export default function Countries({}: {}) {
                     onChangeFilter={onChangeFilter}
                     canClearFilter={canClearFilter}
                     removeFilter={removeFilter}
+                    handleRefresh={handleRefresh}
+                    lastUpdatedAt={lastUpdatedAt}
                 />
                 <CountriesTable
                     dataSource={countriesData.items ?? fakeCountriesData}

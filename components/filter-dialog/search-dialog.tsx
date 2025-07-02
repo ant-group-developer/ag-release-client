@@ -3,21 +3,21 @@ import { Chip } from '@/components/ui/chip';
 import { TYPE_FILTER } from '@/enums/common';
 import React, { useEffect, useState } from 'react';
 
-type Props<T> = {
+type Props = {
     handleChangeTypeFilter: (value?: any) => void;
     open?: boolean;
     title: React.ReactNode;
-    dataFilter: T;
+    dataFilter: any;
     onChangeFilter: (value?: any) => void;
 };
 
-const SearchDialog = <T extends Record<string, any>>({
+const SearchDialog = ({
     open,
     title,
     dataFilter,
     handleChangeTypeFilter,
     onChangeFilter,
-}: Props<T>) => {
+}: Props) => {
     const [value, setValue] = useState<string>('');
 
     const onCancel = () => {

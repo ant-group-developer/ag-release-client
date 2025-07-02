@@ -17,36 +17,6 @@ import { DeleteVariables } from '@/types/api';
 import { useWindowSize } from '@uidotdev/usehooks';
 import { useTranslations } from 'next-intl';
 
-const fakeDspData: DspData[] = [
-    {
-        id: '1',
-        name: 'Spotify',
-        picture: 'https://picsum.photos/seed/spotify/60/60',
-        canLinkArtistProfile: true,
-        creatorId: 'admin',
-        createdAt: '2024-06-01T10:00:00.000Z',
-        updatedAt: '2024-06-10T10:00:00.000Z',
-    },
-    {
-        id: '2',
-        name: 'Apple Music',
-        picture: 'https://picsum.photos/seed/applemusic/60/60',
-        canLinkArtistProfile: false,
-        creatorId: 'admin',
-        createdAt: '2024-05-15T09:00:00.000Z',
-        updatedAt: '2024-06-05T09:00:00.000Z',
-    },
-    {
-        id: '3',
-        name: 'YouTube Music',
-        picture: 'https://picsum.photos/seed/youtubemusic/60/60',
-        canLinkArtistProfile: true,
-        creatorId: 'admin',
-        createdAt: '2024-04-20T08:00:00.000Z',
-        updatedAt: '2024-05-01T08:00:00.000Z',
-    },
-];
-
 export default function Dsp({}: {}) {
     const messages = useTranslations();
 
@@ -85,9 +55,12 @@ export default function Dsp({}: {}) {
     const dataEdit = useModalStore((state) => state.dataEdit as DspData);
     const closeModal = useModalStore((state) => state.closeModal);
 
-    const handleRefresh = () => {};
+    const handleRefresh = () => {
+        refetch();
+    };
 
-    const { dspData, isLoading } = useGetListDsp(dataFilter);
+    const { dspData, isLoading, refetch, lastUpdatedAt } =
+        useGetListDsp(dataFilter);
 
     const modalTitle = `${messages('delete.confirmTitle')}`;
     const modalParagraph = `${messages('delete.confirmMessage', { value: dataEdit?.name })}`;
@@ -110,6 +83,7 @@ export default function Dsp({}: {}) {
                     canClearFilter={canClearFilter}
                     removeFilter={removeFilter}
                     handleRefresh={handleRefresh}
+                    lastUpdatedAt={lastUpdatedAt}
                 />
                 <DspTable
                     dataSource={dspData?.items}

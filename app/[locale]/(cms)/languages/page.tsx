@@ -72,9 +72,12 @@ export default function Languages({}: Props) {
     const modalTitle = `${messages('delete.confirmTitle')}`;
     const modalParagraph = `${messages('delete.confirmMessage', { value: dataEdit?.name })}`;
 
-    const handleRefresh = () => {};
+    const handleRefresh = () => {
+        refetch();
+    };
 
-    const { languagesData, isLoading } = useGetListLanguage(dataFilter);
+    const { languagesData, isLoading, refetch, lastUpdatedAt } =
+        useGetListLanguage(dataFilter);
 
     const onChangeSort = (pagination: any, filters: any, sort: any) => {
         const orderBy = setSortOrder(sort, ORDER.ASC);
@@ -97,6 +100,7 @@ export default function Languages({}: Props) {
                     canClearFilter={canClearFilter}
                     removeFilter={removeFilter}
                     handleRefresh={handleRefresh}
+                    lastUpdatedAt={lastUpdatedAt}
                 />
                 <LanguagesTable
                     dataSource={languagesData?.items}

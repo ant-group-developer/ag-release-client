@@ -1,4 +1,5 @@
 import ActionButton from '@/components/ui/button/action-button';
+import CopyText from '@/components/ui/copy-text/copy-text';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
@@ -46,9 +47,9 @@ export const LanguagesTable = ({ dataFilter, ...props }: Props) => {
                 'name'
             ),
             render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
-                </CustomTooltip>
+                <CopyText tooltipProps={{ placement: 'right' }} text={value}>
+                    <p>{value}</p>
+                </CopyText>
             ),
         },
         {

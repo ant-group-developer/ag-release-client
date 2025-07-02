@@ -10,5 +10,4 @@ export interface LabelData extends CommonAttribute {
 
 export interface LabelDataFilter extends CommonParams {
     keyword?: string;
-    createdAt?: string;
 }

@@ -620,7 +620,8 @@
         "reggae": "Reggae",
         "rap": "Rap",
         "classical": "Cổ điển",
-        "blues": "Blues"
+        "blues": "Blues",
+        "add": "Thêm thể loại"
     },
     "genre": {
         "message": {

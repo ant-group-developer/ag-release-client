@@ -1,11 +1,11 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
-import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 // import { TYPE_MODAL_GENRES } from '../../enums';
 import ActionButton from '@/components/ui/button/action-button';
+import CopyText from '@/components/ui/copy-text/copy-text';
 import ImageFallback from '@/components/ui/image/image-fallback';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { TYPE_MODAL_GENRES } from '../../enums';
@@ -81,9 +81,12 @@ export const GenresTable = ({ dataFilter, ...props }: Props) => {
                             className="aspect-square rounded-lg object-cover"
                         />
                     </div>
-                    <CustomTooltip size="small" title={value}>
-                        <span className="truncate"> {value} </span>
-                    </CustomTooltip>
+                    <CopyText
+                        tooltipProps={{ placement: 'right' }}
+                        text={value}
+                    >
+                        <p>{value}</p>
+                    </CopyText>
                 </div>
             ),
         },
@@ -94,7 +97,11 @@ export const GenresTable = ({ dataFilter, ...props }: Props) => {
             align: 'left',
             width: 300,
             ellipsis: true,
-            render: (value) => <span className="truncate">{value}</span>,
+            render: (value) => (
+                <span className="line-clamp-3 truncate whitespace-pre-line">
+                    {value}
+                </span>
+            ),
         },
         {
             title: messages('common.dateCreated'),

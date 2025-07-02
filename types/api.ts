@@ -84,6 +84,10 @@ export interface CommonParams {
     keyword?: string;
     fieldOrder?: string;
     orderBy?: ORDER;
+    startCreatedAt?: string;
+    endCreatedAt?: string;
+    startUpdatedAt?: string;
+    endUpdatedAt?: string;
 }
 
 export interface CreateFile {
