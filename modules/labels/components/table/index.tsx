@@ -2,7 +2,6 @@ import ActionButton from '@/components/ui/button/action-button';
 import CopyText from '@/components/ui/copy-text/copy-text';
 import ImageFallback from '@/components/ui/image/image-fallback';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
-import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
@@ -80,6 +79,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             render: (value, record) => (
                 <div className="flex items-center gap-4">
                     <div
+                        className="flex-shrink-0"
                         onClick={() => {
                             router.push(`/labels/detail/${record.id}/overview`);
                         }}
@@ -88,8 +88,8 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
                             fallbackSrc={FALLBACK_IMAGE}
                             src={record?.picture ?? ''}
                             alt="genre"
-                            width={48}
-                            height={48}
+                            width={40}
+                            height={40}
                             className="aspect-square rounded-lg object-cover"
                         />
                     </div>
@@ -98,7 +98,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
                         text={value}
                         label={messages('labels.name')}
                     >
-                        <p>{value}</p>
+                        <p className="truncate">{value}</p>
                     </CopyText>
                 </div>
             ),
@@ -111,12 +111,10 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             align: 'left',
             width: 150,
             render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="line-clamp-3 truncate whitespace-pre-line">
-                        {' '}
-                        {value}{' '}
-                    </span>
-                </CustomTooltip>
+                <span className="line-clamp-3 truncate whitespace-pre-line">
+                    {' '}
+                    {value}{' '}
+                </span>
             ),
         },
         {

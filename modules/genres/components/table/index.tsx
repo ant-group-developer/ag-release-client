@@ -71,13 +71,13 @@ export const GenresTable = ({ dataFilter, ...props }: Props) => {
             ),
             render: (value, record) => (
                 <div className="flex items-center gap-4">
-                    <div>
+                    <div className="flex-shrink-0">
                         <ImageFallback
                             fallbackSrc={FALLBACK_IMAGE}
                             src={record?.picture ?? ''}
                             alt="genre"
-                            width={48}
-                            height={48}
+                            width={40}
+                            height={40}
                             className="aspect-square rounded-lg object-cover"
                         />
                     </div>
@@ -85,7 +85,7 @@ export const GenresTable = ({ dataFilter, ...props }: Props) => {
                         tooltipProps={{ placement: 'right' }}
                         text={value}
                     >
-                        <p>{value}</p>
+                        <p className="truncate">{value}</p>
                     </CopyText>
                 </div>
             ),
