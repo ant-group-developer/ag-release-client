@@ -48,7 +48,7 @@ export const LanguagesTable = ({ dataFilter, ...props }: Props) => {
             ),
             render: (value) => (
                 <CopyText tooltipProps={{ placement: 'right' }} text={value}>
-                    <p>{value}</p>
+                    <p className="truncate">{value}</p>
                 </CopyText>
             ),
         },

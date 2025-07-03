@@ -3,7 +3,7 @@ import { showNotification } from '@/helpers/messages-helper';
 import { Image, Upload, UploadFile, UploadProps } from 'antd';
 import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type Props = UploadProps & {
     value?: any;
@@ -20,7 +20,9 @@ export default function ImageListUpload({
     const messages = useTranslations();
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
+    const [showText, setShowText] = useState(true);
     const fileList = value?.fileList || [];
+    const containerRef = useRef<HTMLDivElement>(null);
 
     function beforeUpload(file: File) {
         const isImage = file.type.startsWith('image/');
@@ -56,15 +58,33 @@ export default function ImageListUpload({
     const uploadButton = (
         <button className="flex flex-col items-center" type="button">
             <Plus />
-            <div style={{ marginTop: 8 }}>
-                {' '}
-                {placeholder ?? messages('common.upload')}{' '}
-            </div>
+            {showText && (
+                <div style={{ marginTop: 8 }}>
+                    {placeholder ?? messages('common.upload')}
+                </div>
+            )}
         </button>
     );
 
+    useEffect(() => {
+        function checkWidth() {
+            const width = containerRef.current?.offsetWidth || 0;
+            console.log('🚀 ~ checkWidth ~ width:', width);
+
+            setShowText(width >= 60);
+        }
+
+        const raf = requestAnimationFrame(checkWidth);
+
+        window.addEventListener('resize', checkWidth);
+        return () => {
+            cancelAnimationFrame(raf);
+            window.removeEventListener('resize', checkWidth);
+        };
+    }, []);
+
     return (
-        <div>
+        <div ref={containerRef}>
             <Upload
                 listType="picture-card"
                 multiple

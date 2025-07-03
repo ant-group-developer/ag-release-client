@@ -2,7 +2,6 @@ import ActionButton from '@/components/ui/button/action-button';
 import CopyText from '@/components/ui/copy-text/copy-text';
 import ImageFallback from '@/components/ui/image/image-fallback';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
-import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
@@ -68,7 +67,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
             ellipsis: true,
             align: 'left',
             fixed: 'left',
-            width: 110,
+            width: 150,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -78,6 +77,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
             render: (value, record) => (
                 <div className="flex items-center gap-4">
                     <div
+                        className="flex-shrink-0"
                         onClick={() => {
                             router.push(
                                 `/artists/detail/${record.id}/overview`
@@ -88,8 +88,8 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
                             fallbackSrc={FALLBACK_IMAGE}
                             src={record?.picture ?? ''}
                             alt="genre"
-                            width={48}
-                            height={48}
+                            width={40}
+                            height={40}
                             className="aspect-square rounded-full object-cover"
                         />
                     </div>
@@ -98,7 +98,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
                         text={value}
                         label={messages('artist.name')}
                     >
-                        <p>{value}</p>
+                        <p className="truncate">{value}</p>
                     </CopyText>
                 </div>
             ),
@@ -124,9 +124,9 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
             align: 'left',
             width: 100,
             render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
-                </CustomTooltip>
+                <CopyText tooltipProps={{ placement: 'right' }} text={value}>
+                    <p className="truncate">{value}</p>
+                </CopyText>
             ),
         },
         {

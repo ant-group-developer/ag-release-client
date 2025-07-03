@@ -113,7 +113,7 @@ export const getAvatarUrl = (
 
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(
         name
-    )}&background=${background}&color=${textColor}&size=${size}&bold=true&length=1`;
+    )}&background=${background}&color=${textColor}&size=${size}&bold=true&length=2`;
 };
 
 // export const getGravatarUrl = (email: string, size = 128, name?: string) => {

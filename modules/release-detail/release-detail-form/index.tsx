@@ -92,7 +92,6 @@ export default function ReleaseDetailForm() {
     );
 
     const handleNext = async (data: ReleaseDetailSchema) => {
-        console.log('🚀 ~ handleNext ~ data:', data);
         setFormValues(data as Partial<ReleaseFormValuesData>);
         router.push('/releases/detail/123456/tracks');
     };

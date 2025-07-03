@@ -52,7 +52,7 @@ export const ArtistRoleTable = ({ dataFilter, ...props }: Props) => {
                     text={value}
                     label={messages('artist.role')}
                 >
-                    <p>{value}</p>
+                    <p className="truncate">{value}</p>
                 </CopyText>
             ),
         },
