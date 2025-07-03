@@ -37,6 +37,7 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "somethingWentWrong": "Đã xảy ra lỗi",
         "biography": "Tiểu sử",
         "nationality": "Quốc tịch",
         "currencyName": "Tên tiền tệ",
@@ -782,6 +783,25 @@
             },
             "error": {
                 "duplicateNameArtistRole": "Vài trò này đã tồn tại"
+            }
+        }
+    },
+
+    "timezone": {
+        "label": "Múi giờ",
+        "create": "Tạo múi giờ",
+        "name": "Tên múi giờ",
+        "utc": "UTC",
+        "zone": "Múi giờ",
+        "add": "Thêm múi giờ",
+        "message": {
+            "success": {
+                "create": "Thêm mới múi giờ thành công",
+                "update": "Cập nhật múi giờ thành công",
+                "delete": "Xoá múi giờ thành công"
+            },
+            "error": {
+                "duplicateNameTimezone": "Múi giờ này đã tồn tại"
             }
         }
     }

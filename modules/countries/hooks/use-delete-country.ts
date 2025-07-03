@@ -26,7 +26,12 @@ export const useDeleteCountry = () => {
         data: any,
         { onError }: DeleteVariables<CountriesData['id']>
     ) => {
-        showNotification('error', messages(data?.response?.data?.messageCode));
+        const responseMessages = messages(data?.response?.data?.messageCode);
+
+        showNotification(
+            'error',
+            responseMessages ?? messages('common.somethingWentWrong')
+        );
         onError?.();
     };
 

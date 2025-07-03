@@ -26,7 +26,12 @@ export const useDeleteGenre = () => {
         data: any,
         { onError }: DeleteVariables<GenresData['id']>
     ) => {
-        showNotification('error', messages(data?.response?.data?.messageCode));
+        const responseMessages = messages(data?.response?.data?.messageCode);
+
+        showNotification(
+            'error',
+            responseMessages ?? messages('common.somethingWentWrong')
+        );
         onError?.();
     };
 

@@ -31,7 +31,10 @@ export const useDeleteLabel = () => {
         const responseMessages = messages(data?.response?.data?.messageCode);
 
         onError?.();
-        showNotification('error', responseMessages);
+        showNotification(
+            'error',
+            responseMessages || messages('common.somethingWentWrong')
+        );
     };
 
     const mutation = useMutation({

@@ -30,7 +30,10 @@ export const useUpdateCountry = () => {
         { onError }: UpdateVariables<CountriesData['id'], UpdateCountryPayload>
     ) => {
         const responseMessages = messages(data?.response.data.messageCode);
-        showNotification('error', responseMessages);
+        showNotification(
+            'error',
+            responseMessages || messages('common.somethingWentWrong')
+        );
         onError?.();
     };
 

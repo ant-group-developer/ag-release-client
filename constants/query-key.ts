@@ -181,4 +181,9 @@ export const QUERY_KEY = {
         GET_LIST: 'GET_LIST_RELEASES',
         GET_DETAIL: 'GET_DETAIL_RELEASES',
     },
+    TIMEZONE: {
+        KEY: 'TIMEZONE',
+        GET_LIST: 'GET_LIST_TIMEZONE',
+        GET_DETAIL: 'GET_DETAIL_TIMEZONE',
+    },
 };

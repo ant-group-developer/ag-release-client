@@ -21,6 +21,7 @@ export enum APP_ROUTES {
     DSP = '/dsp',
     ARTIST_ROLE = '/artist-role',
     EMAIL_SENDER = '/email-sender',
+    TIMEZONE = '/timezone',
 }
 
 export const AUTH_ROUTES: string[] = [APP_ROUTES.LOGIN];

@@ -1,21 +1,24 @@
 import { showNotification } from '@/helpers/messages-helper';
-import { DeleteVariables } from '@/types/api';
+import { UpdateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
-import { dspApi } from '../apis';
-import { dspQueryKeys } from '../constants/query-keys';
-import { DspData } from '../types';
+import { timezoneApi } from '../apis';
+import { timezoneQueryKeys } from '../constants/query-keys';
+import { TimezoneData } from '../types';
+import { UpdateTimezonePayload } from '../types/payload';
 
-export const useDeleteDsp = () => {
+export const useUpdateTimezone = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
 
     const onSuccess = (
         data: any,
-        { onSuccess }: DeleteVariables<DspData['id']>
+        {
+            onSuccess,
+        }: UpdateVariables<TimezoneData['id'], UpdateTimezonePayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...dspQueryKeys.getList],
+            queryKey: [...timezoneQueryKeys.getList],
         });
 
         const responseMessages = messages(data?.data?.messageCode);
@@ -26,7 +29,7 @@ export const useDeleteDsp = () => {
 
     const onError = (
         data: any,
-        { onError }: DeleteVariables<DspData['id']>
+        { onError }: UpdateVariables<TimezoneData['id'], UpdateTimezonePayload>
     ) => {
         const responseMessages = messages(data?.response?.data?.messageCode);
 
@@ -38,18 +41,23 @@ export const useDeleteDsp = () => {
     };
 
     const mutation = useMutation({
-        mutationFn: ({ id }: DeleteVariables<DspData['id']>) =>
-            dspApi.deleteDsp(id),
+        mutationFn: ({
+            id,
+            payload,
+        }: UpdateVariables<TimezoneData['id'], UpdateTimezonePayload>) =>
+            timezoneApi.updateTimezone(id, payload),
         onSuccess,
         onError,
     });
 
-    const deleteDsp = (variables: DeleteVariables<DspData['id']>) => {
-        mutation.mutate(variables);
+    const updateTimezone = (
+        variable: UpdateVariables<TimezoneData['id'], UpdateTimezonePayload>
+    ) => {
+        mutation.mutate(variable);
     };
 
     return {
-        deleteDsp,
+        updateTimezone,
         ...mutation,
     };
 };

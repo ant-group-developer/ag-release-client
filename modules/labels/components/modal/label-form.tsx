@@ -209,6 +209,8 @@ export default function LabelFormModal({ ...props }: Props) {
                             maxRows: 6,
                         }}
                         allowClear
+                        showCount
+                        className="mb-4"
                     />
                 </AppFormItem>
             </AppForm>

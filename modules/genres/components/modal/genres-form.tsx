@@ -196,9 +196,9 @@ export default function GenresFormModal({ ...props }: Props) {
                     label={messages('common.description')}
                     rules={[
                         {
-                            max: 300,
+                            max: 200,
                             message: messages('validation.max', {
-                                number: 300,
+                                number: 200,
                             }),
                         },
                     ]}
