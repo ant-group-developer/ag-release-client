@@ -28,8 +28,8 @@ const DateCreatedDialog = ({
 
     useEffect(() => {
         if (open) {
-            setTempStartDate(dataFilter.startDate || '');
-            setTempEndDate(dataFilter.endDate || '');
+            setTempStartDate(dataFilter.startCreatedAt || '');
+            setTempEndDate(dataFilter.startCreatedAt || '');
         }
     }, [open, dataFilter.startCreatedAt, dataFilter.endCreatedAt]);
 

@@ -57,7 +57,7 @@ export const adminRoutes: AdminRoutesType[] = [
                 label: 'dashboard.label',
                 href: APP_ROUTES.DASHBOARD,
                 icon: House,
-                title: 'dashboard',
+                title: 'Dashboard',
                 permission: PERMISSION.STATISTIC.READ,
             },
             {
@@ -65,7 +65,7 @@ export const adminRoutes: AdminRoutesType[] = [
                 label: 'releases.label',
                 href: APP_ROUTES.RELEASES,
                 icon: DiscAlbum,
-                title: 'releases',
+                title: 'Releases',
                 permission: PERMISSION.RELEASE.READ,
             },
             {
@@ -73,7 +73,7 @@ export const adminRoutes: AdminRoutesType[] = [
                 label: 'tracks.label',
                 href: APP_ROUTES.TRACKS,
                 icon: Music,
-                title: 'tracks',
+                title: 'Tracks',
                 permission: PERMISSION.TRACK.READ,
             },
             {
@@ -81,7 +81,7 @@ export const adminRoutes: AdminRoutesType[] = [
                 label: 'distribution.label',
                 href: APP_ROUTES.DISTRIBUTION,
                 icon: Box,
-                title: 'distribution',
+                title: 'Distribution',
                 permission: PERMISSION.DISTRIBUTION.READ,
             },
         ],
@@ -95,7 +95,7 @@ export const adminRoutes: AdminRoutesType[] = [
                 label: 'labels.label',
                 href: APP_ROUTES.LABELS,
                 icon: MicVocal,
-                title: 'labels',
+                title: 'Labels',
                 permission: PERMISSION.LABEL.READ,
             },
             {
@@ -103,7 +103,7 @@ export const adminRoutes: AdminRoutesType[] = [
                 label: 'artist.label',
                 href: APP_ROUTES.ARTISTS,
                 icon: User,
-                title: 'artists',
+                title: 'Artists',
                 permission: PERMISSION.ARTIST.READ,
             },
             {
@@ -111,7 +111,7 @@ export const adminRoutes: AdminRoutesType[] = [
                 label: 'artist.role',
                 href: APP_ROUTES.ARTIST_ROLE,
                 icon: Contact,
-                title: 'artist-role',
+                title: 'Artist Role',
                 permission: PERMISSION.DISTRIBUTION.READ,
             },
             {
@@ -119,7 +119,7 @@ export const adminRoutes: AdminRoutesType[] = [
                 label: 'common.language',
                 href: APP_ROUTES.LANGUAGES,
                 icon: Globe,
-                title: 'languages',
+                title: 'Languages',
                 permission: PERMISSION.DISTRIBUTION.READ,
             },
             {
@@ -127,7 +127,7 @@ export const adminRoutes: AdminRoutesType[] = [
                 label: 'country.label',
                 href: APP_ROUTES.COUNTRIES,
                 icon: Earth,
-                title: 'countries',
+                title: 'Countries',
                 permission: PERMISSION.DISTRIBUTION.READ,
             },
             {
@@ -135,7 +135,7 @@ export const adminRoutes: AdminRoutesType[] = [
                 label: 'common.genres',
                 href: APP_ROUTES.GENRES,
                 icon: Library,
-                title: 'genres',
+                title: 'Genres',
                 permission: PERMISSION.DISTRIBUTION.READ,
             },
             {
@@ -143,7 +143,7 @@ export const adminRoutes: AdminRoutesType[] = [
                 label: 'dsp.label',
                 href: APP_ROUTES.DSP,
                 icon: SquareActivity,
-                title: 'dsp',
+                title: 'Dsp',
                 permission: PERMISSION.DISTRIBUTION.READ,
             },
             {
@@ -151,7 +151,7 @@ export const adminRoutes: AdminRoutesType[] = [
                 label: 'emailSender.label',
                 href: APP_ROUTES.EMAIL_SENDER,
                 icon: Mail,
-                title: 'email-sender',
+                title: 'Email Sender',
                 permission: PERMISSION.DISTRIBUTION.READ,
             },
         ],
