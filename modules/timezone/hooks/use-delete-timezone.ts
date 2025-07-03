@@ -2,20 +2,20 @@ import { showNotification } from '@/helpers/messages-helper';
 import { DeleteVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
-import { languageApi } from '../apis';
-import { languageQueryKeys } from '../constants/query-keys';
-import { LanguagesData } from '../types';
+import { timezoneApi } from '../apis';
+import { timezoneQueryKeys } from '../constants/query-keys';
+import { TimezoneData } from '../types';
 
-export const useDeleteLanguage = () => {
+export const useDeleteTimezone = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
 
     const onSuccess = (
         data: any,
-        { onSuccess }: DeleteVariables<LanguagesData['id']>
+        { onSuccess }: DeleteVariables<TimezoneData['id']>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...languageQueryKeys.getList],
+            queryKey: [...timezoneQueryKeys.getList],
         });
 
         showNotification('success', messages(data.data.messageCode));
@@ -24,7 +24,7 @@ export const useDeleteLanguage = () => {
 
     const onError = (
         data: any,
-        { onError }: DeleteVariables<LanguagesData['id']>
+        { onError }: DeleteVariables<TimezoneData['id']>
     ) => {
         const responseMessages = messages(data?.response?.data?.messageCode);
 
@@ -36,20 +36,18 @@ export const useDeleteLanguage = () => {
     };
 
     const mutation = useMutation({
-        mutationFn: ({ id }: DeleteVariables<LanguagesData['id']>) =>
-            languageApi.deleteLanguage(id),
+        mutationFn: ({ id }: DeleteVariables<TimezoneData['id']>) =>
+            timezoneApi.deleteTimezone(id),
         onSuccess,
         onError,
     });
 
-    const deleteLanguage = (
-        variables: DeleteVariables<LanguagesData['id']>
-    ) => {
+    const deleteTimezone = (variables: DeleteVariables<TimezoneData['id']>) => {
         mutation.mutate(variables);
     };
 
     return {
-        deleteLanguage,
+        deleteTimezone,
         ...mutation,
     };
 };

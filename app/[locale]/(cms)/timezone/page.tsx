@@ -7,20 +7,20 @@ import { ORDER, SCREEN } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import LanguagesHeader from '@/modules/languages/components/header';
-import LanguageFormModal from '@/modules/languages/components/modal/language-form';
-import { LanguagesTable } from '@/modules/languages/components/table';
-import { TYPE_MODAL_LANGUAGES } from '@/modules/languages/enums';
-import { useDeleteLanguage } from '@/modules/languages/hooks/use-delete-language';
-import { useGetListLanguage } from '@/modules/languages/hooks/use-get-list-language';
-import { LanguageDataFilter, LanguagesData } from '@/modules/languages/types';
+import TimezoneHeader from '@/modules/timezone/components/header';
+import TimezoneFormModal from '@/modules/timezone/components/modal/timezone-form';
+import { TimezoneTable } from '@/modules/timezone/components/table';
+import { TYPE_MODAL_TIMEZONE } from '@/modules/timezone/enums';
+import { useDeleteTimezone } from '@/modules/timezone/hooks/use-delete-timezone';
+import { useGetListTimezones } from '@/modules/timezone/hooks/use-get-list-timezones';
+import { TimezoneData } from '@/modules/timezone/types';
 import { DeleteVariables } from '@/types/api';
 import { useWindowSize } from '@uidotdev/usehooks';
 import { useTranslations } from 'next-intl';
 
 type Props = {};
 
-export default function Languages({}: Props) {
+export default function Timezone({}: Props) {
     const messages = useTranslations();
     const {
         dataFilter,
@@ -28,7 +28,7 @@ export default function Languages({}: Props) {
         onChangePage,
         canClearFilter,
         removeFilter,
-    } = useFilter<LanguageDataFilter>({
+    } = useFilter<any>({
         page: 1,
         pageSize: 21,
     });
@@ -36,17 +36,35 @@ export default function Languages({}: Props) {
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit);
 
-    const { deleteLanguage } = useDeleteLanguage();
+    const { deleteTimezone } = useDeleteTimezone();
+    const { timezonesData, isLoading, refetch, lastUpdatedAt } =
+        useGetListTimezones(dataFilter);
 
-    const handleDeleteLanguage = () => {
-        const variables: DeleteVariables<LanguagesData['id']> = {
+    const handleDeleteTimezone = () => {
+        const variables: DeleteVariables<TimezoneData['id']> = {
             id: dataEdit?.id,
             onSuccess: () => {
                 closeModal();
             },
         };
 
-        deleteLanguage(variables);
+        deleteTimezone(variables);
+    };
+
+    const handleRefresh = () => {
+        refetch();
+    };
+
+    const onChangeSort = (pagination: any, filters: any, sort: any) => {
+        const orderBy = setSortOrder(sort, ORDER.ASC);
+        const fieldOrder = sort.field;
+        onChangeFilter(
+            {
+                orderBy,
+                fieldOrder,
+            },
+            false
+        );
     };
 
     const { height, width } = useWindowSize();
@@ -72,44 +90,25 @@ export default function Languages({}: Props) {
     const modalTitle = `${messages('delete.confirmTitle')}`;
     const modalParagraph = `${messages('delete.confirmMessage', { value: dataEdit?.name })}`;
 
-    const handleRefresh = () => {
-        refetch();
-    };
-
-    const { languagesData, isLoading, refetch, lastUpdatedAt } =
-        useGetListLanguage(dataFilter);
-
-    const onChangeSort = (pagination: any, filters: any, sort: any) => {
-        const orderBy = setSortOrder(sort, ORDER.ASC);
-        const fieldOrder = sort.field;
-        onChangeFilter(
-            {
-                orderBy,
-                fieldOrder,
-            },
-            false
-        );
-    };
-
     return (
         <div className="flex h-full flex-col justify-between overflow-hidden">
             <div className="flex-1">
-                <LanguagesHeader
+                <TimezoneHeader
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
                     canClearFilter={canClearFilter}
                     removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
+                    handleRefresh={() => handleRefresh()}
                     lastUpdatedAt={lastUpdatedAt}
                 />
-                <LanguagesTable
-                    dataSource={languagesData?.items}
+                <TimezoneTable
+                    dataSource={timezonesData?.items}
                     scroll={{ y: scrollY() }}
                     loading={isLoading}
                     pagination={{
                         pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
-                        current: languagesData.metadata.currentPage,
-                        total: languagesData.metadata.totalItems,
+                        current: timezonesData.metadata.currentPage,
+                        total: timezonesData.metadata.totalItems,
                     }}
                     dataFilter={dataFilter}
                     onChange={onChangeSort}
@@ -118,29 +117,27 @@ export default function Languages({}: Props) {
             <AppPagination
                 className="border-b border-t"
                 align="end"
-                current={languagesData?.metadata?.currentPage}
+                current={timezonesData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}
-                total={languagesData?.metadata?.totalItems}
+                total={timezonesData?.metadata?.totalItems}
                 onChange={onChangePage}
                 showTotalText
                 showSizeChanger
                 showQuickJumper
                 pageSizeOptions={PAGE_SIZE_OPTIONS}
             />
-
-            {typeModal === TYPE_MODAL_LANGUAGES.DELETE && (
+            {typeModal === TYPE_MODAL_TIMEZONE.DELETE && (
                 <AppConfirm
                     open
                     onCancel={closeModal}
-                    onOk={() => handleDeleteLanguage()}
+                    onOk={() => handleDeleteTimezone()}
                     modalTitle={modalTitle}
                     paragraph={modalParagraph}
                 />
             )}
-
-            {(typeModal === TYPE_MODAL_LANGUAGES.CREATE ||
-                typeModal === TYPE_MODAL_LANGUAGES.UPDATE) && (
-                <LanguageFormModal />
+            {(typeModal === TYPE_MODAL_TIMEZONE.CREATE ||
+                typeModal === TYPE_MODAL_TIMEZONE.UPDATE) && (
+                <TimezoneFormModal />
             )}
         </div>
     );

@@ -2,6 +2,7 @@ import { APP_ROUTES } from '@/enums/routes';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import {
     Box,
+    Clock,
     Contact,
     DiscAlbum,
     Earth,
@@ -115,6 +116,14 @@ export const adminRoutes: AdminRoutesType[] = [
                 permission: PERMISSION.DISTRIBUTION.READ,
             },
             {
+                id: 'genres',
+                label: 'common.genres',
+                href: APP_ROUTES.GENRES,
+                icon: Library,
+                title: 'Genres',
+                permission: PERMISSION.DISTRIBUTION.READ,
+            },
+            {
                 id: 'languages',
                 label: 'common.language',
                 href: APP_ROUTES.LANGUAGES,
@@ -131,11 +140,11 @@ export const adminRoutes: AdminRoutesType[] = [
                 permission: PERMISSION.DISTRIBUTION.READ,
             },
             {
-                id: 'genres',
-                label: 'common.genres',
-                href: APP_ROUTES.GENRES,
-                icon: Library,
-                title: 'Genres',
+                id: 'timezone',
+                label: 'timezone.label',
+                href: APP_ROUTES.TIMEZONE,
+                icon: Clock,
+                title: 'Timezone',
                 permission: PERMISSION.DISTRIBUTION.READ,
             },
             {

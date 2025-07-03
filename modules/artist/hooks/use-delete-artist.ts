@@ -26,7 +26,12 @@ export const useDeleteArtist = () => {
         data: any,
         { onError }: DeleteVariables<ArtistData['id']>
     ) => {
-        showNotification('error', messages(data?.response?.data?.messageCode));
+        const responseMessages = messages(data?.response?.data?.messageCode);
+
+        showNotification(
+            'error',
+            responseMessages ?? messages('common.somethingWentWrong')
+        );
         onError?.();
     };
 
