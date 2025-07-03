@@ -760,6 +760,7 @@
     "dsp": {
         "label": "DSP",
         "name": "Tên nền tảng",
+        "add": "Thêm nền tảng",
         "message": {
             "success": {
                 "create": "Thêm nền tảng thành công",

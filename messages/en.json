@@ -758,6 +758,7 @@
     "dsp": {
         "label": "DSP",
         "name": "plat form name",
+        "add": "Add platform",
         "message": {
             "success": {
                 "create": "Create platform successfully",

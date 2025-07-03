@@ -95,12 +95,14 @@ export default function DspSuperFilter({
                     onChangeFilter={onChangeFilter}
                 />
 
-                <DspHeaderDropdown
-                    open={typeFilter === TYPE_FILTER.DROPDOWN}
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    handleChangeTypeFilter={handleChangeTypeFilter}
-                />
+                <div className="grow">
+                    <DspHeaderDropdown
+                        open={typeFilter === TYPE_FILTER.DROPDOWN}
+                        dataFilter={dataFilter}
+                        onChangeFilter={onChangeFilter}
+                        handleChangeTypeFilter={handleChangeTypeFilter}
+                    />
+                </div>
             </div>
             {canClearFilter && (
                 <div className="flex items-center">

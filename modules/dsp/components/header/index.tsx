@@ -45,7 +45,7 @@ export default function DspHeader({
                     />
                     <CreateButton
                         canCreate={true}
-                        text="Thêm DSP"
+                        text={messages('dsp.add')}
                         onClick={() => openModal(TYPE_MODAL_DSP.CREATE)}
                     />
                 </div>

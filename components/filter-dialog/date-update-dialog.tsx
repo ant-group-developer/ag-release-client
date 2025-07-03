@@ -2,7 +2,7 @@ import { AppPopover } from '@/components/shared/app-popover';
 import { Chip } from '@/components/ui/chip';
 import DateRangePicker from '@/components/ui/input/date-range-picker';
 import { DATE_FORMAT, TYPE_FILTER } from '@/enums/common';
-import { formattedDate } from '@/helpers/common';
+import { formatDatesToUTC, formattedDate } from '@/helpers/common';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useEffect, useState } from 'react';
@@ -38,9 +38,14 @@ const DateUpdateDialog = ({
     };
 
     const onSubmit = () => {
+        const [startDateUpdated, endDateUpdated] = formatDatesToUTC(
+            tempStartDate,
+            tempEndDate
+        );
+
         onChangeFilter({
-            startUpdatedAt: tempStartDate,
-            endUpdatedAt: tempEndDate,
+            startUpdatedAt: startDateUpdated,
+            endUpdatedAt: endDateUpdated,
         });
         onCancel();
     };
@@ -67,7 +72,7 @@ const DateUpdateDialog = ({
             {dataFilter.startUpdatedAt && dataFilter.endUpdatedAt && (
                 <Chip
                     onClick={() =>
-                        handleChangeTypeFilter(TYPE_FILTER.DATE_CREATED)
+                        handleChangeTypeFilter(TYPE_FILTER.DATE_UPDATED)
                     }
                     onRemove={() =>
                         onChangeFilter({
