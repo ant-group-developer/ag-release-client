@@ -1,44 +1,42 @@
 import { ZodIssue } from 'zod';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import { ReleaseFormValuesData } from '../types';
+import { RELEASES_TYPE } from '../enums';
+
+interface ReleaseFormStoreData {
+    id: string;
+    primaryGenreId: string;
+    subGenreId: string;
+    labelId: string;
+    title: string;
+    version: string;
+    type: RELEASES_TYPE;
+    releaseArtists: any;
+    coverArtThumbnails: any;
+    pLineOwner: string;
+    cLineOwner: string;
+}
 
 interface ReleaseFormState {
-    formValues: Partial<ReleaseFormValuesData>;
-    setFormValues: (values: Partial<ReleaseFormValuesData>) => void;
+    formValues: Partial<ReleaseFormStoreData>;
+    setFormValues: (values: Partial<ReleaseFormStoreData>) => void;
     resetFormValues: () => void;
     validationErrors: ZodIssue[];
     setValidationErrors: (errors: ZodIssue[]) => void;
 }
 
-const initialValue: ReleaseFormValuesData = {
+const initialValue: ReleaseFormStoreData = {
     id: '',
-    thumbnail: undefined,
-    releaseType: null,
-    nameRelease: '',
+    primaryGenreId: '',
+    title: '',
+    type: RELEASES_TYPE.ALBUM,
+    pLineOwner: '',
+    cLineOwner: '',
+    subGenreId: '',
+    labelId: '',
     version: '',
-    isMoreThan4Artists: false,
-    artists: [],
-    genres: null,
-    subGenres: null,
-    metaDataLanguage: '',
-    label: '',
-    upc: '',
-    catalogId: '',
-    cLine: {
-        year: '',
-        name: '',
-    },
-    pLine: {
-        year: '',
-        name: '',
-    },
-    releaseDate: '',
-    timezone: '',
-    territoryType: [],
-    platforms: [],
-    artistsApplyAllTracks: [],
-    tracks: [],
+    releaseArtists: undefined,
+    coverArtThumbnails: undefined,
 };
 
 export const useReleaseFormStore = create<ReleaseFormState>()(

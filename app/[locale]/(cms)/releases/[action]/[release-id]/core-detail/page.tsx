@@ -20,10 +20,10 @@ export default function CoreDetail() {
     const closeModal = useModalStore((state) => state.closeModal);
 
     const handleRemoveArtistList = (artistId: string) => {
-        const newArtistList = formValues?.artists?.filter(
-            (artist: any) => artist.id !== artistId
-        );
-        setFormValues({ ...formValues, artists: newArtistList });
+        // const newArtistList = formValues?.artists?.filter(
+        //     (artist: any) => artist.id !== artistId
+        // );
+        // setFormValues({ ...formValues, artists: newArtistList });
         closeModal();
     };
 
@@ -31,29 +31,26 @@ export default function CoreDetail() {
         const isArtistEditModal =
             typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST;
         try {
-            const newArtistData = {
-                name: values.name,
-                role: values.role,
-                id: values.name,
-            };
-            const releaseArtists = formValues.artists || [];
-
-            let updatedArtists;
-
-            if (isArtistEditModal) {
-                updatedArtists = releaseArtists.map((artist: any) =>
-                    artist.name === dataEdit?.name
-                        ? { ...artist, ...newArtistData }
-                        : artist
-                );
-            } else {
-                updatedArtists = [...releaseArtists, newArtistData];
-            }
-
-            setFormValues({
-                ...formValues,
-                artists: updatedArtists,
-            });
+            // const newArtistData = {
+            //     name: values.name,
+            //     role: values.role,
+            //     id: values.name,
+            // };
+            // const releaseArtists = formValues.artists || [];
+            // let updatedArtists;
+            // if (isArtistEditModal) {
+            //     updatedArtists = releaseArtists.map((artist: any) =>
+            //         artist.name === dataEdit?.name
+            //             ? { ...artist, ...newArtistData }
+            //             : artist
+            //     );
+            // } else {
+            //     updatedArtists = [...releaseArtists, newArtistData];
+            // }
+            // setFormValues({
+            //     ...formValues,
+            //     artists: updatedArtists,
+            // });
         } catch (error) {
             console.error('Validation failed:', error);
         }
@@ -65,7 +62,7 @@ export default function CoreDetail() {
             {(typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST ||
                 typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST) && (
                 <AddArtistModal
-                    isSetMainArtist={formValues?.artists?.length === 0}
+                    // isSetMainArtist={formValues?.artists?.length === 0}
                     onSubmit={handleAddArtistRelease}
                 />
             )}

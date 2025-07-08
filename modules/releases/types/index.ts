@@ -7,6 +7,15 @@ import { TrackData } from '@/modules/tracks/types';
 import { CommonAttribute, CommonParams } from '@/types/api';
 import { RELEASES_STATUS, RELEASES_TYPE } from '../enums';
 
+export interface ReleaseCoverArt {
+    '75x75': string | null;
+    '100x100': string | null;
+    '160x160': string | null;
+    '300x300': string | null;
+    '900x900': string | null;
+    original: string | null;
+}
+
 export interface ReleasesData extends CommonAttribute {
     creatorId: string;
     modifierId: string;
@@ -17,11 +26,14 @@ export interface ReleasesData extends CommonAttribute {
     title: string;
     version: string | null;
     status: RELEASES_STATUS;
-    type: RELEASES_TYPE;
+    type?: RELEASES_TYPE;
     tracks: TrackData[];
     releaseArtists: ReleaseArtists[];
-    primaryGenre: GenresData;
-    subGenre: GENRES;
+    primaryGenre?: GenresData;
+    subGenre?: GENRES;
+    coverArtThumbnails?: ReleaseCoverArt;
+    pLineOwner: string;
+    cLineOwner: string;
 }
 
 export interface ReleasesDataFilter extends CommonParams {

@@ -69,7 +69,6 @@ export default function ImageListUpload({
     useEffect(() => {
         function checkWidth() {
             const width = containerRef.current?.offsetWidth || 0;
-            console.log('🚀 ~ checkWidth ~ width:', width);
 
             setShowText(width >= 60);
         }

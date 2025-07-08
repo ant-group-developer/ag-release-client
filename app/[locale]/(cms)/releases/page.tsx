@@ -1,17 +1,24 @@
 'use client';
+import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { LAYOUT_TABLE, SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
+import { useLoading, UseLoadingType } from '@/hooks/use-loading';
+import useModalStore from '@/hooks/use-modal';
 import ReleasesHeader from '@/modules/releases/components/header';
 import ReleasesTable from '@/modules/releases/components/table';
 import ReleasesGridTable from '@/modules/releases/components/table/grid-table';
 import { defaultVisibleColumnsReleases } from '@/modules/releases/constants';
-import { RELEASES_COLUMNS_DISPLAY } from '@/modules/releases/enums';
+import {
+    RELEASES_COLUMNS_DISPLAY,
+    TYPE_MODAL_RELEASE,
+} from '@/modules/releases/enums';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
-import { ReleasesDataFilter } from '@/modules/releases/types';
+import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
 import { useWindowSize } from '@uidotdev/usehooks';
 import dayjs from 'dayjs';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 type Props = {};
@@ -42,11 +49,6 @@ export default function Releases({}: Props) {
         return defaultVisibleColumnsReleases;
     });
 
-    const handleChangeVisibleColumns = (
-        columns: RELEASES_COLUMNS_DISPLAY[]
-    ) => {
-        setVisibleColumns(columns);
-    };
     const {
         dataFilter,
         onSearch,
@@ -58,9 +60,17 @@ export default function Releases({}: Props) {
         page: 1,
         pageSize: 21,
     });
-    const { height, width } = useWindowSize();
 
+    const { height, width } = useWindowSize();
+    const { layoutTable } = useTableLayoutToggle();
+    const { releasesData } = useGetListReleases(dataFilter);
+    const messages = useTranslations();
     const isSmallDevice = Number(width) <= SCREEN.MD;
+    const closeModal = useModalStore((state) => state.closeModal);
+    const isLoading = useLoading(UseLoadingType.Fetching);
+    const typeModal = useModalStore((state) => state.typeModal);
+    const dataEdit = useModalStore((state) => state.dataEdit as ReleasesData);
+    const modalParagraph = `${messages('delete.confirmMessage', { value: dataEdit?.title })}`;
 
     const scrollY = () => {
         if (isSmallDevice) return undefined;
@@ -73,11 +83,15 @@ export default function Releases({}: Props) {
         return minHeight;
     };
 
-    const { layoutTable } = useTableLayoutToggle();
+    const handleChangeVisibleColumns = (
+        columns: RELEASES_COLUMNS_DISPLAY[]
+    ) => {
+        setVisibleColumns(columns);
+    };
 
     const handleRefresh = () => {};
 
-    const { releasesData } = useGetListReleases(dataFilter);
+    const handleDeleteRelease = () => {};
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -108,6 +122,7 @@ export default function Releases({}: Props) {
                         visibleColumns={visibleColumns}
                         dataSource={releasesData?.items}
                         scroll={{ x: SCREEN.XXL, y: scrollY() }}
+                        loading={isLoading}
                     />
                 )}
 
@@ -131,6 +146,16 @@ export default function Releases({}: Props) {
                 showQuickJumper
                 pageSizeOptions={[21, 28, 35]}
             />
+
+            {typeModal === TYPE_MODAL_RELEASE.DELETE && (
+                <AppConfirm
+                    open
+                    onOk={() => handleDeleteRelease()}
+                    onCancel={closeModal}
+                    modalTitle={`${messages('common.delete')} ${messages('releases.label').toLowerCase()}`}
+                    paragraph={modalParagraph}
+                />
+            )}
         </div>
     );
 }

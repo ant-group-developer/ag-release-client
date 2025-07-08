@@ -1,16 +1,24 @@
 import ActionButton from '@/components/ui/button/action-button';
+import CopyText from '@/components/ui/copy-text/copy-text';
+import ImageFallback from '@/components/ui/image/image-fallback';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { FALLBACK_IMAGE } from '@/constants/common';
 import {
     convertSecondsToHoursMinutes,
     formattedDate,
     getIntlCodeByReleaseStatus,
 } from '@/helpers/common';
+import { getReleaseDetailTabRoute } from '@/helpers/link';
+import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
-import { RELEASES_COLUMNS_DISPLAY } from '../../enums';
+import {
+    RELEASES_COLUMNS_DISPLAY,
+    RELEASES_TABS,
+    TYPE_MODAL_RELEASE,
+} from '../../enums';
 import { ReleasesData } from '../../types';
 
 type Props = Omit<AppTableProps<ReleasesData>, 'columns'> & {
@@ -20,6 +28,7 @@ type Props = Omit<AppTableProps<ReleasesData>, 'columns'> & {
 export default function ReleasesTable({ visibleColumns, ...props }: Props) {
     const messages = useTranslations();
     const router = useRouter();
+    const openModal = useModalStore((state) => state.openModal);
     const column: ColumnType<ReleasesData>[] = [
         {
             title: messages('common.iNo'),
@@ -28,32 +37,32 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             align: 'center',
             render: (_, __, index) => index + 1,
         },
-        {
-            // title: messages('common.thumbnail'),
-            key: 'thumbnail',
-            dataIndex: 'thumbnail',
-            align: 'center',
-            width: 100,
-            fixed: 'left',
-            render: (value, record) => (
-                <div
-                    className="flex items-center justify-center"
-                    // onClick={() =>
-                    //     router.push(
-                    //         `${APP_ROUTES.RELEASES}/detail/${record.releaseId}/core-detail`
-                    //     )
-                    // }
-                >
-                    <Image
-                        src={value}
-                        alt="thumbnail"
-                        width={200}
-                        height={200}
-                        className="h-12 w-12 cursor-pointer rounded-lg object-cover"
-                    />
-                </div>
-            ),
-        },
+        // {
+        //     // title: messages('common.thumbnail'),
+        //     key: 'thumbnail',
+        //     dataIndex: 'thumbnail',
+        //     align: 'center',
+        //     width: 100,
+        //     fixed: 'left',
+        //     render: (value, record) => (
+        //         <div
+        //             className="flex items-center justify-center"
+        //             // onClick={() =>
+        //             //     router.push(
+        //             //         `${APP_ROUTES.RELEASES}/detail/${record.releaseId}/core-detail`
+        //             //     )
+        //             // }
+        //         >
+        //             <Image
+        //                 src={value}
+        //                 alt="thumbnail"
+        //                 width={200}
+        //                 height={200}
+        //                 className="h-12 w-12 cursor-pointer rounded-lg object-cover"
+        //             />
+        //         </div>
+        //     ),
+        // },
         {
             title: messages('releases.name'),
             key: 'title',
@@ -62,10 +71,31 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             align: 'left',
             width: 200,
             fixed: 'left',
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
-                </CustomTooltip>
+            render: (value, record) => (
+                <div className="flex items-center gap-4">
+                    <div
+                        className="flex-shrink-0 cursor-pointer"
+                        onClick={() => {
+                            router.push(`/labels/detail/${record.id}/overview`);
+                        }}
+                    >
+                        <ImageFallback
+                            fallbackSrc={FALLBACK_IMAGE}
+                            src={record?.coverArtThumbnails?.['75x75'] ?? ''}
+                            alt="genre"
+                            width={40}
+                            height={40}
+                            className="aspect-square rounded-lg object-cover"
+                        />
+                    </div>
+                    <CopyText
+                        tooltipProps={{ placement: 'right' }}
+                        text={value}
+                        label={messages('labels.name')}
+                    >
+                        <p className="truncate">{value}</p>
+                    </CopyText>
+                </div>
             ),
         },
         {
@@ -203,7 +233,18 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             align: 'center',
             width: 50,
             fixed: 'right',
-            render: () => <ActionButton showUpdate showDetail showDelete />,
+            render: (_, record) => (
+                <div onClick={(e) => e.stopPropagation()}>
+                    <ActionButton
+                        showUpdate
+                        showDetail
+                        showDelete
+                        onShowDelete={() =>
+                            openModal(TYPE_MODAL_RELEASE.DELETE, record)
+                        }
+                    />
+                </div>
+            ),
         },
     ];
 
@@ -219,7 +260,19 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             {...props}
             pagination={false}
             columns={newColumns}
-            rowClassName={'group'}
+            rowClassName={'group cursor-pointer'}
+            onRow={(record) => {
+                return {
+                    onClick: () => {
+                        router.push(
+                            getReleaseDetailTabRoute(
+                                record?.id,
+                                RELEASES_TABS.CORE_DETAIL
+                            )
+                        );
+                    },
+                };
+            }}
         />
     );
 }

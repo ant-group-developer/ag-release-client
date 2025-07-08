@@ -15,7 +15,6 @@ import {
 } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
 import { ReleaseFormValuesData } from '@/modules/releases/types';
-import { GENRES } from '@/modules/tracks/enums';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Input, Radio, Select } from 'antd';
 import { debounce } from 'lodash';
@@ -28,29 +27,20 @@ import ArtistCard from './artist-card';
 
 export const releaseDetailSchema = (messages: any) =>
     z.object({
-        releaseType: z
-            .nativeEnum(RELEASES_TYPE, {
-                required_error: messages('validation.select'),
-            })
-            .nullable(),
-        nameRelease: z.string().nonempty(messages('validation.input')),
-        version: z.string().optional(),
-        isMoreThan4Artists: z.boolean(),
-        // artists: z.array(artistSchema(messages)),
-        genres: z.nativeEnum(GENRES).nullable(),
-        subGenres: z.nativeEnum(GENRES).nullable().optional(),
-        metaDataLanguage: z.string().nonempty(messages('validation.select')),
-        label: z.string().optional(),
         upc: z.string().optional(),
-        catalogId: z.string().optional(),
-        cLine: z.object({
-            year: z.string().nonempty(messages('validation.input')),
-            name: z.string().nonempty(messages('validation.input')),
+        primaryGenreId: z.string().nonempty(messages('validation.input')),
+        subGenreId: z.string().optional(),
+        labelId: z.string().optional(),
+        title: z.string().nonempty(messages('validation.input')),
+        version: z.string().optional(),
+        type: z.nativeEnum(RELEASES_TYPE, {
+            required_error: messages('validation.select'),
         }),
-        pLine: z.object({
-            year: z.string().nonempty(messages('validation.input')),
-            name: z.string().nonempty(messages('validation.input')),
-        }),
+        releaseArtists: z.array(z.unknown()), // Check lại type
+        coverArtThumbnails: z.any(), // Check lại type
+        pLineOwner: z.string().nonempty(messages('validation.input')),
+        cLineOwner: z.string().nonempty(messages('validation.input')),
+        isMoreThan4Artists: z.string().nonempty(messages('validation.input')),
     });
 
 export type ReleaseDetailSchema = z.infer<
@@ -60,6 +50,7 @@ export type ReleaseDetailSchema = z.infer<
 export default function ReleaseDetailForm() {
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
+    console.log('🚀 ~ ReleaseDetailForm ~ formValues:', formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const formUpdateRef = useRef(false);
 
@@ -68,7 +59,7 @@ export default function ReleaseDetailForm() {
     const isCreateReleasePage = params['action'] === 'create';
 
     const formMethods = useForm<ReleaseDetailSchema>({
-        // defaultValues: isEmptyFormValues ? undefined : formValues,
+        defaultValues: formValues,
         resolver: zodResolver(releaseDetailSchema(messages)),
         mode: 'onChange',
         reValidateMode: 'onChange',
@@ -86,14 +77,14 @@ export default function ReleaseDetailForm() {
     const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
     const isMoreThan4Artists = watch('isMoreThan4Artists');
-    const artists = formValues.artists || [];
+    const artists = formValues.releaseArtists || [];
     const resetFormValues = useReleaseFormStore(
         (state) => state.resetFormValues
     );
 
     const handleNext = async (data: ReleaseDetailSchema) => {
-        setFormValues(data as Partial<ReleaseFormValuesData>);
-        router.push('/releases/detail/123456/tracks');
+        // setFormValues(data as Partial<ReleaseFormValuesData>);
+        // router.push('/releases/detail/123456/tracks');
     };
 
     // Thêm handler để debug form errors
@@ -142,16 +133,16 @@ export default function ReleaseDetailForm() {
         showNotification('success', 'Đã thêm nghệ sĩ vào tất cả bài hát');
     };
 
-    const debouncedSetFormValues = useMemo(
-        () =>
-            debounce((values: ReleaseDetailSchema) => {
-                setFormValues({
-                    ...formValues,
-                    ...(values as Partial<ReleaseFormValuesData>),
-                });
-            }, 300),
-        [setFormValues, formValues.artists]
-    );
+    // const debouncedSetFormValues = useMemo(
+    //     () =>
+    //         debounce((values: ReleaseDetailSchema) => {
+    //             setFormValues({
+    //                 ...formValues,
+    //                 ...(values as Partial<ReleaseFormValuesData>),
+    //             });
+    //         }, 300),
+    //     [setFormValues, formValues.artists]
+    // );
 
     const watchedAllFields = useWatch({ control });
 
@@ -164,26 +155,26 @@ export default function ReleaseDetailForm() {
 
         // Chỉ update các trường khác ngoài artists
         // const { artists, ...otherFields } = watchedAllFields;
-        const { ...otherFields } = watchedAllFields;
-        const {
-            artists: currentArtists,
-            artistsApplyAllTracks,
-            ...currentOtherFields
-        } = formValues;
+        // const { ...otherFields } = watchedAllFields;
+        // const {
+        //     artists: currentArtists,
+        //     artistsApplyAllTracks,
+        //     ...currentOtherFields
+        // } = formValues;
 
-        if (
-            JSON.stringify(otherFields) !== JSON.stringify(currentOtherFields)
-        ) {
-            debouncedSetFormValues({
-                ...watchedAllFields,
-                artistsApplyAllTracks,
-            } as ReleaseDetailSchema);
-        }
+        // if (
+        //     JSON.stringify(otherFields) !== JSON.stringify(currentOtherFields)
+        // ) {
+        //     debouncedSetFormValues({
+        //         ...watchedAllFields,
+        //         artistsApplyAllTracks,
+        //     } as ReleaseDetailSchema);
+        // }
 
-        // Cleanup function
-        return () => {
-            debouncedSetFormValues.cancel();
-        };
+        // // Cleanup function
+        // return () => {
+        //     debouncedSetFormValues.cancel();
+        // };
     }, [watchedAllFields]);
 
     useEffect(() => {
@@ -211,14 +202,14 @@ export default function ReleaseDetailForm() {
                     <div className="grid grid-cols-2 gap-8">
                         <div className="col-span-2 flex flex-col">
                             <FormItem
-                                name="releaseType"
+                                name="type"
                                 label={messages('releases.type')}
                                 required
-                                ErrorMessage={errors.releaseType?.message}
+                                ErrorMessage={errors.type?.message}
                             >
                                 <Controller
                                     control={control}
-                                    name="releaseType"
+                                    name="type"
                                     render={({ field }) => (
                                         <Radio.Group {...field}>
                                             {Object.values(RELEASES_TYPE).map(
@@ -239,21 +230,21 @@ export default function ReleaseDetailForm() {
                         </div>
                         <div>
                             <LabelForm
-                                htmlFor="nameRelease"
+                                htmlFor="title"
                                 required
                                 label={messages('releases.name')}
                             />
                             <Controller
                                 control={control}
-                                name="nameRelease"
+                                name="title"
                                 render={({ field }) => (
                                     <div>
                                         <Input
-                                            id="nameRelease"
+                                            id="title"
                                             {...field}
                                             allowClear
                                             status={
-                                                errors.nameRelease
+                                                errors.title
                                                     ? 'error'
                                                     : undefined
                                             }
@@ -262,8 +253,8 @@ export default function ReleaseDetailForm() {
                                 )}
                             />
                             <ErrorText
-                                isError={!!errors.nameRelease}
-                                message={errors.nameRelease?.message}
+                                isError={!!errors.title}
+                                message={errors.title?.message}
                             />
                         </div>
 
@@ -296,9 +287,7 @@ export default function ReleaseDetailForm() {
                                         'releases.isMoreThan4Artists'
                                     )}
                                     required
-                                    ErrorMessage={
-                                        errors.isMoreThan4Artists?.message
-                                    }
+                                    ErrorMessage={''}
                                 >
                                     <Controller
                                         control={control}
@@ -375,36 +364,41 @@ export default function ReleaseDetailForm() {
                         </div>
 
                         <FormItem
-                            name="genres"
+                            name="primaryGenreId"
                             label={messages('common.genres')}
                             required
                             ErrorMessage={errors.genres?.message}
                         >
                             <Controller
                                 control={control}
-                                name="genres"
-                                render={({ field }) => (
-                                    <GenresSelect
-                                        showSearch
-                                        className="w-full"
-                                        id="genres"
-                                        {...field}
-                                        status={
-                                            errors.genres ? 'error' : undefined
-                                        }
-                                    />
-                                )}
+                                name="primaryGenreId"
+                                render={({ field }) => {
+                                    console.log(field);
+                                    return (
+                                        <GenresSelect
+                                            showSearch
+                                            className="w-full"
+                                            id="primaryGenreId"
+                                            {...field}
+                                            status={
+                                                errors.genres
+                                                    ? 'error'
+                                                    : undefined
+                                            }
+                                        />
+                                    );
+                                }}
                             />
                         </FormItem>
 
                         <FormItem
-                            name="subGenres"
+                            name="subGenreId"
                             label={messages('common.subGenres')}
                             ErrorMessage={errors.subGenres?.message}
                         >
                             <Controller
                                 control={control}
-                                name="subGenres"
+                                name="subGenreId"
                                 render={({ field }) => (
                                     <GenresSelect
                                         className="w-full"
@@ -449,19 +443,19 @@ export default function ReleaseDetailForm() {
                         </FormItem>
 
                         <FormItem
-                            name="label"
+                            name="labelId"
                             label="Label"
                             ErrorMessage={errors.label?.message}
                         >
                             <Controller
                                 control={control}
-                                name="label"
+                                name="labelId"
                                 render={({ field }) => (
                                     <LabelSelect
                                         className="w-full"
                                         showSearch
                                         allowClear
-                                        id="label"
+                                        id="labelId"
                                         {...field}
                                         status={
                                             errors.label ? 'error' : undefined
@@ -516,7 +510,7 @@ export default function ReleaseDetailForm() {
                         </FormItem>
 
                         <FormItem
-                            name="cLine"
+                            name="cLineOwner"
                             label="Bản quyền tác phẩm"
                             required
                             tooltipInfor={messages(
@@ -526,10 +520,10 @@ export default function ReleaseDetailForm() {
                         >
                             <Controller
                                 control={control}
-                                name="cLine"
+                                name="cLineOwner"
                                 render={({ field }) => (
                                     <Input
-                                        id="cLine"
+                                        id="cLineOwner"
                                         value={field.value?.name || ''}
                                         onChange={(e) =>
                                             field.onChange({
@@ -569,7 +563,7 @@ export default function ReleaseDetailForm() {
                         </FormItem>
 
                         <FormItem
-                            name="pLine"
+                            name="pLineOwner"
                             label="Bản quyền ghi âm"
                             required
                             tooltipInfor={messages(
@@ -579,10 +573,10 @@ export default function ReleaseDetailForm() {
                         >
                             <Controller
                                 control={control}
-                                name="pLine"
+                                name="pLineOwner"
                                 render={({ field }) => (
                                     <Input
-                                        id="pLine"
+                                        id="cLineOwner"
                                         value={field.value?.name || ''}
                                         onChange={(e) =>
                                             field.onChange({
