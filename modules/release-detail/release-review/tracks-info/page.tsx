@@ -1,7 +1,7 @@
 import { SIZE_ICON } from '@/constants/common';
 import { getLanguageLabel } from '@/helpers/common';
 import { cn } from '@/helpers/tailwind';
-import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { TrackData } from '@/modules/tracks/types';
 import { Collapse } from 'antd';
 import { CircleAlert } from 'lucide-react';

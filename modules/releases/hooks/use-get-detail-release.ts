@@ -30,6 +30,9 @@ export const useGetDetailRelease = (id: ReleasesData['id']) => {
         id: '',
         createdAt: '',
         updatedAt: null,
+        pLineOwner: '',
+        cLineOwner: '',
+        catalogId: null,
     };
 
     return {

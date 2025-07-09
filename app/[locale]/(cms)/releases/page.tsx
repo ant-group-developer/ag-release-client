@@ -122,7 +122,7 @@ export default function Releases({}: Props) {
                         visibleColumns={visibleColumns}
                         dataSource={releasesData?.items}
                         scroll={{ x: SCREEN.XXL, y: scrollY() }}
-                        loading={isLoading}
+                        // loading={isLoading}
                     />
                 )}
 

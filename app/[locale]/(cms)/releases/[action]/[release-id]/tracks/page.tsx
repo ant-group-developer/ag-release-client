@@ -9,7 +9,7 @@ import {
     TYPE_MODAL_RELEASE,
     TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST,
 } from '@/modules/releases/enums';
-import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { TrackData } from '@/modules/tracks/types';
 import { Key, useState } from 'react';
 

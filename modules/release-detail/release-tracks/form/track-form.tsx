@@ -5,7 +5,7 @@ import { languageList } from '@/constants/fakeData';
 import useModalStore from '@/hooks/use-modal';
 import { artistSchema } from '@/modules/artist/schema';
 import { TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST } from '@/modules/releases/enums';
-import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { TrackData } from '@/modules/tracks/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Input, Select, Switch } from 'antd';

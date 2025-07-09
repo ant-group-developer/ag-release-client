@@ -2,7 +2,7 @@ import ImageListUpload from '@/components/ui/input/image-list-upload';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
 import { cn } from '@/helpers/tailwind';
-import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useTranslations } from 'next-intl';
 import { Controller, useForm } from 'react-hook-form';
 

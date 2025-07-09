@@ -3,34 +3,38 @@ import { LabelForm } from '@/components/ui/label/labelForm';
 import FormItem from '@/components/ui/react-hook-form/form-item';
 import GenresSelect from '@/components/ui/select/genres-select';
 import LabelSelect from '@/components/ui/select/label-select';
+import LanguageSelect from '@/components/ui/select/language-select';
 import ErrorText from '@/components/ui/text/error-text';
-import { languageList, yearList } from '@/constants/fakeData';
-import { showNotification } from '@/helpers/messages-helper';
+import { getReleaseDetailTabRoute } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
 import { ArtistData } from '@/modules/artist/types';
 import {
+    RELEASES_TABS,
     RELEASES_TYPE,
     TYPE_MODAL_RELEASE_ARTIST_LIST,
 } from '@/modules/releases/enums';
-import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
-import { ReleaseFormValuesData } from '@/modules/releases/types';
+import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
+import { CreateReleaseDraftPayload } from '@/modules/releases/types/payload';
+import { CreateVariables } from '@/types/api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Input, Radio, Select } from 'antd';
-import { debounce } from 'lodash';
+import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { useEffect, useMemo, useRef } from 'react';
-import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
+import { useEffect } from 'react';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
-import ArtistCard from './artist-card';
 
 export const releaseDetailSchema = (messages: any) =>
     z.object({
         upc: z.string().optional(),
         primaryGenreId: z.string().nonempty(messages('validation.input')),
         subGenreId: z.string().optional(),
+        metadataLanguageId: z.string().nonempty(messages('validation.input')),
         labelId: z.string().optional(),
+        catalogId: z.string().optional(),
         title: z.string().nonempty(messages('validation.input')),
         version: z.string().optional(),
         type: z.nativeEnum(RELEASES_TYPE, {
@@ -49,22 +53,32 @@ export type ReleaseDetailSchema = z.infer<
 
 export default function ReleaseDetailForm() {
     const messages = useTranslations();
-    const formValues = useReleaseFormStore((state) => state.formValues);
-    console.log('🚀 ~ ReleaseDetailForm ~ formValues:', formValues);
-    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
-    const formUpdateRef = useRef(false);
 
+    //hook
+    const { createReleaseDraft, isPending: isOnCreatingDraft } =
+        useCreateReleaseDraft();
+
+    // zustand store
+    const formValues = useReleaseFormStore((state) => state.formValues);
+    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
+    const resetFormValues = useReleaseFormStore(
+        (state) => state.resetFormValues
+    );
+    const openModal = useModalStore((state) => state.openModal);
+
+    //route
+    const router = useRouter();
     const params = useParams();
     const releaseId = params['release-id'];
     const isCreateReleasePage = params['action'] === 'create';
 
+    // form
     const formMethods = useForm<ReleaseDetailSchema>({
-        defaultValues: formValues,
+        // defaultValues: initialFormValue,
         resolver: zodResolver(releaseDetailSchema(messages)),
         mode: 'onChange',
         reValidateMode: 'onChange',
     });
-
     const {
         control,
         handleSubmit,
@@ -72,65 +86,93 @@ export default function ReleaseDetailForm() {
         watch,
         formState: { errors },
         reset,
+        getValues,
     } = formMethods;
 
-    const router = useRouter();
-    const openModal = useModalStore((state) => state.openModal);
     const isMoreThan4Artists = watch('isMoreThan4Artists');
+    const version = watch('version');
+    const type = watch('type');
+    const title = watch('title');
+    const isEnableCreateDraftBtn = (!!type && !!title) === true;
     const artists = formValues.releaseArtists || [];
-    const resetFormValues = useReleaseFormStore(
-        (state) => state.resetFormValues
-    );
 
-    const handleNext = async (data: ReleaseDetailSchema) => {
+    const handleNext = async (data: any) => {
+        console.log('🚀 ~ handleNext ~ data:', data);
         // setFormValues(data as Partial<ReleaseFormValuesData>);
         // router.push('/releases/detail/123456/tracks');
     };
-
-    // Thêm handler để debug form errors
-    const handleFormError = (errors: any) => {
-        console.log('❌ Form có lỗi validation:', errors);
-    };
-
+    const handleFormError = (errors: any) => {};
     const handleApplyAllTracks = (checked: boolean, artist: ArtistData) => {
-        if (!checked) {
-            setFormValues({
-                ...formValues,
-                artistsApplyAllTracks:
-                    formValues?.artistsApplyAllTracks?.filter(
-                        (item) => item.name !== artist.name
-                    ),
-            });
-            return;
-        }
+        // if (!checked) {
+        //     setFormValues({
+        //         ...formValues,
+        //         artistsApplyAllTracks:
+        //             formValues?.artistsApplyAllTracks?.filter(
+        //                 (item) => item.name !== artist.name
+        //             ),
+        //     });
+        //     return;
+        // }
+        // const isArtistExists = formValues?.artistsApplyAllTracks?.some(
+        //     (item) => item.name === artist.name
+        // );
+        // const updatedTracks = formValues?.tracks?.map((track) => {
+        //     const isArtistExistsInTrack = track.artists?.some(
+        //         (item) => item.name === artist.name
+        //     );
+        //     if (isArtistExistsInTrack) return track;
+        //     return {
+        //         ...track,
+        //         artists: [...track.artists, artist as ArtistData],
+        //     };
+        // });
+        // setFormValues({
+        //     ...formValues,
+        //     artistsApplyAllTracks: isArtistExists
+        //         ? formValues?.artistsApplyAllTracks
+        //         : [
+        //               ...(formValues?.artistsApplyAllTracks || []),
+        //               artist as ArtistData,
+        //           ],
+        //     tracks: updatedTracks,
+        // });
+        // showNotification('success', 'Đã thêm nghệ sĩ vào tất cả bài hát');
+    };
+    const copyRightYearList = () => {
+        const currentYear = dayjs().year();
+        const yearList = [
+            {
+                label: (currentYear - 1).toString(),
+                value: (currentYear - 1).toString(),
+            },
+            { label: currentYear.toString(), value: currentYear.toString() },
+            {
+                label: (currentYear + 1).toString(),
+                value: (currentYear + 1).toString(),
+            },
+        ];
+        return yearList;
+    };
+    const copyRightYears = copyRightYearList();
 
-        const isArtistExists = formValues?.artistsApplyAllTracks?.some(
-            (item) => item.name === artist.name
-        );
-
-        const updatedTracks = formValues?.tracks?.map((track) => {
-            const isArtistExistsInTrack = track.artists?.some(
-                (item) => item.name === artist.name
-            );
-            if (isArtistExistsInTrack) return track;
-            return {
-                ...track,
-                artists: [...track.artists, artist as ArtistData],
-            };
-        });
-
-        setFormValues({
-            ...formValues,
-            artistsApplyAllTracks: isArtistExists
-                ? formValues?.artistsApplyAllTracks
-                : [
-                      ...(formValues?.artistsApplyAllTracks || []),
-                      artist as ArtistData,
-                  ],
-            tracks: updatedTracks,
-        });
-
-        showNotification('success', 'Đã thêm nghệ sĩ vào tất cả bài hát');
+    const handleCreateReleaseDraft = () => {
+        const variables: CreateVariables<CreateReleaseDraftPayload> = {
+            payload: {
+                title: title,
+                version: version,
+                type: type,
+            },
+            onSuccess: (data) => {
+                console.log('🚀 ~ handleCreateReleaseDraft ~ data:', data);
+                router.push(
+                    getReleaseDetailTabRoute(
+                        data?.id,
+                        RELEASES_TABS.CORE_DETAIL
+                    )
+                );
+            },
+        };
+        createReleaseDraft(variables);
     };
 
     // const debouncedSetFormValues = useMemo(
@@ -144,53 +186,30 @@ export default function ReleaseDetailForm() {
     //     [setFormValues, formValues.artists]
     // );
 
-    const watchedAllFields = useWatch({ control });
-
     useEffect(() => {
-        if (formUpdateRef.current) {
-            formUpdateRef.current = false; // Reset flag khi form đã được reset
-            // Không cần set lại giá trị trong store khi form đang được reset
-            return;
-        }
-
-        // Chỉ update các trường khác ngoài artists
-        // const { artists, ...otherFields } = watchedAllFields;
-        // const { ...otherFields } = watchedAllFields;
-        // const {
-        //     artists: currentArtists,
-        //     artistsApplyAllTracks,
-        //     ...currentOtherFields
-        // } = formValues;
-
-        // if (
-        //     JSON.stringify(otherFields) !== JSON.stringify(currentOtherFields)
-        // ) {
-        //     debouncedSetFormValues({
-        //         ...watchedAllFields,
-        //         artistsApplyAllTracks,
-        //     } as ReleaseDetailSchema);
-        // }
-
-        // // Cleanup function
-        // return () => {
-        //     debouncedSetFormValues.cancel();
-        // };
-    }, [watchedAllFields]);
-
-    useEffect(() => {
-        // console.log(
-        //     '🚀 ~ useEffect ~ isCreateReleasePage:',
-        //     isCreateReleasePage
-        // );
-
         if (isCreateReleasePage) {
             reset();
         } else {
-            // console.log('formvalue', formValues);
-            reset(formValues);
+            if (releaseId && formValues) {
+                const initialFormValue: ReleaseDetailSchema = {
+                    primaryGenreId: formValues.primaryGenreId ?? '',
+                    subGenreId: formValues.subGenreId ?? '',
+                    metadataLanguageId: '',
+                    title: formValues.title ?? '',
+                    type: formValues.type ?? RELEASES_TYPE.ALBUM,
+                    releaseArtists: formValues.releaseArtists ?? [],
+                    pLineOwner: formValues.pLineOwner ?? '',
+                    cLineOwner: formValues.cLineOwner ?? '',
+                    isMoreThan4Artists: '',
+                    upc: formValues.upc ?? '',
+                    labelId: formValues.labelId ?? '',
+                    catalogId: formValues.catalogId ?? '',
+                    version: formValues.version ?? '',
+                };
+                reset(initialFormValue);
+            }
         }
-        formUpdateRef.current = true;
-    }, [releaseId, formValues?.id]);
+    }, [isCreateReleasePage, releaseId, formValues]);
 
     return (
         <FormProvider {...formMethods}>
@@ -279,6 +298,19 @@ export default function ReleaseDetailForm() {
                             />
                         </FormItem>
 
+                        {isCreateReleasePage && (
+                            <div className="col-span-2 flex w-full justify-end">
+                                <Button
+                                    type="primary"
+                                    onClick={() => handleCreateReleaseDraft()}
+                                    disabled={!isEnableCreateDraftBtn}
+                                    loading={isOnCreatingDraft}
+                                >
+                                    {messages('common.next')}
+                                </Button>
+                            </div>
+                        )}
+
                         <div className="col-span-2">
                             <div className="flex items-center justify-between">
                                 <FormItem
@@ -294,7 +326,12 @@ export default function ReleaseDetailForm() {
                                         name="isMoreThan4Artists"
                                         render={({ field }) => (
                                             <div className="pb-2 pt-1">
-                                                <Radio.Group {...field}>
+                                                <Radio.Group
+                                                    {...field}
+                                                    disabled={
+                                                        isCreateReleasePage
+                                                    }
+                                                >
                                                     <Radio value={false}>
                                                         {messages('common.no')}
                                                     </Radio>
@@ -317,6 +354,7 @@ export default function ReleaseDetailForm() {
                                                     TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST
                                                 )
                                             }
+                                            disabled={isCreateReleasePage}
                                         >
                                             {messages('artist.add')}
                                         </Button>
@@ -330,50 +368,54 @@ export default function ReleaseDetailForm() {
                                 )}
                             </div>
 
-                            {!isMoreThan4Artists && (
+                            {/* {!isMoreThan4Artists && (
                                 <div className="grid grid-cols-2 gap-8">
-                                    {artists.map((artist, index) => (
-                                        <ArtistCard
-                                            key={index}
-                                            index={index}
-                                            data={artist}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                openModal(
-                                                    TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST,
-                                                    artist
-                                                );
-                                            }}
-                                            onDelete={() =>
-                                                openModal(
-                                                    TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST,
-                                                    artist
-                                                )
-                                            }
-                                            showApplyToAllTracks
-                                            onApplyToAllTracks={(checked) =>
-                                                handleApplyAllTracks(
-                                                    checked,
-                                                    artist
-                                                )
-                                            }
-                                        />
-                                    ))}
+                                    {artists.map(
+                                        (
+                                            artist: ReleaseArtists,
+                                            index: number
+                                        ) => (
+                                            <ArtistCard
+                                                key={index}
+                                                index={index}
+                                                data={artist}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    openModal(
+                                                        TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST,
+                                                        artist
+                                                    );
+                                                }}
+                                                onDelete={() =>
+                                                    openModal(
+                                                        TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST,
+                                                        artist
+                                                    )
+                                                }
+                                                showApplyToAllTracks
+                                                onApplyToAllTracks={(checked) =>
+                                                    handleApplyAllTracks(
+                                                        checked,
+                                                        artist
+                                                    )
+                                                }
+                                            />
+                                        )
+                                    )}
                                 </div>
-                            )}
+                            )} */}
                         </div>
 
                         <FormItem
                             name="primaryGenreId"
                             label={messages('common.genres')}
                             required
-                            ErrorMessage={errors.genres?.message}
+                            ErrorMessage={errors.primaryGenreId?.message}
                         >
                             <Controller
                                 control={control}
                                 name="primaryGenreId"
                                 render={({ field }) => {
-                                    console.log(field);
                                     return (
                                         <GenresSelect
                                             showSearch
@@ -381,10 +423,11 @@ export default function ReleaseDetailForm() {
                                             id="primaryGenreId"
                                             {...field}
                                             status={
-                                                errors.genres
+                                                errors.primaryGenreId
                                                     ? 'error'
                                                     : undefined
                                             }
+                                            disabled={isCreateReleasePage}
                                         />
                                     );
                                 }}
@@ -394,7 +437,7 @@ export default function ReleaseDetailForm() {
                         <FormItem
                             name="subGenreId"
                             label={messages('common.subGenres')}
-                            ErrorMessage={errors.subGenres?.message}
+                            ErrorMessage={errors.subGenreId?.message}
                         >
                             <Controller
                                 control={control}
@@ -407,36 +450,37 @@ export default function ReleaseDetailForm() {
                                         id="subGenres"
                                         {...field}
                                         status={
-                                            errors.subGenres
+                                            errors.subGenreId
                                                 ? 'error'
                                                 : undefined
                                         }
+                                        disabled={isCreateReleasePage}
                                     />
                                 )}
                             />
                         </FormItem>
 
                         <FormItem
-                            name="metaDataLanguage"
+                            name="metadataLanguageId"
                             label={`${messages('common.language')} metadata`}
                             required
-                            ErrorMessage={errors.metaDataLanguage?.message}
+                            ErrorMessage={errors.metadataLanguageId?.message}
                         >
                             <Controller
                                 control={control}
-                                name="metaDataLanguage"
+                                name="metadataLanguageId"
                                 render={({ field }) => (
-                                    <Select
+                                    <LanguageSelect
                                         className="w-full"
                                         id="metaDataLanguage"
                                         showSearch
                                         {...field}
-                                        options={languageList}
                                         status={
-                                            errors.metaDataLanguage
+                                            errors.metadataLanguageId
                                                 ? 'error'
                                                 : undefined
                                         }
+                                        disabled={isCreateReleasePage}
                                     />
                                 )}
                             />
@@ -445,7 +489,7 @@ export default function ReleaseDetailForm() {
                         <FormItem
                             name="labelId"
                             label="Label"
-                            ErrorMessage={errors.label?.message}
+                            ErrorMessage={errors.labelId?.message}
                         >
                             <Controller
                                 control={control}
@@ -458,8 +502,9 @@ export default function ReleaseDetailForm() {
                                         id="labelId"
                                         {...field}
                                         status={
-                                            errors.label ? 'error' : undefined
+                                            errors.labelId ? 'error' : undefined
                                         }
+                                        disabled={isCreateReleasePage}
                                     />
                                 )}
                             />
@@ -481,6 +526,7 @@ export default function ReleaseDetailForm() {
                                         status={
                                             errors.upc ? 'error' : undefined
                                         }
+                                        disabled={isCreateReleasePage}
                                     />
                                 )}
                             />
@@ -488,7 +534,7 @@ export default function ReleaseDetailForm() {
 
                         <FormItem
                             name="catalogId"
-                            label="ID category"
+                            label="ID Catalog"
                             ErrorMessage={errors.catalogId?.message}
                         >
                             <Controller
@@ -504,6 +550,7 @@ export default function ReleaseDetailForm() {
                                                 ? 'error'
                                                 : undefined
                                         }
+                                        disabled={isCreateReleasePage}
                                     />
                                 )}
                             />
@@ -516,49 +563,58 @@ export default function ReleaseDetailForm() {
                             tooltipInfor={messages(
                                 'releases.cLineYearDescription'
                             )}
-                            ErrorMessage={errors.cLine?.message}
+                            ErrorMessage={errors.cLineOwner?.message}
                         >
                             <Controller
                                 control={control}
                                 name="cLineOwner"
-                                render={({ field }) => (
-                                    <Input
-                                        id="cLineOwner"
-                                        value={field.value?.name || ''}
-                                        onChange={(e) =>
-                                            field.onChange({
-                                                ...field.value,
-                                                name: e.target.value,
-                                                year:
-                                                    field.value?.year || '2026',
-                                            })
-                                        }
-                                        allowClear
-                                        addonBefore={
-                                            <Select
-                                                value={
-                                                    field.value?.year || '2026'
-                                                }
-                                                onChange={(year) =>
-                                                    field.onChange({
-                                                        ...field.value,
-                                                        year: year || '2026',
-                                                        name:
-                                                            field.value?.name ||
-                                                            '',
-                                                    })
-                                                }
-                                                options={yearList}
-                                                style={{ width: 90 }}
-                                            />
-                                        }
-                                        status={
-                                            errors.cLine?.name
-                                                ? 'error'
-                                                : undefined
-                                        }
-                                    />
-                                )}
+                                render={({ field }) => {
+                                    const [year, ownerCopyRight] =
+                                        field.value?.split(' ') || [];
+                                    return (
+                                        <Input
+                                            id="cLineOwner"
+                                            value={ownerCopyRight}
+                                            disabled={isCreateReleasePage}
+                                            // onChange={(e) =>
+                                            //     field.onChange({
+                                            //         ...field.value,
+                                            //         name: e.target.value,
+                                            //         year:
+                                            //             field.value?.year || '2026',
+                                            //     })
+                                            // }
+                                            allowClear
+                                            addonBefore={
+                                                <Select
+                                                    value={year}
+                                                    // onChange={(year) =>
+                                                    //     field.onChange({
+                                                    //         ...field.value,
+                                                    //         year: year || '2026',
+                                                    //         name:
+                                                    //             field.value?.name ||
+                                                    //             '',
+                                                    //     })
+                                                    // }
+                                                    options={copyRightYears}
+                                                    style={{ width: 90 }}
+                                                    placeholder={messages(
+                                                        'common.year'
+                                                    )}
+                                                    disabled={
+                                                        isCreateReleasePage
+                                                    }
+                                                />
+                                            }
+                                            // status={
+                                            //     errors.cLine?.name
+                                            //         ? 'error'
+                                            //         : undefined
+                                            // }
+                                        />
+                                    );
+                                }}
                             />
                         </FormItem>
 
@@ -569,59 +625,68 @@ export default function ReleaseDetailForm() {
                             tooltipInfor={messages(
                                 'releases.pLineYearDescription'
                             )}
-                            ErrorMessage={errors.pLine?.message}
+                            ErrorMessage={errors.pLineOwner?.message}
                         >
                             <Controller
                                 control={control}
                                 name="pLineOwner"
-                                render={({ field }) => (
-                                    <Input
-                                        id="cLineOwner"
-                                        value={field.value?.name || ''}
-                                        onChange={(e) =>
-                                            field.onChange({
-                                                ...field.value,
-                                                name: e.target.value,
-                                                year:
-                                                    field.value?.year || '2026',
-                                            })
-                                        }
-                                        allowClear
-                                        addonBefore={
-                                            <Select
-                                                value={
-                                                    field.value?.year || '2026'
-                                                }
-                                                onChange={(year) =>
-                                                    field.onChange({
-                                                        ...field.value,
-                                                        year: year || '2026',
-                                                        name:
-                                                            field.value?.name ||
-                                                            '',
-                                                    })
-                                                }
-                                                options={yearList}
-                                                style={{ width: 90 }}
-                                            />
-                                        }
-                                        status={
-                                            errors.pLine?.name
-                                                ? 'error'
-                                                : undefined
-                                        }
-                                    />
-                                )}
+                                render={({ field }) => {
+                                    const [year, ownerCopyRight] =
+                                        field.value?.split(' ') || [];
+                                    return (
+                                        <Input
+                                            id="cLineOwner"
+                                            value={ownerCopyRight}
+                                            disabled={isCreateReleasePage}
+                                            // onChange={(e) =>
+                                            //     field.onChange({
+                                            //         ...field.value,
+                                            //         name: e.target.value,
+                                            //         year:
+                                            //             field.value?.year || '2026',
+                                            //     })
+                                            // }
+                                            allowClear
+                                            addonBefore={
+                                                <Select
+                                                    value={year}
+                                                    // onChange={(year) =>
+                                                    //     field.onChange({
+                                                    //         ...field.value,
+                                                    //         year: year || '2026',
+                                                    //         name:
+                                                    //             field.value?.name ||
+                                                    //             '',
+                                                    //     })
+                                                    // }
+                                                    options={copyRightYears}
+                                                    style={{ width: 90 }}
+                                                    placeholder={messages(
+                                                        'common.year'
+                                                    )}
+                                                    disabled={
+                                                        isCreateReleasePage
+                                                    }
+                                                />
+                                            }
+                                            // status={
+                                            //     errors.pLine?.name
+                                            //         ? 'error'
+                                            //         : undefined
+                                            // }
+                                        />
+                                    );
+                                }}
                             />
                         </FormItem>
                     </div>
                 </div>
 
-                <div className="flex w-full justify-end">
+                {/* <div className="flex w-full justify-end">
                     <Button type="primary" className="my-8" htmlType="submit">
                         {messages('common.next')}
                     </Button>
-                </div>
+                </div> */}
             </form>
         </FormProvider>
     );

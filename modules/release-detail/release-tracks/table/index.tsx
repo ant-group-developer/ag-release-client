@@ -5,8 +5,8 @@ import SortableTable, {
 import useModalStore from '@/hooks/use-modal';
 import { ArtistData } from '@/modules/artist/types';
 import { TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST } from '@/modules/releases/enums';
-import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
-import { useTrackReadyStore } from '@/modules/releases/hooks/trackReadyStore';
+import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useTrackReadyStore } from '@/modules/releases/hooks/track-ready-store';
 import { TrackData } from '@/modules/tracks/types';
 import { Input, Tabs, Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';

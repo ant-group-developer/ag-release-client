@@ -6,10 +6,16 @@ import useModalStore from '@/hooks/use-modal';
 import { Link, useRouter } from '@/i18n/routing';
 import ReleaseDetailHeader from '@/modules/release-detail/header';
 import RightSidebar from '@/modules/release-detail/right-sidebar';
-import { RELEASES_TABS, TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
-import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import {
+    RELEASES_TABS,
+    RELEASES_TYPE,
+    TYPE_MODAL_RELEASE,
+} from '@/modules/releases/enums';
+import {
+    ReleaseFormStoreData,
+    useReleaseFormStore,
+} from '@/modules/releases/hooks/release-form-store';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
-import { ReleasesData } from '@/modules/releases/types';
 import { Button, Tabs, TabsProps } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname } from 'next/navigation';
@@ -37,9 +43,8 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const pathname = usePathname();
     const openModal = useModalStore((state) => state.openModal);
     const childrenRef = useRef<HTMLDivElement>(null);
-    const releaseId = params['release-id'] ? `/${params['release-id']}` : '';
+    const releaseId = params['release-id'] ? `${params['release-id']}` : '';
     const { releaseData } = useGetDetailRelease(releaseId);
-    console.log('🚀 ~ ReleaseDetail ~ releaseId:', releaseId);
 
     const isCreateReleasePage = params['action'] === 'create';
     const isDisableTab = releaseId == '';
@@ -50,7 +55,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
 
     const coreDetailTabsNavigate = isCreateReleasePage
         ? '/releases/create'
-        : getReleaseDetailTabRoute('R100000001', RELEASES_TABS.CORE_DETAIL);
+        : getReleaseDetailTabRoute(releaseId, RELEASES_TABS.CORE_DETAIL);
 
     const items: TabsProps['items'] = [
         {
@@ -98,7 +103,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                 <Link
                     className={cn(isDisableTab ? 'pointer-events-none' : '')}
                     href={getReleaseDetailTabRoute(
-                        'R100000001',
+                        releaseId,
                         RELEASES_TABS.SCHEDULE
                     )}
                 >
@@ -115,7 +120,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                 <Link
                     className={cn(isDisableTab ? 'pointer-events-none' : '')}
                     href={getReleaseDetailTabRoute(
-                        'R100000001',
+                        releaseId,
                         RELEASES_TABS.DISTRIBUTION
                     )}
                 >
@@ -132,7 +137,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                 <Link
                     className={cn(isDisableTab ? 'pointer-events-none' : '')}
                     href={getReleaseDetailTabRoute(
-                        'R100000001',
+                        releaseId,
                         RELEASES_TABS.REVIEW
                     )}
                 >
@@ -148,7 +153,9 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     };
     const handleSubmit = async () => {
         try {
-            router.push(`/releases/detail/341239532/core-detail`);
+            router.push(
+                getReleaseDetailTabRoute(releaseId, RELEASES_TABS.CORE_DETAIL)
+            );
             showNotification('success', 'Thông tin đã được lưu thành công');
         } catch (error) {
             console.error('Lỗi khi xác thực form:', error);
@@ -224,19 +231,32 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     }, [isScrolledOnDetailPage, isDetailPage]);
 
     useEffect(() => {
-        if (!releaseId) {
+        if (!releaseId || releaseId === '' || isCreateReleasePage) {
             resetFormValues();
+            return;
         }
 
-        const initialData = {
-           
+        const initialData: ReleaseFormStoreData = {
+            id: releaseData.id,
+            primaryGenreId: releaseData.primaryGenreId,
+            subGenreId: releaseData.subGenreId,
+            labelId: releaseData.labelId,
+            title: releaseData.title,
+            version: releaseData.version,
+            type: releaseData.type as RELEASES_TYPE,
+            releaseArtists: releaseData.releaseArtists,
+            coverArtThumbnails: releaseData.coverArtThumbnails?.['75x75'],
+            pLineOwner: releaseData.pLineOwner,
+            cLineOwner: releaseData.cLineOwner,
+            catalogId: releaseData.catalogId,
+            upc: releaseData.upc,
         };
 
         const releaseAlreadyHasValue = formValues?.id;
-        if (releaseId && !releaseAlreadyHasValue) {
+        if (releaseId) {
             setFormValues(initialData);
         }
-    }, [releaseId]);
+    }, [releaseId, JSON.stringify(releaseData)]);
 
     return (
         <div className="flex h-full overflow-hidden">
@@ -252,7 +272,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                             items={items}
                             activeKey={activeTab}
                             onChange={handleTabChange}
-                            tabBarExtraContent={buttonSave}
+                            // tabBarExtraContent={buttonSave}
                         />
                     </div>
                 </div>

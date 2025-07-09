@@ -2,7 +2,7 @@ import { LabelForm } from '@/components/ui/label/labelForm';
 import CountrySelect from '@/components/ui/select/country-select';
 import ErrorText from '@/components/ui/text/error-text';
 import { timeStringToSeconds } from '@/helpers/common';
-import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { TrackData } from '@/modules/tracks/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input, Select, TimePicker } from 'antd';

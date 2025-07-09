@@ -1,6 +1,6 @@
 'use client';
 import { cn } from '@/helpers/common';
-import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { releaseSchema } from '@/modules/releases/schemas';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';

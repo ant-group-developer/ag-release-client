@@ -18,7 +18,7 @@ import DistributionHeader from '@/modules/release-detail/release-distribution/co
 import DistributionStatus from '@/modules/release-detail/release-distribution/components/header-action/distribution-status';
 import DistributionTable from '@/modules/release-detail/release-distribution/components/table';
 import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
-import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { Button } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
@@ -278,7 +278,6 @@ export default function Distribution({}: Props) {
         });
         closeModal();
         router.push(`/releases/detail/${releaseId}/review`);
-        console.log(formValues);
     };
 
     return (

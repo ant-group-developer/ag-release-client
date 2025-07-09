@@ -2,7 +2,7 @@
 import MetadataInfo from '@/modules/release-detail/release-review/metadata-info';
 import ReviewProgress from '@/modules/release-detail/release-review/review-progress';
 import TracksInfo from '@/modules/release-detail/release-review/tracks-info/page';
-import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useTranslations } from 'next-intl';
 
 export default function Review() {

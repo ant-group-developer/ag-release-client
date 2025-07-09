@@ -34,6 +34,7 @@ export interface ReleasesData extends CommonAttribute {
     coverArtThumbnails?: ReleaseCoverArt;
     pLineOwner: string;
     cLineOwner: string;
+    catalogId: string | null;
 }
 
 export interface ReleasesDataFilter extends CommonParams {

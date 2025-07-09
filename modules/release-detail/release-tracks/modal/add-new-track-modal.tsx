@@ -13,7 +13,7 @@ import extractAudioMetadata, {
 } from '@/helpers/common';
 import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
-import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { TrackData } from '@/modules/tracks/types';
 type Props = {
     onAddTracks: (tracks: TrackData[]) => void;
@@ -82,7 +82,6 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
             onAddTracks?.(newTracks);
             closeModal();
         } catch (error) {
-            console.log('🚀 ~ onFinish ~ error:', error);
             showNotification(
                 'error',
                 messages('file.message.uploadFileFailed')

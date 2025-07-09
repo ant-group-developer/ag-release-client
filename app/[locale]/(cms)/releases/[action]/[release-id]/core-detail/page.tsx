@@ -8,7 +8,7 @@ import LabelFormModal from '@/modules/labels/components/modal/label-form';
 import { TYPE_MODAL_LABEL } from '@/modules/labels/enum';
 import ReleaseDetailForm from '@/modules/release-detail/release-detail-form';
 import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '@/modules/releases/enums';
-import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useParams } from 'next/navigation';
 
 export default function CoreDetail() {

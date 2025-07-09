@@ -3,18 +3,20 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { RELEASES_TYPE } from '../enums';
 
-interface ReleaseFormStoreData {
+export interface ReleaseFormStoreData {
     id: string;
     primaryGenreId: string;
     subGenreId: string;
     labelId: string;
     title: string;
-    version: string;
+    version: string | null;
     type: RELEASES_TYPE;
     releaseArtists: any;
     coverArtThumbnails: any;
     pLineOwner: string;
     cLineOwner: string;
+    catalogId: string | null;
+    upc: string | null;
 }
 
 interface ReleaseFormState {
@@ -37,6 +39,8 @@ const initialValue: ReleaseFormStoreData = {
     version: '',
     releaseArtists: undefined,
     coverArtThumbnails: undefined,
+    catalogId: null,
+    upc: null,
 };
 
 export const useReleaseFormStore = create<ReleaseFormState>()(

@@ -2,7 +2,7 @@ import { LabelForm } from '@/components/ui/label/labelForm';
 import GenresSelect from '@/components/ui/select/genres-select';
 import ErrorText from '@/components/ui/text/error-text';
 import { languageList, yearList } from '@/constants/fakeData';
-import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { TrackData } from '@/modules/tracks/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input, Select } from 'antd';

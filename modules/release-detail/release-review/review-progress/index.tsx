@@ -3,7 +3,7 @@ import RegionSelect from '@/components/ui/select/region-select';
 import TimezoneSelect from '@/components/ui/select/timezone-select';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { fakeDspData } from '@/modules/dashboard/constants/mockData';
-import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';

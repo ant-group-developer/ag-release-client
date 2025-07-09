@@ -1,6 +1,6 @@
 import IconButton from '@/components/ui/button/icon-button';
 import { SIZE_ICON } from '@/constants/common';
-import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { Avatar, Checkbox, CheckboxChangeEvent } from 'antd';
 import { Trash2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';

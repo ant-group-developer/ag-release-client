@@ -37,6 +37,7 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "year": "Year",
         "general": "General",
         "somethingWentWrong": "Something went wrong",
         "biography": "Biography",
