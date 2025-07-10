@@ -16,16 +16,23 @@ import {
 } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
-import { CreateReleaseDraftPayload } from '@/modules/releases/types/payload';
-import { CreateVariables } from '@/types/api';
+import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
+import { ReleaseArtists, ReleasesData } from '@/modules/releases/types';
+import {
+    CreateReleaseDraftPayload,
+    UpdateReleaseDraftPayload,
+} from '@/modules/releases/types/payload';
+import { CreateVariables, UpdateVariables } from '@/types/api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Input, Radio, Select } from 'antd';
 import dayjs from 'dayjs';
+import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
+import ArtistCard from './artist-card';
 
 export const releaseDetailSchema = (messages: any) =>
     z.object({
@@ -44,7 +51,7 @@ export const releaseDetailSchema = (messages: any) =>
         coverArtThumbnails: z.any(), // Check lại type
         pLineOwner: z.string().nonempty(messages('validation.input')),
         cLineOwner: z.string().nonempty(messages('validation.input')),
-        isMoreThan4Artists: z.string().nonempty(messages('validation.input')),
+        isVariousArtist: z.boolean(),
     });
 
 export type ReleaseDetailSchema = z.infer<
@@ -57,6 +64,7 @@ export default function ReleaseDetailForm() {
     //hook
     const { createReleaseDraft, isPending: isOnCreatingDraft } =
         useCreateReleaseDraft();
+    const { updateReleaseDraft } = useUpdateReleaseDraft();
 
     // zustand store
     const formValues = useReleaseFormStore((state) => state.formValues);
@@ -89,7 +97,7 @@ export default function ReleaseDetailForm() {
         getValues,
     } = formMethods;
 
-    const isMoreThan4Artists = watch('isMoreThan4Artists');
+    const isVariousArtist = watch('isVariousArtist');
     const version = watch('version');
     const type = watch('type');
     const title = watch('title');
@@ -154,7 +162,6 @@ export default function ReleaseDetailForm() {
         return yearList;
     };
     const copyRightYears = copyRightYearList();
-
     const handleCreateReleaseDraft = () => {
         const variables: CreateVariables<CreateReleaseDraftPayload> = {
             payload: {
@@ -174,6 +181,23 @@ export default function ReleaseDetailForm() {
         };
         createReleaseDraft(variables);
     };
+    const debouncedUpdate = useCallback(
+        debounce((data) => {
+            if (!formValues.id) return;
+            const variables: UpdateVariables<
+                ReleasesData['id'],
+                UpdateReleaseDraftPayload
+            > = {
+                id: formValues.id ?? '',
+                payload: data,
+                onSuccess: (data: ReleasesData) => {
+                    setFormValues(data);
+                },
+            };
+            updateReleaseDraft(variables);
+        }, 500),
+        [formValues.id]
+    );
 
     // const debouncedSetFormValues = useMemo(
     //     () =>
@@ -194,17 +218,18 @@ export default function ReleaseDetailForm() {
                 const initialFormValue: ReleaseDetailSchema = {
                     primaryGenreId: formValues.primaryGenreId ?? '',
                     subGenreId: formValues.subGenreId ?? '',
-                    metadataLanguageId: '',
                     title: formValues.title ?? '',
                     type: formValues.type ?? RELEASES_TYPE.ALBUM,
                     releaseArtists: formValues.releaseArtists ?? [],
-                    pLineOwner: formValues.pLineOwner ?? '',
-                    cLineOwner: formValues.cLineOwner ?? '',
-                    isMoreThan4Artists: '',
+                    pLineOwner: formValues.pLineOwner ?? `${dayjs().year()} `,
+                    cLineOwner: formValues.cLineOwner ?? `${dayjs().year()} `,
+                    isVariousArtist: formValues.isVariousArtist ?? false,
                     upc: formValues.upc ?? '',
                     labelId: formValues.labelId ?? '',
                     catalogId: formValues.catalogId ?? '',
                     version: formValues.version ?? '',
+                    metadataLanguageId:
+                        formValues.releaseLanguage?.metadataLanguageId ?? '',
                 };
                 reset(initialFormValue);
             }
@@ -230,7 +255,16 @@ export default function ReleaseDetailForm() {
                                     control={control}
                                     name="type"
                                     render={({ field }) => (
-                                        <Radio.Group {...field}>
+                                        <Radio.Group
+                                            {...field}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                field.onChange(value);
+                                                debouncedUpdate({
+                                                    type: value,
+                                                });
+                                            }}
+                                        >
                                             {Object.values(RELEASES_TYPE).map(
                                                 (type) => (
                                                     <Radio
@@ -261,6 +295,13 @@ export default function ReleaseDetailForm() {
                                         <Input
                                             id="title"
                                             {...field}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                field.onChange(value);
+                                                debouncedUpdate({
+                                                    title: value,
+                                                });
+                                            }}
                                             allowClear
                                             status={
                                                 errors.title
@@ -289,6 +330,13 @@ export default function ReleaseDetailForm() {
                                     <Input
                                         id="version"
                                         {...field}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            field.onChange(value);
+                                            debouncedUpdate({
+                                                version: value,
+                                            });
+                                        }}
                                         allowClear
                                         status={
                                             errors.version ? 'error' : undefined
@@ -314,7 +362,7 @@ export default function ReleaseDetailForm() {
                         <div className="col-span-2">
                             <div className="flex items-center justify-between">
                                 <FormItem
-                                    name="isMoreThan4Artists"
+                                    name="isVariousArtist"
                                     label={messages(
                                         'releases.isMoreThan4Artists'
                                     )}
@@ -323,11 +371,20 @@ export default function ReleaseDetailForm() {
                                 >
                                     <Controller
                                         control={control}
-                                        name="isMoreThan4Artists"
+                                        name="isVariousArtist"
                                         render={({ field }) => (
                                             <div className="pb-2 pt-1">
                                                 <Radio.Group
                                                     {...field}
+                                                    onChange={(e) => {
+                                                        const value =
+                                                            e.target.value;
+                                                        field.onChange(value);
+                                                        debouncedUpdate({
+                                                            isVariousArtist:
+                                                                value,
+                                                        });
+                                                    }}
                                                     disabled={
                                                         isCreateReleasePage
                                                     }
@@ -346,7 +403,7 @@ export default function ReleaseDetailForm() {
                                         )}
                                     />
                                 </FormItem>
-                                {!isMoreThan4Artists && (
+                                {!isVariousArtist && (
                                     <div className="pt-5">
                                         <Button
                                             onClick={() =>
@@ -368,8 +425,9 @@ export default function ReleaseDetailForm() {
                                 )}
                             </div>
 
-                            {/* {!isMoreThan4Artists && (
+                            {!isVariousArtist && (
                                 <div className="grid grid-cols-2 gap-8">
+                                    {console.log(artists)}
                                     {artists.map(
                                         (
                                             artist: ReleaseArtists,
@@ -403,7 +461,7 @@ export default function ReleaseDetailForm() {
                                         )
                                     )}
                                 </div>
-                            )} */}
+                            )}
                         </div>
 
                         <FormItem
@@ -422,6 +480,12 @@ export default function ReleaseDetailForm() {
                                             className="w-full"
                                             id="primaryGenreId"
                                             {...field}
+                                            onChange={(e) => {
+                                                field.onChange(e);
+                                                debouncedUpdate({
+                                                    primaryGenreId: e,
+                                                });
+                                            }}
                                             status={
                                                 errors.primaryGenreId
                                                     ? 'error'
@@ -449,6 +513,12 @@ export default function ReleaseDetailForm() {
                                         showSearch
                                         id="subGenres"
                                         {...field}
+                                        onChange={(e) => {
+                                            field.onChange(e);
+                                            debouncedUpdate({
+                                                subGenreId: e,
+                                            });
+                                        }}
                                         status={
                                             errors.subGenreId
                                                 ? 'error'
@@ -475,6 +545,14 @@ export default function ReleaseDetailForm() {
                                         id="metaDataLanguage"
                                         showSearch
                                         {...field}
+                                        onChange={(e) => {
+                                            field.onChange(e);
+                                            debouncedUpdate({
+                                                releaseLanguage: {
+                                                    metadataLanguageId: e,
+                                                },
+                                            });
+                                        }}
                                         status={
                                             errors.metadataLanguageId
                                                 ? 'error'
@@ -501,6 +579,12 @@ export default function ReleaseDetailForm() {
                                         allowClear
                                         id="labelId"
                                         {...field}
+                                        onChange={(e) => {
+                                            field.onChange(e);
+                                            debouncedUpdate({
+                                                labelId: e,
+                                            });
+                                        }}
                                         status={
                                             errors.labelId ? 'error' : undefined
                                         }
@@ -522,6 +606,13 @@ export default function ReleaseDetailForm() {
                                     <Input
                                         id="upc"
                                         {...field}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            field.onChange(value);
+                                            debouncedUpdate({
+                                                upc: value,
+                                            });
+                                        }}
                                         allowClear
                                         status={
                                             errors.upc ? 'error' : undefined
@@ -544,6 +635,13 @@ export default function ReleaseDetailForm() {
                                     <Input
                                         id="catalogId"
                                         {...field}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            field.onChange(value);
+                                            debouncedUpdate({
+                                                catalogId: value,
+                                            });
+                                        }}
                                         allowClear
                                         status={
                                             errors.catalogId
@@ -571,32 +669,36 @@ export default function ReleaseDetailForm() {
                                 render={({ field }) => {
                                     const [year, ownerCopyRight] =
                                         field.value?.split(' ') || [];
+
+                                    const handleYearChange = (
+                                        newYear: string
+                                    ) => {
+                                        const value =
+                                            `${newYear} ${ownerCopyRight ?? ''}`.trim();
+                                        field.onChange(value);
+                                        debouncedUpdate({ cLineOwner: value });
+                                    };
+
+                                    const handleOwnerChange = (
+                                        e: React.ChangeEvent<HTMLInputElement>
+                                    ) => {
+                                        const value =
+                                            `${year} ${e.target.value}`.trim();
+                                        field.onChange(value);
+                                        debouncedUpdate({ cLineOwner: value });
+                                    };
                                     return (
                                         <Input
                                             id="cLineOwner"
                                             value={ownerCopyRight}
+                                            onChange={handleOwnerChange}
                                             disabled={isCreateReleasePage}
-                                            // onChange={(e) =>
-                                            //     field.onChange({
-                                            //         ...field.value,
-                                            //         name: e.target.value,
-                                            //         year:
-                                            //             field.value?.year || '2026',
-                                            //     })
-                                            // }
                                             allowClear
                                             addonBefore={
                                                 <Select
+                                                    defaultValue={'2025'}
                                                     value={year}
-                                                    // onChange={(year) =>
-                                                    //     field.onChange({
-                                                    //         ...field.value,
-                                                    //         year: year || '2026',
-                                                    //         name:
-                                                    //             field.value?.name ||
-                                                    //             '',
-                                                    //     })
-                                                    // }
+                                                    onChange={handleYearChange}
                                                     options={copyRightYears}
                                                     style={{ width: 90 }}
                                                     placeholder={messages(
@@ -633,32 +735,37 @@ export default function ReleaseDetailForm() {
                                 render={({ field }) => {
                                     const [year, ownerCopyRight] =
                                         field.value?.split(' ') || [];
+
+                                    const handleYearChange = (
+                                        newYear: string
+                                    ) => {
+                                        const value =
+                                            `${newYear} ${ownerCopyRight ?? ''}`.trim();
+                                        field.onChange(value);
+                                        debouncedUpdate({ pLineOwner: value });
+                                    };
+
+                                    const handleOwnerChange = (
+                                        e: React.ChangeEvent<HTMLInputElement>
+                                    ) => {
+                                        const value =
+                                            `${year} ${e.target.value}`.trim();
+                                        field.onChange(value);
+                                        debouncedUpdate({ pLineOwner: value });
+                                    };
+
                                     return (
                                         <Input
-                                            id="cLineOwner"
+                                            id="pLineOwner"
                                             value={ownerCopyRight}
+                                            onChange={handleOwnerChange}
                                             disabled={isCreateReleasePage}
-                                            // onChange={(e) =>
-                                            //     field.onChange({
-                                            //         ...field.value,
-                                            //         name: e.target.value,
-                                            //         year:
-                                            //             field.value?.year || '2026',
-                                            //     })
-                                            // }
                                             allowClear
                                             addonBefore={
                                                 <Select
+                                                    defaultValue={'2025'}
                                                     value={year}
-                                                    // onChange={(year) =>
-                                                    //     field.onChange({
-                                                    //         ...field.value,
-                                                    //         year: year || '2026',
-                                                    //         name:
-                                                    //             field.value?.name ||
-                                                    //             '',
-                                                    //     })
-                                                    // }
+                                                    onChange={handleYearChange}
                                                     options={copyRightYears}
                                                     style={{ width: 90 }}
                                                     placeholder={messages(
@@ -669,11 +776,6 @@ export default function ReleaseDetailForm() {
                                                     }
                                                 />
                                             }
-                                            // status={
-                                            //     errors.pLine?.name
-                                            //         ? 'error'
-                                            //         : undefined
-                                            // }
                                         />
                                     );
                                 }}

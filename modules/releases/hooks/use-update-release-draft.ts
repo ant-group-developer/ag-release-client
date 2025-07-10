@@ -23,8 +23,8 @@ export const useUpdateReleaseDraft = () => {
 
         const responseMessages = messages(data?.data?.messageCode);
 
-        onSuccess?.();
-        showNotification('success', responseMessages);
+        onSuccess?.(data?.data?.data);
+        // showNotification('success', responseMessages);
     };
 
     const onError = (

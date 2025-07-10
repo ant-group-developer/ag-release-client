@@ -6,11 +6,7 @@ import useModalStore from '@/hooks/use-modal';
 import { Link, useRouter } from '@/i18n/routing';
 import ReleaseDetailHeader from '@/modules/release-detail/header';
 import RightSidebar from '@/modules/release-detail/right-sidebar';
-import {
-    RELEASES_TABS,
-    RELEASES_TYPE,
-    TYPE_MODAL_RELEASE,
-} from '@/modules/releases/enums';
+import { RELEASES_TABS, TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
 import {
     ReleaseFormStoreData,
     useReleaseFormStore,
@@ -49,8 +45,8 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const isCreateReleasePage = params['action'] === 'create';
     const isDisableTab = releaseId == '';
 
-    const isDetailPage = pathname.includes('/core-detail');
-    const isTracksPage = pathname.includes('/tracks');
+    const isDetailPage = pathname.includes(`/${RELEASES_TABS.CORE_DETAIL}`);
+    const isTracksPage = pathname.includes(`/${RELEASES_TABS.TRACKS}`);
     const headerIsScrolled = isDetailPage ? isScrolledOnDetailPage : true;
 
     const coreDetailTabsNavigate = isCreateReleasePage
@@ -86,7 +82,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                             : ''
                     )}
                     href={getReleaseDetailTabRoute(
-                        'R100000001',
+                        releaseId,
                         RELEASES_TABS.TRACKS
                     )}
                 >
@@ -141,7 +137,9 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                         RELEASES_TABS.REVIEW
                     )}
                 >
-                    <span className="font-medium">Review</span>
+                    <span className="font-medium">
+                        {messages('common.overview')}
+                    </span>
                 </Link>
             ),
             disabled: isDisableTab,
@@ -162,7 +160,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         }
     };
 
-    const buttonSave = (
+    const extraButton = (
         <div className="flex justify-end gap-2">
             {isTracksPage && (
                 <Button
@@ -173,11 +171,11 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                 </Button>
             )}
 
-            {isDetailPage && (
+            {/* {isDetailPage && (
                 <Button type="primary" onClick={handleSubmit}>
                     {messages('common.saveInfo')}
                 </Button>
-            )}
+            )} */}
         </div>
     );
 
@@ -237,22 +235,31 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         }
 
         const initialData: ReleaseFormStoreData = {
-            id: releaseData.id,
-            primaryGenreId: releaseData.primaryGenreId,
-            subGenreId: releaseData.subGenreId,
-            labelId: releaseData.labelId,
-            title: releaseData.title,
-            version: releaseData.version,
-            type: releaseData.type as RELEASES_TYPE,
-            releaseArtists: releaseData.releaseArtists,
-            coverArtThumbnails: releaseData.coverArtThumbnails?.['75x75'],
-            pLineOwner: releaseData.pLineOwner,
-            cLineOwner: releaseData.cLineOwner,
-            catalogId: releaseData.catalogId,
-            upc: releaseData.upc,
+            // id: releaseData.id,
+            // primaryGenreId: releaseData.primaryGenreId,
+            // primaryGenre: releaseData.primaryGenre,
+            // subGenreId: releaseData.subGenreId,
+            // subGenre: releaseData.subGenre,
+            // labelId: releaseData.labelId,
+            // label: releaseData.label,
+            // title: releaseData.title,
+            // version: releaseData.version,
+            // type: releaseData.type as RELEASES_TYPE,
+            // releaseArtists: releaseData.releaseArtists,
+            // pLineOwner: releaseData.pLineOwner,
+            // cLineOwner: releaseData.cLineOwner,
+            // catalogId: releaseData.catalogId,
+            // upc: releaseData.upc,
+            // isVariousArtist: releaseData.isVariousArtist,
+            // creatorId: '',
+            // modifierId: '',
+            // status: RELEASES_STATUS.DRAFT,
+            // tracks: [],
+            // createdAt: '',
+            // updatedAt: null,
+            ...releaseData,
         };
 
-        const releaseAlreadyHasValue = formValues?.id;
         if (releaseId) {
             setFormValues(initialData);
         }
@@ -272,7 +279,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                             items={items}
                             activeKey={activeTab}
                             onChange={handleTabChange}
-                            // tabBarExtraContent={buttonSave}
+                            tabBarExtraContent={extraButton}
                         />
                     </div>
                 </div>

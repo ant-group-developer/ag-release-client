@@ -1,4 +1,3 @@
-import { GENRES } from '@/modules/tracks/enums';
 import { useQuery } from '@tanstack/react-query';
 import { releasesApi } from '../apis';
 import { releasesQueryKeys } from '../constants/query-keys';
@@ -25,14 +24,15 @@ export const useGetDetailRelease = (id: ReleasesData['id']) => {
         tracks: [],
         releaseArtists: [],
         primaryGenre: undefined,
-        subGenre: GENRES.POP,
-        coverArtThumbnails: undefined,
         id: '',
         createdAt: '',
         updatedAt: null,
         pLineOwner: '',
         cLineOwner: '',
         catalogId: null,
+        isVariousArtist: false,
+        releaseDate: '',
+        releaseTime: '',
     };
 
     return {

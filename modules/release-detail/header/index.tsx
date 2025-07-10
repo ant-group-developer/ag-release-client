@@ -16,9 +16,9 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     const formValues = useReleaseFormStore((state) => state.formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
 
-    const mainArtist = formValues?.artists?.find(
-        (artist: any) => artist.role === 'Main Artist'
-    );
+    // const mainArtist = formValues?.artists?.find(
+    //     (artist: any) => artist.role === 'Main Artist'
+    // );
 
     const handleValuesChange = (data: any) => {
         setFormValues({ ...formValues, ...data });
@@ -70,30 +70,30 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                 <div className="text-sm">
                                     <span>{messages('releases.name')}: </span>
                                     <span className="font-bold">
-                                        {formValues.nameRelease}{' '}
+                                        {formValues.title}{' '}
                                         {formValues.version &&
-                                            formValues.nameRelease &&
+                                            formValues.title &&
                                             `[${formValues.version}]`}
                                     </span>
                                 </div>
                                 <div className="text-sm">
                                     <span>Label: </span>
                                     <span className="font-bold">
-                                        {formValues.label}
+                                        {formValues?.label?.name}
                                     </span>
                                 </div>
                                 <div className="text-sm">
                                     <span>{messages('artist.label')}: </span>
                                     <span className="font-bold">
-                                        {formValues?.artists
+                                        {/* {formValues?.releaseArtists
                                             ? mainArtist?.name
-                                            : ''}
+                                            : ''} */}
                                     </span>
                                 </div>
                                 <div className="text-sm">
                                     <span>{messages('common.genres')}: </span>
                                     <span className="font-bold">
-                                        {formValues.genres}
+                                        {formValues?.primaryGenre?.name}
                                     </span>
                                 </div>
                                 {formValues.releaseDate && (

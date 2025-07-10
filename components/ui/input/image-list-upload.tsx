@@ -3,7 +3,7 @@ import { showNotification } from '@/helpers/messages-helper';
 import { Image, Upload, UploadFile, UploadProps } from 'antd';
 import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 type Props = UploadProps & {
     value?: any;
@@ -66,21 +66,33 @@ export default function ImageListUpload({
         </button>
     );
 
-    useEffect(() => {
-        function checkWidth() {
-            const width = containerRef.current?.offsetWidth || 0;
-
+    const checkWidth = useCallback(() => {
+        if (containerRef.current) {
+            const width = containerRef.current.offsetWidth;
             setShowText(width >= 60);
         }
+    }, []);
 
-        const raf = requestAnimationFrame(checkWidth);
+    useEffect(() => {
+        checkWidth();
 
+        // Sử dụng ResizeObserver thay vì window resize để theo dõi chính xác
+        const resizeObserver = new ResizeObserver(() => {
+            checkWidth();
+        });
+
+        if (containerRef.current) {
+            resizeObserver.observe(containerRef.current);
+        }
+
+        // Fallback cho trường hợp ResizeObserver không được hỗ trợ
         window.addEventListener('resize', checkWidth);
+
         return () => {
-            cancelAnimationFrame(raf);
+            resizeObserver.disconnect();
             window.removeEventListener('resize', checkWidth);
         };
-    }, []);
+    }, [checkWidth]);
 
     return (
         <div ref={containerRef}>

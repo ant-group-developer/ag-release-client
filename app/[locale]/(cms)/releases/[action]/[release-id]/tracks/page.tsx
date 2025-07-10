@@ -10,7 +10,6 @@ import {
     TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST,
 } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
-import { TrackData } from '@/modules/tracks/types';
 import { Key, useState } from 'react';
 
 export default function Tracks() {
@@ -34,64 +33,7 @@ export default function Tracks() {
         });
     };
 
-    const handleAddTracks = (newTracks: any[]) => {
-        const artistsFromApplyAllTracks =
-            formValues?.artistsApplyAllTracks || [];
-
-        const currentTracks = formValues.tracks || [];
-        const normalizedTracks = currentTracks.map((track: TrackData) => {
-            if (!track.artists) {
-                return {
-                    ...track,
-                    artists: [...artistsFromApplyAllTracks],
-                };
-            }
-            return track;
-        });
-
-        const initialValueTrack: TrackData = {
-            id: '',
-            title: '',
-            trackName: '',
-            trackId: '',
-            genres: '',
-            labelName: '',
-            isrc: '',
-            creationDate: '',
-            releaseDate: '',
-            duration: 0,
-            thumbnail: '',
-            isSensitiveContent: false,
-            plays: 0,
-            fileName: '',
-            trackOrigin: '',
-            languageTrack: '',
-            countryLanguage: '',
-            metadataLanguage: '',
-            lyrics: '',
-            countryRecording: '',
-            recordingType: '',
-            songInfo: {
-                duration: 0,
-                peakData: [],
-            },
-            previewTrack: '',
-            territoryType: [],
-            artists: [...artistsFromApplyAllTracks],
-        };
-
-        const newTracksWithArtists = newTracks.map((track: TrackData) => {
-            return {
-                ...initialValueTrack,
-                ...track,
-            };
-        });
-
-        setFormValues({
-            ...formValues,
-            tracks: [...normalizedTracks, ...newTracksWithArtists],
-        });
-    };
+    const handleAddTracks = (newTracks: any[]) => {};
 
     const rowSelection = {
         selectedRow,
@@ -135,24 +77,23 @@ export default function Tracks() {
     };
 
     const handleRemoveArtistTrack = (values: any) => {
-        const { trackData, artist } = values;
-        const updatedTracks = formValues?.tracks?.map((track: TrackData) => {
-            if (track.id === trackData?.id) {
-                return {
-                    ...track,
-                    artists: track.artists?.filter(
-                        (item) => item.id !== artist.id
-                    ),
-                };
-            }
-            return track;
-        });
-
-        setFormValues({
-            ...formValues,
-            tracks: updatedTracks,
-        });
-        closeModal();
+        // const { trackData, artist } = values;
+        // const updatedTracks = formValues?.tracks?.map((track: TrackData) => {
+        //     if (track.id === trackData?.id) {
+        //         return {
+        //             ...track,
+        //             artists: track.artists?.filter(
+        //                 (item) => item.id !== artist.id
+        //             ),
+        //         };
+        //     }
+        //     return track;
+        // });
+        // setFormValues({
+        //     ...formValues,
+        //     tracks: updatedTracks,
+        // });
+        // closeModal();
     };
 
     return (

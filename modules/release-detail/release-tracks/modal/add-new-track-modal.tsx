@@ -7,14 +7,13 @@ import { useTranslations } from 'next-intl';
 
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import WaveAudioUpload from '@/components/ui/input/wave-audio-upload';
-import extractAudioMetadata, {
-    getFileName,
-    getPeakData,
-} from '@/helpers/common';
+import { getPeakData } from '@/helpers/common';
 import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { TrackData } from '@/modules/tracks/types';
+import { bucketApi } from '@/modules/upload/apis/bucket-api';
+import { CreateBucketFile } from '@/modules/upload/types/data';
 type Props = {
     onAddTracks: (tracks: TrackData[]) => void;
 } & Omit<AppModalProps, 'children'>;
@@ -26,9 +25,6 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const formValues = useReleaseFormStore((state) => state.formValues);
-    const mainArtist = formValues?.artists?.find(
-        (artist: any) => artist.role === 'Main Artist'
-    );
 
     const { isActive, active, deActive } = useActive();
 
@@ -37,48 +33,116 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
             const values = await form.validateFields();
             const files = values.tracks?.fileList || [];
 
-            const newTracksPromises: Promise<TrackData>[] = files.map(
+            const a: { file: File; key: string }[] = [];
+
+            const newTracksPromises = files.map(
                 async (file: any, index: number) => {
                     let songDuration = 0;
                     let peakData: number[] = [];
-                    if (file.originFileObj) {
+                    const fileOriginal = file.originFileObj;
+
+                    if (fileOriginal) {
                         const { peakData: data, songDuration: duration } =
                             await getPeakData(file.originFileObj);
+
+                        if (!data) return;
+
                         peakData = data;
                         songDuration = duration;
                     }
 
-                    const metadata = await extractAudioMetadata(
-                        file.originFileObj
+                    // const metadata = await extractAudioMetadata(
+                    //     file.originFileObj
+                    // );
+
+                    const trackInfor: CreateBucketFile = {
+                        uploadPurpose: 'track_audio',
+                        file: {
+                            fileName: fileOriginal.name,
+                            contentType: fileOriginal.type,
+                            extension: fileOriginal.name.split('.').pop(),
+                            fileSize: file.size,
+                        },
+                        key: `${fileOriginal.name}-${index}`,
+                    };
+                    a.push({
+                        file: file,
+                        key: `${fileOriginal.name}-${index}`,
+                    });
+
+                    const peakJson = JSON.stringify(peakData);
+                    const peakBlob = new Blob([peakJson], {
+                        type: 'application/json',
+                    });
+                    const peakFile = new File(
+                        [peakBlob],
+                        fileOriginal.name.replace(/\.\w+$/, '.json'),
+                        {
+                            type: 'application/json',
+                        }
                     );
 
-                    const fileData: TrackData['fileData'] = {
-                        fileName: file.name,
-                        metadata,
-                    };
-
-                    return {
-                        id: index,
-                        title: getFileName(file),
-                        file: file.originFileObj,
-                        artists: mainArtist
-                            ? [
-                                  {
-                                      name: mainArtist.name,
-                                      //   role: mainArtist.role,
-                                      id: mainArtist.name,
-                                  },
-                              ]
-                            : [],
-                        songInfo: {
-                            duration: songDuration,
-                            peakData: peakData,
+                    const peakInfor: CreateBucketFile = {
+                        uploadPurpose: 'peak_audio',
+                        file: {
+                            fileName: peakFile.name,
+                            contentType: peakFile.type,
+                            extension: 'json',
+                            fileSize: peakFile.size,
                         },
-                        fileData,
+                        key: `${peakFile.name}-${index}`,
                     };
+                    a.push({
+                        file: peakFile,
+                        key: `${peakFile.name}-${index}`,
+                    });
+
+                    return [trackInfor, peakInfor];
                 }
             );
-            const newTracks = await Promise.all(newTracksPromises);
+
+            const newTracks = (await Promise.all(newTracksPromises)).flat();
+
+            const response = await bucketApi.createBuckets({
+                createBucketDtos: newTracks,
+            });
+
+            const uploadPromises = response.data.map(async (item: any) => {
+                const matchedFile = a.find((aItem) => aItem.key === item.key);
+                if (matchedFile) {
+                    try {
+                        const uploadResponse = await fetch(item.urlUpload, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type':
+                                    matchedFile.file.type ||
+                                    'application/octet-stream',
+                            },
+                            body: matchedFile.file,
+                        });
+
+                        if (!uploadResponse.ok) {
+                            throw new Error(
+                                `Failed to upload file ${matchedFile.key}. Please try again later.`
+                            );
+                        }
+
+                        console.log(
+                            `✅ Successfully uploaded: ${matchedFile.key}`
+                        );
+                    } catch (uploadError) {
+                        console.error(
+                            `❌ Failed to upload ${matchedFile.key}:`,
+                            uploadError
+                        );
+                        throw uploadError;
+                    }
+                }
+            });
+
+            await Promise.all(uploadPromises);
+
+            console.log('🚀 ~ onFinish ~ response:', response);
             onAddTracks?.(newTracks);
             closeModal();
         } catch (error) {
