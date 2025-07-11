@@ -1,29 +1,38 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import useModalStore from '@/hooks/use-modal';
-import AddArtistModal from '@/modules/artist/components/modal/add-artist';
 import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
 import { TYPE_MODAL_ARTIST } from '@/modules/artist/enum';
 import LabelFormModal from '@/modules/labels/components/modal/label-form';
 import { TYPE_MODAL_LABEL } from '@/modules/labels/enum';
+import ReleaseArtistModal from '@/modules/release-artist/components/modal/release-artist-modal';
+import { useDeleteReleaseArtist } from '@/modules/release-artist/hooks/use-delete-release-artist';
+import { ReleaseArtist } from '@/modules/release-artist/types';
 import ReleaseDetailForm from '@/modules/release-detail/release-detail-form';
 import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { DeleteVariables } from '@/types/api';
+import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 
 export default function CoreDetail() {
+    const messages = useTranslations();
     const params = useParams();
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const formValues = useReleaseFormStore((state) => state.formValues);
     const typeModal = useModalStore((state) => state.typeModal);
-    const dataEdit = useModalStore((state) => state.dataEdit);
+    const dataEdit = useModalStore((state) => state.dataEdit as ReleaseArtist);
     const closeModal = useModalStore((state) => state.closeModal);
+    const { deleteReleaseArtist } = useDeleteReleaseArtist();
 
-    const handleRemoveArtistList = (artistId: string) => {
-        // const newArtistList = formValues?.artists?.filter(
-        //     (artist: any) => artist.id !== artistId
-        // );
-        // setFormValues({ ...formValues, artists: newArtistList });
+    const titleModalDelete = messages('delete.confirmTitle');
+    const paragraphDelete = `${messages('delete.confirmMessage', { value: dataEdit?.artist?.name })}`;
+
+    const handleRemoveArtistList = () => {
+        const variables: DeleteVariables<ReleaseArtist['id']> = {
+            id: dataEdit?.id,
+        };
+        deleteReleaseArtist(variables);
         closeModal();
     };
 
@@ -61,9 +70,8 @@ export default function CoreDetail() {
             <ReleaseDetailForm />
             {(typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST ||
                 typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST) && (
-                <AddArtistModal
-                    // isSetMainArtist={formValues?.artists?.length === 0}
-                    onSubmit={handleAddArtistRelease}
+                <ReleaseArtistModal
+                    isSetMainArtist={formValues?.releaseArtists?.length === 0}
                 />
             )}
 
@@ -73,10 +81,10 @@ export default function CoreDetail() {
             {typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST && (
                 <AppConfirm
                     open
-                    modalTitle="Xóa nghệ sĩ"
-                    paragraph="Bạn có chắc chắn muốn xóa nghệ sĩ ra khỏi phát hành này không?"
+                    modalTitle={titleModalDelete}
+                    paragraph={paragraphDelete}
                     onCancel={closeModal}
-                    onOk={() => handleRemoveArtistList(dataEdit.id)}
+                    onOk={() => handleRemoveArtistList()}
                 />
             )}
         </div>

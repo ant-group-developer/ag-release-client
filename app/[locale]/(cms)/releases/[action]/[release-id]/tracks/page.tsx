@@ -1,7 +1,7 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import useModalStore from '@/hooks/use-modal';
-import AddArtistModal from '@/modules/artist/components/modal/add-artist';
+import AddArtistModal from '@/modules/release-artist/components/modal/release-artist-modal';
 import AudioPlayer from '@/modules/release-detail/release-tracks/audio-player';
 import AddNewTrackModal from '@/modules/release-detail/release-tracks/modal/add-new-track-modal';
 import ReleaseTracksTable from '@/modules/release-detail/release-tracks/table';

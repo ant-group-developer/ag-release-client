@@ -1,7 +1,6 @@
-import { ArtistRoleData } from '@/modules/artist-role/types';
-import { ArtistData } from '@/modules/artist/types';
 import { GenresData } from '@/modules/genres/types';
 import { LabelData } from '@/modules/labels/types';
+import { ReleaseArtist } from '@/modules/release-artist/types';
 import { TrackData } from '@/modules/tracks/types';
 import { CommonAttribute, CommonParams } from '@/types/api';
 import { RELEASES_STATUS, RELEASES_TYPE } from '../enums';
@@ -30,7 +29,7 @@ export interface ReleasesData extends CommonAttribute {
     status: RELEASES_STATUS;
     type?: RELEASES_TYPE;
     tracks: TrackData[];
-    releaseArtists: ReleaseArtists[];
+    releaseArtists: ReleaseArtist[];
     coverArtThumbnails?: ReleaseCoverArt;
     pLineOwner: string;
     cLineOwner: string;
@@ -56,12 +55,4 @@ export interface releaseLanguage extends CommonParams {
     audioLanguageId: string | null;
     metadataLanguageId: string;
     releaseId: string;
-}
-
-export interface ReleaseArtists extends CommonAttribute {
-    artistRoleId: string;
-    artistId: string;
-    releaseId: string;
-    artist: ArtistData;
-    artistRole: ArtistRoleData;
 }

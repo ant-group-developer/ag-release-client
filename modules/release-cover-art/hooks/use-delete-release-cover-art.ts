@@ -3,21 +3,13 @@ import { releasesQueryKeys } from '@/modules/releases/constants/query-keys';
 import { DeleteVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
-import { artistRoleApi } from '../apis';
-import { artistRoleQueryKeys } from '../constants/query-keys';
-import { ArtistRoleData } from '../types';
+import { releaseCoverArtApi } from '../apis';
 
-export const useDeleteArtistRole = () => {
+export const useDeleteReleaseCoverArt = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
 
-    const onSuccess = (
-        data: any,
-        { onSuccess }: DeleteVariables<ArtistRoleData['id']>
-    ) => {
-        queryClient.invalidateQueries({
-            queryKey: [...artistRoleQueryKeys.getList],
-        });
+    const onSuccess = (data: any, { onSuccess }: DeleteVariables<string>) => {
         queryClient.invalidateQueries({
             queryKey: [...releasesQueryKeys.getDetail],
         });
@@ -28,10 +20,7 @@ export const useDeleteArtistRole = () => {
         showNotification('success', responseMessages);
     };
 
-    const onError = (
-        data: any,
-        { onError }: DeleteVariables<ArtistRoleData['id']>
-    ) => {
+    const onError = (data: any, { onError }: DeleteVariables<string>) => {
         const responseMessages = messages(data?.response?.data?.messageCode);
 
         onError?.();
@@ -41,20 +30,15 @@ export const useDeleteArtistRole = () => {
         );
     };
     const mutation = useMutation({
-        mutationFn: ({ id }: DeleteVariables<ArtistRoleData['id']>) =>
-            artistRoleApi.deleteArtistRole(id),
+        mutationFn: ({ id }: DeleteVariables<string>) =>
+            releaseCoverArtApi.deleteReleaseCoverArt(id),
         onSuccess,
         onError,
     });
 
-    const deleteArtistRole = (
-        variables: DeleteVariables<ArtistRoleData['id']>
-    ) => {
-        mutation.mutate(variables);
+    const deleteReleaseCoverArt = (variables: DeleteVariables<string>) => {
+        return mutation.mutate(variables);
     };
 
-    return {
-        deleteArtistRole,
-        ...mutation,
-    };
+    return { deleteReleaseCoverArt, mutation };
 };

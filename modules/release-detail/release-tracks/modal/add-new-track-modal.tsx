@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import WaveAudioUpload from '@/components/ui/input/wave-audio-upload';
+import { TYPE_UPLOAD_BUCKET } from '@/enums/common';
 import { getPeakData } from '@/helpers/common';
 import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
@@ -56,7 +57,7 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                     // );
 
                     const trackInfor: CreateBucketFile = {
-                        uploadPurpose: 'track_audio',
+                        uploadPurpose: TYPE_UPLOAD_BUCKET.TRACK,
                         file: {
                             fileName: fileOriginal.name,
                             contentType: fileOriginal.type,
@@ -83,7 +84,7 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                     );
 
                     const peakInfor: CreateBucketFile = {
-                        uploadPurpose: 'peak_audio',
+                        uploadPurpose: TYPE_UPLOAD_BUCKET.JSON,
                         file: {
                             fileName: peakFile.name,
                             contentType: peakFile.type,

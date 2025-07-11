@@ -1,23 +1,33 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
-import AppModal from '@/components/ui/modal/normal-modal';
+import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import ArtistSelect from '@/components/ui/select/artist-select';
 import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import useModalStore from '@/hooks/use-modal';
+import { useGetListArtistRole } from '@/modules/artist-role/hooks/use-get-list-artist-role';
+import { ArtistRoleData } from '@/modules/artist-role/types';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { DspData } from '@/modules/dsp/types';
+import { RELEASE_MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
+import { useCreateReleaseArtist } from '@/modules/release-artist/hooks/use-create-release-artist';
+import { ReleaseArtist } from '@/modules/release-artist/types';
+import {
+    CreateReleaseArtistPayload,
+    UpdateReleaseArtistPayload,
+} from '@/modules/release-artist/types/payload';
 import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form } from 'antd';
 import { useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
-import { roleArtist } from '../../constants';
-import ArtistProfilesList from '../list/artist-profiles';
+import ArtistProfilesList from '../../../artist/components/list/artist-profiles';
+import { roleArtist } from '../../../artist/constants';
+import { useUpdateReleaseArtist } from '../../hooks/use-update-release-artist';
 
-type Props = {
-    onSubmit: (values: any) => void;
-    isSetMainArtist?: boolean;
+type Props = Omit<AppModalProps, 'children'> & {
+    isSetMainArtist: boolean;
 };
 
 // Dữ liệu mẫu cho các platform đã liên kết
@@ -26,7 +36,7 @@ const fakeLinkedPlatforms = [
     { id: '5', name: 'Youtube Music' },
 ];
 
-export default function AddArtistModal({ isSetMainArtist, onSubmit }: Props) {
+export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
     const [form] = Form.useForm();
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
@@ -34,32 +44,53 @@ export default function AddArtistModal({ isSetMainArtist, onSubmit }: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
     const formValues = useReleaseFormStore((state) => state.formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
+
     const isArtistEditModal =
         typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST;
-    const isAddArtistReleaseModal =
-        typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST;
-    const dataEdit = useModalStore((state) => state.dataEdit);
+    const dataEdit = useModalStore((state) => state.dataEdit as ReleaseArtist);
 
     const { dspData } = useGetListDsp({});
+    const { createReleaseArtist } = useCreateReleaseArtist();
+    const { artistsRolesData } = useGetListArtistRole({});
+    const { updateReleaseArtist } = useUpdateReleaseArtist();
 
-    const handleSubmit = async () => {
-        try {
-            const values = await form.validateFields();
-            if (isSetMainArtist) {
-                values.role = 'Main Artist';
-            }
-            onSubmit(values);
-            closeModal();
-        } catch (error) {
-            console.error('Validation failed:', error);
+    const mainArtist: ArtistRoleData = artistsRolesData.items.find(
+        (item: ArtistRoleData) => item.name === RELEASE_MAIN_ARTIST_ROLE
+    );
+
+    const handleSubmit = async (values: any) => {
+        if (!isArtistEditModal) {
+            const variables: CreateVariables<CreateReleaseArtistPayload> = {
+                payload: {
+                    artistId: values.artistId,
+                    artistRoleId: values.roleId ?? mainArtist.id,
+                    releaseId: formValues.id as string,
+                },
+                onSuccess: () => {
+                    closeModal();
+                },
+            };
+            createReleaseArtist(variables);
+        } else {
+            const variables: UpdateVariables<
+                ReleaseArtist['id'],
+                UpdateReleaseArtistPayload
+            > = {
+                id: dataEdit.id,
+                payload: {
+                    artistId: values?.artistId,
+                    artistRoleId: values.roleId,
+                },
+            };
+            updateReleaseArtist(variables);
         }
     };
 
     useEffect(() => {
         if (isArtistEditModal) {
             form.setFieldsValue({
-                name: dataEdit?.name,
-                role: dataEdit?.role,
+                artistId: dataEdit?.artistId,
+                roleId: dataEdit?.artistRoleId,
             });
         }
     }, [isArtistEditModal, dataEdit, form]);
@@ -73,11 +104,16 @@ export default function AddArtistModal({ isSetMainArtist, onSubmit }: Props) {
                     : messages('artist.add')
             }
             onCancel={closeModal}
-            onOk={handleSubmit}
+            onOk={form.submit}
         >
-            <AppForm form={form} layout="vertical" showSubmit={false}>
+            <AppForm
+                form={form}
+                onFinish={(values) => handleSubmit(values)}
+                layout="vertical"
+                showSubmit={false}
+            >
                 <AppFormItem
-                    name="name"
+                    name="artistId"
                     label={messages('artist.name')}
                     required
                     rules={[
@@ -95,7 +131,7 @@ export default function AddArtistModal({ isSetMainArtist, onSubmit }: Props) {
 
                 {!isSetMainArtist && (
                     <AppFormItem
-                        name="role"
+                        name="roleId"
                         label={messages('common.role')}
                         required
                         rules={[

@@ -49,5 +49,5 @@ export interface CreateBucketFile {
         extension: string;
         fileSize: number;
     };
-    key: string;
+    key?: string;
 }

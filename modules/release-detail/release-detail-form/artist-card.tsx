@@ -1,5 +1,6 @@
 import IconButton from '@/components/ui/button/icon-button';
 import { SIZE_ICON } from '@/constants/common';
+import { ReleaseArtist } from '@/modules/release-artist/types';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { Avatar, Checkbox, CheckboxChangeEvent } from 'antd';
 import { Trash2 } from 'lucide-react';
@@ -8,7 +9,7 @@ import { HTMLAttributes } from 'react';
 
 type Props = HTMLAttributes<HTMLDivElement> & {
     index: number;
-    data: any;
+    data: ReleaseArtist;
     onDelete?: () => void;
     showApplyToAllTracks?: boolean;
     onApplyToAllTracks?: (checked: boolean) => void;
@@ -27,6 +28,8 @@ export default function ArtistCard({
         onApplyToAllTracks?.(e.target.checked);
     };
     const formValues = useReleaseFormStore((state) => state.formValues);
+    const artist = data?.artist;
+    const artistRole = data.artistRole;
     return (
         <div
             className="flex cursor-pointer items-center justify-between rounded-lg bg-gray-100 px-3 py-2 hover:bg-gray-200"
@@ -39,10 +42,10 @@ export default function ArtistCard({
                     </Avatar>
                 </div>
                 <div className="flex flex-col gap-1">
-                    <p className="font-bold">{data?.name}</p>
+                    <p className="font-bold">{artist?.name}</p>
                     <p>
-                        <span>1569468 | </span>
-                        <span>{data?.role}</span>
+                        <span>{artist?.id} | </span>
+                        <span>{artistRole?.name}</span>
                     </p>
                     {showApplyToAllTracks && (
                         <div
@@ -51,9 +54,9 @@ export default function ArtistCard({
                             }}
                         >
                             <Checkbox
-                                defaultChecked={formValues?.artistsApplyAllTracks?.some(
-                                    (item: any) => item.name === data.name
-                                )}
+                                // defaultChecked={formValues?.artistsApplyAllTracks?.some(
+                                //     (item: any) => item.name === data.name
+                                // )}
                                 onChange={(e: CheckboxChangeEvent) => {
                                     handleChangeChecked(e);
                                 }}

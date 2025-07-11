@@ -9,6 +9,7 @@ import { getReleaseDetailTabRoute } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
 import { ArtistData } from '@/modules/artist/types';
+import { ReleaseArtist } from '@/modules/release-artist/types';
 import {
     RELEASES_TABS,
     RELEASES_TYPE,
@@ -17,7 +18,7 @@ import {
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
-import { ReleaseArtists, ReleasesData } from '@/modules/releases/types';
+import { ReleasesData } from '@/modules/releases/types';
 import {
     CreateReleaseDraftPayload,
     UpdateReleaseDraftPayload,
@@ -102,7 +103,7 @@ export default function ReleaseDetailForm() {
     const type = watch('type');
     const title = watch('title');
     const isEnableCreateDraftBtn = (!!type && !!title) === true;
-    const artists = formValues.releaseArtists || [];
+    const releaseArtist = formValues.releaseArtists || [];
 
     const handleNext = async (data: any) => {
         console.log('🚀 ~ handleNext ~ data:', data);
@@ -239,7 +240,7 @@ export default function ReleaseDetailForm() {
     return (
         <FormProvider {...formMethods}>
             <form
-                className="px-4 pt-4"
+                className="px-4 py-4"
                 onSubmit={handleSubmit(handleNext, handleFormError)}
             >
                 <div className="flex flex-col">
@@ -427,36 +428,35 @@ export default function ReleaseDetailForm() {
 
                             {!isVariousArtist && (
                                 <div className="grid grid-cols-2 gap-8">
-                                    {console.log(artists)}
-                                    {artists.map(
+                                    {releaseArtist.map(
                                         (
-                                            artist: ReleaseArtists,
+                                            releaseArtist: ReleaseArtist,
                                             index: number
                                         ) => (
                                             <ArtistCard
                                                 key={index}
                                                 index={index}
-                                                data={artist}
+                                                data={releaseArtist}
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     openModal(
                                                         TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST,
-                                                        artist
+                                                        releaseArtist
                                                     );
                                                 }}
                                                 onDelete={() =>
                                                     openModal(
                                                         TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST,
-                                                        artist
+                                                        releaseArtist
                                                     )
                                                 }
                                                 showApplyToAllTracks
-                                                onApplyToAllTracks={(checked) =>
-                                                    handleApplyAllTracks(
-                                                        checked,
-                                                        artist
-                                                    )
-                                                }
+                                                // onApplyToAllTracks={(checked) =>
+                                                //     handleApplyAllTracks(
+                                                //         checked,
+                                                //         releaseArtist
+                                                //     )
+                                                // }
                                             />
                                         )
                                     )}

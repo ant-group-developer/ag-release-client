@@ -1,22 +1,23 @@
 import { showNotification } from '@/helpers/messages-helper';
 import { releasesQueryKeys } from '@/modules/releases/constants/query-keys';
-import { DeleteVariables } from '@/types/api';
+import { CreateVariables, UpdateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
-import { artistRoleApi } from '../apis';
-import { artistRoleQueryKeys } from '../constants/query-keys';
-import { ArtistRoleData } from '../types';
+import { releaseArtistApi } from '../apis';
+import { releaseArtistQueryKeys } from '../constants/query-keys';
+import { ReleaseArtist } from '../types';
+import { UpdateReleaseArtistPayload } from '../types/payload';
 
-export const useDeleteArtistRole = () => {
+export const useUpdateReleaseArtist = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
 
     const onSuccess = (
         data: any,
-        { onSuccess }: DeleteVariables<ArtistRoleData['id']>
+        { onSuccess }: CreateVariables<UpdateReleaseArtistPayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...artistRoleQueryKeys.getList],
+            queryKey: [...releaseArtistQueryKeys.getList],
         });
         queryClient.invalidateQueries({
             queryKey: [...releasesQueryKeys.getDetail],
@@ -24,13 +25,13 @@ export const useDeleteArtistRole = () => {
 
         const responseMessages = messages(data?.data?.messageCode);
 
-        onSuccess?.();
+        onSuccess?.(data?.data?.data);
         showNotification('success', responseMessages);
     };
 
     const onError = (
         data: any,
-        { onError }: DeleteVariables<ArtistRoleData['id']>
+        { onError }: CreateVariables<UpdateReleaseArtistPayload>
     ) => {
         const responseMessages = messages(data?.response?.data?.messageCode);
 
@@ -41,20 +42,26 @@ export const useDeleteArtistRole = () => {
         );
     };
     const mutation = useMutation({
-        mutationFn: ({ id }: DeleteVariables<ArtistRoleData['id']>) =>
-            artistRoleApi.deleteArtistRole(id),
+        mutationFn: ({
+            id,
+            payload,
+        }: UpdateVariables<ReleaseArtist['id'], UpdateReleaseArtistPayload>) =>
+            releaseArtistApi.updateReleaseArtist(id, payload),
         onSuccess,
         onError,
     });
 
-    const deleteArtistRole = (
-        variables: DeleteVariables<ArtistRoleData['id']>
+    const updateReleaseArtist = (
+        variables: UpdateVariables<
+            ReleaseArtist['id'],
+            UpdateReleaseArtistPayload
+        >
     ) => {
         mutation.mutate(variables);
     };
 
     return {
-        deleteArtistRole,
+        updateReleaseArtist,
         ...mutation,
     };
 };

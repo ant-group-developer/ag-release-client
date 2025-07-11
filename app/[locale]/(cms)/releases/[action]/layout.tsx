@@ -23,7 +23,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const [activeTab, setActiveTab] = useState<string>(
         RELEASES_TABS.CORE_DETAIL
     );
-    const [isScrolledOnDetailPage, setIsScrolledOnDetailPage] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
 
     const validationErrors = useReleaseFormStore(
         (state) => state.validationErrors
@@ -47,7 +47,6 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
 
     const isDetailPage = pathname.includes(`/${RELEASES_TABS.CORE_DETAIL}`);
     const isTracksPage = pathname.includes(`/${RELEASES_TABS.TRACKS}`);
-    const headerIsScrolled = isDetailPage ? isScrolledOnDetailPage : true;
 
     const coreDetailTabsNavigate = isCreateReleasePage
         ? '/releases/create'
@@ -180,6 +179,35 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     );
 
     useEffect(() => {
+        const handleScroll = () => {
+            const scrollContainer = childrenRef.current;
+            if (!scrollContainer) return;
+
+            console.log(
+                '🚀 ~ handleScroll ~ scrollTop:',
+                scrollContainer.scrollTop
+            );
+
+            if (scrollContainer.scrollTop > 20) {
+                setIsScrolled(true);
+            } else {
+                setIsScrolled(false);
+            }
+        };
+
+        const scrollContainer = childrenRef.current;
+        if (scrollContainer) {
+            scrollContainer.addEventListener('scroll', handleScroll, {
+                passive: true,
+            });
+
+            return () => {
+                scrollContainer.removeEventListener('scroll', handleScroll);
+            };
+        }
+    }, []);
+
+    useEffect(() => {
         const getActiveTab = () => {
             const map: Record<string, string> = {
                 [RELEASES_TABS.CORE_DETAIL]: RELEASES_TABS.CORE_DETAIL,
@@ -192,41 +220,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             return map[tabKey ?? ''] || RELEASES_TABS.CORE_DETAIL;
         };
         setActiveTab(getActiveTab());
-
-        // Set initial scroll state if it's a detail page and already scrolled
-        if (isDetailPage) {
-            if (childrenRef.current && childrenRef.current.scrollTop > 10) {
-                setIsScrolledOnDetailPage(true);
-            } else {
-                setIsScrolledOnDetailPage(false);
-            }
-        }
     }, [pathname, isDetailPage]);
-
-    useEffect(() => {
-        const handleScroll = () => {
-            if (!childrenRef.current || !isDetailPage) return;
-            if (
-                childrenRef.current.scrollHeight >
-                childrenRef.current.clientHeight
-            ) {
-                const newIsScrolled = childrenRef.current.scrollTop > 0;
-                if (newIsScrolled !== isScrolledOnDetailPage) {
-                    setIsScrolledOnDetailPage(newIsScrolled);
-                }
-            }
-        };
-
-        const currentRef = childrenRef.current;
-        if (currentRef && isDetailPage) {
-            currentRef.addEventListener('scroll', handleScroll);
-        }
-        return () => {
-            if (currentRef) {
-                currentRef.removeEventListener('scroll', handleScroll);
-            }
-        };
-    }, [isScrolledOnDetailPage, isDetailPage]);
 
     useEffect(() => {
         if (!releaseId || releaseId === '' || isCreateReleasePage) {
@@ -235,28 +229,6 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         }
 
         const initialData: ReleaseFormStoreData = {
-            // id: releaseData.id,
-            // primaryGenreId: releaseData.primaryGenreId,
-            // primaryGenre: releaseData.primaryGenre,
-            // subGenreId: releaseData.subGenreId,
-            // subGenre: releaseData.subGenre,
-            // labelId: releaseData.labelId,
-            // label: releaseData.label,
-            // title: releaseData.title,
-            // version: releaseData.version,
-            // type: releaseData.type as RELEASES_TYPE,
-            // releaseArtists: releaseData.releaseArtists,
-            // pLineOwner: releaseData.pLineOwner,
-            // cLineOwner: releaseData.cLineOwner,
-            // catalogId: releaseData.catalogId,
-            // upc: releaseData.upc,
-            // isVariousArtist: releaseData.isVariousArtist,
-            // creatorId: '',
-            // modifierId: '',
-            // status: RELEASES_STATUS.DRAFT,
-            // tracks: [],
-            // createdAt: '',
-            // updatedAt: null,
             ...releaseData,
         };
 
@@ -272,7 +244,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                 className="flex h-full flex-1 flex-col overflow-y-auto"
             >
                 <div className="sticky top-0 z-10 bg-white">
-                    <ReleaseDetailHeader isScrolled={headerIsScrolled} />
+                    <ReleaseDetailHeader isScrolled={isScrolled} />
                     <div className="px-4">
                         <Tabs
                             className="tab-release-detail !pt-0"

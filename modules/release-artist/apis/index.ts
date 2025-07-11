@@ -1,7 +1,10 @@
 import axiosAuth from '@/api/axios-auth';
 import { DetailResponse } from '@/types/api';
 import { ReleaseArtist } from '../types';
-import { CreateReleaseArtistPayload } from '../types/payload';
+import {
+    CreateReleaseArtistPayload,
+    UpdateReleaseArtistPayload,
+} from '../types/payload';
 
 export const releaseArtistApi = {
     createReleaseArtist: (payload: CreateReleaseArtistPayload) => {
@@ -11,7 +14,17 @@ export const releaseArtistApi = {
         );
     },
 
-    deleteReleaseArtist: (id: string) => {
+    updateReleaseArtist: (
+        id: ReleaseArtist['id'],
+        payload: UpdateReleaseArtistPayload
+    ) => {
+        return axiosAuth.put<DetailResponse<ReleaseArtist>>(
+            `/release-artists/${id}`,
+            payload
+        );
+    },
+
+    deleteReleaseArtist: (id: ReleaseArtist['id']) => {
         return axiosAuth.delete(`/release-artists/${id}`);
     },
 };

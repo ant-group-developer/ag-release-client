@@ -306,7 +306,8 @@
         "dimensions": "Dimensions",
         "validation": {
             "mustBeLessThanMB": "Image must be less than {value} MB",
-            "supportImageFormat": "Support image formats {value}"
+            "supportImageFormat": "Support image formats {value}",
+            "mustBeMinWidth": "image minimum of {value}px wide"
         }
     },
     "document": {

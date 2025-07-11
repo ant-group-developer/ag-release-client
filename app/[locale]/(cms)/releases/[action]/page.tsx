@@ -1,11 +1,10 @@
 'use client';
-import AppConfirm from '@/components/ui/modal/confirm-modal';
 import useModalStore from '@/hooks/use-modal';
-import AddArtistModal from '@/modules/artist/components/modal/add-artist';
 import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
 import { TYPE_MODAL_ARTIST } from '@/modules/artist/enum';
 import LabelFormModal from '@/modules/labels/components/modal/label-form';
 import { TYPE_MODAL_LABEL } from '@/modules/labels/enum';
+import AddReleaseArtistModal from '@/modules/release-artist/components/modal/release-artist-modal';
 import ReleaseDetailForm from '@/modules/release-detail/release-detail-form';
 import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
@@ -22,43 +21,11 @@ export default function CoreDetailCreate() {
     const dataEdit = useModalStore((state) => state.dataEdit);
 
     const handleRemoveArtistList = (artistId: string) => {
-        const newArtistList = formValues?.artists?.filter(
-            (artist: any) => artist.id !== artistId
-        );
-        setFormValues({ ...formValues, artists: newArtistList });
-        closeModal();
-    };
-
-    const handleAddArtistRelease = (values: any) => {
-        const isArtistEditModal =
-            typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST;
-        try {
-            const newArtistData = {
-                name: values.name,
-                role: values.role,
-                id: values.name,
-            };
-            const releaseArtists = formValues.artists || [];
-
-            let updatedArtists;
-
-            if (isArtistEditModal) {
-                updatedArtists = releaseArtists.map((artist: any) =>
-                    artist.name === dataEdit?.name
-                        ? { ...artist, ...newArtistData }
-                        : artist
-                );
-            } else {
-                updatedArtists = [...releaseArtists, newArtistData];
-            }
-
-            setFormValues({
-                ...formValues,
-                artists: updatedArtists,
-            });
-        } catch (error) {
-            console.error('Validation failed:', error);
-        }
+        // const newArtistList = formValues?.artists?.filter(
+        //     (artist: any) => artist.id !== artistId
+        // );
+        // setFormValues({ ...formValues, artists: newArtistList });
+        // closeModal();
     };
 
     useEffect(() => {
@@ -71,16 +38,15 @@ export default function CoreDetailCreate() {
 
             {(typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST ||
                 typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST) && (
-                <AddArtistModal
-                    isSetMainArtist={formValues?.artists?.length === 0}
-                    onSubmit={handleAddArtistRelease}
+                <AddReleaseArtistModal
+                    isSetMainArtist={formValues?.releaseArtists?.length === 0}
                 />
             )}
 
             {typeModal === TYPE_MODAL_ARTIST.CREATE && <ArtistFormModal />}
             {typeModal === TYPE_MODAL_LABEL.CREATE && <LabelFormModal />}
 
-            {typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST && (
+            {/* {typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST && (
                 <AppConfirm
                     open
                     modalTitle="Xóa nghệ sĩ"
@@ -88,7 +54,7 @@ export default function CoreDetailCreate() {
                     onCancel={closeModal}
                     onOk={() => handleRemoveArtistList(dataEdit.id)}
                 />
-            )}
+            )} */}
         </div>
     );
 }

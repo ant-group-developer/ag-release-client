@@ -1,6 +1,7 @@
 import { FileType, getBase64 } from '@/helpers/common';
 import { showNotification } from '@/helpers/messages-helper';
 import { Image, Upload, UploadFile, UploadProps } from 'antd';
+import type { RcFile } from 'antd/es/upload/interface';
 import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -9,12 +10,14 @@ type Props = UploadProps & {
     value?: any;
     placeholder?: string;
     maxSizeMB?: number;
+    minWidth?: number;
 };
 
 export default function ImageListUpload({
     placeholder,
     value,
     maxSizeMB = 5,
+    minWidth,
     ...props
 }: Props) {
     const messages = useTranslations();
@@ -24,7 +27,7 @@ export default function ImageListUpload({
     const fileList = value?.fileList || [];
     const containerRef = useRef<HTMLDivElement>(null);
 
-    function beforeUpload(file: File) {
+    function beforeUpload(file: RcFile, _fileList: RcFile[]) {
         const isImage = file.type.startsWith('image/');
         if (!isImage) {
             showNotification('error', messages('validation.image'));
@@ -38,6 +41,35 @@ export default function ImageListUpload({
             );
             return Upload.LIST_IGNORE;
         }
+        if (minWidth) {
+            const imageUrl = URL.createObjectURL(file);
+            const img = new window.Image();
+
+            return new Promise<boolean | typeof Upload.LIST_IGNORE>(
+                (resolve) => {
+                    img.onload = () => {
+                        URL.revokeObjectURL(imageUrl);
+                        if (img.width < minWidth) {
+                            showNotification(
+                                'error',
+                                messages('image.validation.mustBeMinWidth', {
+                                    value: minWidth,
+                                })
+                            );
+                            resolve(Upload.LIST_IGNORE);
+                        } else {
+                            resolve(false);
+                        }
+                    };
+                    img.onerror = () => {
+                        showNotification('error', messages('validation.image'));
+                        resolve(Upload.LIST_IGNORE);
+                    };
+                    img.src = imageUrl;
+                }
+            );
+        }
+
         return false;
     }
 
@@ -98,7 +130,7 @@ export default function ImageListUpload({
         <div ref={containerRef}>
             <Upload
                 listType="picture-card"
-                multiple
+                // multiple
                 {...props}
                 fileList={fileList}
                 onPreview={handlePreview}

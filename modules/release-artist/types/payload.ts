@@ -3,3 +3,6 @@ export interface CreateReleaseArtistPayload {
     artistId: string;
     releaseId: string;
 }
+
+export interface UpdateReleaseArtistPayload
+    extends Partial<CreateReleaseArtistPayload> {}

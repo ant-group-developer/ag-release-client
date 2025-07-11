@@ -186,4 +186,9 @@ export const QUERY_KEY = {
         GET_LIST: 'GET_LIST_TIMEZONE',
         GET_DETAIL: 'GET_DETAIL_TIMEZONE',
     },
+    RELEASE_ARTIST: {
+        KEY: 'RELEASE_ARTIST',
+        GET_LIST: 'GET_LIST_RELEASE_ARTIST',
+        GET_DETAIL: 'GET_DETAIL_RELEASE_ARTIST',
+    },
 };
