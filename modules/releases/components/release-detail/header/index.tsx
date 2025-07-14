@@ -84,7 +84,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
 
     useEffect(() => {
         form.setFieldsValue({
-            thumbnail: formValues.coverArtThumbnails
+            thumbnail: formValues.coverArtThumbnails?.original
                 ? {
                       fileList: [
                           {
@@ -135,7 +135,6 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                         //         isScrolled,
                                         // }
                                     )}
-                                    
                                     accept="image/*"
                                     maxCount={1}
                                     minWidth={1400}

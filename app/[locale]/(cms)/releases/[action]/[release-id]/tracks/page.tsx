@@ -1,8 +1,7 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import useModalStore from '@/hooks/use-modal';
-import AddArtistModal from '@/modules/release-artist/components/modal/release-artist-modal';
-import AudioPlayer from '@/modules/releases/components/release-detail/release-tracks/audio-player';
+import ReleaseArtistModal from '@/modules/release-artist/components/modal/release-artist-modal';
 import AddNewTrackModal from '@/modules/releases/components/release-detail/release-tracks/modal/add-new-track-modal';
 import ReleaseTracksTable from '@/modules/releases/components/release-detail/release-tracks/table';
 import {
@@ -110,8 +109,6 @@ export default function Tracks() {
                 loading={isLoading}
             />
 
-            <AudioPlayer />
-
             {typeModal === TYPE_MODAL_RELEASE.ADD_TRACK && (
                 <AddNewTrackModal open onAddTracks={handleAddTracks} />
             )}
@@ -119,7 +116,7 @@ export default function Tracks() {
             {(typeModal === TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.ADD_ARTIST ||
                 typeModal ===
                     TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.EDIT_ARTIST) && (
-                <AddArtistModal isSetMainArtist />
+                <ReleaseArtistModal isSetMainArtist />
             )}
 
             {typeModal ===

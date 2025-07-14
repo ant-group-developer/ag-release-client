@@ -147,7 +147,7 @@ a {
 .release-detail-header-upload .ant-upload,
 .release-detail-header-upload .ant-upload-list-picture-card,
 .release-detail-header-upload .ant-upload-list-item-container {
-    @apply !size-full !rounded-lg;
+    @apply !rounded-lg;
 }
 
 .release-detail-header-upload

@@ -299,10 +299,10 @@ export default function ReleaseTracksTable({
                 columns={columns}
                 rowClassName={() => 'group'}
                 onDragEnd={handleDragEnd}
-                // expandable={{
-                //     expandedRowRender,
-                //     expandedRowClassName: () => '!z-0 custom-track-expanded',
-                // }}
+                expandable={{
+                    expandedRowRender,
+                    expandedRowClassName: () => '!z-0 custom-track-expanded',
+                }}
                 scroll={{ x: 'max-content' }}
             />
         </div>

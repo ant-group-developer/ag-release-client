@@ -106,9 +106,12 @@ export default function ReleaseDetailForm() {
     const releaseArtist = formValues.releaseArtists || [];
 
     const handleNext = async (data: any) => {
-        console.log('🚀 ~ handleNext ~ data:', data);
-        // setFormValues(data as Partial<ReleaseFormValuesData>);
-        // router.push('/releases/detail/123456/tracks');
+        router.push(
+            getReleaseDetailTabRoute(
+                formValues.id as string,
+                RELEASES_TABS.TRACKS
+            )
+        );
     };
     const handleFormError = (errors: any) => {};
     const handleApplyAllTracks = (checked: boolean, artist: ArtistData) => {
@@ -199,17 +202,6 @@ export default function ReleaseDetailForm() {
         }, 500),
         [formValues.id]
     );
-
-    // const debouncedSetFormValues = useMemo(
-    //     () =>
-    //         debounce((values: ReleaseDetailSchema) => {
-    //             setFormValues({
-    //                 ...formValues,
-    //                 ...(values as Partial<ReleaseFormValuesData>),
-    //             });
-    //         }, 300),
-    //     [setFormValues, formValues.artists]
-    // );
 
     useEffect(() => {
         if (isCreateReleasePage) {
@@ -427,7 +419,7 @@ export default function ReleaseDetailForm() {
                             </div>
 
                             {!isVariousArtist && (
-                                <div className="grid grid-cols-2 gap-8">
+                                <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                                     {releaseArtist.map(
                                         (
                                             releaseArtist: ReleaseArtist,
@@ -784,11 +776,16 @@ export default function ReleaseDetailForm() {
                     </div>
                 </div>
 
-                {/* <div className="flex w-full justify-end">
-                    <Button type="primary" className="my-8" htmlType="submit">
+                <div className="flex w-full justify-end">
+                    <Button
+                        onClick={handleNext}
+                        disabled={isCreateReleasePage}
+                        type="primary"
+                        className="my-8"
+                    >
                         {messages('common.next')}
                     </Button>
-                </div> */}
+                </div>
             </form>
         </FormProvider>
     );
