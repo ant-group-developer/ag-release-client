@@ -2,14 +2,15 @@
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import useModalStore from '@/hooks/use-modal';
 import AddArtistModal from '@/modules/release-artist/components/modal/release-artist-modal';
-import AudioPlayer from '@/modules/release-detail/release-tracks/audio-player';
-import AddNewTrackModal from '@/modules/release-detail/release-tracks/modal/add-new-track-modal';
-import ReleaseTracksTable from '@/modules/release-detail/release-tracks/table';
+import AudioPlayer from '@/modules/releases/components/release-detail/release-tracks/audio-player';
+import AddNewTrackModal from '@/modules/releases/components/release-detail/release-tracks/modal/add-new-track-modal';
+import ReleaseTracksTable from '@/modules/releases/components/release-detail/release-tracks/table';
 import {
     TYPE_MODAL_RELEASE,
     TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST,
 } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { Key, useState } from 'react';
 
 export default function Tracks() {
@@ -19,6 +20,10 @@ export default function Tracks() {
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const dataEdit = useModalStore((state) => state.dataEdit);
     const closeModal = useModalStore((state) => state.closeModal);
+
+    const { tracksData, isLoading } = useGetListTracks({
+        releaseId: formValues?.id as string,
+    });
 
     const handleRowSelection = (selectedRowKeys: Key[]) => {
         setSelectedRow(selectedRowKeys);
@@ -99,9 +104,10 @@ export default function Tracks() {
     return (
         <div>
             <ReleaseTracksTable
-                dataSource={formValues?.tracks || []}
+                dataSource={tracksData?.items}
                 rowSelection={rowSelection}
                 handleRemoveTrack={handleRemoveTrack}
+                loading={isLoading}
             />
 
             <AudioPlayer />
@@ -113,7 +119,7 @@ export default function Tracks() {
             {(typeModal === TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.ADD_ARTIST ||
                 typeModal ===
                     TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.EDIT_ARTIST) && (
-                <AddArtistModal onSubmit={handleAddArtistTrack} />
+                <AddArtistModal isSetMainArtist />
             )}
 
             {typeModal ===

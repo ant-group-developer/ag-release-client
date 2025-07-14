@@ -1,4 +1,3 @@
-import { RELEASES_STATUS, RELEASES_TYPE } from '@/modules/releases/enums';
 import { AudioFileBucket } from '@/modules/upload/types/data';
 import { CommonAttribute, CommonParams } from '@/types/api';
 
@@ -53,11 +52,5 @@ export interface TrackData extends CommonAttribute {
 }
 
 export interface TrackDataFilter extends CommonParams {
-    type?: RELEASES_TYPE;
-    status?: RELEASES_STATUS;
-    startDateCreated?: string;
-    endDateCreated?: string;
-    startDateRelease?: string;
-    endDateRelease?: string;
-    genres?: string;
+    releaseId?: string;
 }

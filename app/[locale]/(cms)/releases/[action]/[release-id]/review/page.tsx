@@ -1,7 +1,7 @@
 'use client';
-import MetadataInfo from '@/modules/release-detail/release-review/metadata-info';
-import ReviewProgress from '@/modules/release-detail/release-review/review-progress';
-import TracksInfo from '@/modules/release-detail/release-review/tracks-info/page';
+import MetadataInfo from '@/modules/releases/components/release-detail/release-review/metadata-info';
+import ReviewProgress from '@/modules/releases/components/release-detail/release-review/review-progress';
+import TracksInfo from '@/modules/releases/components/release-detail/release-review/tracks-info/page';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useTranslations } from 'next-intl';
 

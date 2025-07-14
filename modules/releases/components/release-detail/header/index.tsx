@@ -129,12 +129,13 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                 <ImageListUpload
                                     disabled={isCreateReleasePage}
                                     className={cn(
-                                        'release-detail-header-upload size-28 !rounded-lg !border-0 !p-0 transition-all duration-300',
-                                        {
-                                            'size-14 transition-all duration-300':
-                                                isScrolled,
-                                        }
+                                        'release-detail-header-upload size-28 !rounded-lg !border-0 !p-0 transition-all duration-300'
+                                        // {
+                                        //     'size-14 transition-all duration-300':
+                                        //         isScrolled,
+                                        // }
                                     )}
+                                    
                                     accept="image/*"
                                     maxCount={1}
                                     minWidth={1400}

@@ -8,17 +8,26 @@ import { useTranslations } from 'next-intl';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import WaveAudioUpload from '@/components/ui/input/wave-audio-upload';
 import { TYPE_UPLOAD_BUCKET } from '@/enums/common';
-import { getPeakData } from '@/helpers/common';
+import extractAudioMetadata, { getPeakData } from '@/helpers/common';
 import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useCreateTrackDraft } from '@/modules/tracks/hooks/use-create-track-draft';
 import { TrackData } from '@/modules/tracks/types';
+import { trackPayload } from '@/modules/tracks/types/payload';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
-import { CreateBucketFile } from '@/modules/upload/types/data';
+import { AudioFileBucket, CreateBucketFile } from '@/modules/upload/types/data';
+import { CreateVariables } from '@/types/api';
 type Props = {
     onAddTracks: (tracks: TrackData[]) => void;
 } & Omit<AppModalProps, 'children'>;
 
+interface TracksPayload {
+    title: string;
+    releaseId: string;
+    audioFileDraft: AudioFileBucket;
+    key: string;
+}
 export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
     const messages = useTranslations();
     const isLoading = useLoading();
@@ -28,13 +37,18 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
     const formValues = useReleaseFormStore((state) => state.formValues);
 
     const { isActive, active, deActive } = useActive();
+    const { createTrackDraft } = useCreateTrackDraft();
 
     const onFinish = async () => {
         try {
+            active();
             const values = await form.validateFields();
             const files = values.tracks?.fileList || [];
 
-            const a: { file: File; key: string }[] = [];
+            const tracksPayload: TracksPayload[] = [];
+
+            // temp for handle store file and key
+            const temp: { file: any; key: string }[] = [];
 
             const newTracksPromises = files.map(
                 async (file: any, index: number) => {
@@ -52,9 +66,9 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                         songDuration = duration;
                     }
 
-                    // const metadata = await extractAudioMetadata(
-                    //     file.originFileObj
-                    // );
+                    const metadata = await extractAudioMetadata(
+                        file.originFileObj
+                    );
 
                     const trackInfor: CreateBucketFile = {
                         uploadPurpose: TYPE_UPLOAD_BUCKET.TRACK,
@@ -64,11 +78,33 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                             extension: fileOriginal.name.split('.').pop(),
                             fileSize: file.size,
                         },
-                        key: `${fileOriginal.name}-${index}`,
+                        key: `track-${index}`,
                     };
-                    a.push({
+
+                    tracksPayload.push({
+                        title:
+                            fileOriginal.name.lastIndexOf('.') !== -1
+                                ? fileOriginal.name.substring(
+                                      0,
+                                      fileOriginal.name.lastIndexOf('.')
+                                  )
+                                : fileOriginal.name,
+                        releaseId: formValues.id as string,
+                        audioFileDraft: {
+                            sampleRate: metadata.sampleRate.toString(),
+                            bitDepth: metadata.bitDepth,
+                            duration: metadata.duration,
+                            bitrate: metadata.bitrate.toString(),
+                            trackId: null,
+                            fileId: null,
+                            peakId: null,
+                        },
+                        key: `track-${index}`,
+                    });
+
+                    temp.push({
                         file: file,
-                        key: `${fileOriginal.name}-${index}`,
+                        key: `track-${index}`,
                     });
 
                     const peakJson = JSON.stringify(peakData);
@@ -91,11 +127,11 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                             extension: 'json',
                             fileSize: peakFile.size,
                         },
-                        key: `${peakFile.name}-${index}`,
+                        key: `peak-${index}`,
                     };
-                    a.push({
+                    temp.push({
                         file: peakFile,
-                        key: `${peakFile.name}-${index}`,
+                        key: `peak-${index}`,
                     });
 
                     return [trackInfor, peakInfor];
@@ -104,13 +140,19 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
 
             const newTracks = (await Promise.all(newTracksPromises)).flat();
 
+            // create bucket
             const response = await bucketApi.createBuckets({
-                createBucketDtos: newTracks,
+                bucketDtos: newTracks,
             });
 
+            // Put file into bucket
             const uploadPromises = response.data.map(async (item: any) => {
-                const matchedFile = a.find((aItem) => aItem.key === item.key);
+                const matchedFile = temp.find((i) => {
+                    return item.key.includes(i.key);
+                });
                 if (matchedFile) {
+                    console.log(matchedFile);
+
                     try {
                         const uploadResponse = await fetch(item.urlUpload, {
                             method: 'PUT',
@@ -119,7 +161,9 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                                     matchedFile.file.type ||
                                     'application/octet-stream',
                             },
-                            body: matchedFile.file,
+                            body:
+                                matchedFile.file.originFileObj ??
+                                matchedFile.file,
                         });
 
                         if (!uploadResponse.ok) {
@@ -127,25 +171,47 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                                 `Failed to upload file ${matchedFile.key}. Please try again later.`
                             );
                         }
-
-                        console.log(
-                            `✅ Successfully uploaded: ${matchedFile.key}`
-                        );
                     } catch (uploadError) {
-                        console.error(
-                            `❌ Failed to upload ${matchedFile.key}:`,
-                            uploadError
-                        );
                         throw uploadError;
+                    }
+                }
+
+                if (item.key.startsWith('peak-')) {
+                    const index = item.key.split('-')[1]; // Lấy index từ "peak-0"
+                    const track = tracksPayload.find(
+                        (tp) => tp.key === `track-${index}`
+                    );
+                    if (track) {
+                        track.audioFileDraft.peakId = item.fileId;
+                    }
+                } else if (item.key.startsWith('track-')) {
+                    const track = tracksPayload.find(
+                        (tp) => tp.key === item.key
+                    );
+                    if (track) {
+                        track.audioFileDraft.fileId = item.fileId;
                     }
                 }
             });
 
             await Promise.all(uploadPromises);
 
-            console.log('🚀 ~ onFinish ~ response:', response);
-            onAddTracks?.(newTracks);
-            closeModal();
+            const fileIdsSubmit = response.data.map((item: any) => item.fileId);
+            // submit file
+            await bucketApi.submit({ ids: fileIdsSubmit });
+
+            const variables: CreateVariables<trackPayload[]> = {
+                payload: tracksPayload,
+                onSuccess: () => {
+                    deActive();
+                    closeModal();
+                },
+                onError: () => {
+                    deActive();
+                },
+            };
+
+            createTrackDraft(variables);
         } catch (error) {
             showNotification(
                 'error',
@@ -153,7 +219,6 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
             );
         }
     };
-
     return (
         <AppModal
             {...props}

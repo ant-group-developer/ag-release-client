@@ -4,7 +4,6 @@ import ErrorText from '@/components/ui/text/error-text';
 import { timeStringToSeconds } from '@/helpers/common';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { TrackData } from '@/modules/tracks/types';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { Input, Select, TimePicker } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
@@ -41,25 +40,25 @@ type Props = {
 
 export default function AudioSpecifications({ trackData }: Props) {
     const messages = useTranslations();
-    const { fileData } = trackData;
-    const metadata = fileData?.metadata;
+    // const { fileData } = trackData;
+    // const metadata = fileData?.metadata;
     const formValues = useReleaseFormStore((state) => state.formValues);
     const thisTrackData = formValues?.tracks?.find(
         (track: TrackData) => track.id === trackData.id
     );
 
     const formMethods = useForm<AudioSpecificationsSchema>({
-        defaultValues: {
-            fileName: fileData?.fileName,
-            countryRecording: thisTrackData?.countryRecording,
-            previewTrack: '',
-            // hookTrack: '00:00:00',
-            recordingType: thisTrackData?.recordingType,
-        },
-        mode: 'onChange',
-        resolver: zodResolver(
-            audioSpecificationsSchema(messages, trackData.songInfo.duration)
-        ),
+        // defaultValues: {
+        //     fileName: fileData?.fileName,
+        //     countryRecording: thisTrackData?.countryRecording,
+        //     previewTrack: '',
+        //     // hookTrack: '00:00:00',
+        //     recordingType: thisTrackData?.recordingType,
+        // },
+        // mode: 'onChange',
+        // resolver: zodResolver(
+        //     audioSpecificationsSchema(messages, trackData.songInfo.duration)
+        // ),
     });
 
     const {
@@ -102,9 +101,9 @@ export default function AudioSpecifications({ trackData }: Props) {
         });
     }, [watchedAllFields]);
 
-    useEffect(() => {
-        formMethods.trigger();
-    }, [fileData, trackData, formMethods]);
+    // useEffect(() => {
+    //     formMethods.trigger();
+    // }, [fileData, trackData, formMethods]);
 
     return (
         <FormProvider {...formMethods}>
@@ -267,7 +266,7 @@ export default function AudioSpecifications({ trackData }: Props) {
                         />
                     </div>
                 </div>
-
+                {/* 
                 <div className="grid grid-cols-7 rounded-md border p-2">
                     <div>
                         <p className="font-bold">Codec</p>
@@ -297,7 +296,7 @@ export default function AudioSpecifications({ trackData }: Props) {
                         <p className="font-bold">MQS</p>
                         <p className="text-xs">{metadata?.mqs}</p>
                     </div>
-                </div>
+                </div> */}
             </form>
         </FormProvider>
     );

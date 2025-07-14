@@ -51,15 +51,15 @@ export default function OtherMetadataForm({ trackData }: Props) {
 
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const formMethods = useForm<OtherMetadataSchema>({
-        defaultValues: {
-            genres: trackData.genres ?? '',
-            subGenres: trackData?.subGenres,
-            isSensitiveContent: trackData?.isSensitiveContent ?? false,
-            countryLanguage: trackData?.countryLanguage ?? '',
-            metadataLanguage: trackData?.metadataLanguage ?? '',
-            lyrics: trackData?.lyrics,
-            pLine: trackData?.pLine ?? { year: '', name: '' },
-        },
+        // defaultValues: {
+        //     genres: trackData.genres ?? '',
+        //     subGenres: trackData?.subGenres,
+        //     isSensitiveContent: trackData?.isSensitiveContent ?? false,
+        //     countryLanguage: trackData?.countryLanguage ?? '',
+        //     metadataLanguage: trackData?.metadataLanguage ?? '',
+        //     lyrics: trackData?.lyrics,
+        //     pLine: trackData?.pLine ?? { year: '', name: '' },
+        // },
         resolver: zodResolver(otherMetadataSchema(messages)),
         mode: 'onChange',
     });

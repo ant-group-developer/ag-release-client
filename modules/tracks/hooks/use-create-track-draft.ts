@@ -2,20 +2,20 @@ import { showNotification } from '@/helpers/messages-helper';
 import { CreateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
-import { artistRoleApi } from '../apis';
-import { artistRoleQueryKeys } from '../constants/query-keys';
-import { CreateArtistRolePayload } from '../types/payload';
+import { trackApi } from '../apis';
+import { trackQueryKeys } from '../constants/query-keys';
+import { trackPayload } from '../types/payload';
 
-export const useCreateArtistRole = () => {
+export const useCreateTrackDraft = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
 
     const onSuccess = (
         data: any,
-        { onSuccess }: CreateVariables<CreateArtistRolePayload>
+        { onSuccess }: CreateVariables<trackPayload[]>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...artistRoleQueryKeys.getList],
+            queryKey: [...trackQueryKeys.getList],
         });
 
         const responseMessages = messages(data?.data?.messageCode);
@@ -26,7 +26,7 @@ export const useCreateArtistRole = () => {
 
     const onError = (
         data: any,
-        { onError }: CreateVariables<CreateArtistRolePayload>
+        { onError }: CreateVariables<trackPayload[]>
     ) => {
         const responseMessages = messages(data?.response?.data?.messageCode);
 
@@ -36,22 +36,19 @@ export const useCreateArtistRole = () => {
             responseMessages || messages('common.somethingWentWrong')
         );
     };
-
     const mutation = useMutation({
-        mutationFn: ({ payload }: CreateVariables<CreateArtistRolePayload>) =>
-            artistRoleApi.createArtistRole(payload),
+        mutationFn: ({ payload }: CreateVariables<trackPayload[]>) =>
+            trackApi.createTrackDraft({ trackDrafts: payload }),
         onSuccess,
         onError,
     });
 
-    const createArtistRole = (
-        variables: CreateVariables<CreateArtistRolePayload>
-    ) => {
-        mutation.mutate(variables);
+    const createTrackDraft = (variables: CreateVariables<trackPayload[]>) => {
+        return mutation.mutate(variables);
     };
 
     return {
-        createArtistRole,
+        createTrackDraft,
         ...mutation,
     };
 };

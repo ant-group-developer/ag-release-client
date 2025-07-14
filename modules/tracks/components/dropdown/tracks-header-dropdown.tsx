@@ -40,15 +40,15 @@ export default function TracksHeaderDropdown({
         {
             label: messages('common.dateCreated'),
             value: TYPE_FILTER.DATE_CREATED,
-            visible: !dataFilter.startDateCreated && !dataFilter.endDateCreated,
+            visible: !dataFilter.startCreatedAt && !dataFilter.endCreatedAt,
             onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_CREATED),
         },
-        {
-            label: messages('common.dateRelease'),
-            value: TYPE_FILTER.DATE_RELEASE,
-            visible: !dataFilter.startDateRelease && !dataFilter.endDateRelease,
-            onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_RELEASE),
-        },
+        // {
+        //     label: messages('common.dateRelease'),
+        //     value: TYPE_FILTER.DATE_RELEASE,
+        //     visible: !dataFilter.startDateRelease && !dataFilter.endDateRelease,
+        //     onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_RELEASE),
+        // },
         {
             label: messages('common.search'),
             value: TYPE_FILTER.KEYWORD,
@@ -61,12 +61,12 @@ export default function TracksHeaderDropdown({
         //     visible: !dataFilter.type,
         //     onClick: () => handleChangeTypeFilter(TYPE_FILTER.TYPE),
         // },
-        {
-            label: messages('common.genres'),
-            value: TYPE_FILTER.GENRES,
-            visible: !dataFilter.genres,
-            onClick: () => handleChangeTypeFilter(TYPE_FILTER.GENRES),
-        },
+        // {
+        //     label: messages('common.genres'),
+        //     value: TYPE_FILTER.GENRES,
+        //     visible: !dataFilter.genres,
+        //     onClick: () => handleChangeTypeFilter(TYPE_FILTER.GENRES),
+        // },
     ];
 
     const options = dropdownItems.filter(

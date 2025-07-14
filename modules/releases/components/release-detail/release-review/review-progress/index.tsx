@@ -2,7 +2,6 @@ import { LabelForm } from '@/components/ui/label/labelForm';
 import RegionSelect from '@/components/ui/select/region-select';
 import TimezoneSelect from '@/components/ui/select/timezone-select';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { fakeDspData } from '@/modules/dashboard/constants/mockData';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
@@ -114,16 +113,13 @@ export default function ReviewProgress({}: Props) {
     };
 
     const calculateDistributionProgress = () => {
-        if (!formValues) return { completed: 0, total: 0 };
-
-        const totalPlatforms = fakeDspData.length;
-
-        const selectedPlatform = formValues.platforms?.length || 0;
-
-        return {
-            completed: selectedPlatform,
-            total: totalPlatforms,
-        };
+        // if (!formValues) return { completed: 0, total: 0 };
+        // const totalPlatforms = fakeDspData.length;
+        // const selectedPlatform = formValues.platforms?.length || 0;
+        // return {
+        //     completed: selectedPlatform,
+        //     total: totalPlatforms,
+        // };
     };
 
     const coreInfo = calculateCoreInfoProgress();
@@ -145,12 +141,12 @@ export default function ReviewProgress({}: Props) {
             : Math.round((scheduleInfo.completed / scheduleInfo.total) * 100);
 
     const distributionInfo = calculateDistributionProgress();
-    const distributionPercent =
-        distributionInfo.total === 0
-            ? 0
-            : Math.round(
-                  (distributionInfo.completed / distributionInfo.total) * 100
-              );
+    // const distributionPercent =
+    //     distributionInfo.total === 0
+    //         ? 0
+    //         : Math.round(
+    //               (distributionInfo.completed / distributionInfo.total) * 100
+    //           );
 
     // Tính toán tổng phần trăm hoàn thành
     const totalPercent = Math.round(
@@ -231,11 +227,11 @@ export default function ReviewProgress({}: Props) {
                     <LabelForm htmlFor="timezone" required label="timezone" />
 
                     <TimezoneSelect
-                        value={
-                            formValues?.timezone == ''
-                                ? undefined
-                                : formValues?.timezone
-                        }
+                        // value={
+                        //     formValues?.timezone == ''
+                        //         ? undefined
+                        //         : formValues?.timezone
+                        // }
                         id="timezone"
                         className="w-full"
                         disabled
@@ -253,7 +249,7 @@ export default function ReviewProgress({}: Props) {
                     <RegionSelect
                         className="w-full"
                         id="territoryType"
-                        value={formValues?.territoryType}
+                        // value={formValues?.territoryType}
                         multiple
                         allowClear
                         maxTagCount="responsive"
@@ -272,4 +268,6 @@ export default function ReviewProgress({}: Props) {
             </div>
         </div>
     );
+
+    return <div>Bảo trì</div>;
 }

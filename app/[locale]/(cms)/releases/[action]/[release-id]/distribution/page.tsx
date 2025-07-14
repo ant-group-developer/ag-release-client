@@ -14,9 +14,9 @@ import {
     DISTRIBUTION_STATUS,
 } from '@/modules/distribution/enum';
 import { DistributionDataFilter } from '@/modules/distribution/types';
-import DistributionHeader from '@/modules/release-detail/release-distribution/components/header';
-import DistributionStatus from '@/modules/release-detail/release-distribution/components/header-action/distribution-status';
-import DistributionTable from '@/modules/release-detail/release-distribution/components/table';
+import DistributionHeader from '@/modules/releases/components/release-detail/release-distribution/components/header';
+import DistributionStatus from '@/modules/releases/components/release-detail/release-distribution/components/header-action/distribution-status';
+import DistributionTable from '@/modules/releases/components/release-detail/release-distribution/components/table';
 import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { Button } from 'antd';
@@ -117,156 +117,6 @@ export default function Distribution({}: Props) {
 
     const handleRefresh = () => {};
 
-    // const facebookOptions = [
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>Claim Ad Earnings</span>
-    //                 <IconInfoTooltip title=" Quét tất cả video/câu chuyện sử dụng nhạc của bạn và bật kiếm tiền (nhận tiền bản quyền)" />
-    //             </p>
-    //         ),
-    //         value: 'Claim Ad Earnings',
-    //     },
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>Block</span>
-    //                 <IconInfoTooltip title="Quét tất cả video/câu chuyện sử dụng nhạc của bạn và chặn chúng." />
-    //             </p>
-    //         ),
-    //         value: 'Block',
-    //     },
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>Monitor</span>
-    //                 <IconInfoTooltip title="Quét tất cả video/câu chuyện sử dụng nhạc của bạn nhưng không bật kiếm tiền. Chỉ thu thập dữ liệu phân tích." />
-    //             </p>
-    //         ),
-    //         value: 'Monitor',
-    //     },
-    // ];
-
-    // const tiktokOptions = [
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>NoTiktokScanning</span>
-    //                 <IconInfoTooltip title="Không quét TikTok để tìm các video chứa nhạc của bạn vì bản thu này không đáp ứng đầy đủ các yêu cầu (xem Thuộc tính bản nhạc). Lưu ý rằng nhạc của bạn vẫn sẽ có sẵn để người dùng TikTok thêm vào video của họ." />
-    //             </p>
-    //         ),
-    //         value: 'NoTiktokScanning',
-    //     },
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>Block</span>
-    //                 <IconInfoTooltip title="Quét tất cả video/câu chuyện sử dụng nhạc của bạn và chặn chúng." />
-    //             </p>
-    //         ),
-    //         value: 'Block',
-    //     },
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>Monetize</span>
-    //                 <IconInfoTooltip title="Quét tất cả các video sử dụng nhạc của bạn và bật kiếm tiền cho chúng (nhận tiền bản quyền)." />
-    //             </p>
-    //         ),
-    //         value: 'Monitor',
-    //     },
-    // ];
-
-    // const youtubeOptions = [
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>Monetize in all countries</span>
-    //                 <IconInfoTooltip title="Quét tất cả các video sử dụng nhạc của bạn và bật kiếm tiền cho chúng (nhận tiền bản quyền)." />
-    //             </p>
-    //         ),
-    //         value: 'Monetize in all',
-    //     },
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>Track in all countries</span>
-    //                 <IconInfoTooltip title="Quét tất cả các video sử dụng nhạc của bạn nhưng không bật kiếm tiền. Chỉ thu thập dữ liệu phân tích về chúng." />
-    //             </p>
-    //         ),
-    //         value: 'rack in all countries',
-    //     },
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>Block in all countries</span>
-    //                 <IconInfoTooltip title="Quét tất cả các video sử dụng nhạc của bạn và chặn chúng." />
-    //             </p>
-    //         ),
-    //         value: 'Block in all countries',
-    //     },
-    // ];
-
-    // const amazonOptions = [
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>$0.6</span>
-    //                 <span>Back</span>
-    //             </p>
-    //         ),
-    //         value: 0.6,
-    //     },
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>$0.8</span>
-    //                 <span>Mid</span>
-    //             </p>
-    //         ),
-    //         value: 0.8,
-    //     },
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>$1.2</span>
-    //                 <span>Front</span>
-    //             </p>
-    //         ),
-    //         value: 1.2,
-    //     },
-    // ];
-
-    // const appleMusicOptions = [
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>$0.6</span>
-    //                 <span>Back</span>
-    //             </p>
-    //         ),
-    //         value: 0.6,
-    //     },
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>$0.8</span>
-    //                 <span>Mid</span>
-    //             </p>
-    //         ),
-    //         value: 0.8,
-    //     },
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>$1.2</span>
-    //                 <span>Front</span>
-    //             </p>
-    //         ),
-    //         value: 1.2,
-    //     },
-    // ];
-
     const dataTable = distributionData.filter((item) => {
         return selectedRow.includes(item.id);
     });
@@ -274,7 +124,7 @@ export default function Distribution({}: Props) {
     const handleDistribution = () => {
         setFormValues({
             ...formValues,
-            platforms: selectedRow as string[],
+            // platforms: selectedRow as string[],
         });
         closeModal();
         router.push(`/releases/detail/${releaseId}/review`);

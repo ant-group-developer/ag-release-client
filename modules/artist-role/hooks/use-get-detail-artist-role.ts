@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { artistRoleApi } from '../apis';
-import { ArtistRoleQueryKeys } from '../constants/query-keys';
+import { artistRoleQueryKeys } from '../constants/query-keys';
 import { ArtistRoleData } from '../types';
 
 export const useGetDetailArtistRole = (id: ArtistRoleData['id']) => {
     const { data, ...res } = useQuery({
-        queryKey: [...ArtistRoleQueryKeys.getDetail, id],
+        queryKey: [...artistRoleQueryKeys.getDetail, id],
         queryFn: () => artistRoleApi.getDetail(id),
     });
 

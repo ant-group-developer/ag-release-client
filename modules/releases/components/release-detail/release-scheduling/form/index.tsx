@@ -36,8 +36,8 @@ export default function ReleaseSchedulingForm({}: Props) {
     const formMethods = useForm<ReleaseSchedulingSchema>({
         defaultValues: {
             releaseDate: formValues?.releaseDate || '',
-            territoryType: formValues?.territoryType || [],
-            timezone: formValues?.timezone || '',
+            // territoryType: formValues?.territoryType || [],
+            // timezone: formValues?.timezone || '',
         },
         resolver: zodResolver(releaseSchedulingSchema(messages)),
         mode: 'onChange',

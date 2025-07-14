@@ -1,6 +1,6 @@
 'use client';
-import ReleaseSchedulingForm from '@/modules/release-detail/release-scheduling/form';
-import ReleaseSchedulingTable from '@/modules/release-detail/release-scheduling/table';
+import ReleaseSchedulingForm from '@/modules/releases/components/release-detail/release-scheduling/form';
+import ReleaseSchedulingTable from '@/modules/releases/components/release-detail/release-scheduling/table';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 
 export default function Schedule() {

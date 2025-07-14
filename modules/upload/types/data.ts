@@ -32,13 +32,13 @@ export interface AudioFileBucket {
     sampleRate: string;
     bitrate: string | null;
     bitDepth: number | null;
-    duration: number;
-    hook: number | null;
-    trackId: string;
-    fileId: string;
-    peakId: string;
-    file: string;
-    peak: string;
+    duration?: number;
+    hook?: number | null;
+    trackId?: string | null;
+    fileId?: string | null;
+    peakId?: string | null;
+    file?: string | null;
+    peak?: string | null;
 }
 
 export interface CreateBucketFile {

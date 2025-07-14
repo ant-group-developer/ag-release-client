@@ -5,7 +5,7 @@ import { TYPE_MODAL_ARTIST } from '@/modules/artist/enum';
 import LabelFormModal from '@/modules/labels/components/modal/label-form';
 import { TYPE_MODAL_LABEL } from '@/modules/labels/enum';
 import AddReleaseArtistModal from '@/modules/release-artist/components/modal/release-artist-modal';
-import ReleaseDetailForm from '@/modules/release-detail/release-detail-form';
+import ReleaseDetailForm from '@/modules/releases/components/release-detail/release-detail-form';
 import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useEffect } from 'react';

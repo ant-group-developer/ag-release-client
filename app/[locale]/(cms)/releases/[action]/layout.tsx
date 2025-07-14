@@ -4,8 +4,8 @@ import { getReleaseDetailTabRoute } from '@/helpers/link';
 import { showNotification } from '@/helpers/messages-helper';
 import useModalStore from '@/hooks/use-modal';
 import { Link, useRouter } from '@/i18n/routing';
-import ReleaseDetailHeader from '@/modules/release-detail/header';
-import RightSidebar from '@/modules/release-detail/right-sidebar';
+import ReleaseDetailHeader from '@/modules/releases/components/release-detail/header';
+import RightSidebar from '@/modules/releases/components/release-detail/right-sidebar';
 import { RELEASES_TABS, TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
 import {
     ReleaseFormStoreData,
@@ -183,15 +183,10 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             const scrollContainer = childrenRef.current;
             if (!scrollContainer) return;
 
-            console.log(
-                '🚀 ~ handleScroll ~ scrollTop:',
-                scrollContainer.scrollTop
-            );
-
             if (scrollContainer.scrollTop > 20) {
                 setIsScrolled(true);
             } else {
-                setIsScrolled(false);
+                // setIsScrolled(false);
             }
         };
 

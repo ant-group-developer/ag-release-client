@@ -3,7 +3,6 @@ import SortableTable, {
     SortableTableProps,
 } from '@/components/ui/table/sortable-table';
 import useModalStore from '@/hooks/use-modal';
-import { ArtistData } from '@/modules/artist/types';
 import { TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useTrackReadyStore } from '@/modules/releases/hooks/track-ready-store';
@@ -18,12 +17,6 @@ import AudioSpecifications from '../form/audio-specifications';
 import OtherMetadataForm from '../form/other-metadata-form';
 import TracksForm from '../form/track-form';
 import { TrackWaveform } from '../track-wave-form';
-
-type FormValidationStatus = {
-    trackForm: boolean;
-    metadataForm: boolean;
-    audioSpecsForm: boolean;
-};
 
 type Props = {
     handleRemoveTrack: (trackId: string) => void;
@@ -123,7 +116,7 @@ export default function ReleaseTracksTable({
             render: (value, record) => {
                 return (
                     <div className="flex flex-wrap gap-y-2">
-                        {record.artists.map((artist: ArtistData) => (
+                        {/* {record.artists.map((artist: ArtistData) => (
                             <Tag
                                 key={`${record.id}-${artist.id}`}
                                 closeIcon
@@ -137,7 +130,7 @@ export default function ReleaseTracksTable({
                             >
                                 {artist.name}
                             </Tag>
-                        ))}
+                        ))} */}
                         <Tag
                             key={`${record.id}-add-artist`}
                             className="border-dashed"
@@ -306,10 +299,10 @@ export default function ReleaseTracksTable({
                 columns={columns}
                 rowClassName={() => 'group'}
                 onDragEnd={handleDragEnd}
-                expandable={{
-                    expandedRowRender,
-                    expandedRowClassName: () => '!z-0 custom-track-expanded',
-                }}
+                // expandable={{
+                //     expandedRowRender,
+                //     expandedRowClassName: () => '!z-0 custom-track-expanded',
+                // }}
                 scroll={{ x: 'max-content' }}
             />
         </div>

@@ -373,7 +373,7 @@ function Dashboard({}: Props) {
                     </div>
                 </div>
 
-                <ListRelease data={fakeReleasesData.slice(0, 14)} />
+                <ListRelease data={[]} />
 
                 <ListNews />
             </div>

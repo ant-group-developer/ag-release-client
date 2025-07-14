@@ -13,7 +13,6 @@ import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
-import ArtistCard from '../../release-detail-form/artist-card';
 
 export const releaseTrackSchema = (messages: any) =>
     z.object({
@@ -45,8 +44,8 @@ export default function TracksForm({ trackData }: Props) {
             trackName: trackData.title ?? '',
             // artists: trackData.artists,
             isAddArtistsFromRelease: false,
-            trackOrigin: thisTrackData?.trackOrigin ?? '',
-            languageTrack: thisTrackData?.languageTrack ?? '',
+            // trackOrigin: thisTrackData?.trackOrigin ?? '',
+            // languageTrack: thisTrackData?.languageTrack ?? '',
         },
         resolver: zodResolver(releaseTrackSchema(messages)),
         mode: 'onChange',
@@ -122,9 +121,9 @@ export default function TracksForm({ trackData }: Props) {
                     ? {
                           ...track,
                           trackName: trackData.title,
-                          artists: trackData.artists,
+                          //   artists: trackData.artists,
                           isAddArtistsFromRelease: false,
-                          genres: trackData.genres,
+                          //   genres: trackData.genres,
                       }
                     : track
             ),
@@ -262,7 +261,7 @@ export default function TracksForm({ trackData }: Props) {
                             Thêm nghệ sĩ
                         </Button>
                         <div className="grid grid-cols-2 gap-4">
-                            {trackData.artists.map(
+                            {/* {trackData.artists.map(
                                 (artist: any, index: number) => (
                                     <ArtistCard
                                         key={index}
@@ -285,7 +284,7 @@ export default function TracksForm({ trackData }: Props) {
                                         index={index}
                                     />
                                 )
-                            )}
+                            )} */}
                         </div>
                     </div>
                 )}
