@@ -2,8 +2,6 @@ import Image from 'next/image';
 import { TrackData } from '../../types';
 
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { DATE_FORMAT } from '@/enums/common';
-import { formattedDate } from '@/helpers/common';
 import { Card, CardProps } from 'antd';
 import Meta from 'antd/es/card/Meta';
 type Props = CardProps & {
@@ -20,7 +18,7 @@ export default function GridCardTracks({ data, ...props }: Props) {
                     <Image
                         className="cursor-pointer overflow-hidden object-cover duration-300 hover:scale-110"
                         alt="example"
-                        src={data.thumbnail}
+                        src={data.picture ?? ''}
                         width={300}
                         height={300}
                     />
@@ -40,14 +38,14 @@ export default function GridCardTracks({ data, ...props }: Props) {
                 }
                 description={
                     <div className="flex justify-between font-medium">
-                        <span> {data.artists[0].name} </span>
+                        {/* <span> {data.artists[0].name} </span> */}
 
                         <p className="flex justify-between">
                             <span>
-                                {formattedDate(
+                                {/* {formattedDate(
                                     data.releaseDate,
                                     DATE_FORMAT.DATE_ONLY
-                                )}
+                                )} */}
                             </span>
                         </p>
                     </div>

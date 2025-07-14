@@ -1,16 +1,16 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import useModalStore from '@/hooks/use-modal';
-import AddArtistModal from '@/modules/artist/components/modal/add-artist';
-import AudioPlayer from '@/modules/release-detail/release-tracks/audio-player';
-import AddNewTrackModal from '@/modules/release-detail/release-tracks/modal/add-new-track-modal';
-import ReleaseTracksTable from '@/modules/release-detail/release-tracks/table';
+import AddArtistModal from '@/modules/release-artist/components/modal/release-artist-modal';
+import AudioPlayer from '@/modules/releases/components/release-detail/release-tracks/audio-player';
+import AddNewTrackModal from '@/modules/releases/components/release-detail/release-tracks/modal/add-new-track-modal';
+import ReleaseTracksTable from '@/modules/releases/components/release-detail/release-tracks/table';
 import {
     TYPE_MODAL_RELEASE,
     TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST,
 } from '@/modules/releases/enums';
-import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
-import { TrackData } from '@/modules/tracks/types';
+import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { Key, useState } from 'react';
 
 export default function Tracks() {
@@ -20,6 +20,10 @@ export default function Tracks() {
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const dataEdit = useModalStore((state) => state.dataEdit);
     const closeModal = useModalStore((state) => state.closeModal);
+
+    const { tracksData, isLoading } = useGetListTracks({
+        releaseId: formValues?.id as string,
+    });
 
     const handleRowSelection = (selectedRowKeys: Key[]) => {
         setSelectedRow(selectedRowKeys);
@@ -34,64 +38,7 @@ export default function Tracks() {
         });
     };
 
-    const handleAddTracks = (newTracks: any[]) => {
-        const artistsFromApplyAllTracks =
-            formValues?.artistsApplyAllTracks || [];
-
-        const currentTracks = formValues.tracks || [];
-        const normalizedTracks = currentTracks.map((track: TrackData) => {
-            if (!track.artists) {
-                return {
-                    ...track,
-                    artists: [...artistsFromApplyAllTracks],
-                };
-            }
-            return track;
-        });
-
-        const initialValueTrack: TrackData = {
-            id: '',
-            title: '',
-            trackName: '',
-            trackId: '',
-            genres: '',
-            labelName: '',
-            isrc: '',
-            creationDate: '',
-            releaseDate: '',
-            duration: 0,
-            thumbnail: '',
-            isSensitiveContent: false,
-            plays: 0,
-            fileName: '',
-            trackOrigin: '',
-            languageTrack: '',
-            countryLanguage: '',
-            metadataLanguage: '',
-            lyrics: '',
-            countryRecording: '',
-            recordingType: '',
-            songInfo: {
-                duration: 0,
-                peakData: [],
-            },
-            previewTrack: '',
-            territoryType: [],
-            artists: [...artistsFromApplyAllTracks],
-        };
-
-        const newTracksWithArtists = newTracks.map((track: TrackData) => {
-            return {
-                ...initialValueTrack,
-                ...track,
-            };
-        });
-
-        setFormValues({
-            ...formValues,
-            tracks: [...normalizedTracks, ...newTracksWithArtists],
-        });
-    };
+    const handleAddTracks = (newTracks: any[]) => {};
 
     const rowSelection = {
         selectedRow,
@@ -135,32 +82,32 @@ export default function Tracks() {
     };
 
     const handleRemoveArtistTrack = (values: any) => {
-        const { trackData, artist } = values;
-        const updatedTracks = formValues?.tracks?.map((track: TrackData) => {
-            if (track.id === trackData?.id) {
-                return {
-                    ...track,
-                    artists: track.artists?.filter(
-                        (item) => item.id !== artist.id
-                    ),
-                };
-            }
-            return track;
-        });
-
-        setFormValues({
-            ...formValues,
-            tracks: updatedTracks,
-        });
-        closeModal();
+        // const { trackData, artist } = values;
+        // const updatedTracks = formValues?.tracks?.map((track: TrackData) => {
+        //     if (track.id === trackData?.id) {
+        //         return {
+        //             ...track,
+        //             artists: track.artists?.filter(
+        //                 (item) => item.id !== artist.id
+        //             ),
+        //         };
+        //     }
+        //     return track;
+        // });
+        // setFormValues({
+        //     ...formValues,
+        //     tracks: updatedTracks,
+        // });
+        // closeModal();
     };
 
     return (
         <div>
             <ReleaseTracksTable
-                dataSource={formValues?.tracks || []}
+                dataSource={tracksData?.items}
                 rowSelection={rowSelection}
                 handleRemoveTrack={handleRemoveTrack}
+                loading={isLoading}
             />
 
             <AudioPlayer />
@@ -172,7 +119,7 @@ export default function Tracks() {
             {(typeModal === TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.ADD_ARTIST ||
                 typeModal ===
                     TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.EDIT_ARTIST) && (
-                <AddArtistModal onSubmit={handleAddArtistTrack} />
+                <AddArtistModal isSetMainArtist />
             )}
 
             {typeModal ===

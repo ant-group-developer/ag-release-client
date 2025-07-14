@@ -3,7 +3,7 @@ import { UpdateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { artistRoleApi } from '../apis';
-import { ArtistRoleQueryKeys } from '../constants/query-keys';
+import { artistRoleQueryKeys } from '../constants/query-keys';
 import { ArtistRoleData } from '../types';
 import { UpdateArtistRolePayload } from '../types/payload';
 
@@ -18,7 +18,7 @@ export const useUpdateArtistRole = () => {
         }: UpdateVariables<ArtistRoleData['id'], UpdateArtistRolePayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...ArtistRoleQueryKeys.getList],
+            queryKey: [...artistRoleQueryKeys.getList],
         });
 
         const responseMessages = messages(data?.data?.messageCode);

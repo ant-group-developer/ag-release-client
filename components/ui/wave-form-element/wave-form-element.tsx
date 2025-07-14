@@ -1,6 +1,6 @@
 'use client';
 import { SIZE_ICON_BIG } from '@/constants/common';
-import { convertSecondsToTime, parsePeakData } from '@/helpers/common';
+import { convertSecondsToTime } from '@/helpers/common';
 import { Button, Col, Row } from 'antd';
 import { CirclePause, CirclePlay } from 'lucide-react';
 import PropTypes from 'prop-types';
@@ -8,7 +8,7 @@ import Waveform from 'react-audio-waveform';
 // import { StyledSongItemDuration, StyledSongItemPlayback } from './index.styled';
 
 const WaveformElement = ({
-    peakData = '',
+    peakData = [0],
     songDuration = 0,
     playedTime = 0,
     playing = false,
@@ -16,7 +16,7 @@ const WaveformElement = ({
     handleSeeking = (value: any) => {},
 }) => {
     // const peaks = (peakData && peakData.split(';')) || [];
-    const peaks = parsePeakData(peakData);
+    // const peaks = parsePeakData(peakData);
 
     return (
         <Row align="middle" wrap={false}>
@@ -45,9 +45,9 @@ const WaveformElement = ({
             </Col>
             <Col flex="auto">
                 <div style={{ width: '100%', overflow: 'hidden' }}>
-                    {(peaks.length > 0 && (
+                    {(peakData.length > 0 && (
                         <Waveform
-                            peaks={peaks}
+                            peaks={peakData}
                             height={40}
                             pos={playedTime}
                             duration={songDuration}

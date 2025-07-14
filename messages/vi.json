@@ -37,6 +37,7 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "year": "Năm",
         "somethingWentWrong": "Đã xảy ra lỗi",
         "biography": "Tiểu sử",
         "nationality": "Quốc tịch",
@@ -306,7 +307,8 @@
         "dimensions": "Kích thước",
         "validation": {
             "mustBeLessThanMB": "Ảnh phải nhỏ hơn {value} MB",
-            "supportImageFormat": "Hỗ trợ ảnh định dạng {value}"
+            "supportImageFormat": "Hỗ trợ ảnh định dạng {value}",
+            "mustBeMinWidth": "Ảnh phải có chiều rộng tối thiểu {value}px"
         }
     },
     "document": {

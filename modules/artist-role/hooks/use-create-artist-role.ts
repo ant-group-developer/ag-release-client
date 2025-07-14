@@ -3,7 +3,7 @@ import { CreateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { artistRoleApi } from '../apis';
-import { ArtistRoleQueryKeys } from '../constants/query-keys';
+import { artistRoleQueryKeys } from '../constants/query-keys';
 import { CreateArtistRolePayload } from '../types/payload';
 
 export const useCreateArtistRole = () => {
@@ -15,7 +15,7 @@ export const useCreateArtistRole = () => {
         { onSuccess }: CreateVariables<CreateArtistRolePayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...ArtistRoleQueryKeys.getList],
+            queryKey: [...artistRoleQueryKeys.getList],
         });
 
         const responseMessages = messages(data?.data?.messageCode);

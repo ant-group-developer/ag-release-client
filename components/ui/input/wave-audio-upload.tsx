@@ -105,7 +105,7 @@ const AudioItem = ({
                 </div>
             </div>
             <WaveformElement
-                peakData={audioFile.peakData.join(';')}
+                peakData={audioFile.peakData}
                 playedTime={currentTimePlaying}
                 songDuration={audioFile.duration}
                 playing={isPlaying}
@@ -163,7 +163,6 @@ const WaveAudioUpload = ({
                 try {
                     const { peakData, songDuration: duration } =
                         await getPeakData(file);
-
                     newAudioFiles.push({
                         url: audioObjectUrl,
                         duration,

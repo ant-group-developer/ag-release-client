@@ -4,11 +4,11 @@ import { formattedDate } from '@/helpers/common';
 import { ArtistDataFilter } from '@/modules/artist/types';
 import { useQuery } from '@tanstack/react-query';
 import { artistRoleApi } from '../apis';
-import { ArtistRoleQueryKeys } from '../constants/query-keys';
+import { artistRoleQueryKeys } from '../constants/query-keys';
 
 export const useGetListArtistRole = (params: ArtistDataFilter) => {
     const { data, ...res } = useQuery({
-        queryKey: [...ArtistRoleQueryKeys.getList, params],
+        queryKey: [...artistRoleQueryKeys.getList, params],
         queryFn: () => artistRoleApi.getList(params),
     });
 

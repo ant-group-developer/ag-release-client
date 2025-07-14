@@ -1,9 +1,10 @@
 import { showNotification } from '@/helpers/messages-helper';
+import { releasesQueryKeys } from '@/modules/releases/constants/query-keys';
 import { DeleteVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { artistRoleApi } from '../apis';
-import { ArtistRoleQueryKeys } from '../constants/query-keys';
+import { artistRoleQueryKeys } from '../constants/query-keys';
 import { ArtistRoleData } from '../types';
 
 export const useDeleteArtistRole = () => {
@@ -15,7 +16,10 @@ export const useDeleteArtistRole = () => {
         { onSuccess }: DeleteVariables<ArtistRoleData['id']>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...ArtistRoleQueryKeys.getList],
+            queryKey: [...artistRoleQueryKeys.getList],
+        });
+        queryClient.invalidateQueries({
+            queryKey: [...releasesQueryKeys.getDetail],
         });
 
         const responseMessages = messages(data?.data?.messageCode);
