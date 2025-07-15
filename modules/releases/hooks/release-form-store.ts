@@ -4,24 +4,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import { RELEASES_STATUS, RELEASES_TYPE } from '../enums';
 import { ReleasesData } from '../types';
 
-export interface ReleaseFormStoreData extends ReleasesData {
-    // id: string;
-    // primaryGenreId: string;
-    // primaryGenre?: GenresData
-    // subGenreId: string;
-    // labelId: string;
-    // title: string;
-    // version: string | null;
-    // type: RELEASES_TYPE;
-    // releaseArtists: any;
-    // coverArtThumbnails: any;
-    // pLineOwner: string;
-    // cLineOwner: string;
-    // catalogId: string | null;
-    // upc: string | null;
-    // isVariousArtist: boolean;
-    // metadataLanguageId: string;
-}
+export interface ReleaseFormStoreData extends ReleasesData {}
 
 interface ReleaseFormState {
     formValues: Partial<ReleaseFormStoreData>;

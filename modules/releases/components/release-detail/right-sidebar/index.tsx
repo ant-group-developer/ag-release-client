@@ -44,6 +44,7 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
 
     useEffect(() => {
         // Thực hiện xác thực
+        console.log(formValues);
         const validationResult = releaseSchema(messages as any).safeParse(
             formValues
         );

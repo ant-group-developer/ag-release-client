@@ -1,12 +1,6 @@
 'use client';
 import useModalStore from '@/hooks/use-modal';
-import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
-import { TYPE_MODAL_ARTIST } from '@/modules/artist/enum';
-import LabelFormModal from '@/modules/labels/components/modal/label-form';
-import { TYPE_MODAL_LABEL } from '@/modules/labels/enum';
-import AddReleaseArtistModal from '@/modules/release-artist/components/modal/release-artist-modal';
 import ReleaseDetailForm from '@/modules/releases/components/release-detail/release-detail-form';
-import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useEffect } from 'react';
 
@@ -36,7 +30,7 @@ export default function CoreDetailCreate() {
         <div>
             <ReleaseDetailForm />
 
-            {(typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST ||
+            {/* {(typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST ||
                 typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST) && (
                 <AddReleaseArtistModal
                     isSetMainArtist={formValues?.releaseArtists?.length === 0}
@@ -44,7 +38,7 @@ export default function CoreDetailCreate() {
             )}
 
             {typeModal === TYPE_MODAL_ARTIST.CREATE && <ArtistFormModal />}
-            {typeModal === TYPE_MODAL_LABEL.CREATE && <LabelFormModal />}
+            {typeModal === TYPE_MODAL_LABEL.CREATE && <LabelFormModal />} */}
 
             {/* {typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST && (
                 <AppConfirm

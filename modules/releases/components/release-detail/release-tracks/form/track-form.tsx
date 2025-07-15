@@ -25,7 +25,7 @@ export const releaseTrackSchema = (messages: any) =>
         trackOrigin: z.string().nonempty(messages('validation.input')),
         languageTrack: z.string().nonempty(messages('validation.input')),
         isAddArtistsFromRelease: z.boolean(),
-        artists: z.array(artistSchema(messages)),
+        releaseArtists: z.array(artistSchema(messages)),
     });
 
 type ReleaseTrackSchema = z.infer<ReturnType<typeof releaseTrackSchema>>;
@@ -47,8 +47,6 @@ export default function TracksForm({ trackData, updateTrackDraft }: Props) {
     const formMethods = useForm<ReleaseTrackSchema>({
         defaultValues: {
             trackName: trackData.title ?? '',
-            // artists: trackData.artists,
-            isAddArtistsFromRelease: false,
             trackOrigin: trackData.originType,
             isrc: trackData.isrc ?? '',
             version: trackData.version ?? '',
