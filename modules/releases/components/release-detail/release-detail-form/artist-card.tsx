@@ -1,6 +1,7 @@
 import IconButton from '@/components/ui/button/icon-button';
 import { SIZE_ICON } from '@/constants/common';
-import { ReleaseArtist } from '@/modules/release-artist/types';
+import { ArtistRoleData } from '@/modules/artist-role/types';
+import { ArtistData } from '@/modules/artist/types';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { Avatar, Checkbox, CheckboxChangeEvent } from 'antd';
 import { Trash2 } from 'lucide-react';
@@ -9,7 +10,10 @@ import { HTMLAttributes } from 'react';
 
 type Props = HTMLAttributes<HTMLDivElement> & {
     index: number;
-    data: ReleaseArtist;
+    data: {
+        artist: ArtistData | undefined;
+        artistRole: ArtistRoleData | undefined;
+    };
     onDelete?: () => void;
     showApplyToAllTracks?: boolean;
     onApplyToAllTracks?: (checked: boolean) => void;
@@ -67,7 +71,7 @@ export default function ArtistCard({
                 </div>
             </div>
             <div className="flex items-center gap-2">
-                <div>
+                {/* <div>
                     <Avatar.Group
                         max={{
                             count: 3,
@@ -85,7 +89,7 @@ export default function ArtistCard({
                         <Avatar src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbhvKe4ebnX7xrphoWADoK-wteStypzRFKWQ&s" />
                         <Avatar src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Youtube_Music_icon.svg/2048px-Youtube_Music_icon.svg.png" />
                     </Avatar.Group>
-                </div>
+                </div> */}
 
                 <div className="w-8" onClick={(e) => e.stopPropagation()}>
                     <IconButton

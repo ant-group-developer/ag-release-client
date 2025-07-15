@@ -1,14 +1,13 @@
-import { LabelForm } from '@/components/ui/label/labelForm';
+import FormItem from '@/components/ui/react-hook-form/form-item';
 import CountrySelect from '@/components/ui/select/country-select';
-import ErrorText from '@/components/ui/text/error-text';
 import { timeStringToSeconds } from '@/helpers/common';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { TrackData } from '@/modules/tracks/types';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Input, Select, TimePicker } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
-import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 const audioSpecificationsSchema = (messages: any, maxDuration: number) =>
@@ -36,9 +35,13 @@ export type AudioSpecificationsSchema = z.infer<
 
 type Props = {
     trackData: TrackData;
+    updateTrackDraft: (data: any) => void;
 };
 
-export default function AudioSpecifications({ trackData }: Props) {
+export default function AudioSpecifications({
+    trackData,
+    updateTrackDraft,
+}: Props) {
     const messages = useTranslations();
     // const { fileData } = trackData;
     // const metadata = fileData?.metadata;
@@ -48,17 +51,17 @@ export default function AudioSpecifications({ trackData }: Props) {
     );
 
     const formMethods = useForm<AudioSpecificationsSchema>({
-        // defaultValues: {
-        //     fileName: fileData?.fileName,
-        //     countryRecording: thisTrackData?.countryRecording,
-        //     previewTrack: '',
-        //     // hookTrack: '00:00:00',
-        //     recordingType: thisTrackData?.recordingType,
-        // },
-        // mode: 'onChange',
-        // resolver: zodResolver(
-        //     audioSpecificationsSchema(messages, trackData.songInfo.duration)
-        // ),
+        defaultValues: {
+            fileName: trackData?.title,
+            countryRecording: thisTrackData?.recordingCountryId,
+        },
+        mode: 'onChange',
+        resolver: zodResolver(
+            audioSpecificationsSchema(
+                messages,
+                trackData?.audioFileBucket?.duration ?? 0
+            )
+        ),
     });
 
     const {
@@ -68,38 +71,7 @@ export default function AudioSpecifications({ trackData }: Props) {
     } = formMethods;
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
 
-    const onSubmit = (data: AudioSpecificationsSchema) => {
-        const newValue = {
-            ...formValues,
-            tracks: formValues?.tracks?.map((track: any) => {
-                if (track.id === trackData.id) {
-                    return {
-                        ...track,
-                        ...data,
-                    };
-                }
-                return track;
-            }),
-        };
-        setFormValues(newValue);
-    };
-
-    const watchedAllFields = useWatch({ control });
-
-    useEffect(() => {
-        setFormValues({
-            ...formValues,
-            tracks: formValues?.tracks?.map((track: any) => {
-                if (track.id === trackData.id) {
-                    return {
-                        ...track,
-                        ...watchedAllFields,
-                    };
-                }
-                return track;
-            }),
-        });
-    }, [watchedAllFields]);
+    const onSubmit = (data: AudioSpecificationsSchema) => {};
 
     // useEffect(() => {
     //     formMethods.trigger();
@@ -109,21 +81,38 @@ export default function AudioSpecifications({ trackData }: Props) {
         <FormProvider {...formMethods}>
             <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
                 <div className="grid grid-cols-2 gap-4">
-                    <div>
-                        <LabelForm label="Tên File" required />
+                    <FormItem
+                        name="fileName"
+                        label="Tên File"
+                        required
+                        ErrorMessage={errors.fileName?.message}
+                    >
                         <Controller
                             control={control}
                             name="fileName"
-                            render={({ field }) => <Input {...field} />}
+                            render={({ field }) => (
+                                <Input
+                                    {...field}
+                                    status={
+                                        errors.fileName ? 'error' : undefined
+                                    }
+                                    onChange={(e) => {
+                                        field.onChange(e);
+                                        updateTrackDraft({
+                                            fileName: e.target.value,
+                                        });
+                                    }}
+                                />
+                            )}
                         />
-                        <ErrorText
-                            isError={!!errors.fileName}
-                            message={errors.fileName?.message}
-                        />
-                    </div>
+                    </FormItem>
 
-                    <div>
-                        <LabelForm label="Quốc gia ghi âm" required />
+                    <FormItem
+                        name="countryRecording"
+                        label="Quốc gia ghi âm"
+                        required
+                        ErrorMessage={errors.countryRecording?.message}
+                    >
                         <Controller
                             control={control}
                             name="countryRecording"
@@ -137,103 +126,62 @@ export default function AudioSpecifications({ trackData }: Props) {
                                     className="w-full"
                                     {...field}
                                     showSearch
+                                    onChange={(e) => {
+                                        field.onChange(e);
+                                        updateTrackDraft({
+                                            countryRecordingId: e,
+                                        });
+                                    }}
                                 />
                             )}
                         />
-                        <ErrorText
-                            isError={!!errors.countryRecording}
-                            message={errors.countryRecording?.message}
-                        />
-                    </div>
+                    </FormItem>
 
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <LabelForm
-                                label="Đoạn nghe mẫu"
-                                required
-                                htmlFor="previewTrack"
-                            />
-                            <Controller
-                                control={control}
-                                name="previewTrack"
-                                render={({ field }) => (
-                                    <TimePicker
-                                        {...field}
-                                        value={
-                                            field.value
-                                                ? dayjs(field.value, 'HH:mm:ss')
-                                                : null
-                                        }
-                                        onChange={(time) => {
-                                            field.onChange(
-                                                time
-                                                    ? time.format('HH:mm:ss')
-                                                    : ''
-                                            );
-                                        }}
-                                        onBlur={field.onBlur}
-                                        size="large"
-                                        format="HH:mm:ss"
-                                        status={
-                                            !!errors.previewTrack
-                                                ? 'error'
-                                                : undefined
-                                        }
-                                    />
-                                )}
-                            />
-                            <ErrorText
-                                isError={!!errors.previewTrack}
-                                message={errors.previewTrack?.message}
-                            />
-                        </div>
-
-                        {/* <div>
-                            <LabelForm
-                                label="Hook bài hát"
-                                required
-                                htmlFor="hookTrack"
-                            />
-                            <Controller
-                                control={control}
-                                name="hookTrack"
-                                render={({ field }) => (
-                                    <TimePicker
-                                        {...field}
-                                        value={
-                                            field.value
-                                                ? dayjs(field.value, 'HH:mm:ss')
-                                                : null
-                                        }
-                                        onChange={(time) => {
-                                            field.onChange(
-                                                time
-                                                    ? time.format('HH:mm:ss')
-                                                    : ''
-                                            );
-                                        }}
-                                        onBlur={field.onBlur}
-                                        defaultValue={dayjs(
-                                            '00:00:00',
-                                            'HH:mm:ss'
-                                        )}
-                                        size="large"
-                                        format="HH:mm:ss"
-                                    />
-                                )}
-                            />
-                            <ErrorText
-                                isError={!!errors.hookTrack}
-                                message={errors.hookTrack?.message}
-                            />
-                        </div> */}
-                    </div>
-                    <div>
-                        <LabelForm
-                            label="Thể loại bản ghi"
-                            required
-                            htmlFor="recordingType"
+                    <FormItem
+                        name="previewTrack"
+                        label="Đoạn nghe mẫu"
+                        required
+                        ErrorMessage={errors.previewTrack?.message}
+                    >
+                        <Controller
+                            control={control}
+                            name="previewTrack"
+                            render={({ field }) => (
+                                <TimePicker
+                                    {...field}
+                                    value={
+                                        field.value
+                                            ? dayjs(field.value, 'HH:mm:ss')
+                                            : null
+                                    }
+                                    onChange={(time) => {
+                                        const value = time
+                                            ? time.format('HH:mm:ss')
+                                            : '';
+                                        field.onChange(value);
+                                        updateTrackDraft({
+                                            previewTrack: value,
+                                        });
+                                    }}
+                                    onBlur={field.onBlur}
+                                    size="large"
+                                    format="HH:mm:ss"
+                                    status={
+                                        !!errors.previewTrack
+                                            ? 'error'
+                                            : undefined
+                                    }
+                                />
+                            )}
                         />
+                    </FormItem>
+
+                    <FormItem
+                        name="recordingType"
+                        label="Thể loại bản ghi"
+                        required
+                        ErrorMessage={errors.recordingType?.message}
+                    >
                         <Controller
                             control={control}
                             name="recordingType"
@@ -257,46 +205,16 @@ export default function AudioSpecifications({ trackData }: Props) {
                                         },
                                     ]}
                                     showSearch
+                                    onChange={(e) => {
+                                        field.onChange(e);
+                                        updateTrackDraft({ recordingType: e });
+                                    }}
                                 />
                             )}
                         />
-                        <ErrorText
-                            isError={!!errors.recordingType}
-                            message={errors.recordingType?.message}
-                        />
-                    </div>
+                    </FormItem>
                 </div>
-                {/* 
-                <div className="grid grid-cols-7 rounded-md border p-2">
-                    <div>
-                        <p className="font-bold">Codec</p>
-                        <p className="text-xs">{metadata?.codec}</p>
-                    </div>
-                    <div>
-                        <p className="font-bold">Bit Depth</p>
-                        <p className="text-xs">{metadata?.bitDepth}</p>
-                    </div>
-                    <div>
-                        <p className="font-bold">Bitrate</p>
-                        <p className="text-xs">{metadata?.bitrate}</p>
-                    </div>
-                    <div>
-                        <p className="font-bold">Format</p>
-                        <p className="text-xs">{metadata?.format}</p>
-                    </div>
-                    <div>
-                        <p className="font-bold">Channels</p>
-                        <p className="text-xs">{metadata?.channels}</p>
-                    </div>
-                    <div>
-                        <p className="font-bold">Sample Rate</p>
-                        <p className="text-xs">{metadata?.sampleRate}</p>
-                    </div>
-                    <div>
-                        <p className="font-bold">MQS</p>
-                        <p className="text-xs">{metadata?.mqs}</p>
-                    </div>
-                </div> */}
+                {/* Các phần khác nếu có */}
             </form>
         </FormProvider>
     );

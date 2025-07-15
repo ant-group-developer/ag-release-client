@@ -1,22 +1,26 @@
 import { LabelForm } from '@/components/ui/label/labelForm';
+import LanguageSelect from '@/components/ui/select/language-select';
+import OriginalTypeSelect from '@/components/ui/select/original-type-select';
 import ErrorText from '@/components/ui/text/error-text';
 import IconInfoTooltip from '@/components/ui/tooltip/icon-info-tooltip';
-import { languageList } from '@/constants/fakeData';
 import useModalStore from '@/hooks/use-modal';
 import { artistSchema } from '@/modules/artist/schema';
-import { TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { TrackArtistData } from '@/modules/track-artist/types';
+import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
 import { TrackData } from '@/modules/tracks/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Input, Select, Switch } from 'antd';
+import { Button, Input, Switch } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
-import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
+import ArtistCard from '../../release-detail-form/artist-card';
 
 export const releaseTrackSchema = (messages: any) =>
     z.object({
         trackName: z.string().nonempty(messages('validation.input')),
+        version: z.string().optional(),
         isrc: z.string().optional(),
         trackOrigin: z.string().nonempty(messages('validation.input')),
         languageTrack: z.string().nonempty(messages('validation.input')),
@@ -28,9 +32,10 @@ type ReleaseTrackSchema = z.infer<ReturnType<typeof releaseTrackSchema>>;
 
 type Props = {
     trackData: TrackData;
+    updateTrackDraft: (data: any) => void;
 };
 
-export default function TracksForm({ trackData }: Props) {
+export default function TracksForm({ trackData, updateTrackDraft }: Props) {
     const messages = useTranslations();
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const formValues = useReleaseFormStore((state) => state.formValues);
@@ -44,8 +49,10 @@ export default function TracksForm({ trackData }: Props) {
             trackName: trackData.title ?? '',
             // artists: trackData.artists,
             isAddArtistsFromRelease: false,
-            // trackOrigin: thisTrackData?.trackOrigin ?? '',
-            // languageTrack: thisTrackData?.languageTrack ?? '',
+            trackOrigin: trackData.originType,
+            isrc: trackData.isrc ?? '',
+            version: trackData.version ?? '',
+            languageTrack: trackData.trackLanguage?.audioLanguageId,
         },
         resolver: zodResolver(releaseTrackSchema(messages)),
         mode: 'onChange',
@@ -67,8 +74,10 @@ export default function TracksForm({ trackData }: Props) {
         {
             label: (
                 <span className="flex items-center justify-between gap-1">
-                    Tác phẩm gốc{' '}
-                    <IconInfoTooltip title="Tác phẩm gốc là tác phẩm được tạo ra đầu tiên, không phải bất kỳ bản cover hoặc remix nào." />
+                    {messages('tracks.original.label')}
+                    <IconInfoTooltip
+                        title={messages('tracks.original.tooltip')}
+                    />
                 </span>
             ),
             value: 'original',
@@ -76,8 +85,8 @@ export default function TracksForm({ trackData }: Props) {
         {
             label: (
                 <span className="flex items-center justify-between gap-1">
-                    Bản cover{' '}
-                    <IconInfoTooltip title="Bản cover là bản nhạc được cover lại từ tác phẩm gốc, có thể có sự thay đổi về âm nhạc, lời bài hát, hoặc cả hai." />
+                    {messages('tracks.cover.label')}
+                    <IconInfoTooltip title={messages('tracks.cover.tooltip')} />
                 </span>
             ),
             value: 'cover',
@@ -85,32 +94,30 @@ export default function TracksForm({ trackData }: Props) {
         {
             label: (
                 <span className="flex items-center justify-between gap-1">
-                    Bản remix{' '}
-                    <IconInfoTooltip title="Bản remix là bản nhạc được tạo ra từ tác phẩm gốc, có thể có sự thay đổi về âm nhạc, lời bài hát, hoặc cả hai." />
+                    {messages('tracks.remix.label')}
+                    <IconInfoTooltip title={messages('tracks.remix.label')} />
                 </span>
             ),
             value: 'remix',
         },
     ];
 
-    const watchedAllFields = useWatch({ control });
+    // useEffect(() => {
+    //     const updatedFormValues = {
+    //         ...formValues,
+    //         tracks: formValues?.tracks?.map((track: TrackData) =>
+    //             track.id === trackData.id
+    //                 ? {
+    //                       ...track,
+    //                       ...watchedAllFields,
+    //                       //   artists: watchedAllFields.artists as ArtistData[],
+    //                   }
+    //                 : track
+    //         ),
+    //     };
 
-    useEffect(() => {
-        const updatedFormValues = {
-            ...formValues,
-            tracks: formValues?.tracks?.map((track: TrackData) =>
-                track.id === trackData.id
-                    ? {
-                          ...track,
-                          ...watchedAllFields,
-                          //   artists: watchedAllFields.artists as ArtistData[],
-                      }
-                    : track
-            ),
-        };
-
-        // setFormValues(updatedFormValues);
-    }, [watchedAllFields]);
+    //     // setFormValues(updatedFormValues);
+    // }, [watchedAllFields]);
 
     useEffect(() => {
         trigger();
@@ -137,7 +144,7 @@ export default function TracksForm({ trackData }: Props) {
                     <LabelForm
                         htmlFor="trackName"
                         required
-                        label="Tên bài hát"
+                        label={messages('tracks.name')}
                     />
                     <Controller
                         control={control}
@@ -147,6 +154,13 @@ export default function TracksForm({ trackData }: Props) {
                                 id="trackName"
                                 {...field}
                                 allowClear
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    field.onChange(value);
+                                    updateTrackDraft({
+                                        title: value,
+                                    });
+                                }}
                                 status={errors.trackName ? 'error' : undefined}
                             />
                         )}
@@ -158,6 +172,36 @@ export default function TracksForm({ trackData }: Props) {
                 </div>
 
                 <div>
+                    <LabelForm
+                        htmlFor="version"
+                        label={messages('releases.version')}
+                    />
+                    <Controller
+                        control={control}
+                        name="version"
+                        render={({ field }) => (
+                            <Input
+                                id="version"
+                                {...field}
+                                allowClear
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    field.onChange(value);
+                                    updateTrackDraft({
+                                        version: value,
+                                    });
+                                }}
+                                status={errors.version ? 'error' : undefined}
+                            />
+                        )}
+                    />
+                    <ErrorText
+                        isError={!!errors.trackName}
+                        message={errors.trackName?.message}
+                    />
+                </div>
+
+                {/* <div>
                     <LabelForm htmlFor="isrc" label="ISRC" />
                     <Controller
                         control={control}
@@ -166,6 +210,13 @@ export default function TracksForm({ trackData }: Props) {
                             <Input
                                 id="isrc"
                                 {...field}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    field.onChange(value);
+                                    debouncedUpdate({
+                                        isrc: value,
+                                    });
+                                }}
                                 allowClear
                                 status={errors.isrc ? 'error' : undefined}
                             />
@@ -175,22 +226,27 @@ export default function TracksForm({ trackData }: Props) {
                         isError={!!errors.isrc}
                         message={errors.isrc?.message}
                     />
-                </div>
+                </div> */}
 
                 <div>
                     <LabelForm
                         htmlFor="trackOrigin"
                         required
-                        label="Nguồn gốc"
+                        label={`${messages('tracks.original.label')}`}
                     />
                     <Controller
                         control={control}
                         name="trackOrigin"
                         render={({ field }) => (
-                            <Select
+                            <OriginalTypeSelect
                                 id="trackOrigin"
                                 {...field}
-                                options={originalSourceList}
+                                onChange={(e) => {
+                                    field.onChange(e);
+                                    updateTrackDraft({
+                                        originType: e,
+                                    });
+                                }}
                                 className="w-full"
                                 status={
                                     errors.trackOrigin ? 'error' : undefined
@@ -208,16 +264,23 @@ export default function TracksForm({ trackData }: Props) {
                     <LabelForm
                         htmlFor="languageTrack"
                         required
-                        label="Ngôn ngữ bài hát"
+                        label={messages('tracks.language')}
                     />
                     <Controller
                         control={control}
                         name="languageTrack"
                         render={({ field }) => (
-                            <Select
+                            <LanguageSelect
                                 id="languageTrack"
                                 {...field}
-                                options={languageList}
+                                onChange={(e) => {
+                                    field.onChange(e);
+                                    updateTrackDraft({
+                                        trackLanguage: {
+                                            audioLanguageId: e,
+                                        },
+                                    });
+                                }}
                                 showSearch
                                 className="w-full"
                                 status={
@@ -248,44 +311,44 @@ export default function TracksForm({ trackData }: Props) {
 
                 {!isAddArtistsFromRelease && (
                     <div className="col-span-2">
-                        <Button
-                            onClick={() =>
-                                openModal(
-                                    TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.ADD_ARTIST,
-                                    trackData
-                                )
-                            }
-                            shape="round"
-                            className="mb-4"
-                        >
-                            Thêm nghệ sĩ
-                        </Button>
                         <div className="grid grid-cols-2 gap-4">
-                            {/* {trackData.artists.map(
-                                (artist: any, index: number) => (
+                            {trackData?.trackArtists?.map(
+                                (item: TrackArtistData, index: number) => (
                                     <ArtistCard
                                         key={index}
-                                        data={artist}
+                                        data={{
+                                            artist: item.artist,
+                                            artistRole: item.artistRole,
+                                        }}
                                         onDelete={() =>
                                             openModal(
-                                                TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.DELETE_ARTIST,
-                                                {
-                                                    trackData,
-                                                    artist,
-                                                }
+                                                TYPE_MODAL_TRACK_ARTIST.DELETE,
+                                                item
                                             )
                                         }
                                         onClick={() => {
                                             openModal(
-                                                TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.EDIT_ARTIST,
-                                                artist
+                                                TYPE_MODAL_TRACK_ARTIST.UPDATE,
+                                                item
                                             );
                                         }}
                                         index={index}
                                     />
                                 )
-                            )} */}
+                            )}
                         </div>
+                        <Button
+                            onClick={() =>
+                                openModal(
+                                    TYPE_MODAL_TRACK_ARTIST.ADD,
+                                    trackData
+                                )
+                            }
+                            shape="round"
+                            className="mt-4"
+                        >
+                            {messages('artist.add')}
+                        </Button>
                     </div>
                 )}
             </form>

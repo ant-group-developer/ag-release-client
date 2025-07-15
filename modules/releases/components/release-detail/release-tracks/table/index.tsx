@@ -3,37 +3,40 @@ import SortableTable, {
     SortableTableProps,
 } from '@/components/ui/table/sortable-table';
 import useModalStore from '@/hooks/use-modal';
-import { TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST } from '@/modules/releases/enums';
+import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useTrackReadyStore } from '@/modules/releases/hooks/track-ready-store';
+import { TrackArtistData } from '@/modules/track-artist/types';
+import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
+import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
 import { TrackData } from '@/modules/tracks/types';
+import { UpdateTrackPayload } from '@/modules/tracks/types/payload';
+import { UpdateVariables } from '@/types/api';
 import { Input, Tabs, Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import TrackActionButton from '../button/track-action';
 import AudioSpecifications from '../form/audio-specifications';
 import OtherMetadataForm from '../form/other-metadata-form';
 import TracksForm from '../form/track-form';
 import { TrackWaveform } from '../track-wave-form';
 
-type Props = {
-    handleRemoveTrack: (trackId: string) => void;
-} & Omit<SortableTableProps<TrackData>, 'columns'>;
+type Props = {} & Omit<SortableTableProps<TrackData>, 'columns'>;
 
-export default function ReleaseTracksTable({
-    handleRemoveTrack,
-    ...props
-}: Props) {
+export default function ReleaseTracksTable({ ...props }: Props) {
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const openModal = useModalStore((state) => state.openModal);
+    const closeModal = useModalStore((state) => state.closeModal);
     const formErrors = useReleaseFormStore((state) => state.validationErrors);
     const setTrackReadyMap = useTrackReadyStore(
         (state) => state.setTrackReadyMap
     );
+
+    const { updateTrackDraft } = useUpdateTrackDraft();
 
     const handleDragEnd: OnDragEnd<TrackData[]> = (newData) => {
         const payload = newData.map((item, index) => ({
@@ -42,24 +45,19 @@ export default function ReleaseTracksTable({
         }));
     };
 
-    const debouncedSetFormValues = useMemo(
-        () =>
-            debounce((track: TrackData, value: string) => {
-                setFormValues({
-                    ...formValues,
-                    tracks: formValues?.tracks?.map((item) =>
-                        item.id === track.id ? { ...item, title: value } : item
-                    ),
-                });
-            }, 300),
-        [formValues, setFormValues]
-    );
-
-    const handleChangeTitle = useCallback(
-        (track: TrackData, value: string) => {
-            debouncedSetFormValues(track, value);
-        },
-        [debouncedSetFormValues]
+    const debouncedUpdate = useCallback(
+        debounce((id, data) => {
+            if (!formValues.id) return;
+            const variables: UpdateVariables<
+                TrackData['id'],
+                UpdateTrackPayload
+            > = {
+                id,
+                payload: data,
+            };
+            updateTrackDraft(variables);
+        }, 500),
+        [formValues.id]
     );
 
     const columns: ColumnType<TrackData>[] = [
@@ -101,7 +99,9 @@ export default function ReleaseTracksTable({
                     <Input
                         defaultValue={value}
                         onChange={(e) =>
-                            handleChangeTitle(record, e.target.value)
+                            debouncedUpdate(record.id, {
+                                title: e.target.value,
+                            })
                         }
                     />
                 );
@@ -116,97 +116,36 @@ export default function ReleaseTracksTable({
             render: (value, record) => {
                 return (
                     <div className="flex flex-wrap gap-y-2">
-                        {/* {record.artists.map((artist: ArtistData) => (
-                            <Tag
-                                key={`${record.id}-${artist.id}`}
-                                closeIcon
-                                onClose={(e) => {
-                                    e.preventDefault();
-                                    openModal(
-                                        TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.DELETE_ARTIST,
-                                        { trackData: record, artist }
-                                    );
-                                }}
-                            >
-                                {artist.name}
-                            </Tag>
-                        ))} */}
+                        {record?.trackArtists?.map(
+                            (trackArtist: TrackArtistData) => (
+                                <Tag
+                                    key={`${record.id}`}
+                                    closeIcon
+                                    onClose={(e) => {
+                                        e.preventDefault();
+                                        openModal(
+                                            TYPE_MODAL_TRACK_ARTIST.DELETE,
+                                            record
+                                        );
+                                    }}
+                                >
+                                    {trackArtist?.artist?.name}
+                                </Tag>
+                            )
+                        )}
                         <Tag
                             key={`${record.id}-add-artist`}
                             className="border-dashed"
                             onClick={() =>
-                                openModal(
-                                    TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.ADD_ARTIST,
-                                    record
-                                )
+                                openModal(TYPE_MODAL_TRACK_ARTIST.ADD, record)
                             }
                         >
-                            + Thêm nghệ sĩ
+                            + {messages('artist.add')}
                         </Tag>
                     </div>
                 );
             },
         },
-        // {
-        //     title: 'Nguồn gốc',
-        //     dataIndex: '',
-        //     key: '',
-        //     align: 'left',
-        //     width: 150,
-        //     render: (value) => {
-        //         return (
-        //             <Select
-        //                 className="w-full"
-        //                 placeholder="Chọn nguồn gốc"
-        //                 options={originalSourceList}
-        //             />
-        //         );
-        //     },
-        // },
-        // {
-        //     title: (
-        //         <div className="flex items-center justify-between">
-        //             <span>Ngôn ngữ</span>
-        //             <div>
-        //                 <IconInfoTooltip title="Ngôn ngữ chính được thể hiện trong bài hát" />
-        //             </div>
-        //         </div>
-        //     ),
-        //     dataIndex: '',
-        //     key: '',
-        //     align: 'left',
-        //     width: 120,
-        //     render: (value) => {
-        //         return (
-        //             <Select
-        //                 className="w-full"
-        //                 placeholder="Chọn ngôn ngữ"
-        //                 options={languageList}
-        //             />
-        //         );
-        //     },
-        // },
-        // {
-        //     title: (
-        //         <div className="flex items-center justify-between">
-        //             <span>Nội dung nhạy cảm</span>
-        //             <div>
-        //                 <IconInfoTooltip title="Tích nếu nội dung bài hát này có chứa nội dung nhạy cảm" />
-        //             </div>
-        //         </div>
-        //     ),
-        //     dataIndex: '',
-        //     key: '',
-        //     align: 'center',
-        //     width: 125,
-        //     render: (value) => {
-        //         return (
-        //             <div className="flex items-center justify-center gap-2">
-        //                 <Checkbox />
-        //             </div>
-        //         );
-        //     },
-        // },
         {
             title: messages('common.status'),
             dataIndex: 'status',
@@ -222,7 +161,9 @@ export default function ReleaseTracksTable({
                     <Tag bordered color={color}>
                         {/* <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline"> */}
                         {/* {messages('common.draft')} */}
-                        {isTrackError ? 'Thiếu thông tin' : 'Sẵn sàng'}
+                        {isTrackError
+                            ? messages('common.missingInformation')
+                            : messages('common.ready')}
                         {/* </span> */}
                     </Tag>
                 );
@@ -237,7 +178,9 @@ export default function ReleaseTracksTable({
             render: (value, record) => (
                 <TrackActionButton
                     showDelete
-                    onShowDelete={() => handleRemoveTrack(record?.id)}
+                    onShowDelete={() =>
+                        openModal(TYPE_MODAL_TRACK.DELETE, record)
+                    }
                     showDownload
                 />
             ),
@@ -253,6 +196,9 @@ export default function ReleaseTracksTable({
                     <TracksForm
                         key={`${record.id}-track-form-content`}
                         trackData={record}
+                        updateTrackDraft={(data) =>
+                            debouncedUpdate(record.id, data)
+                        }
                     />
                 ),
             },
@@ -263,6 +209,9 @@ export default function ReleaseTracksTable({
                     <OtherMetadataForm
                         key={`${record.id}-metadata-form-content`}
                         trackData={record}
+                        updateTrackDraft={(data) =>
+                            debouncedUpdate(record.id, data)
+                        }
                     />
                 ),
             },
@@ -273,6 +222,9 @@ export default function ReleaseTracksTable({
                     <AudioSpecifications
                         key={`${record.id}-audio-specs-content`}
                         trackData={record}
+                        updateTrackDraft={(data) =>
+                            debouncedUpdate(record.id, data)
+                        }
                     />
                 ),
             },

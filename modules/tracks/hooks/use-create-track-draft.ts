@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { trackApi } from '../apis';
 import { trackQueryKeys } from '../constants/query-keys';
-import { trackPayload } from '../types/payload';
+import { TrackPayload } from '../types/payload';
 
 export const useCreateTrackDraft = () => {
     const messages = useTranslations();
@@ -12,7 +12,7 @@ export const useCreateTrackDraft = () => {
 
     const onSuccess = (
         data: any,
-        { onSuccess }: CreateVariables<trackPayload[]>
+        { onSuccess }: CreateVariables<TrackPayload[]>
     ) => {
         queryClient.invalidateQueries({
             queryKey: [...trackQueryKeys.getList],
@@ -26,7 +26,7 @@ export const useCreateTrackDraft = () => {
 
     const onError = (
         data: any,
-        { onError }: CreateVariables<trackPayload[]>
+        { onError }: CreateVariables<TrackPayload[]>
     ) => {
         const responseMessages = messages(data?.response?.data?.messageCode);
 
@@ -37,13 +37,13 @@ export const useCreateTrackDraft = () => {
         );
     };
     const mutation = useMutation({
-        mutationFn: ({ payload }: CreateVariables<trackPayload[]>) =>
+        mutationFn: ({ payload }: CreateVariables<TrackPayload[]>) =>
             trackApi.createTrackDraft({ trackDrafts: payload }),
         onSuccess,
         onError,
     });
 
-    const createTrackDraft = (variables: CreateVariables<trackPayload[]>) => {
+    const createTrackDraft = (variables: CreateVariables<TrackPayload[]>) => {
         return mutation.mutate(variables);
     };
 

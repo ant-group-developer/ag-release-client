@@ -37,6 +37,8 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "missingInformation": "Thiếu thông tin",
+        "ready": "Sẵn sàng",
         "year": "Năm",
         "somethingWentWrong": "Đã xảy ra lỗi",
         "biography": "Tiểu sử",
@@ -601,6 +603,19 @@
         "name": "Tên bài hát",
         "id": "Mã bài hát",
         "count": "Số lượng bài hát",
+        "language": "Ngôn ngữ bài hát",
+        "original": {
+            "label": "Tác phẩm gốc",
+            "tooltip": "Tác phẩm gốc là tác phẩm được tạo ra đầu tiên, không phải bất kỳ bản cover hoặc remix nào."
+        },
+        "cover": {
+            "label": "Bản cover",
+            "tooltip": "Bản cover là bản nhạc được cover lại từ tác phẩm gốc, có thể có sự thay đổi về âm nhạc, lời bài hát, hoặc cả hai."
+        },
+        "remix": {
+            "label": "Bản remix",
+            "tooltip": "Bản remix là bản nhạc được tạo ra từ tác phẩm gốc, có thể có sự thay đổi về âm nhạc, lời bài hát, hoặc cả hai."
+        },
         "placeholder": {
             "selectArtist": "Chọn nghệ sĩ",
             "selectSubArtist": "Chọn nghệ sĩ phụ",
@@ -806,5 +821,13 @@
                 "duplicateNameTimezone": "Múi giờ này đã tồn tại"
             }
         }
+    },
+
+    "trackType": {
+        "label": "Thể loại bài"
+    },
+
+    "trackOrigin": {
+        "label": "Nguồn gốc bài hát"
     }
 }

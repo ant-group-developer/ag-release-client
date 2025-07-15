@@ -50,8 +50,14 @@ export const releaseDetailSchema = (messages: any) =>
         }),
         releaseArtists: z.array(z.unknown()), // Check lại type
         coverArtThumbnails: z.any(), // Check lại type
-        pLineOwner: z.string().nonempty(messages('validation.input')),
-        cLineOwner: z.string().nonempty(messages('validation.input')),
+        pLineOwner: z
+            .string()
+            .min(5, messages('validation.input'))
+            .nonempty(messages('validation.input')),
+        cLineOwner: z
+            .string()
+            .min(5, messages('validation.input'))
+            .nonempty(messages('validation.input')),
         isVariousArtist: z.boolean(),
     });
 
@@ -106,12 +112,15 @@ export default function ReleaseDetailForm() {
     const releaseArtist = formValues.releaseArtists || [];
 
     const handleNext = async (data: any) => {
-        router.push(
-            getReleaseDetailTabRoute(
-                formValues.id as string,
-                RELEASES_TABS.TRACKS
-            )
-        );
+        const valid = await trigger();
+        if (valid) {
+            router.push(
+                getReleaseDetailTabRoute(
+                    formValues.id as string,
+                    RELEASES_TABS.TRACKS
+                )
+            );
+        }
     };
     const handleFormError = (errors: any) => {};
     const handleApplyAllTracks = (checked: boolean, artist: ArtistData) => {
@@ -174,7 +183,6 @@ export default function ReleaseDetailForm() {
                 type: type,
             },
             onSuccess: (data) => {
-                console.log('🚀 ~ handleCreateReleaseDraft ~ data:', data);
                 router.push(
                     getReleaseDetailTabRoute(
                         data?.id,
@@ -396,7 +404,48 @@ export default function ReleaseDetailForm() {
                                         )}
                                     />
                                 </FormItem>
-                                {!isVariousArtist && (
+                            </div>
+
+                            {!isVariousArtist && (
+                                <div>
+                                    <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                                        {releaseArtist.map(
+                                            (
+                                                releaseArtist: ReleaseArtist,
+                                                index: number
+                                            ) => (
+                                                <ArtistCard
+                                                    key={index}
+                                                    index={index}
+                                                    data={{
+                                                        artist: releaseArtist.artist,
+                                                        artistRole:
+                                                            releaseArtist.artistRole,
+                                                    }}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        openModal(
+                                                            TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST,
+                                                            releaseArtist
+                                                        );
+                                                    }}
+                                                    onDelete={() =>
+                                                        openModal(
+                                                            TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST,
+                                                            releaseArtist
+                                                        )
+                                                    }
+                                                    showApplyToAllTracks
+                                                    // onApplyToAllTracks={(checked) =>
+                                                    //     handleApplyAllTracks(
+                                                    //         checked,
+                                                    //         releaseArtist
+                                                    //     )
+                                                    // }
+                                                />
+                                            )
+                                        )}
+                                    </div>
                                     <div className="pt-5">
                                         <Button
                                             onClick={() =>
@@ -408,50 +457,16 @@ export default function ReleaseDetailForm() {
                                         >
                                             {messages('artist.add')}
                                         </Button>
-                                        {/* <ErrorText
-                                                isError={
-                                                    errors.artists?.length === 0
-                                                }
-                                                message={errors.artists?.message}
-                                            /> */}
+                                        <ErrorText
+                                            isError={
+                                                errors.releaseArtists
+                                                    ?.length === 0
+                                            }
+                                            message={
+                                                errors.releaseArtists?.message
+                                            }
+                                        />
                                     </div>
-                                )}
-                            </div>
-
-                            {!isVariousArtist && (
-                                <div className="grid grid-cols-2 gap-x-8 gap-y-4">
-                                    {releaseArtist.map(
-                                        (
-                                            releaseArtist: ReleaseArtist,
-                                            index: number
-                                        ) => (
-                                            <ArtistCard
-                                                key={index}
-                                                index={index}
-                                                data={releaseArtist}
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    openModal(
-                                                        TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST,
-                                                        releaseArtist
-                                                    );
-                                                }}
-                                                onDelete={() =>
-                                                    openModal(
-                                                        TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST,
-                                                        releaseArtist
-                                                    )
-                                                }
-                                                showApplyToAllTracks
-                                                // onApplyToAllTracks={(checked) =>
-                                                //     handleApplyAllTracks(
-                                                //         checked,
-                                                //         releaseArtist
-                                                //     )
-                                                // }
-                                            />
-                                        )
-                                    )}
                                 </div>
                             )}
                         </div>
