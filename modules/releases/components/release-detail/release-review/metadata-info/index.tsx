@@ -1,4 +1,8 @@
+import { SIZE_ICON } from '@/constants/common';
+import { cn, getLanguageLabel } from '@/helpers/common';
+import type { ReleaseFormStoreData } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { CircleAlert } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 type Props = {};
@@ -8,171 +12,178 @@ export default function MetadataInfo({}: Props) {
     const formValue = useReleaseFormStore((state) => state.formValues);
     const formErrors = useReleaseFormStore((state) => state.validationErrors);
 
-    const getFieldError = (fieldPath: string) => {
+    const getFieldError = (fieldPath: keyof ReleaseFormStoreData | string) => {
         return formErrors.find((error) => error.path.join('.') === fieldPath);
     };
 
-    // const renderField = (
-    //     label: string,
-    //     fieldPath: keyof ReleaseFormValuesData,
-    //     isRequired: boolean = false
-    // ) => {
-    //     const error = getFieldError(fieldPath);
-    //     let value = formValue[fieldPath] || '';
+    const renderField = (
+        label: string,
+        fieldPath: keyof ReleaseFormStoreData | string,
+        isRequired: boolean = false
+    ) => {
+        const error = getFieldError(fieldPath);
+        let value = (formValue as any)[fieldPath] || '';
 
-    //     if (fieldPath === 'metaDataLanguage') {
-    //         value = getLanguageLabel(value);
-    //     }
-    //     if ((fieldPath === 'cLine' || fieldPath === 'pLine') && value) {
-    //         value = `${value.year || ''} ${value.name || ''}`.trim();
-    //     }
+        if (
+            fieldPath === 'metaDataLanguage' ||
+            fieldPath === 'metadataLanguageId'
+        ) {
+            value = getLanguageLabel(value);
+        }
+        if (
+            (fieldPath === 'cLineOwner' || fieldPath === 'pLineOwner') &&
+            value
+        ) {
+            value = `${value.year || ''} ${value.name || ''}`.trim();
+        }
 
-    //     return (
-    //         <div className="flex justify-between">
-    //             <div>
-    //                 <p
-    //                     className={cn('font-semibold', {
-    //                         'text-red-500': error,
-    //                     })}
-    //                 >
-    //                     {label} {isRequired && '*'}
-    //                 </p>
-    //                 {!value && (
-    //                     <p className="text-gray-500">
-    //                         {isRequired ? 'Bắt buộc' : 'Tuỳ chọn'}
-    //                     </p>
-    //                 )}
-    //                 {value && <p className="mt-1">{value}</p>}
-    //             </div>
-    //             {error && (
-    //                 <CircleAlert className="text-red-500" size={SIZE_ICON} />
-    //             )}
-    //         </div>
-    //     );
-    // };
+        return (
+            <div className="flex justify-between">
+                <div>
+                    <p
+                        className={cn('font-semibold', {
+                            'text-red-500': error,
+                        })}
+                    >
+                        {label} {isRequired && '*'}
+                    </p>
+                    {!value && (
+                        <p className="text-gray-500">
+                            {isRequired ? 'Bắt buộc' : 'Tuỳ chọn'}
+                        </p>
+                    )}
+                    {value && <p className="mt-1">{value}</p>}
+                </div>
+                {error && (
+                    <CircleAlert className="text-red-500" size={SIZE_ICON} />
+                )}
+            </div>
+        );
+    };
 
-    // return (
-    //     <div>
-    //         <p className="font-semibold">MetaData</p>
-    //         <div className="my-1 rounded-lg bg-card-bg p-4">
-    //             <p className="text-base font-medium">
-    //                 {messages('common.coreInfo')}
-    //             </p>
-    //         </div>
-    //         <div className="grid grid-cols-1 gap-1">
-    //             <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
-    //                 <span className="col-span-2 font-medium">
-    //                     {messages('releases.name')}
-    //                 </span>
-    //                 <div className="col-span-4 flex flex-col gap-2">
-    //                     {renderField(
-    //                         messages('releases.name'),
-    //                         'nameRelease',
-    //                         true
-    //                     )}
-    //                     {renderField(messages('releases.version'), 'version')}
-    //                 </div>
-    //             </div>
+    return (
+        <div>
+            <p className="font-semibold">MetaData</p>
+            <div className="my-1 rounded-lg bg-card-bg p-4">
+                <p className="text-base font-medium">
+                    {messages('common.coreInfo')}
+                </p>
+            </div>
+            <div className="grid grid-cols-1 gap-1">
+                <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
+                    <span className="col-span-2 font-medium">
+                        {messages('releases.name')}
+                    </span>
+                    <div className="col-span-4 flex flex-col gap-2">
+                        {renderField(messages('releases.name'), 'title', true)}
+                        {renderField(messages('releases.version'), 'version')}
+                    </div>
+                </div>
 
-    //             <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
-    //                 <span className="col-span-2 font-medium">
-    //                     {' '}
-    //                     {messages('common.artist')}{' '}
-    //                 </span>
-    //                 <div className="col-span-4 flex flex-col gap-2">
-    //                     {formValue.artists?.length === 0 && (
-    //                         <p className="font-semibold text-red-500"></p>
-    //                     )}
-    //                     {formValue.artists?.map((artist, index) => (
-    //                         <div key={index} className="flex justify-between">
-    //                             <div>
-    //                                 <p
-    //                                     className={cn('font-semibold', {
-    //                                         'text-red-500':
-    //                                             getFieldError('artists'),
-    //                                     })}
-    //                                 >
-    //                                     {artist.name} {index === 0 && '*'}
-    //                                 </p>
-    //                                 <p className="text-gray-500">
-    //                                     {/* {artist.role} */} Role
-    //                                 </p>
-    //                             </div>
-    //                             {getFieldError('artists') && (
-    //                                 <CircleAlert
-    //                                     className="text-red-500"
-    //                                     size={SIZE_ICON}
-    //                                 />
-    //                             )}
-    //                         </div>
-    //                     ))}
-    //                 </div>
-    //             </div>
+                <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
+                    <span className="col-span-2 font-medium">
+                        {' '}
+                        {messages('common.artist')}{' '}
+                    </span>
+                    <div className="col-span-4 flex flex-col gap-2">
+                        {(formValue.releaseArtists?.length === 0 ||
+                            !formValue.releaseArtists) && (
+                            <p className="font-semibold text-red-500"></p>
+                        )}
+                        {formValue.releaseArtists?.map(
+                            (artist: any, index: number) => (
+                                <div
+                                    key={index}
+                                    className="flex justify-between"
+                                >
+                                    <div>
+                                        <p
+                                            className={cn('font-semibold', {
+                                                'text-red-500':
+                                                    getFieldError(
+                                                        'releaseArtists'
+                                                    ),
+                                            })}
+                                        >
+                                            {artist.name} {index === 0 && '*'}
+                                        </p>
+                                        <p className="text-gray-500">
+                                            {/* {artist.role} */} Role
+                                        </p>
+                                    </div>
+                                    {getFieldError('releaseArtists') && (
+                                        <CircleAlert
+                                            className="text-red-500"
+                                            size={SIZE_ICON}
+                                        />
+                                    )}
+                                </div>
+                            )
+                        )}
+                    </div>
+                </div>
 
-    //             <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
-    //                 <span className="col-span-2 font-medium">Thể loại</span>
-    //                 <div className="col-span-4 flex flex-col gap-2">
-    //                     {renderField(
-    //                         messages('formFields.tracks.genres'),
-    //                         'genres',
-    //                         true
-    //                     )}
-    //                     {renderField(
-    //                         messages('formFields.tracks.subGenres'),
-    //                         'subGenres'
-    //                     )}
-    //                 </div>
-    //             </div>
+                <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
+                    <span className="col-span-2 font-medium">Thể loại</span>
+                    <div className="col-span-4 flex flex-col gap-2">
+                        {renderField(
+                            messages('formFields.tracks.genres'),
+                            'primaryGenreId',
+                            true
+                        )}
+                        {renderField(
+                            messages('formFields.tracks.subGenres'),
+                            'subGenreId'
+                        )}
+                    </div>
+                </div>
 
-    //             <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
-    //                 <span className="col-span-2 font-medium">
-    //                     {' '}
-    //                     {messages('common.language')}{' '}
-    //                 </span>
-    //                 <div className="col-span-4 flex flex-col gap-2">
-    //                     {renderField(
-    //                         messages('formFields.tracks.metadataLanguage'),
-    //                         'metaDataLanguage',
-    //                         true
-    //                     )}
-    //                 </div>
-    //             </div>
+                <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
+                    <span className="col-span-2 font-medium">
+                        {' '}
+                        {messages('common.language')}{' '}
+                    </span>
+                    <div className="col-span-4 flex flex-col gap-2">
+                        {renderField(
+                            messages('formFields.tracks.metadataLanguage'),
+                            'metadataLanguageId',
+                            true
+                        )}
+                    </div>
+                </div>
 
-    //             <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
-    //                 <span className="col-span-2 font-medium">Label</span>
-    //                 <div className="col-span-4 flex flex-col gap-2">
-    //                     {renderField('Label', 'label')}
-    //                 </div>
-    //             </div>
+                <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
+                    <span className="col-span-2 font-medium">Label</span>
+                    <div className="col-span-4 flex flex-col gap-2">
+                        {renderField('Label', 'labelId')}
+                    </div>
+                </div>
 
-    //             <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
-    //                 <span className="col-span-2 font-medium">UPC</span>
-    //                 <div className="col-span-4 flex flex-col gap-2">
-    //                     {renderField('UPC', 'upc')}
-    //                 </div>
-    //             </div>
+                <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
+                    <span className="col-span-2 font-medium">UPC</span>
+                    <div className="col-span-4 flex flex-col gap-2">
+                        {renderField('UPC', 'upc')}
+                    </div>
+                </div>
 
-    //             <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
-    //                 <span className="col-span-2 font-medium">ID category</span>
-    //                 <div className="col-span-4 flex flex-col gap-2">
-    //                     {renderField('ID Category', 'catalogId')}
-    //                 </div>
-    //             </div>
+                <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
+                    <span className="col-span-2 font-medium">ID category</span>
+                    <div className="col-span-4 flex flex-col gap-2">
+                        {renderField('ID Category', 'catalogId')}
+                    </div>
+                </div>
 
-    //             <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
-    //                 <span className="col-span-2 font-medium">
-    //                     {' '}
-    //                     {messages('common.copyRight')}{' '}
-    //                 </span>
-    //                 <div className="col-span-4 flex flex-col gap-2">
-    //                     {renderField('Bản quyền tác phẩm', 'cLine', true)}
-    //                     {renderField('Bản quyền ghi âm', 'pLine', true)}
-    //                 </div>
-    //             </div>
-    //         </div>
-    //     </div>
-    // );
-
-    // Quick fix build error
-    return <></>;
+                <div className="grid grid-cols-6 rounded-lg bg-card-bg p-4">
+                    <span className="col-span-2 font-medium">
+                        {' '}
+                        {messages('common.copyRight')}{' '}
+                    </span>
+                    <div className="col-span-4 flex flex-col gap-2">
+                        {renderField('Bản quyền tác phẩm', 'cLineOwner', true)}
+                        {renderField('Bản quyền ghi âm', 'pLineOwner', true)}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 }

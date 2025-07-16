@@ -19,7 +19,7 @@ import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { TrackData } from '@/modules/tracks/types';
 import { DeleteVariables } from '@/types/api';
 import { useTranslations } from 'next-intl';
-import { Key, useState } from 'react';
+import { Key, useEffect, useState } from 'react';
 
 export default function Tracks() {
     const messages = useTranslations();
@@ -61,42 +61,6 @@ export default function Tracks() {
         onChange: handleRowSelection,
     };
 
-    const handleAddArtistTrack = (values: any) => {
-        // try {
-        //     const newArtistData: ArtistData = {
-        //         name: values.name,
-        //         id: values.name,
-        //         createdAt: new Date().toDateString(),
-        //     };
-        //     const updatedTracks = formValues?.tracks?.map(
-        //         (track: TrackData) => {
-        //             if (track.id === dataEdit?.id) {
-        //                 const isArtistExists = track.artists?.some(
-        //                     (artist) => artist.name === newArtistData.name
-        //                 );
-        //                 if (!isArtistExists) {
-        //                     return {
-        //                         ...track,
-        //                         artists: [
-        //                             ...(track.artists || []),
-        //                             newArtistData,
-        //                         ],
-        //                     };
-        //                 }
-        //             }
-        //             return track;
-        //         }
-        //     );
-        //     setFormValues({
-        //         ...formValues,
-        //         tracks: updatedTracks,
-        //     });
-        //     closeModal();
-        // } catch (error) {
-        //     console.error('Validation failed:', error);
-        // }
-    };
-
     const handleRemoveTrackArtist = () => {
         const variable: DeleteVariables<TrackArtistData['id']> = {
             id: dataEdit?.id,
@@ -104,6 +68,16 @@ export default function Tracks() {
         };
         deleteTrackArtist(variable);
     };
+
+    useEffect(() => {
+        console.log(tracksData?.items);
+        if (tracksData?.items) {
+            setFormValues({
+                ...formValues,
+                tracks: tracksData.items,
+            });
+        }
+    }, [tracksData?.items]);
 
     return (
         <div>

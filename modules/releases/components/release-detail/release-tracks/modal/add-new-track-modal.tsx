@@ -98,6 +98,7 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                             trackId: null,
                             fileId: null,
                             peakId: null,
+                            preview: null,
                         },
                         key: `track-${index}`,
                     });

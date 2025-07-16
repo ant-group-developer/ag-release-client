@@ -13,17 +13,22 @@ export interface TrackData extends CommonAttribute {
     pLineOwner: string | null;
     primaryGenreId: string | null;
     subGenreId: string | null;
-    audioFileBucket?: AudioFileBucket;
+    audioFile?: AudioFileBucket;
+    originTypeId: string;
     originType: OriginType;
     trackLanguage?: {
         metadataLanguageId: string;
         audioLanguageId: string;
         metadataLanguageCountryId: string;
+        recordingCountryId: string;
     };
     trackArtists?: TrackArtistData[];
     isSensitiveContent: boolean;
     lyric: string;
-    recordingCountryId: string;
+    trackTypeId: string;
+    copyArtistsFromRelease: boolean;
+    trackOriginTypeId: string | null;
+    preview: string;
 }
 
 export interface TrackDataFilter extends CommonParams {

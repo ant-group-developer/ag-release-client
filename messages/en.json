@@ -37,6 +37,8 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "region": "Khu vực",
+        "specification": "Specification",
         "missingInformation": "Missing information",
         "ready": "Ready",
         "year": "Year",
@@ -70,6 +72,7 @@
         "subGenres": "Sub genres",
         "subArtist": "Sub artist",
         "releaseDate": "Release date",
+        "releaseTime": "Release time",
         "duration": "Duration",
         "draft": "Draft",
         "processing": "Processing",
@@ -603,6 +606,7 @@
         "id": "Track ID",
         "count": "Track count",
         "language": "Track language",
+        "recordingCountry": "Recording country",
         "original": {
             "label": "Original Work",
             "tooltip": "Original work is the piece that was created first, not any cover or remix."
@@ -711,6 +715,7 @@
     },
 
     "formFields": {
+        "metadataLanguageId": "Metadata language",
         "artists": "Artists",
         "releaseDate": "Release date",
         "territoryType": "Territory type",
@@ -723,8 +728,19 @@
         "genres": "Genres",
         "subGenres": "Sub genres",
         "metaDataLanguage": "Metadata language",
+        "primaryGenreId": "Primary genre",
+        "releaseLanguage": "Release language",
+        "releaseArtists": "Release artist",
+        "pLineOwner": "P Copyright",
+        "cLineOwner": "C Copyright",
+        "releaseTime": "Time release",
+        "releaseTimezoneId": "Timezone",
         "tracks": {
-            "pLine": "Recoding copyright",
+            "trackLanguage": "Ngôn ngữ bài hát",
+            "recordingCountryId": "Recording country",
+            "preview": "Preview track",
+            "primaryGenreId": "Primary genre",
+            "pLineOwner": "Recoding copyright",
             "previewTrack": "Preview track",
             "trackOrigin": "Track origin",
             "track": "Track",
@@ -826,6 +842,7 @@
     },
 
     "trackOrigin": {
-        "label": "Track original"
+        "label": "Track original",
+        "value": "Value"
     }
 }

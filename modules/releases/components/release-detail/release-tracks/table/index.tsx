@@ -39,10 +39,10 @@ export default function ReleaseTracksTable({ ...props }: Props) {
     const { updateTrackDraft } = useUpdateTrackDraft();
 
     const handleDragEnd: OnDragEnd<TrackData[]> = (newData) => {
-        const payload = newData.map((item, index) => ({
-            id: item.id,
-            order: index + 1,
-        }));
+        // const payload = newData.map((item, index) => ({
+        //     id: item.id,
+        //     order: index + 1,
+        // }));
     };
 
     const debouncedUpdate = useCallback(
@@ -191,7 +191,11 @@ export default function ReleaseTracksTable({ ...props }: Props) {
         const items = [
             {
                 key: `${record.id}-track-form`,
-                label: <span className="font-medium">Bản nhạc & nghệ sĩ</span>,
+                label: (
+                    <span className="font-medium">
+                        {messages('tracks.label')} & {messages('artist.label')}
+                    </span>
+                ),
                 children: (
                     <TracksForm
                         key={`${record.id}-track-form-content`}
@@ -204,7 +208,11 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             },
             {
                 key: `${record.id}-metadata-form`,
-                label: <span className="font-medium">Các metadata khác</span>,
+                label: (
+                    <span className="font-medium">
+                        {messages('releases.otherMetadata')}
+                    </span>
+                ),
                 children: (
                     <OtherMetadataForm
                         key={`${record.id}-metadata-form-content`}
@@ -217,7 +225,11 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             },
             {
                 key: `${record.id}-audio-specs`,
-                label: <span className="font-medium">Thông số kỹ thuật</span>,
+                label: (
+                    <span className="font-medium">
+                        {messages('common.specification')}
+                    </span>
+                ),
                 children: (
                     <AudioSpecifications
                         key={`${record.id}-audio-specs-content`}

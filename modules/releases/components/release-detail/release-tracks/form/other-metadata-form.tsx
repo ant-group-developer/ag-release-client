@@ -25,6 +25,26 @@ const otherMetadataSchema = (messages: any) =>
             .string()
             .min(5, messages('validation.input'))
             .nonempty(messages('validation.input')),
+        isrc: z
+            .string()
+            .optional()
+            .refine(
+                (val) => val !== null,
+                messages({
+                    messages: messages('validation.input'),
+                })
+            ),
+        // languageTrack: z.object({
+        //     metadataLanguageId: z
+        //         .string()
+        //         .min(1, messages('validation.select')),
+        //     metadataLanguageCountryId: z
+        //         .string()
+        //         .min(1, messages('validation.select')),
+        //     // Nếu form con không dùng 2 trường còn lại thì có thể để optional hoặc nullable
+        //     audioLanguageId: z.string().optional().nullable(),
+        //     recordingCountryId: z.string().optional().nullable(),
+        // }),
     });
 
 export type OtherMetadataSchema = z.infer<
@@ -55,6 +75,7 @@ export default function OtherMetadataForm({
                 trackData?.trackLanguage?.metadataLanguageId ?? '',
             lyrics: trackData?.lyric ?? '',
             pLineOwner: trackData?.pLineOwner ?? `${dayjs().year()} `,
+            isrc: trackData.isrc ?? '',
         },
         resolver: zodResolver(otherMetadataSchema(messages)),
         mode: 'onChange',
@@ -75,19 +96,23 @@ export default function OtherMetadataForm({
             ...formValues,
             tracks: formValues?.tracks?.map((track: any) => {
                 if (track.id === trackData.id) {
+                    const { countryLanguage, metadataLanguage, ...restFields } =
+                        watchedAllFields;
+
                     return {
                         ...track,
-                        ...watchedAllFields,
+                        ...restFields,
+                        trackLanguage: {
+                            ...track.trackLanguage,
+                            metadataLanguageCountryId: countryLanguage,
+                            metadataLanguageId: metadataLanguage,
+                        },
                     };
                 }
                 return track;
             }),
         });
     }, [watchedAllFields]);
-
-    useEffect(() => {
-        trigger();
-    }, [trackData]);
 
     return (
         <FormProvider {...formMethods}>
@@ -347,6 +372,32 @@ export default function OtherMetadataForm({
                                     });
                                 }}
                                 status={errors.lyrics ? 'error' : undefined}
+                            />
+                        )}
+                    />
+                </FormItem>
+
+                <FormItem
+                    name="isrc"
+                    label="ISRC"
+                    ErrorMessage={errors.isrc?.message}
+                >
+                    <Controller
+                        control={control}
+                        name="isrc"
+                        render={({ field }) => (
+                            <Input
+                                id="isrc"
+                                {...field}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    field.onChange(value);
+                                    updateTrackDraft({
+                                        isrc: value,
+                                    });
+                                }}
+                                allowClear
+                                status={errors.isrc ? 'error' : undefined}
                             />
                         )}
                     />

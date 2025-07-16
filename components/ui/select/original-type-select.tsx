@@ -1,6 +1,6 @@
-import useModalStore from '@/hooks/use-modal';
+import { useGetListTrackOriginTypes } from '@/modules/track-origin-types/hooks/use-get-list-track-origin-types';
+import { TrackOriginTypeData } from '@/modules/track-origin-types/types';
 import { Select, SelectProps } from 'antd';
-import { useTranslations } from 'next-intl';
 
 type Props = Omit<SelectProps, 'options'> & {};
 
@@ -11,17 +11,17 @@ export enum OriginType {
 }
 
 export default function OriginalTypeSelect({ ...props }: Props) {
-    const messages = useTranslations();
-    const openModal = useModalStore((state) => state.openModal);
+    const { trackOriginTypesData } = useGetListTrackOriginTypes({
+        pageSize: 999,
+    });
 
-    return (
-        <Select
-            {...props}
-            options={Object.values(OriginType).map((item) => ({
-                id: item,
-                value: item,
-                label: item,
-            }))}
-        />
+    const options = trackOriginTypesData.items.map(
+        (item: TrackOriginTypeData) => ({
+            id: item.id,
+            value: item.id,
+            label: item.name,
+        })
     );
+
+    return <Select {...props} options={options} />;
 }

@@ -44,10 +44,13 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
 
     useEffect(() => {
         // Thực hiện xác thực
-        console.log(formValues);
         const validationResult = releaseSchema(messages as any).safeParse(
             formValues
         );
+
+        console.log(validationResult?.error?.errors);
+
+        console.log('🚀 ~ useEffect ~ formValues:', formValues);
 
         if (!validationResult.success) {
             setValidationErrors(validationResult.error.errors);
@@ -97,7 +100,7 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
                                         className="rounded-md border border-red-200 bg-red-50 p-2 text-sm"
                                     >
                                         {err.path.length > 0 && (
-                                            <p className="text-red-600">
+                                            <p className="break-words text-red-600">
                                                 {getFieldLabel(err.path)}
                                             </p>
                                         )}

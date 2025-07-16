@@ -36,35 +36,6 @@ export default function CoreDetail() {
         closeModal();
     };
 
-    const handleAddArtistRelease = (values: any) => {
-        const isArtistEditModal =
-            typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST;
-        try {
-            // const newArtistData = {
-            //     name: values.name,
-            //     role: values.role,
-            //     id: values.name,
-            // };
-            // const releaseArtists = formValues.artists || [];
-            // let updatedArtists;
-            // if (isArtistEditModal) {
-            //     updatedArtists = releaseArtists.map((artist: any) =>
-            //         artist.name === dataEdit?.name
-            //             ? { ...artist, ...newArtistData }
-            //             : artist
-            //     );
-            // } else {
-            //     updatedArtists = [...releaseArtists, newArtistData];
-            // }
-            // setFormValues({
-            //     ...formValues,
-            //     artists: updatedArtists,
-            // });
-        } catch (error) {
-            console.error('Validation failed:', error);
-        }
-    };
-
     return (
         <div>
             <ReleaseDetailForm />

@@ -25,6 +25,7 @@ export default function TrackOriginTypeFormModal({ ...props }: Props) {
     const dataEdit = useModalStore(
         (state) => state.dataEdit as TrackOriginTypeData
     );
+    console.log('🚀 ~ TrackOriginTypeFormModal ~ dataEdit:', dataEdit);
     const isUpdateForm = dataEdit?.id;
 
     const { createTrackOriginType } = useCreateTrackOriginType();
@@ -100,7 +101,7 @@ export default function TrackOriginTypeFormModal({ ...props }: Props) {
             >
                 <AppFormItem
                     name="name"
-                    label={messages('trackType.label')}
+                    label={messages('trackOrigin.label')}
                     required
                     rules={[
                         {
@@ -111,6 +112,25 @@ export default function TrackOriginTypeFormModal({ ...props }: Props) {
                             max: 100,
                             message: messages('validation.max', {
                                 number: 100,
+                            }),
+                        },
+                    ]}
+                >
+                    <Input allowClear />
+                </AppFormItem>
+                <AppFormItem
+                    name="value"
+                    label={messages('trackOrigin.value')}
+                    required
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.input'),
+                        },
+                        {
+                            max: 50,
+                            message: messages('validation.max', {
+                                number: 50,
                             }),
                         },
                     ]}

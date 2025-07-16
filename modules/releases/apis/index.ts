@@ -32,4 +32,8 @@ export const releasesApi = {
             payload
         );
     },
+
+    deleteRelease: (id: ReleasesData['id']) => {
+        return axiosAuth.delete(`/releases/draft/${id}`);
+    },
 };

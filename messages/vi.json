@@ -37,6 +37,8 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "region": "region",
+        "specification": "Thông số kỹ thuật",
         "missingInformation": "Thiếu thông tin",
         "ready": "Sẵn sàng",
         "year": "Năm",
@@ -69,6 +71,7 @@
         "subGenres": "Thể loại phụ",
         "subArtist": "Nghệ sĩ phụ",
         "releaseDate": "Ngày phát hành",
+        "releaseTime": "Giờ phát hành",
         "duration": "Thời lượng",
         "draft": "Bản nháp",
         "processing": "Đang xử lý",
@@ -604,6 +607,7 @@
         "id": "Mã bài hát",
         "count": "Số lượng bài hát",
         "language": "Ngôn ngữ bài hát",
+        "recordingCountry": "Quốc gia ghi âm",
         "original": {
             "label": "Tác phẩm gốc",
             "tooltip": "Tác phẩm gốc là tác phẩm được tạo ra đầu tiên, không phải bất kỳ bản cover hoặc remix nào."
@@ -712,6 +716,7 @@
     },
 
     "formFields": {
+        "metadataLanguageId": "Ngôn ngữ metadata",
         "artists": "Nghệ sĩ",
         "releaseDate": "Ngày phát hành",
         "territoryType": "Khu vực",
@@ -725,8 +730,23 @@
         "metaDataLanguage": "Ngôn ngữ metadata",
         "cLine": "Bản quyền tác phẩm",
         "pLine": "Bản quyền ghi âm",
+        "version": "Phiên bản",
+        "primaryGenreId": "Thể loại chính",
+        "releaseTime": "Giờ phát hành",
+        "releaseTimezoneId": "Múi giờ",
+        "releaseLanguage": "Ngôn ngữ phát hành",
+        "releaseArtists": "Nghệ sĩ phát hành",
+        "pLineOwner": "Bản quyền ghi âm",
+        "cLineOwner": "Bản quyền tác phẩm",
         "tracks": {
-            "pLine": "Bản quyền ghi âm",
+            "trackLanguage": "Ngôn ngữ bài hát",
+            "recordingCountryId": "Quốc gia thu âm",
+            "preview": "Đoạn nghe trước",
+            "originTypeId": "Nguồn gốc bài hát",
+            "trackArtists": "Nghệ sĩ bài hát",
+            "trackTypeId": "Thể loại bài hát",
+            "primaryGenreId": "Thể loại chính",
+            "pLineOwner": "Bản quyền ghi âm",
             "previewTrack": "Đoạn nghe trước",
             "trackOrigin": "Nguồn gốc bài hát",
             "trackName": "Tên bài hát",
@@ -828,6 +848,7 @@
     },
 
     "trackOrigin": {
-        "label": "Nguồn gốc bài hát"
+        "label": "Nguồn gốc bài hát",
+        "value": "Giá trị"
     }
 }

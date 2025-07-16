@@ -1,20 +1,26 @@
-import { LabelForm } from '@/components/ui/label/labelForm';
+import FormItem from '@/components/ui/react-hook-form/form-item';
 import RegionSelect from '@/components/ui/select/region-select';
 import TimezoneSelect from '@/components/ui/select/timezone-select';
-import ErrorText from '@/components/ui/text/error-text';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { DATE_FORMAT } from '@/enums/common';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
+import { ReleasesData } from '@/modules/releases/types';
+import { UpdateReleaseDraftPayload } from '@/modules/releases/types/payload';
+import { UpdateVariables } from '@/types/api';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DatePicker } from 'antd';
+import { DatePicker, TimePicker } from 'antd';
 import dayjs from 'dayjs';
+import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
-import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
+import { useCallback } from 'react';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 const releaseSchedulingSchema = (messages: any) =>
     z.object({
         releaseDate: z.string().nonempty(messages('validation.input')),
+        releaseTime: z.string().nonempty(messages('validation.input')),
         territoryType: z
             .array(z.string())
             .min(1, messages('validation.select')),
@@ -32,12 +38,14 @@ export default function ReleaseSchedulingForm({}: Props) {
 
     const formValues = useReleaseFormStore((state) => state.formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
+    const { updateReleaseDraft } = useUpdateReleaseDraft();
 
     const formMethods = useForm<ReleaseSchedulingSchema>({
         defaultValues: {
-            releaseDate: formValues?.releaseDate || '',
+            releaseDate: formValues?.releaseDate ?? '',
+            releaseTime: formValues?.releaseTime,
             // territoryType: formValues?.territoryType || [],
-            // timezone: formValues?.timezone || '',
+            timezone: formValues?.releaseTimezoneId ?? '',
         },
         resolver: zodResolver(releaseSchedulingSchema(messages)),
         mode: 'onChange',
@@ -52,34 +60,52 @@ export default function ReleaseSchedulingForm({}: Props) {
         setValue,
     } = formMethods;
 
-    const watchedAllFields = useWatch({ control });
+    const debouncedUpdate = useCallback(
+        debounce((data) => {
+            if (!formValues.id) return;
+            const variables: UpdateVariables<
+                ReleasesData['id'],
+                UpdateReleaseDraftPayload
+            > = {
+                id: formValues.id ?? '',
+                payload: data,
+                onSuccess: (data: ReleasesData) => {
+                    setFormValues(data);
+                },
+            };
+            updateReleaseDraft(variables);
+        }, 500),
+        [formValues.id]
+    );
 
-    useEffect(() => {
-        const updatedFormValues = {
-            ...formValues,
-            releaseDate: watchedAllFields.releaseDate,
-            territoryType: watchedAllFields.territoryType,
-            timezone: watchedAllFields.timezone,
-        };
+    // const watchedAllFields = useWatch({ control });
 
-        setFormValues(updatedFormValues);
-    }, [watchedAllFields]);
+    // useEffect(() => {
+    //     const updatedFormValues = {
+    //         ...formValues,
+    //         releaseDate: watchedAllFields.releaseDate,
+    //         territoryType: watchedAllFields.territoryType,
+    //         timezone: watchedAllFields.timezone,
+    //     };
 
-    useEffect(() => {
-        trigger();
-    }, []);
+    //     setFormValues(updatedFormValues);
+    // }, [watchedAllFields]);
+
+    // useEffect(() => {
+    //     trigger();
+    // }, []);
 
     return (
         <div className="rounded-lg bg-white p-4">
             <FormProvider {...formMethods}>
                 <form className="flex flex-col gap-4">
-                    <div className="grid grid-cols-3 gap-8">
-                        <div>
-                            <LabelForm
-                                htmlFor="releaseDate"
-                                required
-                                label="Thời gian phát hành"
-                            />
+                    <div className="grid grid-cols-2 gap-6">
+                        <FormItem
+                            name="releaseDate"
+                            label={messages('releases.releaseDate')}
+                            required
+                            ErrorMessage={errors.releaseDate?.message}
+                        >
                             <Controller
                                 control={control}
                                 name="releaseDate"
@@ -87,7 +113,7 @@ export default function ReleaseSchedulingForm({}: Props) {
                                     <DatePicker
                                         id="releaseDate"
                                         className="w-full"
-                                        format="DD/MM/YYYY"
+                                        format={DATE_FORMAT.DATE_ONLY}
                                         disabledDate={(date) =>
                                             date &&
                                             date < dayjs().startOf('day')
@@ -100,12 +126,15 @@ export default function ReleaseSchedulingForm({}: Props) {
                                                   )
                                                 : null
                                         }
-                                        onChange={(date, dateString) => {
+                                        onChange={(date) => {
                                             field.onChange(
                                                 date
                                                     ? date.format('YYYY-MM-DD')
                                                     : ''
                                             );
+                                            debouncedUpdate({
+                                                releaseDate: date,
+                                            });
                                         }}
                                         status={
                                             errors.releaseDate
@@ -115,18 +144,52 @@ export default function ReleaseSchedulingForm({}: Props) {
                                     />
                                 )}
                             />
-                            <ErrorText
-                                isError={!!errors.releaseDate}
-                                message={errors.releaseDate?.message}
-                            />
-                        </div>
+                        </FormItem>
 
-                        <div>
-                            <LabelForm
-                                htmlFor="timezone"
-                                required
-                                label="timezone"
+                        <FormItem
+                            name="releaseTime"
+                            label={messages('common.releaseTime')}
+                            required
+                            ErrorMessage={errors.releaseTime?.message}
+                        >
+                            <Controller
+                                control={control}
+                                name="releaseTime"
+                                render={({ field }) => (
+                                    <TimePicker
+                                        className="w-full"
+                                        value={
+                                            field.value
+                                                ? dayjs(field.value, 'HH:mm')
+                                                : null
+                                        }
+                                        onChange={(time) => {
+                                            field.onChange(
+                                                time ? time.format('HH:mm') : ''
+                                            );
+                                            debouncedUpdate({
+                                                releaseTime: time
+                                                    ? time.format('HH:mm')
+                                                    : '',
+                                            });
+                                        }}
+                                        status={
+                                            errors.releaseTime
+                                                ? 'error'
+                                                : undefined
+                                        }
+                                        showSecond={false}
+                                    />
+                                )}
                             />
+                        </FormItem>
+
+                        <FormItem
+                            name="timezone"
+                            label="timezone"
+                            required
+                            ErrorMessage={errors.timezone?.message}
+                        >
                             <Controller
                                 control={control}
                                 name="timezone"
@@ -135,6 +198,13 @@ export default function ReleaseSchedulingForm({}: Props) {
                                         id="timezone"
                                         className="w-full"
                                         {...field}
+                                        placeholder="Chọn múi giờ"
+                                        onChange={(e) => {
+                                            field.onChange(e);
+                                            debouncedUpdate({
+                                                releaseTimezoneId: e,
+                                            });
+                                        }}
                                         status={
                                             errors.timezone
                                                 ? 'error'
@@ -143,18 +213,14 @@ export default function ReleaseSchedulingForm({}: Props) {
                                     />
                                 )}
                             />
-                            <ErrorText
-                                isError={!!errors.timezone}
-                                message={errors.timezone?.message}
-                            />
-                        </div>
+                        </FormItem>
 
-                        <div>
-                            <LabelForm
-                                htmlFor="territoryType"
-                                required
-                                label="Khu vực"
-                            />
+                        <FormItem
+                            name="territoryType"
+                            label={messages('common.region')}
+                            required
+                            ErrorMessage={errors.territoryType?.message}
+                        >
                             <Controller
                                 control={control}
                                 name="territoryType"
@@ -186,11 +252,7 @@ export default function ReleaseSchedulingForm({}: Props) {
                                     />
                                 )}
                             />
-                            <ErrorText
-                                isError={!!errors.territoryType}
-                                message={errors.territoryType?.message}
-                            />
-                        </div>
+                        </FormItem>
                     </div>
                 </form>
             </FormProvider>

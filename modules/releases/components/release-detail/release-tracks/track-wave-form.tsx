@@ -5,16 +5,16 @@ import { TrackData } from '@/modules/tracks/types';
 import { useEffect, useState } from 'react';
 
 export function TrackWaveform({ data }: { data: TrackData }) {
-    const { id, audioFileBucket } = data;
+    const { id, audioFile } = data;
     const { isPlaying, handlePlay, currentTimePlaying, handleSeeking } =
         useSongStatus(id);
 
     const [peakData, setPeakData] = useState<any>([]);
 
     useEffect(() => {
-        if (audioFileBucket?.peak) {
+        if (audioFile?.peak?.urlRead) {
             axiosAuth
-                .get(audioFileBucket.peak)
+                .get(audioFile?.peak?.urlRead)
                 .then((response) => {
                     setPeakData(response.data);
                 })
@@ -22,18 +22,18 @@ export function TrackWaveform({ data }: { data: TrackData }) {
                     console.error('Lỗi khi đọc file JSON:', error);
                 });
         }
-    }, [audioFileBucket?.peak]);
+    }, [audioFile?.peak?.urlRead]);
 
     return (
         <WaveformElement
             peakData={peakData}
             playedTime={currentTimePlaying}
-            songDuration={audioFileBucket?.duration}
+            songDuration={audioFile?.duration}
             playing={isPlaying}
             togglePlayback={() =>
                 handlePlay({
                     url:
-                        audioFileBucket?.file ??
+                        audioFile?.peak?.urlRead ??
                         'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
                     songId: id,
                 })
@@ -41,7 +41,7 @@ export function TrackWaveform({ data }: { data: TrackData }) {
             handleSeeking={(second) =>
                 handleSeeking({
                     url:
-                        audioFileBucket?.file ??
+                        audioFile?.peak?.urlRead ??
                         'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
                     songId: id,
                     second,

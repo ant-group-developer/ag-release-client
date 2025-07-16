@@ -1,5 +1,6 @@
 export interface CreateTrackOriginTypePayload {
     name: string;
+    value: string;
 }
 
 export interface UpdateTrackOriginTypePayload

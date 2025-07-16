@@ -1,32 +1,32 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
 import CountrySelect from '@/components/ui/select/country-select';
-import { timeStringToSeconds } from '@/helpers/common';
+import TrackTypesSelect from '@/components/ui/select/track-types-select';
+import { DATE_FORMAT } from '@/enums/common';
+import {
+    convertSecondsToHoursMinutes,
+    timeStringToSeconds,
+} from '@/helpers/common';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { TrackData } from '@/modules/tracks/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Input, Select, TimePicker } from 'antd';
+import { Input, TimePicker } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { useEffect } from 'react';
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
 const audioSpecificationsSchema = (messages: any, maxDuration: number) =>
     z.object({
         fileName: z.string().nonempty(messages('validation.input')),
-        countryRecording: z.string().nonempty(messages('validation.input')),
+        recordingCountry: z.string().nonempty(messages('validation.input')),
         previewTrack: z
             .string()
             .nonempty('Đoạn nghe mẫu là bắt buộc')
             .refine((val) => timeStringToSeconds(val) <= maxDuration, {
                 message: 'Thời gian không được lớn hơn thời lượng bài hát',
             }),
-        // hookTrack: z
-        //     .string()
-        //     .nonempty('Hook bài hát là bắt buộc')
-        //     .refine((val) => timeStringToSeconds(val) <= maxDuration, {
-        //         message: 'Thời gian không được lớn hơn thời lượng bài hát',
-        //     }),
-        recordingType: z.string().nonempty(messages('validation.input')),
+        trackTypes: z.string().nonempty(messages('validation.input')),
     });
 
 export type AudioSpecificationsSchema = z.infer<
@@ -43,23 +43,23 @@ export default function AudioSpecifications({
     updateTrackDraft,
 }: Props) {
     const messages = useTranslations();
-    // const { fileData } = trackData;
-    // const metadata = fileData?.metadata;
+
     const formValues = useReleaseFormStore((state) => state.formValues);
-    const thisTrackData = formValues?.tracks?.find(
-        (track: TrackData) => track.id === trackData.id
-    );
 
     const formMethods = useForm<AudioSpecificationsSchema>({
         defaultValues: {
-            fileName: trackData?.title,
-            countryRecording: thisTrackData?.recordingCountryId,
+            fileName: trackData?.audioFile?.file?.fileName,
+            recordingCountry: trackData?.trackLanguage?.recordingCountryId,
+            trackTypes: trackData?.trackTypeId,
+            previewTrack: trackData?.audioFile?.preview
+                ? convertSecondsToHoursMinutes(trackData.audioFile.preview)
+                : '',
         },
         mode: 'onChange',
         resolver: zodResolver(
             audioSpecificationsSchema(
                 messages,
-                trackData?.audioFileBucket?.duration ?? 0
+                trackData?.audioFile?.duration ?? 0
             )
         ),
     });
@@ -73,13 +73,26 @@ export default function AudioSpecifications({
 
     const onSubmit = (data: AudioSpecificationsSchema) => {};
 
-    // useEffect(() => {
-    //     formMethods.trigger();
-    // }, [fileData, trackData, formMethods]);
+    const watchedAllFields = useWatch({ control });
+
+    useEffect(() => {
+        setFormValues({
+            ...formValues,
+            tracks: formValues?.tracks?.map((track: any) => {
+                if (track.id === trackData.id) {
+                    return {
+                        ...track,
+                        ...watchedAllFields,
+                    };
+                }
+                return track;
+            }),
+        });
+    }, [watchedAllFields]);
 
     return (
         <FormProvider {...formMethods}>
-            <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+            <form className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                     <FormItem
                         name="fileName"
@@ -97,9 +110,13 @@ export default function AudioSpecifications({
                                         errors.fileName ? 'error' : undefined
                                     }
                                     onChange={(e) => {
-                                        field.onChange(e);
+                                        field.onChange(e.target.value);
                                         updateTrackDraft({
-                                            fileName: e.target.value,
+                                            audioFile: {
+                                                file: {
+                                                    fileName: e.target.value,
+                                                },
+                                            },
                                         });
                                     }}
                                 />
@@ -108,18 +125,18 @@ export default function AudioSpecifications({
                     </FormItem>
 
                     <FormItem
-                        name="countryRecording"
-                        label="Quốc gia ghi âm"
+                        name="recordingCountry"
+                        label={messages('tracks.recordingCountry')}
                         required
-                        ErrorMessage={errors.countryRecording?.message}
+                        ErrorMessage={errors.recordingCountry?.message}
                     >
                         <Controller
                             control={control}
-                            name="countryRecording"
+                            name="recordingCountry"
                             render={({ field }) => (
                                 <CountrySelect
                                     status={
-                                        errors.countryRecording
+                                        errors.recordingCountry
                                             ? 'error'
                                             : undefined
                                     }
@@ -129,7 +146,9 @@ export default function AudioSpecifications({
                                     onChange={(e) => {
                                         field.onChange(e);
                                         updateTrackDraft({
-                                            countryRecordingId: e,
+                                            trackLanguage: {
+                                                audioLanguageId: e,
+                                            },
                                         });
                                     }}
                                 />
@@ -151,21 +170,35 @@ export default function AudioSpecifications({
                                     {...field}
                                     value={
                                         field.value
-                                            ? dayjs(field.value, 'HH:mm:ss')
+                                            ? dayjs(
+                                                  typeof field.value ===
+                                                      'number'
+                                                      ? convertSecondsToHoursMinutes(
+                                                            field.value
+                                                        )
+                                                      : field.value,
+                                                  DATE_FORMAT.HOUR_MINUTE
+                                              )
                                             : null
                                     }
                                     onChange={(time) => {
                                         const value = time
-                                            ? time.format('HH:mm:ss')
+                                            ? time.format(
+                                                  DATE_FORMAT.HOUR_MINUTE
+                                              )
                                             : '';
                                         field.onChange(value);
                                         updateTrackDraft({
-                                            previewTrack: value,
+                                            audioFile: {
+                                                preview: value
+                                                    ? timeStringToSeconds(value)
+                                                    : 0,
+                                            },
                                         });
                                     }}
                                     onBlur={field.onBlur}
-                                    size="large"
-                                    format="HH:mm:ss"
+                                    size="middle"
+                                    format={DATE_FORMAT.HOUR_MINUTE}
                                     status={
                                         !!errors.previewTrack
                                             ? 'error'
@@ -177,44 +210,31 @@ export default function AudioSpecifications({
                     </FormItem>
 
                     <FormItem
-                        name="recordingType"
-                        label="Thể loại bản ghi"
+                        name="trackTypes"
+                        label={messages('trackType.label')}
                         required
-                        ErrorMessage={errors.recordingType?.message}
+                        ErrorMessage={errors.trackTypes?.message}
                     >
                         <Controller
                             control={control}
-                            name="recordingType"
+                            name="trackTypes"
                             render={({ field }) => (
-                                <Select
+                                <TrackTypesSelect
                                     status={
-                                        errors.recordingType
-                                            ? 'error'
-                                            : undefined
+                                        errors.trackTypes ? 'error' : undefined
                                     }
                                     className="w-full"
                                     {...field}
-                                    options={[
-                                        {
-                                            label: 'Sound Recording (Music work)',
-                                            value: '1',
-                                        },
-                                        {
-                                            label: 'Sound Recording (Non music work)',
-                                            value: '2',
-                                        },
-                                    ]}
                                     showSearch
                                     onChange={(e) => {
                                         field.onChange(e);
-                                        updateTrackDraft({ recordingType: e });
+                                        updateTrackDraft({ trackTypeId: e });
                                     }}
                                 />
                             )}
                         />
                     </FormItem>
                 </div>
-                {/* Các phần khác nếu có */}
             </form>
         </FormProvider>
     );

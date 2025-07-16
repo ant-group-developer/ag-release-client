@@ -29,7 +29,7 @@ export interface ReleasesData extends CommonAttribute {
     status: RELEASES_STATUS;
     type?: RELEASES_TYPE;
     tracks: TrackData[];
-    releaseArtists: ReleaseArtist[];
+    releaseArtists?: ReleaseArtist[];
     coverArtThumbnails?: ReleaseCoverArt;
     pLineOwner: string;
     cLineOwner: string;
@@ -38,6 +38,7 @@ export interface ReleasesData extends CommonAttribute {
     releaseLanguage?: releaseLanguage;
     releaseDate: string;
     releaseTime: string;
+    releaseTimezoneId: string | null;
 }
 
 export interface ReleasesDataFilter extends CommonParams {
@@ -56,3 +57,5 @@ export interface releaseLanguage extends CommonParams {
     metadataLanguageId: string;
     releaseId: string;
 }
+
+export type { TrackData } from '@/modules/tracks/types';

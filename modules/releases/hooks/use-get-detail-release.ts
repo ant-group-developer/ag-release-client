@@ -33,6 +33,7 @@ export const useGetDetailRelease = (id: ReleasesData['id']) => {
         isVariousArtist: false,
         releaseDate: '',
         releaseTime: '',
+        releaseTimezoneId: null,
     };
 
     return {

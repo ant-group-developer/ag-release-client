@@ -31,12 +31,12 @@ const initialValue: ReleaseFormStoreData = {
     modifierId: '',
     upc: '',
     status: RELEASES_STATUS.DRAFT,
-    tracks: [],
-    releaseArtists: [],
     createdAt: '',
     updatedAt: null,
     releaseDate: '',
     releaseTime: '',
+    releaseTimezoneId: null,
+    tracks: [],
 };
 
 export const useReleaseFormStore = create<ReleaseFormState>()(

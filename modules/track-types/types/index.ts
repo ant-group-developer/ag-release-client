@@ -8,5 +8,5 @@ export interface TrackTypeData extends CommonAttribute {
 
 export interface TrackTypeDataFilter extends CommonParams {
     keyword?: string;
-    createdAt: string;
+    createdAt?: string;
 }

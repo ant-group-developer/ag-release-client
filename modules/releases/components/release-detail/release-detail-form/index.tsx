@@ -18,7 +18,7 @@ import {
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
-import { ReleasesData } from '@/modules/releases/types';
+import { ReleaseCoverArt, ReleasesData } from '@/modules/releases/types';
 import {
     CreateReleaseDraftPayload,
     UpdateReleaseDraftPayload,
@@ -43,13 +43,16 @@ export const releaseDetailSchema = (messages: any) =>
         metadataLanguageId: z.string().nonempty(messages('validation.input')),
         labelId: z.string().optional(),
         catalogId: z.string().optional(),
-        title: z.string().nonempty(messages('validation.input')),
+        title: z
+            .string()
+            .min(1, messages('validation.input'))
+            .max(100, messages('validation.input')),
         version: z.string().optional(),
         type: z.nativeEnum(RELEASES_TYPE, {
             required_error: messages('validation.select'),
         }),
-        releaseArtists: z.array(z.unknown()), // Check lại type
-        coverArtThumbnails: z.any(), // Check lại type
+        releaseArtists: z.array(z.custom<ReleaseArtist>()),
+        coverArtThumbnails: z.custom<ReleaseCoverArt>(),
         pLineOwner: z
             .string()
             .min(5, messages('validation.input'))
@@ -89,7 +92,6 @@ export default function ReleaseDetailForm() {
 
     // form
     const formMethods = useForm<ReleaseDetailSchema>({
-        // defaultValues: initialFormValue,
         resolver: zodResolver(releaseDetailSchema(messages)),
         mode: 'onChange',
         reValidateMode: 'onChange',
@@ -194,8 +196,10 @@ export default function ReleaseDetailForm() {
         createReleaseDraft(variables);
     };
     const debouncedUpdate = useCallback(
-        debounce((data) => {
+        debounce(async (data) => {
             if (!formValues.id) return;
+            const valid = await trigger();
+            if (!valid) return;
             const variables: UpdateVariables<
                 ReleasesData['id'],
                 UpdateReleaseDraftPayload
@@ -231,11 +235,20 @@ export default function ReleaseDetailForm() {
                     version: formValues.version ?? '',
                     metadataLanguageId:
                         formValues.releaseLanguage?.metadataLanguageId ?? '',
+                    coverArtThumbnails: {
+                        '75x75': null,
+                        '100x100': null,
+                        '160x160': null,
+                        '300x300': null,
+                        '900x900': null,
+                        original: null,
+                    },
                 };
+                setFormValues(initialFormValue);
                 reset(initialFormValue);
             }
         }
-    }, [isCreateReleasePage, releaseId, formValues]);
+    }, [isCreateReleasePage, releaseId]);
 
     return (
         <FormProvider {...formMethods}>
