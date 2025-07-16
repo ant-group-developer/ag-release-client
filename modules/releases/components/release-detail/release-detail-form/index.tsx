@@ -40,7 +40,16 @@ export const releaseDetailSchema = (messages: any) =>
         upc: z.string().optional(),
         primaryGenreId: z.string().nonempty(messages('validation.input')),
         subGenreId: z.string().optional(),
-        metadataLanguageId: z.string().nonempty(messages('validation.input')),
+        releaseLanguage: z.object({
+            metadataLanguageId: z
+                .string()
+                .nonempty(messages('validation.input')),
+            metadataLanguageCountryId: z
+                .string()
+                .nonempty(messages('validation.input')),
+            audioLanguageId: z.string().nonempty(messages('validation.input')),
+            releaseId: z.string().nonempty(messages('validation.input')),
+        }),
         labelId: z.string().optional(),
         catalogId: z.string().optional(),
         title: z
@@ -198,8 +207,6 @@ export default function ReleaseDetailForm() {
     const debouncedUpdate = useCallback(
         debounce(async (data) => {
             if (!formValues.id) return;
-            const valid = await trigger();
-            if (!valid) return;
             const variables: UpdateVariables<
                 ReleasesData['id'],
                 UpdateReleaseDraftPayload
@@ -233,8 +240,19 @@ export default function ReleaseDetailForm() {
                     labelId: formValues.labelId ?? '',
                     catalogId: formValues.catalogId ?? '',
                     version: formValues.version ?? '',
-                    metadataLanguageId:
-                        formValues.releaseLanguage?.metadataLanguageId ?? '',
+                    releaseLanguage: {
+                        metadataLanguageId:
+                            formValues.releaseLanguage?.metadataLanguageId ||
+                            '',
+                        metadataLanguageCountryId:
+                            formValues.releaseLanguage
+                                ?.metadataLanguageCountryId || '',
+                        audioLanguageId:
+                            formValues.releaseLanguage?.audioLanguageId || '',
+                        releaseId: formValues.id || '',
+                    },
+                    // metadataLanguageId:
+                    //     formValues.releaseLanguage?.metadataLanguageId ?? '',
                     coverArtThumbnails: {
                         '75x75': null,
                         '100x100': null,
@@ -551,14 +569,17 @@ export default function ReleaseDetailForm() {
                         </FormItem>
 
                         <FormItem
-                            name="metadataLanguageId"
+                            name="releaseLanguage.metadataLanguageId"
                             label={`${messages('common.language')} metadata`}
                             required
-                            ErrorMessage={errors.metadataLanguageId?.message}
+                            ErrorMessage={
+                                errors.releaseLanguage?.metadataLanguageId
+                                    ?.message
+                            }
                         >
                             <Controller
                                 control={control}
-                                name="metadataLanguageId"
+                                name="releaseLanguage.metadataLanguageId"
                                 render={({ field }) => (
                                     <LanguageSelect
                                         className="w-full"
@@ -574,7 +595,8 @@ export default function ReleaseDetailForm() {
                                             });
                                         }}
                                         status={
-                                            errors.metadataLanguageId
+                                            errors.releaseLanguage
+                                                ?.metadataLanguageId
                                                 ? 'error'
                                                 : undefined
                                         }

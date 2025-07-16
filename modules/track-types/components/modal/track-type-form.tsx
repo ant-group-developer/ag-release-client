@@ -98,7 +98,7 @@ export default function TrackTypeFormModal({ ...props }: Props) {
             >
                 <AppFormItem
                     name="name"
-                    label={messages('trackOrigin.label')}
+                    label={messages('trackType.label')}
                     required
                     rules={[
                         {

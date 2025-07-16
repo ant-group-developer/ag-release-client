@@ -19,14 +19,14 @@ import { z } from 'zod';
 const audioSpecificationsSchema = (messages: any, maxDuration: number) =>
     z.object({
         fileName: z.string().nonempty(messages('validation.input')),
-        recordingCountry: z.string().nonempty(messages('validation.input')),
-        previewTrack: z
+        recordingCountryId: z.string().nonempty(messages('validation.input')),
+        preview: z
             .string()
             .nonempty('Đoạn nghe mẫu là bắt buộc')
             .refine((val) => timeStringToSeconds(val) <= maxDuration, {
                 message: 'Thời gian không được lớn hơn thời lượng bài hát',
             }),
-        trackTypes: z.string().nonempty(messages('validation.input')),
+        trackTypeId: z.string().nonempty(messages('validation.input')),
     });
 
 export type AudioSpecificationsSchema = z.infer<
@@ -49,9 +49,9 @@ export default function AudioSpecifications({
     const formMethods = useForm<AudioSpecificationsSchema>({
         defaultValues: {
             fileName: trackData?.audioFile?.file?.fileName,
-            recordingCountry: trackData?.trackLanguage?.recordingCountryId,
-            trackTypes: trackData?.trackTypeId,
-            previewTrack: trackData?.audioFile?.preview
+            recordingCountryId: trackData?.trackLanguage?.recordingCountryId,
+            trackTypeId: trackData?.trackTypeId,
+            preview: trackData?.audioFile?.preview
                 ? convertSecondsToHoursMinutes(trackData.audioFile.preview)
                 : '',
         },
@@ -76,6 +76,7 @@ export default function AudioSpecifications({
     const watchedAllFields = useWatch({ control });
 
     useEffect(() => {
+        console.log('run uef');
         setFormValues({
             ...formValues,
             tracks: formValues?.tracks?.map((track: any) => {
@@ -125,18 +126,18 @@ export default function AudioSpecifications({
                     </FormItem>
 
                     <FormItem
-                        name="recordingCountry"
+                        name="recordingCountryId"
                         label={messages('tracks.recordingCountry')}
                         required
-                        ErrorMessage={errors.recordingCountry?.message}
+                        ErrorMessage={errors.recordingCountryId?.message}
                     >
                         <Controller
                             control={control}
-                            name="recordingCountry"
+                            name="recordingCountryId"
                             render={({ field }) => (
                                 <CountrySelect
                                     status={
-                                        errors.recordingCountry
+                                        errors.recordingCountryId
                                             ? 'error'
                                             : undefined
                                     }
@@ -147,7 +148,7 @@ export default function AudioSpecifications({
                                         field.onChange(e);
                                         updateTrackDraft({
                                             trackLanguage: {
-                                                audioLanguageId: e,
+                                                recordingCountryId: e,
                                             },
                                         });
                                     }}
@@ -157,14 +158,14 @@ export default function AudioSpecifications({
                     </FormItem>
 
                     <FormItem
-                        name="previewTrack"
+                        name="preview"
                         label="Đoạn nghe mẫu"
                         required
-                        ErrorMessage={errors.previewTrack?.message}
+                        ErrorMessage={errors.preview?.message}
                     >
                         <Controller
                             control={control}
-                            name="previewTrack"
+                            name="preview"
                             render={({ field }) => (
                                 <TimePicker
                                     {...field}
@@ -200,9 +201,7 @@ export default function AudioSpecifications({
                                     size="middle"
                                     format={DATE_FORMAT.HOUR_MINUTE}
                                     status={
-                                        !!errors.previewTrack
-                                            ? 'error'
-                                            : undefined
+                                        !!errors.preview ? 'error' : undefined
                                     }
                                 />
                             )}
@@ -210,18 +209,18 @@ export default function AudioSpecifications({
                     </FormItem>
 
                     <FormItem
-                        name="trackTypes"
+                        name="trackTypeId"
                         label={messages('trackType.label')}
                         required
-                        ErrorMessage={errors.trackTypes?.message}
+                        ErrorMessage={errors.trackTypeId?.message}
                     >
                         <Controller
                             control={control}
-                            name="trackTypes"
+                            name="trackTypeId"
                             render={({ field }) => (
                                 <TrackTypesSelect
                                     status={
-                                        errors.trackTypes ? 'error' : undefined
+                                        errors.trackTypeId ? 'error' : undefined
                                     }
                                     className="w-full"
                                     {...field}
