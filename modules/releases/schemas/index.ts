@@ -2,12 +2,13 @@ import { ReleaseArtist } from '@/modules/release-artist/types';
 import { releaseTrackSchema } from '@/modules/tracks/schemas';
 import { z } from 'zod';
 import { RELEASES_TYPE } from '../enums';
-export const releaseSchema = (messages: (key: string) => string) =>
+export const releaseSchema = (messages: any) =>
     z.object({
         coverArtThumbnails: z
             .object({
                 '75x75': z.string().nullable(),
                 '100x100': z.string().nullable(),
+                '160x160': z.string().nullable(),
                 '300x300': z.string().nullable(),
                 '900x900': z.string().nullable(),
                 original: z
@@ -17,7 +18,6 @@ export const releaseSchema = (messages: (key: string) => string) =>
                         message: messages('validation.input'),
                     }),
             })
-            .nullable()
             .refine(
                 (val) =>
                     val !== null &&
@@ -27,7 +27,11 @@ export const releaseSchema = (messages: (key: string) => string) =>
                     message: messages('validation.input'),
                 }
             ),
-        upc: z.string().optional().nullable(),
+        upc: z
+            .string()
+            .max(20, messages('validation.max', { number: 20 }))
+            .optional()
+            .nullable(),
         primaryGenreId: z
             .string()
             .nullable()
@@ -44,19 +48,28 @@ export const releaseSchema = (messages: (key: string) => string) =>
                         message: messages('validation.input'),
                     }),
             })
-            .nullable()
             .refine((val) => val !== null, {
                 message: messages('validation.input'),
             }),
         labelId: z.string().optional().nullable(),
-        catalogId: z.string().optional().nullable(),
+        catalogId: z
+            .string()
+            .max(100, messages('validation.max', { number: 100 }))
+            .optional()
+            .nullable(),
         title: z
             .string()
+            .min(1, messages('validation.min', { number: 1 }))
+            .max(100, messages('validation.max', { number: 100 }))
             .nullable()
             .refine((val) => val !== null && val !== '', {
                 message: messages('validation.input'),
             }),
-        version: z.string().optional().nullable(),
+        version: z
+            .string()
+            .max(50, messages('validation.max', { number: 50 }))
+            .optional()
+            .nullable(),
         type: z.nativeEnum(RELEASES_TYPE, {
             required_error: messages('validation.select'),
         }),
@@ -115,7 +128,7 @@ export const releaseSchema = (messages: (key: string) => string) =>
                     .refine((val) => val !== null && val !== undefined, {
                         message: messages('validation.input'),
                     }),
-                distributeType: z.boolean().optional().nullable(),
+                distributionType: z.string().optional().nullable(),
                 selectedCountries: z.array(z.string()).optional().nullable(),
             })
             .superRefine((val, ctx) => {
@@ -132,9 +145,9 @@ export const releaseSchema = (messages: (key: string) => string) =>
                     }
                 }
                 if (!val.distributeWorldwide) {
-                    if (!val.distributeType) {
+                    if (!val.distributionType) {
                         ctx.addIssue({
-                            path: ['distributeType'],
+                            path: ['distributionType'],
                             code: z.ZodIssueCode.custom,
                             message: messages('validation.input'),
                         });

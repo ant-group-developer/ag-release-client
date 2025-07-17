@@ -40,7 +40,7 @@ const initialValue: ReleaseFormStoreData = {
     releaseTerritory: {
         distributeWorldwide: false,
         selectedCountries: [],
-        distributeType: false,
+        distributionType: '',
     },
 };
 

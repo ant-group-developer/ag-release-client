@@ -1,50 +1,31 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
 import CountrySelect from '@/components/ui/select/country-select';
 import GenresSelect from '@/components/ui/select/genres-select';
-import LanguageSelect from '@/components/ui/select/language-select';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
+import { releaseTrackSchema } from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
+import { UpdateTrackPayload } from '@/modules/tracks/types/payload';
+import { UpdateVariables } from '@/types/api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input, Select } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import dayjs from 'dayjs';
+import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
 const otherMetadataSchema = (messages: any) =>
-    z.object({
-        genres: z.string().min(1, messages('validation.select')),
-        subGenres: z.string().optional(),
-        isSensitiveContent: z.boolean(messages('validation.input')),
-        countryLanguage: z.string().min(1, messages('validation.select')),
-        metadataLanguage: z.string().min(1, messages('validation.select')),
-        lyrics: z.string().optional(),
-        pLineOwner: z
-            .string()
-            .min(5, messages('validation.input'))
-            .nonempty(messages('validation.input')),
-        isrc: z
-            .string()
-            .optional()
-            .refine(
-                (val) => val !== null,
-                messages({
-                    messages: messages('validation.input'),
-                })
-            ),
-        // languageTrack: z.object({
-        //     metadataLanguageId: z
-        //         .string()
-        //         .min(1, messages('validation.select')),
-        //     metadataLanguageCountryId: z
-        //         .string()
-        //         .min(1, messages('validation.select')),
-        //     // Nếu form con không dùng 2 trường còn lại thì có thể để optional hoặc nullable
-        //     audioLanguageId: z.string().optional().nullable(),
-        //     recordingCountryId: z.string().optional().nullable(),
-        // }),
+    releaseTrackSchema(messages).pick({
+        primaryGenreId: true,
+        subGenreId: true,
+        isSensitiveContent: true,
+        trackLanguage: true,
+        lyric: true,
+        pLineOwner: true,
+        isrc: true,
     });
 
 export type OtherMetadataSchema = z.infer<
@@ -53,28 +34,21 @@ export type OtherMetadataSchema = z.infer<
 
 type Props = {
     trackData: TrackData;
-    updateTrackDraft: (data: any) => void;
 };
 
-export default function OtherMetadataForm({
-    trackData,
-    updateTrackDraft,
-}: Props) {
+export default function OtherMetadataForm({ trackData }: Props) {
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
 
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const formMethods = useForm<OtherMetadataSchema>({
         defaultValues: {
-            genres: trackData.primaryGenreId ?? '',
-            subGenres: trackData?.subGenreId ?? '',
+            primaryGenreId: trackData.primaryGenreId ?? '',
+            subGenreId: trackData?.subGenreId ?? '',
             isSensitiveContent: trackData?.isSensitiveContent ?? false,
-            countryLanguage:
-                trackData?.trackLanguage?.metadataLanguageCountryId ?? '',
-            metadataLanguage:
-                trackData?.trackLanguage?.metadataLanguageId ?? '',
-            lyrics: trackData?.lyric ?? '',
-            pLineOwner: trackData?.pLineOwner ?? ``,
+            trackLanguage: trackData?.trackLanguage ?? {},
+            lyric: trackData?.lyric ?? '',
+            pLineOwner: trackData?.pLineOwner ?? `${dayjs().year()} `,
             isrc: trackData.isrc ?? '',
         },
         resolver: zodResolver(otherMetadataSchema(messages)),
@@ -91,23 +65,43 @@ export default function OtherMetadataForm({
 
     const watchedAllFields = useWatch({ control });
 
+    const { updateTrackDraft } = useUpdateTrackDraft();
+    const debouncedUpdateTrackDraft = useCallback(
+        debounce(async (data: any, fieldName?: string) => {
+            if (fieldName) {
+                const isValid = await trigger(
+                    fieldName as keyof OtherMetadataSchema
+                );
+                if (!isValid) return;
+            }
+            if (!formValues.id) return;
+            const variables: UpdateVariables<
+                TrackData['id'],
+                UpdateTrackPayload
+            > = {
+                id: trackData.id,
+                payload: data,
+            };
+            updateTrackDraft(variables);
+        }, 500),
+        [formValues.id]
+    );
+
     useEffect(() => {
-        console.log('run useEffect');
         setFormValues({
             ...formValues,
             tracks: formValues?.tracks?.map((track: any) => {
                 if (track.id === trackData.id) {
-                    const { countryLanguage, metadataLanguage, ...restFields } =
-                        watchedAllFields;
+                    const { ...restFields } = watchedAllFields;
 
                     return {
                         ...track,
                         ...restFields,
-                        trackLanguage: {
-                            ...track.trackLanguage,
-                            metadataLanguageCountryId: countryLanguage,
-                            metadataLanguageId: metadataLanguage,
-                        },
+                        // trackLanguage: {
+                        //     ...track.trackLanguage,
+                        //     metadataLanguageCountryId: countryLanguage,
+                        //     metadataLanguageId: metadataLanguage,
+                        // },
                     };
                 }
                 return track;
@@ -122,13 +116,13 @@ export default function OtherMetadataForm({
                 onSubmit={handleSubmit(() => {})}
             >
                 <FormItem
-                    name="genres"
+                    name="primaryGenreId"
                     label={messages('genres.primary')}
                     required
-                    ErrorMessage={errors.genres?.message}
+                    ErrorMessage={errors.primaryGenreId?.message}
                 >
                     <Controller
-                        name="genres"
+                        name="primaryGenreId"
                         control={control}
                         render={({ field }) => (
                             <GenresSelect
@@ -137,23 +131,25 @@ export default function OtherMetadataForm({
                                 {...field}
                                 onChange={(e) => {
                                     field.onChange(e);
-                                    updateTrackDraft({
+                                    debouncedUpdateTrackDraft({
                                         primaryGenreId: e,
                                     });
                                 }}
-                                status={errors.genres ? 'error' : undefined}
+                                status={
+                                    errors.primaryGenreId ? 'error' : undefined
+                                }
                             />
                         )}
                     />
                 </FormItem>
 
                 <FormItem
-                    name="subGenres"
+                    name="subGenreId"
                     label={messages('common.subGenres')}
-                    ErrorMessage={errors.subGenres?.message}
+                    ErrorMessage={errors.subGenreId?.message}
                 >
                     <Controller
-                        name="subGenres"
+                        name="subGenreId"
                         control={control}
                         render={({ field }) => (
                             <GenresSelect
@@ -163,11 +159,11 @@ export default function OtherMetadataForm({
                                 {...field}
                                 onChange={(e) => {
                                     field.onChange(e);
-                                    updateTrackDraft({
+                                    debouncedUpdateTrackDraft({
                                         subGenreId: e,
                                     });
                                 }}
-                                status={errors.subGenres ? 'error' : undefined}
+                                status={errors.subGenreId ? 'error' : undefined}
                             />
                         )}
                     />
@@ -199,7 +195,7 @@ export default function OtherMetadataForm({
                                 {...field}
                                 onChange={(e) => {
                                     field.onChange(e);
-                                    updateTrackDraft({
+                                    debouncedUpdateTrackDraft({
                                         isSensitiveContent: e,
                                     });
                                 }}
@@ -214,30 +210,39 @@ export default function OtherMetadataForm({
                 </FormItem>
 
                 <FormItem
-                    name="countryLanguage"
+                    name="trackLanguage.metadataLanguageCountryId"
                     label={messages('country.language')}
                     required
-                    ErrorMessage={errors.countryLanguage?.message}
+                    ErrorMessage={
+                        errors.trackLanguage?.metadataLanguageCountryId?.message
+                    }
                 >
                     <Controller
-                        name="countryLanguage"
+                        name="trackLanguage.metadataLanguageCountryId"
                         control={control}
                         render={({ field }) => (
                             <CountrySelect
                                 className="w-full"
-                                id="countryLanguage"
+                                id="metadataLanguageCountryId"
                                 showSearch
                                 {...field}
+                                value={field.value ?? ''}
                                 onChange={(e) => {
                                     field.onChange(e);
-                                    updateTrackDraft({
+                                    debouncedUpdateTrackDraft({
                                         trackLanguage: {
+                                            ...formMethods.getValues(
+                                                'trackLanguage'
+                                            ),
                                             metadataLanguageCountryId: e,
                                         },
                                     });
                                 }}
                                 status={
-                                    errors.countryLanguage ? 'error' : undefined
+                                    errors.trackLanguage
+                                        ?.metadataLanguageCountryId
+                                        ? 'error'
+                                        : undefined
                                 }
                             />
                         )}
@@ -245,32 +250,29 @@ export default function OtherMetadataForm({
                 </FormItem>
 
                 <FormItem
-                    name="metadataLanguage"
-                    label="Metadata language"
-                    required
-                    ErrorMessage={errors.metadataLanguage?.message}
+                    name="lyric"
+                    label="Lời bài hát"
+                    ErrorMessage={errors.lyric?.message}
                 >
                     <Controller
-                        name="metadataLanguage"
+                        name="lyric"
                         control={control}
                         render={({ field }) => (
-                            <LanguageSelect
-                                className="w-full"
-                                showSearch
+                            <TextArea
                                 {...field}
+                                value={field.value ?? ''}
+                                rows={1}
+                                autoSize={{ minRows: 1, maxRows: 20 }}
                                 onChange={(e) => {
-                                    field.onChange(e);
-                                    updateTrackDraft({
-                                        trackLanguage: {
-                                            metadataLanguageId: e,
+                                    field.onChange(e.target.value);
+                                    debouncedUpdateTrackDraft(
+                                        {
+                                            lyric: e.target.value,
                                         },
-                                    });
+                                        'lyric'
+                                    );
                                 }}
-                                status={
-                                    errors.metadataLanguage
-                                        ? 'error'
-                                        : undefined
-                                }
+                                status={errors.lyric ? 'error' : undefined}
                             />
                         )}
                     />
@@ -293,7 +295,7 @@ export default function OtherMetadataForm({
                                 const value =
                                     `${newYear} ${ownerCopyRight ?? ''}`.trim();
                                 field.onChange(value);
-                                updateTrackDraft({
+                                debouncedUpdateTrackDraft({
                                     pLineOwner: value,
                                 });
                             };
@@ -304,9 +306,12 @@ export default function OtherMetadataForm({
                                 const value =
                                     `${year} ${e.target.value}`.trim();
                                 field.onChange(value);
-                                updateTrackDraft({
-                                    pLineOwner: value,
-                                });
+                                debouncedUpdateTrackDraft(
+                                    {
+                                        pLineOwner: value,
+                                    },
+                                    'pLineOwner'
+                                );
                             };
 
                             const copyRightYearList = () => {
@@ -353,31 +358,6 @@ export default function OtherMetadataForm({
                 </FormItem>
 
                 <FormItem
-                    name="lyrics"
-                    label="Lời bài hát"
-                    ErrorMessage={errors.lyrics?.message}
-                >
-                    <Controller
-                        name="lyrics"
-                        control={control}
-                        render={({ field }) => (
-                            <TextArea
-                                {...field}
-                                rows={1}
-                                autoSize={{ minRows: 1, maxRows: 20 }}
-                                onChange={(e) => {
-                                    field.onChange(e);
-                                    updateTrackDraft({
-                                        lyric: e.target.value,
-                                    });
-                                }}
-                                status={errors.lyrics ? 'error' : undefined}
-                            />
-                        )}
-                    />
-                </FormItem>
-
-                <FormItem
                     name="isrc"
                     label="ISRC"
                     ErrorMessage={errors.isrc?.message}
@@ -389,12 +369,16 @@ export default function OtherMetadataForm({
                             <Input
                                 id="isrc"
                                 {...field}
+                                value={field.value ?? ''}
                                 onChange={(e) => {
                                     const value = e.target.value;
                                     field.onChange(value);
-                                    updateTrackDraft({
-                                        isrc: value,
-                                    });
+                                    debouncedUpdateTrackDraft(
+                                        {
+                                            isrc: value,
+                                        },
+                                        'isrc'
+                                    );
                                 }}
                                 allowClear
                                 status={errors.isrc ? 'error' : undefined}

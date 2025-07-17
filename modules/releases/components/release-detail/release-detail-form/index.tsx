@@ -18,7 +18,8 @@ import {
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
-import { ReleaseCoverArt, ReleasesData } from '@/modules/releases/types';
+import { releaseSchema } from '@/modules/releases/schemas';
+import { ReleasesData } from '@/modules/releases/types';
 import {
     CreateReleaseDraftPayload,
     UpdateReleaseDraftPayload,
@@ -35,42 +36,58 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import ArtistCard from './artist-card';
 
+// export const releaseDetailSchema = (messages: any) =>
+//     z.object({
+//         upc: z.string().optional(),
+//         primaryGenreId: z.string().nonempty(messages('validation.input')),
+//         subGenreId: z.string().optional(),
+//         releaseLanguage: z.object({
+//             metadataLanguageId: z
+//                 .string()
+//                 .nonempty(messages('validation.input')),
+//             metadataLanguageCountryId: z.string().nullable(),
+//             audioLanguageId: z.string().optional().nullable(),
+//             releaseId: z.string().nonempty(messages('validation.input')),
+//         }),
+//         labelId: z.string().optional(),
+//         catalogId: z.string().optional(),
+//         title: z
+//             .string()
+//             .min(1, messages('validation.input'))
+//             .max(100, messages('validation.input')),
+//         version: z.string().optional(),
+//         type: z.nativeEnum(RELEASES_TYPE, {
+//             required_error: messages('validation.select'),
+//         }),
+//         releaseArtists: z.array(z.custom<ReleaseArtist>()),
+//         coverArtThumbnails: z.custom<ReleaseCoverArt>(),
+//         pLineOwner: z
+//             .string()
+//             .min(5, messages('validation.input'))
+//             .nonempty(messages('validation.input')),
+//         cLineOwner: z
+//             .string()
+//             .min(5, messages('validation.input'))
+//             .nonempty(messages('validation.input')),
+//         isVariousArtist: z.boolean(),
+//     });
+
 export const releaseDetailSchema = (messages: any) =>
-    z.object({
-        upc: z.string().optional(),
-        primaryGenreId: z.string().nonempty(messages('validation.input')),
-        subGenreId: z.string().optional(),
-        releaseLanguage: z.object({
-            metadataLanguageId: z
-                .string()
-                .nonempty(messages('validation.input')),
-            metadataLanguageCountryId: z
-                .string()
-                .nonempty(messages('validation.input')),
-            audioLanguageId: z.string().nonempty(messages('validation.input')),
-            releaseId: z.string().nonempty(messages('validation.input')),
-        }),
-        labelId: z.string().optional(),
-        catalogId: z.string().optional(),
-        title: z
-            .string()
-            .min(1, messages('validation.input'))
-            .max(100, messages('validation.input')),
-        version: z.string().optional(),
-        type: z.nativeEnum(RELEASES_TYPE, {
-            required_error: messages('validation.select'),
-        }),
-        releaseArtists: z.array(z.custom<ReleaseArtist>()),
-        coverArtThumbnails: z.custom<ReleaseCoverArt>(),
-        pLineOwner: z
-            .string()
-            .min(5, messages('validation.input'))
-            .nonempty(messages('validation.input')),
-        cLineOwner: z
-            .string()
-            .min(5, messages('validation.input'))
-            .nonempty(messages('validation.input')),
-        isVariousArtist: z.boolean(),
+    releaseSchema(messages).pick({
+        upc: true,
+        primaryGenreId: true,
+        subGenreId: true,
+        releaseLanguage: true,
+        labelId: true,
+        catalogId: true,
+        title: true,
+        version: true,
+        type: true,
+        releaseArtists: true,
+        coverArtThumbnails: true,
+        pLineOwner: true,
+        cLineOwner: true,
+        isVariousArtist: true,
     });
 
 export type ReleaseDetailSchema = z.infer<
@@ -115,14 +132,17 @@ export default function ReleaseDetailForm() {
         getValues,
     } = formMethods;
 
+    console.log('lỗi này', errors);
+
     const isVariousArtist = watch('isVariousArtist');
-    const version = watch('version');
+    const version = watch('version') ?? '';
     const type = watch('type');
-    const title = watch('title');
+    const title = watch('title') ?? '';
     const isEnableCreateDraftBtn = (!!type && !!title) === true;
     const releaseArtist = formValues.releaseArtists || [];
 
-    const handleNext = async (data: any) => {
+    const handleNext = async () => {
+        console.log('Form values:', getValues());
         const valid = await trigger();
         if (valid) {
             router.push(
@@ -154,9 +174,9 @@ export default function ReleaseDetailForm() {
     const handleCreateReleaseDraft = () => {
         const variables: CreateVariables<CreateReleaseDraftPayload> = {
             payload: {
-                title: title,
-                version: version,
-                type: type,
+                title: title ?? '',
+                version: version ?? '',
+                type: type ?? RELEASES_TYPE.ALBUM,
             },
             onSuccess: (data) => {
                 router.push(
@@ -215,22 +235,14 @@ export default function ReleaseDetailForm() {
                         metadataLanguageId:
                             formValues.releaseLanguage?.metadataLanguageId ||
                             '',
-                        metadataLanguageCountryId:
-                            formValues.releaseLanguage
-                                ?.metadataLanguageCountryId || '',
-                        audioLanguageId:
-                            formValues.releaseLanguage?.audioLanguageId || '',
-                        releaseId: formValues.id || '',
                     },
-                    // metadataLanguageId:
-                    //     formValues.releaseLanguage?.metadataLanguageId ?? '',
-                    coverArtThumbnails: {
-                        '75x75': null,
-                        '100x100': null,
-                        '160x160': null,
-                        '300x300': null,
-                        '900x900': null,
-                        original: null,
+                    coverArtThumbnails: formValues.coverArtThumbnails ?? {
+                        '75x75': '',
+                        '100x100': '',
+                        '160x160': '',
+                        '300x300': '',
+                        '900x900': '',
+                        original: '',
                     },
                 };
                 // setFormValues(initialFormValue);
@@ -298,6 +310,7 @@ export default function ReleaseDetailForm() {
                                         <Input
                                             id="title"
                                             {...field}
+                                            value={field.value ?? ''}
                                             onChange={(e) => {
                                                 const value = e.target.value;
                                                 field.onChange(value);
@@ -336,12 +349,16 @@ export default function ReleaseDetailForm() {
                                     <Input
                                         id="version"
                                         {...field}
+                                        value={field.value ?? ''}
                                         onChange={(e) => {
                                             const value = e.target.value;
                                             field.onChange(value);
-                                            debouncedUpdate({
-                                                version: value,
-                                            });
+                                            debouncedUpdate(
+                                                {
+                                                    version: value,
+                                                },
+                                                'version'
+                                            );
                                         }}
                                         allowClear
                                         status={
@@ -622,6 +639,7 @@ export default function ReleaseDetailForm() {
                                     <Input
                                         id="upc"
                                         {...field}
+                                        value={field.value ?? ''}
                                         onChange={(e) => {
                                             const value = e.target.value;
                                             field.onChange(value);
@@ -651,6 +669,7 @@ export default function ReleaseDetailForm() {
                                     <Input
                                         id="catalogId"
                                         {...field}
+                                        value={field.value ?? ''}
                                         onChange={(e) => {
                                             const value = e.target.value;
                                             field.onChange(value);
@@ -701,13 +720,20 @@ export default function ReleaseDetailForm() {
                                         const value =
                                             `${year} ${e.target.value}`.trim();
                                         field.onChange(value);
-                                        debouncedUpdate({ cLineOwner: value });
+                                        debouncedUpdate(
+                                            { cLineOwner: value },
+                                            'cLineOwner'
+                                        );
                                     };
                                     return (
                                         <Input
                                             id="cLineOwner"
+                                            // {...field}
                                             value={ownerCopyRight}
-                                            onChange={handleOwnerChange}
+                                            onChange={(e) => {
+                                                field.onChange(),
+                                                    handleOwnerChange(e);
+                                            }}
                                             disabled={isCreateReleasePage}
                                             allowClear
                                             addonBefore={
@@ -725,11 +751,11 @@ export default function ReleaseDetailForm() {
                                                     }
                                                 />
                                             }
-                                            // status={
-                                            //     errors.cLine?.name
-                                            //         ? 'error'
-                                            //         : undefined
-                                            // }
+                                            status={
+                                                errors.cLineOwner?.message
+                                                    ? 'error'
+                                                    : undefined
+                                            }
                                         />
                                     );
                                 }}
@@ -767,14 +793,21 @@ export default function ReleaseDetailForm() {
                                         const value =
                                             `${year} ${e.target.value}`.trim();
                                         field.onChange(value);
-                                        debouncedUpdate({ pLineOwner: value });
+                                        debouncedUpdate(
+                                            { pLineOwner: value },
+                                            'pLineOwner'
+                                        );
                                     };
 
                                     return (
                                         <Input
                                             id="pLineOwner"
+                                            // {...field}
                                             value={ownerCopyRight}
-                                            onChange={handleOwnerChange}
+                                            onChange={(e) => {
+                                                field.onChange(),
+                                                    handleOwnerChange(e);
+                                            }}
                                             disabled={isCreateReleasePage}
                                             allowClear
                                             addonBefore={
@@ -791,6 +824,11 @@ export default function ReleaseDetailForm() {
                                                         isCreateReleasePage
                                                     }
                                                 />
+                                            }
+                                            status={
+                                                errors.pLineOwner?.message
+                                                    ? 'error'
+                                                    : undefined
                                             }
                                         />
                                     );

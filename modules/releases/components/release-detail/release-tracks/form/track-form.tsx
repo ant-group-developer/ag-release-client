@@ -6,40 +6,49 @@ import useModalStore from '@/hooks/use-modal';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
-import {
-    releaseTrackSchema,
-    ReleaseTrackSchema,
-} from '@/modules/tracks/schemas';
+import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
+import { releaseTrackSchema } from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
+import { UpdateTrackPayload } from '@/modules/tracks/types/payload';
+import { UpdateVariables } from '@/types/api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Input, Switch } from 'antd';
+import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
+import { z } from 'zod';
 import ArtistCard from '../../release-detail-form/artist-card';
+
+export const trackAndArtistSchema = (messages: any) =>
+    releaseTrackSchema(messages).pick({
+        title: true,
+        version: true,
+        trackArtists: true,
+        trackLanguage: true,
+        trackOriginTypeId: true,
+        copyArtistsFromRelease: true,
+    });
+
+export type TrackAndArtistSchema = z.infer<
+    ReturnType<typeof trackAndArtistSchema>
+>;
 
 type Props = {
     trackData: TrackData;
-    updateTrackDraft: (data: any) => void;
 };
 
-export default function TracksForm({ trackData, updateTrackDraft }: Props) {
+export default function TracksForm({ trackData }: Props) {
     const messages = useTranslations();
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const formValues = useReleaseFormStore((state) => state.formValues);
     const openModal = useModalStore((state) => state.openModal);
 
-    const formMethods = useForm<ReleaseTrackSchema>({
+    const formMethods = useForm<TrackAndArtistSchema>({
         defaultValues: {
             ...trackData,
-            audioFile: trackData.audioFile
-                ? {
-                      ...trackData.audioFile,
-                      preview: trackData.audioFile.preview ?? undefined,
-                  }
-                : undefined,
         },
-        resolver: zodResolver(releaseTrackSchema(messages)),
+        resolver: zodResolver(trackAndArtistSchema(messages)),
         mode: 'onChange',
         reValidateMode: 'onChange',
     });
@@ -52,6 +61,28 @@ export default function TracksForm({ trackData, updateTrackDraft }: Props) {
         trigger,
         setValue,
     } = formMethods;
+
+    const { updateTrackDraft } = useUpdateTrackDraft();
+    const debouncedUpdateTrackDraft = useCallback(
+        debounce(async (data: any, fieldName?: string) => {
+            if (fieldName) {
+                const isValid = await trigger(
+                    fieldName as keyof TrackAndArtistSchema
+                );
+                if (!isValid) return;
+            }
+            if (!formValues.id) return;
+            const variables: UpdateVariables<
+                TrackData['id'],
+                UpdateTrackPayload
+            > = {
+                id: trackData.id,
+                payload: data,
+            };
+            updateTrackDraft(variables);
+        }, 500),
+        [formValues.id]
+    );
 
     const isAddArtistsFromRelease = watch('copyArtistsFromRelease');
 
@@ -68,8 +99,6 @@ export default function TracksForm({ trackData, updateTrackDraft }: Props) {
                         ...track,
                         ...restFields,
                         title: restFields.title ?? track.title,
-                        isSensitiveContent:
-                            restFields.isSensitiveContent ?? false,
                         trackLanguage: {
                             ...track.trackLanguage,
                             audioLanguageId: trackLanguage?.audioLanguageId,
@@ -102,9 +131,12 @@ export default function TracksForm({ trackData, updateTrackDraft }: Props) {
                                 onChange={(e) => {
                                     const value = e.target.value;
                                     field.onChange(value);
-                                    updateTrackDraft({
-                                        title: value,
-                                    });
+                                    debouncedUpdateTrackDraft(
+                                        {
+                                            title: value,
+                                        },
+                                        'title'
+                                    );
                                 }}
                                 status={errors.title ? 'error' : undefined}
                             />
@@ -133,9 +165,12 @@ export default function TracksForm({ trackData, updateTrackDraft }: Props) {
                                 onChange={(e) => {
                                     const value = e.target.value;
                                     field.onChange(value);
-                                    updateTrackDraft({
-                                        version: value,
-                                    });
+                                    debouncedUpdateTrackDraft(
+                                        {
+                                            version: value,
+                                        },
+                                        'version'
+                                    );
                                 }}
                                 status={errors.version ? 'error' : undefined}
                             />
@@ -162,7 +197,7 @@ export default function TracksForm({ trackData, updateTrackDraft }: Props) {
                                 {...field}
                                 onChange={(e) => {
                                     field.onChange(e);
-                                    updateTrackDraft({
+                                    debouncedUpdateTrackDraft({
                                         trackOriginTypeId: e,
                                     });
                                 }}
@@ -197,7 +232,7 @@ export default function TracksForm({ trackData, updateTrackDraft }: Props) {
                                 value={field.value ?? ''}
                                 onChange={(e) => {
                                     field.onChange(e);
-                                    updateTrackDraft({
+                                    debouncedUpdateTrackDraft({
                                         trackLanguage: {
                                             ...formMethods.getValues(
                                                 'trackLanguage'
@@ -236,7 +271,7 @@ export default function TracksForm({ trackData, updateTrackDraft }: Props) {
                                 checked={!!field.value}
                                 onChange={(e) => {
                                     field.onChange(e);
-                                    updateTrackDraft({
+                                    debouncedUpdateTrackDraft({
                                         copyArtistsFromRelease: e,
                                     });
                                 }}

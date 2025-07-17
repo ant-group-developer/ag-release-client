@@ -31,7 +31,7 @@ const releaseSchedulingSchema = (messages: any) =>
                 .refine((val) => val !== null && val !== undefined, {
                     message: messages('validation.input'),
                 }),
-            distributeType: z.boolean().optional().nullable(),
+            distributionType: z.string().optional().nullable(),
             selectedCountries: z.array(z.string()).optional().nullable(),
         }),
         distributeTypes: z.boolean(),
@@ -58,7 +58,8 @@ export default function ReleaseSchedulingForm({}: Props) {
             releaseTerritory: {
                 distributeWorldwide:
                     formValues?.releaseTerritory?.distributeWorldwide ?? true,
-                distributeType: formValues?.releaseTerritory?.distributeType,
+                distributionType:
+                    formValues?.releaseTerritory?.distributionType,
                 selectedCountries:
                     formValues?.releaseTerritory?.selectedCountries,
             },
@@ -269,22 +270,35 @@ export default function ReleaseSchedulingForm({}: Props) {
                                 <>
                                     <FormItem
                                         required
-                                        name="releaseTerritory.distributeType"
+                                        name="releaseTerritory.distributionType"
                                         label={messages('select.option')}
                                         ErrorMessage={
                                             errors.releaseTerritory
-                                                ?.distributeType?.message
+                                                ?.distributionType?.message
                                         }
                                     >
                                         <Controller
                                             control={control}
-                                            name="releaseTerritory.distributeType"
+                                            name="releaseTerritory.distributionType"
                                             render={({ field }) => {
                                                 return (
                                                     <Radio.Group
                                                         {...field}
                                                         onChange={(e) => {
-                                                            field.onChange(e);
+                                                            field.onChange(
+                                                                e.target.value
+                                                            ),
+                                                                debouncedUpdate(
+                                                                    {
+                                                                        releaseTerritory:
+                                                                            {
+                                                                                distributionType:
+                                                                                    e
+                                                                                        .target
+                                                                                        .value,
+                                                                            },
+                                                                    }
+                                                                );
                                                         }}
                                                     >
                                                         <Radio.Button
@@ -346,6 +360,15 @@ export default function ReleaseSchedulingForm({}: Props) {
                                                         </CustomTooltip>
                                                     )}
                                                     {...field}
+                                                    onChange={(value) => {
+                                                        field.onChange(value);
+                                                        debouncedUpdate({
+                                                            releaseTerritory: {
+                                                                selectedCountries:
+                                                                    value,
+                                                            },
+                                                        });
+                                                    }}
                                                     status={
                                                         errors.territoryType
                                                             ? 'error'

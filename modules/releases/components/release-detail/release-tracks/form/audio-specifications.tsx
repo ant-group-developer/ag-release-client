@@ -7,6 +7,7 @@ import {
     timeStringToSeconds,
 } from '@/helpers/common';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { releaseTrackSchema } from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input, TimePicker } from 'antd';
@@ -16,17 +17,11 @@ import { useEffect } from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
-const audioSpecificationsSchema = (messages: any, maxDuration: number) =>
-    z.object({
-        fileName: z.string().nonempty(messages('validation.input')),
-        recordingCountryId: z.string().nonempty(messages('validation.input')),
-        preview: z
-            .string()
-            .nonempty('Đoạn nghe mẫu là bắt buộc')
-            .refine((val) => timeStringToSeconds(val) <= maxDuration, {
-                message: 'Thời gian không được lớn hơn thời lượng bài hát',
-            }),
-        trackTypeId: z.string().nonempty(messages('validation.input')),
+const audioSpecificationsSchema = (messages: any) =>
+    releaseTrackSchema(messages).pick({
+        audioFile: true,
+        trackLanguage: true,
+        trackTypeId: true,
     });
 
 export type AudioSpecificationsSchema = z.infer<
@@ -46,22 +41,20 @@ export default function AudioSpecifications({
 
     const formValues = useReleaseFormStore((state) => state.formValues);
 
+    const getAudioFileDefault = () => ({
+        file: {
+            fileName: trackData?.audioFile?.file?.fileName ?? '',
+        },
+        preview: trackData?.audioFile?.preview ?? 0,
+    });
     const formMethods = useForm<AudioSpecificationsSchema>({
         defaultValues: {
-            fileName: trackData?.audioFile?.file?.fileName,
-            recordingCountryId: trackData?.trackLanguage?.recordingCountryId,
-            trackTypeId: trackData?.trackTypeId,
-            preview: trackData?.audioFile?.preview
-                ? convertSecondsToHoursMinutes(trackData.audioFile.preview)
-                : '',
+            audioFile: getAudioFileDefault(),
+            trackLanguage: trackData?.trackLanguage ?? {},
+            trackTypeId: trackData?.trackTypeId ?? '',
         },
         mode: 'onChange',
-        resolver: zodResolver(
-            audioSpecificationsSchema(
-                messages,
-                trackData?.audioFile?.duration ?? 0
-            )
-        ),
+        resolver: zodResolver(audioSpecificationsSchema(messages)),
     });
 
     const {
@@ -96,25 +89,34 @@ export default function AudioSpecifications({
             <form className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                     <FormItem
-                        name="fileName"
+                        name="audioFile.file.fileName"
                         label="Tên File"
                         required
-                        ErrorMessage={errors.fileName?.message}
+                        ErrorMessage={errors.audioFile?.file?.fileName?.message}
                     >
                         <Controller
                             control={control}
-                            name="fileName"
+                            name="audioFile.file.fileName"
                             render={({ field }) => (
                                 <Input
                                     {...field}
+                                    value={field.value ?? ''}
                                     status={
-                                        errors.fileName ? 'error' : undefined
+                                        errors.audioFile?.file?.fileName
+                                            ? 'error'
+                                            : undefined
                                     }
                                     onChange={(e) => {
                                         field.onChange(e.target.value);
                                         updateTrackDraft({
                                             audioFile: {
+                                                ...formMethods.getValues(
+                                                    'audioFile'
+                                                ),
                                                 file: {
+                                                    ...formMethods.getValues(
+                                                        'audioFile.file'
+                                                    ),
                                                     fileName: e.target.value,
                                                 },
                                             },
@@ -126,28 +128,34 @@ export default function AudioSpecifications({
                     </FormItem>
 
                     <FormItem
-                        name="recordingCountryId"
+                        name="trackLanguage.recordingCountryId"
                         label={messages('tracks.recordingCountry')}
                         required
-                        ErrorMessage={errors.recordingCountryId?.message}
+                        ErrorMessage={
+                            errors.trackLanguage?.recordingCountryId?.message
+                        }
                     >
                         <Controller
                             control={control}
-                            name="recordingCountryId"
+                            name="trackLanguage.recordingCountryId"
                             render={({ field }) => (
                                 <CountrySelect
                                     status={
-                                        errors.recordingCountryId
+                                        errors.trackLanguage?.recordingCountryId
                                             ? 'error'
                                             : undefined
                                     }
                                     className="w-full"
                                     {...field}
+                                    value={field.value ?? ''}
                                     showSearch
                                     onChange={(e) => {
                                         field.onChange(e);
                                         updateTrackDraft({
                                             trackLanguage: {
+                                                ...formMethods.getValues(
+                                                    'trackLanguage'
+                                                ),
                                                 recordingCountryId: e,
                                             },
                                         });
@@ -158,26 +166,24 @@ export default function AudioSpecifications({
                     </FormItem>
 
                     <FormItem
-                        name="preview"
+                        name="audioFile.preview"
                         label="Đoạn nghe mẫu"
                         required
-                        ErrorMessage={errors.preview?.message}
+                        ErrorMessage={errors.audioFile?.preview?.message}
                     >
                         <Controller
                             control={control}
-                            name="preview"
+                            name="audioFile.preview"
                             render={({ field }) => (
                                 <TimePicker
                                     {...field}
                                     value={
-                                        field.value
+                                        typeof field.value === 'number' &&
+                                        field.value > 0
                                             ? dayjs(
-                                                  typeof field.value ===
-                                                      'number'
-                                                      ? convertSecondsToHoursMinutes(
-                                                            field.value
-                                                        )
-                                                      : field.value,
+                                                  convertSecondsToHoursMinutes(
+                                                      field.value
+                                                  ),
                                                   DATE_FORMAT.HOUR_MINUTE_SECOND
                                               )
                                             : null
@@ -188,12 +194,16 @@ export default function AudioSpecifications({
                                                   DATE_FORMAT.HOUR_MINUTE_SECOND
                                               )
                                             : '';
-                                        field.onChange(value);
+                                        const seconds = value
+                                            ? timeStringToSeconds(value)
+                                            : 0;
+                                        field.onChange(seconds);
                                         updateTrackDraft({
                                             audioFile: {
-                                                preview: value
-                                                    ? timeStringToSeconds(value)
-                                                    : 0,
+                                                ...formMethods.getValues(
+                                                    'audioFile'
+                                                ),
+                                                preview: seconds,
                                             },
                                         });
                                     }}
@@ -201,7 +211,9 @@ export default function AudioSpecifications({
                                     size="middle"
                                     format={DATE_FORMAT.HOUR_MINUTE_SECOND}
                                     status={
-                                        !!errors.preview ? 'error' : undefined
+                                        !!errors.audioFile?.preview
+                                            ? 'error'
+                                            : undefined
                                     }
                                 />
                             )}
@@ -224,6 +236,7 @@ export default function AudioSpecifications({
                                     }
                                     className="w-full"
                                     {...field}
+                                    value={field.value ?? ''}
                                     showSearch
                                     onChange={(e) => {
                                         field.onChange(e);

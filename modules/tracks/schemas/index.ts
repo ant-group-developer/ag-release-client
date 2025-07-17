@@ -11,8 +11,16 @@ export const releaseTrackSchema = (messages: any) =>
             .refine((val) => val !== null && val !== '', {
                 message: messages('validation.input'),
             }),
-        version: z.string().optional().nullable(),
-        isrc: z.string().optional().nullable(),
+        version: z
+            .string()
+            .max(50, messages('validation.max', { number: 50 }))
+            .optional()
+            .nullable(),
+        isrc: z
+            .string()
+            .max(20, messages('validation.max', { number: 20 }))
+            .optional()
+            .nullable(),
         iswc: z.string().optional().nullable(),
         pLineOwner: z
             .string()
@@ -65,7 +73,11 @@ export const releaseTrackSchema = (messages: any) =>
             .min(1, messages('validation.input')),
         copyArtistsFromRelease: z.boolean().optional(),
         isSensitiveContent: z.boolean().optional(),
-        lyric: z.string().optional().nullable(),
+        lyric: z
+            .string()
+            .max(1000, messages('validation.max', { number: 1000 }))
+            .optional()
+            .nullable(),
         trackTypeId: z
             .string()
             .nullable()
@@ -73,6 +85,12 @@ export const releaseTrackSchema = (messages: any) =>
                 message: messages('validation.input'),
             }),
         audioFile: z.object({
+            file: z.object({
+                fileName: z
+                    .string()
+                    .max(100, messages('validation.max', { number: 100 })),
+                urlRead: z.string(),
+            }),
             // preview: z
             //     .number()
             //     .optional()

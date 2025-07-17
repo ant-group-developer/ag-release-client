@@ -55,7 +55,7 @@ export interface ReleasesDataFilter extends CommonParams {
 export interface ReleaseTerritory extends CommonParams {
     distributeWorldwide: boolean;
     selectedCountries: string[];
-    distributeType: boolean;
+    distributionType: string;
 }
 
 export interface releaseLanguage extends CommonParams {

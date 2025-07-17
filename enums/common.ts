@@ -169,5 +169,5 @@ export enum TYPE_UPLOAD_BUCKET {
 
 export enum DISTRIBUTE_TYPES {
     DISTRIBUTE_ONLY_IN = 'distribute_only_in',
-    DISTRIBUTE_EVERY_WHERE_EXCEPT = 'distribute_every_where_EXCEPT',
+    DISTRIBUTE_EVERY_WHERE_EXCEPT = 'distribute_everywhere_except',
 }

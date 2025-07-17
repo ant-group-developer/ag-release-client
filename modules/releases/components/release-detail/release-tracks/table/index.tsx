@@ -2,6 +2,7 @@ import SortableTable, {
     OnDragEnd,
     SortableTableProps,
 } from '@/components/ui/table/sortable-table';
+import { showNotification } from '@/helpers/messages-helper';
 import useModalStore from '@/hooks/use-modal';
 import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
@@ -97,12 +98,21 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             render: (value, record) => {
                 return (
                     <Input
+                        maxLength={100}
+                        minLength={1}
                         defaultValue={value}
-                        onChange={(e) =>
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            if (value.length < 1) {
+                                return showNotification(
+                                    'error',
+                                    messages('validation.min', { number: 1 })
+                                );
+                            }
                             debouncedUpdate(record.id, {
                                 title: e.target.value,
-                            })
-                        }
+                            });
+                        }}
                     />
                 );
             },
@@ -200,9 +210,6 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                     <TracksForm
                         key={`${record.id}-track-form-content`}
                         trackData={record}
-                        updateTrackDraft={(data) =>
-                            debouncedUpdate(record.id, data)
-                        }
                     />
                 ),
             },
