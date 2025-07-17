@@ -602,6 +602,27 @@
             "label": "Lên lịch"
         }
     },
+
+    "release": {
+        "message": {
+            "success": {
+                "create": "Thêm mới phát hành thành công",
+                "update": "Cập nhật phát hành thành công",
+                "delete": "Xoá phát hành thành công"
+            }
+        }
+    },
+
+    "releaseArtist": {
+        "message": {
+            "success": {
+                "create": "Thêm mới nghệ sĩ phát hành thành công",
+                "update": "Cập nhật nghệ sĩ phát hành thành công",
+                "delete": "Xoá nghệ sĩ phát hành thành công"
+            }
+        }
+    },
+
     "tracks": {
         "number": "Bài hát số",
         "add": "Thêm bài hát",
@@ -635,6 +656,17 @@
             "selectSensitiveContent": "Lựa chọn nội dung"
         }
     },
+
+    "track": {
+        "message": {
+            "success": {
+                "create": "Thêm mới bài hát thành công",
+                "update": "Cập nhật bài hát thành công",
+                "delete": "Xoá bài hát thành công"
+            }
+        }
+    },
+
     "genres": {
         "name": "Tên thể loại",
         "pop": "Pop",
@@ -722,6 +754,7 @@
     },
 
     "formFields": {
+        "title": "Tên phát hành",
         "metadataLanguageId": "Ngôn ngữ metadata",
         "artists": "Nghệ sĩ",
         "releaseDate": "Ngày phát hành",
@@ -748,9 +781,11 @@
         "cLineOwner": "Bản quyền tác phẩm",
         "releaseTerritory": {
             "selectedCountries": "Quốc gia phân phối",
-            "distributeType": "Tuỳ chọn vòng phân phối"
+            "distributionType": "Tuỳ chọn vòng phân phối"
         },
         "tracks": {
+            "trackOriginTypeId": "Nguồn gốc bài hát",
+            "audioLanguageId": "Ngôn ngữ âm thanh",
             "metadataLanguageId": "Ngôn ngữ metadata",
             "metadataLanguageCountryId": "Ngôn ngữ quốc gia",
             "trackLanguage": "Ngôn ngữ bài hát",

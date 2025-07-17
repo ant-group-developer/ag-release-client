@@ -24,7 +24,6 @@ const initialValue: ReleaseFormStoreData = {
     subGenreId: '',
     labelId: '',
     version: '',
-    coverArtThumbnails: undefined,
     catalogId: null,
     isVariousArtist: false,
     creatorId: '',
@@ -42,6 +41,21 @@ const initialValue: ReleaseFormStoreData = {
         selectedCountries: [],
         distributionType: '',
     },
+    coverArtThumbnails: {
+        original: null,
+        '75x75': null,
+        '100x100': null,
+        '160x160': null,
+        '300x300': null,
+        '900x900': null,
+    },
+    releaseLanguage: {
+        metadataLanguageId: '',
+        audioLanguageId: '',
+        metadataLanguageCountryId: '',
+        releaseId: '',
+    },
+    releaseArtists: [],
 };
 
 export const useReleaseFormStore = create<ReleaseFormState>()(

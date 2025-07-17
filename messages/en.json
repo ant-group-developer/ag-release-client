@@ -601,6 +601,26 @@
             "label": "Scheduling"
         }
     },
+    "release": {
+        "message": {
+            "success": {
+                "create": "Create release successfully",
+                "update": "Update release successfully",
+                "delete": "Delete release successfully"
+            }
+        }
+    },
+
+    "releaseArtist": {
+        "message": {
+            "success": {
+                "create": "Create release artist successfully",
+                "update": "Update release artist successfully",
+                "delete": "Delete release artist successfully"
+            }
+        }
+    },
+
     "tracks": {
         "number": "Track number",
         "add": "Add track",
@@ -634,6 +654,17 @@
             "selectSensitiveContent": "Select content"
         }
     },
+
+    "track": {
+        "message": {
+            "success": {
+                "create": "Create track successfully",
+                "update": "Update track successfully",
+                "delete": "Delete track successfully"
+            }
+        }
+    },
+
     "genres": {
         "name": "Genre name",
         "pop": "Pop",
@@ -721,6 +752,7 @@
     },
 
     "formFields": {
+        "title": "Release name",
         "metadataLanguageId": "Metadata language",
         "artists": "Artists",
         "releaseDate": "Release date",
@@ -743,9 +775,11 @@
         "releaseTimezoneId": "Timezone",
         "releaseTerritory": {
             "selectedCountries": "Countries distribute",
-            "distributeType": "Options distribute"
+            "distributionType": "Options distribute"
         },
         "tracks": {
+            "trackOriginTypeId": "Track origin type",
+            "audioLanguageId": "Audio language",
             "metadataLanguageId": "Metadata language",
             "metadataLanguageCountryId": "country Language",
             "trackLanguage": "Ngôn ngữ bài hát",

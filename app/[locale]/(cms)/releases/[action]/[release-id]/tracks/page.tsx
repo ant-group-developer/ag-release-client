@@ -71,14 +71,12 @@ export default function Tracks() {
 
     useEffect(() => {
         if (tracksData?.items) {
-            console.log(
-                '🚀 ~ useEffect ~ tracksData?.items:',
-                tracksData?.items
-            );
-
             setFormValues({
                 ...formValues,
-                tracks: tracksData.items,
+                tracks: tracksData.items.map((track) => ({
+                    ...track,
+                    isSensitiveContent: track.isSensitiveContent ?? false,
+                })),
             });
         }
     }, [tracksData?.items]);

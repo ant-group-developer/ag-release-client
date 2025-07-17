@@ -224,9 +224,6 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                     <OtherMetadataForm
                         key={`${record.id}-metadata-form-content`}
                         trackData={record}
-                        updateTrackDraft={(data) =>
-                            debouncedUpdate(record.id, data)
-                        }
                     />
                 ),
             },
