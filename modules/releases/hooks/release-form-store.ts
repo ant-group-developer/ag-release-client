@@ -37,6 +37,11 @@ const initialValue: ReleaseFormStoreData = {
     releaseTime: '',
     releaseTimezoneId: null,
     tracks: [],
+    releaseTerritory: {
+        distributeWorldwide: false,
+        selectedCountries: [],
+        distributeType: false,
+    },
 };
 
 export const useReleaseFormStore = create<ReleaseFormState>()(

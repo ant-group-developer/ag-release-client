@@ -30,7 +30,7 @@ export interface ReleasesData extends CommonAttribute {
     type?: RELEASES_TYPE;
     tracks: TrackData[];
     releaseArtists?: ReleaseArtist[];
-    coverArtThumbnails?: ReleaseCoverArt;
+    coverArtThumbnails?: ReleaseCoverArt | null;
     pLineOwner: string;
     cLineOwner: string;
     catalogId: string | null;
@@ -39,6 +39,7 @@ export interface ReleasesData extends CommonAttribute {
     releaseDate: string;
     releaseTime: string;
     releaseTimezoneId: string | null;
+    releaseTerritory: ReleaseTerritory;
 }
 
 export interface ReleasesDataFilter extends CommonParams {
@@ -49,6 +50,12 @@ export interface ReleasesDataFilter extends CommonParams {
     startDateRelease?: string;
     endDateRelease?: string;
     genres?: string;
+}
+
+export interface ReleaseTerritory extends CommonParams {
+    distributeWorldwide: boolean;
+    selectedCountries: string[];
+    distributeType: boolean;
 }
 
 export interface releaseLanguage extends CommonParams {

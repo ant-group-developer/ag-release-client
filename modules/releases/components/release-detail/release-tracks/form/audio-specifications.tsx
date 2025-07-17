@@ -178,14 +178,14 @@ export default function AudioSpecifications({
                                                             field.value
                                                         )
                                                       : field.value,
-                                                  DATE_FORMAT.HOUR_MINUTE
+                                                  DATE_FORMAT.HOUR_MINUTE_SECOND
                                               )
                                             : null
                                     }
                                     onChange={(time) => {
                                         const value = time
                                             ? time.format(
-                                                  DATE_FORMAT.HOUR_MINUTE
+                                                  DATE_FORMAT.HOUR_MINUTE_SECOND
                                               )
                                             : '';
                                         field.onChange(value);
@@ -199,7 +199,7 @@ export default function AudioSpecifications({
                                     }}
                                     onBlur={field.onBlur}
                                     size="middle"
-                                    format={DATE_FORMAT.HOUR_MINUTE}
+                                    format={DATE_FORMAT.HOUR_MINUTE_SECOND}
                                     status={
                                         !!errors.preview ? 'error' : undefined
                                     }

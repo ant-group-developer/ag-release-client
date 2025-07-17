@@ -32,6 +32,12 @@ export default function TracksForm({ trackData, updateTrackDraft }: Props) {
     const formMethods = useForm<ReleaseTrackSchema>({
         defaultValues: {
             ...trackData,
+            audioFile: trackData.audioFile
+                ? {
+                      ...trackData.audioFile,
+                      preview: trackData.audioFile.preview ?? undefined,
+                  }
+                : undefined,
         },
         resolver: zodResolver(releaseTrackSchema(messages)),
         mode: 'onChange',
@@ -54,18 +60,21 @@ export default function TracksForm({ trackData, updateTrackDraft }: Props) {
     useEffect(() => {
         setFormValues({
             ...formValues,
-            tracks: formValues?.tracks?.map((track: any) => {
+            tracks: formValues?.tracks?.map((track: TrackData) => {
                 if (track.id === trackData.id) {
                     const { trackLanguage, ...restFields } = watchedAllFields;
 
                     return {
                         ...track,
                         ...restFields,
+                        title: restFields.title ?? track.title,
+                        isSensitiveContent:
+                            restFields.isSensitiveContent ?? false,
                         trackLanguage: {
                             ...track.trackLanguage,
                             audioLanguageId: trackLanguage?.audioLanguageId,
                         },
-                    };
+                    } as TrackData;
                 }
                 return track;
             }),
@@ -140,16 +149,16 @@ export default function TracksForm({ trackData, updateTrackDraft }: Props) {
 
                 <div>
                     <LabelForm
-                        htmlFor="originTypeId"
+                        htmlFor="trackOriginTypeId"
                         required
                         label={`${messages('trackOrigin.label')}`}
                     />
                     <Controller
                         control={control}
-                        name="originTypeId"
+                        name="trackOriginTypeId"
                         render={({ field }) => (
                             <OriginalTypeSelect
-                                id="originTypeId"
+                                id="trackOriginTypeId"
                                 {...field}
                                 onChange={(e) => {
                                     field.onChange(e);
@@ -159,14 +168,16 @@ export default function TracksForm({ trackData, updateTrackDraft }: Props) {
                                 }}
                                 className="w-full"
                                 status={
-                                    errors.originTypeId ? 'error' : undefined
+                                    errors.trackOriginTypeId
+                                        ? 'error'
+                                        : undefined
                                 }
                             />
                         )}
                     />
                     <ErrorText
-                        isError={!!errors.originTypeId}
-                        message={errors.originTypeId?.message}
+                        isError={!!errors.trackOriginTypeId}
+                        message={errors.trackOriginTypeId?.message}
                     />
                 </div>
 

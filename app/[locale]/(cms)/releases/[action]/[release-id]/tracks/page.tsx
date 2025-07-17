@@ -70,8 +70,12 @@ export default function Tracks() {
     };
 
     useEffect(() => {
-        console.log(tracksData?.items);
         if (tracksData?.items) {
+            console.log(
+                '🚀 ~ useEffect ~ tracksData?.items:',
+                tracksData?.items
+            );
+
             setFormValues({
                 ...formValues,
                 tracks: tracksData.items,

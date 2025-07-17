@@ -16,7 +16,7 @@ export const useGetListGenres = (params: GenresDataFilter) => {
 
     const lastUpdatedAt = formattedDate(
         res.dataUpdatedAt,
-        DATE_FORMAT.HOUR_MINUTE
+        DATE_FORMAT.HOUR_MINUTE_SECOND
     );
 
     return {

@@ -37,7 +37,7 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
-        "region": "region",
+        "region": "Khu vực",
         "specification": "Thông số kỹ thuật",
         "missingInformation": "Thiếu thông tin",
         "ready": "Sẵn sàng",
@@ -546,7 +546,8 @@
 
     "select": {
         "date": "Chọn ngày",
-        "approver": "Chọn người duyệt"
+        "approver": "Chọn người duyệt",
+        "option": "Vui lòng chọn"
     },
 
     "theme": {
@@ -591,6 +592,10 @@
             "selectRole": "Chọn vai trò",
             "selectMusician": "Chọn nhạc sĩ",
             "selectLanguageMetadata": "Chọn ngôn ngữ metadata"
+        },
+
+        "validation": {
+            "mustHaveMainArtist": "Vui lòng thêm nghệ sĩ chính (Main Artist)"
         },
 
         "scheduling": {
@@ -643,7 +648,8 @@
         "rap": "Rap",
         "classical": "Cổ điển",
         "blues": "Blues",
-        "add": "Thêm thể loại"
+        "add": "Thêm thể loại",
+        "primary": "Thể loại chính"
     },
     "genre": {
         "message": {
@@ -734,11 +740,19 @@
         "primaryGenreId": "Thể loại chính",
         "releaseTime": "Giờ phát hành",
         "releaseTimezoneId": "Múi giờ",
-        "releaseLanguage": "Ngôn ngữ phát hành",
+        "releaseLanguage": {
+            "metadataLanguageId": "Ngôn ngữ metadata"
+        },
         "releaseArtists": "Nghệ sĩ phát hành",
         "pLineOwner": "Bản quyền ghi âm",
         "cLineOwner": "Bản quyền tác phẩm",
+        "releaseTerritory": {
+            "selectedCountries": "Quốc gia phân phối",
+            "distributeType": "Tuỳ chọn vòng phân phối"
+        },
         "tracks": {
+            "metadataLanguageId": "Ngôn ngữ metadata",
+            "metadataLanguageCountryId": "Ngôn ngữ quốc gia",
             "trackLanguage": "Ngôn ngữ bài hát",
             "recordingCountryId": "Quốc gia thu âm",
             "preview": "Đoạn nghe trước",
@@ -781,6 +795,9 @@
             "countryRecording": "Quốc gia ghi âm",
             "recordingType": "Loại ghi âm",
             "isSensitiveContent": "Nội dung nhạy cảm"
+        },
+        "coverArtThumbnails": {
+            "original": "Ảnh phát hành"
         }
     },
 
@@ -788,7 +805,10 @@
         "label": "Phân phối",
         "create": "Tạo phân phối",
         "name": "Tên phân phối",
-        "id": "Mã phân phối"
+        "id": "Mã phân phối",
+        "onlyIn": "Chỉ phân phối trong",
+        "everyWhereExcept": "Phân phối khắp nơi ngoại trừ",
+        "wordWide": "Phân phối khắp thế giới"
     },
 
     "emailSender": {

@@ -134,42 +134,7 @@ export default function ReleaseDetailForm() {
         }
     };
     const handleFormError = (errors: any) => {};
-    const handleApplyAllTracks = (checked: boolean, artist: ArtistData) => {
-        // if (!checked) {
-        //     setFormValues({
-        //         ...formValues,
-        //         artistsApplyAllTracks:
-        //             formValues?.artistsApplyAllTracks?.filter(
-        //                 (item) => item.name !== artist.name
-        //             ),
-        //     });
-        //     return;
-        // }
-        // const isArtistExists = formValues?.artistsApplyAllTracks?.some(
-        //     (item) => item.name === artist.name
-        // );
-        // const updatedTracks = formValues?.tracks?.map((track) => {
-        //     const isArtistExistsInTrack = track.artists?.some(
-        //         (item) => item.name === artist.name
-        //     );
-        //     if (isArtistExistsInTrack) return track;
-        //     return {
-        //         ...track,
-        //         artists: [...track.artists, artist as ArtistData],
-        //     };
-        // });
-        // setFormValues({
-        //     ...formValues,
-        //     artistsApplyAllTracks: isArtistExists
-        //         ? formValues?.artistsApplyAllTracks
-        //         : [
-        //               ...(formValues?.artistsApplyAllTracks || []),
-        //               artist as ArtistData,
-        //           ],
-        //     tracks: updatedTracks,
-        // });
-        // showNotification('success', 'Đã thêm nghệ sĩ vào tất cả bài hát');
-    };
+    const handleApplyAllTracks = (checked: boolean, artist: ArtistData) => {};
     const copyRightYearList = () => {
         const currentYear = dayjs().year();
         const yearList = [
@@ -205,7 +170,13 @@ export default function ReleaseDetailForm() {
         createReleaseDraft(variables);
     };
     const debouncedUpdate = useCallback(
-        debounce(async (data) => {
+        debounce(async (data: any, fieldName?: string) => {
+            if (fieldName) {
+                const valid = await trigger(
+                    fieldName as keyof ReleaseDetailSchema
+                );
+                if (!valid) return;
+            }
             if (!formValues.id) return;
             const variables: UpdateVariables<
                 ReleasesData['id'],
@@ -262,11 +233,11 @@ export default function ReleaseDetailForm() {
                         original: null,
                     },
                 };
-                setFormValues(initialFormValue);
+                // setFormValues(initialFormValue);
                 reset(initialFormValue);
             }
         }
-    }, [isCreateReleasePage, releaseId]);
+    }, [isCreateReleasePage, releaseId, formValues]);
 
     return (
         <FormProvider {...formMethods}>
@@ -330,9 +301,12 @@ export default function ReleaseDetailForm() {
                                             onChange={(e) => {
                                                 const value = e.target.value;
                                                 field.onChange(value);
-                                                debouncedUpdate({
-                                                    title: value,
-                                                });
+                                                debouncedUpdate(
+                                                    {
+                                                        title: value,
+                                                    },
+                                                    'title'
+                                                );
                                             }}
                                             allowClear
                                             status={
@@ -504,7 +478,7 @@ export default function ReleaseDetailForm() {
 
                         <FormItem
                             name="primaryGenreId"
-                            label={messages('common.genres')}
+                            label={messages('genres.primary')}
                             required
                             ErrorMessage={errors.primaryGenreId?.message}
                         >

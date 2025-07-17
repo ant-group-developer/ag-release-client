@@ -546,7 +546,8 @@
 
     "select": {
         "date": "Select date",
-        "approver": "Select approver"
+        "approver": "Select approver",
+        "option": "Please select options"
     },
 
     "theme": {
@@ -590,6 +591,10 @@
             "selectRole": "Select role",
             "selectMusician": "Select musician",
             "selectLanguageMetadata": "Select language metadata"
+        },
+
+        "validation": {
+            "mustHaveMainArtist": "Release must have a main artist"
         },
 
         "scheduling": {
@@ -642,7 +647,8 @@
         "rap": "Rap",
         "classical": "Classical",
         "blues": "Blues",
-        "add": "Add new genre"
+        "add": "Add new genre",
+        "primary": "Primary genre"
     },
     "genre": {
         "message": {
@@ -735,7 +741,13 @@
         "cLineOwner": "C Copyright",
         "releaseTime": "Time release",
         "releaseTimezoneId": "Timezone",
+        "releaseTerritory": {
+            "selectedCountries": "Countries distribute",
+            "distributeType": "Options distribute"
+        },
         "tracks": {
+            "metadataLanguageId": "Metadata language",
+            "metadataLanguageCountryId": "country Language",
             "trackLanguage": "Ngôn ngữ bài hát",
             "recordingCountryId": "Recording country",
             "preview": "Preview track",
@@ -776,6 +788,9 @@
             "countryRecording": "Country recording",
             "recordingType": "Recording type",
             "isSensitiveContent": "Is sensitive content"
+        },
+        "coverArtThumbnails": {
+            "original": "Release image"
         }
     },
 
@@ -783,7 +798,10 @@
         "label": "Distribute",
         "create": "Create distribute",
         "name": "Distribute name",
-        "id": "Distribute ID"
+        "id": "Distribute ID",
+        "onlyIn": "Distribute only in",
+        "everyWhereExcept": "Distribute everywhere except",
+        "wordWide": "Distribute world wide"
     },
 
     "emailSender": {

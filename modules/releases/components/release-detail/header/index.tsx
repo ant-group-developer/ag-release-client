@@ -1,22 +1,23 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
+import AppConfirm from '@/components/ui/modal/confirm-modal';
 import { DATE_FORMAT, TYPE_UPLOAD_BUCKET } from '@/enums/common';
-import { formattedDate, getImageDimensions } from '@/helpers/common';
+import { formattedDate } from '@/helpers/common';
 import { cn } from '@/helpers/tailwind';
 import { RELEASE_MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
-import { useDeleteReleaseArtist } from '@/modules/release-artist/hooks/use-delete-release-artist';
 import { ReleaseArtist } from '@/modules/release-artist/types';
-import { useCreateReleaseCoverArt } from '@/modules/release-cover-art/hooks/use-create-release-cover-art';
-import { ReleaseCoverArtPayload } from '@/modules/release-cover-art/types';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
+import { ReleasesData } from '@/modules/releases/types';
+import { UpdateReleaseDraftPayload } from '@/modules/releases/types/payload';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { CreateBucketFile } from '@/modules/upload/types/data';
-import { CreateVariables } from '@/types/api';
+import { UpdateVariables } from '@/types/api';
 import { Form } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 type Props = {
     isScrolled: boolean;
@@ -29,13 +30,14 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const params = useParams();
     const isCreateReleasePage = params['action'] === 'create';
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
     const mainArtist = formValues?.releaseArtists?.find(
         (releaseArtist: ReleaseArtist) =>
             releaseArtist.artistRole?.name === RELEASE_MAIN_ARTIST_ROLE
     );
 
-    const { createReleaseCoverArt } = useCreateReleaseCoverArt();
+    const { updateReleaseDraft } = useUpdateReleaseDraft();
     const handleImageUpload = async (info: any) => {
         const file = info.fileList[0];
         if (!file) return;
@@ -53,20 +55,22 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
 
         const fileId = await bucketApi.createBucket(fileOriginal, payload);
         if (fileId) {
-            bucketApi.submit({ ids: [fileId] });
+            await bucketApi.submit({ ids: [fileId] });
         }
-        const { width, height } = await getImageDimensions(fileOriginal);
-        const variables: CreateVariables<ReleaseCoverArtPayload> = {
+        const variables: UpdateVariables<
+            ReleasesData['id'],
+            UpdateReleaseDraftPayload
+        > = {
+            id: formValues.id as string,
             payload: {
-                fileId,
-                height,
-                width,
-                type: 'original',
-                releaseId: formValues.id as string,
+                releaseCoverArt: {
+                    fileId,
+                },
             },
         };
 
-        createReleaseCoverArt(variables);
+        updateReleaseDraft(variables);
+
         setFormValues({
             coverArtThumbnails: {
                 '75x75': formValues.coverArtThumbnails?.['75x75'] ?? null,
@@ -79,8 +83,37 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         });
     };
 
-    const { deleteReleaseArtist } = useDeleteReleaseArtist();
-    const handleRemoveImage = () => {};
+    const handleRemoveImage = () => {
+        setIsConfirmOpen(true);
+        return false;
+    };
+
+    const handleConfirmRemove = async () => {
+        const variables: UpdateVariables<
+            ReleasesData['id'],
+            UpdateReleaseDraftPayload
+        > = {
+            id: formValues.id as string,
+            payload: {
+                releaseCoverArt: null,
+            },
+        };
+        await updateReleaseDraft(variables);
+        setFormValues({
+            coverArtThumbnails: {
+                '75x75': null,
+                '100x100': null,
+                '160x160': null,
+                '300x300': null,
+                '900x900': null,
+                original: null,
+            },
+        });
+        form.setFieldsValue({
+            thumbnail: undefined,
+        });
+        setIsConfirmOpen(false);
+    };
 
     useEffect(() => {
         form.setFieldsValue({
@@ -98,11 +131,6 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                 : undefined,
         });
     }, [formValues, form]);
-
-    // Khi submit form thì cập nhật lại state
-    // const handleFinish = (data: any) => {
-    //     setFormValues({ ...formValues, ...data });
-    // };
 
     return (
         <div>
@@ -162,12 +190,14 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                             `[${formValues.version}]`}
                                     </span>
                                 </div>
-                                <div className="text-sm">
-                                    <span>Label: </span>
-                                    <span className="font-bold">
-                                        {formValues?.label?.name}
-                                    </span>
-                                </div>
+                                {formValues.labelId && (
+                                    <div className="text-sm">
+                                        <span>Label: </span>
+                                        <span className="font-bold">
+                                            {formValues?.label?.name}
+                                        </span>
+                                    </div>
+                                )}
                                 <div className="text-sm">
                                     <span>{messages('artist.label')}: </span>
                                     <span className="font-bold">
@@ -208,6 +238,15 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                     </div>
                 </div>
             </AppForm>
+            <AppConfirm
+                open={isConfirmOpen}
+                modalTitle={messages('delete.confirmTitle')}
+                paragraph={messages('delete.confirmMessage', {
+                    value: messages('common.image').toLowerCase(),
+                })}
+                onCancel={() => setIsConfirmOpen(false)}
+                onOk={handleConfirmRemove}
+            />
         </div>
     );
 }

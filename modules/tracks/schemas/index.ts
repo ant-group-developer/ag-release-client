@@ -5,6 +5,8 @@ export const releaseTrackSchema = (messages: any) =>
     z.object({
         title: z
             .string()
+            .min(1, messages('validation.input'))
+            .max(100, messages('validation.input'))
             .nullable()
             .refine((val) => val !== null && val !== '', {
                 message: messages('validation.input'),
@@ -26,7 +28,7 @@ export const releaseTrackSchema = (messages: any) =>
                 message: messages('validation.input'),
             }),
         subGenreId: z.string().optional().nullable(),
-        originTypeId: z
+        trackOriginTypeId: z
             .string()
             .nullable()
             .refine((val) => val !== null && val !== '', {
@@ -70,18 +72,19 @@ export const releaseTrackSchema = (messages: any) =>
             .refine((val) => val !== null && val !== '', {
                 message: messages('validation.input'),
             }),
-        recordingCountryId: z
-            .string()
-            .nullable()
-            .refine((val) => val !== null && val !== '', {
-                message: messages('validation.input'),
+        audioFile: z.object({
+            // preview: z
+            //     .number()
+            //     .optional()
+            //     .nullable()
+            //     .refine((val) => val !== null && val !== undefined, {
+            //         message: messages('validation.input'),
+            //     }),
+            preview: z.number({
+                required_error: messages('validation.input'),
+                invalid_type_error: messages('validation.input'),
             }),
-        preview: z
-            .string()
-            .nullable()
-            .refine((val) => val !== null && val !== '', {
-                message: messages('validation.input'),
-            }),
+        }),
     });
 
 export type ReleaseTrackSchema = z.infer<ReturnType<typeof releaseTrackSchema>>;

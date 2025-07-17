@@ -74,7 +74,7 @@ export default function OtherMetadataForm({
             metadataLanguage:
                 trackData?.trackLanguage?.metadataLanguageId ?? '',
             lyrics: trackData?.lyric ?? '',
-            pLineOwner: trackData?.pLineOwner ?? `${dayjs().year()} `,
+            pLineOwner: trackData?.pLineOwner ?? ``,
             isrc: trackData.isrc ?? '',
         },
         resolver: zodResolver(otherMetadataSchema(messages)),
@@ -92,6 +92,7 @@ export default function OtherMetadataForm({
     const watchedAllFields = useWatch({ control });
 
     useEffect(() => {
+        console.log('run useEffect');
         setFormValues({
             ...formValues,
             tracks: formValues?.tracks?.map((track: any) => {
@@ -122,7 +123,7 @@ export default function OtherMetadataForm({
             >
                 <FormItem
                     name="genres"
-                    label={messages('common.genres')}
+                    label={messages('genres.primary')}
                     required
                     ErrorMessage={errors.genres?.message}
                 >
@@ -133,7 +134,6 @@ export default function OtherMetadataForm({
                             <GenresSelect
                                 className="w-full"
                                 showSearch
-                                allowClear
                                 {...field}
                                 onChange={(e) => {
                                     field.onChange(e);

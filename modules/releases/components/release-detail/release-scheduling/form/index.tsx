@@ -1,15 +1,15 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
-import RegionSelect from '@/components/ui/select/region-select';
+import CountrySelect from '@/components/ui/select/country-select';
 import TimezoneSelect from '@/components/ui/select/timezone-select';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { DATE_FORMAT } from '@/enums/common';
+import { DATE_FORMAT, DISTRIBUTE_TYPES } from '@/enums/common';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
 import { ReleasesData } from '@/modules/releases/types';
 import { UpdateReleaseDraftPayload } from '@/modules/releases/types/payload';
 import { UpdateVariables } from '@/types/api';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DatePicker, TimePicker } from 'antd';
+import { DatePicker, Radio, TimePicker } from 'antd';
 import dayjs from 'dayjs';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
@@ -25,6 +25,16 @@ const releaseSchedulingSchema = (messages: any) =>
             .array(z.string())
             .min(1, messages('validation.select')),
         timezone: z.string().nonempty(messages('validation.input')),
+        releaseTerritory: z.object({
+            distributeWorldwide: z
+                .boolean()
+                .refine((val) => val !== null && val !== undefined, {
+                    message: messages('validation.input'),
+                }),
+            distributeType: z.boolean().optional().nullable(),
+            selectedCountries: z.array(z.string()).optional().nullable(),
+        }),
+        distributeTypes: z.boolean(),
     });
 
 export type ReleaseSchedulingSchema = z.infer<
@@ -42,10 +52,16 @@ export default function ReleaseSchedulingForm({}: Props) {
 
     const formMethods = useForm<ReleaseSchedulingSchema>({
         defaultValues: {
-            releaseDate: formValues?.releaseDate ?? '',
+            releaseDate: formValues?.releaseDate,
             releaseTime: formValues?.releaseTime,
-            // territoryType: formValues?.territoryType || [],
             timezone: formValues?.releaseTimezoneId ?? '',
+            releaseTerritory: {
+                distributeWorldwide:
+                    formValues?.releaseTerritory?.distributeWorldwide ?? true,
+                distributeType: formValues?.releaseTerritory?.distributeType,
+                selectedCountries:
+                    formValues?.releaseTerritory?.selectedCountries,
+            },
         },
         resolver: zodResolver(releaseSchedulingSchema(messages)),
         mode: 'onChange',
@@ -59,6 +75,8 @@ export default function ReleaseSchedulingForm({}: Props) {
         trigger,
         setValue,
     } = formMethods;
+
+    const distributeWorldwide = watch('releaseTerritory.distributeWorldwide');
 
     const debouncedUpdate = useCallback(
         debounce((data) => {
@@ -78,23 +96,6 @@ export default function ReleaseSchedulingForm({}: Props) {
         [formValues.id]
     );
 
-    // const watchedAllFields = useWatch({ control });
-
-    // useEffect(() => {
-    //     const updatedFormValues = {
-    //         ...formValues,
-    //         releaseDate: watchedAllFields.releaseDate,
-    //         territoryType: watchedAllFields.territoryType,
-    //         timezone: watchedAllFields.timezone,
-    //     };
-
-    //     setFormValues(updatedFormValues);
-    // }, [watchedAllFields]);
-
-    // useEffect(() => {
-    //     trigger();
-    // }, []);
-
     return (
         <div className="rounded-lg bg-white p-4">
             <FormProvider {...formMethods}>
@@ -109,40 +110,37 @@ export default function ReleaseSchedulingForm({}: Props) {
                             <Controller
                                 control={control}
                                 name="releaseDate"
-                                render={({ field }) => (
-                                    <DatePicker
-                                        id="releaseDate"
-                                        className="w-full"
-                                        format={DATE_FORMAT.DATE_ONLY}
-                                        disabledDate={(date) =>
-                                            date &&
-                                            date < dayjs().startOf('day')
-                                        }
-                                        value={
-                                            field.value
-                                                ? dayjs(
-                                                      field.value,
-                                                      'YYYY-MM-DD'
-                                                  )
-                                                : null
-                                        }
-                                        onChange={(date) => {
-                                            field.onChange(
-                                                date
-                                                    ? date.format('YYYY-MM-DD')
-                                                    : ''
-                                            );
-                                            debouncedUpdate({
-                                                releaseDate: date,
-                                            });
-                                        }}
-                                        status={
-                                            errors.releaseDate
-                                                ? 'error'
-                                                : undefined
-                                        }
-                                    />
-                                )}
+                                render={({ field }) => {
+                                    return (
+                                        <DatePicker
+                                            id="releaseDate"
+                                            className="w-full"
+                                            format={DATE_FORMAT.DATE_ONLY}
+                                            disabledDate={(date) =>
+                                                date &&
+                                                date < dayjs().startOf('day')
+                                            }
+                                            value={
+                                                field.value
+                                                    ? dayjs(field.value)
+                                                    : null
+                                            }
+                                            onChange={(date) => {
+                                                field.onChange(
+                                                    date.toISOString()
+                                                );
+                                                debouncedUpdate({
+                                                    releaseDate: date,
+                                                });
+                                            }}
+                                            status={
+                                                errors.releaseDate
+                                                    ? 'error'
+                                                    : undefined
+                                            }
+                                        />
+                                    );
+                                }}
                             />
                         </FormItem>
 
@@ -160,16 +158,25 @@ export default function ReleaseSchedulingForm({}: Props) {
                                         className="w-full"
                                         value={
                                             field.value
-                                                ? dayjs(field.value, 'HH:mm')
+                                                ? dayjs(
+                                                      field.value,
+                                                      DATE_FORMAT.HOUR_MINUTE
+                                                  )
                                                 : null
                                         }
                                         onChange={(time) => {
                                             field.onChange(
-                                                time ? time.format('HH:mm') : ''
+                                                time
+                                                    ? time.format(
+                                                          DATE_FORMAT.HOUR_MINUTE
+                                                      )
+                                                    : ''
                                             );
                                             debouncedUpdate({
                                                 releaseTime: time
-                                                    ? time.format('HH:mm')
+                                                    ? time.format(
+                                                          DATE_FORMAT.HOUR_MINUTE
+                                                      )
                                                     : '',
                                             });
                                         }}
@@ -215,44 +222,142 @@ export default function ReleaseSchedulingForm({}: Props) {
                             />
                         </FormItem>
 
-                        <FormItem
-                            name="territoryType"
-                            label={messages('common.region')}
-                            required
-                            ErrorMessage={errors.territoryType?.message}
-                        >
-                            <Controller
-                                control={control}
-                                name="territoryType"
-                                render={({ field }) => (
-                                    <RegionSelect
-                                        className="w-full"
-                                        id="territoryType"
-                                        multiple
-                                        allowClear
-                                        maxTagCount="responsive"
-                                        maxTagPlaceholder={(value) => (
-                                            <CustomTooltip
-                                                title={value
-                                                    .map(
-                                                        (item: any) =>
-                                                            item.label
-                                                    )
-                                                    .join(', ')}
+                        <div className="space-y-2">
+                            <FormItem
+                                required
+                                name="releaseTerritory.distributeWorldwide"
+                                label={messages('distribute.wordWide')}
+                                ErrorMessage={
+                                    errors.releaseTerritory?.distributeWorldwide
+                                        ?.message
+                                }
+                            >
+                                <Controller
+                                    control={control}
+                                    name="releaseTerritory.distributeWorldwide"
+                                    defaultValue={true}
+                                    render={({ field }) => {
+                                        return (
+                                            <Radio.Group
+                                                {...field}
+                                                onChange={(e) => {
+                                                    field.onChange(
+                                                        e.target.value
+                                                    ),
+                                                        debouncedUpdate({
+                                                            releaseTerritory: {
+                                                                distributeWorldwide:
+                                                                    e.target
+                                                                        .value,
+                                                            },
+                                                        });
+                                                }}
                                             >
-                                                +{value.length}
-                                            </CustomTooltip>
-                                        )}
-                                        {...field}
-                                        status={
-                                            errors.territoryType
-                                                ? 'error'
-                                                : undefined
+                                                <Radio.Button value={true}>
+                                                    {messages('common.yes')}
+                                                </Radio.Button>
+                                                <Radio.Button value={false}>
+                                                    {messages('common.no')}
+                                                </Radio.Button>
+                                            </Radio.Group>
+                                        );
+                                    }}
+                                />
+                            </FormItem>
+
+                            {!distributeWorldwide && (
+                                <>
+                                    <FormItem
+                                        required
+                                        name="releaseTerritory.distributeType"
+                                        label={messages('select.option')}
+                                        ErrorMessage={
+                                            errors.releaseTerritory
+                                                ?.distributeType?.message
                                         }
-                                    />
-                                )}
-                            />
-                        </FormItem>
+                                    >
+                                        <Controller
+                                            control={control}
+                                            name="releaseTerritory.distributeType"
+                                            render={({ field }) => {
+                                                return (
+                                                    <Radio.Group
+                                                        {...field}
+                                                        onChange={(e) => {
+                                                            field.onChange(e);
+                                                        }}
+                                                    >
+                                                        <Radio.Button
+                                                            value={
+                                                                DISTRIBUTE_TYPES.DISTRIBUTE_ONLY_IN
+                                                            }
+                                                        >
+                                                            {messages(
+                                                                'distribute.onlyIn'
+                                                            )}
+                                                        </Radio.Button>
+                                                        <Radio.Button
+                                                            value={
+                                                                DISTRIBUTE_TYPES.DISTRIBUTE_EVERY_WHERE_EXCEPT
+                                                            }
+                                                        >
+                                                            {messages(
+                                                                'distribute.everyWhereExcept'
+                                                            )}
+                                                        </Radio.Button>
+                                                    </Radio.Group>
+                                                );
+                                            }}
+                                        />
+                                    </FormItem>
+                                    <FormItem
+                                        name="releaseTerritory.selectedCountries"
+                                        label={messages('common.region')}
+                                        required
+                                        ErrorMessage={
+                                            errors.releaseTerritory
+                                                ?.selectedCountries?.message
+                                        }
+                                    >
+                                        <Controller
+                                            control={control}
+                                            name="releaseTerritory.selectedCountries"
+                                            render={({ field }) => (
+                                                <CountrySelect
+                                                    className="w-full"
+                                                    id="releaseTerritory.selectedCountries"
+                                                    mode="multiple"
+                                                    allowClear
+                                                    maxTagCount="responsive"
+                                                    maxTagPlaceholder={(
+                                                        value
+                                                    ) => (
+                                                        <CustomTooltip
+                                                            title={value
+                                                                .map(
+                                                                    (
+                                                                        item: any
+                                                                    ) =>
+                                                                        item.label
+                                                                )
+                                                                .join(', ')}
+                                                        >
+                                                            +{value.length}
+                                                        </CustomTooltip>
+                                                    )}
+                                                    {...field}
+                                                    status={
+                                                        errors.territoryType
+                                                            ? 'error'
+                                                            : undefined
+                                                    }
+                                                />
+                                            )}
+                                        />
+                                    </FormItem>
+                                </>
+                            )}
+                        </div>
                     </div>
                 </form>
             </FormProvider>
