@@ -4,6 +4,7 @@ import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import { DATE_FORMAT, TYPE_UPLOAD_BUCKET } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
+import { genFolderBucket } from '@/helpers/string';
 import { cn } from '@/helpers/tailwind';
 import { RELEASE_MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { ReleaseArtist } from '@/modules/release-artist/types';
@@ -44,7 +45,11 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         const fileOriginal = file.originFileObj;
 
         const payload: CreateBucketFile = {
-            uploadPurpose: TYPE_UPLOAD_BUCKET.RELEASE_COVER_ART,
+            folderBucket: genFolderBucket({
+                releaseId: formValues.id ?? '',
+                uploadPurpose: TYPE_UPLOAD_BUCKET.RELEASE_COVER_ART,
+                fileName: fileOriginal.name,
+            }),
             file: {
                 fileName: fileOriginal.name,
                 contentType: fileOriginal.type,

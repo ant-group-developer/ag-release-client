@@ -10,6 +10,7 @@ import WaveAudioUpload from '@/components/ui/input/wave-audio-upload';
 import { TYPE_UPLOAD_BUCKET } from '@/enums/common';
 import extractAudioMetadata, { getPeakData } from '@/helpers/common';
 import { showNotification } from '@/helpers/messages-helper';
+import { genFolderBucket } from '@/helpers/string';
 import { useActive } from '@/hooks/use-active';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useCreateTrackDraft } from '@/modules/tracks/hooks/use-create-track-draft';
@@ -71,7 +72,11 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                     );
 
                     const trackInfor: CreateBucketFile = {
-                        uploadPurpose: TYPE_UPLOAD_BUCKET.TRACK,
+                        folderBucket: genFolderBucket({
+                            releaseId: formValues.id ?? '',
+                            uploadPurpose: TYPE_UPLOAD_BUCKET.TRACK,
+                            fileName: fileOriginal.name,
+                        }),
                         file: {
                             fileName: fileOriginal.name,
                             contentType: fileOriginal.type,
@@ -121,7 +126,11 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                     );
 
                     const peakInfor: CreateBucketFile = {
-                        uploadPurpose: TYPE_UPLOAD_BUCKET.JSON,
+                        folderBucket: genFolderBucket({
+                            releaseId: formValues.id ?? '',
+                            uploadPurpose: TYPE_UPLOAD_BUCKET.TRACK,
+                            fileName: fileOriginal.name,
+                        }),
                         file: {
                             fileName: peakFile.name,
                             contentType: peakFile.type,

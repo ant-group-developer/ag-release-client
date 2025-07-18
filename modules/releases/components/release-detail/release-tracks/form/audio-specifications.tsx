@@ -69,7 +69,6 @@ export default function AudioSpecifications({
     const watchedAllFields = useWatch({ control });
 
     useEffect(() => {
-        console.log('run uef');
         setFormValues({
             ...formValues,
             tracks: formValues?.tracks?.map((track: any) => {
