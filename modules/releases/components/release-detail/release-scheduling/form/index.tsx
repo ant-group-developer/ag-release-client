@@ -5,6 +5,7 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { DATE_FORMAT, DISTRIBUTE_TYPES } from '@/enums/common';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
+import { releaseSchema } from '@/modules/releases/schemas';
 import { ReleasesData } from '@/modules/releases/types';
 import { UpdateReleaseDraftPayload } from '@/modules/releases/types/payload';
 import { UpdateVariables } from '@/types/api';
@@ -18,23 +19,11 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 const releaseSchedulingSchema = (messages: any) =>
-    z.object({
-        releaseDate: z.string().nonempty(messages('validation.input')),
-        releaseTime: z.string().nonempty(messages('validation.input')),
-        territoryType: z
-            .array(z.string())
-            .min(1, messages('validation.select')),
-        timezone: z.string().nonempty(messages('validation.input')),
-        releaseTerritory: z.object({
-            distributeWorldwide: z
-                .boolean()
-                .refine((val) => val !== null && val !== undefined, {
-                    message: messages('validation.input'),
-                }),
-            distributionType: z.string().optional().nullable(),
-            selectedCountries: z.array(z.string()).optional().nullable(),
-        }),
-        distributeTypes: z.boolean(),
+    releaseSchema(messages).pick({
+        releaseDate: true,
+        releaseTime: true,
+        releaseTimezoneId: true,
+        releaseTerritory: true,
     });
 
 export type ReleaseSchedulingSchema = z.infer<
@@ -54,7 +43,7 @@ export default function ReleaseSchedulingForm({}: Props) {
         defaultValues: {
             releaseDate: formValues?.releaseDate,
             releaseTime: formValues?.releaseTime,
-            timezone: formValues?.releaseTimezoneId ?? '',
+            releaseTimezoneId: formValues?.releaseTimezoneId,
             releaseTerritory: {
                 distributeWorldwide:
                     formValues?.releaseTerritory?.distributeWorldwide ?? true,
@@ -193,17 +182,17 @@ export default function ReleaseSchedulingForm({}: Props) {
                         </FormItem>
 
                         <FormItem
-                            name="timezone"
+                            name="releaseTimezoneId"
                             label="timezone"
                             required
-                            ErrorMessage={errors.timezone?.message}
+                            ErrorMessage={errors.releaseTimezoneId?.message}
                         >
                             <Controller
                                 control={control}
-                                name="timezone"
+                                name="releaseTimezoneId"
                                 render={({ field }) => (
                                     <TimezoneSelect
-                                        id="timezone"
+                                        id="releaseTimezoneId"
                                         className="w-full"
                                         {...field}
                                         placeholder="Chọn múi giờ"
@@ -214,7 +203,7 @@ export default function ReleaseSchedulingForm({}: Props) {
                                             });
                                         }}
                                         status={
-                                            errors.timezone
+                                            errors.releaseTimezoneId
                                                 ? 'error'
                                                 : undefined
                                         }
@@ -280,48 +269,44 @@ export default function ReleaseSchedulingForm({}: Props) {
                                         <Controller
                                             control={control}
                                             name="releaseTerritory.distributionType"
-                                            render={({ field }) => {
-                                                return (
-                                                    <Radio.Group
-                                                        {...field}
-                                                        onChange={(e) => {
-                                                            field.onChange(
-                                                                e.target.value
-                                                            ),
-                                                                debouncedUpdate(
+                                            render={({ field }) => (
+                                                <Radio.Group
+                                                    {...field}
+                                                    onChange={(e) => {
+                                                        field.onChange(
+                                                            e.target.value
+                                                        ),
+                                                            debouncedUpdate({
+                                                                releaseTerritory:
                                                                     {
-                                                                        releaseTerritory:
-                                                                            {
-                                                                                distributionType:
-                                                                                    e
-                                                                                        .target
-                                                                                        .value,
-                                                                            },
-                                                                    }
-                                                                );
-                                                        }}
+                                                                        distributionType:
+                                                                            e
+                                                                                .target
+                                                                                .value,
+                                                                    },
+                                                            });
+                                                    }}
+                                                >
+                                                    <Radio.Button
+                                                        value={
+                                                            DISTRIBUTE_TYPES.DISTRIBUTE_ONLY_IN
+                                                        }
                                                     >
-                                                        <Radio.Button
-                                                            value={
-                                                                DISTRIBUTE_TYPES.DISTRIBUTE_ONLY_IN
-                                                            }
-                                                        >
-                                                            {messages(
-                                                                'distribute.onlyIn'
-                                                            )}
-                                                        </Radio.Button>
-                                                        <Radio.Button
-                                                            value={
-                                                                DISTRIBUTE_TYPES.DISTRIBUTE_EVERY_WHERE_EXCEPT
-                                                            }
-                                                        >
-                                                            {messages(
-                                                                'distribute.everyWhereExcept'
-                                                            )}
-                                                        </Radio.Button>
-                                                    </Radio.Group>
-                                                );
-                                            }}
+                                                        {messages(
+                                                            'distribute.onlyIn'
+                                                        )}
+                                                    </Radio.Button>
+                                                    <Radio.Button
+                                                        value={
+                                                            DISTRIBUTE_TYPES.DISTRIBUTE_EVERY_WHERE_EXCEPT
+                                                        }
+                                                    >
+                                                        {messages(
+                                                            'distribute.everyWhereExcept'
+                                                        )}
+                                                    </Radio.Button>
+                                                </Radio.Group>
+                                            )}
                                         />
                                     </FormItem>
                                     <FormItem
@@ -369,11 +354,6 @@ export default function ReleaseSchedulingForm({}: Props) {
                                                             },
                                                         });
                                                     }}
-                                                    status={
-                                                        errors.territoryType
-                                                            ? 'error'
-                                                            : undefined
-                                                    }
                                                 />
                                             )}
                                         />

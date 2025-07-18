@@ -43,12 +43,19 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         const file = info.fileList[0];
         if (!file) return;
         const fileOriginal = file.originFileObj;
+        const fileNameWithoutExtension =
+            fileOriginal.name.lastIndexOf('.') !== -1
+                ? fileOriginal.name.substring(
+                      0,
+                      fileOriginal.name.lastIndexOf('.')
+                  )
+                : fileOriginal.name;
 
         const payload: CreateBucketFile = {
             folderBucket: genFolderBucket({
                 releaseId: formValues.id ?? '',
                 uploadPurpose: TYPE_UPLOAD_BUCKET.RELEASE_COVER_ART,
-                fileName: fileOriginal.name,
+                // fileName: fileNameWithoutExtension,
             }),
             file: {
                 fileName: fileOriginal.name,
@@ -87,12 +94,10 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
             },
         });
     };
-
     const handleRemoveImage = () => {
         setIsConfirmOpen(true);
         return false;
     };
-
     const handleConfirmRemove = async () => {
         const variables: UpdateVariables<
             ReleasesData['id'],
@@ -126,7 +131,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                 ? {
                       fileList: [
                           {
-                              uid: formValues.id,
+                              uid: 'uid',
                               thumbUrl: formValues.coverArtThumbnails.original,
                               url: formValues.coverArtThumbnails.original,
                               name: formValues.title,
@@ -162,11 +167,11 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                 <ImageListUpload
                                     disabled={isCreateReleasePage}
                                     className={cn(
-                                        'release-detail-header-upload size-28 !rounded-lg !border-0 !p-0 transition-all duration-300'
-                                        // {
-                                        //     'size-14 transition-all duration-300':
-                                        //         isScrolled,
-                                        // }
+                                        'release-detail-header-upload !aspect-square !size-28 !rounded-lg !border-0 !p-0 transition-all duration-300',
+                                        {
+                                            '!size-14 transition-all duration-300':
+                                                isScrolled,
+                                        }
                                     )}
                                     accept="image/*"
                                     maxCount={1}

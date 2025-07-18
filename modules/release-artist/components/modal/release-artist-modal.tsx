@@ -3,9 +3,11 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import ArtistSelect from '@/components/ui/select/artist-select';
 import RoleArtistSelect from '@/components/ui/select/role-artist-select';
+import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { useGetListArtistRole } from '@/modules/artist-role/hooks/use-get-list-artist-role';
 import { ArtistRoleData } from '@/modules/artist-role/types';
+import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { DspData } from '@/modules/dsp/types';
 import { RELEASE_MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
@@ -21,7 +23,7 @@ import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form } from 'antd';
 import { useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import ArtistProfilesList from '../../../artist/components/list/artist-profiles';
 import { roleArtist } from '../../../artist/constants';
 import { useUpdateReleaseArtist } from '../../hooks/use-update-release-artist';
@@ -38,6 +40,8 @@ const fakeLinkedPlatforms = [
 
 export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
     const [form] = Form.useForm();
+    const { active, deActive, isActive } = useActive();
+    const [showCreateArtistModal, setShowCreateArtistModal] = useState(false);
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
     const watchArtistName = useWatch(['name'], form);
@@ -59,30 +63,38 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
     );
 
     const handleSubmit = async (values: any) => {
-        if (!isArtistEditModal) {
-            const variables: CreateVariables<CreateReleaseArtistPayload> = {
-                payload: {
-                    artistId: values.artistId,
-                    artistRoleId: values.roleId ?? mainArtist.id,
-                    releaseId: formValues.id as string,
-                },
-                onSuccess: () => {
-                    closeModal();
-                },
-            };
-            createReleaseArtist(variables);
-        } else {
-            const variables: UpdateVariables<
-                ReleaseArtist['id'],
-                UpdateReleaseArtistPayload
-            > = {
-                id: dataEdit.id,
-                payload: {
-                    artistId: values?.artistId,
-                    artistRoleId: values.roleId,
-                },
-            };
-            updateReleaseArtist(variables);
+        active();
+        try {
+            if (!isArtistEditModal) {
+                const variables: CreateVariables<CreateReleaseArtistPayload> = {
+                    payload: {
+                        artistId: values.artistId,
+                        artistRoleId: values.roleId ?? mainArtist.id,
+                        releaseId: formValues.id as string,
+                    },
+                    onSuccess: () => {
+                        closeModal();
+                    },
+                };
+                createReleaseArtist(variables);
+            } else {
+                const variables: UpdateVariables<
+                    ReleaseArtist['id'],
+                    UpdateReleaseArtistPayload
+                > = {
+                    id: dataEdit.id,
+                    payload: {
+                        artistId: values?.artistId,
+                        artistRoleId: values.roleId,
+                    },
+                    onSuccess: () => {
+                        deActive();
+                    },
+                };
+                updateReleaseArtist(variables);
+            }
+        } catch (error) {
+            deActive();
         }
     };
 
@@ -105,12 +117,14 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
             }
             onCancel={closeModal}
             onOk={form.submit}
+            confirmLoading={isActive}
         >
             <AppForm
                 form={form}
                 onFinish={(values) => handleSubmit(values)}
                 layout="vertical"
                 showSubmit={false}
+                disabled={isActive}
             >
                 <AppFormItem
                     name="artistId"
@@ -126,8 +140,16 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                     <ArtistSelect
                         showSearch
                         placeholder={messages('artist.select')}
+                        onCreateArtist={() => setShowCreateArtistModal(true)}
                     />
                 </AppFormItem>
+
+                {showCreateArtistModal && (
+                    <ArtistFormModal
+                        open
+                        onCancel={() => setShowCreateArtistModal(false)}
+                    />
+                )}
 
                 {!isSetMainArtist && (
                     <AppFormItem

@@ -41,7 +41,7 @@ export const useDeleteTrack = () => {
     };
     const mutation = useMutation({
         mutationFn: ({ id }: DeleteVariables<TrackData['id']>) =>
-            trackApi.deleteTrack(id),
+            trackApi.deleteTrackDraft(id),
         onSuccess,
         onError,
     });

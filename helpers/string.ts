@@ -168,7 +168,7 @@ export function genFolderBucket({
     releaseId: string;
     fileName?: string;
 }) {
-    const datePrefix = dayjs().format('YYYY_MM_DD');
+    const datePrefix = dayjs().utc().format('YYYY_MM_DD');
 
     let subFolder = '';
     switch (uploadPurpose) {

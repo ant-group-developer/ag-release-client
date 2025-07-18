@@ -39,6 +39,7 @@ type Props = {
 };
 
 export default function TracksForm({ trackData }: Props) {
+    console.log('🚀 ~ TracksForm ~ trackData:', trackData);
     const messages = useTranslations();
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const formValues = useReleaseFormStore((state) => state.formValues);
@@ -265,18 +266,21 @@ export default function TracksForm({ trackData }: Props) {
                     <Controller
                         control={control}
                         name="copyArtistsFromRelease"
-                        render={({ field }) => (
-                            <Switch
-                                {...field}
-                                checked={!!field.value}
-                                onChange={(e) => {
-                                    field.onChange(e);
-                                    debouncedUpdateTrackDraft({
-                                        copyArtistsFromRelease: e,
-                                    });
-                                }}
-                            />
-                        )}
+                        render={({ field }) => {
+                            console.log('🚀 ~ TracksForm ~ field:', field);
+                            return (
+                                <Switch
+                                    {...field}
+                                    checked={!!field.value}
+                                    onChange={(e) => {
+                                        field.onChange(e);
+                                        debouncedUpdateTrackDraft({
+                                            copyArtistsFromRelease: e,
+                                        });
+                                    }}
+                                />
+                            );
+                        }}
                     />
                 </div>
 

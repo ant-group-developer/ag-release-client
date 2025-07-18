@@ -1,16 +1,14 @@
-import useModalStore from '@/hooks/use-modal';
-import { TYPE_MODAL_ARTIST } from '@/modules/artist/enum';
 import { useGetListArtist } from '@/modules/artist/hooks/use-get-list-artists';
 import { ArtistData } from '@/modules/artist/types';
 import { Button, Select, SelectProps } from 'antd';
 import { useTranslations } from 'next-intl';
 
-type Props = SelectProps & {};
+type Props = SelectProps & {
+    onCreateArtist?: () => void;
+};
 
-export default function ArtistSelect({ ...props }: Props) {
+export default function ArtistSelect({ onCreateArtist, ...props }: Props) {
     const messages = useTranslations();
-    const openModal = useModalStore((state) => state.openModal);
-
     const { artistsData } = useGetListArtist({});
 
     return (
@@ -29,9 +27,7 @@ export default function ArtistSelect({ ...props }: Props) {
                             <Button
                                 type="primary"
                                 className="w-full"
-                                onClick={() =>
-                                    openModal(TYPE_MODAL_ARTIST.CREATE)
-                                }
+                                onClick={onCreateArtist}
                             >
                                 {messages('releases.createArtist')}
                             </Button>

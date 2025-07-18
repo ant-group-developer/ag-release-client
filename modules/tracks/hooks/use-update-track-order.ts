@@ -1,36 +1,26 @@
 import { showNotification } from '@/helpers/messages-helper';
 import { releasesQueryKeys } from '@/modules/releases/constants/query-keys';
-import { DeleteVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
-import { releasesApi } from '../apis';
-import { ReleasesData } from '../types';
+import { trackApi } from '../apis';
+import { UpdateTrackOrderPayload } from '../types/payload';
 
-export const useDeleteRelease = () => {
+export const useUpdateTrackOrder = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
 
-    const onSuccess = (
-        data: any,
-        { onSuccess }: DeleteVariables<ReleasesData['id']>
-    ) => {
+    const onSuccess = (data: any, { onSuccess }: UpdateTrackOrderPayload) => {
         queryClient.invalidateQueries({
             queryKey: [...releasesQueryKeys.getDetail],
-        });
-        queryClient.invalidateQueries({
-            queryKey: [...releasesQueryKeys.getList],
         });
 
         const responseMessages = messages(data?.data?.messageCode);
 
-        onSuccess?.();
-        showNotification('success', responseMessages);
+        onSuccess?.(data?.data?.data);
+        // showNotification('success', responseMessages);
     };
 
-    const onError = (
-        data: any,
-        { onError }: DeleteVariables<ReleasesData['id']>
-    ) => {
+    const onError = (data: any, { onError }: UpdateTrackOrderPayload) => {
         const responseMessages = messages(data?.response?.data?.messageCode);
 
         onError?.();
@@ -39,19 +29,20 @@ export const useDeleteRelease = () => {
             responseMessages || messages('common.somethingWentWrong')
         );
     };
+
     const mutation = useMutation({
-        mutationFn: ({ id }: DeleteVariables<ReleasesData['id']>) =>
-            releasesApi.deleteRelease(id),
+        mutationFn: (payload: UpdateTrackOrderPayload) =>
+            trackApi.updateTrackOrder(payload),
         onSuccess,
         onError,
     });
 
-    const deleteRelease = (variables: DeleteVariables<ReleasesData['id']>) => {
+    const updateTrackOrder = (variables: UpdateTrackOrderPayload) => {
         return mutation.mutate(variables);
     };
 
     return {
-        deleteRelease,
+        updateTrackOrder,
         ...mutation,
     };
 };

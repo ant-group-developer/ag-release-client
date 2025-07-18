@@ -25,7 +25,6 @@ export default function TrackOriginTypeFormModal({ ...props }: Props) {
     const dataEdit = useModalStore(
         (state) => state.dataEdit as TrackOriginTypeData
     );
-    console.log('🚀 ~ TrackOriginTypeFormModal ~ dataEdit:', dataEdit);
     const isUpdateForm = dataEdit?.id;
 
     const { createTrackOriginType } = useCreateTrackOriginType();

@@ -5,4 +5,6 @@ export interface CreateReleaseArtistPayload {
 }
 
 export interface UpdateReleaseArtistPayload
-    extends Partial<CreateReleaseArtistPayload> {}
+    extends Partial<CreateReleaseArtistPayload> {
+    addArtistToTracks?: boolean;
+}

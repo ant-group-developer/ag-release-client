@@ -25,7 +25,6 @@ type Props = Omit<AppModalProps, 'children'> & {};
 export default function ArtistFormModal({ ...props }: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
-    const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as ArtistData);
     const { active, isActive, deActive } = useActive();
     const isUpdateForm = dataEdit?.id;
@@ -130,7 +129,6 @@ export default function ArtistFormModal({ ...props }: Props) {
             {...props}
             title={titleModal}
             open
-            onCancel={closeModal}
             onOk={form.submit}
             loading={isActive}
         >
@@ -139,6 +137,7 @@ export default function ArtistFormModal({ ...props }: Props) {
                 onFinish={onFinish}
                 showSubmit={false}
                 layout="vertical"
+                disabled={isActive}
             >
                 <div className="flex items-center gap-4">
                     <AppFormItem name="pictureFile" label={'Avatar'}>

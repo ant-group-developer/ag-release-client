@@ -56,6 +56,13 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                     let songDuration = 0;
                     let peakData: number[] = [];
                     const fileOriginal = file.originFileObj;
+                    const fileNameWithoutExtension =
+                        fileOriginal.name.lastIndexOf('.') !== -1
+                            ? fileOriginal.name.substring(
+                                  0,
+                                  fileOriginal.name.lastIndexOf('.')
+                              )
+                            : fileOriginal.name;
 
                     if (fileOriginal) {
                         const { peakData: data, songDuration: duration } =
@@ -75,7 +82,7 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                         folderBucket: genFolderBucket({
                             releaseId: formValues.id ?? '',
                             uploadPurpose: TYPE_UPLOAD_BUCKET.TRACK,
-                            fileName: fileOriginal.name,
+                            fileName: fileNameWithoutExtension,
                         }),
                         file: {
                             fileName: fileOriginal.name,
@@ -129,7 +136,7 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                         folderBucket: genFolderBucket({
                             releaseId: formValues.id ?? '',
                             uploadPurpose: TYPE_UPLOAD_BUCKET.TRACK,
-                            fileName: fileOriginal.name,
+                            fileName: fileNameWithoutExtension,
                         }),
                         file: {
                             fileName: peakFile.name,
@@ -161,8 +168,6 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                     return item.key.includes(i.key);
                 });
                 if (matchedFile) {
-                    console.log(matchedFile);
-
                     try {
                         const uploadResponse = await fetch(item.urlUpload, {
                             method: 'PUT',

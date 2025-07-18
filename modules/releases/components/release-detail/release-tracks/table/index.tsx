@@ -10,8 +10,12 @@ import { useTrackReadyStore } from '@/modules/releases/hooks/track-ready-store';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
+import { useUpdateTrackOrder } from '@/modules/tracks/hooks/use-update-track-order';
 import { TrackData } from '@/modules/tracks/types';
-import { UpdateTrackPayload } from '@/modules/tracks/types/payload';
+import {
+    UpdateTrackOrderPayload,
+    UpdateTrackPayload,
+} from '@/modules/tracks/types/payload';
 import { UpdateVariables } from '@/types/api';
 import { Input, Tabs, Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
@@ -38,12 +42,19 @@ export default function ReleaseTracksTable({ ...props }: Props) {
     );
 
     const { updateTrackDraft } = useUpdateTrackDraft();
+    const { updateTrackOrder } = useUpdateTrackOrder();
 
     const handleDragEnd: OnDragEnd<TrackData[]> = (newData) => {
-        // const payload = newData.map((item, index) => ({
-        //     id: item.id,
-        //     order: index + 1,
-        // }));
+        const payload = newData.map((item, index) => ({
+            id: item.id,
+            order: index + 1,
+        }));
+
+        const variables: UpdateTrackOrderPayload = {
+            trackDrafts: payload,
+        };
+
+        updateTrackOrder(variables);
     };
 
     const debouncedUpdate = useCallback(
@@ -135,7 +146,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                                         e.preventDefault();
                                         openModal(
                                             TYPE_MODAL_TRACK_ARTIST.DELETE,
-                                            record
+                                            trackArtist
                                         );
                                     }}
                                 >

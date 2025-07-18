@@ -33,7 +33,7 @@ export function TrackWaveform({ data }: { data: TrackData }) {
             togglePlayback={() =>
                 handlePlay({
                     url:
-                        audioFile?.peak?.urlRead ??
+                        audioFile?.file?.urlRead ??
                         'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
                     songId: id,
                 })
@@ -41,7 +41,7 @@ export function TrackWaveform({ data }: { data: TrackData }) {
             handleSeeking={(second) =>
                 handleSeeking({
                     url:
-                        audioFile?.peak?.urlRead ??
+                        audioFile?.file?.urlRead ??
                         'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
                     songId: id,
                     second,

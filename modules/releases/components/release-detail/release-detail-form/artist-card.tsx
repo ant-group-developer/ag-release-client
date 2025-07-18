@@ -13,6 +13,7 @@ type Props = HTMLAttributes<HTMLDivElement> & {
     data: {
         artist: ArtistData | undefined;
         artistRole: ArtistRoleData | undefined;
+        addArtistToTracks?: boolean;
     };
     onDelete?: () => void;
     showApplyToAllTracks?: boolean;
@@ -58,9 +59,7 @@ export default function ArtistCard({
                             }}
                         >
                             <Checkbox
-                                // defaultChecked={formValues?.artistsApplyAllTracks?.some(
-                                //     (item: any) => item.name === data.name
-                                // )}
+                                defaultChecked={data?.addArtistToTracks}
                                 onChange={(e: CheckboxChangeEvent) => {
                                     handleChangeChecked(e);
                                 }}

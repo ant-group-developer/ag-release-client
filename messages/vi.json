@@ -667,6 +667,16 @@
         }
     },
 
+    "trackArtist": {
+        "message": {
+            "success": {
+                "create": "Thêm mới nghệ sĩ thành công",
+                "update": "Cập nhật nghệ sĩ thành công",
+                "delete": "Xoá nghệ sĩ thành công"
+            }
+        }
+    },
+
     "genres": {
         "name": "Tên thể loại",
         "pop": "Pop",

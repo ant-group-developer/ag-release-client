@@ -56,10 +56,6 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
             formValues
         );
 
-        console.log(validationResult?.error?.errors);
-
-        console.log('🚀 ~ useEffect ~ formValues:', formValues);
-
         if (!validationResult.success) {
             setValidationErrors(validationResult.error.errors);
         } else {

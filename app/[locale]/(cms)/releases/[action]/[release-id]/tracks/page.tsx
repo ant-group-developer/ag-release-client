@@ -1,7 +1,6 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import useModalStore from '@/hooks/use-modal';
-import ReleaseArtistModal from '@/modules/release-artist/components/modal/release-artist-modal';
 import AddNewTrackModal from '@/modules/releases/components/release-detail/release-tracks/modal/add-new-track-modal';
 import ReleaseTracksTable from '@/modules/releases/components/release-detail/release-tracks/table';
 import {
@@ -34,6 +33,7 @@ export default function Tracks() {
 
     const { tracksData, isLoading } = useGetListTracks({
         releaseId: formValues?.id as string,
+        fieldOrder: 'order',
     });
 
     const { deleteTrack } = useDeleteTrack();
@@ -93,11 +93,12 @@ export default function Tracks() {
                 <AddNewTrackModal open onAddTracks={handleAddTracks} />
             )}
 
-            {(typeModal === TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.ADD_ARTIST ||
+            {/* On checking to delete */}
+            {/* {(typeModal === TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.ADD_ARTIST ||
                 typeModal ===
                     TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.EDIT_ARTIST) && (
                 <ReleaseArtistModal isSetMainArtist />
-            )}
+            )} */}
 
             {(typeModal === TYPE_MODAL_TRACK_ARTIST.ADD ||
                 typeModal === TYPE_MODAL_TRACK_ARTIST.UPDATE) && (

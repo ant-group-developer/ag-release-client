@@ -7,6 +7,7 @@ import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { useGetListArtistRole } from '@/modules/artist-role/hooks/use-get-list-artist-role';
 import { ArtistRoleData } from '@/modules/artist-role/types';
+import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { DspData } from '@/modules/dsp/types';
 import { RELEASE_MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
@@ -16,7 +17,7 @@ import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form } from 'antd';
 import { useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import ArtistProfilesList from '../../../artist/components/list/artist-profiles';
 import { roleArtist } from '../../../artist/constants';
 import { useCreateTrackArtist } from '../../hooks/use-create-track-artist';
@@ -36,6 +37,7 @@ const fakeLinkedPlatforms = [
 
 export default function TrackArtistModal({ ...props }: Props) {
     const [form] = Form.useForm();
+    const [showCreateArtist, setShowCreateArtist] = useState<boolean>(false);
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
     const watchArtistName = useWatch(['name'], form);
@@ -125,8 +127,16 @@ export default function TrackArtistModal({ ...props }: Props) {
                     <ArtistSelect
                         showSearch
                         placeholder={messages('artist.select')}
+                        onCreateArtist={() => setShowCreateArtist(true)}
                     />
                 </AppFormItem>
+
+                {showCreateArtist && (
+                    <ArtistFormModal
+                        open
+                        onCancel={() => setShowCreateArtist(false)}
+                    />
+                )}
 
                 <AppFormItem
                     name="roleId"
@@ -161,6 +171,7 @@ export default function TrackArtistModal({ ...props }: Props) {
                     </div>
                 )}
             </AppForm>
+
             {/* <LinkProfileArtist
                 open={showLinkProfile}
                 onClose={() => setShowLinkProfile(false)}

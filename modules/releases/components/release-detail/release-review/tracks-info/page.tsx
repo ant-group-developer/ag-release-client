@@ -131,9 +131,14 @@ export default function TracksInfo({}: Props) {
 
     return (
         <div className="my-1">
-            {isHasTrack > 0 && (
-                <p className="font-semibold"> {messages('tracks.label')} </p>
-            )}
+            <p className="font-semibold"> {messages('tracks.label')} </p>
+
+            <div className="mb-1 rounded-lg bg-card-bg p-4">
+                <p className="text-base font-medium">
+                    {messages('common.coreInfo')}
+                </p>
+            </div>
+
             <div className="flex flex-col gap-1">
                 {formValue.tracks?.map((track: TrackData, index: number) => (
                     <Collapse

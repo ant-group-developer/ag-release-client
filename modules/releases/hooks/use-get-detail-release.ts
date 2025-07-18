@@ -8,6 +8,7 @@ export const useGetDetailRelease = (id: ReleasesData['id']) => {
     const { data, ...res } = useQuery({
         queryKey: [...releasesQueryKeys.getDetail, id],
         queryFn: () => releasesApi.getDetail(id),
+        enabled: !!id,
     });
 
     const defaultData: ReleasesData = {
@@ -34,6 +35,11 @@ export const useGetDetailRelease = (id: ReleasesData['id']) => {
         releaseDate: '',
         releaseTime: '',
         releaseTimezoneId: null,
+        releaseTerritory: {
+            distributeWorldwide: false,
+            selectedCountries: [],
+            distributionType: '',
+        },
     };
 
     return {

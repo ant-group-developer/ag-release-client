@@ -665,6 +665,16 @@
         }
     },
 
+    "trackArtist": {
+        "message": {
+            "success": {
+                "create": "Add artist successfully",
+                "update": "Update artist successfully",
+                "delete": "Delete artist successfully"
+            }
+        }
+    },
+
     "genres": {
         "name": "Genre name",
         "pop": "Pop",
