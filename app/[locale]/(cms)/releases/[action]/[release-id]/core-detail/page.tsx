@@ -1,10 +1,6 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import useModalStore from '@/hooks/use-modal';
-import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
-import { TYPE_MODAL_ARTIST } from '@/modules/artist/enum';
-import LabelFormModal from '@/modules/labels/components/modal/label-form';
-import { TYPE_MODAL_LABEL } from '@/modules/labels/enum';
 import ReleaseArtistModal from '@/modules/release-artist/components/modal/release-artist-modal';
 import { useDeleteReleaseArtist } from '@/modules/release-artist/hooks/use-delete-release-artist';
 import { ReleaseArtist } from '@/modules/release-artist/types';
@@ -36,35 +32,6 @@ export default function CoreDetail() {
         closeModal();
     };
 
-    const handleAddArtistRelease = (values: any) => {
-        const isArtistEditModal =
-            typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST;
-        try {
-            // const newArtistData = {
-            //     name: values.name,
-            //     role: values.role,
-            //     id: values.name,
-            // };
-            // const releaseArtists = formValues.artists || [];
-            // let updatedArtists;
-            // if (isArtistEditModal) {
-            //     updatedArtists = releaseArtists.map((artist: any) =>
-            //         artist.name === dataEdit?.name
-            //             ? { ...artist, ...newArtistData }
-            //             : artist
-            //     );
-            // } else {
-            //     updatedArtists = [...releaseArtists, newArtistData];
-            // }
-            // setFormValues({
-            //     ...formValues,
-            //     artists: updatedArtists,
-            // });
-        } catch (error) {
-            console.error('Validation failed:', error);
-        }
-    };
-
     return (
         <div>
             <ReleaseDetailForm />
@@ -74,9 +41,6 @@ export default function CoreDetail() {
                     isSetMainArtist={formValues?.releaseArtists?.length === 0}
                 />
             )}
-
-            {typeModal === TYPE_MODAL_ARTIST.CREATE && <ArtistFormModal />}
-            {typeModal === TYPE_MODAL_LABEL.CREATE && <LabelFormModal />}
 
             {typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST && (
                 <AppConfirm

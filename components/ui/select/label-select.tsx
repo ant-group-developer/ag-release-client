@@ -1,13 +1,14 @@
 import useModalStore from '@/hooks/use-modal';
-import { TYPE_MODAL_LABEL } from '@/modules/labels/enum';
 import { useGetListLabels } from '@/modules/labels/hooks/use-get-list-labels';
 import { LabelData } from '@/modules/labels/types';
 import { Button, Select, SelectProps } from 'antd';
 import { useTranslations } from 'next-intl';
 
-type Props = SelectProps & {};
+type Props = SelectProps & {
+    onCreateLabel?: () => void;
+};
 
-export default function LabelSelect({ ...props }: Props) {
+export default function LabelSelect({ onCreateLabel, ...props }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
 
@@ -29,12 +30,11 @@ export default function LabelSelect({ ...props }: Props) {
                 return (
                     <div>
                         {menu}
-                        <div className="flex justify-end pt-2">
+                        <div className="flex w-full pt-2">
                             <Button
                                 type="primary"
-                                onClick={() =>
-                                    openModal(TYPE_MODAL_LABEL.CREATE)
-                                }
+                                className="w-full"
+                                onClick={onCreateLabel}
                             >
                                 {messages('common.create')} label
                             </Button>

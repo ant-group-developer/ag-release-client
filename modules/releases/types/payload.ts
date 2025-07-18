@@ -7,4 +7,8 @@ export interface CreateReleaseDraftPayload {
     version?: string;
 }
 
-export interface UpdateReleaseDraftPayload extends Partial<ReleasesData> {}
+export interface UpdateReleaseDraftPayload extends Partial<ReleasesData> {
+    releaseCoverArt?: {
+        fileId: string;
+    } | null;
+}

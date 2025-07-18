@@ -1,76 +1,97 @@
 import { usePlaySongStore } from '@/app/hooks/usePlaySongStore';
 import { useEffect, useRef } from 'react';
+import ReactPlayer from 'react-player';
 
 export default function AudioPlayer() {
     const { url, isPlaying, setReactPlayerRef, songId, currentTimePlaying } =
         usePlaySongStore();
-    const audioRef = useRef<HTMLAudioElement>(null);
+    const playerRef = useRef<ReactPlayer>(null);
 
     // Bước 1: Cung cấp các phương thức điều khiển player cho store
     useEffect(() => {
-        if (!audioRef.current) {
-            setReactPlayerRef(null); // Đảm bảo store ref là null nếu audio element chưa sẵn sàng
+        if (!playerRef.current) {
+            setReactPlayerRef(null); // Đảm bảo store ref là null nếu player chưa sẵn sàng
             return;
         }
         setReactPlayerRef({
             seekTo: (second: number) => {
-                if (audioRef.current) {
-                    audioRef.current.currentTime = second;
+                if (playerRef.current) {
+                    playerRef.current.seekTo(second, 'seconds');
                 }
             },
             getCurrentTime: () => {
-                return audioRef.current?.currentTime || 0;
+                return playerRef.current?.getCurrentTime() || 0;
             },
         });
         return () => {
             setReactPlayerRef(null);
         };
-    }, [setReactPlayerRef, audioRef.current]);
+    }, [setReactPlayerRef, playerRef.current]);
 
-    // Bước 2: Play/Pause dựa trên trạng thái từ store và thiết lập thời gian khi phát
+    // Bước 2: Xử lý việc thiết lập thời gian khi phát
     useEffect(() => {
-        if (audioRef.current && url) {
-            // Chỉ xử lý nếu có ref và URL hợp lệ
-            if (isPlaying) {
-                // Đặt thời gian hiện tại của audio element từ store
-                const storedTime = currentTimePlaying;
-                if (audioRef.current.currentTime !== storedTime) {
-                    audioRef.current.currentTime = storedTime;
-                }
-                audioRef.current
-                    .play()
-                    .catch((e) => console.error('Lỗi phát nhạc:', e));
-            } else {
-                audioRef.current.pause();
+        if (playerRef.current && url && isPlaying) {
+            // Đặt thời gian hiện tại của player từ store
+            const storedTime = currentTimePlaying;
+            const currentTime = playerRef.current.getCurrentTime();
+
+            // Chỉ seek nếu thời gian khác nhau đáng kể (tránh seek liên tục)
+            if (Math.abs(currentTime - storedTime) > 0.5) {
+                playerRef.current.seekTo(storedTime, 'seconds');
             }
-        } else if (audioRef.current && !url) {
-            // Nếu không có URL, dừng và reset
-            audioRef.current.pause();
-            audioRef.current.currentTime = 0;
         }
     }, [isPlaying, url, songId, currentTimePlaying]);
 
     // Bước 3: Cập nhật liên tục thời gian phát hiện tại từ player vào store
-    useEffect(() => {
-        const audio = audioRef.current;
-        if (!audio) return;
+    const onProgress = (state: { playedSeconds: number }) => {
+        // Chỉ cập nhật thời gian vào store nếu đây là bài hát đang active
+        if (usePlaySongStore.getState().songId === songId) {
+            usePlaySongStore.setState((prevState) => ({
+                ...prevState,
+                currentTimePlaying: state.playedSeconds,
+            }));
+        }
+    };
 
-        const onTimeUpdate = () => {
-            // Chỉ cập nhật thời gian vào store nếu đây là bài hát đang active
-            if (usePlaySongStore.getState().songId === songId) {
-                usePlaySongStore.setState((state) => ({
-                    ...state,
-                    currentTimePlaying: audio.currentTime,
-                }));
-            }
-        };
+    // Xử lý khi bài hát kết thúc
+    const onEnded = () => {
+        if (usePlaySongStore.getState().songId === songId) {
+            usePlaySongStore.setState((prevState) => ({
+                ...prevState,
+                isPlaying: false,
+                currentTimePlaying: 0,
+            }));
+        }
+    };
 
-        audio.addEventListener('timeupdate', onTimeUpdate);
+    // Xử lý lỗi phát nhạc
+    const onError = (error: any) => {
+        console.error('Lỗi phát nhạc:', error);
+        if (usePlaySongStore.getState().songId === songId) {
+            usePlaySongStore.setState((prevState) => ({
+                ...prevState,
+                isPlaying: false,
+            }));
+        }
+    };
 
-        return () => {
-            audio.removeEventListener('timeupdate', onTimeUpdate);
-        };
-    }, [songId, audioRef.current]); // Chạy lại hiệu ứng nếu songId thay đổi (để đảm bảo lắng nghe đúng bài hát)
-
-    return <audio ref={audioRef} src={url} style={{ display: 'none' }} />;
+    return (
+        <ReactPlayer
+            ref={playerRef}
+            url={url}
+            playing={isPlaying}
+            width="0"
+            height="0"
+            style={{ display: 'none' }}
+            onProgress={onProgress}
+            onEnded={onEnded}
+            onError={onError}
+            progressInterval={1000} // Cập nhật progress mỗi giây
+            config={{
+                file: {
+                    forceAudio: true,
+                },
+            }}
+        />
+    );
 }

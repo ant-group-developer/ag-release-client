@@ -1,33 +1,18 @@
-import useModalStore from '@/hooks/use-modal';
+import { useGetListCountries } from '@/modules/countries/hooks/use-get-list-countries';
 import { Select, SelectProps } from 'antd';
-import { useTranslations } from 'next-intl';
 
-type Props = SelectProps & {};
+type Props = Omit<SelectProps, 'option'> & {};
 
 export default function CountrySelect({ ...props }: Props) {
-    const messages = useTranslations();
-    const openModal = useModalStore((state) => state.openModal);
-    const fakeCountry: SelectProps['options'] = [
-        {
-            id: 1,
-            value: 'Việt Nam',
-            label: 'Việt Nam',
-        },
-        {
-            id: 2,
-            value: 'United State',
-            label: 'United State',
-        },
-        {
-            id: 3,
-            value: 'France',
-            label: 'France',
-        },
-        {
-            id: 4,
-            value: 'Thailand',
-            label: 'Thailand',
-        },
-    ];
-    return <Select {...props} options={fakeCountry} />;
+    const { countriesData } = useGetListCountries({ pageSize: 9999 });
+
+    const options = countriesData.items.map((item) => {
+        return {
+            id: item.id,
+            value: item.id,
+            label: item.name,
+        };
+    });
+
+    return <Select {...props} options={options} />;
 }

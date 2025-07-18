@@ -47,7 +47,7 @@ export default function ReleasesHeader({
                         handleRefresh={handleRefresh}
                         lastTimeUpdated={formattedDate(
                             new Date(),
-                            DATE_FORMAT.HOUR_MINUTE
+                            DATE_FORMAT.HOUR_MINUTE_SECOND
                         )}
                     />
 

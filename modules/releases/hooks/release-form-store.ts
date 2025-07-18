@@ -4,24 +4,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import { RELEASES_STATUS, RELEASES_TYPE } from '../enums';
 import { ReleasesData } from '../types';
 
-export interface ReleaseFormStoreData extends ReleasesData {
-    // id: string;
-    // primaryGenreId: string;
-    // primaryGenre?: GenresData
-    // subGenreId: string;
-    // labelId: string;
-    // title: string;
-    // version: string | null;
-    // type: RELEASES_TYPE;
-    // releaseArtists: any;
-    // coverArtThumbnails: any;
-    // pLineOwner: string;
-    // cLineOwner: string;
-    // catalogId: string | null;
-    // upc: string | null;
-    // isVariousArtist: boolean;
-    // metadataLanguageId: string;
-}
+export interface ReleaseFormStoreData extends ReleasesData {}
 
 interface ReleaseFormState {
     formValues: Partial<ReleaseFormStoreData>;
@@ -41,19 +24,38 @@ const initialValue: ReleaseFormStoreData = {
     subGenreId: '',
     labelId: '',
     version: '',
-    coverArtThumbnails: undefined,
     catalogId: null,
     isVariousArtist: false,
     creatorId: '',
     modifierId: '',
     upc: '',
     status: RELEASES_STATUS.DRAFT,
-    tracks: [],
-    releaseArtists: [],
     createdAt: '',
     updatedAt: null,
     releaseDate: '',
     releaseTime: '',
+    releaseTimezoneId: null,
+    tracks: [],
+    releaseTerritory: {
+        distributeWorldwide: false,
+        selectedCountries: [],
+        distributionType: '',
+    },
+    coverArtThumbnails: {
+        original: null,
+        '75x75': null,
+        '100x100': null,
+        '160x160': null,
+        '300x300': null,
+        '900x900': null,
+    },
+    releaseLanguage: {
+        metadataLanguageId: '',
+        audioLanguageId: '',
+        metadataLanguageCountryId: '',
+        releaseId: '',
+    },
+    releaseArtists: [],
 };
 
 export const useReleaseFormStore = create<ReleaseFormState>()(

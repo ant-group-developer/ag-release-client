@@ -37,6 +37,10 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "region": "Khu vực",
+        "specification": "Specification",
+        "missingInformation": "Missing information",
+        "ready": "Ready",
         "year": "Year",
         "general": "General",
         "somethingWentWrong": "Something went wrong",
@@ -68,6 +72,7 @@
         "subGenres": "Sub genres",
         "subArtist": "Sub artist",
         "releaseDate": "Release date",
+        "releaseTime": "Release time",
         "duration": "Duration",
         "draft": "Draft",
         "processing": "Processing",
@@ -541,7 +546,8 @@
 
     "select": {
         "date": "Select date",
-        "approver": "Select approver"
+        "approver": "Select approver",
+        "option": "Please select options"
     },
 
     "theme": {
@@ -587,10 +593,34 @@
             "selectLanguageMetadata": "Select language metadata"
         },
 
+        "validation": {
+            "mustHaveMainArtist": "Release must have a main artist"
+        },
+
         "scheduling": {
             "label": "Scheduling"
         }
     },
+    "release": {
+        "message": {
+            "success": {
+                "create": "Create release successfully",
+                "update": "Update release successfully",
+                "delete": "Delete release successfully"
+            }
+        }
+    },
+
+    "releaseArtist": {
+        "message": {
+            "success": {
+                "create": "Create release artist successfully",
+                "update": "Update release artist successfully",
+                "delete": "Delete release artist successfully"
+            }
+        }
+    },
+
     "tracks": {
         "number": "Track number",
         "add": "Add track",
@@ -600,6 +630,20 @@
         "name": "Track name",
         "id": "Track ID",
         "count": "Track count",
+        "language": "Track language",
+        "recordingCountry": "Recording country",
+        "original": {
+            "label": "Original Work",
+            "tooltip": "Original work is the piece that was created first, not any cover or remix."
+        },
+        "cover": {
+            "label": "Cover Version",
+            "tooltip": "A cover version is a new performance of a previously released song, which may change the arrangement, lyrics, or both."
+        },
+        "remix": {
+            "label": "Remix Version",
+            "tooltip": "A remix is a version of a song produced by altering the original recording—often changing instrumentation, tempo, or adding new elements."
+        },
         "placeholder": {
             "selectArtist": "Select artist",
             "selectSubArtist": "Select sub artist",
@@ -610,6 +654,27 @@
             "selectSensitiveContent": "Select content"
         }
     },
+
+    "track": {
+        "message": {
+            "success": {
+                "create": "Create track successfully",
+                "update": "Update track successfully",
+                "delete": "Delete track successfully"
+            }
+        }
+    },
+
+    "trackArtist": {
+        "message": {
+            "success": {
+                "create": "Add artist successfully",
+                "update": "Update artist successfully",
+                "delete": "Delete artist successfully"
+            }
+        }
+    },
+
     "genres": {
         "name": "Genre name",
         "pop": "Pop",
@@ -623,7 +688,8 @@
         "rap": "Rap",
         "classical": "Classical",
         "blues": "Blues",
-        "add": "Add new genre"
+        "add": "Add new genre",
+        "primary": "Primary genre"
     },
     "genre": {
         "message": {
@@ -696,6 +762,8 @@
     },
 
     "formFields": {
+        "title": "Release name",
+        "metadataLanguageId": "Metadata language",
         "artists": "Artists",
         "releaseDate": "Release date",
         "territoryType": "Territory type",
@@ -708,8 +776,27 @@
         "genres": "Genres",
         "subGenres": "Sub genres",
         "metaDataLanguage": "Metadata language",
+        "primaryGenreId": "Primary genre",
+        "releaseLanguage": "Release language",
+        "releaseArtists": "Release artist",
+        "pLineOwner": "P Copyright",
+        "cLineOwner": "C Copyright",
+        "releaseTime": "Time release",
+        "releaseTimezoneId": "Timezone",
+        "releaseTerritory": {
+            "selectedCountries": "Countries distribute",
+            "distributionType": "Options distribute"
+        },
         "tracks": {
-            "pLine": "Recoding copyright",
+            "trackOriginTypeId": "Track origin type",
+            "audioLanguageId": "Audio language",
+            "metadataLanguageId": "Metadata language",
+            "metadataLanguageCountryId": "country Language",
+            "trackLanguage": "Ngôn ngữ bài hát",
+            "recordingCountryId": "Recording country",
+            "preview": "Preview track",
+            "primaryGenreId": "Primary genre",
+            "pLineOwner": "Recoding copyright",
             "previewTrack": "Preview track",
             "trackOrigin": "Track origin",
             "track": "Track",
@@ -745,6 +832,9 @@
             "countryRecording": "Country recording",
             "recordingType": "Recording type",
             "isSensitiveContent": "Is sensitive content"
+        },
+        "coverArtThumbnails": {
+            "original": "Release image"
         }
     },
 
@@ -752,7 +842,10 @@
         "label": "Distribute",
         "create": "Create distribute",
         "name": "Distribute name",
-        "id": "Distribute ID"
+        "id": "Distribute ID",
+        "onlyIn": "Distribute only in",
+        "everyWhereExcept": "Distribute everywhere except",
+        "wordWide": "Distribute world wide"
     },
 
     "emailSender": {
@@ -804,5 +897,14 @@
                 "duplicateNameTimezone": "This timezone already exists"
             }
         }
+    },
+
+    "trackType": {
+        "label": "Track type"
+    },
+
+    "trackOrigin": {
+        "label": "Track original",
+        "value": "Value"
     }
 }

@@ -8,4 +8,5 @@ export interface ReleaseArtist extends CommonAttribute {
     releaseId: string;
     artist?: ArtistData;
     artistRole?: ArtistRoleData;
+    addArtistToTracks: boolean;
 }

@@ -12,6 +12,12 @@ export enum TRACKS_COLUMNS_DISPLAY {
     ACTIONS = 'actions',
 }
 
+export enum TYPE_MODAL_TRACK_ARTIST {
+    ADD = 'add',
+    UPDATE = 'update',
+    DELETE = 'delete',
+}
+
 export enum GENRES {
     POP = 'pop',
     ROCK = 'rock',

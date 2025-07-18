@@ -14,8 +14,10 @@ import {
     RELEASES_COLUMNS_DISPLAY,
     TYPE_MODAL_RELEASE,
 } from '@/modules/releases/enums';
+import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
+import { DeleteVariables } from '@/types/api';
 import { useWindowSize } from '@uidotdev/usehooks';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
@@ -64,6 +66,7 @@ export default function Releases({}: Props) {
     const { height, width } = useWindowSize();
     const { layoutTable } = useTableLayoutToggle();
     const { releasesData } = useGetListReleases(dataFilter);
+    const { deleteRelease } = useDeleteRelease();
     const messages = useTranslations();
     const isSmallDevice = Number(width) <= SCREEN.MD;
     const closeModal = useModalStore((state) => state.closeModal);
@@ -91,7 +94,15 @@ export default function Releases({}: Props) {
 
     const handleRefresh = () => {};
 
-    const handleDeleteRelease = () => {};
+    const handleDeleteRelease = () => {
+        const variables: DeleteVariables<ReleasesData['id']> = {
+            id: dataEdit?.id,
+            onSuccess: () => {
+                closeModal();
+            },
+        };
+        deleteRelease(variables);
+    };
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -122,7 +133,7 @@ export default function Releases({}: Props) {
                         visibleColumns={visibleColumns}
                         dataSource={releasesData?.items}
                         scroll={{ x: SCREEN.XXL, y: scrollY() }}
-                        // loading={isLoading}
+                        loading={isLoading}
                     />
                 )}
 

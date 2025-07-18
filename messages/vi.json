@@ -37,6 +37,10 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "region": "Khu vực",
+        "specification": "Thông số kỹ thuật",
+        "missingInformation": "Thiếu thông tin",
+        "ready": "Sẵn sàng",
         "year": "Năm",
         "somethingWentWrong": "Đã xảy ra lỗi",
         "biography": "Tiểu sử",
@@ -67,6 +71,7 @@
         "subGenres": "Thể loại phụ",
         "subArtist": "Nghệ sĩ phụ",
         "releaseDate": "Ngày phát hành",
+        "releaseTime": "Giờ phát hành",
         "duration": "Thời lượng",
         "draft": "Bản nháp",
         "processing": "Đang xử lý",
@@ -541,7 +546,8 @@
 
     "select": {
         "date": "Chọn ngày",
-        "approver": "Chọn người duyệt"
+        "approver": "Chọn người duyệt",
+        "option": "Vui lòng chọn"
     },
 
     "theme": {
@@ -588,10 +594,35 @@
             "selectLanguageMetadata": "Chọn ngôn ngữ metadata"
         },
 
+        "validation": {
+            "mustHaveMainArtist": "Vui lòng thêm nghệ sĩ chính (Main Artist)"
+        },
+
         "scheduling": {
             "label": "Lên lịch"
         }
     },
+
+    "release": {
+        "message": {
+            "success": {
+                "create": "Thêm mới phát hành thành công",
+                "update": "Cập nhật phát hành thành công",
+                "delete": "Xoá phát hành thành công"
+            }
+        }
+    },
+
+    "releaseArtist": {
+        "message": {
+            "success": {
+                "create": "Thêm mới nghệ sĩ phát hành thành công",
+                "update": "Cập nhật nghệ sĩ phát hành thành công",
+                "delete": "Xoá nghệ sĩ phát hành thành công"
+            }
+        }
+    },
+
     "tracks": {
         "number": "Bài hát số",
         "add": "Thêm bài hát",
@@ -601,6 +632,20 @@
         "name": "Tên bài hát",
         "id": "Mã bài hát",
         "count": "Số lượng bài hát",
+        "language": "Ngôn ngữ bài hát",
+        "recordingCountry": "Quốc gia ghi âm",
+        "original": {
+            "label": "Tác phẩm gốc",
+            "tooltip": "Tác phẩm gốc là tác phẩm được tạo ra đầu tiên, không phải bất kỳ bản cover hoặc remix nào."
+        },
+        "cover": {
+            "label": "Bản cover",
+            "tooltip": "Bản cover là bản nhạc được cover lại từ tác phẩm gốc, có thể có sự thay đổi về âm nhạc, lời bài hát, hoặc cả hai."
+        },
+        "remix": {
+            "label": "Bản remix",
+            "tooltip": "Bản remix là bản nhạc được tạo ra từ tác phẩm gốc, có thể có sự thay đổi về âm nhạc, lời bài hát, hoặc cả hai."
+        },
         "placeholder": {
             "selectArtist": "Chọn nghệ sĩ",
             "selectSubArtist": "Chọn nghệ sĩ phụ",
@@ -611,6 +656,27 @@
             "selectSensitiveContent": "Lựa chọn nội dung"
         }
     },
+
+    "track": {
+        "message": {
+            "success": {
+                "create": "Thêm mới bài hát thành công",
+                "update": "Cập nhật bài hát thành công",
+                "delete": "Xoá bài hát thành công"
+            }
+        }
+    },
+
+    "trackArtist": {
+        "message": {
+            "success": {
+                "create": "Thêm mới nghệ sĩ thành công",
+                "update": "Cập nhật nghệ sĩ thành công",
+                "delete": "Xoá nghệ sĩ thành công"
+            }
+        }
+    },
+
     "genres": {
         "name": "Tên thể loại",
         "pop": "Pop",
@@ -624,7 +690,8 @@
         "rap": "Rap",
         "classical": "Cổ điển",
         "blues": "Blues",
-        "add": "Thêm thể loại"
+        "add": "Thêm thể loại",
+        "primary": "Thể loại chính"
     },
     "genre": {
         "message": {
@@ -697,6 +764,8 @@
     },
 
     "formFields": {
+        "title": "Tên phát hành",
+        "metadataLanguageId": "Ngôn ngữ metadata",
         "artists": "Nghệ sĩ",
         "releaseDate": "Ngày phát hành",
         "territoryType": "Khu vực",
@@ -710,8 +779,33 @@
         "metaDataLanguage": "Ngôn ngữ metadata",
         "cLine": "Bản quyền tác phẩm",
         "pLine": "Bản quyền ghi âm",
+        "version": "Phiên bản",
+        "primaryGenreId": "Thể loại chính",
+        "releaseTime": "Giờ phát hành",
+        "releaseTimezoneId": "Múi giờ",
+        "releaseLanguage": {
+            "metadataLanguageId": "Ngôn ngữ metadata"
+        },
+        "releaseArtists": "Nghệ sĩ phát hành",
+        "pLineOwner": "Bản quyền ghi âm",
+        "cLineOwner": "Bản quyền tác phẩm",
+        "releaseTerritory": {
+            "selectedCountries": "Quốc gia phân phối",
+            "distributionType": "Tuỳ chọn vòng phân phối"
+        },
         "tracks": {
-            "pLine": "Bản quyền ghi âm",
+            "trackOriginTypeId": "Nguồn gốc bài hát",
+            "audioLanguageId": "Ngôn ngữ âm thanh",
+            "metadataLanguageId": "Ngôn ngữ metadata",
+            "metadataLanguageCountryId": "Ngôn ngữ quốc gia",
+            "trackLanguage": "Ngôn ngữ bài hát",
+            "recordingCountryId": "Quốc gia thu âm",
+            "preview": "Đoạn nghe trước",
+            "originTypeId": "Nguồn gốc bài hát",
+            "trackArtists": "Nghệ sĩ bài hát",
+            "trackTypeId": "Thể loại bài hát",
+            "primaryGenreId": "Thể loại chính",
+            "pLineOwner": "Bản quyền ghi âm",
             "previewTrack": "Đoạn nghe trước",
             "trackOrigin": "Nguồn gốc bài hát",
             "trackName": "Tên bài hát",
@@ -746,6 +840,9 @@
             "countryRecording": "Quốc gia ghi âm",
             "recordingType": "Loại ghi âm",
             "isSensitiveContent": "Nội dung nhạy cảm"
+        },
+        "coverArtThumbnails": {
+            "original": "Ảnh phát hành"
         }
     },
 
@@ -753,7 +850,10 @@
         "label": "Phân phối",
         "create": "Tạo phân phối",
         "name": "Tên phân phối",
-        "id": "Mã phân phối"
+        "id": "Mã phân phối",
+        "onlyIn": "Chỉ phân phối trong",
+        "everyWhereExcept": "Phân phối khắp nơi ngoại trừ",
+        "wordWide": "Phân phối khắp thế giới"
     },
 
     "emailSender": {
@@ -806,5 +906,14 @@
                 "duplicateNameTimezone": "Múi giờ này đã tồn tại"
             }
         }
+    },
+
+    "trackType": {
+        "label": "Thể loại bài"
+    },
+
+    "trackOrigin": {
+        "label": "Nguồn gốc bài hát",
+        "value": "Giá trị"
     }
 }

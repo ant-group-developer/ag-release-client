@@ -1,40 +1,31 @@
-import { LabelForm } from '@/components/ui/label/labelForm';
+import FormItem from '@/components/ui/react-hook-form/form-item';
+import CountrySelect from '@/components/ui/select/country-select';
 import GenresSelect from '@/components/ui/select/genres-select';
-import ErrorText from '@/components/ui/text/error-text';
-import { languageList, yearList } from '@/constants/fakeData';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
+import { releaseTrackSchema } from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
+import { UpdateTrackPayload } from '@/modules/tracks/types/payload';
+import { UpdateVariables } from '@/types/api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input, Select } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
+import dayjs from 'dayjs';
+import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
 const otherMetadataSchema = (messages: any) =>
-    z.object({
-        genres: z.string().min(1, messages('validation.select')),
-        subGenres: z.string().optional(),
-        isSensitiveContent: z.boolean(messages('validation.input')),
-        countryLanguage: z.string().min(1, messages('validation.select')),
-        metadataLanguage: z.string().min(1, messages('validation.select')),
-        lyrics: z.string().optional(),
-        pLine: z
-            .object({
-                year: z.string().nonempty(messages('validation.input')),
-                name: z.string().nonempty(messages('validation.input')),
-            })
-            .refine(
-                (val) =>
-                    val &&
-                    typeof val === 'object' &&
-                    val.year !== undefined &&
-                    val.name !== undefined,
-                {
-                    message: messages('validation.input'),
-                }
-            ),
+    releaseTrackSchema(messages).pick({
+        primaryGenreId: true,
+        subGenreId: true,
+        isSensitiveContent: true,
+        trackLanguage: true,
+        lyric: true,
+        pLineOwner: true,
+        isrc: true,
     });
 
 export type OtherMetadataSchema = z.infer<
@@ -51,15 +42,15 @@ export default function OtherMetadataForm({ trackData }: Props) {
 
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const formMethods = useForm<OtherMetadataSchema>({
-        // defaultValues: {
-        //     genres: trackData.genres ?? '',
-        //     subGenres: trackData?.subGenres,
-        //     isSensitiveContent: trackData?.isSensitiveContent ?? false,
-        //     countryLanguage: trackData?.countryLanguage ?? '',
-        //     metadataLanguage: trackData?.metadataLanguage ?? '',
-        //     lyrics: trackData?.lyrics,
-        //     pLine: trackData?.pLine ?? { year: '', name: '' },
-        // },
+        defaultValues: {
+            primaryGenreId: trackData.primaryGenreId ?? '',
+            subGenreId: trackData?.subGenreId ?? '',
+            isSensitiveContent: trackData?.isSensitiveContent ?? false,
+            trackLanguage: trackData?.trackLanguage ?? {},
+            lyric: trackData?.lyric ?? '',
+            pLineOwner: trackData?.pLineOwner ?? `${dayjs().year()} `,
+            isrc: trackData.isrc ?? '',
+        },
         resolver: zodResolver(otherMetadataSchema(messages)),
         mode: 'onChange',
     });
@@ -74,14 +65,43 @@ export default function OtherMetadataForm({ trackData }: Props) {
 
     const watchedAllFields = useWatch({ control });
 
+    const { updateTrackDraft } = useUpdateTrackDraft();
+    const debouncedUpdateTrackDraft = useCallback(
+        debounce(async (data: any, fieldName?: string) => {
+            if (fieldName) {
+                const isValid = await trigger(
+                    fieldName as keyof OtherMetadataSchema
+                );
+                if (!isValid) return;
+            }
+            if (!formValues.id) return;
+            const variables: UpdateVariables<
+                TrackData['id'],
+                UpdateTrackPayload
+            > = {
+                id: trackData.id,
+                payload: data,
+            };
+            updateTrackDraft(variables);
+        }, 500),
+        [formValues.id]
+    );
+
     useEffect(() => {
         setFormValues({
             ...formValues,
             tracks: formValues?.tracks?.map((track: any) => {
                 if (track.id === trackData.id) {
+                    const { ...restFields } = watchedAllFields;
+
                     return {
                         ...track,
-                        ...watchedAllFields,
+                        ...restFields,
+                        // trackLanguage: {
+                        //     ...track.trackLanguage,
+                        //     metadataLanguageCountryId: countryLanguage,
+                        //     metadataLanguageId: metadataLanguage,
+                        // },
                     };
                 }
                 return track;
@@ -89,24 +109,47 @@ export default function OtherMetadataForm({ trackData }: Props) {
         });
     }, [watchedAllFields]);
 
-    useEffect(() => {
-        trigger();
-    }, [trackData]);
-
     return (
         <FormProvider {...formMethods}>
             <form
                 className="grid grid-cols-2 gap-4"
                 onSubmit={handleSubmit(() => {})}
             >
-                <div>
-                    <LabelForm
-                        htmlFor="genres"
-                        required
-                        label={messages('common.genres')}
-                    />
+                <FormItem
+                    name="primaryGenreId"
+                    label={messages('genres.primary')}
+                    required
+                    ErrorMessage={errors.primaryGenreId?.message}
+                >
                     <Controller
-                        name="genres"
+                        name="primaryGenreId"
+                        control={control}
+                        render={({ field }) => (
+                            <GenresSelect
+                                className="w-full"
+                                showSearch
+                                {...field}
+                                onChange={(e) => {
+                                    field.onChange(e);
+                                    debouncedUpdateTrackDraft({
+                                        primaryGenreId: e,
+                                    });
+                                }}
+                                status={
+                                    errors.primaryGenreId ? 'error' : undefined
+                                }
+                            />
+                        )}
+                    />
+                </FormItem>
+
+                <FormItem
+                    name="subGenreId"
+                    label={messages('common.subGenres')}
+                    ErrorMessage={errors.subGenreId?.message}
+                >
+                    <Controller
+                        name="subGenreId"
                         control={control}
                         render={({ field }) => (
                             <GenresSelect
@@ -114,46 +157,24 @@ export default function OtherMetadataForm({ trackData }: Props) {
                                 showSearch
                                 allowClear
                                 {...field}
-                                status={errors.genres ? 'error' : undefined}
+                                onChange={(e) => {
+                                    field.onChange(e);
+                                    debouncedUpdateTrackDraft({
+                                        subGenreId: e,
+                                    });
+                                }}
+                                status={errors.subGenreId ? 'error' : undefined}
                             />
                         )}
                     />
-                    <ErrorText
-                        isError={!!errors.genres}
-                        message={errors.genres?.message}
-                    />
-                </div>
+                </FormItem>
 
-                <div>
-                    <LabelForm
-                        htmlFor="subGenres"
-                        label={messages('common.subGenres')}
-                    />
-                    <Controller
-                        name="subGenres"
-                        control={control}
-                        render={({ field }) => (
-                            <GenresSelect
-                                className="w-full"
-                                showSearch
-                                allowClear
-                                {...field}
-                                status={errors.subGenres ? 'error' : undefined}
-                            />
-                        )}
-                    />
-                    <ErrorText
-                        isError={!!errors.subGenres}
-                        message={errors.subGenres?.message}
-                    />
-                </div>
-
-                <div>
-                    <LabelForm
-                        htmlFor="isSensitiveContent"
-                        required
-                        label={messages('formFields.tracks.sensitiveContent')}
-                    />
+                <FormItem
+                    name="isSensitiveContent"
+                    label={messages('formFields.tracks.sensitiveContent')}
+                    required
+                    ErrorMessage={errors.isSensitiveContent?.message}
+                >
                     <Controller
                         name="isSensitiveContent"
                         control={control}
@@ -172,6 +193,12 @@ export default function OtherMetadataForm({ trackData }: Props) {
                                     },
                                 ]}
                                 {...field}
+                                onChange={(e) => {
+                                    field.onChange(e);
+                                    debouncedUpdateTrackDraft({
+                                        isSensitiveContent: e,
+                                    });
+                                }}
                                 status={
                                     errors.isSensitiveContent
                                         ? 'error'
@@ -180,139 +207,185 @@ export default function OtherMetadataForm({ trackData }: Props) {
                             />
                         )}
                     />
-                    <ErrorText
-                        isError={!!errors.isSensitiveContent}
-                        message={errors.isSensitiveContent?.message}
-                    />
-                </div>
+                </FormItem>
 
-                <div>
-                    <LabelForm
-                        htmlFor="countryLanguage"
-                        required
-                        label={messages('country.language')}
-                    />
+                <FormItem
+                    name="trackLanguage.metadataLanguageCountryId"
+                    label={messages('country.language')}
+                    required
+                    ErrorMessage={
+                        errors.trackLanguage?.metadataLanguageCountryId?.message
+                    }
+                >
                     <Controller
-                        name="countryLanguage"
+                        name="trackLanguage.metadataLanguageCountryId"
                         control={control}
                         render={({ field }) => (
-                            <Select
+                            <CountrySelect
                                 className="w-full"
+                                id="metadataLanguageCountryId"
                                 showSearch
-                                options={languageList}
                                 {...field}
+                                value={field.value ?? ''}
+                                onChange={(e) => {
+                                    field.onChange(e);
+                                    debouncedUpdateTrackDraft({
+                                        trackLanguage: {
+                                            ...formMethods.getValues(
+                                                'trackLanguage'
+                                            ),
+                                            metadataLanguageCountryId: e,
+                                        },
+                                    });
+                                }}
                                 status={
-                                    errors.countryLanguage ? 'error' : undefined
-                                }
-                            />
-                        )}
-                    />
-                    <ErrorText
-                        isError={!!errors.countryLanguage}
-                        message={errors.countryLanguage?.message}
-                    />
-                </div>
-
-                <div>
-                    <LabelForm
-                        htmlFor="metadataLanguage"
-                        required
-                        label="Metadata language"
-                    />
-                    <Controller
-                        name="metadataLanguage"
-                        control={control}
-                        render={({ field }) => (
-                            <Select
-                                className="w-full"
-                                showSearch
-                                options={languageList}
-                                {...field}
-                                status={
-                                    errors.metadataLanguage
+                                    errors.trackLanguage
+                                        ?.metadataLanguageCountryId
                                         ? 'error'
                                         : undefined
                                 }
                             />
                         )}
                     />
-                    <ErrorText
-                        isError={!!errors.metadataLanguage}
-                        message={errors.metadataLanguage?.message}
-                    />
-                </div>
+                </FormItem>
 
-                <div>
-                    <LabelForm htmlFor="lyrics" label="Lời bài hát" />
+                <FormItem
+                    name="lyric"
+                    label="Lời bài hát"
+                    ErrorMessage={errors.lyric?.message}
+                >
                     <Controller
-                        name="lyrics"
+                        name="lyric"
                         control={control}
                         render={({ field }) => (
                             <TextArea
                                 {...field}
+                                value={field.value ?? ''}
                                 rows={1}
                                 autoSize={{ minRows: 1, maxRows: 20 }}
-                                status={errors.lyrics ? 'error' : undefined}
+                                onChange={(e) => {
+                                    field.onChange(e.target.value);
+                                    debouncedUpdateTrackDraft(
+                                        {
+                                            lyric: e.target.value,
+                                        },
+                                        'lyric'
+                                    );
+                                }}
+                                status={errors.lyric ? 'error' : undefined}
                             />
                         )}
                     />
-                    <ErrorText
-                        isError={!!errors.lyrics}
-                        message={errors.lyrics?.message}
-                    />
-                </div>
+                </FormItem>
 
-                <div>
-                    <LabelForm
-                        htmlFor="pLine"
-                        required
-                        label="Bản quyền ghi âm"
-                    />
+                <FormItem
+                    name="pLineOwner"
+                    label="Bản quyền ghi âm"
+                    required
+                    ErrorMessage={errors.pLineOwner?.message}
+                >
                     <Controller
-                        name="pLine"
+                        name="pLineOwner"
                         control={control}
+                        render={({ field }) => {
+                            const [year, ownerCopyRight] =
+                                field.value?.split(' ') || [];
+
+                            const handleYearChange = (newYear: string) => {
+                                const value =
+                                    `${newYear} ${ownerCopyRight ?? ''}`.trim();
+                                field.onChange(value);
+                                debouncedUpdateTrackDraft({
+                                    pLineOwner: value,
+                                });
+                            };
+
+                            const handleOwnerChange = (
+                                e: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                                const value =
+                                    `${year} ${e.target.value}`.trim();
+                                field.onChange(value);
+                                debouncedUpdateTrackDraft(
+                                    {
+                                        pLineOwner: value,
+                                    },
+                                    'pLineOwner'
+                                );
+                            };
+
+                            const copyRightYearList = () => {
+                                const currentYear = dayjs().year();
+                                const yearList = [
+                                    {
+                                        label: (currentYear - 1).toString(),
+                                        value: (currentYear - 1).toString(),
+                                    },
+                                    {
+                                        label: currentYear.toString(),
+                                        value: currentYear.toString(),
+                                    },
+                                    {
+                                        label: (currentYear + 1).toString(),
+                                        value: (currentYear + 1).toString(),
+                                    },
+                                ];
+                                return yearList;
+                            };
+                            const copyRightYears = copyRightYearList();
+                            return (
+                                <Input
+                                    id="pLineOwner"
+                                    value={ownerCopyRight}
+                                    onChange={handleOwnerChange}
+                                    allowClear
+                                    addonBefore={
+                                        <Select
+                                            defaultValue={'2025'}
+                                            value={year}
+                                            onChange={handleYearChange}
+                                            options={copyRightYears}
+                                            style={{ width: 90 }}
+                                            placeholder={messages(
+                                                'common.year'
+                                            )}
+                                        />
+                                    }
+                                />
+                            );
+                        }}
+                    />
+                </FormItem>
+
+                <FormItem
+                    name="isrc"
+                    label="ISRC"
+                    ErrorMessage={errors.isrc?.message}
+                >
+                    <Controller
+                        control={control}
+                        name="isrc"
                         render={({ field }) => (
                             <Input
-                                id="pLine"
-                                value={field.value?.name || ''}
-                                onChange={(e) =>
-                                    field.onChange({
-                                        ...field.value,
-                                        name: e.target.value,
-                                    })
-                                }
+                                id="isrc"
+                                {...field}
+                                value={field.value ?? ''}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    field.onChange(value);
+                                    debouncedUpdateTrackDraft(
+                                        {
+                                            isrc: value,
+                                        },
+                                        'isrc'
+                                    );
+                                }}
                                 allowClear
-                                addonBefore={
-                                    <Select
-                                        defaultValue={
-                                            field.value?.year || '2026'
-                                        }
-                                        value={field.value?.year}
-                                        options={yearList}
-                                        onChange={(year) =>
-                                            field.onChange({
-                                                ...field.value,
-                                                year,
-                                            })
-                                        }
-                                        style={{ width: 90 }}
-                                    />
-                                }
-                                status={
-                                    errors.pLine?.name ? 'error' : undefined
-                                }
+                                status={errors.isrc ? 'error' : undefined}
                             />
                         )}
                     />
-                    {/* <ErrorText
-                        isError={!!errors.pLine?.year}
-                        message={errors.pLine?.year?.message}
-                    /> */}
-                    <ErrorText
-                        isError={!!errors.pLine?.name}
-                        message={errors.pLine?.name?.message}
-                    />
-                </div>
+                </FormItem>
             </form>
         </FormProvider>
     );

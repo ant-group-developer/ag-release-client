@@ -1,5 +1,4 @@
 import ActionButton from '@/components/ui/button/action-button';
-import CopyText from '@/components/ui/copy-text/copy-text';
 import ImageFallback from '@/components/ui/image/image-fallback';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
@@ -37,32 +36,6 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             align: 'center',
             render: (_, __, index) => index + 1,
         },
-        // {
-        //     // title: messages('common.thumbnail'),
-        //     key: 'thumbnail',
-        //     dataIndex: 'thumbnail',
-        //     align: 'center',
-        //     width: 100,
-        //     fixed: 'left',
-        //     render: (value, record) => (
-        //         <div
-        //             className="flex items-center justify-center"
-        //             // onClick={() =>
-        //             //     router.push(
-        //             //         `${APP_ROUTES.RELEASES}/detail/${record.releaseId}/core-detail`
-        //             //     )
-        //             // }
-        //         >
-        //             <Image
-        //                 src={value}
-        //                 alt="thumbnail"
-        //                 width={200}
-        //                 height={200}
-        //                 className="h-12 w-12 cursor-pointer rounded-lg object-cover"
-        //             />
-        //         </div>
-        //     ),
-        // },
         {
             title: messages('releases.name'),
             key: 'title',
@@ -88,13 +61,8 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
                             className="aspect-square rounded-lg object-cover"
                         />
                     </div>
-                    <CopyText
-                        tooltipProps={{ placement: 'right' }}
-                        text={value}
-                        label={messages('labels.name')}
-                    >
-                        <p className="truncate">{value}</p>
-                    </CopyText>
+
+                    <p className="truncate">{value}</p>
                 </div>
             ),
         },

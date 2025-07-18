@@ -10,11 +10,12 @@ import WaveAudioUpload from '@/components/ui/input/wave-audio-upload';
 import { TYPE_UPLOAD_BUCKET } from '@/enums/common';
 import extractAudioMetadata, { getPeakData } from '@/helpers/common';
 import { showNotification } from '@/helpers/messages-helper';
+import { genFolderBucket } from '@/helpers/string';
 import { useActive } from '@/hooks/use-active';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useCreateTrackDraft } from '@/modules/tracks/hooks/use-create-track-draft';
 import { TrackData } from '@/modules/tracks/types';
-import { trackPayload } from '@/modules/tracks/types/payload';
+import { TrackPayload } from '@/modules/tracks/types/payload';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { AudioFileBucket, CreateBucketFile } from '@/modules/upload/types/data';
 import { CreateVariables } from '@/types/api';
@@ -55,6 +56,13 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                     let songDuration = 0;
                     let peakData: number[] = [];
                     const fileOriginal = file.originFileObj;
+                    const fileNameWithoutExtension =
+                        fileOriginal.name.lastIndexOf('.') !== -1
+                            ? fileOriginal.name.substring(
+                                  0,
+                                  fileOriginal.name.lastIndexOf('.')
+                              )
+                            : fileOriginal.name;
 
                     if (fileOriginal) {
                         const { peakData: data, songDuration: duration } =
@@ -71,7 +79,11 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                     );
 
                     const trackInfor: CreateBucketFile = {
-                        uploadPurpose: TYPE_UPLOAD_BUCKET.TRACK,
+                        folderBucket: genFolderBucket({
+                            releaseId: formValues.id ?? '',
+                            uploadPurpose: TYPE_UPLOAD_BUCKET.TRACK,
+                            fileName: fileNameWithoutExtension,
+                        }),
                         file: {
                             fileName: fileOriginal.name,
                             contentType: fileOriginal.type,
@@ -98,6 +110,7 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                             trackId: null,
                             fileId: null,
                             peakId: null,
+                            preview: null,
                         },
                         key: `track-${index}`,
                     });
@@ -120,7 +133,11 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                     );
 
                     const peakInfor: CreateBucketFile = {
-                        uploadPurpose: TYPE_UPLOAD_BUCKET.JSON,
+                        folderBucket: genFolderBucket({
+                            releaseId: formValues.id ?? '',
+                            uploadPurpose: TYPE_UPLOAD_BUCKET.TRACK,
+                            fileName: fileNameWithoutExtension,
+                        }),
                         file: {
                             fileName: peakFile.name,
                             contentType: peakFile.type,
@@ -151,8 +168,6 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                     return item.key.includes(i.key);
                 });
                 if (matchedFile) {
-                    console.log(matchedFile);
-
                     try {
                         const uploadResponse = await fetch(item.urlUpload, {
                             method: 'PUT',
@@ -200,7 +215,7 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
             // submit file
             await bucketApi.submit({ ids: fileIdsSubmit });
 
-            const variables: CreateVariables<trackPayload[]> = {
+            const variables: CreateVariables<TrackPayload[]> = {
                 payload: tracksPayload,
                 onSuccess: () => {
                     deActive();

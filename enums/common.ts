@@ -68,7 +68,8 @@ export enum DATE_FORMAT {
     MYSQL_TYPE_DATE = 'YYYY-MM-DD',
     REPORT = 'MMMM DD, YYYY',
     DATE_MONTH = 'DD/MM',
-    HOUR_MINUTE = 'HH:mm:ss',
+    HOUR_MINUTE_SECOND = 'HH:mm:ss',
+    HOUR_MINUTE = 'HH:mm',
     YEAR_MONTH_DAY_TIME = 'YYYY-MM-DD HH:mm:ss',
 }
 
@@ -164,4 +165,9 @@ export enum TYPE_UPLOAD_BUCKET {
     JSON = 'peak_audio',
     TRACK = 'track_audio',
     RELEASE_COVER_ART = 'release_cover_art',
+}
+
+export enum DISTRIBUTE_TYPES {
+    DISTRIBUTE_ONLY_IN = 'distribute_only_in',
+    DISTRIBUTE_EVERY_WHERE_EXCEPT = 'distribute_everywhere_except',
 }

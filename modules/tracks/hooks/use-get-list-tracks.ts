@@ -8,6 +8,7 @@ export const useGetListTracks = (params: TrackDataFilter) => {
     const { data, ...res } = useQuery({
         queryKey: [...trackQueryKeys.getList, params],
         queryFn: () => trackApi.getListTrack(params),
+        enabled: !!params.releaseId,
     });
 
     const tracksData = data?.data?.data ?? DEFAULT_DATA_PAGINATION;

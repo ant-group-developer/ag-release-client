@@ -76,10 +76,10 @@ export default function RegionSelect({ ...props }: Props) {
 
     return (
         <TreeSelect
+            placeholder={messages('placeholder.selectRegion')}
             {...props}
             treeCheckable
             treeData={treeData}
-            placeholder={messages('placeholder.selectRegion')}
             showCheckedStrategy={TreeSelect.SHOW_PARENT}
             allowClear
         />

@@ -39,8 +39,11 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const pathname = usePathname();
     const openModal = useModalStore((state) => state.openModal);
     const childrenRef = useRef<HTMLDivElement>(null);
+    // Thêm ref cho div cha scroll
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
     const releaseId = params['release-id'] ? `${params['release-id']}` : '';
-    const { releaseData } = useGetDetailRelease(releaseId);
+    const { releaseData, isLoading: isReleaseDataLoading } =
+        useGetDetailRelease(releaseId);
 
     const isCreateReleasePage = params['action'] === 'create';
     const isDisableTab = releaseId == '';
@@ -179,30 +182,6 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     );
 
     useEffect(() => {
-        const handleScroll = () => {
-            const scrollContainer = childrenRef.current;
-            if (!scrollContainer) return;
-
-            if (scrollContainer.scrollTop > 20) {
-                setIsScrolled(true);
-            } else {
-                // setIsScrolled(false);
-            }
-        };
-
-        const scrollContainer = childrenRef.current;
-        if (scrollContainer) {
-            scrollContainer.addEventListener('scroll', handleScroll, {
-                passive: true,
-            });
-
-            return () => {
-                scrollContainer.removeEventListener('scroll', handleScroll);
-            };
-        }
-    }, []);
-
-    useEffect(() => {
         const getActiveTab = () => {
             const map: Record<string, string> = {
                 [RELEASES_TABS.CORE_DETAIL]: RELEASES_TABS.CORE_DETAIL,
@@ -223,8 +202,18 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             return;
         }
 
+        // ReleaseData from api into Release zustand global state
         const initialData: ReleaseFormStoreData = {
             ...releaseData,
+            releaseLanguage: releaseData.releaseLanguage ?? {
+                metadataLanguageId: '',
+                audioLanguageId: '',
+                metadataLanguageCountryId: '',
+                releaseId: '',
+            },
+            releaseTerritory: releaseData.releaseTerritory ?? {
+                distributeWorldwide: true,
+            },
         };
 
         if (releaseId) {
@@ -232,11 +221,28 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         }
     }, [releaseId, JSON.stringify(releaseData)]);
 
+    useEffect(() => {
+        // Lắng nghe scroll để set isScrolled
+        const handleScroll = () => {
+            const scrollTop = scrollContainerRef.current?.scrollTop || 0;
+            setIsScrolled(scrollTop > 0);
+        };
+        const scrollEl = scrollContainerRef.current;
+        if (scrollEl) {
+            scrollEl.addEventListener('scroll', handleScroll);
+        }
+        return () => {
+            if (scrollEl) {
+                scrollEl.removeEventListener('scroll', handleScroll);
+            }
+        };
+    }, []);
+
     return (
         <div className="flex h-full overflow-hidden">
             <div
-                ref={childrenRef}
                 className="flex h-full flex-1 flex-col overflow-y-auto"
+                ref={scrollContainerRef}
             >
                 <div className="sticky top-0 z-10 bg-white">
                     <ReleaseDetailHeader isScrolled={isScrolled} />

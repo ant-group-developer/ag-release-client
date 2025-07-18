@@ -11,7 +11,6 @@ import { Form, Input } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
-import { TYPE_MODAL_LABEL } from '../../enum';
 import { useCreateLabel } from '../../hooks/use-create-label';
 import { useUpdateLabel } from '../../hooks/use-update-label';
 import { LabelData } from '../../types';
@@ -26,12 +25,10 @@ type Props = Omit<AppModalProps, 'children'> & {};
 export default function LabelFormModal({ ...props }: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
-    const closeModal = useModalStore((state) => state.closeModal);
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as LabelData);
     const { active, isActive, deActive } = useActive();
-    const isUpdateModal = typeModal === TYPE_MODAL_LABEL.EDIT;
-    const isCreateModal = typeModal === TYPE_MODAL_LABEL.CREATE;
+    const isUpdateModal = dataEdit?.id;
 
     const { createLabel } = useCreateLabel();
     const { updateLabel } = useUpdateLabel();
@@ -96,9 +93,9 @@ export default function LabelFormModal({ ...props }: Props) {
             payloadValues.picture = defaultImage;
         }
 
-        return isCreateModal
-            ? handleCreateLabel(payloadValues)
-            : handleUpdateLabel(payloadValues);
+        return isUpdateModal
+            ? handleUpdateLabel(payloadValues)
+            : handleCreateLabel(payloadValues);
     };
 
     useEffect(() => {
@@ -124,9 +121,8 @@ export default function LabelFormModal({ ...props }: Props) {
         <AppModal
             width={600}
             {...props}
-            title={`${isCreateModal ? messages('common.create') : messages('common.update')} label`}
+            title={`${isUpdateModal ? messages('common.update') : messages('common.create')} label`}
             open
-            onCancel={closeModal}
             onOk={form.submit}
             loading={isActive}
         >

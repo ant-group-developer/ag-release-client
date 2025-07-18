@@ -1,53 +1,55 @@
 import { LabelForm } from '@/components/ui/label/labelForm';
+import LanguageSelect from '@/components/ui/select/language-select';
+import OriginalTypeSelect from '@/components/ui/select/original-type-select';
 import ErrorText from '@/components/ui/text/error-text';
-import IconInfoTooltip from '@/components/ui/tooltip/icon-info-tooltip';
-import { languageList } from '@/constants/fakeData';
 import useModalStore from '@/hooks/use-modal';
-import { artistSchema } from '@/modules/artist/schema';
-import { TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { TrackArtistData } from '@/modules/track-artist/types';
+import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
+import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
+import { releaseTrackSchema } from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
+import { UpdateTrackPayload } from '@/modules/tracks/types/payload';
+import { UpdateVariables } from '@/types/api';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Input, Select, Switch } from 'antd';
+import { Button, Input, Switch } from 'antd';
+import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
+import ArtistCard from '../../release-detail-form/artist-card';
 
-export const releaseTrackSchema = (messages: any) =>
-    z.object({
-        trackName: z.string().nonempty(messages('validation.input')),
-        isrc: z.string().optional(),
-        trackOrigin: z.string().nonempty(messages('validation.input')),
-        languageTrack: z.string().nonempty(messages('validation.input')),
-        isAddArtistsFromRelease: z.boolean(),
-        artists: z.array(artistSchema(messages)),
+export const trackAndArtistSchema = (messages: any) =>
+    releaseTrackSchema(messages).pick({
+        title: true,
+        version: true,
+        trackArtists: true,
+        trackLanguage: true,
+        trackOriginTypeId: true,
+        copyArtistsFromRelease: true,
     });
 
-type ReleaseTrackSchema = z.infer<ReturnType<typeof releaseTrackSchema>>;
+export type TrackAndArtistSchema = z.infer<
+    ReturnType<typeof trackAndArtistSchema>
+>;
 
 type Props = {
     trackData: TrackData;
 };
 
 export default function TracksForm({ trackData }: Props) {
+    console.log('🚀 ~ TracksForm ~ trackData:', trackData);
     const messages = useTranslations();
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const formValues = useReleaseFormStore((state) => state.formValues);
     const openModal = useModalStore((state) => state.openModal);
-    const thisTrackData = formValues?.tracks?.find(
-        (track: TrackData) => track.id === trackData.id
-    );
 
-    const formMethods = useForm<ReleaseTrackSchema>({
+    const formMethods = useForm<TrackAndArtistSchema>({
         defaultValues: {
-            trackName: trackData.title ?? '',
-            // artists: trackData.artists,
-            isAddArtistsFromRelease: false,
-            // trackOrigin: thisTrackData?.trackOrigin ?? '',
-            // languageTrack: thisTrackData?.languageTrack ?? '',
+            ...trackData,
         },
-        resolver: zodResolver(releaseTrackSchema(messages)),
+        resolver: zodResolver(trackAndArtistSchema(messages)),
         mode: 'onChange',
         reValidateMode: 'onChange',
     });
@@ -61,146 +63,157 @@ export default function TracksForm({ trackData }: Props) {
         setValue,
     } = formMethods;
 
-    const isAddArtistsFromRelease = watch('isAddArtistsFromRelease');
+    const { updateTrackDraft } = useUpdateTrackDraft();
+    const debouncedUpdateTrackDraft = useCallback(
+        debounce(async (data: any, fieldName?: string) => {
+            if (fieldName) {
+                const isValid = await trigger(
+                    fieldName as keyof TrackAndArtistSchema
+                );
+                if (!isValid) return;
+            }
+            if (!formValues.id) return;
+            const variables: UpdateVariables<
+                TrackData['id'],
+                UpdateTrackPayload
+            > = {
+                id: trackData.id,
+                payload: data,
+            };
+            updateTrackDraft(variables);
+        }, 500),
+        [formValues.id]
+    );
 
-    const originalSourceList = [
-        {
-            label: (
-                <span className="flex items-center justify-between gap-1">
-                    Tác phẩm gốc{' '}
-                    <IconInfoTooltip title="Tác phẩm gốc là tác phẩm được tạo ra đầu tiên, không phải bất kỳ bản cover hoặc remix nào." />
-                </span>
-            ),
-            value: 'original',
-        },
-        {
-            label: (
-                <span className="flex items-center justify-between gap-1">
-                    Bản cover{' '}
-                    <IconInfoTooltip title="Bản cover là bản nhạc được cover lại từ tác phẩm gốc, có thể có sự thay đổi về âm nhạc, lời bài hát, hoặc cả hai." />
-                </span>
-            ),
-            value: 'cover',
-        },
-        {
-            label: (
-                <span className="flex items-center justify-between gap-1">
-                    Bản remix{' '}
-                    <IconInfoTooltip title="Bản remix là bản nhạc được tạo ra từ tác phẩm gốc, có thể có sự thay đổi về âm nhạc, lời bài hát, hoặc cả hai." />
-                </span>
-            ),
-            value: 'remix',
-        },
-    ];
+    const isAddArtistsFromRelease = watch('copyArtistsFromRelease');
 
     const watchedAllFields = useWatch({ control });
 
     useEffect(() => {
-        const updatedFormValues = {
-            ...formValues,
-            tracks: formValues?.tracks?.map((track: TrackData) =>
-                track.id === trackData.id
-                    ? {
-                          ...track,
-                          ...watchedAllFields,
-                          //   artists: watchedAllFields.artists as ArtistData[],
-                      }
-                    : track
-            ),
-        };
-
-        // setFormValues(updatedFormValues);
-    }, [watchedAllFields]);
-
-    useEffect(() => {
-        trigger();
         setFormValues({
             ...formValues,
-            tracks: formValues?.tracks?.map((track: TrackData) =>
-                track.id === trackData.id
-                    ? {
-                          ...track,
-                          trackName: trackData.title,
-                          //   artists: trackData.artists,
-                          isAddArtistsFromRelease: false,
-                          //   genres: trackData.genres,
-                      }
-                    : track
-            ),
+            tracks: formValues?.tracks?.map((track: TrackData) => {
+                if (track.id === trackData.id) {
+                    const { trackLanguage, ...restFields } = watchedAllFields;
+
+                    return {
+                        ...track,
+                        ...restFields,
+                        title: restFields.title ?? track.title,
+                        trackLanguage: {
+                            ...track.trackLanguage,
+                            audioLanguageId: trackLanguage?.audioLanguageId,
+                        },
+                    } as TrackData;
+                }
+                return track;
+            }),
         });
-    }, []);
+    }, [watchedAllFields]);
 
     return (
         <FormProvider {...formMethods}>
             <form className="grid grid-cols-2 gap-4">
                 <div>
                     <LabelForm
-                        htmlFor="trackName"
+                        htmlFor="title"
                         required
-                        label="Tên bài hát"
+                        label={messages('tracks.name')}
                     />
                     <Controller
                         control={control}
-                        name="trackName"
+                        name="title"
                         render={({ field }) => (
                             <Input
-                                id="trackName"
+                                id="title"
                                 {...field}
                                 allowClear
-                                status={errors.trackName ? 'error' : undefined}
+                                value={field.value ?? ''}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    field.onChange(value);
+                                    debouncedUpdateTrackDraft(
+                                        {
+                                            title: value,
+                                        },
+                                        'title'
+                                    );
+                                }}
+                                status={errors.title ? 'error' : undefined}
                             />
                         )}
                     />
                     <ErrorText
-                        isError={!!errors.trackName}
-                        message={errors.trackName?.message}
-                    />
-                </div>
-
-                <div>
-                    <LabelForm htmlFor="isrc" label="ISRC" />
-                    <Controller
-                        control={control}
-                        name="isrc"
-                        render={({ field }) => (
-                            <Input
-                                id="isrc"
-                                {...field}
-                                allowClear
-                                status={errors.isrc ? 'error' : undefined}
-                            />
-                        )}
-                    />
-                    <ErrorText
-                        isError={!!errors.isrc}
-                        message={errors.isrc?.message}
+                        isError={!!errors.title}
+                        message={errors.title?.message}
                     />
                 </div>
 
                 <div>
                     <LabelForm
-                        htmlFor="trackOrigin"
-                        required
-                        label="Nguồn gốc"
+                        htmlFor="version"
+                        label={messages('releases.version')}
                     />
                     <Controller
                         control={control}
-                        name="trackOrigin"
+                        name="version"
                         render={({ field }) => (
-                            <Select
-                                id="trackOrigin"
+                            <Input
+                                id="version"
                                 {...field}
-                                options={originalSourceList}
+                                value={field.value ?? ''}
+                                allowClear
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    field.onChange(value);
+                                    debouncedUpdateTrackDraft(
+                                        {
+                                            version: value,
+                                        },
+                                        'version'
+                                    );
+                                }}
+                                status={errors.version ? 'error' : undefined}
+                            />
+                        )}
+                    />
+                    <ErrorText
+                        isError={!!errors.version}
+                        message={errors.version?.message}
+                    />
+                </div>
+
+                <div>
+                    <LabelForm
+                        htmlFor="trackOriginTypeId"
+                        required
+                        label={`${messages('trackOrigin.label')}`}
+                    />
+                    <Controller
+                        control={control}
+                        name="trackOriginTypeId"
+                        render={({ field }) => (
+                            <OriginalTypeSelect
+                                id="trackOriginTypeId"
+                                {...field}
+                                onChange={(e) => {
+                                    field.onChange(e);
+                                    debouncedUpdateTrackDraft({
+                                        trackOriginTypeId: e,
+                                    });
+                                }}
                                 className="w-full"
                                 status={
-                                    errors.trackOrigin ? 'error' : undefined
+                                    errors.trackOriginTypeId
+                                        ? 'error'
+                                        : undefined
                                 }
                             />
                         )}
                     />
                     <ErrorText
-                        isError={!!errors.trackOrigin}
-                        message={errors.trackOrigin?.message}
+                        isError={!!errors.trackOriginTypeId}
+                        message={errors.trackOriginTypeId?.message}
                     />
                 </div>
 
@@ -208,84 +221,109 @@ export default function TracksForm({ trackData }: Props) {
                     <LabelForm
                         htmlFor="languageTrack"
                         required
-                        label="Ngôn ngữ bài hát"
+                        label={messages('tracks.language')}
                     />
                     <Controller
                         control={control}
-                        name="languageTrack"
+                        name="trackLanguage.audioLanguageId"
                         render={({ field }) => (
-                            <Select
+                            <LanguageSelect
                                 id="languageTrack"
                                 {...field}
-                                options={languageList}
+                                value={field.value ?? ''}
+                                onChange={(e) => {
+                                    field.onChange(e);
+                                    debouncedUpdateTrackDraft({
+                                        trackLanguage: {
+                                            ...formMethods.getValues(
+                                                'trackLanguage'
+                                            ),
+                                            audioLanguageId: e,
+                                        },
+                                    });
+                                }}
                                 showSearch
                                 className="w-full"
                                 status={
-                                    errors.languageTrack ? 'error' : undefined
+                                    errors.trackLanguage?.audioLanguageId
+                                        ? 'error'
+                                        : undefined
                                 }
                             />
                         )}
                     />
                     <ErrorText
-                        isError={!!errors.languageTrack}
-                        message={errors.languageTrack?.message}
+                        isError={!!errors.trackLanguage?.audioLanguageId}
+                        message={errors.trackLanguage?.audioLanguageId?.message}
                     />
                 </div>
 
                 <div className="col-span-2">
                     <LabelForm
-                        htmlFor="isAddArtistsFromRelease"
+                        htmlFor="copyArtistsFromRelease"
                         label="Thêm tất cả nghệ sĩ từ phát hành ?"
                     />
                     <Controller
                         control={control}
-                        name="isAddArtistsFromRelease"
-                        render={({ field }) => (
-                            <Switch {...field} checked={field.value} />
-                        )}
+                        name="copyArtistsFromRelease"
+                        render={({ field }) => {
+                            console.log('🚀 ~ TracksForm ~ field:', field);
+                            return (
+                                <Switch
+                                    {...field}
+                                    checked={!!field.value}
+                                    onChange={(e) => {
+                                        field.onChange(e);
+                                        debouncedUpdateTrackDraft({
+                                            copyArtistsFromRelease: e,
+                                        });
+                                    }}
+                                />
+                            );
+                        }}
                     />
                 </div>
 
                 {!isAddArtistsFromRelease && (
                     <div className="col-span-2">
-                        <Button
-                            onClick={() =>
-                                openModal(
-                                    TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.ADD_ARTIST,
-                                    trackData
-                                )
-                            }
-                            shape="round"
-                            className="mb-4"
-                        >
-                            Thêm nghệ sĩ
-                        </Button>
                         <div className="grid grid-cols-2 gap-4">
-                            {/* {trackData.artists.map(
-                                (artist: any, index: number) => (
+                            {trackData?.trackArtists?.map(
+                                (item: TrackArtistData, index: number) => (
                                     <ArtistCard
                                         key={index}
-                                        data={artist}
+                                        data={{
+                                            artist: item.artist,
+                                            artistRole: item.artistRole,
+                                        }}
                                         onDelete={() =>
                                             openModal(
-                                                TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.DELETE_ARTIST,
-                                                {
-                                                    trackData,
-                                                    artist,
-                                                }
+                                                TYPE_MODAL_TRACK_ARTIST.DELETE,
+                                                item
                                             )
                                         }
                                         onClick={() => {
                                             openModal(
-                                                TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.EDIT_ARTIST,
-                                                artist
+                                                TYPE_MODAL_TRACK_ARTIST.UPDATE,
+                                                item
                                             );
                                         }}
                                         index={index}
                                     />
                                 )
-                            )} */}
+                            )}
                         </div>
+                        <Button
+                            onClick={() =>
+                                openModal(
+                                    TYPE_MODAL_TRACK_ARTIST.ADD,
+                                    trackData
+                                )
+                            }
+                            shape="round"
+                            className="mt-4"
+                        >
+                            {messages('artist.add')}
+                        </Button>
                     </div>
                 )}
             </form>

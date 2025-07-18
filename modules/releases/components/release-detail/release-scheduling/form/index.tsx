@@ -1,24 +1,29 @@
-import { LabelForm } from '@/components/ui/label/labelForm';
-import RegionSelect from '@/components/ui/select/region-select';
+import FormItem from '@/components/ui/react-hook-form/form-item';
+import CountrySelect from '@/components/ui/select/country-select';
 import TimezoneSelect from '@/components/ui/select/timezone-select';
-import ErrorText from '@/components/ui/text/error-text';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { DATE_FORMAT, DISTRIBUTE_TYPES } from '@/enums/common';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
+import { releaseSchema } from '@/modules/releases/schemas';
+import { ReleasesData } from '@/modules/releases/types';
+import { UpdateReleaseDraftPayload } from '@/modules/releases/types/payload';
+import { UpdateVariables } from '@/types/api';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DatePicker } from 'antd';
+import { DatePicker, Radio, TimePicker } from 'antd';
 import dayjs from 'dayjs';
+import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
-import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
+import { useCallback } from 'react';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 const releaseSchedulingSchema = (messages: any) =>
-    z.object({
-        releaseDate: z.string().nonempty(messages('validation.input')),
-        territoryType: z
-            .array(z.string())
-            .min(1, messages('validation.select')),
-        timezone: z.string().nonempty(messages('validation.input')),
+    releaseSchema(messages).pick({
+        releaseDate: true,
+        releaseTime: true,
+        releaseTimezoneId: true,
+        releaseTerritory: true,
     });
 
 export type ReleaseSchedulingSchema = z.infer<
@@ -32,12 +37,21 @@ export default function ReleaseSchedulingForm({}: Props) {
 
     const formValues = useReleaseFormStore((state) => state.formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
+    const { updateReleaseDraft } = useUpdateReleaseDraft();
 
     const formMethods = useForm<ReleaseSchedulingSchema>({
         defaultValues: {
-            releaseDate: formValues?.releaseDate || '',
-            // territoryType: formValues?.territoryType || [],
-            // timezone: formValues?.timezone || '',
+            releaseDate: formValues?.releaseDate,
+            releaseTime: formValues?.releaseTime,
+            releaseTimezoneId: formValues?.releaseTimezoneId,
+            releaseTerritory: {
+                distributeWorldwide:
+                    formValues?.releaseTerritory?.distributeWorldwide ?? true,
+                distributionType:
+                    formValues?.releaseTerritory?.distributionType,
+                selectedCountries:
+                    formValues?.releaseTerritory?.selectedCountries,
+            },
         },
         resolver: zodResolver(releaseSchedulingSchema(messages)),
         mode: 'onChange',
@@ -52,144 +66,300 @@ export default function ReleaseSchedulingForm({}: Props) {
         setValue,
     } = formMethods;
 
-    const watchedAllFields = useWatch({ control });
+    const distributeWorldwide = watch('releaseTerritory.distributeWorldwide');
 
-    useEffect(() => {
-        const updatedFormValues = {
-            ...formValues,
-            releaseDate: watchedAllFields.releaseDate,
-            territoryType: watchedAllFields.territoryType,
-            timezone: watchedAllFields.timezone,
-        };
-
-        setFormValues(updatedFormValues);
-    }, [watchedAllFields]);
-
-    useEffect(() => {
-        trigger();
-    }, []);
+    const debouncedUpdate = useCallback(
+        debounce((data) => {
+            if (!formValues.id) return;
+            const variables: UpdateVariables<
+                ReleasesData['id'],
+                UpdateReleaseDraftPayload
+            > = {
+                id: formValues.id ?? '',
+                payload: data,
+                onSuccess: (data: ReleasesData) => {
+                    setFormValues(data);
+                },
+            };
+            updateReleaseDraft(variables);
+        }, 500),
+        [formValues.id]
+    );
 
     return (
         <div className="rounded-lg bg-white p-4">
             <FormProvider {...formMethods}>
                 <form className="flex flex-col gap-4">
-                    <div className="grid grid-cols-3 gap-8">
-                        <div>
-                            <LabelForm
-                                htmlFor="releaseDate"
-                                required
-                                label="Thời gian phát hành"
-                            />
+                    <div className="grid grid-cols-2 gap-6">
+                        <FormItem
+                            name="releaseDate"
+                            label={messages('releases.releaseDate')}
+                            required
+                            ErrorMessage={errors.releaseDate?.message}
+                        >
                             <Controller
                                 control={control}
                                 name="releaseDate"
+                                render={({ field }) => {
+                                    return (
+                                        <DatePicker
+                                            id="releaseDate"
+                                            className="w-full"
+                                            format={DATE_FORMAT.DATE_ONLY}
+                                            disabledDate={(date) =>
+                                                date &&
+                                                date < dayjs().startOf('day')
+                                            }
+                                            value={
+                                                field.value
+                                                    ? dayjs(field.value)
+                                                    : null
+                                            }
+                                            onChange={(date) => {
+                                                field.onChange(
+                                                    date.toISOString()
+                                                );
+                                                debouncedUpdate({
+                                                    releaseDate: date,
+                                                });
+                                            }}
+                                            status={
+                                                errors.releaseDate
+                                                    ? 'error'
+                                                    : undefined
+                                            }
+                                        />
+                                    );
+                                }}
+                            />
+                        </FormItem>
+
+                        <FormItem
+                            name="releaseTime"
+                            label={messages('common.releaseTime')}
+                            required
+                            ErrorMessage={errors.releaseTime?.message}
+                        >
+                            <Controller
+                                control={control}
+                                name="releaseTime"
                                 render={({ field }) => (
-                                    <DatePicker
-                                        id="releaseDate"
+                                    <TimePicker
                                         className="w-full"
-                                        format="DD/MM/YYYY"
-                                        disabledDate={(date) =>
-                                            date &&
-                                            date < dayjs().startOf('day')
-                                        }
                                         value={
                                             field.value
                                                 ? dayjs(
                                                       field.value,
-                                                      'YYYY-MM-DD'
+                                                      DATE_FORMAT.HOUR_MINUTE
                                                   )
                                                 : null
                                         }
-                                        onChange={(date, dateString) => {
+                                        onChange={(time) => {
                                             field.onChange(
-                                                date
-                                                    ? date.format('YYYY-MM-DD')
+                                                time
+                                                    ? time.format(
+                                                          DATE_FORMAT.HOUR_MINUTE
+                                                      )
                                                     : ''
                                             );
+                                            debouncedUpdate({
+                                                releaseTime: time
+                                                    ? time.format(
+                                                          DATE_FORMAT.HOUR_MINUTE
+                                                      )
+                                                    : '',
+                                            });
                                         }}
                                         status={
-                                            errors.releaseDate
+                                            errors.releaseTime
                                                 ? 'error'
                                                 : undefined
                                         }
+                                        showSecond={false}
                                     />
                                 )}
                             />
-                            <ErrorText
-                                isError={!!errors.releaseDate}
-                                message={errors.releaseDate?.message}
-                            />
-                        </div>
+                        </FormItem>
 
-                        <div>
-                            <LabelForm
-                                htmlFor="timezone"
-                                required
-                                label="timezone"
-                            />
+                        <FormItem
+                            name="releaseTimezoneId"
+                            label="timezone"
+                            required
+                            ErrorMessage={errors.releaseTimezoneId?.message}
+                        >
                             <Controller
                                 control={control}
-                                name="timezone"
+                                name="releaseTimezoneId"
                                 render={({ field }) => (
                                     <TimezoneSelect
-                                        id="timezone"
+                                        id="releaseTimezoneId"
                                         className="w-full"
                                         {...field}
+                                        placeholder="Chọn múi giờ"
+                                        onChange={(e) => {
+                                            field.onChange(e);
+                                            debouncedUpdate({
+                                                releaseTimezoneId: e,
+                                            });
+                                        }}
                                         status={
-                                            errors.timezone
+                                            errors.releaseTimezoneId
                                                 ? 'error'
                                                 : undefined
                                         }
                                     />
                                 )}
                             />
-                            <ErrorText
-                                isError={!!errors.timezone}
-                                message={errors.timezone?.message}
-                            />
-                        </div>
+                        </FormItem>
 
-                        <div>
-                            <LabelForm
-                                htmlFor="territoryType"
+                        <div className="space-y-2">
+                            <FormItem
                                 required
-                                label="Khu vực"
-                            />
-                            <Controller
-                                control={control}
-                                name="territoryType"
-                                render={({ field }) => (
-                                    <RegionSelect
-                                        className="w-full"
-                                        id="territoryType"
-                                        multiple
-                                        allowClear
-                                        maxTagCount="responsive"
-                                        maxTagPlaceholder={(value) => (
-                                            <CustomTooltip
-                                                title={value
-                                                    .map(
-                                                        (item: any) =>
-                                                            item.label
-                                                    )
-                                                    .join(', ')}
+                                name="releaseTerritory.distributeWorldwide"
+                                label={messages('distribute.wordWide')}
+                                ErrorMessage={
+                                    errors.releaseTerritory?.distributeWorldwide
+                                        ?.message
+                                }
+                            >
+                                <Controller
+                                    control={control}
+                                    name="releaseTerritory.distributeWorldwide"
+                                    defaultValue={true}
+                                    render={({ field }) => {
+                                        return (
+                                            <Radio.Group
+                                                {...field}
+                                                onChange={(e) => {
+                                                    field.onChange(
+                                                        e.target.value
+                                                    ),
+                                                        debouncedUpdate({
+                                                            releaseTerritory: {
+                                                                distributeWorldwide:
+                                                                    e.target
+                                                                        .value,
+                                                            },
+                                                        });
+                                                }}
                                             >
-                                                +{value.length}
-                                            </CustomTooltip>
-                                        )}
-                                        {...field}
-                                        status={
-                                            errors.territoryType
-                                                ? 'error'
-                                                : undefined
+                                                <Radio.Button value={true}>
+                                                    {messages('common.yes')}
+                                                </Radio.Button>
+                                                <Radio.Button value={false}>
+                                                    {messages('common.no')}
+                                                </Radio.Button>
+                                            </Radio.Group>
+                                        );
+                                    }}
+                                />
+                            </FormItem>
+
+                            {!distributeWorldwide && (
+                                <>
+                                    <FormItem
+                                        required
+                                        name="releaseTerritory.distributionType"
+                                        label={messages('select.option')}
+                                        ErrorMessage={
+                                            errors.releaseTerritory
+                                                ?.distributionType?.message
                                         }
-                                    />
-                                )}
-                            />
-                            <ErrorText
-                                isError={!!errors.territoryType}
-                                message={errors.territoryType?.message}
-                            />
+                                    >
+                                        <Controller
+                                            control={control}
+                                            name="releaseTerritory.distributionType"
+                                            render={({ field }) => (
+                                                <Radio.Group
+                                                    {...field}
+                                                    onChange={(e) => {
+                                                        field.onChange(
+                                                            e.target.value
+                                                        ),
+                                                            debouncedUpdate({
+                                                                releaseTerritory:
+                                                                    {
+                                                                        distributionType:
+                                                                            e
+                                                                                .target
+                                                                                .value,
+                                                                    },
+                                                            });
+                                                    }}
+                                                >
+                                                    <Radio.Button
+                                                        value={
+                                                            DISTRIBUTE_TYPES.DISTRIBUTE_ONLY_IN
+                                                        }
+                                                    >
+                                                        {messages(
+                                                            'distribute.onlyIn'
+                                                        )}
+                                                    </Radio.Button>
+                                                    <Radio.Button
+                                                        value={
+                                                            DISTRIBUTE_TYPES.DISTRIBUTE_EVERY_WHERE_EXCEPT
+                                                        }
+                                                    >
+                                                        {messages(
+                                                            'distribute.everyWhereExcept'
+                                                        )}
+                                                    </Radio.Button>
+                                                </Radio.Group>
+                                            )}
+                                        />
+                                    </FormItem>
+                                    <FormItem
+                                        name="releaseTerritory.selectedCountries"
+                                        label={messages('common.region')}
+                                        required
+                                        ErrorMessage={
+                                            errors.releaseTerritory
+                                                ?.selectedCountries?.message
+                                        }
+                                    >
+                                        <Controller
+                                            control={control}
+                                            name="releaseTerritory.selectedCountries"
+                                            render={({ field }) => (
+                                                <CountrySelect
+                                                    className="w-full"
+                                                    id="releaseTerritory.selectedCountries"
+                                                    mode="multiple"
+                                                    allowClear
+                                                    maxTagCount="responsive"
+                                                    maxTagPlaceholder={(
+                                                        value
+                                                    ) => (
+                                                        <CustomTooltip
+                                                            title={value
+                                                                .map(
+                                                                    (
+                                                                        item: any
+                                                                    ) =>
+                                                                        item.label
+                                                                )
+                                                                .join(', ')}
+                                                        >
+                                                            +{value.length}
+                                                        </CustomTooltip>
+                                                    )}
+                                                    {...field}
+                                                    onChange={(value) => {
+                                                        field.onChange(value);
+                                                        debouncedUpdate({
+                                                            releaseTerritory: {
+                                                                selectedCountries:
+                                                                    value,
+                                                            },
+                                                        });
+                                                    }}
+                                                />
+                                            )}
+                                        />
+                                    </FormItem>
+                                </>
+                            )}
                         </div>
                     </div>
                 </form>

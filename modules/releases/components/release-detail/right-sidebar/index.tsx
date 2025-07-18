@@ -21,13 +21,21 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
             return messages('formFields.tracks.track' as any);
         }
 
-        if (path.length >= 3 && path[0] === 'tracks') {
+        if (path.length === 3 && path[0] === 'tracks') {
             const trackNum = Number(path[1]) + 1;
             const field = path[2];
             const fieldKey = `tracks.${field}`;
 
             // Sử dụng fieldLabels để ánh xạ trường vào tên dễ hiểu
             // const fieldLabel = fieldLabels[field] || field;
+            return `${messages('tracks.number')} ${trackNum}: ${messages(`formFields.${fieldKey}` as any) || field}`;
+        }
+
+        if (path.length === 4 && path[0] === 'tracks') {
+            const trackNum = Number(path[1]) + 1;
+            const field = path[3];
+            const fieldKey = `tracks.${field}`;
+
             return `${messages('tracks.number')} ${trackNum}: ${messages(`formFields.${fieldKey}` as any) || field}`;
         }
 
@@ -96,7 +104,7 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
                                         className="rounded-md border border-red-200 bg-red-50 p-2 text-sm"
                                     >
                                         {err.path.length > 0 && (
-                                            <p className="text-red-600">
+                                            <p className="break-words text-red-600">
                                                 {getFieldLabel(err.path)}
                                             </p>
                                         )}
