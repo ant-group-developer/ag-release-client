@@ -12,6 +12,7 @@ import {
     useReleaseFormStore,
 } from '@/modules/releases/hooks/release-form-store';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
+import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { Button, Tabs, TabsProps } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname } from 'next/navigation';
@@ -44,12 +45,16 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const releaseId = params['release-id'] ? `${params['release-id']}` : '';
     const { releaseData, isLoading: isReleaseDataLoading } =
         useGetDetailRelease(releaseId);
+    const { tracksData, isLoading: isTracksLoading } = useGetListTracks({
+        releaseId: releaseData?.id || '',
+    });
 
     const isCreateReleasePage = params['action'] === 'create';
     const isDisableTab = releaseId == '';
 
     const isDetailPage = pathname.includes(`/${RELEASES_TABS.CORE_DETAIL}`);
     const isTracksPage = pathname.includes(`/${RELEASES_TABS.TRACKS}`);
+    const isCoreDetailPage = pathname.includes(`/${RELEASES_TABS.CORE_DETAIL}`);
 
     const coreDetailTabsNavigate = isCreateReleasePage
         ? '/releases/create'
@@ -214,15 +219,25 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             releaseTerritory: releaseData.releaseTerritory ?? {
                 distributeWorldwide: true,
             },
+            tracks: tracksData.items.map((track) => ({
+                ...track,
+                isSensitiveContent: track.isSensitiveContent ?? false,
+            })),
         };
 
-        if (releaseId) {
+        if (releaseId && releaseData?.id) {
             setFormValues(initialData);
         }
-    }, [releaseId, JSON.stringify(releaseData)]);
+    }, [releaseId, JSON.stringify(releaseData), tracksData?.items]);
 
     useEffect(() => {
-        // Lắng nghe scroll để set isScrolled
+        // Chỉ theo dõi scroll khi ở trang core-detail, các trang khác mặc định isScrolled = true
+        if (!isCoreDetailPage) {
+            setIsScrolled(true);
+            return;
+        }
+
+        // Lắng nghe scroll để set isScrolled chỉ khi ở trang core-detail
         const handleScroll = () => {
             const scrollTop = scrollContainerRef.current?.scrollTop || 0;
             setIsScrolled(scrollTop > 0);
@@ -236,7 +251,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                 scrollEl.removeEventListener('scroll', handleScroll);
             }
         };
-    }, []);
+    }, [isCoreDetailPage]);
 
     return (
         <div className="flex h-full overflow-hidden">

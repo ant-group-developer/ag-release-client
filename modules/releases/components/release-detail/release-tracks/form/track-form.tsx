@@ -39,7 +39,6 @@ type Props = {
 };
 
 export default function TracksForm({ trackData }: Props) {
-    console.log('🚀 ~ TracksForm ~ trackData:', trackData);
     const messages = useTranslations();
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const formValues = useReleaseFormStore((state) => state.formValues);
@@ -267,7 +266,6 @@ export default function TracksForm({ trackData }: Props) {
                         control={control}
                         name="copyArtistsFromRelease"
                         render={({ field }) => {
-                            console.log('🚀 ~ TracksForm ~ field:', field);
                             return (
                                 <Switch
                                     {...field}

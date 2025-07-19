@@ -37,6 +37,7 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "notAvailable": "Chưa có thông tin",
         "region": "Khu vực",
         "specification": "Thông số kỹ thuật",
         "missingInformation": "Thiếu thông tin",
@@ -565,6 +566,7 @@
         "id": "Mã phát hành",
         "type": "Loại phát hành",
         "releaseDate": "Ngày phát hành",
+        "releaseTime": "Thời gian phát hành",
         "duration": "Thời lượng",
         "trackCount": "Số bài hát",
         "publisher": "Hãng phát hành",
@@ -909,7 +911,7 @@
     },
 
     "trackType": {
-        "label": "Thể loại bài"
+        "label": "Thể loại bài hát"
     },
 
     "trackOrigin": {

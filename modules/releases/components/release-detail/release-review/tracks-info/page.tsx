@@ -1,9 +1,11 @@
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import type { TrackData } from '@/modules/releases/types';
+import { TrackArtistData } from '@/modules/track-artist/types';
 import { Collapse } from 'antd';
-import classNames from 'classnames';
 import { AlertCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import ArtistItem from '../metadata-info/artist-item';
+import TrackMetadataInfoItem from './track-metadata-info-item';
 
 const SIZE_ICON = 20;
 
@@ -64,6 +66,43 @@ export default function TracksInfo({}: Props) {
         return trackError.errors.find((error) => error.path[0] === field);
     };
 
+    // Hàm lấy giá trị hiển thị cho từng field
+    const getFieldValue = (
+        track: TrackData | undefined,
+        field: keyof TrackData
+    ) => {
+        if (!track) return '';
+        if (
+            field === 'trackLanguage' &&
+            typeof track.trackLanguage === 'object'
+        ) {
+            const lang = track.trackLanguage;
+            const audioLang = lang?.audioLanguage?.name;
+            const country = lang?.metadataLanguageCountry?.name;
+            const recordingCountry = (lang as any)?.recordingCountry?.name;
+            return (
+                <div className="mt-1">
+                    {audioLang && <div>Ngôn ngữ bài hát: {audioLang}</div>}
+                    {country && <div>Ngôn ngữ metadata: {country}</div>}
+                    {recordingCountry && (
+                        <div>Quốc gia thu âm: {recordingCountry}</div>
+                    )}
+                </div>
+            );
+        }
+        // if (field === 'primaryGenreId') {
+        //     return track.primaryGenre?.name || track.primaryGenreId || '';
+        // }
+        // if (field === 'subGenreId') {
+        //     return track.subGenre?.name || track.subGenreId || '';
+        // }
+        const value = track[field];
+        if (typeof value === 'boolean') {
+            return value ? messages('common.yes') : messages('common.no');
+        }
+        return value !== undefined && value !== null ? String(value) : '';
+    };
+
     const renderField = (
         trackIndex: number,
         label: string,
@@ -72,52 +111,21 @@ export default function TracksInfo({}: Props) {
     ) => {
         const error = getFieldError(trackIndex, field);
         const track = formValue.tracks?.[trackIndex];
-        const value = track?.[field as keyof TrackData];
-
-        // if (field === 'languageTrack') {
-        //     value = getLanguageLabel(typeof value === 'string' ? value : '');
-        // }
-
-        // if (
-        //     field === 'pLine' &&
-        //     value &&
-        //     typeof value === 'object' &&
-        //     'year' in value &&
-        //     'name' in value
-        // ) {
-        //     if (value.year && value.name) {
-        //         value = `${value.year} ${value.name}`;
-        //     } else {
-        //         value = 'Thiếu năm hoặc tên bản quyền';
-        //     }
-        // }
-
+        const value = getFieldValue(track, field);
         return (
             <div className="flex justify-between">
                 <div>
-                    <p
-                        className={classNames('font-semibold', {
-                            'text-red-500': error,
-                        })}
-                    >
+                    <p className="font-medium">
                         {label} {isRequired && '*'}
                     </p>
-                    {value === undefined || value === null ? (
+                    {value === '' ? (
                         <p className="text-gray-500">
                             {isRequired
                                 ? messages('common.required')
                                 : messages('common.optional')}
                         </p>
                     ) : (
-                        <p className="mt-1">
-                            {typeof value === 'boolean'
-                                ? value
-                                    ? messages('common.yes')
-                                    : messages('common.no')
-                                : Array.isArray(value)
-                                  ? value.map((v: any) => v.name).join(', ')
-                                  : String(value)}
-                        </p>
+                        <p className="mt-1">{value}</p>
                     )}
                 </div>
                 {error && (
@@ -126,8 +134,6 @@ export default function TracksInfo({}: Props) {
             </div>
         );
     };
-
-    const isHasTrack = formValue.tracks?.length ?? 0;
 
     return (
         <div className="my-1">
@@ -156,78 +162,94 @@ export default function TracksInfo({}: Props) {
                             key={String(index + 1)}
                         >
                             <div>
-                                <div className="grid grid-cols-6 bg-card-bg p-4">
-                                    <span className="col-span-2 font-medium">
-                                        {messages('tracks.label')} &{' '}
-                                        {messages('artist.label')}
-                                    </span>
-                                    <div className="col-span-4 flex flex-col gap-2">
-                                        {renderField(
-                                            index,
-                                            messages('tracks.name'),
-                                            'title',
-                                            true
-                                        )}
-                                        {renderField(index, 'ISRC', 'isrc')}
-                                        {renderField(
-                                            index,
-                                            messages('artist.label'),
-                                            'trackArtists',
-                                            true
-                                        )}
-                                        {renderField(
-                                            index,
-                                            messages('common.source'),
-                                            'originType',
-                                            true
-                                        )}
-                                        {renderField(
-                                            index,
-                                            messages(
-                                                'formFields.tracks.languageTrack'
-                                            ),
-                                            'trackLanguage',
-                                            true
-                                        )}
-                                        {renderField(
-                                            index,
-                                            'Bản quyền ghi âm',
-                                            'pLineOwner',
-                                            true
-                                        )}
-                                    </div>
-                                </div>
+                                {/* Thông tin bài hát */}
+                                <TrackMetadataInfoItem
+                                    label={messages('tracks.label')}
+                                >
+                                    {renderField(
+                                        index,
+                                        messages('tracks.name'),
+                                        'title',
+                                        true
+                                    )}
+                                    {renderField(index, 'ISRC', 'isrc')}
+                                    {renderField(index, 'ISWC', 'iswc')}
+                                    {renderField(
+                                        index,
+                                        messages('formFields.tracks.version'),
+                                        'version'
+                                    )}
+                                    {renderField(
+                                        index,
+                                        messages('formFields.tracks.genres'),
+                                        'primaryGenreId',
+                                        true
+                                    )}
+                                    {renderField(
+                                        index,
+                                        messages('formFields.tracks.subGenres'),
+                                        'subGenreId'
+                                    )}
+                                </TrackMetadataInfoItem>
 
-                                <div className="grid grid-cols-6 bg-card-bg p-4">
-                                    <span className="col-span-2 font-medium">
-                                        {messages('releases.otherMetadata')}
-                                    </span>
-                                    <div className="col-span-4 flex flex-col gap-2">
-                                        {renderField(
-                                            index,
-                                            messages(
-                                                'formFields.tracks.genres'
-                                            ),
-                                            'primaryGenreId',
-                                            true
-                                        )}
-                                        {renderField(
-                                            index,
-                                            messages(
-                                                'formFields.tracks.subGenres'
-                                            ),
-                                            'subGenreId'
-                                        )}
-                                        {renderField(
-                                            index,
-                                            messages(
-                                                'formFields.tracks.sensitiveContent'
-                                            ),
-                                            'isSensitiveContent',
-                                            true
-                                        )}
-                                    </div>
-                                </div>
+                                {/* Thông tin nghệ sĩ */}
+                                <TrackMetadataInfoItem
+                                    label={messages('artist.label')}
+                                >
+                                    {track?.trackArtists?.map(
+                                        (
+                                            trackArtist: TrackArtistData,
+                                            index: number
+                                        ) => (
+                                            <ArtistItem
+                                                key={index}
+                                                data={{
+                                                    artist: trackArtist?.artist,
+                                                    role: trackArtist?.artistRole,
+                                                }}
+                                            />
+                                        )
+                                    )}
+                                </TrackMetadataInfoItem>
+
+                                {/* Các metadata khác */}
+                                <TrackMetadataInfoItem
+                                    label={messages('releases.otherMetadata')}
+                                >
+                                    {renderField(
+                                        index,
+                                        messages(
+                                            'formFields.tracks.trackOriginTypeId'
+                                        ),
+                                        'originType',
+                                        true
+                                    )}
+                                    {renderField(
+                                        index,
+                                        messages('language.label'),
+                                        'trackLanguage',
+                                        true
+                                    )}
+                                    {renderField(
+                                        index,
+                                        'Bản quyền ghi âm',
+                                        'pLineOwner',
+                                        true
+                                    )}
+                                    {renderField(
+                                        index,
+                                        messages(
+                                            'formFields.tracks.sensitiveContent'
+                                        ),
+                                        'isSensitiveContent',
+                                        true
+                                    )}
+                                    {renderField(
+                                        index,
+                                        messages('trackType.label'),
+                                        'trackTypeId'
+                                    )}
+                                </TrackMetadataInfoItem>
                             </div>
                         </Collapse.Panel>
                     </Collapse>

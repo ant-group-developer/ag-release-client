@@ -37,6 +37,7 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "notAvailable": "Not available",
         "region": "Khu vực",
         "specification": "Specification",
         "missingInformation": "Missing information",
@@ -565,6 +566,7 @@
         "id": "Release ID",
         "type": "Release type",
         "releaseDate": "Release date",
+        "releaseTime": "Release time",
         "duration": "Duration",
         "trackCount": "Track count",
         "publisher": "Publisher release",

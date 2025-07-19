@@ -39,7 +39,7 @@ export default function ShowColumnOptionDropdown({
             alwaysVisible: true,
         },
         {
-            key: TRACKS_COLUMNS_DISPLAY.TRACK_ID,
+            key: TRACKS_COLUMNS_DISPLAY.ID,
             label: messages('tracks.id'),
             alwaysVisible: true,
         },
@@ -51,18 +51,17 @@ export default function ShowColumnOptionDropdown({
             key: TRACKS_COLUMNS_DISPLAY.GENRES,
             label: messages('common.type'),
         },
-
         {
-            key: TRACKS_COLUMNS_DISPLAY.ARTIST,
+            key: TRACKS_COLUMNS_DISPLAY.VERSION,
+            label: messages('releases.version'),
+        },
+        {
+            key: TRACKS_COLUMNS_DISPLAY.TRACK_ARTIST,
             label: messages('common.artist'),
         },
         {
             key: TRACKS_COLUMNS_DISPLAY.ISRC,
             label: 'ISRC',
-        },
-        {
-            key: TRACKS_COLUMNS_DISPLAY.DURATION,
-            label: messages('common.duration'),
         },
         {
             key: TRACKS_COLUMNS_DISPLAY.RELEASE_DATE,
