@@ -679,6 +679,35 @@
         }
     },
 
+    "trackType": {
+        "label": "Thể loại bài hát",
+        "message": {
+            "success": {
+                "create": "Thêm thể loại thành công",
+                "update": "Cập nhật thể loại thành công",
+                "delete": "Xoá thể loại thành công"
+            },
+            "error": {
+                "duplicateNameTrackType": "Thể loại bài hát này đã tồn tại"
+            }
+        }
+    },
+
+    "trackOrigin": {
+        "label": "Nguồn gốc bài hát",
+        "value": "Giá trị",
+        "message": {
+            "success": {
+                "create": "Thêm mới nguồn gốc bài hát thành công",
+                "update": "Cập nhật nguồn gốc bài hát thành công",
+                "delete": "Xoá nguồn gốc bài hát thành công"
+            },
+            "error": {
+                "duplicateNameTrackOriginType": "Nguồn gốc bài hát này đã tồn tại"
+            }
+        }
+    },
+
     "genres": {
         "name": "Tên thể loại",
         "pop": "Pop",
@@ -908,14 +937,5 @@
                 "duplicateNameTimezone": "Múi giờ này đã tồn tại"
             }
         }
-    },
-
-    "trackType": {
-        "label": "Thể loại bài hát"
-    },
-
-    "trackOrigin": {
-        "label": "Nguồn gốc bài hát",
-        "value": "Giá trị"
     }
 }

@@ -111,7 +111,9 @@ export default function Labels({}: Props) {
             </div>
 
             {(typeModal === TYPE_MODAL_LABEL.CREATE ||
-                typeModal === TYPE_MODAL_LABEL.EDIT) && <LabelFormModal />}
+                typeModal === TYPE_MODAL_LABEL.EDIT) && (
+                <LabelFormModal onCancel={closeModal} />
+            )}
 
             {typeModal === TYPE_MODAL_LABEL.DELETE && (
                 <AppConfirm

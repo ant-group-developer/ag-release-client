@@ -2,9 +2,11 @@ import { useGetListLanguage } from '@/modules/languages/hooks/use-get-list-langu
 import { LanguagesData } from '@/modules/languages/types';
 import { Select, SelectProps } from 'antd';
 
-type Props = Omit<SelectProps, 'options'> & {};
+type Props = Omit<SelectProps, 'options'> & {
+    fallBack?: string;
+};
 
-export default function LanguageSelect({ ...props }: Props) {
+export default function LanguageSelect({ fallBack, ...props }: Props) {
     // const messages = useTranslations();
     const { languagesData } = useGetListLanguage({});
     const option = languagesData?.items.map(
@@ -17,5 +19,12 @@ export default function LanguageSelect({ ...props }: Props) {
         }
     );
 
-    return <Select {...props} options={option} />;
+    const labelRender = (props: SelectProps) => {
+        const { value } = props;
+        if (value) {
+            return fallBack || value;
+        }
+    };
+
+    return <Select {...props} options={option} labelRender={labelRender} />;
 }

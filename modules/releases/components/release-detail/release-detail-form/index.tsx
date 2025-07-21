@@ -5,6 +5,7 @@ import LabelSelect from '@/components/ui/select/label-select';
 import LanguageSelect from '@/components/ui/select/language-select';
 import ErrorText from '@/components/ui/text/error-text';
 import { getReleaseDetailTabRoute } from '@/helpers/link';
+import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
@@ -120,6 +121,7 @@ export default function ReleaseDetailForm() {
             );
         } else {
             deActive();
+            showNotification('error', messages('validation.error'));
         }
     };
     const handleFormError = (errors: any) => {};
@@ -479,8 +481,7 @@ export default function ReleaseDetailForm() {
                                             </Button>
                                             <ErrorText
                                                 isError={
-                                                    errors.releaseArtists
-                                                        ?.length === 0
+                                                    !!errors.releaseArtists
                                                 }
                                                 message={
                                                     errors.releaseArtists
@@ -570,29 +571,36 @@ export default function ReleaseDetailForm() {
                                 <Controller
                                     control={control}
                                     name="releaseLanguage.metadataLanguageId"
-                                    render={({ field }) => (
-                                        <LanguageSelect
-                                            className="w-full"
-                                            id="metaDataLanguage"
-                                            showSearch
-                                            {...field}
-                                            onChange={(e) => {
-                                                field.onChange(e);
-                                                debouncedUpdate({
-                                                    releaseLanguage: {
-                                                        metadataLanguageId: e,
-                                                    },
-                                                });
-                                            }}
-                                            status={
-                                                errors.releaseLanguage
-                                                    ?.metadataLanguageId
-                                                    ? 'error'
-                                                    : undefined
-                                            }
-                                            disabled={isCreateReleasePage}
-                                        />
-                                    )}
+                                    render={({ field }) => {
+                                        const fallBackLabel =
+                                            formValues?.releaseLanguage
+                                                ?.metadataLanguage?.name;
+                                        return (
+                                            <LanguageSelect
+                                                className="w-full"
+                                                id="metaDataLanguage"
+                                                showSearch
+                                                {...field}
+                                                fallBack={fallBackLabel}
+                                                onChange={(e) => {
+                                                    field.onChange(e);
+                                                    debouncedUpdate({
+                                                        releaseLanguage: {
+                                                            metadataLanguageId:
+                                                                e,
+                                                        },
+                                                    });
+                                                }}
+                                                status={
+                                                    errors.releaseLanguage
+                                                        ?.metadataLanguageId
+                                                        ? 'error'
+                                                        : undefined
+                                                }
+                                                disabled={isCreateReleasePage}
+                                            />
+                                        );
+                                    }}
                                 />
                             </FormItem>
 
@@ -695,7 +703,7 @@ export default function ReleaseDetailForm() {
 
                             <FormItem
                                 name="cLineOwner"
-                                label="Bản quyền tác phẩm"
+                                label={messages('formFields.cLine')}
                                 required
                                 tooltipInfor={messages(
                                     'releases.cLineYearDescription'

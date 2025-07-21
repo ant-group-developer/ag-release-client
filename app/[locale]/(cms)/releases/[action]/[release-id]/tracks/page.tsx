@@ -69,8 +69,6 @@ export default function Tracks() {
         deleteTrackArtist(variable);
     };
 
-    console.log(tracksData);
-
     useEffect(() => {
         if (tracksData?.items) {
             setFormValues({

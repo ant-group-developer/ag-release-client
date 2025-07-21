@@ -19,7 +19,6 @@ import { useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import ArtistProfilesList from '../../../artist/components/list/artist-profiles';
-import { roleArtist } from '../../../artist/constants';
 import { useCreateTrackArtist } from '../../hooks/use-create-track-artist';
 import { useUpdateTrackArtist } from '../../hooks/use-update-track-artist';
 import {
@@ -106,6 +105,7 @@ export default function TrackArtistModal({ ...props }: Props) {
             onCancel={closeModal}
             onOk={form.submit}
             confirmLoading={isActive}
+            {...props}
         >
             <AppForm
                 form={form}
@@ -149,10 +149,7 @@ export default function TrackArtistModal({ ...props }: Props) {
                         },
                     ]}
                 >
-                    <RoleArtistSelect
-                        placeholder={messages('common.role')}
-                        options={roleArtist}
-                    />
+                    <RoleArtistSelect placeholder={messages('common.role')} />
                 </AppFormItem>
 
                 {watchArtistName && (

@@ -25,7 +25,6 @@ import { useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import ArtistProfilesList from '../../../artist/components/list/artist-profiles';
-import { roleArtist } from '../../../artist/constants';
 import { useUpdateReleaseArtist } from '../../hooks/use-update-release-artist';
 
 type Props = Omit<AppModalProps, 'children'> & {
@@ -165,7 +164,6 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                     >
                         <RoleArtistSelect
                             placeholder={messages('common.role')}
-                            options={roleArtist}
                         />
                     </AppFormItem>
                 )}

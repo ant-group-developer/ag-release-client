@@ -229,14 +229,15 @@ export default function TracksForm({ trackData }: Props) {
                             <LanguageSelect
                                 id="languageTrack"
                                 {...field}
+                                fallBack={
+                                    trackData?.trackLanguage?.audioLanguage
+                                        ?.name
+                                }
                                 value={field.value ?? ''}
                                 onChange={(e) => {
                                     field.onChange(e);
                                     debouncedUpdateTrackDraft({
                                         trackLanguage: {
-                                            ...formMethods.getValues(
-                                                'trackLanguage'
-                                            ),
                                             audioLanguageId: e,
                                         },
                                     });

@@ -677,6 +677,35 @@
         }
     },
 
+    "trackType": {
+        "label": "Track type",
+        "message": {
+            "success": {
+                "create": "Add track type successfully",
+                "update": "Update track type successfully",
+                "delete": "Delete track type successfully"
+            },
+            "error": {
+                "duplicateNameTrackType": "This track type is already exists"
+            }
+        }
+    },
+
+    "trackOrigin": {
+        "label": "Track original",
+        "value": "Value",
+        "message": {
+            "success": {
+                "create": "Add track original successfully",
+                "update": "Update track original successfully",
+                "delete": "Delete track original successfully"
+            },
+            "error": {
+                "duplicateNameTrackOriginType": "This track origin is already exists"
+            }
+        }
+    },
+
     "genres": {
         "name": "Genre name",
         "pop": "Pop",
@@ -901,14 +930,5 @@
                 "duplicateNameTimezone": "This timezone already exists"
             }
         }
-    },
-
-    "trackType": {
-        "label": "Track type"
-    },
-
-    "trackOrigin": {
-        "label": "Track original",
-        "value": "Value"
     }
 }

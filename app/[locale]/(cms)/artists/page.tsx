@@ -113,7 +113,9 @@ export default function Artists({}: Props) {
             </div>
 
             {(typeModal === TYPE_MODAL_ARTIST.CREATE ||
-                typeModal === TYPE_MODAL_ARTIST.UPDATE) && <ArtistFormModal />}
+                typeModal === TYPE_MODAL_ARTIST.UPDATE) && (
+                <ArtistFormModal onCancel={closeModal} />
+            )}
 
             {typeModal === TYPE_MODAL_ARTIST.DELETE && (
                 <AppConfirm
