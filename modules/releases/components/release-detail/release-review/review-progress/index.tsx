@@ -11,7 +11,7 @@ export default function ReviewProgress({}: Props) {
 
     return (
         <div>
-            <div className="grid grid-cols-3 gap-1">
+            <div className="grid grid-cols-3 gap-2">
                 <div>
                     <MetadataInfoItem label={messages('releases.releaseDate')}>
                         <p className="pt-1">

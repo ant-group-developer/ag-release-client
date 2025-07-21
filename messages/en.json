@@ -771,6 +771,8 @@
         "territoryType": "Territory type",
         "cLineYear": "C line year",
         "pLineYear": "P line year",
+        "cLine": "Product copyright",
+        "pLine": "Sound recording copyright",
         "nameRelease": "Release name",
         "version": "Version",
         "timezone": "Timezone",

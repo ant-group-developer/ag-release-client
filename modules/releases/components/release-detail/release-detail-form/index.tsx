@@ -772,7 +772,7 @@ export default function ReleaseDetailForm() {
 
                             <FormItem
                                 name="pLineOwner"
-                                label="Bản quyền ghi âm"
+                                label={messages('formFields.pLine')}
                                 required
                                 tooltipInfor={messages(
                                     'releases.pLineYearDescription'

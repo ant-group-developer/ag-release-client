@@ -82,20 +82,31 @@ export default function TracksInfo({}: Props) {
             const recordingCountry = (lang as any)?.recordingCountry?.name;
             return (
                 <div className="mt-1">
-                    {audioLang && <div>Ngôn ngữ bài hát: {audioLang}</div>}
-                    {country && <div>Ngôn ngữ metadata: {country}</div>}
+                    {audioLang && (
+                        <div>
+                            {messages('tracks.language')}: {audioLang}
+                        </div>
+                    )}
+                    {country && (
+                        <div>
+                            {messages('common.language')} metadata: {country}
+                        </div>
+                    )}
                     {recordingCountry && (
-                        <div>Quốc gia thu âm: {recordingCountry}</div>
+                        <div>
+                            {messages('tracks.recordingCountry')}:{' '}
+                            {recordingCountry}
+                        </div>
                     )}
                 </div>
             );
         }
-        // if (field === 'primaryGenreId') {
-        //     return track.primaryGenre?.name || track.primaryGenreId || '';
-        // }
-        // if (field === 'subGenreId') {
-        //     return track.subGenre?.name || track.subGenreId || '';
-        // }
+        if (field === 'primaryGenreId') {
+            return track.primaryGenre?.name || track.primaryGenreId || '';
+        }
+        if (field === 'subGenreId') {
+            return track.subGenre?.name || track.subGenreId || '';
+        }
         const value = track[field];
         if (typeof value === 'boolean') {
             return value ? messages('common.yes') : messages('common.no');
@@ -136,20 +147,20 @@ export default function TracksInfo({}: Props) {
     };
 
     return (
-        <div className="my-1">
+        <div className="space-y-2">
             <p className="font-semibold"> {messages('tracks.label')} </p>
 
-            <div className="mb-1 rounded-lg bg-card-bg p-4">
+            <div className="mb-2 rounded-lg bg-zinc-100 p-4">
                 <p className="text-base font-medium">
                     {messages('common.coreInfo')}
                 </p>
             </div>
 
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-2">
                 {formValue.tracks?.map((track: TrackData, index: number) => (
                     <Collapse
                         key={String(index + 1)}
-                        className="release-review-collapse !border-none !bg-card-bg !py-2"
+                        className="release-review-collapse !border-none !bg-zinc-100 !py-2"
                         size="small"
                         bordered={false}
                     >
@@ -162,7 +173,6 @@ export default function TracksInfo({}: Props) {
                             key={String(index + 1)}
                         >
                             <div>
-                                {/* Thông tin bài hát */}
                                 <TrackMetadataInfoItem
                                     label={messages('tracks.label')}
                                 >
@@ -181,7 +191,7 @@ export default function TracksInfo({}: Props) {
                                     )}
                                     {renderField(
                                         index,
-                                        messages('formFields.tracks.genres'),
+                                        messages('genres.primary'),
                                         'primaryGenreId',
                                         true
                                     )}
