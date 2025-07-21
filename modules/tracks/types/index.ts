@@ -1,5 +1,6 @@
 import { OriginType } from '@/components/ui/select/original-type-select';
 import { CountriesData } from '@/modules/countries/types';
+import { GenresData } from '@/modules/genres/types';
 import { LanguagesData } from '@/modules/languages/types';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { AudioFileBucket } from '@/modules/upload/types/data';
@@ -14,7 +15,9 @@ export interface TrackData extends CommonAttribute {
     releaseId: string;
     pLineOwner: string | null;
     primaryGenreId: string | null;
+    primaryGenre: GenresData | null;
     subGenreId: string | null;
+    subGenre: GenresData | null;
     audioFile?: AudioFileBucket;
     originTypeId: string;
     originType: OriginType;

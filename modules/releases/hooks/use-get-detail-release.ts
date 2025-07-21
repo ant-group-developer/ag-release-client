@@ -40,6 +40,7 @@ export const useGetDetailRelease = (id: ReleasesData['id']) => {
             selectedCountries: [],
             distributionType: '',
         },
+        timeZone: null,
     };
 
     return {

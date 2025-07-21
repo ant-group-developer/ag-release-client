@@ -12,7 +12,9 @@ export default function MetadataInfoItem({
     className = '',
 }: MetadataInfoItemProps) {
     return (
-        <div className={`mb-1 rounded-lg bg-card-bg p-4 ${className}`}>
+        <div
+            className={`rounded-lg bg-zinc-100 p-4 dark:bg-zinc-900 ${className}`}
+        >
             <p className="font-medium">{label}</p>
             <div className="flex flex-col">{children}</div>
         </div>
