@@ -233,14 +233,13 @@ export default function ReleaseSchedulingForm({}: Props) {
                                                 onChange={(e) => {
                                                     field.onChange(
                                                         e.target.value
-                                                    ),
-                                                        debouncedUpdate({
-                                                            releaseTerritory: {
-                                                                distributeWorldwide:
-                                                                    e.target
-                                                                        .value,
-                                                            },
-                                                        });
+                                                    );
+                                                    debouncedUpdate({
+                                                        releaseTerritory: {
+                                                            distributeWorldwide:
+                                                                e.target.value,
+                                                        },
+                                                    });
                                                 }}
                                             >
                                                 <Radio.Button value={true}>
@@ -275,16 +274,14 @@ export default function ReleaseSchedulingForm({}: Props) {
                                                     onChange={(e) => {
                                                         field.onChange(
                                                             e.target.value
-                                                        ),
-                                                            debouncedUpdate({
-                                                                releaseTerritory:
-                                                                    {
-                                                                        distributionType:
-                                                                            e
-                                                                                .target
-                                                                                .value,
-                                                                    },
-                                                            });
+                                                        );
+                                                        debouncedUpdate({
+                                                            releaseTerritory: {
+                                                                distributionType:
+                                                                    e.target
+                                                                        .value,
+                                                            },
+                                                        });
                                                     }}
                                                 >
                                                     <Radio.Button

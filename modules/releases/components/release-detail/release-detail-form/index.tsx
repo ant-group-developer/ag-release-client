@@ -734,11 +734,11 @@ export default function ReleaseDetailForm() {
                                         return (
                                             <Input
                                                 id="cLineOwner"
-                                                // {...field}
+                                                {...field}
                                                 value={ownerCopyRight}
                                                 onChange={(e) => {
-                                                    field.onChange(),
-                                                        handleOwnerChange(e);
+                                                    field.onChange(e);
+                                                    handleOwnerChange(e);
                                                 }}
                                                 disabled={isCreateReleasePage}
                                                 allowClear
@@ -815,8 +815,8 @@ export default function ReleaseDetailForm() {
                                                 // {...field}
                                                 value={ownerCopyRight}
                                                 onChange={(e) => {
-                                                    field.onChange(),
-                                                        handleOwnerChange(e);
+                                                    field.onChange(e);
+                                                    handleOwnerChange(e);
                                                 }}
                                                 disabled={isCreateReleasePage}
                                                 allowClear

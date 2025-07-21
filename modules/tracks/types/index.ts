@@ -1,4 +1,6 @@
 import { OriginType } from '@/components/ui/select/original-type-select';
+import { CountriesData } from '@/modules/countries/types';
+import { LanguagesData } from '@/modules/languages/types';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { AudioFileBucket } from '@/modules/upload/types/data';
 import { CommonAttribute, CommonParams } from '@/types/api';
@@ -16,12 +18,7 @@ export interface TrackData extends CommonAttribute {
     audioFile?: AudioFileBucket;
     originTypeId: string;
     originType: OriginType;
-    trackLanguage?: {
-        metadataLanguageId: string;
-        audioLanguageId: string;
-        metadataLanguageCountryId: string;
-        recordingCountryId: string;
-    };
+    trackLanguage?: TrackLanguage;
     trackArtists?: TrackArtistData[];
     isSensitiveContent: boolean;
     lyric: string;
@@ -29,6 +26,16 @@ export interface TrackData extends CommonAttribute {
     copyArtistsFromRelease: boolean;
     trackOriginTypeId: string | null;
     preview: string;
+}
+
+export interface TrackLanguage {
+    metadataLanguageId: string;
+    audioLanguageId: string;
+    metadataLanguageCountryId: string;
+    recordingCountryId: string;
+    recordingCountry: CountriesData | null;
+    audioLanguage: LanguagesData | null;
+    metadataLanguageCountry: CountriesData | null;
 }
 
 export interface TrackDataFilter extends CommonParams {

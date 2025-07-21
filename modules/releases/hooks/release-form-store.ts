@@ -54,8 +54,23 @@ const initialValue: ReleaseFormStoreData = {
         audioLanguageId: '',
         metadataLanguageCountryId: '',
         releaseId: '',
+        metadataLanguage: {
+            name: '',
+            code: '',
+            id: '',
+            createdAt: '',
+            updatedAt: null,
+        },
     },
     releaseArtists: [],
+    timeZone: {
+        name: '',
+        utc: '',
+        zone: '',
+        id: '',
+        createdAt: '',
+        updatedAt: null,
+    },
 };
 
 export const useReleaseFormStore = create<ReleaseFormState>()(

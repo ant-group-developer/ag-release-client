@@ -1,6 +1,8 @@
 import { GenresData } from '@/modules/genres/types';
 import { LabelData } from '@/modules/labels/types';
+import { LanguagesData } from '@/modules/languages/types';
 import { ReleaseArtist } from '@/modules/release-artist/types';
+import { TimezoneData } from '@/modules/timezone/types';
 import { TrackData } from '@/modules/tracks/types';
 import { CommonAttribute, CommonParams } from '@/types/api';
 import { RELEASES_STATUS, RELEASES_TYPE } from '../enums';
@@ -40,6 +42,7 @@ export interface ReleasesData extends CommonAttribute {
     releaseTime: string;
     releaseTimezoneId: string | null;
     releaseTerritory: ReleaseTerritory;
+    timeZone: TimezoneData | null;
 }
 
 export interface ReleasesDataFilter extends CommonParams {
@@ -62,6 +65,7 @@ export interface releaseLanguage extends CommonParams {
     metadataLanguageCountryId: string | null;
     audioLanguageId: string | null;
     metadataLanguageId: string;
+    metadataLanguage?: LanguagesData;
     releaseId: string;
 }
 
