@@ -25,10 +25,10 @@ export default function OriginalTypeSelect({ fallBack, ...props }: Props) {
         })
     );
 
-    const labelRender = (props: SelectProps) => {
-        const { title, value } = props;
+    const labelRender = (props: any) => {
+        const { value, label } = props;
         if (value) {
-            return title || fallBack || value;
+            return fallBack || label;
         }
     };
 

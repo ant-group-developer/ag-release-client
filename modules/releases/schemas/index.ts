@@ -47,6 +47,18 @@ export const releaseSchema = (messages: any) =>
                     .refine((val) => val !== null && val !== '', {
                         message: messages('validation.input'),
                     }),
+                metadataLanguageCountryId: z
+                    .string()
+                    .nullable()
+                    .refine((val) => val !== null && val !== '', {
+                        message: messages('validation.input'),
+                    }),
+                audioLanguageId: z
+                    .string()
+                    .nullable()
+                    .refine((val) => val !== null && val !== '', {
+                        message: messages('validation.input'),
+                    }),
             })
             .refine((val) => val !== null, {
                 message: messages('validation.input'),

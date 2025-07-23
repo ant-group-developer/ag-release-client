@@ -186,7 +186,7 @@ export default function TracksForm({ trackData }: Props) {
                     <LabelForm
                         htmlFor="trackOriginTypeId"
                         required
-                        label={`${messages('trackOrigin.label')}`}
+                        label={`${messages('trackOriginType.label')}`}
                     />
                     <Controller
                         control={control}
@@ -195,6 +195,7 @@ export default function TracksForm({ trackData }: Props) {
                             <OriginalTypeSelect
                                 id="trackOriginTypeId"
                                 {...field}
+                                fallBack={trackData?.trackOriginType?.name}
                                 onChange={(e) => {
                                     field.onChange(e);
                                     debouncedUpdateTrackDraft({
@@ -233,7 +234,6 @@ export default function TracksForm({ trackData }: Props) {
                                     trackData?.trackLanguage?.audioLanguage
                                         ?.name
                                 }
-                                value={field.value ?? ''}
                                 onChange={(e) => {
                                     field.onChange(e);
                                     debouncedUpdateTrackDraft({

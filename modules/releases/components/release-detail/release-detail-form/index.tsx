@@ -1,5 +1,6 @@
 // React Hook Form version using Controller
 import FormItem from '@/components/ui/react-hook-form/form-item';
+import CountrySelect from '@/components/ui/select/country-select';
 import GenresSelect from '@/components/ui/select/genres-select';
 import LabelSelect from '@/components/ui/select/label-select';
 import LanguageSelect from '@/components/ui/select/language-select';
@@ -218,8 +219,13 @@ export default function ReleaseDetailForm() {
                     version: formValues.version ?? '',
                     releaseLanguage: {
                         metadataLanguageId:
-                            formValues.releaseLanguage?.metadataLanguageId ||
+                            formValues.releaseLanguage?.metadataLanguageId ??
                             '',
+                        audioLanguageId:
+                            formValues.releaseLanguage?.audioLanguageId ?? '',
+                        metadataLanguageCountryId:
+                            formValues.releaseLanguage
+                                ?.metadataLanguageCountryId ?? '',
                     },
                     coverArtThumbnails: formValues.coverArtThumbnails ?? {
                         '75x75': '',
@@ -509,6 +515,10 @@ export default function ReleaseDetailForm() {
                                                 className="w-full"
                                                 id="primaryGenreId"
                                                 {...field}
+                                                fallBack={
+                                                    formValues?.primaryGenre
+                                                        ?.name
+                                                }
                                                 onChange={(e) => {
                                                     field.onChange(e);
                                                     debouncedUpdate({
@@ -542,6 +552,9 @@ export default function ReleaseDetailForm() {
                                             showSearch
                                             id="subGenres"
                                             {...field}
+                                            fallBack={
+                                                formValues?.subGenre?.name
+                                            }
                                             onChange={(e) => {
                                                 field.onChange(e);
                                                 debouncedUpdate({
@@ -605,6 +618,95 @@ export default function ReleaseDetailForm() {
                             </FormItem>
 
                             <FormItem
+                                name="releaseLanguage.audioLanguageId"
+                                label={`${messages('tracks.language')}`}
+                                required
+                                ErrorMessage={
+                                    errors.releaseLanguage?.audioLanguageId
+                                        ?.message
+                                }
+                            >
+                                <Controller
+                                    control={control}
+                                    name="releaseLanguage.audioLanguageId"
+                                    render={({ field }) => {
+                                        const fallBackLabel =
+                                            formValues?.releaseLanguage
+                                                ?.audioLanguage?.name;
+                                        return (
+                                            <LanguageSelect
+                                                className="w-full"
+                                                id="releaseLanguage.audioLanguageId"
+                                                showSearch
+                                                {...field}
+                                                fallBack={fallBackLabel}
+                                                onChange={(e) => {
+                                                    field.onChange(e);
+                                                    debouncedUpdate({
+                                                        releaseLanguage: {
+                                                            audioLanguageId: e,
+                                                        },
+                                                    });
+                                                }}
+                                                status={
+                                                    errors.releaseLanguage
+                                                        ?.audioLanguageId
+                                                        ? 'error'
+                                                        : undefined
+                                                }
+                                                disabled={isCreateReleasePage}
+                                            />
+                                        );
+                                    }}
+                                />
+                            </FormItem>
+
+                            <FormItem
+                                name="releaseLanguage.metadataLanguageCountryId"
+                                label={`${messages('country.language')}`}
+                                required
+                                ErrorMessage={
+                                    errors.releaseLanguage
+                                        ?.metadataLanguageCountryId?.message
+                                }
+                            >
+                                <Controller
+                                    control={control}
+                                    name="releaseLanguage.metadataLanguageCountryId"
+                                    render={({ field }) => {
+                                        const fallBackLabel =
+                                            formValues?.releaseLanguage
+                                                ?.metadataLanguageCountry?.name;
+                                        return (
+                                            <CountrySelect
+                                                className="w-full"
+                                                id="releaseLanguage.metadataLanguageCountryId"
+                                                showSearch
+                                                {...field}
+                                                fallBack={fallBackLabel}
+                                                onChange={(e) => {
+                                                    field.onChange(e);
+                                                    debouncedUpdate({
+                                                        releaseLanguage: {
+                                                            metadataLanguageCountryId:
+                                                                e,
+                                                        },
+                                                    });
+                                                }}
+                                                status={
+                                                    errors.releaseLanguage
+                                                        ?.metadataLanguageCountryId
+                                                        ? 'error'
+                                                        : undefined
+                                                }
+                                                disabled={isCreateReleasePage}
+                                            />
+                                        );
+                                    }}
+                                />
+                            </FormItem>
+
+                            <FormItem
                                 name="labelId"
                                 label="Label"
                                 ErrorMessage={errors.labelId?.message}
@@ -619,6 +721,7 @@ export default function ReleaseDetailForm() {
                                             allowClear
                                             id="labelId"
                                             {...field}
+                                            fallBack={formValues?.label?.name}
                                             onCreateLabel={() =>
                                                 setShowCreateLabel(true)
                                             }

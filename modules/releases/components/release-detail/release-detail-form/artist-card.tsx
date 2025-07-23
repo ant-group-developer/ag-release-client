@@ -63,8 +63,9 @@ export default function ArtistCard({
                                 onChange={(e: CheckboxChangeEvent) => {
                                     handleChangeChecked(e);
                                 }}
-                            />
-                            <span> {messages('artist.addToTracks')}</span>
+                            >
+                                <span> {messages('artist.addToTracks')}</span>
+                            </Checkbox>
                         </div>
                     )}
                 </div>

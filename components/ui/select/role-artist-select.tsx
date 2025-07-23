@@ -12,12 +12,13 @@ export default function RoleArtistSelect({ fallBack, ...props }: Props) {
     const openModal = useModalStore((state) => state.openModal);
 
     const { artistsRolesData } = useGetListArtistRole({});
-    const labelRender = (props: SelectProps) => {
-        const { value } = props;
+    const labelRender = (props: any) => {
+        const { value, label } = props;
         if (value) {
-            return fallBack || value;
+            return fallBack || label;
         }
     };
+
     return (
         <Select
             {...props}

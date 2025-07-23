@@ -43,12 +43,12 @@ export const releaseTrackSchema = (messages: any) =>
                 message: messages('validation.input'),
             }),
         trackLanguage: z.object({
-            metadataLanguageId: z
-                .string()
-                .nullable()
-                .refine((val) => val !== null && val !== '', {
-                    message: messages('validation.input'),
-                }),
+            // metadataLanguageId: z
+            //     .string()
+            //     .nullable()
+            //     .refine((val) => val !== null && val !== '', {
+            //         message: messages('validation.input'),
+            //     }), chưa dùng
             audioLanguageId: z
                 .string()
                 .nullable()
@@ -89,7 +89,7 @@ export const releaseTrackSchema = (messages: any) =>
                 fileName: z
                     .string()
                     .max(100, messages('validation.max', { number: 100 })),
-                urlRead: z.string(),
+                urlRead: z.string().nullable().optional(),
             }),
             // preview: z
             //     .number()
@@ -98,10 +98,14 @@ export const releaseTrackSchema = (messages: any) =>
             //     .refine((val) => val !== null && val !== undefined, {
             //         message: messages('validation.input'),
             //     }),
-            preview: z.number({
-                required_error: messages('validation.input'),
-                invalid_type_error: messages('validation.input'),
-            }),
+            preview: z
+                .number({
+                    required_error: messages('validation.input'),
+                    invalid_type_error: messages('validation.input'),
+                })
+                .refine((val) => val !== null && val !== 0, {
+                    message: messages('validation.input'),
+                }),
         }),
     });
 

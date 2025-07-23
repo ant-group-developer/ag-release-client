@@ -691,7 +691,7 @@
         }
     },
 
-    "trackOrigin": {
+    "trackOriginType": {
         "label": "Track original",
         "value": "Value",
         "message": {

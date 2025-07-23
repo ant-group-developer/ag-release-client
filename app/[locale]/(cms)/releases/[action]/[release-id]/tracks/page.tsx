@@ -75,7 +75,7 @@ export default function Tracks() {
                 ...formValues,
                 tracks: tracksData.items.map((track) => ({
                     ...track,
-                    isSensitiveContent: track.isSensitiveContent ?? false,
+                    isSensitiveContent: !!track.isSensitiveContent,
                 })),
             });
         }

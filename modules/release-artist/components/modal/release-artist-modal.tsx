@@ -138,6 +138,7 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                 >
                     <ArtistSelect
                         showSearch
+                        fallBack={dataEdit?.artist?.name}
                         placeholder={messages('artist.select')}
                         onCreateArtist={() => setShowCreateArtistModal(true)}
                     />
@@ -163,6 +164,7 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                         ]}
                     >
                         <RoleArtistSelect
+                            fallBack={dataEdit?.artistRole?.name}
                             placeholder={messages('common.role')}
                         />
                     </AppFormItem>

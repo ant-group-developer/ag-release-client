@@ -221,7 +221,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             },
             tracks: tracksData.items.map((track) => ({
                 ...track,
-                isSensitiveContent: track.isSensitiveContent ?? false,
+                isSensitiveContent: !!track.isSensitiveContent,
             })),
         };
 

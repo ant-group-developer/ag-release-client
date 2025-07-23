@@ -1,3 +1,4 @@
+import { CountriesData } from '@/modules/countries/types';
 import { GenresData } from '@/modules/genres/types';
 import { LabelData } from '@/modules/labels/types';
 import { LanguagesData } from '@/modules/languages/types';
@@ -26,6 +27,7 @@ export interface ReleasesData extends CommonAttribute {
     subGenre?: GenresData;
     labelId: string;
     label?: LabelData;
+    isSensitiveContent: boolean;
     title: string;
     version: string | null;
     status: RELEASES_STATUS;
@@ -63,9 +65,11 @@ export interface ReleaseTerritory extends CommonParams {
 
 export interface releaseLanguage extends CommonParams {
     metadataLanguageCountryId: string | null;
+    metadataLanguageCountry?: CountriesData | null;
     audioLanguageId: string | null;
+    audioLanguage?: LanguagesData | null;
     metadataLanguageId: string;
-    metadataLanguage?: LanguagesData;
+    metadataLanguage?: LanguagesData | null;
     releaseId: string;
 }
 

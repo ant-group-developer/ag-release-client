@@ -19,10 +19,10 @@ export default function LanguageSelect({ fallBack, ...props }: Props) {
         }
     );
 
-    const labelRender = (props: SelectProps) => {
-        const { value } = props;
+    const labelRender = (props: any) => {
+        const { value, label } = props;
         if (value) {
-            return fallBack || value;
+            return fallBack || label;
         }
     };
 

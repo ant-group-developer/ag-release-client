@@ -100,27 +100,12 @@ export default function AudioSpecifications({
                                 <Input
                                     {...field}
                                     value={field.value ?? ''}
+                                    readOnly={true}
                                     status={
                                         errors.audioFile?.file?.fileName
                                             ? 'error'
                                             : undefined
                                     }
-                                    onChange={(e) => {
-                                        field.onChange(e.target.value);
-                                        updateTrackDraft({
-                                            audioFile: {
-                                                ...formMethods.getValues(
-                                                    'audioFile'
-                                                ),
-                                                file: {
-                                                    ...formMethods.getValues(
-                                                        'audioFile.file'
-                                                    ),
-                                                    fileName: e.target.value,
-                                                },
-                                            },
-                                        });
-                                    }}
                                 />
                             )}
                         />
@@ -146,15 +131,15 @@ export default function AudioSpecifications({
                                     }
                                     className="w-full"
                                     {...field}
-                                    value={field.value ?? ''}
+                                    fallBack={
+                                        trackData?.trackLanguage
+                                            ?.recordingCountry?.name
+                                    }
                                     showSearch
                                     onChange={(e) => {
                                         field.onChange(e);
                                         updateTrackDraft({
                                             trackLanguage: {
-                                                ...formMethods.getValues(
-                                                    'trackLanguage'
-                                                ),
                                                 recordingCountryId: e,
                                             },
                                         });
@@ -199,9 +184,6 @@ export default function AudioSpecifications({
                                         field.onChange(seconds);
                                         updateTrackDraft({
                                             audioFile: {
-                                                ...formMethods.getValues(
-                                                    'audioFile'
-                                                ),
                                                 preview: seconds,
                                             },
                                         });
@@ -235,6 +217,7 @@ export default function AudioSpecifications({
                                     }
                                     className="w-full"
                                     {...field}
+                                    fallBack={trackData?.trackType?.name}
                                     value={field.value ?? ''}
                                     showSearch
                                     onChange={(e) => {

@@ -693,7 +693,7 @@
         }
     },
 
-    "trackOrigin": {
+    "trackOriginType": {
         "label": "Nguồn gốc bài hát",
         "value": "Giá trị",
         "message": {

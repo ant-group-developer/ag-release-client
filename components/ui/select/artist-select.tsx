@@ -5,12 +5,22 @@ import { useTranslations } from 'next-intl';
 
 type Props = SelectProps & {
     onCreateArtist?: () => void;
+    fallBack?: string;
 };
 
-export default function ArtistSelect({ onCreateArtist, ...props }: Props) {
+export default function ArtistSelect({
+    fallBack,
+    onCreateArtist,
+    ...props
+}: Props) {
     const messages = useTranslations();
     const { artistsData } = useGetListArtist({});
-
+    const labelRender = (props: any) => {
+        const { value, label } = props;
+        if (value) {
+            return fallBack || label;
+        }
+    };
     return (
         <Select
             {...props}
@@ -19,6 +29,7 @@ export default function ArtistSelect({ onCreateArtist, ...props }: Props) {
                 value: item.id,
                 label: item.name,
             }))}
+            labelRender={labelRender}
             dropdownRender={(menu) => {
                 return (
                     <div>

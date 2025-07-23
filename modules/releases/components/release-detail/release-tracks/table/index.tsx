@@ -92,10 +92,13 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             key: 'waveform',
             align: 'center',
             width: 300,
-            render: (value, record) => {
+            render: (value, record, index) => {
                 return (
                     <div className="w-[330px]">
-                        <TrackWaveform key={record.id} data={record} />
+                        <TrackWaveform
+                            key={`${record.id}-${index}`}
+                            data={record}
+                        />
                     </div>
                 );
             },
@@ -134,13 +137,13 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             key: 'artists',
             align: 'left',
             width: 300,
-            render: (value, record) => {
+            render: (value, record, index) => {
                 return (
                     <div className="flex flex-wrap gap-y-2">
                         {record?.trackArtists?.map(
                             (trackArtist: TrackArtistData) => (
                                 <Tag
-                                    key={`${record.id}`}
+                                    key={`${record.id}-${trackArtist.id}`}
                                     closeIcon
                                     onClose={(e) => {
                                         e.preventDefault();

@@ -32,16 +32,21 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     const params = useParams();
     const isCreateReleasePage = params['action'] === 'create';
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-
+    const [isUploading, setIsUploading] = useState(false);
     const mainArtist = formValues?.releaseArtists?.find(
         (releaseArtist: ReleaseArtist) =>
             releaseArtist.artistRole?.name === RELEASE_MAIN_ARTIST_ROLE
     );
 
-    const { updateReleaseDraft } = useUpdateReleaseDraft();
+    const { updateReleaseDraft, isPending: isUpdatingRelease } =
+        useUpdateReleaseDraft();
+
     const handleImageUpload = async (info: any) => {
+        setIsUploading(true);
         const file = info.fileList[0];
-        if (!file) return;
+        if (!file) {
+            return;
+        }
         const fileOriginal = file.originFileObj;
         const fileNameWithoutExtension =
             fileOriginal.name.lastIndexOf('.') !== -1
@@ -79,20 +84,16 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                     fileId,
                 },
             },
+            onSuccess: (data: ReleasesData) => {
+                setIsUploading(false);
+                setFormValues({ coverArtThumbnails: data?.coverArtThumbnails });
+            },
+            onError: () => {
+                setIsUploading(false);
+            },
         };
 
         updateReleaseDraft(variables);
-
-        setFormValues({
-            coverArtThumbnails: {
-                '75x75': formValues.coverArtThumbnails?.['75x75'] ?? null,
-                '100x100': formValues.coverArtThumbnails?.['100x100'] ?? null,
-                '160x160': formValues.coverArtThumbnails?.['160x160'] ?? null,
-                '300x300': formValues.coverArtThumbnails?.['300x300'] ?? null,
-                '900x900': formValues.coverArtThumbnails?.['900x900'] ?? null,
-                original: file.url || file.thumbUrl || null,
-            },
-        });
     };
     const handleRemoveImage = () => {
         setIsConfirmOpen(true);
@@ -107,22 +108,27 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
             payload: {
                 releaseCoverArt: null,
             },
-        };
-        await updateReleaseDraft(variables);
-        setFormValues({
-            coverArtThumbnails: {
-                '75x75': null,
-                '100x100': null,
-                '160x160': null,
-                '300x300': null,
-                '900x900': null,
-                original: null,
+            onSuccess: () => {
+                setIsConfirmOpen(false);
+                setFormValues({
+                    coverArtThumbnails: {
+                        '75x75': null,
+                        '100x100': null,
+                        '160x160': null,
+                        '300x300': null,
+                        '900x900': null,
+                        original: null,
+                    },
+                });
+                form.setFieldsValue({
+                    thumbnail: undefined,
+                });
             },
-        });
-        form.setFieldsValue({
-            thumbnail: undefined,
-        });
-        setIsConfirmOpen(false);
+            onError: () => {
+                setIsConfirmOpen(false);
+            },
+        };
+        updateReleaseDraft(variables);
     };
 
     useEffect(() => {
@@ -152,36 +158,25 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
             >
                 <div className="flex justify-between px-4 py-2">
                     <div className="flex w-full gap-4">
-                        <div>
-                            <AppFormItem
-                                name="thumbnail"
-                                // label={messages('common.uploadImage')}
-                                required
-                                rules={[
+                        <AppFormItem name="thumbnail">
+                            <ImageListUpload
+                                loading={isUploading}
+                                disabled={isCreateReleasePage}
+                                className={cn(
+                                    'release-detail-header-upload !aspect-square !size-28 !rounded-lg !border-0 !p-0 transition-all duration-300',
                                     {
-                                        required: true,
-                                        message: messages('validation.image'),
-                                    },
-                                ]}
-                            >
-                                <ImageListUpload
-                                    disabled={isCreateReleasePage}
-                                    className={cn(
-                                        'release-detail-header-upload !aspect-square !size-28 !rounded-lg !border-0 !p-0 transition-all duration-300',
-                                        {
-                                            '!size-14 transition-all duration-300':
-                                                isScrolled,
-                                        }
-                                    )}
-                                    accept="image/*"
-                                    maxCount={1}
-                                    minWidth={1400}
-                                    placeholder={messages('common.uploadImage')}
-                                    onChange={handleImageUpload}
-                                    onRemove={handleRemoveImage}
-                                />
-                            </AppFormItem>
-                        </div>
+                                        '!size-14 transition-all duration-300':
+                                            isScrolled,
+                                    }
+                                )}
+                                accept="image/*"
+                                maxCount={1}
+                                minWidth={1400}
+                                placeholder={messages('common.uploadImage')}
+                                onChange={handleImageUpload}
+                                onRemove={handleRemoveImage}
+                            />
+                        </AppFormItem>
                         <div>
                             <div
                                 className={cn(

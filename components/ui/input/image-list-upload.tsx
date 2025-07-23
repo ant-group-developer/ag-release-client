@@ -1,6 +1,6 @@
 import { FileType, getBase64 } from '@/helpers/common';
 import { showNotification } from '@/helpers/messages-helper';
-import { Image, Upload, UploadFile, UploadProps } from 'antd';
+import { Image, Spin, Upload, UploadFile, UploadProps } from 'antd';
 import type { RcFile } from 'antd/es/upload/interface';
 import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -11,6 +11,7 @@ type Props = UploadProps & {
     placeholder?: string;
     maxSizeMB?: number;
     minWidth?: number;
+    loading?: boolean;
 };
 
 export default function ImageListUpload({
@@ -18,6 +19,7 @@ export default function ImageListUpload({
     value,
     maxSizeMB = 5,
     minWidth,
+    loading = false,
     ...props
 }: Props) {
     const messages = useTranslations();
@@ -79,7 +81,6 @@ export default function ImageListUpload({
         }
 
         setPreviewImage(file.url || file.preview || '');
-
         setPreviewOpen(true);
     };
 
@@ -127,7 +128,7 @@ export default function ImageListUpload({
     }, [checkWidth]);
 
     return (
-        <div ref={containerRef}>
+        <div ref={containerRef} style={{ position: 'relative' }}>
             <Upload
                 listType="picture-card"
                 // multiple
@@ -136,10 +137,31 @@ export default function ImageListUpload({
                 onPreview={handlePreview}
                 onChange={handleChange}
                 beforeUpload={beforeUpload}
+                disabled={loading} // Disable upload khi đang loading
             >
                 {fileList.length >= (props.maxCount || 0) ? null : uploadButton}
             </Upload>
-            {previewImage && (
+
+            {loading && (
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 10,
+                        borderRadius: '6px',
+                    }}
+                >
+                    <Spin />
+                </div>
+            )}
+
+            {previewImage && !loading && (
                 <Image
                     alt=""
                     wrapperStyle={{ display: 'none' }}
