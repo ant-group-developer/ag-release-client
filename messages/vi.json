@@ -825,6 +825,7 @@
             "distributionType": "Tuỳ chọn vòng phân phối"
         },
         "tracks": {
+            "sensitiveContent": "Nội dung nhạy cảm",
             "trackOriginTypeId": "Nguồn gốc bài hát",
             "audioLanguageId": "Ngôn ngữ âm thanh",
             "metadataLanguageId": "Ngôn ngữ metadata",

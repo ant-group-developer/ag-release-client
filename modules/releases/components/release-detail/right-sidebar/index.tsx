@@ -11,6 +11,7 @@ interface RightSidebarProps {
 }
 
 export default function RightSidebar({ errors }: RightSidebarProps) {
+    console.log('🚀 ~ RightSidebar ~ errors:', errors);
     const messages = useTranslations();
     const errorCount = errors.length;
 

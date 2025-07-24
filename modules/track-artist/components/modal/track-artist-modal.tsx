@@ -12,6 +12,7 @@ import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { DspData } from '@/modules/dsp/types';
 import { RELEASE_MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { ReleaseArtist } from '@/modules/release-artist/types';
+import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
 import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form } from 'antd';
@@ -21,6 +22,7 @@ import { useEffect, useState } from 'react';
 import ArtistProfilesList from '../../../artist/components/list/artist-profiles';
 import { useCreateTrackArtist } from '../../hooks/use-create-track-artist';
 import { useUpdateTrackArtist } from '../../hooks/use-update-track-artist';
+import { TrackArtistData } from '../../types';
 import {
     CreateTrackArtistPayload,
     UpdateTrackArtistPayload,
@@ -42,9 +44,19 @@ export default function TrackArtistModal({ ...props }: Props) {
     const watchArtistName = useWatch(['name'], form);
     const typeModal = useModalStore((state) => state.typeModal);
     const { active, deActive, isActive } = useActive();
+    const formValues = useReleaseFormStore((state) => state.formValues);
 
     const isTrackArtistEditModal = typeModal === TYPE_MODAL_TRACK_ARTIST.UPDATE;
-    const dataEdit = useModalStore((state) => state.dataEdit as ReleaseArtist);
+    const dataEdit = useModalStore((state) => state.dataEdit); // Nếu add artist thì dataEdit là TrackData, còn update thì là trackArtistData
+
+    const trackData = formValues?.tracks?.find((item) => {
+        if (isTrackArtistEditModal) {
+            console.log('update');
+            return item.id == dataEdit?.trackId;
+        } else {
+            return item.id == dataEdit.id;
+        }
+    });
 
     const { dspData } = useGetListDsp({});
     const { artistsRolesData } = useGetListArtistRole({});
@@ -58,6 +70,7 @@ export default function TrackArtistModal({ ...props }: Props) {
     const handleSubmit = async (values: any) => {
         active();
         if (!isTrackArtistEditModal) {
+            console.log(dataEdit);
             const variables: CreateVariables<CreateTrackArtistPayload> = {
                 payload: {
                     artistId: values.artistId,
@@ -67,6 +80,7 @@ export default function TrackArtistModal({ ...props }: Props) {
                 onSuccess: () => {
                     closeModal();
                 },
+                onError: () => deActive(),
             };
             createTrackArtist(variables);
         } else {
@@ -80,10 +94,44 @@ export default function TrackArtistModal({ ...props }: Props) {
                     artistRoleId: values.roleId,
                 },
                 onSuccess: () => deActive(),
+                onError: () => deActive(),
             };
             updateTrackArtist(variables);
         }
     };
+
+    // Handle disabled role that this artist already exists
+    const getExistingRoleIdsOfSelectedArtist = () => {
+        const watchArtistId = useWatch('artistId', form);
+        console.log(
+            '🚀 ~ getExistingRoleIdsOfSelectedArtist ~ watchArtistId:',
+            watchArtistId
+        );
+        return (
+            trackData?.trackArtists
+                ?.filter(
+                    (item: TrackArtistData) => item.artist?.id === watchArtistId
+                )
+                .map(
+                    (item: TrackArtistData) => item?.artistRole?.id as string
+                ) || []
+        );
+    };
+    const disabledRoleIds = getExistingRoleIdsOfSelectedArtist();
+
+    const getExistingArtistOfSelectedRole = () => {
+        const watchRoleId = useWatch('roleId', form);
+        return (
+            trackData?.trackArtists
+                ?.filter(
+                    (item: TrackArtistData) =>
+                        item?.artistRole?.id === watchRoleId
+                )
+                .map((item: TrackArtistData) => item?.artist?.id as string) ||
+            []
+        );
+    };
+    const disabledArtistIds = getExistingArtistOfSelectedRole();
 
     useEffect(() => {
         if (isTrackArtistEditModal) {
@@ -125,6 +173,7 @@ export default function TrackArtistModal({ ...props }: Props) {
                     ]}
                 >
                     <ArtistSelect
+                        disabledArtistIds={disabledArtistIds}
                         showSearch
                         placeholder={messages('artist.select')}
                         onCreateArtist={() => setShowCreateArtist(true)}
@@ -149,7 +198,10 @@ export default function TrackArtistModal({ ...props }: Props) {
                         },
                     ]}
                 >
-                    <RoleArtistSelect placeholder={messages('common.role')} />
+                    <RoleArtistSelect
+                        disabledRoleIds={disabledRoleIds}
+                        placeholder={messages('common.role')}
+                    />
                 </AppFormItem>
 
                 {watchArtistName && (
@@ -167,6 +219,10 @@ export default function TrackArtistModal({ ...props }: Props) {
                         />
                     </div>
                 )}
+                <p className="text-xs text-gray-500">
+                    * Chỉnh sửa nghệ sĩ sẽ làm ngắt đồng bộ với nghệ sĩ phát
+                    hành.
+                </p>
             </AppForm>
 
             {/* <LinkProfileArtist

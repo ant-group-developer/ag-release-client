@@ -8,4 +8,5 @@ export interface TrackArtistData extends CommonAttribute {
     releaseId: string;
     artist?: ArtistData;
     artistRole?: ArtistRoleData;
+    trackId: string;
 }

@@ -84,8 +84,9 @@ export default function Tracks() {
     return (
         <div>
             <ReleaseTracksTable
-                dataSource={tracksData?.items}
-                rowSelection={rowSelection}
+                // dataSource={tracksData?.items}
+                dataSource={formValues?.tracks ?? []}
+                // rowSelection={rowSelection}
                 loading={isLoading}
             />
 

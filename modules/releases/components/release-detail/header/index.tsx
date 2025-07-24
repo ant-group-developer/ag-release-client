@@ -172,6 +172,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                 accept="image/*"
                                 maxCount={1}
                                 minWidth={1400}
+                                maxSizeMB={2}
                                 placeholder={messages('common.uploadImage')}
                                 onChange={handleImageUpload}
                                 onRemove={handleRemoveImage}

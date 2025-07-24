@@ -224,11 +224,11 @@ export default function ReleaseDetailForm() {
                             debouncedUpdate={debouncedUpdate}
                         />
 
-                        <div className="grid grid-cols-2 gap-8">
+                        {/* <div className="grid grid-cols-2 gap-8">
                             <div className="col-span-2">
                                 <div className="flex items-center justify-between"></div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
 
                     <div className="flex w-full justify-end">

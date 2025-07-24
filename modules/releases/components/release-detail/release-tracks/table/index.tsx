@@ -16,6 +16,7 @@ import {
     UpdateTrackOrderPayload,
     UpdateTrackPayload,
 } from '@/modules/tracks/types/payload';
+import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { UpdateVariables } from '@/types/api';
 import { Input, Tabs, Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
@@ -114,7 +115,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                     <Input
                         maxLength={100}
                         minLength={1}
-                        defaultValue={value}
+                        defaultValue={record?.title}
                         onChange={(e) => {
                             const value = e.target.value;
                             if (value.length < 1) {
@@ -124,7 +125,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                                 );
                             }
                             debouncedUpdate(record.id, {
-                                title: e.target.value,
+                                title: value,
                             });
                         }}
                     />
@@ -159,7 +160,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                         )}
                         <Tag
                             key={`${record.id}-add-artist`}
-                            className="border-dashed"
+                            className="border-dashed hover:border-blue-500"
                             onClick={() =>
                                 openModal(TYPE_MODAL_TRACK_ARTIST.ADD, record)
                             }
@@ -199,15 +200,24 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             key: 'action',
             align: 'center',
             width: 40,
-            render: (value, record) => (
-                <TrackActionButton
-                    showDelete
-                    onShowDelete={() =>
-                        openModal(TYPE_MODAL_TRACK.DELETE, record)
-                    }
-                    showDownload
-                />
-            ),
+            render: (value, record) => {
+                return (
+                    <TrackActionButton
+                        showDelete
+                        onShowDelete={() =>
+                            openModal(TYPE_MODAL_TRACK.DELETE, record)
+                        }
+                        showDownload
+                        onShowDownload={async () => {
+                            const response =
+                                await bucketApi.getLinkDownloadFile(
+                                    record?.audioFile?.fileId as string
+                                );
+                            window.open(response?.data?.data);
+                        }}
+                    />
+                );
+            },
         },
     ];
 

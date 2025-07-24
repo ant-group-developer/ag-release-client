@@ -160,6 +160,7 @@ export default function AudioSpecifications({
                             name="audioFile.preview"
                             render={({ field }) => (
                                 <TimePicker
+                                    showNow={false}
                                     {...field}
                                     value={
                                         typeof field.value === 'number' &&

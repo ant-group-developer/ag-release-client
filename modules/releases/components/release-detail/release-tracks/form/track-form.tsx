@@ -59,6 +59,7 @@ export default function TracksForm({ trackData }: Props) {
         formState: { errors },
         watch,
         trigger,
+        reset,
         setValue,
     } = formMethods;
 
@@ -109,6 +110,10 @@ export default function TracksForm({ trackData }: Props) {
             }),
         });
     }, [watchedAllFields]);
+
+    useEffect(() => {
+        reset({ ...trackData });
+    }, [trackData, reset]);
 
     return (
         <FormProvider {...formMethods}>

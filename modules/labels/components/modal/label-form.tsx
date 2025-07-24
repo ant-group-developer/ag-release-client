@@ -147,7 +147,7 @@ export default function LabelFormModal({ ...props }: Props) {
                         <ImageListUpload
                             maxCount={1}
                             accept="image/*"
-                            maxSizeMB={3}
+                            maxSizeMB={2}
                         />
                     </AppFormItem>
                     <div>

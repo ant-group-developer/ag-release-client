@@ -39,4 +39,8 @@ export const bucketApi = {
     submit: ({ ids }: { ids: string[] }) => {
         return axiosAuth.post('/bucket/gcs/private/bulk/submit', { ids });
     },
+
+    getLinkDownloadFile: (id: string) => {
+        return axiosAuth.get(`/bucket/gcs/private/${id}/download`);
+    },
 };
