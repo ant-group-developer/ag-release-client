@@ -20,7 +20,7 @@ import {
 import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { CreateVariables, UpdateVariables } from '@/types/api';
-import { Form } from 'antd';
+import { Checkbox, Form } from 'antd';
 import { useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
@@ -61,6 +61,34 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
         (item: ArtistRoleData) => item.name === RELEASE_MAIN_ARTIST_ROLE
     );
 
+    // Handle disabled role that this artist already exists
+    const getExistingRoleIdsOfSelectedArtist = () => {
+        const watchArtistId = useWatch('artistId', form);
+        return (
+            formValues?.releaseArtists
+                ?.filter(
+                    (item: ReleaseArtist) => item.artist?.id === watchArtistId
+                )
+                .map((item: ReleaseArtist) => item?.artistRole?.id as string) ||
+            []
+        );
+    };
+    const disabledRoleIds = getExistingRoleIdsOfSelectedArtist();
+
+    const getExistingArtistOfSelectedRole = () => {
+        const watchRoleId = useWatch('roleId', form);
+        return (
+            formValues?.releaseArtists
+                ?.filter(
+                    (item: ReleaseArtist) =>
+                        item?.artistRole?.id === watchRoleId
+                )
+                .map((item: ReleaseArtist) => item?.artist?.id as string) || []
+        );
+    };
+    const disabledArtistIds = getExistingArtistOfSelectedRole();
+   
+
     const handleSubmit = async (values: any) => {
         active();
         try {
@@ -70,6 +98,7 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                         artistId: values.artistId,
                         artistRoleId: values.roleId ?? mainArtist.id,
                         releaseId: formValues.id as string,
+                        addArtistToTracks: values?.addArtistToTracks ?? false,
                     },
                     onSuccess: () => {
                         closeModal();
@@ -85,6 +114,7 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                     payload: {
                         artistId: values?.artistId,
                         artistRoleId: values.roleId,
+                        addArtistToTracks: values?.addArtistToTracks,
                     },
                     onSuccess: () => {
                         deActive();
@@ -98,13 +128,14 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
     };
 
     useEffect(() => {
-        if (isArtistEditModal) {
+        if (dataEdit?.id) {
             form.setFieldsValue({
                 artistId: dataEdit?.artistId,
                 roleId: dataEdit?.artistRoleId,
+                addArtistToTracks: dataEdit?.addArtistToTracks,
             });
         }
-    }, [isArtistEditModal, dataEdit, form]);
+    }, [dataEdit]);
 
     return (
         <AppModal
@@ -138,9 +169,10 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                 >
                     <ArtistSelect
                         showSearch
-                        fallBack={dataEdit?.artist?.name}
+                        // fallBack={dataEdit?.artist?.name}
                         placeholder={messages('artist.select')}
                         onCreateArtist={() => setShowCreateArtistModal(true)}
+                        disabledArtistIds={disabledArtistIds}
                     />
                 </AppFormItem>
 
@@ -164,8 +196,9 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                         ]}
                     >
                         <RoleArtistSelect
-                            fallBack={dataEdit?.artistRole?.name}
+                            // fallBack={dataEdit?.artistRole?.name}
                             placeholder={messages('common.role')}
+                            disabledRoleIds={disabledRoleIds}
                         />
                     </AppFormItem>
                 )}
@@ -185,6 +218,12 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                         />
                     </div>
                 )}
+
+                <AppFormItem name="addArtistToTracks" valuePropName="checked">
+                    <Checkbox>
+                        <span> {messages('artist.addToTracks')}</span>
+                    </Checkbox>
+                </AppFormItem>
             </AppForm>
             {/* <LinkProfileArtist
                 open={showLinkProfile}

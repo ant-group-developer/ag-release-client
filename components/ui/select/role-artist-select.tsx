@@ -5,9 +5,14 @@ import { useTranslations } from 'next-intl';
 
 type Props = Omit<SelectProps, 'options'> & {
     fallBack?: string;
+    disabledRoleIds?: string[];
 };
 
-export default function RoleArtistSelect({ fallBack, ...props }: Props) {
+export default function RoleArtistSelect({
+    disabledRoleIds,
+    fallBack,
+    ...props
+}: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
 
@@ -26,6 +31,7 @@ export default function RoleArtistSelect({ fallBack, ...props }: Props) {
                 id: item.id,
                 value: item.id,
                 label: item.name,
+                disabled: disabledRoleIds?.includes(item.id) ?? false,
             }))}
             labelRender={labelRender}
             // dropdownRender={(menu) => {

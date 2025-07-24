@@ -930,5 +930,24 @@
                 "duplicateNameTimezone": "This timezone already exists"
             }
         }
+    },
+    "tooltipForm": {
+        "releaseTitle": "Do not include version information like Remix or Uncut in the main Title field. Use the Version field instead.",
+        "version": "A particular iteration of the product that will be delivered to stores and displayed alongside the title. Example: 'Live' , 'Deluxe Version'. If multiple versions of an album exist, use this field to indicate the correct version.",
+        "releaseType": "Indicates the size of the release package (i.e. Single, EP, Album).",
+        "label": "This field determines the label under which your release will be created.",
+        "eanUpcCode": "The Universal Product Code (UPC), is a 12 or 13 character long numeric code typically used to identify one or more master recordings in certain media type.",
+        "catalogId": "Unique code used to identify the label's product. This field is optional and serves as an identifier on your label's side, used, for example, in month-end reports.",
+        "primaryGenre": "A conventional category that groups together pieces of music sharing a set of conventions or traditions. This will determine where a product will chart and how it will be sorted with similar music.",
+        "subGenre": "A more niche category that helps differentiate a piece of music according to its region, style, or sound, carrying its own set of characteristics that clearly distinguish and set it apart within the larger genre.",
+        "metadataLanguage": "The language of the product's metadata.",
+        "variousArtistsCompilation": "If this release contains 5 or more artists, select this box to designate it as Various Artists.",
+        "cLineYear": "The first year this version was released anywhere in the world.",
+        "cLineOwner": "C Line owner identifies the entity which legally owns the copyrights to the release's associated creations such as cover art, liner notes and metadata.",
+        "pLineYear": "The year the sound recording was first released anywhere in the world.",
+        "pLineOwner": "P Line owner identifies the individual/entity which legally owns the sound recording.",
+        "languageTrack": "The main language of the song in this release. For example: Vietnamese, English, etc.",
+        "countryLanguage": "The official language of the country related to this release. For example: Vietnam, United States, etc.",
+        "isMoreThan4Artists": "Select 'Yes' if this release has 5 or more artists to display as 'Various artists'."
     }
 }

@@ -7,7 +7,9 @@ type Props = CustomTooltipProps & {};
 export default function IconInfoTooltip({ ...props }: Props) {
     return (
         <CustomTooltip {...props}>
-            <Info size={SIZE_ICON} className="cursor-pointer" />
+            <div className="flex h-full items-center justify-center">
+                <Info size={SIZE_ICON} className="cursor-pointer" />
+            </div>
         </CustomTooltip>
     );
 }

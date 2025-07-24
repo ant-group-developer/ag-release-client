@@ -800,8 +800,8 @@
         "artists": "Nghệ sĩ",
         "releaseDate": "Ngày phát hành",
         "territoryType": "Khu vực",
-        "cLineYear": "C line year",
-        "pLineYear": "P line year",
+        "cLineYear": "Năm bản quyền tác phẩm",
+        "pLineYear": "Năm bản quyền ghi âm",
         "nameRelease": "Tên phát hành",
         "timezone": "Múi giờ",
         "releaseType": "Thể loại phát hành",
@@ -860,11 +860,8 @@
             "isrc": "ISRC",
             "mainArtist": "Nghệ sĩ chính",
             "originalSource": "Nguồn gốc",
-            "languageTrack": "Ngôn ngữ bài hát",
-            "genresTrack": "Thể loại bài hát",
-            "subGenresTrack": "Thể loại phụ bài hát",
-            "sensitiveContent": "Nội dung nhạy cảm",
-            "countryLanguage": "Ngôn ngữ quốc gia",
+            "languageTrack": "Ngôn ngữ chính của bài hát trong phát hành này. Ví dụ: tiếng Việt, tiếng Anh, v.v.",
+            "countryLanguage": "Ngôn ngữ chính thức của quốc gia liên quan đến phát hành này. Ví dụ: Việt Nam, Hoa Kỳ, v.v.",
             "metadataLanguage": "Ngôn ngữ metadata",
             "lyrics": "Lời bài hát",
             "source": "Nguồn gốc",
@@ -937,5 +934,25 @@
                 "duplicateNameTimezone": "Múi giờ này đã tồn tại"
             }
         }
+    },
+
+    "tooltipForm": {
+        "releaseTitle": "Không bao gồm thông tin phiên bản như Remix hoặc Uncut trong trường Tiêu đề chính. Hãy sử dụng trường Phiên bản thay thế.",
+        "version": "Một phiên bản cụ thể của sản phẩm sẽ được cung cấp cho các cửa hàng và hiển thị cùng với tiêu đề. Ví dụ: 'Live', 'Phiên bản Deluxe'. Nếu có nhiều phiên bản của album, sử dụng trường này để chỉ định phiên bản đúng.",
+        "releaseType": "Chỉ ra kích thước của gói phát hành (ví dụ: Single, EP, Album).",
+        "label": "Trường này xác định nhãn mà theo đó sản phẩm của bạn sẽ được tạo ra.",
+        "eanUpcCode": "Mã Sản phẩm Phổ biến (UPC) là mã số dài 12 hoặc 13 ký tự, thường được sử dụng để nhận diện một hoặc nhiều bản thu âm chính trong một số loại phương tiện.",
+        "catalogId": "Mã duy nhất dùng để nhận diện sản phẩm của nhãn. Trường này là tùy chọn và dùng làm mã nhận diện từ phía nhãn, ví dụ, trong các báo cáo cuối tháng.",
+        "primaryGenre": "Một thể loại thông dụng để nhóm các tác phẩm âm nhạc có chung một tập hợp các quy tắc hoặc truyền thống. Điều này sẽ xác định nơi sản phẩm sẽ được xếp hạng và cách nó sẽ được sắp xếp với âm nhạc tương tự.",
+        "subGenre": "Một thể loại chi tiết hơn giúp phân biệt một tác phẩm âm nhạc theo khu vực, phong cách hoặc âm thanh của nó, mang theo một bộ đặc điểm riêng biệt và dễ dàng phân biệt trong thể loại lớn hơn.",
+        "metadataLanguage": "Ngôn ngữ của metadata sản phẩm.",
+        "variousArtistsCompilation": "Nếu sản phẩm này có 5 hoặc nhiều hơn các nghệ sĩ, hãy chọn hộp này để xác định nó là một tuyển tập của nhiều nghệ sĩ.",
+        "cLineYear": "Năm phát hành đầu tiên của sản phẩm này (với hình ảnh bìa và dàn dựng này) trên toàn thế giới.",
+        "cLineOwner": "Chủ sở hữu C Line xác định thực thể sở hữu bản quyền hợp pháp đối với các sáng tạo liên quan đến sản phẩm này như bìa album, chú thích và metadata.",
+        "pLineYear": "Năm bản thu âm được phát hành lần đầu tiên trên toàn thế giới.",
+        "pLineOwner": "Chủ sở hữu P Line xác định cá nhân/thực thể sở hữu bản thu âm hợp pháp.",
+        "languageTrack": "Ngôn ngữ chính của bài hát trong phát hành này. Ví dụ: tiếng Việt, tiếng Anh, v.v.",
+        "countryLanguage": "Ngôn ngữ chính thức của quốc gia liên quan đến phát hành này. Ví dụ: Việt Nam, Hoa Kỳ, v.v.",
+        "isMoreThan4Artists": "Chọn 'Có' nếu phát hành này có từ 5 nghệ sĩ trở lên để hiển thị là 'Nhiều nghệ sĩ'."
     }
 }

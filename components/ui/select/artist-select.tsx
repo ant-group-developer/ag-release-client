@@ -6,10 +6,12 @@ import { useTranslations } from 'next-intl';
 type Props = SelectProps & {
     onCreateArtist?: () => void;
     fallBack?: string;
+    disabledArtistIds?: string[];
 };
 
 export default function ArtistSelect({
     fallBack,
+    disabledArtistIds,
     onCreateArtist,
     ...props
 }: Props) {
@@ -28,6 +30,7 @@ export default function ArtistSelect({
                 id: item.id,
                 value: item.id,
                 label: item.name,
+                disabled: disabledArtistIds?.includes(item.id) ?? false,
             }))}
             labelRender={labelRender}
             dropdownRender={(menu) => {

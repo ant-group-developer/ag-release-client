@@ -13,12 +13,12 @@ export const LabelForm = ({
     required,
     tooltipInfor,
 }: LabelFormProps) => (
-    <div className="mb-1 flex justify-between">
+    <div className="mb-1 flex">
         <label htmlFor={htmlFor} className="font-semibold">
             {label} {required && <span className="text-red-500">*</span>}
         </label>
         {tooltipInfor && (
-            <div className="pr-2">
+            <div className="pl-1">
                 <IconInfoTooltip title={tooltipInfor} />
             </div>
         )}
