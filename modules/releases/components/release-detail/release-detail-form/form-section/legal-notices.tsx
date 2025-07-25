@@ -134,6 +134,7 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                             field.value?.split(' ') || ['', ''];
                                         return (
                                             <Input
+                                                id="cLineOwner"
                                                 value={owner}
                                                 disabled={isCreateReleasePage}
                                                 allowClear

@@ -180,6 +180,7 @@ export const QUERY_KEY = {
         KEY: 'RELEASES',
         GET_LIST: 'GET_LIST_RELEASES',
         GET_DETAIL: 'GET_DETAIL_RELEASES',
+        VALIDATE: 'VALIDATE_RELEASE',
     },
     TIMEZONE: {
         KEY: 'TIMEZONE',

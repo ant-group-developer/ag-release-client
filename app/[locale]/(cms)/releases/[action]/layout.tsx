@@ -254,9 +254,9 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     }, [isCoreDetailPage]);
 
     return (
-        <div className="flex h-full overflow-hidden">
+        <div className="flex">
             <div
-                className="flex h-full flex-1 flex-col overflow-y-auto"
+                className="flex h-full flex-1 flex-col"
                 ref={scrollContainerRef}
             >
                 <div className="sticky top-0 z-10 bg-white">

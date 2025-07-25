@@ -85,21 +85,20 @@ export const releaseSchema = (messages: any) =>
         type: z.nativeEnum(RELEASES_TYPE, {
             required_error: messages('validation.select'),
         }),
-        releaseArtists: z
-            .array(z.custom<ReleaseArtist>()).optional(), 
-            // .min(1, messages('validation.input')) Đã validate ở detail schema
-            // .refine(
-            //     (artists) =>
-            //         Array.isArray(artists) &&
-            //         artists.some(
-            //             (artist) =>
-            //                 artist.artistRole &&
-            //                 artist.artistRole.name === 'Main Artist'
-            //         ),
-            //     {
-            //         message: messages('releases.validation.mustHaveMainArtist'),
-            //     }
-            // ),
+        releaseArtists: z.array(z.custom<ReleaseArtist>()).optional(),
+        // .min(1, messages('validation.input')) Đã validate ở detail schema
+        // .refine(
+        //     (artists) =>
+        //         Array.isArray(artists) &&
+        //         artists.some(
+        //             (artist) =>
+        //                 artist.artistRole &&
+        //                 artist.artistRole.name === 'Main Artist'
+        //         ),
+        //     {
+        //         message: messages('releases.validation.mustHaveMainArtist'),
+        //     }
+        // ),
         pLineOwner: z
             .string()
             .min(5, messages('validation.input'))

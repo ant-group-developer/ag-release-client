@@ -1,6 +1,6 @@
 import axiosAuth from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
-import { ReleasesData, ReleasesDataFilter } from '../types';
+import { ReleasesData, ReleasesDataFilter, ReleaseValidate } from '../types';
 import {
     CreateReleaseDraftPayload,
     UpdateReleaseDraftPayload,
@@ -35,5 +35,13 @@ export const releasesApi = {
 
     deleteRelease: (id: ReleasesData['id']) => {
         return axiosAuth.delete(`/releases/draft/${id}`);
+    },
+
+    validate: (id: ReleasesData['id']) => {
+        {
+            return axiosAuth.get<DetailResponse<ReleaseValidate[]>>(
+                `/releases/draft/${id}/validate`
+            );
+        }
     },
 };
