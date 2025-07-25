@@ -1,4 +1,3 @@
-import { formattedDate } from '@/helpers/common';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useTranslations } from 'next-intl';
 import MetadataInfoItem from '../metadata-info/metadata-info-item';
@@ -15,9 +14,8 @@ export default function ReviewProgress({}: Props) {
                 <div>
                     <MetadataInfoItem label={messages('releases.releaseDate')}>
                         <p className="pt-1">
-                            {formValues.releaseDate
-                                ? formattedDate(formValues.releaseDate)
-                                : messages('common.notAvailable')}
+                            {formValues.releaseDate ??
+                                messages('common.notAvailable')}
                         </p>
                     </MetadataInfoItem>
                 </div>
@@ -25,16 +23,18 @@ export default function ReviewProgress({}: Props) {
                 <div>
                     <MetadataInfoItem label={messages('releases.releaseTime')}>
                         <p className="pt-1">
-                            {formValues.releaseTime
-                                ? formValues.releaseTime
-                                : messages('common.notAvailable')}
+                            {formValues.releaseTime ??
+                                messages('common.notAvailable')}
                         </p>
                     </MetadataInfoItem>
                 </div>
 
                 <div>
                     <MetadataInfoItem label={messages('timezone.label')}>
-                        <p className="pt-1">{formValues?.timeZone?.name}</p>
+                        <p className="pt-1">
+                            {formValues?.timeZone?.name ??
+                                messages('common.notAvailable')}
+                        </p>
                     </MetadataInfoItem>
                 </div>
 

@@ -41,6 +41,7 @@ export const useGetDetailRelease = (id: ReleasesData['id']) => {
             distributionType: '',
         },
         timeZone: null,
+        isSensitiveContent: false,
     };
 
     return {

@@ -39,7 +39,8 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                     key: 'Genre & Language',
                     label: (
                         <Title level={4} className="!mb-0">
-                            Genre & Language
+                            {messages('genre.label')} &{' '}
+                            {messages('language.label')}
                         </Title>
                     ),
                     children: (
@@ -79,6 +80,7 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                                                         : undefined
                                                 }
                                                 disabled={isCreateReleasePage}
+                                                
                                             />
                                         );
                                     }}

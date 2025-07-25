@@ -27,6 +27,7 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const { updateReleaseArtist } = useUpdateReleaseArtist();
+    console.log('🚀 ~ LegalNoticesSection ~ errors:', errors);
 
     // router
     const params = useParams();
@@ -76,7 +77,7 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                     key: 'Legal Notices',
                     label: (
                         <Title level={4} className="!mb-0">
-                            Legal Notices
+                            {messages('common.legalNotices')}
                         </Title>
                     ),
                     children: (
@@ -86,7 +87,7 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                 name="cLineOwner"
                                 label={messages('formFields.cLineYear')}
                                 required
-                                ErrorMessage={errors.cLineOwner?.message}
+                                ErrorMessage={''}
                                 tooltipInfor={messages('tooltipForm.cLineYear')}
                             >
                                 <Controller
@@ -101,7 +102,9 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                                 value={year}
                                                 disabled={isCreateReleasePage}
                                                 onChange={(newYear) => {
-                                                    const v = `${newYear} ${owner}`;
+                                                    const v = owner?.trim()
+                                                        ? `${newYear} ${owner.trim()}`
+                                                        : newYear;
                                                     field.onChange(v);
                                                     debouncedUpdate({
                                                         cLineOwner: v,
@@ -135,13 +138,23 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                                 disabled={isCreateReleasePage}
                                                 allowClear
                                                 onChange={(e) => {
-                                                    const v = `${year} ${e.target.value}`;
+                                                    const newOwner =
+                                                        e.target.value;
+                                                    // Nếu owner rỗng, chỉ lưu year, nếu có owner thì format "year owner"
+                                                    const v = newOwner?.trim()
+                                                        ? `${year} ${newOwner.trim()}`
+                                                        : year;
                                                     field.onChange(v);
                                                     debouncedUpdate(
                                                         { cLineOwner: v },
                                                         'cLineOwner'
                                                     );
                                                 }}
+                                                status={
+                                                    errors.cLineOwner
+                                                        ? 'error'
+                                                        : undefined
+                                                }
                                             />
                                         );
                                     }}
@@ -152,7 +165,7 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                 name="pLineOwner"
                                 label={messages('formFields.pLineYear')}
                                 required
-                                ErrorMessage={errors.pLineOwner?.message}
+                                ErrorMessage={''}
                                 tooltipInfor={messages('tooltipForm.pLineYear')}
                             >
                                 <Controller
@@ -167,7 +180,9 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                                 value={year}
                                                 disabled={isCreateReleasePage}
                                                 onChange={(newYear) => {
-                                                    const v = `${newYear} ${owner}`;
+                                                    const v = owner?.trim()
+                                                        ? `${newYear} ${owner.trim()}`
+                                                        : newYear;
                                                     field.onChange(v);
                                                     debouncedUpdate({
                                                         pLineOwner: v,
@@ -201,13 +216,23 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                                 disabled={isCreateReleasePage}
                                                 allowClear
                                                 onChange={(e) => {
-                                                    const v = `${year} ${e.target.value}`;
+                                                    const newOwner =
+                                                        e.target.value;
+                                                    // Nếu owner rỗng, chỉ lưu year, nếu có owner thì format "year owner"
+                                                    const v = newOwner?.trim()
+                                                        ? `${year} ${newOwner.trim()}`
+                                                        : year;
                                                     field.onChange(v);
                                                     debouncedUpdate(
                                                         { pLineOwner: v },
                                                         'pLineOwner'
                                                     );
                                                 }}
+                                                status={
+                                                    errors.pLineOwner
+                                                        ? 'error'
+                                                        : undefined
+                                                }
                                             />
                                         );
                                     }}

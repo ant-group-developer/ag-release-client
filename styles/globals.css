@@ -342,13 +342,13 @@ a {
 /* close ckeditor css */
 
 .custom-collapse .ant-collapse-expand-icon {
-    display: flex !important;
-    align-items: center !important;
-    height: 100% !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
+    @apply flex h-full items-center pb-0 pt-0 !important;
 }
 
 .custom-collapse .ant-collapse-header {
-    align-items: center !important;
+    @apply items-center !important;
+}
+
+.custom-collapse .ant-collapse-content-box {
+    @apply p-6 pt-1 !important;
 }

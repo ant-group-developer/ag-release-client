@@ -37,6 +37,7 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "legalNotices": "Thông báo pháp lý",
         "notAvailable": "Chưa có thông tin",
         "region": "Khu vực",
         "specification": "Thông số kỹ thuật",
@@ -558,6 +559,7 @@
     },
 
     "releases": {
+        "configuration": "Thiết lập phát hành",
         "otherMetadata": "Các metadata khác",
         "label": "Phát hành",
         "create": "Tạo phát hành ",
@@ -616,6 +618,7 @@
     },
 
     "releaseArtist": {
+        "label": "Nghệ sĩ phát hành",
         "message": {
             "success": {
                 "create": "Thêm mới nghệ sĩ phát hành thành công",
@@ -675,7 +678,8 @@
                 "create": "Thêm mới nghệ sĩ thành công",
                 "update": "Cập nhật nghệ sĩ thành công",
                 "delete": "Xoá nghệ sĩ thành công"
-            }
+            },
+            "note": "Chỉnh sửa nghệ sĩ sẽ làm ngắt đồng bộ với nghệ sĩ phát hành"
         }
     },
 
@@ -725,6 +729,7 @@
         "primary": "Thể loại chính"
     },
     "genre": {
+        "label": "Thể loại",
         "message": {
             "success": {
                 "create": "Thêm mới thể loại nhạc thành công",

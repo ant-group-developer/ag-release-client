@@ -36,9 +36,10 @@ export type TrackAndArtistSchema = z.infer<
 
 type Props = {
     trackData: TrackData;
+    index: number;
 };
 
-export default function TracksForm({ trackData }: Props) {
+export default function TracksForm({ trackData, index }: Props) {
     const messages = useTranslations();
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const formValues = useReleaseFormStore((state) => state.formValues);
@@ -129,7 +130,7 @@ export default function TracksForm({ trackData }: Props) {
                         name="title"
                         render={({ field }) => (
                             <Input
-                                id="title"
+                                id={`tracks.${index}.title`}
                                 {...field}
                                 allowClear
                                 value={field.value ?? ''}

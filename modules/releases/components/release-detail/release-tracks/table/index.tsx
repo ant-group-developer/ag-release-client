@@ -221,7 +221,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
         },
     ];
 
-    const expandedRowRender = (record: TrackData) => {
+    const expandedRowRender = (record: TrackData, index: number) => {
         const items = [
             {
                 key: `${record.id}-track-form`,
@@ -234,6 +234,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                     <TracksForm
                         key={`${record.id}-track-form-content`}
                         trackData={record}
+                        index={index}
                     />
                 ),
             },

@@ -72,7 +72,7 @@ export default function ReleaseConfigurationSection({
                     key: 'release-configuration',
                     label: (
                         <Title level={4} className="!mb-0">
-                            Release Configuration
+                            {messages('releases.configuration')}
                         </Title>
                     ),
                     children: (

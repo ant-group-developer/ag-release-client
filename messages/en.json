@@ -37,6 +37,7 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "legalNotices": "Legal notices",
         "notAvailable": "Not available",
         "region": "Khu vực",
         "specification": "Specification",
@@ -558,6 +559,7 @@
     },
 
     "releases": {
+        "configuration": "Release configuration",
         "otherMetadata": "Other metadata",
         "label": "Release",
         "create": "Create release",
@@ -614,6 +616,7 @@
     },
 
     "releaseArtist": {
+        "label": "Release artists",
         "message": {
             "success": {
                 "create": "Create release artist successfully",
@@ -673,7 +676,8 @@
                 "create": "Add artist successfully",
                 "update": "Update artist successfully",
                 "delete": "Delete artist successfully"
-            }
+            },
+            "note": "Editing the artist will interrupt synchronization with the release artist"
         }
     },
 
@@ -723,6 +727,7 @@
         "primary": "Primary genre"
     },
     "genre": {
+        "label": "Genre",
         "message": {
             "success": {
                 "create": "Create new genre successfully",
@@ -812,8 +817,8 @@
         "primaryGenreId": "Primary genre",
         "releaseLanguage": "Release language",
         "releaseArtists": "Release artist",
-        "pLineOwner": "P Copyright",
-        "cLineOwner": "C Copyright",
+        "pLineOwner": "P copyright",
+        "cLineOwner": "C copyright",
         "releaseTime": "Time release",
         "releaseTimezoneId": "Timezone",
         "releaseTerritory": {

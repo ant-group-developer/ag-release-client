@@ -216,7 +216,6 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                         {formValues?.primaryGenre?.name}
                                     </span>
                                 </div>
-                                {formValues.releaseDate && (
                                     <div>
                                         <span>
                                             {messages('common.releaseDate')}
@@ -229,7 +228,6 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                             )}
                                         </span>
                                     </div>
-                                )}
 
                                 {formValues.upc && (
                                     <div>

@@ -103,10 +103,7 @@ export default function TrackArtistModal({ ...props }: Props) {
     // Handle disabled role that this artist already exists
     const getExistingRoleIdsOfSelectedArtist = () => {
         const watchArtistId = useWatch('artistId', form);
-        console.log(
-            '🚀 ~ getExistingRoleIdsOfSelectedArtist ~ watchArtistId:',
-            watchArtistId
-        );
+
         return (
             trackData?.trackArtists
                 ?.filter(
@@ -220,8 +217,7 @@ export default function TrackArtistModal({ ...props }: Props) {
                     </div>
                 )}
                 <p className="text-xs text-gray-500">
-                    * Chỉnh sửa nghệ sĩ sẽ làm ngắt đồng bộ với nghệ sĩ phát
-                    hành.
+                    * {messages('trackArtist.message.note')}.
                 </p>
             </AppForm>
 

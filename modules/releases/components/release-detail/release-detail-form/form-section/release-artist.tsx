@@ -62,7 +62,12 @@ export default function ReleaseArtistSection({ debouncedUpdate }: Props) {
             items={[
                 {
                     key: 'Release Artists',
-                    label: <Title level={4} className="!mb-0">Release Artists</Title>,
+                    label: (
+                        <Title level={4} className="!mb-0">
+                            {' '}
+                            {messages('releaseArtist.label')}{' '}
+                        </Title>
+                    ),
                     children: (
                         <div className="grid grid-cols-3 items-center gap-5">
                             <div className="col-span-3">
@@ -154,7 +159,7 @@ export default function ReleaseArtistSection({ debouncedUpdate }: Props) {
                                             )
                                         )}
                                     </div>
-                                    <div className="pt-5">
+                                    <div className="relative">
                                         <Button
                                             onClick={() =>
                                                 openModal(
@@ -162,6 +167,7 @@ export default function ReleaseArtistSection({ debouncedUpdate }: Props) {
                                                 )
                                             }
                                             disabled={isCreateReleasePage}
+                                            danger={!!errors.releaseArtists}
                                         >
                                             {messages('artist.add')}
                                         </Button>

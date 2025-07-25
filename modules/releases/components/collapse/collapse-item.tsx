@@ -9,7 +9,6 @@ export const CollapseItem = ({ items, ...props }: Props) => {
     const { token } = theme.useToken();
 
     const panelStyle: React.CSSProperties = {
-        marginBottom: 24,
         background: token.colorFillAlter,
         borderRadius: token.borderRadiusLG,
         border: 'none',
@@ -25,7 +24,7 @@ export const CollapseItem = ({ items, ...props }: Props) => {
         <Collapse
             {...props}
             bordered={false}
-            className='custom-collapse'
+            className="custom-collapse"
             expandIcon={({ isActive }) => (
                 <div
                     style={{

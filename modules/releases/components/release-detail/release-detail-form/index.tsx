@@ -38,7 +38,7 @@ export const releaseDetailSchema = (messages: any) =>
             version: true,
             type: true,
             releaseArtists: true,
-            coverArtThumbnails: true,
+            // coverArtThumbnails: true,
             pLineOwner: true,
             cLineOwner: true,
             isVariousArtist: true,
@@ -165,8 +165,8 @@ export default function ReleaseDetailForm() {
                     title: formValues.title ?? '',
                     type: formValues.type ?? RELEASES_TYPE.ALBUM,
                     releaseArtists: formValues.releaseArtists ?? [],
-                    pLineOwner: formValues.pLineOwner ?? `${dayjs().year()} `,
-                    cLineOwner: formValues.cLineOwner ?? `${dayjs().year()} `,
+                    pLineOwner: formValues.pLineOwner ?? `${dayjs().year()}`,
+                    cLineOwner: formValues.cLineOwner ?? `${dayjs().year()}`,
                     isVariousArtist: formValues.isVariousArtist ?? false,
                     upc: formValues.upc ?? '',
                     labelId: formValues.labelId ?? '',
@@ -182,17 +182,17 @@ export default function ReleaseDetailForm() {
                             formValues.releaseLanguage
                                 ?.metadataLanguageCountryId ?? '',
                     },
-                    coverArtThumbnails: formValues.coverArtThumbnails ?? {
-                        '75x75': '',
-                        '100x100': '',
-                        '160x160': '',
-                        '300x300': '',
-                        '900x900': '',
-                        original: '',
-                    },
+                    // coverArtThumbnails: formValues.coverArtThumbnails ?? {
+                    //     '75x75': '',
+                    //     '100x100': '',
+                    //     '160x160': '',
+                    //     '300x300': '',
+                    //     '900x900': '',
+                    //     original: '',
+                    // },
                 };
                 // setFormValues(initialFormValue);
-                reset(initialFormValue);
+                reset(initialFormValue, { keepErrors: true });
             }
         }
     }, [isCreateReleasePage, releaseId, formValues]);
@@ -204,7 +204,7 @@ export default function ReleaseDetailForm() {
                     className="px-4 py-4"
                     onSubmit={handleSubmit(handleNext, handleFormError)}
                 >
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-6">
                         <ReleaseConfigurationSection
                             debouncedUpdate={debouncedUpdate}
                             setShowCreateLabel={setShowCreateLabel}
@@ -239,7 +239,7 @@ export default function ReleaseDetailForm() {
                             className="my-8"
                             loading={isActive}
                         >
-                            {messages('common.next')}
+                            {messages('common.continue')}
                         </Button>
                     </div>
                 </form>
