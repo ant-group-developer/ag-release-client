@@ -33,7 +33,7 @@ export const TrackOriginTypeTable = ({ dataFilter, ...props }: Props) => {
                 ),
         },
         {
-            title: messages('trackOrigin.label'),
+            title: messages('trackOriginType.label'),
             key: 'name',
             dataIndex: 'name',
             ellipsis: true,
@@ -49,14 +49,14 @@ export const TrackOriginTypeTable = ({ dataFilter, ...props }: Props) => {
                 <CopyText
                     tooltipProps={{ placement: 'right' }}
                     text={value}
-                    label={messages('trackOrigin.label')}
+                    label={messages('trackOriginType.label')}
                 >
                     <p className="truncate">{value}</p>
                 </CopyText>
             ),
         },
         {
-            title: messages('trackOrigin.value'),
+            title: messages('trackOriginType.value'),
             key: 'value',
             dataIndex: 'value',
             ellipsis: true,

@@ -100,7 +100,7 @@ export default function TrackOriginTypeFormModal({ ...props }: Props) {
             >
                 <AppFormItem
                     name="name"
-                    label={messages('trackOrigin.label')}
+                    label={messages('trackOriginType.label')}
                     required
                     rules={[
                         {
@@ -119,7 +119,7 @@ export default function TrackOriginTypeFormModal({ ...props }: Props) {
                 </AppFormItem>
                 <AppFormItem
                     name="value"
-                    label={messages('trackOrigin.value')}
+                    label={messages('trackOriginType.value')}
                     required
                     rules={[
                         {

@@ -129,6 +129,7 @@ export default function OtherMetadataForm({ trackData }: Props) {
                                 className="w-full"
                                 showSearch
                                 {...field}
+                                fallBack={trackData?.primaryGenre?.name}
                                 onChange={(e) => {
                                     field.onChange(e);
                                     debouncedUpdateTrackDraft({
@@ -157,6 +158,7 @@ export default function OtherMetadataForm({ trackData }: Props) {
                                 showSearch
                                 allowClear
                                 {...field}
+                                fallBack={trackData?.subGenre?.name}
                                 onChange={(e) => {
                                     field.onChange(e);
                                     debouncedUpdateTrackDraft({
@@ -226,14 +228,14 @@ export default function OtherMetadataForm({ trackData }: Props) {
                                 id="metadataLanguageCountryId"
                                 showSearch
                                 {...field}
-                                value={field.value ?? ''}
+                                fallBack={
+                                    trackData?.trackLanguage
+                                        ?.metadataLanguageCountry?.name
+                                }
                                 onChange={(e) => {
                                     field.onChange(e);
                                     debouncedUpdateTrackDraft({
                                         trackLanguage: {
-                                            ...formMethods.getValues(
-                                                'trackLanguage'
-                                            ),
                                             metadataLanguageCountryId: e,
                                         },
                                     });

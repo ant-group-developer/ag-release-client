@@ -6,9 +6,14 @@ import { useTranslations } from 'next-intl';
 
 type Props = SelectProps & {
     onCreateLabel?: () => void;
+    fallBack?: string;
 };
 
-export default function LabelSelect({ onCreateLabel, ...props }: Props) {
+export default function LabelSelect({
+    onCreateLabel,
+    fallBack,
+    ...props
+}: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
 
@@ -22,10 +27,18 @@ export default function LabelSelect({ onCreateLabel, ...props }: Props) {
         };
     });
 
+    const labelRender = (props: any) => {
+        const { value, label } = props;
+        if (value) {
+            return fallBack || label;
+        }
+    };
+
     return (
         <Select
             {...props}
             options={option}
+            labelRender={labelRender}
             dropdownRender={(menu) => {
                 return (
                     <div>

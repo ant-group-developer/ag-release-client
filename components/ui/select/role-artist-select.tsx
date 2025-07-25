@@ -3,13 +3,26 @@ import { useGetListArtistRole } from '@/modules/artist-role/hooks/use-get-list-a
 import { Select, SelectProps } from 'antd';
 import { useTranslations } from 'next-intl';
 
-type Props = SelectProps & {};
+type Props = Omit<SelectProps, 'options'> & {
+    fallBack?: string;
+    disabledRoleIds?: string[];
+};
 
-export default function RoleArtistSelect({ ...props }: Props) {
+export default function RoleArtistSelect({
+    disabledRoleIds,
+    fallBack,
+    ...props
+}: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
 
     const { artistsRolesData } = useGetListArtistRole({});
+    const labelRender = (props: any) => {
+        const { value, label } = props;
+        if (value) {
+            return fallBack || label;
+        }
+    };
 
     return (
         <Select
@@ -18,7 +31,9 @@ export default function RoleArtistSelect({ ...props }: Props) {
                 id: item.id,
                 value: item.id,
                 label: item.name,
+                disabled: disabledRoleIds?.includes(item.id) ?? false,
             }))}
+            labelRender={labelRender}
             // dropdownRender={(menu) => {
             //     return (
             //         <div>

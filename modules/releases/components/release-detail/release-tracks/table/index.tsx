@@ -16,6 +16,7 @@ import {
     UpdateTrackOrderPayload,
     UpdateTrackPayload,
 } from '@/modules/tracks/types/payload';
+import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { UpdateVariables } from '@/types/api';
 import { Input, Tabs, Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
@@ -92,10 +93,13 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             key: 'waveform',
             align: 'center',
             width: 300,
-            render: (value, record) => {
+            render: (value, record, index) => {
                 return (
                     <div className="w-[330px]">
-                        <TrackWaveform key={record.id} data={record} />
+                        <TrackWaveform
+                            key={`${record.id}-${index}`}
+                            data={record}
+                        />
                     </div>
                 );
             },
@@ -111,7 +115,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                     <Input
                         maxLength={100}
                         minLength={1}
-                        defaultValue={value}
+                        defaultValue={record?.title}
                         onChange={(e) => {
                             const value = e.target.value;
                             if (value.length < 1) {
@@ -121,7 +125,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                                 );
                             }
                             debouncedUpdate(record.id, {
-                                title: e.target.value,
+                                title: value,
                             });
                         }}
                     />
@@ -134,13 +138,13 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             key: 'artists',
             align: 'left',
             width: 300,
-            render: (value, record) => {
+            render: (value, record, index) => {
                 return (
                     <div className="flex flex-wrap gap-y-2">
                         {record?.trackArtists?.map(
                             (trackArtist: TrackArtistData) => (
                                 <Tag
-                                    key={`${record.id}`}
+                                    key={`${record.id}-${trackArtist.id}`}
                                     closeIcon
                                     onClose={(e) => {
                                         e.preventDefault();
@@ -156,7 +160,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                         )}
                         <Tag
                             key={`${record.id}-add-artist`}
-                            className="border-dashed"
+                            className="border-dashed hover:border-blue-500"
                             onClick={() =>
                                 openModal(TYPE_MODAL_TRACK_ARTIST.ADD, record)
                             }
@@ -196,19 +200,28 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             key: 'action',
             align: 'center',
             width: 40,
-            render: (value, record) => (
-                <TrackActionButton
-                    showDelete
-                    onShowDelete={() =>
-                        openModal(TYPE_MODAL_TRACK.DELETE, record)
-                    }
-                    showDownload
-                />
-            ),
+            render: (value, record) => {
+                return (
+                    <TrackActionButton
+                        showDelete
+                        onShowDelete={() =>
+                            openModal(TYPE_MODAL_TRACK.DELETE, record)
+                        }
+                        showDownload
+                        onShowDownload={async () => {
+                            const response =
+                                await bucketApi.getLinkDownloadFile(
+                                    record?.audioFile?.fileId as string
+                                );
+                            window.open(response?.data?.data);
+                        }}
+                    />
+                );
+            },
         },
     ];
 
-    const expandedRowRender = (record: TrackData) => {
+    const expandedRowRender = (record: TrackData, index: number) => {
         const items = [
             {
                 key: `${record.id}-track-form`,
@@ -221,6 +234,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                     <TracksForm
                         key={`${record.id}-track-form-content`}
                         trackData={record}
+                        index={index}
                     />
                 ),
             },

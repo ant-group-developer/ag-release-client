@@ -47,6 +47,18 @@ export const releaseSchema = (messages: any) =>
                     .refine((val) => val !== null && val !== '', {
                         message: messages('validation.input'),
                     }),
+                metadataLanguageCountryId: z
+                    .string()
+                    .nullable()
+                    .refine((val) => val !== null && val !== '', {
+                        message: messages('validation.input'),
+                    }),
+                audioLanguageId: z
+                    .string()
+                    .nullable()
+                    .refine((val) => val !== null && val !== '', {
+                        message: messages('validation.input'),
+                    }),
             })
             .refine((val) => val !== null, {
                 message: messages('validation.input'),
@@ -74,20 +86,20 @@ export const releaseSchema = (messages: any) =>
             required_error: messages('validation.select'),
         }),
         releaseArtists: z
-            .array(z.custom<ReleaseArtist>())
-            .min(1, messages('validation.input'))
-            .refine(
-                (artists) =>
-                    Array.isArray(artists) &&
-                    artists.some(
-                        (artist) =>
-                            artist.artistRole &&
-                            artist.artistRole.name === 'Main Artist'
-                    ),
-                {
-                    message: messages('releases.validation.mustHaveMainArtist'),
-                }
-            ),
+            .array(z.custom<ReleaseArtist>()).optional(), 
+            // .min(1, messages('validation.input')) Đã validate ở detail schema
+            // .refine(
+            //     (artists) =>
+            //         Array.isArray(artists) &&
+            //         artists.some(
+            //             (artist) =>
+            //                 artist.artistRole &&
+            //                 artist.artistRole.name === 'Main Artist'
+            //         ),
+            //     {
+            //         message: messages('releases.validation.mustHaveMainArtist'),
+            //     }
+            // ),
         pLineOwner: z
             .string()
             .min(5, messages('validation.input'))

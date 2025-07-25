@@ -19,7 +19,11 @@ export const useUpdateTrackDraft = () => {
             queryKey: [...releasesQueryKeys.getDetail],
         });
 
-        const responseMessages = messages(data?.data?.messageCode);
+        // queryClient.invalidateQueries({
+        //     queryKey: [...trackQueryKeys.getList],
+        // });
+
+        // const responseMessages = messages(data?.data?.messageCode);
 
         onSuccess?.(data?.data?.data);
         // showNotification('success', responseMessages);

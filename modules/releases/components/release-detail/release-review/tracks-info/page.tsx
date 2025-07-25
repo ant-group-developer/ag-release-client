@@ -242,7 +242,7 @@ export default function TracksInfo({}: Props) {
                                     )}
                                     {renderField(
                                         index,
-                                        'Bản quyền ghi âm',
+                                        messages('formFields.pLineOwner'),
                                         'pLineOwner',
                                         true
                                     )}

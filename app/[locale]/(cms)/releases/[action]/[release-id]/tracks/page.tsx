@@ -69,15 +69,13 @@ export default function Tracks() {
         deleteTrackArtist(variable);
     };
 
-    console.log(tracksData);
-
     useEffect(() => {
         if (tracksData?.items) {
             setFormValues({
                 ...formValues,
                 tracks: tracksData.items.map((track) => ({
                     ...track,
-                    isSensitiveContent: track.isSensitiveContent ?? false,
+                    isSensitiveContent: !!track.isSensitiveContent,
                 })),
             });
         }
@@ -86,8 +84,9 @@ export default function Tracks() {
     return (
         <div>
             <ReleaseTracksTable
-                dataSource={tracksData?.items}
-                rowSelection={rowSelection}
+                // dataSource={tracksData?.items}
+                dataSource={formValues?.tracks ?? []}
+                // rowSelection={rowSelection}
                 loading={isLoading}
             />
 

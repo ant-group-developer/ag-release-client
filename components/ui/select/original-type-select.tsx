@@ -2,7 +2,9 @@ import { useGetListTrackOriginTypes } from '@/modules/track-origin-types/hooks/u
 import { TrackOriginTypeData } from '@/modules/track-origin-types/types';
 import { Select, SelectProps } from 'antd';
 
-type Props = Omit<SelectProps, 'options'> & {};
+type Props = Omit<SelectProps, 'options'> & {
+    fallBack?: string;
+};
 
 export enum OriginType {
     ORIGINAL = 'original',
@@ -10,7 +12,7 @@ export enum OriginType {
     REMIX = 'remix',
 }
 
-export default function OriginalTypeSelect({ ...props }: Props) {
+export default function OriginalTypeSelect({ fallBack, ...props }: Props) {
     const { trackOriginTypesData } = useGetListTrackOriginTypes({
         pageSize: 999,
     });
@@ -23,5 +25,12 @@ export default function OriginalTypeSelect({ ...props }: Props) {
         })
     );
 
-    return <Select {...props} options={options} />;
+    const labelRender = (props: any) => {
+        const { value, label } = props;
+        if (value) {
+            return fallBack || label;
+        }
+    };
+
+    return <Select {...props} options={options} labelRender={labelRender} />;
 }

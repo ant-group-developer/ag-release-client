@@ -23,7 +23,7 @@ export default function FormItem({
 }: FormItemProps) {
     const isError = (ErrorMessage?.length ?? 0 > 0) ? true : false;
     return (
-        <div className={className}>
+        <div className={`${className} relative`}>
             <LabelForm
                 htmlFor={name}
                 required={required}

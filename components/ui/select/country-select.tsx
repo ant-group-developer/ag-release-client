@@ -1,9 +1,11 @@
 import { useGetListCountries } from '@/modules/countries/hooks/use-get-list-countries';
 import { Select, SelectProps } from 'antd';
 
-type Props = Omit<SelectProps, 'option'> & {};
+type Props = Omit<SelectProps, 'option'> & {
+    fallBack?: string;
+};
 
-export default function CountrySelect({ ...props }: Props) {
+export default function CountrySelect({ fallBack, ...props }: Props) {
     const { countriesData } = useGetListCountries({ pageSize: 9999 });
 
     const options = countriesData.items.map((item) => {
@@ -14,5 +16,12 @@ export default function CountrySelect({ ...props }: Props) {
         };
     });
 
-    return <Select {...props} options={options} />;
+    const labelRender = (props: any) => {
+        const { value, label } = props;
+        if (value) {
+            return fallBack || label;
+        }
+    };
+
+    return <Select {...props} options={options} labelRender={labelRender} />;
 }

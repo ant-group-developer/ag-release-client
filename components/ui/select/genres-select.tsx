@@ -2,10 +2,11 @@ import { useGetListGenres } from '@/modules/genres/hooks/use-get-list-genres';
 import { GenresData } from '@/modules/genres/types';
 import { Select, SelectProps } from 'antd';
 
-type Props = Omit<SelectProps, 'options'> & {};
+type Props = Omit<SelectProps, 'options'> & {
+    fallBack?: string;
+};
 
-export default function GenresSelect({ ...props }: Props) {
-    // const messages = useTranslations();
+export default function GenresSelect({ fallBack, ...props }: Props) {
     const { genresData } = useGetListGenres({});
     const option = genresData?.items.map((item: GenresData, index: number) => {
         return {
@@ -14,13 +15,13 @@ export default function GenresSelect({ ...props }: Props) {
             label: item.name,
         };
     });
-    // const option = Object.values(GENRES).map((item: string, index: number) => {
-    //     return {
-    //         id: index,
-    //         value: item,
-    //         label: messages(getIntlCodeByGenres(item)),
-    //     };
-    // });
 
-    return <Select {...props} options={option} />;
+    const labelRender = (props: any) => {
+        const { value, label } = props;
+        if (value) {
+            return fallBack || label;
+        }
+    };
+
+    return <Select {...props} options={option} labelRender={labelRender} />;
 }

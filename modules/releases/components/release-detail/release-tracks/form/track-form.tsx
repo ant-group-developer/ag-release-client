@@ -36,9 +36,10 @@ export type TrackAndArtistSchema = z.infer<
 
 type Props = {
     trackData: TrackData;
+    index: number;
 };
 
-export default function TracksForm({ trackData }: Props) {
+export default function TracksForm({ trackData, index }: Props) {
     const messages = useTranslations();
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const formValues = useReleaseFormStore((state) => state.formValues);
@@ -59,6 +60,7 @@ export default function TracksForm({ trackData }: Props) {
         formState: { errors },
         watch,
         trigger,
+        reset,
         setValue,
     } = formMethods;
 
@@ -110,6 +112,10 @@ export default function TracksForm({ trackData }: Props) {
         });
     }, [watchedAllFields]);
 
+    useEffect(() => {
+        reset({ ...trackData });
+    }, [trackData, reset]);
+
     return (
         <FormProvider {...formMethods}>
             <form className="grid grid-cols-2 gap-4">
@@ -124,7 +130,7 @@ export default function TracksForm({ trackData }: Props) {
                         name="title"
                         render={({ field }) => (
                             <Input
-                                id="title"
+                                id={`tracks.${index}.title`}
                                 {...field}
                                 allowClear
                                 value={field.value ?? ''}
@@ -186,7 +192,7 @@ export default function TracksForm({ trackData }: Props) {
                     <LabelForm
                         htmlFor="trackOriginTypeId"
                         required
-                        label={`${messages('trackOrigin.label')}`}
+                        label={`${messages('trackOriginType.label')}`}
                     />
                     <Controller
                         control={control}
@@ -195,6 +201,7 @@ export default function TracksForm({ trackData }: Props) {
                             <OriginalTypeSelect
                                 id="trackOriginTypeId"
                                 {...field}
+                                fallBack={trackData?.trackOriginType?.name}
                                 onChange={(e) => {
                                     field.onChange(e);
                                     debouncedUpdateTrackDraft({
@@ -229,14 +236,14 @@ export default function TracksForm({ trackData }: Props) {
                             <LanguageSelect
                                 id="languageTrack"
                                 {...field}
-                                value={field.value ?? ''}
+                                fallBack={
+                                    trackData?.trackLanguage?.audioLanguage
+                                        ?.name
+                                }
                                 onChange={(e) => {
                                     field.onChange(e);
                                     debouncedUpdateTrackDraft({
                                         trackLanguage: {
-                                            ...formMethods.getValues(
-                                                'trackLanguage'
-                                            ),
                                             audioLanguageId: e,
                                         },
                                     });

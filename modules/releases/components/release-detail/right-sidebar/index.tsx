@@ -1,9 +1,11 @@
 'use client';
+import { SIZE_ICON } from '@/constants/common';
 import { cn } from '@/helpers/common';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { releaseSchema } from '@/modules/releases/schemas';
+import { AlertTriangle, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ZodIssue } from 'zod';
 
 interface RightSidebarProps {
@@ -13,6 +15,7 @@ interface RightSidebarProps {
 export default function RightSidebar({ errors }: RightSidebarProps) {
     const messages = useTranslations();
     const errorCount = errors.length;
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
     const getFieldLabel = (path: (string | number)[]) => {
         if (!path.length) return;
@@ -50,6 +53,10 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
         (state) => state.setValidationErrors
     );
 
+    const toggleSidebar = () => {
+        setIsSidebarOpen((prevState) => !prevState);
+    };
+
     useEffect(() => {
         // Thực hiện xác thực
         const validationResult = releaseSchema(messages as any).safeParse(
@@ -66,26 +73,28 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
     return (
         <div
             className={cn(
-                'h-screen w-[300px] border-x bg-white transition-all duration-300'
-                // isActive ? 'w-[250px]' : 'w-[50px]'
+                'h-screen w-[300px] border-x bg-white transition-all duration-300',
+                isSidebarOpen ? 'w-[300px]' : 'w-[75px]'
             )}
         >
             {/* Header */}
             <div className="flex h-16 items-center border-b px-3">
-                {/* {isActive ? ( */}
-                <>
-                    <h3 className="grow font-semibold text-red-500">
-                        {`${messages('validation.error')} (${errorCount})`}
-                    </h3>
-                    {/* <button onClick={toggleActive}>
-                        <ChevronRight size={SIZE_ICON} />
-                    </button> */}
-                </>
-                {/* ) : (
-                    <button onClick={toggleActive} className="mx-auto">
+                {isSidebarOpen ? (
+                    <>
+                        <h3 className="grow font-semibold text-red-500">
+                            {`${messages('validation.error')} (${errorCount})`}
+                        </h3>
+                        {
+                            <button onClick={toggleSidebar}>
+                                <ChevronRight size={SIZE_ICON} />
+                            </button>
+                        }
+                    </>
+                ) : (
+                    <button onClick={toggleSidebar} className="mx-auto">
                         <ChevronLeft size={SIZE_ICON} />
                     </button>
-                )} */}
+                )}
             </div>
 
             {/* Content */}
@@ -93,51 +102,41 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
                 <div className="p-3">
                     {/* Errors */}
                     <div className="mb-4">
-                        {/* <h4 className="mb-2 flex items-center gap-2 font-semibold text-red-500">
-                            <XCircle size={SIZE_ICON} />
-                        </h4> */}
-                        <ul className="space-y-2">
-                            {errors.length > 0 ? (
-                                errors.map((err, index) => (
-                                    <li
-                                        key={index}
-                                        className="rounded-md border border-red-200 bg-red-50 p-2 text-sm"
-                                    >
-                                        {err.path.length > 0 && (
-                                            <p className="break-words text-red-600">
-                                                {getFieldLabel(err.path)}
+                        {isSidebarOpen && (
+                            <ul className="space-y-2">
+                                {errors.length > 0 ? (
+                                    errors.map((err, index) => (
+                                        <li
+                                            key={index}
+                                            className="rounded-md border border-red-200 bg-red-50 p-2 text-sm"
+                                        >
+                                            {err.path.length > 0 && (
+                                                <p className="break-words text-red-600">
+                                                    {getFieldLabel(err.path)}
+                                                </p>
+                                            )}
+                                            <p className="text-xs text-red-500">
+                                                {err.message}
                                             </p>
-                                        )}
-                                        <p className="text-xs text-red-500">
-                                            {err.message}
-                                        </p>
+                                        </li>
+                                    ))
+                                ) : (
+                                    <li className="text-sm text-gray-500">
+                                        {messages('validation.noError')}
                                     </li>
-                                ))
-                            ) : (
-                                <li className="text-sm text-gray-500">
-                                    {messages('validation.noError')}
-                                </li>
-                            )}
-                        </ul>
+                                )}
+                            </ul>
+                        )}
                     </div>
 
-                    {/* Warnings */}
-                    {/* <div>
-                        <h4 className="mb-2 flex items-center gap-2 font-semibold text-amber-500">
-                            <AlertTriangle size={SIZE_ICON} />
-                            Warnings ({warningCount})
-                        </h4>
-                        <ul className="space-y-2">
-                            {warningCount === 0 ? (
-                                <li className="text-sm text-gray-500">
-                                    Không có cảnh báo.
-                                </li>
-                            ) : (
-                                <>
-                                </>
-                            )}
-                        </ul>
-                    </div> */}
+                    {/* errors */}
+                    {!isSidebarOpen && (
+                        <div>
+                            <h4 className="mb-2 flex items-center gap-2 text-red-500">
+                                <AlertTriangle size={SIZE_ICON} />({errorCount})
+                            </h4>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

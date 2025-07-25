@@ -37,6 +37,7 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "legalNotices": "Legal notices",
         "notAvailable": "Not available",
         "region": "Khu vực",
         "specification": "Specification",
@@ -558,6 +559,7 @@
     },
 
     "releases": {
+        "configuration": "Release configuration",
         "otherMetadata": "Other metadata",
         "label": "Release",
         "create": "Create release",
@@ -614,6 +616,7 @@
     },
 
     "releaseArtist": {
+        "label": "Release artists",
         "message": {
             "success": {
                 "create": "Create release artist successfully",
@@ -673,6 +676,36 @@
                 "create": "Add artist successfully",
                 "update": "Update artist successfully",
                 "delete": "Delete artist successfully"
+            },
+            "note": "Editing the artist will interrupt synchronization with the release artist"
+        }
+    },
+
+    "trackType": {
+        "label": "Track type",
+        "message": {
+            "success": {
+                "create": "Add track type successfully",
+                "update": "Update track type successfully",
+                "delete": "Delete track type successfully"
+            },
+            "error": {
+                "duplicateNameTrackType": "This track type is already exists"
+            }
+        }
+    },
+
+    "trackOriginType": {
+        "label": "Track original",
+        "value": "Value",
+        "message": {
+            "success": {
+                "create": "Add track original successfully",
+                "update": "Update track original successfully",
+                "delete": "Delete track original successfully"
+            },
+            "error": {
+                "duplicateNameTrackOriginType": "This track origin is already exists"
             }
         }
     },
@@ -694,6 +727,7 @@
         "primary": "Primary genre"
     },
     "genre": {
+        "label": "Genre",
         "message": {
             "success": {
                 "create": "Create new genre successfully",
@@ -783,8 +817,8 @@
         "primaryGenreId": "Primary genre",
         "releaseLanguage": "Release language",
         "releaseArtists": "Release artist",
-        "pLineOwner": "P Copyright",
-        "cLineOwner": "C Copyright",
+        "pLineOwner": "P copyright",
+        "cLineOwner": "C copyright",
         "releaseTime": "Time release",
         "releaseTimezoneId": "Timezone",
         "releaseTerritory": {
@@ -902,13 +936,23 @@
             }
         }
     },
-
-    "trackType": {
-        "label": "Track type"
-    },
-
-    "trackOrigin": {
-        "label": "Track original",
-        "value": "Value"
+    "tooltipForm": {
+        "releaseTitle": "Do not include version information like Remix or Uncut in the main Title field. Use the Version field instead.",
+        "version": "A particular iteration of the product that will be delivered to stores and displayed alongside the title. Example: 'Live' , 'Deluxe Version'. If multiple versions of an album exist, use this field to indicate the correct version.",
+        "releaseType": "Indicates the size of the release package (i.e. Single, EP, Album).",
+        "label": "This field determines the label under which your release will be created.",
+        "eanUpcCode": "The Universal Product Code (UPC), is a 12 or 13 character long numeric code typically used to identify one or more master recordings in certain media type.",
+        "catalogId": "Unique code used to identify the label's product. This field is optional and serves as an identifier on your label's side, used, for example, in month-end reports.",
+        "primaryGenre": "A conventional category that groups together pieces of music sharing a set of conventions or traditions. This will determine where a product will chart and how it will be sorted with similar music.",
+        "subGenre": "A more niche category that helps differentiate a piece of music according to its region, style, or sound, carrying its own set of characteristics that clearly distinguish and set it apart within the larger genre.",
+        "metadataLanguage": "The language of the product's metadata.",
+        "variousArtistsCompilation": "If this release contains 5 or more artists, select this box to designate it as Various Artists.",
+        "cLineYear": "The first year this version was released anywhere in the world.",
+        "cLineOwner": "C Line owner identifies the entity which legally owns the copyrights to the release's associated creations such as cover art, liner notes and metadata.",
+        "pLineYear": "The year the sound recording was first released anywhere in the world.",
+        "pLineOwner": "P Line owner identifies the individual/entity which legally owns the sound recording.",
+        "languageTrack": "The main language of the song in this release. For example: Vietnamese, English, etc.",
+        "countryLanguage": "The official language of the country related to this release. For example: Vietnam, United States, etc.",
+        "isMoreThan4Artists": "Select 'Yes' if this release has 5 or more artists to display as 'Various artists'."
     }
 }

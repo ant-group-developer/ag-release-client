@@ -2,8 +2,10 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import { useLoading } from '@/hooks/use-loading';
 import useModalStore from '@/hooks/use-modal';
-import { Form } from 'antd';
+import { Form, Progress } from 'antd';
+import axios from 'axios';
 import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import WaveAudioUpload from '@/components/ui/input/wave-audio-upload';
@@ -19,6 +21,7 @@ import { TrackPayload } from '@/modules/tracks/types/payload';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { AudioFileBucket, CreateBucketFile } from '@/modules/upload/types/data';
 import { CreateVariables } from '@/types/api';
+
 type Props = {
     onAddTracks: (tracks: TrackData[]) => void;
 } & Omit<AppModalProps, 'children'>;
@@ -29,6 +32,13 @@ interface TracksPayload {
     audioFileDraft: AudioFileBucket;
     key: string;
 }
+
+interface UploadProgress {
+    fileName: string;
+    progress: number;
+    key: string;
+}
+
 export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
     const messages = useTranslations();
     const isLoading = useLoading();
@@ -36,6 +46,7 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const formValues = useReleaseFormStore((state) => state.formValues);
+    const [uploadProgress, setUploadProgress] = useState<UploadProgress[]>([]);
 
     const { isActive, active, deActive } = useActive();
     const { createTrackDraft } = useCreateTrackDraft();
@@ -162,6 +173,27 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                 bucketDtos: newTracks,
             });
 
+            // Initialize progress state
+            const initialProgress: UploadProgress[] = [];
+            response.data.forEach((item: any) => {
+                if (item.key.startsWith('track-')) {
+                    const matchedFile = temp.find((i) =>
+                        item.key.includes(i.key)
+                    );
+                    if (matchedFile) {
+                        initialProgress.push({
+                            fileName:
+                                matchedFile.file.name ||
+                                matchedFile.file.originFileObj?.name ||
+                                item.key,
+                            progress: 0,
+                            key: item.key,
+                        });
+                    }
+                }
+            });
+            setUploadProgress(initialProgress);
+
             // Put file into bucket
             const uploadPromises = response.data.map(async (item: any) => {
                 const matchedFile = temp.find((i) => {
@@ -169,21 +201,45 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                 });
                 if (matchedFile) {
                     try {
-                        const uploadResponse = await fetch(item.urlUpload, {
-                            method: 'PUT',
-                            headers: {
-                                'Content-Type':
-                                    matchedFile.file.type ||
-                                    'application/octet-stream',
-                            },
-                            body:
-                                matchedFile.file.originFileObj ??
-                                matchedFile.file,
-                        });
+                        const fileToUpload =
+                            matchedFile.file.originFileObj ?? matchedFile.file;
 
-                        if (!uploadResponse.ok) {
+                        const uploadResponse = await axios.put(
+                            item.urlUpload,
+                            fileToUpload,
+                            {
+                                headers: {
+                                    'Content-Type':
+                                        matchedFile.file.type ||
+                                        'application/octet-stream',
+                                },
+                                onUploadProgress: (progressEvent) => {
+                                    const percentCompleted = Math.round(
+                                        (progressEvent.loaded * 100) /
+                                            (progressEvent.total || 1)
+                                    );
+
+                                    setUploadProgress((prev) =>
+                                        prev.map((progress) =>
+                                            progress.key === item.key
+                                                ? {
+                                                      ...progress,
+                                                      progress:
+                                                          percentCompleted,
+                                                  }
+                                                : progress
+                                        )
+                                    );
+                                },
+                            }
+                        );
+
+                        if (
+                            !uploadResponse.status ||
+                            uploadResponse.status >= 400
+                        ) {
                             throw new Error(
-                                `Failed to upload file ${matchedFile.key}. Please try again later.`
+                                `Failed to upload file. Please try again later.`
                             );
                         }
                     } catch (uploadError) {
@@ -228,12 +284,15 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
 
             createTrackDraft(variables);
         } catch (error) {
+            setUploadProgress([]);
+            deActive();
             showNotification(
                 'error',
                 messages('file.message.uploadFileFailed')
             );
         }
     };
+
     return (
         <AppModal
             {...props}
@@ -241,6 +300,7 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
             onOk={form.submit}
             onCancel={closeModal}
             confirmLoading={isActive}
+            loading={isActive}
             width={750}
             style={{ top: '4rem' }}
         >
@@ -268,6 +328,30 @@ export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
                             </div>
                         }
                     />
+
+                    {/* Progress bars ngay dưới WaveAudioUpload */}
+                    {uploadProgress.length > 0 && (
+                        <div className="mt-4 space-y-3">
+                            {uploadProgress.map((progress) => (
+                                <div key={progress.key}>
+                                    <div className="mb-1 flex items-center justify-between text-sm">
+                                        <span
+                                            className="max-w-[300px] truncate"
+                                            title={progress.fileName}
+                                        >
+                                            {progress.fileName}
+                                        </span>
+                                        {/* <span>{progress.progress}%</span> */}
+                                    </div>
+                                    <Progress
+                                        percent={progress.progress}
+                                        size="small"
+                                        strokeColor="#1890ff"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </AppFormItem>
             </AppForm>
         </AppModal>

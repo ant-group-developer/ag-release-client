@@ -242,12 +242,12 @@ export default function ReleaseSchedulingForm({}: Props) {
                                                     });
                                                 }}
                                             >
-                                                <Radio.Button value={true}>
+                                                <Radio value={true}>
                                                     {messages('common.yes')}
-                                                </Radio.Button>
-                                                <Radio.Button value={false}>
+                                                </Radio>
+                                                <Radio value={false}>
                                                     {messages('common.no')}
-                                                </Radio.Button>
+                                                </Radio>
                                             </Radio.Group>
                                         );
                                     }}
@@ -284,7 +284,7 @@ export default function ReleaseSchedulingForm({}: Props) {
                                                         });
                                                     }}
                                                 >
-                                                    <Radio.Button
+                                                    <Radio
                                                         value={
                                                             DISTRIBUTE_TYPES.DISTRIBUTE_ONLY_IN
                                                         }
@@ -292,8 +292,8 @@ export default function ReleaseSchedulingForm({}: Props) {
                                                         {messages(
                                                             'distribute.onlyIn'
                                                         )}
-                                                    </Radio.Button>
-                                                    <Radio.Button
+                                                    </Radio>
+                                                    <Radio
                                                         value={
                                                             DISTRIBUTE_TYPES.DISTRIBUTE_EVERY_WHERE_EXCEPT
                                                         }
@@ -301,7 +301,7 @@ export default function ReleaseSchedulingForm({}: Props) {
                                                         {messages(
                                                             'distribute.everyWhereExcept'
                                                         )}
-                                                    </Radio.Button>
+                                                    </Radio>
                                                 </Radio.Group>
                                             )}
                                         />

@@ -167,7 +167,7 @@ export const adminRoutes: AdminRoutesType[] = [
             },
             {
                 id: 'track-origin-types',
-                label: 'trackOrigin.label',
+                label: 'trackOriginType.label',
                 href: APP_ROUTES.TRACK_ORIGIN_TYPE,
                 icon: FileMusic,
                 title: 'Track Origin',
