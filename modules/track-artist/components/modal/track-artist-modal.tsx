@@ -51,7 +51,6 @@ export default function TrackArtistModal({ ...props }: Props) {
 
     const trackData = formValues?.tracks?.find((item) => {
         if (isTrackArtistEditModal) {
-            console.log('update');
             return item.id == dataEdit?.trackId;
         } else {
             return item.id == dataEdit.id;
@@ -70,7 +69,7 @@ export default function TrackArtistModal({ ...props }: Props) {
     const handleSubmit = async (values: any) => {
         active();
         if (!isTrackArtistEditModal) {
-            console.log(dataEdit);
+            dataEdit;
             const variables: CreateVariables<CreateTrackArtistPayload> = {
                 payload: {
                     artistId: values.artistId,

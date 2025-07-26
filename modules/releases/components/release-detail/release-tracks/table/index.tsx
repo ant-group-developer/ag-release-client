@@ -22,11 +22,12 @@ import { Input, Tabs, Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import TrackActionButton from '../button/track-action';
 import AudioSpecifications from '../form/audio-specifications';
 import OtherMetadataForm from '../form/other-metadata-form';
 import TracksForm from '../form/track-form';
+import ViewAll from '../form/view-all';
 import { TrackWaveform } from '../track-wave-form';
 
 type Props = {} & Omit<SortableTableProps<TrackData>, 'columns'>;
@@ -41,6 +42,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
     const setTrackReadyMap = useTrackReadyStore(
         (state) => state.setTrackReadyMap
     );
+    const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
 
     const { updateTrackDraft } = useUpdateTrackDraft();
     const { updateTrackOrder } = useUpdateTrackOrder();
@@ -269,6 +271,24 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                     />
                 ),
             },
+            {
+                key: `${record.id}-view-all`,
+                label: (
+                    <span className="font-medium">
+                        {messages('common.viewAll')}
+                    </span>
+                ),
+                children: (
+                    <ViewAll
+                        key={`${record.id}-view-all`}
+                        trackData={record}
+                        updateTrackDraft={(data) =>
+                            debouncedUpdate(record.id, data)
+                        }
+                        index={index}
+                    />
+                ),
+            },
         ];
         return (
             <div className="px-20 py-4">
@@ -284,6 +304,43 @@ export default function ReleaseTracksTable({ ...props }: Props) {
     //     return height - 140 - 64;
     // };
 
+    // Cho phép mở nhiều hàng cùng lúc
+    const handleExpand = (expanded: boolean, record: TrackData) => {
+        const newExpandedKeys = [...expandedRowKeys];
+        if (expanded) {
+            newExpandedKeys.push(record.id);
+        } else {
+            const index = newExpandedKeys.indexOf(record.id);
+            if (index !== -1) {
+                newExpandedKeys.splice(index, 1);
+            }
+        }
+        setExpandedRowKeys(newExpandedKeys);
+    };
+
+    useEffect(() => {
+        const handleHashChange = () => {
+            const hash = window.location.hash;
+            const match = hash.match(/tracks\.(\d+)/);
+            if (match && props.dataSource) {
+                const index = parseInt(match[1]);
+                if (index >= 0 && index < props.dataSource.length) {
+                    const trackId = props.dataSource[index].id;
+                    setExpandedRowKeys([trackId]);
+                }
+            }
+        };
+
+        handleHashChange();
+
+        // Thêm listener để xử lý khi hash thay đổi
+        window.addEventListener('hashchange', handleHashChange);
+
+        return () => {
+            window.removeEventListener('hashchange', handleHashChange);
+        };
+    }, [props.dataSource, window?.location?.hash]);
+
     return (
         <div className="w-full">
             <SortableTable
@@ -294,6 +351,8 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                 onDragEnd={handleDragEnd}
                 expandable={{
                     expandedRowRender,
+                    expandedRowKeys,
+                    onExpand: handleExpand,
                     expandedRowClassName: () => '!z-0 custom-track-expanded',
                 }}
                 scroll={{ x: 'max-content' }}

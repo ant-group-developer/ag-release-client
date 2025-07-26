@@ -1,6 +1,4 @@
 import { LabelForm } from '@/components/ui/label/labelForm';
-import LanguageSelect from '@/components/ui/select/language-select';
-import OriginalTypeSelect from '@/components/ui/select/original-type-select';
 import ErrorText from '@/components/ui/text/error-text';
 import useModalStore from '@/hooks/use-modal';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
@@ -25,8 +23,6 @@ export const trackAndArtistSchema = (messages: any) =>
         title: true,
         version: true,
         trackArtists: true,
-        trackLanguage: true,
-        trackOriginTypeId: true,
         copyArtistsFromRelease: true,
     });
 
@@ -95,16 +91,12 @@ export default function TracksForm({ trackData, index }: Props) {
             ...formValues,
             tracks: formValues?.tracks?.map((track: TrackData) => {
                 if (track.id === trackData.id) {
-                    const { trackLanguage, ...restFields } = watchedAllFields;
+                    const { ...restFields } = watchedAllFields;
 
                     return {
                         ...track,
                         ...restFields,
                         title: restFields.title ?? track.title,
-                        trackLanguage: {
-                            ...track.trackLanguage,
-                            audioLanguageId: trackLanguage?.audioLanguageId,
-                        },
                     } as TrackData;
                 }
                 return track;
@@ -185,82 +177,6 @@ export default function TracksForm({ trackData, index }: Props) {
                     <ErrorText
                         isError={!!errors.version}
                         message={errors.version?.message}
-                    />
-                </div>
-
-                <div>
-                    <LabelForm
-                        htmlFor="trackOriginTypeId"
-                        required
-                        label={`${messages('trackOriginType.label')}`}
-                    />
-                    <Controller
-                        control={control}
-                        name="trackOriginTypeId"
-                        render={({ field }) => (
-                            <OriginalTypeSelect
-                                id="trackOriginTypeId"
-                                {...field}
-                                fallBack={trackData?.trackOriginType?.name}
-                                onChange={(e) => {
-                                    field.onChange(e);
-                                    debouncedUpdateTrackDraft({
-                                        trackOriginTypeId: e,
-                                    });
-                                }}
-                                className="w-full"
-                                status={
-                                    errors.trackOriginTypeId
-                                        ? 'error'
-                                        : undefined
-                                }
-                            />
-                        )}
-                    />
-                    <ErrorText
-                        isError={!!errors.trackOriginTypeId}
-                        message={errors.trackOriginTypeId?.message}
-                    />
-                </div>
-
-                <div>
-                    <LabelForm
-                        htmlFor="languageTrack"
-                        required
-                        label={messages('tracks.language')}
-                    />
-                    <Controller
-                        control={control}
-                        name="trackLanguage.audioLanguageId"
-                        render={({ field }) => (
-                            <LanguageSelect
-                                id="languageTrack"
-                                {...field}
-                                fallBack={
-                                    trackData?.trackLanguage?.audioLanguage
-                                        ?.name
-                                }
-                                onChange={(e) => {
-                                    field.onChange(e);
-                                    debouncedUpdateTrackDraft({
-                                        trackLanguage: {
-                                            audioLanguageId: e,
-                                        },
-                                    });
-                                }}
-                                showSearch
-                                className="w-full"
-                                status={
-                                    errors.trackLanguage?.audioLanguageId
-                                        ? 'error'
-                                        : undefined
-                                }
-                            />
-                        )}
-                    />
-                    <ErrorText
-                        isError={!!errors.trackLanguage?.audioLanguageId}
-                        message={errors.trackLanguage?.audioLanguageId?.message}
                     />
                 </div>
 

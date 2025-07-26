@@ -20,9 +20,9 @@ export const useUpdateReleaseDraft = () => {
         queryClient.invalidateQueries({
             queryKey: [...releasesQueryKeys.getList],
         });
-        // queryClient.invalidateQueries({
-        //     queryKey: [...releasesQueryKeys.getDetail],
-        // });
+        queryClient.invalidateQueries({
+            queryKey: [...releasesQueryKeys.validate],
+        });
 
         const responseMessages = messages(data?.data?.messageCode);
 

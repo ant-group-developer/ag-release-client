@@ -2,7 +2,6 @@ import FormItem from '@/components/ui/react-hook-form/form-item';
 import CountrySelect from '@/components/ui/select/country-select';
 import GenresSelect from '@/components/ui/select/genres-select';
 import LanguageSelect from '@/components/ui/select/language-select';
-import { useRouter } from '@/i18n/routing';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import Title from 'antd/lib/typography/Title';
@@ -26,7 +25,6 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
 
     // router
     const params = useParams();
-    const router = useRouter();
 
     // variables
     const isCreateReleasePage = params['action'] === 'create';
@@ -80,7 +78,6 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                                                         : undefined
                                                 }
                                                 disabled={isCreateReleasePage}
-                                                
                                             />
                                         );
                                     }}
@@ -145,7 +142,7 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                                         return (
                                             <LanguageSelect
                                                 className="w-full"
-                                                id="metaDataLanguage"
+                                                id="metadataLanguageId"
                                                 showSearch
                                                 {...field}
                                                 fallBack={fallBackLabel}
@@ -193,7 +190,7 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                                         return (
                                             <LanguageSelect
                                                 className="w-full"
-                                                id="releaseLanguage.audioLanguageId"
+                                                id="audioLanguageId"
                                                 showSearch
                                                 {...field}
                                                 fallBack={fallBackLabel}
@@ -240,7 +237,7 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                                         return (
                                             <CountrySelect
                                                 className="w-full"
-                                                id="releaseLanguage.metadataLanguageCountryId"
+                                                id="metadataLanguageCountryId"
                                                 showSearch
                                                 {...field}
                                                 fallBack={fallBackLabel}

@@ -9,13 +9,10 @@ import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
 import { AlertTriangle, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import { ZodIssue } from 'zod';
 
-interface RightSidebarProps {
-    errors: ZodIssue[];
-}
+interface RightSidebarProps {}
 
-export default function RightSidebar({ errors }: RightSidebarProps) {
+export default function RightSidebar({ ...props }: RightSidebarProps) {
     // hook - state
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
@@ -31,35 +28,19 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
     const errorCount = releaseValidateData.length;
 
     // func
-    const getFieldLabel = (path: (string | number)[]) => {
-        if (!path.length) return;
+    const getFieldLabel = (field: string) => {
+        if (!field) return;
 
-        if (path.length === 1 && path[0] === 'tracks') {
-            return messages('formFields.tracks.track' as any);
+        if (field.startsWith('tracks.')) {
+            const parts = field.split('.');
+            if (parts.length == 3) {
+                const trackIndex = Number(parts[1]) + 1;
+                const fieldName = parts.slice(2).join('.');
+                return `${messages('tracks.number')} ${trackIndex}: ${messages(`formFields.${fieldName}` as any) || field}`;
+            }
         }
 
-        if (path.length === 3 && path[0] === 'tracks') {
-            const trackNum = Number(path[1]) + 1;
-            const field = path[2];
-            const fieldKey = `tracks.${field}`;
-
-            // Sử dụng fieldLabels để ánh xạ trường vào tên dễ hiểu
-            // const fieldLabel = fieldLabels[field] || field;
-            return `${messages('tracks.number')} ${trackNum}: ${messages(`formFields.${fieldKey}` as any) || field}`;
-        }
-
-        if (path.length === 4 && path[0] === 'tracks') {
-            const trackNum = Number(path[1]) + 1;
-            const field = path[3];
-            const fieldKey = `tracks.${field}`;
-
-            return `${messages('tracks.number')} ${trackNum}: ${messages(`formFields.${fieldKey}` as any) || field}`;
-        }
-
-        // Ánh xạ các trường khác vào fieldLabels
-        const fieldKey = path.join('.');
-        // return  fieldLabels[fieldKey] || path.join(' ');
-        return messages(`formFields.${fieldKey}` as any) || path.join(' ');
+        return messages(`formFields.${field}` as any);
     };
     const setValidationErrors = useReleaseFormStore(
         (state) => state.setValidationErrors
@@ -71,6 +52,9 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
         const newUrl = `${getReleaseDetailTabRoute(formValues?.id as string, page)}#${field}`;
         // const newUrl = `/releases/detail/${router.query.id}/err.page#${err.field}`;
         router.push(newUrl);
+        setTimeout(() => {
+            window.dispatchEvent(new HashChangeEvent('hashchange'));
+        }, 100);
     };
 
     // useEffect(() => {
@@ -89,7 +73,7 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
     return (
         <div
             className={cn(
-                'sticky bottom-0 top-0 h-screen w-[300px] border-x bg-white transition-all duration-300',
+                'sticky top-0 h-screen w-[300px] border-x bg-white transition-all duration-300',
                 isSidebarOpen ? 'w-[300px]' : 'w-[75px]'
             )}
         >
@@ -143,34 +127,26 @@ export default function RightSidebar({ errors }: RightSidebarProps) {
                             //     )}
                             // </ul>
                             <ul className="space-y-2">
-                                {errors.length > 0 ? (
-                                    releaseValidateData.map((err, index) => (
-                                        <li
-                                            key={index}
-                                            className="group cursor-pointer rounded-md border border-red-200 bg-red-50 p-2 text-sm"
-                                            onClick={() =>
-                                                handleErrorClick(
-                                                    err.field,
-                                                    err.page as RELEASES_TABS
-                                                )
-                                            }
-                                        >
-                                            <p className="break-words text-red-600 group-hover:underline">
-                                                {err.field}
-                                            </p>
+                                {releaseValidateData.map((err, index) => (
+                                    <li
+                                        key={index}
+                                        className="group cursor-pointer rounded-md border border-red-200 bg-red-50 p-2 text-sm"
+                                        onClick={() =>
+                                            handleErrorClick(
+                                                err.field,
+                                                err.page as RELEASES_TABS
+                                            )
+                                        }
+                                    >
+                                        <p className="break-words text-red-600 group-hover:underline">
+                                            {getFieldLabel(err.field)}
+                                        </p>
 
-                                            <p className="text-xs text-red-500 group-hover:underline">
-                                                {messages(
-                                                    err.messageCode as any
-                                                )}
-                                            </p>
-                                        </li>
-                                    ))
-                                ) : (
-                                    <li className="text-sm text-gray-500">
-                                        {messages('validation.noError')}
+                                        <p className="text-xs text-red-500 group-hover:underline">
+                                            {messages(err.messageCode as any)}
+                                        </p>
                                     </li>
-                                )}
+                                ))}
                             </ul>
                         )}
                     </div>

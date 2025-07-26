@@ -254,9 +254,9 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     }, [isCoreDetailPage]);
 
     return (
-        <div className="flex">
+        <div className="flex h-full">
             <div
-                className="flex h-full flex-1 flex-col"
+                className="flex h-[calc(100vh-4rem)] flex-1 flex-col"
                 ref={scrollContainerRef}
             >
                 <div className="sticky top-0 z-10 bg-white">
@@ -273,7 +273,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                 </div>
                 <div className="flex-1">{children}</div>
             </div>
-            <RightSidebar errors={validationErrors} />
+            <RightSidebar  />
         </div>
     );
 }

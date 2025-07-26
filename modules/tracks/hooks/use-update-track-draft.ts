@@ -18,6 +18,9 @@ export const useUpdateTrackDraft = () => {
         queryClient.invalidateQueries({
             queryKey: [...releasesQueryKeys.getDetail],
         });
+        queryClient.invalidateQueries({
+            queryKey: [...releasesQueryKeys.validate],
+        });
 
         // queryClient.invalidateQueries({
         //     queryKey: [...trackQueryKeys.getList],

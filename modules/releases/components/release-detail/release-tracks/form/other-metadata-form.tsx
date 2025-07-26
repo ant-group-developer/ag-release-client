@@ -1,6 +1,8 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
 import CountrySelect from '@/components/ui/select/country-select';
 import GenresSelect from '@/components/ui/select/genres-select';
+import LanguageSelect from '@/components/ui/select/language-select';
+import OriginalTypeSelect from '@/components/ui/select/original-type-select';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
 import { releaseTrackSchema } from '@/modules/tracks/schemas';
@@ -25,6 +27,7 @@ const otherMetadataSchema = (messages: any) =>
         trackLanguage: true,
         lyric: true,
         pLineOwner: true,
+        trackOriginTypeId: true,
         isrc: true,
     });
 
@@ -212,6 +215,37 @@ export default function OtherMetadataForm({ trackData }: Props) {
                 </FormItem>
 
                 <FormItem
+                    name="trackOriginTypeId"
+                    label={`${messages('trackOriginType.label')}`}
+                    required
+                    ErrorMessage={errors.trackOriginTypeId?.message}
+                >
+                    <Controller
+                        control={control}
+                        name="trackOriginTypeId"
+                        render={({ field }) => (
+                            <OriginalTypeSelect
+                                id="trackOriginTypeId"
+                                {...field}
+                                fallBack={trackData?.trackOriginType?.name}
+                                onChange={(e) => {
+                                    field.onChange(e);
+                                    debouncedUpdateTrackDraft({
+                                        trackOriginTypeId: e,
+                                    });
+                                }}
+                                className="w-full"
+                                status={
+                                    errors.trackOriginTypeId
+                                        ? 'error'
+                                        : undefined
+                                }
+                            />
+                        )}
+                    />
+                </FormItem>
+
+                <FormItem
                     name="trackLanguage.metadataLanguageCountryId"
                     label={messages('country.language')}
                     required
@@ -243,6 +277,45 @@ export default function OtherMetadataForm({ trackData }: Props) {
                                 status={
                                     errors.trackLanguage
                                         ?.metadataLanguageCountryId
+                                        ? 'error'
+                                        : undefined
+                                }
+                            />
+                        )}
+                    />
+                </FormItem>
+
+                <FormItem
+                    name="trackLanguage.audioLanguageId"
+                    required
+                    label={messages('tracks.language')}
+                    ErrorMessage={
+                        errors.trackLanguage?.audioLanguageId?.message
+                    }
+                >
+                    <Controller
+                        control={control}
+                        name="trackLanguage.audioLanguageId"
+                        render={({ field }) => (
+                            <LanguageSelect
+                                id="languageTrack"
+                                {...field}
+                                fallBack={
+                                    trackData?.trackLanguage?.audioLanguage
+                                        ?.name
+                                }
+                                onChange={(e) => {
+                                    field.onChange(e);
+                                    debouncedUpdateTrackDraft({
+                                        trackLanguage: {
+                                            audioLanguageId: e,
+                                        },
+                                    });
+                                }}
+                                showSearch
+                                className="w-full"
+                                status={
+                                    errors.trackLanguage?.audioLanguageId
                                         ? 'error'
                                         : undefined
                                 }

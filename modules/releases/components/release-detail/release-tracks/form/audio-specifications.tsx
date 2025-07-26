@@ -57,6 +57,8 @@ export default function AudioSpecifications({
         resolver: zodResolver(audioSpecificationsSchema(messages)),
     });
 
+    console.log('trackdata', trackData);
+
     const {
         control,
         handleSubmit,
@@ -151,7 +153,7 @@ export default function AudioSpecifications({
 
                     <FormItem
                         name="audioFile.preview"
-                        label="Đoạn nghe mẫu"
+                        label={messages('formFields.tracks.preview')}
                         required
                         ErrorMessage={errors.audioFile?.preview?.message}
                     >
@@ -230,6 +232,31 @@ export default function AudioSpecifications({
                         />
                     </FormItem>
                 </div>
+                {trackData.audioFile && (
+                    <div className="mt-6 overflow-hidden rounded-md border">
+                        <div className="grid grid-cols-4 gap-4 p-4 text-sm">
+                            <div>
+                                <p className="font-bold">Bit Depth</p>
+                                <p>{trackData.audioFile.bitDepth ?? '-'}</p>
+                            </div>
+                            <div>
+                                <p className="font-bold">Bitrate</p>
+                                <p>{trackData.audioFile.bitrate ?? '-'}</p>
+                            </div>
+                            <div>
+                                <p className="font-bold">Format</p>
+                                <p>
+                                    {trackData.audioFile.file?.extension?.toUpperCase() ||
+                                        'WAVE'}
+                                </p>
+                            </div>
+                            <div>
+                                <p className="font-bold">Sample Rate</p>
+                                <p>{trackData.audioFile.sampleRate ?? '-'}</p>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </form>
         </FormProvider>
     );

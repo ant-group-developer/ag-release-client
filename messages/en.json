@@ -37,6 +37,7 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "viewAll": "View all",
         "legalNotices": "Legal notices",
         "notAvailable": "Not available",
         "region": "Khu vực",
@@ -666,6 +667,9 @@
                 "create": "Create track successfully",
                 "update": "Update track successfully",
                 "delete": "Delete track successfully"
+            },
+            "error": {
+                "releaseNotFound": "Cannot found this release"
             }
         }
     },
@@ -798,6 +802,12 @@
     },
 
     "formFields": {
+        "trackArtists": "track artist",
+        "distributionType": "Release type",
+        "releaseCoverArts": "Release image",
+        "audioLanguageId": "Audio language",
+        "labelId": "Label",
+        "metadataLanguageCountryId": "Language country",
         "title": "Release name",
         "metadataLanguageId": "Metadata language",
         "artists": "Artists",
@@ -825,6 +835,9 @@
             "selectedCountries": "Countries distribute",
             "distributionType": "Options distribute"
         },
+        "trackOriginTypeId": "Track origin type",
+        "trackTypeId": "Track type",
+        "preview": "Track preview",
         "tracks": {
             "trackOriginTypeId": "Track origin type",
             "audioLanguageId": "Audio language",

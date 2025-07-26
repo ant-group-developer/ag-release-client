@@ -37,6 +37,7 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "viewAll": "Xem tất cả",
         "legalNotices": "Thông báo pháp lý",
         "notAvailable": "Chưa có thông tin",
         "region": "Khu vực",
@@ -668,6 +669,9 @@
                 "create": "Thêm mới bài hát thành công",
                 "update": "Cập nhật bài hát thành công",
                 "delete": "Xoá bài hát thành công"
+            },
+            "error": {
+                "releaseNotFound": "Không tìm thấy bản phát hành"
             }
         }
     },
@@ -800,6 +804,12 @@
     },
 
     "formFields": {
+        "trackArtists": "Nghệ sĩ bài hát",
+        "distributionType": "Loại phát hành",
+        "releaseCoverArts": "Ảnh phát hành",
+        "audioLanguageId": "Ngôn ngữ bài hát",
+        "labelId": "Label",
+        "metadataLanguageCountryId": "Ngôn ngữ quốc gia",
         "title": "Tên phát hành",
         "metadataLanguageId": "Ngôn ngữ metadata",
         "artists": "Nghệ sĩ",
@@ -829,9 +839,11 @@
             "selectedCountries": "Quốc gia phân phối",
             "distributionType": "Tuỳ chọn vòng phân phối"
         },
+        "trackOriginTypeId": "Nguồn gốc bài hát",
+        "trackTypeId": "Thể loại bài hát",
+        "preview": "Đoạn nghe trước",
         "tracks": {
             "sensitiveContent": "Nội dung nhạy cảm",
-            "trackOriginTypeId": "Nguồn gốc bài hát",
             "audioLanguageId": "Ngôn ngữ âm thanh",
             "metadataLanguageId": "Ngôn ngữ metadata",
             "metadataLanguageCountryId": "Ngôn ngữ quốc gia",
@@ -873,7 +885,8 @@
             "source": "Nguồn gốc",
             "countryRecording": "Quốc gia ghi âm",
             "recordingType": "Loại ghi âm",
-            "isSensitiveContent": "Nội dung nhạy cảm"
+            "isSensitiveContent": "Nội dung nhạy cảm",
+            "trackOriginTypeId": "Nguồn gốc bài hát"
         },
         "coverArtThumbnails": {
             "original": "Ảnh phát hành"

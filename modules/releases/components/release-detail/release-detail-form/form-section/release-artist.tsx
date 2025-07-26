@@ -117,7 +117,7 @@ export default function ReleaseArtistSection({ debouncedUpdate }: Props) {
                             </div>
                             {!isVariousArtist && (
                                 <div className="col-span-3">
-                                    <div className="grid grid-cols-2 gap-x-4 gap-y-4">
+                                    <div className="mb-4 grid grid-cols-2 gap-x-4 gap-y-4">
                                         {releaseArtist.map(
                                             (
                                                 releaseArtist: ReleaseArtist,
