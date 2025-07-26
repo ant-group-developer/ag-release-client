@@ -1,15 +1,22 @@
 export enum TRACKS_COLUMNS_DISPLAY {
     I_NO = 'iNo',
     THUMBNAIL = 'thumbnail',
-    TRACK_ID = 'trackId',
+    ID = 'id',
     TITLE = 'title',
     GENRES = 'genres',
-    ARTIST = 'artist',
+    TRACK_ARTIST = 'trackArtists',
     ISRC = 'isrc',
     DURATION = 'duration',
     RELEASE_DATE = 'releaseDate',
     CREATION_DATE = 'creationDate',
+    VERSION = 'version',
     ACTIONS = 'actions',
+}
+
+export enum TYPE_MODAL_TRACK_ARTIST {
+    ADD = 'add',
+    UPDATE = 'update',
+    DELETE = 'delete',
 }
 
 export enum GENRES {

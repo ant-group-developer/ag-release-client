@@ -2,7 +2,9 @@
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_OPTIONS } from '@/constants/common';
-import { SCREEN } from '@/enums/common';
+import { PAGE_SIZE } from '@/constants/page-size';
+import { ORDER, SCREEN } from '@/enums/common';
+import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import LanguagesHeader from '@/modules/languages/components/header';
@@ -70,13 +72,24 @@ export default function Languages({}: Props) {
     const modalTitle = `${messages('delete.confirmTitle')}`;
     const modalParagraph = `${messages('delete.confirmMessage', { value: dataEdit?.name })}`;
 
-    const handleRefresh = () => {};
+    const handleRefresh = () => {
+        refetch();
+    };
 
-    const { languagesData, isLoading } = useGetListLanguage(dataFilter);
-    console.log(
-        '🚀 ~ Languages ~ languagesData:',
-        languagesData.metadata?.totalItems
-    );
+    const { languagesData, isLoading, refetch, lastUpdatedAt } =
+        useGetListLanguage(dataFilter);
+
+    const onChangeSort = (pagination: any, filters: any, sort: any) => {
+        const orderBy = setSortOrder(sort, ORDER.ASC);
+        const fieldOrder = sort.field;
+        onChangeFilter(
+            {
+                orderBy,
+                fieldOrder,
+            },
+            false
+        );
+    };
 
     return (
         <div className="flex h-full flex-col justify-between overflow-hidden">
@@ -87,11 +100,19 @@ export default function Languages({}: Props) {
                     canClearFilter={canClearFilter}
                     removeFilter={removeFilter}
                     handleRefresh={handleRefresh}
+                    lastUpdatedAt={lastUpdatedAt}
                 />
                 <LanguagesTable
                     dataSource={languagesData?.items}
-                    scroll={{ x: SCREEN.MD, y: scrollY() }}
+                    scroll={{ y: scrollY() }}
                     loading={isLoading}
+                    pagination={{
+                        pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
+                        current: languagesData.metadata.currentPage,
+                        total: languagesData.metadata.totalItems,
+                    }}
+                    dataFilter={dataFilter}
+                    onChange={onChangeSort}
                 />
             </div>
             <AppPagination

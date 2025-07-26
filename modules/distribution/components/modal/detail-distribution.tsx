@@ -14,7 +14,7 @@ type Props = Omit<AppModalProps, 'children'> & {};
 
 export default function DetailDistributionModal({ ...props }: Props) {
     const messages = useTranslations();
-    const rowData = useModalStore((state) => state.dataEdit) as ReleasesData;
+    const dataEdit = useModalStore((state) => state.dataEdit) as ReleasesData;
     const closeModal = useModalStore((state) => state.closeModal);
 
     const columns: ColumnType<any>[] = [
@@ -90,7 +90,7 @@ export default function DetailDistributionModal({ ...props }: Props) {
                 <div className="flex items-center gap-4 rounded-lg bg-zinc-100 p-4">
                     <div className="">
                         <Image
-                            src={rowData?.thumbnail}
+                            src={''}
                             alt="thumbnail"
                             width={120}
                             height={120}
@@ -98,9 +98,9 @@ export default function DetailDistributionModal({ ...props }: Props) {
                         />
                     </div>
                     <div>
-                        <p className="text-2xl font-bold">{rowData?.title}</p>
+                        <p className="text-2xl font-bold">{dataEdit?.title}</p>
                         <p className="text-sm text-gray-500">
-                            {rowData?.artist}
+                            {/* {dataEdit?.artist} */} artist
                         </p>
                     </div>
                 </div>

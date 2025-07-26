@@ -1,17 +1,21 @@
 import ActionButton from '@/components/ui/button/action-button';
+import CopyText from '@/components/ui/copy-text/copy-text';
+import ImageFallback from '@/components/ui/image/image-fallback';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
-import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { formattedDate } from '@/helpers/common';
+import { FALLBACK_IMAGE } from '@/constants/common';
+import { formattedDate, getIndex } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
 import { TYPE_MODAL_DSP } from '../../enums';
 import { DspData } from '../../types';
 
-// Table cho DSP
-
-type Props = Omit<AppTableProps<DspData>, 'columns'> & {};
+type Props = Omit<AppTableProps<DspData>, 'columns'> & {
+    pagination: {
+        pageSize: number;
+        current: number;
+    };
+};
 
 export const DspTable = ({ ...props }: Props) => {
     const messages = useTranslations();
@@ -22,47 +26,69 @@ export const DspTable = ({ ...props }: Props) => {
             key: 'iNo',
             width: 50,
             align: 'center',
-            render: (_, __, index) => index + 1,
+            render: (_, __, index) =>
+                getIndex(
+                    props.pagination.pageSize,
+                    props.pagination.current,
+                    index
+                ),
         },
+        // {
+        //     title: '',
+        //     key: 'picture',
+        //     dataIndex: 'picture',
+        //     align: 'center',
+        //     width: 50,
+        //     render: (value) => (
+        //         <div className="flex justify-center">
+        //             <ImageFallback
+        //                 fallbackSrc={FALLBACK_IMAGE}
+        //                 src={value ?? ''}
+        //                 alt="genre"
+        //                 width={48}
+        //                 height={48}
+        //                 className="aspect-square rounded-lg object-cover"
+        //             />
+        //         </div>
+        //     ),
+        // },
         {
-            title: '',
-            key: 'picture',
-            dataIndex: 'picture',
-            align: 'center',
-            width: 50,
-            render: (value) =>
-                value ? (
-                    <Image
-                        src={value}
-                        alt="dsp"
-                        width={48}
-                        height={48}
-                        className="rounded-lg"
-                    />
-                ) : null,
-        },
-        {
-            title: 'Tên DSP',
+            title: messages('dsp.name'),
             key: 'name',
             dataIndex: 'name',
             ellipsis: true,
             align: 'left',
             width: 300,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
-                </CustomTooltip>
+            render: (value, record) => (
+                <div className="flex items-center gap-4">
+                    <div className="flex-shrink-0">
+                        <ImageFallback
+                            fallbackSrc={FALLBACK_IMAGE}
+                            src={record?.picture ?? ''}
+                            alt="genre"
+                            width={40}
+                            height={40}
+                            className="aspect-square rounded-lg object-cover"
+                        />
+                    </div>
+                    <CopyText
+                        tooltipProps={{ placement: 'right' }}
+                        text={value}
+                    >
+                        <p className="truncate">{value}</p>
+                    </CopyText>
+                </div>
             ),
         },
         {
-            title: 'Có liên kết nghệ sĩ?',
+            title: messages('artist.canLinkArtistProfile'),
             key: 'canLinkArtistProfile',
             dataIndex: 'canLinkArtistProfile',
             align: 'center',
             width: 120,
             render: (value) => (
                 <span className="truncate text-wrap">
-                    {value ? 'Có' : 'Không'}
+                    {value ? messages('common.yes') : messages('common.no')}
                 </span>
             ),
         },
@@ -98,6 +124,9 @@ export const DspTable = ({ ...props }: Props) => {
             render: (_, record) => (
                 <ActionButton
                     showDelete
+                    onShowDelete={() =>
+                        openModal(TYPE_MODAL_DSP.DELETE, record)
+                    }
                     showUpdate
                     onShowUpdate={() =>
                         openModal(TYPE_MODAL_DSP.UPDATE, record)

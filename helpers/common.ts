@@ -405,12 +405,9 @@ export function formatDatesToUTC(
 ): [string, string] {
     // const startDateFormatted = dayjs(startDate).startOf('day').toISOString();
     // const endDateFormatted = dayjs(endDate).endOf('day').toISOString();
-    const startDateFormatted = dayjs(startDate)
-        .startOf('day')
-        .format(DATE_FORMAT.YEAR_MONTH_DAY_TIME);
-    const endDateFormatted = dayjs(endDate)
-        .endOf('day')
-        .format(DATE_FORMAT.YEAR_MONTH_DAY_TIME);
+    const startDateFormatted = dayjs(startDate).startOf('day').toISOString();
+    // .format(DATE_FORMAT.YEAR_MONTH_DAY_TIME);
+    const endDateFormatted = dayjs(endDate).endOf('day').toISOString();
     // .format(DATE_FORMAT.YEAR_MONTH_DAY_TIME);
     return [startDateFormatted, endDateFormatted];
 }
@@ -525,25 +522,13 @@ export const getTitleChipDisplay = (
 
 export const convertSecondsToHoursMinutes = (seconds: number) => {
     if (isNaN(Number(seconds)) || seconds < 0) {
-        return '00:00';
+        return '00:00:00';
     }
-
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
     const secs = Math.floor(seconds % 60);
-
     const pad = (num: number) => num.toString().padStart(2, '0');
-
-    if (hrs > 0) {
-        // Format: HH:mm:ss
-        return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
-    } else if (mins > 0) {
-        // Format: mm:ss
-        return `${pad(mins)}:${pad(secs)}`;
-    } else {
-        // Format: 00:ss
-        return `00:${pad(secs)}`;
-    }
+    return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
 };
 
 type ReleaseStatusMessageKey =
@@ -695,7 +680,6 @@ export const timeStringToSeconds = (time: string) => {
     return result;
 };
 
-
 export function getLanguageLabel(code: string) {
     const languageMap: Record<string, string> = {
         vi: 'Tiếng Việt',
@@ -703,3 +687,17 @@ export function getLanguageLabel(code: string) {
     };
     return languageMap[code] || code;
 }
+
+// Chuyển số giây sang chuỗi HH:mm
+export const secondsToHHmm = (seconds: number) => {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+};
+
+// Chuyển chuỗi HH:mm sang số giây
+export const hhmmToSeconds = (hhmm: string) => {
+    if (!hhmm) return 0;
+    const [h, m] = hhmm.split(':').map(Number);
+    return h * 3600 + m * 60;
+};

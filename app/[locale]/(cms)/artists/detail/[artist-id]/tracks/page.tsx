@@ -3,13 +3,12 @@ import AppPagination from '@/components/ui/pagination';
 import { LAYOUT_TABLE, SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
-import { ReleasesDataFilter } from '@/modules/releases/types';
 import TracksHeader from '@/modules/tracks/components/header';
 import TracksTable from '@/modules/tracks/components/table';
 import TracksGridTable from '@/modules/tracks/components/table/grid-table';
 import { defaultVisibleColumnsTracks } from '@/modules/tracks/constants';
-import { fakeTrackData } from '@/modules/tracks/constants/mockdata';
 import { TRACKS_COLUMNS_DISPLAY } from '@/modules/tracks/enums';
+import { TrackDataFilter } from '@/modules/tracks/types';
 import { useWindowSize } from '@uidotdev/usehooks';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
@@ -51,7 +50,7 @@ export default function Tracks({}: Props) {
         onChangeFilter,
         canClearFilter,
         removeFilter,
-    } = useFilter<ReleasesDataFilter>({
+    } = useFilter<TrackDataFilter>({
         page: 1,
         pageSize: 21,
     });
@@ -110,13 +109,13 @@ export default function Tracks({}: Props) {
                 {layoutTable === LAYOUT_TABLE.LIST && (
                     <TracksTable
                         visibleColumns={visibleColumns}
-                        dataSource={fakeTrackData}
+                        dataSource={[]}
                         scroll={{ x: SCREEN.XXL, y: scrollY() }}
                     />
                 )}
 
                 {layoutTable === LAYOUT_TABLE.GRID && (
-                    <TracksGridTable data={fakeTrackData} loading={false} />
+                    <TracksGridTable data={[]} loading={false} />
                 )}
             </div>
 
@@ -125,7 +124,7 @@ export default function Tracks({}: Props) {
                 align="end"
                 current={dataFilter.page}
                 pageSize={dataFilter.pageSize}
-                total={fakeTrackData.length}
+                total={[].length}
                 onChange={onChangePage}
                 showTotalText
                 showSizeChanger

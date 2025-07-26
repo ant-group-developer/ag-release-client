@@ -37,6 +37,15 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "legalNotices": "Thông báo pháp lý",
+        "notAvailable": "Chưa có thông tin",
+        "region": "Khu vực",
+        "specification": "Thông số kỹ thuật",
+        "missingInformation": "Thiếu thông tin",
+        "ready": "Sẵn sàng",
+        "year": "Năm",
+        "somethingWentWrong": "Đã xảy ra lỗi",
+        "biography": "Tiểu sử",
         "nationality": "Quốc tịch",
         "currencyName": "Tên tiền tệ",
         "currencySymbol": "Ký hiệu tiền tệ",
@@ -64,6 +73,7 @@
         "subGenres": "Thể loại phụ",
         "subArtist": "Nghệ sĩ phụ",
         "releaseDate": "Ngày phát hành",
+        "releaseTime": "Giờ phát hành",
         "duration": "Thời lượng",
         "draft": "Bản nháp",
         "processing": "Đang xử lý",
@@ -304,7 +314,8 @@
         "dimensions": "Kích thước",
         "validation": {
             "mustBeLessThanMB": "Ảnh phải nhỏ hơn {value} MB",
-            "supportImageFormat": "Hỗ trợ ảnh định dạng {value}"
+            "supportImageFormat": "Hỗ trợ ảnh định dạng {value}",
+            "mustBeMinWidth": "Ảnh phải có chiều rộng tối thiểu {value}px"
         }
     },
     "document": {
@@ -332,7 +343,17 @@
         "code": "Mã ngôn ngữ",
         "vietnamese": "Tiếng Việt",
         "select": "Chọn ngôn ngữ",
-        "add": "Thêm ngôn ngữ"
+        "add": "Thêm ngôn ngữ",
+        "message": {
+            "success": {
+                "create": "Thêm mới ngôn ngữ thành công",
+                "update": "cập nhật ngôn ngữ thành công",
+                "delete": "Xoá ngôn ngữ thành công"
+            },
+            "error": {
+                "duplicateNameLanguage": "Tên ngôn ngữ đã tồn tại"
+            }
+        }
     },
     "channel": {
         "code": "Mã kênh",
@@ -527,7 +548,8 @@
 
     "select": {
         "date": "Chọn ngày",
-        "approver": "Chọn người duyệt"
+        "approver": "Chọn người duyệt",
+        "option": "Vui lòng chọn"
     },
 
     "theme": {
@@ -537,6 +559,7 @@
     },
 
     "releases": {
+        "configuration": "Thiết lập phát hành",
         "otherMetadata": "Các metadata khác",
         "label": "Phát hành",
         "create": "Tạo phát hành ",
@@ -545,6 +568,7 @@
         "id": "Mã phát hành",
         "type": "Loại phát hành",
         "releaseDate": "Ngày phát hành",
+        "releaseTime": "Thời gian phát hành",
         "duration": "Thời lượng",
         "trackCount": "Số bài hát",
         "publisher": "Hãng phát hành",
@@ -574,10 +598,36 @@
             "selectLanguageMetadata": "Chọn ngôn ngữ metadata"
         },
 
+        "validation": {
+            "mustHaveMainArtist": "Vui lòng thêm nghệ sĩ chính (Main Artist)"
+        },
+
         "scheduling": {
             "label": "Lên lịch"
         }
     },
+
+    "release": {
+        "message": {
+            "success": {
+                "create": "Thêm mới phát hành thành công",
+                "update": "Cập nhật phát hành thành công",
+                "delete": "Xoá phát hành thành công"
+            }
+        }
+    },
+
+    "releaseArtist": {
+        "label": "Nghệ sĩ phát hành",
+        "message": {
+            "success": {
+                "create": "Thêm mới nghệ sĩ phát hành thành công",
+                "update": "Cập nhật nghệ sĩ phát hành thành công",
+                "delete": "Xoá nghệ sĩ phát hành thành công"
+            }
+        }
+    },
+
     "tracks": {
         "number": "Bài hát số",
         "add": "Thêm bài hát",
@@ -587,6 +637,20 @@
         "name": "Tên bài hát",
         "id": "Mã bài hát",
         "count": "Số lượng bài hát",
+        "language": "Ngôn ngữ bài hát",
+        "recordingCountry": "Quốc gia ghi âm",
+        "original": {
+            "label": "Tác phẩm gốc",
+            "tooltip": "Tác phẩm gốc là tác phẩm được tạo ra đầu tiên, không phải bất kỳ bản cover hoặc remix nào."
+        },
+        "cover": {
+            "label": "Bản cover",
+            "tooltip": "Bản cover là bản nhạc được cover lại từ tác phẩm gốc, có thể có sự thay đổi về âm nhạc, lời bài hát, hoặc cả hai."
+        },
+        "remix": {
+            "label": "Bản remix",
+            "tooltip": "Bản remix là bản nhạc được tạo ra từ tác phẩm gốc, có thể có sự thay đổi về âm nhạc, lời bài hát, hoặc cả hai."
+        },
         "placeholder": {
             "selectArtist": "Chọn nghệ sĩ",
             "selectSubArtist": "Chọn nghệ sĩ phụ",
@@ -597,6 +661,57 @@
             "selectSensitiveContent": "Lựa chọn nội dung"
         }
     },
+
+    "track": {
+        "message": {
+            "success": {
+                "create": "Thêm mới bài hát thành công",
+                "update": "Cập nhật bài hát thành công",
+                "delete": "Xoá bài hát thành công"
+            }
+        }
+    },
+
+    "trackArtist": {
+        "message": {
+            "success": {
+                "create": "Thêm mới nghệ sĩ thành công",
+                "update": "Cập nhật nghệ sĩ thành công",
+                "delete": "Xoá nghệ sĩ thành công"
+            },
+            "note": "Chỉnh sửa nghệ sĩ sẽ làm ngắt đồng bộ với nghệ sĩ phát hành"
+        }
+    },
+
+    "trackType": {
+        "label": "Thể loại bài hát",
+        "message": {
+            "success": {
+                "create": "Thêm thể loại thành công",
+                "update": "Cập nhật thể loại thành công",
+                "delete": "Xoá thể loại thành công"
+            },
+            "error": {
+                "duplicateNameTrackType": "Thể loại bài hát này đã tồn tại"
+            }
+        }
+    },
+
+    "trackOriginType": {
+        "label": "Nguồn gốc bài hát",
+        "value": "Giá trị",
+        "message": {
+            "success": {
+                "create": "Thêm mới nguồn gốc bài hát thành công",
+                "update": "Cập nhật nguồn gốc bài hát thành công",
+                "delete": "Xoá nguồn gốc bài hát thành công"
+            },
+            "error": {
+                "duplicateNameTrackOriginType": "Nguồn gốc bài hát này đã tồn tại"
+            }
+        }
+    },
+
     "genres": {
         "name": "Tên thể loại",
         "pop": "Pop",
@@ -609,7 +724,22 @@
         "reggae": "Reggae",
         "rap": "Rap",
         "classical": "Cổ điển",
-        "blues": "Blues"
+        "blues": "Blues",
+        "add": "Thêm thể loại",
+        "primary": "Thể loại chính"
+    },
+    "genre": {
+        "label": "Thể loại",
+        "message": {
+            "success": {
+                "create": "Thêm mới thể loại nhạc thành công",
+                "delete": "Xoá thể loại nhạc thành công",
+                "update": "Cập nhật thể loại nhạc thành công"
+            },
+            "error": {
+                "duplicateNameGenre": "Thể loại nhạc này đã tồn tại"
+            }
+        }
     },
     "artist": {
         "label": "Nghệ sĩ",
@@ -624,7 +754,18 @@
         "profiles": "Hồ sơ nghệ sĩ",
         "variousArtists": "Nhiều nghệ sĩ",
         "descriptionVariantArtists": "Tên hiển thị sẽ là 'Nhiều nghệ sĩ'",
-        "role": "Vai trò nghệ sĩ"
+        "role": "Vai trò nghệ sĩ",
+        "canLinkArtistProfile": "Có thể liên kết hồ sơ nghệ sĩ",
+        "message": {
+            "success": {
+                "create": "Thêm mới nghệ sĩ thành công",
+                "update": "Cập nhật nghệ sĩ thành công",
+                "delete": "xoá nghệ sĩ thành công"
+            },
+            "error": {
+                "duplicateNameArtist": "Nghệ sĩ này đã tồn tại"
+            }
+        }
     },
 
     "role": {
@@ -639,6 +780,18 @@
         "name": "Tên label",
         "id": "Mã label"
     },
+    "label": {
+        "message": {
+            "success": {
+                "create": "Thêm mới label thành công",
+                "delete": "Xoá label thành công",
+                "update": "Cập nhật label thành công"
+            },
+            "error": {
+                "duplicateNameLabel": "Label này đã tồn tại"
+            }
+        }
+    },
     "distribution": {
         "label": "Phân phối",
         "create": "Tạo phân phối",
@@ -647,11 +800,13 @@
     },
 
     "formFields": {
+        "title": "Tên phát hành",
+        "metadataLanguageId": "Ngôn ngữ metadata",
         "artists": "Nghệ sĩ",
         "releaseDate": "Ngày phát hành",
         "territoryType": "Khu vực",
-        "cLineYear": "C line year",
-        "pLineYear": "P line year",
+        "cLineYear": "Năm bản quyền tác phẩm",
+        "pLineYear": "Năm bản quyền ghi âm",
         "nameRelease": "Tên phát hành",
         "timezone": "Múi giờ",
         "releaseType": "Thể loại phát hành",
@@ -660,8 +815,34 @@
         "metaDataLanguage": "Ngôn ngữ metadata",
         "cLine": "Bản quyền tác phẩm",
         "pLine": "Bản quyền ghi âm",
+        "version": "Phiên bản",
+        "primaryGenreId": "Thể loại chính",
+        "releaseTime": "Giờ phát hành",
+        "releaseTimezoneId": "Múi giờ",
+        "releaseLanguage": {
+            "metadataLanguageId": "Ngôn ngữ metadata"
+        },
+        "releaseArtists": "Nghệ sĩ phát hành",
+        "pLineOwner": "Bản quyền ghi âm",
+        "cLineOwner": "Bản quyền tác phẩm",
+        "releaseTerritory": {
+            "selectedCountries": "Quốc gia phân phối",
+            "distributionType": "Tuỳ chọn vòng phân phối"
+        },
         "tracks": {
-            "pLine": "Bản quyền ghi âm",
+            "sensitiveContent": "Nội dung nhạy cảm",
+            "trackOriginTypeId": "Nguồn gốc bài hát",
+            "audioLanguageId": "Ngôn ngữ âm thanh",
+            "metadataLanguageId": "Ngôn ngữ metadata",
+            "metadataLanguageCountryId": "Ngôn ngữ quốc gia",
+            "trackLanguage": "Ngôn ngữ bài hát",
+            "recordingCountryId": "Quốc gia thu âm",
+            "preview": "Đoạn nghe trước",
+            "originTypeId": "Nguồn gốc bài hát",
+            "trackArtists": "Nghệ sĩ bài hát",
+            "trackTypeId": "Thể loại bài hát",
+            "primaryGenreId": "Thể loại chính",
+            "pLineOwner": "Bản quyền ghi âm",
             "previewTrack": "Đoạn nghe trước",
             "trackOrigin": "Nguồn gốc bài hát",
             "trackName": "Tên bài hát",
@@ -685,17 +866,17 @@
             "isrc": "ISRC",
             "mainArtist": "Nghệ sĩ chính",
             "originalSource": "Nguồn gốc",
-            "languageTrack": "Ngôn ngữ bài hát",
-            "genresTrack": "Thể loại bài hát",
-            "subGenresTrack": "Thể loại phụ bài hát",
-            "sensitiveContent": "Nội dung nhạy cảm",
-            "countryLanguage": "Ngôn ngữ quốc gia",
+            "languageTrack": "Ngôn ngữ chính của bài hát trong phát hành này. Ví dụ: tiếng Việt, tiếng Anh, v.v.",
+            "countryLanguage": "Ngôn ngữ chính thức của quốc gia liên quan đến phát hành này. Ví dụ: Việt Nam, Hoa Kỳ, v.v.",
             "metadataLanguage": "Ngôn ngữ metadata",
             "lyrics": "Lời bài hát",
             "source": "Nguồn gốc",
             "countryRecording": "Quốc gia ghi âm",
             "recordingType": "Loại ghi âm",
             "isSensitiveContent": "Nội dung nhạy cảm"
+        },
+        "coverArtThumbnails": {
+            "original": "Ảnh phát hành"
         }
     },
 
@@ -703,6 +884,81 @@
         "label": "Phân phối",
         "create": "Tạo phân phối",
         "name": "Tên phân phối",
-        "id": "Mã phân phối"
+        "id": "Mã phân phối",
+        "onlyIn": "Chỉ phân phối trong",
+        "everyWhereExcept": "Phân phối khắp nơi ngoại trừ",
+        "wordWide": "Phân phối khắp thế giới"
+    },
+
+    "emailSender": {
+        "label": "Email sender"
+    },
+
+    "dsp": {
+        "label": "DSP",
+        "name": "Tên nền tảng",
+        "add": "Thêm nền tảng",
+        "message": {
+            "success": {
+                "create": "Thêm nền tảng thành công",
+                "update": "Cập nhật nền tảng thành công",
+                "delete": "Xoá nền tảng thành công"
+            },
+            "error": {
+                "duplicateNameDsp": "Nền tảng này đã tồn tại"
+            }
+        }
+    },
+
+    "artistRole": {
+        "message": {
+            "success": {
+                "create": "Thêm vai trò mới thành công",
+                "delete": "Xoá vài trò thành công",
+                "update": "Cập nhật vài trò thành công"
+            },
+            "error": {
+                "duplicateNameArtistRole": "Vài trò này đã tồn tại"
+            }
+        }
+    },
+
+    "timezone": {
+        "label": "Múi giờ",
+        "create": "Tạo múi giờ",
+        "name": "Tên múi giờ",
+        "utc": "UTC",
+        "zone": "Múi giờ",
+        "add": "Thêm múi giờ",
+        "message": {
+            "success": {
+                "create": "Thêm mới múi giờ thành công",
+                "update": "Cập nhật múi giờ thành công",
+                "delete": "Xoá múi giờ thành công"
+            },
+            "error": {
+                "duplicateNameTimezone": "Múi giờ này đã tồn tại"
+            }
+        }
+    },
+
+    "tooltipForm": {
+        "releaseTitle": "Không bao gồm thông tin phiên bản như Remix hoặc Uncut trong trường Tiêu đề chính. Hãy sử dụng trường Phiên bản thay thế.",
+        "version": "Một phiên bản cụ thể của sản phẩm sẽ được cung cấp cho các cửa hàng và hiển thị cùng với tiêu đề. Ví dụ: 'Live', 'Phiên bản Deluxe'. Nếu có nhiều phiên bản của album, sử dụng trường này để chỉ định phiên bản đúng.",
+        "releaseType": "Chỉ ra kích thước của gói phát hành (ví dụ: Single, EP, Album).",
+        "label": "Trường này xác định nhãn mà theo đó sản phẩm của bạn sẽ được tạo ra.",
+        "eanUpcCode": "Mã Sản phẩm Phổ biến (UPC) là mã số dài 12 hoặc 13 ký tự, thường được sử dụng để nhận diện một hoặc nhiều bản thu âm chính trong một số loại phương tiện.",
+        "catalogId": "Mã duy nhất dùng để nhận diện sản phẩm của nhãn. Trường này là tùy chọn và dùng làm mã nhận diện từ phía nhãn, ví dụ, trong các báo cáo cuối tháng.",
+        "primaryGenre": "Một thể loại thông dụng để nhóm các tác phẩm âm nhạc có chung một tập hợp các quy tắc hoặc truyền thống. Điều này sẽ xác định nơi sản phẩm sẽ được xếp hạng và cách nó sẽ được sắp xếp với âm nhạc tương tự.",
+        "subGenre": "Một thể loại chi tiết hơn giúp phân biệt một tác phẩm âm nhạc theo khu vực, phong cách hoặc âm thanh của nó, mang theo một bộ đặc điểm riêng biệt và dễ dàng phân biệt trong thể loại lớn hơn.",
+        "metadataLanguage": "Ngôn ngữ của metadata sản phẩm.",
+        "variousArtistsCompilation": "Nếu sản phẩm này có 5 hoặc nhiều hơn các nghệ sĩ, hãy chọn hộp này để xác định nó là một tuyển tập của nhiều nghệ sĩ.",
+        "cLineYear": "Năm phát hành đầu tiên của sản phẩm này (với hình ảnh bìa và dàn dựng này) trên toàn thế giới.",
+        "cLineOwner": "Chủ sở hữu C Line xác định thực thể sở hữu bản quyền hợp pháp đối với các sáng tạo liên quan đến sản phẩm này như bìa album, chú thích và metadata.",
+        "pLineYear": "Năm bản thu âm được phát hành lần đầu tiên trên toàn thế giới.",
+        "pLineOwner": "Chủ sở hữu P Line xác định cá nhân/thực thể sở hữu bản thu âm hợp pháp.",
+        "languageTrack": "Ngôn ngữ chính của bài hát trong phát hành này. Ví dụ: tiếng Việt, tiếng Anh, v.v.",
+        "countryLanguage": "Ngôn ngữ chính thức của quốc gia liên quan đến phát hành này. Ví dụ: Việt Nam, Hoa Kỳ, v.v.",
+        "isMoreThan4Artists": "Chọn 'Có' nếu phát hành này có từ 5 nghệ sĩ trở lên để hiển thị là 'Nhiều nghệ sĩ'."
     }
 }

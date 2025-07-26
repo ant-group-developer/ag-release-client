@@ -15,7 +15,7 @@ export const useCreateCountry = () => {
         { onSuccess }: CreateVariables<CreateCountryPayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [countriesQueryKeys.getList],
+            queryKey: [...countriesQueryKeys.getList],
         });
 
         const responseMessages = messages(data?.data?.messageCode);
@@ -31,7 +31,10 @@ export const useCreateCountry = () => {
         const responseMessages = messages(data?.response?.data?.messageCode);
 
         onError?.();
-        showNotification('error', responseMessages);
+        showNotification(
+            'error',
+            responseMessages || messages('common.somethingWentWrong')
+        );
     };
 
     const mutation = useMutation({

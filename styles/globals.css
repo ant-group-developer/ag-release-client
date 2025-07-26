@@ -147,7 +147,7 @@ a {
 .release-detail-header-upload .ant-upload,
 .release-detail-header-upload .ant-upload-list-picture-card,
 .release-detail-header-upload .ant-upload-list-item-container {
-    @apply !size-full !rounded-lg;
+    @apply !aspect-square !size-full !rounded-lg;
 }
 
 .release-detail-header-upload
@@ -340,3 +340,15 @@ a {
 }
 
 /* close ckeditor css */
+
+.custom-collapse .ant-collapse-expand-icon {
+    @apply flex h-full items-center pb-0 pt-0 !important;
+}
+
+.custom-collapse .ant-collapse-header {
+    @apply items-center !important;
+}
+
+.custom-collapse .ant-collapse-content-box {
+    @apply p-6 pt-1 !important;
+}

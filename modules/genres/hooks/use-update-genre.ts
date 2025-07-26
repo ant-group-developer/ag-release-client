@@ -28,7 +28,10 @@ export const useUpdateGenre = () => {
         { onError }: UpdateVariables<GenresData['id'], UpdateGenrePayload>
     ) => {
         const responseMessages = messages(data?.response.data.messageCode);
-        showNotification('error', responseMessages);
+        showNotification(
+            'error',
+            responseMessages || messages('common.somethingWentWrong')
+        );
         onError?.();
     };
 

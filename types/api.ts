@@ -1,3 +1,5 @@
+import { ORDER } from '@/enums/common';
+
 export interface PaginationResponse<T = any> {
     data: {
         items: T[];
@@ -80,7 +82,12 @@ export interface CommonParams {
     page?: number;
     pageSize?: number;
     keyword?: string;
-    // language: LOCALE;
+    fieldOrder?: string;
+    orderBy?: ORDER;
+    startCreatedAt?: string;
+    endCreatedAt?: string;
+    startUpdatedAt?: string;
+    endUpdatedAt?: string;
 }
 
 export interface CreateFile {
@@ -92,14 +99,12 @@ export interface CreateFile {
     googleDriveFileId?: string;
 }
 
-export interface GetUrlUploadParams {
+export interface UploadPayload {
     infoFile: {
-        contentType: string;
-        extension: string;
-        fileSizeInByte: number;
+        entityType: string;
         fileName: string;
-        type?: string;
-        typeKey?: string;
+        contentType: string;
+        fileSize: number;
     };
     file: File;
 }

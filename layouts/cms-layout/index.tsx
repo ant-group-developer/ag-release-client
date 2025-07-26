@@ -8,6 +8,7 @@ import { useRouter } from '@/i18n/routing';
 import Forbidden from '@/modules/auth/components/forbidden';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { usePermission } from '@/modules/auth/hooks/use-permission';
+import AudioPlayer from '@/modules/releases/components/release-detail/release-tracks/audio-player';
 import SocketProvider from '@/providers/socket';
 import { Layout } from 'antd';
 import { ReactNode, useEffect } from 'react';
@@ -84,6 +85,7 @@ export default function CMSLayout({ children, accessToken }: Props) {
                     <Layout>
                         <div className="relative h-[calc(100vh-4rem)] overflow-y-hidden">
                             <Content>{children}</Content>
+                            <AudioPlayer />
                         </div>
                     </Layout>
                 </Layout>

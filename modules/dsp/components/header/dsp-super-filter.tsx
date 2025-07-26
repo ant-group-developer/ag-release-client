@@ -1,5 +1,6 @@
 import DateCreatedDialog from '@/components/filter-dialog/date-create-dialog';
-import SearchDialog from '@/components/shared/search-dialog';
+import DateUpdateDialog from '@/components/filter-dialog/date-update-dialog';
+import SearchDialog from '@/components/filter-dialog/search-dialog';
 import IconButton from '@/components/ui/button/icon-button';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
@@ -86,12 +87,22 @@ export default function DspSuperFilter({
                     onChangeFilter={onChangeFilter}
                 />
 
-                <DspHeaderDropdown
-                    open={typeFilter === TYPE_FILTER.DROPDOWN}
+                <DateUpdateDialog
+                    open={typeFilter === TYPE_FILTER.DATE_UPDATED}
+                    handleChangeTypeFilter={handleChangeTypeFilter}
+                    title={messages('common.dateUpdated')}
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
-                    handleChangeTypeFilter={handleChangeTypeFilter}
                 />
+
+                <div className="grow">
+                    <DspHeaderDropdown
+                        open={typeFilter === TYPE_FILTER.DROPDOWN}
+                        dataFilter={dataFilter}
+                        onChangeFilter={onChangeFilter}
+                        handleChangeTypeFilter={handleChangeTypeFilter}
+                    />
+                </div>
             </div>
             {canClearFilter && (
                 <div className="flex items-center">

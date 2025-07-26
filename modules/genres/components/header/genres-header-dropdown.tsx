@@ -46,10 +46,15 @@ export default function GenresHeaderDropdown({
         {
             label: messages('common.dateCreated'),
             value: TYPE_FILTER.DATE_CREATED,
-            visible: !dataFilter.dateCreated,
+            visible: !dataFilter.startCreatedAt,
             onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_CREATED),
         },
-        // Có thể thêm filter riêng cho genre ở đây
+        {
+            label: messages('common.dateUpdated'),
+            value: TYPE_FILTER.DATE_UPDATED,
+            visible: !dataFilter.startUpdatedAt,
+            onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_UPDATED),
+        },
     ];
 
     const options = dropdownItems.filter(

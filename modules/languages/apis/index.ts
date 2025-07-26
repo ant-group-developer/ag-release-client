@@ -5,18 +5,18 @@ import { CreateLanguagePayload, UpdateLanguagePayload } from '../types/payload';
 
 export const languageApi = {
     getList: (params: LanguageDataFilter) => {
-        return axiosAuth.get<PaginationResponse<LanguagesData>>('/language', {
+        return axiosAuth.get<PaginationResponse<LanguagesData>>('/languages', {
             params,
         });
     },
 
     getDetail: (id: LanguagesData['id']) => {
-        return axiosAuth.get<DetailResponse<LanguagesData>>(`/language/${id}`);
+        return axiosAuth.get<DetailResponse<LanguagesData>>(`/languages/${id}`);
     },
 
     createLanguage: (payload: CreateLanguagePayload) => {
         return axiosAuth.post<DetailResponse<LanguagesData>>(
-            '/language',
+            '/languages',
             payload
         );
     },
@@ -25,10 +25,10 @@ export const languageApi = {
         id: LanguagesData['id'],
         payload: UpdateLanguagePayload
     ) => {
-        return axiosAuth.put(`/language/${id}`, payload);
+        return axiosAuth.put(`/languages/${id}`, payload);
     },
 
     deleteLanguage: (id: LanguagesData['id']) => {
-        return axiosAuth.delete(`/language/${id}`);
+        return axiosAuth.delete(`/languages/${id}`);
     },
 };

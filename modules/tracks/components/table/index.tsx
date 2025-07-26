@@ -1,15 +1,12 @@
 import ActionButton from '@/components/ui/button/action-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import {
-    convertSecondsToHoursMinutes,
-    formattedDate,
-    getIntlCodeByGenres,
-} from '@/helpers/common';
+import { formattedDate } from '@/helpers/common';
+import { RELEASE_MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
+import { TrackArtistData } from '@/modules/track-artist/types';
 import { TRACKS_COLUMNS_DISPLAY } from '@/modules/tracks/enums';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
 import { TrackData } from '../../types';
 
 type Props = Omit<AppTableProps<TrackData>, 'columns'> & {
@@ -22,27 +19,20 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
         {
             title: messages('common.iNo'),
             key: 'iNo',
-            width: 50,
+            width: 30,
             align: 'center',
             render: (_, __, index) => index + 1,
         },
         {
-            // title: messages('common.thumbnail'),
-            key: 'thumbnail',
-            dataIndex: 'thumbnail',
+            title: messages('tracks.id'),
+            key: 'id',
+            dataIndex: 'id',
             align: 'center',
             width: 60,
-            fixed: 'left',
             render: (value) => (
-                <div className="flex items-center justify-center">
-                    <Image
-                        src={value}
-                        alt="thumbnail"
-                        width={200}
-                        height={200}
-                        className="h-12 w-12 cursor-pointer rounded-lg object-cover"
-                    />
-                </div>
+                <CustomTooltip size="small" title={value}>
+                    <span className="truncate"> {value} </span>
+                </CustomTooltip>
             ),
         },
         {
@@ -52,7 +42,7 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
             ellipsis: true,
             align: 'left',
             fixed: 'left',
-            width: 200,
+            width: 150,
             render: (value) => (
                 <CustomTooltip size="small" title={value}>
                     <span className="truncate"> {value} </span>
@@ -61,38 +51,42 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
         },
         {
             title: messages('common.artist'),
-            key: 'artist',
-            dataIndex: 'artist',
+            key: 'trackArtists',
+            dataIndex: 'trackArtists',
             align: 'left',
             ellipsis: true,
-            width: 200,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
-                        {' '}
-                        {value}{' '}
-                    </span>
-                </CustomTooltip>
-            ),
+            width: 150,
+            render: (value, record) => {
+                const trackArtist = record?.trackArtists;
+                const mainArtist = trackArtist?.find(
+                    (item: TrackArtistData) =>
+                        item.artistRole?.name === RELEASE_MAIN_ARTIST_ROLE
+                );
+                return (
+                    <CustomTooltip size="small" title={value}>
+                        <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
+                            {mainArtist?.artist?.name}
+                        </span>
+                    </CustomTooltip>
+                );
+            },
         },
         {
-            title: messages('tracks.id'),
-            key: 'trackId',
-            dataIndex: 'trackId',
+            title: messages('releases.version'),
+            key: 'version',
+            dataIndex: 'version',
             align: 'left',
-            width: 100,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
-                </CustomTooltip>
-            ),
+            width: 50,
+            render: (value, record) => {
+                return <span className="truncate"> {record.version} </span>;
+            },
         },
         {
             title: 'ISRC',
             key: 'isrc',
             dataIndex: 'isrc',
             align: 'left',
-            width: 200,
+            width: 60,
             render: (value) => (
                 <CustomTooltip size="small" title={value}>
                     <span className="truncate"> {value} </span>
@@ -100,29 +94,17 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
             ),
         },
 
-        {
-            title: messages('common.type'),
-            key: 'genres',
-            dataIndex: 'genres',
-            align: 'left',
-            width: 120,
-            render: (value) => {
-                const genresName = messages(getIntlCodeByGenres(value));
-                return <span className="truncate"> {genresName} </span>;
-            },
-        },
-
-        {
-            title: messages('releases.duration'),
-            key: 'duration',
-            dataIndex: 'duration',
-            align: 'center',
-            width: 100,
-            render: (value) => {
-                const duration = convertSecondsToHoursMinutes(Number(value));
-                return <span className="truncate">{duration}</span>;
-            },
-        },
+        // {
+        //     title: messages('releases.duration'),
+        //     key: 'duration',
+        //     dataIndex: 'duration',
+        //     align: 'center',
+        //     width: 100,
+        //     render: (value) => {
+        //         const duration = convertSecondsToHoursMinutes(Number(value));
+        //         return <span className="truncate">{duration}</span>;
+        //     },
+        // },
         {
             title: messages('releases.releaseDate'),
             key: 'releaseDate',
@@ -152,7 +134,7 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
         {
             key: 'actions',
             align: 'center',
-            width: 50,
+            width: 30,
             fixed: 'right',
             render: () => <ActionButton showUpdate showDetail showDelete />,
         },

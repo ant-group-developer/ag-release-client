@@ -1,8 +1,9 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
-import { PAGE_SIZE_OPTIONS } from '@/constants/page-size';
-import { SCREEN } from '@/enums/common';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { ORDER, SCREEN } from '@/enums/common';
+import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import GenresHeader from '@/modules/genres/components/header';
@@ -32,14 +33,17 @@ export default function Genres({}: {}) {
         pageSize: 21,
     });
 
-    const { genresData, isLoading } = useGetListGenres(dataFilter);
+    const { genresData, isLoading, refetch, lastUpdatedAt } =
+        useGetListGenres(dataFilter);
     const { deleteGenre } = useDeleteGenre();
 
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as GenresData);
     const isUpdateForm = !!dataEdit?.id;
-    const handleRefresh = () => {};
+    const handleRefresh = () => {
+        refetch();
+    };
 
     const { height, width } = useWindowSize();
     const isSmallDevice = Number(width) <= SCREEN.MD;
@@ -67,9 +71,22 @@ export default function Genres({}: {}) {
             onSuccess: () => {
                 closeModal();
             },
+            onError: () => {},
         };
 
         deleteGenre(variables);
+    };
+
+    const onChangeSort = (pagination: any, filters: any, sort: any) => {
+        const orderBy = setSortOrder(sort, ORDER.ASC);
+        const fieldOrder = sort.field;
+        onChangeFilter(
+            {
+                orderBy,
+                fieldOrder,
+            },
+            false
+        );
     };
 
     const modalTitle = `${messages('delete.confirmTitle')}`;
@@ -84,11 +101,19 @@ export default function Genres({}: {}) {
                     canClearFilter={canClearFilter}
                     removeFilter={removeFilter}
                     handleRefresh={handleRefresh}
+                    lastUpdatedAt={lastUpdatedAt}
                 />
                 <GenresTable
                     dataSource={genresData.items}
                     scroll={{ x: SCREEN.MD, y: scrollY() }}
                     loading={isLoading}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: genresData.metadata.currentPage,
+                        total: genresData.metadata.totalItems,
+                    }}
+                    dataFilter={dataFilter}
+                    onChange={onChangeSort}
                 />
             </div>
             <AppPagination

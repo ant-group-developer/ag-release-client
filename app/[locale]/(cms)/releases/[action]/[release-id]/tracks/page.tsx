@@ -1,196 +1,139 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import useModalStore from '@/hooks/use-modal';
-import AddArtistModal from '@/modules/artist/components/modal/add-artist';
-import { ArtistData } from '@/modules/artist/types';
-import AudioPlayer from '@/modules/release-detail/release-tracks/audio-player';
-import AddNewTrackModal from '@/modules/release-detail/release-tracks/modal/add-new-track-modal';
-import ReleaseTracksTable from '@/modules/release-detail/release-tracks/table';
+import AddNewTrackModal from '@/modules/releases/components/release-detail/release-tracks/modal/add-new-track-modal';
+import ReleaseTracksTable from '@/modules/releases/components/release-detail/release-tracks/table';
 import {
     TYPE_MODAL_RELEASE,
     TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST,
+    TYPE_MODAL_TRACK,
 } from '@/modules/releases/enums';
-import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import TrackArtistModal from '@/modules/track-artist/components/modal/track-artist-modal';
+import { useDeleteTrackArtist } from '@/modules/track-artist/hooks/use-delete-track-artist';
+import { TrackArtistData } from '@/modules/track-artist/types';
+import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
+import { useDeleteTrack } from '@/modules/tracks/hooks/use-delete-track';
+import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { TrackData } from '@/modules/tracks/types';
-import { Key, useState } from 'react';
+import { DeleteVariables } from '@/types/api';
+import { useTranslations } from 'next-intl';
+import { Key, useEffect, useState } from 'react';
 
 export default function Tracks() {
+    const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
     const [selectedRow, setSelectedRow] = useState<Key[]>([]);
     const typeModal = useModalStore((state) => state.typeModal);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const dataEdit = useModalStore((state) => state.dataEdit);
     const closeModal = useModalStore((state) => state.closeModal);
+    const titleModal = messages('delete.confirmTitle');
+    const paragraphModal = `${messages('delete.confirmMessage', { value: dataEdit?.artist?.name ?? '' })}`;
+
+    const { tracksData, isLoading } = useGetListTracks({
+        releaseId: formValues?.id as string,
+        fieldOrder: 'order',
+    });
+
+    const { deleteTrack } = useDeleteTrack();
+
+    const { deleteTrackArtist } = useDeleteTrackArtist();
 
     const handleRowSelection = (selectedRowKeys: Key[]) => {
         setSelectedRow(selectedRowKeys);
     };
 
-    const handleRemoveTrack = (trackId: string) => {
-        setFormValues({
-            ...formValues,
-            tracks: formValues?.tracks?.filter(
-                (track) => track?.id !== trackId
-            ),
-        });
-    };
-
-    const handleAddTracks = (newTracks: any[]) => {
-        const artistsFromApplyAllTracks =
-            formValues?.artistsApplyAllTracks || [];
-
-        const currentTracks = formValues.tracks || [];
-        const normalizedTracks = currentTracks.map((track: TrackData) => {
-            if (!track.artists) {
-                return {
-                    ...track,
-                    artists: [...artistsFromApplyAllTracks],
-                };
-            }
-            return track;
-        });
-
-        const initialValueTrack: TrackData = {
-            id: '',
-            title: '',
-            trackName: '',
-            trackId: '',
-            genres: '',
-            labelName: '',
-            isrc: '',
-            creationDate: '',
-            releaseDate: '',
-            duration: 0,
-            thumbnail: '',
-            isSensitiveContent: false,
-            plays: 0,
-            fileName: '',
-            trackOrigin: '',
-            languageTrack: '',
-            countryLanguage: '',
-            metadataLanguage: '',
-            lyrics: '',
-            countryRecording: '',
-            recordingType: '',
-            songInfo: {
-                duration: 0,
-                peakData: [],
+    const handleRemoveTrack = () => {
+        const variables: DeleteVariables<TrackData['id']> = {
+            id: dataEdit.id,
+            onSuccess: () => {
+                closeModal();
             },
-            previewTrack: '',
-            territoryType: [],
-            artists: [...artistsFromApplyAllTracks],
         };
-
-        const newTracksWithArtists = newTracks.map((track: TrackData) => {
-            return {
-                ...initialValueTrack,
-                ...track,
-            };
-        });
-
-        setFormValues({
-            ...formValues,
-            tracks: [...normalizedTracks, ...newTracksWithArtists],
-        });
+        deleteTrack(variables);
     };
+
+    const handleAddTracks = (newTracks: any[]) => {};
 
     const rowSelection = {
         selectedRow,
         onChange: handleRowSelection,
     };
 
-    const handleAddArtistTrack = (values: any) => {
-        try {
-            const newArtistData: ArtistData = {
-                name: values.name,
-                role: values.role,
-                id: values.name,
-                artistId: '',
-                thumbnail: '',
-                trackCount: 0,
-                createdAt: new Date(),
-            };
+    const handleRemoveTrackArtist = () => {
+        const variable: DeleteVariables<TrackArtistData['id']> = {
+            id: dataEdit?.id,
+            onSuccess: () => closeModal(),
+        };
+        deleteTrackArtist(variable);
+    };
 
-            const updatedTracks = formValues?.tracks?.map(
-                (track: TrackData) => {
-                    if (track.id === dataEdit?.id) {
-                        const isArtistExists = track.artists?.some(
-                            (artist) => artist.name === newArtistData.name
-                        );
-
-                        if (!isArtistExists) {
-                            return {
-                                ...track,
-                                artists: [
-                                    ...(track.artists || []),
-                                    newArtistData,
-                                ],
-                            };
-                        }
-                    }
-                    return track;
-                }
-            );
-
+    useEffect(() => {
+        if (tracksData?.items) {
             setFormValues({
                 ...formValues,
-                tracks: updatedTracks,
-            });
-            closeModal();
-        } catch (error) {
-            console.error('Validation failed:', error);
-        }
-    };
-
-    const handleRemoveArtistTrack = (values: any) => {
-        const { trackData, artist } = values;
-        const updatedTracks = formValues?.tracks?.map((track: TrackData) => {
-            if (track.id === trackData?.id) {
-                return {
+                tracks: tracksData.items.map((track) => ({
                     ...track,
-                    artists: track.artists?.filter(
-                        (item) => item.id !== artist.id
-                    ),
-                };
-            }
-            return track;
-        });
-
-        setFormValues({
-            ...formValues,
-            tracks: updatedTracks,
-        });
-        closeModal();
-    };
+                    isSensitiveContent: !!track.isSensitiveContent,
+                })),
+            });
+        }
+    }, [tracksData?.items]);
 
     return (
         <div>
             <ReleaseTracksTable
-                dataSource={formValues?.tracks || []}
-                rowSelection={rowSelection}
-                handleRemoveTrack={handleRemoveTrack}
+                // dataSource={tracksData?.items}
+                dataSource={formValues?.tracks ?? []}
+                // rowSelection={rowSelection}
+                loading={isLoading}
             />
-
-            <AudioPlayer />
 
             {typeModal === TYPE_MODAL_RELEASE.ADD_TRACK && (
                 <AddNewTrackModal open onAddTracks={handleAddTracks} />
             )}
 
-            {(typeModal === TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.ADD_ARTIST ||
+            {/* On checking to delete */}
+            {/* {(typeModal === TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.ADD_ARTIST ||
                 typeModal ===
                     TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.EDIT_ARTIST) && (
-                <AddArtistModal onSubmit={handleAddArtistTrack} />
+                <ReleaseArtistModal isSetMainArtist />
+            )} */}
+
+            {(typeModal === TYPE_MODAL_TRACK_ARTIST.ADD ||
+                typeModal === TYPE_MODAL_TRACK_ARTIST.UPDATE) && (
+                <TrackArtistModal />
             )}
 
             {typeModal ===
                 TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.DELETE_ARTIST && (
                 <AppConfirm
                     open
-                    modalTitle="Xóa nghệ sĩ"
-                    paragraph="Bạn có chắc chắn muốn xóa nghệ sĩ ra khỏi bài hát này không?"
+                    modalTitle={titleModal}
+                    paragraph={paragraphModal}
                     onCancel={closeModal}
-                    onOk={() => handleRemoveArtistTrack(dataEdit)}
+                    onOk={() => {}}
+                />
+            )}
+
+            {typeModal === TYPE_MODAL_TRACK_ARTIST.DELETE && (
+                <AppConfirm
+                    open
+                    modalTitle={titleModal}
+                    paragraph={paragraphModal}
+                    onCancel={closeModal}
+                    onOk={() => handleRemoveTrackArtist()}
+                />
+            )}
+
+            {typeModal === TYPE_MODAL_TRACK.DELETE && (
+                <AppConfirm
+                    open
+                    modalTitle={titleModal}
+                    paragraph={paragraphModal}
+                    onCancel={closeModal}
+                    onOk={() => handleRemoveTrack()}
                 />
             )}
         </div>

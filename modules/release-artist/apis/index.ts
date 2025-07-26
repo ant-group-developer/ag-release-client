@@ -1,0 +1,30 @@
+import axiosAuth from '@/api/axios-auth';
+import { DetailResponse } from '@/types/api';
+import { ReleaseArtist } from '../types';
+import {
+    CreateReleaseArtistPayload,
+    UpdateReleaseArtistPayload,
+} from '../types/payload';
+
+export const releaseArtistApi = {
+    createReleaseArtist: (payload: CreateReleaseArtistPayload) => {
+        return axiosAuth.post<DetailResponse<ReleaseArtist>>(
+            '/release-artists',
+            payload
+        );
+    },
+
+    updateReleaseArtist: (
+        id: ReleaseArtist['id'],
+        payload: UpdateReleaseArtistPayload
+    ) => {
+        return axiosAuth.put<DetailResponse<ReleaseArtist>>(
+            `/release-artists/${id}`,
+            payload
+        );
+    },
+
+    deleteReleaseArtist: (id: ReleaseArtist['id']) => {
+        return axiosAuth.delete(`/release-artists/${id}`);
+    },
+};

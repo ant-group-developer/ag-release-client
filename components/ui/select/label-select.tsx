@@ -1,44 +1,53 @@
 import useModalStore from '@/hooks/use-modal';
-import { TYPE_MODAL_LABEL } from '@/modules/labels/enum';
+import { useGetListLabels } from '@/modules/labels/hooks/use-get-list-labels';
+import { LabelData } from '@/modules/labels/types';
 import { Button, Select, SelectProps } from 'antd';
 import { useTranslations } from 'next-intl';
 
-type Props = SelectProps & {};
+type Props = SelectProps & {
+    onCreateLabel?: () => void;
+    fallBack?: string;
+};
 
-export default function LabelSelect({ ...props }: Props) {
+export default function LabelSelect({
+    onCreateLabel,
+    fallBack,
+    ...props
+}: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
-    const fakeLabel = [
-        {
-            id: 1,
-            value: 'AMG1',
-            label: 'AMG1',
-        },
-        {
-            id: 2,
-            value: 'AMG2',
-            label: 'AMG2',
-        },
-        {
-            id: 3,
-            value: 'AMG3',
-            label: 'AMG3',
-        },
-    ];
+
+    const { labelsData } = useGetListLabels({});
+
+    const option = labelsData.items.map((item: LabelData) => {
+        return {
+            id: item.id,
+            value: item.id,
+            label: item.name,
+        };
+    });
+
+    const labelRender = (props: any) => {
+        const { value, label } = props;
+        if (value) {
+            return fallBack || label;
+        }
+    };
+
     return (
         <Select
             {...props}
-            options={fakeLabel}
+            options={option}
+            labelRender={labelRender}
             dropdownRender={(menu) => {
                 return (
                     <div>
                         {menu}
-                        <div className="flex justify-end pt-2">
+                        <div className="flex w-full pt-2">
                             <Button
                                 type="primary"
-                                onClick={() =>
-                                    openModal(TYPE_MODAL_LABEL.CREATE)
-                                }
+                                className="w-full"
+                                onClick={onCreateLabel}
                             >
                                 {messages('common.create')} label
                             </Button>

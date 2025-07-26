@@ -143,22 +143,72 @@ export const QUERY_KEY = {
     },
     COUNTRIES: {
         KEY: 'COUNTRIES',
-        GET_LIST: 'GET_LIST',
-        GET_DETAIL: 'GET_DETAIL',
+        GET_LIST: 'GET_LIST_COUNTRIES',
+        GET_DETAIL: 'GET_DETAIL_COUNTRIES',
     },
     LANGUAGE: {
         KEY: 'LANGUAGE',
-        GET_LIST: 'GET_LIST',
-        GET_DETAIL: 'GET_DETAIL',
+        GET_LIST: 'GET_LIST_LANGUAGE',
+        GET_DETAIL: 'GET_DETAIL_LANGUAGE',
     },
     GENRE: {
         KEY: 'GENRE',
-        GET_LIST: 'GET_LIST',
-        GET_DETAIL: 'GET_DETAIL',
+        GET_LIST: 'GET_LIST_GENRE',
+        GET_DETAIL: 'GET_DETAIL_GENRE',
     },
     LABELS: {
         KEY: 'LABELS',
-        GET_LIST: 'GET_LIST',
-        GET_DETAIL: 'GET_DETAIL',
+        GET_LIST: 'GET_LIST_LABELS',
+        GET_DETAIL: 'GET_DETAIL_LABELS',
+    },
+    ARTIST: {
+        KEY: 'ARTIST',
+        GET_LIST: 'GET_LIST_ARTIST',
+        GET_DETAIL: 'GET_LIST_ARTIST',
+    },
+    ARTIST_ROLE: {
+        KEY: 'ARTIST_ROLE',
+        GET_LIST: 'GET_LIST_ARTIST_ROLE',
+        GET_DETAIL: 'GET_DETAIL_ARTIST_ROLE',
+    },
+    DSP: {
+        KEY: 'DPS',
+        GET_LIST: 'GET_LIST_DSP',
+        GET_DETAIL: 'GET_DETAIL_DSP',
+    },
+    RELEASES: {
+        KEY: 'RELEASES',
+        GET_LIST: 'GET_LIST_RELEASES',
+        GET_DETAIL: 'GET_DETAIL_RELEASES',
+    },
+    TIMEZONE: {
+        KEY: 'TIMEZONE',
+        GET_LIST: 'GET_LIST_TIMEZONE',
+        GET_DETAIL: 'GET_DETAIL_TIMEZONE',
+    },
+    RELEASE_ARTIST: {
+        KEY: 'RELEASE_ARTIST',
+        GET_LIST: 'GET_LIST_RELEASE_ARTIST',
+        GET_DETAIL: 'GET_DETAIL_RELEASE_ARTIST',
+    },
+    TRACK: {
+        KEY: 'TRACK',
+        GET_LIST: 'GET_LIST_TRACK',
+        GET_DETAIL: 'GET_DETAIL_TRACK',
+        GET_LIST_BY_RELEASE_ID: 'TRACK_GET_LIST_TRACK_BY_RELEASE_ID',
+    },
+    TRACK_ARTIST: {
+        KEY: 'TRACK_ARTIST',
+        GET_LIST: 'GET_LIST_TRACK_ARTIST',
+    },
+    TRACK_TYPE: {
+        KEY: 'TRACK_TYPE',
+        GET_LIST: 'GET_LIST_TRACK_TYPE',
+        GET_DETAIL: 'GET_DETAIL_TRACK_TYPE',
+    },
+    TRACK_ORIGIN_TYPE: {
+        KEY: 'TRACK_ORIGIN_TYPE',
+        GET_LIST: 'GET_LIST_TRACK_ORIGIN_TYPE',
+        GET_DETAIL: 'GET_DETAIL_TRACK_ORIGIN_TYPE',
     },
 };

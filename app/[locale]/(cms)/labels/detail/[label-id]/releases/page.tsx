@@ -4,12 +4,12 @@ import AppPagination from '@/components/ui/pagination';
 import { LAYOUT_TABLE, SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
-import { fakeReleasesData } from '@/modules/dashboard/constants/mockData';
 import ReleasesHeader from '@/modules/releases/components/header';
 import ReleasesTable from '@/modules/releases/components/table';
 import ReleasesGridTable from '@/modules/releases/components/table/grid-table';
 import { defaultVisibleColumnsReleases } from '@/modules/releases/constants';
 import { RELEASES_COLUMNS_DISPLAY } from '@/modules/releases/enums';
+import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { ReleasesDataFilter } from '@/modules/releases/types';
 import { useWindowSize } from '@uidotdev/usehooks';
 import dayjs from 'dayjs';
@@ -86,6 +86,8 @@ export default function Releases({}: Props) {
 
     const handleRefresh = () => {};
 
+    const { releasesData } = useGetListReleases(dataFilter);
+
     useEffect(() => {
         if (typeof window !== 'undefined') {
             sessionStorage.setItem(
@@ -127,14 +129,14 @@ export default function Releases({}: Props) {
                     {layoutTable === LAYOUT_TABLE.LIST && (
                         <ReleasesTable
                             visibleColumns={visibleColumns}
-                            dataSource={fakeReleasesData}
+                            dataSource={releasesData?.items}
                             scroll={{ x: SCREEN.XXL, y: scrollY() }}
                         />
                     )}
 
                     {layoutTable === LAYOUT_TABLE.GRID && (
                         <ReleasesGridTable
-                            data={fakeReleasesData}
+                            data={releasesData?.items}
                             loading={false}
                         />
                     )}
@@ -143,9 +145,9 @@ export default function Releases({}: Props) {
                 <AppPagination
                     className="border-t"
                     align="end"
-                    current={dataFilter.page}
+                    current={releasesData.metadata.currentPage}
                     pageSize={dataFilter.pageSize}
-                    total={fakeReleasesData.length}
+                    total={releasesData?.metadata.totalItems}
                     onChange={onChangePage}
                     showTotalText
                     showSizeChanger

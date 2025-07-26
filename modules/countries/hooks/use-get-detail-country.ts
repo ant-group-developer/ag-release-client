@@ -5,7 +5,7 @@ import { CountriesData } from '../types';
 
 export const useGetDetailCountry = (id: CountriesData['id']) => {
     const { data, ...res } = useQuery({
-        queryKey: [countriesQueryKeys.getDetail, id],
+        queryKey: [...countriesQueryKeys.getDetail, id],
         queryFn: () => countriesApi.getDetail(id),
     });
     const defaultData: CountriesData = {

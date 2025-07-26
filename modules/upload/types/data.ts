@@ -1,4 +1,4 @@
-import { DetailResponse } from '@/types/api';
+import { CommonAttribute, DetailResponse } from '@/types/api';
 
 export type UploadResponse = {
     success: boolean;
@@ -26,4 +26,40 @@ export interface FileData {
     name: string;
     contentType: string;
     size: number;
+}
+
+export interface AudioFileBucket {
+    sampleRate: string;
+    bitrate: string | null;
+    bitDepth: number | null;
+    duration?: number;
+    preview: number | null;
+    hook?: number | null;
+    trackId?: string | null;
+    fileId?: string | null;
+    peakId?: string | null;
+    file?: FileBucket;
+    peak?: FileBucket;
+}
+
+export interface FileBucket extends CommonAttribute {
+    isSubmitted: boolean;
+    fileName: string;
+    key: string;
+    contentType: string;
+    extension: string;
+    fileSize: string;
+    bucket: string;
+    urlRead: string;
+}
+
+export interface CreateBucketFile {
+    folderBucket: string;
+    file: {
+        fileName: string;
+        contentType: string;
+        extension: string;
+        fileSize: number;
+    };
+    key?: string;
 }

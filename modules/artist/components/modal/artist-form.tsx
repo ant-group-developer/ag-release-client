@@ -2,34 +2,163 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
+import { getAvatarUrl } from '@/helpers/link';
+import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
+import { uploadApi } from '@/modules/upload/apis';
+import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form, Input } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { useTranslations } from 'next-intl';
+import { useEffect } from 'react';
+import { useCreateArtist } from '../../hooks/use-create-artist';
+import { useUpdateArtist } from '../../hooks/use-update-artist';
+import { ArtistData } from '../../types';
+import { CreateArtistPayload, UpdateArtistPayload } from '../../types/payload';
+
+type ArtistFormValues = Omit<ArtistData, 'id' | 'createdAt' | 'updatedAt'> & {
+    pictureFile?: any;
+};
 
 type Props = Omit<AppModalProps, 'children'> & {};
 
 export default function ArtistFormModal({ ...props }: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
-    const closeModal = useModalStore((state) => state.closeModal);
+    const dataEdit = useModalStore((state) => state.dataEdit as ArtistData);
+    const { active, isActive, deActive } = useActive();
+    const isUpdateForm = dataEdit?.id;
+
+    const { createArtist } = useCreateArtist();
+    const { updateArtist } = useUpdateArtist();
+
+    const handleCreateArtist = (values: ArtistFormValues) => {
+        const variables: CreateVariables<CreateArtistPayload> = {
+            payload: values,
+            onSuccess: () => {
+                form.resetFields();
+                deActive();
+            },
+            onError: () => {
+                deActive();
+            },
+        };
+        createArtist(variables);
+    };
+
+    const handleUpdateArtist = (values: ArtistFormValues) => {
+        const variables: UpdateVariables<
+            ArtistData['id'],
+            UpdateArtistPayload
+        > = {
+            id: dataEdit?.id,
+            payload: values,
+            onSuccess: () => {
+                deActive();
+            },
+            onError: () => {
+                deActive();
+            },
+        };
+
+        updateArtist(variables);
+    };
+
+    const onFinish = async (values: ArtistFormValues) => {
+        const { pictureFile, ...res } = values;
+        const file = values?.pictureFile?.fileList[0]?.originFileObj;
+        const oldFile = values?.pictureFile?.fileList[0]?.url;
+        active();
+        const payloadValues = res;
+        if (file) {
+            const dataPayload = {
+                entityType: 'artists',
+                fileName: file.name,
+                contentType: file.type,
+                fileSize: file.size,
+            };
+
+            try {
+                const urlPublic = await uploadApi.uploadFile({
+                    infoFile: dataPayload,
+                    file: file,
+                });
+                if (urlPublic) {
+                    payloadValues.picture = urlPublic;
+                }
+            } catch (error) {
+                deActive();
+            }
+        } else if (!file && !oldFile) {
+            // payloadValues.picture = null;
+            const defaultImage = getAvatarUrl(values.name);
+            payloadValues.picture = defaultImage;
+        }
+
+        return isUpdateForm
+            ? handleUpdateArtist(payloadValues)
+            : handleCreateArtist(payloadValues);
+    };
+
+    const titleModal = isUpdateForm
+        ? messages('artist.update')
+        : messages('artist.create');
+
+    useEffect(() => {
+        const initialData = {
+            ...dataEdit,
+            pictureFile: dataEdit?.picture
+                ? {
+                      fileList: [
+                          {
+                              uid: dataEdit?.id,
+                              thumbUrl: dataEdit?.picture,
+                              url: dataEdit?.picture,
+                              name: dataEdit?.name,
+                          },
+                      ],
+                  }
+                : undefined,
+        };
+        form.setFieldsValue(initialData);
+    }, [dataEdit]);
+
     return (
         <AppModal
             width={600}
             {...props}
-            title={messages('artist.create')}
+            title={titleModal}
             open
-            onCancel={closeModal}
             onOk={form.submit}
+            loading={isActive}
         >
-            <AppForm form={form} showSubmit={false} layout="vertical">
+            <AppForm
+                form={form}
+                onFinish={onFinish}
+                showSubmit={false}
+                layout="vertical"
+                disabled={isActive}
+            >
                 <div className="flex items-center gap-4">
-                    <AppFormItem name="thumbnail" label={'Avatar'}>
-                        <ImageListUpload maxCount={1} accept="image/*" />
+                    <AppFormItem name="pictureFile" label={'Avatar'}>
+                        <ImageListUpload
+                            maxCount={1}
+                            accept="image/*"
+                            maxSizeMB={2}
+                        />
                     </AppFormItem>
-                    <p className="flex-1 text-center text-sm text-gray-500">
-                        Hỗ trợ định dạng ảnh PNG, JFIF, JPEG, or JPG
-                    </p>
+                    <div>
+                        <p className="flex-1 text-sm text-gray-500">
+                            {messages('image.validation.supportImageFormat', {
+                                value: 'PNG, JPG, JPEG',
+                            })}
+                        </p>
+                        <p className="flex-1 text-sm text-gray-500">
+                            {messages('image.validation.mustBeLessThanMB', {
+                                value: '3',
+                            })}
+                        </p>
+                    </div>
                 </div>
                 <AppFormItem
                     name="name"
@@ -53,13 +182,13 @@ export default function ArtistFormModal({ ...props }: Props) {
 
                 <AppFormItem
                     name="biography"
-                    label={'Biography'}
-                    required
+                    label={messages('common.biography')}
+                    // required
                     rules={[
-                        {
-                            required: true,
-                            message: messages('validation.input'),
-                        },
+                        // {
+                        //     required: true,
+                        //     message: messages('validation.input'),
+                        // },
                         {
                             max: 250,
                             message: messages('validation.max', {
@@ -68,7 +197,12 @@ export default function ArtistFormModal({ ...props }: Props) {
                         },
                     ]}
                 >
-                    <TextArea allowClear />
+                    <TextArea
+                        showCount
+                        autoSize={{ minRows: 4, maxRows: 6 }}
+                        allowClear
+                        className="mb-2"
+                    />
                 </AppFormItem>
 
                 {/* <div className="space-y-4"> 

@@ -1,3 +1,4 @@
 {
-    "cSpell.words": ["Infor", "Sider"]
+    "cSpell.words": ["Infor", "Sider"],
+    "css.customData": [".vscode/tailwind.json"]
 }

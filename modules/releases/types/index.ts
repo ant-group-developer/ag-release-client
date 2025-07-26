@@ -1,26 +1,50 @@
-import { ArtistData } from '@/modules/artist/types';
-import { PlatformData } from '@/modules/platform/types';
-import { GENRES } from '@/modules/tracks/enums';
+import { CountriesData } from '@/modules/countries/types';
+import { GenresData } from '@/modules/genres/types';
+import { LabelData } from '@/modules/labels/types';
+import { LanguagesData } from '@/modules/languages/types';
+import { ReleaseArtist } from '@/modules/release-artist/types';
+import { TimezoneData } from '@/modules/timezone/types';
 import { TrackData } from '@/modules/tracks/types';
-import { CommonParams } from '@/types/api';
+import { CommonAttribute, CommonParams } from '@/types/api';
 import { RELEASES_STATUS, RELEASES_TYPE } from '../enums';
 
-export interface ReleasesData {
-    id: string;
+export interface ReleaseCoverArt {
+    '75x75': string | null;
+    '100x100': string | null;
+    '160x160': string | null;
+    '300x300': string | null;
+    '900x900': string | null;
+    original: string | null;
+}
+
+export interface ReleasesData extends CommonAttribute {
+    creatorId: string;
+    modifierId: string;
+    upc: string;
+    primaryGenreId: string;
+    primaryGenre?: GenresData;
+    subGenreId: string;
+    subGenre?: GenresData;
+    labelId: string;
+    label?: LabelData;
+    isSensitiveContent: boolean;
     title: string;
-    releaseId: string;
-    type: RELEASES_TYPE;
-    labelName: string;
-    UPC: string;
-    creationDate: string;
-    releaseDate: string;
+    version: string | null;
     status: RELEASES_STATUS;
-    trackCount: number;
-    duration: number;
-    thumbnail: string; // Đánh dấu check
-    artist: string;
-    publisher: string;
-    plays: number;
+    type?: RELEASES_TYPE;
+    tracks: TrackData[];
+    releaseArtists?: ReleaseArtist[];
+    coverArtThumbnails?: ReleaseCoverArt | null;
+    pLineOwner: string;
+    cLineOwner: string;
+    catalogId: string | null;
+    isVariousArtist: boolean;
+    releaseLanguage?: releaseLanguage;
+    releaseDate: string;
+    releaseTime: string;
+    releaseTimezoneId: string | null;
+    releaseTerritory: ReleaseTerritory;
+    timeZone: TimezoneData | null;
 }
 
 export interface ReleasesDataFilter extends CommonParams {
@@ -33,26 +57,20 @@ export interface ReleasesDataFilter extends CommonParams {
     genres?: string;
 }
 
-export interface ReleaseFormValuesData {
-    id: string;
-    thumbnail: any;
-    releaseType: RELEASES_TYPE | null;
-    nameRelease: string;
-    version: string;
-    isMoreThan4Artists: boolean;
-    artists: Pick<ArtistData, 'id' | 'name' | 'role'>[];
-    genres: GENRES | null;
-    subGenres: GENRES | null;
-    metaDataLanguage: string;
-    label: string;
-    upc: string;
-    catalogId: string;
-    cLine: { year: string; name: string };
-    pLine: { year: string; name: string };
-    tracks?: TrackData[] | null;
-    releaseDate: string;
-    timezone: string;
-    territoryType: any;
-    artistsApplyAllTracks: ArtistData[];
-    platforms: PlatformData['id'][];
+export interface ReleaseTerritory extends CommonParams {
+    distributeWorldwide: boolean;
+    selectedCountries: string[];
+    distributionType: string;
 }
+
+export interface releaseLanguage extends CommonParams {
+    metadataLanguageCountryId: string | null;
+    metadataLanguageCountry?: CountriesData | null;
+    audioLanguageId: string | null;
+    audioLanguage?: LanguagesData | null;
+    metadataLanguageId: string;
+    metadataLanguage?: LanguagesData | null;
+    releaseId: string;
+}
+
+export type { TrackData } from '@/modules/tracks/types';

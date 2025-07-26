@@ -18,7 +18,7 @@ export const useDeleteGenre = () => {
             queryKey: [...genreQueryKeys.getList],
         });
 
-        showNotification('success', messages(data.data.message));
+        showNotification('success', messages(data.data.messageCode));
         onSuccess?.();
     };
 
@@ -26,7 +26,12 @@ export const useDeleteGenre = () => {
         data: any,
         { onError }: DeleteVariables<GenresData['id']>
     ) => {
-        showNotification('error', messages(data?.response?.data?.message));
+        const responseMessages = messages(data?.response?.data?.messageCode);
+
+        showNotification(
+            'error',
+            responseMessages ?? messages('common.somethingWentWrong')
+        );
         onError?.();
     };
 

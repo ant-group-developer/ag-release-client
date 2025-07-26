@@ -8,7 +8,6 @@ import TracksHeader from '@/modules/tracks/components/header';
 import TracksTable from '@/modules/tracks/components/table';
 import TracksGridTable from '@/modules/tracks/components/table/grid-table';
 import { defaultVisibleColumnsTracks } from '@/modules/tracks/constants';
-import { fakeTrackData } from '@/modules/tracks/constants/mockdata';
 import { TRACKS_COLUMNS_DISPLAY } from '@/modules/tracks/enums';
 import { useWindowSize } from '@uidotdev/usehooks';
 import dayjs from 'dayjs';
@@ -110,13 +109,13 @@ export default function Tracks({}: Props) {
                 {layoutTable === LAYOUT_TABLE.LIST && (
                     <TracksTable
                         visibleColumns={visibleColumns}
-                        dataSource={fakeTrackData}
+                        dataSource={[]}
                         scroll={{ x: SCREEN.XXL, y: scrollY() }}
                     />
                 )}
 
                 {layoutTable === LAYOUT_TABLE.GRID && (
-                    <TracksGridTable data={fakeTrackData} loading={false} />
+                    <TracksGridTable data={[]} loading={false} />
                 )}
             </div>
 
@@ -125,7 +124,7 @@ export default function Tracks({}: Props) {
                 align="end"
                 current={dataFilter.page}
                 pageSize={dataFilter.pageSize}
-                total={fakeTrackData.length}
+                total={[].length}
                 onChange={onChangePage}
                 showTotalText
                 showSizeChanger

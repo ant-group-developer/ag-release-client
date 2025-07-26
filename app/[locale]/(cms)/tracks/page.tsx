@@ -1,5 +1,6 @@
 'use client';
 import AppPagination from '@/components/ui/pagination';
+import { PAGE_SIZE_OPTIONS } from '@/constants/common';
 import { LAYOUT_TABLE, SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
@@ -8,8 +9,8 @@ import TracksHeader from '@/modules/tracks/components/header';
 import TracksTable from '@/modules/tracks/components/table';
 import TracksGridTable from '@/modules/tracks/components/table/grid-table';
 import { defaultVisibleColumnsTracks } from '@/modules/tracks/constants';
-import { fakeTrackData } from '@/modules/tracks/constants/mockdata';
 import { TRACKS_COLUMNS_DISPLAY } from '@/modules/tracks/enums';
+import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { useWindowSize } from '@uidotdev/usehooks';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
@@ -17,6 +18,7 @@ import { useEffect, useState } from 'react';
 type Props = {};
 
 export default function Tracks({}: Props) {
+    // State - hook
     const [visibleColumns, setVisibleColumns] = useState<
         TRACKS_COLUMNS_DISPLAY[]
     >(() => {
@@ -41,10 +43,7 @@ export default function Tracks({}: Props) {
         }
         return defaultVisibleColumnsTracks;
     });
-
-    const handleChangeVisibleColumns = (columns: TRACKS_COLUMNS_DISPLAY[]) => {
-        setVisibleColumns(columns);
-    };
+    const { layoutTable } = useTableLayoutToggle();
     const {
         dataFilter,
         onSearch,
@@ -57,9 +56,16 @@ export default function Tracks({}: Props) {
         pageSize: 21,
     });
     const { height, width } = useWindowSize();
+    const { tracksData, isLoading: isTrackDataLoading } = useGetListTracks({});
 
+    // constant
     const isSmallDevice = Number(width) <= SCREEN.MD;
 
+    // Function
+    const handleChangeVisibleColumns = (columns: TRACKS_COLUMNS_DISPLAY[]) => {
+        setVisibleColumns(columns);
+    };
+    const handleRefresh = () => {};
     const scrollY = () => {
         if (isSmallDevice) return undefined;
         if (!height) return undefined;
@@ -70,10 +76,6 @@ export default function Tracks({}: Props) {
         if (value > minHeight) return value;
         return minHeight;
     };
-
-    const { layoutTable } = useTableLayoutToggle();
-
-    const handleRefresh = () => {};
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -102,27 +104,31 @@ export default function Tracks({}: Props) {
                 {layoutTable === LAYOUT_TABLE.LIST && (
                     <TracksTable
                         visibleColumns={visibleColumns}
-                        dataSource={fakeTrackData}
+                        dataSource={tracksData.items}
                         scroll={{ x: SCREEN.XXL, y: scrollY() }}
+                        loading={isTrackDataLoading}
                     />
                 )}
 
                 {layoutTable === LAYOUT_TABLE.GRID && (
-                    <TracksGridTable data={fakeTrackData} loading={false} />
+                    <TracksGridTable
+                        data={tracksData.items}
+                        loading={isTrackDataLoading}
+                    />
                 )}
             </div>
 
             <AppPagination
                 className="border-b border-t"
                 align="end"
-                current={dataFilter.page}
+                current={tracksData.metadata.currentPage}
                 pageSize={dataFilter.pageSize}
-                total={fakeTrackData.length}
+                total={tracksData.metadata.totalItems}
                 onChange={onChangePage}
                 showTotalText
                 showSizeChanger
                 showQuickJumper
-                pageSizeOptions={[21, 28, 32]}
+                pageSizeOptions={PAGE_SIZE_OPTIONS}
             />
         </div>
     );

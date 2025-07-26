@@ -1,21 +1,27 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
-import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { formattedDate } from '@/helpers/common';
+import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 // import { TYPE_MODAL_GENRES } from '../../enums';
 import ActionButton from '@/components/ui/button/action-button';
+import CopyText from '@/components/ui/copy-text/copy-text';
 import ImageFallback from '@/components/ui/image/image-fallback';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { TYPE_MODAL_GENRES } from '../../enums';
-import { GenresData } from '../../types';
+import { GenresData, GenresDataFilter } from '../../types';
 
 // Table cho Genres
 
-type Props = Omit<AppTableProps<GenresData>, 'columns'> & {};
+type Props = Omit<AppTableProps<GenresData>, 'columns'> & {
+    pagination: {
+        pageSize: number;
+        current: number;
+    };
+    dataFilter: GenresDataFilter;
+};
 
-export const GenresTable = ({ ...props }: Props) => {
+export const GenresTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const column: ColumnType<GenresData>[] = [
@@ -24,27 +30,32 @@ export const GenresTable = ({ ...props }: Props) => {
             key: 'iNo',
             width: 50,
             align: 'center',
-            render: (_, __, index) => index + 1,
+            render: (_, __, index) =>
+                getIndex(
+                    props.pagination.pageSize,
+                    props.pagination.current,
+                    index
+                ),
         },
-        {
-            title: '',
-            key: 'picture',
-            dataIndex: 'picture',
-            align: 'center',
-            width: 48,
-            render: (value) => (
-                <div className="flex justify-center">
-                    <ImageFallback
-                        fallbackSrc={FALLBACK_IMAGE}
-                        src={value ?? ''}
-                        alt="genre"
-                        width={48}
-                        height={48}
-                        className="aspect-square rounded-lg object-cover"
-                    />
-                </div>
-            ),
-        },
+        // {
+        //     title: '',
+        //     key: 'picture',
+        //     dataIndex: 'picture',
+        //     align: 'center',
+        //     width: 48,
+        //     render: (value) => (
+        //         <div className="flex justify-center">
+        //             <ImageFallback
+        //                 fallbackSrc={FALLBACK_IMAGE}
+        //                 src={value ?? ''}
+        //                 alt="genre"
+        //                 width={48}
+        //                 height={48}
+        //                 className="aspect-square rounded-lg object-cover"
+        //             />
+        //         </div>
+        //     ),
+        // },
         {
             title: messages('genres.name'),
             key: 'name',
@@ -52,10 +63,31 @@ export const GenresTable = ({ ...props }: Props) => {
             ellipsis: true,
             align: 'left',
             width: 200,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
-                </CustomTooltip>
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'name'
+            ),
+            render: (value, record) => (
+                <div className="flex items-center gap-4">
+                    <div className="flex-shrink-0">
+                        <ImageFallback
+                            fallbackSrc={FALLBACK_IMAGE}
+                            src={record?.picture ?? ''}
+                            alt="genre"
+                            width={40}
+                            height={40}
+                            className="aspect-square rounded-lg object-cover"
+                        />
+                    </div>
+                    <CopyText
+                        tooltipProps={{ placement: 'right' }}
+                        text={value}
+                    >
+                        <p className="truncate">{value}</p>
+                    </CopyText>
+                </div>
             ),
         },
         {
@@ -65,7 +97,11 @@ export const GenresTable = ({ ...props }: Props) => {
             align: 'left',
             width: 300,
             ellipsis: true,
-            render: (value) => <span className="truncate">{value}</span>,
+            render: (value) => (
+                <span className="line-clamp-3 truncate whitespace-pre-line">
+                    {value}
+                </span>
+            ),
         },
         {
             title: messages('common.dateCreated'),
@@ -73,6 +109,12 @@ export const GenresTable = ({ ...props }: Props) => {
             dataIndex: 'createdAt',
             align: 'center',
             width: 150,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'createdAt'
+            ),
             render: (value) => (
                 <span className="truncate text-wrap">
                     {formattedDate(value)}
@@ -85,6 +127,12 @@ export const GenresTable = ({ ...props }: Props) => {
             dataIndex: 'updatedAt',
             align: 'center',
             width: 150,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'updatedAt'
+            ),
             render: (value) => (
                 <span className="truncate text-wrap">
                     {formattedDate(value)}

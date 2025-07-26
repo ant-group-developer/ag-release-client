@@ -18,7 +18,7 @@ export const useDeleteLanguage = () => {
             queryKey: [...languageQueryKeys.getList],
         });
 
-        showNotification('success', messages(data.data.message));
+        showNotification('success', messages(data.data.messageCode));
         onSuccess?.();
     };
 
@@ -26,7 +26,12 @@ export const useDeleteLanguage = () => {
         data: any,
         { onError }: DeleteVariables<LanguagesData['id']>
     ) => {
-        showNotification('error', messages(data?.response?.data?.message));
+        const responseMessages = messages(data?.response?.data?.messageCode);
+
+        showNotification(
+            'error',
+            responseMessages ?? messages('common.somethingWentWrong')
+        );
         onError?.();
     };
 

@@ -37,6 +37,16 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "legalNotices": "Legal notices",
+        "notAvailable": "Not available",
+        "region": "Khu vực",
+        "specification": "Specification",
+        "missingInformation": "Missing information",
+        "ready": "Ready",
+        "year": "Year",
+        "general": "General",
+        "somethingWentWrong": "Something went wrong",
+        "biography": "Biography",
         "nationality": "Nationality",
         "currencyName": "Currency name",
         "currencySymbol": "Currency symbol",
@@ -64,6 +74,7 @@
         "subGenres": "Sub genres",
         "subArtist": "Sub artist",
         "releaseDate": "Release date",
+        "releaseTime": "Release time",
         "duration": "Duration",
         "draft": "Draft",
         "processing": "Processing",
@@ -302,7 +313,8 @@
         "dimensions": "Dimensions",
         "validation": {
             "mustBeLessThanMB": "Image must be less than {value} MB",
-            "supportImageFormat": "Support image formats {value}"
+            "supportImageFormat": "Support image formats {value}",
+            "mustBeMinWidth": "image minimum of {value}px wide"
         }
     },
     "document": {
@@ -328,13 +340,23 @@
         "label": "Language",
         "name": "Language name",
         "code": "Code language",
-        "vietnamese": "Tiếng Việt",
+        "vietnamese": "vietnamese",
         "select": "Select language",
-        "add": "Add language"
+        "add": "Add language",
+        "message": {
+            "success": {
+                "create": "Add new language successfully",
+                "update": "Update language successfully",
+                "delete": "Delete language successfully"
+            },
+            "error": {
+                "duplicateNameLanguage": "This language name already exists"
+            }
+        }
     },
     "channel": {
         "code": "Channel code",
-        "lable": "Channel"
+        "label": "Channel"
     },
     "system": {
         "label": "System"
@@ -526,7 +548,8 @@
 
     "select": {
         "date": "Select date",
-        "approver": "Select approver"
+        "approver": "Select approver",
+        "option": "Please select options"
     },
 
     "theme": {
@@ -536,6 +559,7 @@
     },
 
     "releases": {
+        "configuration": "Release configuration",
         "otherMetadata": "Other metadata",
         "label": "Release",
         "create": "Create release",
@@ -544,6 +568,7 @@
         "id": "Release ID",
         "type": "Release type",
         "releaseDate": "Release date",
+        "releaseTime": "Release time",
         "duration": "Duration",
         "trackCount": "Track count",
         "publisher": "Publisher release",
@@ -572,10 +597,35 @@
             "selectLanguageMetadata": "Select language metadata"
         },
 
+        "validation": {
+            "mustHaveMainArtist": "Release must have a main artist"
+        },
+
         "scheduling": {
             "label": "Scheduling"
         }
     },
+    "release": {
+        "message": {
+            "success": {
+                "create": "Create release successfully",
+                "update": "Update release successfully",
+                "delete": "Delete release successfully"
+            }
+        }
+    },
+
+    "releaseArtist": {
+        "label": "Release artists",
+        "message": {
+            "success": {
+                "create": "Create release artist successfully",
+                "update": "Update release artist successfully",
+                "delete": "Delete release artist successfully"
+            }
+        }
+    },
+
     "tracks": {
         "number": "Track number",
         "add": "Add track",
@@ -585,6 +635,20 @@
         "name": "Track name",
         "id": "Track ID",
         "count": "Track count",
+        "language": "Track language",
+        "recordingCountry": "Recording country",
+        "original": {
+            "label": "Original Work",
+            "tooltip": "Original work is the piece that was created first, not any cover or remix."
+        },
+        "cover": {
+            "label": "Cover Version",
+            "tooltip": "A cover version is a new performance of a previously released song, which may change the arrangement, lyrics, or both."
+        },
+        "remix": {
+            "label": "Remix Version",
+            "tooltip": "A remix is a version of a song produced by altering the original recording—often changing instrumentation, tempo, or adding new elements."
+        },
         "placeholder": {
             "selectArtist": "Select artist",
             "selectSubArtist": "Select sub artist",
@@ -595,6 +659,57 @@
             "selectSensitiveContent": "Select content"
         }
     },
+
+    "track": {
+        "message": {
+            "success": {
+                "create": "Create track successfully",
+                "update": "Update track successfully",
+                "delete": "Delete track successfully"
+            }
+        }
+    },
+
+    "trackArtist": {
+        "message": {
+            "success": {
+                "create": "Add artist successfully",
+                "update": "Update artist successfully",
+                "delete": "Delete artist successfully"
+            },
+            "note": "Editing the artist will interrupt synchronization with the release artist"
+        }
+    },
+
+    "trackType": {
+        "label": "Track type",
+        "message": {
+            "success": {
+                "create": "Add track type successfully",
+                "update": "Update track type successfully",
+                "delete": "Delete track type successfully"
+            },
+            "error": {
+                "duplicateNameTrackType": "This track type is already exists"
+            }
+        }
+    },
+
+    "trackOriginType": {
+        "label": "Track original",
+        "value": "Value",
+        "message": {
+            "success": {
+                "create": "Add track original successfully",
+                "update": "Update track original successfully",
+                "delete": "Delete track original successfully"
+            },
+            "error": {
+                "duplicateNameTrackOriginType": "This track origin is already exists"
+            }
+        }
+    },
+
     "genres": {
         "name": "Genre name",
         "pop": "Pop",
@@ -607,7 +722,22 @@
         "reggae": "Reggae",
         "rap": "Rap",
         "classical": "Classical",
-        "blues": "Blues"
+        "blues": "Blues",
+        "add": "Add new genre",
+        "primary": "Primary genre"
+    },
+    "genre": {
+        "label": "Genre",
+        "message": {
+            "success": {
+                "create": "Create new genre successfully",
+                "delete": "Delete genre successfully",
+                "update": "Update genre successfully"
+            },
+            "error": {
+                "duplicateNameGenre": "This genres already exist"
+            }
+        }
     },
     "artist": {
         "label": "Artist",
@@ -622,7 +752,18 @@
         "profiles": "Artist profiles",
         "variousArtists": "Various artists",
         "descriptionVariantArtists": "Display name will be 'Various artists'",
-        "role": "Artist role"
+        "role": "Artist role",
+        "canLinkArtistProfile": "Can link artist profile",
+        "message": {
+            "success": {
+                "create": "Add new artist successfully",
+                "update": "Update artist successfully",
+                "delete": "Delete artist successfully"
+            },
+            "error": {
+                "duplicateNameArtist": "This artist already exist"
+            }
+        }
     },
 
     "role": {
@@ -637,6 +778,18 @@
         "name": "Label name",
         "id": "Label ID"
     },
+    "label": {
+        "message": {
+            "success": {
+                "create": "Create label successfully",
+                "delete": "Delete label successfully",
+                "update": "Update label successfully"
+            },
+            "error": {
+                "duplicateNameLabel": "This Label already exist"
+            }
+        }
+    },
     "distribution": {
         "label": "Distribution",
         "create": "Create distribution",
@@ -645,11 +798,15 @@
     },
 
     "formFields": {
+        "title": "Release name",
+        "metadataLanguageId": "Metadata language",
         "artists": "Artists",
         "releaseDate": "Release date",
         "territoryType": "Territory type",
         "cLineYear": "C line year",
         "pLineYear": "P line year",
+        "cLine": "Product copyright",
+        "pLine": "Sound recording copyright",
         "nameRelease": "Release name",
         "version": "Version",
         "timezone": "Timezone",
@@ -657,8 +814,27 @@
         "genres": "Genres",
         "subGenres": "Sub genres",
         "metaDataLanguage": "Metadata language",
+        "primaryGenreId": "Primary genre",
+        "releaseLanguage": "Release language",
+        "releaseArtists": "Release artist",
+        "pLineOwner": "P copyright",
+        "cLineOwner": "C copyright",
+        "releaseTime": "Time release",
+        "releaseTimezoneId": "Timezone",
+        "releaseTerritory": {
+            "selectedCountries": "Countries distribute",
+            "distributionType": "Options distribute"
+        },
         "tracks": {
-            "pLine": "Recoding copyright",
+            "trackOriginTypeId": "Track origin type",
+            "audioLanguageId": "Audio language",
+            "metadataLanguageId": "Metadata language",
+            "metadataLanguageCountryId": "country Language",
+            "trackLanguage": "Ngôn ngữ bài hát",
+            "recordingCountryId": "Recording country",
+            "preview": "Preview track",
+            "primaryGenreId": "Primary genre",
+            "pLineOwner": "Recoding copyright",
             "previewTrack": "Preview track",
             "trackOrigin": "Track origin",
             "track": "Track",
@@ -694,6 +870,9 @@
             "countryRecording": "Country recording",
             "recordingType": "Recording type",
             "isSensitiveContent": "Is sensitive content"
+        },
+        "coverArtThumbnails": {
+            "original": "Release image"
         }
     },
 
@@ -701,6 +880,79 @@
         "label": "Distribute",
         "create": "Create distribute",
         "name": "Distribute name",
-        "id": "Distribute ID"
+        "id": "Distribute ID",
+        "onlyIn": "Distribute only in",
+        "everyWhereExcept": "Distribute everywhere except",
+        "wordWide": "Distribute world wide"
+    },
+
+    "emailSender": {
+        "label": "Email sender"
+    },
+
+    "dsp": {
+        "label": "DSP",
+        "name": "plat form name",
+        "add": "Add platform",
+        "message": {
+            "success": {
+                "create": "Create platform successfully",
+                "update": "Update platform successfully",
+                "delete": "Delete platform successfully"
+            },
+            "error": {
+                "duplicateNameDsp": "This platform already exist"
+            }
+        }
+    },
+
+    "artistRole": {
+        "message": {
+            "success": {
+                "create": "Add new role successfully",
+                "delete": "Delete role successfully",
+                "update": "Update role successfully"
+            },
+            "error": {
+                "duplicateNameArtistRole": "This role already exist"
+            }
+        }
+    },
+    "timezone": {
+        "label": "Timezone",
+        "create": "Create timezone",
+        "name": "Timezone name",
+        "utc": "UTC",
+        "zone": "Timezone",
+        "add": "Add timezone",
+        "message": {
+            "success": {
+                "create": "Add new timezone successfully",
+                "update": "Update timezone successfully",
+                "delete": "Delete timezone successfully"
+            },
+            "error": {
+                "duplicateNameTimezone": "This timezone already exists"
+            }
+        }
+    },
+    "tooltipForm": {
+        "releaseTitle": "Do not include version information like Remix or Uncut in the main Title field. Use the Version field instead.",
+        "version": "A particular iteration of the product that will be delivered to stores and displayed alongside the title. Example: 'Live' , 'Deluxe Version'. If multiple versions of an album exist, use this field to indicate the correct version.",
+        "releaseType": "Indicates the size of the release package (i.e. Single, EP, Album).",
+        "label": "This field determines the label under which your release will be created.",
+        "eanUpcCode": "The Universal Product Code (UPC), is a 12 or 13 character long numeric code typically used to identify one or more master recordings in certain media type.",
+        "catalogId": "Unique code used to identify the label's product. This field is optional and serves as an identifier on your label's side, used, for example, in month-end reports.",
+        "primaryGenre": "A conventional category that groups together pieces of music sharing a set of conventions or traditions. This will determine where a product will chart and how it will be sorted with similar music.",
+        "subGenre": "A more niche category that helps differentiate a piece of music according to its region, style, or sound, carrying its own set of characteristics that clearly distinguish and set it apart within the larger genre.",
+        "metadataLanguage": "The language of the product's metadata.",
+        "variousArtistsCompilation": "If this release contains 5 or more artists, select this box to designate it as Various Artists.",
+        "cLineYear": "The first year this version was released anywhere in the world.",
+        "cLineOwner": "C Line owner identifies the entity which legally owns the copyrights to the release's associated creations such as cover art, liner notes and metadata.",
+        "pLineYear": "The year the sound recording was first released anywhere in the world.",
+        "pLineOwner": "P Line owner identifies the individual/entity which legally owns the sound recording.",
+        "languageTrack": "The main language of the song in this release. For example: Vietnamese, English, etc.",
+        "countryLanguage": "The official language of the country related to this release. For example: Vietnam, United States, etc.",
+        "isMoreThan4Artists": "Select 'Yes' if this release has 5 or more artists to display as 'Various artists'."
     }
 }

@@ -27,7 +27,10 @@ export const useCreateGenre = () => {
         { onError }: CreateVariables<CreateGenrePayload>
     ) => {
         const responseMessages = messages(data?.response.data.messageCode);
-        showNotification('error', responseMessages);
+        showNotification(
+            'error',
+            responseMessages || messages('common.somethingWentWrong')
+        );
         onError?.();
     };
 

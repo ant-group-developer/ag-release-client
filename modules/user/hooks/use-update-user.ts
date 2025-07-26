@@ -17,7 +17,12 @@ export const useUpdateUser = () => {
     };
 
     const onError = (data: any, { onError }: UpdateUser) => {
-        showNotification('error', messages(data?.response?.data.messageCode));
+        const responseMessages = messages(data?.response?.data?.messageCode);
+
+        showNotification(
+            'error',
+            responseMessages ?? messages('common.somethingWentWrong')
+        );
         onError?.(data);
     };
 

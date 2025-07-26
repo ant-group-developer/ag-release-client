@@ -1,25 +1,37 @@
 import ActionButton from '@/components/ui/button/action-button';
+import CopyText from '@/components/ui/copy-text/copy-text';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
-import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { formattedDate } from '@/helpers/common';
+import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
+import { ArtistDataFilter } from '@/modules/artist/types';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_ARTIST_ROLE } from '../../enums';
 import { ArtistRoleData } from '../../types';
 
-type Props = Omit<AppTableProps<ArtistRoleData>, 'columns'> & {};
+type Props = Omit<AppTableProps<ArtistRoleData>, 'columns'> & {
+    pagination: {
+        pageSize: number;
+        current: number;
+    };
+    dataFilter: ArtistDataFilter;
+};
 
-export const ArtistRoleTable = ({ ...props }: Props) => {
+export const ArtistRoleTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const column: ColumnType<ArtistRoleData>[] = [
         {
             title: messages('common.iNo'),
             key: 'iNo',
-            width: 30,
+            width: 100,
             align: 'center',
-            render: (_, __, index) => index + 1,
+            render: (_, __, index) =>
+                getIndex(
+                    props.pagination.pageSize,
+                    props.pagination.current,
+                    index
+                ),
         },
         {
             title: messages('artist.role'),
@@ -27,11 +39,21 @@ export const ArtistRoleTable = ({ ...props }: Props) => {
             dataIndex: 'name',
             ellipsis: true,
             align: 'left',
-            width: 110,
+            width: 500,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'name'
+            ),
             render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
-                </CustomTooltip>
+                <CopyText
+                    tooltipProps={{ placement: 'right' }}
+                    text={value}
+                    label={messages('artist.role')}
+                >
+                    <p className="truncate">{value}</p>
+                </CopyText>
             ),
         },
         {
@@ -39,7 +61,13 @@ export const ArtistRoleTable = ({ ...props }: Props) => {
             key: 'createdAt',
             dataIndex: 'createdAt',
             align: 'center',
-            width: 100,
+            width: 400,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'createdAt'
+            ),
             render: (value) => (
                 <span className="truncate text-wrap">
                     {formattedDate(value)}
@@ -51,7 +79,13 @@ export const ArtistRoleTable = ({ ...props }: Props) => {
             key: 'updatedAt',
             dataIndex: 'updatedAt',
             align: 'center',
-            width: 100,
+            width: 400,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'updatedAt'
+            ),
             render: (value) => (
                 <span className="truncate text-wrap">
                     {formattedDate(value)}
@@ -61,11 +95,13 @@ export const ArtistRoleTable = ({ ...props }: Props) => {
         {
             key: 'actions',
             align: 'center',
-            width: 20,
-            fixed: 'right',
+            width: 100,
             render: (_, record) => (
                 <ActionButton
                     showDelete
+                    onShowDelete={() =>
+                        openModal(TYPE_MODAL_ARTIST_ROLE.DELETE, record)
+                    }
                     showUpdate
                     onShowUpdate={() =>
                         openModal(TYPE_MODAL_ARTIST_ROLE.UPDATE, record)
