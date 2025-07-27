@@ -127,26 +127,29 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                             //     )}
                             // </ul>
                             <ul className="space-y-2">
-                                {releaseValidateData.map((err, index) => (
-                                    <li
-                                        key={index}
-                                        className="group cursor-pointer rounded-md border border-red-200 bg-red-50 p-2 text-sm"
-                                        onClick={() =>
-                                            handleErrorClick(
-                                                err.field,
-                                                err.page as RELEASES_TABS
-                                            )
-                                        }
-                                    >
-                                        <p className="break-words text-red-600 group-hover:underline">
-                                            {getFieldLabel(err.field)}
-                                        </p>
+                                {releaseValidateData?.length > 0 &&
+                                    releaseValidateData?.map((err, index) => (
+                                        <li
+                                            key={index}
+                                            className="group cursor-pointer rounded-md border border-red-200 bg-red-50 p-2 text-sm"
+                                            onClick={() =>
+                                                handleErrorClick(
+                                                    err.field,
+                                                    err.page as RELEASES_TABS
+                                                )
+                                            }
+                                        >
+                                            <p className="break-words text-red-600 group-hover:underline">
+                                                {getFieldLabel(err.field)}
+                                            </p>
 
-                                        <p className="text-xs text-red-500 group-hover:underline">
-                                            {messages(err.messageCode as any)}
-                                        </p>
-                                    </li>
-                                ))}
+                                            <p className="text-xs text-red-500 group-hover:underline">
+                                                {messages(
+                                                    err.messageCode as any
+                                                )}
+                                            </p>
+                                        </li>
+                                    ))}
                             </ul>
                         )}
                     </div>

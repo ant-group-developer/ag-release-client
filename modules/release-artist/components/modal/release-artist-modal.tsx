@@ -61,9 +61,9 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
         (item: ArtistRoleData) => item.name === RELEASE_MAIN_ARTIST_ROLE
     );
 
+    const watchArtistId = useWatch('artistId', form);
     // Handle disabled role that this artist already exists
     const getExistingRoleIdsOfSelectedArtist = () => {
-        const watchArtistId = useWatch('artistId', form);
         return (
             formValues?.releaseArtists
                 ?.filter(
@@ -75,8 +75,8 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
     };
     const disabledRoleIds = getExistingRoleIdsOfSelectedArtist();
 
+    const watchRoleId = useWatch('roleId', form);
     const getExistingArtistOfSelectedRole = () => {
-        const watchRoleId = useWatch('roleId', form);
         return (
             formValues?.releaseArtists
                 ?.filter(
@@ -87,7 +87,6 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
         );
     };
     const disabledArtistIds = getExistingArtistOfSelectedRole();
-   
 
     const handleSubmit = async (values: any) => {
         active();
@@ -220,7 +219,7 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                 )}
 
                 <AppFormItem name="addArtistToTracks" valuePropName="checked">
-                    <Checkbox>
+                    <Checkbox defaultChecked={true}>
                         <span> {messages('artist.addToTracks')}</span>
                     </Checkbox>
                 </AppFormItem>

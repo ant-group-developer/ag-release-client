@@ -59,7 +59,6 @@ export default function TracksForm({ trackData, index }: Props) {
         reset,
         setValue,
     } = formMethods;
-
     const { updateTrackDraft } = useUpdateTrackDraft();
     const debouncedUpdateTrackDraft = useCallback(
         debounce(async (data: any, fieldName?: string) => {
