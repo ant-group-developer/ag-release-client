@@ -1,5 +1,7 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
+import CountrySelect from '@/components/ui/select/country-select';
 import OriginalTypeSelect from '@/components/ui/select/original-type-select';
+import TrackTypesSelect from '@/components/ui/select/track-types-select';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { releaseTrackSchema } from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
@@ -30,6 +32,8 @@ export default function OtherSection({
             pLineOwner: trackData.pLineOwner ?? `${dayjs().year()} `,
             trackOriginTypeId: trackData.trackOriginTypeId ?? '',
             isrc: trackData.isrc ?? '',
+            trackLanguage: trackData?.trackLanguage,
+            trackTypeId: trackData?.trackTypeId,
         },
         resolver: zodResolver(releaseTrackSchema(messages)),
         mode: 'onChange',
@@ -203,9 +207,89 @@ export default function OtherSection({
                                     />
                                 </FormItem>
                             </div>
-                            <div className="col-span-2">
+
+                            <div>
                                 <FormItem
-                                    label="Bản quyền ghi âm"
+                                    name="trackLanguage.recordingCountryId"
+                                    label={messages('tracks.recordingCountry')}
+                                    required
+                                    ErrorMessage={
+                                        errors.trackLanguage?.recordingCountryId
+                                            ?.message
+                                    }
+                                >
+                                    <Controller
+                                        control={control}
+                                        name="trackLanguage.recordingCountryId"
+                                        render={({ field }) => (
+                                            <CountrySelect
+                                                id={`tracks.${index}.recordingCountryId`}
+                                                status={
+                                                    errors.trackLanguage
+                                                        ?.recordingCountryId
+                                                        ? 'error'
+                                                        : undefined
+                                                }
+                                                className="w-full"
+                                                {...field}
+                                                fallBack={
+                                                    trackData?.trackLanguage
+                                                        ?.recordingCountry?.name
+                                                }
+                                                showSearch
+                                                onChange={(e) => {
+                                                    field.onChange(e);
+                                                    debouncedUpdateTrackDraft({
+                                                        trackLanguage: {
+                                                            recordingCountryId:
+                                                                e,
+                                                        },
+                                                    });
+                                                }}
+                                            />
+                                        )}
+                                    />
+                                </FormItem>
+                            </div>
+                            <div>
+                                <FormItem
+                                    name="trackTypeId"
+                                    label={messages('trackType.label')}
+                                    required
+                                    ErrorMessage={errors.trackTypeId?.message}
+                                >
+                                    <Controller
+                                        control={control}
+                                        name="trackTypeId"
+                                        render={({ field }) => (
+                                            <TrackTypesSelect
+                                                id={`tracks.${index}.trackTypeId`}
+                                                status={
+                                                    errors.trackTypeId
+                                                        ? 'error'
+                                                        : undefined
+                                                }
+                                                className="w-full"
+                                                {...field}
+                                                fallBack={
+                                                    trackData?.trackType?.name
+                                                }
+                                                value={field.value ?? ''}
+                                                showSearch
+                                                onChange={(e) => {
+                                                    field.onChange(e);
+                                                    debouncedUpdateTrackDraft({
+                                                        trackTypeId: e,
+                                                    });
+                                                }}
+                                            />
+                                        )}
+                                    />
+                                </FormItem>
+                            </div>
+                            <div>
+                                <FormItem
+                                    label={messages('formFields.pLine')}
                                     ErrorMessage={errors.pLineOwner?.message}
                                     required
                                     name="pLineOwner"
@@ -240,7 +324,7 @@ export default function OtherSection({
                                             };
                                             return (
                                                 <Input
-                                                    id="pLineOwner"
+                                                    id={`tracks.${index}.pLineOwner`}
                                                     value={ownerCopyRight}
                                                     onChange={handleOwnerChange}
                                                     allowClear
@@ -268,7 +352,7 @@ export default function OtherSection({
                                     />
                                 </FormItem>
                             </div>
-                            <div className="col-span-2">
+                            <div>
                                 <FormItem
                                     label="ISRC"
                                     ErrorMessage={errors.isrc?.message}
@@ -279,7 +363,7 @@ export default function OtherSection({
                                         control={control}
                                         render={({ field }) => (
                                             <Input
-                                                id="isrc"
+                                                id={`tracks.${index}.isrc`}
                                                 {...field}
                                                 value={field.value ?? ''}
                                                 onChange={(e) => {

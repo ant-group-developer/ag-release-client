@@ -33,6 +33,7 @@
 @layer base {
     html {
         font-family: var(--font-family-inter);
+        scroll-behavior: smooth;
     }
 }
 

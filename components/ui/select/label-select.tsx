@@ -1,3 +1,4 @@
+import { toNonAccentVietnamese } from '@/helpers/string';
 import useModalStore from '@/hooks/use-modal';
 import { useGetListLabels } from '@/modules/labels/hooks/use-get-list-labels';
 import { LabelData } from '@/modules/labels/types';
@@ -37,6 +38,12 @@ export default function LabelSelect({
     return (
         <Select
             {...props}
+            showSearch
+            filterOption={(input, option) =>
+                toNonAccentVietnamese(option?.label ?? '')
+                    .toLowerCase()
+                    .includes(toNonAccentVietnamese(input).toLowerCase())
+            }
             options={option}
             labelRender={labelRender}
             dropdownRender={(menu) => {

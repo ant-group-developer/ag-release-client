@@ -97,7 +97,7 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                         artistId: values.artistId,
                         artistRoleId: values.roleId ?? mainArtist.id,
                         releaseId: formValues.id as string,
-                        addArtistToTracks: values?.addArtistToTracks ?? false,
+                        addArtistToTracks: !!values?.addArtistToTracks,
                     },
                     onSuccess: () => {
                         closeModal();
@@ -113,7 +113,7 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                     payload: {
                         artistId: values?.artistId,
                         artistRoleId: values.roleId,
-                        addArtistToTracks: values?.addArtistToTracks,
+                        addArtistToTracks: !!values?.addArtistToTracks,
                     },
                     onSuccess: () => {
                         deActive();
@@ -131,7 +131,11 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
             form.setFieldsValue({
                 artistId: dataEdit?.artistId,
                 roleId: dataEdit?.artistRoleId,
-                addArtistToTracks: dataEdit?.addArtistToTracks,
+                addArtistToTracks: dataEdit?.addArtistToTracks ?? true,
+            });
+        } else {
+            form.setFieldsValue({
+                addArtistToTracks: true,
             });
         }
     }, [dataEdit]);
@@ -219,7 +223,7 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                 )}
 
                 <AppFormItem name="addArtistToTracks" valuePropName="checked">
-                    <Checkbox defaultChecked={true}>
+                    <Checkbox>
                         <span> {messages('artist.addToTracks')}</span>
                     </Checkbox>
                 </AppFormItem>

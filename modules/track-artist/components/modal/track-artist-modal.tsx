@@ -69,7 +69,6 @@ export default function TrackArtistModal({ ...props }: Props) {
     const handleSubmit = async (values: any) => {
         active();
         if (!isTrackArtistEditModal) {
-            dataEdit;
             const variables: CreateVariables<CreateTrackArtistPayload> = {
                 payload: {
                     artistId: values.artistId,
@@ -100,9 +99,8 @@ export default function TrackArtistModal({ ...props }: Props) {
     };
 
     // Handle disabled role that this artist already exists
+    const watchArtistId = useWatch('artistId', form);
     const getExistingRoleIdsOfSelectedArtist = () => {
-        const watchArtistId = useWatch('artistId', form);
-
         return (
             trackData?.trackArtists
                 ?.filter(
@@ -114,9 +112,8 @@ export default function TrackArtistModal({ ...props }: Props) {
         );
     };
     const disabledRoleIds = getExistingRoleIdsOfSelectedArtist();
-
+    const watchRoleId = useWatch('roleId', form);
     const getExistingArtistOfSelectedRole = () => {
-        const watchRoleId = useWatch('roleId', form);
         return (
             trackData?.trackArtists
                 ?.filter(

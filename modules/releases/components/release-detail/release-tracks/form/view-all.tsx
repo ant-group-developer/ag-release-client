@@ -1,4 +1,5 @@
 import { TrackData } from '@/modules/tracks/types';
+import AudioSpecSection from '../collapse/view-all-collapse/audio-spec-section';
 import GenreSection from '../collapse/view-all-collapse/genre-section';
 import LanguageSection from '../collapse/view-all-collapse/language-section';
 import OtherSection from '../collapse/view-all-collapse/other-section';
@@ -29,6 +30,12 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
                 trackData={trackData}
             />
             <OtherSection
+                index={index}
+                debouncedUpdateTrackDraft={updateTrackDraft}
+                trackData={trackData}
+            />
+
+            <AudioSpecSection
                 index={index}
                 debouncedUpdateTrackDraft={updateTrackDraft}
                 trackData={trackData}

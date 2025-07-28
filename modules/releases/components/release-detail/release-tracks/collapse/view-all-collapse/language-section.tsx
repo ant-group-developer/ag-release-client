@@ -64,7 +64,7 @@ export default function LanguageSection({
                                         control={control}
                                         render={({ field }) => (
                                             <CountrySelect
-                                                id={`tracks.${index}.trackLanguage.metadataLanguageCountryId`}
+                                                id={`tracks.${index}.metadataLanguageCountryId`}
                                                 className="w-full"
                                                 showSearch
                                                 {...field}
@@ -112,7 +112,7 @@ export default function LanguageSection({
                                         control={control}
                                         render={({ field }) => (
                                             <LanguageSelect
-                                                id={`tracks.${index}.trackLanguage.audioLanguageId`}
+                                                id={`tracks.${index}.audioLanguageId`}
                                                 {...field}
                                                 fallBack={
                                                     trackData?.trackLanguage
@@ -130,6 +130,49 @@ export default function LanguageSection({
                                                         },
                                                         'trackLanguage.audioLanguageId'
                                                     );
+                                                }}
+                                                showSearch
+                                                className="w-full"
+                                                status={
+                                                    errors.trackLanguage
+                                                        ?.audioLanguageId
+                                                        ? 'error'
+                                                        : undefined
+                                                }
+                                            />
+                                        )}
+                                    />
+                                </FormItem>
+                            </div>
+                            <div>
+                                <FormItem
+                                    name="trackLanguage.metadataLanguageId"
+                                    required
+                                    label={`${messages('language.label')} metadata`}
+                                    ErrorMessage={
+                                        errors.trackLanguage?.audioLanguageId
+                                            ?.message
+                                    }
+                                >
+                                    <Controller
+                                        control={control}
+                                        name="trackLanguage.metadataLanguageId"
+                                        render={({ field }) => (
+                                            <LanguageSelect
+                                                id={`tracks.${index}.metadataLanguageId`}
+                                                {...field}
+                                                // fallBack={
+                                                //     trackData?.trackLanguage?.metadataLanguage
+                                                //         ?.name
+                                                // }
+                                                onChange={(e) => {
+                                                    field.onChange(e);
+                                                    debouncedUpdateTrackDraft({
+                                                        trackLanguage: {
+                                                            metadataLanguageId:
+                                                                e,
+                                                        },
+                                                    });
                                                 }}
                                                 showSearch
                                                 className="w-full"

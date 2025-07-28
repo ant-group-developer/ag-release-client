@@ -161,6 +161,7 @@ export default function ReleaseArtistSection({ debouncedUpdate }: Props) {
                                     </div>
                                     <div className="relative">
                                         <Button
+                                            id={'releaseArtists'}
                                             onClick={() =>
                                                 openModal(
                                                     TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST

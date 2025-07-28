@@ -3,6 +3,7 @@ import CountrySelect from '@/components/ui/select/country-select';
 import GenresSelect from '@/components/ui/select/genres-select';
 import LanguageSelect from '@/components/ui/select/language-select';
 import OriginalTypeSelect from '@/components/ui/select/original-type-select';
+import TrackTypesSelect from '@/components/ui/select/track-types-select';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
 import { releaseTrackSchema } from '@/modules/tracks/schemas';
@@ -28,6 +29,7 @@ const otherMetadataSchema = (messages: any) =>
         lyric: true,
         pLineOwner: true,
         trackOriginTypeId: true,
+        trackTypeId: true,
         isrc: true,
     });
 
@@ -53,6 +55,8 @@ export default function OtherMetadataForm({ trackData }: Props) {
             lyric: trackData?.lyric ?? '',
             pLineOwner: trackData?.pLineOwner ?? `${dayjs().year()} `,
             isrc: trackData.isrc ?? '',
+            trackTypeId: trackData?.trackTypeId,
+            trackOriginTypeId: trackData?.trackOriginTypeId,
         },
         resolver: zodResolver(otherMetadataSchema(messages)),
         mode: 'onChange',
@@ -319,6 +323,113 @@ export default function OtherMetadataForm({ trackData }: Props) {
                                         ? 'error'
                                         : undefined
                                 }
+                            />
+                        )}
+                    />
+                </FormItem>
+
+                <FormItem
+                    name="trackLanguage.metadataLanguageId"
+                    required
+                    label={`${messages('language.label')} metadata`}
+                    ErrorMessage={
+                        errors.trackLanguage?.audioLanguageId?.message
+                    }
+                >
+                    <Controller
+                        control={control}
+                        name="trackLanguage.metadataLanguageId"
+                        render={({ field }) => (
+                            <LanguageSelect
+                                id="trackLanguage.metadataLanguageId"
+                                {...field}
+                                // fallBack={
+                                //     trackData?.trackLanguage?.metadataLanguage
+                                //         ?.name
+                                // }
+                                onChange={(e) => {
+                                    field.onChange(e);
+                                    debouncedUpdateTrackDraft({
+                                        trackLanguage: {
+                                            metadataLanguageId: e,
+                                        },
+                                    });
+                                }}
+                                showSearch
+                                className="w-full"
+                                status={
+                                    errors.trackLanguage?.audioLanguageId
+                                        ? 'error'
+                                        : undefined
+                                }
+                            />
+                        )}
+                    />
+                </FormItem>
+
+                <FormItem
+                    name="trackLanguage.recordingCountryId"
+                    label={messages('tracks.recordingCountry')}
+                    required
+                    ErrorMessage={
+                        errors.trackLanguage?.recordingCountryId?.message
+                    }
+                >
+                    <Controller
+                        control={control}
+                        name="trackLanguage.recordingCountryId"
+                        render={({ field }) => (
+                            <CountrySelect
+                                status={
+                                    errors.trackLanguage?.recordingCountryId
+                                        ? 'error'
+                                        : undefined
+                                }
+                                className="w-full"
+                                {...field}
+                                fallBack={
+                                    trackData?.trackLanguage?.recordingCountry
+                                        ?.name
+                                }
+                                showSearch
+                                onChange={(e) => {
+                                    field.onChange(e);
+                                    debouncedUpdateTrackDraft({
+                                        trackLanguage: {
+                                            recordingCountryId: e,
+                                        },
+                                    });
+                                }}
+                            />
+                        )}
+                    />
+                </FormItem>
+
+                <FormItem
+                    name="trackTypeId"
+                    label={messages('trackType.label')}
+                    required
+                    ErrorMessage={errors.trackTypeId?.message}
+                >
+                    <Controller
+                        control={control}
+                        name="trackTypeId"
+                        render={({ field }) => (
+                            <TrackTypesSelect
+                                status={
+                                    errors.trackTypeId ? 'error' : undefined
+                                }
+                                className="w-full"
+                                {...field}
+                                fallBack={trackData?.trackType?.name}
+                                value={field.value ?? ''}
+                                showSearch
+                                onChange={(e) => {
+                                    field.onChange(e);
+                                    debouncedUpdateTrackDraft({
+                                        trackTypeId: e,
+                                    });
+                                }}
                             />
                         )}
                     />

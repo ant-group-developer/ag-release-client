@@ -2,6 +2,7 @@ import { SIZE_ICON } from '@/constants/common';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import type { ReleaseFormStoreData } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { CircleAlert } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import ArtistItem from './artist-item';
@@ -12,6 +13,7 @@ type Props = {};
 export default function MetadataInfo({}: Props) {
     const messages = useTranslations();
     const formValue = useReleaseFormStore((state) => state.formValues);
+    const { releaseData } = useGetDetailRelease(formValue?.id as string);
     const formErrors = useReleaseFormStore((state) => state.validationErrors);
 
     const getFieldError = (fieldPath: keyof ReleaseFormStoreData | string) => {
@@ -19,7 +21,7 @@ export default function MetadataInfo({}: Props) {
     };
 
     const getFieldValue = (fieldPath: string) => {
-        const value = (formValue as any)[fieldPath] || '';
+        const value = (releaseData as any)[fieldPath] || '';
 
         switch (fieldPath) {
             case 'title':
@@ -31,21 +33,21 @@ export default function MetadataInfo({}: Props) {
                 return value;
 
             case 'primaryGenreId':
-                return formValue.primaryGenre?.name || value;
+                return releaseData.primaryGenre?.name || value;
 
             case 'subGenreId':
-                return formValue.subGenre?.name || value;
+                return releaseData.subGenre?.name || value;
 
             case 'labelId':
-                return formValue.label?.name || value;
+                return releaseData.label?.name || value;
 
             case 'metadataLanguageId':
                 return (
-                    formValue.releaseLanguage?.metadataLanguage?.name || value
+                    releaseData.releaseLanguage?.metadataLanguage?.name || value
                 );
 
             case 'type':
-                return formValue.type || value;
+                return releaseData.type || value;
 
             case 'cLineOwner':
             case 'pLineOwner':
@@ -100,7 +102,7 @@ export default function MetadataInfo({}: Props) {
 
             <div>
                 <MetadataInfoItem label={messages('common.artist')}>
-                    {formValue?.releaseArtists?.map(
+                    {releaseData?.releaseArtists?.map(
                         (releaseArtist: ReleaseArtist, index: number) => (
                             <ArtistItem
                                 key={index}

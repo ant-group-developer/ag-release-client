@@ -161,6 +161,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                     <div className="flex w-full gap-4">
                         <AppFormItem name="thumbnail">
                             <ImageListUpload
+                                id="releaseCoverArts"
                                 loading={isUploading}
                                 disabled={isCreateReleasePage}
                                 className={cn(

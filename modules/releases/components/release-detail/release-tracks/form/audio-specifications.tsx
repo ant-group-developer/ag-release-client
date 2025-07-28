@@ -1,6 +1,4 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
-import CountrySelect from '@/components/ui/select/country-select';
-import TrackTypesSelect from '@/components/ui/select/track-types-select';
 import { DATE_FORMAT } from '@/enums/common';
 import {
     convertSecondsToHoursMinutes,
@@ -57,8 +55,6 @@ export default function AudioSpecifications({
         resolver: zodResolver(audioSpecificationsSchema(messages)),
     });
 
-    console.log('trackdata', trackData);
-
     const {
         control,
         handleSubmit,
@@ -114,44 +110,6 @@ export default function AudioSpecifications({
                     </FormItem>
 
                     <FormItem
-                        name="trackLanguage.recordingCountryId"
-                        label={messages('tracks.recordingCountry')}
-                        required
-                        ErrorMessage={
-                            errors.trackLanguage?.recordingCountryId?.message
-                        }
-                    >
-                        <Controller
-                            control={control}
-                            name="trackLanguage.recordingCountryId"
-                            render={({ field }) => (
-                                <CountrySelect
-                                    status={
-                                        errors.trackLanguage?.recordingCountryId
-                                            ? 'error'
-                                            : undefined
-                                    }
-                                    className="w-full"
-                                    {...field}
-                                    fallBack={
-                                        trackData?.trackLanguage
-                                            ?.recordingCountry?.name
-                                    }
-                                    showSearch
-                                    onChange={(e) => {
-                                        field.onChange(e);
-                                        updateTrackDraft({
-                                            trackLanguage: {
-                                                recordingCountryId: e,
-                                            },
-                                        });
-                                    }}
-                                />
-                            )}
-                        />
-                    </FormItem>
-
-                    <FormItem
                         name="audioFile.preview"
                         label={messages('formFields.tracks.preview')}
                         required
@@ -162,6 +120,7 @@ export default function AudioSpecifications({
                             name="audioFile.preview"
                             render={({ field }) => (
                                 <TimePicker
+                                    className="w-full"
                                     showNow={false}
                                     {...field}
                                     value={
@@ -199,34 +158,6 @@ export default function AudioSpecifications({
                                             ? 'error'
                                             : undefined
                                     }
-                                />
-                            )}
-                        />
-                    </FormItem>
-
-                    <FormItem
-                        name="trackTypeId"
-                        label={messages('trackType.label')}
-                        required
-                        ErrorMessage={errors.trackTypeId?.message}
-                    >
-                        <Controller
-                            control={control}
-                            name="trackTypeId"
-                            render={({ field }) => (
-                                <TrackTypesSelect
-                                    status={
-                                        errors.trackTypeId ? 'error' : undefined
-                                    }
-                                    className="w-full"
-                                    {...field}
-                                    fallBack={trackData?.trackType?.name}
-                                    value={field.value ?? ''}
-                                    showSearch
-                                    onChange={(e) => {
-                                        field.onChange(e);
-                                        updateTrackDraft({ trackTypeId: e });
-                                    }}
                                 />
                             )}
                         />

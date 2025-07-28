@@ -1,3 +1,4 @@
+import { toNonAccentVietnamese } from '@/helpers/string';
 import { useGetListArtist } from '@/modules/artist/hooks/use-get-list-artists';
 import { ArtistData } from '@/modules/artist/types';
 import { Button, Select, SelectProps } from 'antd';
@@ -26,6 +27,12 @@ export default function ArtistSelect({
     return (
         <Select
             {...props}
+            showSearch
+            filterOption={(input, option) =>
+                toNonAccentVietnamese(option?.label ?? '')
+                    .toLowerCase()
+                    .includes(toNonAccentVietnamese(input).toLowerCase())
+            }
             options={artistsData.items.map((item: ArtistData) => ({
                 id: item.id,
                 value: item.id,

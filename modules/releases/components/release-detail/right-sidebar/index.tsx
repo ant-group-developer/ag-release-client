@@ -1,4 +1,5 @@
 'use client';
+import { ScrollArea } from '@/components/ui/scroll/scroll-area';
 import { SIZE_ICON } from '@/constants/common';
 import { cn } from '@/helpers/common';
 import { getReleaseDetailTabRoute } from '@/helpers/link';
@@ -73,96 +74,105 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
     return (
         <div
             className={cn(
-                'sticky top-0 h-screen w-[300px] border-x bg-white transition-all duration-300',
+                'sticky top-0 w-[300px] border-x bg-white transition-all duration-300',
                 isSidebarOpen ? 'w-[300px]' : 'w-[75px]'
             )}
         >
-            {/* Header */}
-            <div className="flex h-16 items-center border-b px-3">
-                {isSidebarOpen ? (
-                    <>
-                        <h3 className="grow font-semibold text-red-500">
-                            {`${messages('validation.error')} (${errorCount})`}
-                        </h3>
-                        {
-                            <button onClick={toggleSidebar}>
-                                <ChevronRight size={SIZE_ICON} />
-                            </button>
-                        }
-                    </>
-                ) : (
-                    <button onClick={toggleSidebar} className="mx-auto">
-                        <ChevronLeft size={SIZE_ICON} />
-                    </button>
-                )}
-            </div>
-
-            {/* Content */}
-            <div className="h-[calc(100%-4rem)] overflow-auto">
-                <div className="p-3">
-                    {/* Errors */}
-                    <div className="mb-4">
-                        {isSidebarOpen && (
-                            // <ul className="space-y-2">
-                            //     {errors.length > 0 ? (
-                            //         errors.map((err, index) => (
-                            //             <li
-                            //                 key={index}
-                            //                 className="rounded-md border border-red-200 bg-red-50 p-2 text-sm"
-                            //             >
-                            //                 {err.path.length > 0 && (
-                            //                     <p className="break-words text-red-600">
-                            //                         {getFieldLabel(err.path)}
-                            //                     </p>
-                            //                 )}
-                            //                 <p className="text-xs text-red-500">
-                            //                     {err.message}
-                            //                 </p>
-                            //             </li>
-                            //         ))
-                            //     ) : (
-                            //         <li className="text-sm text-gray-500">
-                            //             {messages('validation.noError')}
-                            //         </li>
-                            //     )}
-                            // </ul>
-                            <ul className="space-y-2">
-                                {releaseValidateData?.length > 0 &&
-                                    releaseValidateData?.map((err, index) => (
-                                        <li
-                                            key={index}
-                                            className="group cursor-pointer rounded-md border border-red-200 bg-red-50 p-2 text-sm"
-                                            onClick={() =>
-                                                handleErrorClick(
-                                                    err.field,
-                                                    err.page as RELEASES_TABS
-                                                )
-                                            }
-                                        >
-                                            <p className="break-words text-red-600 group-hover:underline">
-                                                {getFieldLabel(err.field)}
-                                            </p>
-
-                                            <p className="text-xs text-red-500 group-hover:underline">
-                                                {messages(
-                                                    err.messageCode as any
-                                                )}
-                                            </p>
-                                        </li>
-                                    ))}
-                            </ul>
-                        )}
-                    </div>
-
-                    {/* errors */}
-                    {!isSidebarOpen && (
-                        <div>
-                            <h4 className="mb-2 flex items-center gap-2 text-red-500">
-                                <AlertTriangle size={SIZE_ICON} />({errorCount})
-                            </h4>
-                        </div>
+            <div className="h-screen">
+                {/* Header */}
+                <div className="flex h-16 items-center border-b px-3">
+                    {isSidebarOpen ? (
+                        <>
+                            <h3 className="grow font-semibold text-red-500">
+                                {`${messages('validation.error')} (${errorCount})`}
+                            </h3>
+                            {
+                                <button onClick={toggleSidebar}>
+                                    <ChevronRight size={SIZE_ICON} />
+                                </button>
+                            }
+                        </>
+                    ) : (
+                        <button onClick={toggleSidebar} className="mx-auto">
+                            <ChevronLeft size={SIZE_ICON} />
+                        </button>
                     )}
                 </div>
+
+                {/* Content */}
+                {/* <div className="h-[calc(100%-8rem)] overflow-auto"> */}
+                <ScrollArea className="h-[calc(100%-8rem)]">
+                    <div className="p-3">
+                        {/* Errors */}
+                        <div className="mb-4">
+                            {isSidebarOpen && (
+                                // <ul className="space-y-2">
+                                //     {errors.length > 0 ? (
+                                //         errors.map((err, index) => (
+                                //             <li
+                                //                 key={index}
+                                //                 className="rounded-md border border-red-200 bg-red-50 p-2 text-sm"
+                                //             >
+                                //                 {err.path.length > 0 && (
+                                //                     <p className="break-words text-red-600">
+                                //                         {getFieldLabel(err.path)}
+                                //                     </p>
+                                //                 )}
+                                //                 <p className="text-xs text-red-500">
+                                //                     {err.message}
+                                //                 </p>
+                                //             </li>
+                                //         ))
+                                //     ) : (
+                                //         <li className="text-sm text-gray-500">
+                                //             {messages('validation.noError')}
+                                //         </li>
+                                //     )}
+                                // </ul>
+                                <ul className="space-y-2">
+                                    {releaseValidateData?.length > 0 &&
+                                        releaseValidateData?.map(
+                                            (err, index) => (
+                                                <li
+                                                    key={index}
+                                                    className="group cursor-pointer rounded-md border border-red-200 bg-red-50 p-2 text-sm"
+                                                    onClick={() =>
+                                                        handleErrorClick(
+                                                            err.field,
+                                                            err.page as RELEASES_TABS
+                                                        )
+                                                    }
+                                                >
+                                                    <p className="break-words text-red-600 group-hover:underline">
+                                                        {getFieldLabel(
+                                                            err.field
+                                                        )}
+                                                    </p>
+
+                                                    <p className="text-xs text-red-500 group-hover:underline">
+                                                        {messages(
+                                                            err.messageCode as any
+                                                        )}
+                                                    </p>
+                                                </li>
+                                            )
+                                        )}
+                                </ul>
+                            )}
+                        </div>
+
+                        {/* errors */}
+                        {!isSidebarOpen && (
+                            <div>
+                                <h4 className="mb-2 flex items-center gap-2 text-red-500">
+                                    <AlertTriangle size={SIZE_ICON} />(
+                                    {errorCount})
+                                </h4>
+                            </div>
+                        )}
+                    </div>
+                </ScrollArea>
+                {/* </div> */}
             </div>
         </div>
     );

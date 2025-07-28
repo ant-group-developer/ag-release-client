@@ -1,3 +1,4 @@
+import { toNonAccentVietnamese } from '@/helpers/string';
 import { useGetListTimezones } from '@/modules/timezone/hooks/use-get-list-timezones';
 import { TimezoneData } from '@/modules/timezone/types';
 import { Select, SelectProps } from 'antd';
@@ -18,13 +19,13 @@ export default function TimezoneSelect({ ...props }: TimezoneSelectProps) {
             placeholder={'Chọn múi giờ'}
             {...props}
             showSearch
+            filterOption={(input, option) =>
+                toNonAccentVietnamese(option?.label ?? '')
+                    .toLowerCase()
+                    .includes(toNonAccentVietnamese(input).toLowerCase())
+            }
             optionFilterProp="label"
             options={options}
-            filterOption={(input, option) =>
-                (option?.label ?? '')
-                    .toLowerCase()
-                    .includes(input.toLowerCase())
-            }
             allowClear
         />
     );

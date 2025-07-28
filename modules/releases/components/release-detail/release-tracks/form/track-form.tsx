@@ -14,7 +14,7 @@ import { Button, Input, Switch } from 'antd';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect } from 'react';
-import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import ArtistCard from '../../release-detail-form/artist-card';
 
@@ -83,25 +83,25 @@ export default function TracksForm({ trackData, index }: Props) {
 
     const isAddArtistsFromRelease = watch('copyArtistsFromRelease');
 
-    const watchedAllFields = useWatch({ control });
+    // const watchedAllFields = useWatch({ control });
 
-    useEffect(() => {
-        setFormValues({
-            ...formValues,
-            tracks: formValues?.tracks?.map((track: TrackData) => {
-                if (track.id === trackData.id) {
-                    const { ...restFields } = watchedAllFields;
+    // useEffect(() => {
+    //     setFormValues({
+    //         ...formValues,
+    //         tracks: formValues?.tracks?.map((track: TrackData) => {
+    //             if (track.id === trackData.id) {
+    //                 const { ...restFields } = watchedAllFields;
 
-                    return {
-                        ...track,
-                        ...restFields,
-                        title: restFields.title ?? track.title,
-                    } as TrackData;
-                }
-                return track;
-            }),
-        });
-    }, [watchedAllFields]);
+    //                 return {
+    //                     ...track,
+    //                     ...restFields,
+    //                     title: restFields.title ?? track.title,
+    //                 } as TrackData;
+    //             }
+    //             return track;
+    //         }),
+    //     });
+    // }, [watchedAllFields]);
 
     useEffect(() => {
         reset({ ...trackData });
@@ -239,7 +239,6 @@ export default function TracksForm({ trackData, index }: Props) {
                                     trackData
                                 )
                             }
-                            shape="round"
                             className="mt-4"
                         >
                             {messages('artist.add')}

@@ -1,3 +1,4 @@
+import { toNonAccentVietnamese } from '@/helpers/string';
 import { useGetListGenres } from '@/modules/genres/hooks/use-get-list-genres';
 import { GenresData } from '@/modules/genres/types';
 import { Select, SelectProps } from 'antd';
@@ -23,5 +24,17 @@ export default function GenresSelect({ fallBack, ...props }: Props) {
         }
     };
 
-    return <Select {...props} options={option} labelRender={labelRender} />;
+    return (
+        <Select
+            {...props}
+            showSearch
+            filterOption={(input, option) =>
+                toNonAccentVietnamese(option?.label ?? '')
+                    .toLowerCase()
+                    .includes(toNonAccentVietnamese(input).toLowerCase())
+            }
+            options={option}
+            labelRender={labelRender}
+        />
+    );
 }

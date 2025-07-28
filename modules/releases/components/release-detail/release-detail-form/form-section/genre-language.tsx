@@ -143,7 +143,6 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                                             <LanguageSelect
                                                 className="w-full"
                                                 id="metadataLanguageId"
-                                                showSearch
                                                 {...field}
                                                 fallBack={fallBackLabel}
                                                 onChange={(e) => {

@@ -63,7 +63,12 @@ export const releaseSchema = (messages: any) =>
             .refine((val) => val !== null, {
                 message: messages('validation.input'),
             }),
-        labelId: z.string().optional().nullable(),
+        labelId: z
+            .string()
+            .nullable()
+            .refine((val) => val !== null && val !== '', {
+                message: messages('validation.input'),
+            }),
         catalogId: z
             .string()
             .max(100, messages('validation.max', { number: 100 }))

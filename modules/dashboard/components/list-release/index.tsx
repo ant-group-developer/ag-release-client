@@ -3,7 +3,7 @@ import FlatList from '@/components/ui/flat-list';
 import AppGrid from '@/components/ui/grid/app-grid';
 import { ReleasesData } from '@/modules/releases/types';
 import { useTranslations } from 'next-intl';
-import CardRelease from '../card/card-album';
+import CardRelease from '../card/card-release';
 
 type Props = {
     data: ReleasesData[];

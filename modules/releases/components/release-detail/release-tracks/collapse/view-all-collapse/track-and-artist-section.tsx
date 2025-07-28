@@ -13,6 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Input, Switch, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
+import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import ArtistCard from '../../../release-detail-form/artist-card';
 const { Title } = Typography;
@@ -59,6 +60,10 @@ export default function TrackAndArtistSection({
     const router = useRouter();
 
     const isAddArtistsFromRelease = watch('copyArtistsFromRelease');
+
+    useEffect(() => {
+        setValue('title', trackData?.title);
+    }, [trackData]);
 
     return (
         <CollapseItem
@@ -208,13 +213,13 @@ export default function TrackAndArtistSection({
                                             )}
                                         </div>
                                         <Button
+                                            id={`tracks.${index}.trackArtists`}
                                             onClick={() =>
                                                 openModal(
                                                     TYPE_MODAL_TRACK_ARTIST.ADD,
                                                     trackData
                                                 )
                                             }
-                                            shape="round"
                                             className="mt-4"
                                         >
                                             {messages('artist.add')}

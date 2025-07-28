@@ -4,6 +4,7 @@ import { UpdateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { trackApi } from '../apis';
+import { trackQueryKeys } from '../constants/query-keys';
 import { TrackData } from '../types';
 import { UpdateTrackPayload } from '../types/payload';
 
@@ -15,16 +16,16 @@ export const useUpdateTrackDraft = () => {
         data: any,
         { onSuccess }: UpdateVariables<TrackData['id'], UpdateTrackPayload>
     ) => {
-        queryClient.invalidateQueries({
-            queryKey: [...releasesQueryKeys.getDetail],
-        });
+        // queryClient.invalidateQueries({
+        //     queryKey: [...releasesQueryKeys.getDetail],
+        // });
         queryClient.invalidateQueries({
             queryKey: [...releasesQueryKeys.validate],
         });
 
-        // queryClient.invalidateQueries({
-        //     queryKey: [...trackQueryKeys.getList],
-        // });
+        queryClient.invalidateQueries({
+            queryKey: [...trackQueryKeys.getList],
+        });
 
         // const responseMessages = messages(data?.data?.messageCode);
 

@@ -145,6 +145,7 @@ export default function ReleaseSchedulingForm({}: Props) {
                                 name="releaseTime"
                                 render={({ field }) => (
                                     <TimePicker
+                                        id="releaseTime"
                                         className="w-full"
                                         value={
                                             field.value

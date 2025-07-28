@@ -6,6 +6,7 @@ import { showNotification } from '@/helpers/messages-helper';
 import useModalStore from '@/hooks/use-modal';
 import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
 import { useTrackReadyStore } from '@/modules/releases/hooks/track-ready-store';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
@@ -46,6 +47,9 @@ export default function ReleaseTracksTable({ ...props }: Props) {
 
     const { updateTrackDraft } = useUpdateTrackDraft();
     const { updateTrackOrder } = useUpdateTrackOrder();
+    const { releaseValidateData } = useReleaseValidate(
+        formValues?.id as string
+    );
 
     const handleDragEnd: OnDragEnd<TrackData[]> = (newData) => {
         const payload = newData.map((item, index) => ({
@@ -115,9 +119,10 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             render: (value, record) => {
                 return (
                     <Input
+                        key={record.id + '-' + record.title}
                         maxLength={100}
                         minLength={1}
-                        defaultValue={record?.title}
+                        defaultValue={record.title}
                         onChange={(e) => {
                             const value = e.target.value;
                             if (value.length < 1) {
@@ -180,9 +185,10 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             align: 'center',
             width: 150,
             render: (value, record, index) => {
-                const isTrackError = formErrors.some(
-                    (error) => error.path[1] === index
-                );
+                const isTrackError = releaseValidateData.some((error) => {
+                    const parts = error.field.split('.');
+                    return parts[0] === 'tracks' && Number(parts[1]) === index;
+                });
                 const color = isTrackError ? 'red' : 'green';
                 return (
                     <Tag bordered color={color}>
@@ -234,7 +240,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                 ),
                 children: (
                     <TracksForm
-                        key={`${record.id}-track-form-content`}
+                        key={`${record.id}-${record.title}-track-form-content`}
                         trackData={record}
                         index={index}
                     />
@@ -292,7 +298,10 @@ export default function ReleaseTracksTable({ ...props }: Props) {
         ];
         return (
             <div className="px-20 py-4">
-                <Tabs items={items} />
+                <Tabs
+                    items={items}
+                    defaultActiveKey={`${record.id}-view-all`}
+                />
             </div>
         );
     };
