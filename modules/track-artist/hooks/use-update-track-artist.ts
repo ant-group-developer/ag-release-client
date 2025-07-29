@@ -23,22 +23,23 @@ export const useUpdateTrackArtist = () => {
             queryKey: [...releasesQueryKeys.validate],
         });
 
-        const responseMessages = messages(data?.data?.messageCode);
+        // const responseMessages = messages(data?.data?.messageCode);
 
         onSuccess?.(data?.data?.data);
-        showNotification('success', responseMessages);
+        // showNotification('success', responseMessages);
     };
 
     const onError = (
         data: any,
         { onError }: CreateVariables<UpdateTrackArtistPayload>
     ) => {
-        // const responseMessages = messages(data?.response?.data?.messageCode);
-        // onError?.();
-        // showNotification(
-        //     'error',
-        //     responseMessages || messages('common.somethingWentWrong')
-        // );
+        const responseMessages = messages(data?.response?.data?.messageCode);
+
+        onError?.();
+        showNotification(
+            'error',
+            responseMessages || messages('common.somethingWentWrong')
+        );
     };
     const mutation = useMutation({
         mutationFn: ({
