@@ -10,7 +10,6 @@ import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
 import { AlertTriangle, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-
 interface RightSidebarProps {}
 
 export default function RightSidebar({ ...props }: RightSidebarProps) {
@@ -58,11 +57,17 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
     const toggleSidebar = () => {
         setIsSidebarOpen((prevState) => !prevState);
     };
-    const handleErrorClick = (field: string, page: RELEASES_TABS) => {
+    const handleErrorClick = async (field: string, page: RELEASES_TABS) => {
         const newUrl = `${getReleaseDetailTabRoute(formValues?.id as string, page)}#${field}`;
-        // const newUrl = `/releases/detail/${router.query.id}/err.page#${err.field}`;
-        router.push(newUrl);
+        // new scroll
+        await router.push(newUrl);
         setTimeout(() => {
+            const el = document.getElementById(field);
+            el?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'center',
+            });
             window.dispatchEvent(new HashChangeEvent('hashchange'));
         }, 100);
     };
