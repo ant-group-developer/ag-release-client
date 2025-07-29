@@ -673,6 +673,9 @@
             "selectLanguage": "Chọn ngôn ngữ",
             "selectLabel": "Chọn hãng phát hành",
             "selectSensitiveContent": "Lựa chọn nội dung"
+        },
+        "validation": {
+            "previewMustBeLessThanDuration": "Thời gian xem trước phải nhỏ hơn thời gian bài hát"
         }
     },
 

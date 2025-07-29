@@ -672,6 +672,9 @@
             "selectLanguage": "Select language",
             "selectLabel": "Select label",
             "selectSensitiveContent": "Select content"
+        },
+        "validation": {
+            "previewMustBeLessThanDuration": "Preview duration must be less than track duration"
         }
     },
 

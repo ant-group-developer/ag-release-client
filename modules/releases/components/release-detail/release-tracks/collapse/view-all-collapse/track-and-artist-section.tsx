@@ -20,7 +20,7 @@ const { Title } = Typography;
 
 type Props = {
     index: number;
-    debouncedUpdateTrackDraft: (data: any, fieldName?: string) => void;
+    debouncedUpdateTrackDraft: (data: any) => void;
     trackData: TrackData;
 };
 
@@ -61,6 +61,16 @@ export default function TrackAndArtistSection({
 
     const isAddArtistsFromRelease = watch('copyArtistsFromRelease');
 
+    const updateTrackDraft = async (data: any, fieldName?: string) => {
+        if (fieldName) {
+            const isValid = await trigger(
+                fieldName as keyof ReleaseTrackSchema
+            );
+            if (!isValid) return;
+        }
+        debouncedUpdateTrackDraft(data);
+    };
+
     useEffect(() => {
         setValue('title', trackData?.title);
     }, [trackData]);
@@ -100,7 +110,7 @@ export default function TrackAndArtistSection({
                                                         const value =
                                                             e.target.value;
                                                         field.onChange(value);
-                                                        debouncedUpdateTrackDraft(
+                                                        updateTrackDraft(
                                                             { title: value },
                                                             'title'
                                                         );
@@ -134,7 +144,7 @@ export default function TrackAndArtistSection({
                                                         const value =
                                                             e.target.value;
                                                         field.onChange(value);
-                                                        debouncedUpdateTrackDraft(
+                                                        updateTrackDraft(
                                                             { version: value },
                                                             'version'
                                                         );

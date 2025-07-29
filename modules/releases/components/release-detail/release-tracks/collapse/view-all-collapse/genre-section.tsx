@@ -1,7 +1,10 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
 import GenresSelect from '@/components/ui/select/genres-select';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
-import { releaseTrackSchema } from '@/modules/tracks/schemas';
+import {
+    ReleaseTrackSchema,
+    releaseTrackSchema,
+} from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Typography } from 'antd';
@@ -12,7 +15,7 @@ const { Title } = Typography;
 
 type Props = {
     index: number;
-    debouncedUpdateTrackDraft: (data: any, fieldName?: string) => void;
+    debouncedUpdateTrackDraft: (data: any) => void;
     trackData: TrackData;
 };
 
@@ -33,7 +36,18 @@ export default function GenreSection({
     const {
         control,
         formState: { errors },
+        trigger,
     } = formMethods;
+
+    const updateTrackDraft = async (data: any, fieldName?: string) => {
+        if (fieldName) {
+            const isValid = await trigger(
+                fieldName as keyof ReleaseTrackSchema
+            );
+            if (!isValid) return;
+        }
+        debouncedUpdateTrackDraft(data);
+    };
     return (
         <CollapseItem
             defaultActiveKey={['genre']}
@@ -71,7 +85,7 @@ export default function GenreSection({
                                                 }
                                                 onChange={(e) => {
                                                     field.onChange(e);
-                                                    debouncedUpdateTrackDraft(
+                                                    updateTrackDraft(
                                                         { primaryGenreId: e },
                                                         'primaryGenreId'
                                                     );
@@ -107,7 +121,7 @@ export default function GenreSection({
                                                 }
                                                 onChange={(e) => {
                                                     field.onChange(e);
-                                                    debouncedUpdateTrackDraft(
+                                                    updateTrackDraft(
                                                         { subGenreId: e },
                                                         'subGenreId'
                                                     );
