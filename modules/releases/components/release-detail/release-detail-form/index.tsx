@@ -190,7 +190,9 @@ export default function ReleaseDetailForm() {
                     // },
                 };
                 // setFormValues(initialFormValue);
-                reset(initialFormValue);
+                reset(initialFormValue, {
+                    keepErrors: true,
+                });
             }
         }
     }, [isCreateReleasePage, releaseId, formValues]);
