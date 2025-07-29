@@ -30,6 +30,8 @@ export default function LanguageSection({
                 metadataLanguageCountryId:
                     trackData.trackLanguage?.metadataLanguageCountryId ?? '',
                 audioLanguageId: trackData.trackLanguage?.audioLanguageId ?? '',
+                metadataLanguageId:
+                    trackData.trackLanguage?.metadataLanguageId ?? '',
             },
         },
         resolver: zodResolver(releaseTrackSchema(messages)),
