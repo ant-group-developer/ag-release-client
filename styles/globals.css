@@ -227,6 +227,11 @@ a {
     line-height: 16px !important;
 }
 
+.ant-typography {
+    font-family: var(--font-inter), Inter, sans-serif !important;
+    color: #3f4254 !important;
+}
+
 /* CKeditor css */
 .home .ql-container {
     max-height: 450px;
@@ -352,4 +357,9 @@ a {
 
 .custom-collapse .ant-collapse-content-box {
     @apply p-6 pt-1 !important;
+}
+
+/* Custom sideBar release Alert */
+.custom-alert-sidebar .ant-alert-message {
+    @apply !mb-1 !important;
 }
