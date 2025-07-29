@@ -23,10 +23,10 @@ export const useUpdateReleaseArtist = () => {
             queryKey: [...releasesQueryKeys.getDetail],
         });
 
-        const responseMessages = messages(data?.data?.messageCode);
+        // const responseMessages = messages(data?.data?.messageCode);
 
         onSuccess?.(data?.data?.data);
-        showNotification('success', responseMessages);
+        // showNotification('success', responseMessages);
     };
 
     const onError = (

@@ -216,7 +216,7 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
 
                             <FormItem
                                 name="releaseLanguage.metadataLanguageCountryId"
-                                label={`${messages('country.language')}`}
+                                label={`Metadata ${messages('country.language').toLowerCase()}`}
                                 required
                                 ErrorMessage={
                                     errors.releaseLanguage

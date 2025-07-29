@@ -37,6 +37,7 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "fileName": "Tên file",
         "viewAll": "Xem tất cả",
         "legalNotices": "Thông báo pháp lý",
         "notAvailable": "Chưa có thông tin",
@@ -650,6 +651,8 @@
         "count": "Số lượng bài hát",
         "language": "Ngôn ngữ bài hát",
         "recordingCountry": "Quốc gia ghi âm",
+        "audioSpecification": "Thông số kỹ thuật âm thanh",
+        "addAllArtistFromRelease": "Thêm tất cả nghệ sĩ từ phát hành",
         "original": {
             "label": "Tác phẩm gốc",
             "tooltip": "Tác phẩm gốc là tác phẩm được tạo ra đầu tiên, không phải bất kỳ bản cover hoặc remix nào."
@@ -830,7 +833,7 @@
         "releaseCoverArts": "Ảnh phát hành",
         "audioLanguageId": "Ngôn ngữ bài hát",
         "labelId": "Label",
-        "metadataLanguageCountryId": "Ngôn ngữ quốc gia",
+        "metadataLanguageCountryId": "Ngôn ngữ metadata quốc gia",
         "title": "Tên phát hành",
         "metadataLanguageId": "Ngôn ngữ metadata",
         "artists": "Nghệ sĩ",
@@ -978,6 +981,9 @@
                 "duplicateNameTimezone": "Múi giờ này đã tồn tại",
                 "cannotDeleteBecauseLinkedReleases": "Không thể xóa múi giờ này vì đang được liên kết với phát hành."
             }
+        },
+        "placeholder": {
+            "selectTimezone": "Chọn múi giờ"
         }
     },
 

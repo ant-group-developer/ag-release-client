@@ -196,7 +196,9 @@ export default function ReleaseSchedulingForm({}: Props) {
                                         id="releaseTimezoneId"
                                         className="w-full"
                                         {...field}
-                                        placeholder="Chọn múi giờ"
+                                        placeholder={messages(
+                                            'timezone.placeholder.selectTimezone'
+                                        )}
                                         onChange={(e) => {
                                             field.onChange(e);
                                             debouncedUpdate({

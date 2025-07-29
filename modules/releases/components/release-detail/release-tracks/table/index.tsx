@@ -7,7 +7,6 @@ import useModalStore from '@/hooks/use-modal';
 import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
-import { useTrackReadyStore } from '@/modules/releases/hooks/track-ready-store';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
@@ -36,13 +35,8 @@ type Props = {} & Omit<SortableTableProps<TrackData>, 'columns'>;
 export default function ReleaseTracksTable({ ...props }: Props) {
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
-    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const openModal = useModalStore((state) => state.openModal);
-    const closeModal = useModalStore((state) => state.closeModal);
-    const formErrors = useReleaseFormStore((state) => state.validationErrors);
-    const setTrackReadyMap = useTrackReadyStore(
-        (state) => state.setTrackReadyMap
-    );
+
     const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
 
     const { updateTrackDraft } = useUpdateTrackDraft();

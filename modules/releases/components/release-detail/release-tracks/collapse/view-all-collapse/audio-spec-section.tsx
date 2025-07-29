@@ -52,7 +52,7 @@ export default function AudioSpecSection({
                     key: 'audio-specs',
                     label: (
                         <Title level={5} className="!mb-0">
-                            Audio Specs
+                            {messages('tracks.audioSpecification')}
                         </Title>
                     ),
                     children: (
@@ -60,7 +60,7 @@ export default function AudioSpecSection({
                             <div className="grid grid-cols-2 gap-4">
                                 <FormItem
                                     name="audioFile.file.fileName"
-                                    label="Tên File"
+                                    label={messages('common.fileName')}
                                     required
                                     ErrorMessage={
                                         errors.audioFile?.file?.fileName

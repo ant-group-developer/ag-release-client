@@ -29,7 +29,7 @@ export default function ListRelease({ data }: Props) {
                 ))} */}
                 <FlatList
                     data={data}
-                    renderItem={({ item }) => <CardRelease album={item} />}
+                    renderItem={({ item }) => <CardRelease data={item} />}
                     keyExtractor={(item) => item.id.toString()}
                     loading={false}
                     className="contents"

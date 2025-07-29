@@ -2,10 +2,12 @@ import { toNonAccentVietnamese } from '@/helpers/string';
 import { useGetListTimezones } from '@/modules/timezone/hooks/use-get-list-timezones';
 import { TimezoneData } from '@/modules/timezone/types';
 import { Select, SelectProps } from 'antd';
+import { useTranslations } from 'next-intl';
 
 interface TimezoneSelectProps extends SelectProps {}
 
 export default function TimezoneSelect({ ...props }: TimezoneSelectProps) {
+    const messages = useTranslations();
     const { timezonesData } = useGetListTimezones({ pageSize: 999 });
 
     const options = timezonesData.items.map((item: TimezoneData) => ({
@@ -16,7 +18,7 @@ export default function TimezoneSelect({ ...props }: TimezoneSelectProps) {
 
     return (
         <Select
-            placeholder={'Chọn múi giờ'}
+            placeholder={messages('timezone.placeholder.selectTimezone')}
             {...props}
             showSearch
             filterOption={(input, option) =>

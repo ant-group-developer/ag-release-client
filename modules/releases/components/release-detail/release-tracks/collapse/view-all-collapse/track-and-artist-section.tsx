@@ -151,7 +151,7 @@ export default function TrackAndArtistSection({
                                 </div>
                                 <div className="col-span-2">
                                     <FormItem
-                                        label="Thêm tất cả nghệ sĩ từ phát hành ?"
+                                        label={`${messages('tracks.addAllArtistFromRelease')} ?`}
                                         ErrorMessage={
                                             errors.copyArtistsFromRelease
                                                 ?.message

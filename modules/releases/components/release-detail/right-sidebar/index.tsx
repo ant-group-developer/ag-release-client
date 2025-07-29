@@ -29,19 +29,28 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
     const errorCount = releaseValidateData.length;
 
     // func
-    const getFieldLabel = (field: string) => {
+    const getFieldLabel = (field: string, page: string) => {
         if (!field) return;
 
-        if (field.startsWith('tracks.')) {
-            const parts = field.split('.');
-            if (parts.length == 3) {
-                const trackIndex = Number(parts[1]) + 1;
-                const fieldName = parts.slice(2).join('.');
-                return `${messages('tracks.number')} ${trackIndex}: ${messages(`formFields.${fieldName}` as any) || field}`;
-            }
-        }
+        switch (page) {
+            case RELEASES_TABS.CORE_DETAIL:
+                return `${messages('common.coreInfo')}: ${messages(`formFields.${field}` as any)}`;
 
-        return messages(`formFields.${field}` as any);
+            case RELEASES_TABS.TRACKS:
+                const parts = field.split('.');
+                if (parts.length == 3) {
+                    const trackIndex = Number(parts[1]) + 1;
+                    const fieldName = parts.slice(2).join('.');
+                    return `${messages('tracks.number')} ${trackIndex}: ${messages(`formFields.${fieldName}` as any) || field}`;
+                }
+                break;
+
+            case RELEASES_TABS.SCHEDULE:
+                return `${messages('releases.scheduling.label')}: ${messages(`formFields.${field}` as any)}`;
+
+            default:
+                return messages(`formFields.${field}` as any);
+        }
     };
     const setValidationErrors = useReleaseFormStore(
         (state) => state.setValidationErrors
@@ -145,7 +154,8 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                                                 >
                                                     <p className="break-words text-red-600 group-hover:underline">
                                                         {getFieldLabel(
-                                                            err.field
+                                                            err.field,
+                                                            err.page as RELEASES_TABS
                                                         )}
                                                     </p>
 

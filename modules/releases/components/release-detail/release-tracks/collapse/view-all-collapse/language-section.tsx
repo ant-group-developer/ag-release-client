@@ -44,7 +44,7 @@ export default function LanguageSection({
                     key: 'language',
                     label: (
                         <Title level={5} className="!mb-0">
-                            Ngôn ngữ
+                            {messages('language.label')}
                         </Title>
                     ),
                     children: (

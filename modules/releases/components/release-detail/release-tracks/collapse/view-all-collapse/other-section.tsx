@@ -66,7 +66,7 @@ export default function OtherSection({
                     key: 'other',
                     label: (
                         <Title level={5} className="!mb-0">
-                            Khác
+                            {messages('common.other')}
                         </Title>
                     ),
                     children: (

@@ -437,7 +437,7 @@ export default function OtherMetadataForm({ trackData }: Props) {
 
                 <FormItem
                     name="lyric"
-                    label="Lời bài hát"
+                    label={messages('formFields.tracks.lyrics')}
                     ErrorMessage={errors.lyric?.message}
                 >
                     <Controller
@@ -466,7 +466,7 @@ export default function OtherMetadataForm({ trackData }: Props) {
 
                 <FormItem
                     name="pLineOwner"
-                    label="Bản quyền ghi âm"
+                    label={messages('formFields.pLine')}
                     required
                     ErrorMessage={errors.pLineOwner?.message}
                 >

@@ -70,7 +70,9 @@ export default function MetadataInfo({}: Props) {
                 <div>
                     {!value && (
                         <p className="text-gray-500">
-                            {isRequired ? 'Bắt buộc' : 'Tuỳ chọn'}
+                            {isRequired
+                                ? messages('common.required')
+                                : messages('common.optional')}
                         </p>
                     )}
                     {value && <p className="mt-1">{value}</p>}

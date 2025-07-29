@@ -87,7 +87,7 @@ export default function AudioSpecifications({
                 <div className="grid grid-cols-2 gap-4">
                     <FormItem
                         name="audioFile.file.fileName"
-                        label="Tên File"
+                        label={messages('common.fileName')}
                         required
                         ErrorMessage={errors.audioFile?.file?.fileName?.message}
                     >

@@ -37,6 +37,7 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "fileName": "File name",
         "viewAll": "View all",
         "legalNotices": "Legal notices",
         "notAvailable": "Not available",
@@ -345,7 +346,7 @@
         "label": "Language",
         "name": "Language name",
         "code": "Code language",
-        "vietnamese": "vietnamese",
+        "vietnamese": "Vietnamese",
         "select": "Select language",
         "add": "Add language",
         "message": {
@@ -649,6 +650,8 @@
         "count": "Track count",
         "language": "Track language",
         "recordingCountry": "Recording country",
+        "audioSpecification": "Audio specification",
+        "addAllArtistFromRelease": "Add all artist from release",
         "original": {
             "label": "Original Work",
             "tooltip": "Original work is the piece that was created first, not any cover or remix."
@@ -829,7 +832,7 @@
         "releaseCoverArts": "Release image",
         "audioLanguageId": "Audio language",
         "labelId": "Label",
-        "metadataLanguageCountryId": "Language country",
+        "metadataLanguageCountryId": "Metadata country language",
         "title": "Release name",
         "metadataLanguageId": "Metadata language",
         "artists": "Artists",
@@ -851,7 +854,7 @@
         "releaseArtists": "Release artist",
         "pLineOwner": "P copyright",
         "cLineOwner": "C copyright",
-        "releaseTime": "Time release",
+        "releaseTime": "Release time",
         "releaseTimezoneId": "Timezone",
         "releaseTerritory": {
             "selectedCountries": "Countries distribute",
@@ -974,6 +977,9 @@
                 "duplicateNameTimezone": "This timezone already exists",
                 "cannotDeleteBecauseLinkedReleases": "Cannot delete this timezone because it is linked to releases"
             }
+        },
+        "placeholder": {
+            "selectTimezone": "Select timezone"
         }
     },
     "tooltipForm": {

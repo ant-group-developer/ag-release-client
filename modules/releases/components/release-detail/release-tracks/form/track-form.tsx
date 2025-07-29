@@ -182,7 +182,7 @@ export default function TracksForm({ trackData, index }: Props) {
                 <div className="col-span-2">
                     <LabelForm
                         htmlFor="copyArtistsFromRelease"
-                        label="Thêm tất cả nghệ sĩ từ phát hành ?"
+                        label={`${messages('tracks.addAllArtistFromRelease')} ?`}
                     />
                     <Controller
                         control={control}
