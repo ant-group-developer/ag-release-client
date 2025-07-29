@@ -1,4 +1,12 @@
+import {
+    releaseTrackSchema,
+    ReleaseTrackSchema,
+} from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
+import { useEffect } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import AudioSpecSection from '../collapse/view-all-collapse/audio-spec-section';
 import GenreSection from '../collapse/view-all-collapse/genre-section';
 import LanguageSection from '../collapse/view-all-collapse/language-section';
@@ -12,35 +20,74 @@ type Props = {
 };
 
 export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
-    
-    return (
-        <div className="flex flex-col gap-4">
-            <TrackAndArtistSection
-                trackData={trackData}
-                debouncedUpdateTrackDraft={updateTrackDraft}
-                index={index}
-            />
-            <GenreSection
-                index={index}
-                debouncedUpdateTrackDraft={updateTrackDraft}
-                trackData={trackData}
-            />
-            <LanguageSection
-                index={index}
-                debouncedUpdateTrackDraft={updateTrackDraft}
-                trackData={trackData}
-            />
-            <OtherSection
-                index={index}
-                debouncedUpdateTrackDraft={updateTrackDraft}
-                trackData={trackData}
-            />
+    const messages = useTranslations();
+    const formMethods = useForm<ReleaseTrackSchema>({
+        defaultValues: {
+            ...trackData,
+        },
+        resolver: zodResolver(releaseTrackSchema(messages)),
+        mode: 'onChange',
+        reValidateMode: 'onChange',
+    });
 
-            <AudioSpecSection
-                index={index}
-                debouncedUpdateTrackDraft={updateTrackDraft}
-                trackData={trackData}
-            />
-        </div>
+    const {
+        control,
+        handleSubmit,
+        formState: { errors },
+        watch,
+        trigger,
+        reset,
+        setValue,
+    } = formMethods;
+
+    useEffect(() => {
+        const handleTriggerField = () => {
+            const hash = window.location.hash;
+            if (hash) {
+                const parts = hash.split('.');
+                const field = parts[2];
+                trigger(field as keyof ReleaseTrackSchema);
+            }
+        };
+        window.addEventListener('hashchange', handleTriggerField);
+
+        handleTriggerField();
+
+        return () => {
+            window.removeEventListener('hashchange', handleTriggerField);
+        };
+    }, []);
+
+    return (
+        <FormProvider {...formMethods}>
+            <div className="flex flex-col gap-4">
+                <TrackAndArtistSection
+                    trackData={trackData}
+                    debouncedUpdateTrackDraft={updateTrackDraft}
+                    index={index}
+                />
+                <GenreSection
+                    index={index}
+                    debouncedUpdateTrackDraft={updateTrackDraft}
+                    trackData={trackData}
+                />
+                <LanguageSection
+                    index={index}
+                    debouncedUpdateTrackDraft={updateTrackDraft}
+                    trackData={trackData}
+                />
+                <OtherSection
+                    index={index}
+                    debouncedUpdateTrackDraft={updateTrackDraft}
+                    trackData={trackData}
+                />
+
+                <AudioSpecSection
+                    index={index}
+                    debouncedUpdateTrackDraft={updateTrackDraft}
+                    trackData={trackData}
+                />
+            </div>
+        </FormProvider>
     );
 }

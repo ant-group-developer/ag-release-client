@@ -1,15 +1,72 @@
 import axiosAuth from '@/api/axios-auth';
 import { useSongStatus } from '@/app/hooks/useSongStatus';
 import WaveformElement from '@/components/ui/wave-form-element/wave-form-element';
+import { showNotification } from '@/helpers/messages-helper';
 import { TrackData } from '@/modules/tracks/types';
-import { useEffect, useState } from 'react';
+import { bucketApi } from '@/modules/upload/apis/bucket-api';
+import { useEffect, useRef, useState } from 'react';
 
 export function TrackWaveform({ data }: { data: TrackData }) {
     const { id, audioFile } = data;
     const { isPlaying, handlePlay, currentTimePlaying, handleSeeking } =
         useSongStatus(id);
-
+    const audioUrlRef = useRef<string | null>(null);
     const [peakData, setPeakData] = useState<any>([]);
+
+    const fetchAudioUrl = async () => {
+        if (!audioUrlRef.current && audioFile?.file?.id) {
+            try {
+                const res = await bucketApi.getLinkReadFile(audioFile.file.id);
+                audioUrlRef.current = res.data?.data ?? null;
+            } catch (error) {
+                showNotification('error', 'Failed to fetch audio file URL');
+            }
+        }
+        return audioUrlRef.current;
+    };
+
+    const handlePlayTrack = async () => {
+        if (!audioUrlRef.current) {
+            const audioUrl = await fetchAudioUrl();
+            if (audioUrl) {
+                handlePlay({
+                    url: audioUrl,
+                    songId: id,
+                });
+            }
+        } else {
+            handlePlay({
+                url: audioUrlRef.current,
+                songId: id,
+            });
+        }
+    };
+
+    const handleSeekingTrack = async (second: number) => {
+        if (!audioUrlRef.current) {
+            const audioUrl = await fetchAudioUrl();
+            if (audioUrl) {
+                handleSeeking({
+                    url: audioUrl,
+                    songId: id,
+                    second,
+                });
+            }
+        } else {
+            handleSeeking({
+                url: audioUrlRef.current,
+                songId: id,
+                second,
+            });
+        }
+    };
+
+    // const fetchPeakData = async () => {
+    //     const response = await bucketApi.getLinkReadFile(
+    //         audioFile?.peak?.id as string
+    //     );
+    //     setPeakData(response.data?.data || []);
+    // };
 
     useEffect(() => {
         if (audioFile?.peak?.urlRead) {
@@ -30,23 +87,8 @@ export function TrackWaveform({ data }: { data: TrackData }) {
             playedTime={currentTimePlaying}
             songDuration={audioFile?.duration}
             playing={isPlaying}
-            togglePlayback={() =>
-                handlePlay({
-                    url:
-                        audioFile?.file?.urlRead ??
-                        'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-                    songId: id,
-                })
-            }
-            handleSeeking={(second) =>
-                handleSeeking({
-                    url:
-                        audioFile?.file?.urlRead ??
-                        'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-                    songId: id,
-                    second,
-                })
-            }
+            togglePlayback={handlePlayTrack}
+            handleSeeking={(second) => handleSeekingTrack(second)}
         />
     );
 }

@@ -14,7 +14,7 @@ import { DatePicker, Radio, TimePicker } from 'antd';
 import dayjs from 'dayjs';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -85,6 +85,23 @@ export default function ReleaseSchedulingForm({}: Props) {
         }, 500),
         [formValues.id]
     );
+
+    useEffect(() => {
+        const handleTriggerField = () => {
+            const hash = window.location.hash;
+            if (hash) {
+                const field = hash.replace('#', '');
+                trigger(field as any);
+            }
+        };
+        window.addEventListener('hashchange', handleTriggerField);
+
+        handleTriggerField();
+
+        return () => {
+            window.removeEventListener('hashchange', handleTriggerField);
+        };
+    }, []);
 
     return (
         <div className="rounded-lg bg-white p-4">

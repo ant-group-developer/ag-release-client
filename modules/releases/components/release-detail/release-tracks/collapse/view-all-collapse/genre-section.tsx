@@ -1,15 +1,11 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
 import GenresSelect from '@/components/ui/select/genres-select';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
-import {
-    ReleaseTrackSchema,
-    releaseTrackSchema,
-} from '@/modules/tracks/schemas';
+import { ReleaseTrackSchema } from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { Typography } from 'antd';
 import { useTranslations } from 'next-intl';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
 const { Title } = Typography;
 
@@ -25,19 +21,14 @@ export default function GenreSection({
     trackData,
 }: Props) {
     const messages = useTranslations();
-    const formMethods = useForm({
-        defaultValues: {
-            primaryGenreId: trackData.primaryGenreId ?? '',
-            subGenreId: trackData.subGenreId ?? '',
-        },
-        resolver: zodResolver(releaseTrackSchema(messages)),
-        mode: 'onChange',
-    });
+
     const {
         control,
         formState: { errors },
+        watch,
         trigger,
-    } = formMethods;
+        setValue,
+    } = useFormContext<ReleaseTrackSchema>();
 
     const updateTrackDraft = async (data: any, fieldName?: string) => {
         if (fieldName) {

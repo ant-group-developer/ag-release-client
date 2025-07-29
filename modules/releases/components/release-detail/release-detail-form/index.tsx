@@ -197,6 +197,23 @@ export default function ReleaseDetailForm() {
         }
     }, [isCreateReleasePage, releaseId, formValues]);
 
+    useEffect(() => {
+        const handleTriggerField = () => {
+            const hash = window.location.hash;
+            if (hash) {
+                const field = hash.replace('#', '');
+                trigger(field as keyof ReleaseDetailSchema);
+            }
+        };
+        window.addEventListener('hashchange', handleTriggerField);
+
+        handleTriggerField();
+
+        return () => {
+            window.removeEventListener('hashchange', handleTriggerField);
+        };
+    }, []);
+
     return (
         <>
             <FormProvider {...formMethods}>
