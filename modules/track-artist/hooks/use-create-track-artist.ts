@@ -32,13 +32,13 @@ export const useCreateTrackArtist = () => {
         data: any,
         { onError }: CreateVariables<CreateTrackArtistPayload>
     ) => {
-        const responseMessages = messages(data?.response?.data?.messageCode);
+        // const responseMessages = messages(data?.response?.data?.messageCode);
 
         onError?.();
-        showNotification(
-            'error',
-            responseMessages || messages('common.somethingWentWrong')
-        );
+        // showNotification(
+        //     'error',
+        //     responseMessages || messages('common.somethingWentWrong')
+        // );
     };
     const mutation = useMutation({
         mutationFn: ({ payload }: CreateVariables<CreateTrackArtistPayload>) =>

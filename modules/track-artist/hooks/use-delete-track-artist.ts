@@ -21,10 +21,10 @@ export const useDeleteTrackArtist = () => {
         //     queryKey: [...releasesQueryKeys.getDetail],
         // });
 
-        const responseMessages = messages(data?.data?.messageCode);
+        // const responseMessages = messages(data?.data?.messageCode);
 
-        onSuccess?.();
-        showNotification('success', responseMessages);
+        // onSuccess?.();
+        // showNotification('success', responseMessages);
     };
 
     const onError = (
