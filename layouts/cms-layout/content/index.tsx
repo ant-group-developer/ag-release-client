@@ -10,7 +10,7 @@ const { Content } = Layout;
 function ContentComponent({ children }: Props) {
     return (
         <Content>
-            <div className="h-[calc(100vh-4rem)] overflow-auto bg-white dark:bg-black">
+            <div className="h-[calc(100vh-4rem)] bg-white dark:bg-black">
                 {children}
             </div>
         </Content>

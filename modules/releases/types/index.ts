@@ -39,7 +39,7 @@ export interface ReleasesData extends CommonAttribute {
     cLineOwner: string;
     catalogId: string | null;
     isVariousArtist: boolean;
-    releaseLanguage?: releaseLanguage;
+    releaseLanguage?: ReleaseLanguage;
     releaseDate: string;
     releaseTime: string;
     releaseTimezoneId: string | null;
@@ -63,7 +63,7 @@ export interface ReleaseTerritory extends CommonParams {
     distributionType: string;
 }
 
-export interface releaseLanguage extends CommonParams {
+export interface ReleaseLanguage extends CommonParams {
     metadataLanguageCountryId: string | null;
     metadataLanguageCountry?: CountriesData | null;
     audioLanguageId: string | null;
@@ -71,6 +71,13 @@ export interface releaseLanguage extends CommonParams {
     metadataLanguageId: string;
     metadataLanguage?: LanguagesData | null;
     releaseId: string;
+}
+
+export interface ReleaseValidate {
+    messageCode: string;
+    message: string;
+    page: string;
+    field: string;
 }
 
 export type { TrackData } from '@/modules/tracks/types';

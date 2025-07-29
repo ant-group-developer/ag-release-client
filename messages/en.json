@@ -37,6 +37,8 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "fileName": "File name",
+        "viewAll": "View all",
         "legalNotices": "Legal notices",
         "notAvailable": "Not available",
         "region": "Khu vực",
@@ -207,7 +209,11 @@
                 "delete": "Delete successfully"
             },
             "error": {
-                "notFound": "Cannot found country"
+                "notFound": "Cannot found country",
+                "cannotDeleteBecauseLinkedReleaseMetadataLanguages": "Cannot delete this country because it is linked to release metadata languages",
+                "cannotDeleteBecauseLinkedTrackMetadataLanguages": "Cannot delete this country because it is linked to track metadata languages",
+                "cannotDeleteBecauseLinkedTrackRecordings": "Cannot delete this country because it is linked to track recordings",
+                "duplicateCodeLanguage": "This country code already exists"
             }
         }
     },
@@ -340,7 +346,7 @@
         "label": "Language",
         "name": "Language name",
         "code": "Code language",
-        "vietnamese": "vietnamese",
+        "vietnamese": "Vietnamese",
         "select": "Select language",
         "add": "Add language",
         "message": {
@@ -350,7 +356,14 @@
                 "delete": "Delete language successfully"
             },
             "error": {
-                "duplicateNameLanguage": "This language name already exists"
+                "duplicateCodeLanguage": "This language code already exists",
+                "duplicateNameLanguage": "This language name already exists",
+                "cannotDeleteBecauseLinkedReleaseLocalizes": "Cannot delete this language because it is linked to release localizes",
+                "cannotDeleteBecauseLinkedReleaseAudioLanguages": "Cannot delete this language because it is linked to release audio languages",
+                "cannotDeleteBecauseLinkedReleaseMetadataLanguages": "Cannot delete this language because it is linked to release metadata languages",
+                "cannotDeleteBecauseLinkedTrackAudioLanguages": "Cannot delete this language because it is linked to track audio languages",
+                "cannotDeleteBecauseLinkedTrackMetadataLanguages": "Cannot delete this language because it is linked to track metadata languages",
+                "cannotDeleteBecauseLinkedTrackLocalizes": "Cannot delete this language because it is linked to track localizes"
             }
         }
     },
@@ -637,6 +650,8 @@
         "count": "Track count",
         "language": "Track language",
         "recordingCountry": "Recording country",
+        "audioSpecification": "Audio specification",
+        "addAllArtistFromRelease": "Add all artist from release",
         "original": {
             "label": "Original Work",
             "tooltip": "Original work is the piece that was created first, not any cover or remix."
@@ -666,6 +681,9 @@
                 "create": "Create track successfully",
                 "update": "Update track successfully",
                 "delete": "Delete track successfully"
+            },
+            "error": {
+                "releaseNotFound": "Cannot found this release"
             }
         }
     },
@@ -690,7 +708,8 @@
                 "delete": "Delete track type successfully"
             },
             "error": {
-                "duplicateNameTrackType": "This track type is already exists"
+                "duplicateNameTrackType": "This track type is already exists",
+                "cannotDeleteBecauseLinkedTracks": "Cannot delete this track type because it is linked to tracks"
             }
         }
     },
@@ -705,7 +724,9 @@
                 "delete": "Delete track original successfully"
             },
             "error": {
-                "duplicateNameTrackOriginType": "This track origin is already exists"
+                "duplicateNameTrackOriginType": "This track origin is already exists",
+                "cannotDeleteBecauseLinkedTracks": "Cannot delete this track origin because it is linked to tracks",
+                "duplicateValueTrackOriginType": "This track origin value already exists"
             }
         }
     },
@@ -735,7 +756,11 @@
                 "update": "Update genre successfully"
             },
             "error": {
-                "duplicateNameGenre": "This genres already exist"
+                "duplicateNameGenre": "This genres already exist",
+                "cannotDeleteBecauseLinkedPrimaryReleases": "Cannot delete this genre because it is linked to primary releases",
+                "cannotDeleteBecauseLinkedSubReleases": "Cannot delete this genre because it is linked to sub releases",
+                "cannotDeleteBecauseLinkedPrimaryTracks": "Cannot delete this genre because it is linked to primary tracks",
+                "cannotDeleteBecauseLinkedSubTracks": "Cannot delete this genre because it is linked to sub tracks"
             }
         }
     },
@@ -761,7 +786,9 @@
                 "delete": "Delete artist successfully"
             },
             "error": {
-                "duplicateNameArtist": "This artist already exist"
+                "duplicateNameArtist": "This artist already exist",
+                "cannotDeleteBecauseLinkedReleases": "Cannot delete this artist because it is linked to releases",
+                "cannotDeleteBecauseLinkedTracks": "Cannot delete this artist because it is linked to tracks"
             }
         }
     },
@@ -786,7 +813,8 @@
                 "update": "Update label successfully"
             },
             "error": {
-                "duplicateNameLabel": "This Label already exist"
+                "duplicateNameLabel": "This Label already exist",
+                "cannotDeleteBecauseLinkedReleases": "Cannot delete this label because it is linked to releases"
             }
         }
     },
@@ -798,6 +826,13 @@
     },
 
     "formFields": {
+        "recordingCountryId": "Recording country",
+        "trackArtists": "track artist",
+        "distributionType": "Release type",
+        "releaseCoverArts": "Release image",
+        "audioLanguageId": "Audio language",
+        "labelId": "Label",
+        "metadataLanguageCountryId": "Metadata country language",
         "title": "Release name",
         "metadataLanguageId": "Metadata language",
         "artists": "Artists",
@@ -819,12 +854,15 @@
         "releaseArtists": "Release artist",
         "pLineOwner": "P copyright",
         "cLineOwner": "C copyright",
-        "releaseTime": "Time release",
+        "releaseTime": "Release time",
         "releaseTimezoneId": "Timezone",
         "releaseTerritory": {
             "selectedCountries": "Countries distribute",
             "distributionType": "Options distribute"
         },
+        "trackOriginTypeId": "Track origin type",
+        "trackTypeId": "Track type",
+        "preview": "Track preview",
         "tracks": {
             "trackOriginTypeId": "Track origin type",
             "audioLanguageId": "Audio language",
@@ -901,7 +939,9 @@
                 "delete": "Delete platform successfully"
             },
             "error": {
-                "duplicateNameDsp": "This platform already exist"
+                "duplicateNameDsp": "This platform already exist",
+                "cannotDeleteBecauseLinkedOrganizations": "Cannot delete this platform because it is linked to organizations",
+                "cannotDeleteBecauseLinkedReleases": "Cannot delete this platform because it is linked to releases"
             }
         }
     },
@@ -914,7 +954,9 @@
                 "update": "Update role successfully"
             },
             "error": {
-                "duplicateNameArtistRole": "This role already exist"
+                "duplicateNameArtistRole": "This role already exist",
+                "cannotDeleteBecauseLinkedReleases": "Cannot delete this role because it is linked to releases",
+                "cannotDeleteBecauseLinkedTracks": "Cannot delete this role because it is linked to tracks"
             }
         }
     },
@@ -932,8 +974,12 @@
                 "delete": "Delete timezone successfully"
             },
             "error": {
-                "duplicateNameTimezone": "This timezone already exists"
+                "duplicateNameTimezone": "This timezone already exists",
+                "cannotDeleteBecauseLinkedReleases": "Cannot delete this timezone because it is linked to releases"
             }
+        },
+        "placeholder": {
+            "selectTimezone": "Select timezone"
         }
     },
     "tooltipForm": {

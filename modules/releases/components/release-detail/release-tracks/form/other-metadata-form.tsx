@@ -1,6 +1,9 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
 import CountrySelect from '@/components/ui/select/country-select';
 import GenresSelect from '@/components/ui/select/genres-select';
+import LanguageSelect from '@/components/ui/select/language-select';
+import OriginalTypeSelect from '@/components/ui/select/original-type-select';
+import TrackTypesSelect from '@/components/ui/select/track-types-select';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
 import { releaseTrackSchema } from '@/modules/tracks/schemas';
@@ -25,6 +28,8 @@ const otherMetadataSchema = (messages: any) =>
         trackLanguage: true,
         lyric: true,
         pLineOwner: true,
+        trackOriginTypeId: true,
+        trackTypeId: true,
         isrc: true,
     });
 
@@ -50,6 +55,8 @@ export default function OtherMetadataForm({ trackData }: Props) {
             lyric: trackData?.lyric ?? '',
             pLineOwner: trackData?.pLineOwner ?? `${dayjs().year()} `,
             isrc: trackData.isrc ?? '',
+            trackTypeId: trackData?.trackTypeId,
+            trackOriginTypeId: trackData?.trackOriginTypeId,
         },
         resolver: zodResolver(otherMetadataSchema(messages)),
         mode: 'onChange',
@@ -212,6 +219,37 @@ export default function OtherMetadataForm({ trackData }: Props) {
                 </FormItem>
 
                 <FormItem
+                    name="trackOriginTypeId"
+                    label={`${messages('trackOriginType.label')}`}
+                    required
+                    ErrorMessage={errors.trackOriginTypeId?.message}
+                >
+                    <Controller
+                        control={control}
+                        name="trackOriginTypeId"
+                        render={({ field }) => (
+                            <OriginalTypeSelect
+                                id="trackOriginTypeId"
+                                {...field}
+                                fallBack={trackData?.trackOriginType?.name}
+                                onChange={(e) => {
+                                    field.onChange(e);
+                                    debouncedUpdateTrackDraft({
+                                        trackOriginTypeId: e,
+                                    });
+                                }}
+                                className="w-full"
+                                status={
+                                    errors.trackOriginTypeId
+                                        ? 'error'
+                                        : undefined
+                                }
+                            />
+                        )}
+                    />
+                </FormItem>
+
+                <FormItem
                     name="trackLanguage.metadataLanguageCountryId"
                     label={messages('country.language')}
                     required
@@ -252,8 +290,154 @@ export default function OtherMetadataForm({ trackData }: Props) {
                 </FormItem>
 
                 <FormItem
+                    name="trackLanguage.audioLanguageId"
+                    required
+                    label={messages('tracks.language')}
+                    ErrorMessage={
+                        errors.trackLanguage?.audioLanguageId?.message
+                    }
+                >
+                    <Controller
+                        control={control}
+                        name="trackLanguage.audioLanguageId"
+                        render={({ field }) => (
+                            <LanguageSelect
+                                id="languageTrack"
+                                {...field}
+                                fallBack={
+                                    trackData?.trackLanguage?.audioLanguage
+                                        ?.name
+                                }
+                                onChange={(e) => {
+                                    field.onChange(e);
+                                    debouncedUpdateTrackDraft({
+                                        trackLanguage: {
+                                            audioLanguageId: e,
+                                        },
+                                    });
+                                }}
+                                showSearch
+                                className="w-full"
+                                status={
+                                    errors.trackLanguage?.audioLanguageId
+                                        ? 'error'
+                                        : undefined
+                                }
+                            />
+                        )}
+                    />
+                </FormItem>
+
+                <FormItem
+                    name="trackLanguage.metadataLanguageId"
+                    required
+                    label={`${messages('language.label')} metadata`}
+                    ErrorMessage={
+                        errors.trackLanguage?.audioLanguageId?.message
+                    }
+                >
+                    <Controller
+                        control={control}
+                        name="trackLanguage.metadataLanguageId"
+                        render={({ field }) => (
+                            <LanguageSelect
+                                id="trackLanguage.metadataLanguageId"
+                                {...field}
+                                // fallBack={
+                                //     trackData?.trackLanguage?.metadataLanguage
+                                //         ?.name
+                                // }
+                                onChange={(e) => {
+                                    field.onChange(e);
+                                    debouncedUpdateTrackDraft({
+                                        trackLanguage: {
+                                            metadataLanguageId: e,
+                                        },
+                                    });
+                                }}
+                                showSearch
+                                className="w-full"
+                                status={
+                                    errors.trackLanguage?.audioLanguageId
+                                        ? 'error'
+                                        : undefined
+                                }
+                            />
+                        )}
+                    />
+                </FormItem>
+
+                <FormItem
+                    name="trackLanguage.recordingCountryId"
+                    label={messages('tracks.recordingCountry')}
+                    required
+                    ErrorMessage={
+                        errors.trackLanguage?.recordingCountryId?.message
+                    }
+                >
+                    <Controller
+                        control={control}
+                        name="trackLanguage.recordingCountryId"
+                        render={({ field }) => (
+                            <CountrySelect
+                                status={
+                                    errors.trackLanguage?.recordingCountryId
+                                        ? 'error'
+                                        : undefined
+                                }
+                                className="w-full"
+                                {...field}
+                                fallBack={
+                                    trackData?.trackLanguage?.recordingCountry
+                                        ?.name
+                                }
+                                showSearch
+                                onChange={(e) => {
+                                    field.onChange(e);
+                                    debouncedUpdateTrackDraft({
+                                        trackLanguage: {
+                                            recordingCountryId: e,
+                                        },
+                                    });
+                                }}
+                            />
+                        )}
+                    />
+                </FormItem>
+
+                <FormItem
+                    name="trackTypeId"
+                    label={messages('trackType.label')}
+                    required
+                    ErrorMessage={errors.trackTypeId?.message}
+                >
+                    <Controller
+                        control={control}
+                        name="trackTypeId"
+                        render={({ field }) => (
+                            <TrackTypesSelect
+                                status={
+                                    errors.trackTypeId ? 'error' : undefined
+                                }
+                                className="w-full"
+                                {...field}
+                                fallBack={trackData?.trackType?.name}
+                                value={field.value ?? ''}
+                                showSearch
+                                onChange={(e) => {
+                                    field.onChange(e);
+                                    debouncedUpdateTrackDraft({
+                                        trackTypeId: e,
+                                    });
+                                }}
+                            />
+                        )}
+                    />
+                </FormItem>
+
+                <FormItem
                     name="lyric"
-                    label="Lời bài hát"
+                    label={messages('formFields.tracks.lyrics')}
                     ErrorMessage={errors.lyric?.message}
                 >
                     <Controller
@@ -282,7 +466,7 @@ export default function OtherMetadataForm({ trackData }: Props) {
 
                 <FormItem
                     name="pLineOwner"
-                    label="Bản quyền ghi âm"
+                    label={messages('formFields.pLine')}
                     required
                     ErrorMessage={errors.pLineOwner?.message}
                 >

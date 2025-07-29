@@ -22,10 +22,10 @@ export const useDeleteReleaseArtist = () => {
             queryKey: [...releasesQueryKeys.getDetail],
         });
 
-        const responseMessages = messages(data?.data?.messageCode);
+        // const responseMessages = messages(data?.data?.messageCode);
 
         onSuccess?.();
-        showNotification('success', responseMessages);
+        // showNotification('success', responseMessages);
     };
 
     const onError = (

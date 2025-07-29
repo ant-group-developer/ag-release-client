@@ -145,6 +145,7 @@ export default function ReleaseSchedulingForm({}: Props) {
                                 name="releaseTime"
                                 render={({ field }) => (
                                     <TimePicker
+                                        id="releaseTime"
                                         className="w-full"
                                         value={
                                             field.value
@@ -195,7 +196,9 @@ export default function ReleaseSchedulingForm({}: Props) {
                                         id="releaseTimezoneId"
                                         className="w-full"
                                         {...field}
-                                        placeholder="Chọn múi giờ"
+                                        placeholder={messages(
+                                            'timezone.placeholder.selectTimezone'
+                                        )}
                                         onChange={(e) => {
                                             field.onChange(e);
                                             debouncedUpdate({

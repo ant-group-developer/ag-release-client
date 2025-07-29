@@ -299,7 +299,7 @@ function Dashboard({}: Props) {
         <div>
             <DashboardHeader />
 
-            <div className="flex flex-col gap-4 px-4 py-4">
+            <div className="flex flex-col gap-4 overflow-auto px-4 py-4">
                 <CardStatistic />
 
                 {/* <div className="grid w-full grid-cols-4 gap-4">

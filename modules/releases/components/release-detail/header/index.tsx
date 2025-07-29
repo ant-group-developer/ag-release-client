@@ -31,6 +31,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const params = useParams();
     const isCreateReleasePage = params['action'] === 'create';
+
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const mainArtist = formValues?.releaseArtists?.find(
@@ -160,6 +161,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                     <div className="flex w-full gap-4">
                         <AppFormItem name="thumbnail">
                             <ImageListUpload
+                                id="releaseCoverArts"
                                 loading={isUploading}
                                 disabled={isCreateReleasePage}
                                 className={cn(
@@ -216,18 +218,17 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                         {formValues?.primaryGenre?.name}
                                     </span>
                                 </div>
-                                    <div>
-                                        <span>
-                                            {messages('common.releaseDate')}
-                                            :{' '}
-                                        </span>
-                                        <span className="font-bold">
-                                            {formattedDate(
-                                                formValues.releaseDate,
-                                                DATE_FORMAT.DATE_ONLY
-                                            )}
-                                        </span>
-                                    </div>
+                                <div>
+                                    <span>
+                                        {messages('common.releaseDate')}:{' '}
+                                    </span>
+                                    <span className="font-bold">
+                                        {formattedDate(
+                                            formValues.releaseDate,
+                                            DATE_FORMAT.DATE_ONLY
+                                        )}
+                                    </span>
+                                </div>
 
                                 {formValues.upc && (
                                     <div>

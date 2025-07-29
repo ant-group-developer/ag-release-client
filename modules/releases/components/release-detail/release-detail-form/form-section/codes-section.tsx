@@ -31,7 +31,12 @@ export default function CodesSection({ debouncedUpdate }: Props) {
             items={[
                 {
                     key: 'codes',
-                    label: <Title level={4} className="!mb-0"> {messages('common.code')} </Title>,
+                    label: (
+                        <Title level={4} className="!mb-0">
+                            {' '}
+                            {messages('common.code')}{' '}
+                        </Title>
+                    ),
                     children: (
                         <div className="grid grid-cols-3 items-center gap-5">
                             <div className="col-span-1">

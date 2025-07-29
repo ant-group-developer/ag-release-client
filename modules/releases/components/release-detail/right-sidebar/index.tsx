@@ -1,143 +1,188 @@
 'use client';
+import { ScrollArea } from '@/components/ui/scroll/scroll-area';
 import { SIZE_ICON } from '@/constants/common';
 import { cn } from '@/helpers/common';
+import { getReleaseDetailTabRoute } from '@/helpers/link';
+import { useRouter } from '@/i18n/routing';
+import { RELEASES_TABS } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
-import { releaseSchema } from '@/modules/releases/schemas';
+import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
 import { AlertTriangle, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
-import { ZodIssue } from 'zod';
+import { useState } from 'react';
 
-interface RightSidebarProps {
-    errors: ZodIssue[];
-}
+interface RightSidebarProps {}
 
-export default function RightSidebar({ errors }: RightSidebarProps) {
+export default function RightSidebar({ ...props }: RightSidebarProps) {
+    // hook - state
     const messages = useTranslations();
-    const errorCount = errors.length;
+    const formValues = useReleaseFormStore((state) => state.formValues);
+    const { releaseValidateData } = useReleaseValidate(
+        formValues?.id as string
+    );
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-    const getFieldLabel = (path: (string | number)[]) => {
-        if (!path.length) return;
+    // router
+    const router = useRouter();
 
-        if (path.length === 1 && path[0] === 'tracks') {
-            return messages('formFields.tracks.track' as any);
+    // variables
+    const errorCount = releaseValidateData.length;
+
+    // func
+    const getFieldLabel = (field: string, page: string) => {
+        if (!field) return;
+
+        switch (page) {
+            case RELEASES_TABS.CORE_DETAIL:
+                return `${messages('common.coreInfo')}: ${messages(`formFields.${field}` as any)}`;
+
+            case RELEASES_TABS.TRACKS:
+                const parts = field.split('.');
+                if (parts.length == 3) {
+                    const trackIndex = Number(parts[1]) + 1;
+                    const fieldName = parts.slice(2).join('.');
+                    return `${messages('tracks.number')} ${trackIndex}: ${messages(`formFields.${fieldName}` as any) || field}`;
+                }
+                break;
+
+            case RELEASES_TABS.SCHEDULE:
+                return `${messages('releases.scheduling.label')}: ${messages(`formFields.${field}` as any)}`;
+
+            default:
+                return messages(`formFields.${field}` as any);
         }
-
-        if (path.length === 3 && path[0] === 'tracks') {
-            const trackNum = Number(path[1]) + 1;
-            const field = path[2];
-            const fieldKey = `tracks.${field}`;
-
-            // Sử dụng fieldLabels để ánh xạ trường vào tên dễ hiểu
-            // const fieldLabel = fieldLabels[field] || field;
-            return `${messages('tracks.number')} ${trackNum}: ${messages(`formFields.${fieldKey}` as any) || field}`;
-        }
-
-        if (path.length === 4 && path[0] === 'tracks') {
-            const trackNum = Number(path[1]) + 1;
-            const field = path[3];
-            const fieldKey = `tracks.${field}`;
-
-            return `${messages('tracks.number')} ${trackNum}: ${messages(`formFields.${fieldKey}` as any) || field}`;
-        }
-
-        // Ánh xạ các trường khác vào fieldLabels
-        const fieldKey = path.join('.');
-        // return  fieldLabels[fieldKey] || path.join(' ');
-        return messages(`formFields.${fieldKey}` as any) || path.join(' ');
     };
-
-    const formValues = useReleaseFormStore((state) => state.formValues);
     const setValidationErrors = useReleaseFormStore(
         (state) => state.setValidationErrors
     );
-
     const toggleSidebar = () => {
         setIsSidebarOpen((prevState) => !prevState);
     };
+    const handleErrorClick = (field: string, page: RELEASES_TABS) => {
+        const newUrl = `${getReleaseDetailTabRoute(formValues?.id as string, page)}#${field}`;
+        // const newUrl = `/releases/detail/${router.query.id}/err.page#${err.field}`;
+        router.push(newUrl);
+        setTimeout(() => {
+            window.dispatchEvent(new HashChangeEvent('hashchange'));
+        }, 100);
+    };
 
-    useEffect(() => {
-        // Thực hiện xác thực
-        const validationResult = releaseSchema(messages as any).safeParse(
-            formValues
-        );
+    // useEffect(() => {
+    //     // Thực hiện xác thực
+    //     const validationResult = releaseSchema(messages as any).safeParse(
+    //         formValues
+    //     );
 
-        if (!validationResult.success) {
-            setValidationErrors(validationResult.error.errors);
-        } else {
-            setValidationErrors([]);
-        }
-    }, [formValues]);
+    //     if (!validationResult.success) {
+    //         setValidationErrors(validationResult.error.errors);
+    //     } else {
+    //         setValidationErrors([]);
+    //     }
+    // }, [formValues]);
 
     return (
         <div
             className={cn(
-                'h-screen w-[300px] border-x bg-white transition-all duration-300',
+                'sticky top-0 w-[300px] border-x bg-white transition-all duration-300',
                 isSidebarOpen ? 'w-[300px]' : 'w-[75px]'
             )}
         >
-            {/* Header */}
-            <div className="flex h-16 items-center border-b px-3">
-                {isSidebarOpen ? (
-                    <>
-                        <h3 className="grow font-semibold text-red-500">
-                            {`${messages('validation.error')} (${errorCount})`}
-                        </h3>
-                        {
-                            <button onClick={toggleSidebar}>
-                                <ChevronRight size={SIZE_ICON} />
-                            </button>
-                        }
-                    </>
-                ) : (
-                    <button onClick={toggleSidebar} className="mx-auto">
-                        <ChevronLeft size={SIZE_ICON} />
-                    </button>
-                )}
-            </div>
-
-            {/* Content */}
-            <div className="h-[calc(100%-8rem)] overflow-auto">
-                <div className="p-3">
-                    {/* Errors */}
-                    <div className="mb-4">
-                        {isSidebarOpen && (
-                            <ul className="space-y-2">
-                                {errors.length > 0 ? (
-                                    errors.map((err, index) => (
-                                        <li
-                                            key={index}
-                                            className="rounded-md border border-red-200 bg-red-50 p-2 text-sm"
-                                        >
-                                            {err.path.length > 0 && (
-                                                <p className="break-words text-red-600">
-                                                    {getFieldLabel(err.path)}
-                                                </p>
-                                            )}
-                                            <p className="text-xs text-red-500">
-                                                {err.message}
-                                            </p>
-                                        </li>
-                                    ))
-                                ) : (
-                                    <li className="text-sm text-gray-500">
-                                        {messages('validation.noError')}
-                                    </li>
-                                )}
-                            </ul>
-                        )}
-                    </div>
-
-                    {/* errors */}
-                    {!isSidebarOpen && (
-                        <div>
-                            <h4 className="mb-2 flex items-center gap-2 text-red-500">
-                                <AlertTriangle size={SIZE_ICON} />({errorCount})
-                            </h4>
-                        </div>
+            <div className="h-screen">
+                {/* Header */}
+                <div className="flex h-16 items-center border-b px-3">
+                    {isSidebarOpen ? (
+                        <>
+                            <h3 className="grow font-semibold text-red-500">
+                                {`${messages('validation.error')} (${errorCount})`}
+                            </h3>
+                            {
+                                <button onClick={toggleSidebar}>
+                                    <ChevronRight size={SIZE_ICON} />
+                                </button>
+                            }
+                        </>
+                    ) : (
+                        <button onClick={toggleSidebar} className="mx-auto">
+                            <ChevronLeft size={SIZE_ICON} />
+                        </button>
                     )}
                 </div>
+
+                {/* Content */}
+                {/* <div className="h-[calc(100%-8rem)] overflow-auto"> */}
+                <ScrollArea className="h-[calc(100%-8rem)]">
+                    <div className="p-3">
+                        {/* Errors */}
+                        <div className="mb-4">
+                            {isSidebarOpen && (
+                                // <ul className="space-y-2">
+                                //     {errors.length > 0 ? (
+                                //         errors.map((err, index) => (
+                                //             <li
+                                //                 key={index}
+                                //                 className="rounded-md border border-red-200 bg-red-50 p-2 text-sm"
+                                //             >
+                                //                 {err.path.length > 0 && (
+                                //                     <p className="break-words text-red-600">
+                                //                         {getFieldLabel(err.path)}
+                                //                     </p>
+                                //                 )}
+                                //                 <p className="text-xs text-red-500">
+                                //                     {err.message}
+                                //                 </p>
+                                //             </li>
+                                //         ))
+                                //     ) : (
+                                //         <li className="text-sm text-gray-500">
+                                //             {messages('validation.noError')}
+                                //         </li>
+                                //     )}
+                                // </ul>
+                                <ul className="space-y-2">
+                                    {releaseValidateData?.length > 0 &&
+                                        releaseValidateData?.map(
+                                            (err, index) => (
+                                                <li
+                                                    key={index}
+                                                    className="group cursor-pointer rounded-md border border-red-200 bg-red-50 p-2 text-sm"
+                                                    onClick={() =>
+                                                        handleErrorClick(
+                                                            err.field,
+                                                            err.page as RELEASES_TABS
+                                                        )
+                                                    }
+                                                >
+                                                    <p className="break-words text-red-600 group-hover:underline">
+                                                        {getFieldLabel(
+                                                            err.field,
+                                                            err.page as RELEASES_TABS
+                                                        )}
+                                                    </p>
+
+                                                    <p className="text-xs text-red-500 group-hover:underline">
+                                                        {messages(
+                                                            err.messageCode as any
+                                                        )}
+                                                    </p>
+                                                </li>
+                                            )
+                                        )}
+                                </ul>
+                            )}
+                        </div>
+
+                        {/* errors */}
+                        {!isSidebarOpen && (
+                            <div>
+                                <h4 className="mb-2 flex items-center gap-2 text-red-500">
+                                    <AlertTriangle size={SIZE_ICON} />(
+                                    {errorCount})
+                                </h4>
+                            </div>
+                        )}
+                    </div>
+                </ScrollArea>
+                {/* </div> */}
             </div>
         </div>
     );

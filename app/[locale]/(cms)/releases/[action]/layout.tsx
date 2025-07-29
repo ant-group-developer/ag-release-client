@@ -254,11 +254,8 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     }, [isCoreDetailPage]);
 
     return (
-        <div className="flex h-full overflow-hidden">
-            <div
-                className="flex h-full flex-1 flex-col overflow-y-auto"
-                ref={scrollContainerRef}
-            >
+        <div className="flex h-full overflow-auto" ref={scrollContainerRef}>
+            <div className="flex h-[calc(100vh-4rem)] flex-1 flex-col">
                 <div className="sticky top-0 z-10 bg-white">
                     <ReleaseDetailHeader isScrolled={isScrolled} />
                     <div className="px-4">
@@ -273,7 +270,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                 </div>
                 <div className="flex-1">{children}</div>
             </div>
-            <RightSidebar errors={validationErrors} />
+            <RightSidebar />
         </div>
     );
 }

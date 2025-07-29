@@ -19,6 +19,7 @@
         "@dnd-kit/utilities": "^3.2.2",
         "@ffmpeg/ffmpeg": "^0.12.15",
         "@hookform/resolvers": "^5.1.1",
+        "@radix-ui/react-scroll-area": "^1.2.9",
         "@tanstack/react-query": "^5.66.0",
         "@uidotdev/usehooks": "^2.4.1",
         "antd": "^5.24.0",

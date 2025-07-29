@@ -16,15 +16,12 @@ import { genFolderBucket } from '@/helpers/string';
 import { useActive } from '@/hooks/use-active';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useCreateTrackDraft } from '@/modules/tracks/hooks/use-create-track-draft';
-import { TrackData } from '@/modules/tracks/types';
 import { TrackPayload } from '@/modules/tracks/types/payload';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { AudioFileBucket, CreateBucketFile } from '@/modules/upload/types/data';
 import { CreateVariables } from '@/types/api';
 
-type Props = {
-    onAddTracks: (tracks: TrackData[]) => void;
-} & Omit<AppModalProps, 'children'>;
+type Props = {} & Omit<AppModalProps, 'children'>;
 
 interface TracksPayload {
     title: string;
@@ -39,7 +36,7 @@ interface UploadProgress {
     key: string;
 }
 
-export default function AddNewTrackModal({ onAddTracks, ...props }: Props) {
+export default function AddNewTrackModal({ ...props }: Props) {
     const messages = useTranslations();
     const isLoading = useLoading();
     const [form] = Form.useForm();

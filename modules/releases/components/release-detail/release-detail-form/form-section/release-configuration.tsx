@@ -113,6 +113,9 @@ export default function ReleaseConfigurationSection({
                                                             );
                                                         }}
                                                         allowClear
+                                                        disabled={
+                                                            isOnCreatingDraft
+                                                        }
                                                         status={
                                                             errors.title
                                                                 ? 'error'
@@ -151,6 +154,7 @@ export default function ReleaseConfigurationSection({
                                                         );
                                                     }}
                                                     allowClear
+                                                    disabled={isOnCreatingDraft}
                                                     status={
                                                         errors.version
                                                             ? 'error'
@@ -165,6 +169,7 @@ export default function ReleaseConfigurationSection({
                                     <FormItem
                                         name="labelId"
                                         label="Label"
+                                        required
                                         ErrorMessage={errors.labelId?.message}
                                         tooltipInfor={messages(
                                             'tooltipForm.label'
@@ -226,6 +231,7 @@ export default function ReleaseConfigurationSection({
                                                             type: value,
                                                         });
                                                     }}
+                                                    disabled={isOnCreatingDraft}
                                                 >
                                                     {Object.values(
                                                         RELEASES_TYPE

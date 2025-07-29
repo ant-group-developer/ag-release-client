@@ -37,6 +37,8 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "fileName": "Tên file",
+        "viewAll": "Xem tất cả",
         "legalNotices": "Thông báo pháp lý",
         "notAvailable": "Chưa có thông tin",
         "region": "Khu vực",
@@ -206,7 +208,10 @@
                 "delete": "Xoá quốc gia thành công"
             },
             "error": {
-                "notFound": "Không tìm thấy quốc gia"
+                "notFound": "Không tìm thấy quốc gia",
+                "cannotDeleteBecauseLinkedReleaseMetadataLanguages": "Không thể xóa quốc gia này vì đang được liên kết với metadata phát hành.",
+                "cannotDeleteBecauseLinkedTrackMetadataLanguages": "Không thể xóa quốc gia này vì đang được liên kết với metadata bài hát.",
+                "cannotDeleteBecauseLinkedTrackRecordings": "Không thể xóa quốc gia này vì đang được liên kết với bài hát ghi âm."
             }
         }
     },
@@ -351,7 +356,14 @@
                 "delete": "Xoá ngôn ngữ thành công"
             },
             "error": {
-                "duplicateNameLanguage": "Tên ngôn ngữ đã tồn tại"
+                "duplicateCodeLanguage": "Mã ngôn ngữ đã tồn tại",
+                "duplicateNameLanguage": "Tên ngôn ngữ đã tồn tại",
+                "cannotDeleteBecauseLinkedReleaseLocalizes": "Không thể xóa ngôn ngữ này vì đang được liên kết với bản phát hành.",
+                "cannotDeleteBecauseLinkedReleaseAudioLanguages": "Không thể xóa ngôn ngữ này vì đang được liên kết trong âm thanh phát hành.",
+                "cannotDeleteBecauseLinkedReleaseMetadataLanguages": "Không thể xóa ngôn ngữ này vì đang được liên kết với metadata phát hành.",
+                "cannotDeleteBecauseLinkedTrackAudioLanguages": "Không thể xóa ngôn ngữ này vì đang được liên kết trong âm thanh bài hát.",
+                "cannotDeleteBecauseLinkedTrackMetadataLanguages": "Không thể xóa ngôn ngữ này vì đang được liên kết với metadata bài hát.",
+                "cannotDeleteBecauseLinkedTrackLocalizes": "Không thể xóa ngôn ngữ này vì đang được liên kết với bản địa hoá bài hát."
             }
         }
     },
@@ -639,6 +651,8 @@
         "count": "Số lượng bài hát",
         "language": "Ngôn ngữ bài hát",
         "recordingCountry": "Quốc gia ghi âm",
+        "audioSpecification": "Thông số kỹ thuật âm thanh",
+        "addAllArtistFromRelease": "Thêm tất cả nghệ sĩ từ phát hành",
         "original": {
             "label": "Tác phẩm gốc",
             "tooltip": "Tác phẩm gốc là tác phẩm được tạo ra đầu tiên, không phải bất kỳ bản cover hoặc remix nào."
@@ -668,6 +682,9 @@
                 "create": "Thêm mới bài hát thành công",
                 "update": "Cập nhật bài hát thành công",
                 "delete": "Xoá bài hát thành công"
+            },
+            "error": {
+                "releaseNotFound": "Không tìm thấy bản phát hành"
             }
         }
     },
@@ -692,7 +709,8 @@
                 "delete": "Xoá thể loại thành công"
             },
             "error": {
-                "duplicateNameTrackType": "Thể loại bài hát này đã tồn tại"
+                "duplicateNameTrackType": "Thể loại bài hát này đã tồn tại",
+                "cannotDeleteBecauseLinkedTracks": "Không thể xóa thể loại này vì đang được liên kết với bài hát."
             }
         }
     },
@@ -707,7 +725,9 @@
                 "delete": "Xoá nguồn gốc bài hát thành công"
             },
             "error": {
-                "duplicateNameTrackOriginType": "Nguồn gốc bài hát này đã tồn tại"
+                "duplicateValueTrackOriginType": "Nguồn gốc bài hát này đã tồn tại",
+                "duplicateNameTrackOriginType": "Nguồn gốc bài hát này đã tồn tại",
+                "cannotDeleteBecauseLinkedTracks": "Không thể xóa nguồn gốc bài hát này vì đang được liên kết với bài hát."
             }
         }
     },
@@ -737,7 +757,11 @@
                 "update": "Cập nhật thể loại nhạc thành công"
             },
             "error": {
-                "duplicateNameGenre": "Thể loại nhạc này đã tồn tại"
+                "duplicateNameGenre": "Thể loại nhạc này đã tồn tại",
+                "cannotDeleteBecauseLinkedReleases": "Không thể xóa thể loại này vì đang được liên kết với phát hành.",
+                "cannotDeleteBecauseLinkedSubReleases": "Không thể xóa thể loại này vì đang được liên kết với phát hành phụ.",
+                "cannotDeleteBecauseLinkedPrimaryTracks": "Không thể xóa thể loại này vì đang được liên kết với bài hát chính.",
+                "cannotDeleteBecauseLinkedSubTracks": "Không thể xóa thể loại này vì đang được liên kết với bài hát phụ."
             }
         }
     },
@@ -763,7 +787,9 @@
                 "delete": "xoá nghệ sĩ thành công"
             },
             "error": {
-                "duplicateNameArtist": "Nghệ sĩ này đã tồn tại"
+                "duplicateNameArtist": "Nghệ sĩ này đã tồn tại",
+                "cannotDeleteBecauseLinkedReleases": "Không thể xóa nghệ sĩ này vì đang được liên kết với phát hành.",
+                "cannotDeleteBecauseLinkedTracks": "Không thể xóa nghệ sĩ này vì đang được liên kết với bản nhạc."
             }
         }
     },
@@ -788,7 +814,8 @@
                 "update": "Cập nhật label thành công"
             },
             "error": {
-                "duplicateNameLabel": "Label này đã tồn tại"
+                "duplicateNameLabel": "Label này đã tồn tại",
+                "cannotDeleteBecauseLinkedReleases": "Không thể xóa vì đang liên kết với phát hành"
             }
         }
     },
@@ -800,6 +827,13 @@
     },
 
     "formFields": {
+        "recordingCountryId": "Quốc gia ghi âm",
+        "trackArtists": "Nghệ sĩ bài hát",
+        "distributionType": "Loại phát hành",
+        "releaseCoverArts": "Ảnh phát hành",
+        "audioLanguageId": "Ngôn ngữ bài hát",
+        "labelId": "Label",
+        "metadataLanguageCountryId": "Ngôn ngữ metadata quốc gia",
         "title": "Tên phát hành",
         "metadataLanguageId": "Ngôn ngữ metadata",
         "artists": "Nghệ sĩ",
@@ -829,9 +863,11 @@
             "selectedCountries": "Quốc gia phân phối",
             "distributionType": "Tuỳ chọn vòng phân phối"
         },
+        "trackOriginTypeId": "Nguồn gốc bài hát",
+        "trackTypeId": "Thể loại bài hát",
+        "preview": "Đoạn nghe trước",
         "tracks": {
             "sensitiveContent": "Nội dung nhạy cảm",
-            "trackOriginTypeId": "Nguồn gốc bài hát",
             "audioLanguageId": "Ngôn ngữ âm thanh",
             "metadataLanguageId": "Ngôn ngữ metadata",
             "metadataLanguageCountryId": "Ngôn ngữ quốc gia",
@@ -873,7 +909,8 @@
             "source": "Nguồn gốc",
             "countryRecording": "Quốc gia ghi âm",
             "recordingType": "Loại ghi âm",
-            "isSensitiveContent": "Nội dung nhạy cảm"
+            "isSensitiveContent": "Nội dung nhạy cảm",
+            "trackOriginTypeId": "Nguồn gốc bài hát"
         },
         "coverArtThumbnails": {
             "original": "Ảnh phát hành"
@@ -905,7 +942,9 @@
                 "delete": "Xoá nền tảng thành công"
             },
             "error": {
-                "duplicateNameDsp": "Nền tảng này đã tồn tại"
+                "duplicateNameDsp": "Nền tảng này đã tồn tại",
+                "cannotDeleteBecauseLinkedOrganizations": "Không thể xóa nền tảng này vì đang được liên kết với tổ chức.",
+                "cannotDeleteBecauseLinkedReleases": "Không thể xóa nền tảng này vì đang được liên kết với phát hành."
             }
         }
     },
@@ -918,7 +957,9 @@
                 "update": "Cập nhật vài trò thành công"
             },
             "error": {
-                "duplicateNameArtistRole": "Vài trò này đã tồn tại"
+                "duplicateNameArtistRole": "Vài trò này đã tồn tại",
+                "cannotDeleteBecauseLinkedReleases": "Không thể xóa vai trò nghệ sĩ này vì đang được liên kết với phát hành.",
+                "cannotDeleteBecauseLinkedTracks": "Không thể xóa vai trò nghệ sĩ này vì đang được liên kết với bản nhạc."
             }
         }
     },
@@ -937,8 +978,12 @@
                 "delete": "Xoá múi giờ thành công"
             },
             "error": {
-                "duplicateNameTimezone": "Múi giờ này đã tồn tại"
+                "duplicateNameTimezone": "Múi giờ này đã tồn tại",
+                "cannotDeleteBecauseLinkedReleases": "Không thể xóa múi giờ này vì đang được liên kết với phát hành."
             }
+        },
+        "placeholder": {
+            "selectTimezone": "Chọn múi giờ"
         }
     },
 

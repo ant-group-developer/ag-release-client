@@ -1,3 +1,4 @@
+import { toNonAccentVietnamese } from '@/helpers/string';
 import { useGetListLanguage } from '@/modules/languages/hooks/use-get-list-language';
 import { LanguagesData } from '@/modules/languages/types';
 import { Select, SelectProps } from 'antd';
@@ -26,5 +27,17 @@ export default function LanguageSelect({ fallBack, ...props }: Props) {
         }
     };
 
-    return <Select {...props} options={option} labelRender={labelRender} />;
+    return (
+        <Select
+            {...props}
+            showSearch
+            filterOption={(input, option) =>
+                toNonAccentVietnamese(option?.label ?? '')
+                    .toLowerCase()
+                    .includes(toNonAccentVietnamese(input).toLowerCase())
+            }
+            options={option}
+            labelRender={labelRender}
+        />
+    );
 }

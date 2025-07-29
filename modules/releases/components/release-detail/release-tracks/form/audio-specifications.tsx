@@ -1,6 +1,4 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
-import CountrySelect from '@/components/ui/select/country-select';
-import TrackTypesSelect from '@/components/ui/select/track-types-select';
 import { DATE_FORMAT } from '@/enums/common';
 import {
     convertSecondsToHoursMinutes,
@@ -89,7 +87,7 @@ export default function AudioSpecifications({
                 <div className="grid grid-cols-2 gap-4">
                     <FormItem
                         name="audioFile.file.fileName"
-                        label="Tên File"
+                        label={messages('common.fileName')}
                         required
                         ErrorMessage={errors.audioFile?.file?.fileName?.message}
                     >
@@ -112,46 +110,8 @@ export default function AudioSpecifications({
                     </FormItem>
 
                     <FormItem
-                        name="trackLanguage.recordingCountryId"
-                        label={messages('tracks.recordingCountry')}
-                        required
-                        ErrorMessage={
-                            errors.trackLanguage?.recordingCountryId?.message
-                        }
-                    >
-                        <Controller
-                            control={control}
-                            name="trackLanguage.recordingCountryId"
-                            render={({ field }) => (
-                                <CountrySelect
-                                    status={
-                                        errors.trackLanguage?.recordingCountryId
-                                            ? 'error'
-                                            : undefined
-                                    }
-                                    className="w-full"
-                                    {...field}
-                                    fallBack={
-                                        trackData?.trackLanguage
-                                            ?.recordingCountry?.name
-                                    }
-                                    showSearch
-                                    onChange={(e) => {
-                                        field.onChange(e);
-                                        updateTrackDraft({
-                                            trackLanguage: {
-                                                recordingCountryId: e,
-                                            },
-                                        });
-                                    }}
-                                />
-                            )}
-                        />
-                    </FormItem>
-
-                    <FormItem
                         name="audioFile.preview"
-                        label="Đoạn nghe mẫu"
+                        label={messages('formFields.tracks.preview')}
                         required
                         ErrorMessage={errors.audioFile?.preview?.message}
                     >
@@ -160,6 +120,7 @@ export default function AudioSpecifications({
                             name="audioFile.preview"
                             render={({ field }) => (
                                 <TimePicker
+                                    className="w-full"
                                     showNow={false}
                                     {...field}
                                     value={
@@ -201,35 +162,32 @@ export default function AudioSpecifications({
                             )}
                         />
                     </FormItem>
-
-                    <FormItem
-                        name="trackTypeId"
-                        label={messages('trackType.label')}
-                        required
-                        ErrorMessage={errors.trackTypeId?.message}
-                    >
-                        <Controller
-                            control={control}
-                            name="trackTypeId"
-                            render={({ field }) => (
-                                <TrackTypesSelect
-                                    status={
-                                        errors.trackTypeId ? 'error' : undefined
-                                    }
-                                    className="w-full"
-                                    {...field}
-                                    fallBack={trackData?.trackType?.name}
-                                    value={field.value ?? ''}
-                                    showSearch
-                                    onChange={(e) => {
-                                        field.onChange(e);
-                                        updateTrackDraft({ trackTypeId: e });
-                                    }}
-                                />
-                            )}
-                        />
-                    </FormItem>
                 </div>
+                {trackData.audioFile && (
+                    <div className="mt-6 overflow-hidden rounded-md border">
+                        <div className="grid grid-cols-4 gap-4 p-4 text-sm">
+                            <div>
+                                <p className="font-bold">Bit Depth</p>
+                                <p>{trackData.audioFile.bitDepth ?? '-'}</p>
+                            </div>
+                            <div>
+                                <p className="font-bold">Bitrate</p>
+                                <p>{trackData.audioFile.bitrate ?? '-'}</p>
+                            </div>
+                            <div>
+                                <p className="font-bold">Format</p>
+                                <p>
+                                    {trackData.audioFile.file?.extension?.toUpperCase() ||
+                                        'WAVE'}
+                                </p>
+                            </div>
+                            <div>
+                                <p className="font-bold">Sample Rate</p>
+                                <p>{trackData.audioFile.sampleRate ?? '-'}</p>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </form>
         </FormProvider>
     );

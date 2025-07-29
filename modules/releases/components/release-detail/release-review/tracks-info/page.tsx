@@ -1,6 +1,7 @@
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import type { TrackData } from '@/modules/releases/types';
 import { TrackArtistData } from '@/modules/track-artist/types';
+import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { Collapse } from 'antd';
 import { AlertCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -22,6 +23,7 @@ type Props = {};
 export default function TracksInfo({}: Props) {
     const messages = useTranslations();
     const formValue = useReleaseFormStore((state) => state.formValues);
+    const { tracksData } = useGetListTracks({ releaseId: formValue?.id });
     const formErrors = useReleaseFormStore((state) => state.validationErrors);
 
     const formatTrackError = (errors: any[]) => {
@@ -121,7 +123,7 @@ export default function TracksInfo({}: Props) {
         isRequired: boolean = false
     ) => {
         const error = getFieldError(trackIndex, field);
-        const track = formValue.tracks?.[trackIndex];
+        const track = tracksData?.items[trackIndex];
         const value = getFieldValue(track, field);
         return (
             <div className="flex justify-between">
@@ -157,7 +159,7 @@ export default function TracksInfo({}: Props) {
             </div>
 
             <div className="flex flex-col gap-2">
-                {formValue.tracks?.map((track: TrackData, index: number) => (
+                {tracksData?.items?.map((track: TrackData, index: number) => (
                     <Collapse
                         key={String(index + 1)}
                         className="release-review-collapse !border-none !bg-zinc-100 !py-2"
@@ -183,7 +185,7 @@ export default function TracksInfo({}: Props) {
                                         true
                                     )}
                                     {renderField(index, 'ISRC', 'isrc')}
-                                    {renderField(index, 'ISWC', 'iswc')}
+                                    {/* {renderField(index, 'ISWC', 'iswc')} */}
                                     {renderField(
                                         index,
                                         messages('formFields.tracks.version'),

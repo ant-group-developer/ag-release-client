@@ -54,8 +54,6 @@ export default function Tracks() {
         deleteTrack(variables);
     };
 
-    const handleAddTracks = (newTracks: any[]) => {};
-
     const rowSelection = {
         selectedRow,
         onChange: handleRowSelection,
@@ -84,14 +82,13 @@ export default function Tracks() {
     return (
         <div>
             <ReleaseTracksTable
-                // dataSource={tracksData?.items}
-                dataSource={formValues?.tracks ?? []}
+                dataSource={tracksData?.items}
                 // rowSelection={rowSelection}
                 loading={isLoading}
             />
 
             {typeModal === TYPE_MODAL_RELEASE.ADD_TRACK && (
-                <AddNewTrackModal open onAddTracks={handleAddTracks} />
+                <AddNewTrackModal open />
             )}
 
             {/* On checking to delete */}
