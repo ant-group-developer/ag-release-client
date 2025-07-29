@@ -3,7 +3,10 @@ import CountrySelect from '@/components/ui/select/country-select';
 import OriginalTypeSelect from '@/components/ui/select/original-type-select';
 import TrackTypesSelect from '@/components/ui/select/track-types-select';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
-import { releaseTrackSchema } from '@/modules/tracks/schemas';
+import {
+    ReleaseTrackSchema,
+    releaseTrackSchema,
+} from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input, Select } from 'antd';
@@ -15,7 +18,7 @@ import { Controller, useForm } from 'react-hook-form';
 
 type Props = {
     index: number;
-    debouncedUpdateTrackDraft: (data: any, fieldName?: string) => void;
+    debouncedUpdateTrackDraft: (data: any) => void;
     trackData: TrackData;
 };
 
@@ -41,6 +44,7 @@ export default function OtherSection({
     const {
         control,
         formState: { errors },
+        trigger,
     } = formMethods;
     const [year, ownerCopyRight] = (trackData.pLineOwner || '').split(' ');
     const copyRightYearList = () => {
@@ -58,6 +62,16 @@ export default function OtherSection({
         ];
     };
     const copyRightYears = copyRightYearList();
+
+    const updateTrackDraft = async (data: any, fieldName?: string) => {
+        if (fieldName) {
+            const isValid = await trigger(
+                fieldName as keyof ReleaseTrackSchema
+            );
+            if (!isValid) return;
+        }
+        debouncedUpdateTrackDraft(data);
+    };
     return (
         <CollapseItem
             defaultActiveKey={['other']}
@@ -107,7 +121,7 @@ export default function OtherSection({
                                                 {...field}
                                                 onChange={(e) => {
                                                     field.onChange(e);
-                                                    debouncedUpdateTrackDraft(
+                                                    updateTrackDraft(
                                                         {
                                                             isSensitiveContent:
                                                                 e,
@@ -147,7 +161,7 @@ export default function OtherSection({
                                                 }
                                                 onChange={(e) => {
                                                     field.onChange(e);
-                                                    debouncedUpdateTrackDraft(
+                                                    updateTrackDraft(
                                                         {
                                                             trackOriginTypeId:
                                                                 e,
@@ -189,7 +203,7 @@ export default function OtherSection({
                                                     field.onChange(
                                                         e.target.value
                                                     );
-                                                    debouncedUpdateTrackDraft(
+                                                    updateTrackDraft(
                                                         {
                                                             lyric: e.target
                                                                 .value,
@@ -239,7 +253,7 @@ export default function OtherSection({
                                                 showSearch
                                                 onChange={(e) => {
                                                     field.onChange(e);
-                                                    debouncedUpdateTrackDraft({
+                                                    updateTrackDraft({
                                                         trackLanguage: {
                                                             recordingCountryId:
                                                                 e,
@@ -278,7 +292,7 @@ export default function OtherSection({
                                                 showSearch
                                                 onChange={(e) => {
                                                     field.onChange(e);
-                                                    debouncedUpdateTrackDraft({
+                                                    updateTrackDraft({
                                                         trackTypeId: e,
                                                     });
                                                 }}
@@ -306,7 +320,7 @@ export default function OtherSection({
                                                 const value =
                                                     `${newYear} ${ownerCopyRight ?? ''}`.trim();
                                                 field.onChange(value);
-                                                debouncedUpdateTrackDraft(
+                                                updateTrackDraft(
                                                     { pLineOwner: value },
                                                     'pLineOwner'
                                                 );
@@ -317,7 +331,7 @@ export default function OtherSection({
                                                 const value =
                                                     `${year} ${e.target.value}`.trim();
                                                 field.onChange(value);
-                                                debouncedUpdateTrackDraft(
+                                                updateTrackDraft(
                                                     { pLineOwner: value },
                                                     'pLineOwner'
                                                 );
@@ -370,7 +384,7 @@ export default function OtherSection({
                                                     const value =
                                                         e.target.value;
                                                     field.onChange(value);
-                                                    debouncedUpdateTrackDraft(
+                                                    updateTrackDraft(
                                                         { isrc: value },
                                                         'isrc'
                                                     );

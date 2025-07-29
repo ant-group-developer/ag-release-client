@@ -5,7 +5,10 @@ import {
     timeStringToSeconds,
 } from '@/helpers/common';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
-import { releaseTrackSchema } from '@/modules/tracks/schemas';
+import {
+    ReleaseTrackSchema,
+    releaseTrackSchema,
+} from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input, TimePicker } from 'antd';
@@ -16,7 +19,7 @@ import { Controller, useForm } from 'react-hook-form';
 
 type Props = {
     index: number;
-    debouncedUpdateTrackDraft: (data: any, fieldName?: string) => void;
+    debouncedUpdateTrackDraft: (data: any) => void;
     trackData: TrackData;
 };
 
@@ -33,6 +36,7 @@ export default function AudioSpecSection({
                 file: {
                     fileName: trackData?.audioFile?.file?.fileName,
                 },
+                duration: trackData?.audioFile?.duration,
             },
             trackLanguage: trackData?.trackLanguage,
             trackTypeId: trackData?.trackTypeId,
@@ -43,7 +47,18 @@ export default function AudioSpecSection({
     const {
         control,
         formState: { errors },
+        trigger,
     } = formMethods;
+
+    const updateTrackDraft = async (data: any, fieldName?: string) => {
+        if (fieldName) {
+            const isValid = await trigger(
+                fieldName as keyof ReleaseTrackSchema
+            );
+            if (!isValid) return;
+        }
+        debouncedUpdateTrackDraft(data);
+    };
     return (
         <CollapseItem
             defaultActiveKey={['audio-specs']}
@@ -129,11 +144,15 @@ export default function AudioSpecSection({
                                                           )
                                                         : 0;
                                                     field.onChange(seconds);
-                                                    debouncedUpdateTrackDraft({
-                                                        audioFile: {
-                                                            preview: seconds,
+                                                    updateTrackDraft(
+                                                        {
+                                                            audioFile: {
+                                                                preview:
+                                                                    seconds,
+                                                            },
                                                         },
-                                                    });
+                                                        'audioFile.preview'
+                                                    );
                                                 }}
                                                 onBlur={field.onBlur}
                                                 size="middle"

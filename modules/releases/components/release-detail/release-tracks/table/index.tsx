@@ -265,9 +265,6 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                     <AudioSpecifications
                         key={`${record.id}-audio-specs-content`}
                         trackData={record}
-                        updateTrackDraft={(data) =>
-                            debouncedUpdate(record.id, data)
-                        }
                     />
                 ),
             },

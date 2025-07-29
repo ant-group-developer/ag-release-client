@@ -2,7 +2,10 @@ import FormItem from '@/components/ui/react-hook-form/form-item';
 import CountrySelect from '@/components/ui/select/country-select';
 import LanguageSelect from '@/components/ui/select/language-select';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
-import { releaseTrackSchema } from '@/modules/tracks/schemas';
+import {
+    ReleaseTrackSchema,
+    releaseTrackSchema,
+} from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Title from 'antd/lib/typography/Title';
@@ -11,7 +14,7 @@ import { Controller, useForm } from 'react-hook-form';
 
 type Props = {
     index: number;
-    debouncedUpdateTrackDraft: (data: any, fieldName?: string) => void;
+    debouncedUpdateTrackDraft: (data: any) => void;
     trackData: TrackData;
 };
 
@@ -27,6 +30,8 @@ export default function LanguageSection({
                 metadataLanguageCountryId:
                     trackData.trackLanguage?.metadataLanguageCountryId ?? '',
                 audioLanguageId: trackData.trackLanguage?.audioLanguageId ?? '',
+                metadataLanguageId:
+                    trackData.trackLanguage?.metadataLanguageId ?? '',
             },
         },
         resolver: zodResolver(releaseTrackSchema(messages)),
@@ -35,7 +40,18 @@ export default function LanguageSection({
     const {
         control,
         formState: { errors },
+        trigger,
     } = formMethods;
+
+    const updateTrackDraft = async (data: any, fieldName?: string) => {
+        if (fieldName) {
+            const isValid = await trigger(
+                fieldName as keyof ReleaseTrackSchema
+            );
+            if (!isValid) return;
+        }
+        debouncedUpdateTrackDraft(data);
+    };
     return (
         <CollapseItem
             defaultActiveKey={['language']}
@@ -75,7 +91,7 @@ export default function LanguageSection({
                                                 }
                                                 onChange={(e) => {
                                                     field.onChange(e);
-                                                    debouncedUpdateTrackDraft(
+                                                    updateTrackDraft(
                                                         {
                                                             trackLanguage: {
                                                                 ...trackData.trackLanguage,
@@ -120,7 +136,7 @@ export default function LanguageSection({
                                                 }
                                                 onChange={(e) => {
                                                     field.onChange(e);
-                                                    debouncedUpdateTrackDraft(
+                                                    updateTrackDraft(
                                                         {
                                                             trackLanguage: {
                                                                 ...trackData.trackLanguage,
@@ -167,7 +183,7 @@ export default function LanguageSection({
                                                 // }
                                                 onChange={(e) => {
                                                     field.onChange(e);
-                                                    debouncedUpdateTrackDraft({
+                                                    updateTrackDraft({
                                                         trackLanguage: {
                                                             metadataLanguageId:
                                                                 e,

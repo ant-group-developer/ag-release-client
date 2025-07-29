@@ -7,11 +7,12 @@ import TrackAndArtistSection from '../collapse/view-all-collapse/track-and-artis
 
 type Props = {
     trackData: TrackData;
-    updateTrackDraft: (data: any, fieldName?: string) => void;
+    updateTrackDraft: (data: any) => void;
     index: number;
 };
 
 export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
+    
     return (
         <div className="flex flex-col gap-4">
             <TrackAndArtistSection

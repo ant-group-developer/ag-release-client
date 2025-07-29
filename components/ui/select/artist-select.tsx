@@ -17,7 +17,7 @@ export default function ArtistSelect({
     ...props
 }: Props) {
     const messages = useTranslations();
-    const { artistsData } = useGetListArtist({});
+    const { artistsData, isLoading } = useGetListArtist({});
     const labelRender = (props: any) => {
         const { value, label } = props;
         if (value) {
@@ -27,6 +27,7 @@ export default function ArtistSelect({
     return (
         <Select
             {...props}
+            loading={isLoading}
             showSearch
             filterOption={(input, option) =>
                 toNonAccentVietnamese(option?.label ?? '')
