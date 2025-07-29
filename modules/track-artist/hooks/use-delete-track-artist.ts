@@ -23,7 +23,7 @@ export const useDeleteTrackArtist = () => {
 
         // const responseMessages = messages(data?.data?.messageCode);
 
-        // onSuccess?.();
+        onSuccess?.();
         // showNotification('success', responseMessages);
     };
 
