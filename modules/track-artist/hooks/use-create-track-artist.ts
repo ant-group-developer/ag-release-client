@@ -1,4 +1,5 @@
 import { showNotification } from '@/helpers/messages-helper';
+import { releasesQueryKeys } from '@/modules/releases/constants/query-keys';
 import { trackQueryKeys } from '@/modules/tracks/constants/query-keys';
 import { CreateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -17,14 +18,14 @@ export const useCreateTrackArtist = () => {
         queryClient.invalidateQueries({
             queryKey: [...trackQueryKeys.getList],
         });
-        // queryClient.invalidateQueries({
-        //     queryKey: [...releasesQueryKeys.getDetail],
-        // });
+        queryClient.invalidateQueries({
+            queryKey: [...releasesQueryKeys.validate],
+        });
 
-        const responseMessages = messages(data?.data?.messageCode);
+        // const responseMessages = messages(data?.data?.messageCode);
 
         onSuccess?.(data?.data?.data);
-        showNotification('success', responseMessages);
+        // showNotification('success', responseMessages);
     };
 
     const onError = (

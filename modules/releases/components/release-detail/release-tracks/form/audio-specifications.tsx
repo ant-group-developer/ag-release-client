@@ -1,20 +1,22 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
-import CountrySelect from '@/components/ui/select/country-select';
-import TrackTypesSelect from '@/components/ui/select/track-types-select';
 import { DATE_FORMAT } from '@/enums/common';
 import {
     convertSecondsToHoursMinutes,
     timeStringToSeconds,
 } from '@/helpers/common';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
 import { releaseTrackSchema } from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
+import { UpdateTrackPayload } from '@/modules/tracks/types/payload';
+import { UpdateVariables } from '@/types/api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input, TimePicker } from 'antd';
 import dayjs from 'dayjs';
+import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
-import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
+import { useCallback } from 'react';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 const audioSpecificationsSchema = (messages: any) =>
@@ -30,13 +32,9 @@ export type AudioSpecificationsSchema = z.infer<
 
 type Props = {
     trackData: TrackData;
-    updateTrackDraft: (data: any) => void;
 };
 
-export default function AudioSpecifications({
-    trackData,
-    updateTrackDraft,
-}: Props) {
+export default function AudioSpecifications({ trackData }: Props) {
     const messages = useTranslations();
 
     const formValues = useReleaseFormStore((state) => state.formValues);
@@ -46,6 +44,7 @@ export default function AudioSpecifications({
             fileName: trackData?.audioFile?.file?.fileName ?? '',
         },
         preview: trackData?.audioFile?.preview ?? 0,
+        duration: trackData?.audioFile?.duration ?? 0,
     });
     const formMethods = useForm<AudioSpecificationsSchema>({
         defaultValues: {
@@ -61,27 +60,48 @@ export default function AudioSpecifications({
         control,
         handleSubmit,
         formState: { errors },
+        trigger,
     } = formMethods;
-    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
+    // const setFormValues = useReleaseFormStore((state) => state.setFormValues);
 
-    const onSubmit = (data: AudioSpecificationsSchema) => {};
+    // const watchedAllFields = useWatch({ control });
 
-    const watchedAllFields = useWatch({ control });
+    const { updateTrackDraft } = useUpdateTrackDraft();
+    const debouncedUpdateTrackDraft = useCallback(
+        debounce(async (data: any, fieldName?: string) => {
+            if (fieldName) {
+                const isValid = await trigger(
+                    fieldName as keyof AudioSpecificationsSchema
+                );
+                if (!isValid) return;
+            }
+            if (!formValues.id) return;
+            const variables: UpdateVariables<
+                TrackData['id'],
+                UpdateTrackPayload
+            > = {
+                id: trackData.id,
+                payload: data,
+            };
+            updateTrackDraft(variables);
+        }, 500),
+        [formValues.id]
+    );
 
-    useEffect(() => {
-        setFormValues({
-            ...formValues,
-            tracks: formValues?.tracks?.map((track: any) => {
-                if (track.id === trackData.id) {
-                    return {
-                        ...track,
-                        ...watchedAllFields,
-                    };
-                }
-                return track;
-            }),
-        });
-    }, [watchedAllFields]);
+    // useEffect(() => {
+    //     setFormValues({
+    //         ...formValues,
+    //         tracks: formValues?.tracks?.map((track: any) => {
+    //             if (track.id === trackData.id) {
+    //                 return {
+    //                     ...track,
+    //                     ...watchedAllFields,
+    //                 };
+    //             }
+    //             return track;
+    //         }),
+    //     });
+    // }, [watchedAllFields]);
 
     return (
         <FormProvider {...formMethods}>
@@ -89,7 +109,7 @@ export default function AudioSpecifications({
                 <div className="grid grid-cols-2 gap-4">
                     <FormItem
                         name="audioFile.file.fileName"
-                        label="Tên File"
+                        label={messages('common.fileName')}
                         required
                         ErrorMessage={errors.audioFile?.file?.fileName?.message}
                     >
@@ -112,46 +132,8 @@ export default function AudioSpecifications({
                     </FormItem>
 
                     <FormItem
-                        name="trackLanguage.recordingCountryId"
-                        label={messages('tracks.recordingCountry')}
-                        required
-                        ErrorMessage={
-                            errors.trackLanguage?.recordingCountryId?.message
-                        }
-                    >
-                        <Controller
-                            control={control}
-                            name="trackLanguage.recordingCountryId"
-                            render={({ field }) => (
-                                <CountrySelect
-                                    status={
-                                        errors.trackLanguage?.recordingCountryId
-                                            ? 'error'
-                                            : undefined
-                                    }
-                                    className="w-full"
-                                    {...field}
-                                    fallBack={
-                                        trackData?.trackLanguage
-                                            ?.recordingCountry?.name
-                                    }
-                                    showSearch
-                                    onChange={(e) => {
-                                        field.onChange(e);
-                                        updateTrackDraft({
-                                            trackLanguage: {
-                                                recordingCountryId: e,
-                                            },
-                                        });
-                                    }}
-                                />
-                            )}
-                        />
-                    </FormItem>
-
-                    <FormItem
                         name="audioFile.preview"
-                        label="Đoạn nghe mẫu"
+                        label={messages('formFields.tracks.preview')}
                         required
                         ErrorMessage={errors.audioFile?.preview?.message}
                     >
@@ -160,6 +142,7 @@ export default function AudioSpecifications({
                             name="audioFile.preview"
                             render={({ field }) => (
                                 <TimePicker
+                                    className="w-full"
                                     showNow={false}
                                     {...field}
                                     value={
@@ -183,11 +166,14 @@ export default function AudioSpecifications({
                                             ? timeStringToSeconds(value)
                                             : 0;
                                         field.onChange(seconds);
-                                        updateTrackDraft({
-                                            audioFile: {
-                                                preview: seconds,
+                                        debouncedUpdateTrackDraft(
+                                            {
+                                                audioFile: {
+                                                    preview: seconds,
+                                                },
                                             },
-                                        });
+                                            'audioFile.preview'
+                                        );
                                     }}
                                     onBlur={field.onBlur}
                                     size="middle"
@@ -201,35 +187,32 @@ export default function AudioSpecifications({
                             )}
                         />
                     </FormItem>
-
-                    <FormItem
-                        name="trackTypeId"
-                        label={messages('trackType.label')}
-                        required
-                        ErrorMessage={errors.trackTypeId?.message}
-                    >
-                        <Controller
-                            control={control}
-                            name="trackTypeId"
-                            render={({ field }) => (
-                                <TrackTypesSelect
-                                    status={
-                                        errors.trackTypeId ? 'error' : undefined
-                                    }
-                                    className="w-full"
-                                    {...field}
-                                    fallBack={trackData?.trackType?.name}
-                                    value={field.value ?? ''}
-                                    showSearch
-                                    onChange={(e) => {
-                                        field.onChange(e);
-                                        updateTrackDraft({ trackTypeId: e });
-                                    }}
-                                />
-                            )}
-                        />
-                    </FormItem>
                 </div>
+                {trackData.audioFile && (
+                    <div className="mt-6 overflow-hidden rounded-md border">
+                        <div className="grid grid-cols-4 gap-4 p-4 text-sm">
+                            <div>
+                                <p className="font-bold">Bit Depth</p>
+                                <p>{trackData.audioFile.bitDepth ?? '-'}</p>
+                            </div>
+                            <div>
+                                <p className="font-bold">Bitrate</p>
+                                <p>{trackData.audioFile.bitrate ?? '-'}</p>
+                            </div>
+                            <div>
+                                <p className="font-bold">Format</p>
+                                <p>
+                                    {trackData.audioFile.file?.extension?.toUpperCase() ||
+                                        'WAVE'}
+                                </p>
+                            </div>
+                            <div>
+                                <p className="font-bold">Sample Rate</p>
+                                <p>{trackData.audioFile.sampleRate ?? '-'}</p>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </form>
         </FormProvider>
     );

@@ -6,7 +6,7 @@ import { showNotification } from '@/helpers/messages-helper';
 import useModalStore from '@/hooks/use-modal';
 import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
-import { useTrackReadyStore } from '@/modules/releases/hooks/track-ready-store';
+import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
@@ -22,11 +22,12 @@ import { Input, Tabs, Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import TrackActionButton from '../button/track-action';
 import AudioSpecifications from '../form/audio-specifications';
 import OtherMetadataForm from '../form/other-metadata-form';
 import TracksForm from '../form/track-form';
+import ViewAll from '../form/view-all';
 import { TrackWaveform } from '../track-wave-form';
 
 type Props = {} & Omit<SortableTableProps<TrackData>, 'columns'>;
@@ -34,16 +35,15 @@ type Props = {} & Omit<SortableTableProps<TrackData>, 'columns'>;
 export default function ReleaseTracksTable({ ...props }: Props) {
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
-    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const openModal = useModalStore((state) => state.openModal);
-    const closeModal = useModalStore((state) => state.closeModal);
-    const formErrors = useReleaseFormStore((state) => state.validationErrors);
-    const setTrackReadyMap = useTrackReadyStore(
-        (state) => state.setTrackReadyMap
-    );
+
+    const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
 
     const { updateTrackDraft } = useUpdateTrackDraft();
     const { updateTrackOrder } = useUpdateTrackOrder();
+    const { releaseValidateData } = useReleaseValidate(
+        formValues?.id as string
+    );
 
     const handleDragEnd: OnDragEnd<TrackData[]> = (newData) => {
         const payload = newData.map((item, index) => ({
@@ -113,9 +113,10 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             render: (value, record) => {
                 return (
                     <Input
+                        key={record.id + '-' + record.title}
                         maxLength={100}
                         minLength={1}
-                        defaultValue={record?.title}
+                        defaultValue={record.title}
                         onChange={(e) => {
                             const value = e.target.value;
                             if (value.length < 1) {
@@ -178,9 +179,10 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             align: 'center',
             width: 150,
             render: (value, record, index) => {
-                const isTrackError = formErrors.some(
-                    (error) => error.path[1] === index
-                );
+                const isTrackError = releaseValidateData.some((error) => {
+                    const parts = error.field.split('.');
+                    return parts[0] === 'tracks' && Number(parts[1]) === index;
+                });
                 const color = isTrackError ? 'red' : 'green';
                 return (
                     <Tag bordered color={color}>
@@ -232,7 +234,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                 ),
                 children: (
                     <TracksForm
-                        key={`${record.id}-track-form-content`}
+                        key={`${record.id}-${record.title}-track-form-content`}
                         trackData={record}
                         index={index}
                     />
@@ -263,16 +265,34 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                     <AudioSpecifications
                         key={`${record.id}-audio-specs-content`}
                         trackData={record}
+                    />
+                ),
+            },
+            {
+                key: `${record.id}-view-all`,
+                label: (
+                    <span className="font-medium">
+                        {messages('common.viewAll')}
+                    </span>
+                ),
+                children: (
+                    <ViewAll
+                        key={`${record.id}-view-all`}
+                        trackData={record}
                         updateTrackDraft={(data) =>
                             debouncedUpdate(record.id, data)
                         }
+                        index={index}
                     />
                 ),
             },
         ];
         return (
             <div className="px-20 py-4">
-                <Tabs items={items} />
+                <Tabs
+                    items={items}
+                    defaultActiveKey={`${record.id}-view-all`}
+                />
             </div>
         );
     };
@@ -284,6 +304,43 @@ export default function ReleaseTracksTable({ ...props }: Props) {
     //     return height - 140 - 64;
     // };
 
+    // Cho phép mở nhiều hàng cùng lúc
+    const handleExpand = (expanded: boolean, record: TrackData) => {
+        const newExpandedKeys = [...expandedRowKeys];
+        if (expanded) {
+            newExpandedKeys.push(record.id);
+        } else {
+            const index = newExpandedKeys.indexOf(record.id);
+            if (index !== -1) {
+                newExpandedKeys.splice(index, 1);
+            }
+        }
+        setExpandedRowKeys(newExpandedKeys);
+    };
+
+    useEffect(() => {
+        const handleHashChange = () => {
+            const hash = window.location.hash;
+            const match = hash.match(/tracks\.(\d+)/);
+            if (match && props.dataSource) {
+                const index = parseInt(match[1]);
+                if (index >= 0 && index < props.dataSource.length) {
+                    const trackId = props.dataSource[index].id;
+                    setExpandedRowKeys([trackId]);
+                }
+            }
+        };
+
+        handleHashChange();
+
+        // Thêm listener để xử lý khi hash thay đổi
+        window.addEventListener('hashchange', handleHashChange);
+
+        return () => {
+            window.removeEventListener('hashchange', handleHashChange);
+        };
+    }, [props.dataSource, window?.location?.hash]);
+
     return (
         <div className="w-full">
             <SortableTable
@@ -294,6 +351,8 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                 onDragEnd={handleDragEnd}
                 expandable={{
                     expandedRowRender,
+                    expandedRowKeys,
+                    onExpand: handleExpand,
                     expandedRowClassName: () => '!z-0 custom-track-expanded',
                 }}
                 scroll={{ x: 'max-content' }}

@@ -42,7 +42,7 @@ export default function ArtistCard({
         >
             <div className="flex items-center gap-4">
                 <div>
-                    <Avatar size={40} shape="circle" src="/logo.png">
+                    <Avatar size={40} shape="circle" src={artist?.picture}>
                         {'A'}
                     </Avatar>
                 </div>

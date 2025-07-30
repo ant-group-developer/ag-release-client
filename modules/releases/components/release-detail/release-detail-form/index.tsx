@@ -87,7 +87,6 @@ export default function ReleaseDetailForm() {
     // zustand store - state
     const formValues = useReleaseFormStore((state) => state.formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
-
     const [showCreateLabel, setShowCreateLabel] = useState<boolean>(false);
 
     //route
@@ -129,7 +128,6 @@ export default function ReleaseDetailForm() {
         }
     };
     const handleFormError = (errors: any) => {};
-
     const debouncedUpdate = useCallback(
         debounce(async (data: any, fieldName?: string) => {
             if (fieldName) {
@@ -192,10 +190,32 @@ export default function ReleaseDetailForm() {
                     // },
                 };
                 // setFormValues(initialFormValue);
-                reset(initialFormValue, { keepErrors: true });
+                reset(initialFormValue, {
+                    keepErrors: true,
+                });
             }
         }
     }, [isCreateReleasePage, releaseId, formValues]);
+
+    useEffect(() => {
+        const handleTriggerField = () => {
+            const hash = window.location.hash;
+            if (!hash) return;
+            const parts = hash.split('.');
+            let field = hash.replace('#', '');
+            if (parts.length >= 2) {
+                field = parts.slice(1).join('.');
+            }
+            trigger(field as keyof ReleaseDetailSchema);
+        };
+        window.addEventListener('hashchange', handleTriggerField);
+
+        handleTriggerField();
+
+        return () => {
+            window.removeEventListener('hashchange', handleTriggerField);
+        };
+    }, []);
 
     return (
         <>
@@ -223,12 +243,6 @@ export default function ReleaseDetailForm() {
                         <LegalNoticesSection
                             debouncedUpdate={debouncedUpdate}
                         />
-
-                        {/* <div className="grid grid-cols-2 gap-8">
-                            <div className="col-span-2">
-                                <div className="flex items-center justify-between"></div>
-                            </div>
-                        </div> */}
                     </div>
 
                     <div className="flex w-full justify-end">

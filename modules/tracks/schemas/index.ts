@@ -43,12 +43,12 @@ export const releaseTrackSchema = (messages: any) =>
                 message: messages('validation.input'),
             }),
         trackLanguage: z.object({
-            // metadataLanguageId: z
-            //     .string()
-            //     .nullable()
-            //     .refine((val) => val !== null && val !== '', {
-            //         message: messages('validation.input'),
-            //     }), chưa dùng
+            metadataLanguageId: z
+                .string()
+                .nullable()
+                .refine((val) => val !== null && val !== '', {
+                    message: messages('validation.input'),
+                }),
             audioLanguageId: z
                 .string()
                 .nullable()
@@ -84,29 +84,46 @@ export const releaseTrackSchema = (messages: any) =>
             .refine((val) => val !== null && val !== '', {
                 message: messages('validation.input'),
             }),
-        audioFile: z.object({
-            file: z.object({
-                fileName: z
-                    .string()
-                    .max(100, messages('validation.max', { number: 100 })),
-                urlRead: z.string().nullable().optional(),
-            }),
-            // preview: z
-            //     .number()
-            //     .optional()
-            //     .nullable()
-            //     .refine((val) => val !== null && val !== undefined, {
-            //         message: messages('validation.input'),
-            //     }),
-            preview: z
-                .number({
-                    required_error: messages('validation.input'),
-                    invalid_type_error: messages('validation.input'),
-                })
-                .refine((val) => val !== null && val !== 0, {
-                    message: messages('validation.input'),
+        audioFile: z
+            .object({
+                id: z.string().optional(),
+                sampleRate: z.string().optional(),
+                bitrate: z.string().nullable().optional(),
+                bitDepth: z.number().nullable().optional(),
+                duration: z.number().nullable().optional(),
+                format: z.string().nullable().optional(),
+                file: z.object({
+                    fileName: z
+                        .string()
+                        .max(100, messages('validation.max', { number: 100 })),
+                    urlRead: z.string().nullable().optional(),
                 }),
-        }),
+
+                preview: z
+                    .number({
+                        required_error: messages('validation.input'),
+                        invalid_type_error: messages('validation.input'),
+                    })
+                    .nullable()
+                    .refine((val) => val !== null && val !== 0, {
+                        message: messages('validation.input'),
+                    }),
+            })
+            .superRefine((data, ctx) => {
+                if (
+                    data.preview != null &&
+                    data.duration != null &&
+                    data.preview >= data.duration
+                ) {
+                    ctx.addIssue({
+                        path: ['preview'],
+                        code: z.ZodIssueCode.custom,
+                        message: messages(
+                            'tracks.validation.previewMustBeLessThanDuration'
+                        ),
+                    });
+                }
+            }),
     });
 
 export type ReleaseTrackSchema = z.infer<ReturnType<typeof releaseTrackSchema>>;

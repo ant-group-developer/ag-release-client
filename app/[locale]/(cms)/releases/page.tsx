@@ -65,7 +65,8 @@ export default function Releases({}: Props) {
 
     const { height, width } = useWindowSize();
     const { layoutTable } = useTableLayoutToggle();
-    const { releasesData } = useGetListReleases(dataFilter);
+    const { releasesData, isLoading: isReleaseDataLoading } =
+        useGetListReleases(dataFilter);
     const { deleteRelease } = useDeleteRelease();
     const messages = useTranslations();
     const isSmallDevice = Number(width) <= SCREEN.MD;
@@ -133,7 +134,7 @@ export default function Releases({}: Props) {
                         visibleColumns={visibleColumns}
                         dataSource={releasesData?.items}
                         scroll={{ x: SCREEN.XXL, y: scrollY() }}
-                        loading={isLoading}
+                        loading={isReleaseDataLoading}
                     />
                 )}
 

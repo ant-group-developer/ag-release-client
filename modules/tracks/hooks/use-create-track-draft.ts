@@ -1,4 +1,5 @@
 import { showNotification } from '@/helpers/messages-helper';
+import { releasesQueryKeys } from '@/modules/releases/constants/query-keys';
 import { CreateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
@@ -16,6 +17,9 @@ export const useCreateTrackDraft = () => {
     ) => {
         queryClient.invalidateQueries({
             queryKey: [...trackQueryKeys.getList],
+        });
+        queryClient.invalidateQueries({
+            queryKey: [...releasesQueryKeys.validate],
         });
 
         const responseMessages = messages(data?.data?.messageCode);

@@ -1,4 +1,4 @@
-import CardRelease from '@/modules/dashboard/components/card/card-album';
+import CardRelease from '@/modules/dashboard/components/card/card-release';
 import { ReleasesData } from '../../types';
 
 type Props = {
@@ -6,5 +6,5 @@ type Props = {
 };
 
 export default function GridCardRelease({ data }: Props) {
-    return <CardRelease album={data} />;
+    return <CardRelease data={data} />;
 }

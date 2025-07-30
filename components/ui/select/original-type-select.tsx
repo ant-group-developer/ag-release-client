@@ -1,3 +1,4 @@
+import { toNonAccentVietnamese } from '@/helpers/string';
 import { useGetListTrackOriginTypes } from '@/modules/track-origin-types/hooks/use-get-list-track-origin-types';
 import { TrackOriginTypeData } from '@/modules/track-origin-types/types';
 import { Select, SelectProps } from 'antd';
@@ -32,5 +33,17 @@ export default function OriginalTypeSelect({ fallBack, ...props }: Props) {
         }
     };
 
-    return <Select {...props} options={options} labelRender={labelRender} />;
+    return (
+        <Select
+            {...props}
+            showSearch
+            filterOption={(input, option) =>
+                toNonAccentVietnamese(option?.label ?? '')
+                    .toLowerCase()
+                    .includes(toNonAccentVietnamese(input).toLowerCase())
+            }
+            options={options}
+            labelRender={labelRender}
+        />
+    );
 }

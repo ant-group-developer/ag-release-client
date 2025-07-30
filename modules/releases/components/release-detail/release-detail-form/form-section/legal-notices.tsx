@@ -27,7 +27,6 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const { updateReleaseArtist } = useUpdateReleaseArtist();
-    console.log('🚀 ~ LegalNoticesSection ~ errors:', errors);
 
     // router
     const params = useParams();
@@ -134,6 +133,7 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                             field.value?.split(' ') || ['', ''];
                                         return (
                                             <Input
+                                                id="cLineOwner"
                                                 value={owner}
                                                 disabled={isCreateReleasePage}
                                                 allowClear
@@ -212,6 +212,7 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                             field.value?.split(' ') || ['', ''];
                                         return (
                                             <Input
+                                                id="pLineOwner"
                                                 value={owner}
                                                 disabled={isCreateReleasePage}
                                                 allowClear

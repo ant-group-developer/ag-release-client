@@ -1,3 +1,4 @@
+import { toNonAccentVietnamese } from '@/helpers/string';
 import useModalStore from '@/hooks/use-modal';
 import { useGetListArtistRole } from '@/modules/artist-role/hooks/use-get-list-artist-role';
 import { Select, SelectProps } from 'antd';
@@ -27,6 +28,12 @@ export default function RoleArtistSelect({
     return (
         <Select
             {...props}
+            showSearch
+            filterOption={(input, option) =>
+                toNonAccentVietnamese(option?.label ?? '')
+                    .toLowerCase()
+                    .includes(toNonAccentVietnamese(input).toLowerCase())
+            }
             options={artistsRolesData.items.map((item) => ({
                 id: item.id,
                 value: item.id,

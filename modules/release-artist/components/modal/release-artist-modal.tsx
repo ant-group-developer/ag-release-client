@@ -61,9 +61,9 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
         (item: ArtistRoleData) => item.name === RELEASE_MAIN_ARTIST_ROLE
     );
 
+    const watchArtistId = useWatch('artistId', form);
     // Handle disabled role that this artist already exists
     const getExistingRoleIdsOfSelectedArtist = () => {
-        const watchArtistId = useWatch('artistId', form);
         return (
             formValues?.releaseArtists
                 ?.filter(
@@ -75,8 +75,8 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
     };
     const disabledRoleIds = getExistingRoleIdsOfSelectedArtist();
 
+    const watchRoleId = useWatch('roleId', form);
     const getExistingArtistOfSelectedRole = () => {
-        const watchRoleId = useWatch('roleId', form);
         return (
             formValues?.releaseArtists
                 ?.filter(
@@ -87,7 +87,6 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
         );
     };
     const disabledArtistIds = getExistingArtistOfSelectedRole();
-   
 
     const handleSubmit = async (values: any) => {
         active();
@@ -98,7 +97,7 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                         artistId: values.artistId,
                         artistRoleId: values.roleId ?? mainArtist.id,
                         releaseId: formValues.id as string,
-                        addArtistToTracks: values?.addArtistToTracks ?? false,
+                        addArtistToTracks: !!values?.addArtistToTracks,
                     },
                     onSuccess: () => {
                         closeModal();
@@ -114,7 +113,7 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                     payload: {
                         artistId: values?.artistId,
                         artistRoleId: values.roleId,
-                        addArtistToTracks: values?.addArtistToTracks,
+                        addArtistToTracks: !!values?.addArtistToTracks,
                     },
                     onSuccess: () => {
                         deActive();
@@ -132,7 +131,11 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
             form.setFieldsValue({
                 artistId: dataEdit?.artistId,
                 roleId: dataEdit?.artistRoleId,
-                addArtistToTracks: dataEdit?.addArtistToTracks,
+                addArtistToTracks: dataEdit?.addArtistToTracks ?? true,
+            });
+        } else {
+            form.setFieldsValue({
+                addArtistToTracks: true,
             });
         }
     }, [dataEdit]);
