@@ -142,7 +142,7 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                                         return (
                                             <LanguageSelect
                                                 className="w-full"
-                                                id="metadataLanguageId"
+                                                id="releaseLanguage.metadataLanguageId"
                                                 {...field}
                                                 fallBack={fallBackLabel}
                                                 onChange={(e) => {
@@ -189,7 +189,7 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                                         return (
                                             <LanguageSelect
                                                 className="w-full"
-                                                id="audioLanguageId"
+                                                id="releaseLanguage.audioLanguageId"
                                                 showSearch
                                                 {...field}
                                                 fallBack={fallBackLabel}
@@ -236,7 +236,7 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                                         return (
                                             <CountrySelect
                                                 className="w-full"
-                                                id="metadataLanguageCountryId"
+                                                id="releaseLanguage.metadataLanguageCountryId"
                                                 showSearch
                                                 {...field}
                                                 fallBack={fallBackLabel}

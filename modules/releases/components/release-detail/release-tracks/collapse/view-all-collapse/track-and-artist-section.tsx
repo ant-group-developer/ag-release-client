@@ -1,20 +1,17 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
+import ErrorText from '@/components/ui/text/error-text';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
-import {
-    releaseTrackSchema,
-    ReleaseTrackSchema,
-} from '@/modules/tracks/schemas';
+import { ReleaseTrackSchema } from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Input, Switch, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useEffect } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import ArtistCard from '../../../release-detail-form/artist-card';
 const { Title } = Typography;
 
@@ -33,27 +30,13 @@ export default function TrackAndArtistSection({
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
 
-    const formMethods = useForm<ReleaseTrackSchema>({
-        defaultValues: {
-            title: trackData?.title,
-            version: trackData?.version,
-            trackArtists: trackData?.trackArtists,
-            copyArtistsFromRelease: trackData?.copyArtistsFromRelease,
-        },
-        resolver: zodResolver(releaseTrackSchema(messages)),
-        mode: 'onChange',
-        reValidateMode: 'onChange',
-    });
-
     const {
         control,
-        handleSubmit,
         formState: { errors },
         watch,
         trigger,
-        reset,
         setValue,
-    } = formMethods;
+    } = useFormContext<ReleaseTrackSchema>();
 
     // router
     const params = useParams();
@@ -222,18 +205,31 @@ export default function TrackAndArtistSection({
                                                 )
                                             )}
                                         </div>
-                                        <Button
-                                            id={`tracks.${index}.trackArtists`}
-                                            onClick={() =>
-                                                openModal(
-                                                    TYPE_MODAL_TRACK_ARTIST.ADD,
-                                                    trackData
-                                                )
-                                            }
-                                            className="mt-4"
-                                        >
-                                            {messages('artist.add')}
-                                        </Button>
+                                        <div className="relative">
+                                            <Button
+                                                id={`tracks.${index}.trackArtists`}
+                                                onClick={() =>
+                                                    openModal(
+                                                        TYPE_MODAL_TRACK_ARTIST.ADD,
+                                                        trackData
+                                                    )
+                                                }
+                                                className="mt-4"
+                                                danger={
+                                                    errors.trackArtists
+                                                        ? true
+                                                        : false
+                                                }
+                                            >
+                                                {messages('artist.add')}
+                                            </Button>
+                                            <ErrorText
+                                                isError={!!errors.trackArtists}
+                                                message={
+                                                    errors.trackArtists?.message
+                                                }
+                                            />
+                                        </div>
                                     </div>
                                 )}
                             </div>

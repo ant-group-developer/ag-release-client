@@ -829,6 +829,21 @@
     },
 
     "formFields": {
+        "audioFile": {
+            "preview": "Preview audio"
+        },
+        "trackLanguage": {
+            "audioLanguageId": "Audio language",
+            "metadataLanguageId": "Metadata language",
+            "metadataLanguageCountryId": "Country language",
+            "recordingCountryId": "Recording country"
+        },
+        "releaseLanguage": {
+            "audioLanguageId": "Audio language",
+            "metadataLanguageId": "Metadata language",
+            "metadataLanguageCountryId": "Metadata country language",
+            "recordingCountryId": "Recording country"
+        },
         "recordingCountryId": "Recording country",
         "trackArtists": "track artist",
         "distributionType": "Release type",
@@ -853,7 +868,6 @@
         "subGenres": "Sub genres",
         "metaDataLanguage": "Metadata language",
         "primaryGenreId": "Primary genre",
-        "releaseLanguage": "Release language",
         "releaseArtists": "Release artist",
         "pLineOwner": "P copyright",
         "cLineOwner": "C copyright",

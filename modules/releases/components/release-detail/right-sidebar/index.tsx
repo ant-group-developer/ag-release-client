@@ -1,4 +1,5 @@
 'use client';
+import IconButton from '@/components/ui/button/icon-button';
 import { ScrollArea } from '@/components/ui/scroll/scroll-area';
 import { SIZE_ICON } from '@/constants/common';
 import { cn } from '@/helpers/common';
@@ -7,7 +8,13 @@ import { useRouter } from '@/i18n/routing';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
-import { AlertTriangle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Alert } from 'antd';
+import {
+    AlertCircle,
+    AlertTriangle,
+    ChevronLeft,
+    ChevronRight,
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 interface RightSidebarProps {}
@@ -37,7 +44,7 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
 
             case RELEASES_TABS.TRACKS:
                 const parts = field.split('.');
-                if (parts.length == 3) {
+                if (parts.length >= 3) {
                     const trackIndex = Number(parts[1]) + 1;
                     const fieldName = parts.slice(2).join('.');
                     return `${messages('tracks.number')} ${trackIndex}: ${messages(`formFields.${fieldName}` as any) || field}`;
@@ -94,82 +101,75 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
         >
             <div className="h-screen">
                 {/* Header */}
-                <div className="flex h-16 items-center border-b px-3">
+                <div className="flex h-16 w-full items-center justify-center border-b px-3">
                     {isSidebarOpen ? (
                         <>
                             <h3 className="grow font-semibold text-red-500">
                                 {`${messages('validation.error')} (${errorCount})`}
                             </h3>
                             {
-                                <button onClick={toggleSidebar}>
+                                <IconButton
+                                    className="w-[40px] cursor-pointer"
+                                    onClick={toggleSidebar}
+                                >
                                     <ChevronRight size={SIZE_ICON} />
-                                </button>
+                                </IconButton>
                             }
                         </>
                     ) : (
-                        <button onClick={toggleSidebar} className="mx-auto">
+                        <IconButton
+                            onClick={toggleSidebar}
+                            className="w-[40px] cursor-pointer"
+                        >
                             <ChevronLeft size={SIZE_ICON} />
-                        </button>
+                        </IconButton>
                     )}
                 </div>
 
                 {/* Content */}
                 {/* <div className="h-[calc(100%-8rem)] overflow-auto"> */}
                 <ScrollArea className="h-[calc(100%-8rem)]">
-                    <div className="p-3">
+                    <div className="max-w-[300px] p-3">
                         {/* Errors */}
                         <div className="mb-4">
                             {isSidebarOpen && (
-                                // <ul className="space-y-2">
-                                //     {errors.length > 0 ? (
-                                //         errors.map((err, index) => (
-                                //             <li
-                                //                 key={index}
-                                //                 className="rounded-md border border-red-200 bg-red-50 p-2 text-sm"
-                                //             >
-                                //                 {err.path.length > 0 && (
-                                //                     <p className="break-words text-red-600">
-                                //                         {getFieldLabel(err.path)}
-                                //                     </p>
-                                //                 )}
-                                //                 <p className="text-xs text-red-500">
-                                //                     {err.message}
-                                //                 </p>
-                                //             </li>
-                                //         ))
-                                //     ) : (
-                                //         <li className="text-sm text-gray-500">
-                                //             {messages('validation.noError')}
-                                //         </li>
-                                //     )}
-                                // </ul>
                                 <ul className="space-y-2">
                                     {releaseValidateData?.length > 0 &&
                                         releaseValidateData?.map(
                                             (err, index) => (
-                                                <li
+                                                <Alert
+                                                    className="custom-alert-sidebar cursor-pointer !px-[14px] !py-3 !text-sm hover:underline"
                                                     key={index}
-                                                    className="group cursor-pointer rounded-md border border-red-200 bg-red-50 p-2 text-sm"
                                                     onClick={() =>
                                                         handleErrorClick(
                                                             err.field,
                                                             err.page as RELEASES_TABS
                                                         )
                                                     }
-                                                >
-                                                    <p className="break-words text-red-600 group-hover:underline">
-                                                        {getFieldLabel(
-                                                            err.field,
-                                                            err.page as RELEASES_TABS
-                                                        )}
-                                                    </p>
-
-                                                    <p className="text-xs text-red-500 group-hover:underline">
-                                                        {messages(
-                                                            err.messageCode as any
-                                                        )}
-                                                    </p>
-                                                </li>
+                                                    message={
+                                                        <div className="max-w-full truncate text-sm">
+                                                            {getFieldLabel(
+                                                                err.field,
+                                                                err.page as RELEASES_TABS
+                                                            )}
+                                                        </div>
+                                                    }
+                                                    description={
+                                                        <p className="line-clamp-3 text-xs">
+                                                            {messages(
+                                                                err.messageCode as any
+                                                            )}
+                                                        </p>
+                                                    }
+                                                    type="error"
+                                                    showIcon
+                                                    icon={
+                                                        <AlertCircle
+                                                            size={SIZE_ICON}
+                                                            className="mt-1 text-red-500"
+                                                        />
+                                                    }
+                                                />
                                             )
                                         )}
                                 </ul>

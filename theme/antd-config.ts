@@ -7,6 +7,7 @@ const theme: ThemeConfig = {
         fontFamily: 'var(--font-inter), Inter, sans-serif',
         colorText: defaultConfig.TEXT_COLOR,
         // fontSize: 13,
+        colorTextHeading: '#3f4254',
         colorLink: defaultConfig.TEXT_COLOR,
         colorLinkHover: '#1677ff',
         colorLinkActive: '#1677ff',

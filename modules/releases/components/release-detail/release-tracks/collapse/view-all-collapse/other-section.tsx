@@ -3,18 +3,14 @@ import CountrySelect from '@/components/ui/select/country-select';
 import OriginalTypeSelect from '@/components/ui/select/original-type-select';
 import TrackTypesSelect from '@/components/ui/select/track-types-select';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
-import {
-    ReleaseTrackSchema,
-    releaseTrackSchema,
-} from '@/modules/tracks/schemas';
+import { ReleaseTrackSchema } from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { Input, Select } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import Title from 'antd/lib/typography/Title';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
 type Props = {
     index: number;
@@ -28,24 +24,15 @@ export default function OtherSection({
     trackData,
 }: Props) {
     const messages = useTranslations();
-    const formMethods = useForm({
-        defaultValues: {
-            isSensitiveContent: trackData.isSensitiveContent ?? false,
-            lyric: trackData.lyric ?? '',
-            pLineOwner: trackData.pLineOwner ?? `${dayjs().year()} `,
-            trackOriginTypeId: trackData.trackOriginTypeId ?? '',
-            isrc: trackData.isrc ?? '',
-            trackLanguage: trackData?.trackLanguage,
-            trackTypeId: trackData?.trackTypeId,
-        },
-        resolver: zodResolver(releaseTrackSchema(messages)),
-        mode: 'onChange',
-    });
+
     const {
         control,
         formState: { errors },
+        watch,
         trigger,
-    } = formMethods;
+        setValue,
+    } = useFormContext<ReleaseTrackSchema>();
+
     const [year, ownerCopyRight] = (trackData.pLineOwner || '').split(' ');
     const copyRightYearList = () => {
         const currentYear = dayjs().year();
@@ -237,7 +224,7 @@ export default function OtherSection({
                                         name="trackLanguage.recordingCountryId"
                                         render={({ field }) => (
                                             <CountrySelect
-                                                id={`tracks.${index}.recordingCountryId`}
+                                                id={`tracks.${index}.trackLanguage.recordingCountryId`}
                                                 status={
                                                     errors.trackLanguage
                                                         ?.recordingCountryId
@@ -342,6 +329,11 @@ export default function OtherSection({
                                                     value={ownerCopyRight}
                                                     onChange={handleOwnerChange}
                                                     allowClear
+                                                    status={
+                                                        errors.pLineOwner
+                                                            ? 'error'
+                                                            : undefined
+                                                    }
                                                     addonBefore={
                                                         <Select
                                                             defaultValue={year}

@@ -5,17 +5,13 @@ import {
     timeStringToSeconds,
 } from '@/helpers/common';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
-import {
-    ReleaseTrackSchema,
-    releaseTrackSchema,
-} from '@/modules/tracks/schemas';
+import { ReleaseTrackSchema } from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { Input, TimePicker } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
 type Props = {
     index: number;
@@ -29,26 +25,14 @@ export default function AudioSpecSection({
     trackData,
 }: Props) {
     const messages = useTranslations();
-    const formMethods = useForm({
-        defaultValues: {
-            audioFile: {
-                preview: trackData?.audioFile?.preview,
-                file: {
-                    fileName: trackData?.audioFile?.file?.fileName,
-                },
-                duration: trackData?.audioFile?.duration,
-            },
-            trackLanguage: trackData?.trackLanguage,
-            trackTypeId: trackData?.trackTypeId,
-        },
-        resolver: zodResolver(releaseTrackSchema(messages)),
-        mode: 'onChange',
-    });
+
     const {
         control,
         formState: { errors },
+        watch,
         trigger,
-    } = formMethods;
+        setValue,
+    } = useFormContext<ReleaseTrackSchema>();
 
     const updateTrackDraft = async (data: any, fieldName?: string) => {
         if (fieldName) {
@@ -116,7 +100,7 @@ export default function AudioSpecSection({
                                         name="audioFile.preview"
                                         render={({ field }) => (
                                             <TimePicker
-                                                id={`tracks.${index}.preview`}
+                                                id={`tracks.${index}.audioFile.preview`}
                                                 className="w-full"
                                                 showNow={false}
                                                 {...field}

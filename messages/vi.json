@@ -830,6 +830,21 @@
     },
 
     "formFields": {
+        "audioFile": {
+            "preview": "Đoạn nghe trước"
+        },
+        "trackLanguage": {
+            "audioLanguageId": "Ngôn ngữ âm thanh",
+            "metadataLanguageId": "Ngôn ngữ metadata",
+            "metadataLanguageCountryId": "Ngôn ngữ quốc gia",
+            "recordingCountryId": "Quốc gia ghi âm"
+        },
+        "releaseLanguage": {
+            "audioLanguageId": "Ngôn ngữ âm thanh",
+            "metadataLanguageId": "Ngôn ngữ metadata",
+            "metadataLanguageCountryId": "Ngôn ngữ quốc gia",
+            "recordingCountryId": "Quốc gia ghi âm"
+        },
         "recordingCountryId": "Quốc gia ghi âm",
         "trackArtists": "Nghệ sĩ bài hát",
         "distributionType": "Loại phát hành",
@@ -856,9 +871,7 @@
         "primaryGenreId": "Thể loại chính",
         "releaseTime": "Giờ phát hành",
         "releaseTimezoneId": "Múi giờ",
-        "releaseLanguage": {
-            "metadataLanguageId": "Ngôn ngữ metadata"
-        },
+
         "releaseArtists": "Nghệ sĩ phát hành",
         "pLineOwner": "Bản quyền ghi âm",
         "cLineOwner": "Bản quyền tác phẩm",

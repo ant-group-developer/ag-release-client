@@ -43,4 +43,8 @@ export const bucketApi = {
     getLinkDownloadFile: (id: string) => {
         return axiosAuth.get(`/bucket/gcs/private/${id}/download`);
     },
+
+    getLinkReadFile: (id: string) => {
+        return axiosAuth.get(`/bucket/gcs/private/${id}/read`);
+    },
 };

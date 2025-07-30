@@ -2,15 +2,11 @@ import FormItem from '@/components/ui/react-hook-form/form-item';
 import CountrySelect from '@/components/ui/select/country-select';
 import LanguageSelect from '@/components/ui/select/language-select';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
-import {
-    ReleaseTrackSchema,
-    releaseTrackSchema,
-} from '@/modules/tracks/schemas';
+import { ReleaseTrackSchema } from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
-import { zodResolver } from '@hookform/resolvers/zod';
 import Title from 'antd/lib/typography/Title';
 import { useTranslations } from 'next-intl';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
 type Props = {
     index: number;
@@ -24,24 +20,14 @@ export default function LanguageSection({
     trackData,
 }: Props) {
     const messages = useTranslations();
-    const formMethods = useForm({
-        defaultValues: {
-            trackLanguage: {
-                metadataLanguageCountryId:
-                    trackData.trackLanguage?.metadataLanguageCountryId ?? '',
-                audioLanguageId: trackData.trackLanguage?.audioLanguageId ?? '',
-                metadataLanguageId:
-                    trackData.trackLanguage?.metadataLanguageId ?? '',
-            },
-        },
-        resolver: zodResolver(releaseTrackSchema(messages)),
-        mode: 'onChange',
-    });
+
     const {
         control,
         formState: { errors },
+        watch,
         trigger,
-    } = formMethods;
+        setValue,
+    } = useFormContext<ReleaseTrackSchema>();
 
     const updateTrackDraft = async (data: any, fieldName?: string) => {
         if (fieldName) {
@@ -80,7 +66,7 @@ export default function LanguageSection({
                                         control={control}
                                         render={({ field }) => (
                                             <CountrySelect
-                                                id={`tracks.${index}.metadataLanguageCountryId`}
+                                                id={`tracks.${index}.trackLanguage.metadataLanguageCountryId`}
                                                 className="w-full"
                                                 showSearch
                                                 {...field}
@@ -128,7 +114,7 @@ export default function LanguageSection({
                                         control={control}
                                         render={({ field }) => (
                                             <LanguageSelect
-                                                id={`tracks.${index}.audioLanguageId`}
+                                                id={`tracks.${index}.trackLanguage.audioLanguageId`}
                                                 {...field}
                                                 fallBack={
                                                     trackData?.trackLanguage
@@ -175,7 +161,7 @@ export default function LanguageSection({
                                         name="trackLanguage.metadataLanguageId"
                                         render={({ field }) => (
                                             <LanguageSelect
-                                                id={`tracks.${index}.metadataLanguageId`}
+                                                id={`tracks.${index}.trackLanguage.metadataLanguageId`}
                                                 {...field}
                                                 // fallBack={
                                                 //     trackData?.trackLanguage?.metadataLanguage
