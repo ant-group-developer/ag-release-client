@@ -4,6 +4,8 @@ import WaveformElement from '@/components/ui/wave-form-element/wave-form-element
 import { showNotification } from '@/helpers/messages-helper';
 import { TrackData } from '@/modules/tracks/types';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
+import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
+import { useIntersectionObserver } from '@uidotdev/usehooks';
 import { useEffect, useRef, useState } from 'react';
 
 export function TrackWaveform({ data }: { data: TrackData }) {
@@ -12,6 +14,18 @@ export function TrackWaveform({ data }: { data: TrackData }) {
         useSongStatus(id);
     const audioUrlRef = useRef<string | null>(null);
     const [peakData, setPeakData] = useState<any>([]);
+    const [ref, entry] = useIntersectionObserver({
+        root: null,
+        rootMargin: '0px',
+        threshold: 0,
+    });
+
+    const { linkReadFile: linkReadFilePeak } = useGetLinkReadFile(
+        audioFile?.peak?.id as string,
+        {
+            enabled: !!entry?.isIntersecting,
+        }
+    );
 
     const fetchAudioUrl = async () => {
         if (!audioUrlRef.current && audioFile?.file?.id) {
@@ -69,9 +83,9 @@ export function TrackWaveform({ data }: { data: TrackData }) {
     // };
 
     useEffect(() => {
-        if (audioFile?.peak?.urlRead) {
+        if (audioFile?.peak?.id && linkReadFilePeak) {
             axiosAuth
-                .get(audioFile?.peak?.urlRead)
+                .get(linkReadFilePeak)
                 .then((response) => {
                     setPeakData(response.data);
                 })
@@ -79,16 +93,18 @@ export function TrackWaveform({ data }: { data: TrackData }) {
                     console.error('Lỗi khi đọc file JSON:', error);
                 });
         }
-    }, [audioFile?.peak?.urlRead]);
+    }, [audioFile?.peak?.id, linkReadFilePeak]);
 
     return (
-        <WaveformElement
-            peakData={peakData}
-            playedTime={currentTimePlaying}
-            songDuration={audioFile?.duration}
-            playing={isPlaying}
-            togglePlayback={handlePlayTrack}
-            handleSeeking={(second) => handleSeekingTrack(second)}
-        />
+        <div ref={ref}>
+            <WaveformElement
+                peakData={peakData}
+                playedTime={currentTimePlaying}
+                songDuration={audioFile?.duration}
+                playing={isPlaying}
+                togglePlayback={handlePlayTrack}
+                handleSeeking={(second) => handleSeekingTrack(second)}
+            />
+        </div>
     );
 }

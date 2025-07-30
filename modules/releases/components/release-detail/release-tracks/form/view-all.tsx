@@ -45,7 +45,10 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
             const hash = window.location.hash;
             if (hash) {
                 const parts = hash.split('.');
-                const field = parts[2];
+                let field = parts[2];
+                if (parts.length >= 4) {
+                    field = parts.slice(2).join('.');
+                }
                 trigger(field as keyof ReleaseTrackSchema);
             }
         };

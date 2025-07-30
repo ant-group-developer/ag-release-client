@@ -100,7 +100,7 @@ export default function AudioSpecSection({
                                         name="audioFile.preview"
                                         render={({ field }) => (
                                             <TimePicker
-                                                id={`tracks.${index}.preview`}
+                                                id={`tracks.${index}.audioFile.preview`}
                                                 className="w-full"
                                                 showNow={false}
                                                 {...field}

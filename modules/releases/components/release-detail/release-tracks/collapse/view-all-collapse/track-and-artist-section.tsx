@@ -1,4 +1,5 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
+import ErrorText from '@/components/ui/text/error-text';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
@@ -28,8 +29,6 @@ export default function TrackAndArtistSection({
     // hook - state
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
-
-   
 
     const {
         control,
@@ -206,18 +205,31 @@ export default function TrackAndArtistSection({
                                                 )
                                             )}
                                         </div>
-                                        <Button
-                                            id={`tracks.${index}.trackArtists`}
-                                            onClick={() =>
-                                                openModal(
-                                                    TYPE_MODAL_TRACK_ARTIST.ADD,
-                                                    trackData
-                                                )
-                                            }
-                                            className="mt-4"
-                                        >
-                                            {messages('artist.add')}
-                                        </Button>
+                                        <div className="relative">
+                                            <Button
+                                                id={`tracks.${index}.trackArtists`}
+                                                onClick={() =>
+                                                    openModal(
+                                                        TYPE_MODAL_TRACK_ARTIST.ADD,
+                                                        trackData
+                                                    )
+                                                }
+                                                className="mt-4"
+                                                danger={
+                                                    errors.trackArtists
+                                                        ? true
+                                                        : false
+                                                }
+                                            >
+                                                {messages('artist.add')}
+                                            </Button>
+                                            <ErrorText
+                                                isError={!!errors.trackArtists}
+                                                message={
+                                                    errors.trackArtists?.message
+                                                }
+                                            />
+                                        </div>
                                     </div>
                                 )}
                             </div>

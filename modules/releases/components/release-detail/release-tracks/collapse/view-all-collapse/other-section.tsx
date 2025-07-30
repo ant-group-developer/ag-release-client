@@ -224,7 +224,7 @@ export default function OtherSection({
                                         name="trackLanguage.recordingCountryId"
                                         render={({ field }) => (
                                             <CountrySelect
-                                                id={`tracks.${index}.recordingCountryId`}
+                                                id={`tracks.${index}.trackLanguage.recordingCountryId`}
                                                 status={
                                                     errors.trackLanguage
                                                         ?.recordingCountryId

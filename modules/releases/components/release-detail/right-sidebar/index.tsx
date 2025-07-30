@@ -44,7 +44,7 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
 
             case RELEASES_TABS.TRACKS:
                 const parts = field.split('.');
-                if (parts.length == 3) {
+                if (parts.length >= 3) {
                     const trackIndex = Number(parts[1]) + 1;
                     const fieldName = parts.slice(2).join('.');
                     return `${messages('tracks.number')} ${trackIndex}: ${messages(`formFields.${fieldName}` as any) || field}`;

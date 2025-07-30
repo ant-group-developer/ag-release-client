@@ -66,7 +66,7 @@ export default function LanguageSection({
                                         control={control}
                                         render={({ field }) => (
                                             <CountrySelect
-                                                id={`tracks.${index}.metadataLanguageCountryId`}
+                                                id={`tracks.${index}.trackLanguage.metadataLanguageCountryId`}
                                                 className="w-full"
                                                 showSearch
                                                 {...field}
@@ -114,7 +114,7 @@ export default function LanguageSection({
                                         control={control}
                                         render={({ field }) => (
                                             <LanguageSelect
-                                                id={`tracks.${index}.audioLanguageId`}
+                                                id={`tracks.${index}.trackLanguage.audioLanguageId`}
                                                 {...field}
                                                 fallBack={
                                                     trackData?.trackLanguage
@@ -161,7 +161,7 @@ export default function LanguageSection({
                                         name="trackLanguage.metadataLanguageId"
                                         render={({ field }) => (
                                             <LanguageSelect
-                                                id={`tracks.${index}.metadataLanguageId`}
+                                                id={`tracks.${index}.trackLanguage.metadataLanguageId`}
                                                 {...field}
                                                 // fallBack={
                                                 //     trackData?.trackLanguage?.metadataLanguage

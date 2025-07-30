@@ -200,10 +200,13 @@ export default function ReleaseDetailForm() {
     useEffect(() => {
         const handleTriggerField = () => {
             const hash = window.location.hash;
-            if (hash) {
-                const field = hash.replace('#', '');
-                trigger(field as keyof ReleaseDetailSchema);
+            if (!hash) return;
+            const parts = hash.split('.');
+            let field = hash.replace('#', '');
+            if (parts.length >= 2) {
+                field = parts.slice(1).join('.');
             }
+            trigger(field as keyof ReleaseDetailSchema);
         };
         window.addEventListener('hashchange', handleTriggerField);
 
