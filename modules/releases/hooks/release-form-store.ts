@@ -95,6 +95,7 @@ const initialValue: ReleaseFormStoreData = {
         createdAt: '',
         updatedAt: null,
     },
+    tracksCount: 0,
 };
 
 export const useReleaseFormStore = create<ReleaseFormState>()(

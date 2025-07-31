@@ -2,6 +2,7 @@
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { LAYOUT_TABLE, SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
+import { getScrollYHeight } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import { useLoading, UseLoadingType } from '@/hooks/use-loading';
@@ -26,6 +27,7 @@ import { useEffect, useState } from 'react';
 type Props = {};
 
 export default function Releases({}: Props) {
+    // hooks - state
     const [visibleColumns, setVisibleColumns] = useState<
         RELEASES_COLUMNS_DISPLAY[]
     >(() => {
@@ -50,7 +52,6 @@ export default function Releases({}: Props) {
         }
         return defaultVisibleColumnsReleases;
     });
-
     const {
         dataFilter,
         onSearch,
@@ -62,39 +63,26 @@ export default function Releases({}: Props) {
         page: 1,
         pageSize: 21,
     });
-
     const { height, width } = useWindowSize();
     const { layoutTable } = useTableLayoutToggle();
-    const { releasesData, isLoading: isReleaseDataLoading } =
-        useGetListReleases(dataFilter);
-    const { deleteRelease } = useDeleteRelease();
     const messages = useTranslations();
-    const isSmallDevice = Number(width) <= SCREEN.MD;
     const closeModal = useModalStore((state) => state.closeModal);
     const isLoading = useLoading(UseLoadingType.Fetching);
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as ReleasesData);
-    const modalParagraph = `${messages('delete.confirmMessage', { value: dataEdit?.title })}`;
 
-    const scrollY = () => {
-        if (isSmallDevice) return undefined;
-        if (!height) return undefined;
-        const minHeight = 300;
-        // const headerFooterHeight = 216;
-        const headerFooterHeight = 210;
-        const value = height - headerFooterHeight;
-        if (value > minHeight) return value;
-        return minHeight;
-    };
+    // apis
+    const { releasesData, isLoading: isReleaseDataLoading } =
+        useGetListReleases(dataFilter);
+    const { deleteRelease } = useDeleteRelease();
 
+    // func
     const handleChangeVisibleColumns = (
         columns: RELEASES_COLUMNS_DISPLAY[]
     ) => {
         setVisibleColumns(columns);
     };
-
     const handleRefresh = () => {};
-
     const handleDeleteRelease = () => {
         const variables: DeleteVariables<ReleasesData['id']> = {
             id: dataEdit?.id,
@@ -133,7 +121,10 @@ export default function Releases({}: Props) {
                     <ReleasesTable
                         visibleColumns={visibleColumns}
                         dataSource={releasesData?.items}
-                        scroll={{ x: SCREEN.XXL, y: scrollY() }}
+                        scroll={{
+                            x: SCREEN.XXL,
+                            y: getScrollYHeight(width, height, 40, 38),
+                        }}
                         loading={isReleaseDataLoading}
                     />
                 )}
@@ -165,7 +156,9 @@ export default function Releases({}: Props) {
                     onOk={() => handleDeleteRelease()}
                     onCancel={closeModal}
                     modalTitle={`${messages('common.delete')} ${messages('releases.label').toLowerCase()}`}
-                    paragraph={modalParagraph}
+                    paragraph={messages('delete.confirmMessage', {
+                        value: dataEdit?.title,
+                    })}
                 />
             )}
         </div>

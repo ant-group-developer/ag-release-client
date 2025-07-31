@@ -31,7 +31,7 @@ export default function ReleasesHeader({
 }: Props) {
     const { layoutTable, toggleLayoutTable } = useTableLayoutToggle();
     return (
-        <AppHeader className="px-4 py-1">
+        <AppHeader>
             <AppHeaderGroup>
                 <ReleasesSuperFilter
                     dataFilter={dataFilter}

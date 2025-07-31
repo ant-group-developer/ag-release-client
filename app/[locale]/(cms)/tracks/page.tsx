@@ -2,6 +2,7 @@
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_OPTIONS } from '@/constants/common';
 import { LAYOUT_TABLE, SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
+import { getScrollYHeight } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import { ReleasesDataFilter } from '@/modules/releases/types';
@@ -58,24 +59,11 @@ export default function Tracks({}: Props) {
     const { height, width } = useWindowSize();
     const { tracksData, isLoading: isTrackDataLoading } = useGetListTracks({});
 
-    // constant
-    const isSmallDevice = Number(width) <= SCREEN.MD;
-
     // Function
     const handleChangeVisibleColumns = (columns: TRACKS_COLUMNS_DISPLAY[]) => {
         setVisibleColumns(columns);
     };
     const handleRefresh = () => {};
-    const scrollY = () => {
-        if (isSmallDevice) return undefined;
-        if (!height) return undefined;
-        const minHeight = 300;
-        // const headerFooterHeight = 216;
-        const headerFooterHeight = 210;
-        const value = height - headerFooterHeight;
-        if (value > minHeight) return value;
-        return minHeight;
-    };
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -105,7 +93,10 @@ export default function Tracks({}: Props) {
                     <TracksTable
                         visibleColumns={visibleColumns}
                         dataSource={tracksData.items}
-                        scroll={{ x: SCREEN.XXL, y: scrollY() }}
+                        scroll={{
+                            x: SCREEN.XXL,
+                            y: getScrollYHeight(height, width, 40, 38),
+                        }}
                         loading={isTrackDataLoading}
                     />
                 )}
