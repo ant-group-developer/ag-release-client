@@ -45,6 +45,7 @@ export interface ReleasesData extends CommonAttribute {
     releaseTimezoneId: string | null;
     releaseTerritory: ReleaseTerritory;
     timeZone: TimezoneData | null;
+    tracksCount: number;
 }
 
 export interface ReleasesDataFilter extends CommonParams {

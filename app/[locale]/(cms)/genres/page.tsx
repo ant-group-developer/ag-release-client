@@ -3,7 +3,7 @@ import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER, SCREEN } from '@/enums/common';
-import { setSortOrder } from '@/helpers/common';
+import { getScrollYHeight, setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import GenresHeader from '@/modules/genres/components/header';
@@ -19,9 +19,9 @@ import { DeleteVariables } from '@/types/api';
 import { useWindowSize } from '@uidotdev/usehooks';
 import { useTranslations } from 'next-intl';
 
-export default function Genres({}: {}) {
+export default function Genres() {
+    // hooks - state
     const messages = useTranslations();
-
     const {
         dataFilter,
         onChangeFilter,
@@ -32,39 +32,23 @@ export default function Genres({}: {}) {
         page: 1,
         pageSize: 21,
     });
+    const typeModal = useModalStore((state) => state.typeModal);
+    const closeModal = useModalStore((state) => state.closeModal);
+    const dataEdit = useModalStore((state) => state.dataEdit as GenresData);
+    const { height, width } = useWindowSize();
 
+    // apis
     const { genresData, isLoading, refetch, lastUpdatedAt } =
         useGetListGenres(dataFilter);
     const { deleteGenre } = useDeleteGenre();
 
-    const typeModal = useModalStore((state) => state.typeModal);
-    const closeModal = useModalStore((state) => state.closeModal);
-    const dataEdit = useModalStore((state) => state.dataEdit as GenresData);
+    // const
     const isUpdateForm = !!dataEdit?.id;
+
+    // func
     const handleRefresh = () => {
         refetch();
     };
-
-    const { height, width } = useWindowSize();
-    const isSmallDevice = Number(width) <= SCREEN.MD;
-    const scrollY = () => {
-        if (isSmallDevice) return undefined;
-        if (!height) return undefined;
-        const minHeight = 300;
-        const appHeaderHeight = 65;
-        const pageHeaderHeight = 53;
-        const tableHeaderHeight = 39;
-        const paginationHeight = 55;
-        const value =
-            height -
-            appHeaderHeight -
-            pageHeaderHeight -
-            tableHeaderHeight -
-            paginationHeight;
-
-        return value > minHeight ? value : minHeight;
-    };
-
     const handleDeleteGenre = () => {
         const variables: DeleteVariables<GenresData['id']> = {
             id: dataEdit?.id,
@@ -76,7 +60,6 @@ export default function Genres({}: {}) {
 
         deleteGenre(variables);
     };
-
     const onChangeSort = (pagination: any, filters: any, sort: any) => {
         const orderBy = setSortOrder(sort, ORDER.ASC);
         const fieldOrder = sort.field;
@@ -88,9 +71,6 @@ export default function Genres({}: {}) {
             false
         );
     };
-
-    const modalTitle = `${messages('delete.confirmTitle')}`;
-    const modalParagraph = `${messages('delete.confirmMessage', { value: dataEdit?.name })}`;
 
     return (
         <div className="flex h-full flex-col justify-between overflow-hidden">
@@ -105,7 +85,10 @@ export default function Genres({}: {}) {
                 />
                 <GenresTable
                     dataSource={genresData.items}
-                    scroll={{ x: SCREEN.MD, y: scrollY() }}
+                    scroll={{
+                        x: SCREEN.MD,
+                        y: getScrollYHeight(height, width, 40, 39),
+                    }}
                     loading={isLoading}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
@@ -132,8 +115,10 @@ export default function Genres({}: {}) {
             {typeModal === TYPE_MODAL_GENRES.DELETE && (
                 <AppConfirm
                     open
-                    modalTitle={modalTitle}
-                    paragraph={modalParagraph}
+                    modalTitle={messages('delete.confirmTitle')}
+                    paragraph={messages('delete.confirmMessage', {
+                        value: dataEdit?.name,
+                    })}
                     onCancel={closeModal}
                     onOk={() => handleDeleteGenre()}
                 />

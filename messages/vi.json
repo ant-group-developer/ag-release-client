@@ -37,6 +37,11 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "variousArtists": "Nhiều nghệ sĩ",
+        "activities": "Hoạt động",
+        "revenue": "Doanh thu",
+        "partners": "Đối tác",
+        "views": "Lượt xem",
         "fileName": "Tên file",
         "viewAll": "Xem tất cả",
         "legalNotices": "Thông báo pháp lý",
@@ -312,7 +317,8 @@
     },
 
     "dashboard": {
-        "label": "Tổng quan"
+        "label": "Tổng quan",
+        "latestNews": "Tin tức mới nhất"
     },
     "image": {
         "label": "Hình ảnh",

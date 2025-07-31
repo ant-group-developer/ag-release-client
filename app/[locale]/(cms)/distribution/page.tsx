@@ -1,6 +1,7 @@
 'use client';
 import AppPagination from '@/components/ui/pagination';
 import { SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
+import { getScrollYHeight } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 
@@ -23,6 +24,7 @@ import { useEffect, useState } from 'react';
 type Props = {};
 
 export default function Distribution({}: Props) {
+    // hooks - state
     const [visibleColumns, setVisibleColumns] = useState<
         DISTRIBUTION_COLUMNS_DISPLAY[]
     >(() => {
@@ -47,12 +49,6 @@ export default function Distribution({}: Props) {
         }
         return defaultVisibleColumnsDistribution;
     });
-
-    const handleChangeVisibleColumns = (
-        columns: DISTRIBUTION_COLUMNS_DISPLAY[]
-    ) => {
-        setVisibleColumns(columns);
-    };
     const {
         dataFilter,
         onChangeFilter,
@@ -63,29 +59,19 @@ export default function Distribution({}: Props) {
         page: 1,
         pageSize: 21,
     });
-
     const { height, width } = useWindowSize();
-    const isSmallDevice = Number(width) <= SCREEN.MD;
     const typeModal = useModalStore((state) => state.typeModal);
 
-    const scrollY = () => {
-        if (isSmallDevice) return undefined;
-        if (!height) return undefined;
-        const minHeight = 300;
-        const header = 64;
-        const pageHeader = 49;
-        const pageFilter = 49;
-        const pagination = 58;
-        const headerTable = 39;
-        const headerFooterHeight =
-            header + pageHeader + pageFilter + pagination + headerTable;
-        const value = height - headerFooterHeight;
-        if (value > minHeight) return value;
-        return minHeight;
+    // apis
+    const { releasesData } = useGetListReleases({});
+
+    // func
+    const handleChangeVisibleColumns = (
+        columns: DISTRIBUTION_COLUMNS_DISPLAY[]
+    ) => {
+        setVisibleColumns(columns);
     };
     const handleRefresh = () => {};
-
-    const { releasesData } = useGetListReleases({});
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -127,7 +113,10 @@ export default function Distribution({}: Props) {
                 <DistributionTable
                     visibleColumns={visibleColumns}
                     dataSource={releasesData?.items}
-                    scroll={{ x: SCREEN.XXL, y: scrollY() }}
+                    scroll={{
+                        x: SCREEN.MD,
+                        y: getScrollYHeight(height, width, 90, 39),
+                    }}
                 />
             </div>
 
@@ -136,7 +125,7 @@ export default function Distribution({}: Props) {
             )}
 
             <AppPagination
-                className="border-b border-t"
+                className="border-t"
                 align="end"
                 current={releasesData.metadata.currentPage}
                 pageSize={dataFilter.pageSize}

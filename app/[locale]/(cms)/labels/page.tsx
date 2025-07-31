@@ -3,8 +3,8 @@ import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_OPTIONS } from '@/constants/common';
 import { PAGE_SIZE } from '@/constants/page-size';
-import { ORDER, SCREEN } from '@/enums/common';
-import { setSortOrder } from '@/helpers/common';
+import { ORDER } from '@/enums/common';
+import { getScrollYHeight, setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 
@@ -22,6 +22,7 @@ import { useTranslations } from 'next-intl';
 type Props = {};
 
 export default function Labels({}: Props) {
+    // hooks - state
     const messages = useTranslations();
     const {
         dataFilter,
@@ -33,35 +34,20 @@ export default function Labels({}: Props) {
         page: 1,
         pageSize: 21,
     });
+    const typeModal = useModalStore((state) => state.typeModal);
+    const closeModal = useModalStore((state) => state.closeModal);
+    const dataEdit = useModalStore((state) => state.dataEdit);
+    const { height, width } = useWindowSize();
 
+    // apis
     const { labelsData, isLoading, lastUpdatedAt, refetch } =
         useGetListLabels(dataFilter);
     const { deleteLabel } = useDeleteLabel();
 
-    const typeModal = useModalStore((state) => state.typeModal);
-    const closeModal = useModalStore((state) => state.closeModal);
-    const dataEdit = useModalStore((state) => state.dataEdit);
-
+    // func
     const handleRefresh = () => {
         refetch();
     };
-
-    const { height, width } = useWindowSize();
-    const isSmallDevice = Number(width) <= SCREEN.MD;
-
-    const modalParagraph = `${messages('delete.confirmMessage', { value: dataEdit?.name })}`;
-
-    const scrollY = () => {
-        if (isSmallDevice) return undefined;
-        if (!height) return undefined;
-        const minHeight = 300;
-        // const headerFooterHeight = 216;
-        const headerFooterHeight = 210;
-        const value = height - headerFooterHeight;
-        if (value > minHeight) return value;
-        return minHeight;
-    };
-
     const handleDeleteLabel = () => {
         const variables: DeleteVariables<LabelData['id']> = {
             id: dataEdit?.id,
@@ -69,10 +55,8 @@ export default function Labels({}: Props) {
                 closeModal();
             },
         };
-
         deleteLabel(variables);
     };
-
     const onChangeSort = (pagination: any, filters: any, sort: any) => {
         const orderBy = setSortOrder(sort, ORDER.ASC);
         const fieldOrder = sort.field;
@@ -98,7 +82,7 @@ export default function Labels({}: Props) {
                 />
                 <LabelsTable
                     dataSource={labelsData?.items}
-                    scroll={{ y: scrollY() }}
+                    scroll={{ y: getScrollYHeight(height, width, 40, 39) }}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
                         current: labelsData.metadata.currentPage,
@@ -121,7 +105,9 @@ export default function Labels({}: Props) {
                     onOk={() => handleDeleteLabel()}
                     onCancel={closeModal}
                     modalTitle={`${messages('common.delete')} label`}
-                    paragraph={modalParagraph}
+                    paragraph={messages('delete.confirmMessage', {
+                        value: dataEdit?.name,
+                    })}
                 />
             )}
 

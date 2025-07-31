@@ -24,9 +24,6 @@ export default function ListRelease({ data }: Props) {
                 </div>
             </div>
             <AppGrid className="overflow-hidden">
-                {/* {fakeReleasesData.slice(0, 14).map((item, index) => (
-                    <CardAlbu key={index} album={item} />
-                ))} */}
                 <FlatList
                     data={data}
                     renderItem={({ item }) => <CardRelease data={item} />}

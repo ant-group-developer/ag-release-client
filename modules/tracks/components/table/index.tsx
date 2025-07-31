@@ -1,6 +1,8 @@
 import ActionButton from '@/components/ui/button/action-button';
+import ImageFallback from '@/components/ui/image/image-fallback';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { FALLBACK_IMAGE } from '@/constants/common';
 import { formattedDate } from '@/helpers/common';
 import { RELEASE_MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { TrackArtistData } from '@/modules/track-artist/types';
@@ -24,6 +26,31 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
             render: (_, __, index) => index + 1,
         },
         {
+            title: messages('tracks.name'),
+            key: 'title',
+            dataIndex: 'title',
+            ellipsis: true,
+            align: 'left',
+            fixed: 'left',
+            width: 150,
+            render: (value) => (
+                <div className="flex items-center gap-4">
+                    <div className="flex-shrink-0 cursor-pointer">
+                        <ImageFallback
+                            fallbackSrc={FALLBACK_IMAGE}
+                            src={`https://picsum.photos/seed/${value}/300/300`}
+                            alt="genre"
+                            width={40}
+                            height={40}
+                            className="aspect-square rounded-lg object-cover"
+                        />
+                    </div>
+
+                    <p className="truncate">{value}</p>
+                </div>
+            ),
+        },
+        {
             title: messages('tracks.id'),
             key: 'id',
             dataIndex: 'id',
@@ -36,31 +63,18 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
             ),
         },
         {
-            title: messages('tracks.name'),
-            key: 'title',
-            dataIndex: 'title',
-            ellipsis: true,
-            align: 'left',
-            fixed: 'left',
-            width: 150,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
-                </CustomTooltip>
-            ),
-        },
-        {
             title: messages('common.artist'),
             key: 'trackArtists',
             dataIndex: 'trackArtists',
             align: 'left',
             ellipsis: true,
-            width: 150,
+            width: 100,
             render: (value, record) => {
                 const trackArtist = record?.trackArtists;
                 const mainArtist = trackArtist?.find(
                     (item: TrackArtistData) =>
-                        item.artistRole?.name === RELEASE_MAIN_ARTIST_ROLE
+                        item.artistRole?.name.toLowerCase() ===
+                        RELEASE_MAIN_ARTIST_ROLE.toLowerCase()
                 );
                 return (
                     <CustomTooltip size="small" title={value}>

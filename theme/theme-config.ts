@@ -36,10 +36,16 @@ export const darkThemeTokens = {
     fontFamily: 'var(--font-inter), Inter, sans-serif',
 };
 
-export const getThemeConfig = (mode: THEME): ThemeConfig => {
+export const getThemeConfig = (
+    mode: THEME,
+    primaryColor: string
+): ThemeConfig => {
     const tokens = mode === THEME.DARK ? darkThemeTokens : lightThemeTokens;
 
     return {
-        token: tokens,
+        token: {
+            ...tokens,
+            colorPrimary: primaryColor,
+        },
     };
 };

@@ -71,7 +71,7 @@ export default function ReleaseConfigurationSection({
                 {
                     key: 'release-configuration',
                     label: (
-                        <Title level={4} className="!mb-0">
+                        <Title level={5} className="!mb-0">
                             {messages('releases.configuration')}
                         </Title>
                     ),

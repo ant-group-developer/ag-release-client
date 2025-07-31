@@ -4,6 +4,7 @@ import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_OPTIONS } from '@/constants/common';
 import { PAGE_SIZE } from '@/constants/page-size';
 import { SCREEN } from '@/enums/common';
+import { getScrollYHeight } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import DspHeader from '@/modules/dsp/components/header';
@@ -17,9 +18,9 @@ import { DeleteVariables } from '@/types/api';
 import { useWindowSize } from '@uidotdev/usehooks';
 import { useTranslations } from 'next-intl';
 
-export default function Dsp({}: {}) {
+export default function Dsp() {
+    // hooks - state
     const messages = useTranslations();
-
     const {
         dataFilter,
         onChangeFilter,
@@ -30,42 +31,20 @@ export default function Dsp({}: {}) {
         page: 1,
         pageSize: 21,
     });
-
     const { height, width } = useWindowSize();
-    const isSmallDevice = Number(width) <= SCREEN.MD;
-    const scrollY = () => {
-        if (isSmallDevice) return undefined;
-        if (!height) return undefined;
-        const minHeight = 300;
-        const appHeaderHeight = 65;
-        const pageHeaderHeight = 53;
-        const tableHeaderHeight = 39;
-        const paginationHeight = 55;
-        const value =
-            height -
-            appHeaderHeight -
-            pageHeaderHeight -
-            tableHeaderHeight -
-            paginationHeight;
-
-        return value > minHeight ? value : minHeight;
-    };
-
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as DspData);
     const closeModal = useModalStore((state) => state.closeModal);
 
+    // apis
+    const { dspData, isLoading, refetch, lastUpdatedAt } =
+        useGetListDsp(dataFilter);
+    const { deleteDsp } = useDeleteDsp();
+
+    // func
     const handleRefresh = () => {
         refetch();
     };
-
-    const { dspData, isLoading, refetch, lastUpdatedAt } =
-        useGetListDsp(dataFilter);
-
-    const modalTitle = `${messages('delete.confirmTitle')}`;
-    const modalParagraph = `${messages('delete.confirmMessage', { value: dataEdit?.name })}`;
-
-    const { deleteDsp } = useDeleteDsp();
     const handleDeleteDsp = () => {
         const variables: DeleteVariables<DspData['id']> = {
             id: dataEdit?.id,
@@ -87,7 +66,10 @@ export default function Dsp({}: {}) {
                 />
                 <DspTable
                     dataSource={dspData?.items}
-                    scroll={{ x: SCREEN.MD, y: scrollY() }}
+                    scroll={{
+                        x: SCREEN.MD,
+                        y: getScrollYHeight(height, width, 40, 39),
+                    }}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
                         current: dspData.metadata.currentPage,
@@ -112,8 +94,10 @@ export default function Dsp({}: {}) {
             {typeModal === TYPE_MODAL_DSP.DELETE && (
                 <AppConfirm
                     open
-                    modalTitle={modalTitle}
-                    paragraph={modalParagraph}
+                    modalTitle={messages('delete.confirmTitle')}
+                    paragraph={messages('delete.confirmMessage', {
+                        value: dataEdit?.name,
+                    })}
                     onCancel={closeModal}
                     onOk={() => handleDeleteDsp()}
                 />

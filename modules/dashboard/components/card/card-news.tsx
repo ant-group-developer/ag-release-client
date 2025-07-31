@@ -6,12 +6,14 @@ import { formattedDate } from '@/helpers/common';
 import { NewsData } from '@/modules/news/types';
 import { Card, CardProps } from 'antd';
 import Meta from 'antd/es/card/Meta';
+import { useTranslations } from 'next-intl';
 
 type Props = CardProps & {
     data: NewsData;
 };
 
 export default function CardNews({ data, ...props }: Props) {
+    const messages = useTranslations();
     return (
         <Card
             {...props}
@@ -40,7 +42,7 @@ export default function CardNews({ data, ...props }: Props) {
                     <div className="flex flex-col gap-1">
                         <p>
                             {formattedDate(data.date, DATE_FORMAT.DATE_ONLY)} |
-                            30 lượt xem
+                            30 {messages('common.views')}
                         </p>
                     </div>
                 }

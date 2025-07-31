@@ -1,6 +1,6 @@
-import Image from 'next/image';
 import { TrackData } from '../../types';
 
+import ImageFallback from '@/components/ui/image/image-fallback';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { Card, CardProps } from 'antd';
 import Meta from 'antd/es/card/Meta';
@@ -15,10 +15,13 @@ export default function GridCardTracks({ data, ...props }: Props) {
             className="custom-card-body !bg-card-bg"
             cover={
                 <div className="relative overflow-hidden">
-                    <Image
+                    <ImageFallback
                         className="cursor-pointer overflow-hidden object-cover duration-300 hover:scale-110"
                         alt="example"
-                        src={data.picture ?? ''}
+                        src={
+                            data.picture ??
+                            `https://picsum.photos/seed/${data?.title}/300/300`
+                        }
                         width={300}
                         height={300}
                     />

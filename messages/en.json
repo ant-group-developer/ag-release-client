@@ -37,6 +37,11 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "variousArtists": "Various artists",
+        "activities": "Activities",
+        "revenue": "Revenue",
+        "partners": "Partners",
+        "views": "Views",
         "fileName": "File name",
         "viewAll": "View all",
         "legalNotices": "Legal notices",
@@ -303,7 +308,8 @@
     },
 
     "dashboard": {
-        "label": "Dashboard"
+        "label": "Dashboard",
+        "latestNews": "Latest news"
     },
     "review": {
         "message": {
@@ -947,7 +953,7 @@
 
     "dsp": {
         "label": "DSP",
-        "name": "plat form name",
+        "name": "platform name",
         "add": "Add platform",
         "message": {
             "success": {
