@@ -42,6 +42,7 @@ export const useGetDetailRelease = (id: ReleasesData['id']) => {
         },
         timeZone: null,
         isSensitiveContent: false,
+        tracksCount: 0,
     };
 
     return {

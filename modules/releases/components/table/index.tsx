@@ -1,8 +1,6 @@
 import ActionButton from '@/components/ui/button/action-button';
-import ImageFallback from '@/components/ui/image/image-fallback';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { FALLBACK_IMAGE } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
 import {
     convertSecondsToHoursMinutes,
@@ -22,6 +20,7 @@ import {
     TYPE_MODAL_RELEASE,
 } from '../../enums';
 import { ReleasesData } from '../../types';
+import ReleaseCoverImage from '../image/release-cover-image';
 
 type Props = Omit<AppTableProps<ReleasesData>, 'columns'> & {
     visibleColumns: RELEASES_COLUMNS_DISPLAY[];
@@ -60,14 +59,7 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
                             );
                         }}
                     >
-                        <ImageFallback
-                            fallbackSrc={FALLBACK_IMAGE}
-                            src={record?.coverArtThumbnails?.['75x75'] ?? ''}
-                            alt="genre"
-                            width={40}
-                            height={40}
-                            className="aspect-square rounded-lg object-cover"
-                        />
+                        <ReleaseCoverImage data={record} />
                     </div>
 
                     <p className="truncate">{value}</p>
