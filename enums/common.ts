@@ -129,6 +129,7 @@ export enum LOCAL_STORAGE_KEY {
     OPEN_SIDE_BAR = 'open_side_bar',
     LAYOUT_TABLE = 'layout_table',
     THEME = 'theme',
+    PRIMARY_COLOR = 'primary_color',
 }
 
 export enum SESSION_STORAGE_KEY {

@@ -87,6 +87,7 @@ export const adminRoutes: AdminRoutesType[] = [
                 title: 'Distribution',
                 permission: PERMISSION.DISTRIBUTION.READ,
             },
+         
         ],
     },
     {
