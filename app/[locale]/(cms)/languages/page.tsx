@@ -3,8 +3,8 @@ import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_OPTIONS } from '@/constants/common';
 import { PAGE_SIZE } from '@/constants/page-size';
-import { ORDER, SCREEN } from '@/enums/common';
-import { setSortOrder } from '@/helpers/common';
+import { ORDER } from '@/enums/common';
+import { getScrollYHeight, setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import LanguagesHeader from '@/modules/languages/components/header';
@@ -21,6 +21,7 @@ import { useTranslations } from 'next-intl';
 type Props = {};
 
 export default function Languages({}: Props) {
+    // hooks - state
     const messages = useTranslations();
     const {
         dataFilter,
@@ -35,9 +36,14 @@ export default function Languages({}: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit);
+    const { height, width } = useWindowSize();
 
+    // apis
     const { deleteLanguage } = useDeleteLanguage();
+    const { languagesData, isLoading, refetch, lastUpdatedAt } =
+        useGetListLanguage(dataFilter);
 
+    // func
     const handleDeleteLanguage = () => {
         const variables: DeleteVariables<LanguagesData['id']> = {
             id: dataEdit?.id,
@@ -48,37 +54,9 @@ export default function Languages({}: Props) {
 
         deleteLanguage(variables);
     };
-
-    const { height, width } = useWindowSize();
-    const isSmallDevice = Number(width) <= SCREEN.MD;
-    const scrollY = () => {
-        if (isSmallDevice) return undefined;
-        if (!height) return undefined;
-        const minHeight = 300;
-        const appHeaderHeight = 65;
-        const pageHeaderHeight = 53;
-        const tableHeaderHeight = 39;
-        const paginationHeight = 55;
-        const value =
-            height -
-            appHeaderHeight -
-            pageHeaderHeight -
-            tableHeaderHeight -
-            paginationHeight;
-
-        return value > minHeight ? value : minHeight;
-    };
-
-    const modalTitle = `${messages('delete.confirmTitle')}`;
-    const modalParagraph = `${messages('delete.confirmMessage', { value: dataEdit?.name })}`;
-
     const handleRefresh = () => {
         refetch();
     };
-
-    const { languagesData, isLoading, refetch, lastUpdatedAt } =
-        useGetListLanguage(dataFilter);
-
     const onChangeSort = (pagination: any, filters: any, sort: any) => {
         const orderBy = setSortOrder(sort, ORDER.ASC);
         const fieldOrder = sort.field;
@@ -104,7 +82,7 @@ export default function Languages({}: Props) {
                 />
                 <LanguagesTable
                     dataSource={languagesData?.items}
-                    scroll={{ y: scrollY() }}
+                    scroll={{ y: getScrollYHeight(height, width, 40, 38) }}
                     loading={isLoading}
                     pagination={{
                         pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
@@ -133,8 +111,10 @@ export default function Languages({}: Props) {
                     open
                     onCancel={closeModal}
                     onOk={() => handleDeleteLanguage()}
-                    modalTitle={modalTitle}
-                    paragraph={modalParagraph}
+                    modalTitle={messages('delete.confirmTitle')}
+                    paragraph={messages('delete.confirmMessage', {
+                        value: dataEdit?.name,
+                    })}
                 />
             )}
 
