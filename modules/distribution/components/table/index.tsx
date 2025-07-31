@@ -11,6 +11,8 @@ import {
 import { getReleaseDetailTabRoute } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
+import { RELEASE_MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
+import { ReleaseArtist } from '@/modules/release-artist/types';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { ReleasesData } from '@/modules/releases/types';
 import { ColumnType } from 'antd/es/table';
@@ -104,14 +106,29 @@ export default function DistributionTable({ visibleColumns, ...props }: Props) {
             align: 'left',
             ellipsis: true,
             width: 300,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
-                        {' '}
-                        {value}{' '}
-                    </span>
-                </CustomTooltip>
-            ),
+            render: (value, record) => {
+                const releaseArtists = record?.releaseArtists || [];
+                const isVariousArtist = record?.isVariousArtist;
+
+                const mainArtist = !isVariousArtist
+                    ? releaseArtists.find(
+                          (item: ReleaseArtist) =>
+                              item?.artistRole?.name?.toLowerCase() ===
+                              RELEASE_MAIN_ARTIST_ROLE.toLowerCase()
+                      )
+                    : null;
+
+                const displayName = isVariousArtist
+                    ? messages('common.variousArtists')
+                    : mainArtist?.artist?.name || '';
+                return (
+                    <CustomTooltip size="small" title={value}>
+                        <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
+                            {displayName}
+                        </span>
+                    </CustomTooltip>
+                );
+            },
         },
         {
             title: 'Label',
@@ -120,10 +137,10 @@ export default function DistributionTable({ visibleColumns, ...props }: Props) {
             align: 'left',
             width: 200,
             ellipsis: true,
-            render: (value) => (
+            render: (value, record) => (
                 <CustomTooltip size="small" title={value}>
                     <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
-                        {value}
+                        {record?.label?.name}
                     </span>
                 </CustomTooltip>
             ),

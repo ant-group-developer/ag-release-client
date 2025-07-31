@@ -831,7 +831,9 @@
         "label": "Distribution",
         "create": "Create distribution",
         "name": "Distribution name",
-        "id": "Distribution ID"
+        "id": "Distribution ID",
+        "batchDistribution": "Batch distribution",
+        "batchTakeDown": "Batch takedown"
     },
 
     "formFields": {
