@@ -16,7 +16,7 @@ export default function AppHeader({ children, className }: Props) {
     return (
         <div
             className={cn(
-                'flex flex-col-reverse justify-between gap-2 border-b px-5 py-3 lg:flex-row lg:items-center',
+                'flex flex-col-reverse justify-between gap-2 border-b px-4 py-0 lg:flex-row lg:items-center',
                 className
             )}
         >

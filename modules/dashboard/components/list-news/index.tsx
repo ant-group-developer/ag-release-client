@@ -1,9 +1,11 @@
 import SeeMoreButton from '@/components/ui/button/see-more-button';
 import { NewsData } from '@/modules/news/types';
+import { useTranslations } from 'next-intl';
 import CardNews from '../card/card-news';
 type Props = {};
 
 export default function ListNews({}: Props) {
+    const messages = useTranslations();
     const listNews: NewsData[] = [
         {
             id: 1,
@@ -45,7 +47,9 @@ export default function ListNews({}: Props) {
     return (
         <div className="mt-8">
             <div className="flex items-center justify-between pb-2">
-                <p className="text-lg font-bold">{'Tin tức sản phẩm mới'}</p>
+                <p className="text-lg font-bold">
+                    {messages('dashboard.latestNews')}
+                </p>
                 <SeeMoreButton />
             </div>
             <div className="grid grid-cols-5 gap-5">

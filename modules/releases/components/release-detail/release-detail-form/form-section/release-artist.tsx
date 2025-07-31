@@ -63,7 +63,7 @@ export default function ReleaseArtistSection({ debouncedUpdate }: Props) {
                 {
                     key: 'Release Artists',
                     label: (
-                        <Title level={4} className="!mb-0">
+                        <Title level={5} className="!mb-0">
                             {' '}
                             {messages('releaseArtist.label')}{' '}
                         </Title>

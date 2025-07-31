@@ -58,9 +58,6 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                 return messages(`formFields.${field}` as any);
         }
     };
-    const setValidationErrors = useReleaseFormStore(
-        (state) => state.setValidationErrors
-    );
     const toggleSidebar = () => {
         setIsSidebarOpen((prevState) => !prevState);
     };
@@ -79,27 +76,14 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
         }, 100);
     };
 
-    // useEffect(() => {
-    //     // Thực hiện xác thực
-    //     const validationResult = releaseSchema(messages as any).safeParse(
-    //         formValues
-    //     );
-
-    //     if (!validationResult.success) {
-    //         setValidationErrors(validationResult.error.errors);
-    //     } else {
-    //         setValidationErrors([]);
-    //     }
-    // }, [formValues]);
-
     return (
         <div
             className={cn(
-                'sticky top-0 w-[300px] border-x bg-white transition-all duration-300',
+                'sticky top-0 h-[calc(100vh-4rem)] w-[300px] border-x bg-white transition-all duration-300',
                 isSidebarOpen ? 'w-[300px]' : 'w-[75px]'
             )}
         >
-            <div className="h-screen">
+            <div>
                 {/* Header */}
                 <div className="flex h-16 w-full items-center justify-center border-b px-3">
                     {isSidebarOpen ? (
@@ -128,7 +112,7 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
 
                 {/* Content */}
                 {/* <div className="h-[calc(100%-8rem)] overflow-auto"> */}
-                <ScrollArea className="h-[calc(100%-8rem)]">
+                <ScrollArea className="h-[86vh]">
                     <div className="max-w-[300px] p-3">
                         {/* Errors */}
                         <div className="mb-4">

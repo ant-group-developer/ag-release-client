@@ -50,7 +50,7 @@
     font-family: var(--font-boston), serif;
 }
 
-.font-medium {
+/* .font-medium {
     font-weight: 500 !important;
 }
 
@@ -60,7 +60,7 @@
 
 .font-bold {
     font-weight: 700 !important;
-}
+} */
 
 body {
     /*font-family: Arial, Helvetica, sans-serif;*/

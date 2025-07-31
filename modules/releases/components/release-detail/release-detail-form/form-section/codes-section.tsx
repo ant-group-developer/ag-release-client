@@ -12,18 +12,17 @@ type Props = {
 
 export default function CodesSection({ debouncedUpdate }: Props) {
     // hook - state
+    const messages = useTranslations();
     const {
         control,
         formState: { errors },
         watch,
     } = useFormContext<ReleaseDetailSchema>();
 
-    // router
+    // router - params
     const params = useParams();
 
     const isCreateReleasePage = params['action'] === 'create';
-
-    const messages = useTranslations();
 
     return (
         <CollapseItem
@@ -32,7 +31,7 @@ export default function CodesSection({ debouncedUpdate }: Props) {
                 {
                     key: 'codes',
                     label: (
-                        <Title level={4} className="!mb-0">
+                        <Title level={5} className="!mb-0">
                             {' '}
                             {messages('common.code')}{' '}
                         </Title>

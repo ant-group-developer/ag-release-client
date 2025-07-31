@@ -37,7 +37,7 @@ export default function TracksGridTable({ data, loading }: Props) {
                     data={data}
                     renderItem={({ item }) => <GridCardTracks data={item} />}
                     keyExtractor={(item) => item.id.toString()}
-                    loading={loading}
+                    // loading={loading}
                     className="contents"
                 />
             </AppGrid>

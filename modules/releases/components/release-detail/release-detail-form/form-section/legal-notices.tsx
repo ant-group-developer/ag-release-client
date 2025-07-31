@@ -75,7 +75,7 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                 {
                     key: 'Legal Notices',
                     label: (
-                        <Title level={4} className="!mb-0">
+                        <Title level={5} className="!mb-0">
                             {messages('common.legalNotices')}
                         </Title>
                     ),
@@ -93,16 +93,17 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                     control={control}
                                     name="cLineOwner"
                                     render={({ field }) => {
-                                        const [year, owner] =
+                                        const [year, ...ownerParts] =
                                             field.value?.split(' ') || ['', ''];
+                                        const owner = ownerParts.join(' ');
                                         return (
                                             <Select
                                                 className="w-full"
                                                 value={year}
                                                 disabled={isCreateReleasePage}
                                                 onChange={(newYear) => {
-                                                    const v = owner?.trim()
-                                                        ? `${newYear} ${owner.trim()}`
+                                                    const v = owner
+                                                        ? `${newYear} ${owner}`
                                                         : newYear;
                                                     field.onChange(v);
                                                     debouncedUpdate({
@@ -129,8 +130,9 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                     control={control}
                                     name="cLineOwner"
                                     render={({ field }) => {
-                                        const [year, owner] =
+                                        const [year, ...ownerParts] =
                                             field.value?.split(' ') || ['', ''];
+                                        const owner = ownerParts.join(' ');
                                         return (
                                             <Input
                                                 id="cLineOwner"
@@ -141,8 +143,8 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                                     const newOwner =
                                                         e.target.value;
                                                     // Nếu owner rỗng, chỉ lưu year, nếu có owner thì format "year owner"
-                                                    const v = newOwner?.trim()
-                                                        ? `${year} ${newOwner.trim()}`
+                                                    const v = newOwner
+                                                        ? `${year} ${newOwner}`
                                                         : year;
                                                     field.onChange(v);
                                                     debouncedUpdate(
@@ -172,16 +174,17 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                     control={control}
                                     name="pLineOwner"
                                     render={({ field }) => {
-                                        const [year, owner] =
+                                        const [year, ...ownerParts] =
                                             field.value?.split(' ') || ['', ''];
+                                        const owner = ownerParts.join(' ');
                                         return (
                                             <Select
                                                 className="w-full"
                                                 value={year}
                                                 disabled={isCreateReleasePage}
                                                 onChange={(newYear) => {
-                                                    const v = owner?.trim()
-                                                        ? `${newYear} ${owner.trim()}`
+                                                    const v = owner
+                                                        ? `${newYear} ${owner}`
                                                         : newYear;
                                                     field.onChange(v);
                                                     debouncedUpdate({
@@ -208,8 +211,9 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                     control={control}
                                     name="pLineOwner"
                                     render={({ field }) => {
-                                        const [year, owner] =
+                                        const [year, ...ownerParts] =
                                             field.value?.split(' ') || ['', ''];
+                                        const owner = ownerParts.join(' ');
                                         return (
                                             <Input
                                                 id="pLineOwner"
@@ -220,8 +224,8 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                                     const newOwner =
                                                         e.target.value;
                                                     // Nếu owner rỗng, chỉ lưu year, nếu có owner thì format "year owner"
-                                                    const v = newOwner?.trim()
-                                                        ? `${year} ${newOwner.trim()}`
+                                                    const v = newOwner
+                                                        ? `${year} ${newOwner}`
                                                         : year;
                                                     field.onChange(v);
                                                     debouncedUpdate(

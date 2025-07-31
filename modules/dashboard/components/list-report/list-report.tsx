@@ -1,5 +1,6 @@
 import ImageFallback from '@/components/ui/image/image-fallback';
 import { Select, SelectProps } from 'antd';
+import { useTranslations } from 'next-intl';
 
 type ListItem = {
     name: string;
@@ -24,13 +25,14 @@ export default function ListReport({
     data = defaultData,
     title = 'Revenue Report',
 }: Props) {
+    const messages = useTranslations();
     const options: SelectProps['options'] = [
         {
-            label: 'Quốc gia',
+            label: messages('country.label'),
             value: 'country',
         },
         {
-            label: 'Nền tảng',
+            label: messages('common.platforms'),
             value: 'dsp',
         },
     ];
@@ -44,7 +46,7 @@ export default function ListReport({
                 <Select
                     className="min-w-44"
                     options={options}
-                    placeholder="Chọn báo cáo theo"
+                    placeholder="Select report"
                 />
             </div>
             <div className="flex-1">

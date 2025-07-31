@@ -36,7 +36,7 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                 {
                     key: 'Genre & Language',
                     label: (
-                        <Title level={4} className="!mb-0">
+                        <Title level={5} className="!mb-0">
                             {messages('genre.label')} &{' '}
                             {messages('language.label')}
                         </Title>
