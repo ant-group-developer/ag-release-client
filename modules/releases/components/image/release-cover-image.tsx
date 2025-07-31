@@ -10,7 +10,7 @@ export default function ReleaseCoverImage({ data }: Props) {
     return (
         <ImageFallback
             fallbackSrc={FALLBACK_IMAGE}
-            src={''}
+            src={data?.coverArtThumbnails?.original as string}
             alt="cover"
             width={40}
             height={40}
