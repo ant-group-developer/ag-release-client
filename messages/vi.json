@@ -832,7 +832,9 @@
         "label": "Phân phối",
         "create": "Tạo phân phối",
         "name": "Tên phân phối",
-        "id": "Mã phân phối"
+        "id": "Mã phân phối",
+        "batchDistribution": "Phân phối hàng loạt",
+        "batchTakeDown": "Gỡ xuống hàng loạt"
     },
 
     "formFields": {

@@ -69,7 +69,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                 payload: data,
             };
             updateTrackDraft(variables);
-        }, 500),
+        }, 800),
         [formValues.id]
     );
 

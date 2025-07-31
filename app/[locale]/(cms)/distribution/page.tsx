@@ -20,11 +20,13 @@ import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releas
 import { useWindowSize } from '@uidotdev/usehooks';
 import { Button } from 'antd';
 import dayjs from 'dayjs';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 type Props = {};
 
 export default function Distribution({}: Props) {
     // hooks - state
+    const messages = useTranslations();
     const [visibleColumns, setVisibleColumns] = useState<
         DISTRIBUTION_COLUMNS_DISPLAY[]
     >(() => {
@@ -94,10 +96,14 @@ export default function Distribution({}: Props) {
                     />
                     <div className="flex items-center gap-4 px-4 font-medium">
                         <Button className="" type="primary">
-                            <span>Phân phối hàng loạt</span>
+                            <span>
+                                {messages('distribution.batchDistribution')}
+                            </span>
                         </Button>
                         <Button danger>
-                            <span>Gỡ xuống hàng loạt</span>
+                            <span>
+                                {messages('distribution.batchTakeDown')}
+                            </span>
                         </Button>
                     </div>
                 </div>

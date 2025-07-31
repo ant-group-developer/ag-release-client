@@ -24,7 +24,7 @@ export const useUpdateTrackDraft = () => {
         });
 
         queryClient.invalidateQueries({
-            queryKey: [...trackQueryKeys.getList],
+            queryKey: [...trackQueryKeys.getList, { fieldOrder: 'order' }],
         });
 
         // const responseMessages = messages(data?.data?.messageCode);
