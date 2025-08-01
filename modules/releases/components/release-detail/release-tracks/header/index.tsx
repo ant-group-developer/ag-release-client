@@ -22,7 +22,7 @@ export default function ListTracksReleaseHeader(
     const openModal = useModalStore((state) => state.openModal);
     const typeModal = useModalStore((state) => state.typeModal);
     return (
-        <AppHeader className="px-4 py-1">
+        <AppHeader>
             <div></div>
             {/* <AppHeaderGroup>
                 <ListTracksReleaseSuperFilter

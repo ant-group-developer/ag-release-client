@@ -37,6 +37,9 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "value": "Value",
+        "viewDetail": "View detail",
+        "systemCategories": "System categories",
         "variousArtists": "Various artists",
         "activities": "Activities",
         "revenue": "Revenue",
@@ -622,6 +625,11 @@
 
         "scheduling": {
             "label": "Scheduling"
+        },
+
+        "coverArt": {
+            "required": "Required cover art",
+            "size": "Perfectly Square image from 1400x1400 pixels to 4000x4000 pixels"
         }
     },
     "release": {
@@ -645,6 +653,17 @@
         }
     },
 
+    "releaseType": {
+        "label": "Release type",
+        "message": {
+            "success": {
+                "create": "Create release type successfully",
+                "update": "Update release type successfully",
+                "delete": "Delete release type successfully"
+            }
+        }
+    },
+
     "tracks": {
         "number": "Track number",
         "add": "Add track",
@@ -658,6 +677,8 @@
         "recordingCountry": "Recording country",
         "audioSpecification": "Audio specification",
         "addAllArtistFromRelease": "Add all artist from release",
+        "minTrack": "Min track",
+        "maxTrack": "Max track",
         "original": {
             "label": "Original Work",
             "tooltip": "Original work is the piece that was created first, not any cover or remix."

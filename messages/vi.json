@@ -37,6 +37,9 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "value": "Giá trị",
+        "viewDetail": "Xem chi tiết",
+        "systemCategories": "Danh mục hệ thống",
         "variousArtists": "Nhiều nghệ sĩ",
         "activities": "Hoạt động",
         "revenue": "Doanh thu",
@@ -622,6 +625,11 @@
 
         "scheduling": {
             "label": "Lên lịch"
+        },
+
+        "coverArt": {
+            "required": "Yêu cầu ảnh bìa",
+            "size": "Ảnh phải vuông, từ 1400x1400 pixel đến 4000x4000x pixel"
         }
     },
 
@@ -646,6 +654,17 @@
         }
     },
 
+    "releaseType": {
+        "label": "Loại phát hành",
+        "message": {
+            "success": {
+                "create": "Thêm mới loại phát hành thành công",
+                "update": "Cập nhật loại phát hành thành công",
+                "delete": "Xoá loại phát hành thành công"
+            }
+        }
+    },
+
     "tracks": {
         "number": "Bài hát số",
         "add": "Thêm bài hát",
@@ -659,6 +678,8 @@
         "recordingCountry": "Quốc gia ghi âm",
         "audioSpecification": "Thông số kỹ thuật âm thanh",
         "addAllArtistFromRelease": "Thêm tất cả nghệ sĩ từ phát hành",
+        "minTrack": "Tối thiểu bài hát",
+        "maxTrack": "Tối đa bài hát",
         "original": {
             "label": "Tác phẩm gốc",
             "tooltip": "Tác phẩm gốc là tác phẩm được tạo ra đầu tiên, không phải bất kỳ bản cover hoặc remix nào."

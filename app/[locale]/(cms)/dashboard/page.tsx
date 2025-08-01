@@ -10,11 +10,13 @@ import ListReport from '@/modules/dashboard/components/list-report/list-report';
 import CardStatistic from '@/modules/dashboard/components/list-statistic';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { ReleasesDataFilter } from '@/modules/releases/types';
+import { theme } from 'antd';
 
 type Props = {};
 
 function Dashboard({}: Props) {
     const router = useRouter();
+    const { token } = theme.useToken();
 
     const {
         dataFilter,
@@ -272,10 +274,14 @@ function Dashboard({}: Props) {
 
                 <div className="grid w-full grid-cols-12 gap-4">
                     <div className="col-span-8">
-                        <div className="rounded-lg border bg-white p-4 shadow-sm">
-                            <h3 className="mb-4 text-lg font-semibold text-gray-800">
+                        <div
+                            className="rounded-lg border p-4 shadow-sm"
+                            style={{ borderColor: token.colorBorder }}
+                        >
+                            <p className="mb-4 text-lg font-semibold">
                                 Streaming Performance
-                            </h3>
+                            </p>
+                            {/* <Title level={4}>Streaming Performance</Title> */}
                             <LineChart
                                 data={lineChartData}
                                 series={top5Countries}

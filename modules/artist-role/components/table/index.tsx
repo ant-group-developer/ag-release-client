@@ -39,7 +39,7 @@ export const ArtistRoleTable = ({ dataFilter, ...props }: Props) => {
             dataIndex: 'name',
             ellipsis: true,
             align: 'left',
-            width: 500,
+            width: 400,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -51,6 +51,29 @@ export const ArtistRoleTable = ({ dataFilter, ...props }: Props) => {
                     tooltipProps={{ placement: 'right' }}
                     text={value}
                     label={messages('artist.role')}
+                >
+                    <p className="truncate">{value}</p>
+                </CopyText>
+            ),
+        },
+        {
+            title: messages('common.value'),
+            key: 'value',
+            dataIndex: 'value',
+            ellipsis: true,
+            align: 'left',
+            width: 250,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'value'
+            ),
+            render: (value) => (
+                <CopyText
+                    tooltipProps={{ placement: 'right' }}
+                    text={value}
+                    label={messages('common.value')}
                 >
                     <p className="truncate">{value}</p>
                 </CopyText>

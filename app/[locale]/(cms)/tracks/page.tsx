@@ -103,7 +103,7 @@ export default function Tracks({}: Props) {
 
                 {layoutTable === LAYOUT_TABLE.GRID && (
                     <TracksGridTable
-                        data={tracksData.items}
+                        data={tracksData?.items}
                         loading={isTrackDataLoading}
                     />
                 )}
@@ -112,9 +112,9 @@ export default function Tracks({}: Props) {
             <AppPagination
                 className="border-b border-t"
                 align="end"
-                current={tracksData.metadata.currentPage}
-                pageSize={dataFilter.pageSize}
-                total={tracksData.metadata.totalItems}
+                current={tracksData?.metadata?.currentPage}
+                pageSize={dataFilter?.pageSize}
+                total={tracksData?.metadata?.totalItems}
                 onChange={onChangePage}
                 showTotalText
                 showSizeChanger

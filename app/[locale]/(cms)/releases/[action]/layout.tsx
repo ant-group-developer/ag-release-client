@@ -13,7 +13,7 @@ import {
 } from '@/modules/releases/hooks/release-form-store';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
-import { Button, Tabs, TabsProps } from 'antd';
+import { Button, Tabs, TabsProps, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname } from 'next/navigation';
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
@@ -21,17 +21,7 @@ import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 type Props = {};
 
 export default function ReleaseDetail({ children }: PropsWithChildren) {
-    const [activeTab, setActiveTab] = useState<string>(
-        RELEASES_TABS.CORE_DETAIL
-    );
-    const [isScrolled, setIsScrolled] = useState(false);
-
-    const validationErrors = useReleaseFormStore(
-        (state) => state.validationErrors
-    );
-    const resetFormValues = useReleaseFormStore(
-        (state) => state.resetFormValues
-    );
+    // hooks
     const messages = useTranslations();
     const router = useRouter();
     const params = useParams();
@@ -39,27 +29,28 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const formValues = useReleaseFormStore((state) => state.formValues);
     const pathname = usePathname();
     const openModal = useModalStore((state) => state.openModal);
-    const childrenRef = useRef<HTMLDivElement>(null);
-    // Thêm ref cho div cha scroll
     const scrollContainerRef = useRef<HTMLDivElement>(null);
-    const releaseId = params['release-id'] ? `${params['release-id']}` : '';
-    const { releaseData, isLoading: isReleaseDataLoading } =
-        useGetDetailRelease(releaseId);
-    const { tracksData, isLoading: isTracksLoading } = useGetListTracks({
-        releaseId: releaseData?.id || '',
-    });
+    const resetFormValues = useReleaseFormStore(
+        (state) => state.resetFormValues
+    );
+    const { token } = theme.useToken();
 
+    // state
+    const [activeTab, setActiveTab] = useState<string>(
+        RELEASES_TABS.CORE_DETAIL
+    );
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    // const
+    const releaseId = params['release-id'] ? `${params['release-id']}` : '';
     const isCreateReleasePage = params['action'] === 'create';
     const isDisableTab = releaseId == '';
-
     const isDetailPage = pathname.includes(`/${RELEASES_TABS.CORE_DETAIL}`);
     const isTracksPage = pathname.includes(`/${RELEASES_TABS.TRACKS}`);
     const isCoreDetailPage = pathname.includes(`/${RELEASES_TABS.CORE_DETAIL}`);
-
     const coreDetailTabsNavigate = isCreateReleasePage
         ? '/releases/create'
         : getReleaseDetailTabRoute(releaseId, RELEASES_TABS.CORE_DETAIL);
-
     const items: TabsProps['items'] = [
         {
             key: RELEASES_TABS.CORE_DETAIL,
@@ -153,6 +144,14 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         },
     ];
 
+    // apis
+    const { releaseData, isLoading: isReleaseDataLoading } =
+        useGetDetailRelease(releaseId);
+    const { tracksData, isLoading: isTracksLoading } = useGetListTracks({
+        releaseId: releaseData?.id || '',
+    });
+
+    // func
     const handleTabChange = (key: string) => {
         router.push(getReleaseDetailTabRoute(releaseId, key as RELEASES_TABS));
     };
@@ -167,6 +166,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         }
     };
 
+    // render
     const extraButton = (
         <div className="flex justify-end gap-2">
             {isTracksPage && (
@@ -256,11 +256,14 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     return (
         <div className="flex h-full overflow-auto" ref={scrollContainerRef}>
             <div className="flex h-[calc(100vh-4rem)] flex-1 flex-col">
-                <div className="sticky top-0 z-10 bg-white">
+                <div className="sticky top-0 z-10">
                     <ReleaseDetailHeader isScrolled={isScrolled} />
                     <div className="px-4">
                         <Tabs
                             className="tab-release-detail !pt-0"
+                            style={{
+                                backgroundColor: token.colorBgContainer,
+                            }}
                             items={items}
                             activeKey={activeTab}
                             onChange={handleTabChange}

@@ -19,7 +19,9 @@ export default function CardRelease({ data, ...props }: Props) {
     const messages = useTranslations();
     const router = useRouter();
     // const albumStatus = messages(getIntlCodeByReleaseStatus(data.status));
-
+    const imageSource =
+        data?.coverArtThumbnails?.['300x300'] ??
+        data?.coverArtThumbnails?.original;
     return (
         <Card
             {...props}
@@ -38,9 +40,7 @@ export default function CardRelease({ data, ...props }: Props) {
                         fallbackSrc={FALLBACK_IMAGE}
                         className="cursor-pointer overflow-hidden object-cover duration-300 hover:scale-110"
                         alt="example"
-                        src={
-                            data?.coverArtThumbnails?.original || FALLBACK_IMAGE
-                        }
+                        src={imageSource || FALLBACK_IMAGE}
                         width={300}
                         height={300}
                     />

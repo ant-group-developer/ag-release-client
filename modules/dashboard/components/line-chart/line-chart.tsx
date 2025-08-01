@@ -2,6 +2,7 @@ import { cn } from '@/helpers/common';
 import * as am5 from '@amcharts/amcharts5';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 import * as am5xy from '@amcharts/amcharts5/xy';
+import { theme } from 'antd';
 import { useEffect, useRef } from 'react';
 
 // Định nghĩa kiểu dữ liệu cho props
@@ -20,6 +21,7 @@ export default function LineChart({
 }: Props) {
     const chartRef = useRef(null); // Tham chiếu đến DOM của biểu đồ
     const chartInstanceRef = useRef<am5.Root | null>(null); // Tham chiếu đến instance của biểu đồ
+    const { token } = theme.useToken();
 
     useEffect(() => {
         // Dọn dẹp biểu đồ cũ nếu có
@@ -52,7 +54,7 @@ export default function LineChart({
             chart.set(
                 'background',
                 am5.Rectangle.new(root, {
-                    fill: am5.color(0xffffff),
+                    fill: am5.color(token.colorBgContainer),
                 })
             );
 
@@ -185,7 +187,7 @@ export default function LineChart({
                 chartInstanceRef.current.dispose();
             }
         };
-    }, [data, seriesData, maxLineWidth]);
+    }, [data, seriesData, maxLineWidth, token]);
 
     return (
         <div

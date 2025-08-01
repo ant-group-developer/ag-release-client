@@ -21,7 +21,7 @@ function AppAvatar({}: Props) {
     const { theme, setTheme } = useThemeStore();
     const { locale, switchLocale } = useLocale();
 
-    const currentLocale = locale === LOCALE.VI ? 'Việt Nam' : 'English';
+    const currentLocale = locale === LOCALE.VI ? 'Tiếng việt' : 'English';
 
     const themeIntl =
         theme === 'dark' ? messages('common.dark') : messages('common.light');

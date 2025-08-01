@@ -85,7 +85,7 @@ const AudioItem = ({
     return (
         <div className="rounded border p-3">
             <div className="mb-2 flex justify-between text-sm font-medium">
-                <div>{audioFile.name}</div>
+                <div className="truncate">{audioFile.name}</div>
                 <div>
                     <Button
                         type="link"

@@ -10,6 +10,7 @@ export enum APP_ROUTES {
     HOME = '/',
     DASHBOARD = '/dashboard',
     RELEASES = '/releases',
+    RELEASE_TYPE = '/release-type',
     TRACKS = '/tracks',
     CREATE_RELEASE = '/release-detail',
     LABELS = '/labels',

@@ -1,5 +1,6 @@
 export interface CreateGenrePayload {
     name: string;
+    value: string;
     picture?: string | null;
     description?: string;
 }

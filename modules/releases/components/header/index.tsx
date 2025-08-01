@@ -5,6 +5,7 @@ import { DATE_FORMAT, LAYOUT_TABLE } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
+import { theme } from 'antd';
 import { RELEASES_COLUMNS_DISPLAY } from '../../enums';
 import { ReleasesDataFilter } from '../../types';
 import ShowColumnOptionDropdown from '../dropdown/show-column-option-dropdown';
@@ -30,8 +31,9 @@ export default function ReleasesHeader({
     handleChangeVisibleColumns,
 }: Props) {
     const { layoutTable, toggleLayoutTable } = useTableLayoutToggle();
+    const { token } = theme.useToken();
     return (
-        <AppHeader>
+        <AppHeader style={{ borderColor: token.colorBorder }}>
             <AppHeaderGroup>
                 <ReleasesSuperFilter
                     dataFilter={dataFilter}

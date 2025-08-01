@@ -54,7 +54,11 @@ export interface FileBucket extends CommonAttribute {
 }
 
 export interface CreateBucketFile {
-    folderBucket: string;
+    folderBucket: {
+        releaseId: string;
+        uploadPurpose: string;
+        trackFileName?: string;
+    };
     file: {
         fileName: string;
         contentType: string;

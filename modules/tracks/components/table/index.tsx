@@ -33,12 +33,12 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
             align: 'left',
             fixed: 'left',
             width: 150,
-            render: (value) => (
+            render: (_, record) => (
                 <div className="flex items-center gap-4">
                     <div className="flex-shrink-0 cursor-pointer">
                         <ImageFallback
                             fallbackSrc={FALLBACK_IMAGE}
-                            src={`https://picsum.photos/seed/${value}/300/300`}
+                            src={`https://picsum.photos/seed/${record?.title}/300/300`}
                             alt="genre"
                             width={40}
                             height={40}
@@ -46,7 +46,7 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
                         />
                     </div>
 
-                    <p className="truncate">{value}</p>
+                    <p className="truncate">{record?.title}</p>
                 </div>
             ),
         },
@@ -73,8 +73,8 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
                 const trackArtist = record?.trackArtists;
                 const mainArtist = trackArtist?.find(
                     (item: TrackArtistData) =>
-                        item.artistRole?.name.toLowerCase() ===
-                        RELEASE_MAIN_ARTIST_ROLE.toLowerCase()
+                        item.artistRole?.name?.toLowerCase() ===
+                        RELEASE_MAIN_ARTIST_ROLE?.toLowerCase()
                 );
                 return (
                     <CustomTooltip size="small" title={value}>
@@ -119,29 +119,29 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
         //         return <span className="truncate">{duration}</span>;
         //     },
         // },
-        {
-            title: messages('releases.releaseDate'),
-            key: 'releaseDate',
-            dataIndex: 'releaseDate',
-            align: 'center',
-            width: 100,
-            render: (value) => (
-                <span className="truncate text-wrap">
-                    {' '}
-                    {formattedDate(value)}{' '}
-                </span>
-            ),
-        },
+        // {
+        //     title: messages('releases.releaseDate'),
+        //     key: 'releaseDate',
+        //     dataIndex: 'releaseDate',
+        //     align: 'center',
+        //     width: 100,
+        //     render: (value,record) => (
+        //         <span className="truncate text-wrap">
+        //             {' '}
+        //             {formattedDate(value)}{' '}
+        //         </span>
+        //     ),
+        // },
         {
             title: messages('common.dateCreated'),
             key: 'creationDate',
             dataIndex: 'creationDate',
             align: 'center',
             width: 100,
-            render: (value) => (
+            render: (value, record) => (
                 <span className="truncate text-wrap">
                     {' '}
-                    {formattedDate(value)}{' '}
+                    {formattedDate(record?.createdAt)}{' '}
                 </span>
             ),
         },
