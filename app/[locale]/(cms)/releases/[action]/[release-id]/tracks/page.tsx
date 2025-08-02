@@ -9,6 +9,7 @@ import {
     TYPE_MODAL_TRACK,
 } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import TrackArtistModal from '@/modules/track-artist/components/modal/track-artist-modal';
 import { useDeleteTrackArtist } from '@/modules/track-artist/hooks/use-delete-track-artist';
 import { TrackArtistData } from '@/modules/track-artist/types';
@@ -17,6 +18,7 @@ import { useDeleteTrack } from '@/modules/tracks/hooks/use-delete-track';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { TrackData } from '@/modules/tracks/types';
 import { DeleteVariables } from '@/types/api';
+import { Button } from 'antd';
 import { useTranslations } from 'next-intl';
 import { Key, useEffect, useState } from 'react';
 
@@ -27,14 +29,17 @@ export default function Tracks() {
     const typeModal = useModalStore((state) => state.typeModal);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const dataEdit = useModalStore((state) => state.dataEdit);
+    console.log('🚀 ~ Tracks ~ dataEdit:', dataEdit);
     const closeModal = useModalStore((state) => state.closeModal);
-    const titleModal = messages('delete.confirmTitle');
-    const paragraphModal = `${messages('delete.confirmMessage', { value: dataEdit?.artist?.name ?? '' })}`;
+    const openModal = useModalStore((state) => state.openModal);
 
     const { tracksData, isLoading } = useGetListTracks({
         releaseId: formValues?.id as string,
         fieldOrder: 'order',
     });
+    const { releaseData } = useGetDetailRelease(formValues?.id as string);
+    const isShowAddTrack =
+        tracksData?.items?.length < releaseData?.albumFormat?.maxTrackCount;
 
     const { deleteTrack } = useDeleteTrack();
 
@@ -80,16 +85,14 @@ export default function Tracks() {
     }, [tracksData?.items]);
 
     return (
-        <div>
+        <div className="relative">
             <ReleaseTracksTable
                 dataSource={tracksData?.items}
                 // rowSelection={rowSelection}
                 loading={isLoading}
             />
 
-            {typeModal === TYPE_MODAL_RELEASE.ADD_TRACK && (
-                <AddNewTrackModal open />
-            )}
+            {typeModal === TYPE_MODAL_RELEASE.ADD_TRACK && <AddNewTrackModal />}
 
             {/* On checking to delete */}
             {/* {(typeModal === TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.ADD_ARTIST ||
@@ -107,8 +110,8 @@ export default function Tracks() {
                 TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.DELETE_ARTIST && (
                 <AppConfirm
                     open
-                    modalTitle={titleModal}
-                    paragraph={paragraphModal}
+                    modalTitle={messages('delete.confirmTitle')}
+                    paragraph={'Are you sure you want to delete ?'}
                     onCancel={closeModal}
                     onOk={() => {}}
                 />
@@ -117,8 +120,10 @@ export default function Tracks() {
             {typeModal === TYPE_MODAL_TRACK_ARTIST.DELETE && (
                 <AppConfirm
                     open
-                    modalTitle={titleModal}
-                    paragraph={paragraphModal}
+                    modalTitle={messages('delete.confirmTitle')}
+                    paragraph={messages('delete.confirmMessage', {
+                        value: dataEdit?.artist?.name,
+                    })}
                     onCancel={closeModal}
                     onOk={() => handleRemoveTrackArtist()}
                 />
@@ -127,11 +132,24 @@ export default function Tracks() {
             {typeModal === TYPE_MODAL_TRACK.DELETE && (
                 <AppConfirm
                     open
-                    modalTitle={titleModal}
-                    paragraph={paragraphModal}
+                    modalTitle={messages('delete.confirmTitle')}
+                    paragraph={messages('delete.confirmMessage', {
+                        value: dataEdit?.title,
+                    })}
                     onCancel={closeModal}
                     onOk={() => handleRemoveTrack()}
                 />
+            )}
+
+            {isShowAddTrack && (
+                <div className="absolute right-2 top-[-2.5rem] z-50">
+                    <Button
+                        onClick={() => openModal(TYPE_MODAL_RELEASE.ADD_TRACK)}
+                        type="primary"
+                    >
+                        {messages('tracks.add')}
+                    </Button>
+                </div>
             )}
         </div>
     );

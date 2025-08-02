@@ -47,7 +47,7 @@ export default function MetadataInfo({}: Props) {
                 );
 
             case 'type':
-                return releaseData.type || value;
+                return releaseData.albumFormat.name || value;
 
             case 'cLineOwner':
             case 'pLineOwner':

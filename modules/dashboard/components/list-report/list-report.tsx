@@ -1,5 +1,5 @@
 import ImageFallback from '@/components/ui/image/image-fallback';
-import { Select, SelectProps } from 'antd';
+import { Select, SelectProps, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 
 type ListItem = {
@@ -25,6 +25,7 @@ export default function ListReport({
     data = defaultData,
     title = 'Revenue Report',
 }: Props) {
+    const { token } = theme.useToken();
     const messages = useTranslations();
     const options: SelectProps['options'] = [
         {
@@ -38,11 +39,14 @@ export default function ListReport({
     ];
 
     return (
-        <div className="flex h-full w-full flex-col rounded-lg border bg-white p-6 shadow">
+        <div
+            style={{
+                borderColor: token.colorBorder,
+            }}
+            className="flex h-full w-full flex-col rounded-lg border p-6 shadow"
+        >
             <div className="mb-4 flex items-center justify-between">
-                <span className="text-lg font-semibold text-gray-800">
-                    {title}
-                </span>
+                <span className="text-lg font-semibold">{title}</span>
                 <Select
                     className="min-w-44"
                     options={options}
@@ -62,12 +66,10 @@ export default function ListReport({
                                         height={32}
                                     />
                                 </div>
-                                <span className="truncate text-black">
-                                    {item.name}
-                                </span>
+                                <span className="truncate">{item.name}</span>
                             </div>
                             <div className="w-36 text-left">
-                                <span className="font-medium text-black">
+                                <span className="font-medium">
                                     ${item.value}
                                 </span>
                             </div>

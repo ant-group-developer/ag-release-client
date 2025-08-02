@@ -12,7 +12,6 @@ import WaveAudioUpload from '@/components/ui/input/wave-audio-upload';
 import { TYPE_UPLOAD_BUCKET } from '@/enums/common';
 import extractAudioMetadata, { getPeakData } from '@/helpers/common';
 import { showNotification } from '@/helpers/messages-helper';
-import { genFolderBucket } from '@/helpers/string';
 import { useActive } from '@/hooks/use-active';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useCreateTrackDraft } from '@/modules/tracks/hooks/use-create-track-draft';
@@ -64,6 +63,16 @@ export default function AddNewTrackModal({ ...props }: Props) {
                     let songDuration = 0;
                     let peakData: number[] = [];
                     const fileOriginal = file.originFileObj;
+
+                    if (fileOriginal.name.length > 80) {
+                        closeModal();
+                        return showNotification(
+                            'error',
+                            messages('tracks.validation.trackFileName', {
+                                number: 80,
+                            })
+                        );
+                    }
                     const fileNameWithoutExtension =
                         fileOriginal.name.lastIndexOf('.') !== -1
                             ? fileOriginal.name.substring(
@@ -87,11 +96,11 @@ export default function AddNewTrackModal({ ...props }: Props) {
                     );
 
                     const trackInfor: CreateBucketFile = {
-                        folderBucket: genFolderBucket({
+                        folderBucket: {
                             releaseId: formValues.id ?? '',
                             uploadPurpose: TYPE_UPLOAD_BUCKET.TRACK,
-                            fileName: fileNameWithoutExtension,
-                        }),
+                            trackFileName: fileNameWithoutExtension,
+                        },
                         file: {
                             fileName: fileOriginal.name,
                             contentType: fileOriginal.type,
@@ -141,11 +150,11 @@ export default function AddNewTrackModal({ ...props }: Props) {
                     );
 
                     const peakInfor: CreateBucketFile = {
-                        folderBucket: genFolderBucket({
+                        folderBucket: {
                             releaseId: formValues.id ?? '',
                             uploadPurpose: TYPE_UPLOAD_BUCKET.TRACK,
-                            fileName: fileNameWithoutExtension,
-                        }),
+                            trackFileName: fileNameWithoutExtension,
+                        },
                         file: {
                             fileName: peakFile.name,
                             contentType: peakFile.type,
@@ -293,6 +302,7 @@ export default function AddNewTrackModal({ ...props }: Props) {
     return (
         <AppModal
             {...props}
+            open
             title={'Thêm bài hát'}
             onOk={form.submit}
             onCancel={closeModal}

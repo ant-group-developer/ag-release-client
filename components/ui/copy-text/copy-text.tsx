@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import React from 'react';
 
 interface CopyTextProps {
-    text: string;
+    text: string | undefined;
     label?: string;
     children?: React.ReactNode;
     className?: string;
@@ -21,6 +21,7 @@ const CopyText: React.FC<CopyTextProps> = ({
     const messages = useTranslations();
 
     const handleCopy = (e: React.MouseEvent) => {
+        if (!text) return;
         e.stopPropagation();
         navigator.clipboard
             .writeText(text)
@@ -29,6 +30,7 @@ const CopyText: React.FC<CopyTextProps> = ({
 
     return (
         <Tooltip
+            placement="right"
             {...tooltipProps}
             title={tooltipProps?.title || messages('common.copy')}
         >

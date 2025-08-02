@@ -115,6 +115,26 @@ export default function TrackTypeFormModal({ ...props }: Props) {
                 >
                     <Input allowClear />
                 </AppFormItem>
+
+                <AppFormItem
+                    name="value"
+                    label={messages('common.value')}
+                    required
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.input'),
+                        },
+                        {
+                            max: 100,
+                            message: messages('validation.max', {
+                                number: 100,
+                            }),
+                        },
+                    ]}
+                >
+                    <Input allowClear />
+                </AppFormItem>
             </AppForm>
         </AppModal>
     );

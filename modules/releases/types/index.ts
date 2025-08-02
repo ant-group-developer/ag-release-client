@@ -3,6 +3,7 @@ import { GenresData } from '@/modules/genres/types';
 import { LabelData } from '@/modules/labels/types';
 import { LanguagesData } from '@/modules/languages/types';
 import { ReleaseArtist } from '@/modules/release-artist/types';
+import { ReleaseTypesData } from '@/modules/release-types/types';
 import { TimezoneData } from '@/modules/timezone/types';
 import { TrackData } from '@/modules/tracks/types';
 import { CommonAttribute, CommonParams } from '@/types/api';
@@ -31,7 +32,8 @@ export interface ReleasesData extends CommonAttribute {
     title: string;
     version: string | null;
     status: RELEASES_STATUS;
-    type?: RELEASES_TYPE;
+    albumFormatId: ReleaseTypesData['id'];
+    albumFormat: ReleaseTypesData;
     tracks: TrackData[];
     releaseArtists?: ReleaseArtist[];
     coverArtThumbnails?: ReleaseCoverArt | null;
@@ -46,6 +48,7 @@ export interface ReleasesData extends CommonAttribute {
     releaseTerritory: ReleaseTerritory;
     timeZone: TimezoneData | null;
     tracksCount: number;
+    totalDuration: number;
 }
 
 export interface ReleasesDataFilter extends CommonParams {

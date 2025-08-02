@@ -2,8 +2,10 @@ import FormItem from '@/components/ui/react-hook-form/form-item';
 import LabelSelect from '@/components/ui/select/label-select';
 import { getReleaseDetailTabRoute } from '@/helpers/link';
 import { useRouter } from '@/i18n/routing';
+import { useGetListReleaseTypes } from '@/modules/release-types/hooks/use-get-list-release-types';
+import { ReleaseTypesData } from '@/modules/release-types/types';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
-import { RELEASES_TABS, RELEASES_TYPE } from '@/modules/releases/enums';
+import { RELEASES_TABS } from '@/modules/releases/enums';
 import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
 import { CreateReleaseDraftPayload } from '@/modules/releases/types/payload';
 import { CreateVariables } from '@/types/api';
@@ -37,12 +39,15 @@ export default function ReleaseConfigurationSection({
     const params = useParams();
     const router = useRouter();
 
+    // apis
+    const { releaseTypesData } = useGetListReleaseTypes({});
+
     // variables
     const isCreateReleasePage = params['action'] === 'create';
     const version = watch('version') ?? '';
-    const type = watch('type');
+    const albumFormatId = watch('albumFormatId');
     const title = watch('title') ?? '';
-    const isEnableCreateDraftBtn = (!!type && !!title) === true;
+    const isEnableCreateDraftBtn = (!!albumFormatId && !!title) === true;
 
     // funtion
     const handleCreateReleaseDraft = () => {
@@ -50,7 +55,7 @@ export default function ReleaseConfigurationSection({
             payload: {
                 title: title ?? '',
                 version: version ?? '',
-                type: type ?? RELEASES_TYPE.ALBUM,
+                albumFormatId: albumFormatId ?? '',
             },
             onSuccess: (data) => {
                 router.push(
@@ -209,17 +214,19 @@ export default function ReleaseConfigurationSection({
                                 </div>
                                 <div className="col-span-1">
                                     <FormItem
-                                        name="type"
+                                        name="albumFormatId"
                                         label={messages('releases.type')}
                                         required
-                                        ErrorMessage={errors.type?.message}
+                                        ErrorMessage={
+                                            errors.albumFormatId?.message
+                                        }
                                         tooltipInfor={messages(
                                             'tooltipForm.releaseType'
                                         )}
                                     >
                                         <Controller
                                             control={control}
-                                            name="type"
+                                            name="albumFormatId"
                                             render={({ field }) => (
                                                 <Radio.Group
                                                     {...field}
@@ -228,22 +235,31 @@ export default function ReleaseConfigurationSection({
                                                             e.target.value;
                                                         field.onChange(value);
                                                         debouncedUpdate({
-                                                            type: value,
+                                                            albumFormatId:
+                                                                value,
                                                         });
                                                     }}
                                                     disabled={isOnCreatingDraft}
                                                 >
-                                                    {Object.values(
-                                                        RELEASES_TYPE
-                                                    ).map((type) => (
-                                                        <Radio
-                                                            key={type}
-                                                            value={type}
-                                                            className="capitalize"
-                                                        >
-                                                            {type}
-                                                        </Radio>
-                                                    ))}
+                                                    {releaseTypesData.items
+                                                        .length > 0 &&
+                                                        releaseTypesData.items.map(
+                                                            (
+                                                                type: ReleaseTypesData
+                                                            ) => (
+                                                                <Radio
+                                                                    key={
+                                                                        type.id
+                                                                    }
+                                                                    value={
+                                                                        type.id
+                                                                    }
+                                                                    className="capitalize"
+                                                                >
+                                                                    {type?.name}
+                                                                </Radio>
+                                                            )
+                                                        )}
                                                 </Radio.Group>
                                             )}
                                         />

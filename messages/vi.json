@@ -37,6 +37,10 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "settingNote": "Tùy chọn cài đặt chỉ áp dụng cho trình duyệt này",
+        "value": "Giá trị",
+        "viewDetail": "Xem chi tiết",
+        "systemCategories": "Danh mục hệ thống",
         "variousArtists": "Nhiều nghệ sĩ",
         "activities": "Hoạt động",
         "revenue": "Doanh thu",
@@ -622,6 +626,11 @@
 
         "scheduling": {
             "label": "Lên lịch"
+        },
+
+        "coverArt": {
+            "required": "Yêu cầu ảnh bìa",
+            "size": "Ảnh phải vuông, từ 1400x1400 pixel đến 4000x4000x pixel"
         }
     },
 
@@ -646,6 +655,26 @@
         }
     },
 
+    "releaseType": {
+        "label": "Loại phát hành"
+    },
+
+    "albumFormat": {
+        "message": {
+            "success": {
+                "create": "Thêm mới loại phát hành thành công",
+                "update": "Cập nhật loại phát hành thành công",
+                "delete": "Xoá loại phát hành thành công"
+            },
+            "error": {
+                "duplicateNameAlbumFormat": "Thể loại này đã tồn tại",
+                "duplicateValueAlbumFormat": "Giá trị thể loại này đã tồn tại",
+                "notFound": "Không thể tìm thấy thể loại này",
+                "cannotDeleteBecauseLinkedReleases": "Không thể xoá thể loại này vì đã liên kết với bản phát hành"
+            }
+        }
+    },
+
     "tracks": {
         "number": "Bài hát số",
         "add": "Thêm bài hát",
@@ -659,6 +688,8 @@
         "recordingCountry": "Quốc gia ghi âm",
         "audioSpecification": "Thông số kỹ thuật âm thanh",
         "addAllArtistFromRelease": "Thêm tất cả nghệ sĩ từ phát hành",
+        "minTrack": "Tối thiểu bài hát",
+        "maxTrack": "Tối đa bài hát",
         "original": {
             "label": "Tác phẩm gốc",
             "tooltip": "Tác phẩm gốc là tác phẩm được tạo ra đầu tiên, không phải bất kỳ bản cover hoặc remix nào."
@@ -681,7 +712,9 @@
             "selectSensitiveContent": "Lựa chọn nội dung"
         },
         "validation": {
-            "previewMustBeLessThanDuration": "Thời gian xem trước phải nhỏ hơn thời gian bài hát"
+            "previewMustBeLessThanDuration": "Thời gian xem trước phải nhỏ hơn thời gian bài hát",
+            "trackUpload": "{type} chỉ tải lên tối đa được {maxCount} bài",
+            "trackFileName": "Tên File không được vượt quá {number} ký tự"
         }
     },
 
@@ -891,6 +924,8 @@
         "trackTypeId": "Thể loại bài hát",
         "preview": "Đoạn nghe trước",
         "tracks": {
+            "maxCountTrack": "Số lượng bài hát vượt quá {number}",
+            "minCountTrack": "Số lượng bài hát nhỏ quá {number}",
             "sensitiveContent": "Nội dung nhạy cảm",
             "audioLanguageId": "Ngôn ngữ âm thanh",
             "metadataLanguageId": "Ngôn ngữ metadata",
@@ -1029,5 +1064,9 @@
         "languageTrack": "Ngôn ngữ chính của bài hát trong phát hành này. Ví dụ: tiếng Việt, tiếng Anh, v.v.",
         "countryLanguage": "Ngôn ngữ chính thức của quốc gia liên quan đến phát hành này. Ví dụ: Việt Nam, Hoa Kỳ, v.v.",
         "isMoreThan4Artists": "Chọn 'Có' nếu phát hành này có từ 5 nghệ sĩ trở lên để hiển thị là 'Nhiều nghệ sĩ'."
+    },
+
+    "tenant": {
+        "label": "Tenant"
     }
 }

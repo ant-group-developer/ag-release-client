@@ -34,8 +34,7 @@ export default function TrackTypes({}: Props) {
         removeFilter,
     } = useFilter<TrackTypeDataFilter>({
         page: 1,
-        pageSize: 10,
-        createdAt: '',
+        pageSize: 28,
     });
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as TrackTypeData);

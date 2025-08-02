@@ -1,4 +1,5 @@
 import ActionButton from '@/components/ui/button/action-button';
+import CopyText from '@/components/ui/copy-text/copy-text';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { DATE_FORMAT } from '@/enums/common';
@@ -8,6 +9,7 @@ import {
     getIntlCodeByReleaseStatus,
 } from '@/helpers/common';
 import { getReleaseDetailTabRoute } from '@/helpers/link';
+import { OnChangeFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
 import { RELEASE_MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
@@ -19,14 +21,19 @@ import {
     RELEASES_TABS,
     TYPE_MODAL_RELEASE,
 } from '../../enums';
-import { ReleasesData } from '../../types';
+import { ReleasesData, ReleasesDataFilter } from '../../types';
 import ReleaseCoverImage from '../image/release-cover-image';
 
 type Props = Omit<AppTableProps<ReleasesData>, 'columns'> & {
     visibleColumns: RELEASES_COLUMNS_DISPLAY[];
+    onChangeFilter: OnChangeFilter<ReleasesDataFilter>;
 };
 
-export default function ReleasesTable({ visibleColumns, ...props }: Props) {
+export default function ReleasesTable({
+    onChangeFilter,
+    visibleColumns,
+    ...props
+}: Props) {
     const messages = useTranslations();
     const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
@@ -48,21 +55,25 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             fixed: 'left',
             render: (value, record) => (
                 <div className="flex items-center gap-4">
-                    <div
-                        className="flex-shrink-0 cursor-pointer"
-                        onClick={() => {
-                            router.push(
-                                getReleaseDetailTabRoute(
-                                    record?.id,
-                                    RELEASES_TABS.CORE_DETAIL
-                                )
-                            );
-                        }}
+                    <CustomTooltip
+                        title={messages('common.viewDetail')}
+                        placement="right"
                     >
-                        <ReleaseCoverImage data={record} />
-                    </div>
-
-                    <p className="truncate">{value}</p>
+                        <div
+                            className="flex-shrink-0 cursor-pointer"
+                            onClick={() => {
+                                router.push(
+                                    getReleaseDetailTabRoute(
+                                        record?.id,
+                                        RELEASES_TABS.CORE_DETAIL
+                                    )
+                                );
+                            }}
+                        >
+                            <ReleaseCoverImage data={record} />
+                        </div>
+                    </CustomTooltip>
+                    <CopyText text={value}>{value}</CopyText>
                 </div>
             ),
         },
@@ -89,11 +100,17 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
                     ? messages('common.variousArtists')
                     : mainArtist?.artist?.name || '';
                 return (
-                    <CustomTooltip size="small" title={value}>
-                        <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
-                            {displayName}
-                        </span>
-                    </CustomTooltip>
+                    // <CustomTooltip
+                    //     size="small"
+                    //     title={messages('filter.filterByValue', {
+                    //         value: displayName,
+                    //     })}
+                    // >
+                    //     <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
+                    //         {displayName}
+                    //     </span>
+                    // </CustomTooltip>
+                    <CopyText text={displayName}>{displayName}</CopyText>
                 );
             },
         },
@@ -105,38 +122,27 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             width: 200,
             ellipsis: true,
             render: (value, record) => (
-                <CustomTooltip size="small" title={record?.label?.name}>
-                    <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
-                        {record?.label?.name}
-                    </span>
-                </CustomTooltip>
+                // <CustomTooltip size="small" title={record?.label?.name}>
+                //     <span className="cursor-pointer truncate ">
+                //         {record?.label?.name}
+                //     </span>
+                // </CustomTooltip>
+                <CopyText text={record?.label?.name}>
+                    {record?.label?.name}
+                </CopyText>
             ),
         },
-        {
-            title: messages('releases.id'),
-            key: 'releaseId',
-            dataIndex: 'releaseId',
-            align: 'center',
-            fixed: 'left',
-            width: 120,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
-                </CustomTooltip>
-            ),
-        },
-
         {
             title: messages('releases.type'),
             key: 'type',
             dataIndex: 'type',
             align: 'center',
             width: 120,
-            render: (value) => {
+            render: (_, record) => {
                 return (
-                    <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
+                    <span className="cursor-pointer truncate">
                         {' '}
-                        {value}{' '}
+                        {record?.albumFormat?.name}{' '}
                     </span>
                 );
             },
@@ -147,9 +153,9 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             dataIndex: 'UPC',
             align: 'center',
             width: 120,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
+            render: (value, record) => (
+                <CustomTooltip size="small" title={record?.upc}>
+                    <span className="truncate"> {record?.upc} </span>
                 </CustomTooltip>
             ),
         },
@@ -160,7 +166,7 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             align: 'center',
             width: 120,
             render: (value) => (
-                <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
+                <span className="cursor-pointer truncate">
                     {messages(getIntlCodeByReleaseStatus(value))}
                 </span>
             ),
@@ -181,8 +187,10 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             dataIndex: 'duration',
             align: 'center',
             width: 100,
-            render: (value) => {
-                const duration = convertSecondsToHoursMinutes(Number(value));
+            render: (value, record) => {
+                const duration = convertSecondsToHoursMinutes(
+                    Number(record?.totalDuration)
+                );
 
                 return <span className="truncate">{duration}</span>;
             },
@@ -206,10 +214,13 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             dataIndex: 'creationDate',
             align: 'center',
             width: 130,
-            render: (value) => (
+            render: (value, record) => (
                 <span className="truncate text-wrap">
                     {' '}
-                    {formattedDate(value, DATE_FORMAT.DATE_ONLY)}{' '}
+                    {formattedDate(
+                        record?.createdAt,
+                        DATE_FORMAT.DATE_ONLY
+                    )}{' '}
                 </span>
             ),
         },
@@ -245,19 +256,7 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             {...props}
             pagination={false}
             columns={newColumns}
-            rowClassName={'group cursor-pointer'}
-            onRow={(record) => {
-                return {
-                    onClick: () => {
-                        router.push(
-                            getReleaseDetailTabRoute(
-                                record?.id,
-                                RELEASES_TABS.CORE_DETAIL
-                            )
-                        );
-                    },
-                };
-            }}
+            rowClassName={'group'}
         />
     );
 }

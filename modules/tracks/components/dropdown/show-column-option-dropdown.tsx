@@ -64,10 +64,6 @@ export default function ShowColumnOptionDropdown({
             label: 'ISRC',
         },
         {
-            key: TRACKS_COLUMNS_DISPLAY.RELEASE_DATE,
-            label: messages('common.dateRelease'),
-        },
-        {
             key: TRACKS_COLUMNS_DISPLAY.CREATION_DATE,
             label: messages('common.dateCreated'),
         },

@@ -106,6 +106,25 @@ export default function ArtistRoleFormModal({ ...props }: Props) {
                 >
                     <Input placeholder={messages('role.name')} allowClear />
                 </AppFormItem>
+                <AppFormItem
+                    name="value"
+                    label={messages('common.value')}
+                    required
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.input'),
+                        },
+                        {
+                            max: 100,
+                            message: messages('validation.max', {
+                                number: 100,
+                            }),
+                        },
+                    ]}
+                >
+                    <Input placeholder={messages('common.value')} allowClear />
+                </AppFormItem>
             </AppForm>
         </AppModal>
     );

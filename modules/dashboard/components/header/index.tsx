@@ -1,6 +1,6 @@
 import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
 import { TYPE_GRAPH, TYPE_SELECT } from '@/enums/common';
-import { SelectProps, Tabs, TabsProps } from 'antd';
+import { SelectProps, Tabs, TabsProps, theme } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import DateStatisticSelect from '../select/date-select';
@@ -8,6 +8,7 @@ import DateStatisticSelect from '../select/date-select';
 type Props = {};
 
 export default function DashboardHeader({}: Props) {
+    const { token } = theme.useToken();
     const messages = useTranslations();
 
     const options: SelectProps['options'] = [
@@ -117,7 +118,10 @@ export default function DashboardHeader({}: Props) {
         }
     };
     return (
-        <AppHeader className="sticky top-0 z-10 border-b bg-white px-0 py-0 dark:border-b-zinc-800 dark:bg-black">
+        <AppHeader
+            className="sticky top-0 z-10 border-b px-0 py-0 dark:border-b-zinc-800"
+            style={{ backgroundColor: token.colorBgContainer }}
+        >
             <AppHeaderGroup className="px-4">
                 <span className="mr-2 text-lg font-bold">
                     {messages('common.statisticIn')}

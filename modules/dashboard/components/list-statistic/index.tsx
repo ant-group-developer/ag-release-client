@@ -17,7 +17,7 @@ export default function ListStatistic({}: Props) {
 
             <div className="grid grid-cols-4 gap-4">
                 <div className="flex justify-between gap-6 rounded-lg border !border-gray-200 p-4 dark:!border-zinc-800">
-                    <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full bg-gray-100">
+                    <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full">
                         {/* <Image
                             width={48}
                             height={48}
@@ -45,7 +45,7 @@ export default function ListStatistic({}: Props) {
                 </div>
 
                 <div className="flex justify-between gap-6 rounded-lg border !border-gray-200 p-4 dark:!border-zinc-800">
-                    <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full bg-gray-100">
+                    <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full">
                         {/* <Image
                             width={48}
                             height={48}
@@ -73,7 +73,7 @@ export default function ListStatistic({}: Props) {
                 </div>
 
                 <div className="flex justify-between gap-6 rounded-lg border !border-gray-200 p-4 dark:!border-zinc-800">
-                    <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full bg-gray-100">
+                    <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full">
                         {/* <Image
                             width={48}
                             height={48}
@@ -101,7 +101,7 @@ export default function ListStatistic({}: Props) {
                 </div>
 
                 <div className="flex justify-between gap-6 rounded-lg border !border-gray-200 p-4 dark:!border-zinc-800">
-                    <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full bg-gray-100">
+                    <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full">
                         {/* <Image
                             width={48}
                             height={48}

@@ -1,9 +1,10 @@
 import { cn } from '@/helpers/common';
-import { ReactNode } from 'react';
+import { CSSProperties, ReactNode } from 'react';
 
 type Props = {
     children: ReactNode;
     className?: string;
+    style?: CSSProperties;
 };
 
 type AppHeaderGroupProps = {
@@ -12,13 +13,14 @@ type AppHeaderGroupProps = {
     position?: 'start' | 'end';
 };
 
-export default function AppHeader({ children, className }: Props) {
+export default function AppHeader({ children, className, style }: Props) {
     return (
         <div
             className={cn(
                 'flex flex-col-reverse justify-between gap-2 border-b px-4 py-0 lg:flex-row lg:items-center',
                 className
             )}
+            style={style}
         >
             {children}
         </div>
