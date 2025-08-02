@@ -9,6 +9,7 @@ import {
     getIntlCodeByReleaseStatus,
 } from '@/helpers/common';
 import { getReleaseDetailTabRoute } from '@/helpers/link';
+import { OnChangeFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
 import { RELEASE_MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
@@ -20,14 +21,19 @@ import {
     RELEASES_TABS,
     TYPE_MODAL_RELEASE,
 } from '../../enums';
-import { ReleasesData } from '../../types';
+import { ReleasesData, ReleasesDataFilter } from '../../types';
 import ReleaseCoverImage from '../image/release-cover-image';
 
 type Props = Omit<AppTableProps<ReleasesData>, 'columns'> & {
     visibleColumns: RELEASES_COLUMNS_DISPLAY[];
+    onChangeFilter: OnChangeFilter<ReleasesDataFilter>;
 };
 
-export default function ReleasesTable({ visibleColumns, ...props }: Props) {
+export default function ReleasesTable({
+    onChangeFilter,
+    visibleColumns,
+    ...props
+}: Props) {
     const messages = useTranslations();
     const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
@@ -94,8 +100,13 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
                     ? messages('common.variousArtists')
                     : mainArtist?.artist?.name || '';
                 return (
-                    // <CustomTooltip size="small" title={displayName}>
-                    //     <span className="cursor-pointer truncate ">
+                    // <CustomTooltip
+                    //     size="small"
+                    //     title={messages('filter.filterByValue', {
+                    //         value: displayName,
+                    //     })}
+                    // >
+                    //     <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
                     //         {displayName}
                     //     </span>
                     // </CustomTooltip>
@@ -127,9 +138,12 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             dataIndex: 'type',
             align: 'center',
             width: 120,
-            render: (value) => {
+            render: (_, record) => {
                 return (
-                    <span className="cursor-pointer truncate"> {value} </span>
+                    <span className="cursor-pointer truncate">
+                        {' '}
+                        {record?.albumFormat?.name}{' '}
+                    </span>
                 );
             },
         },
@@ -173,8 +187,10 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             dataIndex: 'duration',
             align: 'center',
             width: 100,
-            render: (value) => {
-                const duration = convertSecondsToHoursMinutes(Number(value));
+            render: (value, record) => {
+                const duration = convertSecondsToHoursMinutes(
+                    Number(record?.totalDuration)
+                );
 
                 return <span className="truncate">{duration}</span>;
             },
@@ -240,7 +256,7 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             {...props}
             pagination={false}
             columns={newColumns}
-            rowClassName={''}
+            rowClassName={'group'}
         />
     );
 }

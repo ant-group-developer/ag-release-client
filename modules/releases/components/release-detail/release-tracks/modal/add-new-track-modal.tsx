@@ -65,9 +65,12 @@ export default function AddNewTrackModal({ ...props }: Props) {
                     const fileOriginal = file.originFileObj;
 
                     if (fileOriginal.name.length > 80) {
+                        closeModal();
                         return showNotification(
                             'error',
-                            messages('validation.max', { number: 80 })
+                            messages('tracks.validation.trackFileName', {
+                                number: 80,
+                            })
                         );
                     }
                     const fileNameWithoutExtension =
@@ -299,6 +302,7 @@ export default function AddNewTrackModal({ ...props }: Props) {
     return (
         <AppModal
             {...props}
+            open
             title={'Thêm bài hát'}
             onOk={form.submit}
             onCancel={closeModal}

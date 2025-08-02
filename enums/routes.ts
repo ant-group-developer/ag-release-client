@@ -25,6 +25,7 @@ export enum APP_ROUTES {
     TIMEZONE = '/timezone',
     TRACK_TYPE = '/track-types',
     TRACK_ORIGIN_TYPE = '/track-origin-types',
+    TENANT = '/tenant',
 }
 
 export const AUTH_ROUTES: string[] = [APP_ROUTES.LOGIN];

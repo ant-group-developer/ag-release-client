@@ -8,6 +8,7 @@ import { useRouter } from '@/i18n/routing';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
+import { ReleaseValidate } from '@/modules/releases/types';
 import { Alert } from 'antd';
 import {
     AlertCircle,
@@ -48,6 +49,8 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                     const trackIndex = Number(parts[1]) + 1;
                     const fieldName = parts.slice(2).join('.');
                     return `${messages('tracks.number')} ${trackIndex}: ${messages(`formFields.${fieldName}` as any) || field}`;
+                } else if (field == 'maxTrackCount' || 'maxTrackCount') {
+                    return messages('tracks.label');
                 }
                 break;
 
@@ -57,6 +60,19 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
             default:
                 return messages(`formFields.${field}` as any);
         }
+    };
+    const getErrorMessages = (error: ReleaseValidate) => {
+        if (error.field == 'maxTrackCount') {
+            return messages('formFields.tracks.maxCountTrack', {
+                number: error.message,
+            });
+        } else if (error.field == 'minTrackCount') {
+            return messages('formFields.tracks.minCountTrack', {
+                number: error.message,
+            });
+        }
+
+        return messages(error.messageCode as any);
     };
     const toggleSidebar = () => {
         setIsSidebarOpen((prevState) => !prevState);
@@ -140,8 +156,8 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                                                     }
                                                     description={
                                                         <p className="line-clamp-3 text-xs">
-                                                            {messages(
-                                                                err.messageCode as any
+                                                            {getErrorMessages(
+                                                                err
                                                             )}
                                                         </p>
                                                     }

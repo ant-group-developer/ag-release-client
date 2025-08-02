@@ -1,19 +1,18 @@
 'use client';
 import { cn } from '@/helpers/common';
 import { getReleaseDetailTabRoute } from '@/helpers/link';
-import { showNotification } from '@/helpers/messages-helper';
 import useModalStore from '@/hooks/use-modal';
 import { Link, useRouter } from '@/i18n/routing';
 import ReleaseDetailHeader from '@/modules/releases/components/release-detail/header';
 import RightSidebar from '@/modules/releases/components/release-detail/right-sidebar';
-import { RELEASES_TABS, TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
+import { RELEASES_TABS } from '@/modules/releases/enums';
 import {
     ReleaseFormStoreData,
     useReleaseFormStore,
 } from '@/modules/releases/hooks/release-form-store';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
-import { Button, Tabs, TabsProps, theme } from 'antd';
+import { Tabs, TabsProps, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname } from 'next/navigation';
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
@@ -155,36 +154,20 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const handleTabChange = (key: string) => {
         router.push(getReleaseDetailTabRoute(releaseId, key as RELEASES_TABS));
     };
-    const handleSubmit = async () => {
-        try {
-            router.push(
-                getReleaseDetailTabRoute(releaseId, RELEASES_TABS.CORE_DETAIL)
-            );
-            showNotification('success', 'Thông tin đã được lưu thành công');
-        } catch (error) {
-            console.error('Lỗi khi xác thực form:', error);
-        }
-    };
 
     // render
-    const extraButton = (
-        <div className="flex justify-end gap-2">
-            {isTracksPage && (
-                <Button
-                    onClick={() => openModal(TYPE_MODAL_RELEASE.ADD_TRACK)}
-                    type="primary"
-                >
-                    {messages('tracks.add')}
-                </Button>
-            )}
-
-            {/* {isDetailPage && (
-                <Button type="primary" onClick={handleSubmit}>
-                    {messages('common.saveInfo')}
-                </Button>
-            )} */}
-        </div>
-    );
+    // const extraButton = (
+    //     <div className="flex justify-end gap-2">
+    //         {isTracksPage && (
+    //             <Button
+    //                 onClick={() => openModal(TYPE_MODAL_RELEASE.ADD_TRACK)}
+    //                 type="primary"
+    //             >
+    //                 {messages('tracks.add')}
+    //             </Button>
+    //         )}
+    //     </div>
+    // );
 
     useEffect(() => {
         const getActiveTab = () => {
@@ -267,7 +250,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                             items={items}
                             activeKey={activeTab}
                             onChange={handleTabChange}
-                            tabBarExtraContent={extraButton}
+                            // tabBarExtraContent={extraButton}
                         />
                     </div>
                 </div>

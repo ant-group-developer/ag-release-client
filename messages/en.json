@@ -37,6 +37,7 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "settingNote": "Settings apply only to this browser",
         "value": "Value",
         "viewDetail": "View detail",
         "systemCategories": "System categories",
@@ -654,12 +655,21 @@
     },
 
     "releaseType": {
-        "label": "Release type",
+        "label": "Release type"
+    },
+
+    "albumFormat": {
         "message": {
             "success": {
                 "create": "Create release type successfully",
                 "update": "Update release type successfully",
                 "delete": "Delete release type successfully"
+            },
+            "error": {
+                "duplicateNameAlbumFormat": "This type already exists",
+                "duplicateValueAlbumFormat": "This value already exist",
+                "notFound": "Cannot found this type",
+                "cannotDeleteBecauseLinkedReleases": "Cannot delete because this type linked release"
             }
         }
     },
@@ -701,7 +711,9 @@
             "selectSensitiveContent": "Select content"
         },
         "validation": {
-            "previewMustBeLessThanDuration": "Preview duration must be less than track duration"
+            "previewMustBeLessThanDuration": "Preview duration must be less than track duration",
+            "trackUpload": "{type} can upload a maximum of {maxCount} track",
+            "trackFileName": "File name cannot over {number} characters"
         }
     },
 
@@ -910,6 +922,8 @@
         "trackTypeId": "Track type",
         "preview": "Track preview",
         "tracks": {
+            "maxCountTrack": "Total of tracks greater than {number}",
+            "minCountTrack": "Total of tracks less than {number}",
             "trackOriginTypeId": "Track origin type",
             "audioLanguageId": "Audio language",
             "metadataLanguageId": "Metadata language",
@@ -1046,5 +1060,9 @@
         "languageTrack": "The main language of the song in this release. For example: Vietnamese, English, etc.",
         "countryLanguage": "The official language of the country related to this release. For example: Vietnam, United States, etc.",
         "isMoreThan4Artists": "Select 'Yes' if this release has 5 or more artists to display as 'Various artists'."
+    },
+
+    "tenant": {
+        "label": "Tenant"
     }
 }

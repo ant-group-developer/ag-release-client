@@ -70,18 +70,18 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
             ellipsis: true,
             width: 100,
             render: (value, record) => {
-                const trackArtist = record?.trackArtists;
+                const trackArtist = record?.trackArtists ?? [];
                 const mainArtist = trackArtist?.find(
                     (item: TrackArtistData) =>
                         item.artistRole?.name?.toLowerCase() ===
                         RELEASE_MAIN_ARTIST_ROLE?.toLowerCase()
                 );
                 return (
-                    <CustomTooltip size="small" title={value}>
-                        <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
-                            {mainArtist?.artist?.name}
-                        </span>
-                    </CustomTooltip>
+                    // <CustomTooltip size="small" title={value}>
+                    <span className="truncate">
+                        {mainArtist && mainArtist?.artist?.name}
+                    </span>
+                    // </CustomTooltip>
                 );
             },
         },
@@ -102,9 +102,9 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
             align: 'left',
             width: 60,
             render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
-                </CustomTooltip>
+                // <CustomTooltip size="small" title={value}>
+                <span className="truncate"> {value} </span>
+                // </CustomTooltip>
             ),
         },
 
@@ -150,7 +150,7 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
             align: 'center',
             width: 30,
             fixed: 'right',
-            render: () => <ActionButton showUpdate showDetail showDelete />,
+            render: () => <ActionButton showDelete />,
         },
     ];
 

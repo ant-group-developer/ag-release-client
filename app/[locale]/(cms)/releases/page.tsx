@@ -126,6 +126,7 @@ export default function Releases({}: Props) {
                             y: getScrollYHeight(height, width, 40, 38),
                         }}
                         loading={isReleaseDataLoading}
+                        onChangeFilter={onChangeFilter}
                     />
                 )}
 

@@ -7,6 +7,7 @@ import { getReleaseDetailTabRoute } from '@/helpers/link';
 import { useRouter } from '@/i18n/routing';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { ReleasesData } from '@/modules/releases/types';
+import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { Card, CardProps } from 'antd';
 import Meta from 'antd/es/card/Meta';
 import { useTranslations } from 'next-intl';
@@ -19,9 +20,11 @@ export default function CardRelease({ data, ...props }: Props) {
     const messages = useTranslations();
     const router = useRouter();
     // const albumStatus = messages(getIntlCodeByReleaseStatus(data.status));
-    const imageSource =
+    const imageFileId =
         data?.coverArtThumbnails?.['300x300'] ??
         data?.coverArtThumbnails?.original;
+
+    const { linkReadFile } = useGetLinkReadFile(imageFileId as string);
     return (
         <Card
             {...props}
@@ -40,7 +43,7 @@ export default function CardRelease({ data, ...props }: Props) {
                         fallbackSrc={FALLBACK_IMAGE}
                         className="cursor-pointer overflow-hidden object-cover duration-300 hover:scale-110"
                         alt="example"
-                        src={imageSource || FALLBACK_IMAGE}
+                        src={linkReadFile || FALLBACK_IMAGE}
                         width={300}
                         height={300}
                     />
@@ -67,7 +70,7 @@ export default function CardRelease({ data, ...props }: Props) {
                 description={
                     <div className="flex flex-col font-medium">
                         <p className="flex justify-between">
-                            <p> {data?.type} </p>
+                            <p> {data?.albumFormat.name} </p>
                             <span>
                                 {formattedDate(
                                     data.releaseDate,

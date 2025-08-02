@@ -37,6 +37,7 @@
         "quickActions": "Hành động nhanh"
     },
     "common": {
+        "settingNote": "Tùy chọn cài đặt chỉ áp dụng cho trình duyệt này",
         "value": "Giá trị",
         "viewDetail": "Xem chi tiết",
         "systemCategories": "Danh mục hệ thống",
@@ -655,12 +656,21 @@
     },
 
     "releaseType": {
-        "label": "Loại phát hành",
+        "label": "Loại phát hành"
+    },
+
+    "albumFormat": {
         "message": {
             "success": {
                 "create": "Thêm mới loại phát hành thành công",
                 "update": "Cập nhật loại phát hành thành công",
                 "delete": "Xoá loại phát hành thành công"
+            },
+            "error": {
+                "duplicateNameAlbumFormat": "Thể loại này đã tồn tại",
+                "duplicateValueAlbumFormat": "Giá trị thể loại này đã tồn tại",
+                "notFound": "Không thể tìm thấy thể loại này",
+                "cannotDeleteBecauseLinkedReleases": "Không thể xoá thể loại này vì đã liên kết với bản phát hành"
             }
         }
     },
@@ -702,7 +712,9 @@
             "selectSensitiveContent": "Lựa chọn nội dung"
         },
         "validation": {
-            "previewMustBeLessThanDuration": "Thời gian xem trước phải nhỏ hơn thời gian bài hát"
+            "previewMustBeLessThanDuration": "Thời gian xem trước phải nhỏ hơn thời gian bài hát",
+            "trackUpload": "{type} chỉ tải lên tối đa được {maxCount} bài",
+            "trackFileName": "Tên File không được vượt quá {number} ký tự"
         }
     },
 
@@ -912,6 +924,8 @@
         "trackTypeId": "Thể loại bài hát",
         "preview": "Đoạn nghe trước",
         "tracks": {
+            "maxCountTrack": "Số lượng bài hát vượt quá {number}",
+            "minCountTrack": "Số lượng bài hát nhỏ quá {number}",
             "sensitiveContent": "Nội dung nhạy cảm",
             "audioLanguageId": "Ngôn ngữ âm thanh",
             "metadataLanguageId": "Ngôn ngữ metadata",
@@ -1050,5 +1064,9 @@
         "languageTrack": "Ngôn ngữ chính của bài hát trong phát hành này. Ví dụ: tiếng Việt, tiếng Anh, v.v.",
         "countryLanguage": "Ngôn ngữ chính thức của quốc gia liên quan đến phát hành này. Ví dụ: Việt Nam, Hoa Kỳ, v.v.",
         "isMoreThan4Artists": "Chọn 'Có' nếu phát hành này có từ 5 nghệ sĩ trở lên để hiển thị là 'Nhiều nghệ sĩ'."
+    },
+
+    "tenant": {
+        "label": "Tenant"
     }
 }

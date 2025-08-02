@@ -14,6 +14,7 @@ import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-relea
 import { ReleasesData } from '@/modules/releases/types';
 import { UpdateReleaseDraftPayload } from '@/modules/releases/types/payload';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
+import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { CreateBucketFile } from '@/modules/upload/types/data';
 import { UpdateVariables } from '@/types/api';
 import { Form, theme } from 'antd';
@@ -39,6 +40,8 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     // apis
     const { updateReleaseDraft, isPending: isUpdatingRelease } =
         useUpdateReleaseDraft();
+    const coverArtFileId = formValues?.coverArtThumbnails?.['160x160'] ?? '';
+    const { linkReadFile } = useGetLinkReadFile(coverArtFileId);
 
     // const
     const isCreateReleasePage = params['action'] === 'create';
@@ -55,13 +58,13 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
             return;
         }
         const fileOriginal = file.originFileObj;
-        const fileNameWithoutExtension =
-            fileOriginal.name.lastIndexOf('.') !== -1
-                ? fileOriginal.name.substring(
-                      0,
-                      fileOriginal.name.lastIndexOf('.')
-                  )
-                : fileOriginal.name;
+        // const fileNameWithoutExtension =
+        //     fileOriginal.name.lastIndexOf('.') !== -1
+        //         ? fileOriginal.name.substring(
+        //               0,
+        //               fileOriginal.name.lastIndexOf('.')
+        //           )
+        //         : fileOriginal.name;
 
         if (fileOriginal.name.length > 80) {
             setIsUploading(false);
@@ -103,7 +106,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
             },
             onSuccess: (data: ReleasesData) => {
                 setIsUploading(false);
-                setFormValues({ coverArtThumbnails: data?.coverArtThumbnails });
+                // setFormValues({ coverArtThumbnails: data?.coverArtThumbnails });
             },
             onError: () => {
                 setIsUploading(false);
@@ -150,20 +153,20 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
 
     useEffect(() => {
         form.setFieldsValue({
-            thumbnail: formValues.coverArtThumbnails?.original
+            thumbnail: formValues.coverArtThumbnails?.['160x160']
                 ? {
                       fileList: [
                           {
                               uid: 'uid',
-                              thumbUrl: formValues.coverArtThumbnails.original,
-                              url: formValues.coverArtThumbnails.original,
+                              thumbUrl: linkReadFile,
+                              url: linkReadFile,
                               name: formValues.title,
                           },
                       ],
                   }
                 : undefined,
         });
-    }, [formValues, form]);
+    }, [formValues, form, linkReadFile]);
 
     return (
         <div

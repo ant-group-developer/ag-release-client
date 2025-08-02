@@ -9,7 +9,9 @@ import {
     FileMusic,
     Globe,
     House,
+    Layers,
     Library,
+    LockKeyhole,
     LucideProps,
     Mail,
     MicVocal,
@@ -17,6 +19,7 @@ import {
     Speaker,
     SquareActivity,
     User,
+    User2,
 } from 'lucide-react';
 import { ForwardRefExoticComponent, RefAttributes } from 'react';
 
@@ -191,14 +194,30 @@ export const adminRoutes: AdminRoutesType[] = [
         id: 'system',
         label: 'common.system',
         children: [
-            // {
-            //     id: 'permission',
-            //     label: 'user.permission',
-            //     href: APP_ROUTES.PERMISSION,
-            //     icon: LockKeyhole,
-            //     title: 'Permission',
-            //     permission: PERMISSION.PERMISSION.UPDATE,
-            // },
+            {
+                id: 'permission',
+                label: 'user.permission',
+                href: APP_ROUTES.PERMISSION,
+                icon: LockKeyhole,
+                title: 'Permission',
+                permission: PERMISSION.PERMISSION.UPDATE,
+            },
+            {
+                id: 'user',
+                label: 'user.label',
+                href: APP_ROUTES.USER,
+                icon: User2,
+                title: 'Users',
+                permission: PERMISSION.PERMISSION.UPDATE,
+            },
+            {
+                id: 'tenant',
+                label: 'tenant.label',
+                href: APP_ROUTES.TENANT,
+                icon: Layers,
+                title: 'tenant',
+                permission: PERMISSION.PERMISSION.UPDATE,
+            },
             // {
             //     id: 'log',
             //     label: 'log.label',

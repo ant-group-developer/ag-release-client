@@ -94,7 +94,7 @@ export default function Tracks({}: Props) {
                         visibleColumns={visibleColumns}
                         dataSource={tracksData.items}
                         scroll={{
-                            x: SCREEN.XXL,
+                            x: SCREEN.MD,
                             y: getScrollYHeight(height, width, 40, 38),
                         }}
                         loading={isTrackDataLoading}

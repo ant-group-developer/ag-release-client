@@ -78,11 +78,11 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
                 <div className="flex items-center gap-4">
                     <div
                         className="flex-shrink-0"
-                        onClick={() => {
-                            router.push(
-                                `/artists/detail/${record.id}/overview`
-                            );
-                        }}
+                        // onClick={() => {
+                        //     router.push(
+                        //         `/artists/detail/${record.id}/overview`
+                        //     );
+                        // }}
                     >
                         <ImageFallback
                             fallbackSrc={FALLBACK_IMAGE}

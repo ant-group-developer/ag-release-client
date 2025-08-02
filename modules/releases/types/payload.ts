@@ -1,9 +1,8 @@
 import { ReleasesData } from '.';
-import { RELEASES_TYPE } from '../enums';
 
 export interface CreateReleaseDraftPayload {
     title: string;
-    type: RELEASES_TYPE;
+    albumFormatId: string;
     version?: string;
 }
 
