@@ -2,9 +2,10 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { DATE_FORMAT, TYPE_UPLOAD_BUCKET } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
-import { genFolderBucket } from '@/helpers/string';
+import { showNotification } from '@/helpers/messages-helper';
 import { cn } from '@/helpers/tailwind';
 import { RELEASE_MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { ReleaseArtist } from '@/modules/release-artist/types';
@@ -13,9 +14,10 @@ import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-relea
 import { ReleasesData } from '@/modules/releases/types';
 import { UpdateReleaseDraftPayload } from '@/modules/releases/types/payload';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
+import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { CreateBucketFile } from '@/modules/upload/types/data';
 import { UpdateVariables } from '@/types/api';
-import { Form } from 'antd';
+import { Form, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -25,23 +27,30 @@ type Props = {
 };
 
 export default function ReleaseDetailHeader({ isScrolled }: Props) {
+    // hooks - state
     const messages = useTranslations();
     const [form] = Form.useForm();
     const formValues = useReleaseFormStore((state) => state.formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const params = useParams();
-    const isCreateReleasePage = params['action'] === 'create';
-
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
+    const { token } = theme.useToken();
+
+    // apis
+    const { updateReleaseDraft, isPending: isUpdatingRelease } =
+        useUpdateReleaseDraft();
+    const coverArtFileId = formValues?.coverArtThumbnails?.['160x160'] ?? '';
+    const { linkReadFile } = useGetLinkReadFile(coverArtFileId);
+
+    // const
+    const isCreateReleasePage = params['action'] === 'create';
     const mainArtist = formValues?.releaseArtists?.find(
         (releaseArtist: ReleaseArtist) =>
             releaseArtist.artistRole?.name === RELEASE_MAIN_ARTIST_ROLE
     );
 
-    const { updateReleaseDraft, isPending: isUpdatingRelease } =
-        useUpdateReleaseDraft();
-
+    // func
     const handleImageUpload = async (info: any) => {
         setIsUploading(true);
         const file = info.fileList[0];
@@ -49,20 +58,30 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
             return;
         }
         const fileOriginal = file.originFileObj;
-        const fileNameWithoutExtension =
-            fileOriginal.name.lastIndexOf('.') !== -1
-                ? fileOriginal.name.substring(
-                      0,
-                      fileOriginal.name.lastIndexOf('.')
-                  )
-                : fileOriginal.name;
+        // const fileNameWithoutExtension =
+        //     fileOriginal.name.lastIndexOf('.') !== -1
+        //         ? fileOriginal.name.substring(
+        //               0,
+        //               fileOriginal.name.lastIndexOf('.')
+        //           )
+        //         : fileOriginal.name;
+
+        if (fileOriginal.name.length > 80) {
+            setIsUploading(false);
+            form.setFieldsValue({
+                thumbnail: undefined,
+            });
+            return showNotification(
+                'error',
+                messages('validation.max', { number: 80 })
+            );
+        }
 
         const payload: CreateBucketFile = {
-            folderBucket: genFolderBucket({
+            folderBucket: {
                 releaseId: formValues.id ?? '',
                 uploadPurpose: TYPE_UPLOAD_BUCKET.RELEASE_COVER_ART,
-                // fileName: fileNameWithoutExtension,
-            }),
+            },
             file: {
                 fileName: fileOriginal.name,
                 contentType: fileOriginal.type,
@@ -87,7 +106,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
             },
             onSuccess: (data: ReleasesData) => {
                 setIsUploading(false);
-                setFormValues({ coverArtThumbnails: data?.coverArtThumbnails });
+                // setFormValues({ coverArtThumbnails: data?.coverArtThumbnails });
             },
             onError: () => {
                 setIsUploading(false);
@@ -134,23 +153,27 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
 
     useEffect(() => {
         form.setFieldsValue({
-            thumbnail: formValues.coverArtThumbnails?.original
+            thumbnail: formValues.coverArtThumbnails?.['160x160']
                 ? {
                       fileList: [
                           {
                               uid: 'uid',
-                              thumbUrl: formValues.coverArtThumbnails.original,
-                              url: formValues.coverArtThumbnails.original,
+                              thumbUrl: linkReadFile,
+                              url: linkReadFile,
                               name: formValues.title,
                           },
                       ],
                   }
                 : undefined,
         });
-    }, [formValues, form]);
+    }, [formValues, form, linkReadFile]);
 
     return (
-        <div>
+        <div
+            style={{
+                backgroundColor: token.colorBgContainer,
+            }}
+        >
             <AppForm
                 form={form}
                 // onFinish={handleFinish}
@@ -159,27 +182,49 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
             >
                 <div className="flex justify-between px-4 py-2">
                     <div className="flex w-full gap-4">
-                        <AppFormItem name="thumbnail">
-                            <ImageListUpload
-                                id="releaseCoverArts"
-                                loading={isUploading}
-                                disabled={isCreateReleasePage}
-                                className={cn(
-                                    'release-detail-header-upload !aspect-square !size-28 !rounded-lg !border-0 !p-0 transition-all duration-300',
-                                    {
-                                        '!size-14 transition-all duration-300':
-                                            isScrolled,
-                                    }
-                                )}
-                                accept="image/*"
-                                maxCount={1}
-                                minWidth={1400}
-                                maxSizeMB={2}
-                                placeholder={messages('common.uploadImage')}
-                                onChange={handleImageUpload}
-                                onRemove={handleRemoveImage}
-                            />
-                        </AppFormItem>
+                        <CustomTooltip
+                            title={
+                                <>
+                                    <div>
+                                        {messages('releases.coverArt.required')}
+                                    </div>
+                                    <div>
+                                        - {messages('releases.coverArt.size')}
+                                    </div>
+                                    <div>
+                                        -{' '}
+                                        {messages(
+                                            'image.validation.mustBeLessThanMB',
+                                            { value: 10 }
+                                        )}
+                                    </div>
+                                </>
+                            }
+                            placement="right"
+                            overlayInnerStyle={{ minWidth: '300px' }}
+                        >
+                            <AppFormItem name="thumbnail">
+                                <ImageListUpload
+                                    id="releaseCoverArts"
+                                    loading={isUploading}
+                                    disabled={isCreateReleasePage}
+                                    className={cn(
+                                        'release-detail-header-upload !aspect-square !size-28 !rounded-lg !border-0 !p-0 transition-all duration-300',
+                                        {
+                                            '!size-14 transition-all duration-300':
+                                                isScrolled,
+                                        }
+                                    )}
+                                    accept="image/*"
+                                    maxCount={1}
+                                    minWidth={1400}
+                                    maxSizeMB={10}
+                                    placeholder={messages('common.uploadImage')}
+                                    onChange={handleImageUpload}
+                                    onRemove={handleRemoveImage}
+                                />
+                            </AppFormItem>
+                        </CustomTooltip>
                         <div>
                             <div
                                 className={cn(

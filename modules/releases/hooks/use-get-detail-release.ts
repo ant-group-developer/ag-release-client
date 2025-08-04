@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { releasesApi } from '../apis';
 import { releasesQueryKeys } from '../constants/query-keys';
-import { RELEASES_STATUS, RELEASES_TYPE } from '../enums';
+import { RELEASES_STATUS } from '../enums';
 import { ReleasesData } from '../types';
 
 export const useGetDetailRelease = (id: ReleasesData['id']) => {
@@ -21,7 +21,6 @@ export const useGetDetailRelease = (id: ReleasesData['id']) => {
         title: '',
         version: null,
         status: RELEASES_STATUS.DRAFT,
-        type: RELEASES_TYPE.ALBUM,
         tracks: [],
         releaseArtists: [],
         primaryGenre: undefined,
@@ -42,6 +41,18 @@ export const useGetDetailRelease = (id: ReleasesData['id']) => {
         },
         timeZone: null,
         isSensitiveContent: false,
+        tracksCount: 0,
+        albumFormat: {
+            name: '',
+            value: '',
+            minTrackCount: 0,
+            maxTrackCount: 0,
+            id: '',
+            createdAt: '',
+            updatedAt: null,
+        },
+        albumFormatId: '',
+        totalDuration: 0,
     };
 
     return {

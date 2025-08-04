@@ -3,7 +3,7 @@ import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import { useRouter } from '@/i18n/routing';
 import LabelFormModal from '@/modules/labels/components/modal/label-form';
-import { RELEASES_TABS, RELEASES_TYPE } from '@/modules/releases/enums';
+import { RELEASES_TABS } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
 import { releaseSchema } from '@/modules/releases/schemas';
@@ -36,8 +36,8 @@ export const releaseDetailSchema = (messages: any) =>
             catalogId: true,
             title: true,
             version: true,
-            type: true,
             releaseArtists: true,
+            albumFormatId: true,
             // coverArtThumbnails: true,
             pLineOwner: true,
             cLineOwner: true,
@@ -161,7 +161,7 @@ export default function ReleaseDetailForm() {
                     primaryGenreId: formValues.primaryGenreId ?? '',
                     subGenreId: formValues.subGenreId ?? '',
                     title: formValues.title ?? '',
-                    type: formValues.type ?? RELEASES_TYPE.ALBUM,
+
                     releaseArtists: formValues.releaseArtists ?? [],
                     pLineOwner: formValues.pLineOwner ?? `${dayjs().year()}`,
                     cLineOwner: formValues.cLineOwner ?? `${dayjs().year()}`,
@@ -180,14 +180,7 @@ export default function ReleaseDetailForm() {
                             formValues.releaseLanguage
                                 ?.metadataLanguageCountryId ?? '',
                     },
-                    // coverArtThumbnails: formValues.coverArtThumbnails ?? {
-                    //     '75x75': '',
-                    //     '100x100': '',
-                    //     '160x160': '',
-                    //     '300x300': '',
-                    //     '900x900': '',
-                    //     original: '',
-                    // },
+                    albumFormatId: formValues?.albumFormatId ?? '',
                 };
                 // setFormValues(initialFormValue);
                 reset(initialFormValue, {

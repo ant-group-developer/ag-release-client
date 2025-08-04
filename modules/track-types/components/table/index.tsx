@@ -38,7 +38,7 @@ export const TrackTypeTable = ({ dataFilter, ...props }: Props) => {
             dataIndex: 'name',
             ellipsis: true,
             align: 'left',
-            width: 500,
+            width: 400,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -56,11 +56,34 @@ export const TrackTypeTable = ({ dataFilter, ...props }: Props) => {
             ),
         },
         {
+            title: messages('common.value'),
+            key: 'value',
+            dataIndex: 'value',
+            ellipsis: true,
+            align: 'left',
+            width: 300,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'value'
+            ),
+            render: (value) => (
+                <CopyText
+                    tooltipProps={{ placement: 'right' }}
+                    text={value}
+                    label={messages('common.value')}
+                >
+                    <p className="truncate">{value}</p>
+                </CopyText>
+            ),
+        },
+        {
             title: messages('common.dateCreated'),
             key: 'createdAt',
             dataIndex: 'createdAt',
             align: 'center',
-            width: 400,
+            width: 200,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -78,7 +101,7 @@ export const TrackTypeTable = ({ dataFilter, ...props }: Props) => {
             key: 'updatedAt',
             dataIndex: 'updatedAt',
             align: 'center',
-            width: 400,
+            width: 200,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,

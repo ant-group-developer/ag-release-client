@@ -8,8 +8,9 @@ import { useRouter } from '@/i18n/routing';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { Avatar, Dropdown } from 'antd';
 import { ItemType } from 'antd/es/menu/interface';
-import { Check, LogOut } from 'lucide-react';
+import { Check, LogOut, MonitorCog, Moon, Sun } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 
 type Props = {};
 
@@ -21,10 +22,22 @@ function AppAvatar({}: Props) {
     const { theme, setTheme } = useThemeStore();
     const { locale, switchLocale } = useLocale();
 
-    const currentLocale = locale === LOCALE.VI ? 'Việt Nam' : 'English';
+    const currentLocale = locale === LOCALE.VI ? 'Tiếng việt' : 'English';
 
-    const themeIntl =
-        theme === 'dark' ? messages('common.dark') : messages('common.light');
+    let themeIntl = '';
+    switch (theme) {
+        case 'light':
+            themeIntl = messages('common.light');
+            break;
+        case 'dark':
+            themeIntl = messages('common.dark');
+            break;
+        case 'system':
+            themeIntl = messages('common.system');
+            break;
+        default:
+            break;
+    }
 
     const items: ItemType[] = [
         {
@@ -59,9 +72,17 @@ function AppAvatar({}: Props) {
             key: '2',
             children: [
                 {
+                    type: 'group',
+                    label: <p>{messages('common.settingNote')}</p>,
+                    key: '2.0',
+                },
+                {
                     label: (
-                        <p className="flex w-[250px] items-center justify-between">
-                            <span>{messages('common.light')}</span>
+                        <p className="flex min-w-[250px] items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <Sun size={SIZE_ICON} />
+                                <span>{messages('common.light')}</span>
+                            </div>
                             {theme == THEME.LIGHT && <Check size={SIZE_ICON} />}
                         </p>
                     ),
@@ -70,8 +91,11 @@ function AppAvatar({}: Props) {
                 },
                 {
                     label: (
-                        <p className="flex w-[250px] items-center justify-between">
-                            {messages('common.dark')}
+                        <p className="flex min-w-[250px] items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <Moon size={SIZE_ICON} />
+                                {messages('common.dark')}
+                            </div>
                             {theme === THEME.DARK && <Check size={SIZE_ICON} />}
                         </p>
                     ),
@@ -80,8 +104,11 @@ function AppAvatar({}: Props) {
                 },
                 {
                     label: (
-                        <p className="flex w-[250px] items-center justify-between">
-                            {messages('common.system')}
+                        <p className="flex min-w-[250px] items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <MonitorCog size={SIZE_ICON} />
+                                {messages('common.system')}
+                            </div>
                             {theme == THEME.SYSTEM && (
                                 <Check size={SIZE_ICON} />
                             )}
@@ -104,9 +131,22 @@ function AppAvatar({}: Props) {
             key: '3',
             children: [
                 {
+                    type: 'group',
+                    label: <p>{messages('common.settingNote')}</p>,
+                    key: '3.0',
+                },
+                {
                     label: (
-                        <p className="flex w-[250px] items-center justify-between">
-                            {messages('language.vietnamese')}
+                        <p className="flex min-w-[250px] items-center justify-between">
+                            <div className="flex items-center gap-1">
+                                <Image
+                                    height={15}
+                                    width={30}
+                                    src={'/languages/vi.svg'}
+                                    alt={LOCALE.VI}
+                                />
+                                {messages('language.vietnamese')}
+                            </div>
                             {locale === LOCALE.VI && <Check size={SIZE_ICON} />}
                         </p>
                     ),
@@ -115,8 +155,16 @@ function AppAvatar({}: Props) {
                 },
                 {
                     label: (
-                        <p className="flex w-[250px] items-center justify-between">
-                            {messages('language.english')}
+                        <p className="flex min-w-[250px] items-center justify-between">
+                            <div className="flex items-center gap-1">
+                                <Image
+                                    height={15}
+                                    width={30}
+                                    src={'/languages/en.svg'}
+                                    alt={LOCALE.EN}
+                                />
+                                {messages('language.english')}
+                            </div>
                             {locale === LOCALE.EN && <Check size={SIZE_ICON} />}
                         </p>
                     ),

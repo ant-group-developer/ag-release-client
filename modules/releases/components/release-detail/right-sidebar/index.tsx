@@ -8,6 +8,7 @@ import { useRouter } from '@/i18n/routing';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
+import { ReleaseValidate } from '@/modules/releases/types';
 import { Alert } from 'antd';
 import {
     AlertCircle,
@@ -48,6 +49,8 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                     const trackIndex = Number(parts[1]) + 1;
                     const fieldName = parts.slice(2).join('.');
                     return `${messages('tracks.number')} ${trackIndex}: ${messages(`formFields.${fieldName}` as any) || field}`;
+                } else if (field == 'maxTrackCount' || 'maxTrackCount') {
+                    return messages('tracks.label');
                 }
                 break;
 
@@ -58,9 +61,19 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                 return messages(`formFields.${field}` as any);
         }
     };
-    const setValidationErrors = useReleaseFormStore(
-        (state) => state.setValidationErrors
-    );
+    const getErrorMessages = (error: ReleaseValidate) => {
+        if (error.field == 'maxTrackCount') {
+            return messages('formFields.tracks.maxCountTrack', {
+                number: error.message,
+            });
+        } else if (error.field == 'minTrackCount') {
+            return messages('formFields.tracks.minCountTrack', {
+                number: error.message,
+            });
+        }
+
+        return messages(error.messageCode as any);
+    };
     const toggleSidebar = () => {
         setIsSidebarOpen((prevState) => !prevState);
     };
@@ -79,27 +92,14 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
         }, 100);
     };
 
-    // useEffect(() => {
-    //     // Thực hiện xác thực
-    //     const validationResult = releaseSchema(messages as any).safeParse(
-    //         formValues
-    //     );
-
-    //     if (!validationResult.success) {
-    //         setValidationErrors(validationResult.error.errors);
-    //     } else {
-    //         setValidationErrors([]);
-    //     }
-    // }, [formValues]);
-
     return (
         <div
             className={cn(
-                'sticky top-0 w-[300px] border-x bg-white transition-all duration-300',
+                'sticky top-0 h-[calc(100vh-4rem)] w-[300px] border-x bg-white transition-all duration-300',
                 isSidebarOpen ? 'w-[300px]' : 'w-[75px]'
             )}
         >
-            <div className="h-screen">
+            <div>
                 {/* Header */}
                 <div className="flex h-16 w-full items-center justify-center border-b px-3">
                     {isSidebarOpen ? (
@@ -128,7 +128,7 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
 
                 {/* Content */}
                 {/* <div className="h-[calc(100%-8rem)] overflow-auto"> */}
-                <ScrollArea className="h-[calc(100%-8rem)]">
+                <ScrollArea className="h-[86vh]">
                     <div className="max-w-[300px] p-3">
                         {/* Errors */}
                         <div className="mb-4">
@@ -156,8 +156,8 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                                                     }
                                                     description={
                                                         <p className="line-clamp-3 text-xs">
-                                                            {messages(
-                                                                err.messageCode as any
+                                                            {getErrorMessages(
+                                                                err
                                                             )}
                                                         </p>
                                                     }

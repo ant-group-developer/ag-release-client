@@ -1,4 +1,4 @@
-import { Layout } from 'antd';
+import { Layout, theme } from 'antd';
 import { ReactNode } from 'react';
 
 type Props = {
@@ -8,9 +8,13 @@ type Props = {
 const { Content } = Layout;
 
 function ContentComponent({ children }: Props) {
+    const { token } = theme.useToken();
     return (
         <Content>
-            <div className="h-[calc(100vh-4rem)] bg-white dark:bg-black">
+            <div
+                style={{ backgroundColor: token.colorBgContainer }}
+                className="h-[calc(100vh-4rem)] overflow-auto"
+            >
                 {children}
             </div>
         </Content>

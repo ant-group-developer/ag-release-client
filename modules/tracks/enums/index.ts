@@ -7,7 +7,6 @@ export enum TRACKS_COLUMNS_DISPLAY {
     TRACK_ARTIST = 'trackArtists',
     ISRC = 'isrc',
     DURATION = 'duration',
-    RELEASE_DATE = 'releaseDate',
     CREATION_DATE = 'creationDate',
     VERSION = 'version',
     ACTIONS = 'actions',

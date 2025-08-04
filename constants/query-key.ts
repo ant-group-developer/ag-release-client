@@ -192,6 +192,11 @@ export const QUERY_KEY = {
         GET_LIST: 'GET_LIST_RELEASE_ARTIST',
         GET_DETAIL: 'GET_DETAIL_RELEASE_ARTIST',
     },
+    RELEASE_TYPE: {
+        KEY: 'RELEASE_TYPE',
+        GET_LIST: 'GET_LIST_RELEASE_TYPE',
+        GET_DETAIL: 'GET_DETAIL_RELEASE_TYPE',
+    },
     TRACK: {
         KEY: 'TRACK',
         GET_LIST: 'GET_LIST_TRACK',

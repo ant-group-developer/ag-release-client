@@ -4,7 +4,7 @@ import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_OPTIONS } from '@/constants/common';
 import { PAGE_SIZE } from '@/constants/page-size';
 import { ORDER, SCREEN } from '@/enums/common';
-import { setSortOrder } from '@/helpers/common';
+import { getScrollYHeight, setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import ArtistsHeader from '@/modules/artist/components/header';
@@ -22,6 +22,7 @@ import { useTranslations } from 'next-intl';
 type Props = {};
 
 export default function Artists({}: Props) {
+    // hooks - state
     const messages = useTranslations();
     const {
         dataFilter,
@@ -33,27 +34,20 @@ export default function Artists({}: Props) {
         page: 1,
         pageSize: 21,
     });
-
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit);
-    const { deleteArtist } = useDeleteArtist();
-
-    const handleRefresh = () => {
-        refetch();
-    };
-
     const { height, width } = useWindowSize();
 
-    const isSmallDevice = Number(width) <= SCREEN.MD;
-
+    // api
+    const { deleteArtist } = useDeleteArtist();
     const { artistsData, isLoading, lastUpdatedAt, refetch } =
         useGetListArtist(dataFilter);
 
-    const modalParagraph = messages('delete.confirmMessage', {
-        value: dataEdit?.name,
-    });
-
+    // func
+    const handleRefresh = () => {
+        refetch();
+    };
     const handleDeleteArtist = () => {
         const variables: DeleteVariables<ArtistData['id']> = {
             id: dataEdit?.id,
@@ -63,18 +57,6 @@ export default function Artists({}: Props) {
         };
         deleteArtist(variables);
     };
-
-    const scrollY = () => {
-        if (isSmallDevice) return undefined;
-        if (!height) return undefined;
-        const minHeight = 300;
-        // const headerFooterHeight = 216;
-        const headerFooterHeight = 210;
-        const value = height - headerFooterHeight;
-        if (value > minHeight) return value;
-        return minHeight;
-    };
-
     const onChangeSort = (pagination: any, filters: any, sort: any) => {
         const orderBy = setSortOrder(sort, ORDER.ASC);
         const fieldOrder = sort.field;
@@ -100,7 +82,10 @@ export default function Artists({}: Props) {
                 />
                 <ArtistsTable
                     dataSource={artistsData?.items}
-                    scroll={{ x: SCREEN.XXL, y: scrollY() }}
+                    scroll={{
+                        x: SCREEN.XXL,
+                        y: getScrollYHeight(height, width, 40, 39),
+                    }}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
                         current: artistsData.metadata.currentPage,
@@ -123,12 +108,14 @@ export default function Artists({}: Props) {
                     onOk={() => handleDeleteArtist()}
                     onCancel={closeModal}
                     modalTitle={`${messages('artist.delete')} `}
-                    paragraph={modalParagraph}
+                    paragraph={messages('delete.confirmMessage', {
+                        value: dataEdit?.name,
+                    })}
                 />
             )}
 
             <AppPagination
-                className="border-b border-t"
+                className="border-t"
                 align="end"
                 current={artistsData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}

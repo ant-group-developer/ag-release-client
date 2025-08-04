@@ -1,7 +1,6 @@
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { releaseTrackSchema } from '@/modules/tracks/schemas';
 import { z } from 'zod';
-import { RELEASES_TYPE } from '../enums';
 export const releaseSchema = (messages: any) =>
     z.object({
         coverArtThumbnails: z
@@ -87,9 +86,12 @@ export const releaseSchema = (messages: any) =>
             .max(50, messages('validation.max', { number: 50 }))
             .optional()
             .nullable(),
-        type: z.nativeEnum(RELEASES_TYPE, {
-            required_error: messages('validation.select'),
-        }),
+        albumFormatId: z
+            .string()
+            .nullable()
+            .refine((val) => val !== null && val !== '', {
+                message: messages('validation.input'),
+            }),
         releaseArtists: z.array(z.custom<ReleaseArtist>()).optional(),
         // .min(1, messages('validation.input')) Đã validate ở detail schema
         // .refine(

@@ -13,7 +13,7 @@ export const lightThemeTokens = {
     colorTextSecondary: '#666666',
     colorBgContainer: '#ffffff',
     colorBgLayout: '#f0f2f5',
-    colorBorder: '#d9d9d9',
+    colorBorder: 'rgb(229, 231, 235)',
     cardBg: '#f2f2f2',
     cardBgHover: '#e5e5e5',
     fontFamily: 'var(--font-inter), Inter, sans-serif',
@@ -30,16 +30,22 @@ export const darkThemeTokens = {
     colorTextSecondary: '#a6a6a6',
     colorBgContainer: '#141414',
     colorBgLayout: '#000000',
-    colorBorder: '#424242',
+    colorBorder: 'rgb(39, 39, 42)',
     cardBg: '#2a2a2a',
     cardBgHover: '#3a3a3a',
     fontFamily: 'var(--font-inter), Inter, sans-serif',
 };
 
-export const getThemeConfig = (mode: THEME): ThemeConfig => {
+export const getThemeConfig = (
+    mode: THEME,
+    primaryColor: string
+): ThemeConfig => {
     const tokens = mode === THEME.DARK ? darkThemeTokens : lightThemeTokens;
 
     return {
-        token: tokens,
+        token: {
+            ...tokens,
+            colorPrimary: primaryColor,
+        },
     };
 };

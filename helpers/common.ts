@@ -3,6 +3,7 @@ import {
     LOCALE,
     ORDER,
     ORIENTATION,
+    SCREEN,
     UPLOAD_TYPE,
 } from '@/enums/common';
 import { RELEASES_STATUS } from '@/modules/releases/enums';
@@ -700,4 +701,26 @@ export const hhmmToSeconds = (hhmm: string) => {
     if (!hhmm) return 0;
     const [h, m] = hhmm.split(':').map(Number);
     return h * 3600 + m * 60;
+};
+
+export const getScrollYHeight = (
+    height?: number | null,
+    width?: number | null,
+    pageHeaderHeight?: number | null,
+    tableHeaderHeight?: number | null
+) => {
+    const isSmallDevice = Number(width) <= SCREEN.MD;
+    if (!width || !height || isSmallDevice) return undefined;
+
+    const minHeight = 300;
+    const appHeaderHeight = 64;
+    const paginationHeight = 57;
+
+    const value =
+        height -
+        appHeaderHeight -
+        (pageHeaderHeight ?? 0) -
+        (tableHeaderHeight ?? 0) -
+        paginationHeight;
+    return value > minHeight ? value : minHeight;
 };

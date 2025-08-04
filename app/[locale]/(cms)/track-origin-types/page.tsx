@@ -4,7 +4,7 @@ import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_OPTIONS } from '@/constants/common';
 import { PAGE_SIZE } from '@/constants/page-size';
 import { ORDER, SCREEN } from '@/enums/common';
-import { setSortOrder } from '@/helpers/common';
+import { getScrollYHeight, setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import TrackOriginTypeHeader from '@/modules/track-origin-types/components/header';
@@ -24,6 +24,7 @@ import { useTranslations } from 'next-intl';
 type Props = {};
 
 export default function TrackOriginTypes({}: Props) {
+    // hooks - state
     const messages = useTranslations();
     const {
         dataFilter,
@@ -41,43 +42,24 @@ export default function TrackOriginTypes({}: Props) {
         (state) => state.dataEdit as TrackOriginTypeData
     );
     const closeModal = useModalStore((state) => state.closeModal);
+    const { height, width } = useWindowSize();
+
+    // apis
     const { trackOriginTypesData, isLoading, refetch, lastUpdatedAt } =
         useGetListTrackOriginTypes(dataFilter);
     const { deleteTrackOriginType } = useDeleteTrackOriginType();
 
-    const { height, width } = useWindowSize();
-    const isSmallDevice = Number(width) <= SCREEN.MD;
-    const scrollY = () => {
-        if (isSmallDevice) return undefined;
-        if (!height) return undefined;
-        const minHeight = 300;
-        const appHeaderHeight = 65;
-        const pageHeaderHeight = 53;
-        const tableHeaderHeight = 39;
-        const paginationHeight = 55;
-        const value =
-            height -
-            appHeaderHeight -
-            pageHeaderHeight -
-            tableHeaderHeight -
-            paginationHeight;
-
-        return value > minHeight ? value : minHeight;
-    };
-
+    // func
     const handleRefresh = () => {
         refetch();
     };
-
     const handleDeleteTrackType = () => {
         const variables: DeleteVariables<TrackOriginTypeData['id']> = {
             id: dataEdit?.id,
             onSuccess: () => closeModal(),
         };
-
         deleteTrackOriginType(variables);
     };
-
     const onChangeSort = (pagination: any, filters: any, sort: any) => {
         const orderBy = setSortOrder(sort, ORDER.ASC);
         const fieldOrder = sort.field;
@@ -89,9 +71,6 @@ export default function TrackOriginTypes({}: Props) {
             false
         );
     };
-
-    const modalTitle = `${messages('delete.confirmTitle')}`;
-    const modalParagraph = `${messages('delete.confirmMessage', { value: dataEdit?.name })}`;
 
     return (
         <div className="flex h-full flex-col justify-between overflow-hidden">
@@ -106,7 +85,10 @@ export default function TrackOriginTypes({}: Props) {
                 />
                 <TrackOriginTypeTable
                     dataSource={trackOriginTypesData.items}
-                    scroll={{ x: SCREEN.MD, y: scrollY() }}
+                    scroll={{
+                        x: SCREEN.MD,
+                        y: getScrollYHeight(height, width, 40, 38),
+                    }}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
                         current: trackOriginTypesData.metadata.currentPage,
@@ -142,8 +124,10 @@ export default function TrackOriginTypes({}: Props) {
                     onOk={() => {
                         handleDeleteTrackType();
                     }}
-                    modalTitle={modalTitle}
-                    paragraph={modalParagraph}
+                    modalTitle={messages('delete.confirmTitle')}
+                    paragraph={messages('delete.confirmMessage', {
+                        value: dataEdit?.name,
+                    })}
                 />
             )}
         </div>

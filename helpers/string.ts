@@ -1,6 +1,5 @@
 import { LINE_SPREAD } from '@/constants/common';
-import { LOCALE, TYPE_UPLOAD_BUCKET } from '@/enums/common';
-import dayjs from 'dayjs';
+import { LOCALE } from '@/enums/common';
 import { uniq } from 'lodash';
 
 export function toNonAccentVietnamese(str = '') {
@@ -159,32 +158,33 @@ export const getNameByLocale = (
     return locale === LOCALE.VI ? nameVi : nameEn;
 };
 
-export function genFolderBucket({
-    uploadPurpose,
-    releaseId,
-    fileName,
-}: {
-    uploadPurpose: TYPE_UPLOAD_BUCKET;
-    releaseId: string;
-    fileName?: string;
-}) {
-    const datePrefix = dayjs().utc().format('YYYY_MM_DD');
+// Không dùng nữa
+// export function genFolderBucket({
+//     uploadPurpose,
+//     releaseId,
+//     fileName,
+// }: {
+//     uploadPurpose: TYPE_UPLOAD_BUCKET;
+//     releaseId: string;
+//     fileName?: string;
+// }) {
+//     const datePrefix = dayjs().utc().format('YYYY_MM_DD');
 
-    let subFolder = '';
-    switch (uploadPurpose) {
-        case TYPE_UPLOAD_BUCKET.TRACK:
-        case TYPE_UPLOAD_BUCKET.JSON:
-            subFolder = 'tracks';
-            break;
-        case TYPE_UPLOAD_BUCKET.RELEASE_COVER_ART:
-            subFolder = 'release_cover_art';
-            break;
-        default:
-            subFolder = 'unknown';
-            break;
-    }
+//     let subFolder = '';
+//     switch (uploadPurpose) {
+//         case TYPE_UPLOAD_BUCKET.TRACK:
+//         case TYPE_UPLOAD_BUCKET.JSON:
+//             subFolder = 'tracks';
+//             break;
+//         case TYPE_UPLOAD_BUCKET.RELEASE_COVER_ART:
+//             subFolder = 'release_cover_art';
+//             break;
+//         default:
+//             subFolder = 'unknown';
+//             break;
+//     }
 
-    const trackSegment = fileName ? `/${fileName}` : '';
+//     const trackSegment = fileName ? `/${fileName}` : '';
 
-    return `${datePrefix}/releases/${releaseId}/${subFolder}${trackSegment}`;
-}
+//     return `${datePrefix}/releases/${releaseId}/${subFolder}${trackSegment}`;
+// }

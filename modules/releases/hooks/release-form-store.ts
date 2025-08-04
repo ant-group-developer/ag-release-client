@@ -1,7 +1,7 @@
 import { ZodIssue } from 'zod';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import { RELEASES_STATUS, RELEASES_TYPE } from '../enums';
+import { RELEASES_STATUS } from '../enums';
 import { ReleasesData } from '../types';
 
 export interface ReleaseFormStoreData extends ReleasesData {}
@@ -18,7 +18,6 @@ const initialValue: ReleaseFormStoreData = {
     id: '',
     primaryGenreId: '',
     title: '',
-    type: RELEASES_TYPE.ALBUM,
     pLineOwner: '',
     cLineOwner: '',
     subGenreId: '',
@@ -95,6 +94,18 @@ const initialValue: ReleaseFormStoreData = {
         createdAt: '',
         updatedAt: null,
     },
+    tracksCount: 0,
+    albumFormatId: '',
+    albumFormat: {
+        name: '',
+        value: '',
+        minTrackCount: 0,
+        maxTrackCount: 0,
+        id: '',
+        createdAt: '',
+        updatedAt: null,
+    },
+    totalDuration: 0,
 };
 
 export const useReleaseFormStore = create<ReleaseFormState>()(

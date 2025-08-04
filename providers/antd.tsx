@@ -12,9 +12,9 @@ interface Props extends PropsWithChildren {}
 
 function AntdProvider({ children }: Props) {
     const locale = useLocale();
-    const { theme: currentTheme } = useThemeStore();
+    const { theme: currentTheme, primaryColor } = useThemeStore();
 
-    const themeConfig = getThemeConfig(currentTheme);
+    const themeConfig = getThemeConfig(currentTheme, primaryColor as string);
 
     const antdThemeConfig = {
         ...themeConfig,

@@ -1,0 +1,56 @@
+import { showNotification } from '@/helpers/messages-helper';
+import { DeleteVariables } from '@/types/api';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
+import { releaseTypesApi } from '../apis';
+import { releaseTypesQueryKeys } from '../constants/query-keys';
+import { ReleaseTypesData } from '../types';
+
+export const useDeleteReleaseType = () => {
+    const messages = useTranslations();
+    const queryClient = useQueryClient();
+
+    const onSuccess = (
+        data: any,
+        { onSuccess }: DeleteVariables<ReleaseTypesData['id']>
+    ) => {
+        queryClient.invalidateQueries({
+            queryKey: [...releaseTypesQueryKeys.getList],
+        });
+
+        const responseMessages = messages(data?.data?.messageCode);
+
+        onSuccess?.();
+        showNotification('success', responseMessages);
+    };
+
+    const onError = (
+        data: any,
+        { onError }: DeleteVariables<ReleaseTypesData['id']>
+    ) => {
+        const responseMessages = messages(data?.response?.data?.messageCode);
+
+        onError?.();
+        showNotification(
+            'error',
+            responseMessages || messages('common.somethingWentWrong')
+        );
+    };
+    const mutation = useMutation({
+        mutationFn: ({ id }: DeleteVariables<ReleaseTypesData['id']>) =>
+            releaseTypesApi.deleteReleaseType(id),
+        onSuccess,
+        onError,
+    });
+
+    const deleteReleaseType = (
+        variables: DeleteVariables<ReleaseTypesData['id']>
+    ) => {
+        mutation.mutate(variables);
+    };
+
+    return {
+        deleteReleaseType,
+        ...mutation,
+    };
+};

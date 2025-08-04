@@ -17,7 +17,7 @@ export default function ListStatistic({}: Props) {
 
             <div className="grid grid-cols-4 gap-4">
                 <div className="flex justify-between gap-6 rounded-lg border !border-gray-200 p-4 dark:!border-zinc-800">
-                    <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full bg-gray-100">
+                    <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full">
                         {/* <Image
                             width={48}
                             height={48}
@@ -31,7 +31,9 @@ export default function ListStatistic({}: Props) {
                         />
                     </div>
                     <div className="flex flex-1 flex-col justify-center">
-                        <p className="text-lg font-bold">Đối tác</p>
+                        <p className="text-lg font-bold">
+                            {messages('common.partners')}
+                        </p>
                         <p className="text-lg font-medium">32</p>
                     </div>
                     <div className="flex flex-col items-center justify-between gap-2 text-xl font-bold">
@@ -43,7 +45,7 @@ export default function ListStatistic({}: Props) {
                 </div>
 
                 <div className="flex justify-between gap-6 rounded-lg border !border-gray-200 p-4 dark:!border-zinc-800">
-                    <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full bg-gray-100">
+                    <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full">
                         {/* <Image
                             width={48}
                             height={48}
@@ -57,7 +59,9 @@ export default function ListStatistic({}: Props) {
                         />
                     </div>
                     <div className="flex flex-1 flex-col justify-center">
-                        <p className="text-lg font-bold">Doanh thu</p>
+                        <p className="text-lg font-bold">
+                            {messages('common.revenue')}
+                        </p>
                         <p className="text-lg font-medium">20.231.253$</p>
                     </div>
                     <div className="flex flex-col items-center justify-between gap-2 text-xl font-bold">
@@ -69,7 +73,7 @@ export default function ListStatistic({}: Props) {
                 </div>
 
                 <div className="flex justify-between gap-6 rounded-lg border !border-gray-200 p-4 dark:!border-zinc-800">
-                    <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full bg-gray-100">
+                    <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full">
                         {/* <Image
                             width={48}
                             height={48}
@@ -83,7 +87,9 @@ export default function ListStatistic({}: Props) {
                         />
                     </div>
                     <div className="flex flex-1 flex-col justify-center">
-                        <p className="text-lg font-bold">Vấn đề</p>
+                        <p className="text-lg font-bold">
+                            {messages('common.issues')}
+                        </p>
                         <p className="text-lg font-medium">10</p>
                     </div>
                     <div className="flex flex-col items-center justify-between gap-2 text-xl font-bold">
@@ -95,7 +101,7 @@ export default function ListStatistic({}: Props) {
                 </div>
 
                 <div className="flex justify-between gap-6 rounded-lg border !border-gray-200 p-4 dark:!border-zinc-800">
-                    <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full bg-gray-100">
+                    <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full">
                         {/* <Image
                             width={48}
                             height={48}
@@ -109,7 +115,9 @@ export default function ListStatistic({}: Props) {
                         />
                     </div>
                     <div className="flex flex-1 flex-col justify-center">
-                        <p className="text-lg font-bold">Hoạt động</p>
+                        <p className="text-lg font-bold">
+                            {messages('common.activities')}
+                        </p>
                         <p className="text-lg font-medium">15</p>
                     </div>
                     <div className="flex flex-col items-center justify-between gap-2 text-xl font-bold">

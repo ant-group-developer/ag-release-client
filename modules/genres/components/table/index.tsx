@@ -91,6 +91,19 @@ export const GenresTable = ({ dataFilter, ...props }: Props) => {
             ),
         },
         {
+            title: messages('common.value'),
+            key: 'value',
+            dataIndex: 'value',
+            align: 'left',
+            width: 150,
+            ellipsis: true,
+            render: (value) => (
+                <span className="line-clamp-3 truncate whitespace-pre-line">
+                    {value}
+                </span>
+            ),
+        },
+        {
             title: messages('common.description'),
             key: 'description',
             dataIndex: 'description',

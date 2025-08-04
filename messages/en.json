@@ -37,6 +37,15 @@
         "quickActions": "Quick actions"
     },
     "common": {
+        "settingNote": "Settings apply only to this browser",
+        "value": "Value",
+        "viewDetail": "View detail",
+        "systemCategories": "System categories",
+        "variousArtists": "Various artists",
+        "activities": "Activities",
+        "revenue": "Revenue",
+        "partners": "Partners",
+        "views": "Views",
         "fileName": "File name",
         "viewAll": "View all",
         "legalNotices": "Legal notices",
@@ -303,7 +312,8 @@
     },
 
     "dashboard": {
-        "label": "Dashboard"
+        "label": "Dashboard",
+        "latestNews": "Latest news"
     },
     "review": {
         "message": {
@@ -616,6 +626,11 @@
 
         "scheduling": {
             "label": "Scheduling"
+        },
+
+        "coverArt": {
+            "required": "Required cover art",
+            "size": "Perfectly Square image from 1400x1400 pixels to 4000x4000 pixels"
         }
     },
     "release": {
@@ -639,6 +654,26 @@
         }
     },
 
+    "releaseType": {
+        "label": "Release type"
+    },
+
+    "albumFormat": {
+        "message": {
+            "success": {
+                "create": "Create release type successfully",
+                "update": "Update release type successfully",
+                "delete": "Delete release type successfully"
+            },
+            "error": {
+                "duplicateNameAlbumFormat": "This type already exists",
+                "duplicateValueAlbumFormat": "This value already exist",
+                "notFound": "Cannot found this type",
+                "cannotDeleteBecauseLinkedReleases": "Cannot delete because this type linked release"
+            }
+        }
+    },
+
     "tracks": {
         "number": "Track number",
         "add": "Add track",
@@ -652,6 +687,8 @@
         "recordingCountry": "Recording country",
         "audioSpecification": "Audio specification",
         "addAllArtistFromRelease": "Add all artist from release",
+        "minTrack": "Min track",
+        "maxTrack": "Max track",
         "original": {
             "label": "Original Work",
             "tooltip": "Original work is the piece that was created first, not any cover or remix."
@@ -674,7 +711,9 @@
             "selectSensitiveContent": "Select content"
         },
         "validation": {
-            "previewMustBeLessThanDuration": "Preview duration must be less than track duration"
+            "previewMustBeLessThanDuration": "Preview duration must be less than track duration",
+            "trackUpload": "{type} can upload a maximum of {maxCount} track",
+            "trackFileName": "File name cannot over {number} characters"
         }
     },
 
@@ -825,7 +864,9 @@
         "label": "Distribution",
         "create": "Create distribution",
         "name": "Distribution name",
-        "id": "Distribution ID"
+        "id": "Distribution ID",
+        "batchDistribution": "Batch distribution",
+        "batchTakeDown": "Batch takedown"
     },
 
     "formFields": {
@@ -881,6 +922,8 @@
         "trackTypeId": "Track type",
         "preview": "Track preview",
         "tracks": {
+            "maxCountTrack": "Total of tracks greater than {number}",
+            "minCountTrack": "Total of tracks less than {number}",
             "trackOriginTypeId": "Track origin type",
             "audioLanguageId": "Audio language",
             "metadataLanguageId": "Metadata language",
@@ -947,7 +990,7 @@
 
     "dsp": {
         "label": "DSP",
-        "name": "plat form name",
+        "name": "platform name",
         "add": "Add platform",
         "message": {
             "success": {
@@ -1017,5 +1060,9 @@
         "languageTrack": "The main language of the song in this release. For example: Vietnamese, English, etc.",
         "countryLanguage": "The official language of the country related to this release. For example: Vietnam, United States, etc.",
         "isMoreThan4Artists": "Select 'Yes' if this release has 5 or more artists to display as 'Various artists'."
+    },
+
+    "tenant": {
+        "label": "Tenant"
     }
 }

@@ -16,6 +16,7 @@ export const useGetDetailGenre = (id: GenresData['id']) => {
         id: '',
         createdAt: '',
         updatedAt: null,
+        value: '',
     };
 
     return {

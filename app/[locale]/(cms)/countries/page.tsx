@@ -4,7 +4,7 @@ import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_OPTIONS } from '@/constants/common';
 import { PAGE_SIZE } from '@/constants/page-size';
 import { ORDER, SCREEN } from '@/enums/common';
-import { setSortOrder } from '@/helpers/common';
+import { getScrollYHeight, setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import CountriesHeader from '@/modules/countries/components/header';
@@ -20,6 +20,7 @@ import { useWindowSize } from '@uidotdev/usehooks';
 import { useTranslations } from 'next-intl';
 
 export default function Countries({}: {}) {
+    // hooks - state
     const messages = useTranslations();
     const {
         dataFilter,
@@ -31,16 +32,17 @@ export default function Countries({}: {}) {
         page: 1,
         pageSize: 21,
     });
-
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit);
+    const { height, width } = useWindowSize();
 
+    // api
     const { countriesData, isLoading, refetch, lastUpdatedAt } =
         useGetListCountries(dataFilter);
-
     const { deleteCountry } = useDeleteCountry();
 
+    // func
     const handleDeleteCountry = () => {
         const variables: DeleteVariables<CountriesData['id']> = {
             id: dataEdit?.id,
@@ -50,34 +52,9 @@ export default function Countries({}: {}) {
         };
         deleteCountry(variables);
     };
-
-    const { height, width } = useWindowSize();
-    const isSmallDevice = Number(width) <= SCREEN.MD;
-    const scrollY = () => {
-        if (isSmallDevice) return undefined;
-        if (!height) return undefined;
-        const minHeight = 300;
-        const appHeaderHeight = 65;
-        const pageHeaderHeight = 53;
-        const tableHeaderHeight = 39;
-        const paginationHeight = 55;
-        const value =
-            height -
-            appHeaderHeight -
-            pageHeaderHeight -
-            tableHeaderHeight -
-            paginationHeight;
-
-        return value > minHeight ? value : minHeight;
-    };
-
-    const modalTitle = `${messages('delete.confirmTitle')}`;
-    const modalParagraph = `${messages('delete.confirmMessage', { value: dataEdit?.name })}`;
-
     const handleRefresh = () => {
         refetch();
     };
-
     const onChangeSort = (pagination: any, filters: any, sort: any) => {
         const orderBy = setSortOrder(sort, ORDER.ASC);
         const fieldOrder = sort.field;
@@ -103,7 +80,10 @@ export default function Countries({}: {}) {
                 />
                 <CountriesTable
                     dataSource={countriesData.items ?? fakeCountriesData}
-                    scroll={{ x: SCREEN.MD, y: scrollY() }}
+                    scroll={{
+                        x: SCREEN.MD,
+                        y: getScrollYHeight(height, width, 41, 39),
+                    }}
                     loading={isLoading}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
@@ -115,7 +95,7 @@ export default function Countries({}: {}) {
                 />
             </div>
             <AppPagination
-                className="border-b border-t"
+                className="border-t"
                 align="end"
                 current={dataFilter.page}
                 pageSize={dataFilter.pageSize}
@@ -142,8 +122,8 @@ export default function Countries({}: {}) {
                     onOk={() => {
                         handleDeleteCountry();
                     }}
-                    modalTitle={modalTitle}
-                    paragraph={modalParagraph}
+                    modalTitle={`${messages('delete.confirmTitle')}`}
+                    paragraph={`${messages('delete.confirmMessage', { value: dataEdit?.name })}`}
                 />
             )}
         </div>

@@ -8,15 +8,15 @@ import ListNews from '@/modules/dashboard/components/list-news';
 import ListRelease from '@/modules/dashboard/components/list-release';
 import ListReport from '@/modules/dashboard/components/list-report/list-report';
 import CardStatistic from '@/modules/dashboard/components/list-statistic';
-import { RELEASES_STATUS, RELEASES_TYPE } from '@/modules/releases/enums';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { ReleasesDataFilter } from '@/modules/releases/types';
-import { GENRES } from '@/modules/tracks/enums';
+import { theme } from 'antd';
 
 type Props = {};
 
 function Dashboard({}: Props) {
     const router = useRouter();
+    const { token } = theme.useToken();
 
     const {
         dataFilter,
@@ -195,88 +195,6 @@ function Dashboard({}: Props) {
         },
     ];
 
-    // Fake ReleasesData cho ListRelease
-    const fakeReleasesData = [
-        {
-            id: 'rel_001',
-            creatorId: 'admin',
-            modifierId: 'admin',
-            upc: '123456789012',
-            primaryGenreId: 'genre_01',
-            subGenreId: 'genre_02',
-            labelId: 'label_01',
-            title: 'Lost Echoes',
-            version: null,
-            status: RELEASES_STATUS.DISTRIBUTED,
-            type: RELEASES_TYPE.ALBUM,
-            tracks: [],
-            releaseArtists: [],
-            primaryGenre: {
-                id: 'genre_01',
-                name: 'Pop',
-                description: '',
-                picture: '',
-                createdAt: '2024-01-01T00:00:00.000Z',
-                updatedAt: '2024-01-02T00:00:00.000Z',
-            },
-            subGenre: GENRES.POP,
-            createdAt: '2024-01-01T00:00:00.000Z',
-            updatedAt: '2024-01-02T00:00:00.000Z',
-        },
-        {
-            id: 'rel_002',
-            creatorId: 'admin',
-            modifierId: 'admin',
-            upc: '987654321098',
-            primaryGenreId: 'genre_02',
-            subGenreId: 'genre_03',
-            labelId: 'label_02',
-            title: 'Through the Storm',
-            version: null,
-            status: RELEASES_STATUS.DRAFT,
-            type: RELEASES_TYPE.SINGLE,
-            tracks: [],
-            releaseArtists: [],
-            primaryGenre: {
-                id: 'genre_02',
-                name: 'Rock',
-                description: '',
-                picture: '',
-                createdAt: '2024-02-01T00:00:00.000Z',
-                updatedAt: '2024-02-02T00:00:00.000Z',
-            },
-            subGenre: GENRES.ROCK,
-            createdAt: '2024-02-01T00:00:00.000Z',
-            updatedAt: '2024-02-02T00:00:00.000Z',
-        },
-        {
-            id: 'rel_003',
-            creatorId: 'admin',
-            modifierId: 'admin',
-            upc: '555555555555',
-            primaryGenreId: 'genre_03',
-            subGenreId: 'genre_04',
-            labelId: 'label_03',
-            title: 'Sunset Lullaby',
-            version: null,
-            status: RELEASES_STATUS.PROCESSING,
-            type: RELEASES_TYPE.EP,
-            tracks: [],
-            releaseArtists: [],
-            primaryGenre: {
-                id: 'genre_03',
-                name: 'Jazz',
-                description: '',
-                picture: '',
-                createdAt: '2024-03-01T00:00:00.000Z',
-                updatedAt: '2024-03-02T00:00:00.000Z',
-            },
-            subGenre: GENRES.JAZZ,
-            createdAt: '2024-03-01T00:00:00.000Z',
-            updatedAt: '2024-03-02T00:00:00.000Z',
-        },
-    ];
-
     // Chuẩn bị data cho DonutChartWithList
     const totalDspValue = fakeDspData.reduce(
         (sum, item) => sum + item.value,
@@ -356,10 +274,14 @@ function Dashboard({}: Props) {
 
                 <div className="grid w-full grid-cols-12 gap-4">
                     <div className="col-span-8">
-                        <div className="rounded-lg border bg-white p-4 shadow-sm">
-                            <h3 className="mb-4 text-lg font-semibold text-gray-800">
+                        <div
+                            className="rounded-lg border p-4 shadow-sm"
+                            style={{ borderColor: token.colorBorder }}
+                        >
+                            <p className="mb-4 text-lg font-semibold">
                                 Streaming Performance
-                            </h3>
+                            </p>
+                            {/* <Title level={4}>Streaming Performance</Title> */}
                             <LineChart
                                 data={lineChartData}
                                 series={top5Countries}
@@ -373,7 +295,7 @@ function Dashboard({}: Props) {
                     </div>
                 </div>
 
-                <ListRelease data={[]} />
+                <ListRelease data={releasesData.items.slice(0, 14)} />
 
                 <ListNews />
             </div>
