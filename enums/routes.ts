@@ -1,6 +1,7 @@
 export enum APP_ROUTES {
     FORBIDDEN = '/forbidden',
     LOGIN = '/login',
+    LOGOUT = '/api/auth/logout',
     NOT_FOUND = '/404',
     SERVER_ERROR = '/500',
     LOG = '/log',
@@ -26,6 +27,7 @@ export enum APP_ROUTES {
     TRACK_TYPE = '/track-types',
     TRACK_ORIGIN_TYPE = '/track-origin-types',
     TENANT = '/tenant',
+    SETTING = '/setting',
 }
 
 export const AUTH_ROUTES: string[] = [APP_ROUTES.LOGIN];

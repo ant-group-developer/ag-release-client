@@ -9,10 +9,7 @@ type Props = {
 function AppContent({ className, children }: Props) {
     return (
         <div
-            className={cn(
-                'grow overflow-hidden rounded-2xl border-0 bg-white',
-                className
-            )}
+            className={cn('grow overflow-hidden border-0 bg-white', className)}
         >
             {children}
         </div>

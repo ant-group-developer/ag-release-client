@@ -16,12 +16,8 @@ const nextConfig = {
     async rewrites() {
         return [
             {
-                source: '/api/cms/:path*', // get everything after /api/
+                source: '/api/v1/:path*', // get everything after /api/
                 destination: `${process.env.API_URL}/:path*`, // send it to your API
-            },
-            {
-                source: '/api/account/:path*', // get everything after /api/
-                destination: `${process.env.CMS_API}/:path*`, // send it to your API
             },
         ];
     },

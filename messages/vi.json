@@ -26,16 +26,6 @@
         "forbiddenTitle": "Bạn không có quyền truy cập",
         "forbiddenDescription": "Vui lòng liên hệ Admin để biết thêm chi tiết"
     },
-    "action": {
-        "name": "Hành động",
-        "delete": "Xóa",
-        "update": "Cập nhật",
-        "create": "Thêm mới",
-        "view": "Xem",
-        "edit": "Sửa",
-        "cancel": "Hủy",
-        "quickActions": "Hành động nhanh"
-    },
     "common": {
         "settingNote": "Tùy chọn cài đặt chỉ áp dụng cho trình duyệt này",
         "value": "Giá trị",
@@ -1068,5 +1058,33 @@
 
     "tenant": {
         "label": "Tenant"
+    },
+    "action": {
+        "create": {
+            "button": "Thêm mới",
+            "title": "Thêm {label}",
+            "success": "Thêm {label} thành công"
+        },
+        "update": {
+            "button": "Cập nhật",
+            "title": "Cập nhật {label}",
+            "success": "Cập nhật {label} thành công"
+        },
+        "duplicate": {
+            "button": "Nhân bản"
+        },
+        "delete": {
+            "button": "Xoá",
+            "title": "Xoá {label}",
+            "alert": "Bạn có chắc muốn xóa {label}? Hành động này không thể hoàn tác.",
+            "success": "Xoá {label} thành công"
+        },
+        "back": {
+            "button": "Quay lại"
+        },
+        "copy": {
+            "success": "Đã sao chép vào bộ nhớ tạm"
+        },
+        "quickActions": "Hành động nhanh"
     }
 }
