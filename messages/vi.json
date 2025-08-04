@@ -752,6 +752,7 @@
             },
             "error": {
                 "duplicateNameTrackType": "Thể loại bài hát này đã tồn tại",
+                "duplicateValueTrackType": "Giá trị thể loại bài hát này đã tồn tại",
                 "cannotDeleteBecauseLinkedTracks": "Không thể xóa thể loại này vì đang được liên kết với bài hát."
             }
         }
@@ -800,6 +801,7 @@
             },
             "error": {
                 "duplicateNameGenre": "Thể loại nhạc này đã tồn tại",
+                "duplicateValueGenre": "Giá trị thể loại nhạc này đã tồn tại",
                 "cannotDeleteBecauseLinkedReleases": "Không thể xóa thể loại này vì đang được liên kết với phát hành.",
                 "cannotDeleteBecauseLinkedSubReleases": "Không thể xóa thể loại này vì đang được liên kết với phát hành phụ.",
                 "cannotDeleteBecauseLinkedPrimaryTracks": "Không thể xóa thể loại này vì đang được liên kết với bài hát chính.",
@@ -1017,6 +1019,7 @@
             },
             "error": {
                 "duplicateNameArtistRole": "Vài trò này đã tồn tại",
+                "duplicateValueArtistRole": "Giá trị vài trò này đã tồn tại",
                 "cannotDeleteBecauseLinkedReleases": "Không thể xóa vai trò nghệ sĩ này vì đang được liên kết với phát hành.",
                 "cannotDeleteBecauseLinkedTracks": "Không thể xóa vai trò nghệ sĩ này vì đang được liên kết với bản nhạc."
             }

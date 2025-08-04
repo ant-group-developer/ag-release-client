@@ -86,7 +86,7 @@ export default function Releases({}: Props) {
 
     const handleRefresh = () => {};
 
-    const { releasesData } = useGetListReleases(dataFilter);
+    const { releasesData, dataUpdatedAt } = useGetListReleases(dataFilter);
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -125,6 +125,7 @@ export default function Releases({}: Props) {
                         handleRefresh={handleRefresh}
                         handleChangeVisibleColumns={handleChangeVisibleColumns}
                         visibleColumn={visibleColumns}
+                        dataUpdatedAt={dataUpdatedAt}
                     />
                     {layoutTable === LAYOUT_TABLE.LIST && (
                         <ReleasesTable

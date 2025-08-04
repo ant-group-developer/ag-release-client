@@ -18,6 +18,7 @@ type Props = {
     handleRefresh: () => void;
     visibleColumn: TRACKS_COLUMNS_DISPLAY[];
     handleChangeVisibleColumns: (columns: TRACKS_COLUMNS_DISPLAY[]) => void;
+    dataUpdatedAt: number | null;
 };
 
 export default function TracksHeader({
@@ -28,6 +29,7 @@ export default function TracksHeader({
     handleRefresh,
     visibleColumn,
     handleChangeVisibleColumns,
+    dataUpdatedAt,
 }: Props) {
     const { layoutTable, toggleLayoutTable } = useTableLayoutToggle();
     return (
@@ -46,7 +48,7 @@ export default function TracksHeader({
                     <Refresh
                         handleRefresh={handleRefresh}
                         lastTimeUpdated={formattedDate(
-                            new Date(),
+                            dataUpdatedAt,
                             DATE_FORMAT.HOUR_MINUTE_SECOND
                         )}
                     />

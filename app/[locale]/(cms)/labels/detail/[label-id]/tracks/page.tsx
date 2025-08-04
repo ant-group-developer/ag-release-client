@@ -105,6 +105,7 @@ export default function Tracks({}: Props) {
                     handleRefresh={handleRefresh}
                     handleChangeVisibleColumns={handleChangeVisibleColumns}
                     visibleColumn={visibleColumns}
+                    dataUpdatedAt={null}
                 />
                 {layoutTable === LAYOUT_TABLE.LIST && (
                     <TracksTable

@@ -69,11 +69,17 @@ export default function MetadataInfo({}: Props) {
             <div className="flex justify-between">
                 <div>
                     {!value && (
-                        <p className="text-gray-500">
-                            {isRequired
-                                ? messages('common.required')
-                                : messages('common.optional')}
-                        </p>
+                        <div>
+                            {isRequired ? (
+                                <p className="text-red-500">
+                                    {messages('common.required')}
+                                </p>
+                            ) : (
+                                <p className="text-gray-500">
+                                    {messages('common.optional')}
+                                </p>
+                            )}
+                        </div>
                     )}
                     {value && <p className="mt-1">{value}</p>}
                 </div>

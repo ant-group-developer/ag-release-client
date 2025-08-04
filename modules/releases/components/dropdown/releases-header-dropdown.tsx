@@ -49,6 +49,12 @@ export default function ReleasesHeaderDropdown({
             visible: !dataFilter.startDateRelease && !dataFilter.endDateRelease,
             onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_RELEASE),
         },
+        // {
+        //     label: messages('artist.label'),
+        //     value: TYPE_FILTER.ARTIST_ID,
+        //     visible: !dataFilter.artistId,
+        //     onClick: () => handleChangeTypeFilter(TYPE_FILTER.ARTIST_ID),
+        // },
         {
             label: messages('common.search'),
             value: TYPE_FILTER.KEYWORD,

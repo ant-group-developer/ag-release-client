@@ -72,8 +72,12 @@ export default function Releases({}: Props) {
     const dataEdit = useModalStore((state) => state.dataEdit as ReleasesData);
 
     // apis
-    const { releasesData, isLoading: isReleaseDataLoading } =
-        useGetListReleases(dataFilter);
+    const {
+        releasesData,
+        isPending: isReleaseDataLoading,
+        refetch,
+        dataUpdatedAt,
+    } = useGetListReleases(dataFilter);
     const { deleteRelease } = useDeleteRelease();
 
     // func
@@ -82,7 +86,9 @@ export default function Releases({}: Props) {
     ) => {
         setVisibleColumns(columns);
     };
-    const handleRefresh = () => {};
+    const handleRefresh = () => {
+        refetch();
+    };
     const handleDeleteRelease = () => {
         const variables: DeleteVariables<ReleasesData['id']> = {
             id: dataEdit?.id,
@@ -116,6 +122,7 @@ export default function Releases({}: Props) {
                     handleRefresh={handleRefresh}
                     handleChangeVisibleColumns={handleChangeVisibleColumns}
                     visibleColumn={visibleColumns}
+                    dataUpdatedAt={dataUpdatedAt}
                 />
                 {layoutTable === LAYOUT_TABLE.LIST && (
                     <ReleasesTable
