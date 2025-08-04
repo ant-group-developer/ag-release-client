@@ -15,6 +15,7 @@ type Props = {
     dataFilter: ReleasesDataFilter;
     onChangeFilter: OnChangeFilter<ReleasesDataFilter>;
     canClearFilter: boolean;
+    dataUpdatedAt: number | null;
     removeFilter: RemoveFilter;
     handleRefresh: () => void;
     visibleColumn: RELEASES_COLUMNS_DISPLAY[];
@@ -25,6 +26,7 @@ export default function ReleasesHeader({
     dataFilter,
     onChangeFilter,
     canClearFilter,
+    dataUpdatedAt,
     removeFilter,
     handleRefresh,
     visibleColumn,
@@ -48,7 +50,7 @@ export default function ReleasesHeader({
                     <Refresh
                         handleRefresh={handleRefresh}
                         lastTimeUpdated={formattedDate(
-                            new Date(),
+                            dataUpdatedAt,
                             DATE_FORMAT.HOUR_MINUTE_SECOND
                         )}
                     />

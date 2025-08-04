@@ -129,13 +129,22 @@ export default function TracksInfo({}: Props) {
             <div className="flex justify-between">
                 <div>
                     <p className="font-medium">
-                        {label} {isRequired && '*'}
+                        {label}{' '}
+                        {isRequired && <span className="text-red-500">*</span>}
                     </p>
                     {value === '' ? (
-                        <p className="text-gray-500">
-                            {isRequired
-                                ? messages('common.required')
-                                : messages('common.optional')}
+                        <p>
+                            {isRequired ? (
+                                <p className="text-red-500">
+                                    {' '}
+                                    {messages('common.required')}{' '}
+                                </p>
+                            ) : (
+                                <p className="text-gray-500">
+                                    {' '}
+                                    {messages('common.optional')}{' '}
+                                </p>
+                            )}
                         </p>
                     ) : (
                         <p className="mt-1">{value}</p>

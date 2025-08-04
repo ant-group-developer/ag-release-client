@@ -57,13 +57,20 @@ export default function Tracks({}: Props) {
         pageSize: 21,
     });
     const { height, width } = useWindowSize();
-    const { tracksData, isLoading: isTrackDataLoading } = useGetListTracks({});
+    const {
+        tracksData,
+        isLoading: isTrackDataLoading,
+        dataUpdatedAt,
+        refetch,
+    } = useGetListTracks({});
 
     // Function
     const handleChangeVisibleColumns = (columns: TRACKS_COLUMNS_DISPLAY[]) => {
         setVisibleColumns(columns);
     };
-    const handleRefresh = () => {};
+    const handleRefresh = () => {
+        refetch();
+    };
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -86,6 +93,7 @@ export default function Tracks({}: Props) {
                     canClearFilter={canClearFilter}
                     removeFilter={removeFilter}
                     handleRefresh={handleRefresh}
+                    dataUpdatedAt={dataUpdatedAt}
                     handleChangeVisibleColumns={handleChangeVisibleColumns}
                     visibleColumn={visibleColumns}
                 />

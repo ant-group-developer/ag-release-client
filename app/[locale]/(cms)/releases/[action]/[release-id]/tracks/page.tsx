@@ -29,7 +29,6 @@ export default function Tracks() {
     const typeModal = useModalStore((state) => state.typeModal);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const dataEdit = useModalStore((state) => state.dataEdit);
-    console.log('🚀 ~ Tracks ~ dataEdit:', dataEdit);
     const closeModal = useModalStore((state) => state.closeModal);
     const openModal = useModalStore((state) => state.openModal);
 

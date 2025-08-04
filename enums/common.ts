@@ -109,6 +109,7 @@ export enum TYPE_FILTER {
     DATE_UPDATED = 'dateUpdated',
     DATE_RELEASE = 'dateRelease',
     GENRES = 'genres',
+    ARTIST_ID = 'artistId',
     ID = 'ID',
 }
 

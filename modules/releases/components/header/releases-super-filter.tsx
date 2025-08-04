@@ -109,6 +109,14 @@ export default function ReleasesSuperFilter({
                     onChangeFilter={onChangeFilter}
                 />
 
+                {/* <SearchArtistIdDialog
+                    title={messages('artist.label')}
+                    open={typeFilter === TYPE_FILTER.ARTIST_ID}
+                    handleChangeTypeFilter={handleChangeTypeFilter}
+                    dataFilter={dataFilter}
+                    onChangeFilter={onChangeFilter}
+                /> */}
+
                 <DateCreatedDialog
                     title={messages('common.dateCreated')}
                     open={typeFilter === TYPE_FILTER.DATE_CREATED}

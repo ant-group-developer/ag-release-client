@@ -751,6 +751,7 @@
             },
             "error": {
                 "duplicateNameTrackType": "This track type is already exists",
+                "duplicateValueTrackType": "This value track type is already exists",
                 "cannotDeleteBecauseLinkedTracks": "Cannot delete this track type because it is linked to tracks"
             }
         }
@@ -799,6 +800,7 @@
             },
             "error": {
                 "duplicateNameGenre": "This genres already exist",
+                "duplicateValueGenre": "This value genre already exist",
                 "cannotDeleteBecauseLinkedPrimaryReleases": "Cannot delete this genre because it is linked to primary releases",
                 "cannotDeleteBecauseLinkedSubReleases": "Cannot delete this genre because it is linked to sub releases",
                 "cannotDeleteBecauseLinkedPrimaryTracks": "Cannot delete this genre because it is linked to primary tracks",
@@ -1015,6 +1017,7 @@
             },
             "error": {
                 "duplicateNameArtistRole": "This role already exist",
+                "duplicateValueArtistRole": "This role value already exist",
                 "cannotDeleteBecauseLinkedReleases": "Cannot delete this role because it is linked to releases",
                 "cannotDeleteBecauseLinkedTracks": "Cannot delete this role because it is linked to tracks"
             }

@@ -106,7 +106,7 @@ export default function ReleasesTable({
                     //         value: displayName,
                     //     })}
                     // >
-                    //     <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
+                    //     <span onChange={() => onChangeFilter({artistId: mainArtist?.artist?.id})} className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
                     //         {displayName}
                     //     </span>
                     // </CustomTooltip>
