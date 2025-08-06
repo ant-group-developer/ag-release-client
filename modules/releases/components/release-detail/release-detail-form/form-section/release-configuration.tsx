@@ -1,18 +1,23 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
 import LabelSelect from '@/components/ui/select/label-select';
-import { getReleaseDetailTabRoute } from '@/helpers/link';
+import {
+    getReleaseDetailTabRoute,
+    RELEASE_DETAIL_ACTION,
+} from '@/helpers/link';
 import { useRouter } from '@/i18n/routing';
 import { useGetListReleaseTypes } from '@/modules/release-types/hooks/use-get-list-release-types';
 import { ReleaseTypesData } from '@/modules/release-types/types';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
+import { useReleaseDetailActionStore } from '@/modules/releases/hooks/use-release-action-store';
 import { CreateReleaseDraftPayload } from '@/modules/releases/types/payload';
 import { CreateVariables } from '@/types/api';
 import { Button, Input, Radio } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
+import { useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { ReleaseDetailSchema } from '..';
 
@@ -34,8 +39,11 @@ export default function ReleaseConfigurationSection({
     const { createReleaseDraft, isPending: isOnCreatingDraft } =
         useCreateReleaseDraft();
     const messages = useTranslations();
+    const releaseDetailAction = useReleaseDetailActionStore(
+        (state) => state.action
+    );
 
-    // router
+    // router and params
     const params = useParams();
     const router = useRouter();
 
@@ -48,6 +56,12 @@ export default function ReleaseConfigurationSection({
     const albumFormatId = watch('albumFormatId');
     const title = watch('title') ?? '';
     const isEnableCreateDraftBtn = (!!albumFormatId && !!title) === true;
+    const isReadMode = useMemo(
+        () =>
+            releaseDetailAction !== RELEASE_DETAIL_ACTION.EDIT &&
+            !isCreateReleasePage,
+        [releaseDetailAction]
+    );
 
     // funtion
     const handleCreateReleaseDraft = () => {
@@ -119,7 +133,8 @@ export default function ReleaseConfigurationSection({
                                                         }}
                                                         allowClear
                                                         disabled={
-                                                            isOnCreatingDraft
+                                                            isOnCreatingDraft ||
+                                                            isReadMode
                                                         }
                                                         status={
                                                             errors.title
@@ -159,7 +174,10 @@ export default function ReleaseConfigurationSection({
                                                         );
                                                     }}
                                                     allowClear
-                                                    disabled={isOnCreatingDraft}
+                                                    disabled={
+                                                        isOnCreatingDraft ||
+                                                        isReadMode
+                                                    }
                                                     status={
                                                         errors.version
                                                             ? 'error'
@@ -205,7 +223,8 @@ export default function ReleaseConfigurationSection({
                                                             : undefined
                                                     }
                                                     disabled={
-                                                        isCreateReleasePage
+                                                        isCreateReleasePage ||
+                                                        isReadMode
                                                     }
                                                 />
                                             )}
@@ -239,7 +258,10 @@ export default function ReleaseConfigurationSection({
                                                                 value,
                                                         });
                                                     }}
-                                                    disabled={isOnCreatingDraft}
+                                                    disabled={
+                                                        isOnCreatingDraft ||
+                                                        isReadMode
+                                                    }
                                                 >
                                                     {releaseTypesData.items
                                                         .length > 0 &&

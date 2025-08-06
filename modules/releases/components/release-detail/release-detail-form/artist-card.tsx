@@ -1,5 +1,6 @@
 import IconButton from '@/components/ui/button/icon-button';
 import { SIZE_ICON } from '@/constants/common';
+import { cn } from '@/helpers/common';
 import { ArtistRoleData } from '@/modules/artist-role/types';
 import { ArtistData } from '@/modules/artist/types';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
@@ -18,6 +19,7 @@ type Props = HTMLAttributes<HTMLDivElement> & {
     onDelete?: () => void;
     showApplyToAllTracks?: boolean;
     onApplyToAllTracks?: (checked: boolean) => void;
+    disabled?: boolean;
 };
 
 export default function ArtistCard({
@@ -26,6 +28,7 @@ export default function ArtistCard({
     index,
     data,
     onDelete,
+    disabled = false,
     ...props
 }: Props) {
     const messages = useTranslations();
@@ -37,7 +40,13 @@ export default function ArtistCard({
     const artistRole = data.artistRole;
     return (
         <div
-            className="flex cursor-pointer items-center justify-between rounded-lg bg-gray-100 px-3 py-2 hover:bg-gray-200"
+            className={cn(
+                'flex cursor-pointer items-center justify-between rounded-lg bg-gray-100 px-3 py-2 hover:bg-gray-200',
+                {
+                    'pointer-events-none': disabled,
+                    'cursor-not-allowed': disabled,
+                }
+            )}
             {...props}
         >
             <div className="flex items-center gap-4">

@@ -1,5 +1,6 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
 import ErrorText from '@/components/ui/text/error-text';
+import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { useUpdateReleaseArtist } from '@/modules/release-artist/hooks/use-update-release-artist';
 import { ReleaseArtist } from '@/modules/release-artist/types';
@@ -7,11 +8,13 @@ import { UpdateReleaseArtistPayload } from '@/modules/release-artist/types/paylo
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useReleaseDetailActionStore } from '@/modules/releases/hooks/use-release-action-store';
 import { UpdateVariables } from '@/types/api';
 import { Button, Radio } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
+import { useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { ReleaseDetailSchema } from '..';
 import ArtistCard from '../artist-card';
@@ -30,9 +33,16 @@ export default function ReleaseArtistSection({ debouncedUpdate }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const { updateReleaseArtist } = useUpdateReleaseArtist();
+    const releaseDetailAction = useReleaseDetailActionStore(
+        (state) => state.action
+    );
 
-    // router
+    // router - params
     const params = useParams();
+    const isReadMode = useMemo(
+        () => releaseDetailAction !== RELEASE_DETAIL_ACTION.EDIT,
+        [releaseDetailAction]
+    );
 
     // variables
     const isCreateReleasePage = params['action'] === 'create';
@@ -99,7 +109,8 @@ export default function ReleaseArtistSection({ debouncedUpdate }: Props) {
                                                         });
                                                     }}
                                                     disabled={
-                                                        isCreateReleasePage
+                                                        isCreateReleasePage ||
+                                                        isReadMode
                                                     }
                                                 >
                                                     <Radio value={false}>
@@ -126,6 +137,10 @@ export default function ReleaseArtistSection({ debouncedUpdate }: Props) {
                                                 <ArtistCard
                                                     key={index}
                                                     index={index}
+                                                    disabled={
+                                                        isCreateReleasePage ||
+                                                        isReadMode
+                                                    }
                                                     data={{
                                                         artist: releaseArtist.artist,
                                                         artistRole:
@@ -167,7 +182,10 @@ export default function ReleaseArtistSection({ debouncedUpdate }: Props) {
                                                     TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST
                                                 )
                                             }
-                                            disabled={isCreateReleasePage}
+                                            disabled={
+                                                isCreateReleasePage ||
+                                                isReadMode
+                                            }
                                             danger={!!errors.releaseArtists}
                                         >
                                             {messages('artist.add')}

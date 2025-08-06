@@ -27,6 +27,9 @@
         "forbiddenDescription": "Please contact the Admin for more details"
     },
     "common": {
+        "lastEdit": "Last edit",
+        "watch": "Watch",
+        "edit": "Edit",
         "settingNote": "Settings apply only to this browser",
         "value": "Value",
         "viewDetail": "View detail",

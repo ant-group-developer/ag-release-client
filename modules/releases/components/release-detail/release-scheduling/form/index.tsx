@@ -3,7 +3,9 @@ import CountrySelect from '@/components/ui/select/country-select';
 import TimezoneSelect from '@/components/ui/select/timezone-select';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { DATE_FORMAT, DISTRIBUTE_TYPES } from '@/enums/common';
+import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useReleaseDetailActionStore } from '@/modules/releases/hooks/use-release-action-store';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
 import { releaseSchema } from '@/modules/releases/schemas';
 import { ReleasesData } from '@/modules/releases/types';
@@ -14,7 +16,7 @@ import { DatePicker, Radio, TimePicker } from 'antd';
 import dayjs from 'dayjs';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -38,6 +40,13 @@ export default function ReleaseSchedulingForm({}: Props) {
     const formValues = useReleaseFormStore((state) => state.formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const { updateReleaseDraft } = useUpdateReleaseDraft();
+    const releaseDetailAction = useReleaseDetailActionStore(
+        (state) => state.action
+    );
+    const isReadMode = useMemo(
+        () => releaseDetailAction !== RELEASE_DETAIL_ACTION.EDIT,
+        [releaseDetailAction]
+    );
 
     const formMethods = useForm<ReleaseSchedulingSchema>({
         defaultValues: {
@@ -145,6 +154,7 @@ export default function ReleaseSchedulingForm({}: Props) {
                                                     ? 'error'
                                                     : undefined
                                             }
+                                            disabled={isReadMode}
                                         />
                                     );
                                 }}
@@ -194,6 +204,7 @@ export default function ReleaseSchedulingForm({}: Props) {
                                                 : undefined
                                         }
                                         showSecond={false}
+                                        disabled={isReadMode}
                                     />
                                 )}
                             />
@@ -227,6 +238,7 @@ export default function ReleaseSchedulingForm({}: Props) {
                                                 ? 'error'
                                                 : undefined
                                         }
+                                        disabled={isReadMode}
                                     />
                                 )}
                             />
@@ -261,6 +273,7 @@ export default function ReleaseSchedulingForm({}: Props) {
                                                         },
                                                     });
                                                 }}
+                                                disabled={isReadMode}
                                             >
                                                 <Radio value={true}>
                                                     {messages('common.yes')}
@@ -303,6 +316,7 @@ export default function ReleaseSchedulingForm({}: Props) {
                                                             },
                                                         });
                                                     }}
+                                                    disabled={isReadMode}
                                                 >
                                                     <Radio
                                                         value={
@@ -345,6 +359,7 @@ export default function ReleaseSchedulingForm({}: Props) {
                                                     mode="multiple"
                                                     allowClear
                                                     maxTagCount="responsive"
+                                                    disabled={isReadMode}
                                                     maxTagPlaceholder={(
                                                         value
                                                     ) => (

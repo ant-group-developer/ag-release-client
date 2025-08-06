@@ -1,16 +1,19 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
+import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { useUpdateReleaseArtist } from '@/modules/release-artist/hooks/use-update-release-artist';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { UpdateReleaseArtistPayload } from '@/modules/release-artist/types/payload';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useReleaseDetailActionStore } from '@/modules/releases/hooks/use-release-action-store';
 import { UpdateVariables } from '@/types/api';
 import { Input, Select } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
+import { useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { ReleaseDetailSchema } from '..';
 type Props = {
@@ -27,9 +30,16 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const { updateReleaseArtist } = useUpdateReleaseArtist();
+    const releaseDetailAction = useReleaseDetailActionStore(
+        (state) => state.action
+    );
 
-    // router
+    // router - params
     const params = useParams();
+    const isReadMode = useMemo(
+        () => releaseDetailAction !== RELEASE_DETAIL_ACTION.EDIT,
+        [releaseDetailAction]
+    );
 
     // variables
     const isCreateReleasePage = params['action'] === 'create';
@@ -100,7 +110,10 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                             <Select
                                                 className="w-full"
                                                 value={year}
-                                                disabled={isCreateReleasePage}
+                                                disabled={
+                                                    isCreateReleasePage ||
+                                                    isReadMode
+                                                }
                                                 onChange={(newYear) => {
                                                     const v = owner
                                                         ? `${newYear} ${owner}`
@@ -137,7 +150,10 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                             <Input
                                                 id="cLineOwner"
                                                 value={owner}
-                                                disabled={isCreateReleasePage}
+                                                disabled={
+                                                    isCreateReleasePage ||
+                                                    isReadMode
+                                                }
                                                 allowClear
                                                 onChange={(e) => {
                                                     const newOwner =
@@ -181,7 +197,10 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                             <Select
                                                 className="w-full"
                                                 value={year}
-                                                disabled={isCreateReleasePage}
+                                                disabled={
+                                                    isCreateReleasePage ||
+                                                    isReadMode
+                                                }
                                                 onChange={(newYear) => {
                                                     const v = owner
                                                         ? `${newYear} ${owner}`
@@ -218,7 +237,10 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                             <Input
                                                 id="pLineOwner"
                                                 value={owner}
-                                                disabled={isCreateReleasePage}
+                                                disabled={
+                                                    isCreateReleasePage ||
+                                                    isReadMode
+                                                }
                                                 allowClear
                                                 onChange={(e) => {
                                                     const newOwner =
