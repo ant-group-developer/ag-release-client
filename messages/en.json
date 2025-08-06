@@ -26,16 +26,6 @@
         "forbiddenTitle": "You do not have access",
         "forbiddenDescription": "Please contact the Admin for more details"
     },
-    "action": {
-        "name": "Name",
-        "delete": "Delete",
-        "update": "Update",
-        "create": "Create",
-        "view": "View",
-        "edit": "Edit",
-        "cancel": "cancel",
-        "quickActions": "Quick actions"
-    },
     "common": {
         "settingNote": "Settings apply only to this browser",
         "value": "Value",
@@ -1067,5 +1057,33 @@
 
     "tenant": {
         "label": "Tenant"
+    },
+    "action": {
+        "create": {
+            "button": "Create",
+            "title": "Create {label}",
+            "success": "{label} created successfully"
+        },
+        "update": {
+            "button": "Update",
+            "title": "Update {label}",
+            "success": "{label} updated successfully"
+        },
+        "duplicate": {
+            "button": "Duplicate"
+        },
+        "delete": {
+            "button": "Delete",
+            "title": "Delete {label}",
+            "alert": "Are you sure you want to delete {label}? This action cannot be undone.",
+            "success": "{label} deleted successfully"
+        },
+        "back": {
+            "button": "Go back"
+        },
+        "copy": {
+            "success": "Copied to clipboard"
+        },
+        "quickActions": "Quick actions"
     }
 }

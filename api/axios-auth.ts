@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosAuth = axios.create({
-    baseURL: '/api/cms',
+    baseURL: '/api/v1',
 });
 
 axiosAuth.interceptors.request.use((config) => {

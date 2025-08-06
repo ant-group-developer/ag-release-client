@@ -1,8 +1,8 @@
-import { defaultConfig } from '@/constants/env';
-import { useRouter } from '@/i18n/routing';
+import { APP_ROUTES } from '@/enums/routes';
 import { userQueryKeys } from '@/modules/user/constants';
 import { ACCOUNT_TYPE } from '@/modules/user/enums';
 import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import { authApi } from '../api';
 import { UserInfoData } from '../types/common';
 
@@ -41,7 +41,7 @@ export const useAuth = () => {
     const { data, error, refetch, isLoading } = useQuery({
         queryKey: userQueryKeys.getInfo,
         queryFn: () => authApi.getInfo(),
-        // refetchOnWindowFocus: true,
+        refetchOnWindowFocus: true,
     });
 
     const profile = data?.data?.data ?? defaultProfile;
@@ -52,13 +52,7 @@ export const useAuth = () => {
     const isAuthenticated = Boolean(profile.id);
 
     function logout() {
-        const redirectUri = `${defaultConfig.REDIRECT_URI}/api/auth/sign-out`;
-        const client = defaultConfig.CLIENT;
-        const login = defaultConfig.LOGIN_URL;
-
-        const url = `${login}/api/auth/sign-out?redirect_uri=${redirectUri}&client=${client}`;
-
-        router.push(url);
+        router.push(APP_ROUTES.LOGOUT);
     }
 
     return {

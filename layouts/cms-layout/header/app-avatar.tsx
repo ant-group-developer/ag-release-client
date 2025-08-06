@@ -178,22 +178,18 @@ function AppAvatar({}: Props) {
         },
         {
             label: (
-                <div className="flex items-center gap-2 pl-2 text-base text-red-600">
-                    <LogOut />
+                <div className="flex items-center gap-2 pl-2">
+                    <LogOut size={14} />
                     {messages('userProfile.logout')}
                 </div>
             ),
             key: '4',
+            onClick: () => logout(),
         },
     ];
 
-    function onClick({ key }: { key: string }) {
-        if (key === '4') {
-            logout();
-        }
-    }
     return (
-        <Dropdown trigger={['click']} menu={{ items, onClick }}>
+        <Dropdown trigger={['click']} menu={{ items }}>
             <Avatar size={40} className="cursor-pointer !bg-blue-500">
                 {avatarPlaceholder}
             </Avatar>
