@@ -1,30 +1,28 @@
-// import { useQuery } from '@tanstack/react-query';
-// import { userApi } from '../api';
-// import { userQueryKeys } from '../constants';
-// import { DataFilterUser, UserData } from '../types';
-
 import { DEFAULT_DATA_PAGINATION } from '@/constants/common';
+import { PaginationResponse } from '@/types/api';
 import { useQuery } from '@tanstack/react-query';
 import { userApi } from '../api';
 import { userQueryKeys } from '../constants';
-import { DataFilterUser, UserDetailData } from '../types/data';
+import { DataFilterUser, UserData, UserDetail } from '../types/data';
 
 export function useUserList(params: DataFilterUser) {
     const { data, ...restResponse } = useQuery({
-        queryKey: [...userQueryKeys.getList, params],
+        queryKey: userQueryKeys.list(params),
         queryFn: () => userApi.getList(params),
         placeholderData: (previousData) => previousData,
     });
 
     return {
         ...restResponse,
-        data: data?.data?.data ?? DEFAULT_DATA_PAGINATION,
+        data:
+            data?.data?.data ??
+            (DEFAULT_DATA_PAGINATION as PaginationResponse<UserData>['data']),
     };
 }
 
 export function useUserDetail(id: string | null) {
     const { data, ...restResponse } = useQuery({
-        queryKey: [...userQueryKeys.getDetail, id],
+        queryKey: userQueryKeys.detail(id ?? ''),
         queryFn: () => userApi.getDetail(id as string),
         placeholderData: (previousData) => previousData,
         enabled: Boolean(id),
@@ -32,6 +30,6 @@ export function useUserDetail(id: string | null) {
 
     return {
         ...restResponse,
-        dataUser: data?.data?.data ?? ({} as UserDetailData),
+        dataUser: data?.data?.data ?? ({} as UserDetail),
     };
 }

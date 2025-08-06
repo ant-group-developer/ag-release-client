@@ -18,7 +18,7 @@ export interface LogData extends CommonAttribute {
     content: string | null;
     response: string | null;
     email: string | null;
-    userCreatorId: string | null;
+    creatorId: string | null;
     note: string | null;
     success: boolean;
     userAgent: string;

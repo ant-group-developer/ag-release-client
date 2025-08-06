@@ -56,19 +56,27 @@ export interface UUIDCommonAttribute {
 }
 
 export interface CommonAttributeCreator extends CommonAttribute {
-    userCreatorId: string;
-    userCreator: {
+    creatorId: string;
+    creator: {
         id: string;
-        name: string;
+        email: string;
+    };
+    modifierId: string;
+    modifier: {
+        id: string;
         email: string;
     };
 }
 
 export interface UUIDCommonAttributeCreator extends UUIDCommonAttribute {
-    userCreatorId: string;
-    userCreator: {
+    creatorId: string;
+    creator: {
         id: string;
-        name: string;
+        email: string;
+    };
+    modifierId: string;
+    modifier: {
+        id: string;
         email: string;
     };
 }

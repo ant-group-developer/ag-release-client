@@ -6,6 +6,7 @@ import { useLocale } from '@/hooks/use-locale';
 import { useThemeStore } from '@/hooks/use-theme-store';
 import { useRouter } from '@/i18n/routing';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
+import { useUser } from '@auth0/nextjs-auth0/client';
 import { Avatar, Dropdown } from 'antd';
 import { ItemType } from 'antd/es/menu/interface';
 import { Check, LogOut, MonitorCog, Moon, Sun } from 'lucide-react';
@@ -16,9 +17,10 @@ type Props = {};
 
 function AppAvatar({}: Props) {
     const { profile, logout } = useAuth();
+    const { user } = useUser();
     const messages = useTranslations();
     const router = useRouter();
-    const avatarPlaceholder = getAvatarPlaceholder(profile?.name);
+    const avatarPlaceholder = getAvatarPlaceholder(profile?.name || user?.name);
     const { theme, setTheme } = useThemeStore();
     const { locale, switchLocale } = useLocale();
 
@@ -48,22 +50,30 @@ function AppAvatar({}: Props) {
                 >
                     <Avatar
                         size={40}
-                        className="!bg-primary flex-none cursor-pointer"
+                        className="flex-none cursor-pointer"
+                        src={user?.picture}
                     >
                         {avatarPlaceholder}
                     </Avatar>
                     <div className="ml-3 truncate">
-                        <p className="truncate font-bold">{profile.name}</p>
-                        <p className="truncate text-sm">{profile?.email}</p>
+                        <p className="truncate font-semibold">
+                            {profile.name || user?.nickname}
+                        </p>
+                        <p className="truncate text-sm">
+                            {profile?.email || user?.email || user?.name}
+                        </p>
                     </div>
                 </div>
             ),
             key: '1',
         },
         {
+            type: 'divider',
+        },
+        {
             label: (
                 <div className="flex w-[250px] items-center justify-between pl-2 text-sm">
-                    <span className="font-bold">
+                    <span className="font-semibold">
                         {messages('common.displayMode')}
                     </span>
                     <span> {themeIntl} </span>
@@ -122,7 +132,7 @@ function AppAvatar({}: Props) {
         {
             label: (
                 <div className="flex items-center justify-between gap-2 pl-2 text-sm">
-                    <span className="font-bold">
+                    <span className="font-semibold">
                         {messages('language.label')}
                     </span>
                     <span>{currentLocale}</span>
@@ -190,7 +200,7 @@ function AppAvatar({}: Props) {
 
     return (
         <Dropdown trigger={['click']} menu={{ items }}>
-            <Avatar size={40} className="cursor-pointer !bg-blue-500">
+            <Avatar size={40} className="cursor-pointer" src={user?.picture}>
                 {avatarPlaceholder}
             </Avatar>
         </Dropdown>

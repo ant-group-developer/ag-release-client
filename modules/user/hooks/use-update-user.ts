@@ -1,4 +1,5 @@
 import { showNotification } from '@/helpers/messages-helper';
+import { useApiError } from '@/hooks/use-api-error';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { userApi } from '../api';
@@ -8,26 +9,26 @@ import { UpdateUser } from '../types/data';
 export const useUpdateUser = () => {
     const queryClient = useQueryClient();
     const messages = useTranslations();
+    const { handleError } = useApiError();
 
-    const onSuccess = (data: any, { onSuccess }: UpdateUser) => {
-        queryClient.invalidateQueries({ queryKey: userQueryKeys.getDetail });
-        queryClient.invalidateQueries({ queryKey: userQueryKeys.getInfo });
-        showNotification('success', messages(data?.data?.messageCode));
+    const onSuccess = (data: any, { onSuccess, userId }: UpdateUser) => {
+        queryClient.invalidateQueries({
+            queryKey: userQueryKeys.detail(userId),
+        });
+        queryClient.invalidateQueries({ queryKey: userQueryKeys.info() });
+        queryClient.invalidateQueries({ queryKey: userQueryKeys.lists() });
+        showNotification('success', messages('message.updateSuccessfully'));
         onSuccess?.();
     };
 
-    const onError = (data: any, { onError }: UpdateUser) => {
-        const responseMessages = messages(data?.response?.data?.messageCode);
-
-        showNotification(
-            'error',
-            responseMessages ?? messages('common.somethingWentWrong')
-        );
-        onError?.(data);
+    const onError = (error: any, { onError }: UpdateUser) => {
+        handleError(error);
+        onError?.(error);
     };
 
     const mutation = useMutation({
-        mutationFn: ({ payload }: UpdateUser) => userApi.update(payload),
+        mutationFn: ({ payload, userId }: UpdateUser) =>
+            userApi.update(userId, payload),
         onSuccess,
         onError,
     });
