@@ -31,3 +31,8 @@ export enum GENRES {
     BLUES = 'blues',
     R_B = 'r&b',
 }
+
+export enum TRACK_TABS {
+    METADATA = 'metadata',
+    AUDIO_FILE = 'audio file',
+}

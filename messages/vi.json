@@ -27,6 +27,9 @@
         "forbiddenDescription": "Vui lòng liên hệ Admin để biết thêm chi tiết"
     },
     "common": {
+        "lastEdit": "Lần chỉnh sửa cuối",
+        "watch": "Xem",
+        "edit": "Sửa",
         "settingNote": "Tùy chọn cài đặt chỉ áp dụng cho trình duyệt này",
         "value": "Giá trị",
         "viewDetail": "Xem chi tiết",

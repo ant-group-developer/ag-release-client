@@ -1,4 +1,5 @@
 'use client';
+import AppContent from '@/components/ant-music/app-content';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_OPTIONS } from '@/constants/common';
 import { LAYOUT_TABLE, SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
@@ -85,7 +86,7 @@ export default function Tracks({}: Props) {
     }, [visibleColumns]);
 
     return (
-        <div className="flex h-full flex-col justify-between overflow-hidden">
+        <AppContent className="overflow-hidden">
             <div className="flex-1">
                 <TracksHeader
                     dataFilter={dataFilter}
@@ -129,6 +130,6 @@ export default function Tracks({}: Props) {
                 showQuickJumper
                 pageSizeOptions={PAGE_SIZE_OPTIONS}
             />
-        </div>
+        </AppContent>
     );
 }

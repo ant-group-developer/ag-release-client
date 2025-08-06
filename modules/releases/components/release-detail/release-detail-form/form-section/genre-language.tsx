@@ -2,11 +2,14 @@ import FormItem from '@/components/ui/react-hook-form/form-item';
 import CountrySelect from '@/components/ui/select/country-select';
 import GenresSelect from '@/components/ui/select/genres-select';
 import LanguageSelect from '@/components/ui/select/language-select';
+import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useReleaseDetailActionStore } from '@/modules/releases/hooks/use-release-action-store';
 import Title from 'antd/lib/typography/Title';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
+import { useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { ReleaseDetailSchema } from '..';
 type Props = {
@@ -22,9 +25,16 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
     } = useFormContext<ReleaseDetailSchema>();
     const formValues = useReleaseFormStore((state) => state.formValues);
     const messages = useTranslations();
+    const releaseDetailAction = useReleaseDetailActionStore(
+        (state) => state.action
+    );
 
-    // router
+    // router - params
     const params = useParams();
+    const isReadMode = useMemo(
+        () => releaseDetailAction !== RELEASE_DETAIL_ACTION.EDIT,
+        [releaseDetailAction]
+    );
 
     // variables
     const isCreateReleasePage = params['action'] === 'create';
@@ -77,7 +87,10 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                                                         ? 'error'
                                                         : undefined
                                                 }
-                                                disabled={isCreateReleasePage}
+                                                disabled={
+                                                    isCreateReleasePage ||
+                                                    isReadMode
+                                                }
                                             />
                                         );
                                     }}
@@ -114,7 +127,10 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                                                     ? 'error'
                                                     : undefined
                                             }
-                                            disabled={isCreateReleasePage}
+                                            disabled={
+                                                isCreateReleasePage ||
+                                                isReadMode
+                                            }
                                         />
                                     )}
                                 />
@@ -160,7 +176,10 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                                                         ? 'error'
                                                         : undefined
                                                 }
-                                                disabled={isCreateReleasePage}
+                                                disabled={
+                                                    isCreateReleasePage ||
+                                                    isReadMode
+                                                }
                                             />
                                         );
                                     }}
@@ -207,7 +226,10 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                                                         ? 'error'
                                                         : undefined
                                                 }
-                                                disabled={isCreateReleasePage}
+                                                disabled={
+                                                    isCreateReleasePage ||
+                                                    isReadMode
+                                                }
                                             />
                                         );
                                     }}
@@ -255,7 +277,10 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                                                         ? 'error'
                                                         : undefined
                                                 }
-                                                disabled={isCreateReleasePage}
+                                                disabled={
+                                                    isCreateReleasePage ||
+                                                    isReadMode
+                                                }
                                             />
                                         );
                                     }}

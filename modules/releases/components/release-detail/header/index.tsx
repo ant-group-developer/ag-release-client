@@ -5,11 +5,14 @@ import AppConfirm from '@/components/ui/modal/confirm-modal';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { DATE_FORMAT, TYPE_UPLOAD_BUCKET } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
+import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { showNotification } from '@/helpers/messages-helper';
 import { cn } from '@/helpers/tailwind';
-import { RELEASE_MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
+import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
+import { useReleaseDetailActionStore } from '@/modules/releases/hooks/use-release-action-store';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
 import { ReleasesData } from '@/modules/releases/types';
 import { UpdateReleaseDraftPayload } from '@/modules/releases/types/payload';
@@ -17,7 +20,8 @@ import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { CreateBucketFile } from '@/modules/upload/types/data';
 import { UpdateVariables } from '@/types/api';
-import { Form, theme } from 'antd';
+import { Form, Segmented, theme } from 'antd';
+import { SegmentedOptions } from 'antd/es/segmented';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -36,19 +40,37 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const { token } = theme.useToken();
+    const releaseDetailAction = useReleaseDetailActionStore(
+        (state) => state.action
+    );
+    const setReleaseDetailAction = useReleaseDetailActionStore(
+        (state) => state.setAction
+    );
 
     // apis
     const { updateReleaseDraft, isPending: isUpdatingRelease } =
         useUpdateReleaseDraft();
     const coverArtFileId = formValues?.coverArtThumbnails?.['160x160'] ?? '';
     const { linkReadFile } = useGetLinkReadFile(coverArtFileId);
+    const { releaseData } = useGetDetailRelease(formValues?.id as string);
 
     // const
     const isCreateReleasePage = params['action'] === 'create';
     const mainArtist = formValues?.releaseArtists?.find(
         (releaseArtist: ReleaseArtist) =>
-            releaseArtist.artistRole?.name === RELEASE_MAIN_ARTIST_ROLE
+            releaseArtist.artistRole?.value === MAIN_ARTIST_ROLE
     );
+    const segmentedOptions: SegmentedOptions = [
+        {
+            label: messages('common.watch'),
+            value: RELEASE_DETAIL_ACTION.READ,
+        },
+        {
+            label: messages('common.edit'),
+            value: RELEASE_DETAIL_ACTION.EDIT,
+        },
+    ];
+    const isReadMode = releaseDetailAction === RELEASE_DETAIL_ACTION.READ;
 
     // func
     const handleImageUpload = async (info: any) => {
@@ -153,18 +175,18 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
 
     useEffect(() => {
         form.setFieldsValue({
-            thumbnail: formValues.coverArtThumbnails?.['160x160']
-                ? {
-                      fileList: [
-                          {
-                              uid: 'uid',
-                              thumbUrl: linkReadFile,
-                              url: linkReadFile,
-                              name: formValues.title,
-                          },
-                      ],
-                  }
-                : undefined,
+            thumbnail:
+                formValues.coverArtThumbnails?.['160x160'] && linkReadFile
+                    ? {
+                          fileList: [
+                              {
+                                  uid: formValues.coverArtThumbnails['160x160'],
+                                  url: linkReadFile,
+                                  name: formValues.title,
+                              },
+                          ],
+                      }
+                    : undefined,
         });
     }, [formValues, form, linkReadFile]);
 
@@ -207,7 +229,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                 <ImageListUpload
                                     id="releaseCoverArts"
                                     loading={isUploading}
-                                    disabled={isCreateReleasePage}
+                                    disabled={isCreateReleasePage || isReadMode}
                                     className={cn(
                                         'release-detail-header-upload !aspect-square !size-28 !rounded-lg !border-0 !p-0 transition-all duration-300',
                                         {
@@ -284,6 +306,23 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                     </div>
                                 )}
                             </div>
+                        </div>
+                    </div>
+                    <div className="space-y-1">
+                        <p className="text-nowrap text-xs text-gray-500">
+                            {messages('common.lastEdit')}: Dev |{' '}
+                            {formattedDate(releaseData?.updatedAt)}
+                        </p>
+                        <div className="flex justify-end">
+                            <Segmented
+                                value={releaseDetailAction}
+                                options={segmentedOptions}
+                                onChange={(e) =>
+                                    setReleaseDetailAction(
+                                        e as RELEASE_DETAIL_ACTION
+                                    )
+                                }
+                            />
                         </div>
                     </div>
                 </div>

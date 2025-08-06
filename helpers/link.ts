@@ -78,10 +78,18 @@ export const getIconByType = (type: string) => {
     return icons[type] || ICON_IMAGE;
 };
 
+export enum RELEASE_DETAIL_ACTION {
+    EDIT = 'edit',
+    READ = 'read',
+}
 export const getReleaseDetailTabRoute = (
     releaseId: string,
-    tab: RELEASES_TABS
-) => `/releases/detail/${releaseId}/${tab}`;
+    tab: RELEASES_TABS,
+    action?: RELEASE_DETAIL_ACTION
+) => `/releases/detail/${releaseId}/${tab}${action ? `?action=${action}` : ''}`;
+
+export const getTrackDetailRoute = (trackId: string) =>
+    `/tracks/detail/${trackId}`;
 
 export const getAvatarUrl = (
     name: string,

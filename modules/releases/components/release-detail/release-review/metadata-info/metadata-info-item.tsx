@@ -16,7 +16,7 @@ export default function MetadataInfoItem({
             className={`rounded-lg bg-zinc-100 p-4 dark:bg-zinc-900 ${className}`}
         >
             <p className="font-medium">{label}</p>
-            <div className="flex flex-col">{children}</div>
+            <div className="flex flex-col">{children ? children : '_'}</div>
         </div>
     );
 }

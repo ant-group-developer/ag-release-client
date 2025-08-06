@@ -17,6 +17,9 @@ export const lightThemeTokens = {
     cardBg: '#f2f2f2',
     cardBgHover: '#e5e5e5',
     fontFamily: 'var(--font-inter), Inter, sans-serif',
+    colorBgContainerDisabled: '#f5f5f5', // Background container khi disabled
+    colorBorderBg: '#d9d9d9',
+    // colorTextDisabled: defaultConfig.TEXT_COLOR,
 };
 
 export const darkThemeTokens = {
@@ -34,6 +37,9 @@ export const darkThemeTokens = {
     cardBg: '#2a2a2a',
     cardBgHover: '#3a3a3a',
     fontFamily: 'var(--font-inter), Inter, sans-serif',
+    colorBgContainerDisabled: '#2a2a2a',
+    colorBorderBg: '#666666',
+    colorTextDisabled: '#fff',
 };
 
 export const getThemeConfig = (

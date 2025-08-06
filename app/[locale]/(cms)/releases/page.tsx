@@ -1,4 +1,5 @@
 'use client';
+import AppContent from '@/components/ant-music/app-content';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { LAYOUT_TABLE, SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
@@ -112,7 +113,7 @@ export default function Releases({}: Props) {
     }, [visibleColumns]);
 
     return (
-        <div className="flex h-full flex-col justify-between overflow-hidden">
+        <AppContent className="overflow-hidden">
             <div className="flex-1">
                 <ReleasesHeader
                     dataFilter={dataFilter}
@@ -169,6 +170,6 @@ export default function Releases({}: Props) {
                     })}
                 />
             )}
-        </div>
+        </AppContent>
     );
 }

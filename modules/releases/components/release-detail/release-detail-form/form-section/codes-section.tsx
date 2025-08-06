@@ -1,9 +1,12 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
+import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
+import { useReleaseDetailActionStore } from '@/modules/releases/hooks/use-release-action-store';
 import { Input } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
+import { useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { ReleaseDetailSchema } from '..';
 type Props = {
@@ -18,10 +21,16 @@ export default function CodesSection({ debouncedUpdate }: Props) {
         formState: { errors },
         watch,
     } = useFormContext<ReleaseDetailSchema>();
+    const releaseDetailAction = useReleaseDetailActionStore(
+        (state) => state.action
+    );
 
     // router - params
     const params = useParams();
-
+    const isReadMode = useMemo(
+        () => releaseDetailAction !== RELEASE_DETAIL_ACTION.EDIT,
+        [releaseDetailAction]
+    );
     const isCreateReleasePage = params['action'] === 'create';
 
     return (
@@ -69,7 +78,10 @@ export default function CodesSection({ debouncedUpdate }: Props) {
                                                         ? 'error'
                                                         : undefined
                                                 }
-                                                disabled={isCreateReleasePage}
+                                                disabled={
+                                                    isCreateReleasePage ||
+                                                    isReadMode
+                                                }
                                             />
                                         )}
                                     />
@@ -106,7 +118,10 @@ export default function CodesSection({ debouncedUpdate }: Props) {
                                                         ? 'error'
                                                         : undefined
                                                 }
-                                                disabled={isCreateReleasePage}
+                                                disabled={
+                                                    isCreateReleasePage ||
+                                                    isReadMode
+                                                }
                                             />
                                         )}
                                     />

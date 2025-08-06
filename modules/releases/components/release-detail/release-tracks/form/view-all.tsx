@@ -1,9 +1,12 @@
+import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { useReleaseDetailActionStore } from '@/modules/releases/hooks/use-release-action-store';
 import {
     releaseTrackSchema,
     ReleaseTrackSchema,
 } from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { ConfigProvider } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -29,6 +32,10 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
         mode: 'onChange',
         reValidateMode: 'onChange',
     });
+    const releaseDetailAction = useReleaseDetailActionStore(
+        (state) => state.action
+    );
+    const isReadMode = releaseDetailAction === RELEASE_DETAIL_ACTION.READ;
 
     const {
         control,
@@ -62,35 +69,37 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
     }, []);
 
     return (
-        <FormProvider {...formMethods}>
-            <div className="flex flex-col gap-4">
-                <TrackAndArtistSection
-                    trackData={trackData}
-                    debouncedUpdateTrackDraft={updateTrackDraft}
-                    index={index}
-                />
-                <GenreSection
-                    index={index}
-                    debouncedUpdateTrackDraft={updateTrackDraft}
-                    trackData={trackData}
-                />
-                <LanguageSection
-                    index={index}
-                    debouncedUpdateTrackDraft={updateTrackDraft}
-                    trackData={trackData}
-                />
-                <OtherSection
-                    index={index}
-                    debouncedUpdateTrackDraft={updateTrackDraft}
-                    trackData={trackData}
-                />
+        <ConfigProvider componentDisabled={isReadMode}>
+            <FormProvider {...formMethods}>
+                <div className="flex flex-col gap-4">
+                    <TrackAndArtistSection
+                        trackData={trackData}
+                        debouncedUpdateTrackDraft={updateTrackDraft}
+                        index={index}
+                    />
+                    <GenreSection
+                        index={index}
+                        debouncedUpdateTrackDraft={updateTrackDraft}
+                        trackData={trackData}
+                    />
+                    <LanguageSection
+                        index={index}
+                        debouncedUpdateTrackDraft={updateTrackDraft}
+                        trackData={trackData}
+                    />
+                    <OtherSection
+                        index={index}
+                        debouncedUpdateTrackDraft={updateTrackDraft}
+                        trackData={trackData}
+                    />
 
-                <AudioSpecSection
-                    index={index}
-                    debouncedUpdateTrackDraft={updateTrackDraft}
-                    trackData={trackData}
-                />
-            </div>
-        </FormProvider>
+                    <AudioSpecSection
+                        index={index}
+                        debouncedUpdateTrackDraft={updateTrackDraft}
+                        trackData={trackData}
+                    />
+                </div>
+            </FormProvider>
+        </ConfigProvider>
     );
 }

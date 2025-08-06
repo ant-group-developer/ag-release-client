@@ -11,7 +11,7 @@ import {
 import { getReleaseDetailTabRoute } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
-import { RELEASE_MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
+import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { ReleasesData } from '@/modules/releases/types';
@@ -113,8 +113,8 @@ export default function DistributionTable({ visibleColumns, ...props }: Props) {
                 const mainArtist = !isVariousArtist
                     ? releaseArtists.find(
                           (item: ReleaseArtist) =>
-                              item?.artistRole?.name?.toLowerCase() ===
-                              RELEASE_MAIN_ARTIST_ROLE.toLowerCase()
+                              item?.artistRole?.value?.toLowerCase() ===
+                              MAIN_ARTIST_ROLE
                       )
                     : null;
 

@@ -4,7 +4,9 @@ import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { formattedDate } from '@/helpers/common';
-import { RELEASE_MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
+import { getTrackDetailRoute } from '@/helpers/link';
+import { Link } from '@/i18n/routing';
+import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { TRACKS_COLUMNS_DISPLAY } from '@/modules/tracks/enums';
 import { ColumnType } from 'antd/es/table';
@@ -46,7 +48,16 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
                         />
                     </div>
 
-                    <p className="truncate">{record?.title}</p>
+                    <CustomTooltip
+                        title={messages('common.viewDetail')}
+                        placement="right"
+                    >
+                        <Link href={getTrackDetailRoute(record?.id)}>
+                            <p className="truncate hover:cursor-pointer hover:text-blue-500">
+                                {record?.title}
+                            </p>
+                        </Link>
+                    </CustomTooltip>
                 </div>
             ),
         },
@@ -73,8 +84,8 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
                 const trackArtist = record?.trackArtists ?? [];
                 const mainArtist = trackArtist?.find(
                     (item: TrackArtistData) =>
-                        item.artistRole?.name?.toLowerCase() ===
-                        RELEASE_MAIN_ARTIST_ROLE?.toLowerCase()
+                        item.artistRole?.value?.toLowerCase() ===
+                        MAIN_ARTIST_ROLE
                 );
                 return (
                     // <CustomTooltip size="small" title={value}>

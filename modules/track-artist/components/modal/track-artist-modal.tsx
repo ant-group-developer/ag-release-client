@@ -10,7 +10,7 @@ import { ArtistRoleData } from '@/modules/artist-role/types';
 import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { DspData } from '@/modules/dsp/types';
-import { RELEASE_MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
+import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
@@ -63,7 +63,7 @@ export default function TrackArtistModal({ ...props }: Props) {
     const { updateTrackArtist } = useUpdateTrackArtist();
 
     const mainArtist: ArtistRoleData = artistsRolesData.items.find(
-        (item: ArtistRoleData) => item.name === RELEASE_MAIN_ARTIST_ROLE
+        (item: ArtistRoleData) => item.value === MAIN_ARTIST_ROLE
     );
 
     const handleSubmit = async (values: any) => {

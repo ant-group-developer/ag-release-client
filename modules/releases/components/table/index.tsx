@@ -8,11 +8,14 @@ import {
     formattedDate,
     getIntlCodeByReleaseStatus,
 } from '@/helpers/common';
-import { getReleaseDetailTabRoute } from '@/helpers/link';
+import {
+    getReleaseDetailTabRoute,
+    RELEASE_DETAIL_ACTION,
+} from '@/helpers/link';
 import { OnChangeFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { useRouter } from '@/i18n/routing';
-import { RELEASE_MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
+import { Link, useRouter } from '@/i18n/routing';
+import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
@@ -55,25 +58,25 @@ export default function ReleasesTable({
             fixed: 'left',
             render: (value, record) => (
                 <div className="flex items-center gap-4">
+                    <div>
+                        <ReleaseCoverImage data={record} />
+                    </div>
                     <CustomTooltip
                         title={messages('common.viewDetail')}
                         placement="right"
                     >
-                        <div
-                            className="flex-shrink-0 cursor-pointer"
-                            onClick={() => {
-                                router.push(
-                                    getReleaseDetailTabRoute(
-                                        record?.id,
-                                        RELEASES_TABS.CORE_DETAIL
-                                    )
-                                );
-                            }}
+                        <Link
+                            href={getReleaseDetailTabRoute(
+                                record?.id,
+                                RELEASES_TABS.CORE_DETAIL,
+                                RELEASE_DETAIL_ACTION.READ
+                            )}
                         >
-                            <ReleaseCoverImage data={record} />
-                        </div>
+                            <span className="cursor-pointer truncate hover:text-blue-500">
+                                {value}
+                            </span>
+                        </Link>
                     </CustomTooltip>
-                    <CopyText text={value}>{value}</CopyText>
                 </div>
             ),
         },
@@ -91,8 +94,8 @@ export default function ReleasesTable({
                 const mainArtist = !isVariousArtist
                     ? releaseArtists.find(
                           (item: ReleaseArtist) =>
-                              item?.artistRole?.name?.toLowerCase() ===
-                              RELEASE_MAIN_ARTIST_ROLE.toLowerCase()
+                              item?.artistRole?.value?.toLowerCase() ===
+                              MAIN_ARTIST_ROLE
                       )
                     : null;
 
@@ -232,12 +235,29 @@ export default function ReleasesTable({
             render: (_, record) => (
                 <div onClick={(e) => e.stopPropagation()}>
                     <ActionButton
-                        // showUpdate
+                        showUpdate
                         showDetail
                         showDelete
                         onShowDelete={() =>
                             openModal(TYPE_MODAL_RELEASE.DELETE, record)
                         }
+                        onShowDetail={() => {
+                            router.push(
+                                getReleaseDetailTabRoute(
+                                    record?.id,
+                                    RELEASES_TABS.CORE_DETAIL
+                                )
+                            );
+                        }}
+                        onShowUpdate={() => {
+                            router.push(
+                                getReleaseDetailTabRoute(
+                                    record?.id,
+                                    RELEASES_TABS.CORE_DETAIL,
+                                    RELEASE_DETAIL_ACTION.EDIT
+                                )
+                            );
+                        }}
                     />
                 </div>
             ),
