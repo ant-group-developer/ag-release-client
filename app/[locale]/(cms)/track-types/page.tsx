@@ -1,4 +1,5 @@
 'use client';
+import AppContent from '@/components/ant-music/app-content';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_OPTIONS } from '@/constants/common';
@@ -71,7 +72,7 @@ export default function TrackTypes({}: Props) {
     };
 
     return (
-        <div className="flex h-full flex-col justify-between overflow-hidden">
+        <AppContent className="overflow-hidden">
             <div className="flex-1">
                 <TrackTypeHeader
                     dataFilter={dataFilter}
@@ -128,6 +129,6 @@ export default function TrackTypes({}: Props) {
                     })}
                 />
             )}
-        </div>
+        </AppContent>
     );
 }

@@ -1,4 +1,5 @@
 'use client';
+import AppContent from '@/components/ant-music/app-content';
 import AppPagination from '@/components/ui/pagination';
 import { SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
 import { getScrollYHeight } from '@/helpers/common';
@@ -87,7 +88,7 @@ export default function Distribution({}: Props) {
         }
     }, [visibleColumns]);
     return (
-        <div className="flex h-full flex-col justify-between">
+        <AppContent>
             <div className="flex-1">
                 <div className="flex justify-between border-b">
                     <DistributionStatus
@@ -142,6 +143,6 @@ export default function Distribution({}: Props) {
                 showQuickJumper
                 pageSizeOptions={[21, 28, 35]}
             />
-        </div>
+        </AppContent>
     );
 }
