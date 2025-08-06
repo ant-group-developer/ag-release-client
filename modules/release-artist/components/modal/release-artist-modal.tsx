@@ -10,7 +10,7 @@ import { ArtistRoleData } from '@/modules/artist-role/types';
 import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { DspData } from '@/modules/dsp/types';
-import { RELEASE_MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
+import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { useCreateReleaseArtist } from '@/modules/release-artist/hooks/use-create-release-artist';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import {
@@ -58,7 +58,7 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
     const { updateReleaseArtist } = useUpdateReleaseArtist();
 
     const mainArtist: ArtistRoleData = artistsRolesData.items.find(
-        (item: ArtistRoleData) => item.name === RELEASE_MAIN_ARTIST_ROLE
+        (item: ArtistRoleData) => item.value === MAIN_ARTIST_ROLE
     );
 
     const watchArtistId = useWatch('artistId', form);

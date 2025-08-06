@@ -8,7 +8,7 @@ import { formattedDate } from '@/helpers/common';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { showNotification } from '@/helpers/messages-helper';
 import { cn } from '@/helpers/tailwind';
-import { RELEASE_MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
+import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
@@ -58,7 +58,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     const isCreateReleasePage = params['action'] === 'create';
     const mainArtist = formValues?.releaseArtists?.find(
         (releaseArtist: ReleaseArtist) =>
-            releaseArtist.artistRole?.name === RELEASE_MAIN_ARTIST_ROLE
+            releaseArtist.artistRole?.value === MAIN_ARTIST_ROLE
     );
     const segmentedOptions: SegmentedOptions = [
         {

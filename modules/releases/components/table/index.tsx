@@ -15,7 +15,7 @@ import {
 import { OnChangeFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { Link, useRouter } from '@/i18n/routing';
-import { RELEASE_MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
+import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
@@ -94,8 +94,8 @@ export default function ReleasesTable({
                 const mainArtist = !isVariousArtist
                     ? releaseArtists.find(
                           (item: ReleaseArtist) =>
-                              item?.artistRole?.name?.toLowerCase() ===
-                              RELEASE_MAIN_ARTIST_ROLE.toLowerCase()
+                              item?.artistRole?.value?.toLowerCase() ===
+                              MAIN_ARTIST_ROLE
                       )
                     : null;
 

@@ -88,6 +88,9 @@ export const getReleaseDetailTabRoute = (
     action?: RELEASE_DETAIL_ACTION
 ) => `/releases/detail/${releaseId}/${tab}${action ? `?action=${action}` : ''}`;
 
+export const getTrackDetailRoute = (trackId: string) =>
+    `/tracks/detail/${trackId}`;
+
 export const getAvatarUrl = (
     name: string,
     size = 128,

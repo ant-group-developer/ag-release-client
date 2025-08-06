@@ -32,6 +32,10 @@ export const trackApi = {
         });
     },
 
+    getDetailTrack: (id: TrackData['id']) => {
+        return axiosAuth.get<DetailResponse<TrackData>>(`/tracks/${id}`);
+    },
+
     deleteTrackDraft: (id: TrackData['id']) => {
         return axiosAuth.delete(`/tracks/draft/${id}`);
     },
