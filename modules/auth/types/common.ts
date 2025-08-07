@@ -1,4 +1,4 @@
-import { ACCOUNT_TYPE } from '@/modules/user/enums';
+import { USER_TYPE } from '@/modules/user/enums';
 
 export interface LoginPayload {
     email: string;
@@ -54,7 +54,7 @@ export interface UserInfoData {
     dateOfBirth: string | null;
     isActive: boolean;
     emailVerified: boolean;
-    accountType: ACCOUNT_TYPE;
+    type: USER_TYPE;
     permanentResidence: string | null;
     currentAddress: string | null;
     taxNumber: string | null;

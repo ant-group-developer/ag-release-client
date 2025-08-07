@@ -1,6 +1,6 @@
 import { APP_ROUTES } from '@/enums/routes';
 import { userQueryKeys } from '@/modules/user/constants';
-import { ACCOUNT_TYPE } from '@/modules/user/enums';
+import { USER_TYPE } from '@/modules/user/enums';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { authApi } from '../api';
@@ -19,7 +19,7 @@ export const defaultProfile: UserInfoData = {
     dateOfBirth: null,
     isActive: true,
     emailVerified: true,
-    accountType: ACCOUNT_TYPE.USER,
+    type: USER_TYPE.USER,
     permanentResidence: null,
     currentAddress: null,
     taxNumber: null,
@@ -39,15 +39,15 @@ export const useAuth = () => {
     const router = useRouter();
 
     const { data, error, refetch, isLoading } = useQuery({
-        queryKey: userQueryKeys.getInfo,
+        queryKey: userQueryKeys.info(),
         queryFn: () => authApi.getInfo(),
         refetchOnWindowFocus: true,
     });
 
     const profile = data?.data?.data ?? defaultProfile;
 
-    const isAdmin = profile.accountType === ACCOUNT_TYPE.ADMIN;
-    const isUser = profile.accountType === ACCOUNT_TYPE.USER;
+    const isAdmin = profile.type === USER_TYPE.ADMIN;
+    const isUser = profile.type === USER_TYPE.USER;
 
     const isAuthenticated = Boolean(profile.id);
 

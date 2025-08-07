@@ -6,7 +6,7 @@ import { LAYOUT_TABLE, SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
 import { getScrollYHeight } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
-import { useLoading, UseLoadingType } from '@/hooks/use-loading';
+import { LoadingType, useLoading } from '@/hooks/use-loading';
 import useModalStore from '@/hooks/use-modal';
 import ReleasesHeader from '@/modules/releases/components/header';
 import ReleasesTable from '@/modules/releases/components/table';
@@ -68,7 +68,7 @@ export default function Releases({}: Props) {
     const { layoutTable } = useTableLayoutToggle();
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
-    const isLoading = useLoading(UseLoadingType.Fetching);
+    const isLoading = useLoading(LoadingType.Fetching);
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as ReleasesData);
 

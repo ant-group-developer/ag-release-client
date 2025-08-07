@@ -1,4 +1,4 @@
-import { useLoading, UseLoadingType } from '@/hooks/use-loading';
+import { LoadingType, useLoading } from '@/hooks/use-loading';
 import { ReactNode } from 'react';
 import AppModal, { AppModalProps } from './normal-modal';
 
@@ -17,7 +17,7 @@ const AppConfirm = ({
     modalTitle,
     ...props
 }: AppConfirmProps) => {
-    const loading = useLoading(UseLoadingType.Mutating);
+    const loading = useLoading(LoadingType.Mutating);
     return (
         <AppModal
             {...props}

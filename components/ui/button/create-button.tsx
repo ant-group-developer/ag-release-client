@@ -1,6 +1,5 @@
-import { SIZE_ICON_BUTTON } from '@/constants/common';
+import { PlusOutlined } from '@ant-design/icons';
 import { Button, ButtonProps } from 'antd';
-import { PlusIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 type Props = {
@@ -14,11 +13,11 @@ function CreateButton({ text, canCreate, ...props }: Props) {
     return (
         <Button
             {...props}
-            icon={<PlusIcon size={SIZE_ICON_BUTTON} />}
+            icon={<PlusOutlined />}
             type="primary"
             className="flex items-center justify-center"
         >
-            {text ?? messages('common.create')}
+            {text ?? messages('action.create.button')}
         </Button>
     );
 }

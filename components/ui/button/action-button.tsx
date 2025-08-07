@@ -171,13 +171,10 @@ export default function ActionButton({
         <Dropdown
             menu={{ items, onClick: handleMenuClick }}
             trigger={['click']}
-            placement="topLeft"
         >
-            {/* <Tooltip title={messages('common.action')}> */}
             <IconButton>
                 <MoreVertical size={SIZE_ICON} />
             </IconButton>
-            {/* </Tooltip> */}
         </Dropdown>
     );
 }

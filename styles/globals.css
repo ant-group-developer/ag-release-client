@@ -24,6 +24,12 @@
     --font-family-inter: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
+/* .lucide {
+    width: 18px;
+    height: 18px;
+    stroke-width: 1.75;
+} */
+
 /* [data-theme='dark'] {
     --card-bg: #2a2a2a;
     --card-bg-hover: #3a3a3a;

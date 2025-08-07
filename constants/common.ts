@@ -92,3 +92,5 @@ export const ICON_SOURCE = '/icon/source-drive.svg';
 export const OPACITY_TAG = 0.1;
 
 export const PAGE_SIZE_OPTIONS = [21, 28, 32];
+
+export const ARRAY_SEPARATOR = ',';

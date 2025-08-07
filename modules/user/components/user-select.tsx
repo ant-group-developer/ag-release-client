@@ -1,7 +1,9 @@
+import { ORDER } from '@/enums/common';
 import { cn } from '@/helpers/common';
 import { toNonAccentVietnamese } from '@/helpers/string';
 import { Select, SelectProps } from 'antd';
 import { useTranslations } from 'next-intl';
+import { USER_ORDER_BY } from '../enums';
 import { useUserList } from '../hooks/use-get-user';
 
 type Props = {
@@ -18,12 +20,12 @@ function UserSelect({
     ...props
 }: Props) {
     const messages = useTranslations();
-    const defaultUserList = {
-        page: 1,
-        pageSize: 999,
-    };
 
-    const { data: dataUser } = useUserList(defaultUserList);
+    const { data: dataUser } = useUserList({
+        fieldOrder: USER_ORDER_BY.EMAIL,
+        orderBy: ORDER.ASC,
+        pageSize: 999,
+    });
 
     const options = dataUser.items
         // .toSorted((a, b) => a.department.name.localeCompare(b.department.name))

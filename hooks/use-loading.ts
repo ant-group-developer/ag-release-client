@@ -1,19 +1,19 @@
 import { useIsFetching, useIsMutating } from '@tanstack/react-query';
 
-export enum UseLoadingType {
+export enum LoadingType {
     Fetching = 'fetching',
     Mutating = 'mutating',
 }
 
-export function useLoading(type?: UseLoadingType) {
+export function useLoading(type?: LoadingType) {
     const isFetching = useIsFetching();
     const isMutating = useIsMutating();
 
-    if (type === UseLoadingType.Fetching) {
+    if (type === LoadingType.Fetching) {
         return isFetching !== 0;
     }
 
-    if (type === UseLoadingType.Mutating) {
+    if (type === LoadingType.Mutating) {
         return isMutating !== 0;
     }
 

@@ -182,7 +182,7 @@
         "previous": "Previous",
         "next": "Next",
         "of": "of",
-        "userCreator": "Creator",
+        "creator": "Creator",
         "yes": "Yes",
         "no": "No",
         "other": "Other",
@@ -387,7 +387,7 @@
         "file": "File is required!",
         "url": "Please enter a valid link format!",
         "passwordMisMatch": "Password mis match!",
-        "passwordFormat": "Password must contain 1 uppercase character and at least 6 character",
+        "passwordFormat": "Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, and one number.",
         "unique": "Data must not be duplicated",
         "mustBeNumber": "Must be number",
         "min": "Must be min {number} characters",
@@ -401,7 +401,8 @@
         "inputPhoneNumber": "Enter phone number",
         "selectUsedStatus": "Select used status",
         "minWithValid": "Must be min at least {number} valid characters",
-        "onlyTheFollowingFormatsAreAccepted": "Only the following formats are accepted: {accept}"
+        "onlyTheFollowingFormatsAreAccepted": "Only the following formats are accepted: {accept}",
+        "fieldIsRequired": "{field} is required"
     },
     "form": {
         "searchPlaceholder": "Search"
@@ -514,7 +515,7 @@
         "idPlaceOfIssue": "Place of issue",
         "idDateOfIssue": "Date of issue",
         "emailVerified": "Email verified",
-        "accountType": "Account type",
+        "type": "Account type",
         "permanentResidence": "Permanent residence",
         "passportNo": "Passport No.",
         "passportPlaceOfIssue": "Passport place of issue",
@@ -528,7 +529,19 @@
         "name": "Name",
         "topUserCreatedOrder": "Top user created order",
         "topUserCompletedProduct": "Top user completed product",
-        "clickHereToGetTelegramId": "Click here to get Telegram ID"
+        "clickHereToGetTelegramId": "Click here to get Telegram ID",
+        "telegramId": "Telegram ID",
+        "syncData": "Sync data from Auth0",
+        "loginsCount": "Logins count",
+        "lastLogin": "Last login",
+        "lastIp": "Last IP",
+        "password": "Password",
+        "personalInfo": "Personal info",
+        "changePassword": "Change password",
+        "search": {
+            "keyword": "Search by name, email",
+            "id": "Search by ID"
+        }
     },
     "file": {
         "duration": "Duration",
@@ -1059,7 +1072,33 @@
     },
 
     "tenant": {
-        "label": "Tenant"
+        "label": "Tenant",
+        "name": "Tenant name",
+        "logo": "Logo",
+        "icon": "Icon",
+        "title": "Title",
+        "domain": "Domain",
+        "primaryColor": "Primary color",
+        "owner": "Owner",
+        "type": {
+            "title": "Tenant type",
+            "whiteLabel": {
+                "label": "White label"
+            },
+            "label": {
+                "label": "Label"
+            }
+        },
+        "search": {
+            "keyword": "Search by name, email"
+        },
+        "email": {
+            "tooltip": "This email will be used to send notifications"
+        },
+        "parent": {
+            "placeholder": "Select parent tenant",
+            "label": "Parent tenant"
+        }
     },
     "action": {
         "create": {

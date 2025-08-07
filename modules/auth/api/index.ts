@@ -1,9 +1,9 @@
-import axiosAccount from '@/api/axios-account';
+import axiosAuth from '@/api/axios-auth';
 import { DetailResponse } from '@/types/api';
 import { UserInfoData } from '../types/common';
 
 export const authApi = {
     getInfo() {
-        return axiosAccount.get<DetailResponse<UserInfoData>>('/auth/me');
+        return axiosAuth.get<DetailResponse<UserInfoData>>('/auth/me');
     },
 };

@@ -1,64 +1,69 @@
-import { GroupData } from '@/modules/group/types/data';
-import { CommonAttribute, CommonFunction, CommonParams } from '@/types/api';
-import { ACCOUNT_TYPE, SEX } from '../enums';
+import { ORDER } from '@/enums/common';
+import {
+    CommonAttributeCreator,
+    CommonFunction,
+    CommonParams,
+} from '@/types/api';
+import { USER_ORDER_BY, USER_TYPE } from '../enums';
 
-export interface RoleData extends CommonAttribute {
-    name: string;
+export interface DataFilterUser extends CommonParams {
+    isActive?: 'true' | 'false';
+    orderBy: ORDER;
+    fieldOrder: USER_ORDER_BY;
+    id?: string;
+    type?: string;
 }
 
-export interface DepartmentData {
-    id: number;
-    name: string;
-}
-
-export interface UserDetailData {
-    dateCreated: Date;
-    dateUpdated: Date;
-    id: string;
-    name: string;
+export interface UserDetail extends CommonAttributeCreator {
+    name: string | null;
     email: string;
-    avatar: string | null;
-    phoneNumber: string | null;
-    dateOfBirth: Date | null;
-    groups: GroupData[];
     isActive: boolean;
     emailVerified: boolean;
-    accountType: ACCOUNT_TYPE;
-    sex: SEX | null;
-    title: string | null;
-    titleEn: string | null;
-    permanentResidence: string | null;
-    permanentResidenceEn: string | null;
-    currentAddress: string | null;
-    currentAddressEn: string | null;
-    taxNumber: string | null;
-    passportNo: string | null;
-    passportPlaceOfIssue: string | null;
-    passportPlaceOfIssueEn: string | null;
-    idNumber: string | null;
-    idPlaceOfIssue: string | null;
-    idPlaceOfIssueEn: string | null;
-    idDateOfIssue: Date | null;
-    contractSignedDate: Date | null;
-    contractNumber: string | null;
-    telegramId: string;
-    telegramNotificationEnabled: boolean;
+    avatar: string | null;
+    telegramId: string | null;
+    lastLogin: string | null;
+    lastIp: string | null;
+    loginsCount: string | null;
+    type: USER_TYPE;
 }
 
 export type UserData = Pick<
-    UserDetailData,
-    'id' | 'email' | 'name' | 'accountType' | 'groups'
+    UserDetail,
+    | 'id'
+    | 'createdAt'
+    | 'updatedAt'
+    | 'name'
+    | 'email'
+    | 'avatar'
+    | 'type'
+    | 'isActive'
+    | 'lastLogin'
+    | 'loginsCount'
+    | 'creator'
+    | 'modifier'
 >;
 
 export interface UpdateUserPayload {
-    name: string;
-    phoneNumber: string | null;
-    dateOfBirth: Date | string | null;
-    telegramId: string | null;
-    telegramNotificationEnabled: boolean | null;
-}
-export interface UpdateUser extends CommonFunction {
-    payload: UpdateUserPayload;
+    name?: string;
+    email?: string;
+    avatar?: string;
+    telegramId?: string;
+    isActive?: boolean;
+    emailVerified?: boolean;
+    type?: USER_TYPE;
 }
 
-export interface DataFilterUser extends CommonParams {}
+export interface UpdateUser extends CommonFunction {
+    payload: UpdateUserPayload;
+    userId: UserData['id'];
+}
+export interface CreateUserPayload extends UpdateUserPayload {
+    email: string;
+    password: string;
+}
+
+export interface CreateUser extends CommonFunction {
+    payload: CreateUserPayload;
+}
+
+export interface SyncUserData extends CommonFunction {}
