@@ -1,3 +1,4 @@
+import { ARRAY_SEPARATOR } from '@/constants/common';
 import { cloneDeep } from 'lodash';
 
 export const removeEmptyChildren = (data: any[]) => {
@@ -17,3 +18,23 @@ export const removeEmptyChildren = (data: any[]) => {
     });
     return tempData;
 };
+
+export function arrayToString(
+    value: any,
+    separator: string = ARRAY_SEPARATOR
+): string | undefined {
+    if (Array.isArray(value) && value.length > 0) {
+        return value.join(separator);
+    }
+    return undefined;
+}
+
+export function arrayFromString(
+    value: any,
+    separator: string = ARRAY_SEPARATOR
+): string[] | undefined {
+    if (typeof value === 'string') {
+        return value.split(separator);
+    }
+    return undefined;
+}

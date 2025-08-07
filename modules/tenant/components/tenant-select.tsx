@@ -1,10 +1,10 @@
 import { ORDER } from '@/enums/common';
-import { cn } from '@/helpers/common';
+import { cn, getAvatarPlaceholder } from '@/helpers/common';
 import { toNonAccentVietnamese } from '@/helpers/string';
-import { Select, SelectProps } from 'antd';
+import { Avatar, Select, SelectProps } from 'antd';
 import { useTranslations } from 'next-intl';
-import { USER_ORDER_BY } from '../enums';
-import { useUserList } from '../hooks/use-get-user';
+import { TENANT_ORDER_BY } from '../enums';
+import { useTenantList } from '../hooks/use-get-tenant';
 
 type Props = {
     getEmail?: boolean;
@@ -12,7 +12,7 @@ type Props = {
     fallback?: string;
 } & SelectProps;
 
-function UserSelect({
+function TenantSelect({
     getEmail,
     className,
     externalOnChange,
@@ -21,38 +21,41 @@ function UserSelect({
 }: Props) {
     const messages = useTranslations();
 
-    const { data: dataUser } = useUserList({
-        fieldOrder: USER_ORDER_BY.EMAIL,
+    const { data: dataTenant } = useTenantList({
+        fieldOrder: TENANT_ORDER_BY.EMAIL,
         orderBy: ORDER.ASC,
         pageSize: 999,
     });
 
-    const options = dataUser.items
-        // .toSorted((a, b) => a.department.name.localeCompare(b.department.name))
-        .map((data: any) => {
-            // const firstName = data.firstname;
-            // const lastName = data.lastname;
-            // const userName = `${firstName} ${lastName}`;
-            const userId = data.id;
-            // const department = data.department.name || '';
-            const email = data.email;
-            const name = data.name;
+    const options = dataTenant.items.map((data) => {
+        const tenantId = data.id;
+        const email = data.owner.email;
+        const name = data.name;
 
-            return {
-                value: getEmail ? email : userId,
-                label: (
-                    <p className="flex flex-col">
+        return {
+            value: getEmail ? email : tenantId,
+            label: (
+                <div className="flex items-center gap-2">
+                    <Avatar
+                        src={data.logo || data.icon}
+                        className="flex-none"
+                        size={'large'}
+                    >
+                        {getAvatarPlaceholder(data.owner.email)}
+                    </Avatar>
+                    <p className="flex flex-1 flex-col">
                         <span className="truncate">{name}</span>
                         <span className="truncate text-gray-400">{email}</span>
                     </p>
-                ),
-                string: name + ' ' + email,
-                // string: email,
-                email,
-                name,
-                title: name,
-            };
-        });
+                </div>
+            ),
+            string: name + ' ' + email,
+            // string: email,
+            email,
+            name,
+            title: name,
+        };
+    });
 
     const handleChange: SelectProps['onChange'] = (value, option) => {
         props.onChange?.(value, option);
@@ -70,7 +73,7 @@ function UserSelect({
 
     return (
         <Select
-            placeholder={messages('user.select')}
+            placeholder={messages('tenant.label')}
             showSearch
             className={cn('w-full', className)}
             {...props}
@@ -86,4 +89,4 @@ function UserSelect({
     );
 }
 
-export default UserSelect;
+export default TenantSelect;

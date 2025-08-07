@@ -39,7 +39,7 @@ export const useAuth = () => {
     const router = useRouter();
 
     const { data, error, refetch, isLoading } = useQuery({
-        queryKey: userQueryKeys.getInfo,
+        queryKey: userQueryKeys.info(),
         queryFn: () => authApi.getInfo(),
         refetchOnWindowFocus: true,
     });

@@ -1,7 +1,7 @@
 'use client';
 
-import { useMediaQuery } from '@/hooks/use-media';
 import { Layout, SiderProps } from 'antd';
+import { useResponsive } from 'antd-style';
 import { Scrollbars } from 'react-custom-scrollbars';
 import SidebarMenu from './side-bar-menu';
 
@@ -10,14 +10,14 @@ type Props = {} & SiderProps;
 const { Sider } = Layout;
 
 function Sidebar({ collapsed, onBreakpoint, ...props }: Props) {
-    const { isSmallDevice } = useMediaQuery();
+    const responsive = useResponsive();
 
     return (
         <Sider
             className="border-r dark:border-zinc-800"
             collapsible
             width={255}
-            collapsedWidth={isSmallDevice ? 0 : 50}
+            collapsedWidth={responsive.mobile ? 0 : 50}
             theme="light"
             collapsed={collapsed}
             trigger={null}

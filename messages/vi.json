@@ -398,7 +398,8 @@
         "phoneNumber": "Số điện thoại phải gồm đúng 10 số",
         "inputPhoneNumber": "Nhập số điện thoại",
         "selectUsedStatus": "Chọn trạng thái sử dụng",
-        "onlyTheFollowingFormatsAreAccepted": "Chỉ chấp nhận các định dạng: {accept}"
+        "onlyTheFollowingFormatsAreAccepted": "Chỉ chấp nhận các định dạng: {accept}",
+        "fieldIsRequired": "{field} là bắt buộc"
     },
     "form": {
         "searchPlaceholder": "Tìm kiếm"
@@ -526,13 +527,17 @@
         "topUserCompletedProduct": "Top người hoàn thành nhiều sản phẩm nhất",
         "clickHereToGetTelegramId": "Nhấn vào đây để lấy ID telegram",
         "telegramId": "Telegram ID",
-        "syncData": "Đồng bộ dữ liệu",
+        "syncData": "Đồng bộ dữ liệu từ Auth0",
         "loginsCount": "Số lần đăng nhập",
         "lastLogin": "Lần đăng nhập cuối",
         "lastIp": "IP cuối",
         "password": "Mật khẩu",
         "personalInfo": "Thông tin cá nhân",
-        "changePassword": "Đổi mật khẩu"
+        "changePassword": "Đổi mật khẩu",
+        "search": {
+            "keyword": "Tìm kiếm theo tên, email",
+            "id": "Tìm kiếm theo ID"
+        }
     },
     "file": {
         "duration": "Thời lượng",
@@ -1065,7 +1070,33 @@
     },
 
     "tenant": {
-        "label": "Tenant"
+        "label": "Tenant",
+        "name": "Tên tenant",
+        "logo": "Logo",
+        "icon": "Biểu tượng",
+        "title": "Tiêu đề",
+        "domain": "Tên miền",
+        "primaryColor": "Màu chủ đạo",
+        "owner": "Người sở hữu",
+        "type": {
+            "title": "Loại tenant",
+            "whiteLabel": {
+                "label": "White label"
+            },
+            "label": {
+                "label": "Label"
+            }
+        },
+        "search": {
+            "keyword": "Tìm kiếm theo tên, email"
+        },
+        "email": {
+            "tooltip": "Email này sẽ được sử dụng để gửi thông báo"
+        },
+        "parent": {
+            "placeholder": "Chọn tenant cha",
+            "label": "Tenant cha"
+        }
     },
     "action": {
         "create": {

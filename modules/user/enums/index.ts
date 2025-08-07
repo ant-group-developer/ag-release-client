@@ -2,12 +2,6 @@ export enum USER_TYPE {
     ADMIN = 'admin',
     USER = 'user',
 }
-
-export enum SEX {
-    MALE = 'male',
-    FEMALE = 'female',
-}
-
 export enum USER_ORDER_BY {
     LAST_LOGIN = 'lastLogin',
     CREATED_AT = 'createdAt',

@@ -398,7 +398,8 @@
         "inputPhoneNumber": "Enter phone number",
         "selectUsedStatus": "Select used status",
         "minWithValid": "Must be min at least {number} valid characters",
-        "onlyTheFollowingFormatsAreAccepted": "Only the following formats are accepted: {accept}"
+        "onlyTheFollowingFormatsAreAccepted": "Only the following formats are accepted: {accept}",
+        "fieldIsRequired": "{field} is required"
     },
     "form": {
         "searchPlaceholder": "Search"
@@ -527,13 +528,17 @@
         "topUserCompletedProduct": "Top user completed product",
         "clickHereToGetTelegramId": "Click here to get Telegram ID",
         "telegramId": "Telegram ID",
-        "syncData": "Sync data",
+        "syncData": "Sync data from Auth0",
         "loginsCount": "Logins count",
         "lastLogin": "Last login",
         "lastIp": "Last IP",
         "password": "Password",
         "personalInfo": "Personal info",
-        "changePassword": "Change password"
+        "changePassword": "Change password",
+        "search": {
+            "keyword": "Search by name, email",
+            "id": "Search by ID"
+        }
     },
     "file": {
         "duration": "Duration",
@@ -1061,7 +1066,33 @@
     },
 
     "tenant": {
-        "label": "Tenant"
+        "label": "Tenant",
+        "name": "Tenant name",
+        "logo": "Logo",
+        "icon": "Icon",
+        "title": "Title",
+        "domain": "Domain",
+        "primaryColor": "Primary color",
+        "owner": "Owner",
+        "type": {
+            "title": "Tenant type",
+            "whiteLabel": {
+                "label": "White label"
+            },
+            "label": {
+                "label": "Label"
+            }
+        },
+        "search": {
+            "keyword": "Search by name, email"
+        },
+        "email": {
+            "tooltip": "This email will be used to send notifications"
+        },
+        "parent": {
+            "placeholder": "Select parent tenant",
+            "label": "Parent tenant"
+        }
     },
     "action": {
         "create": {

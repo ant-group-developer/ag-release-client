@@ -47,11 +47,7 @@ export const ArtistRoleTable = ({ dataFilter, ...props }: Props) => {
                 'name'
             ),
             render: (value) => (
-                <CopyText
-                    tooltipProps={{ placement: 'right' }}
-                    text={value}
-                    label={messages('artist.role')}
-                >
+                <CopyText tooltipProps={{ placement: 'right' }} text={value}>
                     <p className="truncate">{value}</p>
                 </CopyText>
             ),
@@ -70,11 +66,7 @@ export const ArtistRoleTable = ({ dataFilter, ...props }: Props) => {
                 'value'
             ),
             render: (value) => (
-                <CopyText
-                    tooltipProps={{ placement: 'right' }}
-                    text={value}
-                    label={messages('common.value')}
-                >
+                <CopyText tooltipProps={{ placement: 'right' }} text={value}>
                     <p className="truncate">{value}</p>
                 </CopyText>
             ),

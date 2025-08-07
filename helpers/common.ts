@@ -242,6 +242,10 @@ export const getFileName = (file: File) => {
     return file.name.split('.').slice(0, -1).join('.');
 };
 
+export const getFileExtension = (file: File) => {
+    return file.name.split('.').pop();
+};
+
 export const getFileDuration = async (file: File) => {
     const audioContext = new AudioContext();
     const buffer = await file.arrayBuffer();

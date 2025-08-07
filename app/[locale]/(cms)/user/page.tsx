@@ -10,30 +10,30 @@ import {
 } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-
-import { useDeleteLabel } from '@/modules/labels/hooks/use-delete-label';
-import { LabelData } from '@/modules/labels/types';
 import CreateUserModal from '@/modules/user/components/user-create';
 import UserHeader from '@/modules/user/components/user-header';
 import UserTable from '@/modules/user/components/user-table';
 import UpdateUserModal from '@/modules/user/components/user-update';
 import { TYPE_MODAL_USER, USER_ORDER_BY } from '@/modules/user/enums';
 import { useUserList } from '@/modules/user/hooks/use-get-user';
+import { useSyncUser } from '@/modules/user/hooks/use-sync-user';
 import { DataFilterUser } from '@/modules/user/types/data';
-import { DeleteVariables } from '@/types/api';
 import { useWindowSize } from '@uidotdev/usehooks';
-import { useTranslations } from 'next-intl';
 
 type Props = {};
 
 export default function UserPage({}: Props) {
     // hooks - state
-    const messages = useTranslations();
+    const { height, width } = useWindowSize();
+    const typeModal = useModalStore((state) => state.typeModal);
+    const closeModal = useModalStore((state) => state.closeModal);
+
+    // apis
     const {
         dataFilter,
+        canClearFilter,
         onChangeFilter,
         onChangePage,
-        canClearFilter,
         removeFilter,
     } = useFilter<DataFilterUser>({
         page: 1,
@@ -41,28 +41,10 @@ export default function UserPage({}: Props) {
         fieldOrder: USER_ORDER_BY.UPDATED_AT,
         orderBy: ORDER.DESC,
     });
-    const typeModal = useModalStore((state) => state.typeModal);
-    const closeModal = useModalStore((state) => state.closeModal);
-    const dataEdit = useModalStore((state) => state.dataEdit);
-    const { height, width } = useWindowSize();
+    const { data, dataUpdatedAt, refetch, isFetching } =
+        useUserList(dataFilter);
+    const { syncUser, isPending } = useSyncUser();
 
-    // apis
-    const { data, isLoading, dataUpdatedAt, refetch } = useUserList(dataFilter);
-    const { deleteLabel } = useDeleteLabel();
-
-    // func
-    const handleRefresh = () => {
-        refetch();
-    };
-    const handleDeleteLabel = () => {
-        const variables: DeleteVariables<LabelData['id']> = {
-            id: dataEdit?.id,
-            onSuccess: () => {
-                closeModal();
-            },
-        };
-        deleteLabel(variables);
-    };
     const onChangeSort = (pagination: any, filters: any, sort: any) => {
         const orderBy = setSortOrder(sort, ORDER.ASC);
         const fieldOrder = sort.field;
@@ -83,8 +65,9 @@ export default function UserPage({}: Props) {
                     onChangeFilter={onChangeFilter}
                     canClearFilter={canClearFilter}
                     removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
-                    lastUpdatedAt={formattedDate(dataUpdatedAt)}
+                    handleRefresh={() => refetch()}
+                    handleSync={() => syncUser({})}
+                    lastUpdatedAt={formattedDate(dataUpdatedAt || new Date())}
                 />
                 <UserTable
                     dataSource={data.items}
@@ -94,7 +77,7 @@ export default function UserPage({}: Props) {
                         current: data.metadata.currentPage,
                         total: data.metadata.totalItems,
                     }}
-                    loading={isLoading}
+                    loading={isFetching || isPending}
                     dataFilter={dataFilter}
                     onChange={onChangeSort}
                 />

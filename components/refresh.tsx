@@ -22,7 +22,8 @@ export default function Refresh({ lastTimeUpdated, handleRefresh }: Props) {
                 <CustomTooltip title={messages('common.refresh')}>
                     <IconButton
                         onClick={handleRefresh}
-                        className="cursor-pointer hover:text-blue-500"
+                        shape="square"
+                        variant="filled"
                     >
                         <RotateCw size={SIZE_ICON} />
                     </IconButton>

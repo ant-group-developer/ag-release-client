@@ -217,4 +217,9 @@ export const QUERY_KEY = {
         GET_LIST: 'GET_LIST_TRACK_ORIGIN_TYPE',
         GET_DETAIL: 'GET_DETAIL_TRACK_ORIGIN_TYPE',
     },
+    TENANT: {
+        KEY: 'TENANT',
+        GET_LIST: 'GET_LIST_TENANT',
+        GET_DETAIL: 'GET_DETAIL_TENANT',
+    },
 };

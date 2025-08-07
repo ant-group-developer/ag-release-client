@@ -17,7 +17,7 @@ function CreateButton({ text, canCreate, ...props }: Props) {
             type="primary"
             className="flex items-center justify-center"
         >
-            {text ?? messages('common.create')}
+            {text ?? messages('action.create.button')}
         </Button>
     );
 }

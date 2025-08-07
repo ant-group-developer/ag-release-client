@@ -1,15 +1,20 @@
 import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
 import Refresh from '@/components/refresh';
 import CreateButton from '@/components/ui/button/create-button';
+import IconButton from '@/components/ui/button/icon-button';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { SIZE_ICON } from '@/constants/common';
 import { UseFilterProps } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import LabelsSuperFilter from '@/modules/labels/components/header/labels-super-filter';
+import { CloudDownload } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { TYPE_MODAL_USER } from '../../enums';
-import { DataFilterUser } from '../../types/data';
+import { TYPE_MODAL_USER } from '../enums';
+import { DataFilterUser } from '../types/data';
+import UserHeaderFilter from './user-header-filter';
 
 type Props = {
     handleRefresh: () => void;
+    handleSync: () => void;
     lastUpdatedAt: string;
 } & Pick<
     UseFilterProps<DataFilterUser>,
@@ -18,18 +23,19 @@ type Props = {
 
 export default function UserHeader({
     dataFilter,
-    onChangeFilter,
     canClearFilter,
+    lastUpdatedAt,
+    onChangeFilter,
     removeFilter,
     handleRefresh,
-    lastUpdatedAt,
+    handleSync,
 }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     return (
         <AppHeader>
             <AppHeaderGroup>
-                <LabelsSuperFilter
+                <UserHeaderFilter
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
                     canClearFilter={canClearFilter}
@@ -43,9 +49,20 @@ export default function UserHeader({
                         handleRefresh={handleRefresh}
                         lastTimeUpdated={lastUpdatedAt}
                     />
+                    <CustomTooltip title={messages('user.syncData')}>
+                        <IconButton
+                            onClick={handleSync}
+                            shape="square"
+                            variant="filled"
+                        >
+                            <CloudDownload size={SIZE_ICON} />
+                        </IconButton>
+                    </CustomTooltip>
                     <CreateButton
                         canCreate={true}
-                        text={messages('action.create.button')}
+                        text={messages('action.create.title', {
+                            label: messages('user.label'),
+                        })}
                         onClick={() => openModal(TYPE_MODAL_USER.CREATE)}
                     />
                 </div>

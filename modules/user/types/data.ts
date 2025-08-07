@@ -10,10 +10,11 @@ export interface DataFilterUser extends CommonParams {
     isActive?: 'true' | 'false';
     orderBy: ORDER;
     fieldOrder: USER_ORDER_BY;
+    id?: string;
+    type?: string;
 }
 
-export interface UserDetail extends Omit<CommonAttributeCreator, 'id'> {
-    id: string;
+export interface UserDetail extends CommonAttributeCreator {
     name: string | null;
     email: string;
     isActive: boolean;
@@ -64,3 +65,5 @@ export interface CreateUserPayload extends UpdateUserPayload {
 export interface CreateUser extends CommonFunction {
     payload: CreateUserPayload;
 }
+
+export interface SyncUserData extends CommonFunction {}

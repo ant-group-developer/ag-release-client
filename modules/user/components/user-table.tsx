@@ -93,10 +93,10 @@ function UserTable({ dataFilter, ...props }: Props) {
                             {getAvatarPlaceholder(record.email)}
                         </Avatar>
                         <div className="grid flex-1 truncate">
-                            <CopyText text={cell} label="Name">
+                            <CopyText text={cell}>
                                 <p>{cell}</p>
                             </CopyText>
-                            <CopyText text={record.email} label="Email">
+                            <CopyText text={record.email}>
                                 <p className="italic text-gray-500/80">
                                     {record.email}
                                 </p>
@@ -159,7 +159,7 @@ function UserTable({ dataFilter, ...props }: Props) {
                 USER_ORDER_BY.LOGIN_COUNT
             ),
             render: (cell) => (
-                <CopyText text={cell} label="Logins count" className="mx-auto">
+                <CopyText text={cell} className="mx-auto">
                     <p>{formattedNumber(cell)}</p>
                 </CopyText>
             ),
@@ -222,7 +222,7 @@ function UserTable({ dataFilter, ...props }: Props) {
             title: messages('common.action'),
             dataIndex: 'action',
             align: 'center',
-            width: 100,
+            width: 50,
             fixed: 'right',
             render: (cell, record) => (
                 <ActionButton
