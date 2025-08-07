@@ -369,3 +369,7 @@ a {
 .custom-alert-sidebar .ant-alert-message {
     @apply !mb-1 !important;
 }
+
+.custom-scroll-artist-modal .ant-modal-content {
+    @apply h-[90vh] overflow-y-auto !important;
+}

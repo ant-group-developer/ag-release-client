@@ -8,6 +8,7 @@ import useModalStore from '@/hooks/use-modal';
 import { uploadApi } from '@/modules/upload/apis';
 import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form, Input, Radio } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { useCreateDsp } from '../../hooks/use-create-dsp';
@@ -27,13 +28,7 @@ export default function DspFormModal({ ...props }: Props) {
     const [form] = Form.useForm();
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as DspData);
-
-    function renderTitle() {
-        const isUpdate = !!dataEdit?.id;
-        return `${isUpdate ? messages('common.update') : messages('common.create')} DSP`;
-    }
-    const titleModal = renderTitle();
-    const isUpdateForm = dataEdit?.id;
+    const isUpdate = !!dataEdit?.id;
 
     const { createDsp } = useCreateDsp();
     const { updateDsp } = useUpdateDsp();
@@ -66,12 +61,16 @@ export default function DspFormModal({ ...props }: Props) {
         updateDsp(variables);
     };
 
-    const onFinish = async (values: DspFormValues) => {
-        const { pictureFile, ...res } = values;
+    const onFinish = async (values: any) => {
+        const { pictureFile, link, ...res } = values;
         const file = values?.pictureFile?.fileList[0]?.originFileObj;
         const oldFile = values?.pictureFile?.fileList[0]?.url;
+        const formatLinks = link
+            .split('\n')
+            .map((s: string) => s.trim())
+            .filter(Boolean);
         active();
-        const payloadValues = res;
+        const payloadValues = { formatLinks, ...res };
         if (file) {
             const dataPayload = {
                 entityType: 'dsps',
@@ -97,7 +96,7 @@ export default function DspFormModal({ ...props }: Props) {
             payloadValues.picture = getAvatarUrl(values?.name);
         }
 
-        return isUpdateForm
+        return isUpdate
             ? handleUpdateDsp(payloadValues)
             : handleCreateDsp(payloadValues);
     };
@@ -105,6 +104,7 @@ export default function DspFormModal({ ...props }: Props) {
     useEffect(() => {
         const initialData = {
             ...dataEdit,
+            link: dataEdit?.formatLinks,
             pictureFile: dataEdit?.picture
                 ? {
                       fileList: [
@@ -126,7 +126,7 @@ export default function DspFormModal({ ...props }: Props) {
         <AppModal
             width={500}
             {...props}
-            title={titleModal}
+            title={`${isUpdate ? messages('common.update') : messages('common.create')} DSP`}
             open
             onCancel={closeModal}
             onOk={form.submit}
@@ -188,6 +188,20 @@ export default function DspFormModal({ ...props }: Props) {
                     ]}
                 >
                     <Input allowClear />
+                </AppFormItem>
+
+                <AppFormItem
+                    name="link"
+                    label={'Format links'}
+                    tooltip={messages('dsp.oneLinkPerLine')}
+                >
+                    <TextArea
+                        allowClear
+                        autoSize={{
+                            maxRows: 7,
+                            minRows: 3,
+                        }}
+                    />
                 </AppFormItem>
 
                 <AppFormItem

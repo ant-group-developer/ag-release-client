@@ -16,6 +16,7 @@ export const useGetDetailDsp = (id: DspData['id']) => {
         id: '',
         createdAt: '',
         updatedAt: null,
+        formatLinks: [],
     };
 
     return {

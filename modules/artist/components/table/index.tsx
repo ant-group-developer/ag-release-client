@@ -2,13 +2,16 @@ import ActionButton from '@/components/ui/button/action-button';
 import CopyText from '@/components/ui/copy-text/copy-text';
 import ImageFallback from '@/components/ui/image/image-fallback';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
+import { getArtistDetailRoute } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
-import { useRouter } from '@/i18n/routing';
+import { Link, useRouter } from '@/i18n/routing';
+import { Avatar } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
-import { TYPE_MODAL_ARTIST } from '../../enum';
+import { ARTIST_DETAIL_TABS, TYPE_MODAL_ARTIST } from '../../enum';
 import { ArtistData, ArtistDataFilter } from '../../types';
 
 type Props = Omit<AppTableProps<ArtistData>, 'columns'> & {
@@ -93,13 +96,52 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
                             className="aspect-square rounded-full object-cover"
                         />
                     </div>
-                    <CopyText
-                        tooltipProps={{ placement: 'right' }}
-                        text={value}
-                        label={messages('artist.name')}
+                    <CustomTooltip
+                        placement="right"
+                        title={messages('common.viewDetail')}
                     >
-                        <p className="truncate">{value}</p>
-                    </CopyText>
+                        <Link
+                            href={getArtistDetailRoute(
+                                record?.id,
+                                ARTIST_DETAIL_TABS.OVERVIEW
+                            )}
+                        >
+                            <p className="truncate hover:text-blue-500">
+                                {value}
+                            </p>
+                        </Link>
+                    </CustomTooltip>
+                </div>
+            ),
+        },
+        {
+            title: messages('artist.id'),
+            key: 'id',
+            dataIndex: 'id',
+            align: 'left',
+            width: 100,
+            render: (value) => (
+                <CopyText tooltipProps={{ placement: 'right' }} text={value}>
+                    <p className="truncate">{value}</p>
+                </CopyText>
+            ),
+        },
+        {
+            title: messages('common.platforms'),
+            key: 'artistProfiles',
+            dataIndex: 'artistProfiles',
+            width: 100,
+            render: (_, record) => (
+                <div>
+                    <Avatar.Group
+                        max={{
+                            count: 5,
+                        }}
+                    >
+                        {record?.artistProfiles?.map((item) => (
+                            <Avatar key={item.id} src={item?.dsp?.picture} />
+                        ))}
+                    </Avatar.Group>
                 </div>
             ),
         },
@@ -116,18 +158,6 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
                     </span>
                 );
             },
-        },
-        {
-            title: messages('artist.id'),
-            key: 'id',
-            dataIndex: 'id',
-            align: 'left',
-            width: 100,
-            render: (value) => (
-                <CopyText tooltipProps={{ placement: 'right' }} text={value}>
-                    <p className="truncate">{value}</p>
-                </CopyText>
-            ),
         },
         {
             title: messages('common.dateCreated'),

@@ -8,10 +8,10 @@ import GridCardTracks from './grid-card';
 
 type Props = {
     data: TrackData[];
-    loading: boolean;
+    loading?: boolean;
 };
 
-export default function TracksGridTable({ data, loading }: Props) {
+export default function TracksGridTable({ data, loading = false }: Props) {
     const { height, width } = useWindowSize();
     const isSmallDevice = Number(width) <= SCREEN.MD;
 

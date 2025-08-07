@@ -1,17 +1,23 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
+import IconButton from '@/components/ui/button/icon-button';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
+import PlatformSelect from '@/components/ui/select/platform-select';
+import { SIZE_ICON } from '@/constants/common';
 import { getAvatarUrl } from '@/helpers/link';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
+import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { uploadApi } from '@/modules/upload/apis';
 import { CreateVariables, UpdateVariables } from '@/types/api';
-import { Form, Input } from 'antd';
+import { Button, Form, Input } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
+import { Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { useCreateArtist } from '../../hooks/use-create-artist';
+import { useGetDetailArtist } from '../../hooks/use-get-detail-artist';
 import { useUpdateArtist } from '../../hooks/use-update-artist';
 import { ArtistData } from '../../types';
 import { CreateArtistPayload, UpdateArtistPayload } from '../../types/payload';
@@ -31,6 +37,8 @@ export default function ArtistFormModal({ ...props }: Props) {
 
     const { createArtist } = useCreateArtist();
     const { updateArtist } = useUpdateArtist();
+    const { dspData } = useGetListDsp({});
+    const { artistData } = useGetDetailArtist(dataEdit?.id);
 
     const handleCreateArtist = (values: ArtistFormValues) => {
         const variables: CreateVariables<CreateArtistPayload> = {
@@ -106,22 +114,22 @@ export default function ArtistFormModal({ ...props }: Props) {
 
     useEffect(() => {
         const initialData = {
-            ...dataEdit,
-            pictureFile: dataEdit?.picture
+            ...artistData,
+            pictureFile: artistData?.picture
                 ? {
                       fileList: [
                           {
-                              uid: dataEdit?.id,
-                              thumbUrl: dataEdit?.picture,
-                              url: dataEdit?.picture,
-                              name: dataEdit?.name,
+                              uid: artistData?.id,
+                              thumbUrl: artistData?.picture,
+                              url: artistData?.picture,
+                              name: artistData?.name,
                           },
                       ],
                   }
                 : undefined,
         };
         form.setFieldsValue(initialData);
-    }, [dataEdit]);
+    }, [artistData]);
 
     return (
         <AppModal
@@ -131,35 +139,39 @@ export default function ArtistFormModal({ ...props }: Props) {
             open
             onOk={form.submit}
             loading={isActive}
+            className="custom-scroll-artist-modal !top-6"
         >
             <AppForm
                 form={form}
                 onFinish={onFinish}
                 showSubmit={false}
-                layout="vertical"
+                layout="horizontal"
                 disabled={isActive}
             >
-                <div className="flex items-center gap-4">
-                    <AppFormItem name="pictureFile" label={'Avatar'}>
+                <AppFormItem name="pictureFile" label={'Avatar'}>
+                    <div className="flex w-full items-center gap-4">
                         <ImageListUpload
                             maxCount={1}
                             accept="image/*"
                             maxSizeMB={2}
                         />
-                    </AppFormItem>
-                    <div>
-                        <p className="flex-1 text-sm text-gray-500">
-                            {messages('image.validation.supportImageFormat', {
-                                value: 'PNG, JPG, JPEG',
-                            })}
-                        </p>
-                        <p className="flex-1 text-sm text-gray-500">
-                            {messages('image.validation.mustBeLessThanMB', {
-                                value: '3',
-                            })}
-                        </p>
+                        <div>
+                            <p className="flex-1 text-sm text-gray-500">
+                                {messages(
+                                    'image.validation.supportImageFormat',
+                                    {
+                                        value: 'PNG, JPG, JPEG',
+                                    }
+                                )}
+                            </p>
+                            <p className="flex-1 text-sm text-gray-500">
+                                {messages('image.validation.mustBeLessThanMB', {
+                                    value: '3',
+                                })}
+                            </p>
+                        </div>
                     </div>
-                </div>
+                </AppFormItem>
                 <AppFormItem
                     name="name"
                     label={messages('artist.name')}
@@ -205,38 +217,144 @@ export default function ArtistFormModal({ ...props }: Props) {
                     />
                 </AppFormItem>
 
-                {/* <div className="space-y-4"> 
-                    <AppFormItem name="profiles" label="Artist Profiles">
-                        <div className="flex flex-col gap-2 rounded-md border p-2"> */}
-                {/* <AppFormItem name="spotify" className="!mb-0">
-                                <div className="flex cursor-pointer items-center justify-between rounded-md bg-card-bg p-3 hover:bg-card-bg-hover">
-                                    <div className="flex items-center gap-2">
-                                        <Image
-                                            src="/icon/platform-icon/spotify.svg"
-                                            alt="Spotify"
-                                            width={78}
-                                            height={24}
-                                        />
-                                    </div>
-                                    <Button
-                                        type="default"
-                                        className="font-medium"
-                                    >
-                                        Link Profile
-                                    </Button>
-                                </div>
-                            </AppFormItem> */}
+                <Form.List name={'artistProfiles'}>
+                    {(fields, { add, remove }) => (
+                        <>
+                            <p className="pb-8 font-bold">
+                                {' '}
+                                {messages('dsp.profileList')}{' '}
+                            </p>
+                            {fields.map(({ key, name, ...restField }) => (
+                                <div key={key}>
+                                    <div className="relative">
+                                        <AppFormItem
+                                            {...restField}
+                                            className="flex-1"
+                                            name={[name, 'url']}
+                                            label={'Url'}
+                                            required
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message:
+                                                        messages(
+                                                            'validation.input'
+                                                        ),
+                                                },
+                                                {
+                                                    max: 100,
+                                                    message: messages(
+                                                        'validation.max',
+                                                        {
+                                                            number: 100,
+                                                        }
+                                                    ),
+                                                },
+                                            ]}
+                                        >
+                                            <Input
+                                                allowClear
+                                                onChange={(e) => {
+                                                    const url = e.target.value;
+                                                    const matched =
+                                                        dspData?.items.find(
+                                                            (dsp) =>
+                                                                dsp.formatLinks?.some(
+                                                                    (
+                                                                        link: string
+                                                                    ) =>
+                                                                        url.includes(
+                                                                            link
+                                                                        )
+                                                                )
+                                                        );
 
-                {/* <ArtistProfilesList
-                                list={fakeDspData.map((item) => ({
-                                    icon: item.image,
-                                    name: item.name,
-                                    id: item.id.toString(),
-                                }))}
-                            />
-                        </div>
-                    </AppFormItem>
-                </div> */}
+                                                    if (matched) {
+                                                        const current =
+                                                            form.getFieldValue(
+                                                                'artistProfiles'
+                                                            ) || [];
+                                                        current[name] = {
+                                                            ...(current[name] ||
+                                                                {}),
+                                                            dspId: matched.id,
+                                                        };
+                                                        form.setFieldsValue({
+                                                            artistProfiles:
+                                                                current,
+                                                        });
+                                                    }
+                                                }}
+                                            />
+                                        </AppFormItem>
+                                        <IconButton
+                                            onClick={() => remove(name)}
+                                            className="absolute right-0 top-[-30px] mb-1"
+                                        >
+                                            <Trash
+                                                size={SIZE_ICON}
+                                                className="text-red-500"
+                                            />
+                                        </IconButton>
+                                    </div>
+                                    <AppFormItem
+                                        {...restField}
+                                        name={[name, 'name']}
+                                        label={messages('channel.name')}
+                                        required
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message:
+                                                    messages(
+                                                        'validation.input'
+                                                    ),
+                                            },
+                                            {
+                                                max: 100,
+                                                message: messages(
+                                                    'validation.max',
+                                                    {
+                                                        number: 100,
+                                                    }
+                                                ),
+                                            },
+                                        ]}
+                                    >
+                                        <Input allowClear />
+                                    </AppFormItem>
+                                    <AppFormItem
+                                        {...restField}
+                                        className="!mb-8 border-b !pb-8"
+                                        name={[name, 'dspId']}
+                                        label={messages('common.platforms')}
+                                        required
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message:
+                                                    messages(
+                                                        'validation.input'
+                                                    ),
+                                            },
+                                        ]}
+                                    >
+                                        <PlatformSelect allowClear />
+                                    </AppFormItem>
+                                </div>
+                            ))}
+                            <div className="mb-4">
+                                <Button
+                                    className="w-full"
+                                    type="dashed"
+                                    onClick={() => add()}
+                                >
+                                    + {messages('action.create.button')}
+                                </Button>
+                            </div>
+                        </>
+                    )}
+                </Form.List>
             </AppForm>
         </AppModal>
     );

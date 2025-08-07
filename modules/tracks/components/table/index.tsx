@@ -1,4 +1,3 @@
-import ActionButton from '@/components/ui/button/action-button';
 import ImageFallback from '@/components/ui/image/image-fallback';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
@@ -7,8 +6,10 @@ import { formattedDate } from '@/helpers/common';
 import { getTrackDetailRoute } from '@/helpers/link';
 import { Link } from '@/i18n/routing';
 import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
+import TrackActionButton from '@/modules/releases/components/release-detail/release-tracks/button/track-action';
 import { TrackArtistData } from '@/modules/track-artist/types';
-import { TRACKS_COLUMNS_DISPLAY } from '@/modules/tracks/enums';
+import { TRACK_TABS, TRACKS_COLUMNS_DISPLAY } from '@/modules/tracks/enums';
+import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { TrackData } from '../../types';
@@ -52,7 +53,12 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
                         title={messages('common.viewDetail')}
                         placement="right"
                     >
-                        <Link href={getTrackDetailRoute(record?.id)}>
+                        <Link
+                            href={getTrackDetailRoute(
+                                record?.id,
+                                TRACK_TABS.METADATA
+                            )}
+                        >
                             <p className="truncate hover:cursor-pointer hover:text-blue-500">
                                 {record?.title}
                             </p>
@@ -161,7 +167,17 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
             align: 'center',
             width: 30,
             fixed: 'right',
-            render: () => <ActionButton showDelete />,
+            render: (_, record) => (
+                <TrackActionButton
+                    showDownload
+                    onShowDownload={async () => {
+                        const response = await bucketApi.getLinkDownloadFile(
+                            record?.audioFile?.fileId as string
+                        );
+                        window.open(response?.data?.data);
+                    }}
+                />
+            ),
         },
     ];
 
