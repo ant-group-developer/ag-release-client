@@ -7,7 +7,9 @@ import {
     ICON_VIDEO,
 } from '@/constants/common';
 import { UPLOAD_TYPE } from '@/enums/common';
+import { ARTIST_DETAIL_TABS } from '@/modules/artist/enum';
 import { RELEASES_TABS } from '@/modules/releases/enums';
+import { TRACK_TABS } from '@/modules/tracks/enums';
 
 export const getLinkDrive = (fileId: string) =>
     `https://drive.google.com/uc?export=view&id=${fileId}`;
@@ -88,8 +90,13 @@ export const getReleaseDetailTabRoute = (
     action?: RELEASE_DETAIL_ACTION
 ) => `/releases/detail/${releaseId}/${tab}${action ? `?action=${action}` : ''}`;
 
-export const getTrackDetailRoute = (trackId: string) =>
-    `/tracks/detail/${trackId}`;
+export const getTrackDetailRoute = (trackId: string, tab: TRACK_TABS) =>
+    `/tracks/detail/${trackId}/${tab}`;
+
+export const getArtistDetailRoute = (
+    artistId: string,
+    tab: ARTIST_DETAIL_TABS
+) => `/artists/detail/${artistId}/${tab}`;
 
 export const getAvatarUrl = (
     name: string,

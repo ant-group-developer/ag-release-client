@@ -1,23 +1,32 @@
 'use client';
 
-import AppContainer from '@/components/ant-music/app-container';
 import ArtistProfileCard from '@/modules/artist/components/artist-detail/overview/card/artist-profile';
+import CountAnalysisCard from '@/modules/artist/components/artist-detail/overview/card/count-analysis-card';
 import RevenueAnalysisCard from '@/modules/artist/components/artist-detail/overview/card/revenue-analysis';
 import StreamsAnalysisCard from '@/modules/artist/components/artist-detail/overview/card/streams-analysis';
-import TopOfReleaseCard from '@/modules/artist/components/artist-detail/overview/card/top-of-release';
-import TopOfTrackCard from '@/modules/artist/components/artist-detail/overview/card/top-of-track';
-import ArtistDetailHeader from '@/modules/artist/components/artist-detail/overview/header';
+import { useGetDetailArtist } from '@/modules/artist/hooks/use-get-detail-artist';
+import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
 
 type Props = {};
 
 export default function Overview({}: Props) {
+    const messages = useTranslations();
+    const params = useParams();
+    const artistId = params['artist-id'];
+    const { artistData } = useGetDetailArtist(artistId as string);
     return (
-        <AppContainer>
-            <ArtistDetailHeader />
+        <div className="p-4">
             <div className="grid grid-cols-3 gap-4">
-                <TopOfReleaseCard />
-                <TopOfTrackCard />
-                <ArtistProfileCard />
+                <CountAnalysisCard
+                    title={messages('releases.count')}
+                    number={artistData?.releaseCount}
+                />
+                <CountAnalysisCard
+                    title={messages('tracks.count')}
+                    number={artistData?.trackCount}
+                />
+                <ArtistProfileCard artistData={artistData} />
             </div>
             <div className="mt-4 grid grid-cols-2 gap-4">
                 <StreamsAnalysisCard />
@@ -26,6 +35,6 @@ export default function Overview({}: Props) {
             <div>
                 {/* <ListRelease data={fakeReleasesData.slice(0, 7)} /> */}
             </div>
-        </AppContainer>
+        </div>
     );
 }

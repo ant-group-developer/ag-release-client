@@ -8,6 +8,7 @@ export const useGetListReleases = (params: ReleasesDataFilter) => {
     const { data, ...res } = useQuery({
         queryKey: [...releasesQueryKeys.getList, params],
         queryFn: () => releasesApi.getList(params),
+        placeholderData: (previousData) => previousData,
     });
     const releasesData = data?.data?.data ?? DEFAULT_DATA_PAGINATION;
 

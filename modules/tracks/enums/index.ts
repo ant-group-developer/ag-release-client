@@ -34,5 +34,5 @@ export enum GENRES {
 
 export enum TRACK_TABS {
     METADATA = 'metadata',
-    AUDIO_FILE = 'audio file',
+    AUDIO_FILE = 'audio-file',
 }

@@ -1,3 +1,4 @@
+import { DspData } from '@/modules/dsp/types';
 import { CommonAttribute, CommonParams } from '@/types/api';
 
 export interface ArtistData extends CommonAttribute {
@@ -6,6 +7,17 @@ export interface ArtistData extends CommonAttribute {
     biography: string;
     creatorId: string;
     modifierId?: string;
+    releaseCount: number;
+    trackCount: number;
+    artistProfiles?: ArtistProfileData[];
+}
+
+export interface ArtistProfileData extends CommonAttribute {
+    name: string;
+    url: string;
+    dspId: string;
+    artistId: string;
+    dsp: DspData;
 }
 
 export interface ArtistDataFilter extends CommonParams {

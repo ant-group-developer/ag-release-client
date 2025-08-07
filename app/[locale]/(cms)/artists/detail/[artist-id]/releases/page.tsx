@@ -1,7 +1,8 @@
 'use client';
-import AppContainer from '@/components/ant-music/app-container';
+import AppContent from '@/components/ant-music/app-content';
 import AppPagination from '@/components/ui/pagination';
 import { LAYOUT_TABLE, SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
+import { getScrollYHeight } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import ReleasesHeader from '@/modules/releases/components/header';
@@ -13,10 +14,12 @@ import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releas
 import { ReleasesDataFilter } from '@/modules/releases/types';
 import { useWindowSize } from '@uidotdev/usehooks';
 import dayjs from 'dayjs';
+import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 type Props = {};
 
 export default function Releases({}: Props) {
+    // hooks - state
     const [visibleColumns, setVisibleColumns] = useState<
         RELEASES_COLUMNS_DISPLAY[]
     >(() => {
@@ -41,12 +44,10 @@ export default function Releases({}: Props) {
         }
         return defaultVisibleColumnsReleases;
     });
-
-    const handleChangeVisibleColumns = (
-        columns: RELEASES_COLUMNS_DISPLAY[]
-    ) => {
-        setVisibleColumns(columns);
-    };
+    const params = useParams();
+    const { height, width } = useWindowSize();
+    const { layoutTable } = useTableLayoutToggle();
+    const artistId = params['artist-id'] as string;
     const {
         dataFilter,
         onSearch,
@@ -57,36 +58,22 @@ export default function Releases({}: Props) {
     } = useFilter<ReleasesDataFilter>({
         page: 1,
         pageSize: 21,
+        artistId: artistId,
     });
-    const { height, width } = useWindowSize();
 
-    const isSmallDevice = Number(width) <= SCREEN.MD;
+    // apis
+    const { releasesData, dataUpdatedAt, refetch } =
+        useGetListReleases(dataFilter);
 
-    const scrollY = () => {
-        if (isSmallDevice) return undefined;
-        if (!height) return undefined;
-        const minHeight = 300;
-        const appHeaderHeight = 64;
-        const pageHeaderHeight = 46;
-        const pageFilterHeight = 49;
-        const titleHeaderHeight = 39;
-        const appPaginationHeight = 57;
-        const headerFooterHeight =
-            appHeaderHeight +
-            pageHeaderHeight +
-            pageFilterHeight +
-            titleHeaderHeight +
-            appPaginationHeight;
-        const value = height - headerFooterHeight;
-        if (value > minHeight) return value;
-        return minHeight;
+    // func
+    const handleChangeVisibleColumns = (
+        columns: RELEASES_COLUMNS_DISPLAY[]
+    ) => {
+        setVisibleColumns(columns);
     };
-
-    const { layoutTable } = useTableLayoutToggle();
-
-    const handleRefresh = () => {};
-
-    const { releasesData, dataUpdatedAt } = useGetListReleases(dataFilter);
+    const handleRefresh = () => {
+        refetch();
+    };
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -100,22 +87,8 @@ export default function Releases({}: Props) {
         }
     }, [visibleColumns]);
     return (
-        <AppContainer className="!p-0">
-            {/* <div className="border-b px-8 py-4">
-                <div className="flex items-center gap-2">
-                    <div className="overflow-hidden rounded-full">
-                        <Image
-                            src="https://cdn.revelator.com/images/fd0359c6-3cb8-426c-bcdf-db7e113627b7/file_w160.jpg?_=5/30/2025"
-                            alt="artist-detail-header"
-                            width={40}
-                            height={40}
-                            className="rounded-full"
-                        />
-                    </div>
-                    <span className="font-bold">Ant Remix</span>
-                </div>
-            </div> */}
-            <div className="flex h-full flex-col justify-between overflow-hidden">
+        <div>
+            <AppContent className="h-[calc(100vh-64px-123px)] overflow-hidden">
                 <div className="flex-1">
                     <ReleasesHeader
                         dataFilter={dataFilter}
@@ -131,7 +104,10 @@ export default function Releases({}: Props) {
                         <ReleasesTable
                             visibleColumns={visibleColumns}
                             dataSource={releasesData.items}
-                            scroll={{ x: SCREEN.XXL, y: scrollY() }}
+                            scroll={{
+                                x: SCREEN.XXL,
+                                y: getScrollYHeight(height, width, 121, 39),
+                            }}
                             onChangeFilter={onChangeFilter}
                         />
                     )}
@@ -156,7 +132,7 @@ export default function Releases({}: Props) {
                     showQuickJumper
                     pageSizeOptions={[21, 28, 35]}
                 />
-            </div>
-        </AppContainer>
+            </AppContent>
+        </div>
     );
 }

@@ -372,7 +372,8 @@
     },
     "channel": {
         "code": "Mã kênh",
-        "lable": "Kênh"
+        "lable": "Kênh",
+        "name": "Tên kênh"
     },
     "system": {
         "label": "Hệ thống"
@@ -574,6 +575,7 @@
     },
 
     "releases": {
+        "count": "Số lượng bản phát hành",
         "configuration": "Thiết lập phát hành",
         "otherMetadata": "Các metadata khác",
         "label": "Phát hành",
@@ -989,6 +991,8 @@
         "label": "DSP",
         "name": "Tên nền tảng",
         "add": "Thêm nền tảng",
+        "oneLinkPerLine": "Mỗi link một dòng",
+        "profileList": "Danh sách hồ sơ",
         "message": {
             "success": {
                 "create": "Thêm nền tảng thành công",

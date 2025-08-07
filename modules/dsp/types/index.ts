@@ -6,6 +6,7 @@ export interface DspData extends CommonAttribute {
     name: string;
     picture?: string | null;
     canLinkArtistProfile: boolean;
+    formatLinks: string[];
 }
 
 export interface DspDataFilter extends CommonParams {
