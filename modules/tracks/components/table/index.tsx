@@ -1,7 +1,5 @@
-import ImageFallback from '@/components/ui/image/image-fallback';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { FALLBACK_IMAGE } from '@/constants/common';
 import { formattedDate } from '@/helpers/common';
 import { getTrackDetailRoute } from '@/helpers/link';
 import { Link } from '@/i18n/routing';
@@ -13,6 +11,7 @@ import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { TrackData } from '../../types';
+import TrackCoverArt from './trackCoverArt';
 
 type Props = Omit<AppTableProps<TrackData>, 'columns'> & {
     visibleColumns: TRACKS_COLUMNS_DISPLAY[];
@@ -38,17 +37,7 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
             width: 150,
             render: (_, record) => (
                 <div className="flex items-center gap-4">
-                    <div className="flex-shrink-0 cursor-pointer">
-                        <ImageFallback
-                            fallbackSrc={FALLBACK_IMAGE}
-                            src={`https://picsum.photos/seed/${record?.title}/300/300`}
-                            alt="genre"
-                            width={40}
-                            height={40}
-                            className="aspect-square rounded-lg object-cover"
-                        />
-                    </div>
-
+                    <TrackCoverArt trackData={record} />
                     <CustomTooltip
                         title={messages('common.viewDetail')}
                         placement="right"

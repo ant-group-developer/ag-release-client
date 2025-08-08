@@ -66,12 +66,12 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
         const yearList = [
             {
                 label: (currentYear - 1).toString(),
-                value: (currentYear - 1).toString(),
+                value: Number(currentYear - 1),
             },
-            { label: currentYear.toString(), value: currentYear.toString() },
+            { label: currentYear.toString(), value: Number(currentYear) },
             {
                 label: (currentYear + 1).toString(),
-                value: (currentYear + 1).toString(),
+                value: Number(currentYear + 1),
             },
         ];
         return yearList;
@@ -93,7 +93,7 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                         <div className="grid grid-cols-4 items-center gap-5">
                             {/* C-Line Year */}
                             <FormItem
-                                name="cLineOwner"
+                                name="cLineYear"
                                 label={messages('formFields.cLineYear')}
                                 required
                                 ErrorMessage={''}
@@ -101,27 +101,27 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                             >
                                 <Controller
                                     control={control}
-                                    name="cLineOwner"
+                                    name="cLineYear"
                                     render={({ field }) => {
-                                        const [year, ...ownerParts] =
-                                            field.value?.split(' ') || ['', ''];
-                                        const owner = ownerParts.join(' ');
                                         return (
                                             <Select
+                                                {...field}
                                                 className="w-full"
-                                                value={year}
                                                 disabled={
                                                     isCreateReleasePage ||
                                                     isReadMode
                                                 }
                                                 onChange={(newYear) => {
-                                                    const v = owner
-                                                        ? `${newYear} ${owner}`
-                                                        : newYear;
-                                                    field.onChange(v);
-                                                    debouncedUpdate({
-                                                        cLineOwner: v,
-                                                    });
+                                                    field.onChange(
+                                                        Number(newYear)
+                                                    );
+                                                    debouncedUpdate(
+                                                        {
+                                                            cLineYear:
+                                                                Number(newYear),
+                                                        },
+                                                        'cLineYear'
+                                                    );
                                                 }}
                                                 options={copyRightYears}
                                             />
@@ -143,28 +143,22 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                     control={control}
                                     name="cLineOwner"
                                     render={({ field }) => {
-                                        const [year, ...ownerParts] =
-                                            field.value?.split(' ') || ['', ''];
-                                        const owner = ownerParts.join(' ');
                                         return (
                                             <Input
                                                 id="cLineOwner"
-                                                value={owner}
+                                                {...field}
+                                                value={field.value ?? ''}
                                                 disabled={
                                                     isCreateReleasePage ||
                                                     isReadMode
                                                 }
                                                 allowClear
                                                 onChange={(e) => {
-                                                    const newOwner =
+                                                    const value =
                                                         e.target.value;
-                                                    // Nếu owner rỗng, chỉ lưu year, nếu có owner thì format "year owner"
-                                                    const v = newOwner
-                                                        ? `${year} ${newOwner}`
-                                                        : year;
-                                                    field.onChange(v);
+                                                    field.onChange(value);
                                                     debouncedUpdate(
-                                                        { cLineOwner: v },
+                                                        { cLineOwner: value },
                                                         'cLineOwner'
                                                     );
                                                 }}
@@ -180,7 +174,7 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                             </FormItem>
                             {/* P-Line Year */}
                             <FormItem
-                                name="pLineOwner"
+                                name="pLineYear"
                                 label={messages('formFields.pLineYear')}
                                 required
                                 ErrorMessage={''}
@@ -188,27 +182,27 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                             >
                                 <Controller
                                     control={control}
-                                    name="pLineOwner"
+                                    name="pLineYear"
                                     render={({ field }) => {
-                                        const [year, ...ownerParts] =
-                                            field.value?.split(' ') || ['', ''];
-                                        const owner = ownerParts.join(' ');
                                         return (
                                             <Select
+                                                {...field}
                                                 className="w-full"
-                                                value={year}
                                                 disabled={
                                                     isCreateReleasePage ||
                                                     isReadMode
                                                 }
                                                 onChange={(newYear) => {
-                                                    const v = owner
-                                                        ? `${newYear} ${owner}`
-                                                        : newYear;
-                                                    field.onChange(v);
-                                                    debouncedUpdate({
-                                                        pLineOwner: v,
-                                                    });
+                                                    field.onChange(
+                                                        Number(newYear)
+                                                    );
+                                                    debouncedUpdate(
+                                                        {
+                                                            pLineYear:
+                                                                Number(newYear),
+                                                        },
+                                                        'pLineYear'
+                                                    );
                                                 }}
                                                 options={copyRightYears}
                                             />
@@ -230,13 +224,11 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                     control={control}
                                     name="pLineOwner"
                                     render={({ field }) => {
-                                        const [year, ...ownerParts] =
-                                            field.value?.split(' ') || ['', ''];
-                                        const owner = ownerParts.join(' ');
                                         return (
                                             <Input
+                                                {...field}
                                                 id="pLineOwner"
-                                                value={owner}
+                                                value={field.value ?? ''}
                                                 disabled={
                                                     isCreateReleasePage ||
                                                     isReadMode
@@ -245,13 +237,12 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                                 onChange={(e) => {
                                                     const newOwner =
                                                         e.target.value;
-                                                    // Nếu owner rỗng, chỉ lưu year, nếu có owner thì format "year owner"
-                                                    const v = newOwner
-                                                        ? `${year} ${newOwner}`
-                                                        : year;
-                                                    field.onChange(v);
+                                                    field.onChange(newOwner);
                                                     debouncedUpdate(
-                                                        { pLineOwner: v },
+                                                        {
+                                                            pLineOwner:
+                                                                newOwner,
+                                                        },
                                                         'pLineOwner'
                                                     );
                                                 }}

@@ -39,6 +39,8 @@ export interface ReleasesData extends CommonAttribute {
     coverArtThumbnails?: ReleaseCoverArt | null;
     pLineOwner: string;
     cLineOwner: string;
+    cLineYear: number | null;
+    pLineYear: number | null;
     catalogId: string | null;
     isVariousArtist: boolean;
     releaseLanguage?: ReleaseLanguage;

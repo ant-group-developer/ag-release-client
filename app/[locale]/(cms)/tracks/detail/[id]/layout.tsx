@@ -12,6 +12,7 @@ import {
 import { TRACK_TABS } from '@/modules/tracks/enums';
 import { useGetDetailTrack } from '@/modules/tracks/hooks/use-get-detail-tracks';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
+import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { Tabs, TabsProps, theme } from 'antd';
 import { Download } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -34,6 +35,9 @@ export default function TrackDetail({ children }: PropsWithChildren) {
 
     // apis
     const { trackData } = useGetDetailTrack(trackId as string);
+    const { linkReadFile } = useGetLinkReadFile(
+        trackData?.release?.coverArtThumbnails?.['160x160'] as string
+    );
 
     // const
     const itemTabs: TabsProps['items'] = [
@@ -112,7 +116,7 @@ export default function TrackDetail({ children }: PropsWithChildren) {
         >
             <div className="sticky top-0 z-10">
                 <AppHeaderPage
-                    imageSrc=""
+                    imageSrc={linkReadFile}
                     isScrolled={isScroll}
                     options={renderDownloadTrack()}
                 >
@@ -129,6 +133,16 @@ export default function TrackDetail({ children }: PropsWithChildren) {
                     <ItemHeaderPage
                         name={messages('common.genres')}
                         value={trackData?.primaryGenre?.name}
+                    />
+
+                    <ItemHeaderPage
+                        name={messages('labels.label')}
+                        value={trackData?.release?.label?.name}
+                    />
+
+                    <ItemHeaderPage
+                        name={messages('releases.label')}
+                        value={trackData?.release?.title}
                     />
 
                     <ItemHeaderPage name={'ISRC'} value={trackData.isrc} />

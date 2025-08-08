@@ -2,6 +2,7 @@ import { OriginType } from '@/components/ui/select/original-type-select';
 import { CountriesData } from '@/modules/countries/types';
 import { GenresData } from '@/modules/genres/types';
 import { LanguagesData } from '@/modules/languages/types';
+import { ReleasesData } from '@/modules/releases/types';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { TrackOriginTypeData } from '@/modules/track-origin-types/types';
 import { TrackTypeData } from '@/modules/track-types/types';
@@ -16,6 +17,7 @@ export interface TrackData extends CommonAttribute {
     iswc: string | null;
     releaseId: string;
     pLineOwner: string | null;
+    pLineYear: number | null | undefined;
     primaryGenreId: string | null;
     primaryGenre: GenresData | null;
     subGenreId: string | null;
@@ -33,6 +35,10 @@ export interface TrackData extends CommonAttribute {
     trackOriginTypeId: string | null;
     trackOriginType: TrackOriginTypeData | null;
     preview: string;
+    release: Pick<
+        ReleasesData,
+        'id' | 'title' | 'label' | 'coverArtThumbnails'
+    >;
 }
 
 export interface TrackLanguage {

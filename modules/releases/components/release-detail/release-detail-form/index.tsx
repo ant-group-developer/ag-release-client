@@ -47,6 +47,8 @@ export const releaseDetailSchema = (messages: any) =>
             albumFormatId: true,
             // coverArtThumbnails: true,
             pLineOwner: true,
+            pLineYear: true,
+            cLineYear: true,
             cLineOwner: true,
             isVariousArtist: true,
         })
@@ -185,8 +187,8 @@ export default function ReleaseDetailForm() {
                     title: formValues.title ?? '',
 
                     releaseArtists: formValues.releaseArtists ?? [],
-                    pLineOwner: formValues.pLineOwner ?? `${dayjs().year()}`,
-                    cLineOwner: formValues.cLineOwner ?? `${dayjs().year()}`,
+                    pLineOwner: formValues.pLineOwner ?? '',
+                    cLineOwner: formValues.cLineOwner ?? '',
                     isVariousArtist: formValues.isVariousArtist ?? false,
                     upc: formValues.upc ?? '',
                     labelId: formValues.labelId ?? '',
@@ -203,6 +205,8 @@ export default function ReleaseDetailForm() {
                                 ?.metadataLanguageCountryId ?? '',
                     },
                     albumFormatId: formValues?.albumFormatId ?? '',
+                    cLineYear: formValues?.cLineYear ?? Number(dayjs().year),
+                    pLineYear: formValues?.pLineYear ?? Number(dayjs().year),
                 };
                 // setFormValues(initialFormValue);
                 reset(initialFormValue, {

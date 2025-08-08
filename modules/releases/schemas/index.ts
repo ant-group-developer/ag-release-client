@@ -108,18 +108,24 @@ export const releaseSchema = (messages: any) =>
         // ),
         pLineOwner: z
             .string()
-            .min(5, messages('validation.input'))
+            .max(200, messages('validation.max', { number: 200 }))
             .nullable()
             .refine((val) => val !== null && val !== '', {
                 message: messages('validation.input'),
             }),
         cLineOwner: z
             .string()
-            .min(5, messages('validation.input'))
+            .max(200, messages('validation.max', { number: 200 }))
             .nullable()
             .refine((val) => val !== null && val !== '', {
                 message: messages('validation.input'),
             }),
+        pLineYear: z.number().refine((val) => val !== null, {
+            message: messages('validation.input'),
+        }),
+        cLineYear: z.number().refine((val) => val !== null, {
+            message: messages('validation.input'),
+        }),
         isVariousArtist: z.boolean(),
         releaseDate: z
             .string()

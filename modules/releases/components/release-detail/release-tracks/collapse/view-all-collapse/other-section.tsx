@@ -290,71 +290,104 @@ export default function OtherSection({
                             </div>
                             <div>
                                 <FormItem
-                                    label={messages('formFields.pLine')}
-                                    ErrorMessage={errors.pLineOwner?.message}
+                                    name="pLineYear"
+                                    label={messages('formFields.pLineYear')}
                                     required
-                                    name="pLineOwner"
+                                    ErrorMessage={errors.pLineYear?.message}
                                 >
                                     <Controller
-                                        name="pLineOwner"
+                                        name="pLineYear"
                                         control={control}
                                         render={({ field }) => {
-                                            const [year, ownerCopyRight] =
-                                                field.value?.split(' ') || [];
-                                            const handleYearChange = (
-                                                newYear: string
-                                            ) => {
-                                                const value =
-                                                    `${newYear} ${ownerCopyRight ?? ''}`.trim();
-                                                field.onChange(value);
-                                                updateTrackDraft(
-                                                    { pLineOwner: value },
-                                                    'pLineOwner'
-                                                );
+                                            const currentYear = Number(
+                                                dayjs().year()
+                                            );
+                                            const copyRightYearList = () => {
+                                                const yearList = [
+                                                    {
+                                                        label: (
+                                                            currentYear - 1
+                                                        ).toString(),
+                                                        value: currentYear - 1,
+                                                    },
+                                                    {
+                                                        label: currentYear.toString(),
+                                                        value: currentYear,
+                                                    },
+                                                    {
+                                                        label: (
+                                                            currentYear + 1
+                                                        ).toString(),
+                                                        value: currentYear + 1,
+                                                    },
+                                                ];
+                                                return yearList;
                                             };
-                                            const handleOwnerChange = (
-                                                e: React.ChangeEvent<HTMLInputElement>
-                                            ) => {
-                                                const value =
-                                                    `${year} ${e.target.value}`.trim();
-                                                field.onChange(value);
-                                                updateTrackDraft(
-                                                    { pLineOwner: value },
-                                                    'pLineOwner'
-                                                );
-                                            };
+
                                             return (
-                                                <Input
-                                                    id={`tracks.${index}.pLineOwner`}
-                                                    value={ownerCopyRight}
-                                                    onChange={handleOwnerChange}
-                                                    allowClear
+                                                <Select
+                                                    id="pLineYear"
+                                                    className="w-full"
+                                                    showSearch
+                                                    {...field}
+                                                    value={field.value}
+                                                    onChange={(newYear) => {
+                                                        const yearNumber =
+                                                            Number(newYear);
+                                                        field.onChange(
+                                                            yearNumber
+                                                        );
+                                                        debouncedUpdateTrackDraft(
+                                                            {
+                                                                pLineYear:
+                                                                    yearNumber,
+                                                            }
+                                                        );
+                                                    }}
+                                                    options={copyRightYearList()}
                                                     status={
-                                                        errors.pLineOwner
+                                                        errors.pLineYear
                                                             ? 'error'
                                                             : undefined
-                                                    }
-                                                    addonBefore={
-                                                        <Select
-                                                            defaultValue={year}
-                                                            value={year}
-                                                            onChange={
-                                                                handleYearChange
-                                                            }
-                                                            options={
-                                                                copyRightYears
-                                                            }
-                                                            style={{
-                                                                width: 90,
-                                                            }}
-                                                            placeholder={messages(
-                                                                'common.year'
-                                                            )}
-                                                        />
                                                     }
                                                 />
                                             );
                                         }}
+                                    />
+                                </FormItem>
+                            </div>
+
+                            <div>
+                                <FormItem
+                                    name="pLineOwner"
+                                    label={messages('formFields.pLineOwner')}
+                                    required
+                                    ErrorMessage={errors.pLineOwner?.message}
+                                >
+                                    <Controller
+                                        name="pLineOwner"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <Input
+                                                id="pLineOwner"
+                                                {...field}
+                                                value={field.value ?? ''}
+                                                onChange={(e) => {
+                                                    const value =
+                                                        e.target.value;
+                                                    field.onChange(value);
+                                                    debouncedUpdateTrackDraft({
+                                                        pLineOwner: value,
+                                                    });
+                                                }}
+                                                allowClear
+                                                status={
+                                                    errors.pLineOwner
+                                                        ? 'error'
+                                                        : undefined
+                                                }
+                                            />
+                                        )}
                                     />
                                 </FormItem>
                             </div>
