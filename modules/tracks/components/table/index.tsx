@@ -59,7 +59,7 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
                                 TRACK_TABS.METADATA
                             )}
                         >
-                            <p className="truncate hover:cursor-pointer hover:text-blue-500">
+                            <p className="truncate hover:cursor-pointer hover:text-blue-500 hover:underline">
                                 {record?.title}
                             </p>
                         </Link>

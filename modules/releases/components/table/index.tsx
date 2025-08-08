@@ -72,7 +72,7 @@ export default function ReleasesTable({
                                 RELEASE_DETAIL_ACTION.READ
                             )}
                         >
-                            <span className="cursor-pointer truncate hover:text-blue-500">
+                            <span className="cursor-pointer truncate hover:text-blue-500 hover:underline">
                                 {value}
                             </span>
                         </Link>

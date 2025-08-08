@@ -1,8 +1,9 @@
 import { cn } from '@/helpers/tailwind';
 import { Button, ButtonProps } from 'antd';
+import { ReactNode } from 'react';
 
 type Props = {
-    title: string;
+    title: ReactNode;
     headerButtonText?: string;
     headerButtonProps?: ButtonProps;
     children: React.ReactNode;

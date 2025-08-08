@@ -14,7 +14,7 @@ export default function AudioFile({}: Props) {
     const trackId = params['id'];
     const { trackData } = useGetDetailTrack(trackId as string);
     return (
-        <div className="h-[70vh] space-y-2 overflow-y-auto px-80">
+        <div className="m-auto h-[70vh] max-w-[1000px] space-y-2 overflow-y-auto">
             <div className="rounded-lg border p-4">
                 <TrackWaveform key={`${trackData.id}`} data={trackData} />
             </div>

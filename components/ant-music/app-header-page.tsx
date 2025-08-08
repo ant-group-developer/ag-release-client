@@ -27,12 +27,16 @@ export default function AppHeaderPage({
                 backgroundColor: token.colorBgContainer,
             }}
         >
-            <div className={'flex gap-4'}>
+            <div className={'flex items-start gap-4'}>
                 <div>
                     <Image
-                        className={cn('!aspect-square !rounded-lg', {
-                            '!size-14 transition-all duration-300': isScrolled,
-                        })}
+                        className={cn(
+                            '!aspect-square !rounded-lg object-cover transition-all ease-out'
+                            // {
+                            //     'transition-all duration-700 ease-out':
+                            //         isScrolled,
+                            // }
+                        )}
                         preview={{
                             maskClassName: cn('rounded-lg'),
                         }}
@@ -43,9 +47,10 @@ export default function AppHeaderPage({
                     />
                 </div>
                 <div
-                    className={cn('grid grid-cols-2 gap-x-8', {
-                        'grid-cols-3': isScrolled,
-                    })}
+                    className={cn(
+                        'flex flex-col flex-wrap content-start gap-x-8 gap-y-2'
+                    )}
+                    style={{ height: isScrolled ? 56 : 110 }}
                 >
                     {children}
                 </div>

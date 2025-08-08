@@ -1,5 +1,6 @@
 'use client';
 import AppHeaderPage from '@/components/ant-music/app-header-page';
+import ItemHeaderPage from '@/components/ant-music/item-header-page';
 import IconButton from '@/components/ui/button/icon-button';
 import { SIZE_ICON_BIG } from '@/constants/common';
 import { getTrackDetailRoute } from '@/helpers/link';
@@ -115,34 +116,22 @@ export default function TrackDetail({ children }: PropsWithChildren) {
                     isScrolled={isScroll}
                     options={renderDownloadTrack()}
                 >
-                    <div className="text-sm">
-                        <span>{messages('tracks.name')}: </span>
-                        <span className="font-bold">
-                            {trackData.title}{' '}
-                            {trackData.version &&
-                                trackData.title &&
-                                `[${trackData.version}]`}
-                        </span>
-                    </div>
-                    <div className="text-sm">
-                        <span>{messages('artist.label')}: </span>
-                        <span className="font-bold">
-                            {trackMainArtist?.artist?.name}{' '}
-                            {featuringArtist && featuringArtist?.length > 0 && (
-                                <span>{`(feat. ${featuringArtist.map((item) => item.artist?.name).join(' & ')})`}</span>
-                            )}
-                        </span>
-                    </div>
-                    <div className="text-sm">
-                        <span>{messages('common.genres')}: </span>
-                        <span className="font-bold">
-                            {trackData?.primaryGenre?.name}
-                        </span>
-                    </div>
-                    <div>
-                        <span>ISRC: </span>
-                        <span className="font-bold">{trackData.isrc}</span>
-                    </div>
+                    <ItemHeaderPage
+                        name={messages('tracks.name')}
+                        value={`${trackData.title} ${trackData.version && trackData.title && `[${trackData?.version}]`}`}
+                    />
+
+                    <ItemHeaderPage
+                        name={messages('artist.label')}
+                        value={`${trackMainArtist?.artist?.name} ${featuringArtist && featuringArtist?.length > 0 ? `feat. ${featuringArtist.map((item) => item.artist?.name).join(' & ')}` : ''}`}
+                    />
+
+                    <ItemHeaderPage
+                        name={messages('common.genres')}
+                        value={trackData?.primaryGenre?.name}
+                    />
+
+                    <ItemHeaderPage name={'ISRC'} value={trackData.isrc} />
                 </AppHeaderPage>
 
                 <div className="px-4">
