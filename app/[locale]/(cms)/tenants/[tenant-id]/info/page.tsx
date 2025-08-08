@@ -110,7 +110,11 @@ function DetailTenantPage({}: Props) {
                     showSubmit={false}
                 />
                 <div className="text-right">
-                    <Button onClick={onFinish} type="primary">
+                    <Button
+                        onClick={onFinish}
+                        type="primary"
+                        loading={isActive}
+                    >
                         {messages('common.submit')}
                     </Button>
                 </div>
