@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { ZodIssue } from 'zod';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
@@ -106,6 +107,8 @@ const initialValue: ReleaseFormStoreData = {
         updatedAt: null,
     },
     totalDuration: 0,
+    cLineYear: Number(dayjs().year),
+    pLineYear: Number(dayjs().year),
 };
 
 export const useReleaseFormStore = create<ReleaseFormState>()(

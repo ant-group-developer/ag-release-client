@@ -39,6 +39,8 @@ export interface ReleasesData extends CommonAttribute {
     coverArtThumbnails?: ReleaseCoverArt | null;
     pLineOwner: string;
     cLineOwner: string;
+    cLineYear: number | null;
+    pLineYear: number | null;
     catalogId: string | null;
     isVariousArtist: boolean;
     releaseLanguage?: ReleaseLanguage;
@@ -60,6 +62,7 @@ export interface ReleasesDataFilter extends CommonParams {
     endDateRelease?: string;
     genres?: string;
     artistId?: string;
+    labelId?: string;
 }
 
 export interface ReleaseTerritory extends CommonParams {

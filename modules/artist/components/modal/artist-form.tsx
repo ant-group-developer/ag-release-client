@@ -17,6 +17,7 @@ import { Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { useCreateArtist } from '../../hooks/use-create-artist';
+import { useDeleteArtistProfile } from '../../hooks/use-delete-artist-profile';
 import { useGetDetailArtist } from '../../hooks/use-get-detail-artist';
 import { useUpdateArtist } from '../../hooks/use-update-artist';
 import { ArtistData } from '../../types';
@@ -39,6 +40,7 @@ export default function ArtistFormModal({ ...props }: Props) {
     const { updateArtist } = useUpdateArtist();
     const { dspData } = useGetListDsp({});
     const { artistData } = useGetDetailArtist(dataEdit?.id);
+    const { deleteArtistProfile } = useDeleteArtistProfile();
 
     const handleCreateArtist = (values: ArtistFormValues) => {
         const variables: CreateVariables<CreateArtistPayload> = {
@@ -152,7 +154,7 @@ export default function ArtistFormModal({ ...props }: Props) {
                     <div className="flex w-full items-center gap-4">
                         <ImageListUpload
                             maxCount={1}
-                            accept="image/*"
+                            accept="image/png,image/jpeg,image/svg+xml,image/x-icon"
                             maxSizeMB={2}
                         />
                         <div>
@@ -288,7 +290,23 @@ export default function ArtistFormModal({ ...props }: Props) {
                                             />
                                         </AppFormItem>
                                         <IconButton
-                                            onClick={() => remove(name)}
+                                            onClick={() => {
+                                                const currentProfiles =
+                                                    form.getFieldValue(
+                                                        'artistProfiles'
+                                                    ) || [];
+                                                const profileToRemove =
+                                                    currentProfiles[name];
+                                                remove(name);
+                                                if (profileToRemove?.id) {
+                                                    deleteArtistProfile({
+                                                        artistId:
+                                                            artistData?.id,
+                                                        profileId:
+                                                            profileToRemove.id,
+                                                    });
+                                                }
+                                            }}
                                             className="absolute right-0 top-[-30px] mb-1"
                                         >
                                             <Trash

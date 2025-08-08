@@ -27,6 +27,7 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
     const formMethods = useForm<ReleaseTrackSchema>({
         defaultValues: {
             ...trackData,
+            pLineYear: trackData?.pLineYear ?? undefined,
         },
         resolver: zodResolver(releaseTrackSchema(messages)),
         mode: 'onChange',

@@ -60,10 +60,10 @@ export default function Tracks({}: Props) {
     const { height, width } = useWindowSize();
     const {
         tracksData,
-        isLoading: isTrackDataLoading,
+        isFetching: isTrackDataLoading,
         dataUpdatedAt,
         refetch,
-    } = useGetListTracks({});
+    } = useGetListTracks(dataFilter);
 
     // Function
     const handleChangeVisibleColumns = (columns: TRACKS_COLUMNS_DISPLAY[]) => {

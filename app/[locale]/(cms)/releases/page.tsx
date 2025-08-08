@@ -2,6 +2,7 @@
 import AppContent from '@/components/ant-music/app-content';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
+import { PAGE_SIZE_OPTIONS } from '@/constants/common';
 import { LAYOUT_TABLE, SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
 import { getScrollYHeight } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
@@ -156,7 +157,7 @@ export default function Releases({}: Props) {
                 showTotalText
                 showSizeChanger
                 showQuickJumper
-                pageSizeOptions={[21, 28, 35]}
+                pageSizeOptions={PAGE_SIZE_OPTIONS}
             />
 
             {typeModal === TYPE_MODAL_RELEASE.DELETE && (

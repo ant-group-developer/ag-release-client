@@ -1,6 +1,6 @@
 import IconButton from '@/components/ui/button/icon-button';
 import { SIZE_ICON, SIZE_ICON_SMALL } from '@/constants/common';
-import { Dropdown, MenuProps } from 'antd';
+import { Dropdown, DropdownProps, MenuProps } from 'antd';
 import { Download, MoreVertical, Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { MouseEventHandler } from 'react';
@@ -10,7 +10,7 @@ type Props = {
     onShowDownload?: () => void;
     showDelete?: boolean;
     onShowDelete?: () => void;
-};
+} & DropdownProps;
 
 enum ACTION_BUTTON {
     COMMENT = 'comment',
@@ -28,6 +28,7 @@ export default function TrackActionButton({
     showDownload,
     onShowDelete,
     onShowDownload,
+    ...props
 }: Props) {
     const messages = useTranslations();
     const items: MenuProps['items'] = [];
@@ -75,6 +76,7 @@ export default function TrackActionButton({
 
     return (
         <Dropdown
+            {...props}
             menu={{ items, onClick: handleMenuClick }}
             trigger={['click']}
             placement="topLeft"

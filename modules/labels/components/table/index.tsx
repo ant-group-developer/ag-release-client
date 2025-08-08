@@ -1,14 +1,15 @@
 import ActionButton from '@/components/ui/button/action-button';
-import CopyText from '@/components/ui/copy-text/copy-text';
 import ImageFallback from '@/components/ui/image/image-fallback';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
+import { getLabelDetailRoute } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
-import { useRouter } from '@/i18n/routing';
+import { Link, useRouter } from '@/i18n/routing';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
-import { TYPE_MODAL_LABEL } from '../../enum';
+import { LABEL_DETAIL_TABS, TYPE_MODAL_LABEL } from '../../enum';
 import { LabelData, LabelDataFilter } from '../../types';
 
 type Props = Omit<AppTableProps<LabelData>, 'columns'> & {
@@ -93,13 +94,21 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
                             className="aspect-square rounded-lg object-cover"
                         />
                     </div>
-                    <CopyText
-                        tooltipProps={{ placement: 'right' }}
-                        text={value}
-                        label={messages('labels.name')}
+                    <CustomTooltip
+                        placement="right"
+                        title={messages('common.viewDetail')}
                     >
-                        <p className="truncate">{value}</p>
-                    </CopyText>
+                        <Link
+                            href={getLabelDetailRoute(
+                                record?.id,
+                                LABEL_DETAIL_TABS.RELEASES
+                            )}
+                        >
+                            <p className="truncate hover:text-blue-500 hover:underline">
+                                {value}
+                            </p>
+                        </Link>
+                    </CustomTooltip>
                 </div>
             ),
         },
