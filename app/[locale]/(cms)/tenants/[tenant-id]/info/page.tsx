@@ -93,6 +93,30 @@ function DetailTenantPage({}: Props) {
         if (dataTenant) {
             const initialValues = {
                 ...dataTenant,
+                logo: dataTenant?.logo
+                    ? {
+                          fileList: [
+                              {
+                                  uid: dataTenant?.id,
+                                  thumbUrl: dataTenant?.logo,
+                                  url: dataTenant?.logo,
+                                  name: dataTenant?.name,
+                              },
+                          ],
+                      }
+                    : undefined,
+                icon: dataTenant?.icon
+                    ? {
+                          fileList: [
+                              {
+                                  uid: dataTenant?.id,
+                                  thumbUrl: dataTenant?.icon,
+                                  url: dataTenant?.icon,
+                                  name: dataTenant?.name,
+                              },
+                          ],
+                      }
+                    : undefined,
             };
 
             form.setFieldsValue(initialValues);
