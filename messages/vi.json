@@ -1080,16 +1080,21 @@
     },
 
     "tenant": {
-        "label": "Tenant",
-        "name": "Tên tenant",
+        "label": "Workspace",
+        "name": "Tên workspace",
         "logo": "Logo",
-        "icon": "Biểu tượng",
+        "icon": {
+            "label": "Favicon",
+            "tooltip1": "Tải lên một hình ảnh vuông nhỏ (16×16 pixel hoặc 32×32 pixel) để làm favicon cho trang web của bạn.",
+            "tooltip2": "Biểu tượng này sẽ xuất hiện trên tab trình duyệt, trong mục dấu trang và lịch sử duyệt web.",
+            "tooltip3": "Chúng tôi khuyến nghị sử dụng tệp SVG, ICO hoặc PNG."
+        },
         "title": "Tiêu đề",
         "domain": "Tên miền",
         "primaryColor": "Màu chủ đạo",
         "owner": "Người sở hữu",
         "type": {
-            "title": "Loại tenant",
+            "title": "Loại workspace",
             "whiteLabel": {
                 "label": "White label"
             },
@@ -1104,8 +1109,29 @@
             "tooltip": "Email này sẽ được sử dụng để gửi thông báo"
         },
         "parent": {
-            "placeholder": "Chọn tenant cha",
+            "placeholder": "Chọn workspace cha",
             "label": "Tenant cha"
+        },
+        "back": "Trở lại workspace",
+        "member": "Thành viên"
+    },
+    "integration": {
+        "label": "Tích hợp",
+        "deal": {
+            "label": "Thoả thuận",
+            "title": "Bạn sẽ sử dụng loại thỏa thuận nào cho DSP này?",
+            "direct": {
+                "label": "Thoả thuận trực tiếp",
+                "alert": ""
+            },
+            "merlin": {
+                "label": "Merlin",
+                "alert": "Thông tin xác thực kết nối sẽ được nhập bằng Tài khoản Quản lý. Vui lòng đảm bảo rằng bạn đã điền và gửi cho họ bảng tính \"Client Distribution Deals\"."
+            },
+            "antmusic": {
+                "label": "ANT Music",
+                "alert": "Không cần thông tin xác thực kết nối."
+            }
         }
     },
     "action": {

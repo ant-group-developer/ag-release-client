@@ -14,3 +14,11 @@ export enum TYPE_MODAL_TENANT {
     UPDATE = 'UPDATE_TENANT',
     CREATE = 'CREATE_TENANT',
 }
+
+export enum TENANT_TABS {
+    INFO = 'info',
+    USER = 'users',
+    INTEGRATION = 'integrations',
+    TRACK = 'tracks',
+    RELEASE = 'releases',
+}

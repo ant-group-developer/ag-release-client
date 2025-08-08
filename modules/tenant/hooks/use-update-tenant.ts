@@ -30,6 +30,7 @@ export const useUpdateTenant = () => {
             tenantApi.update(tenantId, payload),
         onSuccess,
         onError,
+        mutationKey: tenantQueryKeys.updates(),
     });
 
     const updateTenant = (variables: UpdateTenant) => {

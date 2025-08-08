@@ -1,7 +1,6 @@
 import ActionButton from '@/components/ui/button/action-button';
 import CopyText from '@/components/ui/copy-text/copy-text';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
-import { SIZE_ICON } from '@/constants/common';
 import {
     formattedDate,
     formattedNumber,
@@ -12,7 +11,6 @@ import {
 import useModalStore from '@/hooks/use-modal';
 import { Avatar, Switch } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { ExternalLink } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_USER, USER_ORDER_BY } from '../enums';
 import { useUpdateUser } from '../hooks/use-update-user';
@@ -102,14 +100,14 @@ function UserTable({ dataFilter, ...props }: Props) {
                                 </p>
                             </CopyText>
                         </div>
-                        <a
+                        {/* <a
                             href={getAuth0Link(record.email)}
                             target="_blank"
                             rel="noreferrer"
                             className="ml-auto rounded-full p-2 text-gray-500 transition-colors hover:bg-gray-200 hover:text-gray-700"
                         >
                             <ExternalLink size={SIZE_ICON} />
-                        </a>
+                        </a> */}
                     </div>
                 );
             },
@@ -219,11 +217,11 @@ function UserTable({ dataFilter, ...props }: Props) {
 
     if (canUpdate) {
         columns.push({
-            title: messages('common.action'),
+            // title: messages('common.action'),
             dataIndex: 'action',
             align: 'center',
             width: 50,
-            fixed: 'right',
+            // fixed: 'right',
             render: (cell, record) => (
                 <ActionButton
                     showUpdate={canUpdate}

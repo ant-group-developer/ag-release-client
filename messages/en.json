@@ -1076,16 +1076,21 @@
     },
 
     "tenant": {
-        "label": "Tenant",
-        "name": "Tenant name",
+        "label": "Workspace",
+        "name": "Workspace name",
         "logo": "Logo",
-        "icon": "Icon",
+        "icon": {
+            "label": "Favicon",
+            "tooltip1": "Upload a small square image (16x16 pixels or 32x32 pixels) that will serve as your website's favicon.",
+            "tooltip2": "This icon will appear in browser tabs, bookmarks, and history.",
+            "tooltip3": "We recommend using an SVG, ICO, or PNG file."
+        },
         "title": "Title",
         "domain": "Domain",
         "primaryColor": "Primary color",
         "owner": "Owner",
         "type": {
-            "title": "Tenant type",
+            "title": "Workspace type",
             "whiteLabel": {
                 "label": "White label"
             },
@@ -1100,8 +1105,29 @@
             "tooltip": "This email will be used to send notifications"
         },
         "parent": {
-            "placeholder": "Select parent tenant",
-            "label": "Parent tenant"
+            "placeholder": "Select parent workspace",
+            "label": "Parent workspace"
+        },
+        "back": "Back to workspaces",
+        "member": "Member"
+    },
+    "integration": {
+        "label": "Integrations",
+        "deal": {
+            "label": "Deal",
+            "title": "What type of deal will you be using for this DSP?",
+            "direct": {
+                "label": "Direct Deal",
+                "alert": ""
+            },
+            "merlin": {
+                "label": "Merlin",
+                "alert": "Your connection credentials will be entered by your Account Manager. Please make sure that you have filled out and sent them the \"Client Distribution Deals\" worksheet."
+            },
+            "antmusic": {
+                "label": "ANT Music",
+                "alert": "No connection credentials needed."
+            }
         }
     },
     "action": {

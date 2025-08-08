@@ -12,7 +12,6 @@ import useModalStore from '@/hooks/use-modal';
 import CreateTenantModal from '@/modules/tenant/components/tenant-create';
 import TenantHeader from '@/modules/tenant/components/tenant-header';
 import TenantTable from '@/modules/tenant/components/tenant-table';
-import UpdateTenantModal from '@/modules/tenant/components/tenant-update';
 import { TENANT_ORDER_BY, TYPE_MODAL_TENANT } from '@/modules/tenant/enums';
 import { useTenantList } from '@/modules/tenant/hooks/use-get-tenant';
 import { DataFilterTenant } from '@/modules/tenant/types/data';
@@ -94,10 +93,6 @@ export default function TenantPage({}: Props) {
 
             {typeModal === TYPE_MODAL_TENANT.CREATE && (
                 <CreateTenantModal open onCancel={closeModal} />
-            )}
-
-            {typeModal === TYPE_MODAL_TENANT.UPDATE && (
-                <UpdateTenantModal open onCancel={closeModal} />
             )}
         </div>
     );

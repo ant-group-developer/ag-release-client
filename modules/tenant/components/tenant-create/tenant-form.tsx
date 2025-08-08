@@ -3,17 +3,21 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppColorPicker from '@/components/ui/colorPicker/app-color-picker';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import UserSelect from '@/modules/user/components/user-select';
-import { Input, Switch } from 'antd';
+import { Input, Switch, theme } from 'antd';
 import { useTranslations } from 'next-intl';
+import { TenantData } from '../../types/data';
 import TenantSelect from '../tenant-select';
 import TenantTypeSelect from '../tenant-type-select';
 
 type Props = {
-    isCreate?: boolean;
+    excludeIds?: Array<TenantData['id']>;
+    canChangeParent?: boolean;
 } & AppFormProps;
 
-function TenantForm({ isCreate, ...props }: Props) {
+function TenantForm({ excludeIds, canChangeParent, ...props }: Props) {
     const messages = useTranslations();
+    const { token } = theme.useToken();
+
     return (
         <AppForm layout="vertical" {...props}>
             <AppFormItem
@@ -32,14 +36,17 @@ function TenantForm({ isCreate, ...props }: Props) {
                 <Input placeholder={messages('tenant.name')} />
             </AppFormItem>
 
-            <AppFormItem
-                label={messages('tenant.parent.label')}
-                name="parentId"
-            >
-                <TenantSelect
-                    placeholder={messages('tenant.parent.placeholder')}
-                />
-            </AppFormItem>
+            {canChangeParent && (
+                <AppFormItem
+                    label={messages('tenant.parent.label')}
+                    name="parentId"
+                >
+                    <TenantSelect
+                        placeholder={messages('tenant.parent.placeholder')}
+                        excludeIds={excludeIds}
+                    />
+                </AppFormItem>
+            )}
 
             <AppFormItem
                 label={messages('tenant.owner')}
@@ -120,30 +127,22 @@ function TenantForm({ isCreate, ...props }: Props) {
                 <Input placeholder={messages('tenant.domain')} />
             </AppFormItem>
 
-            <AppFormItem label={messages('status.label')} name="isActive">
-                <Switch />
-            </AppFormItem>
-
             <div className="flex items-center gap-4">
-                <AppFormItem label={messages('tenant.icon')} name="icon">
+                <AppFormItem label={messages('tenant.icon.label')} name="icon">
                     <ImageListUpload
                         maxCount={1}
-                        accept=".png,.jpg,.jpeg"
-                        maxSizeMB={2}
+                        accept=".png,.svg,.ico"
+                        maxSizeMB={1}
                     />
                 </AppFormItem>
-                <div>
-                    <p className="flex-1 text-sm text-gray-500">
-                        {messages('image.validation.supportImageFormat', {
-                            value: 'PNG, JPG, JPEG',
-                        })}
-                    </p>
-                    <p className="flex-1 text-sm text-gray-500">
-                        {messages('image.validation.mustBeLessThanMB', {
-                            value: '2',
-                        })}
-                    </p>
-                </div>
+                <ul
+                    className="space-y-1 text-xs"
+                    style={{ color: token.colorTextDescription }}
+                >
+                    <li>{messages('tenant.icon.tooltip1')}</li>
+                    <li>{messages('tenant.icon.tooltip2')}</li>
+                    <li>{messages('tenant.icon.tooltip3')}</li>
+                </ul>
             </div>
 
             <div className="flex items-center gap-4">
@@ -154,13 +153,16 @@ function TenantForm({ isCreate, ...props }: Props) {
                         maxSizeMB={2}
                     />
                 </AppFormItem>
-                <div>
-                    <p className="flex-1 text-sm text-gray-500">
+                <div
+                    className="space-y-1 text-xs"
+                    style={{ color: token.colorTextDescription }}
+                >
+                    <p>
                         {messages('image.validation.supportImageFormat', {
                             value: 'PNG, JPG, JPEG',
                         })}
                     </p>
-                    <p className="flex-1 text-sm text-gray-500">
+                    <p>
                         {messages('image.validation.mustBeLessThanMB', {
                             value: '2',
                         })}
@@ -168,12 +170,18 @@ function TenantForm({ isCreate, ...props }: Props) {
                 </div>
             </div>
 
-            <AppFormItem
-                label={messages('tenant.primaryColor')}
-                name="primaryColor"
-            >
-                <AppColorPicker />
-            </AppFormItem>
+            <div className="grid grid-cols-2">
+                <AppFormItem label={messages('status.label')} name="isActive">
+                    <Switch />
+                </AppFormItem>
+
+                <AppFormItem
+                    label={messages('tenant.primaryColor')}
+                    name="primaryColor"
+                >
+                    <AppColorPicker />
+                </AppFormItem>
+            </div>
         </AppForm>
     );
 }

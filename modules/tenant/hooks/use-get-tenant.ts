@@ -24,7 +24,6 @@ export function useTenantDetail(id: string | null) {
     const { data, ...restResponse } = useQuery({
         queryKey: tenantQueryKeys.detail(id ?? ''),
         queryFn: () => tenantApi.getDetail(id as string),
-        placeholderData: (previousData) => previousData,
         enabled: Boolean(id),
     });
 
