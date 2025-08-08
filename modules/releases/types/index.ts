@@ -62,6 +62,7 @@ export interface ReleasesDataFilter extends CommonParams {
     endDateRelease?: string;
     genres?: string;
     artistId?: string;
+    labelId?: string;
 }
 
 export interface ReleaseTerritory extends CommonParams {

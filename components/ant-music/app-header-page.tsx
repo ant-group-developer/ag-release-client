@@ -40,9 +40,10 @@ export default function AppHeaderPage({
                         preview={{
                             maskClassName: cn('rounded-lg'),
                         }}
+                        fallback={'/image/fallback-image.png'}
                         width={isScrolled ? 56 : 110}
                         height={isScrolled ? 56 : 110}
-                        src={`${imageSrc ? imageSrc : `https://picsum.photos/seed/300/300`} `}
+                        src={imageSrc}
                         alt=""
                     />
                 </div>

@@ -1,7 +1,7 @@
 'use client';
 import AppContent from '@/components/ant-music/app-content';
 import AppPagination from '@/components/ui/pagination';
-import { LAYOUT_TABLE, SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
+import { LAYOUT_TABLE, SESSION_STORAGE_KEY } from '@/enums/common';
 import { getScrollYHeight } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
@@ -105,7 +105,6 @@ export default function Releases({}: Props) {
                             visibleColumns={visibleColumns}
                             dataSource={releasesData.items}
                             scroll={{
-                                x: SCREEN.XXL,
                                 y: getScrollYHeight(height, width, 121, 39),
                             }}
                             onChangeFilter={onChangeFilter}

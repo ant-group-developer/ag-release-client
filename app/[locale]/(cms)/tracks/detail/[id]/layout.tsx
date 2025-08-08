@@ -97,6 +97,7 @@ export default function TrackDetail({ children }: PropsWithChildren) {
             }
         };
     }, []);
+
     useEffect(() => {
         const getActiveTab = () => {
             const map: Record<string, string> = {
@@ -127,7 +128,7 @@ export default function TrackDetail({ children }: PropsWithChildren) {
 
                     <ItemHeaderPage
                         name={messages('artist.label')}
-                        value={`${trackMainArtist?.artist?.name} ${featuringArtist && featuringArtist?.length > 0 ? `feat. ${featuringArtist.map((item) => item.artist?.name).join(' & ')}` : ''}`}
+                        value={`${trackMainArtist?.artist?.name ?? ''} ${featuringArtist && featuringArtist?.length > 0 ? `feat. ${featuringArtist.map((item) => item.artist?.name).join(' & ')}` : ''}`}
                     />
 
                     <ItemHeaderPage

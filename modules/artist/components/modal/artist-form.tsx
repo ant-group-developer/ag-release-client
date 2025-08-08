@@ -154,7 +154,7 @@ export default function ArtistFormModal({ ...props }: Props) {
                     <div className="flex w-full items-center gap-4">
                         <ImageListUpload
                             maxCount={1}
-                            accept="image/*"
+                            accept="image/png,image/jpeg,image/svg+xml,image/x-icon"
                             maxSizeMB={2}
                         />
                         <div>

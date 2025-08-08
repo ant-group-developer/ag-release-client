@@ -62,7 +62,8 @@ export default function Tracks({}: Props) {
     const { height, width } = useWindowSize();
 
     // apis
-    const { tracksData, dataUpdatedAt, refetch } = useGetListTracks(dataFilter);
+    const { tracksData, dataUpdatedAt, refetch, isFetching } =
+        useGetListTracks(dataFilter);
 
     // func
     const handleChangeVisibleColumns = (columns: TRACKS_COLUMNS_DISPLAY[]) => {
@@ -104,20 +105,24 @@ export default function Tracks({}: Props) {
                         scroll={{
                             y: getScrollYHeight(height, width, 121, 39),
                         }}
+                        loading={isFetching}
                     />
                 )}
 
                 {layoutTable === LAYOUT_TABLE.GRID && (
-                    <TracksGridTable data={tracksData?.items} />
+                    <TracksGridTable
+                        data={tracksData?.items}
+                        loading={isFetching}
+                    />
                 )}
             </div>
 
             <AppPagination
                 className="border-t"
                 align="end"
-                current={dataFilter.page}
+                current={tracksData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}
-                total={[].length}
+                total={tracksData?.metadata?.totalItems}
                 onChange={onChangePage}
                 showTotalText
                 showSizeChanger

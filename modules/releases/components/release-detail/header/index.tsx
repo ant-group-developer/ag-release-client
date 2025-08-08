@@ -237,7 +237,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                                 isScrolled,
                                         }
                                     )}
-                                    accept="image/*"
+                                    accept="image/png,image/jpeg,image/svg+xml,image/x-icon"
                                     maxCount={1}
                                     minWidth={1400}
                                     maxSizeMB={10}

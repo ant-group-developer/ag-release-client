@@ -150,11 +150,6 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         releaseId: releaseData?.id || '',
     });
 
-    // func
-    const handleTabChange = (key: string) => {
-        router.push(getReleaseDetailTabRoute(releaseId, key as RELEASES_TABS));
-    };
-
     // render
     // const extraButton = (
     //     <div className="flex justify-end gap-2">
@@ -249,7 +244,6 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                             }}
                             items={items}
                             activeKey={activeTab}
-                            onChange={handleTabChange}
                             // tabBarExtraContent={extraButton}
                         />
                     </div>
