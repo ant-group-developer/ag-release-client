@@ -53,6 +53,8 @@ export const useGetDetailRelease = (id: ReleasesData['id']) => {
         },
         albumFormatId: '',
         totalDuration: 0,
+        cLineYear: null,
+        pLineYear: null,
     };
 
     return {

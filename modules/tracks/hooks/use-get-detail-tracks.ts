@@ -36,6 +36,11 @@ export const useGetDetailTrack = (id: TrackData['id']) => {
         id: '',
         createdAt: '',
         updatedAt: null,
+        pLineYear: undefined,
+        release: {
+            id: '',
+            title: '',
+        },
     };
 
     return {
