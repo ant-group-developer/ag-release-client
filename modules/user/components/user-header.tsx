@@ -1,12 +1,8 @@
 import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
 import Refresh from '@/components/refresh';
 import CreateButton from '@/components/ui/button/create-button';
-import IconButton from '@/components/ui/button/icon-button';
-import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { SIZE_ICON } from '@/constants/common';
 import { UseFilterProps } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { CloudDownload } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_USER } from '../enums';
 import { DataFilterUser } from '../types/data';
@@ -49,7 +45,7 @@ export default function UserHeader({
                         handleRefresh={handleRefresh}
                         lastTimeUpdated={lastUpdatedAt}
                     />
-                    <CustomTooltip title={messages('user.syncData')}>
+                    {/* <CustomTooltip title={messages('user.syncData')}>
                         <IconButton
                             onClick={handleSync}
                             shape="square"
@@ -57,7 +53,7 @@ export default function UserHeader({
                         >
                             <CloudDownload size={SIZE_ICON} />
                         </IconButton>
-                    </CustomTooltip>
+                    </CustomTooltip> */}
                     <CreateButton
                         canCreate={true}
                         text={messages('action.create.title', {

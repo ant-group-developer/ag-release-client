@@ -14,4 +14,8 @@ export const tenantQueryKeys = {
     details: () =>
         [...tenantQueryKeys.all, QUERY_KEY.TENANT.GET_DETAIL] as const,
     detail: (id: string) => [...tenantQueryKeys.details(), id] as const,
+    updates: () => [...tenantQueryKeys.all, QUERY_KEY.TENANT.UPDATE] as const,
+    update: (id: string) => [...tenantQueryKeys.updates(), id] as const,
+    creates: () => [...tenantQueryKeys.all, QUERY_KEY.TENANT.CREATE] as const,
+    create: (id: string) => [...tenantQueryKeys.creates(), id] as const,
 };

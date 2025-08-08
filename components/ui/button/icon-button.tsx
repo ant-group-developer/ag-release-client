@@ -17,7 +17,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
             hidden,
             className,
             children,
-            shape = 'circle',
+            shape = 'square',
             variant = 'borderless',
             ...props
         },

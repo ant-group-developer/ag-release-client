@@ -7,7 +7,7 @@ export enum APP_ROUTES {
     LOG = '/log',
     UPLOAD = '/upload',
     PERMISSION = '/permission',
-    USER = '/user',
+    USER = '/users',
     HOME = '/',
     DASHBOARD = '/dashboard',
     RELEASES = '/releases',
@@ -26,7 +26,7 @@ export enum APP_ROUTES {
     TIMEZONE = '/timezone',
     TRACK_TYPE = '/track-types',
     TRACK_ORIGIN_TYPE = '/track-origin-types',
-    TENANT = '/tenant',
+    TENANT = '/tenants',
     SETTING = '/setting',
 }
 

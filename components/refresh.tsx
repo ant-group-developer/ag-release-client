@@ -20,11 +20,7 @@ export default function Refresh({ lastTimeUpdated, handleRefresh }: Props) {
                 </p>
                 {/* <span className="text-xs">{messages('common.hasNewData')}</span> */}
                 <CustomTooltip title={messages('common.refresh')}>
-                    <IconButton
-                        onClick={handleRefresh}
-                        shape="square"
-                        variant="filled"
-                    >
+                    <IconButton onClick={handleRefresh}>
                         <RotateCw size={SIZE_ICON} />
                     </IconButton>
                 </CustomTooltip>

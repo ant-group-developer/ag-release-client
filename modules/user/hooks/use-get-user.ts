@@ -24,7 +24,6 @@ export function useUserDetail(id: string | null) {
     const { data, ...restResponse } = useQuery({
         queryKey: userQueryKeys.detail(id ?? ''),
         queryFn: () => userApi.getDetail(id as string),
-        placeholderData: (previousData) => previousData,
         enabled: Boolean(id),
     });
 

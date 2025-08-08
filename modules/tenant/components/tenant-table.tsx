@@ -1,4 +1,3 @@
-import ActionButton from '@/components/ui/button/action-button';
 import AppColorPicker from '@/components/ui/colorPicker/app-color-picker';
 import CopyText from '@/components/ui/copy-text/copy-text';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
@@ -9,12 +8,14 @@ import {
     getSortOrder,
 } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
+import { Link } from '@/i18n/routing';
 import { Avatar, Switch } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
-import { TENANT_ORDER_BY, TENANT_TYPE, TYPE_MODAL_TENANT } from '../enums';
+import { TENANT_ORDER_BY, TENANT_TABS } from '../enums';
 import { useUpdateTenant } from '../hooks/use-update-tenant';
 import { DataFilterTenant, TenantData } from '../types/data';
+import { getTenantDetailRoute, getTenantTypeLabel } from '../utils';
 
 type Props = {
     dataFilter: DataFilterTenant;
@@ -78,9 +79,15 @@ function TenantTable({ dataFilter, ...props }: Props) {
                             {getAvatarPlaceholder(record.owner.email)}
                         </Avatar>
                         <div className="grid flex-1 truncate">
-                            <CopyText text={cell}>
-                                <p>{cell}</p>
-                            </CopyText>
+                            <Link
+                                href={getTenantDetailRoute(
+                                    record.id,
+                                    TENANT_TABS.INFO
+                                )}
+                                className="hover:underline"
+                            >
+                                {cell}
+                            </Link>
                             <CopyText text={record.owner.email}>
                                 <p className="italic text-gray-500/80">
                                     {record.owner.email}
@@ -96,13 +103,7 @@ function TenantTable({ dataFilter, ...props }: Props) {
             dataIndex: 'type',
             width: 120,
             align: 'center',
-            render: (cell) => {
-                if (cell === TENANT_TYPE.LABEL)
-                    return messages('tenant.type.label.label');
-                if (cell === TENANT_TYPE.WHITE_LABEL)
-                    return messages('tenant.type.whiteLabel.label');
-                return cell;
-            },
+            render: (cell) => getTenantTypeLabel(cell, messages),
         },
         {
             title: messages('tenant.title'),
@@ -163,22 +164,22 @@ function TenantTable({ dataFilter, ...props }: Props) {
         },
     ];
 
-    if (canUpdate) {
-        columns.push({
-            dataIndex: 'action',
-            align: 'center',
-            width: 50,
-            fixed: 'right',
-            render: (cell, record) => (
-                <ActionButton
-                    showUpdate={canUpdate}
-                    onShowUpdate={() =>
-                        openModal(TYPE_MODAL_TENANT.UPDATE, record)
-                    }
-                />
-            ),
-        });
-    }
+    // if (canUpdate) {
+    //     columns.push({
+    //         dataIndex: 'action',
+    //         align: 'center',
+    //         width: 50,
+    //         fixed: 'right',
+    //         render: (cell, record) => (
+    //             <ActionButton
+    //                 showUpdate={canUpdate}
+    //                 onShowUpdate={() =>
+    //                     openModal(TYPE_MODAL_TENANT.UPDATE, record)
+    //                 }
+    //             />
+    //         ),
+    //     });
+    // }
 
     return (
         <AppTable

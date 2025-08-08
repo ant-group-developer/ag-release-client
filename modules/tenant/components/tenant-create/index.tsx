@@ -100,7 +100,7 @@ function CreateTenantModal({ ...props }: Props) {
                 onFinish={onFinish}
                 form={form}
                 submitProps={{ loading: isActive }}
-                isCreate
+                canChangeParent
             />
         </AppModal>
     );

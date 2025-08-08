@@ -5,11 +5,13 @@ import { Avatar, Select, SelectProps } from 'antd';
 import { useTranslations } from 'next-intl';
 import { TENANT_ORDER_BY } from '../enums';
 import { useTenantList } from '../hooks/use-get-tenant';
+import { TenantData } from '../types/data';
 
 type Props = {
     getEmail?: boolean;
     externalOnChange?: SelectProps['onChange'];
     fallback?: string;
+    excludeIds?: Array<TenantData['id']>;
 } & SelectProps;
 
 function TenantSelect({
@@ -17,6 +19,7 @@ function TenantSelect({
     className,
     externalOnChange,
     fallback,
+    excludeIds,
     ...props
 }: Props) {
     const messages = useTranslations();
@@ -27,35 +30,39 @@ function TenantSelect({
         pageSize: 999,
     });
 
-    const options = dataTenant.items.map((data) => {
-        const tenantId = data.id;
-        const email = data.owner.email;
-        const name = data.name;
+    const options = dataTenant.items
+        .filter((item) => !excludeIds?.includes(item.id))
+        .map((data) => {
+            const tenantId = data.id;
+            const email = data.owner.email;
+            const name = data.name;
 
-        return {
-            value: getEmail ? email : tenantId,
-            label: (
-                <div className="flex items-center gap-2">
-                    <Avatar
-                        src={data.logo || data.icon}
-                        className="flex-none"
-                        size={'large'}
-                    >
-                        {getAvatarPlaceholder(data.owner.email)}
-                    </Avatar>
-                    <p className="flex flex-1 flex-col">
-                        <span className="truncate">{name}</span>
-                        <span className="truncate text-gray-400">{email}</span>
-                    </p>
-                </div>
-            ),
-            string: name + ' ' + email,
-            // string: email,
-            email,
-            name,
-            title: name,
-        };
-    });
+            return {
+                value: getEmail ? email : tenantId,
+                label: (
+                    <div className="flex items-center gap-2">
+                        <Avatar
+                            src={data.logo || data.icon}
+                            className="flex-none"
+                            size={'large'}
+                        >
+                            {getAvatarPlaceholder(data.owner.email)}
+                        </Avatar>
+                        <p className="flex flex-1 flex-col">
+                            <span className="truncate">{name}</span>
+                            <span className="truncate text-gray-400">
+                                {email}
+                            </span>
+                        </p>
+                    </div>
+                ),
+                string: name + ' ' + email,
+                // string: email,
+                email,
+                name,
+                title: name,
+            };
+        });
 
     const handleChange: SelectProps['onChange'] = (value, option) => {
         props.onChange?.(value, option);
