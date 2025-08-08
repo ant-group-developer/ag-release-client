@@ -3,8 +3,10 @@ import CopyText from '@/components/ui/copy-text/copy-text';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import {
     formattedDate,
+    formattedNumber,
     getAvatarPlaceholder,
     getIndex,
+    getRandomInt,
     getSortOrder,
 } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
@@ -99,10 +101,9 @@ function TenantTable({ dataFilter, ...props }: Props) {
             },
         },
         {
-            title: messages('tenant.type.title'),
+            title: messages('tenant.type.titleShort'),
             dataIndex: 'type',
             width: 120,
-            align: 'center',
             render: (cell) => getTenantTypeLabel(cell, messages),
         },
         {
@@ -137,18 +138,26 @@ function TenantTable({ dataFilter, ...props }: Props) {
             ),
         },
         {
-            title: messages('common.dateCreated'),
-            dataIndex: TENANT_ORDER_BY.CREATED_AT,
+            title: messages('user.label'),
+            dataIndex: 'member',
             align: 'center',
-            width: 180,
+            width: 120,
             sorter: true,
-            sortOrder: getSortOrder(
-                dataFilter.orderBy,
-                dataFilter.fieldOrder,
-                TENANT_ORDER_BY.CREATED_AT
-            ),
-            render: (cell) => formattedDate(cell),
+            render: () => formattedNumber(getRandomInt(3, 15)),
         },
+        // {
+        //     title: messages('common.dateCreated'),
+        //     dataIndex: TENANT_ORDER_BY.CREATED_AT,
+        //     align: 'center',
+        //     width: 180,
+        //     sorter: true,
+        //     sortOrder: getSortOrder(
+        //         dataFilter.orderBy,
+        //         dataFilter.fieldOrder,
+        //         TENANT_ORDER_BY.CREATED_AT
+        //     ),
+        //     render: (cell) => formattedDate(cell),
+        // },
         {
             title: messages('common.dateUpdated'),
             dataIndex: TENANT_ORDER_BY.UPDATED_AT,

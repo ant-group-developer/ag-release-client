@@ -1091,6 +1091,7 @@
         "owner": "Owner",
         "type": {
             "title": "Workspace type",
+            "titleShort": "Type",
             "whiteLabel": {
                 "label": "White label"
             },

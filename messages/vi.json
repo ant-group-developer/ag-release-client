@@ -1095,6 +1095,7 @@
         "owner": "Người sở hữu",
         "type": {
             "title": "Loại workspace",
+            "titleShort": "Loại",
             "whiteLabel": {
                 "label": "White label"
             },
