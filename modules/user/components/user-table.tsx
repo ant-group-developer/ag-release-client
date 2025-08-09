@@ -9,7 +9,7 @@ import {
     getSortOrder,
 } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
-import { Avatar, Switch } from 'antd';
+import { Avatar, Switch, theme } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_USER, USER_ORDER_BY } from '../enums';
@@ -25,6 +25,7 @@ type Props = {
 } & Omit<AppTableProps<UserData>, 'columns'>;
 
 function UserTable({ dataFilter, ...props }: Props) {
+    const { token } = theme.useToken();
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const canUpdate = true;
@@ -95,7 +96,11 @@ function UserTable({ dataFilter, ...props }: Props) {
                                 <p>{cell}</p>
                             </CopyText>
                             <CopyText text={record.email}>
-                                <p className="italic text-gray-500/80">
+                                <p
+                                    style={{
+                                        color: token.colorTextDescription,
+                                    }}
+                                >
                                     {record.email}
                                 </p>
                             </CopyText>

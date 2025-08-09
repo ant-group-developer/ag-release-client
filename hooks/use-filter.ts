@@ -1,6 +1,6 @@
 'use client';
 
-import { OnSearchType } from '@/components/ui/input/search';
+import { AppSearchProps, OnSearchType } from '@/components/ui/input/search';
 import { PAGE_SIZE } from '@/constants/page-size';
 import { CommonParams } from '@/types/api';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -99,7 +99,7 @@ export const useFilter = <DataFilterType extends CommonParams>(
         });
     };
 
-    const onSearch: OnSearchType = (e) => {
+    const onSearch: AppSearchProps['onChange'] = (e) => {
         const keyword = e.target.value?.trim();
         syncParamsToURL({
             keyword,

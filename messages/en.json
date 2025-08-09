@@ -1110,7 +1110,8 @@
             "label": "Parent workspace"
         },
         "back": "Back to workspaces",
-        "member": "Member"
+        "member": "Member",
+        "manager": "Manager"
     },
     "integration": {
         "label": "Integrations",

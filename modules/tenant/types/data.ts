@@ -30,6 +30,11 @@ export interface TenantDetail extends CommonAttributeCreator {
     children: TenantDetail[];
 }
 
+export type TenantActiveData = Pick<
+    TenantDetail,
+    'id' | 'name' | 'title' | 'logo' | 'icon' | 'type' | 'owner' | 'parent'
+>;
+
 export type TenantData = Pick<
     TenantDetail,
     | 'id'

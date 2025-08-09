@@ -40,6 +40,7 @@
         "mediainfo.js": "^0.3.4",
         "music-metadata": "^11.2.3",
         "next": "14.2.24",
+        "next-auth": "^4.24.11",
         "next-extra": "^0.6.2",
         "next-intl": "^3.26.3",
         "next-nprogress-bar": "^2.4.5",

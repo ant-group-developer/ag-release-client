@@ -79,6 +79,7 @@ function DetailTenantPage({}: Props) {
                     tenantId,
                     payload,
                     onError: deActive,
+                    onSuccess: deActive,
                 };
 
                 return updateTenant(updateVariables);
@@ -93,6 +94,7 @@ function DetailTenantPage({}: Props) {
         if (dataTenant) {
             const initialValues = {
                 ...dataTenant,
+                parentId: dataTenant.parent?.id,
                 logo: dataTenant?.logo
                     ? {
                           fileList: [
@@ -132,6 +134,7 @@ function DetailTenantPage({}: Props) {
                     submitProps={{ loading: isActive }}
                     excludeIds={[tenantId]}
                     showSubmit={false}
+                    canChangeParent
                 />
                 <div className="text-right">
                     <Button

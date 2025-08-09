@@ -1,6 +1,7 @@
 import { APP_ROUTES } from '@/enums/routes';
+import { getAvatarUrl } from '@/helpers/avatar-tailwind';
 import { TENANT_TABS, TENANT_TYPE } from '../enums';
-import { TenantData } from '../types/data';
+import { TenantData, TenantDetail } from '../types/data';
 
 export const getTenantDetailRoute = (
     id: TenantData['id'],
@@ -14,4 +15,16 @@ export const getTenantTypeLabel = (type: TENANT_TYPE, messages: any) => {
     if (type === TENANT_TYPE.WHITE_LABEL)
         return messages('tenant.type.whiteLabel.label');
     return type;
+};
+
+export const getTenantAvatar = ({
+    logo,
+    icon,
+    name,
+}: {
+    logo?: TenantDetail['logo'];
+    icon?: TenantDetail['icon'];
+    name?: TenantDetail['name'];
+}) => {
+    return logo || icon || getAvatarUrl(name ?? '');
 };

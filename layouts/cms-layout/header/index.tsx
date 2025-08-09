@@ -4,11 +4,11 @@ import AppSearch from '@/components/ui/input/search';
 import { TYPE_MODAL } from '@/enums/common';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
+import TenantSwitch from '@/modules/tenant/components/tenant-switch';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Layout } from 'antd';
 import { useTranslations } from 'next-intl';
 import AppAvatar from './app-avatar';
-import Logo from './app-logo';
 import AppSearchModal from './app-search-modal';
 import AppSupport from './app-support';
 
@@ -34,7 +34,8 @@ function Header({ collapsed, toggleCollapsed }: Props) {
                 <IconButton onClick={toggleCollapsed} className="w-10 text-xl">
                     {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                 </IconButton>
-                <Logo />
+                {/* <Logo /> */}
+                <TenantSwitch />
             </div>
 
             <div className="flex max-w-[400px] flex-1 items-center">

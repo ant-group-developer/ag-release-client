@@ -17,7 +17,7 @@ function Sidebar({ collapsed, onBreakpoint, ...props }: Props) {
             className="border-r dark:border-zinc-800"
             collapsible
             width={255}
-            collapsedWidth={responsive.mobile ? 0 : 50}
+            collapsedWidth={responsive.desktop ? 50 : 0}
             theme="light"
             collapsed={collapsed}
             trigger={null}

@@ -70,11 +70,11 @@ export const PopoverFilterDropdown: React.FC<PopoverFilterDropdownProps> = ({
 
         return (
             <>
-                {value && (
+                {/* {value && (
                     <DropdownItem onClick={onSearch}>
                         Search for “<b>{value}</b>”
                     </DropdownItem>
-                )}
+                )} */}
                 {filtered.map((opt, idx) => (
                     <DropdownItem key={idx} onClick={opt.onClick}>
                         {opt.label}
@@ -101,7 +101,7 @@ export const PopoverFilterDropdown: React.FC<PopoverFilterDropdownProps> = ({
                 placeholder={placeholder}
                 onPressEnter={onSearch}
                 allowClear
-                variant="filled"
+                variant="borderless"
             />
         </div>
     );

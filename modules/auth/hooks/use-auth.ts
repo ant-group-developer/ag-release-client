@@ -1,4 +1,5 @@
 import { APP_ROUTES } from '@/enums/routes';
+import { getAvatarUrl } from '@/helpers/avatar-tailwind';
 import { userQueryKeys } from '@/modules/user/constants';
 import { USER_TYPE } from '@/modules/user/enums';
 import { useQuery } from '@tanstack/react-query';
@@ -12,9 +13,9 @@ export const defaultProfile: UserInfoData = {
     dateCreated: new Date(),
     dateUpdated: new Date(),
     id: '',
-    name: '',
-    email: '',
-    avatar: null,
+    name: 'Dev',
+    email: 'dev@ant-group.net',
+    avatar: getAvatarUrl('dev@ant-group.net'),
     phoneNumber: null,
     dateOfBirth: null,
     isActive: true,

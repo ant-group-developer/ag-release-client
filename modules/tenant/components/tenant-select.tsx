@@ -3,7 +3,7 @@ import { cn, getAvatarPlaceholder } from '@/helpers/common';
 import { toNonAccentVietnamese } from '@/helpers/string';
 import { Avatar, Select, SelectProps } from 'antd';
 import { useTranslations } from 'next-intl';
-import { TENANT_ORDER_BY } from '../enums';
+import { TENANT_ORDER_BY, TENANT_TYPE } from '../enums';
 import { useTenantList } from '../hooks/use-get-tenant';
 import { TenantData } from '../types/data';
 
@@ -12,6 +12,7 @@ type Props = {
     externalOnChange?: SelectProps['onChange'];
     fallback?: string;
     excludeIds?: Array<TenantData['id']>;
+    type?: TENANT_TYPE[];
 } & SelectProps;
 
 function TenantSelect({
@@ -20,6 +21,7 @@ function TenantSelect({
     externalOnChange,
     fallback,
     excludeIds,
+    type,
     ...props
 }: Props) {
     const messages = useTranslations();
@@ -31,7 +33,16 @@ function TenantSelect({
     });
 
     const options = dataTenant.items
-        .filter((item) => !excludeIds?.includes(item.id))
+        .filter((item) => {
+            let result = true;
+            if (excludeIds) {
+                result = !excludeIds.includes(item.id);
+            }
+            if (type) {
+                result = type.includes(item.type);
+            }
+            return result;
+        })
         .map((data) => {
             const tenantId = data.id;
             const email = data.owner.email;

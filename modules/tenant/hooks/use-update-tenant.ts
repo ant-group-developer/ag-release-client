@@ -16,6 +16,7 @@ export const useUpdateTenant = () => {
             queryKey: tenantQueryKeys.detail(tenantId),
         });
         queryClient.invalidateQueries({ queryKey: tenantQueryKeys.lists() });
+        queryClient.invalidateQueries({ queryKey: tenantQueryKeys.active() });
         showNotification('success', messages('message.updateSuccessfully'));
         onSuccess?.();
     };

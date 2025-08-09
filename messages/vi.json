@@ -1114,7 +1114,8 @@
             "label": "Tenant cha"
         },
         "back": "Trở lại workspace",
-        "member": "Thành viên"
+        "member": "Thành viên",
+        "manager": "Quản lý"
     },
     "integration": {
         "label": "Tích hợp",

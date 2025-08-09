@@ -24,12 +24,11 @@ export default function UserHeader({
     onChangeFilter,
     removeFilter,
     handleRefresh,
-    handleSync,
 }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     return (
-        <AppHeader>
+        <AppHeader className="app-header">
             <AppHeaderGroup>
                 <UserHeaderFilter
                     dataFilter={dataFilter}
@@ -45,15 +44,6 @@ export default function UserHeader({
                         handleRefresh={handleRefresh}
                         lastTimeUpdated={lastUpdatedAt}
                     />
-                    {/* <CustomTooltip title={messages('user.syncData')}>
-                        <IconButton
-                            onClick={handleSync}
-                            shape="square"
-                            variant="filled"
-                        >
-                            <CloudDownload size={SIZE_ICON} />
-                        </IconButton>
-                    </CustomTooltip> */}
                     <CreateButton
                         canCreate={true}
                         text={messages('action.create.title', {

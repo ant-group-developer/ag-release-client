@@ -13,6 +13,7 @@ export function useCreateTenant() {
 
     const handleOnSuccess = (data: any, { onSuccess }: CreateTenant) => {
         queryClient.invalidateQueries({ queryKey: tenantQueryKeys.lists() });
+        queryClient.invalidateQueries({ queryKey: tenantQueryKeys.active() });
         showNotification('success', messages('message.createSuccessfully'));
         onSuccess?.();
     };

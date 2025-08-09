@@ -220,6 +220,7 @@ export const QUERY_KEY = {
     TENANT: {
         KEY: 'TENANT',
         GET_LIST: 'GET_LIST_TENANT',
+        GET_ACTIVE: 'GET_ACTIVE_TENANT',
         GET_DETAIL: 'GET_DETAIL_TENANT',
         UPDATE: 'UPDATE_TENANT',
         CREATE: 'CREATE_TENANT',

@@ -1,11 +1,10 @@
 import type { MutationKey, QueryKey } from '@tanstack/react-query';
 import { useIsFetching, useIsMutating } from '@tanstack/react-query';
+import { useMemo } from 'react';
 
 type UseLoadingStatusOptions = {
-    /** QueryKeys to watch (e.g. ['todos'], ['user', id], …) */
-    queryKeys?: QueryKey[];
-    /** MutationKeys to watch (e.g. 'addTodo', ['updateUser', id], …) */
-    mutationKeys?: MutationKey[];
+    queryKeys?: QueryKey[]; // e.g. ['todos'], ['user', id]
+    mutationKeys?: MutationKey[]; // e.g. 'addTodo', ['updateUser', id]
 };
 
 type UseLoadingStatusResult = {
@@ -16,33 +15,37 @@ type UseLoadingStatusResult = {
     isLoading: boolean;
 };
 
-/**
- * Watch one or more queryKeys and/or mutationKeys.
- */
+const toArray = (k: QueryKey | string) => (Array.isArray(k) ? k : [k]);
+
+const prefixMatch = (actual: readonly unknown[], filter: QueryKey | string) => {
+    const f = toArray(filter);
+    for (let i = 0; i < f.length; i++) if (actual[i] !== f[i]) return false;
+    return true;
+};
+
 export function useLoadingStatus({
     queryKeys = [],
     mutationKeys = [],
 }: UseLoadingStatusOptions): UseLoadingStatusResult {
-    // count matching active queries
-    const fetchingCount = useIsFetching({
-        predicate: (q) =>
-            queryKeys.some((key) =>
-                Array.isArray(key)
-                    ? JSON.stringify(q.queryKey) === JSON.stringify(key)
-                    : q.queryKey[0] === key
-            ),
-    });
+    const queryPredicate = useMemo(
+        () => (q: any) =>
+            queryKeys.length === 0 ||
+            queryKeys.some((key) => prefixMatch(q.queryKey, key)),
+        [queryKeys]
+    );
 
-    // count matching running mutations
-    const mutatingCount = useIsMutating({
-        predicate: (m) =>
-            mutationKeys.some((key) =>
-                Array.isArray(key)
-                    ? JSON.stringify(m.options.mutationKey) ===
-                      JSON.stringify(key)
-                    : m.options.mutationKey === key
-            ),
-    });
+    const mutationPredicate = useMemo(
+        () => (m: any) => {
+            if (mutationKeys.length === 0) return true;
+            const mk = m.options?.mutationKey as readonly unknown[] | undefined;
+            if (!mk) return false;
+            return mutationKeys.some((key) => prefixMatch(mk, key));
+        },
+        [mutationKeys]
+    );
+
+    const fetchingCount = useIsFetching({ predicate: queryPredicate });
+    const mutatingCount = useIsMutating({ predicate: mutationPredicate });
 
     const isFetching = fetchingCount > 0;
     const isMutating = mutatingCount > 0;
@@ -52,6 +55,6 @@ export function useLoadingStatus({
         isFetching,
         mutatingCount,
         isMutating,
-        isLoading: isFetching && isMutating,
+        isLoading: isFetching || isMutating,
     };
 }

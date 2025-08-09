@@ -12,6 +12,7 @@ export interface DataFilterUser extends CommonParams {
     fieldOrder: USER_ORDER_BY;
     id?: string;
     type?: string;
+    workspaceIds?: string;
 }
 
 export interface UserDetail extends CommonAttributeCreator {

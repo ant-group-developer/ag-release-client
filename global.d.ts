@@ -1,4 +1,5 @@
 import en from './messages/en.json';
+import { UserData } from './modules/user/types/data';
 
 type Messages = typeof en;
 
@@ -39,4 +40,20 @@ declare module 'mediainfo.js' {
     export default function MediaInfo(
         options?: Record<string, any>
     ): Promise<MediaInfoInstance>;
+}
+
+declare module 'next-auth' {
+    interface Session {
+        user: Pick<UserData, 'id' | 'email'>;
+        // accessToken: string;
+        error?: string;
+    }
+}
+
+declare module 'next-auth/jwt' {
+    interface JWT {
+        accessToken: string;
+        refreshToken: string;
+        error?: string;
+    }
 }

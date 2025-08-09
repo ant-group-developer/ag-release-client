@@ -3,6 +3,7 @@ import { DetailResponse, PaginationResponse } from '@/types/api';
 import {
     CreateTenantPayload,
     DataFilterTenant,
+    TenantActiveData,
     TenantData,
     TenantDetail,
     UpdateTenantPayload,
@@ -13,6 +14,12 @@ export const tenantApi = {
         return axiosAuth.get<PaginationResponse<TenantData>>('/tenants', {
             params,
         });
+    },
+
+    getActive() {
+        return axiosAuth.get<PaginationResponse<TenantActiveData>>(
+            `/tenants/active`
+        );
     },
 
     getDetail(id: string) {

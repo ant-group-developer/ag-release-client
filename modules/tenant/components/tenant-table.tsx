@@ -9,15 +9,15 @@ import {
     getRandomInt,
     getSortOrder,
 } from '@/helpers/common';
-import useModalStore from '@/hooks/use-modal';
 import { Link } from '@/i18n/routing';
-import { Avatar, Switch } from 'antd';
+import { Avatar, Switch, theme, Tooltip } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { TENANT_ORDER_BY, TENANT_TABS } from '../enums';
 import { useUpdateTenant } from '../hooks/use-update-tenant';
 import { DataFilterTenant, TenantData } from '../types/data';
-import { getTenantDetailRoute, getTenantTypeLabel } from '../utils';
+import { getTenantDetailRoute } from '../utils';
+import TenantTag from './tenant-tag';
 
 type Props = {
     dataFilter: DataFilterTenant;
@@ -29,7 +29,7 @@ type Props = {
 
 function TenantTable({ dataFilter, ...props }: Props) {
     const messages = useTranslations();
-    const openModal = useModalStore((state) => state.openModal);
+    const { token } = theme.useToken();
     const canUpdate = true;
 
     const { updateTenant } = useUpdateTenant();
@@ -60,7 +60,7 @@ function TenantTable({ dataFilter, ...props }: Props) {
         {
             title: messages('tenant.label'),
             dataIndex: TENANT_ORDER_BY.NAME,
-            width: 320,
+            width: 250,
             ellipsis: true,
             sorter: true,
             fixed: 'left',
@@ -77,21 +77,31 @@ function TenantTable({ dataFilter, ...props }: Props) {
                             alt={cell}
                             className="flex-none"
                             size={40}
+                            shape="square"
                         >
                             {getAvatarPlaceholder(record.owner.email)}
                         </Avatar>
                         <div className="grid flex-1 truncate">
-                            <Link
-                                href={getTenantDetailRoute(
-                                    record.id,
-                                    TENANT_TABS.INFO
-                                )}
-                                className="hover:underline"
+                            <Tooltip
+                                title={messages('common.detail')}
+                                placement="right"
                             >
-                                {cell}
-                            </Link>
+                                <Link
+                                    href={getTenantDetailRoute(
+                                        record.id,
+                                        TENANT_TABS.INFO
+                                    )}
+                                    className="w-fit hover:underline"
+                                >
+                                    {cell}
+                                </Link>
+                            </Tooltip>
                             <CopyText text={record.owner.email}>
-                                <p className="italic text-gray-500/80">
+                                <p
+                                    style={{
+                                        color: token.colorTextDescription,
+                                    }}
+                                >
                                     {record.owner.email}
                                 </p>
                             </CopyText>
@@ -104,18 +114,14 @@ function TenantTable({ dataFilter, ...props }: Props) {
             title: messages('tenant.type.titleShort'),
             dataIndex: 'type',
             width: 120,
-            render: (cell) => getTenantTypeLabel(cell, messages),
+            render: (cell) => <TenantTag type={cell} />,
         },
         {
             title: messages('tenant.title'),
             dataIndex: 'title',
             width: 180,
             ellipsis: true,
-            render: (cell) => (
-                <CopyText text={cell}>
-                    <p>{cell}</p>
-                </CopyText>
-            ),
+            render: (cell) => <CopyText text={cell} />,
         },
         {
             title: messages('tenant.primaryColor'),
@@ -139,11 +145,24 @@ function TenantTable({ dataFilter, ...props }: Props) {
         },
         {
             title: messages('user.label'),
-            dataIndex: 'member',
+            dataIndex: 'user',
             align: 'center',
             width: 120,
             sorter: true,
             render: () => formattedNumber(getRandomInt(3, 15)),
+        },
+        {
+            title: messages('tenant.member'),
+            dataIndex: 'member',
+            align: 'center',
+            width: 120,
+            sorter: true,
+            render: (cell, record) => {
+                if (record.children) {
+                    return formattedNumber(record.children.length);
+                }
+                return '-';
+            },
         },
         // {
         //     title: messages('common.dateCreated'),
@@ -162,7 +181,7 @@ function TenantTable({ dataFilter, ...props }: Props) {
             title: messages('common.dateUpdated'),
             dataIndex: TENANT_ORDER_BY.UPDATED_AT,
             align: 'center',
-            width: 180,
+            width: 120,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,

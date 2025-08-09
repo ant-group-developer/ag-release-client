@@ -47,7 +47,7 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
             key: TENANT_TABS.USER,
             label: (
                 <Link href={getTenantDetailRoute(tenantId, TENANT_TABS.USER)}>
-                    {messages('tenant.member')}
+                    {messages('user.label')}
                 </Link>
             ),
         },
@@ -83,6 +83,7 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
             ),
         },
     ];
+
     return (
         <Spin spinning={isLoading}>
             <div className="mx-auto max-w-screen-2xl px-2">

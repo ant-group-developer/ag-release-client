@@ -28,6 +28,7 @@ export enum APP_ROUTES {
     TRACK_ORIGIN_TYPE = '/track-origin-types',
     TENANT = '/tenants',
     SETTING = '/setting',
+    SIGN_IN = '/sign-in',
 }
 
 export const AUTH_ROUTES: string[] = [APP_ROUTES.LOGIN];

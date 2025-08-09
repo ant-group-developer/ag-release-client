@@ -1,6 +1,8 @@
+import { authOptions } from '@/modules/auth/next-auth';
 import ReactQueryProviders from '@/providers/react-query';
+import SessionProvider from '@/providers/session-provider';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
-import { UserProvider } from '@auth0/nextjs-auth0/client';
+import { getServerSession } from 'next-auth';
 import { ReactNode } from 'react';
 
 type Props = {
@@ -9,12 +11,13 @@ type Props = {
 
 // Since we have a `not-found.tsx` page on the root, a layout file
 // is required, even if it's just passing children through.
-export default function RootLayout({ children }: Props) {
+export default async function RootLayout({ children }: Props) {
+    const session = await getServerSession(authOptions);
     return (
-        <UserProvider>
-            <ReactQueryProviders>
-                <AntdRegistry>{children}</AntdRegistry>
-            </ReactQueryProviders>
-        </UserProvider>
+        <ReactQueryProviders>
+            <AntdRegistry>
+                <SessionProvider session={session}>{children}</SessionProvider>
+            </AntdRegistry>
+        </ReactQueryProviders>
     );
 }

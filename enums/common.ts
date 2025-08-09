@@ -111,6 +111,7 @@ export enum TYPE_FILTER {
     GENRES = 'genres',
     ARTIST_ID = 'artistId',
     ID = 'ID',
+    WORKSPACE = 'workspaceIds',
 }
 
 export enum UPLOAD_TYPE {

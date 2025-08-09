@@ -3,8 +3,9 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppColorPicker from '@/components/ui/colorPicker/app-color-picker';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import UserSelect from '@/modules/user/components/user-select';
-import { Input, Switch, theme } from 'antd';
+import { Form, Input, Switch, theme } from 'antd';
 import { useTranslations } from 'next-intl';
+import { TENANT_TYPE } from '../../enums';
 import { TenantData } from '../../types/data';
 import TenantSelect from '../tenant-select';
 import TenantTypeSelect from '../tenant-type-select';
@@ -36,17 +37,45 @@ function TenantForm({ excludeIds, canChangeParent, ...props }: Props) {
                 <Input placeholder={messages('tenant.name')} />
             </AppFormItem>
 
-            {canChangeParent && (
-                <AppFormItem
-                    label={messages('tenant.parent.label')}
-                    name="parentId"
-                >
-                    <TenantSelect
-                        placeholder={messages('tenant.parent.placeholder')}
-                        excludeIds={excludeIds}
-                    />
-                </AppFormItem>
-            )}
+            <AppFormItem
+                label={messages('tenant.type.title')}
+                name="type"
+                required
+                rules={[
+                    {
+                        required: true,
+                    },
+                ]}
+            >
+                <TenantTypeSelect />
+            </AppFormItem>
+
+            <Form.Item
+                shouldUpdate={(pre, cur) => pre.type !== cur.type}
+                noStyle
+            >
+                {({ getFieldValue }) => {
+                    const type = getFieldValue('type');
+
+                    if (!canChangeParent) return null;
+                    if (type === TENANT_TYPE.WHITE_LABEL) return null;
+
+                    return (
+                        <AppFormItem
+                            label={messages('tenant.parent.label')}
+                            name="parentId"
+                        >
+                            <TenantSelect
+                                placeholder={messages(
+                                    'tenant.parent.placeholder'
+                                )}
+                                excludeIds={excludeIds}
+                                type={[TENANT_TYPE.WHITE_LABEL]}
+                            />
+                        </AppFormItem>
+                    );
+                }}
+            </Form.Item>
 
             <AppFormItem
                 label={messages('tenant.owner')}
@@ -85,20 +114,6 @@ function TenantForm({ excludeIds, canChangeParent, ...props }: Props) {
             >
                 <Input placeholder={messages('common.email')} />
             </AppFormItem>
-
-            <AppFormItem
-                label={messages('tenant.type.title')}
-                name="type"
-                required
-                rules={[
-                    {
-                        required: true,
-                    },
-                ]}
-            >
-                <TenantTypeSelect />
-            </AppFormItem>
-
             <AppFormItem
                 label={messages('tenant.title')}
                 rules={[

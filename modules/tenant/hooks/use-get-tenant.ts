@@ -20,6 +20,21 @@ export function useTenantList(params: DataFilterTenant) {
     };
 }
 
+export function useTenantActive() {
+    const { data, ...restResponse } = useQuery({
+        queryKey: tenantQueryKeys.active(),
+        queryFn: () => tenantApi.getActive(),
+        placeholderData: (previousData) => previousData,
+    });
+
+    return {
+        ...restResponse,
+        data:
+            data?.data?.data ??
+            (DEFAULT_DATA_PAGINATION as PaginationResponse<TenantData>['data']),
+    };
+}
+
 export function useTenantDetail(id: string | null) {
     const { data, ...restResponse } = useQuery({
         queryKey: tenantQueryKeys.detail(id ?? ''),

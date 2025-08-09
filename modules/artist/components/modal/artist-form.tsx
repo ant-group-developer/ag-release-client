@@ -5,7 +5,7 @@ import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import PlatformSelect from '@/components/ui/select/platform-select';
 import { SIZE_ICON } from '@/constants/common';
-import { getAvatarUrl } from '@/helpers/link';
+import { getAvatarUrl } from '@/helpers/avatar-tailwind';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';

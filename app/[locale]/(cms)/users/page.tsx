@@ -3,13 +3,10 @@ import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_OPTIONS } from '@/constants/common';
 import { PAGE_SIZE } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
-import {
-    formattedDate,
-    getScrollYHeight,
-    setSortOrder,
-} from '@/helpers/common';
+import { formattedDate, setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 import CreateUserModal from '@/modules/user/components/user-create';
 import UserHeader from '@/modules/user/components/user-header';
 import UserTable from '@/modules/user/components/user-table';
@@ -18,13 +15,13 @@ import { TYPE_MODAL_USER, USER_ORDER_BY } from '@/modules/user/enums';
 import { useUserList } from '@/modules/user/hooks/use-get-user';
 import { useSyncUser } from '@/modules/user/hooks/use-sync-user';
 import { DataFilterUser } from '@/modules/user/types/data';
-import { useWindowSize } from '@uidotdev/usehooks';
 
 type Props = {};
 
 export default function UserPage({}: Props) {
     // hooks - state
-    const { height, width } = useWindowSize();
+    const scrollY = useTableScrollY();
+
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
 
@@ -58,30 +55,30 @@ export default function UserPage({}: Props) {
     };
 
     return (
-        <div className="flex h-full flex-col justify-between overflow-hidden">
-            <div className="flex-1">
-                <UserHeader
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                    handleRefresh={() => refetch()}
-                    handleSync={() => syncUser({})}
-                    lastUpdatedAt={formattedDate(dataUpdatedAt || new Date())}
-                />
-                <UserTable
-                    dataSource={data.items}
-                    scroll={{ y: getScrollYHeight(height, width, 40, 47) }}
-                    pagination={{
-                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: data.metadata.currentPage,
-                        total: data.metadata.totalItems,
-                    }}
-                    loading={isFetching || isPending}
-                    dataFilter={dataFilter}
-                    onChange={onChangeSort}
-                />
-            </div>
+        <div>
+            <UserHeader
+                dataFilter={dataFilter}
+                onChangeFilter={onChangeFilter}
+                canClearFilter={canClearFilter}
+                removeFilter={removeFilter}
+                handleRefresh={() => refetch()}
+                handleSync={() => syncUser({})}
+                lastUpdatedAt={formattedDate(dataUpdatedAt || new Date())}
+            />
+            <UserTable
+                dataSource={data.items}
+                scroll={{
+                    y: scrollY,
+                }}
+                pagination={{
+                    pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                    current: data.metadata.currentPage,
+                    total: data.metadata.totalItems,
+                }}
+                loading={isFetching || isPending}
+                dataFilter={dataFilter}
+                onChange={onChangeSort}
+            />
 
             <AppPagination
                 className="border-b border-t"

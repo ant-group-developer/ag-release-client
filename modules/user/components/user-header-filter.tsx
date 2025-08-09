@@ -46,6 +46,11 @@ export default function UserHeaderFilter({
             visible: !dataFilter.type,
             onClick: () => setTypeFilter(TYPE_FILTER.TYPE),
         },
+        {
+            label: messages('tenant.label'),
+            visible: !dataFilter.type,
+            onClick: () => setTypeFilter(TYPE_FILTER.WORKSPACE),
+        },
     ];
 
     useEffect(() => {
