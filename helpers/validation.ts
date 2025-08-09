@@ -4,7 +4,7 @@ export const validatePassword = (
     callback: any,
     message = 'Mật khẩu phải có ít nhất 8 kí tự, bao gồm ít nhất 1 chữ thường, 1 chữ hoa và 1 số'
 ) => {
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)\S+$/;
     const isValid = regex.test(value);
 
     if (value && isValid) {
