@@ -1,11 +1,11 @@
-import axiosAuth from '@/api/axios-auth';
+import axiosInstance from '@/api/axios-auth';
 import { ReleaseCoverArtPayload } from '../types';
 
 export const releaseCoverArtApi = {
     createReleaseCoverArt: (payload: ReleaseCoverArtPayload) => {
-        return axiosAuth.post('/release-cover-art', payload);
+        return axiosInstance.post('/release-cover-art', payload);
     },
     deleteReleaseCoverArt: (id: string) => {
-        return axiosAuth.delete(`/release-cover-art/${id}`);
+        return axiosInstance.delete(`/release-cover-art/${id}`);
     },
 };

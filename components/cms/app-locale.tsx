@@ -1,71 +1,70 @@
 import { LOCALE } from '@/enums/common';
 import { useLocale } from '@/hooks/use-locale';
-import { Dropdown } from 'antd';
+import { Button, ButtonProps, Dropdown, DropdownProps } from 'antd';
+import { ItemType, MenuItemType } from 'antd/es/menu/interface';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
-const width = 40;
-const height = 30;
+interface AppLocaleProps extends DropdownProps {
+    buttonProps?: ButtonProps;
+}
 
-function AppLocale() {
+export default function AppLocale({ buttonProps, ...props }: AppLocaleProps) {
     const { locale, switchLocale } = useLocale();
     const messages = useTranslations();
 
-    const items = [
+    const items: ItemType[] = [
         {
-            label: (
-                <p className="flex items-center justify-start gap-2 text-base font-medium">
-                    <Image
-                        src={'/languages/vi.svg'}
-                        className="hidden h-full md:block"
-                        width={width}
-                        height={height}
-                        alt={LOCALE.VI}
-                        style={{ height: 'auto' }}
-                    />
-                    {messages('language.vietnamese')}
-                </p>
-            ),
-            key: LOCALE.VI,
+            type: 'group',
+            label: messages('common.settingNote'),
         },
         {
             label: (
-                <p className="flex items-center justify-start gap-2 text-base font-medium">
+                <p className="flex items-center justify-start gap-2">
                     <Image
+                        height={15}
+                        width={30}
                         src={'/languages/en.svg'}
-                        className="hidden h-full md:block"
-                        width={width}
-                        height={height}
                         alt={LOCALE.EN}
-                        style={{ height: 'auto' }}
                     />
                     {messages('language.english')}
                 </p>
             ),
             key: LOCALE.EN,
         },
+        {
+            label: (
+                <p className="flex items-center justify-start gap-2">
+                    <Image
+                        height={15}
+                        width={30}
+                        src={'/languages/vi.svg'}
+                        alt={LOCALE.VI}
+                    />
+                    {messages('language.vietnamese')}
+                </p>
+            ),
+            key: LOCALE.VI,
+        },
     ];
 
-    const currentLocale = items.find((item) => item.key === locale);
-
-    function onClick({ key }: { key: any }) {
-        switchLocale(key);
-    }
+    const currentLocale = items.find(
+        (item) => item?.key === locale
+    ) as MenuItemType;
 
     return (
         <Dropdown
-            menu={{
-                items: items.filter((item) => item.key !== locale),
-                onClick,
-                className: 'text-text-color',
-            }}
             trigger={['click']}
+            {...props}
+            menu={{
+                items,
+                onClick: ({ key }) => {
+                    switchLocale(key as LOCALE);
+                },
+                activeKey: locale,
+            }}
         >
-            <div className="cursor-pointer rounded-3xl px-4 py-1 !text-white">
-                {currentLocale?.label}
-            </div>
+            <Button {...buttonProps}>{currentLocale?.label}</Button>
         </Dropdown>
     );
 }
-
-export default AppLocale;

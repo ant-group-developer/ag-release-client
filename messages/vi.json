@@ -10,21 +10,29 @@
         "loginByOtherAccount": "Đăng nhập bằng tài khoản khác"
     },
     "auth": {
-        "login": "Đăng nhập",
-        "dontHaveAccount": "Bạn chưa có tài khoản?",
+        "signIn": {
+            "title": "Chào mừng trở lại",
+            "description": "Vui lòng nhập thông tin đăng nhập",
+            "submit": "Đăng nhập"
+        },
+        "dontHaveAccount": "Chưa có tài khoản?",
         "alreadyHaveAccount": "Đã có tài khoản?",
-        "signUp": "Đăng ký",
-        "forgotPassword": "Quên mật khẩu",
-        "confirmEmail": "Xác nhận địa chỉ email",
-        "confirmEmailDescription": "Chúng tôi đã gửi một email xác nhận đến email bạn đăng ký. Kiểm tra thư mục spam nếu bạn không nhận được email nào.",
-        "goToLogin": "Đến trang đăng nhập",
-        "resendConfirmationEmail": "Gửi lại email xác thực",
-        "linkHasExpired": "Liên kết đã hết hạn",
-        "reEnterEmail": "Vui lòng nhập lại email",
-        "emailConfirmationSuccessful": "Xác nhận email thành công",
-        "yourAccountIsBeingApprovedByAdmin": "Tài khoản của bạn đang được Admin phê duyệt",
-        "forbiddenTitle": "Bạn không có quyền truy cập",
-        "forbiddenDescription": "Vui lòng liên hệ Admin để biết thêm chi tiết"
+        "register": {
+            "title": " Tham gia ngay hôm nay",
+            "description": "Tạo tài khoản miễn phí và bắt đầu sử dụng",
+            "submit": "Đăng ký"
+        },
+        "signOut": "Đăng xuất",
+        "forgotPassword": {
+            "title": "Quên mật khẩu?",
+            "description": "Nhập email của bạn và chúng tôi sẽ gửi liên kết đặt lại mật khẩu",
+            "submit": "Gửi liên kết đặt lại mật khẩu",
+            "back": "Trở về trang đăng nhập"
+        },
+        "forbidden": {
+            "title": "Truy cập bị từ chối",
+            "description": "Bạn không có quyền truy cập tài nguyên này."
+        }
     },
     "common": {
         "lastEdit": "Lần chỉnh sửa cuối",
@@ -395,15 +403,18 @@
         "minValid": "Tối thiểu {number} ký tự hợp lệ",
         "minWithValid": "Tối thiểu {number} ký tự hợp lệ",
         "max": "Tối đa {number} ký tự",
-        "numberMin": "Tối thiểu {number}",
-        "numberMax": "Tối đa {number}",
         "image": "Xin vui lòng chọn ảnh hợp lệ",
         "video": "Xin vui lòng chọn video hợp lệ",
         "phoneNumber": "Số điện thoại phải gồm đúng 10 số",
         "inputPhoneNumber": "Nhập số điện thoại",
         "selectUsedStatus": "Chọn trạng thái sử dụng",
         "onlyTheFollowingFormatsAreAccepted": "Chỉ chấp nhận các định dạng: {accept}",
-        "fieldIsRequired": "{field} là bắt buộc"
+        "required": "Vui lòng nhập {field}.",
+        "stringMin": "{field} cần ít nhất {min} ký tự.",
+        "stringMax": "{field} chỉ được tối đa {max} ký tự.",
+        "numberMin": "{field} phải từ {min} trở lên.",
+        "numberMax": "{field} không được lớn hơn {max}.",
+        "invalidType": "{field} không hợp lệ."
     },
     "form": {
         "searchPlaceholder": "Tìm kiếm"

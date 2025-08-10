@@ -1,4 +1,4 @@
-import axiosAuth from '@/api/axios-auth';
+import axiosInstance from '@/api/axios-auth';
 import axiosUpload from '@/api/axios-upload';
 import { DetailResponse, UploadPayload } from '@/types/api';
 import { GOOGLE_ROOT_FOLDER_DRIVE_ID } from '../constants/folder';
@@ -7,7 +7,7 @@ import { FileData, UploadResponse, UploadResponseV2 } from '../types/data';
 export const uploadApi = {
     uploadFile: async ({ infoFile, file }: UploadPayload) => {
         try {
-            const response = await axiosAuth.post<
+            const response = await axiosInstance.post<
                 DetailResponse<{ urlPublic: string; urlUpload: string }>
             >('/bucket/gcs/public/upload/presigned-url', infoFile);
             if (response.status !== 201) {
@@ -38,15 +38,15 @@ export const uploadApi = {
     },
 
     // uploadFileSubmit: async (params: SubmitUploadParams) => {
-    //     return axiosAuth.post('/file/submit-upload', params);
+    //     return axiosInstance.post('/file/submit-upload', params);
     // },
 
     getDownloadLink: (fileId: string) => {
-        return axiosAuth.get(`/file/get-download-url/${fileId}`);
+        return axiosInstance.get(`/file/get-download-url/${fileId}`);
     },
 
     getFile: (fileId: string) => {
-        return axiosAuth.get<DetailResponse<FileData>>(
+        return axiosInstance.get<DetailResponse<FileData>>(
             `/file/get-read-url/${fileId}`
         );
     },

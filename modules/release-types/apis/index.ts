@@ -1,4 +1,4 @@
-import axiosAuth from '@/api/axios-auth';
+import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
 import { ReleaseTypesData, ReleaseTypesDataFilter } from '../types';
 import {
@@ -8,7 +8,7 @@ import {
 
 export const releaseTypesApi = {
     getList: (params: ReleaseTypesDataFilter) => {
-        return axiosAuth.get<PaginationResponse<ReleaseTypesData>>(
+        return axiosInstance.get<PaginationResponse<ReleaseTypesData>>(
             '/album-formats',
             {
                 params,
@@ -17,13 +17,13 @@ export const releaseTypesApi = {
     },
 
     getDetail: (id: ReleaseTypesData['id']) => {
-        return axiosAuth.get<DetailResponse<ReleaseTypesData>>(
+        return axiosInstance.get<DetailResponse<ReleaseTypesData>>(
             `/album-formats/${id}`
         );
     },
 
     createReleaseType: (payload: CreateReleaseTypePayload) => {
-        return axiosAuth.post<DetailResponse<ReleaseTypesData>>(
+        return axiosInstance.post<DetailResponse<ReleaseTypesData>>(
             '/album-formats',
             payload
         );
@@ -33,13 +33,13 @@ export const releaseTypesApi = {
         id: ReleaseTypesData['id'],
         payload: UpdateReleaseTypePayload
     ) => {
-        return axiosAuth.put<DetailResponse<ReleaseTypesData>>(
+        return axiosInstance.put<DetailResponse<ReleaseTypesData>>(
             `/album-formats/${id}`,
             payload
         );
     },
 
     deleteReleaseType: (id: ReleaseTypesData['id']) => {
-        return axiosAuth.delete(`/album-formats/${id}`);
+        return axiosInstance.delete(`/album-formats/${id}`);
     },
 };

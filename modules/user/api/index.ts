@@ -1,4 +1,4 @@
-import axiosAuth from '@/api/axios-auth';
+import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
 import {
     CreateUserPayload,
@@ -10,27 +10,30 @@ import {
 
 export const userApi = {
     getList(params: DataFilterUser) {
-        return axiosAuth.get<PaginationResponse<UserData>>('/users', {
+        return axiosInstance.get<PaginationResponse<UserData>>('/users', {
             params,
         });
     },
 
     getDetail(id: string) {
-        return axiosAuth.get<DetailResponse<UserDetail>>(`/users/${id}`);
+        return axiosInstance.get<DetailResponse<UserDetail>>(`/users/${id}`);
     },
 
     create(payload: CreateUserPayload) {
-        return axiosAuth.post<DetailResponse<UserDetail>>(`/users`, payload);
+        return axiosInstance.post<DetailResponse<UserDetail>>(
+            `/users`,
+            payload
+        );
     },
 
     update(id: string, payload: UpdateUserPayload) {
-        return axiosAuth.put<DetailResponse<UserDetail>>(
+        return axiosInstance.put<DetailResponse<UserDetail>>(
             `/users/${id}`,
             payload
         );
     },
 
     syncData() {
-        return axiosAuth.post(`/users/sync-data`);
+        return axiosInstance.post(`/users/sync-data`);
     },
 };

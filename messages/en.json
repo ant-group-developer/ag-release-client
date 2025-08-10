@@ -10,21 +10,29 @@
         "loginByOtherAccount": "Sign in with another account"
     },
     "auth": {
-        "login": "Login",
-        "signUp": "Signup",
-        "forgotPassword": "Forgot password",
-        "dontHaveAccount": "Don't have account?",
-        "alreadyHaveAccount": "Already have account?",
-        "confirmEmail": "Confirm your email",
-        "confirmEmailDescription": "We sent a confirmation email to the email you registered with. Check your spam folder if you do not receive any email.",
-        "goToLogin": "Login",
-        "resendConfirmationEmail": "Resend confirmation email",
-        "linkHasExpired": "The link has expired",
-        "reEnterEmail": "Please re-enter your email",
-        "emailConfirmationSuccessful": "Email confirmation successful",
-        "yourAccountIsBeingApprovedByAdmin": "Your account is being approved by Admin",
-        "forbiddenTitle": "You do not have access",
-        "forbiddenDescription": "Please contact the Admin for more details"
+        "signIn": {
+            "title": "Welcome back",
+            "description": "Please enter your details to sigin in",
+            "submit": "Sign in"
+        },
+        "dontHaveAccount": "Don't have an account?",
+        "alreadyHaveAccount": "Already have an account?",
+        "register": {
+            "title": "Join us today",
+            "description": "Create a free account and get started",
+            "submit": "Register"
+        },
+        "signOut": "Sign out",
+        "forgotPassword": {
+            "title": "Forgot your password?",
+            "description": "Enter your email and we'll send you a link to reset your password",
+            "submit": "Send password reset link",
+            "back": "Back to sign in"
+        },
+        "forbidden": {
+            "title": "Access Denied",
+            "description": "You do not have permission to view this resource."
+        }
     },
     "common": {
         "lastEdit": "Last edit",
@@ -394,8 +402,6 @@
         "min": "Must be min {number} characters",
         "minValid": "Must be min {number} valid characters",
         "max": "Must be less than {number} characters",
-        "numberMin": "Must be greater than {number} ",
-        "numberMax": "Must be less than {number}",
         "image": "Please select a image file",
         "video": "Please select a video file",
         "phoneNumber": "Phone number must be 10 digits",
@@ -403,7 +409,12 @@
         "selectUsedStatus": "Select used status",
         "minWithValid": "Must be min at least {number} valid characters",
         "onlyTheFollowingFormatsAreAccepted": "Only the following formats are accepted: {accept}",
-        "fieldIsRequired": "{field} is required"
+        "required": "Please enter your {field}.",
+        "stringMin": "{field} must have at least {min} characters.",
+        "stringMax": "{field} can have up to {max} characters only.",
+        "numberMin": "{field} must be at least {min}.",
+        "numberMax": "{field} must not exceed {max}.",
+        "invalidType": "{field} must be a valid value."
     },
     "form": {
         "searchPlaceholder": "Search"

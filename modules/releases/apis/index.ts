@@ -1,4 +1,4 @@
-import axiosAuth from '@/api/axios-auth';
+import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
 import { ReleasesData, ReleasesDataFilter, ReleaseValidate } from '../types';
 import {
@@ -8,16 +8,21 @@ import {
 
 export const releasesApi = {
     getList: (params: ReleasesDataFilter) => {
-        return axiosAuth.get<PaginationResponse<ReleasesData>>('/releases', {
-            params,
-        });
+        return axiosInstance.get<PaginationResponse<ReleasesData>>(
+            '/releases',
+            {
+                params,
+            }
+        );
     },
     getDetail: (id: ReleasesData['id']) => {
-        return axiosAuth.get<DetailResponse<ReleasesData>>(`/releases/${id}`);
+        return axiosInstance.get<DetailResponse<ReleasesData>>(
+            `/releases/${id}`
+        );
     },
 
     createReleaseDraft: (payload: CreateReleaseDraftPayload) => {
-        return axiosAuth.post<DetailResponse<ReleasesData>>(
+        return axiosInstance.post<DetailResponse<ReleasesData>>(
             '/releases/draft',
             payload
         );
@@ -27,19 +32,19 @@ export const releasesApi = {
         id: ReleasesData['id'],
         payload: UpdateReleaseDraftPayload
     ) => {
-        return axiosAuth.put<DetailResponse<ReleasesData>>(
+        return axiosInstance.put<DetailResponse<ReleasesData>>(
             `/releases/draft/${id}`,
             payload
         );
     },
 
     deleteRelease: (id: ReleasesData['id']) => {
-        return axiosAuth.delete(`/releases/draft/${id}`);
+        return axiosInstance.delete(`/releases/draft/${id}`);
     },
 
     validate: (id: ReleasesData['id']) => {
         {
-            return axiosAuth.get<DetailResponse<ReleaseValidate[]>>(
+            return axiosInstance.get<DetailResponse<ReleaseValidate[]>>(
                 `/releases/draft/${id}/validate`
             );
         }

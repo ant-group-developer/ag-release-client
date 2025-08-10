@@ -56,6 +56,8 @@ const nextConfig = {
         AUTH0_CLIENT_SECRET: process.env.AUTH0_CLIENT_SECRET,
         AUTH0_AUDIENCE: process.env.AUTH0_AUDIENCE,
         AUTH0_SCOPE: process.env.AUTH0_SCOPE,
+        NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+        NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     },
     reactStrictMode: true,
     images: {

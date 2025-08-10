@@ -1,9 +1,8 @@
 import createNextIntlMiddleware from 'next-intl/middleware';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
-import { LOCALE } from './enums/common';
-import { AUTH_ROUTES, PUBLIC_ROUTES } from './enums/routes';
-import { routing } from './i18n/routing';
+import { APP_ROUTES, AUTH_ROUTES, PUBLIC_ROUTES } from './enums/routes';
+import { defaultLocale, routing } from './i18n/routing';
 import { getToken } from './modules/auth/utils';
 
 const nextIntl = createNextIntlMiddleware(routing);
@@ -27,7 +26,7 @@ export async function middleware(req: NextRequest) {
 
     // 2. Do your session check + redirects
     const token = await getToken(req);
-    const locale = cookies().get('NEXT_LOCALE')?.value || LOCALE.EN;
+    const locale = cookies().get('NEXT_LOCALE')?.value || defaultLocale;
 
     const normalizePath = (path: string) => path.replace(/\/+$/, '');
     const normalizedPathname = normalizePath(pathname);
@@ -47,25 +46,22 @@ export async function middleware(req: NextRequest) {
         return nextIntl(req);
     }
 
-    // if (!token && !isAuthRoutes) {
-    //     const url = req.nextUrl.clone();
-    //     url.pathname = `/${locale}${APP_ROUTES.SIGN_IN}`;
-    //     return NextResponse.redirect(url);
-    // }
+    if (!token && !isAuthRoutes) {
+        const url = req.nextUrl.clone();
+        url.pathname = `/${locale}${APP_ROUTES.SIGN_IN}`;
+        return NextResponse.redirect(url);
+    }
 
-    // if (token && isAuthRoutes) {
-    //     const url = req.nextUrl.clone();
-    //     url.pathname = `/${locale}${APP_ROUTES.DASHBOARD}`;
-    //     return NextResponse.redirect(url);
-    // }
+    if (token && isAuthRoutes) {
+        const url = req.nextUrl.clone();
+        url.pathname = `/${locale}${APP_ROUTES.DASHBOARD}`;
+        return NextResponse.redirect(url);
+    }
 
     // 3. Proxy Authorization header for your /api/v1 calls
-    if (
-        /^\/api\/(v1|v2)/.test(pathname)
-        // && token?.accessToken
-    ) {
+    if (pathname.startsWith('/api/v1') && token?.accessToken) {
         const res = NextResponse.next();
-        // res.headers.set('Authorization', `Bearer ${token.accessToken}`);
+        res.headers.set('Authorization', `Bearer ${token.accessToken}`);
         // *don’t* call nextIntl here—this is an API route
         return res;
     }

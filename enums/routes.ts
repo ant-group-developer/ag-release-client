@@ -1,6 +1,5 @@
 export enum APP_ROUTES {
     FORBIDDEN = '/forbidden',
-    LOGIN = '/login',
     LOGOUT = '/api/auth/logout',
     NOT_FOUND = '/404',
     SERVER_ERROR = '/500',
@@ -31,7 +30,7 @@ export enum APP_ROUTES {
     SIGN_IN = '/sign-in',
 }
 
-export const AUTH_ROUTES: string[] = [APP_ROUTES.LOGIN];
+export const AUTH_ROUTES: string[] = [APP_ROUTES.SIGN_IN];
 
 export const DEFAULT_ROUTE = APP_ROUTES.DASHBOARD;
 

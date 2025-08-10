@@ -1,4 +1,4 @@
-import { USER_TYPE } from '@/modules/user/enums';
+import { UserDetail } from '@/modules/user/types/data';
 
 export interface LoginPayload {
     email: string;
@@ -41,35 +41,7 @@ export interface ResendVerifyEmail {
     email: string;
 }
 
-export interface UserInfoData {
-    dateCreated: Date;
-    dateUpdated: Date;
-    telegramId: string | null;
-    telegramNotificationEnabled: boolean;
-    id: string;
-    name: string;
-    email: string;
-    avatar: string | null;
-    phoneNumber: string | null;
-    dateOfBirth: string | null;
-    isActive: boolean;
-    emailVerified: boolean;
-    type: USER_TYPE;
-    permanentResidence: string | null;
-    currentAddress: string | null;
-    taxNumber: string | null;
-    passportNo: string | null;
-    passportPlaceOfIssue: string | null;
-    idNumber: string | null;
-    idPlaceOfIssue: string | null;
-    idDateOfIssue: string | null;
-    contractSignedDate: string | null;
-    contractNumber: string | null;
-    groupId: number | null;
-    group: {
-        id: number;
-        name: string;
-    } | null;
+export interface UserInfoData extends UserDetail {
     permission: string[];
 }
 

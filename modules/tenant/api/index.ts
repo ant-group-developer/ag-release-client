@@ -1,4 +1,4 @@
-import axiosAuth from '@/api/axios-auth';
+import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
 import {
     CreateTenantPayload,
@@ -11,30 +11,32 @@ import {
 
 export const tenantApi = {
     getList(params: DataFilterTenant) {
-        return axiosAuth.get<PaginationResponse<TenantData>>('/tenants', {
+        return axiosInstance.get<PaginationResponse<TenantData>>('/tenants', {
             params,
         });
     },
 
     getActive() {
-        return axiosAuth.get<PaginationResponse<TenantActiveData>>(
+        return axiosInstance.get<PaginationResponse<TenantActiveData>>(
             `/tenants/active`
         );
     },
 
     getDetail(id: string) {
-        return axiosAuth.get<DetailResponse<TenantDetail>>(`/tenants/${id}`);
+        return axiosInstance.get<DetailResponse<TenantDetail>>(
+            `/tenants/${id}`
+        );
     },
 
     create(payload: CreateTenantPayload) {
-        return axiosAuth.post<DetailResponse<TenantDetail>>(
+        return axiosInstance.post<DetailResponse<TenantDetail>>(
             `/tenants`,
             payload
         );
     },
 
     update(id: string, payload: UpdateTenantPayload) {
-        return axiosAuth.put<DetailResponse<TenantDetail>>(
+        return axiosInstance.put<DetailResponse<TenantDetail>>(
             `/tenants/${id}`,
             payload
         );

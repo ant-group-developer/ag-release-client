@@ -1,4 +1,4 @@
-import axiosAuth from '@/api/axios-auth';
+import axiosInstance from '@/api/axios-auth';
 import { DetailResponse } from '@/types/api';
 import { ReleaseArtist } from '../types';
 import {
@@ -8,7 +8,7 @@ import {
 
 export const releaseArtistApi = {
     createReleaseArtist: (payload: CreateReleaseArtistPayload) => {
-        return axiosAuth.post<DetailResponse<ReleaseArtist>>(
+        return axiosInstance.post<DetailResponse<ReleaseArtist>>(
             '/release-artists',
             payload
         );
@@ -18,13 +18,13 @@ export const releaseArtistApi = {
         id: ReleaseArtist['id'],
         payload: UpdateReleaseArtistPayload
     ) => {
-        return axiosAuth.put<DetailResponse<ReleaseArtist>>(
+        return axiosInstance.put<DetailResponse<ReleaseArtist>>(
             `/release-artists/${id}`,
             payload
         );
     },
 
     deleteReleaseArtist: (id: ReleaseArtist['id']) => {
-        return axiosAuth.delete(`/release-artists/${id}`);
+        return axiosInstance.delete(`/release-artists/${id}`);
     },
 };

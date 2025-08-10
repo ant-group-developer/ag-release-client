@@ -1,3 +1,4 @@
+import { REFRESH_FAILED_MESSAGE } from '@/api/axios-auth';
 import { APP_ROUTES } from '@/enums/routes';
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
@@ -30,7 +31,9 @@ export const authOptions: NextAuthOptions = {
                     console.log('err:', err);
                     // Pass through the server's error message
                     const errorMessage =
-                        err.response?.data?.message || 'Authentication failed';
+                        err.response?.data?.message ||
+                        err.message ||
+                        'Authentication failed';
                     throw new Error(errorMessage);
                 }
             },
@@ -44,6 +47,7 @@ export const authOptions: NextAuthOptions = {
     callbacks: {
         // Mỗi lần jwt được tạo/refresh
         async jwt({ token, user }) {
+            console.log('token:', token);
             // Lần đầu login
             if (user) {
                 // @ts-ignore
@@ -66,9 +70,9 @@ export const authOptions: NextAuthOptions = {
                     const data = res.data.data;
                     token.accessToken = data.accessToken;
                     token.refreshToken = data.refreshToken;
-                } catch (error) {
-                    console.log('callbacks error:', error);
-                    token.error = 'RefreshFailed';
+                } catch (error: any) {
+                    console.log('callbacks error:', error.message);
+                    token.error = REFRESH_FAILED_MESSAGE;
                 }
             }
 

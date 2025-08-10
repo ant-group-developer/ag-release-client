@@ -1,4 +1,4 @@
-import axiosAuth from '@/api/axios-auth';
+import axiosInstance from '@/api/axios-auth';
 import { DetailResponse } from '@/types/api';
 import { TrackArtistData } from '../types';
 import {
@@ -8,7 +8,7 @@ import {
 
 export const trackArtistApi = {
     createTrackArtist: (payload: CreateTrackArtistPayload) => {
-        return axiosAuth.post<DetailResponse<TrackArtistData>>(
+        return axiosInstance.post<DetailResponse<TrackArtistData>>(
             '/track-artists',
             payload
         );
@@ -18,13 +18,13 @@ export const trackArtistApi = {
         id: TrackArtistData['id'],
         payload: UpdateTrackArtistPayload
     ) => {
-        return axiosAuth.put<DetailResponse<TrackArtistData>>(
+        return axiosInstance.put<DetailResponse<TrackArtistData>>(
             `/track-artists/${id}`,
             payload
         );
     },
 
     deleteTrackArtist: (id: TrackArtistData['id']) => {
-        return axiosAuth.delete(`/track-artists/${id}`);
+        return axiosInstance.delete(`/track-artists/${id}`);
     },
 };

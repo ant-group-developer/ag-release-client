@@ -1,4 +1,4 @@
-import axiosAuth from '@/api/axios-auth';
+import axiosInstance from '@/api/axios-auth';
 import { useSongStatus } from '@/app/hooks/useSongStatus';
 import WaveformElement from '@/components/ui/wave-form-element/wave-form-element';
 import { showNotification } from '@/helpers/messages-helper';
@@ -84,7 +84,7 @@ export function TrackWaveform({ data }: { data: TrackData }) {
 
     useEffect(() => {
         if (audioFile?.peak?.id && linkReadFilePeak) {
-            axiosAuth
+            axiosInstance
                 .get(linkReadFilePeak)
                 .then((response) => {
                     setPeakData(response.data);

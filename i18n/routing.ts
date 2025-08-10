@@ -2,11 +2,13 @@ import { LOCALE } from '@/enums/common';
 import { createNavigation } from 'next-intl/navigation';
 import { defineRouting } from 'next-intl/routing';
 
+export const defaultLocale = LOCALE.EN;
+
 export const routing = defineRouting({
     // locales: ['en', 'vi'],
     // defaultLocale: 'vi',
     locales: Object.values(LOCALE),
-    defaultLocale: LOCALE.VI,
+    defaultLocale,
     localeCookie:
         process.env.NEXT_PUBLIC_USE_CASE === 'locale-cookie-false'
             ? false

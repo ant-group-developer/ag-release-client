@@ -1,9 +1,9 @@
-import axiosAuth from '@/api/axios-auth';
+import axiosInstance from '@/api/axios-auth';
 import { CreateBucketFile } from '../types/data';
 
 export const bucketApi = {
     createBuckets: async (payload: { bucketDtos: CreateBucketFile[] }) => {
-        const response = await axiosAuth.post(
+        const response = await axiosInstance.post(
             '/bucket/gcs/private/bulk',
             payload
         );
@@ -12,7 +12,10 @@ export const bucketApi = {
         };
     },
     createBucket: async (file: File, payload: CreateBucketFile) => {
-        const response = await axiosAuth.post('/bucket/gcs/private', payload);
+        const response = await axiosInstance.post(
+            '/bucket/gcs/private',
+            payload
+        );
         if (response.status !== 201) {
             throw new Error(
                 'Failed to get upload URL. Please try again later.'
@@ -37,14 +40,14 @@ export const bucketApi = {
     },
 
     submit: ({ ids }: { ids: string[] }) => {
-        return axiosAuth.post('/bucket/gcs/private/bulk/submit', { ids });
+        return axiosInstance.post('/bucket/gcs/private/bulk/submit', { ids });
     },
 
     getLinkDownloadFile: (id: string) => {
-        return axiosAuth.get(`/bucket/gcs/private/${id}/download`);
+        return axiosInstance.get(`/bucket/gcs/private/${id}/download`);
     },
 
     getLinkReadFile: (id: string) => {
-        return axiosAuth.get(`/bucket/gcs/private/${id}/read`);
+        return axiosInstance.get(`/bucket/gcs/private/${id}/read`);
     },
 };

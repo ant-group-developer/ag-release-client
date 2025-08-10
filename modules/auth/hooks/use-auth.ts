@@ -1,44 +1,39 @@
-import { APP_ROUTES } from '@/enums/routes';
 import { getAvatarUrl } from '@/helpers/avatar-tailwind';
 import { userQueryKeys } from '@/modules/user/constants';
 import { USER_TYPE } from '@/modules/user/enums';
 import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 import { authApi } from '../api';
 import { UserInfoData } from '../types/common';
 
 export const defaultProfile: UserInfoData = {
     telegramId: null,
-    telegramNotificationEnabled: false,
-    dateCreated: new Date(),
-    dateUpdated: new Date(),
     id: '',
-    name: 'Dev',
-    email: 'dev@ant-group.net',
-    avatar: getAvatarUrl('dev@ant-group.net'),
-    phoneNumber: null,
-    dateOfBirth: null,
-    isActive: true,
-    emailVerified: true,
-    type: USER_TYPE.USER,
-    permanentResidence: null,
-    currentAddress: null,
-    taxNumber: null,
-    passportNo: null,
-    passportPlaceOfIssue: null,
-    idNumber: null,
-    idPlaceOfIssue: null,
-    idDateOfIssue: null,
-    contractSignedDate: null,
-    contractNumber: null,
-    groupId: null,
-    group: null,
+    name: 'User',
+    email: 'user@ant-group.net',
+    avatar: getAvatarUrl('user@ant-group.net'),
     permission: [],
+    isActive: false,
+    emailVerified: false,
+    lastLogin: null,
+    lastIp: null,
+    loginsCount: null,
+    type: USER_TYPE.USER,
+    creatorId: '',
+    creator: {
+        id: '',
+        email: '',
+    },
+    modifierId: '',
+    modifier: {
+        id: '',
+        email: '',
+    },
+    createdAt: '',
+    updatedAt: null,
 };
 
 export const useAuth = () => {
-    const router = useRouter();
-
     const { data, error, refetch, isLoading } = useQuery({
         queryKey: userQueryKeys.info(),
         queryFn: () => authApi.getInfo(),
@@ -53,11 +48,11 @@ export const useAuth = () => {
     const isAuthenticated = Boolean(profile.id);
 
     function logout() {
-        router.push(APP_ROUTES.LOGOUT);
+        signOut();
     }
 
     return {
-        permission: profile.permission,
+        permission: profile.permission || [],
         profile,
         error,
         isAuthenticated,
