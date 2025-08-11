@@ -17,10 +17,10 @@ function Forbidden({}: Props) {
                 height={300}
             />
             <h1 className="mb-2 pt-10 text-2xl font-bold">
-                {messages('auth.forbiddenTitle')}
+                {messages('auth.forbidden.title')}
             </h1>
             <p className="text-lg font-medium">
-                {messages('auth.forbiddenDescription')}
+                {messages('auth.forbidden.description')}
             </p>
             <Button
                 type="primary"
