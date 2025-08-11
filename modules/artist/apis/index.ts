@@ -37,7 +37,7 @@ export const artistApi = {
     },
 
     deleteArtistProfiles: ({ artistId, profileId }: DeleteArtistProfiles) => {
-        return axiosAuth.delete(
+        return axiosInstance.delete(
             `/artists/${artistId}/artist-profiles/${profileId}`
         );
     },
