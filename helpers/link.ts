@@ -8,6 +8,7 @@ import {
 } from '@/constants/common';
 import { UPLOAD_TYPE } from '@/enums/common';
 import { ARTIST_DETAIL_TABS } from '@/modules/artist/enum';
+import { LABEL_DETAIL_TABS } from '@/modules/labels/enum';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { TRACK_TABS } from '@/modules/tracks/enums';
 
@@ -97,6 +98,9 @@ export const getArtistDetailRoute = (
     artistId: string,
     tab: ARTIST_DETAIL_TABS
 ) => `/artists/detail/${artistId}/${tab}`;
+
+export const getLabelDetailRoute = (labelId: string, tab: LABEL_DETAIL_TABS) =>
+    `/labels/detail/${labelId}/${tab}`;
 
 // export const getAvatarUrl = (
 //     name: string,

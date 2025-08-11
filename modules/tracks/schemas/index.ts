@@ -24,11 +24,14 @@ export const releaseTrackSchema = (messages: any) =>
         iswc: z.string().optional().nullable(),
         pLineOwner: z
             .string()
-            .min(5, messages('validation.input'))
+            .max(200, messages('validation.max', { number: 200 }))
             .nullable()
             .refine((val) => val !== null && val !== '', {
                 message: messages('validation.input'),
             }),
+        pLineYear: z.number().refine((val) => val !== null, {
+            message: messages('validation.input'),
+        }),
         primaryGenreId: z
             .string()
             .nullable()

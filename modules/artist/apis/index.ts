@@ -1,7 +1,11 @@
 import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
 import { ArtistData, ArtistDataFilter } from '../types';
-import { CreateArtistPayload, UpdateArtistPayload } from '../types/payload';
+import {
+    CreateArtistPayload,
+    DeleteArtistProfiles,
+    UpdateArtistPayload,
+} from '../types/payload';
 
 export const artistApi = {
     getList: (params: ArtistDataFilter) => {
@@ -30,5 +34,11 @@ export const artistApi = {
 
     deleteArtist: (id: ArtistData['id']) => {
         return axiosInstance.delete(`/artists/${id}`);
+    },
+
+    deleteArtistProfiles: ({ artistId, profileId }: DeleteArtistProfiles) => {
+        return axiosAuth.delete(
+            `/artists/${artistId}/artist-profiles/${profileId}`
+        );
     },
 };

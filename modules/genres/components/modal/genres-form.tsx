@@ -152,7 +152,7 @@ export default function GenresFormModal({ ...props }: Props) {
                         <ImageListUpload
                             maxCount={1}
                             maxSizeMB={2}
-                            accept="image/*"
+                            accept="image/png,image/jpeg,image/svg+xml,image/x-icon"
                         />
                     </AppFormItem>
                     <div>

@@ -1,10 +1,10 @@
 'use client';
+import AppCard from '@/components/ant-music/app-card';
 import { convertSecondsToHoursMinutes } from '@/helpers/common';
 import ArtistItem from '@/modules/releases/components/release-detail/release-review/metadata-info/artist-item';
 import MetadataInfoItem from '@/modules/releases/components/release-detail/release-review/metadata-info/metadata-info-item';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { useGetDetailTrack } from '@/modules/tracks/hooks/use-get-detail-tracks';
-import { Collapse, CollapseProps } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 
@@ -16,11 +16,15 @@ export default function TrackMetadata({}: Props) {
     const trackId = params['id'];
     const { trackData } = useGetDetailTrack(trackId as string);
 
-    const items: CollapseProps['items'] = [
-        {
-            key: 'track-artist',
-            label: 'Track & Artist',
-            children: (
+    return (
+        <div className="m-auto max-w-[1000px] space-y-8 pb-8">
+            <AppCard
+                title={
+                    <p className="text-lg">
+                        {messages('tracks.label')} & {messages('artist.label')}
+                    </p>
+                }
+            >
                 <div className="space-y-2">
                     <div className="grid grid-cols-2 gap-2">
                         <MetadataInfoItem label={messages('tracks.name')}>
@@ -50,12 +54,11 @@ export default function TrackMetadata({}: Props) {
                         </MetadataInfoItem>
                     </div>
                 </div>
-            ),
-        },
-        {
-            key: 'genre',
-            label: 'Genres',
-            children: (
+            </AppCard>
+
+            <AppCard
+                title={<p className="text-lg">{messages('genre.label')}</p>}
+            >
                 <div className="space-y-2">
                     <div className="grid grid-cols-2 gap-2">
                         <MetadataInfoItem label={messages('genres.primary')}>
@@ -76,12 +79,15 @@ export default function TrackMetadata({}: Props) {
                         </MetadataInfoItem>
                     </div>
                 </div>
-            ),
-        },
-        {
-            key: 'other',
-            label: 'Other metadata',
-            children: (
+            </AppCard>
+
+            <AppCard
+                title={
+                    <p className="text-lg">
+                        {messages('releases.otherMetadata')}
+                    </p>
+                }
+            >
                 <div className="space-y-2">
                     <div className="grid grid-cols-2 gap-2">
                         <MetadataInfoItem
@@ -128,16 +134,7 @@ export default function TrackMetadata({}: Props) {
                         </div>
                     </div>
                 </div>
-            ),
-        },
-    ];
-
-    return (
-        <div className="space-y-2 px-80">
-            <Collapse
-                items={items}
-                defaultActiveKey={['track-artist', 'genre', 'other']}
-            />
+            </AppCard>
         </div>
     );
 }

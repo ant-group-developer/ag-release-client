@@ -2,11 +2,13 @@ import SortableTable, {
     OnDragEnd,
     SortableTableProps,
 } from '@/components/ui/table/sortable-table';
+import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { showNotification } from '@/helpers/messages-helper';
 import useModalStore from '@/hooks/use-modal';
 import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
+import { useReleaseDetailActionStore } from '@/modules/releases/hooks/use-release-action-store';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
@@ -33,17 +35,24 @@ import { TrackWaveform } from '../track-wave-form';
 type Props = {} & Omit<SortableTableProps<TrackData>, 'columns'>;
 
 export default function ReleaseTracksTable({ ...props }: Props) {
+    // hooks - state
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
     const openModal = useModalStore((state) => state.openModal);
-
     const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
+    const releaseDetailAction = useReleaseDetailActionStore(
+        (state) => state.action
+    );
 
+    // apis
     const { updateTrackDraft } = useUpdateTrackDraft();
     const { updateTrackOrder } = useUpdateTrackOrder();
     const { releaseValidateData } = useReleaseValidate(
         formValues?.id as string
     );
+
+    // const
+    const isReadMode = releaseDetailAction !== RELEASE_DETAIL_ACTION.EDIT;
 
     const handleDragEnd: OnDragEnd<TrackData[]> = (newData) => {
         const payload = newData.map((item, index) => ({
@@ -117,6 +126,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                         maxLength={100}
                         minLength={1}
                         defaultValue={record.title}
+                        disabled={isReadMode}
                         onChange={(e) => {
                             const value = e.target.value;
                             if (value.length < 1) {
@@ -154,6 +164,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                                             trackArtist
                                         );
                                     }}
+                                    closable={!isReadMode}
                                 >
                                     {trackArtist?.artist?.name}
                                 </Tag>
@@ -162,9 +173,10 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                         <Tag
                             key={`${record.id}-add-artist`}
                             className="border-dashed hover:border-blue-500"
-                            onClick={() =>
-                                openModal(TYPE_MODAL_TRACK_ARTIST.ADD, record)
-                            }
+                            onClick={() => {
+                                if (isReadMode) return;
+                                openModal(TYPE_MODAL_TRACK_ARTIST.ADD, record);
+                            }}
                         >
                             + {messages('artist.add')}
                         </Tag>
@@ -205,6 +217,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             render: (value, record) => {
                 return (
                     <TrackActionButton
+                        disabled={isReadMode}
                         showDelete
                         onShowDelete={() =>
                             openModal(TYPE_MODAL_TRACK.DELETE, record)

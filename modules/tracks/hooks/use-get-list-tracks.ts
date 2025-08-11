@@ -8,6 +8,7 @@ export const useGetListTracks = (params: TrackDataFilter) => {
     const { data, ...res } = useQuery({
         queryKey: [...trackQueryKeys.getList, params],
         queryFn: () => trackApi.getListTrack(params),
+        placeholderData: (prev) => prev,
         enabled: params.hasOwnProperty('releaseId') ? !!params.releaseId : true,
     });
 

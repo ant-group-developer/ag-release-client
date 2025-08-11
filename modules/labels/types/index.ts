@@ -6,6 +6,8 @@ export interface LabelData extends CommonAttribute {
     creatorId: string;
     modifierId: string;
     description: string;
+    releaseCount: number;
+    trackCount: number;
 }
 
 export interface LabelDataFilter extends CommonParams {

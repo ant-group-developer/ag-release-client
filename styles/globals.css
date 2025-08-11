@@ -371,5 +371,5 @@ a {
 }
 
 .custom-scroll-artist-modal .ant-modal-content {
-    @apply h-[90vh] overflow-y-auto !important;
+    @apply max-h-[90vh] overflow-y-auto !important;
 }

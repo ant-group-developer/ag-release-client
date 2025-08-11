@@ -123,7 +123,7 @@ export default function ArtistDetailLayout({ children }: PropsWithChildren) {
                         value={artistData?.trackCount?.toString()}
                     />
                 </AppHeaderPage>
-                <div className="">
+                <div>
                     <Tabs
                         activeKey={activeTab}
                         className="tab-release-detail"

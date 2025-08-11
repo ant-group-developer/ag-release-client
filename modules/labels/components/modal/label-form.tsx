@@ -146,7 +146,7 @@ export default function LabelFormModal({ ...props }: Props) {
                     >
                         <ImageListUpload
                             maxCount={1}
-                            accept="image/*"
+                            accept="image/png,image/jpeg,image/svg+xml,image/x-icon"
                             maxSizeMB={2}
                         />
                     </AppFormItem>

@@ -3,6 +3,7 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import { getAvatarUrl } from '@/helpers/avatar-tailwind';
+import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { uploadApi } from '@/modules/upload/apis';
@@ -65,10 +66,13 @@ export default function DspFormModal({ ...props }: Props) {
         const { pictureFile, link, ...res } = values;
         const file = values?.pictureFile?.fileList[0]?.originFileObj;
         const oldFile = values?.pictureFile?.fileList[0]?.url;
-        const formatLinks = link
-            .split('\n')
-            .map((s: string) => s.trim())
-            .filter(Boolean);
+        let formatLinks = '';
+        if (link) {
+            formatLinks = link
+                .split('\n')
+                .map((s: string) => s.trim())
+                .filter(Boolean);
+        }
         active();
         const payloadValues = { formatLinks, ...res };
         if (file) {
@@ -88,6 +92,10 @@ export default function DspFormModal({ ...props }: Props) {
                     payloadValues.picture = urlPublic;
                 }
             } catch (error) {
+                showNotification(
+                    'error',
+                    messages('file.message.uploadFileFailed')
+                );
                 deActive();
                 return;
             }

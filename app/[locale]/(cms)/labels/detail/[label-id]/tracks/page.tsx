@@ -1,6 +1,8 @@
 'use client';
+import AppContent from '@/components/ant-music/app-content';
 import AppPagination from '@/components/ui/pagination';
-import { LAYOUT_TABLE, SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
+import { LAYOUT_TABLE, SESSION_STORAGE_KEY } from '@/enums/common';
+import { getScrollYHeight } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import { ReleasesDataFilter } from '@/modules/releases/types';
@@ -9,12 +11,14 @@ import TracksTable from '@/modules/tracks/components/table';
 import TracksGridTable from '@/modules/tracks/components/table/grid-table';
 import { defaultVisibleColumnsTracks } from '@/modules/tracks/constants';
 import { TRACKS_COLUMNS_DISPLAY } from '@/modules/tracks/enums';
+import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { useWindowSize } from '@uidotdev/usehooks';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 type Props = {};
 
 export default function Tracks({}: Props) {
+    // Hook - state
     const [visibleColumns, setVisibleColumns] = useState<
         TRACKS_COLUMNS_DISPLAY[]
     >(() => {
@@ -39,10 +43,6 @@ export default function Tracks({}: Props) {
         }
         return defaultVisibleColumnsTracks;
     });
-
-    const handleChangeVisibleColumns = (columns: TRACKS_COLUMNS_DISPLAY[]) => {
-        setVisibleColumns(columns);
-    };
     const {
         dataFilter,
         onSearch,
@@ -54,33 +54,21 @@ export default function Tracks({}: Props) {
         page: 1,
         pageSize: 21,
     });
+    const { layoutTable } = useTableLayoutToggle();
     const { height, width } = useWindowSize();
 
-    const isSmallDevice = Number(width) <= SCREEN.MD;
+    // Apis
+    const { tracksData, isFetching, dataUpdatedAt, refetch } =
+        useGetListTracks(dataFilter);
 
-    const scrollY = () => {
-        if (isSmallDevice) return undefined;
-        if (!height) return undefined;
-        const minHeight = 300;
-        const appHeaderHeight = 64;
-        const pageHeaderHeight = 46;
-        const pageFilterHeight = 49;
-        const titleHeaderHeight = 39;
-        const appPaginationHeight = 57;
-        const headerFooterHeight =
-            appHeaderHeight +
-            pageHeaderHeight +
-            pageFilterHeight +
-            titleHeaderHeight +
-            appPaginationHeight;
-        const value = height - headerFooterHeight;
-        if (value > minHeight) return value;
-        return minHeight;
+    const handleChangeVisibleColumns = (columns: TRACKS_COLUMNS_DISPLAY[]) => {
+        setVisibleColumns(columns);
     };
 
-    const { layoutTable } = useTableLayoutToggle();
-
-    const handleRefresh = () => {};
+    // func
+    const handleRefresh = () => {
+        refetch();
+    };
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -95,7 +83,7 @@ export default function Tracks({}: Props) {
     }, [visibleColumns]);
 
     return (
-        <div className="flex h-full flex-col justify-between overflow-hidden">
+        <AppContent className="h-[calc(100vh-64px-123px)] overflow-hidden">
             <div className="flex-1">
                 <TracksHeader
                     dataFilter={dataFilter}
@@ -105,33 +93,37 @@ export default function Tracks({}: Props) {
                     handleRefresh={handleRefresh}
                     handleChangeVisibleColumns={handleChangeVisibleColumns}
                     visibleColumn={visibleColumns}
-                    dataUpdatedAt={null}
+                    dataUpdatedAt={dataUpdatedAt}
                 />
                 {layoutTable === LAYOUT_TABLE.LIST && (
                     <TracksTable
                         visibleColumns={visibleColumns}
-                        dataSource={[]}
-                        scroll={{ x: SCREEN.XXL, y: scrollY() }}
+                        dataSource={tracksData?.items}
+                        scroll={{ y: getScrollYHeight(height, width, 163, 39) }}
+                        loading={isFetching}
                     />
                 )}
 
                 {layoutTable === LAYOUT_TABLE.GRID && (
-                    <TracksGridTable data={[]} loading={false} />
+                    <TracksGridTable
+                        data={tracksData?.items}
+                        loading={isFetching}
+                    />
                 )}
             </div>
 
             <AppPagination
                 className="border-t"
                 align="end"
-                current={dataFilter.page}
+                current={tracksData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}
-                total={[].length}
+                total={tracksData?.metadata?.totalItems}
                 onChange={onChangePage}
                 showTotalText
                 showSizeChanger
                 showQuickJumper
                 pageSizeOptions={[21, 28, 32]}
             />
-        </div>
+        </AppContent>
     );
 }
