@@ -5,7 +5,7 @@ import { DspData } from '../types';
 
 export const useGetDetailDsp = (id: DspData['id']) => {
     const { data, ...res } = useQuery({
-        queryKey: [...dspQueryKeys.getDetail, id],
+        queryKey: dspQueryKeys.detail(id),
         queryFn: () => dspApi.getDetail(id),
     });
 

@@ -9,5 +9,5 @@ export interface ArtistRoleData extends CommonAttribute {
 
 export interface ArtistRoleDataFilter extends CommonParams {
     keyword?: string;
-    createdAt: string;
+    createdAt?: string;
 }

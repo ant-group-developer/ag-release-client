@@ -6,7 +6,7 @@ import { TrackDataFilter } from '../types';
 
 export const useGetListTracks = (params: TrackDataFilter) => {
     const { data, ...res } = useQuery({
-        queryKey: [...trackQueryKeys.getList, params],
+        queryKey: trackQueryKeys.list(params),
         queryFn: () => trackApi.getListTrack(params),
         placeholderData: (prev) => prev,
         enabled: params.hasOwnProperty('releaseId') ? !!params.releaseId : true,

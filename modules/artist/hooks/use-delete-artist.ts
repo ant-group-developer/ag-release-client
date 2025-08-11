@@ -15,7 +15,7 @@ export const useDeleteArtist = () => {
         { onSuccess }: DeleteVariables<ArtistData['id']>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...artistQueryKeys.getList],
+            queryKey: artistQueryKeys.lists(),
         });
 
         showNotification('success', messages(data.data.messageCode));

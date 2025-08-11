@@ -15,7 +15,7 @@ export const useDeleteLabel = () => {
         { onSuccess }: DeleteVariables<LabelData['id']>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...labelsQueryKeys.getList],
+            queryKey: labelsQueryKeys.lists(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

@@ -33,7 +33,7 @@ export default function DistributionHeader({
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     return (
-        <AppHeader>
+        <AppHeader className="app-header">
             <AppHeaderGroup>
                 <DistributionSuperFilter
                     dataFilter={dataFilter}

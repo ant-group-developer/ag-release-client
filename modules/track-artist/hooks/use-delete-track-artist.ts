@@ -15,7 +15,7 @@ export const useDeleteTrackArtist = () => {
         { onSuccess }: DeleteVariables<TrackArtistData['id']>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...trackQueryKeys.getList],
+            queryKey: trackQueryKeys.lists(),
         });
         // queryClient.invalidateQueries({
         //     queryKey: [...releasesQueryKeys.getDetail],

@@ -6,7 +6,7 @@ import { ReleasesDataFilter } from '../types';
 
 export const useGetListReleases = (params: ReleasesDataFilter) => {
     const { data, ...res } = useQuery({
-        queryKey: [...releasesQueryKeys.getList, params],
+        queryKey: releasesQueryKeys.list(params),
         queryFn: () => releasesApi.getList(params),
         placeholderData: (previousData) => previousData,
     });

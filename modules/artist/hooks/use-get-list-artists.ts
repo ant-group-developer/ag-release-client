@@ -8,7 +8,7 @@ import { ArtistDataFilter } from '../types';
 
 export const useGetListArtist = (params: ArtistDataFilter) => {
     const { data, ...res } = useQuery({
-        queryKey: [...artistQueryKeys.getList, params],
+        queryKey: artistQueryKeys.list(params),
         queryFn: () => artistApi.getList(params),
     });
 

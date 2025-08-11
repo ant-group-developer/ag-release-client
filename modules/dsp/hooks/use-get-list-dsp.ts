@@ -8,7 +8,7 @@ import { DspDataFilter } from '../types';
 
 export const useGetListDsp = (params: DspDataFilter) => {
     const { data, ...res } = useQuery({
-        queryKey: [...dspQueryKeys.getList, params],
+        queryKey: dspQueryKeys.list(params),
         queryFn: () => dspApi.getList(params),
     });
 

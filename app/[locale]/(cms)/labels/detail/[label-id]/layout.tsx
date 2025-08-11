@@ -1,10 +1,13 @@
 'use client';
 import AppHeaderPage from '@/components/ant-music/app-header-page';
 import ItemHeaderPage from '@/components/ant-music/item-header-page';
+import { SIZE_ICON_SMALL } from '@/constants/common';
+import { APP_ROUTES } from '@/enums/routes';
 import { Link, usePathname, useRouter } from '@/i18n/routing';
 import { LABEL_DETAIL_TABS } from '@/modules/labels/enum';
 import { useGetDetailLabel } from '@/modules/labels/hooks/use-get-detail-label';
 import { Tabs, TabsProps, theme } from 'antd';
+import { ArrowLeft } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
@@ -12,9 +15,7 @@ import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 export default function LabelDetailLayout({ children }: PropsWithChildren) {
     // Hooks - state
     const messages = useTranslations();
-    const [activeTab, setActiveTab] = useState<string>(
-        LABEL_DETAIL_TABS.OVERVIEW
-    );
+
     const [isScroll, setIsScrolled] = useState(false);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const { token } = theme.useToken();
@@ -58,8 +59,9 @@ export default function LabelDetailLayout({ children }: PropsWithChildren) {
             ),
         },
     ];
-    const isOverviewPage =
-        pathname.split('/').pop() == LABEL_DETAIL_TABS.OVERVIEW;
+
+    const tabKey = pathname.split('/').pop();
+    const isOverviewPage = tabKey == LABEL_DETAIL_TABS.OVERVIEW;
 
     useEffect(() => {
         if (!isOverviewPage) {
@@ -85,24 +87,21 @@ export default function LabelDetailLayout({ children }: PropsWithChildren) {
         };
     }, [pathname, isOverviewPage, isScroll]);
 
-    useEffect(() => {
-        const getActiveTab = () => {
-            const map: Record<string, string> = {
-                [LABEL_DETAIL_TABS.RELEASES]: LABEL_DETAIL_TABS.RELEASES,
-                [LABEL_DETAIL_TABS.TRACKS]: LABEL_DETAIL_TABS.TRACKS,
-            };
-            const tabKey = pathname.split('/').pop();
-            return map[tabKey ?? ''] || LABEL_DETAIL_TABS.RELEASES;
-        };
-        setActiveTab(getActiveTab());
-    }, [pathname]);
-
     return (
-        <div
-            className="h-[calc(100vh-4rem)] overflow-y-auto"
-            ref={scrollContainerRef}
-        >
-            <div className="sticky top-0 z-10">
+        <div className="mx-auto max-w-screen-2xl px-2" ref={scrollContainerRef}>
+            <div
+                className="sticky top-0 z-10"
+                style={{
+                    background: token.colorBgContainer,
+                }}
+            >
+                <Link
+                    href={APP_ROUTES.LABELS}
+                    className="flex w-fit items-center gap-1 py-2 hover:underline"
+                >
+                    <ArrowLeft size={SIZE_ICON_SMALL} />
+                    {messages('labels.back')}
+                </Link>
                 <AppHeaderPage
                     imageSrc={labelData?.picture as string}
                     isScrolled={isScroll}
@@ -113,17 +112,17 @@ export default function LabelDetailLayout({ children }: PropsWithChildren) {
                     />
                     <ItemHeaderPage
                         name={messages('releases.count')}
-                        value={labelData?.releaseCount.toString()}
+                        value={labelData?.releaseCount?.toString()}
                     />
                     <ItemHeaderPage
                         name={messages('tracks.count')}
-                        value={labelData?.trackCount.toString()}
+                        value={labelData?.trackCount?.toString()}
                     />
                 </AppHeaderPage>
 
                 <div>
                     <Tabs
-                        activeKey={activeTab}
+                        activeKey={tabKey}
                         className="tab-release-detail"
                         style={{
                             backgroundColor: token.colorBgContainer,
@@ -132,7 +131,7 @@ export default function LabelDetailLayout({ children }: PropsWithChildren) {
                     />
                 </div>
             </div>
-            <div className="flex-1"> {children} </div>
+            <div> {children} </div>
         </div>
     );
 }

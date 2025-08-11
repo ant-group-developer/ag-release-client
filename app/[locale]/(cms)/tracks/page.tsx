@@ -1,11 +1,10 @@
 'use client';
-import AppContent from '@/components/ant-music/app-content';
 import AppPagination from '@/components/ui/pagination';
-import { PAGE_SIZE_OPTIONS } from '@/constants/common';
-import { LAYOUT_TABLE, SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
-import { getScrollYHeight } from '@/helpers/common';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { LAYOUT_TABLE, SESSION_STORAGE_KEY } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
+import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 import { ReleasesDataFilter } from '@/modules/releases/types';
 import TracksHeader from '@/modules/tracks/components/header';
 import TracksTable from '@/modules/tracks/components/table';
@@ -21,6 +20,8 @@ type Props = {};
 
 export default function Tracks({}: Props) {
     // State - hook
+    const scrollY = useTableScrollY();
+
     const [visibleColumns, setVisibleColumns] = useState<
         TRACKS_COLUMNS_DISPLAY[]
     >(() => {
@@ -55,7 +56,7 @@ export default function Tracks({}: Props) {
         removeFilter,
     } = useFilter<ReleasesDataFilter>({
         page: 1,
-        pageSize: 21,
+        pageSize: PAGE_SIZE,
     });
     const { height, width } = useWindowSize();
     const {
@@ -86,37 +87,34 @@ export default function Tracks({}: Props) {
     }, [visibleColumns]);
 
     return (
-        <AppContent className="overflow-hidden">
-            <div className="flex-1">
-                <TracksHeader
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
-                    dataUpdatedAt={dataUpdatedAt}
-                    handleChangeVisibleColumns={handleChangeVisibleColumns}
-                    visibleColumn={visibleColumns}
+        <div>
+            <TracksHeader
+                dataFilter={dataFilter}
+                onChangeFilter={onChangeFilter}
+                canClearFilter={canClearFilter}
+                removeFilter={removeFilter}
+                handleRefresh={handleRefresh}
+                dataUpdatedAt={dataUpdatedAt}
+                handleChangeVisibleColumns={handleChangeVisibleColumns}
+                visibleColumn={visibleColumns}
+            />
+            {layoutTable === LAYOUT_TABLE.LIST && (
+                <TracksTable
+                    visibleColumns={visibleColumns}
+                    dataSource={tracksData.items}
+                    scroll={{
+                        y: scrollY,
+                    }}
+                    loading={isTrackDataLoading}
                 />
-                {layoutTable === LAYOUT_TABLE.LIST && (
-                    <TracksTable
-                        visibleColumns={visibleColumns}
-                        dataSource={tracksData.items}
-                        scroll={{
-                            x: SCREEN.MD,
-                            y: getScrollYHeight(height, width, 40, 38),
-                        }}
-                        loading={isTrackDataLoading}
-                    />
-                )}
+            )}
 
-                {layoutTable === LAYOUT_TABLE.GRID && (
-                    <TracksGridTable
-                        data={tracksData?.items}
-                        loading={isTrackDataLoading}
-                    />
-                )}
-            </div>
+            {layoutTable === LAYOUT_TABLE.GRID && (
+                <TracksGridTable
+                    data={tracksData?.items}
+                    loading={isTrackDataLoading}
+                />
+            )}
 
             <AppPagination
                 className="border-b border-t"
@@ -130,6 +128,6 @@ export default function Tracks({}: Props) {
                 showQuickJumper
                 pageSizeOptions={PAGE_SIZE_OPTIONS}
             />
-        </AppContent>
+        </div>
     );
 }

@@ -20,11 +20,11 @@ export const useUpdateTrackDraft = () => {
         //     queryKey: [...releasesQueryKeys.getDetail],
         // });
         queryClient.invalidateQueries({
-            queryKey: [...releasesQueryKeys.validate],
+            queryKey: releasesQueryKeys.validations(),
         });
 
         queryClient.invalidateQueries({
-            queryKey: [...trackQueryKeys.getList, { fieldOrder: 'order' }],
+            queryKey: trackQueryKeys.list({ fieldOrder: 'order' }),
         });
 
         // const responseMessages = messages(data?.data?.messageCode);

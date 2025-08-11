@@ -18,7 +18,7 @@ export const useUpdateCountry = () => {
         }: UpdateVariables<CountriesData['id'], UpdateCountryPayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...countriesQueryKeys.getList],
+            queryKey: countriesQueryKeys.lists(),
         });
         const responseMessages = messages(data?.data?.messageCode);
         showNotification('success', responseMessages);

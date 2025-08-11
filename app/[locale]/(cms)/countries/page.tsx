@@ -1,13 +1,12 @@
 'use client';
-import AppContent from '@/components/ant-music/app-content';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
-import { PAGE_SIZE_OPTIONS } from '@/constants/common';
-import { PAGE_SIZE } from '@/constants/page-size';
-import { ORDER, SCREEN } from '@/enums/common';
-import { getScrollYHeight, setSortOrder } from '@/helpers/common';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { ORDER } from '@/enums/common';
+import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 import CountriesHeader from '@/modules/countries/components/header';
 import CountriesFormModal from '@/modules/countries/components/modal/countries-form';
 import { CountriesTable } from '@/modules/countries/components/table';
@@ -17,11 +16,11 @@ import { useDeleteCountry } from '@/modules/countries/hooks/use-delete-country';
 import { useGetListCountries } from '@/modules/countries/hooks/use-get-list-countries';
 import { CountriesData, CountriesDataFilter } from '@/modules/countries/types';
 import { DeleteVariables } from '@/types/api';
-import { useWindowSize } from '@uidotdev/usehooks';
 import { useTranslations } from 'next-intl';
 
 export default function Countries({}: {}) {
     // hooks - state
+    const scrollY = useTableScrollY();
     const messages = useTranslations();
     const {
         dataFilter,
@@ -31,12 +30,11 @@ export default function Countries({}: {}) {
         removeFilter,
     } = useFilter<CountriesDataFilter>({
         page: 1,
-        pageSize: 21,
+        pageSize: PAGE_SIZE,
     });
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit);
-    const { height, width } = useWindowSize();
 
     // api
     const { countriesData, isLoading, refetch, lastUpdatedAt } =
@@ -69,32 +67,29 @@ export default function Countries({}: {}) {
     };
 
     return (
-        <AppContent className="overflow-hidden">
-            <div className="flex-1">
-                <CountriesHeader
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
-                    lastUpdatedAt={lastUpdatedAt}
-                />
-                <CountriesTable
-                    dataSource={countriesData.items ?? fakeCountriesData}
-                    scroll={{
-                        x: SCREEN.MD,
-                        y: getScrollYHeight(height, width, 41, 39),
-                    }}
-                    loading={isLoading}
-                    pagination={{
-                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: countriesData.metadata.currentPage,
-                        total: countriesData.metadata.totalItems,
-                    }}
-                    dataFilter={dataFilter}
-                    onChange={onChangeSort}
-                />
-            </div>
+        <div>
+            <CountriesHeader
+                dataFilter={dataFilter}
+                onChangeFilter={onChangeFilter}
+                canClearFilter={canClearFilter}
+                removeFilter={removeFilter}
+                handleRefresh={handleRefresh}
+                lastUpdatedAt={lastUpdatedAt}
+            />
+            <CountriesTable
+                dataSource={countriesData.items ?? fakeCountriesData}
+                scroll={{
+                    y: scrollY,
+                }}
+                loading={isLoading}
+                pagination={{
+                    pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                    current: countriesData.metadata.currentPage,
+                    total: countriesData.metadata.totalItems,
+                }}
+                dataFilter={dataFilter}
+                onChange={onChangeSort}
+            />
             <AppPagination
                 className="border-t"
                 align="end"
@@ -127,6 +122,6 @@ export default function Countries({}: {}) {
                     paragraph={`${messages('delete.confirmMessage', { value: dataEdit?.name })}`}
                 />
             )}
-        </AppContent>
+        </div>
     );
 }

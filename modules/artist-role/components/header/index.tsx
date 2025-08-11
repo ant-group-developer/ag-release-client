@@ -28,7 +28,7 @@ export default function ArtistRoleHeader({
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     return (
-        <AppHeader>
+        <AppHeader className="app-header">
             <AppHeaderGroup>
                 <ArtistRoleSuperFilter
                     dataFilter={dataFilter}

@@ -1,13 +1,12 @@
 'use client';
-import AppContent from '@/components/ant-music/app-content';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
-import { PAGE_SIZE_OPTIONS } from '@/constants/common';
-import { PAGE_SIZE } from '@/constants/page-size';
-import { ORDER, SCREEN } from '@/enums/common';
-import { getScrollYHeight, setSortOrder } from '@/helpers/common';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { ORDER } from '@/enums/common';
+import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 import ArtistsHeader from '@/modules/artist/components/header';
 import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
 import { ArtistsTable } from '@/modules/artist/components/table';
@@ -17,13 +16,13 @@ import { useGetListArtist } from '@/modules/artist/hooks/use-get-list-artists';
 import { ArtistData, ArtistDataFilter } from '@/modules/artist/types';
 import { DeleteVariables } from '@/types/api';
 
-import { useWindowSize } from '@uidotdev/usehooks';
 import { useTranslations } from 'next-intl';
 
 type Props = {};
 
 export default function Artists({}: Props) {
     // hooks - state
+    const scrollY = useTableScrollY();
     const messages = useTranslations();
     const {
         dataFilter,
@@ -33,12 +32,11 @@ export default function Artists({}: Props) {
         removeFilter,
     } = useFilter<ArtistDataFilter>({
         page: 1,
-        pageSize: 21,
+        pageSize: PAGE_SIZE,
     });
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
-    const dataEdit = useModalStore((state) => state.dataEdit);
-    const { height, width } = useWindowSize();
+    const dataEdit = useModalStore<ArtistData>((state) => state.dataEdit);
 
     // api
     const { deleteArtist } = useDeleteArtist();
@@ -71,32 +69,29 @@ export default function Artists({}: Props) {
     };
 
     return (
-        <AppContent className="overflow-hidden">
-            <div className="flex-1">
-                <ArtistsHeader
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
-                    lastUpdatedAt={lastUpdatedAt}
-                />
-                <ArtistsTable
-                    dataSource={artistsData?.items}
-                    scroll={{
-                        x: SCREEN.XXL,
-                        y: getScrollYHeight(height, width, 40, 39),
-                    }}
-                    pagination={{
-                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: artistsData.metadata.currentPage,
-                        total: artistsData.metadata.totalItems,
-                    }}
-                    loading={isLoading}
-                    onChange={onChangeSort}
-                    dataFilter={dataFilter}
-                />
-            </div>
+        <div>
+            <ArtistsHeader
+                dataFilter={dataFilter}
+                onChangeFilter={onChangeFilter}
+                canClearFilter={canClearFilter}
+                removeFilter={removeFilter}
+                handleRefresh={handleRefresh}
+                lastUpdatedAt={lastUpdatedAt}
+            />
+            <ArtistsTable
+                dataSource={artistsData?.items}
+                scroll={{
+                    y: scrollY,
+                }}
+                pagination={{
+                    pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                    current: artistsData.metadata.currentPage,
+                    total: artistsData.metadata.totalItems,
+                }}
+                loading={isLoading}
+                onChange={onChangeSort}
+                dataFilter={dataFilter}
+            />
 
             {(typeModal === TYPE_MODAL_ARTIST.CREATE ||
                 typeModal === TYPE_MODAL_ARTIST.UPDATE) && (
@@ -127,6 +122,6 @@ export default function Artists({}: Props) {
                 showQuickJumper
                 pageSizeOptions={PAGE_SIZE_OPTIONS}
             />
-        </AppContent>
+        </div>
     );
 }

@@ -1,13 +1,12 @@
 'use client';
-import AppContent from '@/components/ant-music/app-content';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
-import { PAGE_SIZE_OPTIONS } from '@/constants/common';
-import { PAGE_SIZE } from '@/constants/page-size';
-import { ORDER, SCREEN } from '@/enums/common';
-import { getScrollYHeight, setSortOrder } from '@/helpers/common';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { ORDER } from '@/enums/common';
+import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 import TrackTypeHeader from '@/modules/track-types/components/header';
 import TrackTypeFormModal from '@/modules/track-types/components/modal/track-type-form';
 import { TrackTypeTable } from '@/modules/track-types/components/table';
@@ -26,6 +25,7 @@ type Props = {};
 
 export default function TrackTypes({}: Props) {
     // hooks - state
+    const scrollY = useTableScrollY();
     const messages = useTranslations();
     const {
         dataFilter,
@@ -35,7 +35,7 @@ export default function TrackTypes({}: Props) {
         removeFilter,
     } = useFilter<TrackTypeDataFilter>({
         page: 1,
-        pageSize: 28,
+        pageSize: PAGE_SIZE,
     });
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as TrackTypeData);
@@ -72,32 +72,27 @@ export default function TrackTypes({}: Props) {
     };
 
     return (
-        <AppContent className="overflow-hidden">
-            <div className="flex-1">
-                <TrackTypeHeader
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
-                    lastUpdatedAt={lastUpdatedAt}
-                />
-                <TrackTypeTable
-                    dataSource={trackTypesData.items}
-                    scroll={{
-                        x: SCREEN.MD,
-                        y: getScrollYHeight(height, width, 40, 38),
-                    }}
-                    pagination={{
-                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: trackTypesData.metadata.currentPage,
-                        total: trackTypesData.metadata.totalItems,
-                    }}
-                    loading={isLoading}
-                    dataFilter={dataFilter}
-                    onChange={onChangeSort}
-                />
-            </div>
+        <div>
+            <TrackTypeHeader
+                dataFilter={dataFilter}
+                onChangeFilter={onChangeFilter}
+                canClearFilter={canClearFilter}
+                removeFilter={removeFilter}
+                handleRefresh={handleRefresh}
+                lastUpdatedAt={lastUpdatedAt}
+            />
+            <TrackTypeTable
+                dataSource={trackTypesData.items}
+                scroll={{ y: scrollY }}
+                pagination={{
+                    pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                    current: trackTypesData.metadata.currentPage,
+                    total: trackTypesData.metadata.totalItems,
+                }}
+                loading={isLoading}
+                dataFilter={dataFilter}
+                onChange={onChangeSort}
+            />
             <AppPagination
                 className="border-b border-t"
                 align="end"
@@ -129,6 +124,6 @@ export default function TrackTypes({}: Props) {
                     })}
                 />
             )}
-        </AppContent>
+        </div>
     );
 }

@@ -8,7 +8,7 @@ import { GenresDataFilter } from '../types';
 
 export const useGetListGenres = (params: GenresDataFilter) => {
     const { data, ...res } = useQuery({
-        queryKey: [...genreQueryKeys.getList, params],
+        queryKey: genreQueryKeys.list(params),
         queryFn: () => genresApi.getList(params),
     });
 

@@ -11,7 +11,7 @@ export const useUpdateTrackOrder = () => {
 
     const onSuccess = (data: any, { onSuccess }: UpdateTrackOrderPayload) => {
         queryClient.invalidateQueries({
-            queryKey: [...releasesQueryKeys.getDetail],
+            queryKey: releasesQueryKeys.details(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

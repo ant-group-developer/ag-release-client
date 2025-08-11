@@ -8,7 +8,7 @@ import { TimezoneDataFilter } from '../types';
 
 export const useGetListTimezones = (params: TimezoneDataFilter) => {
     const { data, ...res } = useQuery({
-        queryKey: [...timezoneQueryKeys.getList, params],
+        queryKey: timezoneQueryKeys.list(params),
         queryFn: () => timezoneApi.getList(params),
     });
 

@@ -15,7 +15,7 @@ export const useDeleteLanguage = () => {
         { onSuccess }: DeleteVariables<LanguagesData['id']>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...languageQueryKeys.getList],
+            queryKey: languageQueryKeys.lists(),
         });
 
         showNotification('success', messages(data.data.messageCode));

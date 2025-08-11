@@ -10,7 +10,7 @@ export const useGetListTrackOriginTypes = (
     params: TrackOriginTypeDataFilter
 ) => {
     const { data, ...res } = useQuery({
-        queryKey: [...trackOriginTypeQueryKeys.getList, params],
+        queryKey: trackOriginTypeQueryKeys.list(params),
         queryFn: () => trackOriginTypeApi.getList(params),
     });
 

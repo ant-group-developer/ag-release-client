@@ -15,7 +15,7 @@ export const useCreateReleaseCoverArt = () => {
         { onSuccess }: CreateVariables<ReleaseCoverArtPayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...releasesQueryKeys.getList],
+            queryKey: releasesQueryKeys.lists(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

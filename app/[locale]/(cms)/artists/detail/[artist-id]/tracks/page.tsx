@@ -1,8 +1,8 @@
 'use client';
 import AppContent from '@/components/ant-music/app-content';
 import AppPagination from '@/components/ui/pagination';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { LAYOUT_TABLE, SESSION_STORAGE_KEY } from '@/enums/common';
-import { getScrollYHeight } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import TracksHeader from '@/modules/tracks/components/header';
@@ -12,7 +12,7 @@ import { defaultVisibleColumnsTracks } from '@/modules/tracks/constants';
 import { TRACKS_COLUMNS_DISPLAY } from '@/modules/tracks/enums';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { TrackDataFilter } from '@/modules/tracks/types';
-import { useWindowSize } from '@uidotdev/usehooks';
+import { theme } from 'antd';
 import dayjs from 'dayjs';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -20,6 +20,7 @@ type Props = {};
 
 export default function Tracks({}: Props) {
     // hooks - state
+    const { token } = theme.useToken();
     const [visibleColumns, setVisibleColumns] = useState<
         TRACKS_COLUMNS_DISPLAY[]
     >(() => {
@@ -56,10 +57,9 @@ export default function Tracks({}: Props) {
         removeFilter,
     } = useFilter<TrackDataFilter>({
         page: 1,
-        pageSize: 21,
+        pageSize: PAGE_SIZE,
         artistId: artistId,
     });
-    const { height, width } = useWindowSize();
 
     // apis
     const { tracksData, dataUpdatedAt, refetch, isFetching } =
@@ -86,8 +86,13 @@ export default function Tracks({}: Props) {
     }, [visibleColumns]);
 
     return (
-        <AppContent className="h-[calc(100vh-64px-123px)] overflow-hidden">
-            <div className="flex-1">
+        <AppContent>
+            <div
+                className="sticky top-44 z-10 border-t"
+                style={{
+                    background: token.colorBgContainer,
+                }}
+            >
                 <TracksHeader
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
@@ -98,24 +103,22 @@ export default function Tracks({}: Props) {
                     visibleColumn={visibleColumns}
                     dataUpdatedAt={dataUpdatedAt}
                 />
-                {layoutTable === LAYOUT_TABLE.LIST && (
-                    <TracksTable
-                        visibleColumns={visibleColumns}
-                        dataSource={tracksData?.items}
-                        scroll={{
-                            y: getScrollYHeight(height, width, 121, 39),
-                        }}
-                        loading={isFetching}
-                    />
-                )}
-
-                {layoutTable === LAYOUT_TABLE.GRID && (
-                    <TracksGridTable
-                        data={tracksData?.items}
-                        loading={isFetching}
-                    />
-                )}
             </div>
+            {layoutTable === LAYOUT_TABLE.LIST && (
+                <TracksTable
+                    sticky={{ offsetHeader: 216 }}
+                    visibleColumns={visibleColumns}
+                    dataSource={tracksData?.items}
+                    loading={isFetching}
+                />
+            )}
+
+            {layoutTable === LAYOUT_TABLE.GRID && (
+                <TracksGridTable
+                    data={tracksData?.items}
+                    loading={isFetching}
+                />
+            )}
 
             <AppPagination
                 className="border-t"
@@ -127,7 +130,7 @@ export default function Tracks({}: Props) {
                 showTotalText
                 showSizeChanger
                 showQuickJumper
-                pageSizeOptions={[21, 28, 32]}
+                pageSizeOptions={PAGE_SIZE_OPTIONS}
             />
         </AppContent>
     );

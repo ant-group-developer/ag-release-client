@@ -1,5 +1,13 @@
 import { QUERY_KEY } from '@/constants/query-key';
+import { TrackArtistDataFilter } from '../types';
 
 export const trackArtistQueryKeys = {
-    getList: [QUERY_KEY.TRACK_ARTIST.KEY, QUERY_KEY.TRACK_ARTIST.GET_LIST],
+    all: [QUERY_KEY.TRACK_ARTIST.KEY] as const,
+
+    lists: () =>
+        [...trackArtistQueryKeys.all, QUERY_KEY.TRACK_ARTIST.GET_LIST] as const,
+    list: (params?: TrackArtistDataFilter) =>
+        params
+            ? ([...trackArtistQueryKeys.lists(), params] as const)
+            : trackArtistQueryKeys.lists(),
 };

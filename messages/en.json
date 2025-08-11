@@ -708,6 +708,7 @@
         "addAllArtistFromRelease": "Add all artist from release",
         "minTrack": "Min track",
         "maxTrack": "Max track",
+        "back": "Back to track list",
         "original": {
             "label": "Original Work",
             "tooltip": "Original work is the piece that was created first, not any cover or remix."
@@ -842,6 +843,7 @@
         "descriptionVariantArtists": "Display name will be 'Various artists'",
         "role": "Artist role",
         "canLinkArtistProfile": "Can link artist profile",
+        "back": "Back to artist list",
         "message": {
             "success": {
                 "create": "Add new artist successfully",
@@ -866,7 +868,8 @@
         "label": "Label",
         "create": "Create label",
         "name": "Label name",
-        "id": "Label ID"
+        "id": "Label ID",
+        "back": "Back to label list"
     },
     "label": {
         "message": {

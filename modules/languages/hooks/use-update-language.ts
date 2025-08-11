@@ -18,7 +18,7 @@ export const useUpdateLanguage = () => {
         }: UpdateVariables<LanguagesData['id'], UpdateLanguagePayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...languageQueryKeys.getList],
+            queryKey: languageQueryKeys.lists(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

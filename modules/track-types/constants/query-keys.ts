@@ -1,6 +1,16 @@
 import { QUERY_KEY } from '@/constants/query-key';
 
 export const trackTypeQueryKeys = {
-    getList: [QUERY_KEY.TRACK_TYPE.KEY, QUERY_KEY.TRACK_TYPE.GET_LIST],
-    getDetail: [QUERY_KEY.TRACK_TYPE, QUERY_KEY.TRACK_TYPE.GET_DETAIL],
+    all: [QUERY_KEY.TRACK_TYPE.KEY] as const,
+
+    lists: () =>
+        [...trackTypeQueryKeys.all, QUERY_KEY.TRACK_TYPE.GET_LIST] as const,
+    list: (params?: Record<string, any>) =>
+        params
+            ? ([...trackTypeQueryKeys.lists(), params] as const)
+            : trackTypeQueryKeys.lists(),
+
+    details: () =>
+        [...trackTypeQueryKeys.all, QUERY_KEY.TRACK_TYPE.GET_DETAIL] as const,
+    detail: (id: string) => [...trackTypeQueryKeys.details(), id] as const,
 };

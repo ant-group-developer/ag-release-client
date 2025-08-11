@@ -6,7 +6,7 @@ import { TrackData } from '../types';
 
 export const useGetDetailTrack = (id: TrackData['id']) => {
     const { data, ...res } = useQuery({
-        queryKey: [...trackQueryKeys.getDetail, id],
+        queryKey: trackQueryKeys.detail(id),
         queryFn: () => trackApi.getDetailTrack(id),
         enabled: !!id,
     });

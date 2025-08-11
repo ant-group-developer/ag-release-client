@@ -15,7 +15,7 @@ export const useCreateArtistRole = () => {
         { onSuccess }: CreateVariables<CreateArtistRolePayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...artistRoleQueryKeys.getList],
+            queryKey: artistRoleQueryKeys.list(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

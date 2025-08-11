@@ -15,7 +15,7 @@ export const useCreateGenre = () => {
         { onSuccess }: CreateVariables<CreateGenrePayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...genreQueryKeys.getList],
+            queryKey: genreQueryKeys.lists(),
         });
         const responseMessages = messages(data?.data?.messageCode);
         showNotification('success', responseMessages);

@@ -709,6 +709,7 @@
         "addAllArtistFromRelease": "Thêm tất cả nghệ sĩ từ phát hành",
         "minTrack": "Tối thiểu bài hát",
         "maxTrack": "Tối đa bài hát",
+        "back": "Trở lại danh sách bài hát",
         "original": {
             "label": "Tác phẩm gốc",
             "tooltip": "Tác phẩm gốc là tác phẩm được tạo ra đầu tiên, không phải bất kỳ bản cover hoặc remix nào."
@@ -843,6 +844,7 @@
         "descriptionVariantArtists": "Tên hiển thị sẽ là 'Nhiều nghệ sĩ'",
         "role": "Vai trò nghệ sĩ",
         "canLinkArtistProfile": "Có thể liên kết hồ sơ nghệ sĩ",
+        "back": "Trở lại danh sách nghệ sĩ",
         "message": {
             "success": {
                 "create": "Thêm mới nghệ sĩ thành công",
@@ -867,7 +869,8 @@
         "label": "Label",
         "create": "Tạo label",
         "name": "Tên label",
-        "id": "Mã label"
+        "id": "Mã label",
+        "back": "Trở lại danh sách Label"
     },
     "label": {
         "message": {

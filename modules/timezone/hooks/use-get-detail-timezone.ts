@@ -5,7 +5,7 @@ import { TimezoneData } from '../types';
 
 export const useGetDetailTimezone = (id: TimezoneData['id']) => {
     const { data, ...res } = useQuery({
-        queryKey: [...timezoneQueryKeys.getDetail, id],
+        queryKey: timezoneQueryKeys.detail(id),
         queryFn: () => timezoneApi.getDetail(id),
     });
 

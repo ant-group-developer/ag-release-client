@@ -16,7 +16,7 @@ export const useUpdateLabel = () => {
         { onSuccess }: UpdateVariables<LabelData['id'], UpdateLabelPayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...labelsQueryKeys.getList],
+            queryKey: labelsQueryKeys.lists(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

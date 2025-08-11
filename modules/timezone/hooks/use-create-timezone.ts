@@ -15,7 +15,7 @@ export const useCreateTimezone = () => {
         { onSuccess }: CreateVariables<CreateTimezonePayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...timezoneQueryKeys.getList],
+            queryKey: timezoneQueryKeys.lists(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

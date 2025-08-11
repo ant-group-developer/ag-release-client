@@ -15,7 +15,7 @@ export const useCreateDsp = () => {
         { onSuccess }: CreateVariables<CreateDspPayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...dspQueryKeys.getList],
+            queryKey: dspQueryKeys.lists(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

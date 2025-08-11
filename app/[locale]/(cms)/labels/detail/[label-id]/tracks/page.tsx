@@ -2,7 +2,6 @@
 import AppContent from '@/components/ant-music/app-content';
 import AppPagination from '@/components/ui/pagination';
 import { LAYOUT_TABLE, SESSION_STORAGE_KEY } from '@/enums/common';
-import { getScrollYHeight } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import { ReleasesDataFilter } from '@/modules/releases/types';
@@ -13,12 +12,14 @@ import { defaultVisibleColumnsTracks } from '@/modules/tracks/constants';
 import { TRACKS_COLUMNS_DISPLAY } from '@/modules/tracks/enums';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { useWindowSize } from '@uidotdev/usehooks';
+import { theme } from 'antd';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 type Props = {};
 
 export default function Tracks({}: Props) {
     // Hook - state
+    const { token } = theme.useToken();
     const [visibleColumns, setVisibleColumns] = useState<
         TRACKS_COLUMNS_DISPLAY[]
     >(() => {
@@ -83,8 +84,13 @@ export default function Tracks({}: Props) {
     }, [visibleColumns]);
 
     return (
-        <AppContent className="h-[calc(100vh-64px-123px)] overflow-hidden">
-            <div className="flex-1">
+        <AppContent>
+            <div
+                className="sticky top-44 z-10 border-t"
+                style={{
+                    background: token.colorBgContainer,
+                }}
+            >
                 <TracksHeader
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
@@ -95,22 +101,22 @@ export default function Tracks({}: Props) {
                     visibleColumn={visibleColumns}
                     dataUpdatedAt={dataUpdatedAt}
                 />
-                {layoutTable === LAYOUT_TABLE.LIST && (
-                    <TracksTable
-                        visibleColumns={visibleColumns}
-                        dataSource={tracksData?.items}
-                        scroll={{ y: getScrollYHeight(height, width, 163, 39) }}
-                        loading={isFetching}
-                    />
-                )}
-
-                {layoutTable === LAYOUT_TABLE.GRID && (
-                    <TracksGridTable
-                        data={tracksData?.items}
-                        loading={isFetching}
-                    />
-                )}
             </div>
+            {layoutTable === LAYOUT_TABLE.LIST && (
+                <TracksTable
+                    sticky={{ offsetHeader: 216 }}
+                    visibleColumns={visibleColumns}
+                    dataSource={tracksData?.items}
+                    loading={isFetching}
+                />
+            )}
+
+            {layoutTable === LAYOUT_TABLE.GRID && (
+                <TracksGridTable
+                    data={tracksData?.items}
+                    loading={isFetching}
+                />
+            )}
 
             <AppPagination
                 className="border-t"

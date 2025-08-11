@@ -15,7 +15,7 @@ export const useCreateTrackOriginType = () => {
         { onSuccess }: CreateVariables<CreateTrackOriginTypePayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...trackOriginTypeQueryKeys.getList],
+            queryKey: trackOriginTypeQueryKeys.lists(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

@@ -16,10 +16,10 @@ export const useDeleteReleaseArtist = () => {
         { onSuccess }: DeleteVariables<ReleaseArtist['id']>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...releaseArtistQueryKeys.getList],
+            queryKey: releaseArtistQueryKeys.lists(),
         });
         queryClient.invalidateQueries({
-            queryKey: [...releasesQueryKeys.getDetail],
+            queryKey: releasesQueryKeys.details(),
         });
 
         // const responseMessages = messages(data?.data?.messageCode);

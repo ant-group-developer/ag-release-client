@@ -11,7 +11,7 @@ export const useDeleteReleaseCoverArt = () => {
 
     const onSuccess = (data: any, { onSuccess }: DeleteVariables<string>) => {
         queryClient.invalidateQueries({
-            queryKey: [...releasesQueryKeys.getDetail],
+            queryKey: releasesQueryKeys.details(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

@@ -1,8 +1,7 @@
 'use client';
-import AppContent from '@/components/ant-music/app-content';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
-import { PAGE_SIZE_OPTIONS } from '@/constants/common';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { LAYOUT_TABLE, SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
 import { getScrollYHeight } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
@@ -63,7 +62,7 @@ export default function Releases({}: Props) {
         removeFilter,
     } = useFilter<ReleasesDataFilter>({
         page: 1,
-        pageSize: 21,
+        pageSize: PAGE_SIZE,
     });
     const { height, width } = useWindowSize();
     const { layoutTable } = useTableLayoutToggle();
@@ -114,38 +113,33 @@ export default function Releases({}: Props) {
     }, [visibleColumns]);
 
     return (
-        <AppContent className="overflow-hidden">
-            <div className="flex-1">
-                <ReleasesHeader
-                    dataFilter={dataFilter}
+        <div>
+            <ReleasesHeader
+                dataFilter={dataFilter}
+                onChangeFilter={onChangeFilter}
+                canClearFilter={canClearFilter}
+                removeFilter={removeFilter}
+                handleRefresh={handleRefresh}
+                handleChangeVisibleColumns={handleChangeVisibleColumns}
+                visibleColumn={visibleColumns}
+                dataUpdatedAt={dataUpdatedAt}
+            />
+            {layoutTable === LAYOUT_TABLE.LIST && (
+                <ReleasesTable
+                    visibleColumns={visibleColumns}
+                    dataSource={releasesData?.items}
+                    scroll={{
+                        x: SCREEN.MD,
+                        y: getScrollYHeight(height, width, 40, 38),
+                    }}
+                    loading={isReleaseDataLoading}
                     onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
-                    handleChangeVisibleColumns={handleChangeVisibleColumns}
-                    visibleColumn={visibleColumns}
-                    dataUpdatedAt={dataUpdatedAt}
                 />
-                {layoutTable === LAYOUT_TABLE.LIST && (
-                    <ReleasesTable
-                        visibleColumns={visibleColumns}
-                        dataSource={releasesData?.items}
-                        scroll={{
-                            x: SCREEN.MD,
-                            y: getScrollYHeight(height, width, 40, 38),
-                        }}
-                        loading={isReleaseDataLoading}
-                        onChangeFilter={onChangeFilter}
-                    />
-                )}
+            )}
 
-                {layoutTable === LAYOUT_TABLE.GRID && (
-                    <ReleasesGridTable
-                        data={releasesData?.items}
-                        loading={false}
-                    />
-                )}
-            </div>
+            {layoutTable === LAYOUT_TABLE.GRID && (
+                <ReleasesGridTable data={releasesData?.items} loading={false} />
+            )}
 
             <AppPagination
                 className="border-b border-t"
@@ -171,6 +165,6 @@ export default function Releases({}: Props) {
                     })}
                 />
             )}
-        </AppContent>
+        </div>
     );
 }

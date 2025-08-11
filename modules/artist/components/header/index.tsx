@@ -28,7 +28,7 @@ export default function ArtistsHeader({
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     return (
-        <AppHeader className="px-4 py-0">
+        <AppHeader className="app-header">
             <AppHeaderGroup>
                 <ArtistsSuperFilter
                     dataFilter={dataFilter}

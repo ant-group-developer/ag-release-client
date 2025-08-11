@@ -1,13 +1,10 @@
 'use client';
-import AppContent from '@/components/ant-music/app-content';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
-import { PAGE_SIZE_OPTIONS } from '@/constants/common';
-import { PAGE_SIZE } from '@/constants/page-size';
-import { SCREEN } from '@/enums/common';
-import { getScrollYHeight } from '@/helpers/common';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 import DspHeader from '@/modules/dsp/components/header';
 import DspFormModal from '@/modules/dsp/components/modal/dsp-form';
 import { DspTable } from '@/modules/dsp/components/table';
@@ -16,11 +13,11 @@ import { useDeleteDsp } from '@/modules/dsp/hooks/use-delete-dsp';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { DspData, DspDataFilter } from '@/modules/dsp/types';
 import { DeleteVariables } from '@/types/api';
-import { useWindowSize } from '@uidotdev/usehooks';
 import { useTranslations } from 'next-intl';
 
 export default function Dsp() {
     // hooks - state
+    const scrollY = useTableScrollY();
     const messages = useTranslations();
     const {
         dataFilter,
@@ -30,11 +27,10 @@ export default function Dsp() {
         removeFilter,
     } = useFilter<DspDataFilter>({
         page: 1,
-        pageSize: 21,
+        pageSize: PAGE_SIZE,
     });
-    const { height, width } = useWindowSize();
     const typeModal = useModalStore((state) => state.typeModal);
-    const dataEdit = useModalStore((state) => state.dataEdit as DspData);
+    const dataEdit = useModalStore<DspData>((state) => state.dataEdit);
     const closeModal = useModalStore((state) => state.closeModal);
 
     // apis
@@ -55,30 +51,27 @@ export default function Dsp() {
     };
 
     return (
-        <AppContent className="overflow-hidden">
-            <div className="flex-1">
-                <DspHeader
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
-                    lastUpdatedAt={lastUpdatedAt}
-                />
-                <DspTable
-                    dataSource={dspData?.items}
-                    scroll={{
-                        x: SCREEN.MD,
-                        y: getScrollYHeight(height, width, 40, 39),
-                    }}
-                    pagination={{
-                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: dspData.metadata.currentPage,
-                        total: dspData.metadata.totalItems,
-                    }}
-                    loading={isLoading}
-                />
-            </div>
+        <div>
+            <DspHeader
+                dataFilter={dataFilter}
+                onChangeFilter={onChangeFilter}
+                canClearFilter={canClearFilter}
+                removeFilter={removeFilter}
+                handleRefresh={handleRefresh}
+                lastUpdatedAt={lastUpdatedAt}
+            />
+            <DspTable
+                dataSource={dspData?.items}
+                scroll={{
+                    y: scrollY,
+                }}
+                pagination={{
+                    pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                    current: dspData.metadata.currentPage,
+                    total: dspData.metadata.totalItems,
+                }}
+                loading={isLoading}
+            />
             <AppPagination
                 className="border-b border-t"
                 align="end"
@@ -106,6 +99,6 @@ export default function Dsp() {
 
             {(typeModal === TYPE_MODAL_DSP.CREATE ||
                 typeModal === TYPE_MODAL_DSP.UPDATE) && <DspFormModal />}
-        </AppContent>
+        </div>
     );
 }

@@ -8,7 +8,7 @@ import { TrackTypeDataFilter } from '../types';
 
 export const useGetListTrackTypes = (params: TrackTypeDataFilter) => {
     const { data, ...res } = useQuery({
-        queryKey: [...trackTypeQueryKeys.getList, params],
+        queryKey: trackTypeQueryKeys.list(params),
         queryFn: () => trackTypeApi.getList(params),
     });
 

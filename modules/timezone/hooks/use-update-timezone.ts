@@ -18,7 +18,7 @@ export const useUpdateTimezone = () => {
         }: UpdateVariables<TimezoneData['id'], UpdateTimezonePayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...timezoneQueryKeys.getList],
+            queryKey: timezoneQueryKeys.lists(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

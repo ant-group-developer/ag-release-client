@@ -5,7 +5,7 @@ import { ReleasesData } from '../types';
 
 export const useReleaseValidate = (id: ReleasesData['id']) => {
     const { data, ...res } = useQuery({
-        queryKey: [...releasesQueryKeys.validate, id],
+        queryKey: releasesQueryKeys.validate(id),
         queryFn: () => releasesApi.validate(id),
     });
 

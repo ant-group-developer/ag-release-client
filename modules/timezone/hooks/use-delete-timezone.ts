@@ -15,7 +15,7 @@ export const useDeleteTimezone = () => {
         { onSuccess }: DeleteVariables<TimezoneData['id']>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...timezoneQueryKeys.getList],
+            queryKey: timezoneQueryKeys.lists(),
         });
 
         showNotification('success', messages(data.data.messageCode));

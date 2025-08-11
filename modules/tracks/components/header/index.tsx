@@ -33,7 +33,7 @@ export default function TracksHeader({
 }: Props) {
     const { layoutTable, toggleLayoutTable } = useTableLayoutToggle();
     return (
-        <AppHeader>
+        <AppHeader className="app-header">
             <AppHeaderGroup>
                 <TracksSuperFilter
                     dataFilter={dataFilter}
