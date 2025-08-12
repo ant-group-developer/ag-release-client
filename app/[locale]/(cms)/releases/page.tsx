@@ -2,12 +2,12 @@
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
-import { LAYOUT_TABLE, SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
-import { getScrollYHeight } from '@/helpers/common';
+import { LAYOUT_TABLE, SESSION_STORAGE_KEY } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import { LoadingType, useLoading } from '@/hooks/use-loading';
 import useModalStore from '@/hooks/use-modal';
+import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 import ReleasesHeader from '@/modules/releases/components/header';
 import ReleasesTable from '@/modules/releases/components/table';
 import ReleasesGridTable from '@/modules/releases/components/table/grid-table';
@@ -29,6 +29,8 @@ type Props = {};
 
 export default function Releases({}: Props) {
     // hooks - state
+    const scrollY = useTableScrollY();
+    const scrollYGrid = useTableScrollY({ skipTableHeader: true });
     const [visibleColumns, setVisibleColumns] = useState<
         RELEASES_COLUMNS_DISPLAY[]
     >(() => {
@@ -129,8 +131,7 @@ export default function Releases({}: Props) {
                     visibleColumns={visibleColumns}
                     dataSource={releasesData?.items}
                     scroll={{
-                        x: SCREEN.MD,
-                        y: getScrollYHeight(height, width, 40, 38),
+                        y: scrollY,
                     }}
                     loading={isReleaseDataLoading}
                     onChangeFilter={onChangeFilter}
@@ -138,7 +139,13 @@ export default function Releases({}: Props) {
             )}
 
             {layoutTable === LAYOUT_TABLE.GRID && (
-                <ReleasesGridTable data={releasesData?.items} loading={false} />
+                <ReleasesGridTable
+                    data={releasesData?.items}
+                    loading={false}
+                    scroll={{
+                        y: scrollYGrid,
+                    }}
+                />
             )}
 
             <AppPagination

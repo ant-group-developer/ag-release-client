@@ -41,6 +41,7 @@ export const useGetDetailTrack = (id: TrackData['id']) => {
             id: '',
             title: '',
         },
+        isScanned: false,
     };
 
     return {

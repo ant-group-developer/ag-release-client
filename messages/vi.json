@@ -32,9 +32,17 @@
         "forbidden": {
             "title": "Truy cập bị từ chối",
             "description": "Bạn không có quyền truy cập tài nguyên này."
-        }
+        },
+        "forbiddenTitle": "You do not have access",
+        "forbiddenDescription": "Please contact the Admin for more details"
     },
     "common": {
+        "accuracy": "Độ chính xác",
+        "result": "Kết quả",
+        "history": "Lịch sử",
+        "scan": "Quét",
+        "notScanned": "Chưa quét",
+        "scanned": "Đã quét",
         "lastEdit": "Lần chỉnh sửa cuối",
         "watch": "Xem",
         "edit": "Sửa",
@@ -710,6 +718,10 @@
         "minTrack": "Tối thiểu bài hát",
         "maxTrack": "Tối đa bài hát",
         "back": "Trở lại danh sách bài hát",
+        "skipScannedTracks": "Bỏ qua các bài đã quét",
+        "rageDuplicate": "Khoảng trùng lặp",
+        "rageDuplicateInSongDetected": "Khoảng trùng lặp trong bài được phát hiện",
+        "scan": "Quét nhạc",
         "original": {
             "label": "Tác phẩm gốc",
             "tooltip": "Tác phẩm gốc là tác phẩm được tạo ra đầu tiên, không phải bất kỳ bản cover hoặc remix nào."

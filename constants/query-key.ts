@@ -225,4 +225,9 @@ export const QUERY_KEY = {
         UPDATE: 'UPDATE_TENANT',
         CREATE: 'CREATE_TENANT',
     },
+    ACR_CLOUD: {
+        KEY: 'ACR_CLOUD',
+        GET_LIST: 'ACR_CLOUD_GET_LIST',
+        GET_DETAIL: 'ACR_CLOUD_GET_DETAIL',
+    },
 };

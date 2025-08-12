@@ -1,8 +1,7 @@
 'use client';
 import AppContent from '@/components/ant-music/app-content';
 import AppPagination from '@/components/ui/pagination';
-import { PAGE_SIZE_OPTIONS } from '@/constants/common';
-import { PAGE_SIZE } from '@/constants/page-size';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
 import { formattedDate, setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';

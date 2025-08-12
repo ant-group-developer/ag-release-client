@@ -10,6 +10,7 @@ export enum TRACKS_COLUMNS_DISPLAY {
     CREATION_DATE = 'creationDate',
     VERSION = 'version',
     ACTIONS = 'actions',
+    ACR_CLOUD = 'acrCloud',
 }
 
 export enum TYPE_MODAL_TRACK_ARTIST {

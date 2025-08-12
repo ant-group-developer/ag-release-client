@@ -1,14 +1,19 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { SIZE_ICON } from '@/constants/common';
 import { formattedDate } from '@/helpers/common';
 import { getTrackDetailRoute } from '@/helpers/link';
+import useModalStore from '@/hooks/use-modal';
 import { Link } from '@/i18n/routing';
 import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import TrackActionButton from '@/modules/releases/components/release-detail/release-tracks/button/track-action';
+import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { TRACK_TABS, TRACKS_COLUMNS_DISPLAY } from '@/modules/tracks/enums';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
+import { Button } from 'antd';
 import { ColumnType } from 'antd/es/table';
+import { SearchCheck, SearchX } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { TrackData } from '../../types';
 import TrackCoverArt from './trackCoverArt';
@@ -19,6 +24,7 @@ type Props = Omit<AppTableProps<TrackData>, 'columns'> & {
 
 export default function TracksTable({ visibleColumns, ...props }: Props) {
     const messages = useTranslations();
+    const openModal = useModalStore((state) => state.openModal);
     const column: ColumnType<TrackData>[] = [
         {
             title: messages('common.iNo'),
@@ -57,6 +63,16 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
             ),
         },
         {
+            title: messages('releases.version'),
+            key: 'version',
+            dataIndex: 'version',
+            align: 'left',
+            width: 50,
+            render: (value, record) => {
+                return <span className="truncate"> {record.version} </span>;
+            },
+        },
+        {
             title: messages('tracks.id'),
             key: 'id',
             dataIndex: 'id',
@@ -91,16 +107,7 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
                 );
             },
         },
-        {
-            title: messages('releases.version'),
-            key: 'version',
-            dataIndex: 'version',
-            align: 'left',
-            width: 50,
-            render: (value, record) => {
-                return <span className="truncate"> {record.version} </span>;
-            },
-        },
+
         {
             title: 'ISRC',
             key: 'isrc',
@@ -112,6 +119,43 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
                 <span className="truncate"> {value} </span>
                 // </CustomTooltip>
             ),
+        },
+        {
+            title: 'ACR Cloud',
+            key: 'acrCloud',
+            dataIndex: 'acrCloud',
+            align: 'center',
+            width: 80,
+            render: (value, record) => {
+                const isScanned = !!record?.isScanned;
+                return (
+                    <div>
+                        <Button
+                            onClick={() => {
+                                if (!isScanned) return;
+                                openModal(
+                                    TYPE_MODAL_TRACK.ACR_CLOUD_SCAN_RESULT,
+                                    record
+                                );
+                            }}
+                            icon={
+                                <div>
+                                    {isScanned ? (
+                                        <SearchCheck size={SIZE_ICON} />
+                                    ) : (
+                                        <SearchX size={SIZE_ICON} />
+                                    )}
+                                </div>
+                            }
+                            className="!min-w-40 !rounded-2xl"
+                        >
+                            {isScanned
+                                ? messages('common.scanned')
+                                : messages('common.notScanned')}
+                        </Button>
+                    </div>
+                );
+            },
         },
 
         // {
@@ -143,7 +187,7 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
             key: 'creationDate',
             dataIndex: 'creationDate',
             align: 'center',
-            width: 100,
+            width: 60,
             render: (value, record) => (
                 <span className="truncate text-wrap">
                     {' '}

@@ -7,15 +7,24 @@ import GridCardTracks from './grid-card';
 type Props = {
     data: TrackData[];
     loading?: boolean;
+    scroll?: {
+        x?: number;
+        y?: number;
+    };
 };
 
-export default function TracksGridTable({ data, loading = false }: Props) {
+export default function TracksGridTable({
+    scroll,
+    data,
+    loading = false,
+}: Props) {
     return (
         <Spin spinning={loading} delay={200}>
             <AppGrid
                 className="px-4 py-4"
                 style={{
-                    // maxHeight: scrollY,
+                    maxHeight: scroll?.y,
+                    maxWidth: scroll?.x,
                     overflowY: 'auto',
                 }}
             >

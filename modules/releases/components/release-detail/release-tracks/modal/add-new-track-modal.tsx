@@ -303,7 +303,7 @@ export default function AddNewTrackModal({ ...props }: Props) {
         <AppModal
             {...props}
             open
-            title={'Thêm bài hát'}
+            title={messages('tracks.add')}
             onOk={form.submit}
             onCancel={closeModal}
             confirmLoading={isActive}

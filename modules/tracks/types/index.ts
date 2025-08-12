@@ -35,6 +35,7 @@ export interface TrackData extends CommonAttribute {
     trackOriginTypeId: string | null;
     trackOriginType: TrackOriginTypeData | null;
     preview: string;
+    isScanned: boolean;
     release: Pick<
         ReleasesData,
         'id' | 'title' | 'label' | 'coverArtThumbnails'

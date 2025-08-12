@@ -1,11 +1,16 @@
 import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
 import Refresh from '@/components/refresh';
+import IconButton from '@/components/ui/button/icon-button';
 import TableLayoutSegmented from '@/components/ui/semented/table-layout-semented';
+import { SIZE_ICON } from '@/constants/common';
 import { DATE_FORMAT, LAYOUT_TABLE } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
+import useModalStore from '@/hooks/use-modal';
+import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { TRACKS_COLUMNS_DISPLAY } from '@/modules/tracks/enums';
+import { CalendarSearch } from 'lucide-react';
 import { TrackDataFilter } from '../../types';
 import ShowColumnOptionDropdown from '../dropdown/show-column-option-dropdown';
 import TracksSuperFilter from './tracks-super-filter';
@@ -32,6 +37,7 @@ export default function TracksHeader({
     dataUpdatedAt,
 }: Props) {
     const { layoutTable, toggleLayoutTable } = useTableLayoutToggle();
+    const openModal = useModalStore((state) => state.openModal);
     return (
         <AppHeader className="app-header">
             <AppHeaderGroup>
@@ -52,6 +58,28 @@ export default function TracksHeader({
                             DATE_FORMAT.HOUR_MINUTE_SECOND
                         )}
                     />
+
+                    {/* <div>
+                        <IconButton
+                            onClick={() =>
+                                openModal(TYPE_MODAL_TRACK.ACR_CLOUD_SCAN)
+                            }
+                        >
+                            <ScanSearch size={SIZE_ICON} />
+                        </IconButton>
+                    </div> */}
+
+                    <div>
+                        <IconButton
+                            onClick={() =>
+                                openModal(
+                                    TYPE_MODAL_TRACK.ACR_CLOUD_SCAN_HISTORY
+                                )
+                            }
+                        >
+                            <CalendarSearch size={SIZE_ICON} />
+                        </IconButton>
+                    </div>
 
                     {layoutTable === LAYOUT_TABLE.LIST && (
                         <ShowColumnOptionDropdown
