@@ -198,7 +198,7 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
         //     ),
         // },
         {
-            title: messages('common.dateCreated'),
+            title: messages('common.createdAt'),
             key: 'creationDate',
             dataIndex: 'creationDate',
             align: 'center',

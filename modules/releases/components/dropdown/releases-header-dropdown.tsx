@@ -38,7 +38,7 @@ export default function ReleasesHeaderDropdown({
 
     const dropdownItems = [
         {
-            label: messages('common.dateCreated'),
+            label: messages('common.createdAt'),
             value: TYPE_FILTER.DATE_CREATED,
             visible: !dataFilter.startDateCreated && !dataFilter.endDateCreated,
             onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_CREATED),

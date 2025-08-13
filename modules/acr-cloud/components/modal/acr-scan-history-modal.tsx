@@ -2,10 +2,10 @@ import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER, SCREEN } from '@/enums/common';
-import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { Spin } from 'antd';
 import { useTranslations } from 'next-intl';
+import { useCallback, useState } from 'react';
 import { useGetScanStatus } from '../../hooks/use-get-scan-status';
 import { TrackScanStatusDataFilter } from '../../types';
 import AcrScanHistoryTable from '../table/acr-scan-history-table';
@@ -16,12 +16,26 @@ export default function AcrCloudScanHistoryModal({ ...props }: Props) {
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
 
-    const { dataFilter, onChangePage } = useFilter<TrackScanStatusDataFilter>({
+    const [dataFilter, setDataFilter] = useState<TrackScanStatusDataFilter>({
         page: 1,
         pageSize: PAGE_SIZE,
         orderBy: ORDER.DESC,
         fieldOrder: 'createdAt',
     });
+
+    const onChangePage = useCallback((page: number, pageSize: number) => {
+        setDataFilter((prev) => {
+            const prevSize = prev.pageSize ?? PAGE_SIZE;
+            const sizeChanged = pageSize !== prevSize;
+
+            return {
+                ...prev,
+                page: sizeChanged ? 1 : page,
+                pageSize,
+            };
+        });
+    }, []);
+
     const { scanStatusData, isFetching } = useGetScanStatus(dataFilter);
 
     return (

@@ -165,7 +165,7 @@ function TenantTable({ dataFilter, ...props }: Props) {
             },
         },
         // {
-        //     title: messages('common.dateCreated'),
+        //     title: messages('common.createdAt'),
         //     dataIndex: TENANT_ORDER_BY.CREATED_AT,
         //     align: 'center',
         //     width: 180,
@@ -178,7 +178,7 @@ function TenantTable({ dataFilter, ...props }: Props) {
         //     render: (cell) => formattedDate(cell),
         // },
         {
-            title: messages('common.dateUpdated'),
+            title: messages('common.updatedAt'),
             dataIndex: TENANT_ORDER_BY.UPDATED_AT,
             align: 'center',
             width: 120,

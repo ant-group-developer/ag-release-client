@@ -84,7 +84,7 @@ export default function DistributionSuperFilter({
                 <DateCreatedDialog
                     open={typeFilter === TYPE_FILTER.DATE_CREATED}
                     handleChangeTypeFilter={handleChangeTypeFilter}
-                    title={messages('common.dateCreated')}
+                    title={messages('common.createdAt')}
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
                 />

@@ -110,6 +110,10 @@ export default function Tracks({}: Props) {
                     visibleColumns={visibleColumns}
                     dataSource={tracksData?.items}
                     loading={isFetching}
+                    pagination={{
+                        current: tracksData?.metadata?.currentPage,
+                        pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
+                    }}
                 />
             )}
 

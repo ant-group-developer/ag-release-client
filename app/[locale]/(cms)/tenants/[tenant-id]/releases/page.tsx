@@ -139,6 +139,10 @@ export default function Releases({}: Props) {
                     dataSource={releasesData?.items}
                     loading={isReleaseDataLoading}
                     onChangeFilter={onChangeFilter}
+                    pagination={{
+                        pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
+                        current: releasesData?.metadata?.currentPage,
+                    }}
                 />
             )}
 

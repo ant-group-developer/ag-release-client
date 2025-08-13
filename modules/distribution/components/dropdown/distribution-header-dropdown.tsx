@@ -44,7 +44,7 @@ export default function DistributionHeaderDropdown({
             onClick: () => handleChangeTypeFilter(TYPE_FILTER.KEYWORD),
         },
         {
-            label: messages('common.dateCreated'),
+            label: messages('common.createdAt'),
             value: TYPE_FILTER.DATE_CREATED,
             visible: !dataFilter.startDate && !dataFilter.endDate,
             onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_CREATED),

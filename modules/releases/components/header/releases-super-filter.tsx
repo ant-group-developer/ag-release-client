@@ -118,7 +118,7 @@ export default function ReleasesSuperFilter({
                 /> */}
 
                 <DateCreatedDialog
-                    title={messages('common.dateCreated')}
+                    title={messages('common.createdAt')}
                     open={typeFilter === TYPE_FILTER.DATE_CREATED}
                     handleChangeTypeFilter={handleChangeTypeFilter}
                     dataFilter={dataFilter}

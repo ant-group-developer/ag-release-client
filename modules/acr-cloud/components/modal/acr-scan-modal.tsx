@@ -86,7 +86,7 @@ export default function AcrCloudScanModal({
                 {/* <AppFormItem
                     required
                     name="date"
-                    label={messages('common.dateCreated')}
+                    label={messages('common.createdAt')}
                     // rules={[
                     //     {
                     //         required: true,

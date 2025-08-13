@@ -222,7 +222,7 @@ export default function ReleasesTable({
             ),
         },
         {
-            title: messages('common.dateCreated'),
+            title: messages('common.createdAt'),
             key: 'creationDate',
             dataIndex: 'creationDate',
             align: 'center',
