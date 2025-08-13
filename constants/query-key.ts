@@ -229,5 +229,6 @@ export const QUERY_KEY = {
         KEY: 'ACR_CLOUD',
         GET_LIST: 'ACR_CLOUD_GET_LIST',
         GET_DETAIL: 'ACR_CLOUD_GET_DETAIL',
+        GET_LIST_SCAN_STATUS: 'ACR_CLOUD_GET_LIST_SCAN_STATUS',
     },
 };

@@ -1,4 +1,7 @@
-import { CommonAttribute } from '@/types/api';
+import { TrackData } from '@/modules/tracks/types';
+import { UserDetail } from '@/modules/user/types/data';
+import { CommonAttribute, CommonParams } from '@/types/api';
+import { TRACK_SCAN_STATUS } from '../enums';
 
 export interface TrackScanHistoryData extends CommonAttribute {
     trackId: string;
@@ -97,4 +100,26 @@ export interface AcrHummingItem {
     score: number;
     language?: string;
     langs?: { name: string; code: string }[];
+}
+
+export interface TrackScanStatusFilter {
+    trackCreatedAtStart: string;
+    trackCreatedAtEnd: string;
+    TrackIds: string[];
+    ignoreTrackScanned: boolean;
+}
+
+export interface TrackScanStatusData extends CommonAttribute {
+    creatorId: string;
+    creator: Pick<UserDetail, 'avatar' | 'name'>;
+    modifierId: string;
+    status: TRACK_SCAN_STATUS;
+    filter: TrackScanStatusFilter;
+    trackNeedScanCount: number;
+    trackScannedCount: number;
+    tracksToScan: Pick<TrackData, 'id' | 'title'>[];
+}
+
+export interface TrackScanStatusDataFilter extends CommonParams {
+    createdAt?: string;
 }

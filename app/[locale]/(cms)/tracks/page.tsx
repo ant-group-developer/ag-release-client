@@ -6,6 +6,7 @@ import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import useModalStore from '@/hooks/use-modal';
 import { useTableScrollY } from '@/hooks/use-table-scroll-y';
+import AcrCloudScanHistoryModal from '@/modules/acr-cloud/components/modal/acr-scan-history-modal';
 import AcrCloudScanModal from '@/modules/acr-cloud/components/modal/acr-scan-modal';
 import AcrCloudScanResultModal from '@/modules/acr-cloud/components/modal/acr-scan-result-modal';
 import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
@@ -165,9 +166,9 @@ export default function Tracks({}: Props) {
                 />
             )}
 
-            {/* {typeModal === TYPE_MODAL_TRACK.ACR_CLOUD_SCAN_HISTORY && (
+            {typeModal === TYPE_MODAL_TRACK.ACR_CLOUD_SCAN_HISTORY && (
                 <AcrCloudScanHistoryModal />
-            )} */}
+            )}
 
             {typeModal === TYPE_MODAL_TRACK.ACR_CLOUD_SCAN_RESULT && (
                 <AcrCloudScanResultModal />

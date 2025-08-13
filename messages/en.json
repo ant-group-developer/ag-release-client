@@ -37,6 +37,7 @@
         "forbiddenDescription": "Please contact the Admin for more details"
     },
     "common": {
+        "reScan": "ReScan",
         "accuracy": "Accuracy",
         "result": "Result",
         "history": "History",
@@ -721,6 +722,9 @@
         "rageDuplicate": "Rage duplicate",
         "rageDuplicateInSongDetected": "Range duplicate in song detected",
         "scan": "Scan tracks",
+        "noResultMatches": "No matching results",
+        "totalTrackNeedScan": "Total tracks need scan",
+        "numberOfTracksScanned": "Number of tracks scanned",
         "original": {
             "label": "Original Work",
             "tooltip": "Original work is the piece that was created first, not any cover or remix."

@@ -12,10 +12,12 @@ export default function ScanResultPanel({ data }: Props) {
     const messages = useTranslations();
     const value = data?.content?.music ?? data?.content?.humming;
 
+    if (!value) return <p>{messages('tracks.noResultMatches')}</p>;
+
     const childItems: CollapseProps['items'] = value?.map(
         (item: AcrMusicItem, i: number) => ({
             key: `i-${i}`,
-            label: `${item?.title ?? '-'}`,
+            label: `${item?.title} (${messages('common.accuracy')}: ${item.score})`,
             children: (
                 <div>
                     <div>

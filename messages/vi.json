@@ -37,6 +37,7 @@
         "forbiddenDescription": "Please contact the Admin for more details"
     },
     "common": {
+        "reScan": "Quét lại",
         "accuracy": "Độ chính xác",
         "result": "Kết quả",
         "history": "Lịch sử",
@@ -722,6 +723,9 @@
         "rageDuplicate": "Khoảng trùng lặp",
         "rageDuplicateInSongDetected": "Khoảng trùng lặp trong bài được phát hiện",
         "scan": "Quét nhạc",
+        "noResultMatches": "Không có kết quả trùng khớp",
+        "totalTrackNeedScan": "Tổng các bài hát cần quét",
+        "numberOfTracksScanned": "Các bài hát đã quét",
         "original": {
             "label": "Tác phẩm gốc",
             "tooltip": "Tác phẩm gốc là tác phẩm được tạo ra đầu tiên, không phải bất kỳ bản cover hoặc remix nào."

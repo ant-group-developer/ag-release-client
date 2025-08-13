@@ -1,29 +1,16 @@
+import IconButton from '@/components/ui/button/icon-button';
 import { SIZE_ICON, SIZE_ICON_SMALL } from '@/constants/common';
 import { Dropdown, MenuProps } from 'antd';
-import {
-    CirclePlay,
-    CircleX,
-    Eye,
-    MessageCircleMore,
-    MoreVertical,
-    Pencil,
-    Trash,
-    Upload,
-} from 'lucide-react';
+import { CircleX, MoreVertical, ScanSearch, Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { MouseEventHandler } from 'react';
-import IconButton from './icon-button';
 
 interface Props {
-    showComment?: boolean;
-    showDetail?: boolean;
-    showUpdate?: boolean;
     showDelete?: boolean;
-    showUpload?: boolean;
     showCancel?: boolean;
-    showContinue?: boolean;
+    showScan?: boolean;
 
-    onShowContinue?: MouseEventHandler<HTMLElement>;
+    onShowScan?: MouseEventHandler<HTMLElement>;
     onShowCancel?: MouseEventHandler<HTMLElement>;
     onShowUpload?: MouseEventHandler<HTMLElement>;
     onShowComment?: MouseEventHandler<HTMLElement>;
@@ -33,25 +20,16 @@ interface Props {
 }
 
 enum ACTION_BUTTON {
-    COMMENT = 'comment',
-    DETAIL = 'detail',
-    UPDATE = 'update',
     DELETE = 'delete',
-    UPLOAD = 'upload',
     CANCEL = 'cancel',
-    CONTINUE = 'continue',
+    SCAN = 'scan',
 }
 
-export default function ActionButton({
+export default function ScanStatusAction({
     showDelete,
-    showDetail,
-    showUpdate,
-    showComment,
-    showUpload,
     showCancel,
-    showContinue,
-
-    onShowContinue,
+    showScan,
+    onShowScan,
     onShowCancel,
     onShowComment,
     onShowDetail,
@@ -61,70 +39,28 @@ export default function ActionButton({
 }: Props) {
     const messages = useTranslations();
     const items: MenuProps['items'] = [];
-    if (showComment) {
+    if (showScan) {
         items.push({
-            key: ACTION_BUTTON.COMMENT,
+            key: ACTION_BUTTON.SCAN,
             label: (
                 <div className="flex items-center gap-2">
-                    <MessageCircleMore size={SIZE_ICON_SMALL} />{' '}
-                    {messages('common.comment')}
+                    <ScanSearch size={SIZE_ICON_SMALL} />
+                    <span>{messages('common.reScan')}</span>
                 </div>
             ),
         });
     }
 
-    if (showDetail) {
-        items.push({
-            key: ACTION_BUTTON.DETAIL,
-            label: (
-                <div className="flex items-center gap-2">
-                    <Eye size={SIZE_ICON_SMALL} />
-                    {messages('common.detail')}
-                </div>
-            ),
-        });
-    }
-    if (showUpdate) {
-        items.push({
-            key: ACTION_BUTTON.UPDATE,
-            label: (
-                <div className="flex items-center gap-2">
-                    <Pencil size={SIZE_ICON_SMALL} />
-                    {messages('common.update')}
-                </div>
-            ),
-        });
-    }
-    if (showUpload) {
-        items.push({
-            key: ACTION_BUTTON.UPLOAD,
-            label: (
-                <div className="flex items-center gap-2">
-                    <Upload size={SIZE_ICON_SMALL} />
-                    {messages('common.upload')}
-                </div>
-            ),
-        });
-    }
     if (showCancel) {
+        items.push({
+            type: 'divider',
+        });
         items.push({
             key: ACTION_BUTTON.CANCEL,
             label: (
                 <div className="flex items-center gap-2 text-red-500">
                     <CircleX size={SIZE_ICON_SMALL} />
                     <span>{messages('common.cancel')}</span>
-                </div>
-            ),
-        });
-    }
-
-    if (showContinue) {
-        items.push({
-            key: ACTION_BUTTON.CONTINUE,
-            label: (
-                <div className="flex items-center gap-2">
-                    <CirclePlay size={SIZE_ICON_SMALL} />
-                    <span>{messages('status.active')}</span>
                 </div>
             ),
         });
@@ -152,13 +88,9 @@ export default function ActionButton({
             string,
             MouseEventHandler<HTMLElement> | undefined
         > = {
-            [ACTION_BUTTON.COMMENT]: onShowComment,
-            [ACTION_BUTTON.DETAIL]: onShowDetail,
-            [ACTION_BUTTON.UPDATE]: onShowUpdate,
             [ACTION_BUTTON.DELETE]: onShowDelete,
-            [ACTION_BUTTON.UPLOAD]: onShowUpload,
             [ACTION_BUTTON.CANCEL]: onShowCancel,
-            [ACTION_BUTTON.CONTINUE]: onShowContinue,
+            [ACTION_BUTTON.SCAN]: onShowScan,
         };
 
         const callback = callbacks[key];

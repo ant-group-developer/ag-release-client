@@ -1,5 +1,4 @@
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
-import { DATE_FORMAT } from '@/enums/common';
 import { convertSecondsToTime, formattedDate } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { useGetAcrCloudHistory } from '@/modules/acr-cloud/hooks/use-get-acr-cloud-history';
@@ -15,7 +14,7 @@ export default function AcrCloudScanResultModal({ ...props }: Props) {
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore<TrackData>((state) => state.dataEdit);
-    const { acrCloudResult, isFetching } = useGetAcrCloudHistory(dataEdit?.id);
+    const { acrCloudResult, isPending } = useGetAcrCloudHistory(dataEdit?.id);
 
     return (
         <AppModal
@@ -27,17 +26,14 @@ export default function AcrCloudScanResultModal({ ...props }: Props) {
             className="!top-12"
             {...props}
         >
-            <Spin spinning={isFetching}>
+            <Spin spinning={isPending}>
                 <div className="max-h-[700px] min-h-[500px] space-y-2 overflow-auto">
                     {acrCloudResult?.map((item: TrackScanHistoryData) => (
                         <Collapse
                             key={item.id}
                             items={[
                                 {
-                                    label: formattedDate(
-                                        item?.createdAt,
-                                        DATE_FORMAT.DATE_ONLY
-                                    ),
+                                    label: formattedDate(item?.createdAt),
                                     children: (
                                         <div>
                                             <Collapse

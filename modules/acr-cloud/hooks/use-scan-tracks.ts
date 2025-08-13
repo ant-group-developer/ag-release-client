@@ -1,18 +1,8 @@
 import { useApiError } from '@/hooks/use-api-error';
 import { trackQueryKeys } from '@/modules/tracks/constants/query-keys';
-import { TrackData } from '@/modules/tracks/types';
-import { CommonFunction } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { acrCloudApis } from '../apis';
-
-export interface ScanTracksPayload extends CommonFunction {
-    filter: {
-        tracksIds: TrackData['id'][];
-        trackCreatedAtStart: string;
-        trackCreatedAtEnd: string;
-        ignoreTrackScanned: boolean;
-    };
-}
+import { ScanTracksPayload } from '../types/payloads';
 
 export const useScanTracks = () => {
     const { handleError } = useApiError();
