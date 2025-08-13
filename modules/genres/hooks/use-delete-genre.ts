@@ -15,7 +15,7 @@ export const useDeleteGenre = () => {
         { onSuccess }: DeleteVariables<GenresData['id']>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...genreQueryKeys.getList],
+            queryKey: genreQueryKeys.lists(),
         });
 
         showNotification('success', messages(data.data.messageCode));

@@ -1,12 +1,12 @@
 'use client';
-import AppContent from '@/components/ant-music/app-content';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
-import { ORDER, SCREEN } from '@/enums/common';
-import { getScrollYHeight, setSortOrder } from '@/helpers/common';
+import { ORDER } from '@/enums/common';
+import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 import GenresHeader from '@/modules/genres/components/header';
 import GenresFormModal from '@/modules/genres/components/modal/genres-form';
 import { GenresTable } from '@/modules/genres/components/table';
@@ -22,6 +22,7 @@ import { useTranslations } from 'next-intl';
 
 export default function Genres() {
     // hooks - state
+    const scrollY = useTableScrollY();
     const messages = useTranslations();
     const {
         dataFilter,
@@ -31,11 +32,11 @@ export default function Genres() {
         removeFilter,
     } = useFilter<GenresDataFilter>({
         page: 1,
-        pageSize: 21,
+        pageSize: PAGE_SIZE,
     });
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
-    const dataEdit = useModalStore((state) => state.dataEdit as GenresData);
+    const dataEdit = useModalStore<GenresData>((state) => state.dataEdit);
     const { height, width } = useWindowSize();
 
     // apis
@@ -74,32 +75,29 @@ export default function Genres() {
     };
 
     return (
-        <AppContent className="overflow-hidden">
-            <div className="flex-1">
-                <GenresHeader
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
-                    lastUpdatedAt={lastUpdatedAt}
-                />
-                <GenresTable
-                    dataSource={genresData.items}
-                    scroll={{
-                        x: SCREEN.MD,
-                        y: getScrollYHeight(height, width, 40, 39),
-                    }}
-                    loading={isLoading}
-                    pagination={{
-                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: genresData.metadata.currentPage,
-                        total: genresData.metadata.totalItems,
-                    }}
-                    dataFilter={dataFilter}
-                    onChange={onChangeSort}
-                />
-            </div>
+        <div>
+            <GenresHeader
+                dataFilter={dataFilter}
+                onChangeFilter={onChangeFilter}
+                canClearFilter={canClearFilter}
+                removeFilter={removeFilter}
+                handleRefresh={handleRefresh}
+                lastUpdatedAt={lastUpdatedAt}
+            />
+            <GenresTable
+                dataSource={genresData.items}
+                scroll={{
+                    y: scrollY,
+                }}
+                loading={isLoading}
+                pagination={{
+                    pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                    current: genresData.metadata.currentPage,
+                    total: genresData.metadata.totalItems,
+                }}
+                dataFilter={dataFilter}
+                onChange={onChangeSort}
+            />
             <AppPagination
                 className="border-b border-t"
                 align="end"
@@ -127,6 +125,6 @@ export default function Genres() {
 
             {(typeModal === TYPE_MODAL_GENRES.CREATE ||
                 typeModal === TYPE_MODAL_GENRES.UPDATE) && <GenresFormModal />}
-        </AppContent>
+        </div>
     );
 }

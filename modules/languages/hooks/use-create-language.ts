@@ -15,7 +15,7 @@ export const useCreateLanguage = () => {
         { onSuccess }: CreateVariables<CreateLanguagePayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...languageQueryKeys.getList],
+            queryKey: languageQueryKeys.lists(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

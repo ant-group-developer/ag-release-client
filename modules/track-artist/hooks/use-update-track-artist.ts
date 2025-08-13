@@ -17,10 +17,10 @@ export const useUpdateTrackArtist = () => {
         { onSuccess }: CreateVariables<UpdateTrackArtistPayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...trackQueryKeys.getList],
+            queryKey: trackQueryKeys.lists(),
         });
         queryClient.invalidateQueries({
-            queryKey: [...releasesQueryKeys.validate],
+            queryKey: releasesQueryKeys.validations(),
         });
 
         // const responseMessages = messages(data?.data?.messageCode);

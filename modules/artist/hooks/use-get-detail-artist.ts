@@ -5,7 +5,7 @@ import { ArtistData } from '../types';
 
 export const useGetDetailArtist = (id: ArtistData['id']) => {
     const { data, ...res } = useQuery({
-        queryKey: [...artistQueryKeys.getDetail, id],
+        queryKey: artistQueryKeys.detail(id),
         queryFn: () => artistApi.getDetail(id),
         enabled: !!id,
     });

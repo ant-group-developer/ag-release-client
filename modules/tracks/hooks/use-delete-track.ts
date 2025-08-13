@@ -16,10 +16,10 @@ export const useDeleteTrack = () => {
         { onSuccess }: DeleteVariables<TrackData['id']>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...trackQueryKeys.getList],
+            queryKey: trackQueryKeys.lists(),
         });
         queryClient.invalidateQueries({
-            queryKey: [...releasesQueryKeys.validate],
+            queryKey: releasesQueryKeys.validations(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

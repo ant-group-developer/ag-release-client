@@ -7,6 +7,7 @@ interface Props {
     pageHeaderClassName?: ClassInput;
     pageTableHeaderClassName?: ClassInput;
     pagePaginationClassName?: ClassInput;
+    skipTableHeader?: boolean;
 }
 
 export const useTableScrollY = (props?: Props) => {
@@ -14,6 +15,7 @@ export const useTableScrollY = (props?: Props) => {
         pageHeaderClassName = 'app-header',
         pageTableHeaderClassName = 'ant-table-header',
         pagePaginationClassName = 'ant-pagination',
+        skipTableHeader = false,
     } = props || {};
 
     const minHeight = 300;
@@ -22,8 +24,12 @@ export const useTableScrollY = (props?: Props) => {
     const { height, width } = useWindowSize();
 
     const pageHeaderHeight = useElementHeightByClass(pageHeaderClassName) ?? 0;
-    const pageTableHeaderHeight =
+    const rawPageTableHeaderHeight =
         useElementHeightByClass(pageTableHeaderClassName) ?? 0;
+    // Chỉ sử dụng height nếu không skip
+    const pageTableHeaderHeight = skipTableHeader
+        ? 0
+        : rawPageTableHeaderHeight;
     const pagePaginationHeight =
         useElementHeightByClass(pagePaginationClassName) ?? 0;
 

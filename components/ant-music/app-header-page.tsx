@@ -22,7 +22,7 @@ export default function AppHeaderPage({
 
     return (
         <div
-            className={cn('flex justify-between px-4 py-2', className)}
+            className={cn('mb-5 mt-3 flex justify-between', className)}
             style={{
                 backgroundColor: token.colorBgContainer,
             }}
@@ -41,8 +41,8 @@ export default function AppHeaderPage({
                             maskClassName: cn('rounded-lg'),
                         }}
                         fallback={'/image/fallback-image.png'}
-                        width={isScrolled ? 56 : 110}
-                        height={isScrolled ? 56 : 110}
+                        width={isScrolled ? 64 : 110}
+                        height={isScrolled ? 64 : 110}
                         src={imageSrc}
                         alt=""
                     />
@@ -51,7 +51,7 @@ export default function AppHeaderPage({
                     className={cn(
                         'flex flex-col flex-wrap content-start gap-x-8 gap-y-2'
                     )}
-                    style={{ height: isScrolled ? 56 : 110 }}
+                    style={{ height: isScrolled ? 64 : 110 }}
                 >
                     {children}
                 </div>

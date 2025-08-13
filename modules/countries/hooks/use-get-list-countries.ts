@@ -9,7 +9,7 @@ import { CountriesData, CountriesDataFilter } from '../types';
 
 export const useGetListCountries = (params: CountriesDataFilter) => {
     const { data, ...res } = useQuery({
-        queryKey: [...countriesQueryKeys.getList, params],
+        queryKey: countriesQueryKeys.list(params),
         queryFn: () => countriesApi.getList(params),
         placeholderData: (previousData) => previousData,
         refetchOnWindowFocus: false,

@@ -5,7 +5,7 @@ import { GenresData } from '../types';
 
 export const useGetDetailGenre = (id: GenresData['id']) => {
     const { data, ...res } = useQuery({
-        queryKey: [...genreQueryKeys.getDetail, id],
+        queryKey: genreQueryKeys.detail(id),
         queryFn: () => genresApi.getDetail(id),
     });
 

@@ -15,7 +15,7 @@ export const useDeleteTrackType = () => {
         { onSuccess }: DeleteVariables<TrackTypeData['id']>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...trackTypeQueryKeys.getList],
+            queryKey: trackTypeQueryKeys.lists(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

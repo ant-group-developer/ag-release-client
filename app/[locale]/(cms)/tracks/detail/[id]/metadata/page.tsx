@@ -17,7 +17,7 @@ export default function TrackMetadata({}: Props) {
     const { trackData } = useGetDetailTrack(trackId as string);
 
     return (
-        <div className="m-auto max-w-[1000px] space-y-8 pb-8">
+        <div className="space-y-8 pb-8">
             <AppCard
                 title={
                     <p className="text-lg">

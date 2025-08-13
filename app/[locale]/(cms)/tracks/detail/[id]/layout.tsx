@@ -2,9 +2,10 @@
 import AppHeaderPage from '@/components/ant-music/app-header-page';
 import ItemHeaderPage from '@/components/ant-music/item-header-page';
 import IconButton from '@/components/ui/button/icon-button';
-import { SIZE_ICON_BIG } from '@/constants/common';
+import { SIZE_ICON_BIG, SIZE_ICON_SMALL } from '@/constants/common';
+import { APP_ROUTES } from '@/enums/routes';
 import { getTrackDetailRoute } from '@/helpers/link';
-import { useRouter } from '@/i18n/routing';
+import { Link, useRouter } from '@/i18n/routing';
 import {
     FEATURING_ARTIST_ROLE,
     MAIN_ARTIST_ROLE,
@@ -14,7 +15,7 @@ import { useGetDetailTrack } from '@/modules/tracks/hooks/use-get-detail-tracks'
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { Tabs, TabsProps, theme } from 'antd';
-import { Download } from 'lucide-react';
+import { ArrowLeft, Download } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname } from 'next/navigation';
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
@@ -111,11 +112,20 @@ export default function TrackDetail({ children }: PropsWithChildren) {
     }, [pathname]);
 
     return (
-        <div
-            className="h-[calc(100vh-4rem)] overflow-y-auto"
-            ref={scrollContainerRef}
-        >
-            <div className="sticky top-0 z-10">
+        <div className="mx-auto max-w-screen-2xl px-2" ref={scrollContainerRef}>
+            <div
+                className="sticky top-0 z-10"
+                style={{
+                    background: token.colorBgContainer,
+                }}
+            >
+                <Link
+                    href={APP_ROUTES.TRACKS}
+                    className="flex w-fit items-center gap-1 py-2 hover:underline"
+                >
+                    <ArrowLeft size={SIZE_ICON_SMALL} />
+                    {messages('tracks.back')}
+                </Link>
                 <AppHeaderPage
                     imageSrc={linkReadFile}
                     isScrolled={isScroll}
@@ -149,7 +159,7 @@ export default function TrackDetail({ children }: PropsWithChildren) {
                     <ItemHeaderPage name={'ISRC'} value={trackData.isrc} />
                 </AppHeaderPage>
 
-                <div className="px-4">
+                <div>
                     <Tabs
                         className="!pt-0"
                         style={{

@@ -32,9 +32,18 @@
         "forbidden": {
             "title": "Access Denied",
             "description": "You do not have permission to view this resource."
-        }
+        },
+        "forbiddenTitle": "You do not have access",
+        "forbiddenDescription": "Please contact the Admin for more details"
     },
     "common": {
+        "reScan": "ReScan",
+        "accuracy": "Accuracy",
+        "result": "Result",
+        "history": "History",
+        "scan": "Scan",
+        "notScanned": "Not scanned",
+        "scanned": "Scanned",
         "lastEdit": "Last edit",
         "watch": "Watch",
         "edit": "Edit",
@@ -708,6 +717,14 @@
         "addAllArtistFromRelease": "Add all artist from release",
         "minTrack": "Min track",
         "maxTrack": "Max track",
+        "back": "Back to track list",
+        "skipScannedTracks": "Skip already scanned tracks",
+        "rageDuplicate": "Rage duplicate",
+        "rageDuplicateInSongDetected": "Range duplicate in song detected",
+        "scan": "Scan tracks",
+        "noResultMatches": "No matching results",
+        "totalTrackNeedScan": "Total tracks need scan",
+        "numberOfTracksScanned": "Number of tracks scanned",
         "original": {
             "label": "Original Work",
             "tooltip": "Original work is the piece that was created first, not any cover or remix."
@@ -842,6 +859,7 @@
         "descriptionVariantArtists": "Display name will be 'Various artists'",
         "role": "Artist role",
         "canLinkArtistProfile": "Can link artist profile",
+        "back": "Back to artist list",
         "message": {
             "success": {
                 "create": "Add new artist successfully",
@@ -866,7 +884,8 @@
         "label": "Label",
         "create": "Create label",
         "name": "Label name",
-        "id": "Label ID"
+        "id": "Label ID",
+        "back": "Back to label list"
     },
     "label": {
         "message": {

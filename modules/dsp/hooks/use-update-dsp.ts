@@ -16,7 +16,7 @@ export const useUpdateDsp = () => {
         { onSuccess }: UpdateVariables<DspData['id'], UpdateDspPayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...dspQueryKeys.getList],
+            queryKey: dspQueryKeys.lists(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

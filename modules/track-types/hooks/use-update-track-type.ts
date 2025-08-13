@@ -18,7 +18,7 @@ export const useUpdateTrackType = () => {
         }: UpdateVariables<TrackTypeData['id'], UpdateTrackTypePayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...trackTypeQueryKeys.getList],
+            queryKey: trackTypeQueryKeys.lists(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

@@ -15,7 +15,7 @@ export const useCreateArtist = () => {
         { onSuccess }: CreateVariables<CreateArtistPayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...artistQueryKeys.getList],
+            queryKey: artistQueryKeys.lists(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

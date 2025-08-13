@@ -16,7 +16,7 @@ export default function Overview({}: Props) {
     const artistId = params['artist-id'];
     const { artistData } = useGetDetailArtist(artistId as string);
     return (
-        <div className="p-4">
+        <div className="py-4">
             <div className="grid grid-cols-3 gap-4">
                 <CountAnalysisCard
                     title={messages('releases.count')}

@@ -28,7 +28,7 @@ export default function DspHeader({
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     return (
-        <AppHeader>
+        <AppHeader className="app-header">
             <AppHeaderGroup>
                 <DspSuperFilter
                     dataFilter={dataFilter}

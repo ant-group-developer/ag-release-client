@@ -5,7 +5,7 @@ import { ArtistRoleData } from '../types';
 
 export const useGetDetailArtistRole = (id: ArtistRoleData['id']) => {
     const { data, ...res } = useQuery({
-        queryKey: [...artistRoleQueryKeys.getDetail, id],
+        queryKey: artistRoleQueryKeys.detail(id),
         queryFn: () => artistRoleApi.getDetail(id),
     });
 

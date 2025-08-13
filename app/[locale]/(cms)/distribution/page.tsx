@@ -1,10 +1,10 @@
 'use client';
-import AppContent from '@/components/ant-music/app-content';
 import AppPagination from '@/components/ui/pagination';
-import { SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
-import { getScrollYHeight } from '@/helpers/common';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { SESSION_STORAGE_KEY } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 
 import DistributionHeader from '@/modules/distribution/components/header';
 import DistributionStatus from '@/modules/distribution/components/header-action/distribution-status';
@@ -18,7 +18,6 @@ import {
 } from '@/modules/distribution/enum';
 import { DistributionDataFilter } from '@/modules/distribution/types';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
-import { useWindowSize } from '@uidotdev/usehooks';
 import { Button } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
@@ -27,6 +26,7 @@ type Props = {};
 
 export default function Distribution({}: Props) {
     // hooks - state
+    const scrollY = useTableScrollY();
     const messages = useTranslations();
     const [visibleColumns, setVisibleColumns] = useState<
         DISTRIBUTION_COLUMNS_DISPLAY[]
@@ -60,13 +60,12 @@ export default function Distribution({}: Props) {
         onChangePage,
     } = useFilter<DistributionDataFilter>({
         page: 1,
-        pageSize: 21,
+        pageSize: PAGE_SIZE,
     });
-    const { height, width } = useWindowSize();
     const typeModal = useModalStore((state) => state.typeModal);
 
     // apis
-    const { releasesData } = useGetListReleases({});
+    const { releasesData, isFetching } = useGetListReleases({});
 
     // func
     const handleChangeVisibleColumns = (
@@ -88,44 +87,45 @@ export default function Distribution({}: Props) {
         }
     }, [visibleColumns]);
     return (
-        <AppContent>
-            <div className="flex-1">
-                <div className="flex justify-between border-b">
-                    <DistributionStatus
-                        onChangeFilter={onChangeFilter}
-                        value={dataFilter.status ?? DISTRIBUTION_STATUS.ALL}
-                    />
-                    <div className="flex items-center gap-4 px-4 font-medium">
-                        <Button className="" type="primary">
-                            <span>
-                                {messages('distribution.batchDistribution')}
-                            </span>
-                        </Button>
-                        <Button danger>
-                            <span>
-                                {messages('distribution.batchTakeDown')}
-                            </span>
-                        </Button>
-                    </div>
-                </div>
-                <DistributionHeader
-                    dataFilter={dataFilter}
+        <div>
+            <div className="flex justify-between border-b">
+                <DistributionStatus
                     onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
-                    handleChangeVisibleColumns={handleChangeVisibleColumns}
-                    visibleColumn={visibleColumns}
+                    value={dataFilter.status ?? DISTRIBUTION_STATUS.ALL}
                 />
-                <DistributionTable
-                    visibleColumns={visibleColumns}
-                    dataSource={releasesData?.items}
-                    scroll={{
-                        x: SCREEN.MD,
-                        y: getScrollYHeight(height, width, 90, 39),
-                    }}
-                />
+                <div className="flex items-center gap-4 px-4 font-medium">
+                    <Button className="" type="primary">
+                        <span>
+                            {messages('distribution.batchDistribution')}
+                        </span>
+                    </Button>
+                    <Button danger>
+                        <span>{messages('distribution.batchTakeDown')}</span>
+                    </Button>
+                </div>
             </div>
+            <DistributionHeader
+                dataFilter={dataFilter}
+                onChangeFilter={onChangeFilter}
+                canClearFilter={canClearFilter}
+                removeFilter={removeFilter}
+                handleRefresh={handleRefresh}
+                handleChangeVisibleColumns={handleChangeVisibleColumns}
+                visibleColumn={visibleColumns}
+            />
+            <DistributionTable
+                visibleColumns={visibleColumns}
+                dataSource={releasesData?.items}
+                scroll={{
+                    y: scrollY,
+                }}
+                pagination={{
+                    pageSize: dataFilter.pageSize,
+                    current: releasesData.metadata.currentPage,
+                    total: releasesData.metadata.totalItems,
+                }}
+                loading={isFetching}
+            />
 
             {typeModal === TYPE_MODAL_DISTRIBUTION.DETAIL && (
                 <DetailDistributionModal open />
@@ -141,8 +141,8 @@ export default function Distribution({}: Props) {
                 showTotalText
                 showSizeChanger
                 showQuickJumper
-                pageSizeOptions={[21, 28, 35]}
+                pageSizeOptions={PAGE_SIZE_OPTIONS}
             />
-        </AppContent>
+        </div>
     );
 }

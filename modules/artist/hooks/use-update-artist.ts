@@ -16,7 +16,7 @@ export const useUpdateArtist = () => {
         { onSuccess }: UpdateVariables<ArtistData['id'], UpdateArtistPayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...artistQueryKeys.getList],
+            queryKey: artistQueryKeys.lists(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

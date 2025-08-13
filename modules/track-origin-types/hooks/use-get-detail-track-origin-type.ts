@@ -5,7 +5,7 @@ import { TrackOriginTypeData } from '../types';
 
 export const useGetDetailTrackOriginType = (id: TrackOriginTypeData['id']) => {
     const { data, ...res } = useQuery({
-        queryKey: [...trackOriginTypeQueryKeys.getDetail, id],
+        queryKey: trackOriginTypeQueryKeys.detail(id),
         queryFn: () => trackOriginTypeApi.getDetail(id),
     });
 

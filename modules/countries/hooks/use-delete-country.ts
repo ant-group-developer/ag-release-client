@@ -15,7 +15,7 @@ export const useDeleteCountry = () => {
         { onSuccess }: DeleteVariables<CountriesData['id']>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...countriesQueryKeys.getList],
+            queryKey: countriesQueryKeys.lists(),
         });
 
         showNotification('success', messages(data.data.messageCode));

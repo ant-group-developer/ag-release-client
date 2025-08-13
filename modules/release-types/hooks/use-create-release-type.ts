@@ -15,7 +15,7 @@ export const useCreateReleaseType = () => {
         { onSuccess }: CreateVariables<CreateReleaseTypePayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...releaseTypesQueryKeys.getList],
+            queryKey: releaseTypesQueryKeys.lists(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

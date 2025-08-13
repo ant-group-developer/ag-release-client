@@ -5,7 +5,7 @@ import { ReleaseTypesData } from '../types';
 
 export const useGetDetailReleaseType = (id: ReleaseTypesData['id']) => {
     const { data, ...res } = useQuery({
-        queryKey: [...releaseTypesQueryKeys.getDetail, id],
+        queryKey: releaseTypesQueryKeys.detail(id),
         queryFn: () => releaseTypesApi.getDetail(id),
     });
 

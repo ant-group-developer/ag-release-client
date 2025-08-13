@@ -74,7 +74,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             label: (
                 <Link
                     className={cn(
-                        !isDisableTab || isCreateReleasePage
+                        isDisableTab || isCreateReleasePage
                             ? 'pointer-events-none'
                             : ''
                     )}

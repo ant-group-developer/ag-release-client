@@ -110,7 +110,7 @@ export default function ActionButton({
         items.push({
             key: ACTION_BUTTON.CANCEL,
             label: (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 text-red-500">
                     <CircleX size={SIZE_ICON_SMALL} />
                     <span>{messages('common.cancel')}</span>
                 </div>

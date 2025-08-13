@@ -16,10 +16,10 @@ export const useCreateTrackDraft = () => {
         { onSuccess }: CreateVariables<TrackPayload[]>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...trackQueryKeys.getList],
+            queryKey: trackQueryKeys.lists(),
         });
         queryClient.invalidateQueries({
-            queryKey: [...releasesQueryKeys.validate],
+            queryKey: releasesQueryKeys.validations(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

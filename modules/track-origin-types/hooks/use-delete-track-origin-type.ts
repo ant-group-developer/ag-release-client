@@ -15,7 +15,7 @@ export const useDeleteTrackOriginType = () => {
         { onSuccess }: DeleteVariables<TrackOriginTypeData['id']>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...trackOriginTypeQueryKeys.getList],
+            queryKey: trackOriginTypeQueryKeys.lists(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

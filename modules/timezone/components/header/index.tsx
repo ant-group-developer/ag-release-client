@@ -26,7 +26,7 @@ export default function TimezoneHeader({
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     return (
-        <AppHeader>
+        <AppHeader className="app-header">
             <AppHeaderGroup>
                 <TimezoneSuperFilter
                     dataFilter={dataFilter}

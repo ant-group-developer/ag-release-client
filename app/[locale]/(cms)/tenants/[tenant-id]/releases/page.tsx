@@ -2,6 +2,7 @@
 import AppContent from '@/components/ant-music/app-content';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { LAYOUT_TABLE, SESSION_STORAGE_KEY } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
@@ -19,7 +20,6 @@ import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
 import { DeleteVariables } from '@/types/api';
-import { useWindowSize } from '@uidotdev/usehooks';
 import { theme } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
@@ -63,9 +63,8 @@ export default function Releases({}: Props) {
         removeFilter,
     } = useFilter<ReleasesDataFilter>({
         page: 1,
-        pageSize: 21,
+        pageSize: PAGE_SIZE,
     });
-    const { height, width } = useWindowSize();
     const { layoutTable } = useTableLayoutToggle();
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
@@ -157,7 +156,7 @@ export default function Releases({}: Props) {
                 showTotalText
                 showSizeChanger
                 showQuickJumper
-                pageSizeOptions={[21, 28, 35]}
+                pageSizeOptions={PAGE_SIZE_OPTIONS}
             />
 
             {typeModal === TYPE_MODAL_RELEASE.DELETE && (

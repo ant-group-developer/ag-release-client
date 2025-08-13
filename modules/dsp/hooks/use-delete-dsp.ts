@@ -15,7 +15,7 @@ export const useDeleteDsp = () => {
         { onSuccess }: DeleteVariables<DspData['id']>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...dspQueryKeys.getList],
+            queryKey: dspQueryKeys.lists(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

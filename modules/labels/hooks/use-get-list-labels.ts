@@ -8,7 +8,7 @@ import { LabelDataFilter } from '../types';
 
 export const useGetListLabels = (params: LabelDataFilter) => {
     const { data, ...res } = useQuery({
-        queryKey: [...labelsQueryKeys.getList, params],
+        queryKey: labelsQueryKeys.list(params),
         queryFn: () => labelsApi.getList(params),
     });
 

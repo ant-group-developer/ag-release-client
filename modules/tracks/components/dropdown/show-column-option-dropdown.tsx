@@ -64,6 +64,10 @@ export default function ShowColumnOptionDropdown({
             label: 'ISRC',
         },
         {
+            key: TRACKS_COLUMNS_DISPLAY.ACR_CLOUD,
+            label: 'ACR Cloud',
+        },
+        {
             key: TRACKS_COLUMNS_DISPLAY.CREATION_DATE,
             label: messages('common.dateCreated'),
         },

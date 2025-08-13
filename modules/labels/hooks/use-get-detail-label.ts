@@ -5,7 +5,7 @@ import { LabelData } from '../types';
 
 export const useGetDetailLabel = (id: LabelData['id']) => {
     const { data, ...res } = useQuery({
-        queryKey: [...labelsQueryKeys.getDetail, id],
+        queryKey: labelsQueryKeys.detail(id),
         queryFn: () => labelsApi.getDetail(id),
     });
 

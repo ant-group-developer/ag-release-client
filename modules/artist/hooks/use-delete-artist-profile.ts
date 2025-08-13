@@ -11,7 +11,7 @@ export const useDeleteArtistProfile = () => {
 
     const onSuccess = (data: any, { onSuccess }: DeleteArtistProfiles) => {
         queryClient.invalidateQueries({
-            queryKey: [...artistQueryKeys.getList],
+            queryKey: artistQueryKeys.lists(),
         });
 
         // showNotification('success', messages(data.data.messageCode));

@@ -15,7 +15,7 @@ export const useCreateLabel = () => {
         { onSuccess }: CreateVariables<CreateLabelPayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...labelsQueryKeys.getList],
+            queryKey: labelsQueryKeys.lists(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

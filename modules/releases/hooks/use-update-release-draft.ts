@@ -18,10 +18,10 @@ export const useUpdateReleaseDraft = () => {
         }: UpdateVariables<ReleasesData['id'], UpdateReleaseDraftPayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...releasesQueryKeys.getList],
+            queryKey: releasesQueryKeys.lists(),
         });
         queryClient.invalidateQueries({
-            queryKey: [...releasesQueryKeys.validate],
+            queryKey: releasesQueryKeys.validations(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

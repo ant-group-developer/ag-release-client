@@ -1,13 +1,12 @@
 'use client';
-import AppContent from '@/components/ant-music/app-content';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
-import { PAGE_SIZE_OPTIONS } from '@/constants/common';
-import { PAGE_SIZE } from '@/constants/page-size';
-import { ORDER, SCREEN } from '@/enums/common';
-import { getScrollYHeight, setSortOrder } from '@/helpers/common';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { ORDER } from '@/enums/common';
+import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 import TrackOriginTypeHeader from '@/modules/track-origin-types/components/header';
 import TrackOriginTypeFormModal from '@/modules/track-origin-types/components/modal/track-origin-type-form';
 import { TrackOriginTypeTable } from '@/modules/track-origin-types/components/table';
@@ -26,6 +25,7 @@ type Props = {};
 
 export default function TrackOriginTypes({}: Props) {
     // hooks - state
+    const scrollY = useTableScrollY();
     const messages = useTranslations();
     const {
         dataFilter,
@@ -74,32 +74,29 @@ export default function TrackOriginTypes({}: Props) {
     };
 
     return (
-        <AppContent className="overflow-hidden">
-            <div className="flex-1">
-                <TrackOriginTypeHeader
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
-                    lastUpdatedAt={lastUpdatedAt}
-                />
-                <TrackOriginTypeTable
-                    dataSource={trackOriginTypesData.items}
-                    scroll={{
-                        x: SCREEN.MD,
-                        y: getScrollYHeight(height, width, 40, 38),
-                    }}
-                    pagination={{
-                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: trackOriginTypesData.metadata.currentPage,
-                        total: trackOriginTypesData.metadata.totalItems,
-                    }}
-                    loading={isLoading}
-                    dataFilter={dataFilter}
-                    onChange={onChangeSort}
-                />
-            </div>
+        <div>
+            <TrackOriginTypeHeader
+                dataFilter={dataFilter}
+                onChangeFilter={onChangeFilter}
+                canClearFilter={canClearFilter}
+                removeFilter={removeFilter}
+                handleRefresh={handleRefresh}
+                lastUpdatedAt={lastUpdatedAt}
+            />
+            <TrackOriginTypeTable
+                dataSource={trackOriginTypesData.items}
+                scroll={{
+                    y: scrollY,
+                }}
+                pagination={{
+                    pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                    current: trackOriginTypesData.metadata.currentPage,
+                    total: trackOriginTypesData.metadata.totalItems,
+                }}
+                loading={isLoading}
+                dataFilter={dataFilter}
+                onChange={onChangeSort}
+            />
             <AppPagination
                 className="border-b border-t"
                 align="end"
@@ -131,6 +128,6 @@ export default function TrackOriginTypes({}: Props) {
                     })}
                 />
             )}
-        </AppContent>
+        </div>
     );
 }

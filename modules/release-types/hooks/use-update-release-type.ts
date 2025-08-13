@@ -18,7 +18,7 @@ export const useUpdateReleaseType = () => {
         }: UpdateVariables<ReleaseTypesData['id'], UpdateReleaseTypePayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...releaseTypesQueryKeys.getList],
+            queryKey: releaseTypesQueryKeys.lists(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

@@ -1,6 +1,6 @@
 import { ArtistRoleData } from '@/modules/artist-role/types';
 import { ArtistData } from '@/modules/artist/types';
-import { CommonAttribute } from '@/types/api';
+import { CommonAttribute, CommonParams } from '@/types/api';
 
 export interface ReleaseArtist extends CommonAttribute {
     artistRoleId: string;
@@ -10,3 +10,5 @@ export interface ReleaseArtist extends CommonAttribute {
     artistRole?: ArtistRoleData;
     addArtistToTracks: boolean;
 }
+
+export interface ReleaseArtistDataFilter extends CommonParams {}

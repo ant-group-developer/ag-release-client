@@ -35,7 +35,7 @@ export default function ReleasesHeader({
     const { layoutTable, toggleLayoutTable } = useTableLayoutToggle();
     const { token } = theme.useToken();
     return (
-        <AppHeader style={{ borderColor: token.colorBorder }}>
+        <AppHeader className="app-header">
             <AppHeaderGroup>
                 <ReleasesSuperFilter
                     dataFilter={dataFilter}

@@ -18,7 +18,7 @@ export const useUpdateArtistRole = () => {
         }: UpdateVariables<ArtistRoleData['id'], UpdateArtistRolePayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [...artistRoleQueryKeys.getList],
+            queryKey: artistRoleQueryKeys.list(),
         });
 
         const responseMessages = messages(data?.data?.messageCode);

@@ -8,7 +8,7 @@ import { artistRoleQueryKeys } from '../constants/query-keys';
 
 export const useGetListArtistRole = (params: ArtistDataFilter) => {
     const { data, ...res } = useQuery({
-        queryKey: [...artistRoleQueryKeys.getList, params],
+        queryKey: artistRoleQueryKeys.lists(params),
         queryFn: () => artistRoleApi.getList(params),
     });
 

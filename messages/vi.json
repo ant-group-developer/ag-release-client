@@ -32,9 +32,18 @@
         "forbidden": {
             "title": "Truy cập bị từ chối",
             "description": "Bạn không có quyền truy cập tài nguyên này."
-        }
+        },
+        "forbiddenTitle": "You do not have access",
+        "forbiddenDescription": "Please contact the Admin for more details"
     },
     "common": {
+        "reScan": "Quét lại",
+        "accuracy": "Độ chính xác",
+        "result": "Kết quả",
+        "history": "Lịch sử",
+        "scan": "Quét",
+        "notScanned": "Chưa quét",
+        "scanned": "Đã quét",
         "lastEdit": "Lần chỉnh sửa cuối",
         "watch": "Xem",
         "edit": "Sửa",
@@ -709,6 +718,14 @@
         "addAllArtistFromRelease": "Thêm tất cả nghệ sĩ từ phát hành",
         "minTrack": "Tối thiểu bài hát",
         "maxTrack": "Tối đa bài hát",
+        "back": "Trở lại danh sách bài hát",
+        "skipScannedTracks": "Bỏ qua các bài đã quét",
+        "rageDuplicate": "Khoảng trùng lặp",
+        "rageDuplicateInSongDetected": "Khoảng trùng lặp trong bài được phát hiện",
+        "scan": "Quét nhạc",
+        "noResultMatches": "Không có kết quả trùng khớp",
+        "totalTrackNeedScan": "Tổng các bài hát cần quét",
+        "numberOfTracksScanned": "Các bài hát đã quét",
         "original": {
             "label": "Tác phẩm gốc",
             "tooltip": "Tác phẩm gốc là tác phẩm được tạo ra đầu tiên, không phải bất kỳ bản cover hoặc remix nào."
@@ -843,6 +860,7 @@
         "descriptionVariantArtists": "Tên hiển thị sẽ là 'Nhiều nghệ sĩ'",
         "role": "Vai trò nghệ sĩ",
         "canLinkArtistProfile": "Có thể liên kết hồ sơ nghệ sĩ",
+        "back": "Trở lại danh sách nghệ sĩ",
         "message": {
             "success": {
                 "create": "Thêm mới nghệ sĩ thành công",
@@ -867,7 +885,8 @@
         "label": "Label",
         "create": "Tạo label",
         "name": "Tên label",
-        "id": "Mã label"
+        "id": "Mã label",
+        "back": "Trở lại danh sách Label"
     },
     "label": {
         "message": {

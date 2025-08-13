@@ -1,6 +1,11 @@
 import { QUERY_KEY } from '@/constants/query-key';
+import { ArtistDataFilter } from '../types';
 
 export const artistQueryKeys = {
-    getList: [QUERY_KEY.ARTIST.KEY, QUERY_KEY.ARTIST.GET_LIST],
-    getDetail: [QUERY_KEY.ARTIST.KEY, QUERY_KEY.ARTIST.GET_DETAIL],
+    all: [QUERY_KEY.ARTIST.KEY],
+    lists: () => [...artistQueryKeys.all, QUERY_KEY.ARTIST.GET_LIST],
+    list: (params: ArtistDataFilter) =>
+        params ? [...artistQueryKeys.lists(), params] : artistQueryKeys.lists(),
+    getDetails: () => [...artistQueryKeys.all, QUERY_KEY.ARTIST.GET_DETAIL],
+    detail: (id: string) => [...artistQueryKeys.getDetails(), id],
 };
