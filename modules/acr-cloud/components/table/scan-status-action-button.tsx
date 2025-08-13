@@ -1,7 +1,7 @@
 import IconButton from '@/components/ui/button/icon-button';
 import { SIZE_ICON, SIZE_ICON_SMALL } from '@/constants/common';
 import { Dropdown, MenuProps } from 'antd';
-import { CircleX, MoreVertical, ScanSearch, Trash } from 'lucide-react';
+import { CircleX, Eye, MoreVertical, ScanSearch, Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { MouseEventHandler } from 'react';
 
@@ -9,13 +9,11 @@ interface Props {
     showDelete?: boolean;
     showCancel?: boolean;
     showScan?: boolean;
+    showDetail?: boolean;
 
     onShowScan?: MouseEventHandler<HTMLElement>;
     onShowCancel?: MouseEventHandler<HTMLElement>;
-    onShowUpload?: MouseEventHandler<HTMLElement>;
-    onShowComment?: MouseEventHandler<HTMLElement>;
     onShowDetail?: MouseEventHandler<HTMLElement>;
-    onShowUpdate?: MouseEventHandler<HTMLElement>;
     onShowDelete?: MouseEventHandler<HTMLElement>;
 }
 
@@ -23,19 +21,18 @@ enum ACTION_BUTTON {
     DELETE = 'delete',
     CANCEL = 'cancel',
     SCAN = 'scan',
+    DETAIL = 'detail',
 }
 
 export default function ScanStatusAction({
     showDelete,
     showCancel,
     showScan,
+    showDetail,
     onShowScan,
     onShowCancel,
-    onShowComment,
     onShowDetail,
-    onShowUpdate,
     onShowDelete,
-    onShowUpload,
 }: Props) {
     const messages = useTranslations();
     const items: MenuProps['items'] = [];
@@ -46,6 +43,18 @@ export default function ScanStatusAction({
                 <div className="flex items-center gap-2">
                     <ScanSearch size={SIZE_ICON_SMALL} />
                     <span>{messages('common.reScan')}</span>
+                </div>
+            ),
+        });
+    }
+
+    if (showDetail) {
+        items.push({
+            key: ACTION_BUTTON.DETAIL,
+            label: (
+                <div className="flex items-center gap-2">
+                    <Eye size={SIZE_ICON_SMALL} />
+                    {messages('common.detail')}
                 </div>
             ),
         });
@@ -91,6 +100,7 @@ export default function ScanStatusAction({
             [ACTION_BUTTON.DELETE]: onShowDelete,
             [ACTION_BUTTON.CANCEL]: onShowCancel,
             [ACTION_BUTTON.SCAN]: onShowScan,
+            [ACTION_BUTTON.DETAIL]: onShowDetail,
         };
 
         const callback = callbacks[key];

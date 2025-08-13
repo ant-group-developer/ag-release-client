@@ -1,7 +1,7 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
-import { formattedDate } from '@/helpers/common';
+import { cn, formattedDate, getIndex } from '@/helpers/common';
 import { getTrackDetailRoute } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { Link } from '@/i18n/routing';
@@ -20,6 +20,10 @@ import TrackCoverArt from './trackCoverArt';
 
 type Props = Omit<AppTableProps<TrackData>, 'columns'> & {
     visibleColumns: TRACKS_COLUMNS_DISPLAY[];
+    pagination: {
+        pageSize: number;
+        current: number;
+    };
 };
 
 export default function TracksTable({ visibleColumns, ...props }: Props) {
@@ -31,7 +35,12 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
             key: 'iNo',
             width: 30,
             align: 'center',
-            render: (_, __, index) => index + 1,
+            render: (_, __, index) =>
+                getIndex(
+                    props?.pagination?.pageSize,
+                    props?.pagination?.current,
+                    index
+                ),
         },
         {
             title: messages('tracks.name'),
@@ -147,7 +156,13 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
                                     )}
                                 </div>
                             }
-                            className="!min-w-40 !rounded-2xl"
+                            className={cn(
+                                '!rounded-2xl !text-yellow-500 hover:!border-yellow-500',
+                                {
+                                    '!text-green-500 hover:!border-green-500':
+                                        isScanned,
+                                }
+                            )}
                         >
                             {isScanned
                                 ? messages('common.scanned')

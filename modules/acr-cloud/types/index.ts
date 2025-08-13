@@ -115,9 +115,10 @@ export interface TrackScanStatusData extends CommonAttribute {
     modifierId: string;
     status: TRACK_SCAN_STATUS;
     filter: TrackScanStatusFilter;
-    trackNeedScanCount: number;
-    trackScannedCount: number;
-    tracksToScan: Pick<TrackData, 'id' | 'title'>[];
+    trackNeedScanIds: string[];
+    trackScannedIds: string[];
+    trackNeedScan: Pick<TrackData, 'id' | 'title'>[];
+    trackScanned: Pick<TrackData, 'id' | 'title'>[];
 }
 
 export interface TrackScanStatusDataFilter extends CommonParams {

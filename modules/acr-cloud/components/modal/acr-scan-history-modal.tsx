@@ -15,18 +15,19 @@ type Props = Omit<AppModalProps, 'children'> & {};
 export default function AcrCloudScanHistoryModal({ ...props }: Props) {
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
+
     const { dataFilter, onChangePage } = useFilter<TrackScanStatusDataFilter>({
         page: 1,
         pageSize: PAGE_SIZE,
         orderBy: ORDER.DESC,
         fieldOrder: 'createdAt',
     });
-    const { scanStatusData, isLoading } = useGetScanStatus(dataFilter);
+    const { scanStatusData, isFetching } = useGetScanStatus(dataFilter);
 
     return (
         <AppModal
             open
-            className="!top-4"
+            className="!top-16"
             title={`${messages('common.history')} ${messages('common.scan').toLowerCase()}  ACRCloud`}
             onCancel={closeModal}
             width={1400}
@@ -34,7 +35,7 @@ export default function AcrCloudScanHistoryModal({ ...props }: Props) {
             footer={null}
             {...props}
         >
-            <Spin spinning={isLoading}>
+            <Spin spinning={isFetching}>
                 <div className="max-h-[800px] min-h-[300px] overflow-hidden">
                     <AcrScanHistoryTable
                         dataSource={scanStatusData?.items}
@@ -42,7 +43,6 @@ export default function AcrCloudScanHistoryModal({ ...props }: Props) {
                         pagination={{
                             pageSize: dataFilter.pageSize ?? PAGE_SIZE,
                             current: scanStatusData.metadata.currentPage,
-                            total: scanStatusData.metadata.totalItems,
                         }}
                         scroll={{ x: SCREEN.MD, y: 600 }}
                     />

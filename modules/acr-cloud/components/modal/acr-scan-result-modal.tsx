@@ -21,7 +21,7 @@ export default function AcrCloudScanResultModal({ ...props }: Props) {
             open
             title={`${messages('common.result')}  ACRCloud`}
             onCancel={closeModal}
-            width={750}
+            width={1000}
             footer={null}
             className="!top-12"
             {...props}
@@ -37,10 +37,21 @@ export default function AcrCloudScanResultModal({ ...props }: Props) {
                                     children: (
                                         <div>
                                             <Collapse
+                                                defaultActiveKey={item?.result?.map(
+                                                    (
+                                                        _: ResultScan,
+                                                        idx: number
+                                                    ) => idx
+                                                )}
                                                 items={item?.result?.map(
                                                     (item2: ResultScan) => {
+                                                        const value =
+                                                            item2?.content
+                                                                ?.music ??
+                                                            item2?.content
+                                                                ?.humming;
                                                         return {
-                                                            label: `${convertSecondsToTime(item2?.key?.startSecond)} - ${convertSecondsToTime(item2?.key?.endSecond)} (${messages('tracks.count')}: ${item?.result?.length})`,
+                                                            label: `${convertSecondsToTime(item2?.key?.startSecond)} - ${convertSecondsToTime(item2?.key?.endSecond)} (${messages('tracks.count')}: ${value?.length ?? 0})`,
                                                             children: (
                                                                 <div>
                                                                     <ScanResultPanel

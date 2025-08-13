@@ -37,7 +37,7 @@
         "forbiddenDescription": "Please contact the Admin for more details"
     },
     "common": {
-        "reScan": "ReScan",
+        "reScan": "Re-scan",
         "accuracy": "Accuracy",
         "result": "Result",
         "history": "History",
@@ -139,7 +139,7 @@
         "notification": "Notification",
         "columnsDisplay": "Columns display",
         "all": "All",
-        "cancel": "cancel",
+        "cancel": "Cancel",
         "used": "Used",
         "notUsed": "Not used",
         "use": "Use status",
@@ -188,6 +188,8 @@
         "upload": "Upload",
         "uploadImage": "Upload image",
         "dateCreated": "Date created",
+        "createdAt": "Created at",
+        "updatedAt": "Updated at",
         "dateUpdated": "Date updated",
         "removeFilter": "Remove filter",
         "filter": "Filter",
@@ -725,6 +727,14 @@
         "noResultMatches": "No matching results",
         "totalTrackNeedScan": "Total tracks need scan",
         "numberOfTracksScanned": "Number of tracks scanned",
+        "status": {
+            "running": "Running",
+            "pending": "Pending",
+            "finished": "Finished",
+            "failed": "Failed",
+            "cancel": "Canceled",
+            "unknown": "Unknown"
+        },
         "original": {
             "label": "Original Work",
             "tooltip": "Original work is the piece that was created first, not any cover or remix."
