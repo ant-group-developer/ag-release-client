@@ -27,7 +27,7 @@ export default function AcrCloudScanResultModal({ ...props }: Props) {
             {...props}
         >
             <Spin spinning={isPending}>
-                <div className="max-h-[700px] min-h-[500px] space-y-2 overflow-auto">
+                <div className="max-h-[700px] min-h-[200px] space-y-2 overflow-auto">
                     {acrCloudResult?.map((item: TrackScanHistoryData) => (
                         <Collapse
                             key={item.id}

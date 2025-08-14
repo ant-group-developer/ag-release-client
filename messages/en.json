@@ -727,6 +727,7 @@
         "noResultMatches": "No matching results",
         "totalTrackNeedScan": "Total tracks need scan",
         "numberOfTracksScanned": "Number of tracks scanned",
+        "scanDate": "Date scan",
         "status": {
             "running": "Running",
             "pending": "Pending",

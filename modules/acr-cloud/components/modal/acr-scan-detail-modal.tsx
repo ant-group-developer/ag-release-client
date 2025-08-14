@@ -1,7 +1,10 @@
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import AppTable from '@/components/ui/table/normal-table';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { DATE_FORMAT } from '@/enums/common';
+import { formattedDate } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
-import { Spin, Tag } from 'antd';
+import { Checkbox, Spin, Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
@@ -100,7 +103,7 @@ export default function AcrCloudScanDetailModal({ data, ...props }: Props) {
 
     const titleModal = () => {
         return (
-            <div className="space-x-2">
+            <div className="flex items-center gap-2">
                 <span>
                     {messages('common.detail')}{' '}
                     {messages('common.scan').toLowerCase()} ACRCloud
@@ -109,6 +112,8 @@ export default function AcrCloudScanDetailModal({ data, ...props }: Props) {
             </div>
         );
     };
+
+    console.log(scanStatusData?.filter?.ignoreTrackScanned);
 
     return (
         <AppModal
@@ -122,13 +127,58 @@ export default function AcrCloudScanDetailModal({ data, ...props }: Props) {
             {...props}
         >
             <Spin spinning={isFetching}>
-                <div className="max-h-[600px] min-h-[300px] overflow-hidden">
+                <div className="max-h-[600px]">
+                    <div className="mb-2 flex flex-wrap gap-4">
+                        <div>
+                            {messages('tracks.skipScannedTracks')}:{' '}
+                            <Checkbox
+                                disabled
+                                checked={
+                                    scanStatusData?.filter?.ignoreTrackScanned
+                                }
+                            />
+                        </div>
+                        <span>
+                            {messages('tracks.totalTrackNeedScan')}:{' '}
+                            <span className="font-semibold">
+                                {scanStatusData?.trackNeedScanIds?.length}
+                            </span>
+                        </span>
+                        <span>
+                            {messages('tracks.scanDate')}:{' '}
+                            <span className="font-semibold">
+                                {formattedDate(
+                                    scanStatusData?.createdAt,
+                                    DATE_FORMAT.DATE_ONLY
+                                )}
+                            </span>
+                        </span>
+                    </div>
                     <AppTable
                         columns={column}
                         dataSource={mergedTracks}
-                        scroll={{ x: 'max-content', y: 550 }}
+                        scroll={{ x: 'max-content', y: 470 }}
+                        pagination={{
+                            pageSize: PAGE_SIZE,
+                            total: scanStatusData?.trackNeedScanIds?.length,
+                            size: 'default',
+                            pageSizeOptions: PAGE_SIZE_OPTIONS,
+                            showSizeChanger: true,
+                            showQuickJumper: true,
+                            showTotal: (total, range) => (
+                                <span className="font-semibold">
+                                    {range[0]}–{range[1]}{' '}
+                                    {messages('common.of')} {total}
+                                </span>
+                            ),
+                        }}
                     />
                 </div>
+                {/* <AppPagination
+                    pageSize={PAGE_SIZE}
+                    total={scanStatusData?.trackNeedScanIds?.length}
+                    showTotalText
+                /> */}
             </Spin>
         </AppModal>
     );

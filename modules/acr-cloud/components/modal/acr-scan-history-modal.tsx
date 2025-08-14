@@ -50,7 +50,7 @@ export default function AcrCloudScanHistoryModal({ ...props }: Props) {
             {...props}
         >
             <Spin spinning={isFetching}>
-                <div className="max-h-[800px] min-h-[300px] overflow-hidden">
+                <div className="max-h-[800px] overflow-hidden">
                     <AcrScanHistoryTable
                         dataSource={scanStatusData?.items}
                         dataFilter={dataFilter}

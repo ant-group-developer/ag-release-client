@@ -728,6 +728,7 @@
         "noResultMatches": "Không có kết quả trùng khớp",
         "totalTrackNeedScan": "Tổng các bài hát cần quét",
         "numberOfTracksScanned": "Các bài hát đã quét",
+        "scanDate": "Ngày quét",
         "status": {
             "running": "Đang chạy",
             "pending": "Chờ xử lý",
