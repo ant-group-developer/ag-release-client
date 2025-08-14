@@ -38,7 +38,7 @@ export default function ListTracksReleaseHeaderDropdown({
 
     const dropdownItems = [
         {
-            label: messages('common.dateCreated'),
+            label: messages('common.createdAt'),
             value: TYPE_FILTER.DATE_CREATED,
             visible: !dataFilter.startCreatedAt && !dataFilter.endCreatedAt,
             onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_CREATED),

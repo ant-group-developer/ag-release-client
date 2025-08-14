@@ -6,6 +6,7 @@ import { DATE_FORMAT } from '@/enums/common';
 import {
     convertSecondsToHoursMinutes,
     formattedDate,
+    getIndex,
     getIntlCodeByReleaseStatus,
 } from '@/helpers/common';
 import {
@@ -30,6 +31,10 @@ import ReleaseCoverImage from '../image/release-cover-image';
 type Props = Omit<AppTableProps<ReleasesData>, 'columns'> & {
     visibleColumns: RELEASES_COLUMNS_DISPLAY[];
     onChangeFilter: OnChangeFilter<ReleasesDataFilter>;
+    pagination: {
+        pageSize: number;
+        current: number;
+    };
 };
 
 export default function ReleasesTable({
@@ -46,7 +51,12 @@ export default function ReleasesTable({
             key: 'iNo',
             width: 50,
             align: 'center',
-            render: (_, __, index) => index + 1,
+            render: (_, __, index) =>
+                getIndex(
+                    props?.pagination?.pageSize,
+                    props?.pagination?.current,
+                    index
+                ),
         },
         {
             title: messages('releases.name'),
@@ -212,7 +222,7 @@ export default function ReleasesTable({
             ),
         },
         {
-            title: messages('common.dateCreated'),
+            title: messages('common.createdAt'),
             key: 'creationDate',
             dataIndex: 'creationDate',
             align: 'center',

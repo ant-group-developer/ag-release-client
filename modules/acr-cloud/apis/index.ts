@@ -14,18 +14,23 @@ export const acrCloudApis = {
         );
     },
     scanTracks: (filter: ScanTracksPayload['filter']) => {
-        return axiosInstance.post(`/copyright/filter`, { filter });
+        return axiosInstance.post(`/copyright/tasks`, { filter });
     },
     getScanStatus: (params: TrackScanStatusDataFilter) => {
         return axiosInstance.get<PaginationResponse<TrackScanStatusData>>(
-            `/copyright/filter`,
+            `/copyright/tasks`,
             { params }
         );
     },
     cancelScan: (id: string) => {
-        return axiosInstance.post(`/copyright/filter/${id}/cancel`);
+        return axiosInstance.post(`/copyright/tasks/${id}/cancel`);
     },
     reScan: (id: string) => {
-        return axiosInstance.post(`/copyright/filter/${id}/re-scan`);
+        return axiosInstance.post(`/copyright/tasks/${id}/re-scan`);
+    },
+    getDetailScanStatus: (id: string) => {
+        return axiosInstance.get<DetailResponse<TrackScanStatusData>>(
+            `/copyright/tasks/${id}`
+        );
     },
 };

@@ -44,13 +44,13 @@ export default function GenresHeaderDropdown({
             onClick: () => handleChangeTypeFilter(TYPE_FILTER.KEYWORD),
         },
         {
-            label: messages('common.dateCreated'),
+            label: messages('common.createdAt'),
             value: TYPE_FILTER.DATE_CREATED,
             visible: !dataFilter.startCreatedAt,
             onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_CREATED),
         },
         {
-            label: messages('common.dateUpdated'),
+            label: messages('common.updatedAt'),
             value: TYPE_FILTER.DATE_UPDATED,
             visible: !dataFilter.startUpdatedAt,
             onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_UPDATED),

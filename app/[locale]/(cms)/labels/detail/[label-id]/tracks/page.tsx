@@ -1,6 +1,7 @@
 'use client';
 import AppContent from '@/components/ant-music/app-content';
 import AppPagination from '@/components/ui/pagination';
+import { PAGE_SIZE } from '@/constants/page-size';
 import { LAYOUT_TABLE, SESSION_STORAGE_KEY } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
@@ -108,6 +109,10 @@ export default function Tracks({}: Props) {
                     visibleColumns={visibleColumns}
                     dataSource={tracksData?.items}
                     loading={isFetching}
+                    pagination={{
+                        pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
+                        current: tracksData?.metadata?.currentPage,
+                    }}
                 />
             )}
 

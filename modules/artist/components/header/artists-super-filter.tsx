@@ -94,7 +94,7 @@ export default function ArtistsSuperFilter({
                 <DateCreatedDialog
                     open={typeFilter === TYPE_FILTER.DATE_CREATED}
                     handleChangeTypeFilter={handleChangeTypeFilter}
-                    title={messages('common.dateCreated')}
+                    title={messages('common.createdAt')}
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
                 />
@@ -102,7 +102,7 @@ export default function ArtistsSuperFilter({
                 <DateUpdateDialog
                     open={typeFilter === TYPE_FILTER.DATE_UPDATED}
                     handleChangeTypeFilter={handleChangeTypeFilter}
-                    title={messages('common.dateUpdated')}
+                    title={messages('common.updatedAt')}
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
                 />

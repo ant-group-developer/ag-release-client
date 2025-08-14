@@ -38,7 +38,7 @@ export default function TracksHeaderDropdown({
 
     const dropdownItems = [
         {
-            label: messages('common.dateCreated'),
+            label: messages('common.createdAt'),
             value: TYPE_FILTER.DATE_CREATED,
             visible: !dataFilter.startCreatedAt && !dataFilter.endCreatedAt,
             onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_CREATED),
@@ -54,6 +54,18 @@ export default function TracksHeaderDropdown({
             value: TYPE_FILTER.KEYWORD,
             visible: !dataFilter.keyword,
             onClick: () => handleChangeTypeFilter(TYPE_FILTER.KEYWORD),
+        },
+        {
+            label: messages('releases.label'),
+            value: TYPE_FILTER.RELEASE_ID,
+            visible: !dataFilter.releaseId,
+            onClick: () => handleChangeTypeFilter(TYPE_FILTER.RELEASE_ID),
+        },
+        {
+            label: messages('artist.label'),
+            value: TYPE_FILTER.ARTIST_ID,
+            visible: !dataFilter.artistId,
+            onClick: () => handleChangeTypeFilter(TYPE_FILTER.ARTIST_ID),
         },
         // {
         //     label: messages('common.type'),

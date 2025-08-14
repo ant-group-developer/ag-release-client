@@ -193,7 +193,7 @@ function UserTable({ dataFilter, ...props }: Props) {
             render: (cell) => formattedDate(cell),
         },
         {
-            title: messages('common.dateCreated'),
+            title: messages('common.createdAt'),
             dataIndex: USER_ORDER_BY.CREATED_AT,
             align: 'center',
             width: 180,
@@ -206,7 +206,7 @@ function UserTable({ dataFilter, ...props }: Props) {
             render: (cell) => formattedDate(cell),
         },
         {
-            title: messages('common.dateUpdated'),
+            title: messages('common.updatedAt'),
             dataIndex: USER_ORDER_BY.UPDATED_AT,
             align: 'center',
             width: 180,

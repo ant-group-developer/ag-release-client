@@ -82,7 +82,7 @@ function TenantDeals({}: Props) {
             },
         },
         {
-            title: messages('common.dateUpdated'),
+            title: messages('common.updatedAt'),
             key: 'updatedAt',
             dataIndex: 'updatedAt',
             align: 'center',

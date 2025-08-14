@@ -1,13 +1,15 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
-import PopoverTags from '@/components/ui/tag/popover-tags';
 import { formattedDate, getIndex } from '@/helpers/common';
 import { Avatar } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 import { TRACK_SCAN_STATUS } from '../../enums';
 import { useCancelScan } from '../../hooks/use-cancel-scan';
 import { useReScan } from '../../hooks/use-re-scan';
 import { TrackScanStatusData, TrackScanStatusDataFilter } from '../../types';
+import AcrCloudScanDetailModal from '../modal/acr-scan-detail-modal';
+import TagScanStatus from '../tags/tag-scan-status';
 import ScanStatusAction from './scan-status-action-button';
 
 type Props = Omit<AppTableProps<TrackScanStatusData>, 'columns'> & {
@@ -18,10 +20,33 @@ type Props = Omit<AppTableProps<TrackScanStatusData>, 'columns'> & {
     };
 };
 
+export interface OpenModal {
+    open: boolean;
+    data: TrackScanStatusData | null;
+}
+
 export default function AcrScanHistoryTable({ ...props }: Props) {
+    const [openModal, setOpenModal] = useState<OpenModal>({
+        open: false,
+        data: null,
+    });
     const messages = useTranslations();
     const { cancelScan } = useCancelScan();
     const { reScan } = useReScan();
+
+    const handleOpenModal = (record: TrackScanStatusData) => {
+        setOpenModal({
+            open: true,
+            data: record,
+        });
+    };
+
+    const handleCloseModal = () => {
+        setOpenModal({
+            open: false,
+            data: null,
+        });
+    };
 
     const columns: ColumnType<TrackScanStatusData>[] = [
         {
@@ -48,45 +73,45 @@ export default function AcrScanHistoryTable({ ...props }: Props) {
                 </div>
             ),
         },
-        {
-            title: messages('tracks.label'),
-            key: 'tracks',
-            width: 100,
-            align: 'left',
-            render: (_, record) => (
-                <PopoverTags
-                    tags={record?.tracksToScan?.map((item) => item.title)}
-                    maxVisibleTags={2}
-                />
-            ),
-        },
+        // {
+        //     title: messages('tracks.label'),
+        //     key: 'tracks',
+        //     width: 100,
+        //     align: 'left',
+        //     render: (_, record) => (
+        //         <PopoverTags
+        //             tags={record?.tracksToScan?.map((item) => item.title)}
+        //             maxVisibleTags={2}
+        //         />
+        //     ),
+        // },
         {
             title: messages('common.status'),
             key: 'status',
             width: 50,
             align: 'center',
-            render: (_, record) => <p className="truncate">{record?.status}</p>,
+            render: (_, record) => <TagScanStatus status={record?.status} />,
         },
         {
             title: messages('tracks.totalTrackNeedScan'),
             key: 'trackNeedScanCount',
-            width: 40,
+            width: 50,
             align: 'center',
             render: (_, record) => (
-                <p className="truncate">{record?.trackNeedScanCount}</p>
+                <p className="truncate">{record?.trackNeedScanIds?.length}</p>
             ),
         },
         {
             title: messages('tracks.numberOfTracksScanned'),
             key: 'trackScannedCount',
-            width: 40,
+            width: 50,
             align: 'center',
             render: (_, record) => (
-                <p className="truncate">{record?.trackScannedCount}</p>
+                <p className="truncate">{record?.trackScannedIds?.length}</p>
             ),
         },
         {
-            title: messages('common.dateCreated'),
+            title: messages('common.createdAt'),
             key: 'creationDate',
             dataIndex: 'creationDate',
             align: 'center',
@@ -109,10 +134,12 @@ export default function AcrScanHistoryTable({ ...props }: Props) {
                 return (
                     <ScanStatusAction
                         showCancel={isShowCancel}
+                        showScan
+                        showDetail
+                        onShowDetail={() => handleOpenModal(record)}
                         onShowCancel={() => {
                             cancelScan({ id: record?.id });
                         }}
-                        showScan
                         onShowScan={() => {
                             reScan({ id: record?.id });
                         }}
@@ -121,5 +148,14 @@ export default function AcrScanHistoryTable({ ...props }: Props) {
             },
         },
     ];
-    return <AppTable {...props} pagination={false} columns={columns} />;
+    return (
+        <>
+            <AppTable {...props} pagination={false} columns={columns} />
+            <AcrCloudScanDetailModal
+                open={openModal.open}
+                data={openModal.data}
+                onCancel={handleCloseModal}
+            />
+        </>
+    );
 }

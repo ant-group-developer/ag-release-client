@@ -9,6 +9,7 @@ export const useGetScanStatus = (params: TrackScanStatusDataFilter) => {
     const { data, ...res } = useQuery({
         queryKey: acrCloudQueryKeys.getScanStatusList(params),
         queryFn: () => acrCloudApis.getScanStatus(params),
+        placeholderData: (prev) => prev,
     });
 
     return {

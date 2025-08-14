@@ -16,4 +16,13 @@ export const acrCloudQueryKeys = {
         ...acrCloudQueryKeys.getScanStatusLists(),
         params,
     ],
+    getScanStatusDetails: () =>
+        [
+            ...acrCloudQueryKeys.all,
+            QUERY_KEY.ACR_CLOUD.GET_DETAIL_SCAN_STATUS,
+        ] as const,
+    getScanStatusDetail: (id: string) => [
+        ...acrCloudQueryKeys.getScanStatusDetails(),
+        id,
+    ],
 };

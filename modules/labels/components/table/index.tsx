@@ -127,7 +127,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             ),
         },
         {
-            title: messages('common.dateCreated'),
+            title: messages('common.createdAt'),
             key: 'createdAt',
             dataIndex: 'createdAt',
             align: 'center',
@@ -146,7 +146,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             ),
         },
         {
-            title: messages('common.dateUpdated'),
+            title: messages('common.updatedAt'),
             key: 'updatedAt',
             dataIndex: 'updatedAt',
             align: 'center',

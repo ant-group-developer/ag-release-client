@@ -131,6 +131,10 @@ export default function Tracks({}: Props) {
                     scroll={{
                         y: scrollY,
                     }}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: tracksData.metadata.currentPage,
+                    }}
                     loading={isTrackDataLoading}
                     rowSelection={rowSelection}
                 />

@@ -69,7 +69,7 @@ export default function ShowColumnOptionDropdown({
         },
         {
             key: TRACKS_COLUMNS_DISPLAY.CREATION_DATE,
-            label: messages('common.dateCreated'),
+            label: messages('common.createdAt'),
         },
         {
             key: TRACKS_COLUMNS_DISPLAY.ACTIONS,

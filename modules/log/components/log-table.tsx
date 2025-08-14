@@ -151,7 +151,7 @@ function LogTable({ ...props }: Props) {
             },
         },
         {
-            title: messages('common.dateCreated'),
+            title: messages('common.createdAt'),
             dataIndex: 'dateCreated',
             align: 'center',
             width: 150,
