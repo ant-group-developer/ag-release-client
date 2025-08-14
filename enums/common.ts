@@ -113,6 +113,8 @@ export enum TYPE_FILTER {
     ID = 'ID',
     WORKSPACE = 'workspaceIds',
     RELEASE_ID = 'releaseId',
+    IS_SCANNED = 'isScanned',
+    ALBUM_FORMAT_ID = 'albumFormatId',
 }
 
 export enum UPLOAD_TYPE {

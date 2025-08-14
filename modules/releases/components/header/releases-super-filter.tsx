@@ -3,12 +3,16 @@ import DateReleaseDialog from '@/components/filter-dialog/date-release-dialog';
 import GenresDialog from '@/components/filter-dialog/genres-dialog';
 import SearchDialog from '@/components/filter-dialog/search-dialog';
 import StatusReleaseDialog from '@/components/filter-dialog/status-releases-dialog';
-import TypeReleaseDialog from '@/components/filter-dialog/type-releases-dialog';
+import { PopoverRadioFilter } from '@/components/filter/popover-radio';
 import IconButton from '@/components/ui/button/icon-button';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
 import { TYPE_FILTER } from '@/enums/common';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
+import { useGetListArtist } from '@/modules/artist/hooks/use-get-list-artists';
+import { ArtistData } from '@/modules/artist/types';
+import { useGetListReleaseTypes } from '@/modules/release-types/hooks/use-get-list-release-types';
+import { ReleaseTypesData } from '@/modules/release-types/types';
 import { ListFilter, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
@@ -36,6 +40,10 @@ export default function ReleasesSuperFilter({
     const handleChangeTypeFilter = (value?: TYPE_FILTER) => {
         setTypeFilter(value);
     };
+
+    const { artistsData } = useGetListArtist({ pageSize: 999 });
+
+    const { releaseTypesData } = useGetListReleaseTypes({});
 
     useEffect(() => {
         const handleOutSideClick = (event: any) => {
@@ -85,12 +93,50 @@ export default function ReleasesSuperFilter({
                     onChangeFilter={onChangeFilter}
                 />
 
-                <TypeReleaseDialog
-                    title={messages('common.type')}
-                    open={typeFilter === TYPE_FILTER.TYPE}
-                    handleChangeTypeFilter={handleChangeTypeFilter}
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
+                <PopoverRadioFilter
+                    open={typeFilter === TYPE_FILTER.ALBUM_FORMAT_ID}
+                    title={messages('releases.type')}
+                    options={releaseTypesData?.items?.map(
+                        (item: ReleaseTypesData) => ({
+                            name: item?.name,
+                            value: item?.id,
+                        })
+                    )}
+                    selectedValue={dataFilter?.albumFormatId}
+                    onOpenChange={(val) => {
+                        return setTypeFilter(
+                            val ? TYPE_FILTER.ALBUM_FORMAT_ID : undefined
+                        );
+                    }}
+                    onConfirm={(val) => {
+                        return onChangeFilter({
+                            albumFormatId: val,
+                        });
+                    }}
+                    onRemove={() =>
+                        onChangeFilter({ albumFormatId: undefined })
+                    }
+                />
+
+                <PopoverRadioFilter
+                    open={typeFilter === TYPE_FILTER.ARTIST_ID}
+                    title={messages('artist.label')}
+                    options={artistsData?.items?.map((item: ArtistData) => ({
+                        name: item?.name,
+                        value: item?.id,
+                    }))}
+                    selectedValue={dataFilter.artistId}
+                    onOpenChange={(val) => {
+                        return setTypeFilter(
+                            val ? TYPE_FILTER.ARTIST_ID : undefined
+                        );
+                    }}
+                    onConfirm={(vals) => {
+                        return onChangeFilter({
+                            artistId: vals,
+                        });
+                    }}
+                    onRemove={() => onChangeFilter({ artistId: undefined })}
                 />
 
                 <StatusReleaseDialog

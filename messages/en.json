@@ -729,6 +729,7 @@
         "numberOfTracksScanned": "Number of tracks scanned",
         "scanDate": "Date scan",
         "status": {
+            "scanning": "Scanning",
             "running": "Running",
             "pending": "Pending",
             "finished": "Finished",
@@ -1200,5 +1201,24 @@
             "success": "Copied to clipboard"
         },
         "quickActions": "Quick actions"
+    },
+
+    "permission": {
+        "label": "Permission",
+        "name": "Permission name",
+        "message": {
+            "success": {
+                "create": "Add permission successfully",
+                "update": "Update permission successfully",
+                "delete": "Delete permission successfully"
+            },
+            "error": {
+                "duplicateNamePermission": "This permission already exists",
+                "duplicateValuePermission": "This permission value already exists"
+            }
+        },
+        "action": {
+            "delete": "Delete permission"
+        }
     }
 }

@@ -170,7 +170,12 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
                         </Button> */}
                         <Tag
                             onClick={() => {
-                                if (!isScanned) return;
+                                if (!isScanned) {
+                                    return openModal(
+                                        TYPE_MODAL_TRACK.ACR_CLOUD_SCAN,
+                                        record
+                                    );
+                                }
                                 openModal(
                                     TYPE_MODAL_TRACK.ACR_CLOUD_SCAN_RESULT,
                                     record

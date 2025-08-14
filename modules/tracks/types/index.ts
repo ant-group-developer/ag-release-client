@@ -55,4 +55,5 @@ export interface TrackLanguage {
 export interface TrackDataFilter extends CommonParams {
     releaseId?: string;
     artistId?: string;
+    isScanned?: string;
 }

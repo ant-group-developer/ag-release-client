@@ -1,5 +1,6 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { THEME } from '@/enums/common';
 import useModalStore from '@/hooks/use-modal';
 import { useThemeStore } from '@/hooks/use-theme-store';
@@ -19,9 +20,8 @@ import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
 import { useDeleteTrack } from '@/modules/tracks/hooks/use-delete-track';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { TrackData } from '@/modules/tracks/types';
-import { getThemeConfig } from '@/theme/theme-config';
 import { DeleteVariables } from '@/types/api';
-import { Button, ConfigProvider } from 'antd';
+import { ConfigProvider } from 'antd';
 import { useTranslations } from 'next-intl';
 import { Key, useEffect, useState } from 'react';
 
@@ -68,16 +68,12 @@ export default function Tracks() {
     };
 
     // const
-    const isShowAddTrack =
-        tracksData?.items?.length < releaseData?.albumFormat?.maxTrackCount;
     const rowSelection = {
         selectedRow,
         onChange: handleRowSelection,
     };
-    const themeConfig = getThemeConfig(currentTheme, primaryColor as string);
     const customTheme = {
         token: {
-            ...themeConfig.token,
             colorBgContainerDisabled:
                 currentTheme == THEME.LIGHT ? '#fff' : '#2a2a2a',
         },
@@ -97,11 +93,26 @@ export default function Tracks() {
 
     return (
         <ConfigProvider theme={customTheme}>
-            <div className="relative">
+            <div>
                 <ReleaseTracksTable
                     dataSource={tracksData?.items}
                     // rowSelection={rowSelection}
                     loading={isLoading}
+                    scroll={{
+                        x: 'max-content',
+                    }}
+                    pagination={{
+                        pageSize: PAGE_SIZE,
+                        total: tracksData?.metadata?.totalItems,
+                        size: 'default',
+                        pageSizeOptions: PAGE_SIZE_OPTIONS,
+                        showTotal: (total, range) => (
+                            <span className="font-semibold">
+                                {range[0]}–{range[1]} {messages('common.of')}{' '}
+                                {total}
+                            </span>
+                        ),
+                    }}
                 />
 
                 {typeModal === TYPE_MODAL_RELEASE.ADD_TRACK && (
@@ -153,19 +164,6 @@ export default function Tracks() {
                         onCancel={closeModal}
                         onOk={() => handleRemoveTrack()}
                     />
-                )}
-
-                {isShowAddTrack && (
-                    <div className="absolute right-2 top-[-2.5rem] z-50">
-                        <Button
-                            onClick={() =>
-                                openModal(TYPE_MODAL_RELEASE.ADD_TRACK)
-                            }
-                            type="primary"
-                        >
-                            {messages('tracks.add')}
-                        </Button>
-                    </div>
                 )}
             </div>
         </ConfigProvider>
