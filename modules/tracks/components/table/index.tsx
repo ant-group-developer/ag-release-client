@@ -1,7 +1,7 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
-import { formattedDate, getIndex } from '@/helpers/common';
+import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import { getTrackDetailRoute } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { Link } from '@/i18n/routing';
@@ -15,10 +15,11 @@ import { Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { SearchCheck, SearchX } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { TrackData } from '../../types';
+import { TrackData, TrackDataFilter } from '../../types';
 import TrackCoverArt from './trackCoverArt';
 
 type Props = Omit<AppTableProps<TrackData>, 'columns'> & {
+    dataFilter: TrackDataFilter;
     visibleColumns: TRACKS_COLUMNS_DISPLAY[];
     pagination: {
         pageSize: number;
@@ -26,7 +27,11 @@ type Props = Omit<AppTableProps<TrackData>, 'columns'> & {
     };
 };
 
-export default function TracksTable({ visibleColumns, ...props }: Props) {
+export default function TracksTable({
+    dataFilter,
+    visibleColumns,
+    ...props
+}: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const column: ColumnType<TrackData>[] = [
@@ -232,6 +237,12 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
             dataIndex: 'creationDate',
             align: 'center',
             width: 60,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'tracks_count'
+            ),
             render: (value, record) => (
                 <span className="truncate text-wrap">
                     {' '}

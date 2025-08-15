@@ -43,12 +43,7 @@ export default function ArtistsHeaderDropdown({
             visible: !dataFilter.keyword,
             onClick: () => handleChangeTypeFilter(TYPE_FILTER.KEYWORD),
         },
-        {
-            label: messages('artist.id'),
-            value: TYPE_FILTER.ID,
-            visible: !dataFilter.id,
-            onClick: () => handleChangeTypeFilter(TYPE_FILTER.ID),
-        },
+
         {
             label: messages('common.createdAt'),
             value: TYPE_FILTER.DATE_CREATED,

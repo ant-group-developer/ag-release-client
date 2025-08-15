@@ -54,6 +54,19 @@ export const PermissionTable = ({ dataFilter, ...props }: Props) => {
             ),
         },
         {
+            title: messages('common.note'),
+            key: 'note',
+            dataIndex: 'note',
+            align: 'left',
+            width: 200,
+
+            render: (value) => (
+                <span className="line-clamp-3 truncate whitespace-pre-line">
+                    {value}
+                </span>
+            ),
+        },
+        {
             title: messages('common.createdAt'),
             key: 'createdAt',
             dataIndex: 'createdAt',

@@ -8,6 +8,7 @@ import {
     formattedDate,
     getIndex,
     getIntlCodeByReleaseStatus,
+    getSortOrder,
 } from '@/helpers/common';
 import {
     getReleaseDetailTabRoute,
@@ -29,6 +30,7 @@ import { ReleasesData, ReleasesDataFilter } from '../../types';
 import ReleaseCoverImage from '../image/release-cover-image';
 
 type Props = Omit<AppTableProps<ReleasesData>, 'columns'> & {
+    dataFilter: ReleasesDataFilter;
     visibleColumns: RELEASES_COLUMNS_DISPLAY[];
     onChangeFilter: OnChangeFilter<ReleasesDataFilter>;
     pagination: {
@@ -40,6 +42,7 @@ type Props = Omit<AppTableProps<ReleasesData>, 'columns'> & {
 export default function ReleasesTable({
     onChangeFilter,
     visibleColumns,
+    dataFilter,
     ...props
 }: Props) {
     const messages = useTranslations();
@@ -190,6 +193,12 @@ export default function ReleasesTable({
             dataIndex: 'trackCount',
             align: 'center',
             width: 100,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'tracks_count'
+            ),
             render: (value, record) => (
                 <span className="truncate"> {record?.tracksCount} </span>
             ),
@@ -200,6 +209,12 @@ export default function ReleasesTable({
             dataIndex: 'duration',
             align: 'center',
             width: 100,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'total_duration'
+            ),
             render: (value, record) => {
                 const duration = convertSecondsToHoursMinutes(
                     Number(record?.totalDuration)
@@ -214,6 +229,12 @@ export default function ReleasesTable({
             dataIndex: 'releaseDate',
             align: 'center',
             width: 130,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'releaseDate'
+            ),
             render: (value) => (
                 <span className="truncate text-wrap">
                     {' '}
@@ -227,6 +248,12 @@ export default function ReleasesTable({
             dataIndex: 'creationDate',
             align: 'center',
             width: 130,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'createdAt'
+            ),
             render: (value, record) => (
                 <span className="truncate text-wrap">
                     {' '}

@@ -1,7 +1,8 @@
 'use client';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
-import { LAYOUT_TABLE, SESSION_STORAGE_KEY } from '@/enums/common';
+import { LAYOUT_TABLE, ORDER, SESSION_STORAGE_KEY } from '@/enums/common';
+import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import useModalStore from '@/hooks/use-modal';
@@ -86,6 +87,17 @@ export default function Tracks({}: Props) {
     const handleResetSelectedRow = () => {
         setSelectedRow([]);
     };
+    const onChangeSort = (pagination: any, filters: any, sort: any) => {
+        const orderBy = setSortOrder(sort, ORDER.ASC);
+        const fieldOrder = sort.field;
+        onChangeFilter(
+            {
+                orderBy,
+                fieldOrder,
+            },
+            false
+        );
+    };
 
     // const
     const rowSelection = {
@@ -137,6 +149,8 @@ export default function Tracks({}: Props) {
                     }}
                     loading={isTrackDataLoading}
                     rowSelection={rowSelection}
+                    onChange={onChangeSort}
+                    dataFilter={dataFilter}
                 />
             )}
 

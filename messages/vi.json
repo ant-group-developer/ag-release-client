@@ -1224,5 +1224,24 @@
         "action": {
             "delete": "Xoá quyền"
         }
+    },
+
+    "roles": {
+        "label": "Vai trò",
+        "name": "Tên vai trò",
+        "message": {
+            "success": {
+                "create": "Thêm vai trò thành công",
+                "update": "Cập nhật vai trò thành công",
+                "delete": "Xoá vai trò thành công"
+            },
+            "error": {
+                "duplicateNamePermission": "Vai trò này đã tồn tại",
+                "duplicateValuePermission": "Giá trị vai trò này đã tồn tại"
+            }
+        },
+        "action": {
+            "delete": "Xoá vai trò"
+        }
     }
 }
