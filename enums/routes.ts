@@ -28,6 +28,7 @@ export enum APP_ROUTES {
     TENANT = '/tenants',
     SETTING = '/setting',
     SIGN_IN = '/sign-in',
+    ROLES = '/roles',
 }
 
 export const AUTH_ROUTES: string[] = [APP_ROUTES.SIGN_IN];

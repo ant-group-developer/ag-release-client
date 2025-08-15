@@ -113,6 +113,7 @@ export default function Tracks({}: Props) {
                         pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
                         current: tracksData?.metadata?.currentPage,
                     }}
+                    dataFilter={dataFilter}
                 />
             )}
 

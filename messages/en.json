@@ -1220,5 +1220,24 @@
         "action": {
             "delete": "Delete permission"
         }
+    },
+
+    "roles": {
+        "label": "Role",
+        "name": "Role name",
+        "message": {
+            "success": {
+                "create": "Add role successfully",
+                "update": "Update role successfully",
+                "delete": "Delete role successfully"
+            },
+            "error": {
+                "duplicateNameRole": "This role already exists",
+                "duplicateValueRole": "This role value already exists"
+            }
+        },
+        "action": {
+            "delete": "Delete role"
+        }
     }
 }

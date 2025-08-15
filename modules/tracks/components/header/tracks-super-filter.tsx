@@ -41,9 +41,15 @@ export default function TracksSuperFilter({
         setTypeFilter(value);
     };
 
-    const { releasesData } = useGetListReleases({ pageSize: 999 });
+    const { releasesData } = useGetListReleases(
+        { pageSize: 999 },
+        { enabled: typeFilter == TYPE_FILTER.RELEASE_ID }
+    );
 
-    const { artistsData } = useGetListArtist({ pageSize: 999 });
+    const { artistsData } = useGetListArtist(
+        { pageSize: 999 },
+        { enabled: typeFilter == TYPE_FILTER.ARTIST_ID }
+    );
 
     useEffect(() => {
         const handleOutSideClick = (event: any) => {

@@ -5,6 +5,7 @@ export interface PermissionData extends CommonAttribute {
     modifierId: string;
     name: string;
     value: string;
+    note: string;
 }
 
 export interface PermissionDataDataFilter extends CommonParams {

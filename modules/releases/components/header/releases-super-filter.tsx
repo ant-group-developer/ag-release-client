@@ -16,7 +16,8 @@ import { ReleaseTypesData } from '@/modules/release-types/types';
 import { ListFilter, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
-import { ReleasesDataFilter } from '../../types';
+import { useGetListReleases } from '../../hooks/use-get-list-releases';
+import { ReleasesData, ReleasesDataFilter } from '../../types';
 import ReleasesHeaderDropdown from '../dropdown/releases-header-dropdown';
 
 type Props = {
@@ -44,6 +45,8 @@ export default function ReleasesSuperFilter({
     const { artistsData } = useGetListArtist({ pageSize: 999 });
 
     const { releaseTypesData } = useGetListReleaseTypes({});
+
+    const { releasesData } = useGetListReleases({ pageSize: 999 });
 
     useEffect(() => {
         const handleOutSideClick = (event: any) => {
@@ -137,6 +140,27 @@ export default function ReleasesSuperFilter({
                         });
                     }}
                     onRemove={() => onChangeFilter({ artistId: undefined })}
+                />
+
+                <PopoverRadioFilter
+                    open={typeFilter === TYPE_FILTER.RELEASE_ID}
+                    title={messages('releases.label')}
+                    options={releasesData?.items?.map((item: ReleasesData) => ({
+                        name: item?.title,
+                        value: item?.id,
+                    }))}
+                    selectedValue={dataFilter.releaseId}
+                    onOpenChange={(val) => {
+                        return setTypeFilter(
+                            val ? TYPE_FILTER.RELEASE_ID : undefined
+                        );
+                    }}
+                    onConfirm={(vals) => {
+                        return onChangeFilter({
+                            releaseId: vals,
+                        });
+                    }}
+                    onRemove={() => onChangeFilter({ releaseId: undefined })}
                 />
 
                 <StatusReleaseDialog
