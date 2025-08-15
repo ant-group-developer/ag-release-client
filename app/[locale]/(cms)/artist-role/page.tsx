@@ -4,7 +4,7 @@ import AppPagination from '@/components/ui/pagination';
 
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
-import { setSortOrder } from '@/helpers/common';
+import { formattedDate, setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { useTableScrollY } from '@/hooks/use-table-scroll-y';
@@ -40,7 +40,7 @@ export default function ArtistRole({}: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore<ArtistRoleData>((state) => state.dataEdit);
     const closeModal = useModalStore((state) => state.closeModal);
-    const { artistsRolesData, isLoading, refetch, lastUpdatedAt } =
+    const { artistsRolesData, isLoading, refetch, dataUpdatedAt } =
         useGetListArtistRole(dataFilter);
     const { deleteArtistRole } = useDeleteArtistRole();
 
@@ -73,7 +73,7 @@ export default function ArtistRole({}: Props) {
                 canClearFilter={canClearFilter}
                 removeFilter={removeFilter}
                 handleRefresh={() => refetch()}
-                lastUpdatedAt={lastUpdatedAt}
+                lastUpdatedAt={formattedDate(dataUpdatedAt || new Date())}
             />
             <ArtistRoleTable
                 dataSource={artistsRolesData.items}

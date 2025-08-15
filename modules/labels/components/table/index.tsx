@@ -79,12 +79,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             ),
             render: (value, record) => (
                 <div className="flex items-center gap-4">
-                    <div
-                        className="flex-shrink-0"
-                        onClick={() => {
-                            router.push(`/labels/detail/${record.id}/overview`);
-                        }}
-                    >
+                    <div className="flex-shrink-0">
                         <ImageFallback
                             fallbackSrc={FALLBACK_IMAGE}
                             src={record?.picture ?? ''}

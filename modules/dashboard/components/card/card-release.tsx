@@ -4,7 +4,7 @@ import { FALLBACK_IMAGE } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate, getIntlCodeByReleaseStatus } from '@/helpers/common';
 import { getReleaseDetailTabRoute } from '@/helpers/link';
-import { useRouter } from '@/i18n/routing';
+import { Link, useRouter } from '@/i18n/routing';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { ReleasesData } from '@/modules/releases/types';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
@@ -31,22 +31,21 @@ export default function CardRelease({ data, ...props }: Props) {
             className="custom-card-body !bg-card-bg dark:!bg-card-bg-dark"
             cover={
                 <div className="relative aspect-square overflow-hidden">
-                    <ImageFallback
-                        onClick={() =>
-                            router.push(
-                                getReleaseDetailTabRoute(
-                                    data.id,
-                                    RELEASES_TABS.CORE_DETAIL
-                                )
-                            )
-                        }
-                        fallbackSrc={FALLBACK_IMAGE}
-                        className="cursor-pointer overflow-hidden object-cover duration-300 hover:scale-110"
-                        alt="example"
-                        src={linkReadFile || FALLBACK_IMAGE}
-                        width={300}
-                        height={300}
-                    />
+                    <Link
+                        href={getReleaseDetailTabRoute(
+                            data.id,
+                            RELEASES_TABS.CORE_DETAIL
+                        )}
+                    >
+                        <ImageFallback
+                            fallbackSrc={FALLBACK_IMAGE}
+                            className="cursor-pointer overflow-hidden object-cover duration-300 hover:scale-110"
+                            alt="example"
+                            src={linkReadFile || FALLBACK_IMAGE}
+                            width={300}
+                            height={300}
+                        />
+                    </Link>
                     <div className="absolute right-2 top-2 rounded-lg bg-black/80 p-1 px-2 text-xs font-medium text-white">
                         <span>
                             {' '}

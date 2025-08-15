@@ -3,6 +3,7 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import TracksSelect from '@/components/ui/select/tracks-select';
 import useModalStore from '@/hooks/use-modal';
+import { TrackData } from '@/modules/releases/types';
 import { Checkbox, Form } from 'antd';
 import { useTranslations } from 'next-intl';
 import { Key, useEffect } from 'react';
@@ -29,15 +30,16 @@ export default function AcrCloudScanModal({
     const closeModal = useModalStore((state) => state.closeModal);
     const [form] = Form.useForm();
     const { scanTracks, isPending: isPendingScan } = useScanTracks();
+    const dataEdit = useModalStore<TrackData>((state) => state.dataEdit);
 
     const handleSubmit = (values: any) => {
-        const { date, ...rest } = values;
+        const { date, track, ...rest } = values;
         // const trackCreatedAtStart = dayjs(date[0]).toISOString();
         // const trackCreatedAtEnd = dayjs(date[1]).toISOString();
         const payload = {
             // trackCreatedAtStart,
             // trackCreatedAtEnd,
-            trackIds: selectedTrackIds,
+            trackIds: values?.track,
             ...rest,
         };
         scanTracks({
@@ -61,7 +63,11 @@ export default function AcrCloudScanModal({
         form.setFieldsValue({
             ignoreTrackScanned: true,
             // date: [dayjs(defaultStart), dayjs(defaultEnd)],
-            track: selectedTrackIds,
+            track: Array.from(
+                new Set(
+                    [...(selectedTrackIds ?? []), dataEdit?.id].filter(Boolean)
+                )
+            ),
         });
     }, [selectedTrackIds]);
 

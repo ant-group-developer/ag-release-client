@@ -15,7 +15,6 @@ import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-relea
 import { releaseSchema } from '@/modules/releases/schemas';
 import { ReleasesData } from '@/modules/releases/types';
 import { UpdateReleaseDraftPayload } from '@/modules/releases/types/payload';
-import { getThemeConfig } from '@/theme/theme-config';
 import { UpdateVariables } from '@/types/api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, ConfigProvider } from 'antd';
@@ -110,10 +109,8 @@ export default function ReleaseDetailForm() {
 
     // const
     const isReadMode = releaseDetailAction !== RELEASE_DETAIL_ACTION.EDIT;
-    const themeConfig = getThemeConfig(currentTheme, primaryColor as string);
     const customTheme = {
         token: {
-            ...themeConfig.token,
             colorBgContainerDisabled:
                 currentTheme == THEME.LIGHT ? '#fff' : '#2a2a2a',
         },

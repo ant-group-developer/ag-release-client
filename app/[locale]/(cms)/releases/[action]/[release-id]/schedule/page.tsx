@@ -6,7 +6,6 @@ import ReleaseSchedulingTable from '@/modules/releases/components/release-detail
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { TrackData } from '@/modules/tracks/types';
-import { getThemeConfig } from '@/theme/theme-config';
 import { ConfigProvider } from 'antd';
 
 export default function Schedule() {
@@ -24,11 +23,9 @@ export default function Schedule() {
             youtubePolicy: 'Standard License',
         };
     });
-    const { theme: currentTheme, primaryColor } = useThemeStore();
-    const themeConfig = getThemeConfig(currentTheme, primaryColor as string);
+    const { theme: currentTheme } = useThemeStore();
     const customTheme = {
         token: {
-            ...themeConfig.token,
             colorBgContainerDisabled:
                 currentTheme == THEME.LIGHT ? '#fff' : '#2a2a2a',
         },

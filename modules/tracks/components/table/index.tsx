@@ -1,7 +1,7 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
-import { cn, formattedDate, getIndex } from '@/helpers/common';
+import { formattedDate, getIndex } from '@/helpers/common';
 import { getTrackDetailRoute } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { Link } from '@/i18n/routing';
@@ -11,7 +11,7 @@ import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { TRACK_TABS, TRACKS_COLUMNS_DISPLAY } from '@/modules/tracks/enums';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
-import { Button } from 'antd';
+import { Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { SearchCheck, SearchX } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -139,7 +139,7 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
                 const isScanned = !!record?.isScanned;
                 return (
                     <div>
-                        <Button
+                        {/* <Button
                             onClick={() => {
                                 if (!isScanned) return;
                                 openModal(
@@ -167,7 +167,36 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
                             {isScanned
                                 ? messages('common.scanned')
                                 : messages('common.notScanned')}
-                        </Button>
+                        </Button> */}
+                        <Tag
+                            onClick={() => {
+                                if (!isScanned) {
+                                    return openModal(
+                                        TYPE_MODAL_TRACK.ACR_CLOUD_SCAN,
+                                        record
+                                    );
+                                }
+                                openModal(
+                                    TYPE_MODAL_TRACK.ACR_CLOUD_SCAN_RESULT,
+                                    record
+                                );
+                            }}
+                            color={isScanned ? 'green' : 'blue'}
+                            className="!border-0 hover:cursor-pointer hover:!border hover:opacity-80"
+                        >
+                            {isScanned ? (
+                                <div className="flex items-center gap-1">
+                                    {' '}
+                                    <SearchCheck size={SIZE_ICON} />{' '}
+                                    {messages('common.scanned')}
+                                </div>
+                            ) : (
+                                <div className="flex items-center gap-1">
+                                    <SearchX size={SIZE_ICON} />{' '}
+                                    {messages('common.notScanned')}
+                                </div>
+                            )}
+                        </Tag>
                     </div>
                 );
             },

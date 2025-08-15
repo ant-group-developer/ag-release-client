@@ -728,7 +728,9 @@
         "noResultMatches": "Không có kết quả trùng khớp",
         "totalTrackNeedScan": "Tổng các bài hát cần quét",
         "numberOfTracksScanned": "Các bài hát đã quét",
+        "scanDate": "Ngày quét",
         "status": {
+            "scanning": "Đang quét",
             "running": "Đang chạy",
             "pending": "Chờ xử lý",
             "finished": "Hoàn thành",
@@ -1203,5 +1205,24 @@
             "success": "Đã sao chép vào bộ nhớ tạm"
         },
         "quickActions": "Hành động nhanh"
+    },
+
+    "permission": {
+        "label": "Quyền",
+        "name": "Tên quyền",
+        "message": {
+            "success": {
+                "create": "Thêm quyền thành công",
+                "update": "Cập nhật quyền thành công",
+                "delete": "Xoá quyền thành công"
+            },
+            "error": {
+                "duplicateNamePermission": "Quyền này đã tồn tại",
+                "duplicateValuePermission": "Giá trị quyền này đã tồn tại"
+            }
+        },
+        "action": {
+            "delete": "Xoá quyền"
+        }
     }
 }
