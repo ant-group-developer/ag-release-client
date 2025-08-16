@@ -1214,7 +1214,9 @@
             },
             "error": {
                 "duplicateNamePermission": "This permission already exists",
-                "duplicateValuePermission": "This permission value already exists"
+                "duplicateValuePermission": "This permission value already exists",
+                "cannotDeleteBecauseLinkedRolePermissions": "Cannot delete permission because it is already used in a role",
+                "cannotDeleteBecauseLinkedUsers": "Cannot delete permission because it is already used in a user"
             }
         },
         "action": {
@@ -1233,7 +1235,8 @@
             },
             "error": {
                 "duplicateNameRole": "This role already exists",
-                "duplicateValueRole": "This role value already exists"
+                "duplicateValueRole": "This role value already exists",
+                "cannotDeleteBecauseLinkedPermissions": "Cannot delete role because it is already used in a permission"
             }
         },
         "action": {

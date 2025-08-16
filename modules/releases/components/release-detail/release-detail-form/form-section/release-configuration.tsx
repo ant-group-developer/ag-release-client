@@ -42,6 +42,9 @@ export default function ReleaseConfigurationSection({
     const releaseDetailAction = useReleaseDetailActionStore(
         (state) => state.action
     );
+    const setReleaseDetailAction = useReleaseDetailActionStore(
+        (state) => state.setAction
+    );
 
     // router and params
     const params = useParams();
@@ -72,6 +75,7 @@ export default function ReleaseConfigurationSection({
                 albumFormatId: albumFormatId ?? '',
             },
             onSuccess: (data) => {
+                setReleaseDetailAction(RELEASE_DETAIL_ACTION.EDIT);
                 router.push(
                     getReleaseDetailTabRoute(
                         data?.id,

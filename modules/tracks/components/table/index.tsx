@@ -4,7 +4,7 @@ import { SIZE_ICON } from '@/constants/common';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import { getTrackDetailRoute } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
-import { Link } from '@/i18n/routing';
+import { Link, useRouter } from '@/i18n/routing';
 import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import TrackActionButton from '@/modules/releases/components/release-detail/release-tracks/button/track-action';
 import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
@@ -34,6 +34,7 @@ export default function TracksTable({
 }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
+    const router = useRouter();
     const column: ColumnType<TrackData>[] = [
         {
             title: messages('common.iNo'),
@@ -258,6 +259,12 @@ export default function TracksTable({
             render: (_, record) => (
                 <TrackActionButton
                     showDownload
+                    showDetail
+                    onShowDetail={() => {
+                        router.push(
+                            getTrackDetailRoute(record?.id, TRACK_TABS.METADATA)
+                        );
+                    }}
                     onShowDownload={async () => {
                         const response = await bucketApi.getLinkDownloadFile(
                             record?.audioFile?.fileId as string

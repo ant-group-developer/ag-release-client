@@ -42,11 +42,21 @@ export default function ReleasesSuperFilter({
         setTypeFilter(value);
     };
 
-    const { artistsData } = useGetListArtist({ pageSize: 999 });
+    const { artistsData, isFetching: isArtistsLoading } = useGetListArtist(
+        { pageSize: 0 },
+        { enabled: typeFilter === TYPE_FILTER.ARTIST_ID }
+    );
 
-    const { releaseTypesData } = useGetListReleaseTypes({});
+    const { releaseTypesData, isFetching: isReleaseTypesLoading } =
+        useGetListReleaseTypes(
+            { pageSize: 999 },
+            { enabled: typeFilter === TYPE_FILTER.ARTIST_ID }
+        );
 
-    const { releasesData } = useGetListReleases({ pageSize: 999 });
+    const { releasesData, isFetching: isReleaseLoading } = useGetListReleases(
+        { pageSize: 999 },
+        { enabled: typeFilter === TYPE_FILTER.RELEASE_ID }
+    );
 
     useEffect(() => {
         const handleOutSideClick = (event: any) => {
@@ -99,6 +109,7 @@ export default function ReleasesSuperFilter({
                 <PopoverRadioFilter
                     open={typeFilter === TYPE_FILTER.ALBUM_FORMAT_ID}
                     title={messages('releases.type')}
+                    loading={isReleaseTypesLoading}
                     options={releaseTypesData?.items?.map(
                         (item: ReleaseTypesData) => ({
                             name: item?.name,
@@ -124,6 +135,7 @@ export default function ReleasesSuperFilter({
                 <PopoverRadioFilter
                     open={typeFilter === TYPE_FILTER.ARTIST_ID}
                     title={messages('artist.label')}
+                    loading={isArtistsLoading}
                     options={artistsData?.items?.map((item: ArtistData) => ({
                         name: item?.name,
                         value: item?.id,
@@ -145,6 +157,7 @@ export default function ReleasesSuperFilter({
                 <PopoverRadioFilter
                     open={typeFilter === TYPE_FILTER.RELEASE_ID}
                     title={messages('releases.label')}
+                    loading={isReleaseLoading}
                     options={releasesData?.items?.map((item: ReleasesData) => ({
                         name: item?.title,
                         value: item?.id,

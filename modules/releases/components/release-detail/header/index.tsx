@@ -8,7 +8,10 @@ import { formattedDate } from '@/helpers/common';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { showNotification } from '@/helpers/messages-helper';
 import { cn } from '@/helpers/tailwind';
-import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
+import {
+    FEATURING_ARTIST_ROLE,
+    MAIN_ARTIST_ROLE,
+} from '@/modules/release-artist/constants';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
@@ -60,6 +63,15 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         (releaseArtist: ReleaseArtist) =>
             releaseArtist.artistRole?.value === MAIN_ARTIST_ROLE
     );
+
+    const featuringArtistNames = formValues?.releaseArtists?.map(
+        (item: ReleaseArtist) => {
+            if (item?.artistRole?.value == FEATURING_ARTIST_ROLE) {
+                return item?.artist?.name;
+            }
+        }
+    );
+
     const segmentedOptions: SegmentedOptions = [
         {
             label: messages('common.watch'),

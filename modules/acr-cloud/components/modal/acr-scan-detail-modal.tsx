@@ -2,12 +2,12 @@ import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import AppTable from '@/components/ui/table/normal-table';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { DATE_FORMAT } from '@/enums/common';
-import { formattedDate } from '@/helpers/common';
+import { formattedDate, getIndex } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { Checkbox, Spin, Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { TRACK_SCAN_STATUS } from '../../enums';
 import { useGetDetailScanStatus } from '../../hooks/use-get-scan-status-detail';
 import { TrackScanStatusData } from '../../types';
@@ -31,6 +31,7 @@ type MergedTrackItem = {
 export default function AcrCloudScanDetailModal({ data, ...props }: Props) {
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
+    const [currentPage, setCurrentPage] = useState(1);
 
     const { scanStatusData, isFetching } = useGetDetailScanStatus(
         data?.id as string
@@ -73,7 +74,7 @@ export default function AcrCloudScanDetailModal({ data, ...props }: Props) {
             key: 'iNo',
             width: 20,
             align: 'center',
-            render: (_, __, index) => index + 1,
+            render: (_, __, index) => getIndex(PAGE_SIZE, currentPage, index),
         },
         {
             title: messages('tracks.label'),
@@ -160,10 +161,11 @@ export default function AcrCloudScanDetailModal({ data, ...props }: Props) {
                         scroll={{ x: 'max-content', y: 470 }}
                         pagination={{
                             pageSize: PAGE_SIZE,
+                            current: currentPage,
                             total: scanStatusData?.trackNeedScanIds?.length,
                             size: 'default',
                             pageSizeOptions: PAGE_SIZE_OPTIONS,
-                            showSizeChanger: true,
+                            // showSizeChanger: true,
                             showQuickJumper: true,
                             showTotal: (total, range) => (
                                 <span className="font-semibold">
@@ -171,6 +173,9 @@ export default function AcrCloudScanDetailModal({ data, ...props }: Props) {
                                     {messages('common.of')} {total}
                                 </span>
                             ),
+                            onChange: (page) => {
+                                setCurrentPage(page);
+                            },
                         }}
                     />
                 </div>
