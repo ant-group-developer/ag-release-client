@@ -2,7 +2,7 @@ import { getAvatarUrl } from '@/helpers/avatar-tailwind';
 import { userQueryKeys } from '@/modules/user/constants';
 import { USER_TYPE } from '@/modules/user/enums';
 import { useQuery } from '@tanstack/react-query';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { authApi } from '../api';
 import { UserInfoData } from '../types/common';
 
@@ -34,6 +34,9 @@ export const defaultProfile: UserInfoData = {
 };
 
 export const useAuth = () => {
+    const session = useSession();
+    const tenantId = session.data?.user?.tenantId as string;
+
     const { data, error, refetch, isLoading } = useQuery({
         queryKey: userQueryKeys.info(),
         queryFn: () => authApi.getInfo(),
@@ -54,6 +57,7 @@ export const useAuth = () => {
     return {
         permission: profile.permission || [],
         profile,
+        tenantId,
         error,
         isAuthenticated,
         isLoading,

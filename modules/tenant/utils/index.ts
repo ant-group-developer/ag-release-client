@@ -1,6 +1,6 @@
 import { APP_ROUTES } from '@/enums/routes';
 import { getAvatarUrl } from '@/helpers/avatar-tailwind';
-import { TENANT_TABS, TENANT_TYPE } from '../enums';
+import { TENANT_TABS, TENANT_TYPE, TENANT_USER_TYPE } from '../enums';
 import { TenantData, TenantDetail } from '../types/data';
 
 export const getTenantDetailRoute = (
@@ -27,4 +27,9 @@ export const getTenantAvatar = ({
     name?: TenantDetail['name'];
 }) => {
     return logo || icon || getAvatarUrl(name ?? '');
+};
+
+export const getTenantOwnerEmail = (data: TenantDetail['tenantUser']) => {
+    const result = data.find((item) => item.type === TENANT_USER_TYPE.OWNER);
+    return result?.user?.email || '';
 };

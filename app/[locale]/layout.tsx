@@ -6,7 +6,6 @@ import { flattenData } from '@/helpers/common';
 import { redirect, routing } from '@/i18n/routing';
 import { adminRoutes } from '@/layouts/cms-layout/routes';
 import AntdProvider from '@/providers/antd';
-import '@/styles/globals.css';
 import type { Metadata } from 'next';
 import { pathname } from 'next-extra/pathname';
 import { NextIntlClientProvider } from 'next-intl';
@@ -17,33 +16,10 @@ import {
     getNow,
     getTimeZone,
 } from 'next-intl/server';
-import { Inter, Open_Sans } from 'next/font/google';
-import localFont from 'next/font/local';
 import { cookies } from 'next/headers';
-import NextTopLoader from 'nextjs-toploader';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { PropsWithChildren } from 'react';
-import { ToastContainer } from 'react-toastify';
-
-const openSans = Open_Sans({
-    subsets: ['latin'],
-    weight: ['400', '500', '600', '700', '800'],
-    variable: '--font-open-sans',
-    display: 'swap',
-});
-
-const boston = localFont({
-    src: '../fonts/boston.otf',
-    variable: '--font-boston',
-});
-
-const inter = Inter({
-    subsets: ['latin'],
-    weight: ['400', '500', '600', '700', '800', '900'],
-    variable: '--font-inter',
-    display: 'swap',
-    preload: true,
-});
+import { inter, openSans } from '../layout';
 
 interface RootLayoutProps extends PropsWithChildren {
     params: Promise<{ locale: string }>;
@@ -149,23 +125,17 @@ export default async function RootLayout({
     const messages = await getMessages({ locale });
 
     return (
-        <html lang={locale} suppressHydrationWarning>
+        <html lang={locale}>
             <body
-                className={`${boston.variable} ${openSans.variable} ${openSans.className} ${inter.variable} ${inter.className} text-sm antialiased`}
+                className={`${openSans.variable} ${openSans.className} ${inter.variable} ${inter.className} text-sm antialiased`}
             >
-                <GoogleAnalytics />
                 <NextIntlClientProvider locale={locale} messages={messages}>
                     <ThemeProvider />
                     <AntdProvider>
                         <NuqsAdapter>{children}</NuqsAdapter>
+                        <GoogleAnalytics />
                     </AntdProvider>
                 </NextIntlClientProvider>
-                <ToastContainer
-                    pauseOnFocusLoss={false}
-                    position="top-center"
-                />
-                {/* <ProgressBar /> */}
-                <NextTopLoader showSpinner={false} />
             </body>
         </html>
     );

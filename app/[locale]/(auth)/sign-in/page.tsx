@@ -5,6 +5,7 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import { APP_ROUTES } from '@/enums/routes';
 import { validatePassword } from '@/helpers/validation';
 import { useApiError } from '@/hooks/use-api-error';
+import { Link } from '@/i18n/routing';
 import { Button, Input, theme } from 'antd';
 import { signIn } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
@@ -146,11 +147,17 @@ export default function SignInPage() {
                                 ),
                         },
                     ]}
+                    extra={
+                        <p className="mt-2 text-right">
+                            <Link href={APP_ROUTES.FORGOT_PASSWORD}>
+                                {messages('auth.forgotPassword.title')}
+                            </Link>
+                        </p>
+                    }
                 >
                     <Input.Password />
                 </AppFormItem>
                 <Button
-                    className="mt-4"
                     type="primary"
                     htmlType="submit"
                     block

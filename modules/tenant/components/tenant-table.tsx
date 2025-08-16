@@ -1,5 +1,3 @@
-import AppColorPicker from '@/components/ui/colorPicker/app-color-picker';
-import CopyText from '@/components/ui/copy-text/copy-text';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import {
     formattedDate,
@@ -16,7 +14,7 @@ import { useTranslations } from 'next-intl';
 import { TENANT_ORDER_BY, TENANT_TABS } from '../enums';
 import { useUpdateTenant } from '../hooks/use-update-tenant';
 import { DataFilterTenant, TenantData } from '../types/data';
-import { getTenantDetailRoute } from '../utils';
+import { getTenantDetailRoute, getTenantOwnerEmail } from '../utils';
 import TenantTag from './tenant-tag';
 
 type Props = {
@@ -70,6 +68,7 @@ function TenantTable({ dataFilter, ...props }: Props) {
                 TENANT_ORDER_BY.NAME
             ),
             render: (cell, record) => {
+                const ownerEmail = getTenantOwnerEmail(record.tenantUser);
                 return (
                     <div className="flex items-center gap-2">
                         <Avatar
@@ -79,7 +78,7 @@ function TenantTable({ dataFilter, ...props }: Props) {
                             size={40}
                             shape="square"
                         >
-                            {getAvatarPlaceholder(record.owner.email)}
+                            {getAvatarPlaceholder(record.name)}
                         </Avatar>
                         <div className="grid flex-1 truncate">
                             <Tooltip
@@ -96,15 +95,13 @@ function TenantTable({ dataFilter, ...props }: Props) {
                                     {cell}
                                 </Link>
                             </Tooltip>
-                            <CopyText text={record.owner.email}>
-                                <p
-                                    style={{
-                                        color: token.colorTextDescription,
-                                    }}
-                                >
-                                    {record.owner.email}
-                                </p>
-                            </CopyText>
+                            <p
+                                style={{
+                                    color: token.colorTextDescription,
+                                }}
+                            >
+                                {messages('tenant.owner')}: {ownerEmail}
+                            </p>
                         </div>
                     </div>
                 );
@@ -119,17 +116,16 @@ function TenantTable({ dataFilter, ...props }: Props) {
         {
             title: messages('tenant.title'),
             dataIndex: 'title',
-            width: 180,
+            width: 250,
             ellipsis: true,
-            render: (cell) => <CopyText text={cell} />,
         },
-        {
-            title: messages('tenant.primaryColor'),
-            dataIndex: 'primaryColor',
-            width: 120,
-            ellipsis: true,
-            render: (cell) => <AppColorPicker value={cell} disabled />,
-        },
+        // {
+        //     title: messages('tenant.primaryColor'),
+        //     dataIndex: 'primaryColor',
+        //     width: 120,
+        //     ellipsis: true,
+        //     render: (cell) => <AppColorPicker value={cell} disabled />,
+        // },
         {
             title: messages('status.label'),
             dataIndex: 'isActive',
@@ -209,14 +205,7 @@ function TenantTable({ dataFilter, ...props }: Props) {
     //     });
     // }
 
-    return (
-        <AppTable
-            {...props}
-            size="middle"
-            pagination={false}
-            columns={columns}
-        />
-    );
+    return <AppTable {...props} pagination={false} columns={columns} />;
 }
 
 export default TenantTable;

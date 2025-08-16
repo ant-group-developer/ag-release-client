@@ -22,18 +22,13 @@ export default function TenantPage({}: Props) {
     const closeModal = useModalStore((state) => state.closeModal);
 
     // apis
-    const {
-        dataFilter,
-        canClearFilter,
-        onChangeFilter,
-        onChangePage,
-        removeFilter,
-    } = useFilter<DataFilterTenant>({
-        page: 1,
-        pageSize: 21,
-        fieldOrder: TENANT_ORDER_BY.UPDATED_AT,
-        orderBy: ORDER.DESC,
-    });
+    const { dataFilter, canClearFilter, onChangeFilter, removeFilter } =
+        useFilter<DataFilterTenant>({
+            page: 1,
+            pageSize: 21,
+            fieldOrder: TENANT_ORDER_BY.UPDATED_AT,
+            orderBy: ORDER.DESC,
+        });
     const { data, dataUpdatedAt, refetch, isFetching } =
         useTenantList(dataFilter);
 

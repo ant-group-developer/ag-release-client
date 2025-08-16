@@ -5,7 +5,13 @@ import {
     CommonFunction,
     CommonParams,
 } from '@/types/api';
-import { TENANT_ORDER_BY, TENANT_TYPE } from '../enums';
+import { TENANT_ORDER_BY, TENANT_TYPE, TENANT_USER_TYPE } from '../enums';
+
+export interface TenantUser {
+    id: string;
+    type: TENANT_USER_TYPE;
+    user: Pick<UserData, 'id' | 'email' | 'name'>;
+}
 
 export interface DataFilterTenant extends CommonParams {
     isActive?: 'true' | 'false';
@@ -24,15 +30,15 @@ export interface TenantDetail extends CommonAttributeCreator {
     primaryColor: string | null;
     email: string;
     isActive: boolean;
-    owner: UserData;
     type: TENANT_TYPE;
     parent: TenantDetail | null;
     children: TenantDetail[];
+    tenantUser: TenantUser[];
 }
 
 export type TenantActiveData = Pick<
     TenantDetail,
-    'id' | 'name' | 'title' | 'logo' | 'icon' | 'type' | 'owner' | 'parent'
+    'id' | 'name' | 'title' | 'logo' | 'icon' | 'type' | 'parent' | 'tenantUser'
 >;
 
 export type TenantData = Pick<
@@ -46,10 +52,10 @@ export type TenantData = Pick<
     | 'primaryColor'
     | 'email'
     | 'isActive'
-    | 'owner'
     | 'type'
     | 'parent'
     | 'children'
+    | 'tenantUser'
 >;
 
 export interface UpdateTenantPayload {

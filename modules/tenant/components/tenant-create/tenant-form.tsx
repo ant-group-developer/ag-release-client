@@ -13,9 +13,15 @@ import TenantTypeSelect from '../tenant-type-select';
 type Props = {
     excludeIds?: Array<TenantData['id']>;
     canChangeParent?: boolean;
+    showOwner?: boolean;
 } & AppFormProps;
 
-function TenantForm({ excludeIds, canChangeParent, ...props }: Props) {
+function TenantForm({
+    excludeIds,
+    canChangeParent,
+    showOwner,
+    ...props
+}: Props) {
     const messages = useTranslations();
     const { token } = theme.useToken();
 
@@ -77,27 +83,32 @@ function TenantForm({ excludeIds, canChangeParent, ...props }: Props) {
                 }}
             </Form.Item>
 
-            <AppFormItem
-                label={messages('tenant.owner')}
-                name="ownerId"
-                required
-                rules={[
-                    {
-                        required: true,
-                    },
-                ]}
-            >
-                <UserSelect
-                    externalOnChange={(value, option) => {
-                        if (props.form && !props.form?.getFieldValue('email')) {
-                            const email = Array.isArray(option)
-                                ? option[0]?.email
-                                : option?.email;
-                            props.form.setFieldValue('email', email);
-                        }
-                    }}
-                />
-            </AppFormItem>
+            {showOwner && (
+                <AppFormItem
+                    label={messages('tenant.owner')}
+                    name="ownerId"
+                    required
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}
+                >
+                    <UserSelect
+                        externalOnChange={(value, option) => {
+                            if (
+                                props.form &&
+                                !props.form?.getFieldValue('email')
+                            ) {
+                                const email = Array.isArray(option)
+                                    ? option[0]?.email
+                                    : option?.email;
+                                props.form.setFieldValue('email', email);
+                            }
+                        }}
+                    />
+                </AppFormItem>
+            )}
 
             <AppFormItem
                 label={messages('common.email')}
@@ -142,6 +153,19 @@ function TenantForm({ excludeIds, canChangeParent, ...props }: Props) {
                 <Input placeholder={messages('tenant.domain')} />
             </AppFormItem>
 
+            <div className="grid grid-cols-2">
+                <AppFormItem label={messages('status.label')} name="isActive">
+                    <Switch />
+                </AppFormItem>
+
+                <AppFormItem
+                    label={messages('tenant.primaryColor')}
+                    name="primaryColor"
+                >
+                    <AppColorPicker />
+                </AppFormItem>
+            </div>
+
             <div className="flex items-center gap-4">
                 <AppFormItem label={messages('tenant.icon.label')} name="icon">
                     <ImageListUpload
@@ -183,19 +207,6 @@ function TenantForm({ excludeIds, canChangeParent, ...props }: Props) {
                         })}
                     </p>
                 </div>
-            </div>
-
-            <div className="grid grid-cols-2">
-                <AppFormItem label={messages('status.label')} name="isActive">
-                    <Switch />
-                </AppFormItem>
-
-                <AppFormItem
-                    label={messages('tenant.primaryColor')}
-                    name="primaryColor"
-                >
-                    <AppColorPicker />
-                </AppFormItem>
             </div>
         </AppForm>
     );

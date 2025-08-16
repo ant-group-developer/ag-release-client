@@ -1,11 +1,12 @@
 import { Skeleton } from '@/components/ui/skeleton';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { CheckCard } from '@ant-design/pro-components';
 import { Avatar, Popover } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { useTenantActive } from '../hooks/use-get-tenant';
 import { TenantData } from '../types/data';
-import { getTenantAvatar } from '../utils';
+import { getTenantAvatar, getTenantOwnerEmail } from '../utils';
 import TenantTag from './tenant-tag';
 
 type Props = {};
@@ -13,13 +14,14 @@ type Props = {};
 function TenantSwitch({}: Props) {
     const messages = useTranslations();
     const { data, isLoading } = useTenantActive();
+    const { tenantId } = useAuth();
 
-    const [value, setValue] = useState<TenantData['id']>();
+    const [value, setValue] = useState<TenantData['id']>(tenantId);
     const currentData = data.items.find((item) => item.id === value);
 
     useEffect(() => {
-        setValue(data.items[0]?.id);
-    }, [data]);
+        setValue(tenantId);
+    }, [tenantId]);
 
     if (isLoading) {
         return (
@@ -69,7 +71,9 @@ function TenantSwitch({}: Props) {
                                         <div className="space-y-0.5 truncate text-xs">
                                             <p>
                                                 {messages('tenant.owner')}:{' '}
-                                                {item.owner.email}
+                                                {getTenantOwnerEmail(
+                                                    item.tenantUser
+                                                )}
                                             </p>
                                             {item.parent && (
                                                 <p>

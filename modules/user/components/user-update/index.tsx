@@ -7,13 +7,14 @@ import { useState } from 'react';
 import { UserData } from '../../types/data';
 import UpdateInfo from './update-info';
 import UpdatePassword from './update-password';
+import UpdateTenant from './update-tenant';
 
 type Props = {} & AppModalProps;
 
 enum TAB_KEY {
     UPDATE_INFO = 'update-info',
     UPDATE_PASSWORD = 'update-password',
-    UPDATE_ROLE = 'update-role',
+    UPDATE_TENANT = 'update-tenant',
 }
 
 function UpdateUserModal({ ...props }: Props) {
@@ -33,6 +34,11 @@ function UpdateUserModal({ ...props }: Props) {
             key: TAB_KEY.UPDATE_PASSWORD,
             label: messages('user.changePassword'),
             children: <UpdatePassword dataEdit={dataEdit!} />,
+        },
+        {
+            key: TAB_KEY.UPDATE_TENANT,
+            label: messages('tenant.label'),
+            children: <UpdateTenant dataEdit={dataEdit!} />,
         },
     ];
 

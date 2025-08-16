@@ -1139,6 +1139,21 @@
                 "label": "Label"
             }
         },
+        "userType": {
+            "label": "Role",
+            "owner": {
+                "label": "Owner",
+                "tooltip": "The owner of the workspace. This user has full control over the workspace and its settings."
+            },
+            "admin": {
+                "label": "Admin",
+                "tooltip": "Admins can manage users, settings, and configurations within the workspace."
+            },
+            "member": {
+                "label": "Member",
+                "tooltip": "Users can access and use the workspace but have limited permissions compared to admins."
+            }
+        },
         "search": {
             "keyword": "Search by name, email"
         },

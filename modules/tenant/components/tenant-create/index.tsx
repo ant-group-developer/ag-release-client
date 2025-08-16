@@ -101,6 +101,7 @@ function CreateTenantModal({ ...props }: Props) {
                 form={form}
                 submitProps={{ loading: isActive }}
                 canChangeParent
+                showOwner
             />
         </AppModal>
     );

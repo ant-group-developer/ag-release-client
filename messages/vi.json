@@ -1143,6 +1143,21 @@
                 "label": "Label"
             }
         },
+        "userType": {
+            "label": "Vai trò",
+            "owner": {
+                "label": "Người sở hữu",
+                "tooltip": "Người dùng có quyền sở hữu và quản lý toàn bộ workspace này"
+            },
+            "admin": {
+                "label": "Quản trị viên",
+                "tooltip": "Người dùng có quyền quản trị đầy đủ trong workspace này."
+            },
+            "member": {
+                "label": "Thành viên",
+                "tooltip": "Người dùng có quyền truy cập theo các quyền được cấp."
+            }
+        },
         "search": {
             "keyword": "Tìm kiếm theo tên, email"
         },

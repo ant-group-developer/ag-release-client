@@ -47,7 +47,6 @@ export const authOptions: NextAuthOptions = {
     callbacks: {
         // Mỗi lần jwt được tạo/refresh
         async jwt({ token, user }) {
-            console.log('token:', token);
             // Lần đầu login
             if (user) {
                 // @ts-ignore
@@ -87,7 +86,7 @@ export const authOptions: NextAuthOptions = {
             if (accessTokenData) {
                 session.user = {
                     id: accessTokenData.sub,
-                    email: accessTokenData.email,
+                    tenantId: accessTokenData.tenantId,
                 };
             }
 

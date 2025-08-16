@@ -22,7 +22,7 @@ export interface RefreshDto {
 
 export interface JwtPayload {
     sub: string; // user ID
-    email: string; // user email
+    tenantId: string; // user tenant ID
     iat: number; // issued at
     exp: number; // expiration
 }

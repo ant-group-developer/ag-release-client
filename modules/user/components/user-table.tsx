@@ -50,10 +50,6 @@ function UserTable({ dataFilter, ...props }: Props) {
         });
     };
 
-    const getAuth0Link = (email: string) => {
-        return `https://manage.auth0.com/dashboard/us/ant-group/users?q=${email}`;
-    };
-
     const columns: ColumnsType<UserData> = [
         {
             dataIndex: '',
@@ -105,14 +101,6 @@ function UserTable({ dataFilter, ...props }: Props) {
                                 </p>
                             </CopyText>
                         </div>
-                        {/* <a
-                            href={getAuth0Link(record.email)}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="ml-auto rounded-full p-2 text-gray-500 transition-colors hover:bg-gray-200 hover:text-gray-700"
-                        >
-                            <ExternalLink size={SIZE_ICON} />
-                        </a> */}
                     </div>
                 );
             },
