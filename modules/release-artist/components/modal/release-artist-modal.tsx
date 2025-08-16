@@ -151,6 +151,7 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
             onCancel={closeModal}
             onOk={form.submit}
             confirmLoading={isActive}
+            loading={isActive}
         >
             <AppForm
                 form={form}

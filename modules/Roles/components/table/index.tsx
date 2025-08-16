@@ -64,7 +64,6 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
 
             render: (value) => <AppColorPicker value={value} disabled />,
         },
-
         {
             title: messages('common.note'),
             key: 'note',

@@ -1,6 +1,6 @@
 import { AppPopover } from '@/components/shared/app-popover';
 import { Chip } from '@/components/ui/chip';
-import { Checkbox } from 'antd';
+import { Checkbox, Empty } from 'antd';
 import { ReactNode, useEffect, useState } from 'react';
 
 export type PopoverCheckboxFilterProps<T extends string | number> = {
@@ -20,6 +20,7 @@ export type PopoverCheckboxFilterProps<T extends string | number> = {
     onRemove?: () => void;
     /** Optional CSS class for container */
     className?: string;
+    loading?: boolean;
 };
 
 export function PopoverCheckboxFilter<T extends string | number>({
@@ -31,6 +32,7 @@ export function PopoverCheckboxFilter<T extends string | number>({
     onConfirm,
     onRemove,
     className = '',
+    loading = false,
 }: PopoverCheckboxFilterProps<T>) {
     const [value, setValue] = useState<any[]>(selectedValues);
 
@@ -68,6 +70,7 @@ export function PopoverCheckboxFilter<T extends string | number>({
 
             <AppPopover
                 className="top-[41px]"
+                loading={loading}
                 open={open}
                 title={title}
                 showFooter
@@ -101,6 +104,7 @@ export function PopoverCheckboxFilter<T extends string | number>({
                                 )}
                             </div>
                         ))}
+                        {options?.length < 1 && <Empty />}
                     </Checkbox.Group>
                 </div>
             </AppPopover>

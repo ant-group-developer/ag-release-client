@@ -1,6 +1,6 @@
 import { AppPopover } from '@/components/shared/app-popover';
 import { Chip } from '@/components/ui/chip';
-import { Radio } from 'antd';
+import { Empty, Radio } from 'antd';
 import { ReactNode, useEffect, useState } from 'react';
 
 export type PopoverRadioFilterProps<T extends string | number> = {
@@ -22,6 +22,7 @@ export type PopoverRadioFilterProps<T extends string | number> = {
     className?: string;
     /** Allow clearing the selection */
     allowClear?: boolean;
+    loading?: boolean;
 };
 
 export function PopoverRadioFilter<T extends string | number>({
@@ -34,6 +35,7 @@ export function PopoverRadioFilter<T extends string | number>({
     onRemove,
     className = '',
     allowClear = true,
+    loading = false,
 }: PopoverRadioFilterProps<T>) {
     const [value, setValue] = useState<T | undefined>(selectedValue);
 
@@ -73,6 +75,7 @@ export function PopoverRadioFilter<T extends string | number>({
 
             <AppPopover
                 className="top-[41px]"
+                loading={loading}
                 open={open}
                 title={title}
                 showFooter
@@ -103,6 +106,7 @@ export function PopoverRadioFilter<T extends string | number>({
                             </div>
                         ))}
                     </Radio.Group>
+                    {options?.length < 1 && <Empty />}
                 </div>
             </AppPopover>
         </div>

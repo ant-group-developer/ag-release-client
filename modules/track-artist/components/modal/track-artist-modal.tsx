@@ -145,7 +145,8 @@ export default function TrackArtistModal({ ...props }: Props) {
             }
             onCancel={closeModal}
             onOk={form.submit}
-            confirmLoading={isActive}
+            // confirmLoading={isActive}
+            loading={isActive}
             {...props}
         >
             <AppForm
@@ -153,6 +154,7 @@ export default function TrackArtistModal({ ...props }: Props) {
                 onFinish={(values) => handleSubmit(values)}
                 layout="vertical"
                 showSubmit={false}
+                disabled={isActive}
             >
                 <AppFormItem
                     name="artistId"

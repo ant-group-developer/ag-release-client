@@ -41,12 +41,12 @@ export default function TracksSuperFilter({
         setTypeFilter(value);
     };
 
-    const { releasesData } = useGetListReleases(
+    const { releasesData, isFetching: isReleaseLoading } = useGetListReleases(
         { pageSize: 999 },
         { enabled: typeFilter == TYPE_FILTER.RELEASE_ID }
     );
 
-    const { artistsData } = useGetListArtist(
+    const { artistsData, isFetching: isArtistsLoading } = useGetListArtist(
         { pageSize: 999 },
         { enabled: typeFilter == TYPE_FILTER.ARTIST_ID }
     );
@@ -102,6 +102,7 @@ export default function TracksSuperFilter({
                 <PopoverRadioFilter
                     open={typeFilter === TYPE_FILTER.RELEASE_ID}
                     title={messages('releases.label')}
+                    loading={isReleaseLoading}
                     options={releasesData?.items?.map((item: ReleasesData) => ({
                         name: item?.title,
                         value: item?.id,
@@ -123,6 +124,7 @@ export default function TracksSuperFilter({
                 <PopoverRadioFilter
                     open={typeFilter === TYPE_FILTER.ARTIST_ID}
                     title={messages('artist.label')}
+                    loading={isArtistsLoading}
                     options={artistsData?.items?.map((item: ArtistData) => ({
                         name: item?.name,
                         value: item?.id,
