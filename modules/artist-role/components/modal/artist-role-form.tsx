@@ -1,6 +1,7 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
+import { getCodeFormatted } from '@/helpers/string';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
@@ -104,7 +105,14 @@ export default function ArtistRoleFormModal({ ...props }: Props) {
                         },
                     ]}
                 >
-                    <Input placeholder={messages('role.name')} allowClear />
+                    <Input
+                        placeholder={messages('role.name')}
+                        allowClear
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            form.setFieldValue('code', getCodeFormatted(value));
+                        }}
+                    />
                 </AppFormItem>
                 <AppFormItem
                     name="code"

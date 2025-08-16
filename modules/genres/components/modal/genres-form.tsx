@@ -3,6 +3,7 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import { getAvatarUrl } from '@/helpers/avatar-tailwind';
+import { getCodeFormatted } from '@/helpers/string';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { uploadApi } from '@/modules/upload/apis';
@@ -188,6 +189,10 @@ export default function GenresFormModal({ ...props }: Props) {
                     <Input
                         placeholder={messages('formFields.genres')}
                         allowClear
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            form.setFieldValue('code', getCodeFormatted(value));
+                        }}
                     />
                 </AppFormItem>
 

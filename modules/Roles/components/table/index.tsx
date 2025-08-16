@@ -1,5 +1,4 @@
 import ActionButton from '@/components/ui/button/action-button';
-import AppColorPicker from '@/components/ui/colorPicker/app-color-picker';
 import SortableTable, {
     SortableTableProps,
 } from '@/components/ui/table/sortable-table';
@@ -50,20 +49,20 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
             ellipsis: true,
             render: (value, record) => (
                 <span className="flex items-center gap-1">
-                    <Badge color={record?.color} />
+                    <Badge size="default" color={record?.color} />
                     <span className="truncate">{value}</span>
                 </span>
             ),
         },
-        {
-            title: messages('common.color'),
-            key: 'color',
-            dataIndex: 'color',
-            align: 'left',
-            width: 100,
+        // {
+        //     title: messages('common.color'),
+        //     key: 'color',
+        //     dataIndex: 'color',
+        //     align: 'left',
+        //     width: 100,
 
-            render: (value) => <AppColorPicker value={value} disabled />,
-        },
+        //     render: (value) => <AppColorPicker value={value} disabled />,
+        // },
         {
             title: messages('common.note'),
             key: 'note',
@@ -178,6 +177,16 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
                     ellipsis: true,
                     render: (_, record) => {
                         return <span> {record?.permission?.code} </span>;
+                    },
+                },
+                {
+                    title: messages('common.note'),
+                    dataIndex: 'note',
+                    key: 'note',
+                    width: 280,
+                    ellipsis: true,
+                    render: (_, record) => {
+                        return <span> {record?.permission?.note} </span>;
                     },
                 },
             ];

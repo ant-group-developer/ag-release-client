@@ -697,7 +697,7 @@
             },
             "error": {
                 "duplicateNameAlbumFormat": "This type already exists",
-                "duplicateValueAlbumFormat": "This value already exist",
+                "duplicateCodeAlbumFormat": "This code already exist",
                 "notFound": "Cannot found this type",
                 "cannotDeleteBecauseLinkedReleases": "Cannot delete because this type linked release"
             }
@@ -799,7 +799,7 @@
             },
             "error": {
                 "duplicateNameTrackType": "This track type is already exists",
-                "duplicateValueTrackType": "This value track type is already exists",
+                "duplicateCodeTrackType": "This code track type is already exists",
                 "cannotDeleteBecauseLinkedTracks": "Cannot delete this track type because it is linked to tracks"
             }
         }
@@ -817,7 +817,7 @@
             "error": {
                 "duplicateNameTrackOriginType": "This track origin is already exists",
                 "cannotDeleteBecauseLinkedTracks": "Cannot delete this track origin because it is linked to tracks",
-                "duplicateValueTrackOriginType": "This track origin value already exists"
+                "duplicateCodeTrackOriginType": "This track origin code already exists"
             }
         }
     },
@@ -848,7 +848,7 @@
             },
             "error": {
                 "duplicateNameGenre": "This genres already exist",
-                "duplicateValueGenre": "This value genre already exist",
+                "duplicateCodeGenre": "This code genre already exist",
                 "cannotDeleteBecauseLinkedPrimaryReleases": "Cannot delete this genre because it is linked to primary releases",
                 "cannotDeleteBecauseLinkedSubReleases": "Cannot delete this genre because it is linked to sub releases",
                 "cannotDeleteBecauseLinkedPrimaryTracks": "Cannot delete this genre because it is linked to primary tracks",
@@ -1069,7 +1069,7 @@
             },
             "error": {
                 "duplicateNameArtistRole": "This role already exist",
-                "duplicateValueArtistRole": "This role value already exist",
+                "duplicateCodeArtistRole": "This role code already exist",
                 "cannotDeleteBecauseLinkedReleases": "Cannot delete this role because it is linked to releases",
                 "cannotDeleteBecauseLinkedTracks": "Cannot delete this role because it is linked to tracks"
             }
@@ -1214,7 +1214,7 @@
             },
             "error": {
                 "duplicateNamePermission": "This permission already exists",
-                "duplicateValuePermission": "This permission value already exists",
+                "duplicateCodePermission": "This permission code already exists",
                 "cannotDeleteBecauseLinkedRolePermissions": "Cannot delete permission because it is already used in a role",
                 "cannotDeleteBecauseLinkedUsers": "Cannot delete permission because it is already used in a user"
             }
@@ -1235,7 +1235,7 @@
             },
             "error": {
                 "duplicateNameRole": "This role already exists",
-                "duplicateValueRole": "This role value already exists",
+                "duplicateCodeRole": "This role code already exists",
                 "cannotDeleteBecauseLinkedPermissions": "Cannot delete role because it is already used in a permission"
             }
         },

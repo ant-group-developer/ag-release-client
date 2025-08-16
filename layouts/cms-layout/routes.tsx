@@ -199,7 +199,7 @@ export const adminRoutes: AdminRoutesType[] = [
         children: [
             {
                 id: 'permission',
-                label: 'user.permission',
+                label: 'permission.label',
                 href: APP_ROUTES.PERMISSION,
                 icon: LockKeyhole,
                 title: 'Permission',
