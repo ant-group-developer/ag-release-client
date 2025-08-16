@@ -1218,7 +1218,9 @@
             },
             "error": {
                 "duplicateNamePermission": "Quyền này đã tồn tại",
-                "duplicateValuePermission": "Giá trị quyền này đã tồn tại"
+                "duplicateValuePermission": "Giá trị quyền này đã tồn tại",
+                "cannotDeleteBecauseLinkedRolePermissions": "Không thể xoá quyền này vì đã sử dụng trong Role",
+                "cannotDeleteBecauseLinkedUsers": "Không thể xoá quyền này vì đã được sử dụng bởi người dùng"
             }
         },
         "action": {
@@ -1236,8 +1238,9 @@
                 "delete": "Xoá vai trò thành công"
             },
             "error": {
-                "duplicateNamePermission": "Vai trò này đã tồn tại",
-                "duplicateValuePermission": "Giá trị vai trò này đã tồn tại"
+                "duplicateNameRole": "Vai trò này đã tồn tại",
+                "duplicateValueRole": "Giá trị vai trò này đã tồn tại",
+                "cannotDeleteBecauseLinkedPermissions": "Không thể xoá vai trò vì đã được sử dụng tại một quyền"
             }
         },
         "action": {

@@ -129,8 +129,7 @@ export default function AcrScanHistoryTable({ ...props }: Props) {
             fixed: 'right',
             render: (_, record) => {
                 const isShowCancel =
-                    record?.status == TRACK_SCAN_STATUS.RUNNING ||
-                    record?.status == TRACK_SCAN_STATUS.PENDING;
+                    record?.status == TRACK_SCAN_STATUS.RUNNING;
                 return (
                     <ScanStatusAction
                         showCancel={isShowCancel}
