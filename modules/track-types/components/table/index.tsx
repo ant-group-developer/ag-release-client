@@ -56,9 +56,9 @@ export const TrackTypeTable = ({ dataFilter, ...props }: Props) => {
             ),
         },
         {
-            title: messages('common.value'),
-            key: 'value',
-            dataIndex: 'value',
+            title: messages('common.code'),
+            key: 'code',
+            dataIndex: 'code',
             ellipsis: true,
             align: 'left',
             width: 300,
@@ -66,13 +66,13 @@ export const TrackTypeTable = ({ dataFilter, ...props }: Props) => {
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'value'
+                'code'
             ),
             render: (value) => (
                 <CopyText
                     tooltipProps={{ placement: 'right' }}
                     text={value}
-                    label={messages('common.value')}
+                    label={messages('common.code')}
                 >
                     <p className="truncate">{value}</p>
                 </CopyText>

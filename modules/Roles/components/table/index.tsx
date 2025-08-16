@@ -171,13 +171,13 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
                     },
                 },
                 {
-                    title: messages('common.value'),
-                    dataIndex: 'value',
-                    key: 'value',
+                    title: messages('common.code'),
+                    dataIndex: 'code',
+                    key: 'code',
                     width: 280,
                     ellipsis: true,
                     render: (_, record) => {
-                        return <span> {record?.permission?.value} </span>;
+                        return <span> {record?.permission?.code} </span>;
                     },
                 },
             ];

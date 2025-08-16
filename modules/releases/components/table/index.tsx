@@ -107,7 +107,7 @@ export default function ReleasesTable({
                 const mainArtist = !isVariousArtist
                     ? releaseArtists.find(
                           (item: ReleaseArtist) =>
-                              item?.artistRole?.value?.toLowerCase() ===
+                              item?.artistRole?.code?.toLowerCase() ===
                               MAIN_ARTIST_ROLE
                       )
                     : null;
@@ -116,17 +116,36 @@ export default function ReleasesTable({
                     ? messages('common.variousArtists')
                     : mainArtist?.artist?.name || '';
                 return (
-                    // <CustomTooltip
-                    //     size="small"
-                    //     title={messages('filter.filterByValue', {
-                    //         value: displayName,
-                    //     })}
-                    // >
-                    //     <span onChange={() => onChangeFilter({artistId: mainArtist?.artist?.id})} className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
-                    //         {displayName}
-                    //     </span>
-                    // </CustomTooltip>
-                    <CopyText text={displayName}>{displayName}</CopyText>
+                    <CustomTooltip
+                        size="small"
+                        title={messages('filter.filterByValue', {
+                            value: displayName,
+                        })}
+                    >
+                        {isVariousArtist ? (
+                            <span
+                                className="cursor-pointer truncate hover:text-blue-500 group-hover:underline"
+                                onClick={() =>
+                                    onChangeFilter({
+                                        isVariousArtist: 'true',
+                                    })
+                                }
+                            >
+                                {messages('common.variousArtists')}
+                            </span>
+                        ) : (
+                            <span
+                                onClick={() =>
+                                    onChangeFilter({
+                                        artistId: mainArtist?.artist?.id,
+                                    })
+                                }
+                                className="cursor-pointer truncate hover:text-blue-500 group-hover:underline"
+                            >
+                                {mainArtist?.artist?.name || ''}
+                            </span>
+                        )}
+                    </CustomTooltip>
                 );
             },
         },

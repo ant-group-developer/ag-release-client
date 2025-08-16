@@ -71,10 +71,10 @@ export default function TrackDetail({ children }: PropsWithChildren) {
     ];
     const trackArtist = trackData?.trackArtists;
     const trackMainArtist = trackArtist?.find(
-        (item) => item?.artistRole?.value === MAIN_ARTIST_ROLE
+        (item) => item?.artistRole?.code === MAIN_ARTIST_ROLE
     );
     const featuringArtist = trackArtist?.filter(
-        (item) => item.artistRole?.value === FEATURING_ARTIST_ROLE
+        (item) => item.artistRole?.code === FEATURING_ARTIST_ROLE
     );
     const renderDownloadTrack = () => {
         const handleOnclick = async () => {

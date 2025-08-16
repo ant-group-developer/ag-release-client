@@ -43,9 +43,9 @@ export const PermissionTable = ({ dataFilter, ...props }: Props) => {
             ),
         },
         {
-            title: messages('common.value'),
-            key: 'value',
-            dataIndex: 'value',
+            title: messages('common.code'),
+            key: 'code',
+            dataIndex: 'code',
             align: 'left',
             width: 200,
 

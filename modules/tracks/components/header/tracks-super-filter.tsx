@@ -3,11 +3,12 @@ import DateReleaseDialog from '@/components/filter-dialog/date-release-dialog';
 import GenresDialog from '@/components/filter-dialog/genres-dialog';
 import SearchDialog from '@/components/filter-dialog/search-dialog';
 import TypeReleaseDialog from '@/components/filter-dialog/type-releases-dialog';
-import { PopoverRadioFilter } from '@/components/filter/popover-radio';
+import { PopoverCheckboxFilter } from '@/components/filter/popover-checkbox';
 import IconButton from '@/components/ui/button/icon-button';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
 import { TYPE_FILTER } from '@/enums/common';
+import { arrayFromString, arrayToString } from '@/helpers/array';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
 import { useGetListArtist } from '@/modules/artist/hooks/use-get-list-artists';
 import { ArtistData } from '@/modules/artist/types';
@@ -43,12 +44,18 @@ export default function TracksSuperFilter({
 
     const { releasesData, isFetching: isReleaseLoading } = useGetListReleases(
         { pageSize: 999 },
-        { enabled: typeFilter == TYPE_FILTER.RELEASE_ID }
+        {
+            enabled:
+                typeFilter == TYPE_FILTER.RELEASE_ID || !!dataFilter?.releaseId,
+        }
     );
 
     const { artistsData, isFetching: isArtistsLoading } = useGetListArtist(
         { pageSize: 999 },
-        { enabled: typeFilter == TYPE_FILTER.ARTIST_ID }
+        {
+            enabled:
+                typeFilter == TYPE_FILTER.ARTIST_ID || !!dataFilter?.artistId,
+        }
     );
 
     useEffect(() => {
@@ -99,7 +106,7 @@ export default function TracksSuperFilter({
                     onChangeFilter={onChangeFilter}
                 />
 
-                <PopoverRadioFilter
+                <PopoverCheckboxFilter
                     open={typeFilter === TYPE_FILTER.RELEASE_ID}
                     title={messages('releases.label')}
                     loading={isReleaseLoading}
@@ -107,7 +114,7 @@ export default function TracksSuperFilter({
                         name: item?.title,
                         value: item?.id,
                     }))}
-                    selectedValue={dataFilter.releaseId}
+                    selectedValues={arrayFromString(dataFilter.releaseId)}
                     onOpenChange={(val) => {
                         return setTypeFilter(
                             val ? TYPE_FILTER.RELEASE_ID : undefined
@@ -115,13 +122,13 @@ export default function TracksSuperFilter({
                     }}
                     onConfirm={(vals) => {
                         return onChangeFilter({
-                            releaseId: vals,
+                            releaseId: arrayToString(vals),
                         });
                     }}
                     onRemove={() => onChangeFilter({ releaseId: undefined })}
                 />
 
-                <PopoverRadioFilter
+                <PopoverCheckboxFilter
                     open={typeFilter === TYPE_FILTER.ARTIST_ID}
                     title={messages('artist.label')}
                     loading={isArtistsLoading}
@@ -129,7 +136,7 @@ export default function TracksSuperFilter({
                         name: item?.name,
                         value: item?.id,
                     }))}
-                    selectedValue={dataFilter.artistId}
+                    selectedValues={arrayFromString(dataFilter.artistId)}
                     onOpenChange={(val) => {
                         return setTypeFilter(
                             val ? TYPE_FILTER.ARTIST_ID : undefined
@@ -137,24 +144,20 @@ export default function TracksSuperFilter({
                     }}
                     onConfirm={(vals) => {
                         return onChangeFilter({
-                            artistId: vals,
+                            artistId: arrayToString(vals),
                         });
                     }}
                     onRemove={() => onChangeFilter({ artistId: undefined })}
                 />
 
-                <PopoverRadioFilter
+                <PopoverCheckboxFilter
                     open={typeFilter === TYPE_FILTER.IS_SCANNED}
                     title={messages('common.scan')}
                     options={[
                         { name: messages('common.scanned'), value: 'true' },
                         { name: messages('common.notScanned'), value: 'false' },
                     ]}
-                    selectedValue={
-                        dataFilter?.isScanned
-                            ? `${dataFilter.isScanned}`
-                            : undefined
-                    }
+                    selectedValues={arrayFromString(dataFilter?.isScanned)}
                     onOpenChange={(val) => {
                         return setTypeFilter(
                             val ? TYPE_FILTER.IS_SCANNED : undefined
@@ -162,7 +165,7 @@ export default function TracksSuperFilter({
                     }}
                     onConfirm={(vals) => {
                         return onChangeFilter({
-                            isScanned: `${vals}`,
+                            isScanned: arrayToString(vals),
                         });
                     }}
                     onRemove={() => onChangeFilter({ isScanned: undefined })}

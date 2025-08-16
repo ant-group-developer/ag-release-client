@@ -99,7 +99,7 @@ const initialValue: ReleaseFormStoreData = {
     albumFormatId: '',
     albumFormat: {
         name: '',
-        value: '',
+        code: '',
         minTrackCount: 0,
         maxTrackCount: 0,
         id: '',

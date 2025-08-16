@@ -52,7 +52,7 @@ export default function GenresFormModal({ ...props }: Props) {
         updateGenre(variables);
     };
 
-    const handleCreateGenre = (values: GenreFormValues) => {
+    const handleCreateGenre = (values: any) => {
         const variables: CreateVariables<CreateGenrePayload> = {
             payload: values,
             onSuccess: () => {
@@ -66,7 +66,7 @@ export default function GenresFormModal({ ...props }: Props) {
         createGenre(variables);
     };
 
-    const onFinish = async (values: GenreFormValues) => {
+    const onFinish = async (values: any) => {
         const { pictureFile, ...res } = values;
         const file = values?.pictureFile?.fileList[0]?.originFileObj;
         const oldFile = values?.pictureFile?.fileList[0]?.url;
@@ -192,8 +192,8 @@ export default function GenresFormModal({ ...props }: Props) {
                 </AppFormItem>
 
                 <AppFormItem
-                    name="value"
-                    label={messages('common.value')}
+                    name="code"
+                    label={messages('common.code')}
                     required
                     rules={[
                         {
@@ -208,7 +208,7 @@ export default function GenresFormModal({ ...props }: Props) {
                         },
                     ]}
                 >
-                    <Input placeholder={messages('common.value')} allowClear />
+                    <Input placeholder={messages('common.code')} allowClear />
                 </AppFormItem>
 
                 <AppFormItem

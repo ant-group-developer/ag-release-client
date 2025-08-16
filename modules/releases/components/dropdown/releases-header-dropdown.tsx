@@ -44,11 +44,15 @@ export default function ReleasesHeaderDropdown({
             onClick: () => handleChangeTypeFilter(TYPE_FILTER.ARTIST_ID),
         },
         {
-            label: messages('releases.label'),
-            value: TYPE_FILTER.RELEASE_ID,
-            visible: !dataFilter.releaseId,
-            onClick: () => handleChangeTypeFilter(TYPE_FILTER.RELEASE_ID),
+            label: messages('artist.variousArtists'),
+            value: TYPE_FILTER.IS_VARIOUS_ARTIST,
+            visible: !dataFilter.isVariousArtist,
+            onClick: () => {
+                onChangeFilter({ isVariousArtist: 'true' });
+                handleChangeTypeFilter(TYPE_FILTER.IS_VARIOUS_ARTIST);
+            },
         },
+
         {
             label: messages('common.search'),
             value: TYPE_FILTER.KEYWORD,

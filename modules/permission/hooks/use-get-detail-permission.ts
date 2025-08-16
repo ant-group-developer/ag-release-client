@@ -13,7 +13,7 @@ export const useGetDetailPermission = (id: PermissionData['id']) => {
         creatorId: '',
         modifierId: '',
         name: '',
-        value: '',
+        code: '',
         id: '',
         createdAt: '',
         updatedAt: null,

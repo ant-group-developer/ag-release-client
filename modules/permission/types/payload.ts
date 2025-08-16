@@ -3,7 +3,7 @@ import { Key } from 'react';
 
 export interface CreatePermissionPayload {
     name: string;
-    value: string;
+    code: string;
 }
 
 export interface UpdatePermissionPayload

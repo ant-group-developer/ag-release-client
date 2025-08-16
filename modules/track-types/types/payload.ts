@@ -1,6 +1,6 @@
 export interface CreateTrackTypePayload {
     name: string;
-    value: string;
+    code: string;
 }
 
 export interface UpdateTrackTypePayload

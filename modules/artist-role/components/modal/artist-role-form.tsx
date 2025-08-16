@@ -107,8 +107,8 @@ export default function ArtistRoleFormModal({ ...props }: Props) {
                     <Input placeholder={messages('role.name')} allowClear />
                 </AppFormItem>
                 <AppFormItem
-                    name="value"
-                    label={messages('common.value')}
+                    name="code"
+                    label={messages('common.code')}
                     required
                     rules={[
                         {
@@ -123,7 +123,7 @@ export default function ArtistRoleFormModal({ ...props }: Props) {
                         },
                     ]}
                 >
-                    <Input placeholder={messages('common.value')} allowClear />
+                    <Input placeholder={messages('common.code')} allowClear />
                 </AppFormItem>
             </AppForm>
         </AppModal>

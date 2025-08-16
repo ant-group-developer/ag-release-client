@@ -115,8 +115,8 @@ export default function ReleaseTypeFormModal({ ...props }: Props) {
                     <Input allowClear />
                 </AppFormItem>
                 <AppFormItem
-                    name="value"
-                    label={messages('common.value')}
+                    name="code"
+                    label={messages('common.code')}
                     required
                     rules={[
                         {

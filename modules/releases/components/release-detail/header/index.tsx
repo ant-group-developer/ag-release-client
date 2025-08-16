@@ -58,19 +58,29 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     const { releaseData } = useGetDetailRelease(formValues?.id as string);
 
     // const
+    const isVariousArtist = !!formValues?.isVariousArtist;
     const isCreateReleasePage = params['action'] === 'create';
     const mainArtist = formValues?.releaseArtists?.find(
         (releaseArtist: ReleaseArtist) =>
-            releaseArtist.artistRole?.value === MAIN_ARTIST_ROLE
+            releaseArtist.artistRole?.code === MAIN_ARTIST_ROLE
     );
-
-    const featuringArtistNames = formValues?.releaseArtists?.map(
-        (item: ReleaseArtist) => {
-            if (item?.artistRole?.value == FEATURING_ARTIST_ROLE) {
+    const featuringArtistNames = formValues?.releaseArtists
+        ?.map((item: ReleaseArtist) => {
+            if (item?.artistRole?.code == FEATURING_ARTIST_ROLE) {
                 return item?.artist?.name;
             }
+        })
+        .filter(Boolean)
+        .join(', ');
+
+    const renderArtistName = () => {
+        if (isVariousArtist) {
+            return messages('artist.variousArtists');
+        } else if (mainArtist) {
+            return `${mainArtist?.artist?.name} ${featuringArtistNames && featuringArtistNames?.length > 0 ? `(feat. ${featuringArtistNames})` : ''}`;
         }
-    );
+        return '';
+    };
 
     const segmentedOptions: SegmentedOptions = [
         {
@@ -288,7 +298,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                 <div className="text-sm">
                                     <span>{messages('artist.label')}: </span>
                                     <span className="font-bold">
-                                        {mainArtist?.artist?.name}
+                                        {renderArtistName()}
                                     </span>
                                 </div>
                                 <div className="text-sm">

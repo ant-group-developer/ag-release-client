@@ -3,11 +3,13 @@ import DateReleaseDialog from '@/components/filter-dialog/date-release-dialog';
 import GenresDialog from '@/components/filter-dialog/genres-dialog';
 import SearchDialog from '@/components/filter-dialog/search-dialog';
 import StatusReleaseDialog from '@/components/filter-dialog/status-releases-dialog';
-import { PopoverRadioFilter } from '@/components/filter/popover-radio';
+import { PopoverCheckboxFilter } from '@/components/filter/popover-checkbox';
 import IconButton from '@/components/ui/button/icon-button';
+import { Chip } from '@/components/ui/chip';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
 import { TYPE_FILTER } from '@/enums/common';
+import { arrayFromString, arrayToString } from '@/helpers/array';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
 import { useGetListArtist } from '@/modules/artist/hooks/use-get-list-artists';
 import { ArtistData } from '@/modules/artist/types';
@@ -16,8 +18,7 @@ import { ReleaseTypesData } from '@/modules/release-types/types';
 import { ListFilter, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
-import { useGetListReleases } from '../../hooks/use-get-list-releases';
-import { ReleasesData, ReleasesDataFilter } from '../../types';
+import { ReleasesDataFilter } from '../../types';
 import ReleasesHeaderDropdown from '../dropdown/releases-header-dropdown';
 
 type Props = {
@@ -43,20 +44,22 @@ export default function ReleasesSuperFilter({
     };
 
     const { artistsData, isFetching: isArtistsLoading } = useGetListArtist(
-        { pageSize: 0 },
-        { enabled: typeFilter === TYPE_FILTER.ARTIST_ID }
+        { pageSize: 999 },
+        {
+            enabled:
+                typeFilter === TYPE_FILTER.ARTIST_ID || !!dataFilter.artistId,
+        }
     );
 
     const { releaseTypesData, isFetching: isReleaseTypesLoading } =
         useGetListReleaseTypes(
             { pageSize: 999 },
-            { enabled: typeFilter === TYPE_FILTER.ARTIST_ID }
+            {
+                enabled:
+                    typeFilter === TYPE_FILTER.ALBUM_FORMAT_ID ||
+                    !!dataFilter?.albumFormatId,
+            }
         );
-
-    const { releasesData, isFetching: isReleaseLoading } = useGetListReleases(
-        { pageSize: 999 },
-        { enabled: typeFilter === TYPE_FILTER.RELEASE_ID }
-    );
 
     useEffect(() => {
         const handleOutSideClick = (event: any) => {
@@ -106,7 +109,21 @@ export default function ReleasesSuperFilter({
                     onChangeFilter={onChangeFilter}
                 />
 
-                <PopoverRadioFilter
+                {(typeFilter === TYPE_FILTER.IS_VARIOUS_ARTIST ||
+                    dataFilter?.isVariousArtist) && (
+                    <Chip
+                        onRemove={() => {
+                            setTypeFilter(undefined);
+                            onChangeFilter({
+                                isVariousArtist: '',
+                            });
+                        }}
+                    >
+                        {messages('artist.variousArtists')}
+                    </Chip>
+                )}
+
+                <PopoverCheckboxFilter
                     open={typeFilter === TYPE_FILTER.ALBUM_FORMAT_ID}
                     title={messages('releases.type')}
                     loading={isReleaseTypesLoading}
@@ -116,7 +133,7 @@ export default function ReleasesSuperFilter({
                             value: item?.id,
                         })
                     )}
-                    selectedValue={dataFilter?.albumFormatId}
+                    selectedValues={arrayFromString(dataFilter?.albumFormatId)}
                     onOpenChange={(val) => {
                         return setTypeFilter(
                             val ? TYPE_FILTER.ALBUM_FORMAT_ID : undefined
@@ -124,7 +141,7 @@ export default function ReleasesSuperFilter({
                     }}
                     onConfirm={(val) => {
                         return onChangeFilter({
-                            albumFormatId: val,
+                            albumFormatId: arrayToString(val),
                         });
                     }}
                     onRemove={() =>
@@ -132,7 +149,7 @@ export default function ReleasesSuperFilter({
                     }
                 />
 
-                <PopoverRadioFilter
+                <PopoverCheckboxFilter
                     open={typeFilter === TYPE_FILTER.ARTIST_ID}
                     title={messages('artist.label')}
                     loading={isArtistsLoading}
@@ -140,7 +157,7 @@ export default function ReleasesSuperFilter({
                         name: item?.name,
                         value: item?.id,
                     }))}
-                    selectedValue={dataFilter.artistId}
+                    selectedValues={arrayFromString(dataFilter.artistId)}
                     onOpenChange={(val) => {
                         return setTypeFilter(
                             val ? TYPE_FILTER.ARTIST_ID : undefined
@@ -148,32 +165,10 @@ export default function ReleasesSuperFilter({
                     }}
                     onConfirm={(vals) => {
                         return onChangeFilter({
-                            artistId: vals,
+                            artistId: arrayToString(vals),
                         });
                     }}
                     onRemove={() => onChangeFilter({ artistId: undefined })}
-                />
-
-                <PopoverRadioFilter
-                    open={typeFilter === TYPE_FILTER.RELEASE_ID}
-                    title={messages('releases.label')}
-                    loading={isReleaseLoading}
-                    options={releasesData?.items?.map((item: ReleasesData) => ({
-                        name: item?.title,
-                        value: item?.id,
-                    }))}
-                    selectedValue={dataFilter.releaseId}
-                    onOpenChange={(val) => {
-                        return setTypeFilter(
-                            val ? TYPE_FILTER.RELEASE_ID : undefined
-                        );
-                    }}
-                    onConfirm={(vals) => {
-                        return onChangeFilter({
-                            releaseId: vals,
-                        });
-                    }}
-                    onRemove={() => onChangeFilter({ releaseId: undefined })}
                 />
 
                 <StatusReleaseDialog

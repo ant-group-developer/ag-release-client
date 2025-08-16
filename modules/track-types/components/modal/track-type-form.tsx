@@ -117,8 +117,8 @@ export default function TrackTypeFormModal({ ...props }: Props) {
                 </AppFormItem>
 
                 <AppFormItem
-                    name="value"
-                    label={messages('common.value')}
+                    name="code"
+                    label={messages('common.code')}
                     required
                     rules={[
                         {
