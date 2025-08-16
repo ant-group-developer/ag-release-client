@@ -2,7 +2,6 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppColorPicker from '@/components/ui/colorPicker/app-color-picker';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
-import PermissionSelect from '@/components/ui/select/permission-select';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
@@ -12,7 +11,6 @@ import { useTranslations } from 'next-intl';
 import { Key, useEffect, useState } from 'react';
 import { TYPE_MODAL_ROLES } from '../../enums';
 import { useCreateRole } from '../../hooks/use-create-role';
-import { useDeleteRolePermission } from '../../hooks/use-delete-role-permission';
 import { useUpdateRole } from '../../hooks/use-update-role';
 import { RolesData } from '../../types';
 import { CreateRolePayload, UpdateRolesPayload } from '../../types/payload';
@@ -44,7 +42,7 @@ export default function RolesFormModal({ ...props }: Props) {
     // apis
     const { createRole } = useCreateRole();
     const { updateRole } = useUpdateRole();
-    const { deleteRolePermission } = useDeleteRolePermission();
+    // const { deleteRolePermission } = useDeleteRolePermission();
 
     // func
     const handleCreateRoles = (values: any) => {
@@ -90,14 +88,10 @@ export default function RolesFormModal({ ...props }: Props) {
         const hexString =
             typeof color === 'string' ? color : color?.toHexString();
 
-        const rolePermissionObjs = selectedRow.map((id: Key) => ({
-            permissionId: id,
-        }));
-
-        const payload = {
+        const payload: CreateRolePayload = {
             ...rest,
             color: hexString,
-            rolePermissions: rolePermissionObjs,
+            permissionIds: selectedRow,
         };
 
         active();
@@ -115,8 +109,8 @@ export default function RolesFormModal({ ...props }: Props) {
             : [];
         const initialData = {
             ...dataEdit,
-            rolePermissions: rolePermissionIds,
         };
+        setSelectedRow(rolePermissionIds);
         form.setFieldsValue(initialData);
     }, [dataEdit, isUpdateForm, form]);
 
@@ -150,7 +144,7 @@ export default function RolesFormModal({ ...props }: Props) {
                             {
                                 max: 100,
                                 message: messages('validation.stringMax', {
-                                    number: 100,
+                                    max: 100,
                                     field: messages('permission.name'),
                                 }),
                             },
@@ -172,13 +166,13 @@ export default function RolesFormModal({ ...props }: Props) {
                         <AppColorPicker />
                     </AppFormItem>
 
-                    <AppFormItem
+                    {/* <AppFormItem
                         name="rolePermissions"
                         label={messages('permission.label')}
                         required
                     >
                         <PermissionSelect mode="multiple" allowClear />
-                    </AppFormItem>
+                    </AppFormItem> */}
 
                     <AppFormItem
                         name="note"
@@ -187,7 +181,7 @@ export default function RolesFormModal({ ...props }: Props) {
                             {
                                 max: 1000,
                                 message: messages('validation.stringMax', {
-                                    number: 1000,
+                                    max: 1000,
                                     field: messages('common.note'),
                                 }),
                             },

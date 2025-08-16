@@ -161,7 +161,7 @@ export default function PermissionFormModal({ ...props }: Props) {
                                         message: messages(
                                             'validation.stringMax',
                                             {
-                                                number: 1000,
+                                                max: 1000,
                                                 field: messages('common.note'),
                                             }
                                         ),
@@ -286,7 +286,7 @@ export default function PermissionFormModal({ ...props }: Props) {
                                                                         messages(
                                                                             'validation.stringMax',
                                                                             {
-                                                                                number: 1000,
+                                                                                max: 1000,
                                                                                 field: messages(
                                                                                     'common.note'
                                                                                 ),

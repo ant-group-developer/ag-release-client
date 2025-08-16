@@ -46,37 +46,15 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
             key: 'name',
             dataIndex: 'name',
             align: 'left',
-            width: 100,
+            width: 150,
             ellipsis: true,
-
             render: (value, record) => (
-                <span className="flex items-center gap-1 truncate">
+                <span className="flex items-center gap-1">
                     <Badge color={record?.color} />
-                    <span>{value}</span>
+                    <span className="truncate">{value}</span>
                 </span>
             ),
         },
-        // {
-        //     title: messages('permission.label'),
-        //     key: 'rolePermissions',
-        //     dataIndex: 'rolePermissions',
-        //     align: 'left',
-        //     width: 200,
-
-        //     render: (_, record) => {
-        //         const names = Array.isArray(record?.rolePermissions)
-        //             ? record.rolePermissions
-        //                   .map((rp) => rp?.permission?.name)
-        //                   .filter(Boolean)
-        //             : [];
-        //         return (
-        //             // <span className="line-clamp-3 truncate whitespace-pre-line">
-        //             //     {names}
-        //             // </span>
-        //             <PopoverTags tags={names} maxVisibleTags={5} />
-        //         );
-        //     },
-        // },
         {
             title: messages('common.color'),
             key: 'color',
@@ -85,20 +63,6 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
             width: 100,
 
             render: (value) => <AppColorPicker value={value} disabled />,
-        },
-
-        {
-            title: messages('common.description'),
-            key: 'description',
-            dataIndex: 'description',
-            align: 'left',
-            width: 200,
-
-            render: (value) => (
-                <span className="line-clamp-3 truncate whitespace-pre-line">
-                    {value}
-                </span>
-            ),
         },
 
         {
@@ -171,9 +135,7 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
     ];
 
     const expandable: SortableTableProps<RolesData>['expandable'] = {
-        // AntD: expandedRowRender(record, index, indent, expanded)
         expandedRowRender: (record: RolesData, parentIndex?: number) => {
-            // Map dữ liệu permission -> hàng của bảng con
             const rows: RolePermission[] = Array.isArray(record.rolePermissions)
                 ? record.rolePermissions.map((rp) => rp)
                 : [];
@@ -205,6 +167,9 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
                     key: 'name',
                     width: 280,
                     ellipsis: true,
+                    render: (_, record) => {
+                        return <span> {record?.permission?.name} </span>;
+                    },
                 },
                 {
                     title: messages('common.value'),
@@ -212,13 +177,16 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
                     key: 'value',
                     width: 280,
                     ellipsis: true,
+                    render: (_, record) => {
+                        return <span> {record?.permission?.value} </span>;
+                    },
                 },
             ];
 
             return (
                 <div className="px-4 py-2">
                     <SortableTable
-                        // KHÔNG truyền expandable để tránh đệ quy
+                        className="overflow-hidden rounded-lg border"
                         columns={childColumns}
                         dataSource={rows}
                         pagination={false}
