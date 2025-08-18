@@ -69,7 +69,7 @@ function TenantSwitch({}: Props) {
                                         <div className="space-y-0.5 truncate text-xs">
                                             <p>
                                                 {messages('tenant.owner')}:{' '}
-                                                {item.owner.email}
+                                                {item?.owner?.email}
                                             </p>
                                             {item.parent && (
                                                 <p>

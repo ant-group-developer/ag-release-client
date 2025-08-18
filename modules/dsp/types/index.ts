@@ -1,3 +1,4 @@
+import { DspActionData } from '@/modules/dsp-action/types';
 import { CommonAttribute, CommonParams } from '@/types/api';
 
 export interface DspData extends CommonAttribute {
@@ -7,6 +8,7 @@ export interface DspData extends CommonAttribute {
     picture?: string | null;
     canLinkArtistProfile: boolean;
     formatLinks: string[];
+    dspActions: DspActionData[];
 }
 
 export interface DspDataFilter extends CommonParams {

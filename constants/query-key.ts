@@ -178,6 +178,11 @@ export const QUERY_KEY = {
         GET_LIST: 'GET_LIST_DSP',
         GET_DETAIL: 'GET_DETAIL_DSP',
     },
+    DSP_ACTION: {
+        KEY: 'DPS_ACTION',
+        GET_LIST: 'GET_LIST_DSP_ACTION',
+        GET_DETAIL: 'GET_DETAIL_DSP_ACTION',
+    },
     RELEASES: {
         KEY: 'RELEASES',
         GET_LIST: 'GET_LIST_RELEASES',
@@ -233,5 +238,10 @@ export const QUERY_KEY = {
         GET_DETAIL: 'ACR_CLOUD_GET_DETAIL',
         GET_LIST_SCAN_STATUS: 'ACR_CLOUD_GET_LIST_SCAN_STATUS',
         GET_DETAIL_SCAN_STATUS: 'ACR_COULD_GET_DETAIL_SCAN_STATUS',
+    },
+    ACTIONS: {
+        KEY: 'ACTIONS',
+        GET_LIST: 'GET_LIST_ACTIONS',
+        GET_DETAIL: 'GET_DETAIL_ACTIONS',
     },
 };

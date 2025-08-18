@@ -187,7 +187,7 @@ export default function TrackAndArtistSection({
                                                     index: number
                                                 ) => (
                                                     <ArtistCard
-                                                        key={index}
+                                                        key={item.id}
                                                         data={{
                                                             artist: item.artist,
                                                             artistRole:

@@ -1,5 +1,5 @@
 'use client';
-import { THEME } from '@/enums/common';
+import { SCREEN, THEME } from '@/enums/common';
 import { useThemeStore } from '@/hooks/use-theme-store';
 import ReleaseSchedulingForm from '@/modules/releases/components/release-detail/release-scheduling/form';
 import ReleaseSchedulingTable from '@/modules/releases/components/release-detail/release-scheduling/table';
@@ -34,7 +34,12 @@ export default function Schedule() {
     return (
         <ConfigProvider theme={customTheme}>
             <ReleaseSchedulingForm />
-            <ReleaseSchedulingTable dataSource={trackData} />
+            <ReleaseSchedulingTable
+                dataSource={trackData}
+                scroll={{
+                    x: SCREEN.MD,
+                }}
+            />
         </ConfigProvider>
     );
 }

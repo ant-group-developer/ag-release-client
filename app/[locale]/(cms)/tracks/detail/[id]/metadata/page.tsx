@@ -43,7 +43,7 @@ export default function TrackMetadata({}: Props) {
                                     index: number
                                 ) => (
                                     <ArtistItem
-                                        key={index}
+                                        key={trackArtists?.id}
                                         data={{
                                             artist: trackArtists?.artist,
                                             role: trackArtists?.artistRole,

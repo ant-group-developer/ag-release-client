@@ -95,7 +95,7 @@ export default function ListTracksReleaseHeaderDropdown({
                     </DropdownItem>
                 )}
                 {options.map((item, index) => (
-                    <DropdownItem key={index} onClick={item.onClick}>
+                    <DropdownItem key={item.value} onClick={item.onClick}>
                         {item.label}
                     </DropdownItem>
                 ))}

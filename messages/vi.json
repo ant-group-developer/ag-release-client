@@ -37,6 +37,7 @@
         "forbiddenDescription": "Please contact the Admin for more details"
     },
     "common": {
+        "setIsDefault": "Đặt làm mặc định",
         "reScan": "Quét lại",
         "accuracy": "Độ chính xác",
         "result": "Kết quả",
@@ -1245,6 +1246,26 @@
         },
         "action": {
             "delete": "Xoá vai trò"
+        }
+    },
+
+    "actions": {
+        "label": "Hành động",
+        "name": "Tên hành động",
+        "message": {
+            "success": {
+                "create": "Thêm hành động thành công",
+                "update": "Cập nhật hành động thành công",
+                "delete": "Xoá hành động thành công"
+            },
+            "error": {
+                "duplicateNameAction": "Hành động này đã tồn tại",
+                "duplicateCodeAction": "Mã hành động này đã tồn tại",
+                "cannotDeleteBecauseLinkedDSP": "Không thể xoá hành động vì đã được sử dụng tại một DSP"
+            }
+        },
+        "action": {
+            "delete": "Xoá hành động"
         }
     }
 }

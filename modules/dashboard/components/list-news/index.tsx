@@ -54,7 +54,7 @@ export default function ListNews({}: Props) {
             </div>
             <div className="grid grid-cols-5 gap-5">
                 {listNews.map((item, index) => (
-                    <CardNews key={index} data={item} />
+                    <CardNews key={item.id} data={item} />
                 ))}
             </div>
         </div>
