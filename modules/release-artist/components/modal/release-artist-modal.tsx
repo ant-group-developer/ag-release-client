@@ -58,7 +58,7 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
     const { updateReleaseArtist } = useUpdateReleaseArtist();
 
     const mainArtist: ArtistRoleData = artistsRolesData.items.find(
-        (item: ArtistRoleData) => item.value === MAIN_ARTIST_ROLE
+        (item: ArtistRoleData) => item.code === MAIN_ARTIST_ROLE
     );
 
     const watchArtistId = useWatch('artistId', form);

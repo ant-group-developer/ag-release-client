@@ -44,7 +44,7 @@ export const useGetDetailRelease = (id: ReleasesData['id']) => {
         tracksCount: 0,
         albumFormat: {
             name: '',
-            value: '',
+            code: '',
             minTrackCount: 0,
             maxTrackCount: 0,
             id: '',

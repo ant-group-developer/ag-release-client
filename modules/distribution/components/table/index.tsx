@@ -113,7 +113,7 @@ export default function DistributionTable({ visibleColumns, ...props }: Props) {
                 const mainArtist = !isVariousArtist
                     ? releaseArtists.find(
                           (item: ReleaseArtist) =>
-                              item?.artistRole?.value?.toLowerCase() ===
+                              item?.artistRole?.code?.toLowerCase() ===
                               MAIN_ARTIST_ROLE
                       )
                     : null;

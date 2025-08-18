@@ -43,7 +43,7 @@ export default function PermissionFormModal({ ...props }: Props) {
             payload: values,
             onSuccess: () => {
                 form.setFieldsValue({
-                    permissions: [{ name: '', value: '' }],
+                    permissions: [{ name: '', code: '' }],
                 });
                 deActive();
             },
@@ -88,11 +88,11 @@ export default function PermissionFormModal({ ...props }: Props) {
             // Delay để đảm bảo Form.List đã render
             setTimeout(() => {
                 form.setFieldsValue({
-                    permissions: [{ name: '', value: '' }],
+                    permissions: [{ name: '', code: '' }],
                 });
             }, 0);
         }
-    }, [dataEdit, isUpdateForm]);
+    }, [dataEdit, isUpdateForm, form]);
 
     return (
         <AppModal
@@ -134,8 +134,8 @@ export default function PermissionFormModal({ ...props }: Props) {
                                 <Input allowClear />
                             </AppFormItem>
                             <AppFormItem
-                                name="value"
-                                label={messages('common.value')}
+                                name="code"
+                                label={messages('common.code')}
                                 required
                                 rules={[
                                     {
@@ -245,10 +245,10 @@ export default function PermissionFormModal({ ...props }: Props) {
                                                             {...resField}
                                                             name={[
                                                                 name,
-                                                                'value',
+                                                                'code',
                                                             ]}
                                                             label={messages(
-                                                                'common.value'
+                                                                'common.code'
                                                             )}
                                                             required
                                                             rules={[

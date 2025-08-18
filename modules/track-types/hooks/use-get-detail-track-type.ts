@@ -16,7 +16,7 @@ export const useGetDetailTrackType = (id: TrackTypeData['id']) => {
         id: '',
         createdAt: '',
         updatedAt: null,
-        value: '',
+        code: '',
     };
 
     return {

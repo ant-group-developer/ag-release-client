@@ -4,7 +4,7 @@ export interface PermissionData extends CommonAttribute {
     creatorId: string;
     modifierId: string;
     name: string;
-    value: string;
+    code: string;
     note: string;
 }
 

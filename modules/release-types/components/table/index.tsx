@@ -56,9 +56,9 @@ export const ReleaseTypeTable = ({ dataFilter, ...props }: Props) => {
             ),
         },
         {
-            title: messages('common.value'),
-            key: 'value',
-            dataIndex: 'value',
+            title: messages('common.code'),
+            key: 'code',
+            dataIndex: 'code',
             ellipsis: true,
             align: 'left',
             width: 350,
@@ -66,7 +66,7 @@ export const ReleaseTypeTable = ({ dataFilter, ...props }: Props) => {
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'value'
+                'code'
             ),
             render: (value) => (
                 <CopyText tooltipProps={{ placement: 'right' }} text={value}>

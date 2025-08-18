@@ -3,6 +3,7 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import { getAvatarUrl } from '@/helpers/avatar-tailwind';
+import { getCodeFormatted } from '@/helpers/string';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { uploadApi } from '@/modules/upload/apis';
@@ -52,7 +53,7 @@ export default function GenresFormModal({ ...props }: Props) {
         updateGenre(variables);
     };
 
-    const handleCreateGenre = (values: GenreFormValues) => {
+    const handleCreateGenre = (values: any) => {
         const variables: CreateVariables<CreateGenrePayload> = {
             payload: values,
             onSuccess: () => {
@@ -66,7 +67,7 @@ export default function GenresFormModal({ ...props }: Props) {
         createGenre(variables);
     };
 
-    const onFinish = async (values: GenreFormValues) => {
+    const onFinish = async (values: any) => {
         const { pictureFile, ...res } = values;
         const file = values?.pictureFile?.fileList[0]?.originFileObj;
         const oldFile = values?.pictureFile?.fileList[0]?.url;
@@ -188,12 +189,16 @@ export default function GenresFormModal({ ...props }: Props) {
                     <Input
                         placeholder={messages('formFields.genres')}
                         allowClear
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            form.setFieldValue('code', getCodeFormatted(value));
+                        }}
                     />
                 </AppFormItem>
 
                 <AppFormItem
-                    name="value"
-                    label={messages('common.value')}
+                    name="code"
+                    label={messages('common.code')}
                     required
                     rules={[
                         {
@@ -208,7 +213,7 @@ export default function GenresFormModal({ ...props }: Props) {
                         },
                     ]}
                 >
-                    <Input placeholder={messages('common.value')} allowClear />
+                    <Input placeholder={messages('common.code')} allowClear />
                 </AppFormItem>
 
                 <AppFormItem
