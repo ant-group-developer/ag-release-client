@@ -525,6 +525,7 @@
         "label": "User",
         "admin": "Admin",
         "user": "User",
+        "email": "Email",
         "manager": "Manager",
         "permission": "Permission",
         "firstName": "First name",
@@ -564,6 +565,14 @@
         "search": {
             "keyword": "Search by name, email",
             "id": "Search by ID"
+        },
+        "role": {
+            "system": {
+                "label": "System role"
+            },
+            "tenant": {
+                "label": "Workspace role"
+            }
         }
     },
     "file": {
@@ -1141,6 +1150,21 @@
                 "label": "Label"
             }
         },
+        "userType": {
+            "label": "Role",
+            "owner": {
+                "label": "Owner",
+                "tooltip": "The owner of the workspace. This user has full control over the workspace and its settings."
+            },
+            "admin": {
+                "label": "Admin",
+                "tooltip": "Admins can manage users, settings, and configurations within the workspace."
+            },
+            "member": {
+                "label": "Member",
+                "tooltip": "Users can access and use the workspace but have limited permissions compared to admins."
+            }
+        },
         "search": {
             "keyword": "Search by name, email"
         },
@@ -1179,6 +1203,11 @@
             "button": "Create",
             "title": "Create {label}",
             "success": "{label} created successfully"
+        },
+        "invite": {
+            "button": "Invite",
+            "title": "Invite {label}",
+            "success": "{label} invited successfully"
         },
         "update": {
             "button": "Update",

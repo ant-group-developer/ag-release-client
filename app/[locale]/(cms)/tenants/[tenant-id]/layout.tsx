@@ -8,7 +8,10 @@ import { Link, usePathname } from '@/i18n/routing';
 import { tenantQueryKeys } from '@/modules/tenant/constants';
 import { TENANT_TABS } from '@/modules/tenant/enums';
 import { useTenantDetail } from '@/modules/tenant/hooks/use-get-tenant';
-import { getTenantDetailRoute } from '@/modules/tenant/utils';
+import {
+    getTenantDetailRoute,
+    getTenantOwnerEmail,
+} from '@/modules/tenant/utils';
 import { Avatar, ConfigProvider, Spin, Tabs, TabsProps, theme } from 'antd';
 import { ArrowLeft } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -106,17 +109,15 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
                             size={64}
                             shape="square"
                         >
-                            {getAvatarPlaceholder(
-                                dataTenant.title || dataTenant.name
-                            )}
+                            {getAvatarPlaceholder(dataTenant.name)}
                         </Avatar>
                         <div className="h-full">
                             <h1 className="text-3xl font-bold">
-                                {dataTenant.title || dataTenant.name}
+                                {dataTenant.name}
                             </h1>
                             <p style={{ color: token.colorTextSecondary }}>
                                 {messages('tenant.owner')}:{' '}
-                                {dataTenant.owner?.email}
+                                {getTenantOwnerEmail(dataTenant.tenantUser)}
                             </p>
                         </div>
                     </div>

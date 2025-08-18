@@ -524,6 +524,7 @@
         "label": "Người dùng",
         "admin": "Admin",
         "user": "Người dùng",
+        "email": "Email",
         "manager": "Quản lý",
         "permission": "Phân quyền",
         "firstName": "Họ",
@@ -563,6 +564,14 @@
         "search": {
             "keyword": "Tìm kiếm theo tên, email",
             "id": "Tìm kiếm theo ID"
+        },
+        "role": {
+            "system": {
+                "label": "Role trong hệ thống"
+            },
+            "tenant": {
+                "label": "Role trong workspace"
+            }
         }
     },
     "file": {
@@ -1145,6 +1154,21 @@
                 "label": "Label"
             }
         },
+        "userType": {
+            "label": "Vai trò",
+            "owner": {
+                "label": "Người sở hữu",
+                "tooltip": "Người dùng có quyền sở hữu và quản lý toàn bộ workspace này"
+            },
+            "admin": {
+                "label": "Quản trị viên",
+                "tooltip": "Người dùng có quyền quản trị đầy đủ trong workspace này."
+            },
+            "member": {
+                "label": "Thành viên",
+                "tooltip": "Người dùng có quyền truy cập theo các quyền được cấp."
+            }
+        },
         "search": {
             "keyword": "Tìm kiếm theo tên, email"
         },
@@ -1183,6 +1207,11 @@
             "button": "Thêm mới",
             "title": "Thêm {label}",
             "success": "Thêm {label} thành công"
+        },
+        "invite": {
+            "button": "Mời",
+            "title": "Mời {label}",
+            "success": "Mời {label} thành công"
         },
         "update": {
             "button": "Cập nhật",

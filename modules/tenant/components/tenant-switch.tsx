@@ -1,25 +1,50 @@
 import { Skeleton } from '@/components/ui/skeleton';
+import { defaultConfig } from '@/constants/env';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { CheckCard } from '@ant-design/pro-components';
-import { Avatar, Popover } from 'antd';
+import { Avatar, Popover, Spin } from 'antd';
+import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { useTenantActive } from '../hooks/use-get-tenant';
 import { TenantData } from '../types/data';
-import { getTenantAvatar } from '../utils';
+import { getTenantAvatar, getTenantOwnerEmail } from '../utils';
 import TenantTag from './tenant-tag';
 
 type Props = {};
 
+const defaultData = {
+    name: defaultConfig.APP_SHORT_NAME,
+    logo: defaultConfig.APP_LOGO,
+    icon: defaultConfig.APP_ICON,
+};
+
 function TenantSwitch({}: Props) {
     const messages = useTranslations();
     const { data, isLoading } = useTenantActive();
+    const { tenantId } = useAuth();
+    const { update, data: session } = useSession();
 
-    const [value, setValue] = useState<TenantData['id']>();
-    const currentData = data.items.find((item) => item.id === value);
+    const [loading, setLoading] = useState(false);
+
+    const [value, setValue] = useState<TenantData['id']>(tenantId);
+    const currentData =
+        data.items.find((item) => item.id === value) || defaultData;
+
+    const onSwitchTenant = (tenantId: string) => {
+        setLoading(true);
+        update({ tenantId })
+            .then(() => {
+                window.location.reload();
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
 
     useEffect(() => {
-        setValue(data.items[0]?.id);
-    }, [data]);
+        setValue(tenantId);
+    }, [tenantId]);
 
     if (isLoading) {
         return (
@@ -36,60 +61,66 @@ function TenantSwitch({}: Props) {
                 placement="bottomRight"
                 trigger={['click']}
                 content={
-                    <div className="max-h-96 overflow-auto px-1">
-                        <CheckCard.Group
-                            style={{
-                                display: 'grid',
-                            }}
-                            onChange={(id) => {
-                                if (typeof id === 'string') {
-                                    setValue(id);
-                                }
-                            }}
-                            value={value}
-                        >
-                            {data.items.map((item) => (
-                                <CheckCard
-                                    key={item.id}
-                                    value={item.id}
-                                    avatar={getTenantAvatar({
-                                        logo: item.logo,
-                                        icon: item.icon,
-                                        name: item.name,
-                                    })}
-                                    title={
-                                        <p className="flex items-center gap-2">
-                                            <span className="font-semibold">
-                                                {item.name}
-                                            </span>
-                                            <TenantTag type={item.type} />
-                                        </p>
+                    <Spin spinning={loading}>
+                        <div className="h-[60vh] max-h-[40rem] overflow-auto px-1">
+                            <CheckCard.Group
+                                style={{
+                                    display: 'grid',
+                                }}
+                                onChange={(id) => {
+                                    if (typeof id === 'string') {
+                                        onSwitchTenant(id);
                                     }
-                                    description={
-                                        <div className="space-y-0.5 truncate text-xs">
-                                            <p>
-                                                {messages('tenant.owner')}:{' '}
-                                                {item.owner.email}
+                                }}
+                                value={value}
+                            >
+                                {data.items.map((item) => (
+                                    <CheckCard
+                                        key={item.id}
+                                        value={item.id}
+                                        avatar={getTenantAvatar({
+                                            logo: item.logo,
+                                            icon: item.icon,
+                                            name: item.name,
+                                        })}
+                                        title={
+                                            <p className="flex items-center gap-2">
+                                                <span className="font-semibold">
+                                                    {item.name}
+                                                </span>
+                                                <TenantTag type={item.type} />
                                             </p>
-                                            {item.parent && (
+                                        }
+                                        description={
+                                            <div className="space-y-0.5 truncate text-xs">
                                                 <p>
-                                                    {messages('tenant.manager')}
-                                                    :{' '}
-                                                    <span className="font-semibold">
-                                                        {item.parent.name}
-                                                    </span>
+                                                    {messages('tenant.owner')}:{' '}
+                                                    {getTenantOwnerEmail(
+                                                        item.tenantUser
+                                                    )}
                                                 </p>
-                                            )}
-                                        </div>
-                                    }
-                                    style={{
-                                        marginInlineEnd: 0,
-                                        marginBlockEnd: 8,
-                                    }}
-                                />
-                            ))}
-                        </CheckCard.Group>
-                    </div>
+                                                {item.parent && (
+                                                    <p>
+                                                        {messages(
+                                                            'tenant.manager'
+                                                        )}
+                                                        :{' '}
+                                                        <span className="font-semibold">
+                                                            {item.parent.name}
+                                                        </span>
+                                                    </p>
+                                                )}
+                                            </div>
+                                        }
+                                        style={{
+                                            marginInlineEnd: 0,
+                                            marginBlockEnd: 8,
+                                        }}
+                                    />
+                                ))}
+                            </CheckCard.Group>
+                        </div>
+                    </Spin>
                 }
             >
                 <div className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1 hover:bg-zinc-200/70 dark:hover:bg-zinc-800">

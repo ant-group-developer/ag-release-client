@@ -12,19 +12,38 @@ export type AppFormProps = {
     submitRootClassName?: string;
 } & Omit<FormProps, 'name'>;
 
-function AppForm({
+type AppFormComponent = React.FC<AppFormProps> & {
+    useForm: typeof Form.useForm;
+    useFormInstance: typeof Form.useFormInstance;
+    useWatch: typeof Form.useWatch;
+    Item: typeof Form.Item;
+    List: typeof Form.List;
+    ErrorList: typeof Form.ErrorList;
+    Provider: typeof Form.Provider;
+};
+
+const AppForm: AppFormComponent = ({
     children,
     submitText,
     showSubmit = true,
     submitProps,
     submitRootClassName,
     ...props
-}: AppFormProps) {
+}: AppFormProps) => {
     const messages = useTranslations();
     const formLayout =
         props.layout === 'vertical' ? FORM_LAYOUT_VERTICAL : FORM_LAYOUT;
     return (
-        <Form {...formLayout} {...props}>
+        <Form
+            {...formLayout}
+            requiredMark={(label, info) => (
+                <div className="font-medium">
+                    {label}{' '}
+                    {info.required && <span className="text-red-500">*</span>}
+                </div>
+            )}
+            {...props}
+        >
             {children}
             <div
                 className={cn(
@@ -41,6 +60,14 @@ function AppForm({
             </div>
         </Form>
     );
-}
+};
+
+AppForm.useForm = Form.useForm;
+AppForm.useFormInstance = Form.useFormInstance;
+AppForm.useWatch = Form.useWatch;
+AppForm.Item = Form.Item;
+AppForm.List = Form.List;
+AppForm.ErrorList = Form.ErrorList;
+AppForm.Provider = Form.Provider;
 
 export default AppForm;

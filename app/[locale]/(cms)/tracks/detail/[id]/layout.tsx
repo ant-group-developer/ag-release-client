@@ -100,7 +100,6 @@ export default function TrackDetail({ children }: PropsWithChildren) {
             setIsScrolled(scrollTop > 0);
         };
         const scrollEl = scrollContainerRef.current;
-        console.log(isScroll);
 
         if (scrollEl) {
             scrollEl.addEventListener('scroll', handleScroll);

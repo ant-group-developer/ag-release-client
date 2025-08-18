@@ -8,6 +8,7 @@ import useModalStore from '@/hooks/use-modal';
 import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 import CreateUserModal from '@/modules/user/components/user-create';
 import UserHeader from '@/modules/user/components/user-header';
+import InviteUserModal from '@/modules/user/components/user-invite';
 import UserTable from '@/modules/user/components/user-table';
 import UpdateUserModal from '@/modules/user/components/user-update';
 import { TYPE_MODAL_USER, USER_ORDER_BY } from '@/modules/user/enums';
@@ -98,6 +99,9 @@ export default function UserPage({}: Props) {
 
             {typeModal === TYPE_MODAL_USER.UPDATE && (
                 <UpdateUserModal open onCancel={closeModal} />
+            )}
+            {typeModal === TYPE_MODAL_USER.INVITE && (
+                <InviteUserModal open onCancel={closeModal} />
             )}
         </div>
     );

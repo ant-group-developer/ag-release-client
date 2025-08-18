@@ -22,3 +22,9 @@ export enum TENANT_TABS {
     TRACK = 'tracks',
     RELEASE = 'releases',
 }
+
+export enum TENANT_USER_TYPE {
+    OWNER = 'owner',
+    ADMIN = 'admin',
+    MEMBER = 'member',
+}

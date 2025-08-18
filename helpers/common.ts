@@ -13,7 +13,6 @@ import { DatePickerProps, GetProp, UploadProps } from 'antd';
 import clsx, { ClassValue } from 'clsx';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import MediaInfoFactory from 'mediainfo.js';
 import { parseBlob } from 'music-metadata';
 import { twMerge } from 'tailwind-merge';
 dayjs.extend(utc);
@@ -22,94 +21,6 @@ dayjs.extend(utc);
  * @param file - The File object from an `<input type="file">`
  * @returns Promise with metadata
  */
-
-export const getMediaInfoVideo = async (
-    file: File
-): Promise<{
-    duration: number;
-    resolution?: string;
-    width: number;
-    height: number;
-    frameRate: number;
-    encoding: string;
-    orientation: ORIENTATION;
-}> => {
-    return new Promise((resolve, reject) => {
-        MediaInfoFactory({
-            format: 'object',
-            locateFile: () => '/MediaInfoModule.wasm', // Serve from public folder
-        }).then((mediainfo) => {
-            mediainfo
-                .analyzeData(
-                    () => file.size,
-                    (chunkSize, offset) =>
-                        new Promise((res) => {
-                            const reader = new FileReader();
-                            reader.onload = (e) =>
-                                res(
-                                    new Uint8Array(
-                                        e.target?.result as ArrayBuffer
-                                    )
-                                );
-                            reader.readAsArrayBuffer(
-                                file.slice(offset, offset + chunkSize)
-                            );
-                        })
-                )
-                .then((result) => {
-                    if (
-                        !result.media ||
-                        !result.media.track ||
-                        result.media.track.length === 0
-                    ) {
-                        reject(new Error('No media data found'));
-                        return;
-                    }
-
-                    const videoTrack = result.media.track.find(
-                        (t) => t['@type'] === 'Video'
-                    );
-
-                    if (!videoTrack) {
-                        reject(new Error('No video stream found'));
-                        return;
-                    }
-
-                    // Ensure width and height are defined
-                    const width = videoTrack.Width ?? 0;
-                    const height = videoTrack.Height ?? 0;
-
-                    // Ensure numeric values are properly parsed
-                    const duration = videoTrack.Duration
-                        ? parseFloat(String(videoTrack.Duration.toFixed(1)))
-                        : 0;
-
-                    const frameRate = videoTrack.FrameRate
-                        ? parseFloat(String(videoTrack.FrameRate))
-                        : 0;
-
-                    resolve({
-                        duration,
-                        width: width,
-                        height: height,
-                        frameRate,
-                        encoding: videoTrack.Format ?? 'unknown',
-                        orientation:
-                            width > height
-                                ? ORIENTATION.HORIZONTAL
-                                : ORIENTATION.VERTICAL,
-                        // orientation:
-                        //     width > height
-                        //         ? 'horizontal'
-                        //         : width < height
-                        //           ? 'vertical'
-                        //           : 'unknown',
-                    });
-                })
-                .catch((err) => reject(err));
-        });
-    });
-};
 
 export const getImageDimensions = (
     file: File

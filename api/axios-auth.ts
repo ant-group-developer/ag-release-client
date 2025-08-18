@@ -14,7 +14,7 @@ const replacer = (_key: string, value: any) =>
     value === undefined ? null : value;
 
 const config: AxiosRequestConfig = {
-    baseURL: '/api/v1',
+    baseURL: '/api/proxy',
     headers: { 'Content-Type': 'application/json' },
     transformRequest: [
         function (data: any) {

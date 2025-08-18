@@ -3,7 +3,6 @@ import CopyText from '@/components/ui/copy-text/copy-text';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import {
     formattedDate,
-    formattedNumber,
     getAvatarPlaceholder,
     getIndex,
     getSortOrder,
@@ -48,10 +47,6 @@ function UserTable({ dataFilter, ...props }: Props) {
                 isActive: status,
             },
         });
-    };
-
-    const getAuth0Link = (email: string) => {
-        return `https://manage.auth0.com/dashboard/us/ant-group/users?q=${email}`;
     };
 
     const columns: ColumnsType<UserData> = [
@@ -105,24 +100,28 @@ function UserTable({ dataFilter, ...props }: Props) {
                                 </p>
                             </CopyText>
                         </div>
-                        {/* <a
-                            href={getAuth0Link(record.email)}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="ml-auto rounded-full p-2 text-gray-500 transition-colors hover:bg-gray-200 hover:text-gray-700"
-                        >
-                            <ExternalLink size={SIZE_ICON} />
-                        </a> */}
                     </div>
                 );
             },
         },
         {
-            title: messages('user.type'),
+            title: messages('user.role.system.label'),
             dataIndex: 'type',
             width: 120,
             align: 'center',
             render: (cell) => messages(`user.${cell}` as any),
+        },
+        {
+            title: messages('user.role.tenant.label'),
+            dataIndex: 'type',
+            width: 120,
+            align: 'center',
+            render: (cell, record) => {
+                const type = record.tenantUser[0]?.type;
+                return type
+                    ? messages(`tenant.userType.${type}.label` as any)
+                    : '-';
+            },
         },
         // {
         //     title: messages('user.emailVerified'),
@@ -150,23 +149,23 @@ function UserTable({ dataFilter, ...props }: Props) {
                 />
             ),
         },
-        {
-            title: messages('user.loginsCount'),
-            dataIndex: USER_ORDER_BY.LOGIN_COUNT,
-            align: 'center',
-            width: 180,
-            sorter: true,
-            sortOrder: getSortOrder(
-                dataFilter.orderBy,
-                dataFilter.fieldOrder,
-                USER_ORDER_BY.LOGIN_COUNT
-            ),
-            render: (cell) => (
-                <CopyText text={cell} className="mx-auto">
-                    <p>{formattedNumber(cell)}</p>
-                </CopyText>
-            ),
-        },
+        // {
+        //     title: messages('user.loginsCount'),
+        //     dataIndex: USER_ORDER_BY.LOGIN_COUNT,
+        //     align: 'center',
+        //     width: 180,
+        //     sorter: true,
+        //     sortOrder: getSortOrder(
+        //         dataFilter.orderBy,
+        //         dataFilter.fieldOrder,
+        //         USER_ORDER_BY.LOGIN_COUNT
+        //     ),
+        //     render: (cell) => (
+        //         <CopyText text={cell} className="mx-auto">
+        //             <p>{formattedNumber(cell)}</p>
+        //         </CopyText>
+        //     ),
+        // },
         // {
         //     title: messages('user.lastIp'),
         //     dataIndex: 'lastIp',
@@ -238,14 +237,7 @@ function UserTable({ dataFilter, ...props }: Props) {
         });
     }
 
-    return (
-        <AppTable
-            {...props}
-            size="middle"
-            pagination={false}
-            columns={columns}
-        />
-    );
+    return <AppTable {...props} pagination={false} columns={columns} />;
 }
 
 export default UserTable;

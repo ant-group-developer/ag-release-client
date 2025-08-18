@@ -22,6 +22,11 @@ function AntdProvider({ children }: Props) {
             currentTheme === THEME.DARK
                 ? antdTheme.darkAlgorithm
                 : antdTheme.defaultAlgorithm,
+        components: {
+            Form: {
+                itemMarginBottom: 12,
+            },
+        },
     };
 
     return (

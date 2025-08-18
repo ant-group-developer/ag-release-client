@@ -1,7 +1,5 @@
 import CreateButton from '@/components/ui/button/create-button';
 import IconButton from '@/components/ui/button/icon-button';
-import AppSearch from '@/components/ui/input/search';
-import { TYPE_MODAL } from '@/enums/common';
 import useModalStore from '@/hooks/use-modal';
 import { Link, useRouter } from '@/i18n/routing';
 import TenantSwitch from '@/modules/tenant/components/tenant-switch';
@@ -9,7 +7,6 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Layout } from 'antd';
 import { useTranslations } from 'next-intl';
 import AppAvatar from './app-avatar';
-import AppSearchModal from './app-search-modal';
 import AppSupport from './app-support';
 
 type Props = {
@@ -38,14 +35,14 @@ function Header({ collapsed, toggleCollapsed }: Props) {
                 <TenantSwitch />
             </div>
 
-            <div className="flex max-w-[400px] flex-1 items-center">
+            {/* <div className="flex max-w-[400px] flex-1 items-center">
                 <AppSearch
                     onClick={() => openModal(TYPE_MODAL.SEARCH)}
                     onSearch={() => openModal(TYPE_MODAL.SEARCH)}
                 />
 
                 {typeModal === TYPE_MODAL.SEARCH && <AppSearchModal />}
-            </div>
+            </div> */}
 
             <div className="flex flex-1 items-center justify-end gap-2">
                 <Link href={'/releases/create'}>

@@ -16,7 +16,7 @@ export interface WebsiteConfig {
 }
 
 export interface AppConfigShape {
-    auth0: Auth0Config;
+    // auth0: Auth0Config;
     website: WebsiteConfig;
 }
 

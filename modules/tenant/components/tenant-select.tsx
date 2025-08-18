@@ -45,7 +45,7 @@ function TenantSelect({
         })
         .map((data) => {
             const tenantId = data.id;
-            const email = data.owner.email;
+            const email = data.email;
             const name = data.name;
 
             return {
@@ -57,7 +57,7 @@ function TenantSelect({
                             className="flex-none"
                             size={'large'}
                         >
-                            {getAvatarPlaceholder(data.owner.email)}
+                            {getAvatarPlaceholder(data.name)}
                         </Avatar>
                         <p className="flex flex-1 flex-col">
                             <span className="truncate">{name}</span>

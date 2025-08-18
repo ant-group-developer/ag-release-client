@@ -66,6 +66,10 @@ export async function middleware(req: NextRequest) {
         return res;
     }
 
+    if (pathname.startsWith('/api/proxy')) {
+        return NextResponse.next();
+    }
+
     // 4. Finally, hand off to next-intl
     return nextIntl(req);
 }
