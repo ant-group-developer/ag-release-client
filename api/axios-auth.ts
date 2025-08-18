@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import type { Session } from 'next-auth';
-import { getSession } from 'next-auth/react';
+import { getSession, signOut } from 'next-auth/react';
 
 const ACCESS_TOKEN_EXPIRED_MESSAGE = 'jwt expired';
 export const REFRESH_FAILED_MESSAGE = 'RefreshFailed';
@@ -81,7 +81,7 @@ axiosInstance.interceptors.response.use(
             // If refresh failed, handle accordingly (sign out or surface error)
             if (!session || session.error === REFRESH_FAILED_MESSAGE) {
                 // optionally redirect to sign-in
-                // await signOut();
+                await signOut();
                 return Promise.reject(error);
             }
 
