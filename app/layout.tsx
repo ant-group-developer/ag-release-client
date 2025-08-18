@@ -5,8 +5,24 @@ import SessionProvider from '@/providers/session-provider';
 import '@/styles/globals.css';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { getServerSession } from 'next-auth';
+import { Inter, Open_Sans } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';
 import { ReactNode } from 'react';
+
+const openSans = Open_Sans({
+    subsets: ['latin'],
+    weight: ['400', '500', '600', '700', '800'],
+    variable: '--font-open-sans',
+    display: 'swap',
+});
+
+const inter = Inter({
+    subsets: ['latin'],
+    weight: ['400', '500', '600', '700', '800', '900'],
+    variable: '--font-inter',
+    display: 'swap',
+    preload: true,
+});
 
 type Props = {
     children: ReactNode;
@@ -17,14 +33,20 @@ type Props = {
 export default async function RootLayout({ children }: Props) {
     const session = await getServerSession(authOptions);
     return (
-        <AntdRegistry>
-            <ReactQueryProviders>
-                <NextTopLoader showSpinner={false} />
-                <SessionProvider session={session}>
-                    {children}
-                    <AppToast />
-                </SessionProvider>
-            </ReactQueryProviders>
-        </AntdRegistry>
+        <html lang="en">
+            <body
+                className={`${openSans.variable} ${openSans.className} ${inter.variable} ${inter.className} text-sm antialiased`}
+            >
+                <AntdRegistry>
+                    <ReactQueryProviders>
+                        <NextTopLoader showSpinner={false} />
+                        <SessionProvider session={session}>
+                            {children}
+                            <AppToast />
+                        </SessionProvider>
+                    </ReactQueryProviders>
+                </AntdRegistry>
+            </body>
+        </html>
     );
 }
