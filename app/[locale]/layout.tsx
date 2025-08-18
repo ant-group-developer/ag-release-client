@@ -50,7 +50,9 @@ export async function generateMetadata({
     const timeZone = await getTimeZone({ locale });
     const route = await pathname();
 
-    const settingData = await getCurrentTenant(cookies().toString());
+    const settingData = await getCurrentTenant(cookies().toString()).catch(
+        () => null
+    );
 
     const getTitle = () => {
         const flattenRoutes = flattenData(adminRoutes, {});
