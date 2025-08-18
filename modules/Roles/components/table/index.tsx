@@ -1,7 +1,5 @@
 import ActionButton from '@/components/ui/button/action-button';
-import SortableTable, {
-    SortableTableProps,
-} from '@/components/ui/table/sortable-table';
+import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { Badge, Empty } from 'antd';
@@ -10,7 +8,7 @@ import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_ROLES } from '../../enums';
 import { RolePermission, RolesData, RolesDataDataFilter } from '../../types';
 
-type Props = Omit<SortableTableProps<RolesData>, 'columns'> & {
+type Props = Omit<AppTableProps<RolesData>, 'columns'> & {
     pagination: {
         pageSize: number;
         current: number;
@@ -22,11 +20,6 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
 
-    const RolesDataWithIndex =
-        props.dataSource?.map((record, index) => ({
-            ...record,
-            parentIndex: index + 1,
-        })) || [];
     const column: ColumnType<RolesData>[] = [
         {
             title: messages('common.iNo'),
@@ -132,7 +125,7 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
         },
     ];
 
-    const expandable: SortableTableProps<RolesData>['expandable'] = {
+    const expandable: AppTableProps<RolesData>['expandable'] = {
         expandedRowRender: (record: RolesData, parentIndex?: number) => {
             const rows: RolePermission[] = Array.isArray(record.rolePermissions)
                 ? record.rolePermissions.map((rp) => rp)
@@ -155,9 +148,7 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
                     align: 'center',
                     width: 70,
                     render: (_: any, __: RolePermission, idx: number) =>
-                        parentIndex !== undefined
-                            ? `${parentIndex + 1}.${idx + 1}`
-                            : idx + 1,
+                        idx + 1,
                 },
                 {
                     title: messages('permission.name'),
@@ -193,7 +184,7 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
 
             return (
                 <div className="px-4 py-2">
-                    <SortableTable
+                    <AppTable
                         className="overflow-hidden rounded-lg border"
                         columns={childColumns}
                         dataSource={rows}
@@ -210,10 +201,9 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
     };
 
     return (
-        <SortableTable
+        <AppTable
             key="main"
             {...props}
-            dataSource={RolesDataWithIndex}
             pagination={false}
             columns={column}
             rowClassName={'group cursor-pointer'}
