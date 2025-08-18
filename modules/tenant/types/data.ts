@@ -34,6 +34,7 @@ export interface TenantDetail extends CommonAttributeCreator {
     parent: TenantDetail | null;
     children: TenantDetail[];
     tenantUser: TenantUser[];
+    tenantUserCount: number;
 }
 
 export type TenantActiveData = Pick<
@@ -48,14 +49,13 @@ export type TenantData = Pick<
     | 'icon'
     | 'title'
     | 'name'
-    | 'domain'
-    | 'primaryColor'
     | 'email'
     | 'isActive'
     | 'type'
     | 'parent'
     | 'children'
     | 'tenantUser'
+    | 'tenantUserCount'
 >;
 
 export interface UpdateTenantPayload {

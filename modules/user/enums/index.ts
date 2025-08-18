@@ -14,5 +14,6 @@ export enum USER_ORDER_BY {
 export enum TYPE_MODAL_USER {
     UPDATE = 'UPDATE_USER',
     CREATE = 'CREATE_USER',
+    INVITE = 'INVITE_USER',
     PERMISSION = 'PERMISSION',
 }

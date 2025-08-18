@@ -4,7 +4,6 @@ import {
     formattedNumber,
     getAvatarPlaceholder,
     getIndex,
-    getRandomInt,
     getSortOrder,
 } from '@/helpers/common';
 import { Link } from '@/i18n/routing';
@@ -145,7 +144,7 @@ function TenantTable({ dataFilter, ...props }: Props) {
             align: 'center',
             width: 120,
             sorter: true,
-            render: () => formattedNumber(getRandomInt(3, 15)),
+            render: (cell, record) => formattedNumber(record.tenantUserCount),
         },
         {
             title: messages('tenant.member'),

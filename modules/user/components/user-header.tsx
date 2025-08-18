@@ -3,6 +3,7 @@ import Refresh from '@/components/refresh';
 import CreateButton from '@/components/ui/button/create-button';
 import { UseFilterProps } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { UserAddOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_USER } from '../enums';
 import { DataFilterUser } from '../types/data';
@@ -50,6 +51,15 @@ export default function UserHeader({
                             label: messages('user.label'),
                         })}
                         onClick={() => openModal(TYPE_MODAL_USER.CREATE)}
+                    />
+                    <CreateButton
+                        canCreate={true}
+                        text={messages('action.invite.title', {
+                            label: messages('user.label'),
+                        })}
+                        onClick={() => openModal(TYPE_MODAL_USER.INVITE)}
+                        ghost
+                        icon={<UserAddOutlined />}
                     />
                 </div>
             </AppHeaderGroup>

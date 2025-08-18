@@ -1,4 +1,5 @@
 import { ORDER } from '@/enums/common';
+import { TENANT_USER_TYPE } from '@/modules/tenant/enums';
 import {
     CommonAttributeCreator,
     CommonFunction,
@@ -42,7 +43,12 @@ export type UserData = Pick<
     | 'loginsCount'
     | 'creator'
     | 'modifier'
->;
+> & {
+    tenantUser: {
+        type: TENANT_USER_TYPE;
+        tenantId: string;
+    }[];
+};
 
 export interface UpdateUserPayload {
     name?: string;
@@ -65,6 +71,14 @@ export interface CreateUserPayload extends UpdateUserPayload {
 
 export interface CreateUser extends CommonFunction {
     payload: CreateUserPayload;
+}
+export interface InviteUserPayload {
+    email: string;
+    type: TENANT_USER_TYPE;
+}
+
+export interface InviteUser extends CommonFunction {
+    payload: InviteUserPayload;
 }
 
 export interface SyncUserData extends CommonFunction {}

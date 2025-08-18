@@ -3,6 +3,7 @@ import { DetailResponse, PaginationResponse } from '@/types/api';
 import {
     CreateUserPayload,
     DataFilterUser,
+    InviteUserPayload,
     UpdateUserPayload,
     UserData,
     UserDetail,
@@ -24,6 +25,10 @@ export const userApi = {
             `/users`,
             payload
         );
+    },
+
+    invite(payload: InviteUserPayload) {
+        return axiosInstance.post(`/users/invite`, payload);
     },
 
     update(id: string, payload: UpdateUserPayload) {

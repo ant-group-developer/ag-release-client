@@ -12,9 +12,9 @@ function CreateButton({ text, canCreate, ...props }: Props) {
     if (!canCreate) return null;
     return (
         <Button
-            {...props}
             icon={<PlusOutlined />}
             type="primary"
+            {...props}
             className="flex items-center justify-center"
         >
             {text ?? messages('action.create.button')}
