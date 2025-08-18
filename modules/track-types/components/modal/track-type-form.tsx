@@ -1,6 +1,7 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
+import { getCodeFormatted } from '@/helpers/string';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
@@ -113,12 +114,18 @@ export default function TrackTypeFormModal({ ...props }: Props) {
                         },
                     ]}
                 >
-                    <Input allowClear />
+                    <Input
+                        allowClear
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            form.setFieldValue('code', getCodeFormatted(value));
+                        }}
+                    />
                 </AppFormItem>
 
                 <AppFormItem
-                    name="value"
-                    label={messages('common.value')}
+                    name="code"
+                    label={messages('common.code')}
                     required
                     rules={[
                         {

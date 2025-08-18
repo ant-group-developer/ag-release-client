@@ -2,7 +2,7 @@ import { CommonAttribute, CommonParams } from '@/types/api';
 
 export interface ReleaseTypesData extends CommonAttribute {
     name: string;
-    value: string;
+    code: string;
     minTrackCount: number;
     maxTrackCount: number;
 }

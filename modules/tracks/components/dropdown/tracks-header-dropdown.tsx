@@ -38,10 +38,10 @@ export default function TracksHeaderDropdown({
 
     const dropdownItems = [
         {
-            label: messages('common.createdAt'),
-            value: TYPE_FILTER.DATE_CREATED,
-            visible: !dataFilter.startCreatedAt && !dataFilter.endCreatedAt,
-            onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_CREATED),
+            label: messages('common.search'),
+            value: TYPE_FILTER.KEYWORD,
+            visible: !dataFilter.keyword,
+            onClick: () => handleChangeTypeFilter(TYPE_FILTER.KEYWORD),
         },
         // {
         //     label: messages('common.dateRelease'),
@@ -49,12 +49,6 @@ export default function TracksHeaderDropdown({
         //     visible: !dataFilter.startDateRelease && !dataFilter.endDateRelease,
         //     onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_RELEASE),
         // },
-        {
-            label: messages('common.search'),
-            value: TYPE_FILTER.KEYWORD,
-            visible: !dataFilter.keyword,
-            onClick: () => handleChangeTypeFilter(TYPE_FILTER.KEYWORD),
-        },
         {
             label: messages('releases.label'),
             value: TYPE_FILTER.RELEASE_ID,
@@ -66,6 +60,18 @@ export default function TracksHeaderDropdown({
             value: TYPE_FILTER.ARTIST_ID,
             visible: !dataFilter.artistId,
             onClick: () => handleChangeTypeFilter(TYPE_FILTER.ARTIST_ID),
+        },
+        {
+            label: messages('tracks.scan'),
+            value: TYPE_FILTER.IS_SCANNED,
+            visible: !dataFilter.isScanned,
+            onClick: () => handleChangeTypeFilter(TYPE_FILTER.IS_SCANNED),
+        },
+        {
+            label: messages('common.createdAt'),
+            value: TYPE_FILTER.DATE_CREATED,
+            visible: !dataFilter.startCreatedAt && !dataFilter.endCreatedAt,
+            onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_CREATED),
         },
         // {
         //     label: messages('common.type'),

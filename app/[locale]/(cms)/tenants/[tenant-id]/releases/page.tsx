@@ -143,6 +143,7 @@ export default function Releases({}: Props) {
                         pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
                         current: releasesData?.metadata?.currentPage,
                     }}
+                    dataFilter={dataFilter}
                 />
             )}
 

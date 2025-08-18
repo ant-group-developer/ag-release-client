@@ -158,6 +158,14 @@ export const getNameByLocale = (
     return locale === LOCALE.VI ? nameVi : nameEn;
 };
 
+export const getCodeFormatted = (code: string) => {
+    return code
+        .trim()
+        .split(' ')
+        .map((i) => i.toUpperCase())
+        .join('_');
+};
+
 // Không dùng nữa
 // export function genFolderBucket({
 //     uploadPurpose,

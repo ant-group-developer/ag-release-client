@@ -1,6 +1,6 @@
 export interface CreateArtistRolePayload {
     name: string;
-    value: string;
+    code: string;
 }
 
 export interface UpdateArtistRolePayload

@@ -42,9 +42,21 @@ export default function TracksSuperFilter({
         setTypeFilter(value);
     };
 
-    const { releasesData } = useGetListReleases({ pageSize: 999 });
+    const { releasesData, isFetching: isReleaseLoading } = useGetListReleases(
+        { pageSize: 999 },
+        {
+            enabled:
+                typeFilter == TYPE_FILTER.RELEASE_ID || !!dataFilter?.releaseId,
+        }
+    );
 
-    const { artistsData } = useGetListArtist({ pageSize: 999 });
+    const { artistsData, isFetching: isArtistsLoading } = useGetListArtist(
+        { pageSize: 999 },
+        {
+            enabled:
+                typeFilter == TYPE_FILTER.ARTIST_ID || !!dataFilter?.artistId,
+        }
+    );
 
     useEffect(() => {
         const handleOutSideClick = (event: any) => {
@@ -97,6 +109,7 @@ export default function TracksSuperFilter({
                 <PopoverCheckboxFilter
                     open={typeFilter === TYPE_FILTER.RELEASE_ID}
                     title={messages('releases.label')}
+                    loading={isReleaseLoading}
                     options={releasesData?.items?.map((item: ReleasesData) => ({
                         name: item?.title,
                         value: item?.id,
@@ -118,6 +131,7 @@ export default function TracksSuperFilter({
                 <PopoverCheckboxFilter
                     open={typeFilter === TYPE_FILTER.ARTIST_ID}
                     title={messages('artist.label')}
+                    loading={isArtistsLoading}
                     options={artistsData?.items?.map((item: ArtistData) => ({
                         name: item?.name,
                         value: item?.id,
@@ -134,6 +148,27 @@ export default function TracksSuperFilter({
                         });
                     }}
                     onRemove={() => onChangeFilter({ artistId: undefined })}
+                />
+
+                <PopoverCheckboxFilter
+                    open={typeFilter === TYPE_FILTER.IS_SCANNED}
+                    title={messages('common.scan')}
+                    options={[
+                        { name: messages('common.scanned'), value: 'true' },
+                        { name: messages('common.notScanned'), value: 'false' },
+                    ]}
+                    selectedValues={arrayFromString(dataFilter?.isScanned)}
+                    onOpenChange={(val) => {
+                        return setTypeFilter(
+                            val ? TYPE_FILTER.IS_SCANNED : undefined
+                        );
+                    }}
+                    onConfirm={(vals) => {
+                        return onChangeFilter({
+                            isScanned: arrayToString(vals),
+                        });
+                    }}
+                    onRemove={() => onChangeFilter({ isScanned: undefined })}
                 />
 
                 <TypeReleaseDialog

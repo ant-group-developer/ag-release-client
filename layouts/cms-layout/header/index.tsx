@@ -1,7 +1,7 @@
 import CreateButton from '@/components/ui/button/create-button';
 import IconButton from '@/components/ui/button/icon-button';
 import useModalStore from '@/hooks/use-modal';
-import { useRouter } from '@/i18n/routing';
+import { Link, useRouter } from '@/i18n/routing';
 import TenantSwitch from '@/modules/tenant/components/tenant-switch';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Layout } from 'antd';
@@ -45,11 +45,12 @@ function Header({ collapsed, toggleCollapsed }: Props) {
             </div> */}
 
             <div className="flex flex-1 items-center justify-end gap-2">
-                <CreateButton
-                    canCreate
-                    text={messages('releases.create')}
-                    onClick={() => router.push('/releases/create')}
-                />
+                <Link href={'/releases/create'}>
+                    <CreateButton
+                        canCreate
+                        text={messages('releases.create')}
+                    />
+                </Link>
                 {/* <LocaleSelect /> */}
                 {/* <ThemeToggle /> */}
                 <AppSupport />

@@ -17,7 +17,6 @@ import { useGetListGenres } from '@/modules/genres/hooks/use-get-list-genres';
 // import { fakeGenresData } from '@/modules/genres/constants';
 import { GenresData, GenresDataFilter } from '@/modules/genres/types';
 import { DeleteVariables } from '@/types/api';
-import { useWindowSize } from '@uidotdev/usehooks';
 import { useTranslations } from 'next-intl';
 
 export default function Genres() {
@@ -37,7 +36,6 @@ export default function Genres() {
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore<GenresData>((state) => state.dataEdit);
-    const { height, width } = useWindowSize();
 
     // apis
     const { genresData, isLoading, refetch, lastUpdatedAt } =

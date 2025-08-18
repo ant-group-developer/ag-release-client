@@ -1,4 +1,3 @@
-import SearchArtistIdDialog from '@/components/filter-dialog/artist-id-dialog';
 import DateCreatedDialog from '@/components/filter-dialog/date-create-dialog';
 import DateUpdateDialog from '@/components/filter-dialog/date-update-dialog';
 import SearchDialog from '@/components/filter-dialog/search-dialog';
@@ -10,6 +9,7 @@ import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
 import { ListFilter, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
+import { useGetListArtist } from '../../hooks/use-get-list-artists';
 import { ArtistDataFilter } from '../../types';
 import ArtistsHeaderDropdown from '../dropdown/artists-header-dropdown';
 
@@ -34,6 +34,8 @@ export default function ArtistsSuperFilter({
     const handleChangeTypeFilter = (value?: TYPE_FILTER) => {
         setTypeFilter(value);
     };
+
+    const { artistsData } = useGetListArtist({ pageSize: 999 });
 
     useEffect(() => {
         const handleOutSideClick = (event: any) => {
@@ -83,13 +85,13 @@ export default function ArtistsSuperFilter({
                     onChangeFilter={onChangeFilter}
                 />
 
-                <SearchArtistIdDialog
+                {/* <SearchArtistIdDialog
                     title={messages('artist.id')}
                     open={typeFilter === TYPE_FILTER.ID}
                     handleChangeTypeFilter={handleChangeTypeFilter}
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
-                />
+                /> */}
 
                 <DateCreatedDialog
                     open={typeFilter === TYPE_FILTER.DATE_CREATED}

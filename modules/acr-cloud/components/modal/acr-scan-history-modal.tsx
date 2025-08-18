@@ -1,7 +1,9 @@
+import Refresh from '@/components/refresh';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER, SCREEN } from '@/enums/common';
+import { formattedDate } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { Spin } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -36,13 +38,26 @@ export default function AcrCloudScanHistoryModal({ ...props }: Props) {
         });
     }, []);
 
-    const { scanStatusData, isFetching } = useGetScanStatus(dataFilter);
+    const { scanStatusData, isFetching, refetch, dataUpdatedAt } =
+        useGetScanStatus(dataFilter);
+
+    const renderTitle = () => {
+        return (
+            <div className="flex items-center justify-between pr-4">
+                <span>{`${messages('common.history')} ${messages('common.scan').toLowerCase()}  ACRCloud`}</span>
+                <Refresh
+                    handleRefresh={() => refetch()}
+                    lastTimeUpdated={formattedDate(dataUpdatedAt || new Date())}
+                />
+            </div>
+        );
+    };
 
     return (
         <AppModal
             open
             className="!top-16"
-            title={`${messages('common.history')} ${messages('common.scan').toLowerCase()}  ACRCloud`}
+            title={renderTitle()}
             onCancel={closeModal}
             width={1400}
             height={800}
@@ -50,7 +65,7 @@ export default function AcrCloudScanHistoryModal({ ...props }: Props) {
             {...props}
         >
             <Spin spinning={isFetching}>
-                <div className="max-h-[800px] min-h-[300px] overflow-hidden">
+                <div className="max-h-[800px] overflow-hidden">
                     <AcrScanHistoryTable
                         dataSource={scanStatusData?.items}
                         dataFilter={dataFilter}

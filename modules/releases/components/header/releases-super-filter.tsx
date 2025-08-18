@@ -3,12 +3,18 @@ import DateReleaseDialog from '@/components/filter-dialog/date-release-dialog';
 import GenresDialog from '@/components/filter-dialog/genres-dialog';
 import SearchDialog from '@/components/filter-dialog/search-dialog';
 import StatusReleaseDialog from '@/components/filter-dialog/status-releases-dialog';
-import TypeReleaseDialog from '@/components/filter-dialog/type-releases-dialog';
+import { PopoverCheckboxFilter } from '@/components/filter/popover-checkbox';
 import IconButton from '@/components/ui/button/icon-button';
+import { Chip } from '@/components/ui/chip';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
 import { TYPE_FILTER } from '@/enums/common';
+import { arrayFromString, arrayToString } from '@/helpers/array';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
+import { useGetListArtist } from '@/modules/artist/hooks/use-get-list-artists';
+import { ArtistData } from '@/modules/artist/types';
+import { useGetListReleaseTypes } from '@/modules/release-types/hooks/use-get-list-release-types';
+import { ReleaseTypesData } from '@/modules/release-types/types';
 import { ListFilter, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
@@ -36,6 +42,24 @@ export default function ReleasesSuperFilter({
     const handleChangeTypeFilter = (value?: TYPE_FILTER) => {
         setTypeFilter(value);
     };
+
+    const { artistsData, isFetching: isArtistsLoading } = useGetListArtist(
+        { pageSize: 999 },
+        {
+            enabled:
+                typeFilter === TYPE_FILTER.ARTIST_ID || !!dataFilter.artistId,
+        }
+    );
+
+    const { releaseTypesData, isFetching: isReleaseTypesLoading } =
+        useGetListReleaseTypes(
+            { pageSize: 999 },
+            {
+                enabled:
+                    typeFilter === TYPE_FILTER.ALBUM_FORMAT_ID ||
+                    !!dataFilter?.albumFormatId,
+            }
+        );
 
     useEffect(() => {
         const handleOutSideClick = (event: any) => {
@@ -85,12 +109,66 @@ export default function ReleasesSuperFilter({
                     onChangeFilter={onChangeFilter}
                 />
 
-                <TypeReleaseDialog
-                    title={messages('common.type')}
-                    open={typeFilter === TYPE_FILTER.TYPE}
-                    handleChangeTypeFilter={handleChangeTypeFilter}
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
+                {(typeFilter === TYPE_FILTER.IS_VARIOUS_ARTIST ||
+                    dataFilter?.isVariousArtist) && (
+                    <Chip
+                        onRemove={() => {
+                            setTypeFilter(undefined);
+                            onChangeFilter({
+                                isVariousArtist: '',
+                            });
+                        }}
+                    >
+                        {messages('artist.variousArtists')}
+                    </Chip>
+                )}
+
+                <PopoverCheckboxFilter
+                    open={typeFilter === TYPE_FILTER.ALBUM_FORMAT_ID}
+                    title={messages('releases.type')}
+                    loading={isReleaseTypesLoading}
+                    options={releaseTypesData?.items?.map(
+                        (item: ReleaseTypesData) => ({
+                            name: item?.name,
+                            value: item?.id,
+                        })
+                    )}
+                    selectedValues={arrayFromString(dataFilter?.albumFormatId)}
+                    onOpenChange={(val) => {
+                        return setTypeFilter(
+                            val ? TYPE_FILTER.ALBUM_FORMAT_ID : undefined
+                        );
+                    }}
+                    onConfirm={(val) => {
+                        return onChangeFilter({
+                            albumFormatId: arrayToString(val),
+                        });
+                    }}
+                    onRemove={() =>
+                        onChangeFilter({ albumFormatId: undefined })
+                    }
+                />
+
+                <PopoverCheckboxFilter
+                    open={typeFilter === TYPE_FILTER.ARTIST_ID}
+                    title={messages('artist.label')}
+                    loading={isArtistsLoading}
+                    options={artistsData?.items?.map((item: ArtistData) => ({
+                        name: item?.name,
+                        value: item?.id,
+                    }))}
+                    selectedValues={arrayFromString(dataFilter.artistId)}
+                    onOpenChange={(val) => {
+                        return setTypeFilter(
+                            val ? TYPE_FILTER.ARTIST_ID : undefined
+                        );
+                    }}
+                    onConfirm={(vals) => {
+                        return onChangeFilter({
+                            artistId: arrayToString(vals),
+                        });
+                    }}
+                    onRemove={() => onChangeFilter({ artistId: undefined })}
                 />
 
                 <StatusReleaseDialog

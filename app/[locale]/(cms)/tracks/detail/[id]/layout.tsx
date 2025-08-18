@@ -44,19 +44,37 @@ export default function TrackDetail({ children }: PropsWithChildren) {
     const itemTabs: TabsProps['items'] = [
         {
             key: TRACK_TABS.METADATA,
-            label: 'Metadata',
+            label: (
+                <Link
+                    href={getTrackDetailRoute(
+                        trackData?.id,
+                        TRACK_TABS.METADATA
+                    )}
+                >
+                    Metadata
+                </Link>
+            ),
         },
         {
             key: TRACK_TABS.AUDIO_FILE,
-            label: 'Audio File',
+            label: (
+                <Link
+                    href={getTrackDetailRoute(
+                        trackData?.id,
+                        TRACK_TABS.AUDIO_FILE
+                    )}
+                >
+                    Audio File
+                </Link>
+            ),
         },
     ];
     const trackArtist = trackData?.trackArtists;
     const trackMainArtist = trackArtist?.find(
-        (item) => item?.artistRole?.value === MAIN_ARTIST_ROLE
+        (item) => item?.artistRole?.code === MAIN_ARTIST_ROLE
     );
     const featuringArtist = trackArtist?.filter(
-        (item) => item.artistRole?.value === FEATURING_ARTIST_ROLE
+        (item) => item.artistRole?.code === FEATURING_ARTIST_ROLE
     );
     const renderDownloadTrack = () => {
         const handleOnclick = async () => {
@@ -73,11 +91,6 @@ export default function TrackDetail({ children }: PropsWithChildren) {
                 </IconButton>
             </div>
         );
-    };
-
-    // func
-    const handleTabChange = (key: string) => {
-        router.push(getTrackDetailRoute(trackData?.id, key as TRACK_TABS));
     };
 
     useEffect(() => {
@@ -137,7 +150,7 @@ export default function TrackDetail({ children }: PropsWithChildren) {
 
                     <ItemHeaderPage
                         name={messages('artist.label')}
-                        value={`${trackMainArtist?.artist?.name ?? ''} ${featuringArtist && featuringArtist?.length > 0 ? `feat. ${featuringArtist.map((item) => item.artist?.name).join(' & ')}` : ''}`}
+                        value={`${trackMainArtist?.artist?.name ?? ''} ${featuringArtist && featuringArtist?.length > 0 ? `(feat. ${featuringArtist.map((item) => item.artist?.name).join(' & ')}` : ''})`}
                     />
 
                     <ItemHeaderPage
@@ -165,7 +178,6 @@ export default function TrackDetail({ children }: PropsWithChildren) {
                             backgroundColor: token.colorBgContainer,
                         }}
                         items={itemTabs}
-                        onChange={handleTabChange}
                     />
                 </div>
             </div>

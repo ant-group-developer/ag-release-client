@@ -6,10 +6,16 @@ import { artistApi } from '../apis';
 import { artistQueryKeys } from '../constants/query-keys';
 import { ArtistDataFilter } from '../types';
 
-export const useGetListArtist = (params: ArtistDataFilter) => {
+export const useGetListArtist = (
+    params: ArtistDataFilter,
+    options?: {
+        enabled: boolean;
+    }
+) => {
     const { data, ...res } = useQuery({
         queryKey: artistQueryKeys.list(params),
         queryFn: () => artistApi.getList(params),
+        enabled: options?.enabled ?? true,
     });
 
     const artistsData = data?.data?.data ?? DEFAULT_DATA_PAGINATION;

@@ -63,7 +63,7 @@ export default function TrackArtistModal({ ...props }: Props) {
     const { updateTrackArtist } = useUpdateTrackArtist();
 
     const mainArtist: ArtistRoleData = artistsRolesData.items.find(
-        (item: ArtistRoleData) => item.value === MAIN_ARTIST_ROLE
+        (item: ArtistRoleData) => item.code === MAIN_ARTIST_ROLE
     );
 
     const handleSubmit = async (values: any) => {
@@ -145,7 +145,8 @@ export default function TrackArtistModal({ ...props }: Props) {
             }
             onCancel={closeModal}
             onOk={form.submit}
-            confirmLoading={isActive}
+            // confirmLoading={isActive}
+            loading={isActive}
             {...props}
         >
             <AppForm
@@ -153,6 +154,7 @@ export default function TrackArtistModal({ ...props }: Props) {
                 onFinish={(values) => handleSubmit(values)}
                 layout="vertical"
                 showSubmit={false}
+                disabled={isActive}
             >
                 <AppFormItem
                     name="artistId"

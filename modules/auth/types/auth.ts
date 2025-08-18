@@ -26,3 +26,7 @@ export interface JwtPayload {
     iat: number; // issued at
     exp: number; // expiration
 }
+
+export interface SwitchTenantDto {
+    tenantId: string;
+}

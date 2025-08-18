@@ -20,6 +20,7 @@ import {
     Settings,
     Speaker,
     SquareActivity,
+    SquareUser,
     User,
     User2,
 } from 'lucide-react';
@@ -198,10 +199,18 @@ export const adminRoutes: AdminRoutesType[] = [
         children: [
             {
                 id: 'permission',
-                label: 'user.permission',
+                label: 'permission.label',
                 href: APP_ROUTES.PERMISSION,
                 icon: LockKeyhole,
                 title: 'Permission',
+                permission: PERMISSION.PERMISSION.UPDATE,
+            },
+            {
+                id: 'roles',
+                label: 'roles.label',
+                href: APP_ROUTES.ROLES,
+                icon: SquareUser,
+                title: 'Roles',
                 permission: PERMISSION.PERMISSION.UPDATE,
             },
             {

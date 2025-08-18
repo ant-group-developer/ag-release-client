@@ -357,8 +357,9 @@ export default function ReleaseTracksTable({ ...props }: Props) {
     return (
         <div className="w-full">
             <SortableTable
-                {...props}
+                key="main"
                 pagination={false}
+                {...props}
                 columns={columns}
                 rowClassName={() => 'group'}
                 onDragEnd={handleDragEnd}
@@ -368,7 +369,6 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                     onExpand: handleExpand,
                     expandedRowClassName: () => '!z-0 custom-track-expanded',
                 }}
-                scroll={{ x: 'max-content' }}
             />
         </div>
     );

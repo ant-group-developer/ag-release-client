@@ -18,7 +18,6 @@ import {
     TrackTypeDataFilter,
 } from '@/modules/track-types/types';
 import { DeleteVariables } from '@/types/api';
-import { useWindowSize } from '@uidotdev/usehooks';
 import { useTranslations } from 'next-intl';
 
 type Props = {};
@@ -40,7 +39,6 @@ export default function TrackTypes({}: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as TrackTypeData);
     const closeModal = useModalStore((state) => state.closeModal);
-    const { height, width } = useWindowSize();
 
     // apis
     const { trackTypesData, isLoading, refetch, lastUpdatedAt } =

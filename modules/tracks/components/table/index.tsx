@@ -1,24 +1,25 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
-import { cn, formattedDate, getIndex } from '@/helpers/common';
+import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import { getTrackDetailRoute } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
-import { Link } from '@/i18n/routing';
+import { Link, useRouter } from '@/i18n/routing';
 import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import TrackActionButton from '@/modules/releases/components/release-detail/release-tracks/button/track-action';
 import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { TRACK_TABS, TRACKS_COLUMNS_DISPLAY } from '@/modules/tracks/enums';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
-import { Button } from 'antd';
+import { Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { SearchCheck, SearchX } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { TrackData } from '../../types';
+import { TrackData, TrackDataFilter } from '../../types';
 import TrackCoverArt from './trackCoverArt';
 
 type Props = Omit<AppTableProps<TrackData>, 'columns'> & {
+    dataFilter: TrackDataFilter;
     visibleColumns: TRACKS_COLUMNS_DISPLAY[];
     pagination: {
         pageSize: number;
@@ -26,9 +27,14 @@ type Props = Omit<AppTableProps<TrackData>, 'columns'> & {
     };
 };
 
-export default function TracksTable({ visibleColumns, ...props }: Props) {
+export default function TracksTable({
+    dataFilter,
+    visibleColumns,
+    ...props
+}: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
+    const router = useRouter();
     const column: ColumnType<TrackData>[] = [
         {
             title: messages('common.iNo'),
@@ -104,7 +110,7 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
                 const trackArtist = record?.trackArtists ?? [];
                 const mainArtist = trackArtist?.find(
                     (item: TrackArtistData) =>
-                        item.artistRole?.value?.toLowerCase() ===
+                        item.artistRole?.code?.toLowerCase() ===
                         MAIN_ARTIST_ROLE
                 );
                 return (
@@ -139,7 +145,7 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
                 const isScanned = !!record?.isScanned;
                 return (
                     <div>
-                        <Button
+                        {/* <Button
                             onClick={() => {
                                 if (!isScanned) return;
                                 openModal(
@@ -167,7 +173,36 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
                             {isScanned
                                 ? messages('common.scanned')
                                 : messages('common.notScanned')}
-                        </Button>
+                        </Button> */}
+                        <Tag
+                            onClick={() => {
+                                if (!isScanned) {
+                                    return openModal(
+                                        TYPE_MODAL_TRACK.ACR_CLOUD_SCAN,
+                                        record
+                                    );
+                                }
+                                openModal(
+                                    TYPE_MODAL_TRACK.ACR_CLOUD_SCAN_RESULT,
+                                    record
+                                );
+                            }}
+                            color={isScanned ? 'green' : 'blue'}
+                            className="!border-0 hover:cursor-pointer hover:!border hover:opacity-80"
+                        >
+                            {isScanned ? (
+                                <div className="flex items-center gap-1">
+                                    {' '}
+                                    <SearchCheck size={SIZE_ICON} />{' '}
+                                    {messages('common.scanned')}
+                                </div>
+                            ) : (
+                                <div className="flex items-center gap-1">
+                                    <SearchX size={SIZE_ICON} />{' '}
+                                    {messages('common.notScanned')}
+                                </div>
+                            )}
+                        </Tag>
                     </div>
                 );
             },
@@ -203,6 +238,12 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
             dataIndex: 'creationDate',
             align: 'center',
             width: 60,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'tracks_count'
+            ),
             render: (value, record) => (
                 <span className="truncate text-wrap">
                     {' '}
@@ -218,6 +259,12 @@ export default function TracksTable({ visibleColumns, ...props }: Props) {
             render: (_, record) => (
                 <TrackActionButton
                     showDownload
+                    showDetail
+                    onShowDetail={() => {
+                        router.push(
+                            getTrackDetailRoute(record?.id, TRACK_TABS.METADATA)
+                        );
+                    }}
                     onShowDownload={async () => {
                         const response = await bucketApi.getLinkDownloadFile(
                             record?.audioFile?.fileId as string

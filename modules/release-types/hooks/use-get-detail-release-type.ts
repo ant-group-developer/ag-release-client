@@ -14,7 +14,7 @@ export const useGetDetailReleaseType = (id: ReleaseTypesData['id']) => {
         id: '',
         createdAt: '',
         updatedAt: null,
-        value: '',
+        code: '',
         minTrackCount: 0,
         maxTrackCount: 0,
     };

@@ -20,4 +20,6 @@ export const defaultConfig = {
     CLIENT: process.env.CLIENT ?? '',
     API_UPLOAD: process.env.API_UPLOAD ?? '',
     APP_UPLOAD_X_API_KEY: process.env.APP_UPLOAD_X_API_KEY ?? '',
+    APP_LOGO: '/logo.png',
+    APP_ICON: '/logo.png',
 };

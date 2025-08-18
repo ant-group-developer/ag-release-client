@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 
 interface ApiErrorResponse {
     message: string | string[];
+    messageCode: string;
     error: string;
     statusCode: number;
 }
@@ -16,7 +17,9 @@ export function useApiError() {
 
         if (error instanceof AxiosError) {
             const errorResponse = error.response?.data as ApiErrorResponse;
-            if (errorResponse?.message) {
+            if (errorResponse?.messageCode) {
+                messageList.push(errorResponse.messageCode);
+            } else {
                 if (Array.isArray(errorResponse.message)) {
                     messageList = messageList.concat(errorResponse.message);
                 } else {

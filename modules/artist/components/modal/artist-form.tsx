@@ -221,10 +221,10 @@ export default function ArtistFormModal({ ...props }: Props) {
 
                 <Form.List name={'artistProfiles'}>
                     {(fields, { add, remove }) => (
-                        <>
+                        <div className="max-h-[390px] overflow-y-auto">
                             <p className="pb-8 font-bold">
                                 {' '}
-                                {messages('dsp.profileList')}{' '}
+                                {messages('dsp.profileList').toUpperCase()}{' '}
                             </p>
                             {fields.map(({ key, name, ...restField }) => (
                                 <div key={key}>
@@ -307,7 +307,7 @@ export default function ArtistFormModal({ ...props }: Props) {
                                                     });
                                                 }
                                             }}
-                                            className="absolute right-0 top-[-30px] mb-1"
+                                            className="absolute right-0 top-[-32px] mb-1"
                                         >
                                             <Trash
                                                 size={SIZE_ICON}
@@ -370,7 +370,7 @@ export default function ArtistFormModal({ ...props }: Props) {
                                     + {messages('action.create.button')}
                                 </Button>
                             </div>
-                        </>
+                        </div>
                     )}
                 </Form.List>
             </AppForm>

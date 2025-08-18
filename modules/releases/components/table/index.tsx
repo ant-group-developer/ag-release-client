@@ -8,6 +8,7 @@ import {
     formattedDate,
     getIndex,
     getIntlCodeByReleaseStatus,
+    getSortOrder,
 } from '@/helpers/common';
 import {
     getReleaseDetailTabRoute,
@@ -29,6 +30,7 @@ import { ReleasesData, ReleasesDataFilter } from '../../types';
 import ReleaseCoverImage from '../image/release-cover-image';
 
 type Props = Omit<AppTableProps<ReleasesData>, 'columns'> & {
+    dataFilter: ReleasesDataFilter;
     visibleColumns: RELEASES_COLUMNS_DISPLAY[];
     onChangeFilter: OnChangeFilter<ReleasesDataFilter>;
     pagination: {
@@ -40,6 +42,7 @@ type Props = Omit<AppTableProps<ReleasesData>, 'columns'> & {
 export default function ReleasesTable({
     onChangeFilter,
     visibleColumns,
+    dataFilter,
     ...props
 }: Props) {
     const messages = useTranslations();
@@ -104,7 +107,7 @@ export default function ReleasesTable({
                 const mainArtist = !isVariousArtist
                     ? releaseArtists.find(
                           (item: ReleaseArtist) =>
-                              item?.artistRole?.value?.toLowerCase() ===
+                              item?.artistRole?.code?.toLowerCase() ===
                               MAIN_ARTIST_ROLE
                       )
                     : null;
@@ -113,17 +116,36 @@ export default function ReleasesTable({
                     ? messages('common.variousArtists')
                     : mainArtist?.artist?.name || '';
                 return (
-                    // <CustomTooltip
-                    //     size="small"
-                    //     title={messages('filter.filterByValue', {
-                    //         value: displayName,
-                    //     })}
-                    // >
-                    //     <span onChange={() => onChangeFilter({artistId: mainArtist?.artist?.id})} className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
-                    //         {displayName}
-                    //     </span>
-                    // </CustomTooltip>
-                    <CopyText text={displayName}>{displayName}</CopyText>
+                    <CustomTooltip
+                        size="small"
+                        title={messages('filter.filterByValue', {
+                            value: displayName,
+                        })}
+                    >
+                        {isVariousArtist ? (
+                            <span
+                                className="cursor-pointer truncate hover:text-blue-500 group-hover:underline"
+                                onClick={() =>
+                                    onChangeFilter({
+                                        isVariousArtist: 'true',
+                                    })
+                                }
+                            >
+                                {messages('common.variousArtists')}
+                            </span>
+                        ) : (
+                            <span
+                                onClick={() =>
+                                    onChangeFilter({
+                                        artistId: mainArtist?.artist?.id,
+                                    })
+                                }
+                                className="cursor-pointer truncate hover:text-blue-500 group-hover:underline"
+                            >
+                                {mainArtist?.artist?.name || ''}
+                            </span>
+                        )}
+                    </CustomTooltip>
                 );
             },
         },
@@ -190,6 +212,12 @@ export default function ReleasesTable({
             dataIndex: 'trackCount',
             align: 'center',
             width: 100,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'tracks_count'
+            ),
             render: (value, record) => (
                 <span className="truncate"> {record?.tracksCount} </span>
             ),
@@ -200,6 +228,12 @@ export default function ReleasesTable({
             dataIndex: 'duration',
             align: 'center',
             width: 100,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'total_duration'
+            ),
             render: (value, record) => {
                 const duration = convertSecondsToHoursMinutes(
                     Number(record?.totalDuration)
@@ -214,6 +248,12 @@ export default function ReleasesTable({
             dataIndex: 'releaseDate',
             align: 'center',
             width: 130,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'releaseDate'
+            ),
             render: (value) => (
                 <span className="truncate text-wrap">
                     {' '}
@@ -227,6 +267,12 @@ export default function ReleasesTable({
             dataIndex: 'creationDate',
             align: 'center',
             width: 130,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'createdAt'
+            ),
             render: (value, record) => (
                 <span className="truncate text-wrap">
                     {' '}

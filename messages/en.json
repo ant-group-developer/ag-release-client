@@ -706,7 +706,7 @@
             },
             "error": {
                 "duplicateNameAlbumFormat": "This type already exists",
-                "duplicateValueAlbumFormat": "This value already exist",
+                "duplicateCodeAlbumFormat": "This code already exist",
                 "notFound": "Cannot found this type",
                 "cannotDeleteBecauseLinkedReleases": "Cannot delete because this type linked release"
             }
@@ -736,7 +736,9 @@
         "noResultMatches": "No matching results",
         "totalTrackNeedScan": "Total tracks need scan",
         "numberOfTracksScanned": "Number of tracks scanned",
+        "scanDate": "Date scan",
         "status": {
+            "scanning": "Scanning",
             "running": "Running",
             "pending": "Pending",
             "finished": "Finished",
@@ -806,7 +808,7 @@
             },
             "error": {
                 "duplicateNameTrackType": "This track type is already exists",
-                "duplicateValueTrackType": "This value track type is already exists",
+                "duplicateCodeTrackType": "This code track type is already exists",
                 "cannotDeleteBecauseLinkedTracks": "Cannot delete this track type because it is linked to tracks"
             }
         }
@@ -824,7 +826,7 @@
             "error": {
                 "duplicateNameTrackOriginType": "This track origin is already exists",
                 "cannotDeleteBecauseLinkedTracks": "Cannot delete this track origin because it is linked to tracks",
-                "duplicateValueTrackOriginType": "This track origin value already exists"
+                "duplicateCodeTrackOriginType": "This track origin code already exists"
             }
         }
     },
@@ -855,7 +857,7 @@
             },
             "error": {
                 "duplicateNameGenre": "This genres already exist",
-                "duplicateValueGenre": "This value genre already exist",
+                "duplicateCodeGenre": "This code genre already exist",
                 "cannotDeleteBecauseLinkedPrimaryReleases": "Cannot delete this genre because it is linked to primary releases",
                 "cannotDeleteBecauseLinkedSubReleases": "Cannot delete this genre because it is linked to sub releases",
                 "cannotDeleteBecauseLinkedPrimaryTracks": "Cannot delete this genre because it is linked to primary tracks",
@@ -1076,7 +1078,7 @@
             },
             "error": {
                 "duplicateNameArtistRole": "This role already exist",
-                "duplicateValueArtistRole": "This role value already exist",
+                "duplicateCodeArtistRole": "This role code already exist",
                 "cannotDeleteBecauseLinkedReleases": "Cannot delete this role because it is linked to releases",
                 "cannotDeleteBecauseLinkedTracks": "Cannot delete this role because it is linked to tracks"
             }
@@ -1228,5 +1230,46 @@
             "success": "Copied to clipboard"
         },
         "quickActions": "Quick actions"
+    },
+
+    "permission": {
+        "label": "Permission",
+        "name": "Permission name",
+        "message": {
+            "success": {
+                "create": "Add permission successfully",
+                "update": "Update permission successfully",
+                "delete": "Delete permission successfully"
+            },
+            "error": {
+                "duplicateNamePermission": "This permission already exists",
+                "duplicateCodePermission": "This permission code already exists",
+                "cannotDeleteBecauseLinkedRolePermissions": "Cannot delete permission because it is already used in a role",
+                "cannotDeleteBecauseLinkedUsers": "Cannot delete permission because it is already used in a user"
+            }
+        },
+        "action": {
+            "delete": "Delete permission"
+        }
+    },
+
+    "roles": {
+        "label": "Role",
+        "name": "Role name",
+        "message": {
+            "success": {
+                "create": "Add role successfully",
+                "update": "Update role successfully",
+                "delete": "Delete role successfully"
+            },
+            "error": {
+                "duplicateNameRole": "This role already exists",
+                "duplicateCodeRole": "This role code already exists",
+                "cannotDeleteBecauseLinkedPermissions": "Cannot delete role because it is already used in a permission"
+            }
+        },
+        "action": {
+            "delete": "Delete role"
+        }
     }
 }

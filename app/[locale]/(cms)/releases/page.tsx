@@ -2,7 +2,8 @@
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
-import { LAYOUT_TABLE, SESSION_STORAGE_KEY } from '@/enums/common';
+import { LAYOUT_TABLE, ORDER, SESSION_STORAGE_KEY } from '@/enums/common';
+import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import { LoadingType, useLoading } from '@/hooks/use-loading';
@@ -20,7 +21,6 @@ import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
 import { DeleteVariables } from '@/types/api';
-import { useWindowSize } from '@uidotdev/usehooks';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
@@ -66,7 +66,6 @@ export default function Releases({}: Props) {
         page: 1,
         pageSize: PAGE_SIZE,
     });
-    const { height, width } = useWindowSize();
     const { layoutTable } = useTableLayoutToggle();
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
@@ -100,6 +99,17 @@ export default function Releases({}: Props) {
             },
         };
         deleteRelease(variables);
+    };
+    const onChangeSort = (pagination: any, filters: any, sort: any) => {
+        const orderBy = setSortOrder(sort, ORDER.ASC);
+        const fieldOrder = sort.field;
+        onChangeFilter(
+            {
+                orderBy,
+                fieldOrder,
+            },
+            false
+        );
     };
 
     useEffect(() => {
@@ -139,6 +149,8 @@ export default function Releases({}: Props) {
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
                         current: releasesData.metadata.currentPage,
                     }}
+                    onChange={onChangeSort}
+                    dataFilter={dataFilter}
                 />
             )}
 

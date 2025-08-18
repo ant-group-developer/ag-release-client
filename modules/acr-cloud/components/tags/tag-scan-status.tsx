@@ -37,7 +37,7 @@ export const getScanStatusTranslationKey = (
 ): string => {
     switch (status) {
         case TRACK_SCAN_STATUS.RUNNING:
-            return 'tracks.status.running';
+            return 'tracks.status.scanning';
         case TRACK_SCAN_STATUS.PENDING:
             return 'tracks.status.pending';
         case TRACK_SCAN_STATUS.FINISHED:

@@ -29,6 +29,7 @@ function RadioComponent({ data, searchWords, ...props }: Props) {
                             <div className="flex items-center gap-1">
                                 <p className="ellipsis w-56" title={item.name}>
                                     {/* {item.name} */}
+                                    {/* @ts-ignore */}
                                     <Highlighter
                                         highlightClassName="bg-yellow-200 font-medium"
                                         searchWords={[

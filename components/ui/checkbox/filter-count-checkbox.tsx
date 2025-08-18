@@ -30,6 +30,7 @@ export default function FilterCheckbox({
                     <Checkbox value={option.value}>
                         {/* {option.name} */}
 
+                        {/* @ts-ignore */}
                         <Highlighter
                             highlightClassName="bg-yellow-200 font-medium"
                             searchWords={[

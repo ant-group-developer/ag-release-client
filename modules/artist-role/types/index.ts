@@ -2,7 +2,7 @@ import { CommonAttribute, CommonParams } from '@/types/api';
 
 export interface ArtistRoleData extends CommonAttribute {
     name: string;
-    value: string;
+    code: string;
     creatorId: string;
     modifierId: string;
 }
