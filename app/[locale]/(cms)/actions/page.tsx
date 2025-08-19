@@ -15,7 +15,7 @@ import { useDeleteAction } from '@/modules/actions/hooks/use-delete-action';
 import { useGetListActions } from '@/modules/actions/hooks/use-get-list-actions';
 import { ActionsDataFilter } from '@/modules/actions/types';
 
-import { RolesData } from '@/modules/roless/types';
+import { RolesData } from '@/modules/roles/types';
 import { useTranslations } from 'next-intl';
 
 type Props = {};
