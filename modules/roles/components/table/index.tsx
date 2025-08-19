@@ -1,5 +1,7 @@
 import ActionButton from '@/components/ui/button/action-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import SortableTable from '@/components/ui/table/sortable-table';
+import { SCREEN } from '@/enums/common';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { Badge, Empty } from 'antd';
@@ -24,7 +26,7 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
         {
             title: messages('common.iNo'),
             key: 'iNo',
-            width: 50,
+            width: 30,
             align: 'center',
             render: (_, __, index) =>
                 getIndex(
@@ -42,7 +44,7 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
             ellipsis: true,
             render: (value, record) => (
                 <span className="flex items-center gap-1">
-                    <Badge size="default" color={record?.color} />
+                    <Badge color={record?.color} />
                     <span className="truncate">{value}</span>
                 </span>
             ),
@@ -75,7 +77,7 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
             key: 'createdAt',
             dataIndex: 'createdAt',
             align: 'center',
-            width: 100,
+            width: 80,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -93,7 +95,7 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
             key: 'updatedAt',
             dataIndex: 'updatedAt',
             align: 'center',
-            width: 100,
+            width: 80,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -109,7 +111,7 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
         {
             key: 'actions',
             align: 'center',
-            width: 100,
+            width: 30,
             render: (_, record) => (
                 <ActionButton
                     showDelete
@@ -126,6 +128,7 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
     ];
 
     const expandable: AppTableProps<RolesData>['expandable'] = {
+        columnWidth: 20,
         expandedRowRender: (record: RolesData, parentIndex?: number) => {
             const rows: RolePermission[] = Array.isArray(record.rolePermissions)
                 ? record.rolePermissions.map((rp) => rp)
@@ -146,7 +149,7 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
                     title: messages('common.iNo'),
                     key: 'iNo',
                     align: 'center',
-                    width: 70,
+                    width: 45,
                     render: (_: any, __: RolePermission, idx: number) =>
                         idx + 1,
                 },
@@ -154,7 +157,7 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
                     title: messages('permission.name'),
                     dataIndex: 'name',
                     key: 'name',
-                    width: 280,
+                    width: 240,
                     ellipsis: true,
                     render: (_, record) => {
                         return <span> {record?.permission?.name} </span>;
@@ -183,14 +186,15 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
             ];
 
             return (
-                <div className="px-4 py-2">
-                    <AppTable
-                        className="overflow-hidden rounded-lg border"
+                <div>
+                    <SortableTable
+                        className="ml-24 overflow-hidden rounded-lg border"
                         columns={childColumns}
                         dataSource={rows}
                         pagination={false}
-                        size="small"
+                        size="middle"
                         rowKey="key"
+                        scroll={{ x: SCREEN.MD, y: 280 }}
                     />
                 </div>
             );

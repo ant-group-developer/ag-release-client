@@ -1,0 +1,5 @@
+export enum TYPE_MODAL_PRICE_TIERS {
+    CREATE = 'CREATE',
+    UPDATE = 'UPDATE',
+    DELETE = 'DELETE',
+}

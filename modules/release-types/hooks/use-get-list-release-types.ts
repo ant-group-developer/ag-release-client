@@ -13,6 +13,7 @@ export const useGetListReleaseTypes = (
     const { data, ...res } = useQuery({
         queryKey: releaseTypesQueryKeys.list(params),
         queryFn: () => releaseTypesApi.getList(params),
+        placeholderData: (prev) => prev,
         enabled: options?.enabled ?? true,
     });
 

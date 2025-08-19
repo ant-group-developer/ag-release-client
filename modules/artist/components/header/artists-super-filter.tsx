@@ -4,6 +4,7 @@ import SearchDialog from '@/components/filter-dialog/search-dialog';
 import IconButton from '@/components/ui/button/icon-button';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { TYPE_FILTER } from '@/enums/common';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
 import { ListFilter, X } from 'lucide-react';
@@ -35,7 +36,9 @@ export default function ArtistsSuperFilter({
         setTypeFilter(value);
     };
 
-    const { artistsData } = useGetListArtist({ pageSize: 999 });
+    const { artistsData } = useGetListArtist({
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
+    });
 
     useEffect(() => {
         const handleOutSideClick = (event: any) => {

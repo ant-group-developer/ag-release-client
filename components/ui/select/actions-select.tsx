@@ -9,7 +9,6 @@ type Props = Omit<SelectProps, 'options'> & {
 };
 
 export default function ActionsSelect({ fallBack, ...props }: Props) {
-    console.log(props.value);
     const { actionsData } = useGetListActions({
         pageSize: 999,
     });

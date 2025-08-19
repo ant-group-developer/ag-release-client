@@ -113,7 +113,7 @@ export default function ReleaseSchedulingForm({}: Props) {
     }, []);
 
     return (
-        <div className="rounded-lg bg-white p-4">
+        <div className="rounded-lg bg-white">
             <FormProvider {...formMethods}>
                 <form className="flex flex-col gap-4">
                     <div className="grid grid-cols-2 gap-6">

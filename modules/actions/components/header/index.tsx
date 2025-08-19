@@ -6,7 +6,7 @@ import useModalStore from '@/hooks/use-modal';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_ACTIONS } from '../../enums';
 import { ActionsDataFilter } from '../../types';
-import RolesSuperFilter from './actions-super-filter';
+import ActionsSuperFilter from './actions-super-filter';
 
 type Props = {
     dataFilter: ActionsDataFilter;
@@ -30,7 +30,7 @@ export default function ActionsHeader({
     return (
         <AppHeader className="app-header">
             <AppHeaderGroup>
-                <RolesSuperFilter
+                <ActionsSuperFilter
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
                     canClearFilter={canClearFilter}

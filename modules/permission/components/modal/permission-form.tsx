@@ -1,13 +1,14 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
+import IconButton from '@/components/ui/button/icon-button';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import { SIZE_ICON } from '@/constants/common';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
-import { Button, Form, Input } from 'antd';
+import { Button, Divider, Form, Input } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { useBulkCreatePermission } from '../../hooks/use-bulk-create-permission';
@@ -189,22 +190,18 @@ export default function PermissionFormModal({ ...props }: Props) {
                                                 >
                                                     <div className="absolute right-[-32px] top-0">
                                                         {fields.length > 1 && (
-                                                            <Button
-                                                                size="small"
-                                                                danger
-                                                                icon={
-                                                                    <div>
-                                                                        <Trash2
-                                                                            size={
-                                                                                SIZE_ICON
-                                                                            }
-                                                                        />
-                                                                    </div>
-                                                                }
+                                                            <IconButton
                                                                 onClick={() =>
                                                                     remove(name)
                                                                 }
-                                                            ></Button>
+                                                            >
+                                                                <Trash
+                                                                    size={
+                                                                        SIZE_ICON
+                                                                    }
+                                                                    className="text-red-500"
+                                                                />
+                                                            </IconButton>
                                                         )}
                                                     </div>
                                                     <div>
@@ -303,6 +300,7 @@ export default function PermissionFormModal({ ...props }: Props) {
                                                             />
                                                         </AppFormItem>
                                                     </div>
+                                                    <Divider />
                                                 </div>
                                             )
                                         )}

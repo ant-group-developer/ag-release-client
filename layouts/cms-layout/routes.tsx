@@ -1,9 +1,11 @@
 import { APP_ROUTES } from '@/enums/routes';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import {
+    Banknote,
     BellElectric,
     BookA,
     Box,
+    CircleDollarSign,
     Clock,
     Contact,
     DiscAlbum,
@@ -136,6 +138,22 @@ export const adminRoutes: AdminRoutesType[] = [
         id: 'system-category',
         label: 'common.systemCategories',
         children: [
+            {
+                id: 'currencies',
+                label: 'currencies.label',
+                href: APP_ROUTES.CURRENCIES,
+                icon: Banknote,
+                title: 'currencies',
+                permission: PERMISSION.DISTRIBUTION.READ,
+            },
+            {
+                id: 'priceTiers',
+                label: 'price.label',
+                href: APP_ROUTES.PRICE_TIERS,
+                icon: CircleDollarSign,
+                title: 'priceTiers',
+                permission: PERMISSION.DISTRIBUTION.READ,
+            },
             {
                 id: 'actions',
                 label: 'actions.label',

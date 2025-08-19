@@ -1,4 +1,9 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import {
+    PAGE_SIZE,
+    PAGE_SIZE_EXTRA_LARGE,
+    PAGE_SIZE_OPTIONS,
+} from '@/constants/page-size';
 import { getIndex } from '@/helpers/common';
 import { useGetListPermission } from '@/modules/permission/hooks/use-get-list-permission';
 import { PermissionData } from '@/modules/permission/types';
@@ -10,9 +15,11 @@ type Props = Omit<AppTableProps<PermissionData>, 'columns'> & {};
 
 export default function PermissionTableItemForm({ ...props }: Props) {
     const { permissionData, dataUpdatedAt, refetch, isFetching } =
-        useGetListPermission({ pageSize: 999 });
-    const [currentPage, setCurrentPage] = useState(1);
-    const pageSize = 5;
+        useGetListPermission({ pageSize: PAGE_SIZE_EXTRA_LARGE });
+    const [pagination, setPagination] = useState({
+        current: 1,
+        pageSize: PAGE_SIZE,
+    });
 
     const messages = useTranslations();
     const column: ColumnType<PermissionData>[] = [
@@ -21,7 +28,8 @@ export default function PermissionTableItemForm({ ...props }: Props) {
             key: 'iNo',
             width: 50,
             align: 'center',
-            render: (_, __, index) => getIndex(pageSize, currentPage, index),
+            render: (_, __, index) =>
+                getIndex(pagination?.pageSize, pagination?.current, index),
         },
         {
             title: messages('permission.name'),
@@ -67,13 +75,21 @@ export default function PermissionTableItemForm({ ...props }: Props) {
             columns={column}
             scroll={{
                 x: 'max-content',
+                y: 300,
             }}
             size="small"
             pagination={{
-                pageSize: pageSize,
+                pageSize: pagination?.pageSize,
                 size: 'default',
-                current: currentPage,
-                onChange: (page) => setCurrentPage(page),
+                current: pagination?.current,
+                onChange: (page, pageSize) => {
+                    setPagination({
+                        current: page,
+                        pageSize: pageSize,
+                    });
+                },
+                showSizeChanger: true,
+                pageSizeOptions: PAGE_SIZE_OPTIONS,
             }}
             bordered
         />

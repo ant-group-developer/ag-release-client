@@ -1,63 +1,61 @@
-import ActionsSelect from '@/components/ui/select/actions-select';
+import PriceTiersSelect from '@/components/ui/select/price-tiers-select';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import IconInfoTooltip from '@/components/ui/tooltip/icon-info-tooltip';
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { useGetListDspAction } from '@/modules/dsp-action/hooks/use-get-list-dsp-action';
+import { DspActionData } from '@/modules/dsp-action/types';
 import { DspData } from '@/modules/dsp/types';
+import { useGetListPriceTiers } from '@/modules/price_tiers/hooks/use-get-list-tiers';
+import { TrackData } from '@/modules/releases/types';
 import { Select, TableColumnsType } from 'antd';
 import { useTranslations } from 'next-intl';
 
-interface ReleaseSchedulingTableDataItem {
-    key: string;
-    track: string;
-    priceCode: string;
-    tikTokPolicy: string;
-    facebookPolicy: string;
-    youtubePolicy: string;
-}
-
-type Props = Omit<
-    AppTableProps<ReleaseSchedulingTableDataItem>,
-    'columns'
-> & {};
+type Props = Omit<AppTableProps<TrackData>, 'columns'> & {};
 
 export default function ReleaseSchedulingTable({ ...props }: Props) {
     const messages = useTranslations();
-    const { dspActionsData } = useGetListDspAction({ pageSize: 999 });
-
-    const priceCodeList = [
-        {
-            label: '0.69$',
-            value: '0.69',
-        },
-        {
-            label: '0.99$',
-            value: '0.99',
-        },
-        {
-            label: '1.29$',
-            value: '1.29',
-        },
-    ];
+    const { dspActionsData } = useGetListDspAction({
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
+    });
+    const { priceTiersData } = useGetListPriceTiers({
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
+    });
 
     const dspColumn = dspActionsData?.items?.map((item: DspData) => {
         const defaultAction = item?.dspActions?.find(
             (item) => item?.isDefault === true
         );
+        const options = item?.dspActions.map((item: DspActionData) => ({
+            id: item.action.id,
+            value: item.action.id,
+            name: item?.action.name,
+            label: (
+                <p className="flex items-center justify-between gap-1">
+                    <span>{item?.action?.name}</span>
+                    {item?.action?.note && (
+                        <IconInfoTooltip title={item?.action?.note} />
+                    )}
+                </p>
+            ),
+        }));
         return {
             title: item.name,
             dataIndex: `dsp_${item.id}`,
             key: item.id,
-            width: 200,
+            width: 300,
             align: 'left' as const,
             render: (value: string) => (
-                <ActionsSelect
+                <Select
                     defaultValue={defaultAction?.action?.id}
+                    options={options}
                     className="w-full"
                 />
             ),
         };
     });
 
-    const columns: TableColumnsType<ReleaseSchedulingTableDataItem> = [
+    const columns: TableColumnsType<TrackData> = [
         {
             title: messages('common.iNo'),
             dataIndex: '',
@@ -66,110 +64,46 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
             align: 'center',
             render: (_: any, __: any, index: number) => index + 1,
         },
-        // {
-        //     title: 'Territory',
-        //     dataIndex: 'territory',
-        //     key: 'territory',
-        //     width: 120,
-        //     align: 'left',
-        // },
-        // {
-        //     title: 'Exclusivity',
-        //     dataIndex: 'exclusivity',
-        //     key: 'exclusivity',
-        //     width: 120,
-        //     align: 'left',
-        // },
         {
             title: messages('tracks.name'),
             dataIndex: 'track',
             key: 'track',
-            width: 250,
+            width: 500,
             align: 'left',
+            ellipsis: true,
+            render: (_, record) => (
+                <span className="truncate">
+                    {' '}
+                    <CustomTooltip title={record?.title}>
+                        {record?.title}
+                    </CustomTooltip>
+                </span>
+            ),
         },
         {
             title: messages('common.price'),
             dataIndex: 'priceCode',
             key: 'priceCode',
-            width: 150,
+            width: 166,
+
             align: 'left',
             render: (value: string) => {
+                const defaultPriceTier = priceTiersData?.items?.find(
+                    (item) => item?.isDefault === true
+                );
                 return (
-                    <Select
-                        options={priceCodeList}
-                        defaultValue={priceCodeList[0]}
+                    <PriceTiersSelect
+                        defaultValue={defaultPriceTier?.id}
                         className="w-full"
                     />
                 );
             },
         },
-
-        // {
-        //     title: 'Release Date',
-        //     dataIndex: 'releaseDate',
-        //     key: 'releaseDate',
-        //     width: 120,
-        //     align: 'center',
-        // },
-        // {
-        //     title: 'Pre-Order Date',
-        //     dataIndex: 'preOrderDate',
-        //     key: 'preOrderDate',
-        //     width: 120,
-        //     align: 'center',
-        // },
-        // {
-        //     title: 'Inst Grat Date',
-        //     dataIndex: 'instGratDate',
-        //     key: 'instGratDate',
-        //     width: 200,
-        //     align: 'left',
-        //     render: (value) => {
-        //         return (
-        //             <DatePicker
-        //                 className="w-full"
-        //                 format={DATE_FORMAT.DATE_ONLY}
-        //             />
-        //         );
-        //     },
-        // },
         {
             title: messages('common.policy'),
             colSpan: dspActionsData?.metadata?.totalItems,
             align: 'center',
             children: dspColumn,
-            //  [
-            //     {
-            //         title: 'TikTok',
-            //         dataIndex: 'tikTokPolicy',
-            //         key: 'tikTokPolicy',
-            //         width: 200,
-            //         align: 'left',
-            //         render: (value: string) => (
-            //             <ActionsSelect className="w-full" />
-            //         ),
-            //     },
-            //     {
-            //         title: 'Facebook',
-            //         dataIndex: 'facebookPolicy',
-            //         key: 'facebookPolicy',
-            //         width: 200,
-            //         align: 'left',
-            //         render: (value: string) => (
-            //             <ActionsSelect className="w-full" />
-            //         ),
-            //     },
-            //     {
-            //         title: 'YouTube',
-            //         dataIndex: 'youtubePolicy',
-            //         key: 'youtubePolicy',
-            //         width: 250,
-            //         align: 'left',
-            //         render: (value: string) => (
-            //             <ActionsSelect className="w-full" />
-            //         ),
-            //     },
-            // ],
         },
     ];
 

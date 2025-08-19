@@ -1,3 +1,4 @@
+export const PAGE_SIZE_EXTRA_LARGE = 9999;
 export const PAGE_SIZE_DEFAULT = 21;
 export const PAGE_SIZE_MEDIUM = 28;
 export const PAGE_SIZE_LARGE = 32;

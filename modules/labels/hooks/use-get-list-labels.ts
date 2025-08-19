@@ -10,6 +10,7 @@ export const useGetListLabels = (params: LabelDataFilter) => {
     const { data, ...res } = useQuery({
         queryKey: labelsQueryKeys.list(params),
         queryFn: () => labelsApi.getList(params),
+        placeholderData: (prev) => prev,
     });
 
     const labelsData = data?.data?.data ?? DEFAULT_DATA_PAGINATION;

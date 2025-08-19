@@ -10,6 +10,7 @@ export const useGetListGenres = (params: GenresDataFilter) => {
     const { data, ...res } = useQuery({
         queryKey: genreQueryKeys.list(params),
         queryFn: () => genresApi.getList(params),
+        placeholderData: (prev) => prev,
     });
 
     const genresData = data?.data?.data ?? DEFAULT_DATA_PAGINATION;

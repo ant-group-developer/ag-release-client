@@ -10,6 +10,7 @@ export const useGetListTimezones = (params: TimezoneDataFilter) => {
     const { data, ...res } = useQuery({
         queryKey: timezoneQueryKeys.list(params),
         queryFn: () => timezoneApi.getList(params),
+        placeholderData: (prev) => prev,
     });
 
     const timezonesData = data?.data?.data ?? DEFAULT_DATA_PAGINATION;

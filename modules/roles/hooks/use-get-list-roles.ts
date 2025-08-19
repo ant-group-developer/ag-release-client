@@ -8,6 +8,7 @@ export const useGetListRoles = (params: RolesDataDataFilter) => {
     const { data, ...res } = useQuery({
         queryKey: rolesQueryKeys.list(params),
         queryFn: () => rolesApis.getList(params),
+        placeholderData: (prev) => prev,
     });
 
     const rolesData = data?.data?.data ?? DEFAULT_DATA_PAGINATION;

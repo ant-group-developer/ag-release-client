@@ -8,6 +8,7 @@ export const useGetListArtistRole = (params: ArtistDataFilter) => {
     const { data, ...res } = useQuery({
         queryKey: artistRoleQueryKeys.lists(params),
         queryFn: () => artistRoleApi.getList(params),
+        placeholderData: (prev) => prev,
     });
 
     const artistsRolesData = data?.data?.data ?? DEFAULT_DATA_PAGINATION;

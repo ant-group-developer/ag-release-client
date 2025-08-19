@@ -10,6 +10,7 @@ export const useGetListDsp = (params: DspDataFilter) => {
     const { data, ...res } = useQuery({
         queryKey: dspQueryKeys.list(params),
         queryFn: () => dspApi.getList(params),
+        placeholderData: (prev) => prev,
     });
 
     const dspData = data?.data?.data ?? DEFAULT_DATA_PAGINATION;
