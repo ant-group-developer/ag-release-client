@@ -1,13 +1,14 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
-import { PAGE_SIZE } from '@/constants/page-size';
-import { SCREEN } from '@/enums/common';
 import { useGetListRoles } from '@/modules/roles/hooks/use-get-list-roles';
 import { RolePermission, RolesData } from '@/modules/roles/types';
-import { Badge } from 'antd';
+import { Badge, Button } from 'antd';
 import { ColumnsType, ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { Key, useEffect, useState } from 'react';
+import { useUserRole } from '../../hooks/use-get-user';
+import { useUpdateUserRole } from '../../hooks/use-update-user';
 import { UserData } from '../../types/data';
+import { checkCanAccessTenantAll } from '../../utils/role';
 
 type Props = {
     dataEdit: UserData;
@@ -45,28 +46,39 @@ function NestedPermissionTable({
                 pagination={{
                     pageSize: 5,
                     hideOnSinglePage: true,
+                    showSizeChanger: false,
                 }}
                 className="rounded-lg border"
-                // bordered
                 {...props}
                 columns={columns}
                 scroll={{
-                    x: SCREEN.SM,
+                    x: 0,
                 }}
             />
         </div>
     );
 }
 
-function UpdatePermission({}: Props) {
+function UpdatePermission({ dataEdit }: Props) {
     const messages = useTranslations();
-    const [dataFilter, setDataFilter] = useState({
-        page: 1,
-        pageSize: PAGE_SIZE,
-    });
 
-    const { rolesData, dataUpdatedAt, refetch, isFetching } =
-        useGetListRoles(dataFilter);
+    const userId = dataEdit.id;
+    const canAccessTenantAll = checkCanAccessTenantAll(
+        dataEdit.type,
+        dataEdit.tenantUser[0]?.type
+    );
+
+    const { rolesData } = useGetListRoles({
+        pageSize: 999,
+    });
+    const { updateUserRole, isPending } = useUpdateUserRole();
+
+    const { data } = useUserRole(userId);
+    useEffect(() => {
+        setSelectedKeys(data.map((item) => item.id));
+    }, [data]);
+
+    const [selectedKeys, setSelectedKeys] = useState<Key[]>([]);
 
     const column: ColumnType<RolesData>[] = [
         {
@@ -74,7 +86,7 @@ function UpdatePermission({}: Props) {
             key: 'name',
             dataIndex: 'name',
             align: 'left',
-            width: 300,
+            width: 180,
             ellipsis: true,
             render: (value, record) => (
                 <span className="flex items-center gap-1">
@@ -83,22 +95,12 @@ function UpdatePermission({}: Props) {
                 </span>
             ),
         },
-        // {
-        //     title: messages('common.color'),
-        //     key: 'color',
-        //     dataIndex: 'color',
-        //     align: 'left',
-        //     width: 100,
-
-        //     render: (value) => <AppColorPicker value={value} disabled />,
-        // },
         {
             title: messages('common.note'),
             key: 'note',
             dataIndex: 'note',
             align: 'left',
-            width: 350,
-
+            width: 370,
             render: (value) => (
                 <span className="line-clamp-3 truncate whitespace-pre-line">
                     {value}
@@ -107,10 +109,19 @@ function UpdatePermission({}: Props) {
         },
     ];
 
+    const onSubmit = () => {
+        updateUserRole({
+            payload: {
+                userId: userId,
+                roleIds: selectedKeys as string[],
+            },
+        });
+    };
+
     return (
         <div>
             <AppTable
-                size="middle"
+                className="rounded-lg border"
                 scroll={{
                     x: 0,
                 }}
@@ -124,11 +135,25 @@ function UpdatePermission({}: Props) {
                 }}
                 dataSource={rolesData.items}
                 pagination={{
-                    pageSize: dataFilter.pageSize,
-                    current: dataFilter.page,
+                    pageSize: 15,
                     total: rolesData.metadata.totalItems,
                 }}
+                rowSelection={{
+                    selectedRowKeys: selectedKeys,
+                    onChange: (value) => setSelectedKeys(value),
+                }}
             />
+            {!canAccessTenantAll && (
+                <div className="mt-2 text-right">
+                    <Button
+                        type="primary"
+                        onClick={onSubmit}
+                        loading={isPending}
+                    >
+                        {messages('common.submit')}
+                    </Button>
+                </div>
+            )}
         </div>
     );
 }

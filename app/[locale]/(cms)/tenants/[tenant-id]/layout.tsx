@@ -89,7 +89,7 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
 
     return (
         <Spin spinning={isLoading}>
-            <div className="mx-auto max-w-screen-2xl px-2">
+            <div className="mx-auto max-w-screen-2xl px-2 pb-5">
                 <div
                     className="sticky top-0 z-10"
                     style={{

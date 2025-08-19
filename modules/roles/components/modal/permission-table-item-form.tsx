@@ -12,7 +12,7 @@ export default function PermissionTableItemForm({ ...props }: Props) {
     const { permissionData, dataUpdatedAt, refetch, isFetching } =
         useGetListPermission({ pageSize: 999 });
     const [currentPage, setCurrentPage] = useState(1);
-    const pageSize = 5;
+    const pageSize = 10;
 
     const messages = useTranslations();
     const column: ColumnType<PermissionData>[] = [
@@ -28,8 +28,7 @@ export default function PermissionTableItemForm({ ...props }: Props) {
             key: 'name',
             dataIndex: 'name',
             align: 'left',
-            width: 200,
-
+            width: 150,
             render: (value) => (
                 <span className="truncate text-wrap">{value}</span>
             ),
@@ -39,8 +38,7 @@ export default function PermissionTableItemForm({ ...props }: Props) {
             key: 'code',
             dataIndex: 'code',
             align: 'left',
-            width: 200,
-
+            width: 150,
             render: (value) => (
                 <span className="truncate text-wrap">{value}</span>
             ),
@@ -50,8 +48,7 @@ export default function PermissionTableItemForm({ ...props }: Props) {
             key: 'note',
             dataIndex: 'note',
             align: 'left',
-            width: 200,
-
+            width: 250,
             render: (value) => (
                 <span className="line-clamp-3 truncate whitespace-pre-line">
                     {value}
@@ -68,14 +65,11 @@ export default function PermissionTableItemForm({ ...props }: Props) {
             scroll={{
                 x: 'max-content',
             }}
-            size="small"
             pagination={{
                 pageSize: pageSize,
-                size: 'default',
                 current: currentPage,
                 onChange: (page) => setCurrentPage(page),
             }}
-            bordered
         />
     );
 }

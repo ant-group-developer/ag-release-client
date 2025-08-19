@@ -183,14 +183,15 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
             ];
 
             return (
-                <div className="px-4 py-2">
+                <div className="p-2">
                     <AppTable
-                        className="overflow-hidden rounded-lg border"
+                        className="rounded-lg border"
                         columns={childColumns}
                         dataSource={rows}
-                        pagination={false}
-                        size="small"
-                        rowKey="key"
+                        pagination={{
+                            pageSize: 5,
+                            showSizeChanger: false,
+                        }}
                     />
                 </div>
             );

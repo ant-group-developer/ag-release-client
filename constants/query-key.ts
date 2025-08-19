@@ -21,6 +21,7 @@ export const QUERY_KEY = {
         GET_PROFILE: 'GET_PROFILE',
         GET_USER_DETAIL: 'GET_USER_DETAIL',
         GET_PERMISSION: 'GET_PERMISSION',
+        GET_ROLE: 'GET_ROLE',
     },
     NETWORK: {
         KEY: 'NETWORK',

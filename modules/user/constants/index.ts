@@ -3,6 +3,7 @@ import { DataFilterUser } from '../types/data';
 
 export const userQueryKeys = {
     all: [QUERY_KEY.USER.KEY],
+
     lists: () => [...userQueryKeys.all, QUERY_KEY.USER.GET_USER_LIST] as const,
     list: (params?: DataFilterUser) => {
         const result: any[] = [...userQueryKeys.lists()];
@@ -11,8 +12,17 @@ export const userQueryKeys = {
         }
         return result;
     },
+
     details: () =>
         [...userQueryKeys.all, QUERY_KEY.USER.GET_USER_DETAIL] as const,
     detail: (id: string) => [...userQueryKeys.details(), id] as const,
+
+    roles: () => [...userQueryKeys.all, QUERY_KEY.USER.GET_ROLE] as const,
+    role: (id: string) => [...userQueryKeys.roles(), id] as const,
+
+    permissions: () =>
+        [...userQueryKeys.all, QUERY_KEY.USER.GET_PERMISSION] as const,
+    permission: (id: string) => [...userQueryKeys.permissions(), id] as const,
+
     info: () => [...userQueryKeys.all, QUERY_KEY.USER.GET_PROFILE] as const,
 };

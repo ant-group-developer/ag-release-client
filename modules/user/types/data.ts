@@ -1,4 +1,6 @@
 import { ORDER } from '@/enums/common';
+import { PermissionData } from '@/modules/permission/types';
+import { RolesData } from '@/modules/roles/types';
 import { TENANT_USER_TYPE } from '@/modules/tenant/enums';
 import {
     CommonAttributeCreator,
@@ -80,5 +82,19 @@ export interface InviteUserPayload {
 export interface InviteUser extends CommonFunction {
     payload: InviteUserPayload;
 }
+export interface UpdateUserRolePayload {
+    userId: string;
+    roleIds: string[];
+}
+
+export interface UpdateUserRole extends CommonFunction {
+    payload: UpdateUserRolePayload;
+}
 
 export interface SyncUserData extends CommonFunction {}
+
+export type UserRoleData = Pick<RolesData, 'id' | 'name' | 'code' | 'note'>;
+export type UserPermissionData = Pick<
+    PermissionData,
+    'id' | 'name' | 'code' | 'note'
+>;

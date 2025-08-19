@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { userApi } from '../api';
 import { userQueryKeys } from '../constants';
-import { UpdateUser } from '../types/data';
+import { UpdateUser, UpdateUserRole } from '../types/data';
 
 export const useUpdateUser = () => {
     const queryClient = useQueryClient();
@@ -38,4 +38,37 @@ export const useUpdateUser = () => {
     };
 
     return { updateUser, ...mutation };
+};
+
+export const useUpdateUserRole = () => {
+    const queryClient = useQueryClient();
+    const messages = useTranslations();
+    const { handleError } = useApiError();
+
+    const onSuccess = (data: any, { onSuccess, payload }: UpdateUserRole) => {
+        queryClient.invalidateQueries({
+            queryKey: userQueryKeys.role(payload.userId),
+        });
+        queryClient.invalidateQueries({ queryKey: userQueryKeys.info() });
+        showNotification('success', messages('message.updateSuccessfully'));
+        onSuccess?.();
+    };
+
+    const onError = (error: any, { onError }: UpdateUserRole) => {
+        handleError(error);
+        onError?.(error);
+    };
+
+    const mutation = useMutation({
+        mutationFn: ({ payload }: UpdateUserRole) =>
+            userApi.updateRole(payload),
+        onSuccess,
+        onError,
+    });
+
+    const updateUserRole = (variables: UpdateUserRole) => {
+        mutation.mutate(variables);
+    };
+
+    return { updateUserRole, ...mutation };
 };

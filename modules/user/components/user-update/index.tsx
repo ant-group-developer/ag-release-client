@@ -57,7 +57,7 @@ function UpdateUserModal({ ...props }: Props) {
             footer={null}
             width={800}
             loading={loading}
-            className="top-10"
+            className="!top-5"
         >
             <Spin spinning={loading}>
                 <Tabs

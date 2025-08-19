@@ -3,7 +3,13 @@ import { PaginationResponse } from '@/types/api';
 import { useQuery } from '@tanstack/react-query';
 import { userApi } from '../api';
 import { userQueryKeys } from '../constants';
-import { DataFilterUser, UserData, UserDetail } from '../types/data';
+import {
+    DataFilterUser,
+    UserData,
+    UserDetail,
+    UserPermissionData,
+    UserRoleData,
+} from '../types/data';
 
 export function useUserList(params: DataFilterUser) {
     const { data, ...restResponse } = useQuery({
@@ -30,5 +36,31 @@ export function useUserDetail(id: string | null) {
     return {
         ...restResponse,
         dataUser: data?.data?.data ?? ({} as UserDetail),
+    };
+}
+
+export function useUserRole(id: string | null) {
+    const { data, ...restResponse } = useQuery({
+        queryKey: userQueryKeys.role(id ?? ''),
+        queryFn: () => userApi.getUserRole(id as string),
+        enabled: Boolean(id),
+    });
+
+    return {
+        ...restResponse,
+        data: data?.data?.data ?? ([] as UserRoleData[]),
+    };
+}
+
+export function useUserPermission(id: string | null) {
+    const { data, ...restResponse } = useQuery({
+        queryKey: userQueryKeys.role(id ?? ''),
+        queryFn: () => userApi.getUserPermission(id as string),
+        enabled: Boolean(id),
+    });
+
+    return {
+        ...restResponse,
+        data: data?.data?.data ?? ([] as UserPermissionData[]),
     };
 }

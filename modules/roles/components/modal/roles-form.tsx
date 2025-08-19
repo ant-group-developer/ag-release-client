@@ -123,50 +123,50 @@ export default function RolesFormModal({ ...props }: Props) {
             onCancel={closeModal}
             onOk={form.submit}
             loading={isActive}
+            className="!top-10"
         >
-            <div className="max-h-[580px] overflow-auto">
-                <AppForm
-                    form={form}
-                    onFinish={onFinish}
-                    showSubmit={false}
-                    layout="horizontal"
-                    disabled={isActive}
-                >
-                    <AppFormItem
-                        name="name"
-                        label={messages('roles.name')}
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.input'),
-                            },
-                            {
+            <AppForm
+                form={form}
+                onFinish={onFinish}
+                showSubmit={false}
+                layout="horizontal"
+                disabled={isActive}
+            >
+                <AppFormItem
+                    name="name"
+                    label={messages('roles.name')}
+                    required
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.input'),
+                        },
+                        {
+                            max: 100,
+                            message: messages('validation.stringMax', {
                                 max: 100,
-                                message: messages('validation.stringMax', {
-                                    max: 100,
-                                    field: messages('roles.name'),
-                                }),
-                            },
-                        ]}
-                    >
-                        <Input allowClear />
-                    </AppFormItem>
-                    <AppFormItem
-                        name="color"
-                        label={messages('common.color')}
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.input'),
-                            },
-                        ]}
-                    >
-                        <AppColorPicker />
-                    </AppFormItem>
+                                field: messages('roles.name'),
+                            }),
+                        },
+                    ]}
+                >
+                    <Input allowClear />
+                </AppFormItem>
+                <AppFormItem
+                    name="color"
+                    label={messages('common.color')}
+                    required
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.input'),
+                        },
+                    ]}
+                >
+                    <AppColorPicker />
+                </AppFormItem>
 
-                    {/* <AppFormItem
+                {/* <AppFormItem
                         name="rolePermissions"
                         label={messages('permission.label')}
                         required
@@ -174,31 +174,33 @@ export default function RolesFormModal({ ...props }: Props) {
                         <PermissionSelect mode="multiple" allowClear />
                     </AppFormItem> */}
 
-                    <AppFormItem
-                        name="note"
-                        label={messages('common.note')}
-                        rules={[
-                            {
+                <AppFormItem
+                    name="note"
+                    label={messages('common.note')}
+                    rules={[
+                        {
+                            max: 500,
+                            message: messages('validation.stringMax', {
                                 max: 500,
-                                message: messages('validation.stringMax', {
-                                    max: 500,
-                                    field: messages('common.note'),
-                                }),
-                            },
-                        ]}
-                    >
-                        <TextArea
-                            autoSize={{
-                                minRows: 3,
-                                maxRows: 7,
-                            }}
-                        />
-                    </AppFormItem>
-                    <div>
-                        <PermissionTableItemForm rowSelection={rowSelection} />
-                    </div>
-                </AppForm>
-            </div>
+                                field: messages('common.note'),
+                            }),
+                        },
+                    ]}
+                >
+                    <TextArea
+                        autoSize={{
+                            minRows: 1,
+                            maxRows: 5,
+                        }}
+                    />
+                </AppFormItem>
+                <div>
+                    <PermissionTableItemForm
+                        rowSelection={rowSelection}
+                        className="rounded-lg border"
+                    />
+                </div>
+            </AppForm>
         </AppModal>
     );
 }
