@@ -142,7 +142,9 @@ export default function DspFormModal({ ...props }: Props) {
     useEffect(() => {
         const initialData = {
             ...dspData,
-            link: dspData?.formatLinks,
+            link: Array.isArray(dspData?.formatLinks)
+                ? dspData.formatLinks.join('\n')
+                : dspData?.formatLinks || '',
             pictureFile: dspData?.picture
                 ? {
                       fileList: [
@@ -179,12 +181,13 @@ export default function DspFormModal({ ...props }: Props) {
             onCancel={closeModal}
             onOk={form.submit}
             loading={isActive}
+            className="!top-8"
         >
             <AppForm
                 form={form}
                 onFinish={onFinish}
                 showSubmit={false}
-                layout="horizontal"
+                layout="vertical"
                 disabled={isActive}
             >
                 <AppFormItem
@@ -295,73 +298,80 @@ export default function DspFormModal({ ...props }: Props) {
                         <div className="max-h-[300px] overflow-auto pr-8">
                             {fields.map(({ key, name, ...restField }) => (
                                 <div key={key}>
-                                    <div className="relative">
+                                    <Divider />
+
+                                    <div className="relative flex items-center gap-x-4">
+                                        <div className="w-3/6">
+                                            <AppFormItem
+                                                {...restField}
+                                                name={[name, 'actionId']}
+                                                label={messages(
+                                                    'actions.label'
+                                                )}
+                                                required
+                                                rules={[
+                                                    {
+                                                        required: true,
+                                                        message:
+                                                            messages(
+                                                                'validation.input'
+                                                            ),
+                                                    },
+                                                ]}
+                                            >
+                                                <ActionsSelect allowClear />
+                                            </AppFormItem>
+                                            <IconButton
+                                                onClick={() => {
+                                                    const currentProfiles =
+                                                        form.getFieldValue(
+                                                            'dspActions'
+                                                        ) || [];
+                                                    const dspActions =
+                                                        currentProfiles[name];
+                                                    remove(name);
+                                                    if (dspActions?.id) {
+                                                        deleteDspAction({
+                                                            dspId: dataEdit?.id,
+                                                            actionId:
+                                                                dspActions?.id,
+                                                        });
+                                                    }
+                                                }}
+                                                className="absolute right-0 top-[32px]"
+                                                disabled={isActive}
+                                            >
+                                                <Trash
+                                                    size={SIZE_ICON}
+                                                    className="text-red-500"
+                                                />
+                                            </IconButton>
+                                        </div>
                                         <AppFormItem
                                             {...restField}
-                                            name={[name, 'actionId']}
-                                            label={messages('actions.label')}
-                                            required
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message:
-                                                        messages(
-                                                            'validation.input'
-                                                        ),
-                                                },
-                                            ]}
+                                            name={[name, 'isDefault']}
+                                            label=" "
                                         >
-                                            <ActionsSelect allowClear />
-                                        </AppFormItem>
-                                        <IconButton
-                                            onClick={() => {
-                                                const currentProfiles =
-                                                    form.getFieldValue(
-                                                        'dspActions'
-                                                    ) || [];
-                                                const dspActions =
-                                                    currentProfiles[name];
-                                                remove(name);
-                                                if (dspActions?.id) {
-                                                    deleteDspAction({
-                                                        dspId: dataEdit?.id,
-                                                        actionId:
-                                                            dspActions?.id,
-                                                    });
-                                                }
-                                            }}
-                                            className="absolute right-[-32px] top-0"
-                                            disabled={isActive}
-                                        >
-                                            <Trash
-                                                size={SIZE_ICON}
-                                                className="text-red-500"
-                                            />
-                                        </IconButton>
-                                    </div>
-                                    <AppFormItem
-                                        {...restField}
-                                        name={[name, 'isDefault']}
-                                        label=" "
-                                    >
-                                        <Radio
-                                            defaultChecked={false}
-                                            checked={form.getFieldValue([
-                                                'dspActions',
-                                                name,
-                                                'isDefault',
-                                            ])}
-                                            onChange={(e) =>
-                                                handleDefaultChange(
+                                            <Radio
+                                                defaultChecked={false}
+                                                checked={form.getFieldValue([
+                                                    'dspActions',
                                                     name,
-                                                    e.target.checked
-                                                )
-                                            }
-                                        >
-                                            {messages('common.setIsDefault')}
-                                        </Radio>
-                                    </AppFormItem>
-                                    <Divider />
+                                                    'isDefault',
+                                                ])}
+                                                onChange={(e) =>
+                                                    handleDefaultChange(
+                                                        name,
+                                                        e.target.checked
+                                                    )
+                                                }
+                                            >
+                                                {messages(
+                                                    'common.setIsDefault'
+                                                )}
+                                            </Radio>
+                                        </AppFormItem>
+                                    </div>
                                 </div>
                             ))}
                             <div className="mb-4">
@@ -375,7 +385,8 @@ export default function DspFormModal({ ...props }: Props) {
                                         })
                                     }
                                 >
-                                    + {messages('action.create.button')}
+                                    + {messages('action.create.button')}{' '}
+                                    {` ${messages('actions.label').toLowerCase()}`}
                                 </Button>
                             </div>
                         </div>

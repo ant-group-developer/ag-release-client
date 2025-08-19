@@ -244,4 +244,15 @@ export const QUERY_KEY = {
         GET_LIST: 'GET_LIST_ACTIONS',
         GET_DETAIL: 'GET_DETAIL_ACTIONS',
     },
+    CURRENCIES: {
+        KEY: 'CURRENCIES',
+        GET_LIST: 'GET_LIST_CURRENCIES',
+        GET_DETAIL: 'GET_DETAIL_CURRENCIES',
+    },
+    PRICE_TIERS: {
+        KEY: 'PRICE_TIERS',
+        GET_LIST: 'GET_LIST_PRICE_TIERS',
+        GET_DETAIL: 'GET_DETAIL_PRICE_TIERS',
+        UPDATE: 'UPDATE_PRICE_TIERS',
+    },
 };

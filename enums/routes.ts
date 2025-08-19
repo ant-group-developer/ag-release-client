@@ -33,6 +33,8 @@ export enum APP_ROUTES {
     RESET_PASSWORD = '/reset-password',
     ROLES = '/roles',
     ACTIONS = '/actions',
+    CURRENCIES = '/currencies',
+    PRICE_TIERS = '/price-tiers',
 }
 
 export const AUTH_ROUTES: string[] = [APP_ROUTES.SIGN_IN];

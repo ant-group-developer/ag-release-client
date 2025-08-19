@@ -12,6 +12,7 @@ export const useGetListTrackOriginTypes = (
     const { data, ...res } = useQuery({
         queryKey: trackOriginTypeQueryKeys.list(params),
         queryFn: () => trackOriginTypeApi.getList(params),
+        placeholderData: (prev) => prev,
     });
 
     const trackOriginTypesData = data?.data?.data ?? DEFAULT_DATA_PAGINATION;

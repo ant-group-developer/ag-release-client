@@ -221,7 +221,7 @@ export default function ArtistFormModal({ ...props }: Props) {
 
                 <Form.List name={'artistProfiles'}>
                     {(fields, { add, remove }) => (
-                        <div className="max-h-[390px] overflow-y-auto">
+                        <div className="max-h-[390px] overflow-y-auto pr-8">
                             <p className="pb-8 font-bold">
                                 {' '}
                                 {messages('dsp.profileList').toUpperCase()}{' '}
@@ -307,7 +307,7 @@ export default function ArtistFormModal({ ...props }: Props) {
                                                     });
                                                 }
                                             }}
-                                            className="absolute right-0 top-[-32px] mb-1"
+                                            className="absolute right-[-32px] top-0 mb-1"
                                         >
                                             <Trash
                                                 size={SIZE_ICON}

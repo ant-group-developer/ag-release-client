@@ -8,6 +8,7 @@ import IconButton from '@/components/ui/button/icon-button';
 import { Chip } from '@/components/ui/chip';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { TYPE_FILTER } from '@/enums/common';
 import { arrayFromString, arrayToString } from '@/helpers/array';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
@@ -44,7 +45,7 @@ export default function ReleasesSuperFilter({
     };
 
     const { artistsData, isFetching: isArtistsLoading } = useGetListArtist(
-        { pageSize: 999 },
+        { pageSize: PAGE_SIZE_EXTRA_LARGE },
         {
             enabled:
                 typeFilter === TYPE_FILTER.ARTIST_ID || !!dataFilter.artistId,
@@ -53,7 +54,7 @@ export default function ReleasesSuperFilter({
 
     const { releaseTypesData, isFetching: isReleaseTypesLoading } =
         useGetListReleaseTypes(
-            { pageSize: 999 },
+            { pageSize: PAGE_SIZE_EXTRA_LARGE },
             {
                 enabled:
                     typeFilter === TYPE_FILTER.ALBUM_FORMAT_ID ||

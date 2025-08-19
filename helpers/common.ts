@@ -653,3 +653,18 @@ export function getRandomInt(min: number, max: number) {
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+export const formatCurrency = (price: number, currency?: string) => {
+    if (!currency || currency.length !== 3) {
+        return price.toString();
+    }
+
+    try {
+        return new Intl.NumberFormat(undefined, {
+            style: 'currency',
+            currency,
+        }).format(price);
+    } catch {
+        return price.toString();
+    }
+};

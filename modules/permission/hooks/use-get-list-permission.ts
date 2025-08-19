@@ -8,6 +8,7 @@ export const useGetListPermission = (params: PermissionDataDataFilter) => {
     const { data, ...res } = useQuery({
         queryKey: permissionQueryKeys.list(params),
         queryFn: () => permissionApis.getList(params),
+        placeholderData: (prev) => prev,
     });
 
     const permissionData = data?.data?.data ?? DEFAULT_DATA_PAGINATION;

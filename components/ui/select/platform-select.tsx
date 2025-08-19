@@ -1,3 +1,4 @@
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import useModalStore from '@/hooks/use-modal';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { DspData } from '@/modules/dsp/types';
@@ -11,7 +12,7 @@ export default function PlatformSelect({ mode, ...props }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
 
-    const { dspData } = useGetListDsp({ pageSize: 999 });
+    const { dspData } = useGetListDsp({ pageSize: PAGE_SIZE_EXTRA_LARGE });
 
     const isMultipleMode = mode === 'multiple';
 

@@ -1289,11 +1289,64 @@
             "error": {
                 "duplicateNameAction": "This action already exists",
                 "duplicateCodeAction": "This action code already exists",
-                "cannotDeleteBecauseLinkedDSP": "Cannot delete this action because it is linked to a DSP"
+                "cannotDeleteBecauseLinkedDspActions": "Cannot delete this action because it is linked to a DSP"
             }
         },
         "action": {
             "delete": "Delete action"
+        }
+    },
+
+    "currencies": {
+        "label": "Currency",
+        "name": "Currency name",
+        "code": "Currency code",
+        "message": {
+            "success": {
+                "create": "Currency added successfully",
+                "update": "Currency updated successfully",
+                "delete": "Currency deleted successfully"
+            },
+            "error": {}
+        },
+        "action": {
+            "delete": "Delete currency"
+        }
+    },
+    "currency": {
+        "message": {
+            "success": {
+                "create": "Currency added successfully",
+                "update": "Currency updated successfully",
+                "delete": "Currency deleted successfully"
+            },
+            "error": {
+                "cannotDeleteBecauseLinkedPriceTiers": "Cannot delete currency because it is already used",
+                "uniqueConstraint": "This currency already exists"
+            }
+        }
+    },
+
+    "price": {
+        "label": "Price",
+        "name": "Price name",
+        "code": "Price code",
+        "action": {
+            "delete": "Delete price"
+        }
+    },
+
+    "priceTier": {
+        "message": {
+            "success": {
+                "create": "Price added successfully",
+                "update": "Price updated successfully",
+                "delete": "Price deleted successfully"
+            },
+            "error": {
+                "cannotDeleteBecauseLinkedTracks": "Cannot delete this price because it is linked to tracks",
+                "currencyNotFound": "Currency not found"
+            }
         }
     }
 }

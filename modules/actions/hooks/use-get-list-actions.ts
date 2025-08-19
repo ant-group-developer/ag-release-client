@@ -8,6 +8,7 @@ export const useGetListActions = (params: ActionsDataFilter) => {
     const { data, ...res } = useQuery({
         queryKey: actionsQueryKeys.list(params),
         queryFn: () => actionsApis.getList(params),
+        placeholderData: (prev) => prev,
     });
 
     const actionsData = data?.data?.data ?? DEFAULT_DATA_PAGINATION;

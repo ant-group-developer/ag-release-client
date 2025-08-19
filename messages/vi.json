@@ -1293,11 +1293,68 @@
             "error": {
                 "duplicateNameAction": "Hành động này đã tồn tại",
                 "duplicateCodeAction": "Mã hành động này đã tồn tại",
-                "cannotDeleteBecauseLinkedDSP": "Không thể xoá hành động vì đã được sử dụng tại một DSP"
+                "cannotDeleteBecauseLinkedDspActions": "Không thể xoá hành động vì đã được sử dụng tại một DSP"
             }
         },
         "action": {
             "delete": "Xoá hành động"
+        }
+    },
+
+    "currencies": {
+        "label": "Tiền tệ",
+        "name": "Tên tiền tệ",
+        "code": "Mã tiền tệ",
+        "message": {
+            "success": {
+                "create": "Thêm tiền tệ thành công",
+                "update": "Cập nhật tiền tệ thành công",
+                "delete": "Xoá tiền tệ thành công"
+            },
+            "error": {
+                "duplicateNameCurrency": "Tên tiền tệ này đã tồn tại",
+                "duplicateCodeCurrency": "Mã tiền tệ này đã tồn tại",
+                "cannotDeleteBecauseLinkedRecord": "Không thể xoá tiền tệ vì đã được sử dụng"
+            }
+        },
+        "action": {
+            "delete": "Xoá tiền tệ"
+        }
+    },
+    "currency": {
+        "message": {
+            "success": {
+                "create": "Thêm tiền tệ thành công",
+                "update": "Cập nhật tiền tệ thành công",
+                "delete": "Xoá tiền tệ thành công"
+            },
+            "error": {
+                "cannotDeleteBecauseLinkedPriceTiers": "Không thể xoá tiền tệ vì đã được sử dụng",
+                "uniqueConstraint": "Tiền tệ này đã tồn tại"
+            }
+        }
+    },
+
+    "price": {
+        "label": "Giá",
+        "name": "Tên giá",
+        "code": "Mã giá",
+        "action": {
+            "delete": "Xoá giá"
+        }
+    },
+
+    "priceTier": {
+        "message": {
+            "success": {
+                "create": "Thêm giá thành công",
+                "update": "Cập nhật giá thành công",
+                "delete": "Xoá giá thành công"
+            },
+            "error": {
+                "cannotDeleteBecauseLinkedTracks": "Không thể xoá giá này vì đã được sử dụng trong các bài nhạc",
+                "currencyNotFound": "Không tìm thấy tiền tệ"
+            }
         }
     }
 }

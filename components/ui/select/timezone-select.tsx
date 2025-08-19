@@ -1,3 +1,4 @@
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { toNonAccentVietnamese } from '@/helpers/string';
 import { useGetListTimezones } from '@/modules/timezone/hooks/use-get-list-timezones';
 import { TimezoneData } from '@/modules/timezone/types';
@@ -8,7 +9,7 @@ interface TimezoneSelectProps extends SelectProps {}
 
 export default function TimezoneSelect({ ...props }: TimezoneSelectProps) {
     const messages = useTranslations();
-    const { timezonesData } = useGetListTimezones({ pageSize: 999 });
+    const { timezonesData } = useGetListTimezones({ pageSize: PAGE_SIZE_EXTRA_LARGE });
 
     const options = timezonesData.items.map((item: TimezoneData) => ({
         id: item.id,

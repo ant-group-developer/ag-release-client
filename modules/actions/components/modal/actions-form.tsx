@@ -178,7 +178,7 @@ export default function ActionsFormModal({ ...props }: Props) {
                             {
                                 max: 500,
                                 message: messages('validation.stringMax', {
-                                    max: 200,
+                                    max: 500,
                                     field: messages('common.note'),
                                 }),
                             },

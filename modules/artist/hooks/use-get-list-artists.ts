@@ -15,6 +15,7 @@ export const useGetListArtist = (
     const { data, ...res } = useQuery({
         queryKey: artistQueryKeys.list(params),
         queryFn: () => artistApi.getList(params),
+        placeholderData: (prev) => prev,
         enabled: options?.enabled ?? true,
     });
 
