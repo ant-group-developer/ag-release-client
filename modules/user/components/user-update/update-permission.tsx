@@ -1,8 +1,8 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { PAGE_SIZE } from '@/constants/page-size';
 import { SCREEN } from '@/enums/common';
-import { useGetListRoles } from '@/modules/Roles/hooks/use-get-list-roles';
-import { RolePermission, RolesData } from '@/modules/Roles/types';
+import { useGetListRoles } from '@/modules/roless/hooks/use-get-list-roles';
+import { RolePermission, RolesData } from '@/modules/roless/types';
 import { Badge } from 'antd';
 import { ColumnsType, ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';

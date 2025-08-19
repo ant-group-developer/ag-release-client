@@ -8,15 +8,15 @@ import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 
-import RolesHeader from '@/modules/Roles/components/header';
-import RolesActions from '@/modules/Roles/components/header/roles-actions';
-import RolesFormModal from '@/modules/Roles/components/modal/roles-form';
-import { RolesTable } from '@/modules/Roles/components/table';
-import { TYPE_MODAL_ROLES } from '@/modules/Roles/enums';
-import { useBulkDeleteRoles } from '@/modules/Roles/hooks/use-bulk-delete-roles';
-import { useDeleteRole } from '@/modules/Roles/hooks/use-delete-role';
-import { useGetListRoles } from '@/modules/Roles/hooks/use-get-list-roles';
-import { RolesData, RolesDataDataFilter } from '@/modules/Roles/types';
+import RolesHeader from '@/modules/roles/components/header';
+import RolesActions from '@/modules/roles/components/header/roles-actions';
+import RolesFormModal from '@/modules/roles/components/modal/roles-form';
+import { RolesTable } from '@/modules/roles/components/table';
+import { TYPE_MODAL_ROLES } from '@/modules/roles/enums';
+import { useBulkDeleteRoles } from '@/modules/roles/hooks/use-bulk-delete-roles';
+import { useDeleteRole } from '@/modules/roles/hooks/use-delete-role';
+import { useGetListRoles } from '@/modules/roles/hooks/use-get-list-roles';
+import { RolesData, RolesDataDataFilter } from '@/modules/roles/types';
 import { useTranslations } from 'next-intl';
 import { Key, useState } from 'react';
 
