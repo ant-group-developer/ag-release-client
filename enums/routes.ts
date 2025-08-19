@@ -7,6 +7,7 @@ export enum APP_ROUTES {
     UPLOAD = '/upload',
     PERMISSION = '/permission',
     USER = '/users',
+    GRANT_PERMISSION = '/grant-permission',
     HOME = '/',
     DASHBOARD = '/dashboard',
     RELEASES = '/releases',

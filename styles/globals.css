@@ -373,3 +373,12 @@ a {
 .custom-scroll-artist-modal .ant-modal-content {
     @apply max-h-[90vh] overflow-y-auto !important;
 }
+
+.ant-table-wrapper
+    .ant-table.ant-table-middle
+    .ant-table-tbody
+    .ant-table-wrapper:only-child
+    .ant-table {
+    margin-block: 0px !important;
+    margin-inline: 0px !important;
+}

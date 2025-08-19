@@ -572,6 +572,9 @@
             "tenant": {
                 "label": "Role trong workspace"
             }
+        },
+        "grantPermission": {
+            "label": "Phân quyền"
         }
     },
     "file": {

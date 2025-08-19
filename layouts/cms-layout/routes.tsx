@@ -213,6 +213,14 @@ export const adminRoutes: AdminRoutesType[] = [
                 title: 'Roles',
                 permission: PERMISSION.PERMISSION.UPDATE,
             },
+            // {
+            //     id: 'grantPermission',
+            //     label: 'user.grantPermission.label',
+            //     href: APP_ROUTES.GRANT_PERMISSION,
+            //     icon: UserLock,
+            //     title: 'Grant permission',
+            //     permission: PERMISSION.PERMISSION.UPDATE,
+            // },
             {
                 id: 'user',
                 label: 'user.label',

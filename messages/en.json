@@ -573,6 +573,9 @@
             "tenant": {
                 "label": "Workspace role"
             }
+        },
+        "grantPermission": {
+            "label": "Grant permisson"
         }
     },
     "file": {
