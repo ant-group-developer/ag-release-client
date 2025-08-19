@@ -2,6 +2,7 @@ import { APP_ROUTES } from '@/enums/routes';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import {
     BellElectric,
+    BookA,
     Box,
     Clock,
     Contact,
@@ -135,6 +136,14 @@ export const adminRoutes: AdminRoutesType[] = [
         id: 'system-category',
         label: 'common.systemCategories',
         children: [
+            {
+                id: 'actions',
+                label: 'actions.label',
+                href: APP_ROUTES.ACTIONS,
+                icon: BookA,
+                title: 'actions',
+                permission: PERMISSION.DISTRIBUTION.READ,
+            },
             {
                 id: 'release-type',
                 label: 'releaseType.label',

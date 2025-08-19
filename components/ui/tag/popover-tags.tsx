@@ -22,7 +22,7 @@ export default function PopoverTags({
             <div className="flex items-center justify-center gap-1">
                 {hiddenTags.map((item, index) => {
                     return (
-                        <Tag key={index} className="!mr-0">
+                        <Tag key={item} className="!mr-0">
                             {' '}
                             {item}{' '}
                         </Tag>
@@ -35,7 +35,7 @@ export default function PopoverTags({
     return (
         <div>
             {visibleTags.map((tag, index) => (
-                <Tag key={index} className="!mr-1">
+                <Tag key={tag} className="!mr-1">
                     {tag}
                 </Tag>
             ))}

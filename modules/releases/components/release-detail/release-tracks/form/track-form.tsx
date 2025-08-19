@@ -219,7 +219,7 @@ export default function TracksForm({ trackData, index }: Props) {
                                 {trackData?.trackArtists?.map(
                                     (item: TrackArtistData, index: number) => (
                                         <ArtistCard
-                                            key={index}
+                                            key={item.id}
                                             data={{
                                                 artist: item.artist,
                                                 artistRole: item.artistRole,

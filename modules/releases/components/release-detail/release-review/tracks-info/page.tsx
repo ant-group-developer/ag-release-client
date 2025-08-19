@@ -223,7 +223,7 @@ export default function TracksInfo({}: Props) {
                                             index: number
                                         ) => (
                                             <ArtistItem
-                                                key={index}
+                                                key={trackArtist.id}
                                                 data={{
                                                     artist: trackArtist?.artist,
                                                     role: trackArtist?.artistRole,

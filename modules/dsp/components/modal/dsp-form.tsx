@@ -1,18 +1,24 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
+import IconButton from '@/components/ui/button/icon-button';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
+import ActionsSelect from '@/components/ui/select/actions-select';
+import { SIZE_ICON } from '@/constants/common';
 import { getAvatarUrl } from '@/helpers/avatar-tailwind';
 import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { uploadApi } from '@/modules/upload/apis';
 import { CreateVariables, UpdateVariables } from '@/types/api';
-import { Form, Input, Radio } from 'antd';
+import { Button, Divider, Form, Input, Radio } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
+import { Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useCreateDsp } from '../../hooks/use-create-dsp';
+import { useDeleteDspAction } from '../../hooks/use-delete-dsp-action';
+import { useGetDetailDsp } from '../../hooks/use-get-detail-dsp';
 import { useUpdateDsp } from '../../hooks/use-update-dsp';
 import { DspData } from '../../types';
 import { CreateDspPayload, UpdateDspPayload } from '../../types/payload';
@@ -33,12 +39,17 @@ export default function DspFormModal({ ...props }: Props) {
 
     const { createDsp } = useCreateDsp();
     const { updateDsp } = useUpdateDsp();
+    const { deleteDspAction } = useDeleteDspAction();
+    const { dspData } = useGetDetailDsp(dataEdit?.id);
 
     const handleCreateDsp = (values: DspFormValues) => {
         const variables: CreateVariables<CreateDspPayload> = {
             payload: values,
             onSuccess: () => {
                 form.resetFields();
+                form.setFieldsValue({
+                    dspActions: [{ actionId: undefined, isDefault: true }],
+                });
                 deActive();
             },
             onError: () => {
@@ -109,18 +120,37 @@ export default function DspFormModal({ ...props }: Props) {
             : handleCreateDsp(payloadValues);
     };
 
+    const handleDefaultChange = useCallback(
+        (changedIndex: number, isChecked: boolean) => {
+            if (!isChecked) return;
+
+            const currentActions = form.getFieldValue('dspActions') || [];
+            const updatedActions = currentActions.map(
+                (action: any, index: number) => ({
+                    ...action,
+                    isDefault: index === changedIndex,
+                })
+            );
+
+            form.setFieldsValue({
+                dspActions: updatedActions,
+            });
+        },
+        [form]
+    );
+
     useEffect(() => {
         const initialData = {
-            ...dataEdit,
-            link: dataEdit?.formatLinks,
-            pictureFile: dataEdit?.picture
+            ...dspData,
+            link: dspData?.formatLinks,
+            pictureFile: dspData?.picture
                 ? {
                       fileList: [
                           {
-                              uid: dataEdit?.id,
-                              thumbUrl: dataEdit?.picture,
-                              url: dataEdit?.picture,
-                              name: dataEdit?.name,
+                              uid: dspData?.id,
+                              thumbUrl: dspData?.picture,
+                              url: dspData?.picture,
+                              name: dspData?.name,
                           },
                       ],
                   }
@@ -128,56 +158,69 @@ export default function DspFormModal({ ...props }: Props) {
         };
 
         form.setFieldsValue(initialData);
-    }, [dataEdit]);
+
+        // Nếu là create và chưa có dspActions => thêm 1 item trống
+        if (!isUpdate) {
+            const current = form.getFieldValue('dspActions');
+            if (!Array.isArray(current) || current.length === 0) {
+                form.setFieldsValue({
+                    dspActions: [{ actionId: undefined, isDefault: true }],
+                });
+            }
+        }
+    }, [isUpdate, form, dspData]);
 
     return (
         <AppModal
-            width={500}
+            width={700}
             {...props}
             title={`${isUpdate ? messages('common.update') : messages('common.create')} DSP`}
             open
             onCancel={closeModal}
             onOk={form.submit}
-            className="!top-4"
             loading={isActive}
         >
             <AppForm
                 form={form}
                 onFinish={onFinish}
                 showSubmit={false}
-                layout="vertical"
+                layout="horizontal"
+                disabled={isActive}
             >
-                <div className="flex items-center gap-4">
-                    <AppFormItem
-                        name="pictureFile"
-                        label={messages('common.image')}
-                        // required
-                        // rules={[
-                        //     {
-                        //         required: true,
-                        //         message: messages('validation.input'),
-                        //     },
-                        // ]}
-                    >
+                <AppFormItem
+                    name="pictureFile"
+                    label={messages('common.image')}
+                    // required
+                    // rules={[
+                    //     {
+                    //         required: true,
+                    //         message: messages('validation.input'),
+                    //     },
+                    // ]}
+                >
+                    <div className="flex items-center gap-4">
                         <ImageListUpload
                             maxCount={1}
                             accept="image/*"
                             maxSizeMB={2}
                         />
-                    </AppFormItem>
-                    <div>
-                        <p className="flex-1 text-sm text-gray-500">
-                            {messages('image.validation.supportImageFormat', {
-                                value: 'PNG, JPG, JPEG',
-                            })}
-                        </p>
-                        <p className="flex-1 text-sm text-gray-500">
-                            {messages('image.validation.mustBeLessThanMB', {
-                                value: '3',
-                            })}
-                        </p>
+                        <div>
+                            <p className="flex-1 text-sm text-gray-500">
+                                {messages(
+                                    'image.validation.supportImageFormat',
+                                    {
+                                        value: 'PNG, JPG, JPEG',
+                                    }
+                                )}
+                            </p>
+                            <p className="flex-1 text-sm text-gray-500">
+                                {messages('image.validation.mustBeLessThanMB', {
+                                    value: '3',
+                                })}
+                            </p>
+                        </div>
                     </div>
-                </div>
+                </AppFormItem>
                 <AppFormItem
                     name="name"
                     label={messages('dsp.name')}
@@ -202,6 +245,20 @@ export default function DspFormModal({ ...props }: Props) {
                     name="link"
                     label={'Format links'}
                     tooltip={messages('dsp.oneLinkPerLine')}
+                    required
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.input'),
+                        },
+                        {
+                            max: 200,
+                            message: messages('validation.stringMax', {
+                                max: 200,
+                                field: 'Format links',
+                            }),
+                        },
+                    ]}
                 >
                     <TextArea
                         allowClear
@@ -214,7 +271,11 @@ export default function DspFormModal({ ...props }: Props) {
 
                 <AppFormItem
                     name="canLinkArtistProfile"
-                    label={messages('artist.canLinkArtistProfile')}
+                    label={
+                        <div className="text-wrap pb-2">
+                            {messages('artist.canLinkArtistProfile')}
+                        </div>
+                    }
                     required
                     rules={[
                         {
@@ -228,6 +289,98 @@ export default function DspFormModal({ ...props }: Props) {
                         <Radio value={false}>{messages('common.no')}</Radio>
                     </Radio.Group>
                 </AppFormItem>
+
+                <Form.List name="dspActions">
+                    {(fields, { add, remove }) => (
+                        <div className="max-h-[300px] overflow-auto pr-8">
+                            {fields.map(({ key, name, ...restField }) => (
+                                <div key={key}>
+                                    <div className="relative">
+                                        <AppFormItem
+                                            {...restField}
+                                            name={[name, 'actionId']}
+                                            label={messages('actions.label')}
+                                            required
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message:
+                                                        messages(
+                                                            'validation.input'
+                                                        ),
+                                                },
+                                            ]}
+                                        >
+                                            <ActionsSelect allowClear />
+                                        </AppFormItem>
+                                        <IconButton
+                                            onClick={() => {
+                                                const currentProfiles =
+                                                    form.getFieldValue(
+                                                        'dspActions'
+                                                    ) || [];
+                                                const dspActions =
+                                                    currentProfiles[name];
+                                                remove(name);
+                                                if (dspActions?.id) {
+                                                    deleteDspAction({
+                                                        dspId: dataEdit?.id,
+                                                        actionId:
+                                                            dspActions?.id,
+                                                    });
+                                                }
+                                            }}
+                                            className="absolute right-[-32px] top-0"
+                                            disabled={isActive}
+                                        >
+                                            <Trash
+                                                size={SIZE_ICON}
+                                                className="text-red-500"
+                                            />
+                                        </IconButton>
+                                    </div>
+                                    <AppFormItem
+                                        {...restField}
+                                        name={[name, 'isDefault']}
+                                        label=" "
+                                    >
+                                        <Radio
+                                            defaultChecked={false}
+                                            checked={form.getFieldValue([
+                                                'dspActions',
+                                                name,
+                                                'isDefault',
+                                            ])}
+                                            onChange={(e) =>
+                                                handleDefaultChange(
+                                                    name,
+                                                    e.target.checked
+                                                )
+                                            }
+                                        >
+                                            {messages('common.setIsDefault')}
+                                        </Radio>
+                                    </AppFormItem>
+                                    <Divider />
+                                </div>
+                            ))}
+                            <div className="mb-4">
+                                <Button
+                                    className="w-full"
+                                    type="dashed"
+                                    onClick={() =>
+                                        add({
+                                            actionId: undefined,
+                                            isDefault: false,
+                                        })
+                                    }
+                                >
+                                    + {messages('action.create.button')}
+                                </Button>
+                            </div>
+                        </div>
+                    )}
+                </Form.List>
             </AppForm>
         </AppModal>
     );

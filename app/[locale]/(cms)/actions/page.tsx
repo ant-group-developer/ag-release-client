@@ -1,0 +1,122 @@
+'use client';
+import AppConfirm from '@/components/ui/modal/confirm-modal';
+import AppPagination from '@/components/ui/pagination';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { ORDER } from '@/enums/common';
+import { formattedDate, setSortOrder } from '@/helpers/common';
+import { useFilter } from '@/hooks/use-filter';
+import useModalStore from '@/hooks/use-modal';
+import { useTableScrollY } from '@/hooks/use-table-scroll-y';
+import ActionsHeader from '@/modules/actions/components/header';
+import ActionsFormModal from '@/modules/actions/components/modal/actions-form';
+import { ActionsTable } from '@/modules/actions/components/table';
+import { TYPE_MODAL_ACTIONS } from '@/modules/actions/enums';
+import { useDeleteAction } from '@/modules/actions/hooks/use-delete-action';
+import { useGetListActions } from '@/modules/actions/hooks/use-get-list-actions';
+import { ActionsDataFilter } from '@/modules/actions/types';
+
+import { RolesData } from '@/modules/roles/types';
+import { useTranslations } from 'next-intl';
+
+type Props = {};
+
+export default function Actions({}: Props) {
+    // hooks - state
+    const scrollY = useTableScrollY();
+    const messages = useTranslations();
+    const typeModal = useModalStore((state) => state.typeModal);
+    const closeModal = useModalStore((state) => state.closeModal);
+    const dataEdit = useModalStore<RolesData>((state) => state.dataEdit);
+
+    // apis
+    const {
+        dataFilter,
+        canClearFilter,
+        onChangeFilter,
+        onChangePage,
+        removeFilter,
+    } = useFilter<ActionsDataFilter>({
+        page: 1,
+        pageSize: PAGE_SIZE,
+    });
+    const { actionsData, dataUpdatedAt, refetch, isFetching } =
+        useGetListActions(dataFilter);
+    const { deleteAction } = useDeleteAction();
+
+    const onChangeSort = (pagination: any, filters: any, sort: any) => {
+        const orderBy = setSortOrder(sort, ORDER.ASC);
+        const fieldOrder = sort.field;
+        onChangeFilter(
+            {
+                orderBy,
+                fieldOrder,
+            },
+            false
+        );
+    };
+
+    return (
+        <div>
+            <ActionsHeader
+                dataFilter={dataFilter}
+                onChangeFilter={onChangeFilter}
+                canClearFilter={canClearFilter}
+                removeFilter={removeFilter}
+                handleRefresh={() => refetch()}
+                lastUpdatedAt={formattedDate(dataUpdatedAt || new Date())}
+            />
+
+            <ActionsTable
+                dataSource={actionsData.items}
+                scroll={{
+                    y: scrollY,
+                }}
+                pagination={{
+                    pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                    current: actionsData.metadata.currentPage,
+                    total: actionsData.metadata.totalItems,
+                }}
+                loading={isFetching}
+                dataFilter={dataFilter}
+                onChange={onChangeSort}
+            />
+
+            <AppPagination
+                className="border-b border-t"
+                align="end"
+                current={actionsData?.metadata?.currentPage}
+                pageSize={dataFilter.pageSize}
+                total={actionsData.metadata?.totalItems}
+                onChange={onChangePage}
+                showTotalText
+                showSizeChanger
+                showQuickJumper
+                pageSizeOptions={PAGE_SIZE_OPTIONS}
+            />
+
+            {(typeModal === TYPE_MODAL_ACTIONS.CREATE ||
+                typeModal === TYPE_MODAL_ACTIONS.UPDATE) && (
+                <ActionsFormModal />
+            )}
+
+            {typeModal === TYPE_MODAL_ACTIONS.DELETE && (
+                <AppConfirm
+                    open
+                    modalTitle={messages('action.delete.title', {
+                        label: dataEdit?.name,
+                    })}
+                    paragraph={messages('action.delete.alert', {
+                        label: dataEdit?.name,
+                    })}
+                    onCancel={closeModal}
+                    onOk={() =>
+                        deleteAction({
+                            id: dataEdit?.id,
+                            onSuccess: () => closeModal(),
+                        })
+                    }
+                />
+            )}
+        </div>
+    );
+}

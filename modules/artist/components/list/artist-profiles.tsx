@@ -43,7 +43,7 @@ export default function ArtistProfilesList({
                 return (
                     <>
                         <div
-                            key={index}
+                            key={item.id}
                             className={cn(
                                 'flex cursor-pointer items-center justify-between rounded-md p-3 hover:bg-gray-200',
                                 linked

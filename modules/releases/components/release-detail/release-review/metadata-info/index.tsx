@@ -113,7 +113,7 @@ export default function MetadataInfo({}: Props) {
                     {releaseData?.releaseArtists?.map(
                         (releaseArtist: ReleaseArtist, index: number) => (
                             <ArtistItem
-                                key={index}
+                                key={releaseArtist.id}
                                 data={{
                                     artist: releaseArtist?.artist,
                                     role: releaseArtist?.artistRole,

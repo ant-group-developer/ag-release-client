@@ -37,6 +37,7 @@
         "forbiddenDescription": "Please contact the Admin for more details"
     },
     "common": {
+        "setIsDefault": "Set is default",
         "reScan": "Re-scan",
         "accuracy": "Accuracy",
         "result": "Result",
@@ -1054,7 +1055,7 @@
 
     "dsp": {
         "label": "DSP",
-        "name": "platform name",
+        "name": "Platform name",
         "add": "Add platform",
         "oneLinkPerLine": "One link per line",
         "profileList": "Profile list",
@@ -1273,6 +1274,26 @@
         },
         "action": {
             "delete": "Delete role"
+        }
+    },
+
+    "actions": {
+        "label": "Actions",
+        "name": "Action name",
+        "message": {
+            "success": {
+                "create": "Action created successfully",
+                "update": "Action updated successfully",
+                "delete": "Action deleted successfully"
+            },
+            "error": {
+                "duplicateNameAction": "This action already exists",
+                "duplicateCodeAction": "This action code already exists",
+                "cannotDeleteBecauseLinkedDSP": "Cannot delete this action because it is linked to a DSP"
+            }
+        },
+        "action": {
+            "delete": "Delete action"
         }
     }
 }

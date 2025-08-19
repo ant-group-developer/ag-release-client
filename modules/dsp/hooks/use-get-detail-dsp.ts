@@ -7,6 +7,7 @@ export const useGetDetailDsp = (id: DspData['id']) => {
     const { data, ...res } = useQuery({
         queryKey: dspQueryKeys.detail(id),
         queryFn: () => dspApi.getDetail(id),
+        enabled: !!id,
     });
 
     const defaultData: DspData = {
@@ -17,6 +18,7 @@ export const useGetDetailDsp = (id: DspData['id']) => {
         createdAt: '',
         updatedAt: null,
         formatLinks: [],
+        dspActions: [],
     };
 
     return {

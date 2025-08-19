@@ -135,7 +135,7 @@ export default function ReleaseArtistSection({ debouncedUpdate }: Props) {
                                                 index: number
                                             ) => (
                                                 <ArtistCard
-                                                    key={index}
+                                                    key={releaseArtist?.id}
                                                     index={index}
                                                     disabled={
                                                         isCreateReleasePage ||

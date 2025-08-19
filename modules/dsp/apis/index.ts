@@ -1,7 +1,11 @@
 import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
 import { DspData, DspDataFilter } from '../types';
-import { CreateDspPayload, UpdateDspPayload } from '../types/payload';
+import {
+    CreateDspPayload,
+    DeleteDspAction,
+    UpdateDspPayload,
+} from '../types/payload';
 
 export const dspApi = {
     getList: (params: DspDataFilter) => {
@@ -26,5 +30,9 @@ export const dspApi = {
     },
     deleteDsp: (id: DspData['id']) => {
         return axiosInstance.delete(`/dsps/${id}`);
+    },
+
+    deleteDspAction: ({ dspId, actionId }: DeleteDspAction) => {
+        return axiosInstance.delete(`/dsps/${dspId}/dsp-actions/${actionId}`);
     },
 };

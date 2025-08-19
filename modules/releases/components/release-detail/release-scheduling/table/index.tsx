@@ -1,7 +1,7 @@
-import FacebookPolicySelect from '@/components/ui/select/facebook-policy-select';
-import TikTokPolicySelect from '@/components/ui/select/tiktok-policy-select';
-import YoutubePolicySelect from '@/components/ui/select/youtube-policy-select';
+import ActionsSelect from '@/components/ui/select/actions-select';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import { useGetListDspAction } from '@/modules/dsp-action/hooks/use-get-list-dsp-action';
+import { DspData } from '@/modules/dsp/types';
 import { Select, TableColumnsType } from 'antd';
 import { useTranslations } from 'next-intl';
 
@@ -21,6 +21,8 @@ type Props = Omit<
 
 export default function ReleaseSchedulingTable({ ...props }: Props) {
     const messages = useTranslations();
+    const { dspActionsData } = useGetListDspAction({ pageSize: 999 });
+
     const priceCodeList = [
         {
             label: '0.69$',
@@ -35,6 +37,25 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
             value: '1.29',
         },
     ];
+
+    const dspColumn = dspActionsData?.items?.map((item: DspData) => {
+        const defaultAction = item?.dspActions?.find(
+            (item) => item?.isDefault === true
+        );
+        return {
+            title: item.name,
+            dataIndex: `dsp_${item.id}`,
+            key: item.id,
+            width: 200,
+            align: 'left' as const,
+            render: (value: string) => (
+                <ActionsSelect
+                    defaultValue={defaultAction?.action?.id}
+                    className="w-full"
+                />
+            ),
+        };
+    });
 
     const columns: TableColumnsType<ReleaseSchedulingTableDataItem> = [
         {
@@ -114,34 +135,41 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
         // },
         {
             title: messages('common.policy'),
-            colSpan: 3, // Spans across 3 columns (TikTok, Facebook, YouTube)
+            colSpan: dspActionsData?.metadata?.totalItems,
             align: 'center',
-            children: [
-                {
-                    title: 'TikTok',
-                    dataIndex: 'tikTokPolicy',
-                    key: 'tikTokPolicy',
-                    width: 200,
-                    align: 'left',
-                    render: (value: string) => <TikTokPolicySelect />,
-                },
-                {
-                    title: 'Facebook',
-                    dataIndex: 'facebookPolicy',
-                    key: 'facebookPolicy',
-                    width: 200,
-                    align: 'left',
-                    render: (value: string) => <FacebookPolicySelect />,
-                },
-                {
-                    title: 'YouTube',
-                    dataIndex: 'youtubePolicy',
-                    key: 'youtubePolicy',
-                    width: 250,
-                    align: 'left',
-                    render: (value: string) => <YoutubePolicySelect />,
-                },
-            ],
+            children: dspColumn,
+            //  [
+            //     {
+            //         title: 'TikTok',
+            //         dataIndex: 'tikTokPolicy',
+            //         key: 'tikTokPolicy',
+            //         width: 200,
+            //         align: 'left',
+            //         render: (value: string) => (
+            //             <ActionsSelect className="w-full" />
+            //         ),
+            //     },
+            //     {
+            //         title: 'Facebook',
+            //         dataIndex: 'facebookPolicy',
+            //         key: 'facebookPolicy',
+            //         width: 200,
+            //         align: 'left',
+            //         render: (value: string) => (
+            //             <ActionsSelect className="w-full" />
+            //         ),
+            //     },
+            //     {
+            //         title: 'YouTube',
+            //         dataIndex: 'youtubePolicy',
+            //         key: 'youtubePolicy',
+            //         width: 250,
+            //         align: 'left',
+            //         render: (value: string) => (
+            //             <ActionsSelect className="w-full" />
+            //         ),
+            //     },
+            // ],
         },
     ];
 

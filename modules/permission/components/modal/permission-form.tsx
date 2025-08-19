@@ -157,11 +157,11 @@ export default function PermissionFormModal({ ...props }: Props) {
                                 label={messages('common.note')}
                                 rules={[
                                     {
-                                        max: 1000,
+                                        max: 500,
                                         message: messages(
                                             'validation.stringMax',
                                             {
-                                                max: 1000,
+                                                max: 500,
                                                 field: messages('common.note'),
                                             }
                                         ),

@@ -134,7 +134,7 @@ export default function RolesFormModal({ ...props }: Props) {
                 >
                     <AppFormItem
                         name="name"
-                        label={messages('permission.name')}
+                        label={messages('roles.name')}
                         required
                         rules={[
                             {
@@ -145,7 +145,7 @@ export default function RolesFormModal({ ...props }: Props) {
                                 max: 100,
                                 message: messages('validation.stringMax', {
                                     max: 100,
-                                    field: messages('permission.name'),
+                                    field: messages('roles.name'),
                                 }),
                             },
                         ]}
@@ -179,9 +179,9 @@ export default function RolesFormModal({ ...props }: Props) {
                         label={messages('common.note')}
                         rules={[
                             {
-                                max: 1000,
+                                max: 500,
                                 message: messages('validation.stringMax', {
-                                    max: 1000,
+                                    max: 500,
                                     field: messages('common.note'),
                                 }),
                             },
