@@ -6,7 +6,8 @@ export interface RolesData extends CommonAttribute {
     modifierId: string;
     name: string;
     color: string;
-    note: string;
+    code: string | null;
+    note: string | null;
     rolePermissions: RolePermission[];
 }
 

@@ -1,9 +1,5 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
-import {
-    PAGE_SIZE,
-    PAGE_SIZE_EXTRA_LARGE,
-    PAGE_SIZE_OPTIONS,
-} from '@/constants/page-size';
+import { PAGE_SIZE, PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { getIndex } from '@/helpers/common';
 import { useGetListPermission } from '@/modules/permission/hooks/use-get-list-permission';
 import { PermissionData } from '@/modules/permission/types';
@@ -14,8 +10,9 @@ import { useState } from 'react';
 type Props = Omit<AppTableProps<PermissionData>, 'columns'> & {};
 
 export default function PermissionTableItemForm({ ...props }: Props) {
-    const { permissionData, dataUpdatedAt, refetch, isFetching } =
-        useGetListPermission({ pageSize: PAGE_SIZE_EXTRA_LARGE });
+    const { permissionData, isFetching } = useGetListPermission({
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
+    });
     const [pagination, setPagination] = useState({
         current: 1,
         pageSize: PAGE_SIZE,
@@ -36,8 +33,7 @@ export default function PermissionTableItemForm({ ...props }: Props) {
             key: 'name',
             dataIndex: 'name',
             align: 'left',
-            width: 200,
-
+            width: 150,
             render: (value) => (
                 <span className="truncate text-wrap">{value}</span>
             ),
@@ -47,8 +43,7 @@ export default function PermissionTableItemForm({ ...props }: Props) {
             key: 'code',
             dataIndex: 'code',
             align: 'left',
-            width: 200,
-
+            width: 150,
             render: (value) => (
                 <span className="truncate text-wrap">{value}</span>
             ),
@@ -58,8 +53,7 @@ export default function PermissionTableItemForm({ ...props }: Props) {
             key: 'note',
             dataIndex: 'note',
             align: 'left',
-            width: 200,
-
+            width: 250,
             render: (value) => (
                 <span className="line-clamp-3 truncate whitespace-pre-line">
                     {value}
@@ -77,10 +71,8 @@ export default function PermissionTableItemForm({ ...props }: Props) {
                 x: 'max-content',
                 y: 300,
             }}
-            size="small"
             pagination={{
                 pageSize: pagination?.pageSize,
-                size: 'default',
                 current: pagination?.current,
                 onChange: (page, pageSize) => {
                     setPagination({
@@ -88,10 +80,8 @@ export default function PermissionTableItemForm({ ...props }: Props) {
                         pageSize: pageSize,
                     });
                 },
-                showSizeChanger: true,
-                pageSizeOptions: PAGE_SIZE_OPTIONS,
+                showSizeChanger: false,
             }}
-            bordered
         />
     );
 }

@@ -29,7 +29,7 @@ export const getTenantAvatar = ({
     return logo || icon || getAvatarUrl(name ?? '');
 };
 
-export const getTenantOwnerEmail = (data: TenantDetail['tenantUser']) => {
+export const getTenantOwnerEmail = (data: TenantDetail['tenantUser'] = []) => {
     const result = data.find((item) => item.type === TENANT_USER_TYPE.OWNER);
     return result?.user?.email || '';
 };

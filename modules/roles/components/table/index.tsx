@@ -1,7 +1,5 @@
 import ActionButton from '@/components/ui/button/action-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
-import SortableTable from '@/components/ui/table/sortable-table';
-import { SCREEN } from '@/enums/common';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { Badge, Empty } from 'antd';
@@ -186,15 +184,15 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
             ];
 
             return (
-                <div>
-                    <SortableTable
-                        className="ml-24 overflow-hidden rounded-lg border"
+                <div className="p-2">
+                    <AppTable
+                        className="ml-24 rounded-lg border"
                         columns={childColumns}
                         dataSource={rows}
-                        pagination={false}
-                        size="middle"
-                        rowKey="key"
-                        scroll={{ x: SCREEN.MD, y: 280 }}
+                        pagination={{
+                            pageSize: 5,
+                            showSizeChanger: false,
+                        }}
                     />
                 </div>
             );

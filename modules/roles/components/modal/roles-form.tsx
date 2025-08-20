@@ -123,6 +123,7 @@ export default function RolesFormModal({ ...props }: Props) {
             onCancel={closeModal}
             onOk={form.submit}
             loading={isActive}
+            className="!top-10"
         >
             <AppForm
                 form={form}
@@ -131,6 +132,39 @@ export default function RolesFormModal({ ...props }: Props) {
                 layout="horizontal"
                 disabled={isActive}
             >
+                <AppFormItem
+                    name="name"
+                    label={messages('roles.name')}
+                    required
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.input'),
+                        },
+                        {
+                            max: 100,
+                            message: messages('validation.stringMax', {
+                                max: 100,
+                                field: messages('roles.name'),
+                            }),
+                        },
+                    ]}
+                >
+                    <Input allowClear />
+                </AppFormItem>
+                <AppFormItem
+                    name="color"
+                    label={messages('common.color')}
+                    required
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.input'),
+                        },
+                    ]}
+                >
+                    <AppColorPicker />
+                </AppFormItem>
                 <AppFormItem
                     name="name"
                     label={messages('roles.name')}
@@ -188,13 +222,16 @@ export default function RolesFormModal({ ...props }: Props) {
                 >
                     <TextArea
                         autoSize={{
-                            minRows: 3,
-                            maxRows: 7,
+                            minRows: 1,
+                            maxRows: 5,
                         }}
                     />
                 </AppFormItem>
                 <div>
-                    <PermissionTableItemForm rowSelection={rowSelection} />
+                    <PermissionTableItemForm
+                        rowSelection={rowSelection}
+                        className="rounded-lg border"
+                    />
                 </div>
             </AppForm>
         </AppModal>

@@ -5,8 +5,11 @@ import {
     DataFilterUser,
     InviteUserPayload,
     UpdateUserPayload,
+    UpdateUserRolePayload,
     UserData,
     UserDetail,
+    UserPermissionData,
+    UserRoleData,
 } from '../types/data';
 
 export const userApi = {
@@ -14,6 +17,18 @@ export const userApi = {
         return axiosInstance.get<PaginationResponse<UserData>>('/users', {
             params,
         });
+    },
+
+    getUserRole(id: string) {
+        return axiosInstance.get<DetailResponse<UserRoleData[]>>(
+            `/user-role/${id}/role`
+        );
+    },
+
+    getUserPermission(id: string) {
+        return axiosInstance.get<DetailResponse<UserPermissionData[]>>(
+            `/user-role/${id}/permission`
+        );
     },
 
     getDetail(id: string) {
@@ -29,6 +44,10 @@ export const userApi = {
 
     invite(payload: InviteUserPayload) {
         return axiosInstance.post(`/users/invite`, payload);
+    },
+
+    updateRole(payload: UpdateUserRolePayload) {
+        return axiosInstance.post(`/user-role`, payload);
     },
 
     update(id: string, payload: UpdateUserPayload) {
