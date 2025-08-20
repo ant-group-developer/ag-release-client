@@ -1,57 +1,61 @@
+import ActionsDspSelect from '@/components/ui/select/actions-dsp-select';
 import PriceTiersSelect from '@/components/ui/select/price-tiers-select';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import IconInfoTooltip from '@/components/ui/tooltip/icon-info-tooltip';
-import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
-import { useGetListDspAction } from '@/modules/dsp-action/hooks/use-get-list-dsp-action';
-import { DspActionData } from '@/modules/dsp-action/types';
-import { DspData } from '@/modules/dsp/types';
-import { useGetListPriceTiers } from '@/modules/price_tiers/hooks/use-get-list-tiers';
+import { getTrackDetailRoute, RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { Link } from '@/i18n/routing';
+import { useReleaseDetailActionStore } from '@/modules/releases/hooks/use-release-action-store';
 import { TrackData } from '@/modules/releases/types';
-import { Select, TableColumnsType } from 'antd';
+import { TRACK_TABS } from '@/modules/tracks/enums';
+import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
+import { useUpdateTrackPolicy } from '@/modules/tracks/hooks/use-update-track-policy';
+import { TrackPolicyData } from '@/modules/tracks/types';
+import { TableColumnsType } from 'antd';
 import { useTranslations } from 'next-intl';
 
 type Props = Omit<AppTableProps<TrackData>, 'columns'> & {};
 
 export default function ReleaseSchedulingTable({ ...props }: Props) {
     const messages = useTranslations();
-    const { dspActionsData } = useGetListDspAction({
-        pageSize: PAGE_SIZE_EXTRA_LARGE,
-    });
-    const { priceTiersData } = useGetListPriceTiers({
-        pageSize: PAGE_SIZE_EXTRA_LARGE,
-    });
 
-    const dspColumn = dspActionsData?.items?.map((item: DspData) => {
-        const defaultAction = item?.dspActions?.find(
-            (item) => item?.isDefault === true
-        );
-        const options = item?.dspActions.map((item: DspActionData) => ({
-            id: item.action.id,
-            value: item.action.id,
-            name: item?.action.name,
-            label: (
-                <p className="flex items-center justify-between gap-1">
-                    <span>{item?.action?.name}</span>
-                    {item?.action?.note && (
-                        <IconInfoTooltip title={item?.action?.note} />
-                    )}
-                </p>
-            ),
-        }));
+    const { updateTrackDraft } = useUpdateTrackDraft();
+
+    const { updateTrackPolicy } = useUpdateTrackPolicy();
+
+    const releasesDetailAction = useReleaseDetailActionStore(
+        (state) => state.action
+    );
+    const isCanEdit = releasesDetailAction === RELEASE_DETAIL_ACTION.EDIT;
+
+    const trackPolicies = props?.dataSource?.find(
+        (track) => track?.trackPolicies?.length > 0
+    )?.trackPolicies;
+
+    const dspColumn = trackPolicies?.map((item: TrackPolicyData) => {
+        const dsp = item?.dsp;
         return {
-            title: item.name,
-            dataIndex: `dsp_${item.id}`,
-            key: item.id,
-            width: 300,
+            title: dsp.name,
+            dataIndex: `dsp_${dsp.id}`,
+            key: dsp.id,
             align: 'left' as const,
-            render: (value: string) => (
-                <Select
-                    defaultValue={defaultAction?.action?.id}
-                    options={options}
-                    className="w-full"
-                />
-            ),
+            width: 250,
+            render: (value: string, record: TrackData) => {
+                return (
+                    <ActionsDspSelect
+                        dspId={dsp?.id}
+                        defaultValue={item?.action?.id}
+                        disabled={!isCanEdit}
+                        className="w-full"
+                        onChange={(value) =>
+                            updateTrackPolicy({
+                                id: record.id,
+                                actionId: value,
+                                trackPolicyId: item?.id,
+                            })
+                        }
+                    />
+                );
+            },
         };
     });
 
@@ -72,36 +76,48 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
             align: 'left',
             ellipsis: true,
             render: (_, record) => (
-                <span className="truncate">
-                    {' '}
-                    <CustomTooltip title={record?.title}>
-                        {record?.title}
-                    </CustomTooltip>
-                </span>
+                <CustomTooltip title={messages('common.viewDetail')}>
+                    <Link
+                        href={getTrackDetailRoute(
+                            record?.id,
+                            TRACK_TABS.METADATA
+                        )}
+                    >
+                        <span className="cursor-pointer group-hover:underline">
+                            {record?.title}
+                        </span>
+                    </Link>
+                </CustomTooltip>
             ),
         },
         {
             title: messages('common.price'),
             dataIndex: 'priceCode',
             key: 'priceCode',
-            width: 166,
+            width: 197,
 
             align: 'left',
-            render: (value: string) => {
-                const defaultPriceTier = priceTiersData?.items?.find(
-                    (item) => item?.isDefault === true
-                );
+            render: (value: string, record) => {
                 return (
                     <PriceTiersSelect
-                        defaultValue={defaultPriceTier?.id}
+                        disabled={!isCanEdit}
+                        defaultValue={record?.priceTier?.id}
                         className="w-full"
+                        onChange={(value) =>
+                            updateTrackDraft({
+                                id: record?.id,
+                                payload: {
+                                    priceTierId: value,
+                                },
+                            })
+                        }
                     />
                 );
             },
         },
         {
             title: messages('common.policy'),
-            colSpan: dspActionsData?.metadata?.totalItems,
+            colSpan: trackPolicies?.length,
             align: 'center',
             children: dspColumn,
         },

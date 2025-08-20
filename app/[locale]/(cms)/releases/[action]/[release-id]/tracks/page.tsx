@@ -97,10 +97,8 @@ export default function Tracks() {
                 <ReleaseTracksTable
                     dataSource={tracksData?.items}
                     // rowSelection={rowSelection}
+                    sticky={{ offsetHeader: 174 }}
                     loading={isLoading}
-                    scroll={{
-                        x: 'max-content',
-                    }}
                     pagination={{
                         pageSize: PAGE_SIZE,
                         total: tracksData?.metadata?.totalItems,

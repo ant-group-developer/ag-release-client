@@ -1,6 +1,7 @@
 import ActionButton from '@/components/ui/button/action-button';
 import CurrenciesSelect from '@/components/ui/select/currencies-select';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import {
     formatCurrency,
     formattedDate,
@@ -67,7 +68,7 @@ export const PriceTiersTable = ({ dataFilter, ...props }: Props) => {
             render: (value, record) => (
                 <div>
                     <CurrenciesSelect
-                        fallBack={record?.currency?.name}
+                        fallBack={`${record?.currency.code} - ${record?.currency.name}`}
                         defaultValue={value}
                         className="w-full"
                         onChange={(value) =>
@@ -89,6 +90,7 @@ export const PriceTiersTable = ({ dataFilter, ...props }: Props) => {
             ellipsis: true,
             render: (value, record) => (
                 <Switch
+                    disabled={!record?.isActive}
                     value={record?.isDefault}
                     onChange={(value) =>
                         updatePriceTiers({
@@ -107,15 +109,26 @@ export const PriceTiersTable = ({ dataFilter, ...props }: Props) => {
             width: 100,
             ellipsis: true,
             render: (value, record) => (
-                <Switch
-                    defaultChecked={record?.isActive}
-                    onChange={(value) =>
-                        updatePriceTiers({
-                            id: record?.id,
-                            payload: { isActive: value },
-                        })
+                <CustomTooltip
+                    title={
+                        record.isDefault
+                            ? messages(
+                                  'priceTier.canDeactivateOnlyWhenNotDefault'
+                              )
+                            : ''
                     }
-                />
+                >
+                    <Switch
+                        disabled={record?.isDefault}
+                        defaultChecked={record?.isActive}
+                        onChange={(value) =>
+                            updatePriceTiers({
+                                id: record?.id,
+                                payload: { isActive: value },
+                            })
+                        }
+                    />
+                </CustomTooltip>
             ),
         },
         {

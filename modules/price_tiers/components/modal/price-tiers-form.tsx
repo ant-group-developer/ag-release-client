@@ -150,7 +150,14 @@ export default function PriceTiersFormModal({ ...props }: Props) {
                         label={messages('common.setIsDefault')}
                         required
                     >
-                        <Switch defaultChecked={false} />
+                        <Switch
+                            defaultChecked={false}
+                            onChange={(checked) => {
+                                if (checked) {
+                                    form.setFieldValue('isActive', true);
+                                }
+                            }}
+                        />
                     </AppFormItem>
 
                     <AppFormItem
@@ -159,7 +166,14 @@ export default function PriceTiersFormModal({ ...props }: Props) {
                         label={messages('status.active')}
                         required
                     >
-                        <Switch defaultChecked={true} />
+                        <Switch
+                            defaultChecked={true}
+                            onChange={(checked) => {
+                                if (!checked) {
+                                    form.setFieldValue('isDefault', false);
+                                }
+                            }}
+                        />
                     </AppFormItem>
                 </AppForm>
             </div>

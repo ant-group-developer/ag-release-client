@@ -642,6 +642,7 @@
         "labelName": "Label name",
         "version": "Version",
         "role": "Role",
+        "back": "Back to releases list",
         "isMoreThan4Artists": "Is more than 4 artists",
         "select": {
             "artist": "Select artist",
@@ -1337,6 +1338,7 @@
     },
 
     "priceTier": {
+        "canDeactivateOnlyWhenNotDefault": "You can only deactivate when it is not the default value",
         "message": {
             "success": {
                 "create": "Price added successfully",

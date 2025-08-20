@@ -237,7 +237,7 @@ export default function ReleaseDetailForm() {
         <ConfigProvider theme={customTheme}>
             <FormProvider {...formMethods}>
                 <form
-                    className="px-4 py-4"
+                    className="py-4"
                     onSubmit={handleSubmit(handleNext, handleFormError)}
                 >
                     <div className="flex flex-col gap-6">
