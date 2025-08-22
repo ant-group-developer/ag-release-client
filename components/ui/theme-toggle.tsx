@@ -1,6 +1,6 @@
 import { SIZE_ICON } from '@/constants/common';
 import { THEME } from '@/enums/common';
-import { useThemeStore } from '@/hooks/use-theme-store';
+import { useThemeMode } from '@/hooks/use-theme-mode';
 import { Select } from 'antd';
 
 // Bạn có thể cần import các icon từ @ant-design/icons
@@ -12,7 +12,7 @@ type Props = {
 };
 
 export default function ThemeSelect({ width = 130 }: Props) {
-    const { theme, toggleTheme } = useThemeStore();
+    const { setThemeMode, themeMode } = useThemeMode();
     const messages = useTranslations();
 
     const options = [
@@ -55,8 +55,8 @@ export default function ThemeSelect({ width = 130 }: Props) {
         // />
         <Select
             options={options}
-            value={theme}
-            onChange={toggleTheme}
+            value={themeMode}
+            onChange={setThemeMode}
             style={{ width }}
         />
     );

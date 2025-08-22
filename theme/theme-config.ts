@@ -1,5 +1,4 @@
 import { defaultConfig } from '@/constants/env';
-import { THEME } from '@/enums/common';
 import type { ThemeConfig } from 'antd';
 
 export const lightThemeTokens = {
@@ -42,16 +41,21 @@ export const darkThemeTokens = {
     colorTextDisabled: '#fff',
 };
 
-export const getThemeConfig = (
-    mode: THEME,
-    primaryColor: string
-): ThemeConfig => {
-    const tokens = mode === THEME.DARK ? darkThemeTokens : lightThemeTokens;
+const componentsDark = {};
 
+const componentsLight = {};
+
+export const getThemeConfig = (
+    isDark: boolean
+    // primaryColor: string
+): ThemeConfig => {
+    const tokens = isDark ? darkThemeTokens : lightThemeTokens;
+    const components = isDark ? componentsDark : componentsLight;
     return {
         token: {
             ...tokens,
-            colorPrimary: primaryColor,
+            // colorPrimary: primaryColor,
         },
+        components,
     };
 };

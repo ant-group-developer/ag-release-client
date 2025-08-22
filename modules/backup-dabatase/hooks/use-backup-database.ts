@@ -11,7 +11,7 @@ export const useBackupDatabase = () => {
     const onSuccess = (data: any, { onSuccess }: any) => {
         const responseMessages = messages(data?.data?.messageCode);
         onSuccess?.();
-        showNotification('success', 'Success');
+        showNotification('success', responseMessages);
     };
 
     const onError = (error: any, { onError }: any) => {

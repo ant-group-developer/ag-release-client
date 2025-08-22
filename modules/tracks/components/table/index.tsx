@@ -6,6 +6,7 @@ import useModalStore from '@/hooks/use-modal';
 import { Link, useRouter } from '@/i18n/routing';
 import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import TrackActionButton from '@/modules/releases/components/release-detail/release-tracks/button/track-action';
+import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { TRACK_TABS, TRACKS_COLUMNS_DISPLAY } from '@/modules/tracks/enums';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
@@ -172,6 +173,19 @@ export default function TracksTable({
                             )}
                         </Tag> */}
                         <TagScanCopyright
+                            className="!border-0 hover:cursor-pointer hover:!border hover:opacity-80"
+                            onClick={() => {
+                                if (!isScanned) {
+                                    return openModal(
+                                        TYPE_MODAL_TRACK.ACR_CLOUD_SCAN,
+                                        record
+                                    );
+                                }
+                                openModal(
+                                    TYPE_MODAL_TRACK.ACR_CLOUD_SCAN_RESULT,
+                                    record
+                                );
+                            }}
                             status={record?.scanCopyrightStatus}
                         />
                     </div>

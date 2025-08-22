@@ -1,11 +1,10 @@
-import { THEME } from '@/enums/common';
 import {
     getReleaseDetailTabRoute,
     RELEASE_DETAIL_ACTION,
 } from '@/helpers/link';
 import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
-import { useThemeStore } from '@/hooks/use-theme-store';
+import { useThemeMode } from '@/hooks/use-theme-mode';
 import { useRouter } from '@/i18n/routing';
 import LabelFormModal from '@/modules/labels/components/modal/label-form';
 import { RELEASES_TABS } from '@/modules/releases/enums';
@@ -17,7 +16,7 @@ import { ReleasesData } from '@/modules/releases/types';
 import { UpdateReleaseDraftPayload } from '@/modules/releases/types/payload';
 import { UpdateVariables } from '@/types/api';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, ConfigProvider } from 'antd';
+import { Button, ConfigProvider, theme } from 'antd';
 import dayjs from 'dayjs';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
@@ -91,6 +90,7 @@ export default function ReleaseDetailForm() {
     //hook
     const { updateReleaseDraft } = useUpdateReleaseDraft();
     const { active, deActive, isActive } = useActive();
+    const { token } = theme.useToken();
 
     // zustand store - state
     const formValues = useReleaseFormStore((state) => state.formValues);
@@ -99,7 +99,7 @@ export default function ReleaseDetailForm() {
     const releaseDetailAction = useReleaseDetailActionStore(
         (state) => state.action
     );
-    const { theme: currentTheme, primaryColor } = useThemeStore();
+    const { isDark } = useThemeMode();
 
     //route
     const router = useRouter();
@@ -111,8 +111,8 @@ export default function ReleaseDetailForm() {
     const isReadMode = releaseDetailAction !== RELEASE_DETAIL_ACTION.EDIT;
     const customTheme = {
         token: {
-            colorBgContainerDisabled:
-                currentTheme == THEME.LIGHT ? '#fff' : '#2a2a2a',
+            colorBgContainerDisabled: isDark ? '#2a2a2a' : '#fff',
+            colorTextDisabled: token?.colorText,
         },
     };
 
@@ -130,6 +130,7 @@ export default function ReleaseDetailForm() {
         formState: { errors },
         reset,
         getValues,
+        setFocus,
     } = formMethods;
 
     // function
@@ -222,6 +223,8 @@ export default function ReleaseDetailForm() {
             if (parts.length >= 2) {
                 field = parts.slice(1).join('.');
             }
+            // setFocus(field as keyof ReleaseDetailSchema);
+
             trigger(field as keyof ReleaseDetailSchema);
         };
         window.addEventListener('hashchange', handleTriggerField);
@@ -231,7 +234,7 @@ export default function ReleaseDetailForm() {
         return () => {
             window.removeEventListener('hashchange', handleTriggerField);
         };
-    }, []);
+    }, [trigger]);
 
     return (
         <ConfigProvider theme={customTheme}>

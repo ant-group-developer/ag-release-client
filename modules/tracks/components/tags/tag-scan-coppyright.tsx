@@ -1,13 +1,13 @@
 import { getIntlCodeByScanCopyrightStatus } from '@/helpers/intl';
-import { Tag } from 'antd';
+import { Tag, TagProps } from 'antd';
 import { useTranslations } from 'next-intl';
 import { SCAN_COPYRIGHT_STATUS } from '../../enums';
 
-type Props = {
+type Props = TagProps & {
     status: SCAN_COPYRIGHT_STATUS;
 };
 
-export default function TagScanCopyright({ status }: Props) {
+export default function TagScanCopyright({ status, ...props }: Props) {
     const messages = useTranslations();
     const getColorStatus = (status: SCAN_COPYRIGHT_STATUS) => {
         switch (status) {
@@ -25,7 +25,7 @@ export default function TagScanCopyright({ status }: Props) {
     };
     const color = getColorStatus(status);
     return (
-        <Tag color={color}>
+        <Tag color={color} {...props}>
             {messages(getIntlCodeByScanCopyrightStatus(status) as any)}
         </Tag>
     );

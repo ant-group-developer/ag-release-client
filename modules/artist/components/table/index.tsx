@@ -136,6 +136,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
                     <Avatar.Group
                         max={{
                             count: 5,
+                            style: { backgroundColor: '#ccc' },
                         }}
                     >
                         {record?.artistProfiles?.map((item) => (

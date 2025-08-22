@@ -33,7 +33,11 @@ export default function AcrCloudScanResultModal({ ...props }: Props) {
                             key={item.id}
                             items={[
                                 {
-                                    label: formattedDate(item?.createdAt),
+                                    label: (
+                                        <span className="font-semibold">
+                                            {formattedDate(item?.createdAt)}
+                                        </span>
+                                    ),
                                     children: (
                                         <div>
                                             <Collapse

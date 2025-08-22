@@ -103,5 +103,5 @@ export const getIntlCodeByScanCopyrightStatus = (
         [SCAN_COPYRIGHT_STATUS.UN_SCANNED]: 'scanStatus.unScanned',
         [SCAN_COPYRIGHT_STATUS.WARNING]: 'scanStatus.warning',
     };
-    return scanStatusMap[status] || 'common.unknown';
+    return scanStatusMap[status] || 'common.notAvailable';
 };

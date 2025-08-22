@@ -1394,5 +1394,11 @@
         "finished": "Không có vi phạm",
         "warning": "Cảnh báo",
         "rejected": "Từ chối"
+    },
+
+    "backupLog": {
+        "success": {
+            "startedPleaseWait": "Đang sao lưu, xin vui lòng đợi..."
+        }
     }
 }

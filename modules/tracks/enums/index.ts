@@ -39,7 +39,7 @@ export enum TRACK_TABS {
 }
 
 export enum SCAN_COPYRIGHT_STATUS {
-    UN_SCANNED = 'unScanned',
+    UN_SCANNED = 'un_scanned',
     FINISHED = 'finished',
     WARNING = 'warning',
     REJECTED = 'rejected',

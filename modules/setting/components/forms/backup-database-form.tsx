@@ -4,7 +4,6 @@ import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER, SCREEN, WEEK_DAY } from '@/enums/common';
 import { formattedDate, setSortOrder } from '@/helpers/common';
-import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import { useApiError } from '@/hooks/use-api-error';
 import { useFilter } from '@/hooks/use-filter';
@@ -326,9 +325,9 @@ export default function BackupDatabaseForm({}: Props) {
                         type="primary"
                         onClick={() => {
                             backupDatabaseNow({
-                                onSuccess: () => {
-                                    showNotification('success', 'Success');
-                                },
+                                // onSuccess: () => {
+                                //     showNotification('success', 'Success');
+                                // },
                             });
                         }}
                         loading={isBackupPending}

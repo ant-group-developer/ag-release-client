@@ -45,6 +45,7 @@ export default function ReleaseConfigurationSection({
     const setReleaseDetailAction = useReleaseDetailActionStore(
         (state) => state.setAction
     );
+    console.log('🚀 ~ ReleaseConfigurationSection ~ errors:', errors);
 
     // router and params
     const params = useParams();
@@ -209,7 +210,6 @@ export default function ReleaseConfigurationSection({
                                                 <LabelSelect
                                                     className="w-full"
                                                     showSearch
-                                                    allowClear
                                                     id="labelId"
                                                     {...field}
                                                     onCreateLabel={() =>

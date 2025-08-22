@@ -1,10 +1,11 @@
 'use client';
 import IconButton from '@/components/ui/button/icon-button';
 import { ScrollArea } from '@/components/ui/scroll/scroll-area';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
 import { cn } from '@/helpers/common';
 import { getReleaseDetailTabRoute } from '@/helpers/link';
-import { useRouter } from '@/i18n/routing';
+import { Link, useRouter } from '@/i18n/routing';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
@@ -77,25 +78,25 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
     const toggleSidebar = () => {
         setIsSidebarOpen((prevState) => !prevState);
     };
-    const handleErrorClick = async (field: string, page: RELEASES_TABS) => {
-        const newUrl = `${getReleaseDetailTabRoute(formValues?.id as string, page)}#${field}`;
-        // new scroll
-        await router.push(newUrl);
-        setTimeout(() => {
-            const el = document.getElementById(field);
-            el?.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center',
-                inline: 'center',
-            });
-            window.dispatchEvent(new HashChangeEvent('hashchange'));
-        }, 100);
-    };
+    // const handleErrorClick = async (field: string, page: RELEASES_TABS) => {
+    //     const newUrl = `${getReleaseDetailTabRoute(formValues?.id as string, page)}#${field}`;
+    //     // new scroll
+    //     await router.push(newUrl);
+    //     setTimeout(() => {
+    //         const el = document.getElementById(field);
+    //         el?.scrollIntoView({
+    //             behavior: 'smooth',
+    //             block: 'center',
+    //             inline: 'center',
+    //         });
+    //         window.dispatchEvent(new HashChangeEvent('hashchange'));
+    //     }, 100);
+    // };
 
     return (
         <div
             className={cn(
-                'sticky top-0 h-[calc(100vh-4rem)] w-[300px] border-x bg-white transition-all duration-300',
+                'sticky top-0 h-[calc(100vh-4rem)] w-[300px] border-x transition-all duration-300',
                 isSidebarOpen ? 'w-[300px]' : 'w-[75px]'
             )}
         >
@@ -133,44 +134,60 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                         {/* Errors */}
                         <div className="mb-4">
                             {isSidebarOpen && (
-                                <ul className="space-y-2">
+                                <ul className="flex flex-col gap-1 space-y-2">
                                     {releaseValidateData?.length > 0 &&
                                         releaseValidateData?.map(
-                                            (err, index) => (
-                                                <Alert
-                                                    className="custom-alert-sidebar cursor-pointer !px-[14px] !py-3 !text-sm hover:underline"
-                                                    key={index}
-                                                    onClick={() =>
-                                                        handleErrorClick(
-                                                            err.field,
-                                                            err.page as RELEASES_TABS
-                                                        )
-                                                    }
-                                                    message={
-                                                        <div className="max-w-full truncate text-sm">
-                                                            {getFieldLabel(
-                                                                err.field,
-                                                                err.page as RELEASES_TABS
-                                                            )}
-                                                        </div>
-                                                    }
-                                                    description={
-                                                        <p className="line-clamp-3 text-xs">
-                                                            {getErrorMessages(
-                                                                err
-                                                            )}
-                                                        </p>
-                                                    }
-                                                    type="error"
-                                                    showIcon
-                                                    icon={
-                                                        <AlertCircle
-                                                            size={SIZE_ICON}
-                                                            className="mt-1 text-red-500"
+                                            (err, index) => {
+                                                const label = getFieldLabel(
+                                                    err.field,
+                                                    err.page
+                                                );
+                                                return (
+                                                    <Link
+                                                        key={index}
+                                                        href={`${getReleaseDetailTabRoute(formValues?.id as string, err.page as RELEASES_TABS)}#${err.field}`}
+                                                    >
+                                                        <Alert
+                                                            className="custom-alert-sidebar cursor-pointer !px-[14px] !py-3 !text-sm hover:underline"
+                                                            // key={index}
+                                                            // onClick={() =>
+                                                            //     handleErrorClick(
+                                                            //         err.field,
+                                                            //         err.page as RELEASES_TABS
+                                                            //     )
+                                                            // }
+                                                            message={
+                                                                <div className="max-w-full truncate text-sm dark:text-white">
+                                                                    <CustomTooltip
+                                                                        title={
+                                                                            label
+                                                                        }
+                                                                    >
+                                                                        {label}
+                                                                    </CustomTooltip>
+                                                                </div>
+                                                            }
+                                                            description={
+                                                                <p className="line-clamp-3 text-xs">
+                                                                    {getErrorMessages(
+                                                                        err
+                                                                    )}
+                                                                </p>
+                                                            }
+                                                            type="error"
+                                                            showIcon
+                                                            icon={
+                                                                <AlertCircle
+                                                                    size={
+                                                                        SIZE_ICON
+                                                                    }
+                                                                    className="mt-1 text-red-500"
+                                                                />
+                                                            }
                                                         />
-                                                    }
-                                                />
-                                            )
+                                                    </Link>
+                                                );
+                                            }
                                         )}
                                 </ul>
                             )}

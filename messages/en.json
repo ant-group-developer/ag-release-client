@@ -63,7 +63,7 @@
         "viewAll": "View all",
         "legalNotices": "Legal notices",
         "notAvailable": "Not available",
-        "region": "Khu vực",
+        "region": "Region",
         "specification": "Specification",
         "missingInformation": "Missing information",
         "ready": "Ready",
@@ -1386,5 +1386,11 @@
         "finished": "No violations",
         "warning": "Warning",
         "rejected": "Rejected"
+    },
+
+    "backupLog": {
+        "success": {
+            "startedPleaseWait": "Backup has started, please wait..."
+        }
     }
 }

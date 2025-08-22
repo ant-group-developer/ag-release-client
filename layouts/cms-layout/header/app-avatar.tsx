@@ -3,7 +3,7 @@ import { LOCALE, THEME } from '@/enums/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { getAvatarPlaceholder } from '@/helpers/common';
 import { useLocale } from '@/hooks/use-locale';
-import { useThemeStore } from '@/hooks/use-theme-store';
+import { useThemeMode } from '@/hooks/use-theme-mode';
 import { useRouter } from '@/i18n/routing';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { theme as antdTheme, Avatar, Dropdown } from 'antd';
@@ -19,7 +19,7 @@ function AppAvatar({}: Props) {
     const messages = useTranslations();
     const router = useRouter();
     const avatarPlaceholder = getAvatarPlaceholder(profile?.name);
-    const { theme, setTheme } = useThemeStore();
+    const { themeMode, setThemeMode } = useThemeMode();
     const { locale, switchLocale } = useLocale();
 
     const { token } = antdTheme.useToken();
@@ -27,7 +27,7 @@ function AppAvatar({}: Props) {
     const currentLocale = locale === LOCALE.VI ? 'Tiếng việt' : 'English';
 
     let themeIntl = '';
-    switch (theme) {
+    switch (themeMode) {
         case 'light':
             themeIntl = messages('common.light');
             break;
@@ -91,19 +91,19 @@ function AppAvatar({}: Props) {
                     label: messages('common.light'),
                     key: THEME.LIGHT,
                     icon: <Sun size={SIZE_ICON} />,
-                    onClick: () => setTheme(THEME.LIGHT),
+                    onClick: () => setThemeMode(THEME.LIGHT),
                 },
                 {
                     label: messages('common.dark'),
                     key: THEME.DARK,
                     icon: <Moon size={SIZE_ICON} />,
-                    onClick: () => setTheme(THEME.DARK),
+                    onClick: () => setThemeMode(THEME.DARK),
                 },
                 {
                     label: messages('common.system'),
                     key: THEME.SYSTEM,
                     icon: <MonitorCog size={SIZE_ICON} />,
-                    onClick: () => setTheme(THEME.SYSTEM),
+                    onClick: () => setThemeMode(THEME.SYSTEM),
                 },
             ],
         },
@@ -184,7 +184,7 @@ function AppAvatar({}: Props) {
     return (
         <Dropdown
             trigger={['click']}
-            menu={{ items, selectedKeys: [theme, locale] }}
+            menu={{ items, selectedKeys: [themeMode, locale] }}
         >
             <Avatar size={40} className="cursor-pointer" src={profile.avatar}>
                 {avatarPlaceholder}
