@@ -7,6 +7,7 @@ import TenantForm from '@/modules/tenant/components/tenant-create/tenant-form';
 import { useTenantDetail } from '@/modules/tenant/hooks/use-get-tenant';
 import { useUpdateTenant } from '@/modules/tenant/hooks/use-update-tenant';
 import { UpdateTenant, UpdateTenantPayload } from '@/modules/tenant/types/data';
+import { getTenantOwnerId } from '@/modules/tenant/utils';
 import { uploadApi } from '@/modules/upload/apis';
 import { ENTITY_TYPE_PICTURE } from '@/modules/upload/types/data';
 import { Form } from 'antd';
@@ -35,11 +36,12 @@ function DetailTenantPage({}: Props) {
                 active();
 
                 const { icon, logo, primaryColor, ...otherValues } = values;
+                console.log('icon:', icon);
                 const iconFile = icon?.fileList[0]?.originFileObj;
                 const logoFile = logo?.fileList[0]?.originFileObj;
 
-                let iconUrl: string | undefined = undefined;
-                let logoUrl: string | undefined = undefined;
+                let iconUrl: string = icon?.fileList[0]?.url;
+                let logoUrl: string = logo?.fileList[0]?.url;
 
                 if (iconFile) {
                     iconUrl = await uploadApi.uploadFile({
@@ -96,6 +98,7 @@ function DetailTenantPage({}: Props) {
         if (dataTenant) {
             const initialValues = {
                 ...dataTenant,
+                ownerId: getTenantOwnerId(dataTenant.tenantUser),
                 parentId: dataTenant.parent?.id,
                 logo: dataTenant?.logo
                     ? {
@@ -137,7 +140,6 @@ function DetailTenantPage({}: Props) {
                     submitProps={{ loading: isActive }}
                     excludeIds={[tenantId]}
                     showSubmit={false}
-                    canChangeParent
                 />
                 <div className="text-right">
                     <SubmitButton onClick={onFinish} loading={isActive} />

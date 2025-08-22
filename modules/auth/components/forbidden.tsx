@@ -35,7 +35,7 @@ function Forbidden({ className }: Props) {
             <div className="mt-4 flex w-64 flex-col gap-2">
                 <Link href={APP_ROUTES.DASHBOARD}>
                     <Button type="primary" block>
-                        {messages('dashboard.label')}
+                        {messages('dashboard.goTo')}
                     </Button>
                 </Link>
                 <Button onClick={logout}>

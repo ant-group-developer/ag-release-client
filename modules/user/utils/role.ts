@@ -1,6 +1,7 @@
 import { SYSTEM_TENANT_ID } from '@/modules/tenant/constants';
 import { TENANT_USER_TYPE } from '@/modules/tenant/enums';
 import { USER_TYPE } from '../enums';
+import { UserDetail } from '../types/data';
 
 export const checkIsTenantAdmin = (type: TENANT_USER_TYPE): boolean => {
     return type === TENANT_USER_TYPE.ADMIN;
@@ -31,3 +32,10 @@ export const checkCanAccessTenantAll = (
 
 export const checkIsSystemTenant = (tenantId: string) =>
     tenantId === SYSTEM_TENANT_ID;
+
+export const getTenantUserType = (
+    data: UserDetail['tenantUser'] = [],
+    tenantId: string
+) => {
+    return data.find((item) => item.tenant.id === tenantId)?.type;
+};

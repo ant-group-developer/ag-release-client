@@ -1,8 +1,10 @@
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { Form } from 'antd';
 import { useEffect } from 'react';
 import { useUserDetail } from '../../hooks/use-get-user';
 import { useUpdateUser } from '../../hooks/use-update-user';
 import { UpdateUser, UpdateUserPayload, UserData } from '../../types/data';
+import { getTenantUserType } from '../../utils/role';
 import UserForm from '../user-create/user-form';
 
 type Props = {
@@ -15,6 +17,9 @@ function UpdateInfo({ dataEdit }: Props) {
     const userId = dataEdit.id as string;
 
     const { dataUser } = useUserDetail(userId);
+    const {
+        profile: { tenantId },
+    } = useAuth();
 
     const { updateUser, isPending } = useUpdateUser();
 
@@ -35,11 +40,12 @@ function UpdateInfo({ dataEdit }: Props) {
         if (dataUser) {
             const initialValues = {
                 ...dataUser,
+                tenantType: getTenantUserType(dataUser.tenantUser, tenantId),
             };
 
             form.setFieldsValue(initialValues);
         }
-    }, [dataUser, form]);
+    }, [dataUser, form, tenantId]);
 
     return (
         <UserForm

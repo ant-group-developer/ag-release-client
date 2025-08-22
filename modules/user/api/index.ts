@@ -1,6 +1,7 @@
 import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
 import {
+    BulkUpdateTenantUserPayload,
     CreateUserPayload,
     DataFilterUser,
     InviteUserPayload,
@@ -59,6 +60,10 @@ export const userApi = {
 
     syncData() {
         return axiosInstance.post(`/users/sync-data`);
+    },
+
+    bulkUpdateTenantUser(payload: BulkUpdateTenantUserPayload) {
+        return axiosInstance.post(`/users/bulk-update-tenant-user`, payload);
     },
 
     remove(id: string) {

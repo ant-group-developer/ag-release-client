@@ -18,6 +18,7 @@ import { useRemoveUser } from '@/modules/user/hooks/use-remove-user';
 import { DataFilterUser, UserData } from '@/modules/user/types/data';
 import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
 
 type Props = {};
 
@@ -25,6 +26,9 @@ export default function UserPage({}: Props) {
     // hooks - state
     const messages = useTranslations();
     const { token } = theme.useToken();
+
+    const value = useParams();
+    const tenantId = value['tenant-id'] as string;
 
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
@@ -42,6 +46,7 @@ export default function UserPage({}: Props) {
         pageSize: 21,
         fieldOrder: USER_ORDER_BY.UPDATED_AT,
         orderBy: ORDER.DESC,
+        tenantIds: tenantId,
     });
     const { data, dataUpdatedAt, refetch, isFetching } =
         useUserList(dataFilter);

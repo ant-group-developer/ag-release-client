@@ -82,11 +82,36 @@ export const adminRoutes: AdminRoutesType[] = [
                 },
             },
             {
+                id: 'releaseDetail',
+                label: 'releases.label',
+                href: APP_ROUTES.RELEASES_DETAIL,
+                icon: DiscAlbum,
+                title: 'Release Detail',
+                hidden: true,
+                required: {
+                    permission: [
+                        PERMISSION.RELEASE.READ,
+                        PERMISSION.RELEASE.CREATE,
+                    ],
+                },
+            },
+            {
                 id: 'tracks',
                 label: 'tracks.label',
                 href: APP_ROUTES.TRACKS,
                 icon: Music,
                 title: 'Tracks',
+                required: {
+                    permission: [PERMISSION.TRACK.READ],
+                },
+            },
+            {
+                id: 'trackDetail',
+                label: 'releases.label',
+                href: APP_ROUTES.TRACK_DETAIL,
+                icon: Music,
+                title: 'Track Detail',
+                hidden: true,
                 required: {
                     permission: [PERMISSION.TRACK.READ],
                 },
@@ -121,11 +146,33 @@ export const adminRoutes: AdminRoutesType[] = [
                 },
             },
             {
+                id: 'artistDetail',
+                label: 'artist.label',
+                href: APP_ROUTES.ARTIST_DETAIL,
+                icon: User,
+                title: 'Artist Detail',
+                hidden: true,
+                required: {
+                    permission: [PERMISSION.ARTIST.READ],
+                },
+            },
+            {
                 id: 'labels',
                 label: 'labels.label',
                 href: APP_ROUTES.LABELS,
                 icon: MicVocal,
                 title: 'Labels',
+                required: {
+                    permission: [PERMISSION.LABEL.READ],
+                },
+            },
+            {
+                id: 'labels',
+                label: 'labels.label',
+                href: APP_ROUTES.LABEL_DETAIL,
+                icon: MicVocal,
+                title: 'Label Detail',
+                hidden: true,
                 required: {
                     permission: [PERMISSION.LABEL.READ],
                 },
@@ -322,6 +369,20 @@ export const adminRoutes: AdminRoutesType[] = [
                 href: APP_ROUTES.TENANT,
                 icon: Layers,
                 title: 'Tenant',
+                required: {
+                    tenantType: [
+                        TENANT_USER_TYPE.OWNER,
+                        TENANT_USER_TYPE.ADMIN,
+                    ],
+                },
+            },
+            {
+                id: 'tenantDetail',
+                label: 'tenant.label',
+                href: APP_ROUTES.TENANT_DETAIL,
+                icon: Layers,
+                title: 'Tenant Detail',
+                hidden: true,
                 required: {
                     tenantType: [
                         TENANT_USER_TYPE.OWNER,

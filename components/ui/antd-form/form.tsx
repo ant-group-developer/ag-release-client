@@ -35,6 +35,7 @@ const AppForm: AppFormComponent = ({
         props.layout === 'vertical' ? FORM_LAYOUT_VERTICAL : FORM_LAYOUT;
     return (
         <Form
+            autoComplete="off"
             {...formLayout}
             requiredMark={(label, info) => (
                 <div className="font-medium">

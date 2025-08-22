@@ -1,8 +1,11 @@
 import AppForm, { AppFormProps } from '@/components/ui/antd-form/form';
-import AppFormItem from '@/components/ui/antd-form/form-Item';
 import { validatePassword } from '@/helpers/validation';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
+import TenantSelect from '@/modules/tenant/components/tenant-select';
+import TenantUserTypeSelect from '@/modules/tenant/components/tenant-user-type-select';
 import { Input, Switch } from 'antd';
 import { useTranslations } from 'next-intl';
+import { checkIsTenantOwner } from '../../utils/role';
 import UserTypeSelect from '../user-type-select';
 
 type Props = {
@@ -11,9 +14,13 @@ type Props = {
 
 function UserForm({ isCreate, ...props }: Props) {
     const messages = useTranslations();
+    const { isSystemTenant } = useAuth();
+
+    const tenantType = AppForm.useWatch('tenantType', props.form);
+
     return (
         <AppForm {...props}>
-            <AppFormItem
+            <AppForm.Item
                 label={messages('user.name')}
                 required
                 rules={[
@@ -25,9 +32,9 @@ function UserForm({ isCreate, ...props }: Props) {
                 name="name"
             >
                 <Input placeholder={messages('user.name')} />
-            </AppFormItem>
+            </AppForm.Item>
 
-            <AppFormItem
+            <AppForm.Item
                 label={messages('common.email')}
                 required
                 rules={[
@@ -40,24 +47,26 @@ function UserForm({ isCreate, ...props }: Props) {
                 name="email"
             >
                 <Input placeholder={messages('common.email')} />
-            </AppFormItem>
+            </AppForm.Item>
 
-            <AppFormItem
-                label={messages('user.type')}
-                name="type"
-                required
-                rules={[
-                    {
-                        required: true,
-                    },
-                ]}
-            >
-                <UserTypeSelect />
-            </AppFormItem>
+            {isSystemTenant && (
+                <AppForm.Item
+                    label={messages('user.type')}
+                    name="type"
+                    required
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}
+                >
+                    <UserTypeSelect />
+                </AppForm.Item>
+            )}
 
             {isCreate && (
                 <>
-                    <AppFormItem
+                    <AppForm.Item
                         label={messages('user.password')}
                         required
                         rules={[
@@ -82,11 +91,11 @@ function UserForm({ isCreate, ...props }: Props) {
                         <Input.Password
                             placeholder={messages('user.password')}
                         />
-                    </AppFormItem>
+                    </AppForm.Item>
                 </>
             )}
 
-            <AppFormItem
+            <AppForm.Item
                 label={messages('user.telegramId')}
                 rules={[
                     {
@@ -96,18 +105,50 @@ function UserForm({ isCreate, ...props }: Props) {
                 name="telegramId"
             >
                 <Input placeholder={messages('user.telegramId')} />
-            </AppFormItem>
+            </AppForm.Item>
 
-            <AppFormItem
+            <AppForm.Item
                 label={messages('user.emailVerified')}
                 name="emailVerified"
             >
                 <Switch />
-            </AppFormItem>
+            </AppForm.Item>
 
-            <AppFormItem label={messages('status.label')} name="isActive">
+            <AppForm.Item label={messages('status.label')} name="isActive">
                 <Switch />
-            </AppFormItem>
+            </AppForm.Item>
+
+            {isCreate && isSystemTenant && (
+                <AppForm.Item
+                    label={messages('tenant.label')}
+                    name="tenantId"
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.select'),
+                        },
+                    ]}
+                >
+                    <TenantSelect flatData />
+                </AppForm.Item>
+            )}
+
+            {((isCreate && isSystemTenant) || !isSystemTenant) && (
+                <AppForm.Item
+                    label={messages('user.role.tenant.label')}
+                    name={'tenantType'}
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.select'),
+                        },
+                    ]}
+                >
+                    <TenantUserTypeSelect
+                        disabled={checkIsTenantOwner(tenantType)}
+                    />
+                </AppForm.Item>
+            )}
         </AppForm>
     );
 }

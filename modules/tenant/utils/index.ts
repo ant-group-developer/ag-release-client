@@ -33,3 +33,8 @@ export const getTenantOwnerEmail = (data: TenantDetail['tenantUser'] = []) => {
     const result = data.find((item) => item.type === TENANT_USER_TYPE.OWNER);
     return result?.user?.email || '';
 };
+
+export const getTenantOwnerId = (data: TenantDetail['tenantUser'] = []) => {
+    const result = data.find((item) => item.type === TENANT_USER_TYPE.OWNER);
+    return result?.user?.id;
+};

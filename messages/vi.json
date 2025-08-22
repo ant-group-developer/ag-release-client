@@ -336,7 +336,8 @@
 
     "dashboard": {
         "label": "Tổng quan",
-        "latestNews": "Tin tức mới nhất"
+        "latestNews": "Tin tức mới nhất",
+        "goTo": "Đi đến trang Tổng quan"
     },
     "image": {
         "label": "Hình ảnh",
@@ -572,6 +573,7 @@
         "syncData": "Đồng bộ dữ liệu từ Auth0",
         "loginsCount": "Số lần đăng nhập",
         "lastLogin": "Lần đăng nhập cuối",
+        "lastActive": "Lần hoạt động cuối",
         "lastIp": "IP cuối",
         "password": "Mật khẩu",
         "personalInfo": "Thông tin cá nhân",
@@ -590,6 +592,12 @@
         },
         "grantPermission": {
             "label": "Phân quyền"
+        },
+        "update": {
+            "tenant": {
+                "changeOwnerHint": "Nếu muốn thay đổi người sở hữu, hãy vào mục <element>Workspace</element>",
+                "conflictError": "Các Workspace không được trùng nhau"
+            }
         }
     },
     "file": {

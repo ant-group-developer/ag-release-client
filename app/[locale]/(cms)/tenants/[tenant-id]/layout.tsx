@@ -12,7 +12,15 @@ import {
     getTenantDetailRoute,
     getTenantOwnerEmail,
 } from '@/modules/tenant/utils';
-import { Avatar, ConfigProvider, Spin, Tabs, TabsProps, theme } from 'antd';
+import {
+    Avatar,
+    ConfigProvider,
+    Spin,
+    Tabs,
+    TabsProps,
+    theme,
+    Typography,
+} from 'antd';
 import { ArrowLeft } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
@@ -115,10 +123,11 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
                             <h1 className="text-3xl font-bold">
                                 {dataTenant.name}
                             </h1>
-                            <p style={{ color: token.colorTextSecondary }}>
+
+                            <Typography.Text type="secondary">
                                 {messages('tenant.owner')}:{' '}
                                 {getTenantOwnerEmail(dataTenant.tenantUser)}
-                            </p>
+                            </Typography.Text>
                         </div>
                     </div>
 

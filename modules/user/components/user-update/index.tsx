@@ -1,6 +1,7 @@
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import { useLoading } from '@/hooks/use-loading';
 import useModalStore from '@/hooks/use-modal';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { Spin, Tabs, TabsProps } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -8,6 +9,7 @@ import { UserData } from '../../types/data';
 import UpdateInfo from './update-info';
 import UpdatePassword from './update-password';
 import UpdatePermission from './update-permission';
+import UpdateTenant from './update-tenant';
 
 type Props = {} & AppModalProps;
 
@@ -21,6 +23,7 @@ enum TAB_KEY {
 function UpdateUserModal({ ...props }: Props) {
     const messages = useTranslations();
     const loading = useLoading();
+    const { isSystemTenant } = useAuth();
 
     const dataEdit = useModalStore<UserData>((state) => state.dataEdit);
     const [activeTab, setActiveTab] = useState<TAB_KEY>(TAB_KEY.UPDATE_INFO);
@@ -36,17 +39,21 @@ function UpdateUserModal({ ...props }: Props) {
             label: messages('user.changePassword'),
             children: <UpdatePassword dataEdit={dataEdit!} />,
         },
-        {
+    ];
+
+    if (isSystemTenant) {
+        items.push({
+            key: TAB_KEY.UPDATE_TENANT,
+            label: messages('tenant.label'),
+            children: <UpdateTenant dataEdit={dataEdit!} />,
+        });
+    } else {
+        items.push({
             key: TAB_KEY.UPDATE_PERMISSION,
             label: messages('user.grantPermission.label'),
             children: <UpdatePermission dataEdit={dataEdit!} />,
-        },
-        // {
-        //     key: TAB_KEY.UPDATE_TENANT,
-        //     label: messages('tenant.label'),
-        //     children: <UpdateTenant dataEdit={dataEdit!} />,
-        // },
-    ];
+        });
+    }
 
     return (
         <AppModal
