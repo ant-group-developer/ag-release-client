@@ -3,11 +3,8 @@ import ImageFallback from '@/components/ui/image/image-fallback';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
-import {
-    convertSecondsToHoursMinutes,
-    formattedDate,
-    getIntlCodeByReleaseStatus,
-} from '@/helpers/common';
+import { convertSecondsToHoursMinutes, formattedDate } from '@/helpers/common';
+import { getIntlCodeByReleaseStatus } from '@/helpers/intl';
 import { getReleaseDetailTabRoute } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';

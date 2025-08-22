@@ -79,9 +79,7 @@ export default function CMSLayout({ children, accessToken }: Props) {
                         />
                         <Layout>
                             <div className="relative h-[calc(100vh-4rem)] overflow-y-hidden">
-                                {/* <Content>{getChildren()}</Content>
-                                 */}
-                                <Content>{children}</Content>
+                                <Content>{getChildren()}</Content>
                                 <AudioPlayer />
                             </div>
                         </Layout>
