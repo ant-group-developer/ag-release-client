@@ -1,11 +1,9 @@
-import { Button } from 'antd';
+import IconButton from '@/components/ui/button/icon-button';
 import { CircleHelp } from 'lucide-react';
-import { useTranslations } from 'next-intl';
 
 type Props = {};
 
 function AppSupport({}: Props) {
-    const messages = useTranslations();
     // const { data: dataSetting } = useGetSettingPublic();
 
     // if (!dataSetting?.telegramSupport) {
@@ -13,17 +11,18 @@ function AppSupport({}: Props) {
     // }
 
     return (
-        <Button
-        // onClick={() =>
-        //     window.open(
-        //         dataSetting?.telegramSupport,
-        //         '_blank',
-        //         'noopener,noreferrer'
-        //     )
-        // }
+        <IconButton
+            variant="outlined"
+            // onClick={() =>
+            //     window.open(
+            //         dataSetting?.telegramSupport,
+            //         '_blank',
+            //         'noopener,noreferrer'
+            //     )
+            // }
         >
-            <CircleHelp size={16} /> {messages('common.support')}
-        </Button>
+            <CircleHelp size={16} />
+        </IconButton>
     );
 }
 

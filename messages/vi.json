@@ -31,7 +31,7 @@
         },
         "forbidden": {
             "title": "Truy cập bị từ chối",
-            "description": "Bạn không có quyền truy cập tài nguyên này."
+            "description": "Bạn không có quyền truy cập tài nguyên này. Liên hệ Admin để biết thêm chi tiết."
         },
         "forbiddenTitle": "You do not have access",
         "forbiddenDescription": "Please contact the Admin for more details"
@@ -261,7 +261,7 @@
     },
     "delete": {
         "confirmTitle": "Xác nhận xoá",
-        "confirmMessage": "Bạn có chắc muốn xoá {value} ?"
+        "confirmMessage": "Bạn có chắc muốn xoá {value}?"
     },
     "cancel": {
         "confirmTitle": "Xác nhận huỷ",

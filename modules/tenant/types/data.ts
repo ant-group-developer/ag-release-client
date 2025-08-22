@@ -1,4 +1,5 @@
 import { ORDER } from '@/enums/common';
+import { DspData } from '@/modules/dsp/types';
 import { UserData } from '@/modules/user/types/data';
 import {
     CommonAttributeCreator,
@@ -85,4 +86,20 @@ export interface CreateTenantPayload extends UpdateTenantPayload {
 
 export interface CreateTenant extends CommonFunction {
     payload: CreateTenantPayload;
+}
+
+export interface UpdateTenantDspPayload {
+    tenantId: TenantData['id'];
+    data: { dspId: DspData['id']; isActive: boolean }[];
+}
+
+export interface UpdateTenantDsp extends CommonFunction {
+    payload: UpdateTenantDspPayload;
+}
+
+export interface TenantDspData {
+    id: string;
+    isActive: boolean;
+    tenantId: TenantData['id'];
+    dsp: Pick<DspData, 'id' | 'name'>;
 }

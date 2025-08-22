@@ -1,5 +1,4 @@
 import AppForm, { AppFormProps } from '@/components/ui/antd-form/form';
-import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppColorPicker from '@/components/ui/colorPicker/app-color-picker';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import UserSelect from '@/modules/user/components/user-select';
@@ -26,8 +25,8 @@ function TenantForm({
     const { token } = theme.useToken();
 
     return (
-        <AppForm layout="vertical" {...props}>
-            <AppFormItem
+        <AppForm {...props}>
+            <AppForm.Item
                 label={messages('tenant.name')}
                 required
                 rules={[
@@ -41,9 +40,9 @@ function TenantForm({
                 name="name"
             >
                 <Input placeholder={messages('tenant.name')} />
-            </AppFormItem>
+            </AppForm.Item>
 
-            <AppFormItem
+            <AppForm.Item
                 label={messages('tenant.type.title')}
                 name="type"
                 required
@@ -54,7 +53,7 @@ function TenantForm({
                 ]}
             >
                 <TenantTypeSelect />
-            </AppFormItem>
+            </AppForm.Item>
 
             <Form.Item
                 shouldUpdate={(pre, cur) => pre.type !== cur.type}
@@ -67,7 +66,7 @@ function TenantForm({
                     if (type === TENANT_TYPE.WHITE_LABEL) return null;
 
                     return (
-                        <AppFormItem
+                        <AppForm.Item
                             label={messages('tenant.parent.label')}
                             name="parentId"
                         >
@@ -78,13 +77,13 @@ function TenantForm({
                                 excludeIds={excludeIds}
                                 type={[TENANT_TYPE.WHITE_LABEL]}
                             />
-                        </AppFormItem>
+                        </AppForm.Item>
                     );
                 }}
             </Form.Item>
 
             {showOwner && (
-                <AppFormItem
+                <AppForm.Item
                     label={messages('tenant.owner')}
                     name="ownerId"
                     required
@@ -107,10 +106,10 @@ function TenantForm({
                             }
                         }}
                     />
-                </AppFormItem>
+                </AppForm.Item>
             )}
 
-            <AppFormItem
+            <AppForm.Item
                 label={messages('common.email')}
                 required
                 rules={[
@@ -124,8 +123,8 @@ function TenantForm({
                 tooltip={messages('tenant.email.tooltip')}
             >
                 <Input placeholder={messages('common.email')} />
-            </AppFormItem>
-            <AppFormItem
+            </AppForm.Item>
+            <AppForm.Item
                 label={messages('tenant.title')}
                 rules={[
                     {
@@ -137,9 +136,9 @@ function TenantForm({
                 name="title"
             >
                 <Input placeholder={messages('tenant.title')} />
-            </AppFormItem>
+            </AppForm.Item>
 
-            <AppFormItem
+            <AppForm.Item
                 label={messages('tenant.domain')}
                 rules={[
                     {
@@ -151,63 +150,66 @@ function TenantForm({
                 name="domain"
             >
                 <Input placeholder={messages('tenant.domain')} />
-            </AppFormItem>
+            </AppForm.Item>
 
-            <div className="grid grid-cols-2">
-                <AppFormItem label={messages('status.label')} name="isActive">
-                    <Switch />
-                </AppFormItem>
+            {/* <div className="grid grid-cols-2"> */}
+            <AppForm.Item label={messages('status.label')} name="isActive">
+                <Switch />
+            </AppForm.Item>
 
-                <AppFormItem
-                    label={messages('tenant.primaryColor')}
-                    name="primaryColor"
-                >
-                    <AppColorPicker />
-                </AppFormItem>
-            </div>
+            <AppForm.Item
+                label={messages('tenant.primaryColor')}
+                name="primaryColor"
+            >
+                <AppColorPicker />
+            </AppForm.Item>
+            {/* </div> */}
 
-            <div className="flex items-center gap-4">
-                <AppFormItem label={messages('tenant.icon.label')} name="icon">
-                    <ImageListUpload
-                        maxCount={1}
-                        accept=".png,.svg,.ico"
-                        maxSizeMB={1}
-                    />
-                </AppFormItem>
-                <ul
-                    className="space-y-1 text-xs"
-                    style={{ color: token.colorTextDescription }}
-                >
-                    <li>{messages('tenant.icon.tooltip1')}</li>
-                    <li>{messages('tenant.icon.tooltip2')}</li>
-                    <li>{messages('tenant.icon.tooltip3')}</li>
-                </ul>
-            </div>
+            <AppForm.Item label={messages('tenant.icon.label')} name="icon">
+                <ImageListUpload
+                    maxCount={1}
+                    accept=".png,.svg,.ico"
+                    maxSizeMB={1}
+                    description={
+                        <ul
+                            className="space-y-1 text-xs"
+                            style={{ color: token.colorTextDescription }}
+                        >
+                            <li>{messages('tenant.icon.tooltip1')}</li>
+                            <li>{messages('tenant.icon.tooltip2')}</li>
+                            <li>{messages('tenant.icon.tooltip3')}</li>
+                        </ul>
+                    }
+                />
+            </AppForm.Item>
 
-            <div className="flex items-center gap-4">
-                <AppFormItem label={messages('tenant.logo')} name="logo">
-                    <ImageListUpload
-                        maxCount={1}
-                        accept=".png,.jpg,.jpeg"
-                        maxSizeMB={2}
-                    />
-                </AppFormItem>
-                <div
-                    className="space-y-1 text-xs"
-                    style={{ color: token.colorTextDescription }}
-                >
-                    <p>
-                        {messages('image.validation.supportImageFormat', {
-                            value: 'PNG, JPG, JPEG',
-                        })}
-                    </p>
-                    <p>
-                        {messages('image.validation.mustBeLessThanMB', {
-                            value: '2',
-                        })}
-                    </p>
-                </div>
-            </div>
+            <AppForm.Item label={messages('tenant.logo')} name="logo">
+                <ImageListUpload
+                    maxCount={1}
+                    accept=".png,.jpg,.jpeg"
+                    maxSizeMB={2}
+                    description={
+                        <div
+                            className="space-y-1 text-xs"
+                            style={{ color: token.colorTextDescription }}
+                        >
+                            <p>
+                                {messages(
+                                    'image.validation.supportImageFormat',
+                                    {
+                                        value: 'PNG, JPG, JPEG',
+                                    }
+                                )}
+                            </p>
+                            <p>
+                                {messages('image.validation.mustBeLessThanMB', {
+                                    value: '2',
+                                })}
+                            </p>
+                        </div>
+                    }
+                />
+            </AppForm.Item>
         </AppForm>
     );
 }

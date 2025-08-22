@@ -37,7 +37,7 @@ const CopyText: React.FC<CopyTextProps> = ({
             <div
                 onClick={handleCopy}
                 className={cn(
-                    'w-fit cursor-pointer overflow-hidden rounded px-1 hover:bg-gray-200',
+                    'w-fit max-w-full cursor-pointer overflow-hidden truncate rounded px-1 hover:bg-gray-200',
                     className
                 )}
             >

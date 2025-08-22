@@ -132,7 +132,7 @@ export default function PermissionFormModal({ ...props }: Props) {
                                     },
                                 ]}
                             >
-                                <Input allowClear />
+                                <Input allowClear showCount />
                             </AppFormItem>
                             <AppFormItem
                                 name="code"
@@ -151,7 +151,7 @@ export default function PermissionFormModal({ ...props }: Props) {
                                     },
                                 ]}
                             >
-                                <Input allowClear />
+                                <Input allowClear showCount />
                             </AppFormItem>
                             <AppFormItem
                                 name="note"
@@ -174,6 +174,7 @@ export default function PermissionFormModal({ ...props }: Props) {
                                         minRows: 3,
                                         maxRows: 7,
                                     }}
+                                    showCount
                                 />
                             </AppFormItem>
                         </>
@@ -217,8 +218,7 @@ export default function PermissionFormModal({ ...props }: Props) {
                                                             required
                                                             rules={[
                                                                 {
-                                                                    required:
-                                                                        true,
+                                                                    required: true,
                                                                     message:
                                                                         messages(
                                                                             'validation.input'
@@ -250,8 +250,7 @@ export default function PermissionFormModal({ ...props }: Props) {
                                                             required
                                                             rules={[
                                                                 {
-                                                                    required:
-                                                                        true,
+                                                                    required: true,
                                                                     message:
                                                                         messages(
                                                                             'validation.input'

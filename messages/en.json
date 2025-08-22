@@ -31,7 +31,7 @@
         },
         "forbidden": {
             "title": "Access Denied",
-            "description": "You do not have permission to view this resource."
+            "description": "You do not have permission to access this resource. Please contact the Admin for more details."
         },
         "forbiddenTitle": "You do not have access",
         "forbiddenDescription": "Please contact the Admin for more details"
@@ -263,7 +263,7 @@
     },
     "delete": {
         "confirmTitle": "Confirm delete",
-        "confirmMessage": "Are you sure you want to delete?"
+        "confirmMessage": "Are you sure you want to delete {value}?"
     },
     "cancel": {
         "confirmTitle": "Confirm cancel",

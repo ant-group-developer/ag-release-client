@@ -1,4 +1,6 @@
-import ActionButton from '@/components/ui/button/action-button';
+import ActionButton, {
+    ActionButtonProps,
+} from '@/components/ui/button/action-button';
 import CopyText from '@/components/ui/copy-text/copy-text';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import {
@@ -8,12 +10,14 @@ import {
     getSortOrder,
 } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
-import { Avatar, Switch, theme } from 'antd';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
+import { Avatar, Switch, Tag, theme } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_USER, USER_ORDER_BY } from '../enums';
 import { useUpdateUser } from '../hooks/use-update-user';
 import { DataFilterUser, UserData } from '../types/data';
+import { checkIsSystemAdmin, checkIsTenantOwner } from '../utils/role';
 
 type Props = {
     dataFilter: DataFilterUser;
@@ -21,13 +25,16 @@ type Props = {
         pageSize: number;
         current: number;
     };
+    actionProps?: ActionButtonProps;
 } & Omit<AppTableProps<UserData>, 'columns'>;
 
-function UserTable({ dataFilter, ...props }: Props) {
+function UserTable({ dataFilter, actionProps, ...props }: Props) {
     const { token } = theme.useToken();
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const canUpdate = true;
+
+    const { isAdmin } = useAuth();
 
     const { updateUser } = useUpdateUser();
 
@@ -105,37 +112,22 @@ function UserTable({ dataFilter, ...props }: Props) {
             },
         },
         {
-            title: messages('user.role.system.label'),
-            dataIndex: 'type',
-            width: 120,
-            align: 'center',
-            render: (cell) => messages(`user.${cell}` as any),
+            title: messages('tenant.label'),
+            dataIndex: 'tenant',
+            width: 200,
+            render: (cell, record) => (
+                <div className="flex flex-col gap-1">
+                    {record.tenantUser.map((item) => (
+                        <Tag key={item.tenantId} className="w-fit">
+                            {item.tenant.name}:{' '}
+                            {messages(
+                                `tenant.userType.${item.type}.label` as any
+                            )}
+                        </Tag>
+                    ))}
+                </div>
+            ),
         },
-        {
-            title: messages('user.role.tenant.label'),
-            dataIndex: 'type',
-            width: 120,
-            align: 'center',
-            render: (cell, record) => {
-                const type = record.tenantUser[0]?.type;
-                return type
-                    ? messages(`tenant.userType.${type}.label` as any)
-                    : '-';
-            },
-        },
-        // {
-        //     title: messages('user.emailVerified'),
-        //     dataIndex: 'emailVerified',
-        //     align: 'center',
-        //     width: 180,
-        //     render: (cell, record) => (
-        //         <Switch
-        //             checked={cell}
-        //             disabled={!canUpdate}
-        //             onChange={(status) => updateEmailVerify(record.id, status)}
-        //         />
-        //     ),
-        // },
         {
             title: messages('status.label'),
             dataIndex: 'isActive',
@@ -149,40 +141,10 @@ function UserTable({ dataFilter, ...props }: Props) {
                 />
             ),
         },
-        // {
-        //     title: messages('user.loginsCount'),
-        //     dataIndex: USER_ORDER_BY.LOGIN_COUNT,
-        //     align: 'center',
-        //     width: 180,
-        //     sorter: true,
-        //     sortOrder: getSortOrder(
-        //         dataFilter.orderBy,
-        //         dataFilter.fieldOrder,
-        //         USER_ORDER_BY.LOGIN_COUNT
-        //     ),
-        //     render: (cell) => (
-        //         <CopyText text={cell} className="mx-auto">
-        //             <p>{formattedNumber(cell)}</p>
-        //         </CopyText>
-        //     ),
-        // },
-        // {
-        //     title: messages('user.lastIp'),
-        //     dataIndex: 'lastIp',
-        //     width: 120,
-        //     align: 'center',
-        //     ellipsis: true,
-        //     render: (cell) => (
-        //         <CopyText text={cell} label="Last IP" className="mx-auto">
-        //             <p>{cell}</p>
-        //         </CopyText>
-        //     ),
-        // },
         {
             title: messages('user.lastLogin'),
             dataIndex: USER_ORDER_BY.LAST_LOGIN,
-            align: 'center',
-            width: 180,
+            width: 150,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -191,19 +153,19 @@ function UserTable({ dataFilter, ...props }: Props) {
             ),
             render: (cell) => formattedDate(cell),
         },
-        {
-            title: messages('common.createdAt'),
-            dataIndex: USER_ORDER_BY.CREATED_AT,
-            align: 'center',
-            width: 180,
-            sorter: true,
-            sortOrder: getSortOrder(
-                dataFilter.orderBy,
-                dataFilter.fieldOrder,
-                USER_ORDER_BY.CREATED_AT
-            ),
-            render: (cell) => formattedDate(cell),
-        },
+        // {
+        //     title: messages('common.createdAt'),
+        //     dataIndex: USER_ORDER_BY.CREATED_AT,
+        //     align: 'center',
+        //     width: 180,
+        //     sorter: true,
+        //     sortOrder: getSortOrder(
+        //         dataFilter.orderBy,
+        //         dataFilter.fieldOrder,
+        //         USER_ORDER_BY.CREATED_AT
+        //     ),
+        //     render: (cell) => formattedDate(cell),
+        // },
         {
             title: messages('common.updatedAt'),
             dataIndex: USER_ORDER_BY.UPDATED_AT,
@@ -219,6 +181,15 @@ function UserTable({ dataFilter, ...props }: Props) {
         },
     ];
 
+    if (isAdmin) {
+        columns.splice(2, 0, {
+            title: messages('user.type'),
+            dataIndex: 'type',
+            width: 120,
+            render: (cell) => messages(`user.${cell}` as any),
+        });
+    }
+
     if (canUpdate) {
         columns.push({
             // title: messages('common.action'),
@@ -226,14 +197,25 @@ function UserTable({ dataFilter, ...props }: Props) {
             align: 'center',
             width: 50,
             // fixed: 'right',
-            render: (cell, record) => (
-                <ActionButton
-                    showUpdate={canUpdate}
-                    onShowUpdate={() =>
-                        openModal(TYPE_MODAL_USER.UPDATE, record)
-                    }
-                />
-            ),
+            render: (cell, record) => {
+                const isSystemAdmin = checkIsSystemAdmin(record.type);
+                const isTenantOwner = checkIsTenantOwner(
+                    record.tenantUser[0]?.type
+                );
+                return (
+                    <ActionButton
+                        showUpdate={canUpdate}
+                        onShowUpdate={() =>
+                            openModal(TYPE_MODAL_USER.UPDATE, record)
+                        }
+                        showDelete={(!isSystemAdmin && !isTenantOwner) || false}
+                        onShowDelete={() =>
+                            openModal(TYPE_MODAL_USER.REMOVE, record)
+                        }
+                        {...actionProps}
+                    />
+                );
+            },
         });
     }
 

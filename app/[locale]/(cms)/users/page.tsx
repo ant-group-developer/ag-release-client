@@ -1,4 +1,5 @@
 'use client';
+import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
@@ -13,17 +14,20 @@ import UserTable from '@/modules/user/components/user-table';
 import UpdateUserModal from '@/modules/user/components/user-update';
 import { TYPE_MODAL_USER, USER_ORDER_BY } from '@/modules/user/enums';
 import { useUserList } from '@/modules/user/hooks/use-get-user';
-import { useSyncUser } from '@/modules/user/hooks/use-sync-user';
-import { DataFilterUser } from '@/modules/user/types/data';
+import { useRemoveUser } from '@/modules/user/hooks/use-remove-user';
+import { DataFilterUser, UserData } from '@/modules/user/types/data';
+import { useTranslations } from 'next-intl';
 
 type Props = {};
 
 export default function UserPage({}: Props) {
     // hooks - state
+    const messages = useTranslations();
     const scrollY = useTableScrollY();
 
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
+    const dataEdit = useModalStore<UserData>((state) => state.dataEdit);
 
     // apis
     const {
@@ -40,7 +44,7 @@ export default function UserPage({}: Props) {
     });
     const { data, dataUpdatedAt, refetch, isFetching } =
         useUserList(dataFilter);
-    const { syncUser, isPending } = useSyncUser();
+    const { removeUser, isPending } = useRemoveUser();
 
     const onChangeSort = (pagination: any, filters: any, sort: any) => {
         const orderBy = setSortOrder(sort, ORDER.ASC);
@@ -62,7 +66,6 @@ export default function UserPage({}: Props) {
                 canClearFilter={canClearFilter}
                 removeFilter={removeFilter}
                 handleRefresh={() => refetch()}
-                handleSync={() => syncUser({})}
                 lastUpdatedAt={formattedDate(dataUpdatedAt || new Date())}
             />
             <UserTable
@@ -100,8 +103,26 @@ export default function UserPage({}: Props) {
             {typeModal === TYPE_MODAL_USER.UPDATE && (
                 <UpdateUserModal open onCancel={closeModal} />
             )}
+
             {typeModal === TYPE_MODAL_USER.INVITE && (
                 <InviteUserModal open onCancel={closeModal} />
+            )}
+
+            {typeModal === TYPE_MODAL_USER.REMOVE && (
+                <AppConfirm
+                    open
+                    onCancel={closeModal}
+                    onOk={() => {
+                        removeUser({
+                            userId: dataEdit.id,
+                            onSuccess: closeModal,
+                        });
+                    }}
+                    modalTitle={messages('delete.confirmTitle')}
+                    paragraph={messages('delete.confirmMessage', {
+                        value: dataEdit.email,
+                    })}
+                />
             )}
         </div>
     );

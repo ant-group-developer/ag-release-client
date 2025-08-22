@@ -3,7 +3,12 @@ import { PaginationResponse } from '@/types/api';
 import { useQuery } from '@tanstack/react-query';
 import { tenantApi } from '../api';
 import { tenantQueryKeys } from '../constants';
-import { DataFilterTenant, TenantData, TenantDetail } from '../types/data';
+import {
+    DataFilterTenant,
+    TenantData,
+    TenantDetail,
+    TenantDspData,
+} from '../types/data';
 
 export function useTenantList(params: DataFilterTenant) {
     const { data, ...restResponse } = useQuery({
@@ -45,5 +50,18 @@ export function useTenantDetail(id: string | null) {
     return {
         ...restResponse,
         dataTenant: data?.data?.data ?? ({} as TenantDetail),
+    };
+}
+
+export function useTenantDsp(id: string | null) {
+    const { data, ...restResponse } = useQuery({
+        queryKey: tenantQueryKeys.dsp(id ?? ''),
+        queryFn: () => tenantApi.getDsp(id as string),
+        enabled: Boolean(id),
+    });
+
+    return {
+        ...restResponse,
+        dataTenantDsp: data?.data?.data ?? ([] as TenantDspData[]),
     };
 }

@@ -1,5 +1,5 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
-import { PAGE_SIZE, PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { getIndex } from '@/helpers/common';
 import { useGetListPermission } from '@/modules/permission/hooks/use-get-list-permission';
 import { PermissionData } from '@/modules/permission/types';
@@ -15,7 +15,7 @@ export default function PermissionTableItemForm({ ...props }: Props) {
     });
     const [pagination, setPagination] = useState({
         current: 1,
-        pageSize: PAGE_SIZE,
+        pageSize: 10,
     });
 
     const messages = useTranslations();
@@ -69,7 +69,6 @@ export default function PermissionTableItemForm({ ...props }: Props) {
             columns={column}
             scroll={{
                 x: 'max-content',
-                y: 300,
             }}
             pagination={{
                 pageSize: pagination?.pageSize,

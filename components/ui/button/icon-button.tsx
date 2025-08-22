@@ -28,13 +28,13 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
                 ref={ref}
                 {...props}
                 className={cn(
-                    'inline-grid aspect-square w-8 flex-none cursor-pointer place-content-center text-base hover:bg-gray-300/70',
+                    'inline-grid aspect-square w-8 flex-none cursor-pointer place-content-center text-base hover:bg-gray-200',
                     {
                         '!hidden': hidden,
                         'rounded-full': shape === 'circle',
                         'rounded-lg': shape === 'square',
                         'bg-gray-200/70': variant === 'filled',
-                        'border-gray-200/70': variant === 'outlined',
+                        'border border-gray-300': variant === 'outlined',
                     },
                     className
                 )}

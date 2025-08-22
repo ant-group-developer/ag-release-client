@@ -2,6 +2,7 @@ import { ORDER } from '@/enums/common';
 import { PermissionData } from '@/modules/permission/types';
 import { RolesData } from '@/modules/roles/types';
 import { TENANT_USER_TYPE } from '@/modules/tenant/enums';
+import { TenantData } from '@/modules/tenant/types/data';
 import {
     CommonAttributeCreator,
     CommonFunction,
@@ -49,6 +50,7 @@ export type UserData = Pick<
     tenantUser: {
         type: TENANT_USER_TYPE;
         tenantId: string;
+        tenant: Pick<TenantData, 'id' | 'name'>;
     }[];
 };
 
@@ -92,6 +94,10 @@ export interface UpdateUserRole extends CommonFunction {
 }
 
 export interface SyncUserData extends CommonFunction {}
+
+export interface RemoveUserData extends CommonFunction {
+    userId: string;
+}
 
 export type UserRoleData = Pick<RolesData, 'id' | 'name' | 'code' | 'note'>;
 export type UserPermissionData = Pick<

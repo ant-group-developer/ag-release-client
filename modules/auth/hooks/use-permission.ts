@@ -1,18 +1,36 @@
 import { APP_ROUTES } from '@/enums/routes';
 import { flattenData } from '@/helpers/common';
-import { adminRoutes, AdminRoutesChildType } from '@/layouts/cms-layout/routes';
+import { usePermission } from '@/hooks/use-permission';
+import { adminRoutes, RouteRequired } from '@/layouts/cms-layout/routes';
 import { useLocale } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import { useAuth } from './use-auth';
 
-export const usePermission = () => {
-    const { permission, isAdmin, isLoading } = useAuth();
+export const useCheckPermission = () => {
+    const { isLoading, profile } = useAuth();
+
     const pathname = usePathname();
     const locale = useLocale();
+    const { hasPermission } = usePermission();
 
-    const checkPermission = (name: string) => {
-        if (isAdmin) return true;
-        return permission.includes(name);
+    const checkPermission = (required?: RouteRequired) => {
+        if (required === undefined) return true;
+
+        if ('userType' in required) {
+            const { userType, tenantId } = required;
+            return (
+                userType.some((item) => item === profile.type) &&
+                tenantId.some((item) => item === profile.tenantId)
+            );
+        }
+
+        if ('tenantType' in required) {
+            return required.tenantType.some(
+                (item) => item === profile.tenantType
+            );
+        }
+
+        return hasPermission(required.permission);
     };
 
     const convertHref = (value: string) => '/' + locale + value;
@@ -29,27 +47,13 @@ export const usePermission = () => {
         );
 
         if (!route) return false;
-        return checkPermission(route?.permission);
-    }
-
-    function findRouteCanAccess() {
-        const flattenRoutes = flattenData(adminRoutes, {});
-        const route: AdminRoutesChildType | undefined = flattenRoutes.find(
-            (item) => checkPermission(item.permission) && !item.children
-        );
-        return route;
-    }
-
-    function getPermission() {
-        const canAccessCurrentRoute = checkCanAccessCurrentRoute();
-        const routeCanAccess = findRouteCanAccess();
-        return { canAccessCurrentRoute, routeCanAccess };
+        return checkPermission(route?.required);
     }
 
     return {
         isLoading,
         isForbiddenPage,
-        getPermission,
+        checkCanAccessCurrentRoute,
         checkPermission,
     };
 };

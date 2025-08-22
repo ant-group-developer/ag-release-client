@@ -15,7 +15,7 @@ import { useTranslations } from 'next-intl';
 import { MouseEventHandler } from 'react';
 import IconButton from './icon-button';
 
-interface Props {
+export interface ActionButtonProps {
     showComment?: boolean;
     showDetail?: boolean;
     showUpdate?: boolean;
@@ -62,7 +62,7 @@ export default function ActionButton({
     onShowUpdate,
     onShowDelete,
     onShowUpload,
-}: Props) {
+}: ActionButtonProps) {
     const messages = useTranslations();
     const items: MenuProps['items'] = [];
     if (showDownload) {

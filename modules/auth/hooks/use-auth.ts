@@ -1,36 +1,29 @@
 import { getAvatarUrl } from '@/helpers/avatar-tailwind';
+import { TENANT_USER_TYPE } from '@/modules/tenant/enums';
 import { userQueryKeys } from '@/modules/user/constants';
 import { USER_TYPE } from '@/modules/user/enums';
+import {
+    checkCanAccessTenantAll,
+    checkIsSystemAdmin,
+    checkIsSystemTenant,
+    checkIsTenantOwner,
+    checkIsTenantOwnerOrAdmin,
+} from '@/modules/user/utils/role';
 import { useQuery } from '@tanstack/react-query';
 import { signOut, useSession } from 'next-auth/react';
 import { authApi } from '../api';
-import { UserInfoData } from '../types/common';
+import { UserInfoData } from '../types/auth';
 
 export const defaultProfile: UserInfoData = {
-    telegramId: null,
     id: '',
-    name: 'User',
-    email: 'user@ant-group.net',
-    avatar: getAvatarUrl('user@ant-group.net'),
+    name: 'N/A',
+    email: 'N/A',
+    avatar: getAvatarUrl('unknown'),
     permission: [],
     isActive: false,
-    emailVerified: false,
-    lastLogin: null,
-    lastIp: null,
-    loginsCount: null,
     type: USER_TYPE.USER,
-    creatorId: '',
-    creator: {
-        id: '',
-        email: '',
-    },
-    modifierId: '',
-    modifier: {
-        id: '',
-        email: '',
-    },
-    createdAt: '',
-    updatedAt: null,
+    tenantId: '',
+    tenantType: TENANT_USER_TYPE.MEMBER,
 };
 
 export const useAuth = () => {
@@ -45,8 +38,15 @@ export const useAuth = () => {
 
     const profile = data?.data?.data ?? defaultProfile;
 
-    const isAdmin = profile.type === USER_TYPE.ADMIN;
-    const isUser = profile.type === USER_TYPE.USER;
+    const isAdmin = checkIsSystemAdmin(profile.type);
+    const isUser = !isAdmin;
+    const isTenantOwner = checkIsTenantOwner(profile.tenantType);
+    const isTenantOwnerOrAdmin = checkIsTenantOwnerOrAdmin(profile.tenantType);
+    const canAccessTenantAll = checkCanAccessTenantAll(
+        profile.type,
+        profile.tenantType
+    );
+    const isSystemTenant = checkIsSystemTenant(profile.tenantId);
 
     const isAuthenticated = Boolean(profile.id);
 
@@ -63,6 +63,10 @@ export const useAuth = () => {
         isLoading,
         isAdmin,
         isUser,
+        isTenantOwner,
+        isTenantOwnerOrAdmin,
+        canAccessTenantAll,
+        isSystemTenant,
         logout,
         refreshProfile: refetch,
     };

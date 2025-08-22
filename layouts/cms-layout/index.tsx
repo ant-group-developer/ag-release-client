@@ -3,11 +3,11 @@
 import AppLoader from '@/components/app-loader';
 import { LOCAL_STORAGE_KEY } from '@/enums/common';
 import { useActive } from '@/hooks/use-active';
-import usePermissionStore from '@/hooks/use-permission';
+import usePermissionStore from '@/hooks/use-permission-store';
 import { useRouter } from '@/i18n/routing';
 import Forbidden from '@/modules/auth/components/forbidden';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
-import { usePermission } from '@/modules/auth/hooks/use-permission';
+import { useCheckPermission } from '@/modules/auth/hooks/use-permission';
 import AudioPlayer from '@/modules/releases/components/release-detail/release-tracks/audio-player';
 import SocketProvider from '@/providers/socket';
 import { Layout } from 'antd';
@@ -30,35 +30,16 @@ export default function CMSLayout({ children, accessToken }: Props) {
             : localStorage.getItem(LOCAL_STORAGE_KEY.OPEN_SIDE_BAR) === 'true'
     );
 
-    const { isAdmin, isLoading, permission } = useAuth();
-    const { getPermission } = usePermission();
-    const { canAccessCurrentRoute, routeCanAccess } = getPermission();
+    const { isLoading, permission } = useAuth();
+    const { checkCanAccessCurrentRoute } = useCheckPermission();
 
     const setPermission = usePermissionStore((state) => state.setPermission);
 
-    // useEffect(() => {
-    //     function verify() {
-    //         if (isLoading) return;
-
-    //         if (isAdmin) return;
-
-    //         if (canAccessCurrentRoute) return;
-
-    //         if (routeCanAccess) {
-    //             return router.push(routeCanAccess.href);
-    //         }
-
-    //         return router.push(APP_ROUTES.FORBIDDEN);
-    //     }
-
-    //     verify();
-    // }, [isLoading, isAdmin, canAccessCurrentRoute, routeCanAccess, router]);
-
     useEffect(() => {
-        setPermission(permission, isAdmin);
+        setPermission(permission);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [JSON.stringify(permission), isAdmin]);
+    }, [JSON.stringify(permission)]);
 
     useEffect(() => {
         localStorage.setItem(
@@ -68,42 +49,42 @@ export default function CMSLayout({ children, accessToken }: Props) {
     }, [isActive]);
 
     const getChildren = () => {
-        // if (isLoading) {
-        //     return <AppLoader className="bg-white" />;
-        // }
-
-        // if (canAccessCurrentRoute) {
-        return (
-            <Layout>
-                <Header collapsed={isActive} toggleCollapsed={toggleActive} />
-                <Layout>
-                    <Sidebar
-                        collapsed={isActive}
-                        onBreakpoint={changeActive}
-                        trigger={null}
-                    />
-                    <Layout>
-                        <div className="relative h-[calc(100vh-4rem)] overflow-y-hidden">
-                            <Content>{children}</Content>
-                            <AudioPlayer />
-                        </div>
-                    </Layout>
-                </Layout>
-            </Layout>
-        );
-        // }
-
-        if (routeCanAccess) {
+        if (isLoading) {
             return <AppLoader className="bg-white" />;
         }
 
-        return <Forbidden />;
+        if (checkCanAccessCurrentRoute()) {
+            return children;
+        }
+
+        return <Forbidden className="min-h-fit py-24" />;
     };
 
     return (
         <SocketProvider accessToken={accessToken}>
             <div className="mx-auto max-w-[150rem] overflow-x-hidden border-x border-l-0">
-                {getChildren()}
+                <Layout>
+                    <Header
+                        collapsed={isActive}
+                        toggleCollapsed={toggleActive}
+                    />
+                    <Layout>
+                        <Sidebar
+                            collapsed={isActive}
+                            onBreakpoint={changeActive}
+                            trigger={null}
+                            drawerProps={{
+                                onClose: toggleActive,
+                            }}
+                        />
+                        <Layout>
+                            <div className="relative h-[calc(100vh-4rem)] overflow-y-hidden">
+                                <Content>{getChildren()}</Content>
+                                <AudioPlayer />
+                            </div>
+                        </Layout>
+                    </Layout>
+                </Layout>
             </div>
         </SocketProvider>
     );

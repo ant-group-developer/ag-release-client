@@ -3,8 +3,8 @@ import IconButton from '@/components/ui/button/icon-button';
 import useModalStore from '@/hooks/use-modal';
 import { Link, useRouter } from '@/i18n/routing';
 import TenantSwitch from '@/modules/tenant/components/tenant-switch';
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Layout } from 'antd';
+import { Menu } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import AppAvatar from './app-avatar';
 import AppSupport from './app-support';
@@ -29,10 +29,13 @@ function Header({ collapsed, toggleCollapsed }: Props) {
         >
             <div className="flex flex-1 items-center gap-5">
                 <IconButton onClick={toggleCollapsed} className="w-10 text-xl">
-                    {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                    {/* {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />} */}
+                    <Menu />
                 </IconButton>
                 {/* <Logo /> */}
-                <TenantSwitch />
+                <div className="hidden md:block">
+                    <TenantSwitch />
+                </div>
             </div>
 
             {/* <div className="flex max-w-[400px] flex-1 items-center">
