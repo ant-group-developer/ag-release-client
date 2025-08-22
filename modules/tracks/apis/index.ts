@@ -22,6 +22,19 @@ export const trackApi = {
         );
     },
 
+    updateTrackPolicy: (
+        id: TrackData['id'],
+        trackPolicyId: string,
+        actionId: string
+    ) => {
+        return axiosInstance.put<DetailResponse<TrackData[]>>(
+            `/tracks/draft/${id}/trackPolicies/${trackPolicyId}`,
+            {
+                actionId,
+            }
+        );
+    },
+
     updateTrackOrder: (payload: UpdateTrackOrderPayload) => {
         return axiosInstance.put(`/tracks/draft/bulk`, payload);
     },
@@ -34,6 +47,13 @@ export const trackApi = {
 
     getDetailTrack: (id: TrackData['id']) => {
         return axiosInstance.get<DetailResponse<TrackData>>(`/tracks/${id}`);
+    },
+
+    getTracksWithPolicies: (params: TrackDataFilter) => {
+        return axiosInstance.get<PaginationResponse<TrackData>>(
+            `/tracks/draft/policy`,
+            { params }
+        );
     },
 
     deleteTrackDraft: (id: TrackData['id']) => {

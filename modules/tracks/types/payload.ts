@@ -16,3 +16,9 @@ export interface UpdateTrackOrderPayload extends CommonFunction {
         order: number;
     }[];
 }
+
+export interface UpdateTrackPolicy extends CommonFunction {
+    id: TrackData['id'];
+    trackPolicyId: string;
+    actionId: string;
+}

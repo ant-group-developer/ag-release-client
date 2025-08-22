@@ -13,6 +13,7 @@ export const dspApi = {
             params,
         });
     },
+
     getDetail: (id: DspData['id']) => {
         return axiosInstance.get<DetailResponse<DspData>>(`/dsps/${id}`);
     },

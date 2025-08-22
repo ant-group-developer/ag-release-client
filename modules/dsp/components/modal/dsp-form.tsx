@@ -10,6 +10,7 @@ import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { uploadApi } from '@/modules/upload/apis';
+import { ENTITY_TYPE_PICTURE } from '@/modules/upload/types/data';
 import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Button, Divider, Form, Input, Radio } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
@@ -88,7 +89,7 @@ export default function DspFormModal({ ...props }: Props) {
         const payloadValues = { formatLinks, ...res };
         if (file) {
             const dataPayload = {
-                entityType: 'dsps',
+                entityType: ENTITY_TYPE_PICTURE.DSP,
                 fileName: file.name,
                 contentType: file.type,
                 fileSize: file.size,

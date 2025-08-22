@@ -10,6 +10,7 @@ import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { uploadApi } from '@/modules/upload/apis';
+import { ENTITY_TYPE_PICTURE } from '@/modules/upload/types/data';
 import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Button, Form, Input } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
@@ -82,7 +83,7 @@ export default function ArtistFormModal({ ...props }: Props) {
         const payloadValues = res;
         if (file) {
             const dataPayload = {
-                entityType: 'artists',
+                entityType: ENTITY_TYPE_PICTURE.ARTIST,
                 fileName: file.name,
                 contentType: file.type,
                 fileSize: file.size,

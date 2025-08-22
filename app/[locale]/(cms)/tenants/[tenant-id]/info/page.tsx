@@ -8,6 +8,7 @@ import { useTenantDetail } from '@/modules/tenant/hooks/use-get-tenant';
 import { useUpdateTenant } from '@/modules/tenant/hooks/use-update-tenant';
 import { UpdateTenant, UpdateTenantPayload } from '@/modules/tenant/types/data';
 import { uploadApi } from '@/modules/upload/apis';
+import { ENTITY_TYPE_PICTURE } from '@/modules/upload/types/data';
 import { Form } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
@@ -43,7 +44,7 @@ function DetailTenantPage({}: Props) {
                 if (iconFile) {
                     iconUrl = await uploadApi.uploadFile({
                         infoFile: {
-                            entityType: 'tenants',
+                            entityType: ENTITY_TYPE_PICTURE.TENANT,
                             fileName: iconFile.name,
                             contentType: iconFile.type,
                             fileSize: iconFile.size,
@@ -55,7 +56,7 @@ function DetailTenantPage({}: Props) {
                 if (logoFile) {
                     logoUrl = await uploadApi.uploadFile({
                         infoFile: {
-                            entityType: 'tenants',
+                            entityType: ENTITY_TYPE_PICTURE.TENANT,
                             fileName: logoFile.name,
                             contentType: logoFile.type,
                             fileSize: logoFile.size,
