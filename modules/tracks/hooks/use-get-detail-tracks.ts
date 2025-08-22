@@ -42,6 +42,28 @@ export const useGetDetailTrack = (id: TrackData['id']) => {
             title: '',
         },
         isScanned: false,
+        priceTierId: '',
+        priceTier: {
+            currencyId: '',
+            isDefault: false,
+            isActive: false,
+            amount: 0,
+            creatorId: '',
+            modifierId: '',
+            currency: {
+                name: '',
+                code: '',
+                creatorId: '',
+                modifierId: '',
+                id: '',
+                createdAt: '',
+                updatedAt: null,
+            },
+            id: '',
+            createdAt: '',
+            updatedAt: null,
+        },
+        trackPolicies: [],
     };
 
     return {
