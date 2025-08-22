@@ -7,9 +7,9 @@ import {
     convertSecondsToHoursMinutes,
     formattedDate,
     getIndex,
-    getIntlCodeByReleaseStatus,
     getSortOrder,
 } from '@/helpers/common';
+import { getIntlCodeByReleaseStatus } from '@/helpers/intl';
 import {
     getReleaseDetailTabRoute,
     RELEASE_DETAIL_ACTION,

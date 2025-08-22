@@ -65,7 +65,7 @@ export default function ShowColumnOptionDropdown({
         },
         {
             key: TRACKS_COLUMNS_DISPLAY.ACR_CLOUD,
-            label: 'ACR Cloud',
+            label: 'ACRCloud',
         },
         {
             key: TRACKS_COLUMNS_DISPLAY.CREATION_DATE,

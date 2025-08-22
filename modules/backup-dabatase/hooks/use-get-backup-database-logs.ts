@@ -3,11 +3,13 @@ import { PaginationResponse } from '@/types/api';
 import { useQuery } from '@tanstack/react-query';
 import { backupDatabaseApis } from '../apis';
 import { backupDatabaseQueryKeys } from '../constants';
-import { BackupDatabaseLogData } from '../types';
+import { BackupDatabaseLogData, BackupDatabaseLogDataFilter } from '../types';
 
-export const useListBackupDatabaseLogs = () => {
+export const useListBackupDatabaseLogs = (
+    params: BackupDatabaseLogDataFilter
+) => {
     const { data, ...res } = useQuery({
-        queryKey: backupDatabaseQueryKeys.list(),
+        queryKey: backupDatabaseQueryKeys.list(params),
         queryFn: () => backupDatabaseApis.getBackupDatabaseLogs(),
     });
 

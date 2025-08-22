@@ -1,4 +1,4 @@
-export enum TRACK_SCAN_STATUS {
+export enum SCAN_STATUS {
     RUNNING = 'running',
     PENDING = 'pending',
     FINISHED = 'finished',

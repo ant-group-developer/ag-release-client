@@ -2,7 +2,6 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import { useActive } from '@/hooks/use-active';
 import { Form, Input } from 'antd';
-import TextArea from 'antd/es/input/TextArea';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { useGetSetting } from '../../hooks/use-get-setting';
@@ -72,16 +71,11 @@ export default function TelegramForm({}: Props) {
                         },
                     ]}
                 >
-                    <TextArea
-                        autoSize={{
-                            maxRows: 7,
-                            minRows: 3,
-                        }}
-                    />
+                    <Input.Password />
                 </AppFormItem>
                 <AppFormItem
                     name="chatId"
-                    label="chat Id"
+                    label="Chat Id"
                     required
                     rules={[
                         {

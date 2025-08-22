@@ -8,10 +8,11 @@ import { Checkbox, Spin, Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
-import { TRACK_SCAN_STATUS } from '../../enums';
+
+import { SCAN_STATUS } from '../../enums';
 import { useGetDetailScanStatus } from '../../hooks/use-get-scan-status-detail';
 import { TrackScanStatusData } from '../../types';
-import TagScanStatus from '../tags/tag-scan-status';
+import TagScanStatus from '../tags/tag-track-scan-status';
 
 type Props = Omit<AppModalProps, 'children'> & {
     data: TrackScanStatusData | null;
@@ -109,7 +110,7 @@ export default function AcrCloudScanDetailModal({ data, ...props }: Props) {
                     {messages('common.detail')}{' '}
                     {messages('common.scan').toLowerCase()} ACRCloud
                 </span>
-                <TagScanStatus status={data?.status as TRACK_SCAN_STATUS} />
+                <TagScanStatus status={data?.status as SCAN_STATUS} />
             </div>
         );
     };

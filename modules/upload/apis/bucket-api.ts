@@ -1,5 +1,5 @@
 import axiosInstance from '@/api/axios-auth';
-import { CreateBucketFile } from '../types/data';
+import { CreateBucketFile, DownloadNonFile } from '../types/data';
 
 export const bucketApi = {
     createBuckets: async (payload: { bucketDtos: CreateBucketFile[] }) => {
@@ -49,5 +49,9 @@ export const bucketApi = {
 
     getLinkReadFile: (id: string) => {
         return axiosInstance.get(`/bucket/gcs/private/${id}/read`);
+    },
+
+    downloadNonFile: (payload: DownloadNonFile) => {
+        return axiosInstance.post(`/bucket/gcs/non-file/download`, payload);
     },
 };

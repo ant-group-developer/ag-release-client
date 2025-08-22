@@ -8,4 +8,8 @@ export const backupDatabaseApis = {
             '/database'
         );
     },
+
+    backupDatabase: () => {
+        return axiosInstance.post('/database');
+    },
 };

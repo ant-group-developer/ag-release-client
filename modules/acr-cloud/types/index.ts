@@ -1,7 +1,7 @@
 import { TrackData } from '@/modules/tracks/types';
 import { UserDetail } from '@/modules/user/types/data';
 import { CommonAttribute, CommonParams } from '@/types/api';
-import { TRACK_SCAN_STATUS } from '../enums';
+import { SCAN_STATUS } from '../enums';
 
 export interface TrackScanHistoryData extends CommonAttribute {
     trackId: string;
@@ -113,7 +113,7 @@ export interface TrackScanStatusData extends CommonAttribute {
     creatorId: string;
     creator: Pick<UserDetail, 'avatar' | 'name'>;
     modifierId: string;
-    status: TRACK_SCAN_STATUS;
+    status: SCAN_STATUS;
     filter: TrackScanStatusFilter;
     trackNeedScanIds: string[];
     trackScannedIds: string[];

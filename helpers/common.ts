@@ -3,11 +3,8 @@ import {
     LOCALE,
     ORDER,
     ORIENTATION,
-    SCREEN,
     UPLOAD_TYPE,
 } from '@/enums/common';
-import { RELEASES_STATUS } from '@/modules/releases/enums';
-import { GENRES } from '@/modules/tracks/enums';
 import { presetPalettes } from '@ant-design/colors';
 import { DatePickerProps, GetProp, UploadProps } from 'antd';
 import clsx, { ClassValue } from 'clsx';
@@ -15,6 +12,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { parseBlob } from 'music-metadata';
 import { twMerge } from 'tailwind-merge';
+import { getIntlCodeByReleaseStatus } from './intl';
 dayjs.extend(utc);
 /**
  * Extracts media metadata from a file in the browser (Client-Side)
@@ -455,56 +453,6 @@ export const convertSecondsToHoursMinutes = (seconds: number) => {
     return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
 };
 
-type ReleaseStatusMessageKey =
-    | 'common.processing'
-    | 'common.issues'
-    | 'common.neverDistributed'
-    | 'common.distributed'
-    | 'common.takenDown'
-    | 'common.draft';
-export const getIntlCodeByReleaseStatus = (
-    value: string
-): ReleaseStatusMessageKey => {
-    const releaseStatusToMessageMap: Record<string, ReleaseStatusMessageKey> = {
-        [RELEASES_STATUS.PROCESSING]: 'common.processing',
-        [RELEASES_STATUS.ISSUES]: 'common.issues',
-        [RELEASES_STATUS.NEVER_DISTRIBUTED]: 'common.neverDistributed',
-        [RELEASES_STATUS.DISTRIBUTED]: 'common.distributed',
-        [RELEASES_STATUS.TAKEN_DOWN]: 'common.takenDown',
-        [RELEASES_STATUS.DRAFT]: 'common.draft',
-    };
-    return releaseStatusToMessageMap[value] || 'common.processing';
-};
-
-type GenresMessageKey =
-    | 'genres.pop'
-    | 'genres.rock'
-    | 'genres.jazz'
-    | 'genres.country'
-    | 'genres.hipHop'
-    | 'genres.rB'
-    | 'genres.electronic'
-    | 'genres.reggae'
-    | 'genres.rap'
-    | 'genres.blues'
-    | 'genres.classical';
-export const getIntlCodeByGenres = (value: string): GenresMessageKey => {
-    const genresToMessageMap: Record<string, GenresMessageKey> = {
-        [GENRES.POP]: 'genres.pop',
-        [GENRES.ROCK]: 'genres.rock',
-        [GENRES.JAZZ]: 'genres.jazz',
-        [GENRES.COUNTRY]: 'genres.country',
-        [GENRES.HIP_HOP]: 'genres.hipHop',
-        [GENRES.R_B]: 'genres.rB',
-        [GENRES.ELECTRONIC]: 'genres.electronic',
-        [GENRES.REGGAE]: 'genres.reggae',
-        [GENRES.BLUES]: 'genres.blues',
-        [GENRES.CLASSICAL]: 'genres.classical',
-        [GENRES.RAP]: 'genres.rap',
-    };
-    return genresToMessageMap[value] || 'common.pop';
-};
-
 export function parsePeakData(data = '') {
     return data.split(';');
 }
@@ -624,28 +572,6 @@ export const hhmmToSeconds = (hhmm: string) => {
     if (!hhmm) return 0;
     const [h, m] = hhmm.split(':').map(Number);
     return h * 3600 + m * 60;
-};
-
-export const getScrollYHeight = (
-    height?: number | null,
-    width?: number | null,
-    pageHeaderHeight?: number | null,
-    tableHeaderHeight?: number | null
-) => {
-    const isSmallDevice = Number(width) <= SCREEN.MD;
-    if (!width || !height || isSmallDevice) return undefined;
-
-    const minHeight = 300;
-    const appHeaderHeight = 64;
-    const paginationHeight = 57;
-
-    const value =
-        height -
-        appHeaderHeight -
-        (pageHeaderHeight ?? 0) -
-        (tableHeaderHeight ?? 0) -
-        paginationHeight;
-    return value > minHeight ? value : minHeight;
 };
 
 export function getRandomInt(min: number, max: number) {

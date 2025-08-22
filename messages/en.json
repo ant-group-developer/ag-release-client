@@ -37,6 +37,7 @@
         "forbiddenDescription": "Please contact the Admin for more details"
     },
     "common": {
+        "backupNow": "Backup now",
         "name": "Name",
         "setIsDefault": "Set is default",
         "reScan": "Re-scan",
@@ -1378,5 +1379,12 @@
         "friday": "Friday",
         "saturday": "Saturday",
         "sunday": "Sunday"
+    },
+
+    "scanStatus": {
+        "unScanned": "UnScanned",
+        "finished": "No violations",
+        "warning": "Warning",
+        "rejected": "Rejected"
     }
 }

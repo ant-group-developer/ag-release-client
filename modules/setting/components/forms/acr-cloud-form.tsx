@@ -2,6 +2,7 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
+import { getIntlCodeByReleaseStatus } from '@/helpers/intl';
 import { useActive } from '@/hooks/use-active';
 import { RELEASES_STATUS } from '@/modules/releases/enums';
 import { Form, Input, InputNumber, Select, Switch, TimePicker } from 'antd';
@@ -14,7 +15,7 @@ import { UpdateSettingPayload } from '../../types/payload';
 
 type Props = {};
 
-export default function AcrCloudForm({}: Props) {
+export default function ACRCloudForm({}: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
     const { settingData } = useGetSetting();
@@ -70,7 +71,7 @@ export default function AcrCloudForm({}: Props) {
             >
                 <AppFormItem
                     name="acrHost"
-                    label="Acr host"
+                    label="ACR host"
                     required
                     rules={[
                         {
@@ -81,7 +82,7 @@ export default function AcrCloudForm({}: Props) {
                             max: 100,
                             message: messages('validation.stringMax', {
                                 max: 100,
-                                field: 'AcrHost',
+                                field: 'ACRHost',
                             }),
                         },
                     ]}
@@ -90,7 +91,7 @@ export default function AcrCloudForm({}: Props) {
                 </AppFormItem>
                 <AppFormItem
                     name="acrAccessKey"
-                    label="Acr access key"
+                    label="ACR access key"
                     required
                     rules={[
                         {
@@ -101,7 +102,7 @@ export default function AcrCloudForm({}: Props) {
                             max: 100,
                             message: messages('validation.stringMax', {
                                 max: 100,
-                                field: 'Acr accessKey',
+                                field: 'ACR accessKey',
                             }),
                         },
                     ]}
@@ -110,7 +111,7 @@ export default function AcrCloudForm({}: Props) {
                 </AppFormItem>
                 <AppFormItem
                     name="acrAccessSecret"
-                    label="Acr access secret"
+                    label="ACR access secret"
                     required
                     rules={[
                         {
@@ -121,7 +122,7 @@ export default function AcrCloudForm({}: Props) {
                             max: 100,
                             message: messages('validation.stringMax', {
                                 max: 100,
-                                field: 'Acr accessSecret',
+                                field: 'ACR accessSecret',
                             }),
                         },
                     ]}
@@ -146,9 +147,10 @@ export default function AcrCloudForm({}: Props) {
                     <Select
                         mode="multiple"
                         options={Object.values(RELEASES_STATUS).map((item) => ({
-                            label: item,
+                            label: messages(getIntlCodeByReleaseStatus(item)),
                             value: item,
                         }))}
+                        allowClear
                     />
                 </AppFormItem>
                 <AppFormItem
@@ -178,7 +180,7 @@ export default function AcrCloudForm({}: Props) {
                         },
                     ]}
                 >
-                    <InputNumber />
+                    <InputNumber className="!w-full" />
                 </AppFormItem>
                 <AppFormItem
                     name="scoreWarning"
@@ -207,7 +209,18 @@ export default function AcrCloudForm({}: Props) {
                         },
                     ]}
                 >
-                    <InputNumber />
+                    <InputNumber className="!w-full" />
+                </AppFormItem>
+
+                <AppFormItem
+                    name="autoScanTime"
+                    label={messages('tracks.autoScanTime')}
+                >
+                    <TimePicker
+                        format="HH:mm"
+                        showSecond={false}
+                        className="!w-full"
+                    />
                 </AppFormItem>
                 <AppFormItem
                     name="autoScan"
@@ -215,12 +228,6 @@ export default function AcrCloudForm({}: Props) {
                     valuePropName="checked"
                 >
                     <Switch defaultChecked={false} />
-                </AppFormItem>
-                <AppFormItem
-                    name="autoScanTime"
-                    label={messages('tracks.autoScanTime')}
-                >
-                    <TimePicker format="HH:mm" showSecond={false} />
                 </AppFormItem>
             </AppForm>
         </div>

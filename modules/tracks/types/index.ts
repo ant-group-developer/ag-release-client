@@ -11,6 +11,7 @@ import { TrackOriginTypeData } from '@/modules/track-origin-types/types';
 import { TrackTypeData } from '@/modules/track-types/types';
 import { AudioFileBucket } from '@/modules/upload/types/data';
 import { CommonAttribute, CommonParams } from '@/types/api';
+import { SCAN_COPYRIGHT_STATUS } from '../enums';
 
 export interface TrackData extends CommonAttribute {
     title: string;
@@ -46,6 +47,7 @@ export interface TrackData extends CommonAttribute {
     priceTierId: PriceTiersData['id'];
     priceTier: PriceTiersData;
     trackPolicies: TrackPolicyData[];
+    scanCopyrightStatus: SCAN_COPYRIGHT_STATUS;
 }
 export interface TrackDataFilter extends CommonParams {
     releaseId?: string;

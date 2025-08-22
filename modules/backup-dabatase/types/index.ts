@@ -1,4 +1,4 @@
-import { CommonAttribute } from '@/types/api';
+import { CommonAttribute, CommonParams } from '@/types/api';
 
 export interface BackupDatabaseLogData extends CommonAttribute {
     status: string;
@@ -8,3 +8,5 @@ export interface BackupDatabaseLogData extends CommonAttribute {
     fileSize: string;
     elapsedTime: string;
 }
+
+export interface BackupDatabaseLogDataFilter extends CommonParams {}

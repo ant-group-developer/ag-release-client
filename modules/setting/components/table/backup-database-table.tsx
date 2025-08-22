@@ -1,20 +1,35 @@
 import ActionButton from '@/components/ui/button/action-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { formattedDate, formatTime, getIndex } from '@/helpers/common';
+import {
+    formatFileSize,
+    formattedDate,
+    formatTime,
+    getIndex,
+    getSortOrder,
+} from '@/helpers/common';
+import { getIntlCodeByBackupStatus } from '@/helpers/intl';
+import { useApiError } from '@/hooks/use-api-error';
 import useModalStore from '@/hooks/use-modal';
-import { BackupDatabaseLogData } from '@/modules/backup-dabatase/types';
+import {
+    BackupDatabaseLogData,
+    BackupDatabaseLogDataFilter,
+} from '@/modules/backup-dabatase/types';
+import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
+import { STATUS_BACKUP } from '../../enums';
 type Props = Omit<AppTableProps<BackupDatabaseLogData>, 'columns'> & {
+    dataFilter: BackupDatabaseLogDataFilter;
     pagination: {
         pageSize: number;
         current: number;
     };
 };
 
-export const BackupDatabaseLogTable = ({ ...props }: Props) => {
+export const BackupDatabaseLogTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
+    const { handleError } = useApiError();
     const openModal = useModalStore((state) => state.openModal);
 
     const column: ColumnType<BackupDatabaseLogData>[] = [
@@ -37,11 +52,16 @@ export const BackupDatabaseLogTable = ({ ...props }: Props) => {
             dataIndex: 'fileName',
             align: 'left',
             width: 200,
+            ellipsis: true,
             render: (value, record) => (
-                <CustomTooltip title={messages('common.seeMore')}>
+                <CustomTooltip title={value}>
                     <span
                         onClick={() => {
-                            window.open(record?.urlDrive);
+                            window.open(
+                                record?.urlGcs ?? record?.urlDrive,
+                                '_blank',
+                                'noopener,noreferrer'
+                            );
                         }}
                         className="truncate hover:underline"
                     >
@@ -54,24 +74,30 @@ export const BackupDatabaseLogTable = ({ ...props }: Props) => {
             title: messages('common.status'),
             key: 'status',
             dataIndex: 'status',
-            align: 'left',
+            align: 'center',
             width: 100,
-            render: (value) => <span className="truncate">{value}</span>,
+            render: (value) => (
+                <span className="truncate">
+                    {messages(getIntlCodeByBackupStatus(value))}
+                </span>
+            ),
         },
         {
             title: messages('file.fileSize'),
             key: 'fileSize',
             dataIndex: 'fileSize',
-            align: 'left',
+            align: 'center',
             width: 100,
-            render: (value) => <span className="truncate">{value}</span>,
+            render: (value) => (
+                <span className="truncate">{formatFileSize(value)}</span>
+            ),
         },
         {
-            title: 'elapsed Time',
+            title: 'Elapsed Time',
             key: 'elapsedTime',
             dataIndex: 'elapsedTime',
-            align: 'left',
-            width: 100,
+            align: 'center',
+            width: 150,
             render: (value) => (
                 <span className="truncate">{formatTime(value)}</span>
             ),
@@ -81,30 +107,54 @@ export const BackupDatabaseLogTable = ({ ...props }: Props) => {
             key: 'createdAt',
             dataIndex: 'createdAt',
             align: 'center',
-            width: 80,
+            width: 100,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'createdAt'
+            ),
             render: (value) => (
                 <span className="truncate text-wrap">
                     {formattedDate(value)}
                 </span>
             ),
         },
-        {
-            title: messages('common.updatedAt'),
-            key: 'updatedAt',
-            dataIndex: 'updatedAt',
-            align: 'center',
-            width: 80,
-            render: (value) => (
-                <span className="truncate text-wrap">
-                    {formattedDate(value)}
-                </span>
-            ),
-        },
+
         {
             key: 'actions',
             align: 'center',
             width: 50,
-            render: (_, record) => <ActionButton showDownload />,
+            render: (_, record) => (
+                <ActionButton
+                    showDownload={
+                        record?.status === STATUS_BACKUP.SUCCESS &&
+                        (!!record?.urlGcs || !!record?.urlDrive)
+                    }
+                    onShowDownload={async () => {
+                        try {
+                            const linkDownload =
+                                await bucketApi.downloadNonFile({
+                                    fileName: record?.fileName,
+                                    isPublic: false,
+                                    url: record?.urlGcs,
+                                });
+                            if (
+                                linkDownload?.status === 201 ||
+                                linkDownload.status === 200
+                            ) {
+                                window.open(
+                                    linkDownload?.data?.data,
+                                    '_blank',
+                                    'noopener,noreferrer'
+                                );
+                            }
+                        } catch (error) {
+                            handleError(error);
+                        }
+                    }}
+                />
+            ),
         },
     ];
 
