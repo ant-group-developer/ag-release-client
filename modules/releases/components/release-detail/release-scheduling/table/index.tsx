@@ -40,17 +40,20 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
             align: 'left' as const,
             width: 250,
             render: (value: string, record: TrackData) => {
+                const trackPolicy = record.trackPolicies?.find(
+                    (p) => p.dspId === dsp?.id
+                );
                 return (
                     <ActionsDspSelect
                         dspId={dsp?.id}
-                        defaultValue={item?.action?.id}
+                        defaultValue={trackPolicy?.action?.id}
                         disabled={!isCanEdit}
                         className="w-full"
                         onChange={(value) =>
                             updateTrackPolicy({
                                 id: record.id,
                                 actionId: value,
-                                trackPolicyId: item?.id,
+                                trackPolicyId: trackPolicy?.id as string,
                             })
                         }
                     />

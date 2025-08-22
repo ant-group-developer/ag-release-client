@@ -37,6 +37,7 @@
         "forbiddenDescription": "Please contact the Admin for more details"
     },
     "common": {
+        "name": "Name",
         "setIsDefault": "Set is default",
         "reScan": "Re-scan",
         "accuracy": "Accuracy",
@@ -359,7 +360,20 @@
         "assignee": "Setting Assignee",
         "reviewer": "Setting Reviewer",
         "rate": "Setting Rate",
-        "quickSetting": "Quick setting"
+        "quickSetting": "Quick setting",
+        "executeCycle": "Execute cycle",
+        "backupNotification": "Backup notification",
+        "notifyOnSuccess": "Notify on success",
+        "notifyOnFailed": "Notify on failed",
+        "executeMessages": {
+            "daily": "Everyday {at} execute once",
+            "nDays": "Every {days} days {at} execute once",
+            "hourly": "Executed every {minute} minute of the hour",
+            "nHours": "Starting at 00:00 every day, every {hour} hour, every {minute} minute",
+            "nMinutes": "Starting at minute 0 of each hour and executed every {minutes} minutes",
+            "weekly": "{hours}:{minutes} of {dayOfWeek} once a week",
+            "monthly": "Executed once a month on {days} of {hours}:{minutes}"
+        }
     },
     "log": {
         "label": "Log"
@@ -742,6 +756,10 @@
         "totalTrackNeedScan": "Total tracks need scan",
         "numberOfTracksScanned": "Number of tracks scanned",
         "scanDate": "Date scan",
+        "autoScan": "Auto scan",
+        "scoreWarning": "Score warning",
+        "autoScanTime": "Auto scan time",
+        "releaseStatusAutoScan": "Release status auto scan",
         "status": {
             "scanning": "Scanning",
             "running": "Running",
@@ -1350,5 +1368,15 @@
                 "currencyNotFound": "Currency not found"
             }
         }
+    },
+
+    "weekDays": {
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
     }
 }

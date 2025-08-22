@@ -37,6 +37,7 @@
         "forbiddenDescription": "Please contact the Admin for more details"
     },
     "common": {
+        "name": "Tên",
         "setIsDefault": "Đặt làm mặc định",
         "reScan": "Quét lại",
         "accuracy": "Độ chính xác",
@@ -359,7 +360,20 @@
         "assignee": "Cài đặt người thực hiện",
         "reviewer": "Cài đặt người duyệt",
         "rate": "Cài đặt điểm",
-        "quickSetting": "Cài đặt nhanh"
+        "quickSetting": "Cài đặt nhanh",
+        "executeCycle": "Chu kỳ thực thi",
+        "backupNotification": "Thông báo sao lưu",
+        "notifyOnSuccess": "Thông báo khi thành công",
+        "notifyOnFailed": "Thông báo khi thất bại",
+        "executeMessages": {
+            "daily": "Mỗi ngày vào giờ {at} thực thi một lần",
+            "nDays": "Cứ mỗi {days} ngày {at} thực thi một lần",
+            "hourly": "Thực thi vào phút thứ {minute} của mỗi giờ",
+            "nHours": "Bắt đầu lúc 00:00 hằng ngày, cứ mỗi {hour}:{minute} phút thực thi một lần",
+            "nMinutes": "Bắt đầu từ phút 0 của mỗi giờ và thực thi cứ mỗi {minutes} phút",
+            "weekly": "{hours}:{minutes} giờ vào thứ {dayOfWeek}, thực thi mỗi tuần một lần",
+            "monthly": "Thực thi mỗi tháng một lần vào ngày {days} lúc {hours}:{minutes} giờ"
+        }
     },
     "log": {
         "label": "Log"
@@ -743,6 +757,10 @@
         "totalTrackNeedScan": "Tổng các bài hát cần quét",
         "numberOfTracksScanned": "Các bài hát đã quét",
         "scanDate": "Ngày quét",
+        "autoScan": "Tự động quét",
+        "scoreWarning": "Điểm cảnh báo",
+        "autoScanTime": "Giờ tự động quét",
+        "releaseStatusAutoScan": "Trạng thái tự động quét",
         "status": {
             "scanning": "Đang quét",
             "running": "Đang chạy",
@@ -1358,5 +1376,15 @@
                 "currencyNotFound": "Không tìm thấy tiền tệ"
             }
         }
+    },
+
+    "weekDays": {
+        "monday": "Thứ Hai",
+        "tuesday": "Thứ Ba",
+        "wednesday": "Thứ Tư",
+        "thursday": "Thứ Năm",
+        "friday": "Thứ Sáu",
+        "saturday": "Thứ Bảy",
+        "sunday": "Chủ Nhật"
     }
 }

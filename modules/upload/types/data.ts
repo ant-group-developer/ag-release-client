@@ -67,3 +67,13 @@ export interface CreateBucketFile {
     };
     key?: string;
 }
+
+export enum ENTITY_TYPE_PICTURE {
+    ARTIST = 'artists',
+    DSP = 'dsps',
+    LABEL = 'labels',
+    GENRE = 'genres',
+    TRACK = 'tracks',
+    TENANT = 'tenants',
+    LOGO = 'logo',
+}

@@ -7,6 +7,7 @@ import { getCodeFormatted } from '@/helpers/string';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { uploadApi } from '@/modules/upload/apis';
+import { ENTITY_TYPE_PICTURE } from '@/modules/upload/types/data';
 import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form, Input } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -75,7 +76,7 @@ export default function GenresFormModal({ ...props }: Props) {
         const payloadValues = res;
         if (file) {
             const dataPayload = {
-                entityType: 'genres',
+                entityType: ENTITY_TYPE_PICTURE.GENRE,
                 fileName: file.name,
                 contentType: file.type,
                 fileSize: file.size,
