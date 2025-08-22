@@ -4,7 +4,7 @@ import { DetailResponse, PaginationResponse } from '@/types/api';
 import { DspActionData, DspActionDataFilter } from '../types';
 
 export const dspActionApis = {
-    getListActionByDspId: (id: DspData['id']) => {
+    getListDspActionByDspId: (id: DspData['id']) => {
         return axiosInstance.get<DetailResponse<DspActionData[]>>(
             `/dsps/${id}/dsp-actions`
         );

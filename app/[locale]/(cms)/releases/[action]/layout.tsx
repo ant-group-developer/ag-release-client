@@ -1,4 +1,6 @@
 'use client';
+import { SIZE_ICON_SMALL } from '@/constants/common';
+import { APP_ROUTES } from '@/enums/routes';
 import { cn } from '@/helpers/common';
 import {
     getReleaseDetailTabRoute,
@@ -17,6 +19,7 @@ import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-rel
 import { useReleaseDetailActionStore } from '@/modules/releases/hooks/use-release-action-store';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { Button, Tabs, TabsProps, theme } from 'antd';
+import { ArrowLeft } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname } from 'next/navigation';
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
@@ -243,10 +246,22 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
 
     return (
         <div className="flex h-full overflow-auto" ref={scrollContainerRef}>
-            <div className="flex h-[calc(100vh-4rem)] flex-1 flex-col">
-                <div className="sticky top-0 z-10">
+            <div className="mx-auto flex h-[calc(100vh-4rem)] max-w-screen-xl flex-1 flex-col">
+                <div
+                    className="sticky top-0 z-10"
+                    style={{
+                        backgroundColor: token.colorBgContainer,
+                    }}
+                >
+                    <Link
+                        href={APP_ROUTES.RELEASES}
+                        className="flex w-fit items-center gap-1 py-2 hover:underline"
+                    >
+                        <ArrowLeft size={SIZE_ICON_SMALL} />
+                        {messages('releases.back')}
+                    </Link>
                     <ReleaseDetailHeader isScrolled={isScrolled} />
-                    <div className="px-4">
+                    <div>
                         <Tabs
                             className="tab-release-detail !pt-0"
                             style={{
@@ -258,7 +273,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                         />
                     </div>
                 </div>
-                <div className="flex-1">{children}</div>
+                <div>{children}</div>
             </div>
             <RightSidebar />
         </div>

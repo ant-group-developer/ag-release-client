@@ -1,4 +1,5 @@
 import { ORDER } from '@/enums/common';
+import { ENTITY_TYPE_PICTURE } from '@/modules/upload/types/data';
 
 export interface PaginationResponse<T = any> {
     data: {
@@ -109,7 +110,7 @@ export interface CreateFile {
 
 export interface UploadPayload {
     infoFile: {
-        entityType: string;
+        entityType: ENTITY_TYPE_PICTURE;
         fileName: string;
         contentType: string;
         fileSize: number;

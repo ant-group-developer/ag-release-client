@@ -1,6 +1,7 @@
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import { useActive } from '@/hooks/use-active';
 import { uploadApi } from '@/modules/upload/apis';
+import { ENTITY_TYPE_PICTURE } from '@/modules/upload/types/data';
 import { Form } from 'antd';
 import { useTranslations } from 'next-intl';
 import { TENANT_TYPE } from '../../enums';
@@ -31,7 +32,7 @@ function CreateTenantModal({ ...props }: Props) {
             if (iconFile) {
                 iconUrl = await uploadApi.uploadFile({
                     infoFile: {
-                        entityType: 'tenants',
+                        entityType: ENTITY_TYPE_PICTURE.TENANT,
                         fileName: iconFile.name,
                         contentType: iconFile.type,
                         fileSize: iconFile.size,
@@ -43,7 +44,7 @@ function CreateTenantModal({ ...props }: Props) {
             if (logoFile) {
                 logoUrl = await uploadApi.uploadFile({
                     infoFile: {
-                        entityType: 'tenants',
+                        entityType: ENTITY_TYPE_PICTURE.TENANT,
                         fileName: logoFile.name,
                         contentType: logoFile.type,
                         fileSize: logoFile.size,

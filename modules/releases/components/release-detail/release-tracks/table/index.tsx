@@ -104,7 +104,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             width: 300,
             render: (value, record, index) => {
                 return (
-                    <div className="w-[330px]">
+                    <div className="w-[300px]">
                         <TrackWaveform
                             key={`${record.id}-${index}`}
                             data={record}
@@ -118,7 +118,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             dataIndex: 'title',
             key: 'title',
             align: 'left',
-            width: 300,
+            width: 250,
             render: (value, record) => {
                 return (
                     <Input

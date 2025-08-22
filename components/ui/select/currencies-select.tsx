@@ -35,7 +35,7 @@ export default function CurrenciesSelect({ fallBack, ...props }: Props) {
             options={currenciesData.items.map((item) => ({
                 id: item.id,
                 value: item.id,
-                label: item.name,
+                label: `${item.code} - ${item.name}`,
             }))}
             labelRender={labelRender}
         />

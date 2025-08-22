@@ -224,8 +224,8 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                 layout="vertical"
                 showSubmit={false}
             >
-                <div className="flex justify-between px-4 py-2">
-                    <div className="flex w-full gap-4">
+                <div className="flex justify-between py-2">
+                    <div className="flex w-full items-start gap-4">
                         <CustomTooltip
                             title={
                                 <>
@@ -255,7 +255,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                     className={cn(
                                         'release-detail-header-upload !aspect-square !size-28 !rounded-lg !border-0 !p-0 transition-all duration-300',
                                         {
-                                            '!size-14 transition-all duration-300':
+                                            '!size-16 transition-all duration-300':
                                                 isScrolled,
                                         }
                                     )}
@@ -272,9 +272,9 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                         <div>
                             <div
                                 className={cn(
-                                    'grid grid-cols-2 gap-x-8 gap-y-4',
+                                    'flex flex-col flex-wrap content-start gap-x-8 gap-y-2',
                                     {
-                                        'grid-cols-3': isScrolled,
+                                        'h-16': isScrolled,
                                     }
                                 )}
                             >

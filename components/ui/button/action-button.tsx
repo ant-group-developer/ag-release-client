@@ -3,6 +3,7 @@ import { Dropdown, MenuProps } from 'antd';
 import {
     CirclePlay,
     CircleX,
+    Download,
     Eye,
     MessageCircleMore,
     MoreVertical,
@@ -22,7 +23,8 @@ interface Props {
     showUpload?: boolean;
     showCancel?: boolean;
     showContinue?: boolean;
-
+    showDownload?: boolean;
+    onShowDownload?: MouseEventHandler<HTMLElement>;
     onShowContinue?: MouseEventHandler<HTMLElement>;
     onShowCancel?: MouseEventHandler<HTMLElement>;
     onShowUpload?: MouseEventHandler<HTMLElement>;
@@ -40,6 +42,7 @@ enum ACTION_BUTTON {
     UPLOAD = 'upload',
     CANCEL = 'cancel',
     CONTINUE = 'continue',
+    DOWNLOAD = 'download',
 }
 
 export default function ActionButton({
@@ -50,7 +53,8 @@ export default function ActionButton({
     showUpload,
     showCancel,
     showContinue,
-
+    showDownload,
+    onShowDownload,
     onShowContinue,
     onShowCancel,
     onShowComment,
@@ -61,6 +65,17 @@ export default function ActionButton({
 }: Props) {
     const messages = useTranslations();
     const items: MenuProps['items'] = [];
+    if (showDownload) {
+        items.push({
+            key: ACTION_BUTTON.DOWNLOAD,
+            label: (
+                <div className="flex items-center gap-2">
+                    <Download size={SIZE_ICON_SMALL} />
+                    {messages('common.download')}
+                </div>
+            ),
+        });
+    }
     if (showComment) {
         items.push({
             key: ACTION_BUTTON.COMMENT,
@@ -159,6 +174,7 @@ export default function ActionButton({
             [ACTION_BUTTON.UPLOAD]: onShowUpload,
             [ACTION_BUTTON.CANCEL]: onShowCancel,
             [ACTION_BUTTON.CONTINUE]: onShowContinue,
+            [ACTION_BUTTON.DOWNLOAD]: onShowDownload,
         };
 
         const callback = callbacks[key];

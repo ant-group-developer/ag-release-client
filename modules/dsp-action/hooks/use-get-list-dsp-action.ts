@@ -8,6 +8,7 @@ export const useGetListDspAction = (params: DspActionDataFilter) => {
     const { data, ...res } = useQuery({
         queryKey: dspActionQueryKeys.lists(),
         queryFn: () => dspActionApis.getListDspAction(params),
+        placeholderData: (prev) => prev,
     });
 
     const dspActionsData = data?.data?.data ?? DEFAULT_DATA_PAGINATION;

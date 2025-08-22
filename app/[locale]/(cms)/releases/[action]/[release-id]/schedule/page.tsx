@@ -4,13 +4,13 @@ import { useThemeStore } from '@/hooks/use-theme-store';
 import ReleaseSchedulingForm from '@/modules/releases/components/release-detail/release-scheduling/form';
 import ReleaseSchedulingTable from '@/modules/releases/components/release-detail/release-scheduling/table';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
-import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
+import { useGetListTracksWithPolicies } from '@/modules/tracks/hooks/use-get-list-tracks-with-policies';
 import { ConfigProvider } from 'antd';
 
 export default function Schedule() {
     const formValues = useReleaseFormStore((state) => state.formValues);
 
-    const { tracksData, isFetching } = useGetListTracks({
+    const { tracksData, isFetching } = useGetListTracksWithPolicies({
         releaseId: formValues.id,
     });
 
@@ -24,14 +24,14 @@ export default function Schedule() {
 
     return (
         <ConfigProvider theme={customTheme}>
-            <div className="w-full space-y-4 p-4">
+            <div className="w-full space-y-4 py-4">
                 <ReleaseSchedulingForm />
 
                 <ReleaseSchedulingTable
                     dataSource={tracksData?.items}
                     loading={isFetching}
                     scroll={{
-                        x: SCREEN.SM,
+                        x: SCREEN.XL,
                     }}
                 />
             </div>

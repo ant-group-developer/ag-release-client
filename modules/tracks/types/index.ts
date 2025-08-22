@@ -1,7 +1,10 @@
 import { OriginType } from '@/components/ui/select/original-type-select';
+import { ActionsData } from '@/modules/actions/types';
 import { CountriesData } from '@/modules/countries/types';
+import { DspData } from '@/modules/dsp/types';
 import { GenresData } from '@/modules/genres/types';
 import { LanguagesData } from '@/modules/languages/types';
+import { PriceTiersData } from '@/modules/price_tiers/types';
 import { ReleasesData } from '@/modules/releases/types';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { TrackOriginTypeData } from '@/modules/track-origin-types/types';
@@ -40,6 +43,21 @@ export interface TrackData extends CommonAttribute {
         ReleasesData,
         'id' | 'title' | 'label' | 'coverArtThumbnails'
     >;
+    priceTierId: PriceTiersData['id'];
+    priceTier: PriceTiersData;
+    trackPolicies: TrackPolicyData[];
+}
+export interface TrackDataFilter extends CommonParams {
+    releaseId?: string;
+    artistId?: string;
+    isScanned?: string;
+}
+
+export interface TrackPolicyData extends CommonAttribute {
+    actionId: string;
+    dspId: string;
+    dsp: DspData;
+    action: ActionsData;
 }
 
 export interface TrackLanguage {
@@ -50,10 +68,4 @@ export interface TrackLanguage {
     recordingCountry: CountriesData | null;
     audioLanguage: LanguagesData | null;
     metadataLanguageCountry: CountriesData | null;
-}
-
-export interface TrackDataFilter extends CommonParams {
-    releaseId?: string;
-    artistId?: string;
-    isScanned?: string;
 }

@@ -178,3 +178,13 @@ export enum DISTRIBUTE_TYPES {
     DISTRIBUTE_ONLY_IN = 'distribute_only_in',
     DISTRIBUTE_EVERY_WHERE_EXCEPT = 'distribute_everywhere_except',
 }
+
+export enum WEEK_DAY {
+    MONDAY = 'MONDAY',
+    TUESDAY = 'TUESDAY',
+    WEDNESDAY = 'WEDNESDAY',
+    THURSDAY = 'THURSDAY',
+    FRIDAY = 'FRIDAY',
+    SATURDAY = 'SATURDAY',
+    SUNDAY = 'SUNDAY',
+}
