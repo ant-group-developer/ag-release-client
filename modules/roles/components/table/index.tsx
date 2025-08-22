@@ -1,4 +1,5 @@
 import ActionButton from '@/components/ui/button/action-button';
+import CopyText from '@/components/ui/copy-text/copy-text';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
@@ -41,32 +42,34 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
             width: 150,
             ellipsis: true,
             render: (value, record) => (
-                <span className="flex items-center gap-1">
-                    <Badge color={record?.color} />
-                    <span className="truncate">{value}</span>
-                </span>
+                <CopyText text={value} className="flex items-center gap-2">
+                    <Badge color={record.color} />
+                    <span className="flex-1 truncate">{value}</span>
+                </CopyText>
             ),
         },
-        // {
-        //     title: messages('common.color'),
-        //     key: 'color',
-        //     dataIndex: 'color',
-        //     align: 'left',
-        //     width: 100,
-
-        //     render: (value) => <AppColorPicker value={value} disabled />,
-        // },
+        {
+            title: messages('common.code'),
+            key: 'code',
+            dataIndex: 'code',
+            align: 'left',
+            width: 150,
+            ellipsis: true,
+            render: (value) => <CopyText text={value} />,
+        },
         {
             title: messages('common.note'),
             key: 'note',
             dataIndex: 'note',
             align: 'left',
-            width: 200,
-
+            width: 300,
+            ellipsis: true,
             render: (value) => (
-                <span className="line-clamp-3 truncate whitespace-pre-line">
-                    {value}
-                </span>
+                <CopyText text={value}>
+                    <span className="line-clamp-3 truncate whitespace-pre-line">
+                        {value}
+                    </span>
+                </CopyText>
             ),
         },
 
@@ -75,7 +78,7 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
             key: 'createdAt',
             dataIndex: 'createdAt',
             align: 'center',
-            width: 80,
+            width: 120,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -93,7 +96,7 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
             key: 'updatedAt',
             dataIndex: 'updatedAt',
             align: 'center',
-            width: 80,
+            width: 120,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -109,7 +112,7 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
         {
             key: 'actions',
             align: 'center',
-            width: 30,
+            width: 80,
             render: (_, record) => (
                 <ActionButton
                     showDelete

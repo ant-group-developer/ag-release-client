@@ -7,8 +7,8 @@ import {
     RefreshDto,
     SigninDto,
     SwitchTenantDto,
+    UserInfoData,
 } from '../types/auth';
-import { UserInfoData } from '../types/common';
 
 const axiosAuth: AxiosInstance = axios.create({
     baseURL: process.env.API_URL + '/auth',

@@ -1,13 +1,14 @@
 'use client';
 
 import AppContainer from '@/components/ant-music/app-container';
+import SubmitButton from '@/components/ui/button/submit-button';
 import { useActive } from '@/hooks/use-active';
 import TenantForm from '@/modules/tenant/components/tenant-create/tenant-form';
 import { useTenantDetail } from '@/modules/tenant/hooks/use-get-tenant';
 import { useUpdateTenant } from '@/modules/tenant/hooks/use-update-tenant';
 import { UpdateTenant, UpdateTenantPayload } from '@/modules/tenant/types/data';
 import { uploadApi } from '@/modules/upload/apis';
-import { Button, Form } from 'antd';
+import { Form } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useEffect } from 'react';
@@ -127,9 +128,10 @@ function DetailTenantPage({}: Props) {
 
     return (
         <AppContainer>
-            <div className="">
+            <div className="max-w-screen-xl">
                 <TenantForm
-                    className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3"
+                    layout="vertical"
+                    className="grid grid-cols-1 gap-5 lg:grid-cols-2"
                     form={form}
                     submitProps={{ loading: isActive }}
                     excludeIds={[tenantId]}
@@ -137,13 +139,7 @@ function DetailTenantPage({}: Props) {
                     canChangeParent
                 />
                 <div className="text-right">
-                    <Button
-                        onClick={onFinish}
-                        type="primary"
-                        loading={isActive}
-                    >
-                        {messages('common.submit')}
-                    </Button>
+                    <SubmitButton onClick={onFinish} loading={isActive} />
                 </div>
             </div>
         </AppContainer>

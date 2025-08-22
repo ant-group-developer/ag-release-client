@@ -1,35 +1,52 @@
 'use client';
 
-import { Layout, SiderProps } from 'antd';
+import TenantSwitch from '@/modules/tenant/components/tenant-switch';
+import { Drawer, DrawerProps, Layout, SiderProps } from 'antd';
 import { useResponsive } from 'antd-style';
 import { Scrollbars } from 'react-custom-scrollbars';
 import SidebarMenu from './side-bar-menu';
 
-type Props = {} & SiderProps;
+type Props = {
+    drawerProps?: DrawerProps;
+} & SiderProps;
 
 const { Sider } = Layout;
 
-function Sidebar({ collapsed, onBreakpoint, ...props }: Props) {
+function Sidebar({ collapsed, drawerProps, ...props }: Props) {
     const responsive = useResponsive();
 
+    if (responsive.desktop) {
+        return (
+            <Sider
+                className="border-r dark:border-zinc-800"
+                collapsible
+                width={255}
+                collapsedWidth={50}
+                theme="light"
+                collapsed={collapsed}
+                trigger={null}
+                {...props}
+            >
+                <div className="h-[calc(100vh-5rem)]">
+                    {/* @ts-ignore */}
+                    <Scrollbars autoHide>
+                        <SidebarMenu />
+                    </Scrollbars>
+                </div>
+            </Sider>
+        );
+    }
+
     return (
-        <Sider
-            className="border-r dark:border-zinc-800"
-            collapsible
-            width={255}
-            collapsedWidth={responsive.desktop ? 50 : 0}
-            theme="light"
-            collapsed={collapsed}
-            trigger={null}
-            {...props}
+        <Drawer
+            open={collapsed}
+            placement="left"
+            {...drawerProps}
+            title={<TenantSwitch />}
+            closeIcon={null}
         >
-            <div className="h-[calc(100vh-5rem)]">
-                {/* @ts-ignore */}
-                <Scrollbars autoHide>
-                    <SidebarMenu />
-                </Scrollbars>
-            </div>
-        </Sider>
+            <SidebarMenu />
+        </Drawer>
     );
 }
 

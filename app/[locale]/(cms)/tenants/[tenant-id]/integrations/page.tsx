@@ -3,6 +3,7 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ActionButton from '@/components/ui/button/action-button';
+import SubmitButton from '@/components/ui/button/submit-button';
 import CopyText from '@/components/ui/copy-text/copy-text';
 import ImageFallback from '@/components/ui/image/image-fallback';
 import AppModal from '@/components/ui/modal/normal-modal';
@@ -13,15 +14,29 @@ import useModalStore from '@/hooks/use-modal';
 import { DSP_DEAL, TYPE_MODAL_DSP } from '@/modules/dsp/enums';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { DspData } from '@/modules/dsp/types';
+import { useTenantDsp } from '@/modules/tenant/hooks/use-get-tenant';
+import { useUpdateTenantDsp } from '@/modules/tenant/hooks/use-update-tenant';
 import { CheckCard } from '@ant-design/pro-components';
-import { Alert, Col, Form, Input, InputNumber, Row } from 'antd';
+import { Alert, Col, Form, Input, InputNumber, Row, Switch } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 type Props = {};
 
+type DataSource = Pick<DspData, 'id' | 'name' | 'picture' | 'updatedAt'> & {
+    isActive: boolean;
+    isSelected: boolean;
+};
+
 function TenantDeals({}: Props) {
     const messages = useTranslations();
+
+    const [dataSource, setDataSource] = useState<DataSource[]>([]);
+
+    const value = useParams();
+    const tenantId = value['tenant-id'] as string;
 
     const openModal = useModalStore((state) => state.openModal);
     const closeModal = useModalStore((state) => state.closeModal);
@@ -30,8 +45,10 @@ function TenantDeals({}: Props) {
     const { dspData, isFetching } = useGetListDsp({
         pageSize: 999,
     });
+    const { dataTenantDsp } = useTenantDsp(tenantId);
+    const { updateTenantDsp, isPending } = useUpdateTenantDsp();
 
-    const column: ColumnType<DspData>[] = [
+    const column: ColumnType<DataSource>[] = [
         {
             title: messages('common.iNo'),
             key: 'iNo',
@@ -82,6 +99,24 @@ function TenantDeals({}: Props) {
             },
         },
         {
+            title: messages('status.label'),
+            key: 'isActive',
+            dataIndex: 'isActive',
+            align: 'center',
+            width: 150,
+            render: (value, record, index) => (
+                <Switch
+                    disabled={!record.isSelected}
+                    checked={record.isActive}
+                    onChange={(value) => {
+                        const newDataSource = structuredClone(dataSource);
+                        newDataSource[index].isActive = value;
+                        setDataSource(newDataSource);
+                    }}
+                />
+            ),
+        },
+        {
             title: messages('common.updatedAt'),
             key: 'updatedAt',
             dataIndex: 'updatedAt',
@@ -109,13 +144,63 @@ function TenantDeals({}: Props) {
         },
     ];
 
+    const onSubmit = () => {
+        const data: any[] = [];
+        dataSource.forEach((item) => {
+            if (item.isSelected) {
+                data.push({
+                    dspId: item.id,
+                    isActive: item.isActive,
+                });
+            }
+        });
+
+        updateTenantDsp({
+            payload: { tenantId, data },
+        });
+    };
+
+    useEffect(() => {
+        const newDataSource: DataSource[] = dspData.items?.map((item) => {
+            const data = dataTenantDsp.find((i) => i.dsp.id === item.id);
+            return {
+                id: item.id,
+                name: item.name,
+                picture: item.picture,
+                updatedAt: item.updatedAt,
+                isActive: Boolean(data?.isActive),
+                isSelected: Boolean(data),
+            };
+        });
+        setDataSource(newDataSource);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [JSON.stringify(dspData.items), JSON.stringify(dataTenantDsp)]);
+
     return (
         <div>
             <AppTable
+                sticky={{ offsetHeader: 178 }}
                 columns={column}
-                dataSource={dspData.items}
+                dataSource={dataSource}
                 loading={isFetching}
+                rowSelection={{
+                    selectedRowKeys: dataSource
+                        .filter((item) => item.isSelected)
+                        .map((item) => item.id),
+                    onChange: (keys) => {
+                        setDataSource((prev) =>
+                            prev.map((item) => ({
+                                ...item,
+                                isSelected: keys.some((key) => key === item.id),
+                            }))
+                        );
+                    },
+                }}
             />
+
+            <div className="mt-2 text-right">
+                <SubmitButton onClick={onSubmit} loading={isPending} />
+            </div>
 
             <AppModal
                 title={messages('integration.deal.title')}

@@ -17,7 +17,10 @@ export function useApiError() {
 
         if (error instanceof AxiosError) {
             const errorResponse = error.response?.data as ApiErrorResponse;
-            if (errorResponse?.messageCode) {
+            if (
+                errorResponse?.messageCode &&
+                messages.has(errorResponse.messageCode as any)
+            ) {
                 messageList.push(errorResponse.messageCode);
             } else {
                 if (Array.isArray(errorResponse.message)) {

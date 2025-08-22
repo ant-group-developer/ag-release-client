@@ -60,4 +60,8 @@ export const userApi = {
     syncData() {
         return axiosInstance.post(`/users/sync-data`);
     },
+
+    remove(id: string) {
+        return axiosInstance.delete<DetailResponse<UserDetail>>(`/users/${id}`);
+    },
 };

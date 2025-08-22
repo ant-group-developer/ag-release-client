@@ -1,4 +1,7 @@
 import { Locale } from '@/i18n/routing';
+import { TENANT_USER_TYPE } from '@/modules/tenant/enums';
+import { TenantData } from '@/modules/tenant/types/data';
+import { UserDetail } from '@/modules/user/types/data';
 
 export interface SigninDto {
     email: string;
@@ -30,3 +33,12 @@ export interface JwtPayload {
 export interface SwitchTenantDto {
     tenantId: string;
 }
+
+export type UserInfoData = Pick<
+    UserDetail,
+    'id' | 'name' | 'avatar' | 'isActive' | 'email' | 'type'
+> & {
+    permission: string[];
+    tenantId: TenantData['id'];
+    tenantType: TENANT_USER_TYPE;
+};

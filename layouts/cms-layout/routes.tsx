@@ -1,5 +1,8 @@
 import { APP_ROUTES } from '@/enums/routes';
 import { PERMISSION } from '@/modules/auth/constants/permission';
+import { SYSTEM_TENANT_ID } from '@/modules/tenant/constants';
+import { TENANT_USER_TYPE } from '@/modules/tenant/enums';
+import { USER_TYPE } from '@/modules/user/enums';
 import {
     Banknote,
     BellElectric,
@@ -29,6 +32,11 @@ import {
 } from 'lucide-react';
 import { ForwardRefExoticComponent, RefAttributes } from 'react';
 
+export type RouteRequired =
+    | { userType: USER_TYPE[]; tenantId: string[] }
+    | { tenantType: TENANT_USER_TYPE[] }
+    | { permission: string[] };
+
 export type AdminRoutesChildType = {
     id: string;
     label: any;
@@ -37,7 +45,7 @@ export type AdminRoutesChildType = {
         Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>
     >;
     title: string;
-    permission: string;
+    required?: RouteRequired;
     hidden?: boolean;
     external?: boolean;
 };
@@ -53,21 +61,15 @@ export const adminRoutes: AdminRoutesType[] = [
         id: 'management',
         label: 'common.management',
         children: [
-            // {
-            //     id: 'release-detail',
-            //     label: 'releases.create',
-            //     href: APP_ROUTES.CREATE_RELEASE,
-            //     icon: Plus,
-            //     title: 'release-detail',
-            //     permission: PERMISSION.RELEASE.CREATE,
-            // },
             {
                 id: 'dashboard',
                 label: 'dashboard.label',
                 href: APP_ROUTES.DASHBOARD,
                 icon: House,
                 title: 'Dashboard',
-                permission: PERMISSION.STATISTIC.READ,
+                required: {
+                    permission: [PERMISSION.DASHBOARD.READ],
+                },
             },
             {
                 id: 'releases',
@@ -75,7 +77,9 @@ export const adminRoutes: AdminRoutesType[] = [
                 href: APP_ROUTES.RELEASES,
                 icon: DiscAlbum,
                 title: 'Releases',
-                permission: PERMISSION.RELEASE.READ,
+                required: {
+                    permission: [PERMISSION.RELEASE.READ],
+                },
             },
             {
                 id: 'tracks',
@@ -83,7 +87,9 @@ export const adminRoutes: AdminRoutesType[] = [
                 href: APP_ROUTES.TRACKS,
                 icon: Music,
                 title: 'Tracks',
-                permission: PERMISSION.TRACK.READ,
+                required: {
+                    permission: [PERMISSION.TRACK.READ],
+                },
             },
             {
                 id: 'distribution',
@@ -91,7 +97,12 @@ export const adminRoutes: AdminRoutesType[] = [
                 href: APP_ROUTES.DISTRIBUTION,
                 icon: Box,
                 title: 'Distribution',
-                permission: PERMISSION.DISTRIBUTION.READ,
+                required: {
+                    permission: [
+                        PERMISSION.RELEASE.PUBLISH,
+                        PERMISSION.RELEASE.UNPUBLISH,
+                    ],
+                },
             },
         ],
     },
@@ -105,7 +116,9 @@ export const adminRoutes: AdminRoutesType[] = [
                 href: APP_ROUTES.ARTISTS,
                 icon: User,
                 title: 'Artists',
-                permission: PERMISSION.ARTIST.READ,
+                required: {
+                    permission: [PERMISSION.ARTIST.READ],
+                },
             },
             {
                 id: 'labels',
@@ -113,24 +126,19 @@ export const adminRoutes: AdminRoutesType[] = [
                 href: APP_ROUTES.LABELS,
                 icon: MicVocal,
                 title: 'Labels',
-                permission: PERMISSION.LABEL.READ,
+                required: {
+                    permission: [PERMISSION.LABEL.READ],
+                },
             },
-            {
-                id: 'genres',
-                label: 'common.genres',
-                href: APP_ROUTES.GENRES,
-                icon: Library,
-                title: 'Genres',
-                permission: PERMISSION.DISTRIBUTION.READ,
-            },
-
             {
                 id: 'dsp',
                 label: 'dsp.label',
                 href: APP_ROUTES.DSP,
                 icon: SquareActivity,
                 title: 'Dsp',
-                permission: PERMISSION.DISTRIBUTION.READ,
+                required: {
+                    permission: [PERMISSION.DSP.READ],
+                },
             },
         ],
     },
@@ -139,12 +147,26 @@ export const adminRoutes: AdminRoutesType[] = [
         label: 'common.systemCategories',
         children: [
             {
+                id: 'genres',
+                label: 'common.genres',
+                href: APP_ROUTES.GENRES,
+                icon: Library,
+                title: 'Genres',
+                required: {
+                    userType: [USER_TYPE.ADMIN],
+                    tenantId: [SYSTEM_TENANT_ID],
+                },
+            },
+            {
                 id: 'currencies',
                 label: 'currencies.label',
                 href: APP_ROUTES.CURRENCIES,
                 icon: Banknote,
                 title: 'currencies',
-                permission: PERMISSION.DISTRIBUTION.READ,
+                required: {
+                    userType: [USER_TYPE.ADMIN],
+                    tenantId: [SYSTEM_TENANT_ID],
+                },
             },
             {
                 id: 'priceTiers',
@@ -152,7 +174,10 @@ export const adminRoutes: AdminRoutesType[] = [
                 href: APP_ROUTES.PRICE_TIERS,
                 icon: CircleDollarSign,
                 title: 'priceTiers',
-                permission: PERMISSION.DISTRIBUTION.READ,
+                required: {
+                    userType: [USER_TYPE.ADMIN],
+                    tenantId: [SYSTEM_TENANT_ID],
+                },
             },
             {
                 id: 'actions',
@@ -160,7 +185,10 @@ export const adminRoutes: AdminRoutesType[] = [
                 href: APP_ROUTES.ACTIONS,
                 icon: BookA,
                 title: 'actions',
-                permission: PERMISSION.DISTRIBUTION.READ,
+                required: {
+                    userType: [USER_TYPE.ADMIN],
+                    tenantId: [SYSTEM_TENANT_ID],
+                },
             },
             {
                 id: 'release-type',
@@ -168,7 +196,10 @@ export const adminRoutes: AdminRoutesType[] = [
                 href: APP_ROUTES.RELEASE_TYPE,
                 icon: BellElectric,
                 title: 'release-type',
-                permission: PERMISSION.DISTRIBUTION.READ,
+                required: {
+                    userType: [USER_TYPE.ADMIN],
+                    tenantId: [SYSTEM_TENANT_ID],
+                },
             },
             {
                 id: 'artist-role',
@@ -176,7 +207,10 @@ export const adminRoutes: AdminRoutesType[] = [
                 href: APP_ROUTES.ARTIST_ROLE,
                 icon: Contact,
                 title: 'Artist Role',
-                permission: PERMISSION.DISTRIBUTION.READ,
+                required: {
+                    userType: [USER_TYPE.ADMIN],
+                    tenantId: [SYSTEM_TENANT_ID],
+                },
             },
             {
                 id: 'track-types',
@@ -184,7 +218,10 @@ export const adminRoutes: AdminRoutesType[] = [
                 href: APP_ROUTES.TRACK_TYPE,
                 icon: Speaker,
                 title: 'Track Type',
-                permission: PERMISSION.DISTRIBUTION.READ,
+                required: {
+                    userType: [USER_TYPE.ADMIN],
+                    tenantId: [SYSTEM_TENANT_ID],
+                },
             },
             {
                 id: 'track-origin-types',
@@ -192,7 +229,10 @@ export const adminRoutes: AdminRoutesType[] = [
                 href: APP_ROUTES.TRACK_ORIGIN_TYPE,
                 icon: FileMusic,
                 title: 'Track Origin',
-                permission: PERMISSION.DISTRIBUTION.READ,
+                required: {
+                    userType: [USER_TYPE.ADMIN],
+                    tenantId: [SYSTEM_TENANT_ID],
+                },
             },
             {
                 id: 'languages',
@@ -200,7 +240,10 @@ export const adminRoutes: AdminRoutesType[] = [
                 href: APP_ROUTES.LANGUAGES,
                 icon: Globe,
                 title: 'Languages',
-                permission: PERMISSION.DISTRIBUTION.READ,
+                required: {
+                    userType: [USER_TYPE.ADMIN],
+                    tenantId: [SYSTEM_TENANT_ID],
+                },
             },
             {
                 id: 'countries',
@@ -208,7 +251,10 @@ export const adminRoutes: AdminRoutesType[] = [
                 href: APP_ROUTES.COUNTRIES,
                 icon: Earth,
                 title: 'Countries',
-                permission: PERMISSION.DISTRIBUTION.READ,
+                required: {
+                    userType: [USER_TYPE.ADMIN],
+                    tenantId: [SYSTEM_TENANT_ID],
+                },
             },
             {
                 id: 'timezone',
@@ -216,7 +262,10 @@ export const adminRoutes: AdminRoutesType[] = [
                 href: APP_ROUTES.TIMEZONE,
                 icon: Clock,
                 title: 'Timezone',
-                permission: PERMISSION.DISTRIBUTION.READ,
+                required: {
+                    userType: [USER_TYPE.ADMIN],
+                    tenantId: [SYSTEM_TENANT_ID],
+                },
             },
         ],
     },
@@ -230,7 +279,10 @@ export const adminRoutes: AdminRoutesType[] = [
                 href: APP_ROUTES.PERMISSION,
                 icon: LockKeyhole,
                 title: 'Permission',
-                permission: PERMISSION.PERMISSION.UPDATE,
+                required: {
+                    userType: [USER_TYPE.ADMIN],
+                    tenantId: [SYSTEM_TENANT_ID],
+                },
             },
             {
                 id: 'roles',
@@ -238,7 +290,10 @@ export const adminRoutes: AdminRoutesType[] = [
                 href: APP_ROUTES.ROLES,
                 icon: SquareUser,
                 title: 'Roles',
-                permission: PERMISSION.PERMISSION.UPDATE,
+                required: {
+                    userType: [USER_TYPE.ADMIN],
+                    tenantId: [SYSTEM_TENANT_ID],
+                },
             },
             // {
             //     id: 'grantPermission',
@@ -246,7 +301,7 @@ export const adminRoutes: AdminRoutesType[] = [
             //     href: APP_ROUTES.GRANT_PERMISSION,
             //     icon: UserLock,
             //     title: 'Grant permission',
-            //     permission: PERMISSION.PERMISSION.UPDATE,
+            //     required: PERMISSION.PERMISSION.UPDATE,
             // },
             {
                 id: 'user',
@@ -254,7 +309,12 @@ export const adminRoutes: AdminRoutesType[] = [
                 href: APP_ROUTES.USER,
                 icon: User2,
                 title: 'Users',
-                permission: PERMISSION.PERMISSION.UPDATE,
+                required: {
+                    tenantType: [
+                        TENANT_USER_TYPE.OWNER,
+                        TENANT_USER_TYPE.ADMIN,
+                    ],
+                },
             },
             {
                 id: 'tenant',
@@ -262,7 +322,12 @@ export const adminRoutes: AdminRoutesType[] = [
                 href: APP_ROUTES.TENANT,
                 icon: Layers,
                 title: 'Tenant',
-                permission: PERMISSION.PERMISSION.UPDATE,
+                required: {
+                    tenantType: [
+                        TENANT_USER_TYPE.OWNER,
+                        TENANT_USER_TYPE.ADMIN,
+                    ],
+                },
             },
             // {
             //     id: 'log',
@@ -270,7 +335,7 @@ export const adminRoutes: AdminRoutesType[] = [
             //     href: APP_ROUTES.LOG,
             //     icon: StickyNote,
             //     title: 'Log',
-            //     permission: PERMISSION.LOG.READ,
+            //     required: PERMISSION.LOG.READ,
             // },
             {
                 id: 'email-sender',
@@ -278,7 +343,10 @@ export const adminRoutes: AdminRoutesType[] = [
                 href: APP_ROUTES.EMAIL_SENDER,
                 icon: Mail,
                 title: 'Email Sender',
-                permission: PERMISSION.DISTRIBUTION.READ,
+                required: {
+                    userType: [USER_TYPE.ADMIN],
+                    tenantId: [SYSTEM_TENANT_ID],
+                },
             },
             {
                 id: 'setting',
@@ -286,7 +354,10 @@ export const adminRoutes: AdminRoutesType[] = [
                 href: APP_ROUTES.SETTING,
                 icon: Settings,
                 title: 'Setting',
-                permission: PERMISSION.PERMISSION.UPDATE,
+                required: {
+                    userType: [USER_TYPE.ADMIN],
+                    tenantId: [SYSTEM_TENANT_ID],
+                },
             },
         ],
     },

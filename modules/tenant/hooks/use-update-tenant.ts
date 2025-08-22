@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { tenantApi } from '../api';
 import { tenantQueryKeys } from '../constants';
-import { UpdateTenant } from '../types/data';
+import { UpdateTenant, UpdateTenantDsp } from '../types/data';
 
 export const useUpdateTenant = () => {
     const queryClient = useQueryClient();
@@ -39,4 +39,40 @@ export const useUpdateTenant = () => {
     };
 
     return { updateTenant, ...mutation };
+};
+
+export const useUpdateTenantDsp = () => {
+    const queryClient = useQueryClient();
+    const messages = useTranslations();
+    const { handleError } = useApiError();
+
+    const onSuccess = (
+        data: any,
+        { onSuccess, payload: { tenantId } }: UpdateTenantDsp
+    ) => {
+        queryClient.invalidateQueries({
+            queryKey: tenantQueryKeys.dsp(tenantId),
+        });
+        showNotification('success', messages('message.updateSuccessfully'));
+        onSuccess?.();
+    };
+
+    const onError = (error: any, { onError }: UpdateTenantDsp) => {
+        handleError(error);
+        onError?.(error);
+    };
+
+    const mutation = useMutation({
+        mutationFn: ({ payload }: UpdateTenantDsp) =>
+            tenantApi.updateDsp(payload),
+        onSuccess,
+        onError,
+        mutationKey: tenantQueryKeys.updates(),
+    });
+
+    const updateTenantDsp = (variables: UpdateTenantDsp) => {
+        mutation.mutate(variables);
+    };
+
+    return { updateTenantDsp, ...mutation };
 };

@@ -1,7 +1,6 @@
 import { SIZE_ICON } from '@/constants/common';
 import { Link, usePathname } from '@/i18n/routing';
-import { useAuth } from '@/modules/auth/hooks/use-auth';
-import { usePermission } from '@/modules/auth/hooks/use-permission';
+import { useCheckPermission } from '@/modules/auth/hooks/use-permission';
 import { Menu, MenuProps } from 'antd';
 import { useTranslations } from 'next-intl';
 import { adminRoutes, AdminRoutesChildType } from '../routes';
@@ -13,16 +12,12 @@ type MenuItem = Required<MenuProps>['items'][number];
 function SidebarMenu({}: Props) {
     const pathname = usePathname();
     const messages = useTranslations();
-    const { isAdmin } = useAuth();
-    const { checkPermission } = usePermission();
+    const { checkPermission } = useCheckPermission();
 
     const getChildrenRoutes = (children: AdminRoutesChildType[]) => {
-        return children;
-        // if (isAdmin) return children;
-
-        const result = children.filter((item) =>
-            checkPermission(item.permission)
-        );
+        const result = children.filter((item) => {
+            return checkPermission(item.required);
+        });
         return result;
     };
 
@@ -39,7 +34,6 @@ function SidebarMenu({}: Props) {
                             return (
                                 <a href={child.href} target="_blank">
                                     {messages(child.label)}
-                                    {/* {child.label} */}
                                 </a>
                             );
                         }
@@ -51,7 +45,6 @@ function SidebarMenu({}: Props) {
                             >
                                 <p className="grow font-medium">
                                     {messages(child.label)}
-                                    {/* {child.label} */}
                                 </p>
                             </Link>
                         );

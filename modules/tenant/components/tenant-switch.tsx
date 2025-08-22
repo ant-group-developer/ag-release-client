@@ -1,11 +1,13 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { defaultConfig } from '@/constants/env';
+import { useAppConfig } from '@/modules/app-config/hooks/use-app-config';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { CheckCard } from '@ant-design/pro-components';
-import { Avatar, Popover, Spin } from 'antd';
+import { Avatar, Popover, Spin, Tag } from 'antd';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
+import { SYSTEM_TENANT_ID } from '../constants';
 import { useTenantActive } from '../hooks/use-get-tenant';
 import { TenantData } from '../types/data';
 import { getTenantAvatar, getTenantOwnerEmail } from '../utils';
@@ -13,17 +15,21 @@ import TenantTag from './tenant-tag';
 
 type Props = {};
 
-const defaultData = {
-    name: defaultConfig.APP_SHORT_NAME,
-    logo: defaultConfig.APP_LOGO,
-    icon: defaultConfig.APP_ICON,
-};
-
 function TenantSwitch({}: Props) {
     const messages = useTranslations();
     const { data, isLoading } = useTenantActive();
     const { tenantId } = useAuth();
-    const { update, data: session } = useSession();
+    const { update } = useSession();
+    const { isAdmin } = useAuth();
+
+    const { data: dataConfig } = useAppConfig();
+    const website = dataConfig?.data?.website;
+
+    const defaultData = {
+        name: website?.name || defaultConfig.APP_SHORT_NAME,
+        logo: website?.logo || defaultConfig.APP_LOGO,
+        icon: website?.logo || defaultConfig.APP_ICON,
+    };
 
     const [loading, setLoading] = useState(false);
 
@@ -74,6 +80,31 @@ function TenantSwitch({}: Props) {
                                 }}
                                 value={value}
                             >
+                                {isAdmin && (
+                                    <CheckCard
+                                        key={SYSTEM_TENANT_ID}
+                                        value={SYSTEM_TENANT_ID}
+                                        avatar={getTenantAvatar({
+                                            logo: website?.logo,
+                                            icon: website?.logo,
+                                            name: website?.name,
+                                        })}
+                                        title={
+                                            <p className="flex items-center gap-2">
+                                                <span className="font-semibold">
+                                                    {website?.name}
+                                                </span>
+                                                <Tag color="red">
+                                                    {messages('system.label')}
+                                                </Tag>
+                                            </p>
+                                        }
+                                        style={{
+                                            marginInlineEnd: 0,
+                                            marginBlockEnd: 8,
+                                        }}
+                                    />
+                                )}
                                 {data.items.map((item) => (
                                     <CheckCard
                                         key={item.id}
@@ -133,6 +164,17 @@ function TenantSwitch({}: Props) {
                         size={45}
                         shape="square"
                     />
+                    {/* <Image
+                        src={getTenantAvatar({
+                            logo: currentData?.logo,
+                            icon: currentData?.icon,
+                            name: currentData?.name,
+                        })}
+                        width={45}
+                        height={45}
+                        alt={currentData?.name}
+                        className="rounded-lg"
+                    /> */}
                     <h2 className="flex-1 text-2xl font-bold">
                         {currentData?.name}
                     </h2>

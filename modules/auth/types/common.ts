@@ -1,5 +1,3 @@
-import { UserDetail } from '@/modules/user/types/data';
-
 export interface LoginPayload {
     email: string;
     password: string;
@@ -39,10 +37,6 @@ export interface ResetPasswordPayload {
 
 export interface ResendVerifyEmail {
     email: string;
-}
-
-export interface UserInfoData extends UserDetail {
-    permission: string[];
 }
 
 export * from './token';

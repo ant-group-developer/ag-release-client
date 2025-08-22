@@ -18,7 +18,7 @@ function TenantTag({ type }: Props) {
             color = 'purple';
             break;
         case TENANT_TYPE.WHITE_LABEL:
-            color = 'volcano';
+            color = 'orange';
             break;
     }
 

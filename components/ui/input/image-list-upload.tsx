@@ -4,7 +4,7 @@ import { Image, Spin, Upload, UploadFile, UploadProps } from 'antd';
 import type { RcFile } from 'antd/es/upload/interface';
 import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 
 type Props = UploadProps & {
     value?: any;
@@ -12,6 +12,7 @@ type Props = UploadProps & {
     maxSizeMB?: number;
     minWidth?: number;
     loading?: boolean;
+    description?: ReactNode;
 };
 
 export default function ImageListUpload({
@@ -20,6 +21,7 @@ export default function ImageListUpload({
     maxSizeMB = 5,
     minWidth,
     loading = false,
+    description,
     ...props
 }: Props) {
     const messages = useTranslations();
@@ -128,7 +130,11 @@ export default function ImageListUpload({
     }, [checkWidth]);
 
     return (
-        <div ref={containerRef} style={{ position: 'relative' }}>
+        <div
+            ref={containerRef}
+            style={{ position: 'relative' }}
+            className="flex items-center gap-5"
+        >
             <Upload
                 listType="picture-card"
                 // multiple
@@ -141,6 +147,8 @@ export default function ImageListUpload({
             >
                 {fileList.length >= (props.maxCount || 0) ? null : uploadButton}
             </Upload>
+
+            {description}
 
             {loading && (
                 <div

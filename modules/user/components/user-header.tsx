@@ -3,6 +3,7 @@ import Refresh from '@/components/refresh';
 import CreateButton from '@/components/ui/button/create-button';
 import { UseFilterProps } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { UserAddOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_USER } from '../enums';
@@ -11,7 +12,6 @@ import UserHeaderFilter from './user-header-filter';
 
 type Props = {
     handleRefresh: () => void;
-    handleSync: () => void;
     lastUpdatedAt: string;
 } & Pick<
     UseFilterProps<DataFilterUser>,
@@ -28,6 +28,7 @@ export default function UserHeader({
 }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
+    const { isSystemTenant } = useAuth();
     return (
         <AppHeader className="app-header">
             <AppHeaderGroup>
@@ -52,15 +53,17 @@ export default function UserHeader({
                         })}
                         onClick={() => openModal(TYPE_MODAL_USER.CREATE)}
                     />
-                    <CreateButton
-                        canCreate={true}
-                        text={messages('action.invite.title', {
-                            label: messages('user.label'),
-                        })}
-                        onClick={() => openModal(TYPE_MODAL_USER.INVITE)}
-                        ghost
-                        icon={<UserAddOutlined />}
-                    />
+                    {!isSystemTenant && (
+                        <CreateButton
+                            canCreate={true}
+                            text={messages('action.invite.title', {
+                                label: messages('user.label'),
+                            })}
+                            onClick={() => openModal(TYPE_MODAL_USER.INVITE)}
+                            ghost
+                            icon={<UserAddOutlined />}
+                        />
+                    )}
                 </div>
             </AppHeaderGroup>
         </AppHeader>

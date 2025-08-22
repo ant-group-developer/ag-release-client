@@ -57,6 +57,7 @@ export default function RolesFormModal({ ...props }: Props) {
                 payload,
                 onSuccess: () => {
                     deActive();
+                    form.resetFields();
                 },
                 onError: () => {
                     deActive();
@@ -150,24 +151,11 @@ export default function RolesFormModal({ ...props }: Props) {
                         },
                     ]}
                 >
-                    <Input allowClear />
+                    <Input allowClear showCount />
                 </AppFormItem>
                 <AppFormItem
-                    name="color"
-                    label={messages('common.color')}
-                    required
-                    rules={[
-                        {
-                            required: true,
-                            message: messages('validation.input'),
-                        },
-                    ]}
-                >
-                    <AppColorPicker />
-                </AppFormItem>
-                <AppFormItem
-                    name="name"
-                    label={messages('roles.name')}
+                    name="code"
+                    label={messages('common.code')}
                     required
                     rules={[
                         {
@@ -176,14 +164,13 @@ export default function RolesFormModal({ ...props }: Props) {
                         },
                         {
                             max: 100,
-                            message: messages('validation.stringMax', {
-                                max: 100,
-                                field: messages('roles.name'),
+                            message: messages('validation.max', {
+                                number: 100,
                             }),
                         },
                     ]}
                 >
-                    <Input allowClear />
+                    <Input allowClear showCount />
                 </AppFormItem>
                 <AppFormItem
                     name="color"
@@ -198,14 +185,6 @@ export default function RolesFormModal({ ...props }: Props) {
                 >
                     <AppColorPicker />
                 </AppFormItem>
-
-                {/* <AppFormItem
-                        name="rolePermissions"
-                        label={messages('permission.label')}
-                        required
-                    >
-                        <PermissionSelect mode="multiple" allowClear />
-                    </AppFormItem> */}
 
                 <AppFormItem
                     name="note"
@@ -225,9 +204,10 @@ export default function RolesFormModal({ ...props }: Props) {
                             minRows: 1,
                             maxRows: 5,
                         }}
+                        showCount
                     />
                 </AppFormItem>
-                <div>
+                <div className="mt-8">
                     <PermissionTableItemForm
                         rowSelection={rowSelection}
                         className="rounded-lg border"

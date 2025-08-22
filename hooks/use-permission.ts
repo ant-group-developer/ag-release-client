@@ -1,97 +1,46 @@
-import { PERMISSION } from '@/modules/auth/constants/permission';
-import { UserInfoData } from '@/modules/auth/types/common';
-import { Permission } from '@/modules/auth/types/permission';
-import { create } from 'zustand';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
+import usePermissionStore from './use-permission-store';
 
-type SetPermission = (
-    data: UserInfoData['permission'],
-    isAdmin: boolean
-) => void;
+export type Requirement =
+    | string
+    | string[]
+    | { allOf: string[] }
+    | { anyOf: string[] };
 
-export interface PermissionState {
-    permission: Permission;
-    setPermission: SetPermission;
-}
+const isAllOf = (x: Requirement): x is { allOf: string[] } =>
+    typeof x === 'object' && !Array.isArray(x) && 'allOf' in x;
 
-const defaultPermission: Permission = {
-    log: {
-        canRead: true,
-    },
-    setting: {
-        canRead: true,
-        canUpdate: false,
-    },
-    permission: {
-        canUpdate: false,
-    },
+const isAnyOf = (x: Requirement): x is { anyOf: string[] } =>
+    typeof x === 'object' && !Array.isArray(x) && 'anyOf' in x;
 
-    releases: {
-        canRead: true,
-        canCreate: false,
-        canUpdate: false,
-        canDelete: false,
-    },
-    tracks: {
-        canRead: true,
-        canCreate: false,
-        canUpdate: false,
-        canDelete: false,
-    },
-    labels: {
-        canRead: true,
-        canCreate: false,
-        canUpdate: false,
-        canDelete: false,
-    },
+export const usePermission = () => {
+    const data = usePermissionStore((state) => state.permission);
+    const { isAdmin, isTenantOwnerOrAdmin } = useAuth();
+
+    const check = (req: string): boolean => data.has(req);
+
+    const hasPermission = (requirement: Requirement): boolean => {
+        if (isAdmin || isTenantOwnerOrAdmin) {
+            return true;
+        }
+
+        if (typeof requirement === 'string') return check(requirement);
+
+        if (Array.isArray(requirement)) {
+            // default to anyOf
+            return requirement.some(check);
+        }
+
+        if (isAllOf(requirement) && requirement.allOf.length > 0) {
+            return requirement.allOf.every(check);
+        }
+
+        if (isAnyOf(requirement) && requirement.anyOf.length > 0) {
+            return requirement.anyOf.some(check);
+        }
+
+        return true;
+    };
+
+    return { hasPermission };
 };
-
-const usePermissionStore = create<PermissionState>((set) => {
-    const setPermission: SetPermission = (data, isAdmin) => {
-        const checkPermission = (name: string) => {
-            if (isAdmin) return true;
-            return data.includes(name);
-        };
-
-        const permission: Permission = {
-            log: {
-                canRead: checkPermission(PERMISSION.LOG.READ),
-            },
-            setting: {
-                canRead: checkPermission(PERMISSION.SETTING.READ),
-                canUpdate: checkPermission(PERMISSION.SETTING.UPDATE),
-            },
-            permission: {
-                canUpdate: checkPermission(PERMISSION.PERMISSION.UPDATE),
-            },
-            releases: {
-                canRead: checkPermission(PERMISSION.RELEASE.READ),
-                canCreate: checkPermission(PERMISSION.RELEASE.CREATE),
-                canUpdate: checkPermission(PERMISSION.RELEASE.UPDATE),
-                canDelete: checkPermission(PERMISSION.RELEASE.DELETE),
-            },
-            tracks: {
-                canRead: checkPermission(PERMISSION.TRACK.READ),
-                canCreate: checkPermission(PERMISSION.TRACK.CREATE),
-                canUpdate: checkPermission(PERMISSION.TRACK.UPDATE),
-                canDelete: checkPermission(PERMISSION.TRACK.DELETE),
-            },
-            labels: {
-                canRead: checkPermission(PERMISSION.LABEL.READ),
-                canCreate: checkPermission(PERMISSION.LABEL.CREATE),
-                canUpdate: checkPermission(PERMISSION.LABEL.UPDATE),
-                canDelete: checkPermission(PERMISSION.LABEL.DELETE),
-            },
-        };
-
-        set({
-            permission,
-        });
-    };
-
-    return {
-        permission: defaultPermission,
-        setPermission,
-    };
-});
-
-export default usePermissionStore;

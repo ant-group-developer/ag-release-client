@@ -1,4 +1,5 @@
 import ActionButton from '@/components/ui/button/action-button';
+import CopyText from '@/components/ui/copy-text/copy-text';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
@@ -37,10 +38,7 @@ export const PermissionTable = ({ dataFilter, ...props }: Props) => {
             dataIndex: 'name',
             align: 'left',
             width: 200,
-
-            render: (value) => (
-                <span className="truncate text-wrap">{value}</span>
-            ),
+            render: (value) => <CopyText text={value} />,
         },
         {
             title: messages('common.code'),
@@ -48,22 +46,20 @@ export const PermissionTable = ({ dataFilter, ...props }: Props) => {
             dataIndex: 'code',
             align: 'left',
             width: 200,
-
-            render: (value) => (
-                <span className="truncate text-wrap">{value}</span>
-            ),
+            render: (value) => <CopyText text={value} />,
         },
         {
             title: messages('common.note'),
             key: 'note',
             dataIndex: 'note',
             align: 'left',
-            width: 200,
-
+            width: 300,
             render: (value) => (
-                <span className="line-clamp-3 truncate whitespace-pre-line">
-                    {value}
-                </span>
+                <CopyText text={value}>
+                    <span className="line-clamp-3 truncate whitespace-pre-line">
+                        {value}
+                    </span>
+                </CopyText>
             ),
         },
         {
@@ -105,7 +101,7 @@ export const PermissionTable = ({ dataFilter, ...props }: Props) => {
         {
             key: 'actions',
             align: 'center',
-            width: 100,
+            width: 80,
             render: (_, record) => (
                 <ActionButton
                     showDelete
