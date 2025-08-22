@@ -2,6 +2,7 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import { SCREEN, WEEK_DAY } from '@/enums/common';
 import { useActive } from '@/hooks/use-active';
+import { useListBackupDatabaseLogs } from '@/modules/backup-dabatase/hooks/use-get-backup-database-logs';
 import { Checkbox, Form, InputNumber, Select } from 'antd';
 import { useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
@@ -20,6 +21,7 @@ export default function BackupDatabaseForm({}: Props) {
     const { settingData } = useGetSetting();
     const backupDatabase = settingData?.backupDatabase;
     const { updateSetting } = useUpdateSetting();
+    const { backupDatabaseLogsData } = useListBackupDatabaseLogs();
     const { active, deActive, isActive } = useActive();
     const executeCycle = useWatch('executeCycleType', form);
     const nHours = useWatch('nHours', form);
@@ -290,6 +292,7 @@ export default function BackupDatabaseForm({}: Props) {
                     scroll={{
                         x: SCREEN.MD,
                     }}
+                    dataSource={backupDatabaseLogsData?.items}
                 />
             </div>
         </div>

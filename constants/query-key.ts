@@ -257,4 +257,8 @@ export const QUERY_KEY = {
         GET_DETAIL: 'GET_DETAIL_PRICE_TIERS',
         UPDATE: 'UPDATE_PRICE_TIERS',
     },
+    BACKUP_DATABASE: {
+        KEY: 'BACKUP_DATABASE',
+        GET_LIST: 'GET_LIST_DATABASE_LOGS',
+    },
 };

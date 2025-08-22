@@ -1,5 +1,5 @@
 import { RELEASES_STATUS } from '@/modules/releases/enums';
-import { CommonAttribute, CommonParams } from '@/types/api';
+import { CommonParams } from '@/types/api';
 
 export interface SettingData {
     website: WebsiteConfig;
@@ -9,15 +9,6 @@ export interface SettingData {
 }
 
 export interface SettingDataFilter extends CommonParams {}
-
-export interface BackupDatabaseLogData extends CommonAttribute {
-    date: string;
-    status: string;
-    fileName: string;
-    fileDir: string;
-    fileSize: string;
-    elapsedTime: string;
-}
 
 // Website config
 export interface WebsiteConfig {
