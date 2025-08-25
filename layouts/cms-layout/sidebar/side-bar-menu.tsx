@@ -16,7 +16,7 @@ function SidebarMenu({}: Props) {
 
     const getChildrenRoutes = (children: AdminRoutesChildType[]) => {
         const result = children.filter((item) => {
-            return checkPermission(item.required);
+            return !item.hidden && checkPermission(item.required);
         });
         return result;
     };

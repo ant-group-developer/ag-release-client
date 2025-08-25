@@ -3,15 +3,22 @@ import { Select, SelectProps } from 'antd';
 import { useTranslations } from 'next-intl';
 import { TENANT_USER_TYPE } from '../enums';
 
-interface Props extends SelectProps {}
+interface Props extends SelectProps {
+    disabledOwner?: boolean;
+}
 
-function TenantUserTypeSelect({ className, ...props }: Props) {
+function TenantUserTypeSelect({
+    className,
+    disabledOwner = true,
+    ...props
+}: Props) {
     const messages = useTranslations();
 
     const options = [
         {
             label: messages('tenant.userType.owner.label'),
             value: TENANT_USER_TYPE.OWNER,
+            disabled: disabledOwner,
         },
         {
             label: messages('tenant.userType.admin.label'),

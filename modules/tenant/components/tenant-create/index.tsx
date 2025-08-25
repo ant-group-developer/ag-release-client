@@ -106,8 +106,6 @@ function CreateTenantModal({ ...props }: Props) {
                 }}
                 form={form}
                 showSubmit={false}
-                canChangeParent
-                showOwner
             />
             <div className="text-right">
                 <Button type="primary" onClick={onFinish}>

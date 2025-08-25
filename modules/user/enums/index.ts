@@ -4,11 +4,11 @@ export enum USER_TYPE {
 }
 export enum USER_ORDER_BY {
     LAST_LOGIN = 'lastLogin',
+    LAST_ACTIVE = 'lastActive',
     CREATED_AT = 'createdAt',
     UPDATED_AT = 'updatedAt',
     NAME = 'name',
     EMAIL = 'email',
-    LOGIN_COUNT = 'loginsCount',
 }
 
 export enum TYPE_MODAL_USER {

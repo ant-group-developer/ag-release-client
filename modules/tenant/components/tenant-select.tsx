@@ -1,5 +1,5 @@
 import { ORDER } from '@/enums/common';
-import { cn, getAvatarPlaceholder } from '@/helpers/common';
+import { cn, flattenData, getAvatarPlaceholder } from '@/helpers/common';
 import { toNonAccentVietnamese } from '@/helpers/string';
 import { Avatar, Select, SelectProps } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -13,6 +13,7 @@ type Props = {
     fallback?: string;
     excludeIds?: Array<TenantData['id']>;
     type?: TENANT_TYPE[];
+    flatData?: boolean;
 } & SelectProps;
 
 function TenantSelect({
@@ -22,6 +23,7 @@ function TenantSelect({
     fallback,
     excludeIds,
     type,
+    flatData,
     ...props
 }: Props) {
     const messages = useTranslations();
@@ -32,7 +34,11 @@ function TenantSelect({
         pageSize: 999,
     });
 
-    const options = dataTenant.items
+    const data = flatData
+        ? flattenData(dataTenant.items, {})
+        : dataTenant.items;
+
+    const options = data
         .filter((item) => {
             let result = true;
             if (excludeIds) {

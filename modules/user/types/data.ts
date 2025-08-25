@@ -16,7 +16,7 @@ export interface DataFilterUser extends CommonParams {
     fieldOrder: USER_ORDER_BY;
     id?: string;
     type?: string;
-    workspaceIds?: string;
+    tenantIds?: string;
 }
 
 export interface UserDetail extends CommonAttributeCreator {
@@ -28,8 +28,12 @@ export interface UserDetail extends CommonAttributeCreator {
     telegramId: string | null;
     lastLogin: string | null;
     lastIp: string | null;
-    loginsCount: string | null;
     type: USER_TYPE;
+    tenantUser: {
+        id: string;
+        type: TENANT_USER_TYPE;
+        tenant: Pick<TenantData, 'id' | 'name'>;
+    }[];
 }
 
 export type UserData = Pick<
@@ -43,16 +47,10 @@ export type UserData = Pick<
     | 'type'
     | 'isActive'
     | 'lastLogin'
-    | 'loginsCount'
     | 'creator'
     | 'modifier'
-> & {
-    tenantUser: {
-        type: TENANT_USER_TYPE;
-        tenantId: string;
-        tenant: Pick<TenantData, 'id' | 'name'>;
-    }[];
-};
+    | 'tenantUser'
+> & {};
 
 export interface UpdateUserPayload {
     name?: string;
@@ -104,3 +102,15 @@ export type UserPermissionData = Pick<
     PermissionData,
     'id' | 'name' | 'code' | 'note'
 >;
+
+export interface BulkUpdateTenantUserPayload {
+    userId: string;
+    data: {
+        type: TENANT_USER_TYPE.ADMIN | TENANT_USER_TYPE.MEMBER;
+        tenantId: string;
+    }[];
+}
+
+export interface BulkUpdateTenantUser extends CommonFunction {
+    payload: BulkUpdateTenantUserPayload;
+}

@@ -18,7 +18,9 @@ type Props = {};
 function TenantSwitch({}: Props) {
     const messages = useTranslations();
     const { data, isLoading } = useTenantActive();
-    const { tenantId } = useAuth();
+    const {
+        profile: { tenantId },
+    } = useAuth();
     const { update } = useSession();
     const { isAdmin } = useAuth();
 

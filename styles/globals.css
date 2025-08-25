@@ -240,7 +240,7 @@ select {
 
 .ant-typography {
     font-family: var(--font-inter), Inter, sans-serif !important;
-    color: #3f4254 !important;
+    /* color: #3f4254 !important; */
 }
 
 /* CKeditor css */

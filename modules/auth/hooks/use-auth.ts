@@ -28,7 +28,7 @@ export const defaultProfile: UserInfoData = {
 
 export const useAuth = () => {
     const session = useSession();
-    const tenantId = session.data?.user?.tenantId as string;
+    // const tenantId = session.data?.user?.tenantId as string;
 
     const { data, error, refetch, isLoading } = useQuery({
         queryKey: userQueryKeys.info(),
@@ -46,7 +46,7 @@ export const useAuth = () => {
         profile.type,
         profile.tenantType
     );
-    const isSystemTenant = checkIsSystemTenant(profile.tenantId);
+    const isSystemTenant = checkIsSystemTenant(profile.tenantId) && isAdmin;
 
     const isAuthenticated = Boolean(profile.id);
 
@@ -57,7 +57,6 @@ export const useAuth = () => {
     return {
         permission: profile.permission || [],
         profile,
-        tenantId,
         error,
         isAuthenticated,
         isLoading,

@@ -34,7 +34,7 @@ function UserTable({ dataFilter, actionProps, ...props }: Props) {
     const openModal = useModalStore((state) => state.openModal);
     const canUpdate = true;
 
-    const { isAdmin } = useAuth();
+    const { isAdmin, isSystemTenant } = useAuth();
 
     const { updateUser } = useUpdateUser();
 
@@ -118,7 +118,7 @@ function UserTable({ dataFilter, actionProps, ...props }: Props) {
             render: (cell, record) => (
                 <div className="flex flex-col gap-1">
                     {record.tenantUser.map((item) => (
-                        <Tag key={item.tenantId} className="w-fit">
+                        <Tag key={item.id} className="w-fit">
                             {item.tenant.name}:{' '}
                             {messages(
                                 `tenant.userType.${item.type}.label` as any
@@ -150,6 +150,18 @@ function UserTable({ dataFilter, actionProps, ...props }: Props) {
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
                 USER_ORDER_BY.LAST_LOGIN
+            ),
+            render: (cell) => formattedDate(cell),
+        },
+        {
+            title: messages('user.lastActive'),
+            dataIndex: USER_ORDER_BY.LAST_ACTIVE,
+            width: 150,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                USER_ORDER_BY.LAST_ACTIVE
             ),
             render: (cell) => formattedDate(cell),
         },
@@ -208,7 +220,12 @@ function UserTable({ dataFilter, actionProps, ...props }: Props) {
                         onShowUpdate={() =>
                             openModal(TYPE_MODAL_USER.UPDATE, record)
                         }
-                        showDelete={(!isSystemAdmin && !isTenantOwner) || false}
+                        showDelete={
+                            (!isSystemTenant &&
+                                !isSystemAdmin &&
+                                !isTenantOwner) ||
+                            false
+                        }
                         onShowDelete={() =>
                             openModal(TYPE_MODAL_USER.REMOVE, record)
                         }

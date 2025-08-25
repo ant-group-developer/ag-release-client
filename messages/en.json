@@ -328,7 +328,8 @@
 
     "dashboard": {
         "label": "Dashboard",
-        "latestNews": "Latest news"
+        "latestNews": "Latest news",
+        "goTo": "Go to Dashboard"
     },
     "review": {
         "message": {
@@ -574,6 +575,7 @@
         "syncData": "Sync data from Auth0",
         "loginsCount": "Logins count",
         "lastLogin": "Last login",
+        "lastActive": "Last active",
         "lastIp": "Last IP",
         "password": "Password",
         "personalInfo": "Personal info",
@@ -592,6 +594,12 @@
         },
         "grantPermission": {
             "label": "Grant permisson"
+        },
+        "update": {
+            "tenant": {
+                "changeOwnerHint": "To change the owner, go to the <element>Workspace</element> section",
+                "conflictError": "Tenant must be unique"
+            }
         }
     },
     "file": {
