@@ -1,6 +1,5 @@
 import DateCreatedDialog from '@/components/filter-dialog/date-create-dialog';
 import DateReleaseDialog from '@/components/filter-dialog/date-release-dialog';
-import GenresDialog from '@/components/filter-dialog/genres-dialog';
 import SearchDialog from '@/components/filter-dialog/search-dialog';
 import StatusReleaseDialog from '@/components/filter-dialog/status-releases-dialog';
 import { PopoverCheckboxFilter } from '@/components/filter/popover-checkbox';
@@ -16,6 +15,7 @@ import { useGetListArtist } from '@/modules/artist/hooks/use-get-list-artists';
 import { ArtistData } from '@/modules/artist/types';
 import { useGetListReleaseTypes } from '@/modules/release-types/hooks/use-get-list-release-types';
 import { ReleaseTypesData } from '@/modules/release-types/types';
+import { GENRES } from '@/modules/tracks/enums';
 import { ListFilter, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
@@ -180,12 +180,25 @@ export default function ReleasesSuperFilter({
                     onChangeFilter={onChangeFilter}
                 />
 
-                <GenresDialog
-                    title={messages('common.genres')}
+                <PopoverCheckboxFilter
                     open={typeFilter === TYPE_FILTER.GENRES}
-                    handleChangeTypeFilter={handleChangeTypeFilter}
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
+                    title={messages('common.genres')}
+                    options={Object.values(GENRES)?.map((item) => ({
+                        name: item.charAt(0).toUpperCase() + item.slice(1),
+                        value: item,
+                    }))}
+                    selectedValues={arrayFromString(dataFilter.genres)}
+                    onOpenChange={(val) => {
+                        return setTypeFilter(
+                            val ? TYPE_FILTER.GENRES : undefined
+                        );
+                    }}
+                    onConfirm={(vals) => {
+                        return onChangeFilter({
+                            genres: arrayToString(vals),
+                        });
+                    }}
+                    onRemove={() => onChangeFilter({ genres: undefined })}
                 />
 
                 {/* <SearchArtistIdDialog

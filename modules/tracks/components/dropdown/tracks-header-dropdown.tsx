@@ -50,6 +50,12 @@ export default function TracksHeaderDropdown({
         //     onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_RELEASE),
         // },
         {
+            label: messages('common.genres'),
+            value: TYPE_FILTER.GENRES,
+            visible: !dataFilter.genres,
+            onClick: () => handleChangeTypeFilter(TYPE_FILTER.GENRES),
+        },
+        {
             label: messages('releases.label'),
             value: TYPE_FILTER.RELEASE_ID,
             visible: !dataFilter.releaseId,

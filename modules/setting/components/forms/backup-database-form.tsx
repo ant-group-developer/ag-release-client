@@ -5,12 +5,11 @@ import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER, SCREEN, WEEK_DAY } from '@/enums/common';
 import { formattedDate, setSortOrder } from '@/helpers/common';
 import { useActive } from '@/hooks/use-active';
-import { useApiError } from '@/hooks/use-api-error';
 import { useFilter } from '@/hooks/use-filter';
 import { useBackupDatabase } from '@/modules/backup-dabatase/hooks/use-backup-database';
 import { useListBackupDatabaseLogs } from '@/modules/backup-dabatase/hooks/use-get-backup-database-logs';
 import { BackupDatabaseLogDataFilter } from '@/modules/backup-dabatase/types';
-import { Button, Checkbox, Form, InputNumber, Select } from 'antd';
+import { Button, Checkbox, Divider, Form, InputNumber, Select } from 'antd';
 import { useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
@@ -32,7 +31,6 @@ export default function BackupDatabaseForm({}: Props) {
     const { backupDatabase: backupDatabaseNow, isPending: isBackupPending } =
         useBackupDatabase();
     const { active, deActive, isActive } = useActive();
-    const { handleError } = useApiError();
     const executeCycle = useWatch('executeCycleType', form);
     const nHours = useWatch('nHours', form);
     const nDays = useWatch('nDays', form);
@@ -318,17 +316,14 @@ export default function BackupDatabaseForm({}: Props) {
                     </div>
                 </AppFormItem>
             </AppForm>
+            <Divider />
             <div>
                 <div className="flex justify-between py-2 font-semibold">
                     <span>Backup database logs</span>
                     <Button
                         type="primary"
                         onClick={() => {
-                            backupDatabaseNow({
-                                // onSuccess: () => {
-                                //     showNotification('success', 'Success');
-                                // },
-                            });
+                            backupDatabaseNow({});
                         }}
                         loading={isBackupPending}
                     >
@@ -349,8 +344,7 @@ export default function BackupDatabaseForm({}: Props) {
                     <BackupDatabaseLogTable
                         pagination={{
                             pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                            current:
-                                backupDatabaseLogsData.metadata.currentPage,
+                            current: dataFilter?.page ?? 1,
                         }}
                         scroll={{
                             x: SCREEN.MD,
@@ -364,7 +358,7 @@ export default function BackupDatabaseForm({}: Props) {
                     <AppPagination
                         className="border-b border-t"
                         align="end"
-                        current={backupDatabaseLogsData?.metadata?.currentPage}
+                        current={dataFilter?.page}
                         pageSize={dataFilter.pageSize}
                         total={backupDatabaseLogsData.metadata?.totalItems}
                         onChange={onChangePage}

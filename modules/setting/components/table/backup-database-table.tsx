@@ -2,9 +2,9 @@ import ActionButton from '@/components/ui/button/action-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import {
+    convertSecondsToTime,
     formatFileSize,
     formattedDate,
-    formatTime,
     getIndex,
     getSortOrder,
 } from '@/helpers/common';
@@ -16,6 +16,7 @@ import {
     BackupDatabaseLogDataFilter,
 } from '@/modules/backup-dabatase/types';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
+import { Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { STATUS_BACKUP } from '../../enums';
@@ -57,8 +58,9 @@ export const BackupDatabaseLogTable = ({ dataFilter, ...props }: Props) => {
                 <CustomTooltip title={value}>
                     <span
                         onClick={() => {
+                            if (!record.urlFolderGcs) return;
                             window.open(
-                                record?.urlGcs ?? record?.urlDrive,
+                                record?.urlFolderGcs,
                                 '_blank',
                                 'noopener,noreferrer'
                             );
@@ -76,11 +78,21 @@ export const BackupDatabaseLogTable = ({ dataFilter, ...props }: Props) => {
             dataIndex: 'status',
             align: 'center',
             width: 100,
-            render: (value) => (
-                <span className="truncate">
-                    {messages(getIntlCodeByBackupStatus(value))}
-                </span>
-            ),
+            render: (value) => {
+                const color =
+                    value === STATUS_BACKUP.SUCCESS
+                        ? 'green'
+                        : STATUS_BACKUP.FAILED
+                          ? 'red'
+                          : 'blue';
+                return (
+                    <span className="truncate">
+                        <Tag color={color}>
+                            {messages(getIntlCodeByBackupStatus(value))}
+                        </Tag>
+                    </span>
+                );
+            },
         },
         {
             title: messages('file.fileSize'),
@@ -97,9 +109,9 @@ export const BackupDatabaseLogTable = ({ dataFilter, ...props }: Props) => {
             key: 'elapsedTime',
             dataIndex: 'elapsedTime',
             align: 'center',
-            width: 150,
+            width: 100,
             render: (value) => (
-                <span className="truncate">{formatTime(value)}</span>
+                <span className="truncate">{convertSecondsToTime(value)}</span>
             ),
         },
         {
@@ -107,7 +119,7 @@ export const BackupDatabaseLogTable = ({ dataFilter, ...props }: Props) => {
             key: 'createdAt',
             dataIndex: 'createdAt',
             align: 'center',
-            width: 100,
+            width: 130,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,

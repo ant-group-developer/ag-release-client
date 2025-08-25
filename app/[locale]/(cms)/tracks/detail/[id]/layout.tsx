@@ -2,6 +2,7 @@
 import AppHeaderPage from '@/components/ant-music/app-header-page';
 import ItemHeaderPage from '@/components/ant-music/item-header-page';
 import IconButton from '@/components/ui/button/icon-button';
+import DetailSkeleton from '@/components/ui/skeleton/detail-skeleton';
 import { SIZE_ICON_BIG, SIZE_ICON_SMALL } from '@/constants/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { getTrackDetailRoute } from '@/helpers/link';
@@ -35,7 +36,7 @@ export default function TrackDetail({ children }: PropsWithChildren) {
     const pathname = usePathname();
 
     // apis
-    const { trackData } = useGetDetailTrack(trackId as string);
+    const { trackData, isLoading } = useGetDetailTrack(trackId as string);
     const { linkReadFile } = useGetLinkReadFile(
         trackData?.release?.coverArtThumbnails?.['160x160'] as string
     );
@@ -122,6 +123,10 @@ export default function TrackDetail({ children }: PropsWithChildren) {
         };
         setActiveTab(getActiveTab());
     }, [pathname]);
+
+    if (isLoading || !trackData) {
+        return <DetailSkeleton />;
+    }
 
     return (
         <div className="mx-auto max-w-screen-2xl px-2" ref={scrollContainerRef}>

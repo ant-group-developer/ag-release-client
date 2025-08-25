@@ -205,7 +205,7 @@ export default function DspFormModal({ ...props }: Props) {
                     <div className="flex items-center gap-4">
                         <ImageListUpload
                             maxCount={1}
-                            accept="image/*"
+                            accept="image/png,image/jpeg,image/svg+xml,image/x-icon"
                             maxSizeMB={2}
                         />
                         <div>
@@ -213,7 +213,7 @@ export default function DspFormModal({ ...props }: Props) {
                                 {messages(
                                     'image.validation.supportImageFormat',
                                     {
-                                        value: 'PNG, JPG, JPEG',
+                                        value: 'PNG, JPG, WEBP, SVG, ICON',
                                     }
                                 )}
                             </p>

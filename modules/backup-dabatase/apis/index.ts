@@ -1,11 +1,12 @@
 import axiosInstance from '@/api/axios-auth';
 import { PaginationResponse } from '@/types/api';
-import { BackupDatabaseLogData } from '../types';
+import { BackupDatabaseLogData, BackupDatabaseLogDataFilter } from '../types';
 
 export const backupDatabaseApis = {
-    getBackupDatabaseLogs: () => {
+    getBackupDatabaseLogs: (params: BackupDatabaseLogDataFilter) => {
         return axiosInstance.get<PaginationResponse<BackupDatabaseLogData>>(
-            '/database'
+            '/database',
+            { params }
         );
     },
 
