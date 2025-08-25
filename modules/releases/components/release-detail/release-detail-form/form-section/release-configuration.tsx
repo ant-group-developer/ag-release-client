@@ -45,7 +45,6 @@ export default function ReleaseConfigurationSection({
     const setReleaseDetailAction = useReleaseDetailActionStore(
         (state) => state.setAction
     );
-    console.log('🚀 ~ ReleaseConfigurationSection ~ errors:', errors);
 
     // router and params
     const params = useParams();

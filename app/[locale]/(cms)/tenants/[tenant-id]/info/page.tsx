@@ -36,7 +36,6 @@ function DetailTenantPage({}: Props) {
                 active();
 
                 const { icon, logo, primaryColor, ...otherValues } = values;
-                console.log('icon:', icon);
                 const iconFile = icon?.fileList[0]?.originFileObj;
                 const logoFile = logo?.fileList[0]?.originFileObj;
 

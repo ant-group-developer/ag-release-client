@@ -115,8 +115,6 @@ export default function AcrCloudScanDetailModal({ data, ...props }: Props) {
         );
     };
 
-    console.log(scanStatusData?.filter?.ignoreTrackScanned);
-
     return (
         <AppModal
             open

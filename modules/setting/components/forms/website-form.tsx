@@ -48,8 +48,6 @@ export default function WebsiteForm({}: Props) {
                 },
             };
 
-            console.log('payload', payload);
-
             updateSetting({
                 payload,
                 onSuccess: () => {

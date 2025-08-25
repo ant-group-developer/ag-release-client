@@ -330,24 +330,26 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                             </div>
                         </div>
                     </div>
-                    <div className="space-y-1">
-                        <p className="text-nowrap text-xs text-gray-500">
-                            {messages('common.lastEdit')}:{' '}
-                            {releaseData?.modifier?.name} |{' '}
-                            {formattedDate(releaseData?.updatedAt)}
-                        </p>
-                        <div className="flex justify-end">
-                            <Segmented
-                                value={releaseDetailAction}
-                                options={segmentedOptions}
-                                onChange={(e) =>
-                                    setReleaseDetailAction(
-                                        e as RELEASE_DETAIL_ACTION
-                                    )
-                                }
-                            />
+                    {!isCreateReleasePage && (
+                        <div className="space-y-1">
+                            <p className="text-nowrap text-xs text-gray-500">
+                                {messages('common.lastEdit')}:{' '}
+                                {releaseData?.modifier?.name} |{' '}
+                                {formattedDate(releaseData?.updatedAt)}
+                            </p>
+                            <div className="flex justify-end">
+                                <Segmented
+                                    value={releaseDetailAction}
+                                    options={segmentedOptions}
+                                    onChange={(e) =>
+                                        setReleaseDetailAction(
+                                            e as RELEASE_DETAIL_ACTION
+                                        )
+                                    }
+                                />
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </AppForm>
             <AppConfirm

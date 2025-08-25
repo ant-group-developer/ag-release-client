@@ -149,20 +149,28 @@ export default function LabelFormModal({ ...props }: Props) {
                             maxCount={1}
                             accept="image/png,image/jpeg,image/svg+xml,image/x-icon"
                             maxSizeMB={2}
+                            description={
+                                <ul className="space-y-1 text-xs">
+                                    <li className="flex-1 text-sm text-gray-500">
+                                        {messages(
+                                            'image.validation.supportImageFormat',
+                                            {
+                                                value: 'PNG, JPG, WEBP, SVG, ICON',
+                                            }
+                                        )}
+                                    </li>
+                                    <li className="flex-1 text-sm text-gray-500">
+                                        {messages(
+                                            'image.validation.mustBeLessThanMB',
+                                            {
+                                                value: '3',
+                                            }
+                                        )}
+                                    </li>
+                                </ul>
+                            }
                         />
                     </AppFormItem>
-                    <div>
-                        <p className="flex-1 text-sm text-gray-500">
-                            {messages('image.validation.supportImageFormat', {
-                                value: 'PNG, JPG, WEBP, SVG, ICON',
-                            })}
-                        </p>
-                        <p className="flex-1 text-sm text-gray-500">
-                            {messages('image.validation.mustBeLessThanMB', {
-                                value: '3',
-                            })}
-                        </p>
-                    </div>
                 </div>
                 <AppFormItem
                     name="name"
