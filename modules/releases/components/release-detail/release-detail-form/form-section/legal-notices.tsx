@@ -102,10 +102,12 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                 <Controller
                                     control={control}
                                     name="cLineYear"
+                                    defaultValue={dayjs().year()}
                                     render={({ field }) => {
                                         return (
                                             <Select
                                                 {...field}
+                                                value={field.value}
                                                 className="w-full"
                                                 disabled={
                                                     isCreateReleasePage ||
@@ -183,10 +185,12 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                 <Controller
                                     control={control}
                                     name="pLineYear"
+                                    defaultValue={dayjs().year()}
                                     render={({ field }) => {
                                         return (
                                             <Select
                                                 {...field}
+                                                value={field.value}
                                                 className="w-full"
                                                 disabled={
                                                     isCreateReleasePage ||
