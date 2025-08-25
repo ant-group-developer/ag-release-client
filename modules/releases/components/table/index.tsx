@@ -17,6 +17,7 @@ import {
 import { OnChangeFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { Link, useRouter } from '@/i18n/routing';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { ColumnType } from 'antd/es/table';
@@ -48,6 +49,9 @@ export default function ReleasesTable({
     const messages = useTranslations();
     const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
+
+    const { isSystemTenant } = useAuth();
+
     const column: ColumnType<ReleasesData>[] = [
         {
             title: messages('common.iNo'),
@@ -67,7 +71,7 @@ export default function ReleasesTable({
             dataIndex: 'title',
             ellipsis: true,
             align: 'left',
-            width: 200,
+            width: 220,
             fixed: 'left',
             render: (value, record) => (
                 <div className="flex items-center gap-4">
@@ -99,7 +103,7 @@ export default function ReleasesTable({
             dataIndex: 'artist',
             align: 'left',
             ellipsis: true,
-            width: 200,
+            width: 180,
             render: (value, record) => {
                 const releaseArtists = record?.releaseArtists || [];
                 const isVariousArtist = record?.isVariousArtist;
@@ -154,7 +158,7 @@ export default function ReleasesTable({
             key: 'publisher',
             dataIndex: 'publisher',
             align: 'left',
-            width: 200,
+            width: 150,
             ellipsis: true,
             render: (value, record) => (
                 // <CustomTooltip size="small" title={record?.label?.name}>
@@ -171,7 +175,7 @@ export default function ReleasesTable({
             title: messages('releases.type'),
             key: 'type',
             dataIndex: 'type',
-            align: 'center',
+            // align: 'center',
             width: 120,
             render: (_, record) => {
                 return (
@@ -319,6 +323,18 @@ export default function ReleasesTable({
             ),
         },
     ];
+
+    if (isSystemTenant) {
+        column.splice(4, 0, {
+            title: messages('tenant.label'),
+            key: 'tenant',
+            dataIndex: 'tenant',
+            width: 180,
+            render: (_, record) => {
+                return record.tenant?.name;
+            },
+        });
+    }
 
     const newColumns = column.map((column) => ({
         ...column,

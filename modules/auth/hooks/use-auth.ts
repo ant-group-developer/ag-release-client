@@ -66,6 +66,7 @@ export const useAuth = () => {
         isTenantOwnerOrAdmin,
         canAccessTenantAll,
         isSystemTenant,
+        isNotSystemTenant: !isSystemTenant,
         logout,
         refreshProfile: refetch,
     };

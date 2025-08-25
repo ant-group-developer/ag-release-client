@@ -4,6 +4,7 @@ import { LabelData } from '@/modules/labels/types';
 import { LanguagesData } from '@/modules/languages/types';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { ReleaseTypesData } from '@/modules/release-types/types';
+import { TenantData } from '@/modules/tenant/types/data';
 import { TimezoneData } from '@/modules/timezone/types';
 import { TrackData } from '@/modules/tracks/types';
 import { CommonAttribute, CommonParams } from '@/types/api';
@@ -51,6 +52,7 @@ export interface ReleasesData extends CommonAttribute {
     timeZone: TimezoneData | null;
     tracksCount: number;
     totalDuration: number;
+    tenant?: Pick<TenantData, 'id' | 'name'>;
 }
 
 export interface ReleasesDataFilter extends CommonParams {

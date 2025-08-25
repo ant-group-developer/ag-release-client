@@ -55,6 +55,10 @@ export const useGetDetailRelease = (id: ReleasesData['id']) => {
         totalDuration: 0,
         cLineYear: null,
         pLineYear: null,
+        tenant: {
+            id: '',
+            name: '',
+        },
     };
 
     return {
