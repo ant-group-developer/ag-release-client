@@ -102,10 +102,10 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                 <Controller
                                     control={control}
                                     name="cLineYear"
-                                    defaultValue={dayjs().year()}
                                     render={({ field }) => {
                                         return (
                                             <Select
+                                                id="cLineYear"
                                                 {...field}
                                                 value={field.value}
                                                 className="w-full"
@@ -185,10 +185,10 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                 <Controller
                                     control={control}
                                     name="pLineYear"
-                                    defaultValue={dayjs().year()}
                                     render={({ field }) => {
                                         return (
                                             <Select
+                                                id="pLineYear"
                                                 {...field}
                                                 value={field.value}
                                                 className="w-full"

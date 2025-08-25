@@ -1,5 +1,4 @@
 'use client';
-import DetailSkeleton from '@/components/ui/skeleton/detail-skeleton';
 import { SIZE_ICON_SMALL } from '@/constants/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { cn } from '@/helpers/common';
@@ -245,9 +244,9 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         };
     }, [isCoreDetailPage]);
 
-    if (isReleaseDataLoading || !releaseData) {
-        return <DetailSkeleton />;
-    }
+    // if (isReleaseDataLoading || !releaseData) {
+    //     return <DetailSkeleton />;
+    // }
 
     return (
         <div className="flex h-full overflow-auto" ref={scrollContainerRef}>

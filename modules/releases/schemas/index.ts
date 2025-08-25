@@ -120,12 +120,18 @@ export const releaseSchema = (messages: any) =>
             .refine((val) => val !== null && val !== '', {
                 message: messages('validation.input'),
             }),
-        pLineYear: z.number().refine((val) => val !== null, {
-            message: messages('validation.input'),
-        }),
-        cLineYear: z.number().refine((val) => val !== null, {
-            message: messages('validation.input'),
-        }),
+        pLineYear: z
+            .number()
+            .optional()
+            .refine((val) => val !== null, {
+                message: messages('validation.input'),
+            }),
+        cLineYear: z
+            .number()
+            .optional()
+            .refine((val) => val !== null, {
+                message: messages('validation.input'),
+            }),
         isVariousArtist: z.boolean(),
         releaseDate: z
             .string()
