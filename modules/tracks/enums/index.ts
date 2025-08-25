@@ -37,3 +37,10 @@ export enum TRACK_TABS {
     METADATA = 'metadata',
     AUDIO_FILE = 'audio-file',
 }
+
+export enum SCAN_COPYRIGHT_STATUS {
+    UN_SCANNED = 'un_scanned',
+    FINISHED = 'finished',
+    WARNING = 'warning',
+    REJECTED = 'rejected',
+}

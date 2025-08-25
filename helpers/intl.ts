@@ -1,4 +1,7 @@
 import { DISTRIBUTION_STATUS } from '@/modules/distribution/enum';
+import { RELEASES_STATUS } from '@/modules/releases/enums';
+import { STATUS_BACKUP } from '@/modules/setting/enums';
+import { GENRES, SCAN_COPYRIGHT_STATUS } from '@/modules/tracks/enums';
 
 type DistributionStatusMessageKey =
     | 'common.processing'
@@ -23,4 +26,82 @@ export const getIntlCodeByDistributionStatus = (
     };
 
     return distributionStatusToMessageMap[status] || 'common.progress';
+};
+
+type ReleaseStatusMessageKey =
+    | 'common.processing'
+    | 'common.issues'
+    | 'common.neverDistributed'
+    | 'common.distributed'
+    | 'common.takenDown'
+    | 'common.draft';
+export const getIntlCodeByReleaseStatus = (
+    value: string
+): ReleaseStatusMessageKey => {
+    const releaseStatusToMessageMap: Record<string, ReleaseStatusMessageKey> = {
+        [RELEASES_STATUS.PROCESSING]: 'common.processing',
+        [RELEASES_STATUS.ISSUES]: 'common.issues',
+        [RELEASES_STATUS.NEVER_DISTRIBUTED]: 'common.neverDistributed',
+        [RELEASES_STATUS.DISTRIBUTED]: 'common.distributed',
+        [RELEASES_STATUS.TAKEN_DOWN]: 'common.takenDown',
+        [RELEASES_STATUS.DRAFT]: 'common.draft',
+    };
+    return releaseStatusToMessageMap[value] || 'common.processing';
+};
+
+type BackupStatusMessageKey =
+    | 'tracks.status.running'
+    | 'tracks.status.finished'
+    | 'tracks.status.failed';
+
+export const getIntlCodeByBackupStatus = (
+    value: string
+): BackupStatusMessageKey => {
+    const releaseStatusToMessageMap: Record<string, BackupStatusMessageKey> = {
+        [STATUS_BACKUP.RUNNING]: 'tracks.status.running',
+        [STATUS_BACKUP.SUCCESS]: 'tracks.status.finished',
+        [STATUS_BACKUP.FAILED]: 'tracks.status.failed',
+    };
+    return releaseStatusToMessageMap[value] || 'common.unknown';
+};
+
+type GenresMessageKey =
+    | 'genres.pop'
+    | 'genres.rock'
+    | 'genres.jazz'
+    | 'genres.country'
+    | 'genres.hipHop'
+    | 'genres.rB'
+    | 'genres.electronic'
+    | 'genres.reggae'
+    | 'genres.rap'
+    | 'genres.blues'
+    | 'genres.classical';
+export const getIntlCodeByGenres = (value: string): GenresMessageKey => {
+    const genresToMessageMap: Record<string, GenresMessageKey> = {
+        [GENRES.POP]: 'genres.pop',
+        [GENRES.ROCK]: 'genres.rock',
+        [GENRES.JAZZ]: 'genres.jazz',
+        [GENRES.COUNTRY]: 'genres.country',
+        [GENRES.HIP_HOP]: 'genres.hipHop',
+        [GENRES.R_B]: 'genres.rB',
+        [GENRES.ELECTRONIC]: 'genres.electronic',
+        [GENRES.REGGAE]: 'genres.reggae',
+        [GENRES.BLUES]: 'genres.blues',
+        [GENRES.CLASSICAL]: 'genres.classical',
+        [GENRES.RAP]: 'genres.rap',
+    };
+    return genresToMessageMap[value] || 'common.pop';
+};
+
+export const getIntlCodeByScanCopyrightStatus = (
+    status: SCAN_COPYRIGHT_STATUS
+) => {
+    const scanStatusMap = {
+        [SCAN_COPYRIGHT_STATUS.FINISHED]: 'scanStatus.finished',
+        [SCAN_COPYRIGHT_STATUS.REJECTED]: 'scanStatus.rejected',
+        [SCAN_COPYRIGHT_STATUS.UN_SCANNED]: 'scanStatus.unScanned',
+        [SCAN_COPYRIGHT_STATUS.WARNING]: 'scanStatus.warning',
+    };
+    return scanStatusMap[status] || 'common.notAvailable';
 };

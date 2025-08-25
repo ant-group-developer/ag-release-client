@@ -1,11 +1,11 @@
 'use client';
-import { SCREEN, THEME } from '@/enums/common';
-import { useThemeStore } from '@/hooks/use-theme-store';
+import { SCREEN } from '@/enums/common';
+import { useThemeMode } from '@/hooks/use-theme-mode';
 import ReleaseSchedulingForm from '@/modules/releases/components/release-detail/release-scheduling/form';
 import ReleaseSchedulingTable from '@/modules/releases/components/release-detail/release-scheduling/table';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useGetListTracksWithPolicies } from '@/modules/tracks/hooks/use-get-list-tracks-with-policies';
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, theme } from 'antd';
 
 export default function Schedule() {
     const formValues = useReleaseFormStore((state) => state.formValues);
@@ -14,11 +14,12 @@ export default function Schedule() {
         releaseId: formValues.id,
     });
 
-    const { theme: currentTheme } = useThemeStore();
+    const { token } = theme.useToken();
+    const { isDark } = useThemeMode();
     const customTheme = {
         token: {
-            colorBgContainerDisabled:
-                currentTheme == THEME.LIGHT ? '#fff' : '#2a2a2a',
+            colorBgContainerDisabled: isDark ? '#2a2a2a' : '#fff',
+            colorTextDisabled: token?.colorText,
         },
     };
 

@@ -24,7 +24,7 @@ export default function ScanResultPanel({ data }: Props) {
     if (!data?.content?.music && data?.content?.humming) {
         value = value?.map((item) => ({
             ...item,
-            score: item.score * 100,
+            score: Math.round(item.score * 100),
         }));
     }
 

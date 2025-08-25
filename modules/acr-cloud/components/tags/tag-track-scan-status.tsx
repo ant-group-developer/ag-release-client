@@ -1,9 +1,9 @@
 import { Tag } from 'antd';
 import { useTranslations } from 'next-intl';
-import { TRACK_SCAN_STATUS } from '../../enums';
+import { SCAN_STATUS } from '../../enums';
 
 type Props = {
-    status: TRACK_SCAN_STATUS;
+    status: SCAN_STATUS;
 };
 
 export default function TagScanStatus({ status }: Props) {
@@ -15,36 +15,34 @@ export default function TagScanStatus({ status }: Props) {
     );
 }
 
-export const getScanStatusColor = (status: TRACK_SCAN_STATUS): string => {
+export const getScanStatusColor = (status: SCAN_STATUS): string => {
     switch (status) {
-        case TRACK_SCAN_STATUS.RUNNING:
+        case SCAN_STATUS.RUNNING:
             return 'processing'; // blue
-        case TRACK_SCAN_STATUS.PENDING:
+        case SCAN_STATUS.PENDING:
             return 'warning'; // orange/yellow
-        case TRACK_SCAN_STATUS.FINISHED:
+        case SCAN_STATUS.FINISHED:
             return 'success'; // green
-        case TRACK_SCAN_STATUS.FAILED:
+        case SCAN_STATUS.FAILED:
             return 'error'; // red
-        case TRACK_SCAN_STATUS.CANCEL:
+        case SCAN_STATUS.CANCEL:
             return 'error'; // gray
         default:
             return 'default';
     }
 };
 
-export const getScanStatusTranslationKey = (
-    status: TRACK_SCAN_STATUS
-): string => {
+export const getScanStatusTranslationKey = (status: SCAN_STATUS): string => {
     switch (status) {
-        case TRACK_SCAN_STATUS.RUNNING:
+        case SCAN_STATUS.RUNNING:
             return 'tracks.status.scanning';
-        case TRACK_SCAN_STATUS.PENDING:
+        case SCAN_STATUS.PENDING:
             return 'tracks.status.pending';
-        case TRACK_SCAN_STATUS.FINISHED:
+        case SCAN_STATUS.FINISHED:
             return 'tracks.status.finished';
-        case TRACK_SCAN_STATUS.FAILED:
+        case SCAN_STATUS.FAILED:
             return 'tracks.status.failed';
-        case TRACK_SCAN_STATUS.CANCEL:
+        case SCAN_STATUS.CANCEL:
             return 'tracks.status.cancel';
         default:
             return 'tracks.status.unknown';

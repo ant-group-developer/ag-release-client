@@ -1,5 +1,6 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
-import { formattedDate, getIntlCodeByReleaseStatus } from '@/helpers/common';
+import { formattedDate } from '@/helpers/common';
+import { getIntlCodeByReleaseStatus } from '@/helpers/intl';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
 import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';

@@ -4,7 +4,7 @@ import { cn } from '@/helpers/common';
 import { ArtistRoleData } from '@/modules/artist-role/types';
 import { ArtistData } from '@/modules/artist/types';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
-import { Avatar, Checkbox, CheckboxChangeEvent } from 'antd';
+import { Avatar, Checkbox, CheckboxChangeEvent, theme } from 'antd';
 import { Trash2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { HTMLAttributes } from 'react';
@@ -38,6 +38,8 @@ export default function ArtistCard({
     const formValues = useReleaseFormStore((state) => state.formValues);
     const artist = data?.artist;
     const artistRole = data.artistRole;
+    const { token } = theme.useToken();
+
     return (
         <div
             className={cn(
@@ -47,6 +49,9 @@ export default function ArtistCard({
                     'cursor-not-allowed': disabled,
                 }
             )}
+            style={{
+                background: token.colorBgContainer,
+            }}
             {...props}
         >
             <div className="flex items-center gap-4">

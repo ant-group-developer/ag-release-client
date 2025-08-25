@@ -1,8 +1,16 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
-import { SCREEN, WEEK_DAY } from '@/enums/common';
+import AppPagination from '@/components/ui/pagination';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { ORDER, SCREEN, WEEK_DAY } from '@/enums/common';
+import { formattedDate, setSortOrder } from '@/helpers/common';
 import { useActive } from '@/hooks/use-active';
-import { Checkbox, Form, InputNumber, Select } from 'antd';
+import { useApiError } from '@/hooks/use-api-error';
+import { useFilter } from '@/hooks/use-filter';
+import { useBackupDatabase } from '@/modules/backup-dabatase/hooks/use-backup-database';
+import { useListBackupDatabaseLogs } from '@/modules/backup-dabatase/hooks/use-get-backup-database-logs';
+import { BackupDatabaseLogDataFilter } from '@/modules/backup-dabatase/types';
+import { Button, Checkbox, Form, InputNumber, Select } from 'antd';
 import { useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
@@ -10,6 +18,7 @@ import { useGetSetting } from '../../hooks/use-get-setting';
 import { useUpdateSetting } from '../../hooks/use-update-role';
 import { EXECUTE_CYCLE_TYPE } from '../../types';
 import { UpdateSettingPayload } from '../../types/payload';
+import BackupDatabaseHeader from '../header';
 import { BackupDatabaseLogTable } from '../table/backup-database-table';
 
 type Props = {};
@@ -20,12 +29,27 @@ export default function BackupDatabaseForm({}: Props) {
     const { settingData } = useGetSetting();
     const backupDatabase = settingData?.backupDatabase;
     const { updateSetting } = useUpdateSetting();
+    const { backupDatabase: backupDatabaseNow, isPending: isBackupPending } =
+        useBackupDatabase();
     const { active, deActive, isActive } = useActive();
+    const { handleError } = useApiError();
     const executeCycle = useWatch('executeCycleType', form);
     const nHours = useWatch('nHours', form);
     const nDays = useWatch('nDays', form);
     const nMinutes = useWatch('nMinutes', form);
     const dayOfWeek = useWatch('dayOfWeek', form);
+    const {
+        dataFilter,
+        canClearFilter,
+        onChangeFilter,
+        onChangePage,
+        removeFilter,
+    } = useFilter<BackupDatabaseLogDataFilter>({
+        page: 1,
+        pageSize: PAGE_SIZE,
+    });
+    const { backupDatabaseLogsData, isFetching, refetch, dataUpdatedAt } =
+        useListBackupDatabaseLogs(dataFilter);
 
     const scheduleOptions = [
         { label: 'Daily', value: EXECUTE_CYCLE_TYPE.DAILY },
@@ -115,7 +139,6 @@ export default function BackupDatabaseForm({}: Props) {
                     },
                 },
             };
-            console.log('🚀 ~ onFinish ~ payload:', payload);
             updateSetting({
                 payload,
                 onSuccess: () => {
@@ -128,6 +151,18 @@ export default function BackupDatabaseForm({}: Props) {
         } catch (error) {
             deActive();
         }
+    };
+
+    const onChangeSort = (pagination: any, filters: any, sort: any) => {
+        const orderBy = setSortOrder(sort, ORDER.ASC);
+        const fieldOrder = sort.field;
+        onChangeFilter(
+            {
+                orderBy,
+                fieldOrder,
+            },
+            false
+        );
     };
 
     useEffect(() => {
@@ -143,6 +178,7 @@ export default function BackupDatabaseForm({}: Props) {
                 onFinish={onFinish}
                 disabled={isActive}
                 submitProps={{ loading: isActive }}
+                submitText={messages('action.update.button')}
                 initialValues={{
                     executeCycleType: EXECUTE_CYCLE_TYPE.DAILY,
                     dayOfWeek: WEEK_DAY.MONDAY,
@@ -283,14 +319,61 @@ export default function BackupDatabaseForm({}: Props) {
                 </AppFormItem>
             </AppForm>
             <div>
-                <p className="py-2 font-semibold">Backup database logs</p>
-                <BackupDatabaseLogTable
-                    className="rounded-md border"
-                    pagination={{ pageSize: 20, current: 1 }}
-                    scroll={{
-                        x: SCREEN.MD,
-                    }}
-                />
+                <div className="flex justify-between py-2 font-semibold">
+                    <span>Backup database logs</span>
+                    <Button
+                        type="primary"
+                        onClick={() => {
+                            backupDatabaseNow({
+                                // onSuccess: () => {
+                                //     showNotification('success', 'Success');
+                                // },
+                            });
+                        }}
+                        loading={isBackupPending}
+                    >
+                        {messages('common.backupNow')}
+                    </Button>
+                </div>
+                <div className="rounded-md border">
+                    <BackupDatabaseHeader
+                        dataFilter={dataFilter}
+                        onChangeFilter={onChangeFilter}
+                        canClearFilter={canClearFilter}
+                        removeFilter={removeFilter}
+                        handleRefresh={() => refetch()}
+                        lastUpdatedAt={formattedDate(
+                            dataUpdatedAt || new Date()
+                        )}
+                    />
+                    <BackupDatabaseLogTable
+                        pagination={{
+                            pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                            current:
+                                backupDatabaseLogsData.metadata.currentPage,
+                        }}
+                        scroll={{
+                            x: SCREEN.MD,
+                            y: 300,
+                        }}
+                        dataSource={backupDatabaseLogsData?.items}
+                        loading={isFetching}
+                        onChange={onChangeSort}
+                        dataFilter={dataFilter}
+                    />
+                    <AppPagination
+                        className="border-b border-t"
+                        align="end"
+                        current={backupDatabaseLogsData?.metadata?.currentPage}
+                        pageSize={dataFilter.pageSize}
+                        total={backupDatabaseLogsData.metadata?.totalItems}
+                        onChange={onChangePage}
+                        showTotalText
+                        showSizeChanger
+                        showQuickJumper
+                        pageSizeOptions={PAGE_SIZE_OPTIONS}
+                    />
+                </div>
             </div>
         </div>
     );

@@ -4,3 +4,9 @@ export enum SETTING_TABS {
     TELEGRAM = 'telegram',
     ACR_CLOUD = 'acrCloud',
 }
+
+export enum STATUS_BACKUP {
+    RUNNING = 'running',
+    SUCCESS = 'success',
+    FAILED = 'failed',
+}

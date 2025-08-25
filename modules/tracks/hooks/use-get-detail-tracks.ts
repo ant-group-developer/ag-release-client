@@ -2,6 +2,7 @@ import { OriginType } from '@/components/ui/select/original-type-select';
 import { useQuery } from '@tanstack/react-query';
 import { trackApi } from '../apis';
 import { trackQueryKeys } from '../constants/query-keys';
+import { SCAN_COPYRIGHT_STATUS } from '../enums';
 import { TrackData } from '../types';
 
 export const useGetDetailTrack = (id: TrackData['id']) => {
@@ -64,6 +65,7 @@ export const useGetDetailTrack = (id: TrackData['id']) => {
             updatedAt: null,
         },
         trackPolicies: [],
+        scanCopyrightStatus: SCAN_COPYRIGHT_STATUS.UN_SCANNED,
     };
 
     return {

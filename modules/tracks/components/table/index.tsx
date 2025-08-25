@@ -1,6 +1,5 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { SIZE_ICON } from '@/constants/common';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import { getTrackDetailRoute } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
@@ -11,11 +10,10 @@ import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { TRACK_TABS, TRACKS_COLUMNS_DISPLAY } from '@/modules/tracks/enums';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
-import { Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
-import { SearchCheck, SearchX } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { TrackData, TrackDataFilter } from '../../types';
+import TagScanCopyright from '../tags/tag-scan-coppyright';
 import TrackCoverArt from './trackCoverArt';
 
 type Props = Omit<AppTableProps<TrackData>, 'columns'> & {
@@ -136,7 +134,7 @@ export default function TracksTable({
             ),
         },
         {
-            title: 'ACR Cloud',
+            title: 'ACRCloud',
             key: 'acrCloud',
             dataIndex: 'acrCloud',
             align: 'center',
@@ -145,36 +143,7 @@ export default function TracksTable({
                 const isScanned = !!record?.isScanned;
                 return (
                     <div>
-                        {/* <Button
-                            onClick={() => {
-                                if (!isScanned) return;
-                                openModal(
-                                    TYPE_MODAL_TRACK.ACR_CLOUD_SCAN_RESULT,
-                                    record
-                                );
-                            }}
-                            icon={
-                                <div>
-                                    {isScanned ? (
-                                        <SearchCheck size={SIZE_ICON} />
-                                    ) : (
-                                        <SearchX size={SIZE_ICON} />
-                                    )}
-                                </div>
-                            }
-                            className={cn(
-                                '!rounded-2xl !text-yellow-500 hover:!border-yellow-500',
-                                {
-                                    '!text-green-500 hover:!border-green-500':
-                                        isScanned,
-                                }
-                            )}
-                        >
-                            {isScanned
-                                ? messages('common.scanned')
-                                : messages('common.notScanned')}
-                        </Button> */}
-                        <Tag
+                        {/* <Tag
                             onClick={() => {
                                 if (!isScanned) {
                                     return openModal(
@@ -202,7 +171,23 @@ export default function TracksTable({
                                     {messages('common.notScanned')}
                                 </div>
                             )}
-                        </Tag>
+                        </Tag> */}
+                        <TagScanCopyright
+                            className="!border-0 hover:cursor-pointer hover:!border hover:opacity-80"
+                            onClick={() => {
+                                if (!isScanned) {
+                                    return openModal(
+                                        TYPE_MODAL_TRACK.ACR_CLOUD_SCAN,
+                                        record
+                                    );
+                                }
+                                openModal(
+                                    TYPE_MODAL_TRACK.ACR_CLOUD_SCAN_RESULT,
+                                    record
+                                );
+                            }}
+                            status={record?.scanCopyrightStatus}
+                        />
                     </div>
                 );
             },

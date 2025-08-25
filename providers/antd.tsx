@@ -1,8 +1,8 @@
 'use client';
-import { LOCALE, THEME } from '@/enums/common';
-import { useThemeStore } from '@/hooks/use-theme-store';
+import { LOCALE } from '@/enums/common';
+import { useThemeMode } from '@/hooks/use-theme-mode';
 import { getThemeConfig } from '@/theme/theme-config';
-import { ConfigProvider, theme as antdTheme } from 'antd';
+import { ConfigProvider } from 'antd';
 import enUS from 'antd/locale/en_US';
 import viVN from 'antd/locale/vi_VN';
 import { useLocale } from 'next-intl';
@@ -12,16 +12,12 @@ interface Props extends PropsWithChildren {}
 
 function AntdProvider({ children }: Props) {
     const locale = useLocale();
-    const { theme: currentTheme, primaryColor } = useThemeStore();
-
-    const themeConfig = getThemeConfig(currentTheme, primaryColor as string);
+    const { algorithm, isDark } = useThemeMode();
+    const themeConfig = getThemeConfig(isDark);
 
     const antdThemeConfig = {
         ...themeConfig,
-        algorithm:
-            currentTheme === THEME.DARK
-                ? antdTheme.darkAlgorithm
-                : antdTheme.defaultAlgorithm,
+        algorithm,
         components: {
             Form: {
                 itemMarginBottom: 12,

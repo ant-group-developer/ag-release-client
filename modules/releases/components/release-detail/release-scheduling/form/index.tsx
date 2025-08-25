@@ -212,7 +212,7 @@ export default function ReleaseSchedulingForm({}: Props) {
 
                         <FormItem
                             name="releaseTimezoneId"
-                            label="timezone"
+                            label={messages('timezone.zone')}
                             required
                             ErrorMessage={errors.releaseTimezoneId?.message}
                         >

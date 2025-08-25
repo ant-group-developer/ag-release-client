@@ -1,8 +1,6 @@
 import { TYPE_FILTER } from '@/enums/common';
-import {
-    getIntlCodeByReleaseStatus,
-    getTitleChipDisplay,
-} from '@/helpers/common';
+import { getTitleChipDisplay } from '@/helpers/common';
+import { getIntlCodeByReleaseStatus } from '@/helpers/intl';
 import { RELEASES_STATUS } from '@/modules/releases/enums';
 import { ReleasesDataFilter } from '@/modules/releases/types';
 import { useTranslations } from 'next-intl';

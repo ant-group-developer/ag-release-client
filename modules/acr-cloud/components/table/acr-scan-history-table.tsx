@@ -4,13 +4,14 @@ import { Avatar } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import { TRACK_SCAN_STATUS } from '../../enums';
+
 import { useCancelScan } from '../../hooks/use-cancel-scan';
 import { useReScan } from '../../hooks/use-re-scan';
 import { TrackScanStatusData, TrackScanStatusDataFilter } from '../../types';
 import AcrCloudScanDetailModal from '../modal/acr-scan-detail-modal';
-import TagScanStatus from '../tags/tag-scan-status';
+import TagTrackScanStatus from '../tags/tag-track-scan-status';
 import ScanStatusAction from './scan-status-action-button';
+import { SCAN_STATUS } from '../../enums';
 
 type Props = Omit<AppTableProps<TrackScanStatusData>, 'columns'> & {
     dataFilter: TrackScanStatusDataFilter;
@@ -90,7 +91,9 @@ export default function AcrScanHistoryTable({ ...props }: Props) {
             key: 'status',
             width: 50,
             align: 'center',
-            render: (_, record) => <TagScanStatus status={record?.status} />,
+            render: (_, record) => (
+                <TagTrackScanStatus status={record?.status} />
+            ),
         },
         {
             title: messages('tracks.totalTrackNeedScan'),
@@ -129,7 +132,7 @@ export default function AcrScanHistoryTable({ ...props }: Props) {
             fixed: 'right',
             render: (_, record) => {
                 const isShowCancel =
-                    record?.status == TRACK_SCAN_STATUS.RUNNING;
+                    record?.status == SCAN_STATUS.RUNNING;
                 return (
                     <ScanStatusAction
                         showCancel={isShowCancel}

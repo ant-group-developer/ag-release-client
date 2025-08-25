@@ -65,7 +65,7 @@ export default function SettingPage({}: Props) {
         },
         {
             key: SETTING_TABS.ACR_CLOUD,
-            label: 'ACR Cloud',
+            label: 'ACRCloud',
             children: <AcrCloudForm />,
         },
     ];

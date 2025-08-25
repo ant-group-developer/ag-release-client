@@ -1,9 +1,8 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
-import { THEME } from '@/enums/common';
 import useModalStore from '@/hooks/use-modal';
-import { useThemeStore } from '@/hooks/use-theme-store';
+import { useThemeMode } from '@/hooks/use-theme-mode';
 import AddNewTrackModal from '@/modules/releases/components/release-detail/release-tracks/modal/add-new-track-modal';
 import ReleaseTracksTable from '@/modules/releases/components/release-detail/release-tracks/table';
 import {
@@ -21,7 +20,7 @@ import { useDeleteTrack } from '@/modules/tracks/hooks/use-delete-track';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { TrackData } from '@/modules/tracks/types';
 import { DeleteVariables } from '@/types/api';
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { Key, useEffect, useState } from 'react';
 
@@ -35,7 +34,6 @@ export default function Tracks() {
     const dataEdit = useModalStore((state) => state.dataEdit);
     const closeModal = useModalStore((state) => state.closeModal);
     const openModal = useModalStore((state) => state.openModal);
-    const { theme: currentTheme, primaryColor } = useThemeStore();
 
     // apis
     const { tracksData, isLoading } = useGetListTracks({
@@ -72,10 +70,12 @@ export default function Tracks() {
         selectedRow,
         onChange: handleRowSelection,
     };
+    const { token } = theme.useToken();
+    const { isDark } = useThemeMode();
     const customTheme = {
         token: {
-            colorBgContainerDisabled:
-                currentTheme == THEME.LIGHT ? '#fff' : '#2a2a2a',
+            colorBgContainerDisabled: isDark ? '#2a2a2a' : '#fff',
+            colorTextDisabled: token?.colorText,
         },
     };
 
@@ -97,7 +97,7 @@ export default function Tracks() {
                 <ReleaseTracksTable
                     dataSource={tracksData?.items}
                     // rowSelection={rowSelection}
-                    sticky={{ offsetHeader: 174 }}
+                    // sticky={{ offsetHeader: 174 }}
                     loading={isLoading}
                     pagination={{
                         pageSize: PAGE_SIZE,

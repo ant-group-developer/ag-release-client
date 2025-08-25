@@ -1,5 +1,4 @@
 import GoogleAnalytics from '@/components/google-analytics';
-import ThemeProvider from '@/components/theme-provider';
 import { defaultConfig } from '@/constants/env';
 import { DEFAULT_ROUTE } from '@/enums/routes';
 import { flattenData } from '@/helpers/common';
@@ -117,7 +116,7 @@ export default async function RootLayout({
                 className={`${openSans.variable} ${openSans.className} ${inter.variable} ${inter.className} text-sm antialiased`}
             >
                 <NextIntlClientProvider locale={locale} messages={messages}>
-                    <ThemeProvider />
+                    {/* <ThemeProvider /> */}
                     <AntdProvider>
                         <NuqsAdapter>{children}</NuqsAdapter>
                         <GoogleAnalytics />

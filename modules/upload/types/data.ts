@@ -77,3 +77,9 @@ export enum ENTITY_TYPE_PICTURE {
     TENANT = 'tenants',
     LOGO = 'logo',
 }
+
+export interface DownloadNonFile {
+    url: string;
+    isPublic: boolean;
+    fileName: string;
+}

@@ -37,6 +37,7 @@
         "forbiddenDescription": "Please contact the Admin for more details"
     },
     "common": {
+        "backupNow": "Sao lưu ngay",
         "name": "Tên",
         "setIsDefault": "Đặt làm mặc định",
         "reScan": "Quét lại",
@@ -1386,5 +1387,18 @@
         "friday": "Thứ Sáu",
         "saturday": "Thứ Bảy",
         "sunday": "Chủ Nhật"
+    },
+
+    "scanStatus": {
+        "unScanned": "Chưa được quét",
+        "finished": "Không có vi phạm",
+        "warning": "Cảnh báo",
+        "rejected": "Từ chối"
+    },
+
+    "backupLog": {
+        "success": {
+            "startedPleaseWait": "Đang sao lưu, xin vui lòng đợi..."
+        }
     }
 }
