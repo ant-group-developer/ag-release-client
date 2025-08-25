@@ -1,6 +1,7 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
+import { MAX_NAME_LENGTH, MAX_NOTE_LENGTH } from '@/constants/validate';
 import { useActive } from '@/hooks/use-active';
 import { uploadApi } from '@/modules/upload/apis';
 import { ENTITY_TYPE_PICTURE } from '@/modules/upload/types/data';
@@ -105,9 +106,9 @@ export default function WebsiteForm({}: Props) {
                             message: messages('validation.input'),
                         },
                         {
-                            max: 100,
+                            max: MAX_NAME_LENGTH,
                             message: messages('validation.stringMax', {
-                                max: 100,
+                                max: MAX_NAME_LENGTH,
                                 field: messages('common.name'),
                             }),
                         },
@@ -125,9 +126,9 @@ export default function WebsiteForm({}: Props) {
                             message: messages('validation.input'),
                         },
                         {
-                            max: 100,
+                            max: MAX_NAME_LENGTH,
                             message: messages('validation.stringMax', {
-                                max: 100,
+                                max: MAX_NAME_LENGTH,
                                 field: messages('common.title'),
                             }),
                         },
@@ -140,10 +141,10 @@ export default function WebsiteForm({}: Props) {
                     label={messages('common.description')}
                     rules={[
                         {
-                            max: 500,
+                            max: MAX_NOTE_LENGTH,
                             message: messages('validation.stringMax', {
-                                max: 500,
-                                field: messages('common.description'),
+                                max: MAX_NOTE_LENGTH,
+                                field: messages('common.note'),
                             }),
                         },
                     ]}

@@ -1,5 +1,6 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
+import { MAX_NAME_LENGTH } from '@/constants/validate';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
 import { getIntlCodeByReleaseStatus } from '@/helpers/intl';
@@ -79,10 +80,10 @@ export default function ACRCloudForm({}: Props) {
                             message: messages('validation.input'),
                         },
                         {
-                            max: 100,
+                            max: MAX_NAME_LENGTH,
                             message: messages('validation.stringMax', {
-                                max: 100,
-                                field: 'ACRHost',
+                                max: MAX_NAME_LENGTH,
+                                field: 'ACR host',
                             }),
                         },
                     ]}
@@ -99,10 +100,10 @@ export default function ACRCloudForm({}: Props) {
                             message: messages('validation.input'),
                         },
                         {
-                            max: 100,
+                            max: MAX_NAME_LENGTH,
                             message: messages('validation.stringMax', {
-                                max: 100,
-                                field: 'ACR accessKey',
+                                max: MAX_NAME_LENGTH,
+                                field: 'ACR access key',
                             }),
                         },
                     ]}
@@ -119,10 +120,10 @@ export default function ACRCloudForm({}: Props) {
                             message: messages('validation.input'),
                         },
                         {
-                            max: 100,
+                            max: MAX_NAME_LENGTH,
                             message: messages('validation.stringMax', {
-                                max: 100,
-                                field: 'ACR accessSecret',
+                                max: MAX_NAME_LENGTH,
+                                field: 'ACR access secret,',
                             }),
                         },
                     ]}
@@ -201,9 +202,9 @@ export default function ACRCloudForm({}: Props) {
                         },
                         {
                             type: 'number',
-                            max: 100,
+                            max: MAX_NAME_LENGTH,
                             message: messages('validation.numberMax', {
-                                max: 100,
+                                max: MAX_NAME_LENGTH,
                                 field: messages('tracks.scoreWarning'),
                             }),
                         },

@@ -1,5 +1,6 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
+import { MAX_NAME_LENGTH } from '@/constants/validate';
 import { useActive } from '@/hooks/use-active';
 import { Form, Input } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -63,9 +64,9 @@ export default function TelegramForm({}: Props) {
                             message: messages('validation.input'),
                         },
                         {
-                            max: 100,
+                            max: MAX_NAME_LENGTH,
                             message: messages('validation.stringMax', {
-                                max: 100,
+                                max: MAX_NAME_LENGTH,
                                 field: 'Token',
                             }),
                         },
@@ -83,10 +84,10 @@ export default function TelegramForm({}: Props) {
                             message: messages('validation.input'),
                         },
                         {
-                            max: 100,
+                            max: MAX_NAME_LENGTH,
                             message: messages('validation.stringMax', {
-                                max: 100,
-                                field: 'chatId',
+                                max: MAX_NAME_LENGTH,
+                                field: 'Chat ID',
                             }),
                         },
                     ]}

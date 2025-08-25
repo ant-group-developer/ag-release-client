@@ -1,6 +1,7 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
+import { MAX_NAME_LENGTH } from '@/constants/validate';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
@@ -122,9 +123,9 @@ export default function CurrenciesFormModal({ ...props }: Props) {
                                 message: messages('validation.input'),
                             },
                             {
-                                max: 100,
+                                max: MAX_NAME_LENGTH,
                                 message: messages('validation.stringMax', {
-                                    max: 100,
+                                    max: MAX_NAME_LENGTH,
                                     field: messages('currencies.name'),
                                 }),
                             },

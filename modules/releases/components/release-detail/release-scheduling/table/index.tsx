@@ -30,37 +30,11 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
     const trackPolicies = props?.dataSource?.find(
         (track) => track?.trackPolicies?.length > 0
     )?.trackPolicies;
-
-    const dspColumn = trackPolicies?.map((item: TrackPolicyData) => {
-        const dsp = item?.dsp;
-        return {
-            title: dsp.name,
-            dataIndex: `dsp_${dsp.id}`,
-            key: dsp.id,
-            align: 'left' as const,
-            width: 250,
-            render: (value: string, record: TrackData) => {
-                const trackPolicy = record.trackPolicies?.find(
-                    (p) => p.dspId === dsp?.id
-                );
-                return (
-                    <ActionsDspSelect
-                        dspId={dsp?.id}
-                        defaultValue={trackPolicy?.action?.id}
-                        disabled={!isCanEdit}
-                        className="w-full"
-                        onChange={(value) =>
-                            updateTrackPolicy({
-                                id: record.id,
-                                actionId: value,
-                                trackPolicyId: trackPolicy?.id as string,
-                            })
-                        }
-                    />
-                );
-            },
-        };
-    });
+    console.log('🚀 ~ ReleaseSchedulingTable ~ trackPolicies:', trackPolicies);
+    console.log(
+        '🚀 ~ ReleaseSchedulingTable ~ props?.dataSource?:',
+        props?.dataSource
+    );
 
     const columns: TableColumnsType<TrackData> = [
         {
@@ -68,6 +42,7 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
             dataIndex: '',
             key: 'ino',
             width: 50,
+            fixed: 'left',
             align: 'center',
             render: (_: any, __: any, index: number) => index + 1,
         },
@@ -75,7 +50,8 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
             title: messages('tracks.name'),
             dataIndex: 'track',
             key: 'track',
-            width: 500,
+            width: 400,
+            fixed: 'left',
             align: 'left',
             ellipsis: true,
             render: (_, record) => (
@@ -122,7 +98,37 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
             title: messages('common.policy'),
             colSpan: trackPolicies?.length,
             align: 'center',
-            children: dspColumn,
+            children: trackPolicies?.map((item: TrackPolicyData) => {
+                const dsp = item?.dsp;
+                return {
+                    title: dsp.name,
+                    dataIndex: `dsp_${dsp.id}`,
+                    key: dsp.id,
+                    align: 'left' as const,
+                    width: 250,
+                    render: (value: string, record: TrackData) => {
+                        const trackPolicy = record.trackPolicies?.find(
+                            (p) => p.dspId === dsp?.id
+                        );
+                        return (
+                            <ActionsDspSelect
+                                dspId={dsp?.id}
+                                defaultValue={trackPolicy?.action?.id}
+                                disabled={!isCanEdit}
+                                className="w-full"
+                                onChange={(value) =>
+                                    updateTrackPolicy({
+                                        id: record.id,
+                                        actionId: value,
+                                        trackPolicyId:
+                                            trackPolicy?.id as string,
+                                    })
+                                }
+                            />
+                        );
+                    },
+                };
+            }),
         },
     ];
 

@@ -5,6 +5,7 @@ import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import ActionsSelect from '@/components/ui/select/actions-select';
 import { SIZE_ICON } from '@/constants/common';
+import { MAX_NAME_LENGTH } from '@/constants/validate';
 import { getAvatarUrl } from '@/helpers/avatar-tailwind';
 import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
@@ -238,9 +239,10 @@ export default function DspFormModal({ ...props }: Props) {
                             message: messages('validation.input'),
                         },
                         {
-                            max: 100,
-                            message: messages('validation.max', {
-                                number: 100,
+                            max: MAX_NAME_LENGTH,
+                            message: messages('validation.stringMax', {
+                                max: MAX_NAME_LENGTH,
+                                field: messages('dsp.name'),
                             }),
                         },
                     ]}

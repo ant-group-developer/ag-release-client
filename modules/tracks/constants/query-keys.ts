@@ -9,7 +9,6 @@ export const trackQueryKeys = {
         params
             ? ([...trackQueryKeys.lists(), params] as const)
             : trackQueryKeys.lists(),
-
     listsByReleaseId: () =>
         [
             ...trackQueryKeys.all,
@@ -26,4 +25,12 @@ export const trackQueryKeys = {
 
     details: () => [...trackQueryKeys.all, QUERY_KEY.TRACK.GET_DETAIL] as const,
     detail: (id: string) => [...trackQueryKeys.details(), id] as const,
+    listsTracksPolicies: () => [
+        ...trackQueryKeys.all,
+        QUERY_KEY.TRACK.GET_TRACKS_POLICIES,
+    ],
+    listTracksPolicies: (params: TrackDataFilter) => [
+        trackQueryKeys.listsTracksPolicies(),
+        params,
+    ],
 };
