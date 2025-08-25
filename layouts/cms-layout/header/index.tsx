@@ -1,7 +1,7 @@
 import CreateButton from '@/components/ui/button/create-button';
 import IconButton from '@/components/ui/button/icon-button';
-import useModalStore from '@/hooks/use-modal';
-import { Link, useRouter } from '@/i18n/routing';
+import { Link } from '@/i18n/routing';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import TenantSwitch from '@/modules/tenant/components/tenant-switch';
 import { Layout } from 'antd';
 import { Menu } from 'lucide-react';
@@ -18,9 +18,7 @@ const { Header: AntdHeader } = Layout;
 
 function Header({ collapsed, toggleCollapsed }: Props) {
     const messages = useTranslations();
-    const typeModal = useModalStore((state) => state.typeModal);
-    const openModal = useModalStore((state) => state.openModal);
-    const router = useRouter();
+    const { isNotSystemTenant } = useAuth();
 
     return (
         <AntdHeader
@@ -48,12 +46,14 @@ function Header({ collapsed, toggleCollapsed }: Props) {
             </div> */}
 
             <div className="flex flex-1 items-center justify-end gap-2">
-                <Link href={'/releases/create'}>
-                    <CreateButton
-                        canCreate
-                        text={messages('releases.create')}
-                    />
-                </Link>
+                {isNotSystemTenant && (
+                    <Link href={'/releases/create'}>
+                        <CreateButton
+                            canCreate
+                            text={messages('releases.create')}
+                        />
+                    </Link>
+                )}
                 {/* <LocaleSelect /> */}
                 {/* <ThemeToggle /> */}
                 <AppSupport />

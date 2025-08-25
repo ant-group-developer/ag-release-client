@@ -267,7 +267,7 @@ export default function ReleaseDetailForm() {
                     <div className="flex w-full justify-end">
                         <Button
                             onClick={handleNext}
-                            disabled={isCreateReleasePage || isReadMode}
+                            disabled={isReadMode}
                             type="primary"
                             className="my-8"
                             loading={isActive}

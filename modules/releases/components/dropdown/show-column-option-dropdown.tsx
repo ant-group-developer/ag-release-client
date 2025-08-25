@@ -59,6 +59,10 @@ export default function ShowColumnOptionDropdown({
             label: messages('releases.type'),
         },
         {
+            key: RELEASES_COLUMNS_DISPLAY.TENANT,
+            label: messages('tenant.label'),
+        },
+        {
             key: RELEASES_COLUMNS_DISPLAY.UPC,
             label: 'UPC',
         },

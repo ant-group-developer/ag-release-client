@@ -34,7 +34,7 @@ function UserTable({ dataFilter, actionProps, ...props }: Props) {
     const openModal = useModalStore((state) => state.openModal);
     const canUpdate = true;
 
-    const { isAdmin, isSystemTenant } = useAuth();
+    const { isAdmin, isNotSystemTenant } = useAuth();
 
     const { updateUser } = useUpdateUser();
 
@@ -221,7 +221,7 @@ function UserTable({ dataFilter, actionProps, ...props }: Props) {
                             openModal(TYPE_MODAL_USER.UPDATE, record)
                         }
                         showDelete={
-                            (!isSystemTenant &&
+                            (isNotSystemTenant &&
                                 !isSystemAdmin &&
                                 !isTenantOwner) ||
                             false
