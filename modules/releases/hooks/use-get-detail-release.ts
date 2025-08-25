@@ -76,6 +76,10 @@ export const useGetDetailRelease = (id: ReleasesData['id']) => {
             },
             tenantUser: [],
         },
+        tenant: {
+            id: '',
+            name: '',
+        },
     };
 
     return {

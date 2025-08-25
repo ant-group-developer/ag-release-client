@@ -28,7 +28,7 @@ export default function UserHeader({
 }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
-    const { isSystemTenant } = useAuth();
+    const { isNotSystemTenant } = useAuth();
     return (
         <AppHeader className="app-header">
             <AppHeaderGroup>
@@ -53,7 +53,7 @@ export default function UserHeader({
                         })}
                         onClick={() => openModal(TYPE_MODAL_USER.CREATE)}
                     />
-                    {!isSystemTenant && (
+                    {isNotSystemTenant && (
                         <CreateButton
                             canCreate={true}
                             text={messages('action.invite.title', {

@@ -14,7 +14,7 @@ type Props = {
 
 function UserForm({ isCreate, ...props }: Props) {
     const messages = useTranslations();
-    const { isSystemTenant } = useAuth();
+    const { isSystemTenant, isNotSystemTenant } = useAuth();
 
     const tenantType = AppForm.useWatch('tenantType', props.form);
 
@@ -133,7 +133,7 @@ function UserForm({ isCreate, ...props }: Props) {
                 </AppForm.Item>
             )}
 
-            {((isCreate && isSystemTenant) || !isSystemTenant) && (
+            {((isCreate && isSystemTenant) || isNotSystemTenant) && (
                 <AppForm.Item
                     label={messages('user.role.tenant.label')}
                     name={'tenantType'}

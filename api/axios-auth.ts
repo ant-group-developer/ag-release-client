@@ -2,7 +2,9 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import type { Session } from 'next-auth';
 import { getSession, signOut } from 'next-auth/react';
 
-const ACCESS_TOKEN_EXPIRED_MESSAGE = 'jwt expired';
+const TOKEN_EXPIRED_NAME = 'TokenExpiredError';
+const TOKEN_ERROR_NAME = 'JsonWebTokenError';
+
 export const REFRESH_FAILED_MESSAGE = 'RefreshFailed';
 
 type AugmentedSession = Session & {
@@ -53,7 +55,7 @@ function getSessionOnce(): Promise<AugmentedSession | null> {
 axiosInstance.interceptors.response.use(
     (res: AxiosResponse) => res,
     async (error) => {
-        const msg = error?.response?.data?.message as string | undefined;
+        const errName = error?.response?.data?.name as string | undefined;
         const status = error?.response?.status as number | undefined;
 
         // Prevent infinite loops
@@ -64,9 +66,13 @@ axiosInstance.interceptors.response.use(
             return Promise.reject(error);
         }
 
+        const shouldSignout = errName === TOKEN_ERROR_NAME;
+        if (shouldSignout) {
+            return signOut();
+        }
+
         // Decide when to refresh: message match OR 401 (adjust to your API)
-        const shouldRefresh =
-            msg === ACCESS_TOKEN_EXPIRED_MESSAGE || status === 401;
+        const shouldRefresh = errName === TOKEN_EXPIRED_NAME || status === 401;
 
         if (!shouldRefresh) {
             return Promise.reject(error);

@@ -6,7 +6,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import { RELEASES_STATUS } from '../enums';
 import { ReleasesData } from '../types';
 
-export interface ReleaseFormStoreData extends ReleasesData {}
+export interface ReleaseFormStoreData extends Omit<ReleasesData, 'tenant'> {}
 
 interface ReleaseFormState {
     formValues: Partial<ReleaseFormStoreData>;
