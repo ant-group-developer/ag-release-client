@@ -152,28 +152,31 @@ export default function ArtistFormModal({ ...props }: Props) {
                 disabled={isActive}
             >
                 <AppFormItem name="pictureFile" label={'Avatar'}>
-                    <div className="flex w-full items-center gap-4">
-                        <ImageListUpload
-                            maxCount={1}
-                            accept="image/png,image/jpeg,image/svg+xml,image/x-icon"
-                            maxSizeMB={2}
-                        />
-                        <div>
-                            <p className="flex-1 text-sm text-gray-500">
-                                {messages(
-                                    'image.validation.supportImageFormat',
-                                    {
-                                        value: 'PNG, JPG, WEBP, SVG, ICON',
-                                    }
-                                )}
-                            </p>
-                            <p className="flex-1 text-sm text-gray-500">
-                                {messages('image.validation.mustBeLessThanMB', {
-                                    value: '3',
-                                })}
-                            </p>
-                        </div>
-                    </div>
+                    <ImageListUpload
+                        maxCount={1}
+                        accept="image/png,image/jpeg,image/svg+xml,image/x-icon"
+                        maxSizeMB={3}
+                        description={
+                            <ul className="space-y-1 text-xs">
+                                <li className="flex-1 text-sm text-gray-500">
+                                    {messages(
+                                        'image.validation.supportImageFormat',
+                                        {
+                                            value: 'PNG, JPG, WEBP, SVG, ICON',
+                                        }
+                                    )}
+                                </li>
+                                <li className="flex-1 text-sm text-gray-500">
+                                    {messages(
+                                        'image.validation.mustBeLessThanMB',
+                                        {
+                                            value: '3',
+                                        }
+                                    )}
+                                </li>
+                            </ul>
+                        }
+                    />
                 </AppFormItem>
                 <AppFormItem
                     name="name"

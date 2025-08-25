@@ -141,7 +141,6 @@ export default function DspFormModal({ ...props }: Props) {
     );
 
     useEffect(() => {
-        console.log(dspData.picture);
         const initialData = {
             ...dspData,
             link: Array.isArray(dspData?.formatLinks)
@@ -152,7 +151,7 @@ export default function DspFormModal({ ...props }: Props) {
                       fileList: [
                           {
                               uid: dspData?.id,
-                              thumbUrl: dspData?.picture,
+                              status: 'done',
                               url: dspData?.picture,
                               name: dspData?.name,
                           },
@@ -160,7 +159,6 @@ export default function DspFormModal({ ...props }: Props) {
                   }
                 : undefined,
         };
-        console.log('🚀 ~ DspFormModal ~ initialData:', initialData);
 
         form.setFieldsValue(initialData);
 
@@ -204,28 +202,31 @@ export default function DspFormModal({ ...props }: Props) {
                     //     },
                     // ]}
                 >
-                    <div className="flex items-center gap-4">
-                        <ImageListUpload
-                            maxCount={1}
-                            accept="image/png,image/jpeg,image/svg+xml,image/x-icon"
-                            maxSizeMB={2}
-                        />
-                        <div>
-                            <p className="flex-1 text-sm text-gray-500">
-                                {messages(
-                                    'image.validation.supportImageFormat',
-                                    {
-                                        value: 'PNG, JPG, WEBP, SVG, ICON',
-                                    }
-                                )}
-                            </p>
-                            <p className="flex-1 text-sm text-gray-500">
-                                {messages('image.validation.mustBeLessThanMB', {
-                                    value: '3',
-                                })}
-                            </p>
-                        </div>
-                    </div>
+                    <ImageListUpload
+                        maxCount={1}
+                        accept="image/png,image/jpeg,image/svg+xml,image/x-icon"
+                        maxSizeMB={3}
+                        description={
+                            <ul className="space-y-1 text-xs">
+                                <li className="flex-1 text-sm text-gray-500">
+                                    {messages(
+                                        'image.validation.supportImageFormat',
+                                        {
+                                            value: 'PNG, JPG, WEBP, SVG, ICON',
+                                        }
+                                    )}
+                                </li>
+                                <li className="flex-1 text-sm text-gray-500">
+                                    {messages(
+                                        'image.validation.mustBeLessThanMB',
+                                        {
+                                            value: '3',
+                                        }
+                                    )}
+                                </li>
+                            </ul>
+                        }
+                    />
                 </AppFormItem>
                 <AppFormItem
                     name="name"
