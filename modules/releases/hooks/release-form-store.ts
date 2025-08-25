@@ -1,3 +1,4 @@
+import { USER_TYPE } from '@/modules/user/enums';
 import dayjs from 'dayjs';
 import { ZodIssue } from 'zod';
 import { create } from 'zustand';
@@ -109,6 +110,26 @@ const initialValue: ReleaseFormStoreData = {
     totalDuration: 0,
     cLineYear: Number(dayjs().year),
     pLineYear: Number(dayjs().year),
+    modifier: {
+        name: null,
+        id: '',
+        createdAt: '',
+        updatedAt: null,
+        email: '',
+        avatar: null,
+        type: USER_TYPE.USER,
+        isActive: false,
+        lastLogin: null,
+        creator: {
+            id: '',
+            email: '',
+        },
+        modifier: {
+            id: '',
+            email: '',
+        },
+        tenantUser: [],
+    },
 };
 
 export const useReleaseFormStore = create<ReleaseFormState>()(

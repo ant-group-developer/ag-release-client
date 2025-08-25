@@ -141,6 +141,7 @@ export default function DspFormModal({ ...props }: Props) {
     );
 
     useEffect(() => {
+        console.log(dspData.picture);
         const initialData = {
             ...dspData,
             link: Array.isArray(dspData?.formatLinks)
@@ -159,6 +160,7 @@ export default function DspFormModal({ ...props }: Props) {
                   }
                 : undefined,
         };
+        console.log('🚀 ~ DspFormModal ~ initialData:', initialData);
 
         form.setFieldsValue(initialData);
 
