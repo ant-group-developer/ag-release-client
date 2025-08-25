@@ -53,6 +53,7 @@ export interface TrackDataFilter extends CommonParams {
     releaseId?: string;
     artistId?: string;
     isScanned?: string;
+    genres?: string;
 }
 
 export interface TrackPolicyData extends CommonAttribute {

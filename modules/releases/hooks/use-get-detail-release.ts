@@ -1,3 +1,4 @@
+import { USER_TYPE } from '@/modules/user/enums';
 import { useQuery } from '@tanstack/react-query';
 import { releasesApi } from '../apis';
 import { releasesQueryKeys } from '../constants/query-keys';
@@ -55,6 +56,26 @@ export const useGetDetailRelease = (id: ReleasesData['id']) => {
         totalDuration: 0,
         cLineYear: null,
         pLineYear: null,
+        modifier: {
+            id: '',
+            createdAt: '',
+            updatedAt: null,
+            name: null,
+            email: '',
+            avatar: null,
+            type: USER_TYPE.USER,
+            isActive: false,
+            lastLogin: null,
+            creator: {
+                id: '',
+                email: '',
+            },
+            modifier: {
+                id: '',
+                email: '',
+            },
+            tenantUser: [],
+        },
         tenant: {
             id: '',
             name: '',

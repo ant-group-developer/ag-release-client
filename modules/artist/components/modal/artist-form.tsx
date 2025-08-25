@@ -163,7 +163,7 @@ export default function ArtistFormModal({ ...props }: Props) {
                                 {messages(
                                     'image.validation.supportImageFormat',
                                     {
-                                        value: 'PNG, JPG, JPEG',
+                                        value: 'PNG, JPG, WEBP, SVG, ICON',
                                     }
                                 )}
                             </p>

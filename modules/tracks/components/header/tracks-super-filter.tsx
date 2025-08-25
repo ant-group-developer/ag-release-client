@@ -1,6 +1,5 @@
 import DateCreatedDialog from '@/components/filter-dialog/date-create-dialog';
 import DateReleaseDialog from '@/components/filter-dialog/date-release-dialog';
-import GenresDialog from '@/components/filter-dialog/genres-dialog';
 import SearchDialog from '@/components/filter-dialog/search-dialog';
 import TypeReleaseDialog from '@/components/filter-dialog/type-releases-dialog';
 import { PopoverCheckboxFilter } from '@/components/filter/popover-checkbox';
@@ -18,6 +17,7 @@ import { ReleasesData } from '@/modules/releases/types';
 import { ListFilter, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
+import { GENRES } from '../../enums';
 import { TrackDataFilter } from '../../types';
 import TracksHeaderDropdown from '../dropdown/tracks-header-dropdown';
 
@@ -130,6 +130,27 @@ export default function TracksSuperFilter({
                 />
 
                 <PopoverCheckboxFilter
+                    open={typeFilter === TYPE_FILTER.GENRES}
+                    title={messages('common.genres')}
+                    options={Object.values(GENRES)?.map((item) => ({
+                        name: item.charAt(0).toUpperCase() + item.slice(1),
+                        value: item,
+                    }))}
+                    selectedValues={arrayFromString(dataFilter.genres)}
+                    onOpenChange={(val) => {
+                        return setTypeFilter(
+                            val ? TYPE_FILTER.GENRES : undefined
+                        );
+                    }}
+                    onConfirm={(vals) => {
+                        return onChangeFilter({
+                            genres: arrayToString(vals),
+                        });
+                    }}
+                    onRemove={() => onChangeFilter({ genres: undefined })}
+                />
+
+                <PopoverCheckboxFilter
                     open={typeFilter === TYPE_FILTER.ARTIST_ID}
                     title={messages('artist.label')}
                     loading={isArtistsLoading}
@@ -175,14 +196,6 @@ export default function TracksSuperFilter({
                 <TypeReleaseDialog
                     title={messages('common.type')}
                     open={typeFilter === TYPE_FILTER.TYPE}
-                    handleChangeTypeFilter={handleChangeTypeFilter}
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                />
-
-                <GenresDialog
-                    title={messages('common.genres')}
-                    open={typeFilter === TYPE_FILTER.GENRES}
                     handleChangeTypeFilter={handleChangeTypeFilter}
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}

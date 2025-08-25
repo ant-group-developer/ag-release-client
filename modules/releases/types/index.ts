@@ -7,6 +7,7 @@ import { ReleaseTypesData } from '@/modules/release-types/types';
 import { TenantData } from '@/modules/tenant/types/data';
 import { TimezoneData } from '@/modules/timezone/types';
 import { TrackData } from '@/modules/tracks/types';
+import { UserData } from '@/modules/user/types/data';
 import { CommonAttribute, CommonParams } from '@/types/api';
 import { RELEASES_STATUS, RELEASES_TYPE } from '../enums';
 
@@ -22,6 +23,7 @@ export interface ReleaseCoverArt {
 export interface ReleasesData extends CommonAttribute {
     creatorId: string;
     modifierId: string;
+    modifier: UserData;
     upc: string;
     primaryGenreId: string;
     primaryGenre?: GenresData;

@@ -10,7 +10,8 @@ export const useListBackupDatabaseLogs = (
 ) => {
     const { data, ...res } = useQuery({
         queryKey: backupDatabaseQueryKeys.list(params),
-        queryFn: () => backupDatabaseApis.getBackupDatabaseLogs(),
+        queryFn: () => backupDatabaseApis.getBackupDatabaseLogs(params),
+        placeholderData: (prev) => prev,
     });
 
     return {

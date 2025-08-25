@@ -160,7 +160,7 @@ export default function GenresFormModal({ ...props }: Props) {
                     <div>
                         <p className="flex-1 text-sm text-gray-500">
                             {messages('image.validation.supportImageFormat', {
-                                value: 'PNG, JPG, JPEG',
+                                value: 'PNG, JPG, WEBP, SVG, ICON',
                             })}
                         </p>
                         <p className="flex-1 text-sm text-gray-500">
