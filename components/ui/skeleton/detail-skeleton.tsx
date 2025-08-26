@@ -1,17 +1,11 @@
 'use client';
 import { SIZE_ICON_SMALL } from '@/constants/common';
-import { Skeleton, Tabs } from 'antd';
+import { Divider, Skeleton } from 'antd';
 import { ArrowLeft } from 'lucide-react';
 
-interface DetailSkeletonProps {
-    showTabs?: boolean;
-    itemCount?: number;
-}
+interface DetailSkeletonProps {}
 
-export default function DetailSkeleton({
-    showTabs = true,
-    itemCount = 5,
-}: DetailSkeletonProps) {
+export default function DetailSkeleton({}: DetailSkeletonProps) {
     return (
         <div className="mx-auto max-w-screen-2xl px-2">
             <div className="sticky top-0 z-10">
@@ -23,48 +17,17 @@ export default function DetailSkeleton({
                 {/* Header skeleton */}
                 <div className="flex gap-4 py-4">
                     <Skeleton.Avatar active shape="square" size={80} />
-                    <div className="flex-1 space-y-3">
-                        {Array.from({ length: itemCount }).map((_, idx) => (
-                            <Skeleton.Input
-                                key={idx}
-                                active
-                                size="small"
-                                style={{ width: idx % 2 === 0 ? 200 : 120 }}
-                            />
-                        ))}
+                    <div className="flex flex-1 flex-col space-y-3">
+                        <Skeleton.Input active size="small" />
+                        <Skeleton.Input active size="small" />
                     </div>
                 </div>
-
-                {showTabs && (
-                    <Tabs
-                        className="!pt-0"
-                        items={[
-                            {
-                                key: '1',
-                                label: (
-                                    <Skeleton.Input
-                                        active
-                                        size="small"
-                                        style={{ width: 100 }}
-                                    />
-                                ),
-                            },
-                            {
-                                key: '2',
-                                label: (
-                                    <Skeleton.Input
-                                        active
-                                        size="small"
-                                        style={{ width: 100 }}
-                                    />
-                                ),
-                            },
-                        ]}
-                    />
-                )}
             </div>
+            <Divider />
             <div className="flex-1 py-4">
-                <Skeleton active paragraph={{ rows: 6 }} />
+                <div className="h-64 w-full sm:h-72 md:h-80 lg:h-96 xl:h-[400px]">
+                    <Skeleton.Node active={true} className="!h-full !w-full" />
+                </div>
             </div>
         </div>
     );

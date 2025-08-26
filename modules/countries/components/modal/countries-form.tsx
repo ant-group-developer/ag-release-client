@@ -2,6 +2,7 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import InputNumber from '@/components/ui/input/input-number';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
+import { MAX_NAME_LENGTH } from '@/constants/validate';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form, Input } from 'antd';
@@ -99,9 +100,10 @@ export default function CountriesFormModal({ ...props }: Props) {
                             message: messages('validation.input'),
                         },
                         {
-                            max: 100,
-                            message: messages('validation.max', {
-                                number: 100,
+                            max: MAX_NAME_LENGTH,
+                            message: messages('validation.stringMax', {
+                                max: MAX_NAME_LENGTH,
+                                field: messages('country.name'),
                             }),
                         },
                     ]}

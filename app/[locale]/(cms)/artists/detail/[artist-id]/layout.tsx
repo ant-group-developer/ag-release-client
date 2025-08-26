@@ -1,6 +1,7 @@
 'use client';
 import AppHeaderPage from '@/components/ant-music/app-header-page';
 import ItemHeaderPage from '@/components/ant-music/item-header-page';
+import DetailSkeleton from '@/components/ui/skeleton/detail-skeleton';
 import { SIZE_ICON_SMALL } from '@/constants/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { Link, usePathname, useRouter } from '@/i18n/routing';
@@ -63,7 +64,7 @@ export default function ArtistDetailLayout({ children }: PropsWithChildren) {
     const tabKey = pathname.split('/').pop();
 
     // apis
-    const { artistData } = useGetDetailArtist(artistId as string);
+    const { artistData, isLoading } = useGetDetailArtist(artistId as string);
 
     useEffect(() => {
         if (!isOverviewPage) {
@@ -88,6 +89,10 @@ export default function ArtistDetailLayout({ children }: PropsWithChildren) {
             }
         };
     }, [pathname, isOverviewPage]);
+
+    if (isLoading || !artistData) {
+        return <DetailSkeleton />;
+    }
 
     return (
         <div className="mx-auto max-w-screen-2xl px-2" ref={scrollContainerRef}>

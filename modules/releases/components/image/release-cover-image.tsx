@@ -19,9 +19,12 @@ export default function ReleaseCoverImage({ data }: Props) {
         threshold: 0,
     });
 
-    const { linkReadFile } = useGetLinkReadFile(imgFileId as string, {
-        enabled: !!entry?.isIntersecting,
-    });
+    const { linkReadFile, isFetching } = useGetLinkReadFile(
+        imgFileId as string,
+        {
+            enabled: !!entry?.isIntersecting,
+        }
+    );
 
     return (
         <div ref={ref}>

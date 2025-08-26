@@ -3,6 +3,7 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import IconButton from '@/components/ui/button/icon-button';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import { SIZE_ICON } from '@/constants/common';
+import { MAX_NAME_LENGTH, MAX_NOTE_LENGTH } from '@/constants/validate';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
@@ -125,10 +126,16 @@ export default function PermissionFormModal({ ...props }: Props) {
                                         message: messages('validation.input'),
                                     },
                                     {
-                                        max: 100,
-                                        message: messages('validation.max', {
-                                            number: 100,
-                                        }),
+                                        max: MAX_NAME_LENGTH,
+                                        message: messages(
+                                            'validation.stringMax',
+                                            {
+                                                max: MAX_NAME_LENGTH,
+                                                field: messages(
+                                                    'permission.name'
+                                                ),
+                                            }
+                                        ),
                                     },
                                 ]}
                             >
@@ -144,10 +151,14 @@ export default function PermissionFormModal({ ...props }: Props) {
                                         message: messages('validation.input'),
                                     },
                                     {
-                                        max: 100,
-                                        message: messages('validation.max', {
-                                            number: 100,
-                                        }),
+                                        max: MAX_NAME_LENGTH,
+                                        message: messages(
+                                            'validation.stringMax',
+                                            {
+                                                max: MAX_NAME_LENGTH,
+                                                field: messages('common.code'),
+                                            }
+                                        ),
                                     },
                                 ]}
                             >
@@ -158,11 +169,11 @@ export default function PermissionFormModal({ ...props }: Props) {
                                 label={messages('common.note')}
                                 rules={[
                                     {
-                                        max: 500,
+                                        max: MAX_NOTE_LENGTH,
                                         message: messages(
                                             'validation.stringMax',
                                             {
-                                                max: 500,
+                                                max: MAX_NOTE_LENGTH,
                                                 field: messages('common.note'),
                                             }
                                         ),
@@ -218,19 +229,23 @@ export default function PermissionFormModal({ ...props }: Props) {
                                                             required
                                                             rules={[
                                                                 {
-                                                                    required: true,
+                                                                    required:
+                                                                        true,
                                                                     message:
                                                                         messages(
                                                                             'validation.input'
                                                                         ),
                                                                 },
                                                                 {
-                                                                    max: 100,
+                                                                    max: MAX_NAME_LENGTH,
                                                                     message:
                                                                         messages(
-                                                                            'validation.max',
+                                                                            'validation.stringMax',
                                                                             {
-                                                                                number: 100,
+                                                                                max: MAX_NAME_LENGTH,
+                                                                                field: messages(
+                                                                                    'permission.name'
+                                                                                ),
                                                                             }
                                                                         ),
                                                                 },
@@ -250,19 +265,23 @@ export default function PermissionFormModal({ ...props }: Props) {
                                                             required
                                                             rules={[
                                                                 {
-                                                                    required: true,
+                                                                    required:
+                                                                        true,
                                                                     message:
                                                                         messages(
                                                                             'validation.input'
                                                                         ),
                                                                 },
                                                                 {
-                                                                    max: 100,
+                                                                    max: MAX_NAME_LENGTH,
                                                                     message:
                                                                         messages(
-                                                                            'validation.max',
+                                                                            'validation.stringMax',
                                                                             {
-                                                                                number: 100,
+                                                                                max: MAX_NAME_LENGTH,
+                                                                                field: messages(
+                                                                                    'common.code'
+                                                                                ),
                                                                             }
                                                                         ),
                                                                 },

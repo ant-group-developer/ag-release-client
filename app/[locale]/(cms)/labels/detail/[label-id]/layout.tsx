@@ -1,6 +1,7 @@
 'use client';
 import AppHeaderPage from '@/components/ant-music/app-header-page';
 import ItemHeaderPage from '@/components/ant-music/item-header-page';
+import DetailSkeleton from '@/components/ui/skeleton/detail-skeleton';
 import { SIZE_ICON_SMALL } from '@/constants/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { Link, usePathname, useRouter } from '@/i18n/routing';
@@ -27,7 +28,7 @@ export default function LabelDetailLayout({ children }: PropsWithChildren) {
     const pathname = usePathname();
 
     // Apis
-    const { labelData } = useGetDetailLabel(labelId as string);
+    const { labelData, isLoading } = useGetDetailLabel(labelId as string);
 
     // Const
     const items: TabsProps['items'] = [
@@ -86,6 +87,10 @@ export default function LabelDetailLayout({ children }: PropsWithChildren) {
             }
         };
     }, [pathname, isOverviewPage, isScroll]);
+
+    if (isLoading || !labelData) {
+        return <DetailSkeleton />;
+    }
 
     return (
         <div className="mx-auto max-w-screen-2xl px-2" ref={scrollContainerRef}>

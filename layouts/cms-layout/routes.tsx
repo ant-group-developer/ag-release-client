@@ -321,10 +321,10 @@ export const adminRoutes: RouteNode[] = [
                         required: SYS_ADMIN_REQ,
                     },
                     {
-                        id: 'actions',
+                        id: 'policy',
                         type: 'link',
-                        label: 'actions.label',
-                        title: 'Actions',
+                        label: 'policy.label',
+                        title: 'Policy',
                         href: APP_ROUTES.ACTIONS,
                         icon: BookA,
                         required: SYS_ADMIN_REQ,

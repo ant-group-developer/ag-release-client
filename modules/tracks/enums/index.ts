@@ -7,10 +7,10 @@ export enum TRACKS_COLUMNS_DISPLAY {
     TRACK_ARTIST = 'trackArtists',
     ISRC = 'isrc',
     DURATION = 'duration',
-    CREATION_DATE = 'creationDate',
     VERSION = 'version',
     ACTIONS = 'actions',
     ACR_CLOUD = 'acrCloud',
+    CREATED_AT = 'createdAt',
 }
 
 export enum TYPE_MODAL_TRACK_ARTIST {

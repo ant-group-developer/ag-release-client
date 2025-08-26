@@ -1,6 +1,7 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
+import { MAX_NAME_LENGTH, MAX_NOTE_LENGTH } from '@/constants/validate';
 import { getCodeFormatted } from '@/helpers/string';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
@@ -107,7 +108,7 @@ export default function ActionsFormModal({ ...props }: Props) {
         <AppModal
             open
             {...props}
-            title={`${dataEdit?.id ? messages('common.update') : messages('common.create')} ${messages('actions.label').toLowerCase()} `}
+            title={`${dataEdit?.id ? messages('common.update') : messages('common.create')} ${messages('policy.label').toLowerCase()} `}
             onCancel={closeModal}
             onOk={form.submit}
             loading={isActive}
@@ -122,7 +123,7 @@ export default function ActionsFormModal({ ...props }: Props) {
                 >
                     <AppFormItem
                         name="name"
-                        label={messages('actions.name')}
+                        label={messages('policy.name')}
                         required
                         rules={[
                             {
@@ -130,10 +131,10 @@ export default function ActionsFormModal({ ...props }: Props) {
                                 message: messages('validation.input'),
                             },
                             {
-                                max: 100,
+                                max: MAX_NAME_LENGTH,
                                 message: messages('validation.stringMax', {
-                                    max: 100,
-                                    field: messages('actions.name'),
+                                    max: MAX_NAME_LENGTH,
+                                    field: messages('policy.name'),
                                 }),
                             },
                         ]}
@@ -160,9 +161,9 @@ export default function ActionsFormModal({ ...props }: Props) {
                                 message: messages('validation.input'),
                             },
                             {
-                                max: 100,
+                                max: MAX_NAME_LENGTH,
                                 message: messages('validation.stringMax', {
-                                    max: 100,
+                                    max: MAX_NAME_LENGTH,
                                     field: messages('common.code'),
                                 }),
                             },
@@ -176,9 +177,9 @@ export default function ActionsFormModal({ ...props }: Props) {
                         label={messages('common.note')}
                         rules={[
                             {
-                                max: 500,
+                                max: MAX_NOTE_LENGTH,
                                 message: messages('validation.stringMax', {
-                                    max: 500,
+                                    max: MAX_NOTE_LENGTH,
                                     field: messages('common.note'),
                                 }),
                             },

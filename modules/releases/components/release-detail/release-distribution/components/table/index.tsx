@@ -61,8 +61,8 @@ export default function DistributionTable({ ...props }: Props) {
         },
         {
             title: 'Last Delivered',
-            key: 'creationDate',
-            dataIndex: 'creationDate',
+            key: 'createdAt',
+            dataIndex: 'createdAt',
             align: 'center',
             width: 250,
             render: (value) => (

@@ -272,7 +272,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                         <div>
                             <div
                                 className={cn(
-                                    'flex flex-col flex-wrap content-start gap-x-8 gap-y-2',
+                                    'flex h-28 flex-col flex-wrap content-start gap-x-8 gap-y-2',
                                     {
                                         'h-16': isScrolled,
                                     }

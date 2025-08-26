@@ -267,8 +267,8 @@ export default function ReleasesTable({
         },
         {
             title: messages('common.createdAt'),
-            key: 'creationDate',
-            dataIndex: 'creationDate',
+            key: 'createdAt',
+            dataIndex: 'createdAt',
             align: 'center',
             width: 130,
             sorter: true,

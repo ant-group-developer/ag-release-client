@@ -48,6 +48,7 @@ export interface TrackData extends CommonAttribute {
     priceTier: PriceTiersData;
     trackPolicies: TrackPolicyData[];
     scanCopyrightStatus: SCAN_COPYRIGHT_STATUS;
+    isByAi: boolean;
 }
 export interface TrackDataFilter extends CommonParams {
     releaseId?: string;

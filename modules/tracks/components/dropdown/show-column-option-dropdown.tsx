@@ -68,7 +68,7 @@ export default function ShowColumnOptionDropdown({
             label: 'ACRCloud',
         },
         {
-            key: TRACKS_COLUMNS_DISPLAY.CREATION_DATE,
+            key: TRACKS_COLUMNS_DISPLAY.CREATED_AT,
             label: messages('common.createdAt'),
         },
         {

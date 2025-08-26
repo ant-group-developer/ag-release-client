@@ -15,6 +15,8 @@ export default function Overview({}: Props) {
     const params = useParams();
     const artistId = params['artist-id'];
     const { artistData } = useGetDetailArtist(artistId as string);
+
+    
     return (
         <div className="py-4">
             <div className="grid grid-cols-3 gap-4">

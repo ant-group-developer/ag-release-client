@@ -8,7 +8,11 @@ import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import TrackActionButton from '@/modules/releases/components/release-detail/release-tracks/button/track-action';
 import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { TrackArtistData } from '@/modules/track-artist/types';
-import { TRACK_TABS, TRACKS_COLUMNS_DISPLAY } from '@/modules/tracks/enums';
+import {
+    SCAN_COPYRIGHT_STATUS,
+    TRACK_TABS,
+    TRACKS_COLUMNS_DISPLAY,
+} from '@/modules/tracks/enums';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
@@ -140,7 +144,9 @@ export default function TracksTable({
             align: 'center',
             width: 80,
             render: (value, record) => {
-                const isScanned = !!record?.isScanned;
+                const isUnScanned =
+                    record?.scanCopyrightStatus ==
+                    SCAN_COPYRIGHT_STATUS.UN_SCANNED;
                 return (
                     <div>
                         {/* <Tag
@@ -175,7 +181,7 @@ export default function TracksTable({
                         <TagScanCopyright
                             className="!border-0 hover:cursor-pointer hover:!border hover:opacity-80"
                             onClick={() => {
-                                if (!isScanned) {
+                                if (isUnScanned) {
                                     return openModal(
                                         TYPE_MODAL_TRACK.ACR_CLOUD_SCAN,
                                         record
@@ -219,15 +225,15 @@ export default function TracksTable({
         // },
         {
             title: messages('common.createdAt'),
-            key: 'creationDate',
-            dataIndex: 'creationDate',
+            key: 'createdAt',
+            dataIndex: 'createdAt',
             align: 'center',
             width: 60,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'tracks_count'
+                'createdAt'
             ),
             render: (value, record) => (
                 <span className="truncate text-wrap">

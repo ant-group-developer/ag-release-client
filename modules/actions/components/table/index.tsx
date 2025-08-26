@@ -34,7 +34,7 @@ export const ActionsTable = ({ dataFilter, ...props }: Props) => {
                 ),
         },
         {
-            title: messages('actions.name'),
+            title: messages('policy.name'),
             key: 'name',
             dataIndex: 'name',
             align: 'left',

@@ -17,7 +17,6 @@ import { UpdateReleaseDraftPayload } from '@/modules/releases/types/payload';
 import { UpdateVariables } from '@/types/api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, ConfigProvider, theme } from 'antd';
-import dayjs from 'dayjs';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
@@ -131,6 +130,7 @@ export default function ReleaseDetailForm() {
         reset,
         getValues,
         setFocus,
+        setError,
     } = formMethods;
 
     // function
@@ -174,6 +174,8 @@ export default function ReleaseDetailForm() {
         [formValues.id]
     );
 
+    console.log(getValues('cLineYear'));
+
     useEffect(() => {
         if (isCreateReleasePage) {
             reset();
@@ -203,10 +205,9 @@ export default function ReleaseDetailForm() {
                                 ?.metadataLanguageCountryId ?? '',
                     },
                     albumFormatId: formValues?.albumFormatId ?? '',
-                    cLineYear: formValues?.cLineYear ?? Number(dayjs().year),
-                    pLineYear: formValues?.pLineYear ?? Number(dayjs().year),
+                    pLineYear: formValues?.pLineYear ?? undefined,
+                    cLineYear: formValues?.pLineYear ?? undefined,
                 };
-                // setFormValues(initialFormValue);
                 reset(initialFormValue, {
                     keepErrors: true,
                 });
@@ -215,7 +216,7 @@ export default function ReleaseDetailForm() {
     }, [isCreateReleasePage, releaseId, formValues]);
 
     useEffect(() => {
-        const handleTriggerField = () => {
+        const handleTriggerField = async () => {
             const hash = window.location.hash;
             if (!hash) return;
             const parts = hash.split('.');
@@ -225,7 +226,8 @@ export default function ReleaseDetailForm() {
             }
             // setFocus(field as keyof ReleaseDetailSchema);
 
-            trigger(field as keyof ReleaseDetailSchema);
+            await trigger(field as keyof ReleaseDetailSchema);
+            console.log('hashChange');
         };
         window.addEventListener('hashchange', handleTriggerField);
 
@@ -234,7 +236,7 @@ export default function ReleaseDetailForm() {
         return () => {
             window.removeEventListener('hashchange', handleTriggerField);
         };
-    }, [trigger]);
+    }, [trigger, window.location.hash]);
 
     return (
         <ConfigProvider theme={customTheme}>

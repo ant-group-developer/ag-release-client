@@ -70,7 +70,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             ellipsis: true,
             align: 'left',
             fixed: 'left',
-            width: 110,
+            width: 200,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -122,11 +122,27 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             ),
         },
         {
+            title: messages('releases.count'),
+            key: 'releaseCount',
+            dataIndex: 'releaseCount',
+            align: 'center',
+            width: 70,
+            render: (value) => <p className="truncate">{value}</p>,
+        },
+        {
+            title: messages('tracks.count'),
+            key: 'trackCount',
+            dataIndex: 'trackCount',
+            align: 'center',
+            width: 70,
+            render: (value) => <p className="truncate">{value}</p>,
+        },
+        {
             title: messages('common.createdAt'),
             key: 'createdAt',
             dataIndex: 'createdAt',
             align: 'center',
-            width: 100,
+            width: 70,
             render: (value) => (
                 <span className="truncate text-wrap">
                     {' '}
@@ -145,7 +161,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             key: 'updatedAt',
             dataIndex: 'updatedAt',
             align: 'center',
-            width: 100,
+            width: 70,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -162,7 +178,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
         {
             key: 'actions',
             align: 'center',
-            width: 20,
+            width: 50,
             render: (_, record) => (
                 <ActionButton
                     showUpdate

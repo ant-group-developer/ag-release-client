@@ -11,7 +11,6 @@ export enum DISTRIBUTION_COLUMNS_DISPLAY {
     TRACK_COUNT = 'trackCount',
     DURATION = 'duration',
     RELEASE_DATE = 'releaseDate',
-    CREATION_DATE = 'creationDate',
     ACTIONS = 'actions',
 }
 

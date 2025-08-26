@@ -5,6 +5,7 @@ import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import ActionsSelect from '@/components/ui/select/actions-select';
 import { SIZE_ICON } from '@/constants/common';
+import { MAX_NAME_LENGTH } from '@/constants/validate';
 import { getAvatarUrl } from '@/helpers/avatar-tailwind';
 import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
@@ -238,9 +239,10 @@ export default function DspFormModal({ ...props }: Props) {
                             message: messages('validation.input'),
                         },
                         {
-                            max: 100,
-                            message: messages('validation.max', {
-                                number: 100,
+                            max: MAX_NAME_LENGTH,
+                            message: messages('validation.stringMax', {
+                                max: MAX_NAME_LENGTH,
+                                field: messages('dsp.name'),
                             }),
                         },
                     ]}
@@ -299,19 +301,18 @@ export default function DspFormModal({ ...props }: Props) {
 
                 <Form.List name="dspActions">
                     {(fields, { add, remove }) => (
-                        <div className="max-h-[300px] overflow-auto pr-8">
+                        <div className="max-h-[300px] overflow-auto">
+                            <Divider />
+                            <p className="mb-2 font-semibold">
+                                {messages('common.policies')}
+                            </p>
                             {fields.map(({ key, name, ...restField }) => (
                                 <div key={key}>
-                                    <Divider />
-
                                     <div className="relative flex items-center gap-x-4">
                                         <div className="w-3/6">
                                             <AppFormItem
                                                 {...restField}
                                                 name={[name, 'actionId']}
-                                                label={messages(
-                                                    'actions.label'
-                                                )}
                                                 required
                                                 rules={[
                                                     {
@@ -342,7 +343,7 @@ export default function DspFormModal({ ...props }: Props) {
                                                         });
                                                     }
                                                 }}
-                                                className="absolute right-0 top-[32px]"
+                                                className="absolute right-0 top-0"
                                                 disabled={isActive}
                                             >
                                                 <Trash
@@ -354,7 +355,6 @@ export default function DspFormModal({ ...props }: Props) {
                                         <AppFormItem
                                             {...restField}
                                             name={[name, 'isDefault']}
-                                            label=" "
                                         >
                                             <Radio
                                                 defaultChecked={false}
@@ -390,7 +390,7 @@ export default function DspFormModal({ ...props }: Props) {
                                     }
                                 >
                                     + {messages('action.create.button')}{' '}
-                                    {` ${messages('actions.label').toLowerCase()}`}
+                                    {` ${messages('policy.label').toLowerCase()}`}
                                 </Button>
                             </div>
                         </div>

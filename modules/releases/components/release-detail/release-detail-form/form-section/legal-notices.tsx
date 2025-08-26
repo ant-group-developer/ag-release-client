@@ -105,7 +105,9 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                     render={({ field }) => {
                                         return (
                                             <Select
+                                                id="cLineYear"
                                                 {...field}
+                                                value={field.value}
                                                 className="w-full"
                                                 disabled={
                                                     isCreateReleasePage ||
@@ -124,6 +126,11 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                                     );
                                                 }}
                                                 options={copyRightYears}
+                                                status={
+                                                    errors.cLineYear
+                                                        ? 'error'
+                                                        : undefined
+                                                }
                                             />
                                         );
                                     }}
@@ -186,7 +193,9 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                     render={({ field }) => {
                                         return (
                                             <Select
+                                                id="pLineYear"
                                                 {...field}
+                                                value={field.value}
                                                 className="w-full"
                                                 disabled={
                                                     isCreateReleasePage ||
