@@ -155,18 +155,34 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
         {
             title: messages('releases.count'),
             key: 'releaseCount',
-            dataIndex: 'releaseCount',
+            dataIndex: 'release_count',
             align: 'center',
             width: 120,
-            render: (value) => <p className="truncate">{value}</p>,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'release_count'
+            ),
+            render: (value, record) => (
+                <p className="truncate">{record?.releaseCount}</p>
+            ),
         },
         {
             title: messages('tracks.count'),
             key: 'trackCount',
-            dataIndex: 'trackCount',
+            dataIndex: 'track_count',
             align: 'center',
             width: 100,
-            render: (value) => <p className="truncate">{value}</p>,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'track_count'
+            ),
+            render: (value, record) => (
+                <p className="truncate">{record?.trackCount}</p>
+            ),
         },
         {
             title: messages('common.biography'),

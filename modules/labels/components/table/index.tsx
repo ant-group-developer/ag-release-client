@@ -124,18 +124,34 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
         {
             title: messages('releases.count'),
             key: 'releaseCount',
-            dataIndex: 'releaseCount',
+            dataIndex: 'release_count',
             align: 'center',
-            width: 70,
-            render: (value) => <p className="truncate">{value}</p>,
+            width: 90,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'release_count'
+            ),
+            render: (value, record) => (
+                <p className="truncate">{record?.releaseCount}</p>
+            ),
         },
         {
             title: messages('tracks.count'),
             key: 'trackCount',
-            dataIndex: 'trackCount',
+            dataIndex: 'track_count',
             align: 'center',
             width: 70,
-            render: (value) => <p className="truncate">{value}</p>,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'track_count'
+            ),
+            render: (value, record) => (
+                <p className="truncate">{record?.trackCount}</p>
+            ),
         },
         {
             title: messages('common.createdAt'),

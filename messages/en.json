@@ -806,6 +806,9 @@
             "previewMustBeLessThanDuration": "Preview duration must be less than track duration",
             "trackUpload": "{type} can upload a maximum of {maxCount} track",
             "trackFileName": "File name cannot over {number} characters"
+        },
+        "acrCloud": {
+            "compareResult": "Select results to compare"
         }
     },
 

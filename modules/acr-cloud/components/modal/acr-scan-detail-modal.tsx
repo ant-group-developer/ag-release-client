@@ -1,7 +1,6 @@
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import AppTable from '@/components/ui/table/normal-table';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
-import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate, getIndex } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { Checkbox, Spin, Tag } from 'antd';
@@ -147,10 +146,7 @@ export default function AcrCloudScanDetailModal({ data, ...props }: Props) {
                         <span>
                             {messages('tracks.scanDate')}:{' '}
                             <span className="font-semibold">
-                                {formattedDate(
-                                    scanStatusData?.createdAt,
-                                    DATE_FORMAT.DATE_ONLY
-                                )}
+                                {formattedDate(scanStatusData?.createdAt)}
                             </span>
                         </span>
                     </div>
