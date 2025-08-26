@@ -13,7 +13,7 @@ import { TrackData } from '@/modules/tracks/types';
 import { UpdateTrackPayload } from '@/modules/tracks/types/payload';
 import { UpdateVariables } from '@/types/api';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ConfigProvider, Input, Select } from 'antd';
+import { ConfigProvider, Input, Radio, Select } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import dayjs from 'dayjs';
 import { debounce } from 'lodash';
@@ -27,6 +27,7 @@ const otherMetadataSchema = (messages: any) =>
         primaryGenreId: true,
         subGenreId: true,
         isSensitiveContent: true,
+        isByAi: true,
         trackLanguage: true,
         lyric: true,
         pLineOwner: true,
@@ -54,6 +55,7 @@ export default function OtherMetadataForm({ trackData }: Props) {
             primaryGenreId: trackData.primaryGenreId ?? '',
             subGenreId: trackData?.subGenreId ?? '',
             isSensitiveContent: trackData?.isSensitiveContent ?? false,
+            isByAi: trackData?.isByAi ?? false,
             trackLanguage: trackData?.trackLanguage ?? {},
             lyric: trackData?.lyric ?? '',
             pLineOwner: trackData?.pLineOwner ?? '',
@@ -202,32 +204,78 @@ export default function OtherMetadataForm({ trackData }: Props) {
                             name="isSensitiveContent"
                             control={control}
                             render={({ field }) => (
-                                <Select
-                                    className="w-full"
-                                    showSearch
-                                    options={[
-                                        {
-                                            label: messages('common.yes'),
-                                            value: true,
-                                        },
-                                        {
-                                            label: messages('common.no'),
-                                            value: false,
-                                        },
-                                    ]}
+                                // <Select
+                                //     className="w-full"
+                                //     showSearch
+                                //     options={[
+                                //         {
+                                //             label: messages('common.yes'),
+                                //             value: true,
+                                //         },
+                                //         {
+                                //             label: messages('common.no'),
+                                //             value: false,
+                                //         },
+                                //     ]}
+                                //     {...field}
+                                //     onChange={(e) => {
+                                //         field.onChange(e);
+                                //         debouncedUpdateTrackDraft({
+                                //             isSensitiveContent: e,
+                                //         });
+                                //     }}
+                                //     status={
+                                //         errors.isSensitiveContent
+                                //             ? 'error'
+                                //             : undefined
+                                //     }
+                                // />
+                                <Radio.Group
                                     {...field}
                                     onChange={(e) => {
                                         field.onChange(e);
                                         debouncedUpdateTrackDraft({
-                                            isSensitiveContent: e,
+                                            isSensitiveContent: e.target.value,
                                         });
                                     }}
-                                    status={
-                                        errors.isSensitiveContent
-                                            ? 'error'
-                                            : undefined
-                                    }
-                                />
+                                >
+                                    <Radio value={true}>
+                                        {messages('common.yes')}
+                                    </Radio>
+                                    <Radio value={false}>
+                                        {messages('common.no')}
+                                    </Radio>
+                                </Radio.Group>
+                            )}
+                        />
+                    </FormItem>
+
+                    <FormItem
+                        label={messages('common.isSongCreatedByAi')}
+                        ErrorMessage={errors.isByAi?.message}
+                        required
+                        name="isByAi"
+                    >
+                        <Controller
+                            name="isByAi"
+                            control={control}
+                            render={({ field }) => (
+                                <Radio.Group
+                                    {...field}
+                                    onChange={(e) => {
+                                        field.onChange(e);
+                                        debouncedUpdateTrackDraft({
+                                            isByAi: e.target.value,
+                                        });
+                                    }}
+                                >
+                                    <Radio value={true}>
+                                        {messages('common.yes')}
+                                    </Radio>
+                                    <Radio value={false}>
+                                        {messages('common.no')}
+                                    </Radio>
+                                </Radio.Group>
                             )}
                         />
                     </FormItem>
@@ -451,35 +499,6 @@ export default function OtherMetadataForm({ trackData }: Props) {
                     </FormItem>
 
                     <FormItem
-                        name="lyric"
-                        label={messages('formFields.tracks.lyrics')}
-                        ErrorMessage={errors.lyric?.message}
-                    >
-                        <Controller
-                            name="lyric"
-                            control={control}
-                            render={({ field }) => (
-                                <TextArea
-                                    {...field}
-                                    value={field.value ?? ''}
-                                    rows={1}
-                                    autoSize={{ minRows: 1, maxRows: 20 }}
-                                    onChange={(e) => {
-                                        field.onChange(e.target.value);
-                                        debouncedUpdateTrackDraft(
-                                            {
-                                                lyric: e.target.value,
-                                            },
-                                            'lyric'
-                                        );
-                                    }}
-                                    status={errors.lyric ? 'error' : undefined}
-                                />
-                            )}
-                        />
-                    </FormItem>
-
-                    <FormItem
                         name="pLineYear"
                         label={messages('formFields.pLineYear')}
                         required
@@ -564,6 +583,35 @@ export default function OtherMetadataForm({ trackData }: Props) {
                                     status={
                                         errors.pLineOwner ? 'error' : undefined
                                     }
+                                />
+                            )}
+                        />
+                    </FormItem>
+
+                    <FormItem
+                        name="lyric"
+                        label={messages('formFields.tracks.lyrics')}
+                        ErrorMessage={errors.lyric?.message}
+                    >
+                        <Controller
+                            name="lyric"
+                            control={control}
+                            render={({ field }) => (
+                                <TextArea
+                                    {...field}
+                                    value={field.value ?? ''}
+                                    rows={1}
+                                    autoSize={{ minRows: 1, maxRows: 20 }}
+                                    onChange={(e) => {
+                                        field.onChange(e.target.value);
+                                        debouncedUpdateTrackDraft(
+                                            {
+                                                lyric: e.target.value,
+                                            },
+                                            'lyric'
+                                        );
+                                    }}
+                                    status={errors.lyric ? 'error' : undefined}
                                 />
                             )}
                         />

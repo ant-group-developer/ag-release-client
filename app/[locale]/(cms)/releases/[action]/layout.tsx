@@ -1,4 +1,5 @@
 'use client';
+import DetailSkeleton from '@/components/ui/skeleton/detail-skeleton';
 import { SIZE_ICON_SMALL } from '@/constants/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { cn } from '@/helpers/common';
@@ -250,35 +251,41 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
 
     return (
         <div className="flex h-full overflow-auto" ref={scrollContainerRef}>
-            <div className="mx-auto flex h-[calc(100vh-4rem)] max-w-screen-xl flex-1 flex-col">
-                <div
-                    className="sticky top-0 z-10"
-                    style={{
-                        backgroundColor: token.colorBgContainer,
-                    }}
-                >
-                    <Link
-                        href={APP_ROUTES.RELEASES}
-                        className="flex w-fit items-center gap-1 py-2 hover:underline"
-                    >
-                        <ArrowLeft size={SIZE_ICON_SMALL} />
-                        {messages('releases.back')}
-                    </Link>
-                    <ReleaseDetailHeader isScrolled={isScrolled} />
-                    <div>
-                        <Tabs
-                            className="tab-release-detail !pt-0"
-                            style={{
-                                backgroundColor: token.colorBgContainer,
-                            }}
-                            items={items}
-                            activeKey={activeTab}
-                            tabBarExtraContent={extraButton}
-                        />
-                    </div>
+            {isReleaseDataLoading || !releaseData ? (
+                <div className="w-[100vw] px-8">
+                    <DetailSkeleton />
                 </div>
-                <div>{children}</div>
-            </div>
+            ) : (
+                <div className="mx-auto flex h-[calc(100vh-4rem)] max-w-screen-xl flex-1 flex-col">
+                    <div
+                        className="sticky top-0 z-10"
+                        style={{
+                            backgroundColor: token.colorBgContainer,
+                        }}
+                    >
+                        <Link
+                            href={APP_ROUTES.RELEASES}
+                            className="flex w-fit items-center gap-1 py-2 hover:underline"
+                        >
+                            <ArrowLeft size={SIZE_ICON_SMALL} />
+                            {messages('releases.back')}
+                        </Link>
+                        <ReleaseDetailHeader isScrolled={isScrolled} />
+                        <div>
+                            <Tabs
+                                className="tab-release-detail !pt-0"
+                                style={{
+                                    backgroundColor: token.colorBgContainer,
+                                }}
+                                items={items}
+                                activeKey={activeTab}
+                                tabBarExtraContent={extraButton}
+                            />
+                        </div>
+                    </div>
+                    <div>{children}</div>
+                </div>
+            )}
             <RightSidebar />
         </div>
     );

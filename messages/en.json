@@ -37,6 +37,8 @@
         "forbiddenDescription": "Please contact the Admin for more details"
     },
     "common": {
+        "isSongCreatedByAi": "Is a song created by AI",
+        "policies": "Policies",
         "backupNow": "Backup now",
         "name": "Name",
         "setIsDefault": "Set is default",
@@ -1322,6 +1324,14 @@
         },
         "action": {
             "delete": "Delete action"
+        }
+    },
+
+    "policy": {
+        "label": "Policy",
+        "name": "Policy name",
+        "action": {
+            "delete": "Delete policy"
         }
     },
 

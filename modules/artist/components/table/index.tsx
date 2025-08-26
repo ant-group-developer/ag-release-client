@@ -30,7 +30,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
         {
             title: messages('common.iNo'),
             key: 'iNo',
-            width: 30,
+            width: 60,
             align: 'center',
             render: (_, __, index) =>
                 getIndex(
@@ -70,7 +70,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
             ellipsis: true,
             align: 'left',
             fixed: 'left',
-            width: 150,
+            width: 300,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -118,19 +118,25 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
             title: messages('artist.id'),
             key: 'id',
             dataIndex: 'id',
-            align: 'left',
-            width: 100,
+            align: 'center',
+            width: 120,
             render: (value) => (
-                <CopyText tooltipProps={{ placement: 'right' }} text={value}>
-                    <p className="truncate">{value}</p>
-                </CopyText>
+                <div className="flex justify-center">
+                    <CopyText
+                        tooltipProps={{ placement: 'right' }}
+                        text={value}
+                    >
+                        <p className="truncate">{value}</p>
+                    </CopyText>
+                </div>
             ),
         },
+
         {
-            title: messages('common.platforms'),
+            title: messages('artist.profiles'),
             key: 'artistProfiles',
             dataIndex: 'artistProfiles',
-            width: 100,
+            width: 200,
             render: (_, record) => (
                 <div>
                     <Avatar.Group
@@ -147,11 +153,27 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
             ),
         },
         {
+            title: messages('releases.count'),
+            key: 'releaseCount',
+            dataIndex: 'releaseCount',
+            align: 'center',
+            width: 120,
+            render: (value) => <p className="truncate">{value}</p>,
+        },
+        {
+            title: messages('tracks.count'),
+            key: 'trackCount',
+            dataIndex: 'trackCount',
+            align: 'center',
+            width: 100,
+            render: (value) => <p className="truncate">{value}</p>,
+        },
+        {
             title: messages('common.biography'),
             key: 'biography',
             dataIndex: 'biography',
             align: 'left',
-            width: 200,
+            width: 300,
             render: (value, record) => {
                 return (
                     <span className="line-clamp-3 whitespace-pre-line">
@@ -165,7 +187,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
             key: 'createdAt',
             dataIndex: 'createdAt',
             align: 'center',
-            width: 100,
+            width: 150,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -184,7 +206,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
             key: 'updatedAt',
             dataIndex: 'updatedAt',
             align: 'center',
-            width: 100,
+            width: 150,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -201,19 +223,19 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
         {
             key: 'actions',
             align: 'center',
-            width: 20,
+            width: 80,
             fixed: 'right',
             render: (_, record) => (
                 <ActionButton
                     showUpdate
                     showDetail
-                    showDelete
+                    // showDelete
                     onShowUpdate={() => {
                         openModal(TYPE_MODAL_ARTIST.UPDATE, record);
                     }}
-                    onShowDelete={() => {
-                        openModal(TYPE_MODAL_ARTIST.DELETE, record);
-                    }}
+                    // onShowDelete={() => {
+                    //     openModal(TYPE_MODAL_ARTIST.DELETE, record);
+                    // }}
                 />
             ),
         },

@@ -130,6 +130,7 @@ export default function ReleaseDetailForm() {
         reset,
         getValues,
         setFocus,
+        setError,
     } = formMethods;
 
     // function
@@ -173,6 +174,8 @@ export default function ReleaseDetailForm() {
         [formValues.id]
     );
 
+    console.log(getValues('cLineYear'));
+
     useEffect(() => {
         if (isCreateReleasePage) {
             reset();
@@ -202,6 +205,8 @@ export default function ReleaseDetailForm() {
                                 ?.metadataLanguageCountryId ?? '',
                     },
                     albumFormatId: formValues?.albumFormatId ?? '',
+                    pLineYear: formValues?.pLineYear ?? undefined,
+                    cLineYear: formValues?.pLineYear ?? undefined,
                 };
                 reset(initialFormValue, {
                     keepErrors: true,
@@ -222,6 +227,7 @@ export default function ReleaseDetailForm() {
             // setFocus(field as keyof ReleaseDetailSchema);
 
             await trigger(field as keyof ReleaseDetailSchema);
+            console.log('hashChange');
         };
         window.addEventListener('hashchange', handleTriggerField);
 
@@ -230,7 +236,7 @@ export default function ReleaseDetailForm() {
         return () => {
             window.removeEventListener('hashchange', handleTriggerField);
         };
-    }, [trigger]);
+    }, [trigger, window.location.hash]);
 
     return (
         <ConfigProvider theme={customTheme}>

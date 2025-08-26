@@ -228,10 +228,10 @@ export const adminRoutes: AdminRoutesType[] = [
             },
             {
                 id: 'actions',
-                label: 'actions.label',
+                label: 'policy.label',
                 href: APP_ROUTES.ACTIONS,
                 icon: BookA,
-                title: 'actions',
+                title: 'Policy',
                 required: {
                     userType: [USER_TYPE.ADMIN],
                     tenantId: [SYSTEM_TENANT_ID],

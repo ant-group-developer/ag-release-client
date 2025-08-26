@@ -29,9 +29,12 @@ export const releaseTrackSchema = (messages: any) =>
             .refine((val) => val !== null && val !== '', {
                 message: messages('validation.input'),
             }),
-        pLineYear: z.number().refine((val) => val !== null, {
-            message: messages('validation.input'),
-        }),
+        pLineYear: z
+            .number()
+            .optional()
+            .refine((val) => val !== null, {
+                message: messages('validation.input'),
+            }),
         primaryGenreId: z
             .string()
             .nullable()
@@ -76,6 +79,7 @@ export const releaseTrackSchema = (messages: any) =>
             .min(1, messages('validation.input')),
         copyArtistsFromRelease: z.boolean().optional(),
         isSensitiveContent: z.boolean().optional(),
+        isByAi: z.boolean().optional(),
         lyric: z
             .string()
             .max(1000, messages('validation.max', { number: 1000 }))

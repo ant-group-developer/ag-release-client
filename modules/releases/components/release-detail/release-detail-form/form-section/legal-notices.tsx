@@ -126,6 +126,11 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                                     );
                                                 }}
                                                 options={copyRightYears}
+                                                status={
+                                                    errors.cLineYear
+                                                        ? 'error'
+                                                        : undefined
+                                                }
                                             />
                                         );
                                     }}

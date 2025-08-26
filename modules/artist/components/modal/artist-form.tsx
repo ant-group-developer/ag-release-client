@@ -13,7 +13,7 @@ import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { uploadApi } from '@/modules/upload/apis';
 import { ENTITY_TYPE_PICTURE } from '@/modules/upload/types/data';
 import { CreateVariables, UpdateVariables } from '@/types/api';
-import { Button, Form, Input } from 'antd';
+import { Button, Divider, Form, Input } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -227,13 +227,14 @@ export default function ArtistFormModal({ ...props }: Props) {
 
                 <Form.List name={'artistProfiles'}>
                     {(fields, { add, remove }) => (
-                        <div className="max-h-[390px] overflow-y-auto pr-8">
-                            <p className="pb-8 font-bold">
+                        <div className="max-h-[390px] overflow-y-auto">
+                            <Divider />
+                            <p className="mb-2 font-semibold">
                                 {' '}
-                                {messages('dsp.profileList').toUpperCase()}{' '}
+                                {messages('dsp.profileList')}{' '}
                             </p>
                             {fields.map(({ key, name, ...restField }) => (
-                                <div key={key}>
+                                <div key={key} className="pr-8">
                                     <div className="relative">
                                         <AppFormItem
                                             {...restField}

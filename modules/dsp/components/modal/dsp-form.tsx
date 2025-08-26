@@ -301,19 +301,18 @@ export default function DspFormModal({ ...props }: Props) {
 
                 <Form.List name="dspActions">
                     {(fields, { add, remove }) => (
-                        <div className="max-h-[300px] overflow-auto pr-8">
+                        <div className="max-h-[300px] overflow-auto">
+                            <Divider />
+                            <p className="mb-2 font-semibold">
+                                {messages('common.policies')}
+                            </p>
                             {fields.map(({ key, name, ...restField }) => (
                                 <div key={key}>
-                                    <Divider />
-
                                     <div className="relative flex items-center gap-x-4">
                                         <div className="w-3/6">
                                             <AppFormItem
                                                 {...restField}
                                                 name={[name, 'actionId']}
-                                                label={messages(
-                                                    'actions.label'
-                                                )}
                                                 required
                                                 rules={[
                                                     {
@@ -344,7 +343,7 @@ export default function DspFormModal({ ...props }: Props) {
                                                         });
                                                     }
                                                 }}
-                                                className="absolute right-0 top-[32px]"
+                                                className="absolute right-0 top-0"
                                                 disabled={isActive}
                                             >
                                                 <Trash
@@ -356,7 +355,6 @@ export default function DspFormModal({ ...props }: Props) {
                                         <AppFormItem
                                             {...restField}
                                             name={[name, 'isDefault']}
-                                            label=" "
                                         >
                                             <Radio
                                                 defaultChecked={false}
@@ -392,7 +390,7 @@ export default function DspFormModal({ ...props }: Props) {
                                     }
                                 >
                                     + {messages('action.create.button')}{' '}
-                                    {` ${messages('actions.label').toLowerCase()}`}
+                                    {` ${messages('policy.label').toLowerCase()}`}
                                 </Button>
                             </div>
                         </div>

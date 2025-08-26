@@ -108,7 +108,7 @@ export default function ActionsFormModal({ ...props }: Props) {
         <AppModal
             open
             {...props}
-            title={`${dataEdit?.id ? messages('common.update') : messages('common.create')} ${messages('actions.label').toLowerCase()} `}
+            title={`${dataEdit?.id ? messages('common.update') : messages('common.create')} ${messages('policy.label').toLowerCase()} `}
             onCancel={closeModal}
             onOk={form.submit}
             loading={isActive}
@@ -123,7 +123,7 @@ export default function ActionsFormModal({ ...props }: Props) {
                 >
                     <AppFormItem
                         name="name"
-                        label={messages('actions.name')}
+                        label={messages('policy.name')}
                         required
                         rules={[
                             {
@@ -134,7 +134,7 @@ export default function ActionsFormModal({ ...props }: Props) {
                                 max: MAX_NAME_LENGTH,
                                 message: messages('validation.stringMax', {
                                     max: MAX_NAME_LENGTH,
-                                    field: messages('actions.name'),
+                                    field: messages('policy.name'),
                                 }),
                             },
                         ]}

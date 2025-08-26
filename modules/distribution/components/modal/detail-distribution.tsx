@@ -41,7 +41,7 @@ export default function DetailDistributionModal({ ...props }: Props) {
         },
         {
             title: 'Last Enqueue',
-            dataIndex: 'creationDate',
+            dataIndex: 'createdAt',
             width: 100,
             align: 'center',
             render: (value) => {

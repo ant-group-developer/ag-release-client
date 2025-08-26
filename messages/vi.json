@@ -37,6 +37,8 @@
         "forbiddenDescription": "Please contact the Admin for more details"
     },
     "common": {
+        "isSongCreatedByAi": "Bài hát được tạo bởi AI",
+        "policies": "Chính sách",
         "backupNow": "Sao lưu ngay",
         "name": "Tên",
         "setIsDefault": "Đặt làm mặc định",
@@ -1326,6 +1328,14 @@
         },
         "action": {
             "delete": "Xoá hành động"
+        }
+    },
+
+    "policy": {
+        "label": "Chính sách",
+        "name": "Tên Chính sách",
+        "action": {
+            "delete": "Xoá chính sách"
         }
     },
 

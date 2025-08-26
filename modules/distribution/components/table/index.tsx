@@ -157,8 +157,8 @@ export default function DistributionTable({ visibleColumns, ...props }: Props) {
         },
         {
             title: messages('common.createdAt'),
-            key: 'creationDate',
-            dataIndex: 'creationDate',
+            key: 'createdAt',
+            dataIndex: 'createdAt',
             align: 'center',
             width: 180,
             render: (value) => (

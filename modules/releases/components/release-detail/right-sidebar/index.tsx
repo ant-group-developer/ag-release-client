@@ -146,6 +146,15 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                                                     <Link
                                                         key={index}
                                                         href={`${getReleaseDetailTabRoute(formValues?.id as string, err.page as RELEASES_TABS)}#${err.field}`}
+                                                        onClick={() => {
+                                                            setTimeout(() => {
+                                                                window.dispatchEvent(
+                                                                    new HashChangeEvent(
+                                                                        'hashchange'
+                                                                    )
+                                                                );
+                                                            }, 200);
+                                                        }}
                                                     >
                                                         <Alert
                                                             className="custom-alert-sidebar cursor-pointer !px-[14px] !py-3 !text-sm hover:underline"
