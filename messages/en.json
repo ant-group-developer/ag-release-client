@@ -56,7 +56,8 @@
         "settingNote": "Settings apply only to this browser",
         "value": "Value",
         "viewDetail": "View detail",
-        "systemCategories": "Categories",
+        "systemCategories": "System Categories",
+        "category": "Categories",
         "variousArtists": "Various artists",
         "activities": "Activities",
         "revenue": "Revenue",
@@ -1213,7 +1214,12 @@
         },
         "back": "Back to workspaces",
         "member": "Member",
-        "manager": "Manager"
+        "manager": "Manager",
+        "labels": {
+            "max": {
+                "label": "Maximum labels can create"
+            }
+        }
     },
     "integration": {
         "label": "Integrations",

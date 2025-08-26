@@ -9,6 +9,7 @@ const AppTable = <RecordType extends object>({
 }: AppTableProps<RecordType>) => {
     return (
         <Table
+            showSorterTooltip={false}
             // @ts-ignore
             rowKey={(record) => record?.id ?? Math.random()}
             size="small"

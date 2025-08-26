@@ -65,7 +65,7 @@ export enum RELEASES_COLUMNS_DISPLAY {
     UPC = 'upc',
     STATUS = 'status',
     TRACK_COUNT = 'trackCount',
-    DURATION = 'duration',
+    DURATION = 'total_duration',
     TENANT = 'tenant',
     RELEASE_DATE = 'releaseDate',
     ACTIONS = 'actions',

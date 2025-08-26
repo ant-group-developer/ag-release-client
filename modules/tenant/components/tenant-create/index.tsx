@@ -63,6 +63,7 @@ function CreateTenantModal({ ...props }: Props) {
 
                 const payload: CreateTenantPayload = {
                     ...otherValues,
+                    maxLabels: Number(otherValues.maxLabels),
                     icon: iconUrl,
                     logo: logoUrl,
                     primaryColor: hexString,

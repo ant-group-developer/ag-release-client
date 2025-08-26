@@ -1,6 +1,7 @@
 import AppForm, { AppFormProps } from '@/components/ui/antd-form/form';
 import AppColorPicker from '@/components/ui/colorPicker/app-color-picker';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
+import InputNumber from '@/components/ui/input/input-number';
 import UserSelect from '@/modules/user/components/user-select';
 import { Form, Input, Switch, theme } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -111,6 +112,27 @@ function TenantForm({ excludeIds, ...props }: Props) {
             >
                 <Input placeholder={messages('common.email')} />
             </AppForm.Item>
+
+            <AppForm.Item
+                label={messages('tenant.labels.max.label')}
+                rules={[
+                    {
+                        max: 2000,
+                        min: 0,
+                    },
+                    {
+                        required: true,
+                        message: messages('validation.input'),
+                    },
+                ]}
+                name="maxLabels"
+            >
+                <InputNumber
+                    placeholder={messages('tenant.labels.max.label')}
+                    allowClear={false}
+                />
+            </AppForm.Item>
+
             <AppForm.Item
                 label={messages('tenant.title')}
                 rules={[

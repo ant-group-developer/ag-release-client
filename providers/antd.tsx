@@ -2,7 +2,7 @@
 import { LOCALE } from '@/enums/common';
 import { useThemeMode } from '@/hooks/use-theme-mode';
 import { getThemeConfig } from '@/theme/theme-config';
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, ThemeConfig } from 'antd';
 import enUS from 'antd/locale/en_US';
 import viVN from 'antd/locale/vi_VN';
 import { useLocale } from 'next-intl';
@@ -15,7 +15,7 @@ function AntdProvider({ children }: Props) {
     const { algorithm, isDark } = useThemeMode();
     const themeConfig = getThemeConfig(isDark);
 
-    const antdThemeConfig = {
+    const antdThemeConfig: ThemeConfig = {
         ...themeConfig,
         algorithm,
         components: {

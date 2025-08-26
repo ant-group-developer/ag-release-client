@@ -2,7 +2,7 @@ import AppForm from '@/components/ui/antd-form/form';
 import { ORDER } from '@/enums/common';
 import { flattenData } from '@/helpers/common';
 import { showNotification } from '@/helpers/messages-helper';
-import TenantSelect from '@/modules/tenant/components/tenant-select';
+import TenantTreeSelect from '@/modules/tenant/components/tenant-tree-select';
 import TenantUserTypeSelect from '@/modules/tenant/components/tenant-user-type-select';
 import { TENANT_ORDER_BY, TENANT_USER_TYPE } from '@/modules/tenant/enums';
 import { useTenantList } from '@/modules/tenant/hooks/use-get-tenant';
@@ -129,8 +129,7 @@ function UpdateTenant({ dataEdit }: Props) {
                                                     },
                                                 ]}
                                             >
-                                                <TenantSelect
-                                                    flatData
+                                                <TenantTreeSelect
                                                     disabled={isLocked}
                                                 />
                                             </AppForm.Item>

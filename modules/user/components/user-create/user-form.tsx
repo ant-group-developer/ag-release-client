@@ -1,7 +1,7 @@
 import AppForm, { AppFormProps } from '@/components/ui/antd-form/form';
 import { validatePassword } from '@/helpers/validation';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
-import TenantSelect from '@/modules/tenant/components/tenant-select';
+import TenantTreeSelect from '@/modules/tenant/components/tenant-tree-select';
 import TenantUserTypeSelect from '@/modules/tenant/components/tenant-user-type-select';
 import { Input, Switch } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -129,7 +129,7 @@ function UserForm({ isCreate, ...props }: Props) {
                         },
                     ]}
                 >
-                    <TenantSelect flatData />
+                    <TenantTreeSelect />
                 </AppForm.Item>
             )}
 

@@ -12,7 +12,6 @@ type Props = {
     fallback?: string;
     excludeIds?: Array<TenantData['id']>;
     type?: TENANT_TYPE[];
-    flatData?: boolean;
 } & TreeSelectProps;
 
 function TenantTreeSelect({
@@ -22,7 +21,6 @@ function TenantTreeSelect({
     fallback,
     excludeIds,
     type,
-    flatData,
     ...props
 }: Props) {
     const messages = useTranslations();

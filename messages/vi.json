@@ -57,6 +57,7 @@
         "value": "Giá trị",
         "viewDetail": "Xem chi tiết",
         "systemCategories": "Danh mục hệ thống",
+        "category": "Danh mục",
         "variousArtists": "Nhiều nghệ sĩ",
         "activities": "Hoạt động",
         "revenue": "Doanh thu",
@@ -1217,7 +1218,12 @@
         },
         "back": "Trở lại workspace",
         "member": "Thành viên",
-        "manager": "Quản lý"
+        "manager": "Quản lý",
+        "labels": {
+            "max": {
+                "label": "Số label có thể tạo"
+            }
+        }
     },
     "integration": {
         "label": "Tích hợp",
