@@ -21,16 +21,11 @@ import { useTranslations } from 'next-intl';
 export default function Countries({}: {}) {
     // hooks - state
     const messages = useTranslations();
-    const {
-        dataFilter,
-        onChangeFilter,
-        onChangePage,
-        canClearFilter,
-        removeFilter,
-    } = useFilter<CountriesDataFilter>({
-        page: 1,
-        pageSize: PAGE_SIZE,
-    });
+    const { dataFilter, onChangeFilter, onChangePage, onSearch } =
+        useFilter<CountriesDataFilter>({
+            page: 1,
+            pageSize: PAGE_SIZE,
+        });
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit);
@@ -67,14 +62,7 @@ export default function Countries({}: {}) {
 
     return (
         <AppContainer title={messages('country.label')}>
-            <CountriesHeader
-                dataFilter={dataFilter}
-                onChangeFilter={onChangeFilter}
-                canClearFilter={canClearFilter}
-                removeFilter={removeFilter}
-                handleRefresh={handleRefresh}
-                lastUpdatedAt={lastUpdatedAt}
-            />
+            <CountriesHeader dataFilter={dataFilter} onSearch={onSearch} />
             <CountriesTable
                 sticky
                 dataSource={countriesData.items ?? fakeCountriesData}

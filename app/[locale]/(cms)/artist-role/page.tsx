@@ -5,7 +5,7 @@ import AppPagination from '@/components/ui/pagination';
 
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
-import { formattedDate, setSortOrder } from '@/helpers/common';
+import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import ArtistRoleHeader from '@/modules/artist-role/components/header';
@@ -26,16 +26,11 @@ type Props = {};
 export default function ArtistRole({}: Props) {
     // hooks - state
     const messages = useTranslations();
-    const {
-        dataFilter,
-        onChangeFilter,
-        onChangePage,
-        canClearFilter,
-        removeFilter,
-    } = useFilter<ArtistRoleDataFilter>({
-        page: 1,
-        pageSize: PAGE_SIZE,
-    });
+    const { dataFilter, onChangeFilter, onChangePage, onSearch } =
+        useFilter<ArtistRoleDataFilter>({
+            page: 1,
+            pageSize: PAGE_SIZE,
+        });
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore<ArtistRoleData>((state) => state.dataEdit);
     const closeModal = useModalStore((state) => state.closeModal);
@@ -66,14 +61,7 @@ export default function ArtistRole({}: Props) {
 
     return (
         <AppContainer title={messages('artist.role')}>
-            <ArtistRoleHeader
-                dataFilter={dataFilter}
-                onChangeFilter={onChangeFilter}
-                canClearFilter={canClearFilter}
-                removeFilter={removeFilter}
-                handleRefresh={() => refetch()}
-                lastUpdatedAt={formattedDate(dataUpdatedAt || new Date())}
-            />
+            <ArtistRoleHeader dataFilter={dataFilter} onSearch={onSearch} />
             <ArtistRoleTable
                 sticky
                 dataSource={artistsRolesData.items}

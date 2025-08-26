@@ -80,10 +80,7 @@ export default function ShowColumnOptionDropdown({
             key: DISTRIBUTION_COLUMNS_DISPLAY.RELEASE_DATE,
             label: messages('releases.releaseDate'),
         },
-        {
-            key: DISTRIBUTION_COLUMNS_DISPLAY.CREATION_DATE,
-            label: messages('releases.releaseDate'),
-        },
+
         {
             key: DISTRIBUTION_COLUMNS_DISPLAY.ACTIONS,
             label: messages('common.action'),

@@ -1,49 +1,31 @@
 import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
-import Refresh from '@/components/refresh';
 import CreateButton from '@/components/ui/button/create-button';
-import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
+import AppSearch from '@/components/ui/input/search';
+import { UseFilterProps } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_ARTIST } from '../../enum';
 import { ArtistDataFilter } from '../../types';
-import ArtistsSuperFilter from './artists-super-filter';
 
-type Props = {
-    dataFilter: ArtistDataFilter;
-    onChangeFilter: OnChangeFilter<ArtistDataFilter>;
-    canClearFilter: boolean;
-    removeFilter: RemoveFilter;
-    handleRefresh: () => void;
-    lastUpdatedAt: string;
-};
+type Props = Pick<UseFilterProps<ArtistDataFilter>, 'dataFilter' | 'onSearch'>;
 
-export default function ArtistsHeader({
-    dataFilter,
-    onChangeFilter,
-    canClearFilter,
-    removeFilter,
-    handleRefresh,
-    lastUpdatedAt,
-}: Props) {
+export default function ArtistsHeader({ dataFilter, onSearch }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     return (
-        <AppHeader className="app-header">
+        <AppHeader className="app-header px-0 pb-3">
             <AppHeaderGroup>
-                <ArtistsSuperFilter
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                />
+                <div>
+                    <AppSearch
+                        className="max-w-52"
+                        onChange={onSearch}
+                        defaultValue={dataFilter.keyword}
+                    />
+                </div>
             </AppHeaderGroup>
 
             <AppHeaderGroup position="end" className="flex-1">
                 <div className="flex items-center gap-2">
-                    <Refresh
-                        handleRefresh={handleRefresh}
-                        lastTimeUpdated={lastUpdatedAt}
-                    />
                     <CreateButton
                         canCreate={true}
                         text={messages('artist.create')}

@@ -69,4 +69,5 @@ export enum RELEASES_COLUMNS_DISPLAY {
     TENANT = 'tenant',
     RELEASE_DATE = 'releaseDate',
     ACTIONS = 'actions',
+    CREATED_AT = 'createdAt',
 }

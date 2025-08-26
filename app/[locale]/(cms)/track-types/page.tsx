@@ -25,16 +25,11 @@ type Props = {};
 export default function TrackTypes({}: Props) {
     // hooks - state
     const messages = useTranslations();
-    const {
-        dataFilter,
-        onChangeFilter,
-        onChangePage,
-        canClearFilter,
-        removeFilter,
-    } = useFilter<TrackTypeDataFilter>({
-        page: 1,
-        pageSize: PAGE_SIZE,
-    });
+    const { dataFilter, onChangeFilter, onChangePage, onSearch } =
+        useFilter<TrackTypeDataFilter>({
+            page: 1,
+            pageSize: PAGE_SIZE,
+        });
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as TrackTypeData);
     const closeModal = useModalStore((state) => state.closeModal);
@@ -73,14 +68,7 @@ export default function TrackTypes({}: Props) {
             title={messages('trackType.label')}
             description={messages('trackType.description')}
         >
-            <TrackTypeHeader
-                dataFilter={dataFilter}
-                onChangeFilter={onChangeFilter}
-                canClearFilter={canClearFilter}
-                removeFilter={removeFilter}
-                handleRefresh={handleRefresh}
-                lastUpdatedAt={lastUpdatedAt}
-            />
+            <TrackTypeHeader dataFilter={dataFilter} onSearch={onSearch} />
             <TrackTypeTable
                 sticky
                 dataSource={trackTypesData.items}

@@ -4,7 +4,7 @@ import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
-import { formattedDate, setSortOrder } from '@/helpers/common';
+import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import CurrenciesHeader from '@/modules/currencies/components/header';
@@ -30,16 +30,11 @@ export default function Currencies({}: Props) {
     const dataEdit = useModalStore<CurrenciesData>((state) => state.dataEdit);
 
     // apis
-    const {
-        dataFilter,
-        canClearFilter,
-        onChangeFilter,
-        onChangePage,
-        removeFilter,
-    } = useFilter<CurrenciesDataFilter>({
-        page: 1,
-        pageSize: PAGE_SIZE,
-    });
+    const { dataFilter, onChangeFilter, onChangePage, onSearch } =
+        useFilter<CurrenciesDataFilter>({
+            page: 1,
+            pageSize: PAGE_SIZE,
+        });
     const { currenciesData, dataUpdatedAt, refetch, isFetching } =
         useGetListCurrencies(dataFilter);
     const { deleteCurrency } = useDeleteCurrency();
@@ -58,14 +53,7 @@ export default function Currencies({}: Props) {
 
     return (
         <AppContainer title={messages('currencies.label')}>
-            <CurrenciesHeader
-                dataFilter={dataFilter}
-                onChangeFilter={onChangeFilter}
-                canClearFilter={canClearFilter}
-                removeFilter={removeFilter}
-                handleRefresh={() => refetch()}
-                lastUpdatedAt={formattedDate(dataUpdatedAt || new Date())}
-            />
+            <CurrenciesHeader dataFilter={dataFilter} onSearch={onSearch} />
 
             <CurrenciesTable
                 sticky

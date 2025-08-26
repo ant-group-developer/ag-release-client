@@ -1,46 +1,33 @@
 import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
-import Refresh from '@/components/refresh';
 import CreateButton from '@/components/ui/button/create-button';
+import AppSearch from '@/components/ui/input/search';
+import { UseFilterProps } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_TIMEZONE } from '../../enums';
-import TimezoneSuperFilter from './timezone-super-filter';
+import { TimezoneDataFilter } from '../../types';
 
-type Props = {
-    dataFilter: any;
-    onChangeFilter: any;
-    canClearFilter: boolean;
-    removeFilter: any;
-    handleRefresh: () => void;
-    lastUpdatedAt: string;
-};
+type Props = Pick<
+    UseFilterProps<TimezoneDataFilter>,
+    'dataFilter' | 'onSearch'
+>;
 
-export default function TimezoneHeader({
-    dataFilter,
-    onChangeFilter,
-    canClearFilter,
-    removeFilter,
-    handleRefresh,
-    lastUpdatedAt,
-}: Props) {
+export default function TimezoneHeader({ dataFilter, onSearch }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     return (
-        <AppHeader className="app-header">
+        <AppHeader className="app-header px-0 pb-3">
             <AppHeaderGroup>
-                <TimezoneSuperFilter
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                />
+                <div>
+                    <AppSearch
+                        className="max-w-52"
+                        onChange={onSearch}
+                        defaultValue={dataFilter.keyword}
+                    />
+                </div>
             </AppHeaderGroup>
             <AppHeaderGroup position="end" className="flex-1">
                 <div className="flex items-center gap-2">
-                    <Refresh
-                        handleRefresh={handleRefresh}
-                        lastTimeUpdated={lastUpdatedAt}
-                    />
                     <CreateButton
                         canCreate={true}
                         text={messages('timezone.add')}

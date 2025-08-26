@@ -4,7 +4,7 @@ import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
-import { formattedDate, setSortOrder } from '@/helpers/common';
+import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import ActionsHeader from '@/modules/actions/components/header';
@@ -28,16 +28,11 @@ export default function Actions({}: Props) {
     const dataEdit = useModalStore<RolesData>((state) => state.dataEdit);
 
     // apis
-    const {
-        dataFilter,
-        canClearFilter,
-        onChangeFilter,
-        onChangePage,
-        removeFilter,
-    } = useFilter<ActionsDataFilter>({
-        page: 1,
-        pageSize: PAGE_SIZE,
-    });
+    const { dataFilter, onChangeFilter, onChangePage, onSearch } =
+        useFilter<ActionsDataFilter>({
+            page: 1,
+            pageSize: PAGE_SIZE,
+        });
     const { actionsData, dataUpdatedAt, refetch, isFetching } =
         useGetListActions(dataFilter);
     const { deleteAction } = useDeleteAction();
@@ -56,14 +51,7 @@ export default function Actions({}: Props) {
 
     return (
         <AppContainer title={messages('actions.label')}>
-            <ActionsHeader
-                dataFilter={dataFilter}
-                onChangeFilter={onChangeFilter}
-                canClearFilter={canClearFilter}
-                removeFilter={removeFilter}
-                handleRefresh={() => refetch()}
-                lastUpdatedAt={formattedDate(dataUpdatedAt || new Date())}
-            />
+            <ActionsHeader dataFilter={dataFilter} onSearch={onSearch} />
 
             <ActionsTable
                 sticky

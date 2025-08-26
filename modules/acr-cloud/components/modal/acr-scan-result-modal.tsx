@@ -21,7 +21,7 @@ export default function AcrCloudScanResultModal({ ...props }: Props) {
 
     const renderTitle = () => {
         return (
-            <div className="mr-2 flex items-center justify-between">
+            <div className="mr-2 flex items-center gap-2">
                 <span>{`${messages('common.result')}  ACRCloud`}</span>
                 <Button
                     onClick={() => setOpenCompareModal(true)}

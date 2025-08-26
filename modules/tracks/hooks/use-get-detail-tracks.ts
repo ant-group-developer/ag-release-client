@@ -66,6 +66,7 @@ export const useGetDetailTrack = (id: TrackData['id']) => {
         },
         trackPolicies: [],
         scanCopyrightStatus: SCAN_COPYRIGHT_STATUS.UN_SCANNED,
+        isByAi: false,
     };
 
     return {

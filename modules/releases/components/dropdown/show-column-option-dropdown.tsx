@@ -83,7 +83,7 @@ export default function ShowColumnOptionDropdown({
             label: messages('releases.releaseDate'),
         },
         {
-            key: RELEASES_COLUMNS_DISPLAY.CREATION_DATE,
+            key: RELEASES_COLUMNS_DISPLAY.CREATED_AT,
             label: messages('common.createdAt'),
         },
         {

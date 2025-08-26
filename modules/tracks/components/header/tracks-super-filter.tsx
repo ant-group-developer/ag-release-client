@@ -9,6 +9,7 @@ import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { TYPE_FILTER } from '@/enums/common';
 import { arrayFromString, arrayToString } from '@/helpers/array';
+import { getIntlCodeByScanCopyrightStatus } from '@/helpers/intl';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
 import { useGetListArtist } from '@/modules/artist/hooks/use-get-list-artists';
 import { ArtistData } from '@/modules/artist/types';
@@ -17,7 +18,7 @@ import { ReleasesData } from '@/modules/releases/types';
 import { ListFilter, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
-import { GENRES } from '../../enums';
+import { GENRES, SCAN_COPYRIGHT_STATUS } from '../../enums';
 import { TrackDataFilter } from '../../types';
 import TracksHeaderDropdown from '../dropdown/tracks-header-dropdown';
 
@@ -130,6 +131,36 @@ export default function TracksSuperFilter({
                 />
 
                 <PopoverCheckboxFilter
+                    open={typeFilter === TYPE_FILTER.SCAN_COPYRIGHT_STATUS}
+                    title={messages('common.scan')}
+                    loading={isReleaseLoading}
+                    options={Object.values(SCAN_COPYRIGHT_STATUS).map(
+                        (item) => ({
+                            name: messages(
+                                getIntlCodeByScanCopyrightStatus(item) as any
+                            ),
+                            value: item,
+                        })
+                    )}
+                    selectedValues={arrayFromString(
+                        dataFilter.scanCopyrightStatus
+                    )}
+                    onOpenChange={(val) => {
+                        return setTypeFilter(
+                            val ? TYPE_FILTER.SCAN_COPYRIGHT_STATUS : undefined
+                        );
+                    }}
+                    onConfirm={(vals) => {
+                        return onChangeFilter({
+                            scanCopyrightStatus: arrayToString(vals),
+                        });
+                    }}
+                    onRemove={() =>
+                        onChangeFilter({ scanCopyrightStatus: undefined })
+                    }
+                />
+
+                <PopoverCheckboxFilter
                     open={typeFilter === TYPE_FILTER.GENRES}
                     title={messages('common.genres')}
                     options={Object.values(GENRES)?.map((item) => ({
@@ -172,7 +203,7 @@ export default function TracksSuperFilter({
                     onRemove={() => onChangeFilter({ artistId: undefined })}
                 />
 
-                <PopoverCheckboxFilter
+                {/* <PopoverCheckboxFilter
                     open={typeFilter === TYPE_FILTER.IS_SCANNED}
                     title={messages('common.scan')}
                     options={[
@@ -191,7 +222,7 @@ export default function TracksSuperFilter({
                         });
                     }}
                     onRemove={() => onChangeFilter({ isScanned: undefined })}
-                />
+                /> */}
 
                 <TypeReleaseDialog
                     title={messages('common.type')}

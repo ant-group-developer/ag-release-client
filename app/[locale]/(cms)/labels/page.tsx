@@ -23,16 +23,11 @@ type Props = {};
 export default function Labels({}: Props) {
     // hooks - state
     const messages = useTranslations();
-    const {
-        dataFilter,
-        onChangeFilter,
-        onChangePage,
-        canClearFilter,
-        removeFilter,
-    } = useFilter<LabelDataFilter>({
-        page: 1,
-        pageSize: PAGE_SIZE,
-    });
+    const { dataFilter, onChangeFilter, onChangePage, onSearch } =
+        useFilter<LabelDataFilter>({
+            page: 1,
+            pageSize: PAGE_SIZE,
+        });
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore<LabelData>((state) => state.dataEdit);
@@ -69,14 +64,7 @@ export default function Labels({}: Props) {
 
     return (
         <AppContainer title={messages('labels.label')}>
-            <LabelsHeader
-                dataFilter={dataFilter}
-                onChangeFilter={onChangeFilter}
-                canClearFilter={canClearFilter}
-                removeFilter={removeFilter}
-                handleRefresh={handleRefresh}
-                lastUpdatedAt={lastUpdatedAt}
-            />
+            <LabelsHeader dataFilter={dataFilter} onSearch={onSearch} />
             <LabelsTable
                 sticky
                 dataSource={labelsData?.items}
