@@ -1,4 +1,5 @@
 'use client';
+import AppContainer from '@/components/app-container';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -6,7 +7,6 @@ import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 import TimezoneHeader from '@/modules/timezone/components/header';
 import TimezoneFormModal from '@/modules/timezone/components/modal/timezone-form';
 import { TimezoneTable } from '@/modules/timezone/components/table';
@@ -22,7 +22,6 @@ type Props = {};
 
 export default function Timezone({}: Props) {
     // hooks - state
-    const scrollY = useTableScrollY();
     const messages = useTranslations();
     const {
         dataFilter,
@@ -71,7 +70,7 @@ export default function Timezone({}: Props) {
     };
 
     return (
-        <div>
+        <AppContainer title={messages('timezone.label')}>
             <TimezoneHeader
                 dataFilter={dataFilter}
                 onChangeFilter={onChangeFilter}
@@ -81,8 +80,8 @@ export default function Timezone({}: Props) {
                 lastUpdatedAt={lastUpdatedAt}
             />
             <TimezoneTable
+                sticky
                 dataSource={timezonesData?.items}
-                scroll={{ y: scrollY }}
                 loading={isLoading}
                 pagination={{
                     pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
@@ -119,6 +118,6 @@ export default function Timezone({}: Props) {
                 typeModal === TYPE_MODAL_TIMEZONE.UPDATE) && (
                 <TimezoneFormModal />
             )}
-        </div>
+        </AppContainer>
     );
 }

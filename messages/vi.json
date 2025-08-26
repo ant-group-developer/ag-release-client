@@ -839,6 +839,7 @@
 
     "trackType": {
         "label": "Thể loại bài hát",
+        "description": "Designates the track as a musical or non-musical work.",
         "message": {
             "success": {
                 "create": "Thêm thể loại thành công",

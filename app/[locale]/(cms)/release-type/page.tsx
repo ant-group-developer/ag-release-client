@@ -1,4 +1,5 @@
 'use client';
+import AppContainer from '@/components/app-container';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -6,7 +7,6 @@ import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 import ReleaseTypeHeader from '@/modules/release-types/components/header';
 import ReleaseTypeFormModal from '@/modules/release-types/components/modal/release-type-form';
 import { ReleaseTypeTable } from '@/modules/release-types/components/table';
@@ -24,7 +24,6 @@ type Props = {};
 
 export default function ReleaseType({}: Props) {
     // hooks - state
-    const scrollY = useTableScrollY();
     const messages = useTranslations();
     const {
         dataFilter,
@@ -70,7 +69,7 @@ export default function ReleaseType({}: Props) {
     };
 
     return (
-        <div>
+        <AppContainer title={messages('releaseType.label')}>
             <ReleaseTypeHeader
                 dataFilter={dataFilter}
                 onChangeFilter={onChangeFilter}
@@ -80,10 +79,8 @@ export default function ReleaseType({}: Props) {
                 lastUpdatedAt={lastUpdatedAt}
             />
             <ReleaseTypeTable
+                sticky
                 dataSource={releaseTypesData.items}
-                scroll={{
-                    y: scrollY,
-                }}
                 pagination={{
                     pageSize: dataFilter.pageSize ?? PAGE_SIZE,
                     current: releaseTypesData.metadata.currentPage,
@@ -94,7 +91,7 @@ export default function ReleaseType({}: Props) {
                 onChange={onChangeSort}
             />
             <AppPagination
-                className="border-b border-t"
+                className="border-t"
                 align="end"
                 current={releaseTypesData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}
@@ -124,6 +121,6 @@ export default function ReleaseType({}: Props) {
                     })}
                 />
             )}
-        </div>
+        </AppContainer>
     );
 }

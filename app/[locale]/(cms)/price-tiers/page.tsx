@@ -1,4 +1,5 @@
 'use client';
+import AppContainer from '@/components/app-container';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -7,7 +8,6 @@ import { formattedDate, setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useLoadingStatus } from '@/hooks/use-loading-status';
 import useModalStore from '@/hooks/use-modal';
-import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 import PriceTiersHeader from '@/modules/price_tiers/components/header';
 import PriceTiersFormModal from '@/modules/price_tiers/components/modal/price-tiers-form';
 import { PriceTiersTable } from '@/modules/price_tiers/components/table';
@@ -26,7 +26,6 @@ type Props = {};
 
 export default function PriceTiers({}: Props) {
     // hooks - state
-    const scrollY = useTableScrollY();
     const messages = useTranslations();
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
@@ -64,7 +63,7 @@ export default function PriceTiers({}: Props) {
     };
 
     return (
-        <div>
+        <AppContainer title={messages('currencies.label')}>
             <PriceTiersHeader
                 dataFilter={dataFilter}
                 onChangeFilter={onChangeFilter}
@@ -75,10 +74,8 @@ export default function PriceTiers({}: Props) {
             />
 
             <PriceTiersTable
+                sticky
                 dataSource={priceTiersData.items}
-                scroll={{
-                    y: scrollY,
-                }}
                 pagination={{
                     pageSize: dataFilter.pageSize ?? PAGE_SIZE,
                     current: priceTiersData.metadata.currentPage,
@@ -90,7 +87,7 @@ export default function PriceTiers({}: Props) {
             />
 
             <AppPagination
-                className="border-b border-t"
+                className="border-t"
                 align="end"
                 current={priceTiersData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}
@@ -125,6 +122,6 @@ export default function PriceTiers({}: Props) {
                     }
                 />
             )}
-        </div>
+        </AppContainer>
     );
 }

@@ -56,7 +56,7 @@
         "settingNote": "Settings apply only to this browser",
         "value": "Value",
         "viewDetail": "View detail",
-        "systemCategories": "System categories",
+        "systemCategories": "Categories",
         "variousArtists": "Various artists",
         "activities": "Activities",
         "revenue": "Revenue",
@@ -198,7 +198,7 @@
         "updatedAt": "Updated at",
         "dateUpdated": "Date updated",
         "removeFilter": "Remove filter",
-        "filter": "Filter",
+        "filter": "Filters",
         "submit": "Submit",
         "content": "Content",
         "management": "Management",
@@ -838,6 +838,7 @@
 
     "trackType": {
         "label": "Track type",
+        "description": "Designates the track as a musical or non-musical work.",
         "message": {
             "success": {
                 "create": "Add track type successfully",

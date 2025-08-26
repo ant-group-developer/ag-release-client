@@ -1,4 +1,5 @@
 'use client';
+import AppContainer from '@/components/app-container';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -6,7 +7,6 @@ import { ORDER } from '@/enums/common';
 import { formattedDate, setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 
 import RolesHeader from '@/modules/roles/components/header';
 import RolesActions from '@/modules/roles/components/header/roles-actions';
@@ -24,7 +24,6 @@ type Props = {};
 
 export default function Roles({}: Props) {
     // hooks - state
-    const scrollY = useTableScrollY();
     const messages = useTranslations();
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
@@ -75,7 +74,7 @@ export default function Roles({}: Props) {
     };
 
     return (
-        <div>
+        <AppContainer title={messages('roles.label')}>
             <div className="app-header">
                 <RolesHeader
                     dataFilter={dataFilter}
@@ -92,10 +91,8 @@ export default function Roles({}: Props) {
             </div>
 
             <RolesTable
+                sticky
                 dataSource={rolesData.items}
-                scroll={{
-                    y: scrollY,
-                }}
                 pagination={{
                     pageSize: dataFilter.pageSize ?? PAGE_SIZE,
                     current: rolesData.metadata.currentPage,
@@ -108,7 +105,7 @@ export default function Roles({}: Props) {
             />
 
             <AppPagination
-                className="border-b border-t"
+                className="border-t"
                 align="end"
                 current={rolesData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}
@@ -163,6 +160,6 @@ export default function Roles({}: Props) {
                     }
                 />
             )}
-        </div>
+        </AppContainer>
     );
 }

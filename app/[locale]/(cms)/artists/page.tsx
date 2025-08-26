@@ -1,4 +1,5 @@
 'use client';
+import AppContainer from '@/components/app-container';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -6,7 +7,6 @@ import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 import ArtistsHeader from '@/modules/artist/components/header';
 import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
 import { ArtistsTable } from '@/modules/artist/components/table';
@@ -22,7 +22,6 @@ type Props = {};
 
 export default function Artists({}: Props) {
     // hooks - state
-    const scrollY = useTableScrollY();
     const messages = useTranslations();
     const {
         dataFilter,
@@ -69,7 +68,7 @@ export default function Artists({}: Props) {
     };
 
     return (
-        <div>
+        <AppContainer title={messages('artist.label')}>
             <ArtistsHeader
                 dataFilter={dataFilter}
                 onChangeFilter={onChangeFilter}
@@ -79,10 +78,8 @@ export default function Artists({}: Props) {
                 lastUpdatedAt={lastUpdatedAt}
             />
             <ArtistsTable
+                sticky
                 dataSource={artistsData?.items}
-                scroll={{
-                    y: scrollY,
-                }}
                 pagination={{
                     pageSize: dataFilter.pageSize ?? PAGE_SIZE,
                     current: artistsData.metadata.currentPage,
@@ -122,6 +119,6 @@ export default function Artists({}: Props) {
                 showQuickJumper
                 pageSizeOptions={PAGE_SIZE_OPTIONS}
             />
-        </div>
+        </AppContainer>
     );
 }

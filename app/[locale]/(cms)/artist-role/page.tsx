@@ -1,4 +1,5 @@
 'use client';
+import AppContainer from '@/components/app-container';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 
@@ -7,7 +8,6 @@ import { ORDER } from '@/enums/common';
 import { formattedDate, setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 import ArtistRoleHeader from '@/modules/artist-role/components/header';
 import ArtistRoleFormModal from '@/modules/artist-role/components/modal/artist-role-form';
 import { ArtistRoleTable } from '@/modules/artist-role/components/table';
@@ -25,7 +25,6 @@ type Props = {};
 
 export default function ArtistRole({}: Props) {
     // hooks - state
-    const scrollY = useTableScrollY();
     const messages = useTranslations();
     const {
         dataFilter,
@@ -66,7 +65,7 @@ export default function ArtistRole({}: Props) {
     };
 
     return (
-        <div>
+        <AppContainer title={messages('artist.role')}>
             <ArtistRoleHeader
                 dataFilter={dataFilter}
                 onChangeFilter={onChangeFilter}
@@ -76,8 +75,8 @@ export default function ArtistRole({}: Props) {
                 lastUpdatedAt={formattedDate(dataUpdatedAt || new Date())}
             />
             <ArtistRoleTable
+                sticky
                 dataSource={artistsRolesData.items}
-                scroll={{ y: scrollY }}
                 pagination={{
                     pageSize: dataFilter.pageSize ?? PAGE_SIZE,
                     current: artistsRolesData.metadata.currentPage,
@@ -88,7 +87,7 @@ export default function ArtistRole({}: Props) {
                 onChange={onChangeSort}
             />
             <AppPagination
-                className="border-b border-t"
+                className="border-t"
                 align="end"
                 current={artistsRolesData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}
@@ -118,6 +117,6 @@ export default function ArtistRole({}: Props) {
                     })}
                 />
             )}
-        </div>
+        </AppContainer>
     );
 }

@@ -53,6 +53,7 @@ function LogPage({}: Props) {
                 onChangeFilter={onChangeFilter}
             />
             <LogTable
+                sticky
                 dataSource={dataLog}
                 loading={isFetching}
                 pagination={{

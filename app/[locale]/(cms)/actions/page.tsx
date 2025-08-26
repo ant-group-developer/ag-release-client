@@ -1,4 +1,5 @@
 'use client';
+import AppContainer from '@/components/app-container';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -6,7 +7,6 @@ import { ORDER } from '@/enums/common';
 import { formattedDate, setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 import ActionsHeader from '@/modules/actions/components/header';
 import ActionsFormModal from '@/modules/actions/components/modal/actions-form';
 import { ActionsTable } from '@/modules/actions/components/table';
@@ -22,7 +22,6 @@ type Props = {};
 
 export default function Actions({}: Props) {
     // hooks - state
-    const scrollY = useTableScrollY();
     const messages = useTranslations();
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
@@ -56,7 +55,7 @@ export default function Actions({}: Props) {
     };
 
     return (
-        <div>
+        <AppContainer title={messages('actions.label')}>
             <ActionsHeader
                 dataFilter={dataFilter}
                 onChangeFilter={onChangeFilter}
@@ -67,10 +66,8 @@ export default function Actions({}: Props) {
             />
 
             <ActionsTable
+                sticky
                 dataSource={actionsData.items}
-                scroll={{
-                    y: scrollY,
-                }}
                 pagination={{
                     pageSize: dataFilter.pageSize ?? PAGE_SIZE,
                     current: actionsData.metadata.currentPage,
@@ -82,7 +79,7 @@ export default function Actions({}: Props) {
             />
 
             <AppPagination
-                className="border-b border-t"
+                className="border-t"
                 align="end"
                 current={actionsData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}
@@ -117,6 +114,6 @@ export default function Actions({}: Props) {
                     }
                 />
             )}
-        </div>
+        </AppContainer>
     );
 }

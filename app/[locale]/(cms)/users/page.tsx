@@ -1,12 +1,12 @@
 'use client';
+import AppContainer from '@/components/app-container';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
-import { formattedDate, setSortOrder } from '@/helpers/common';
+import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 import CreateUserModal from '@/modules/user/components/user-create';
 import UserHeader from '@/modules/user/components/user-header';
 import InviteUserModal from '@/modules/user/components/user-invite';
@@ -23,7 +23,6 @@ type Props = {};
 export default function UserPage({}: Props) {
     // hooks - state
     const messages = useTranslations();
-    const scrollY = useTableScrollY();
 
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
@@ -42,8 +41,7 @@ export default function UserPage({}: Props) {
         fieldOrder: USER_ORDER_BY.UPDATED_AT,
         orderBy: ORDER.DESC,
     });
-    const { data, dataUpdatedAt, refetch, isFetching } =
-        useUserList(dataFilter);
+    const { data, isFetching } = useUserList(dataFilter);
     const { removeUser, isPending } = useRemoveUser();
 
     const onChangeSort = (pagination: any, filters: any, sort: any) => {
@@ -59,20 +57,16 @@ export default function UserPage({}: Props) {
     };
 
     return (
-        <div>
+        <AppContainer title={messages('user.label')}>
             <UserHeader
                 dataFilter={dataFilter}
                 onChangeFilter={onChangeFilter}
                 canClearFilter={canClearFilter}
                 removeFilter={removeFilter}
-                handleRefresh={() => refetch()}
-                lastUpdatedAt={formattedDate(dataUpdatedAt || new Date())}
             />
             <UserTable
+                sticky
                 dataSource={data.items}
-                scroll={{
-                    y: scrollY,
-                }}
                 pagination={{
                     pageSize: dataFilter.pageSize ?? PAGE_SIZE,
                     current: data.metadata.currentPage,
@@ -84,7 +78,6 @@ export default function UserPage({}: Props) {
             />
 
             <AppPagination
-                className="border-b border-t"
                 align="end"
                 current={data?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}
@@ -124,6 +117,6 @@ export default function UserPage({}: Props) {
                     })}
                 />
             )}
-        </div>
+        </AppContainer>
     );
 }
