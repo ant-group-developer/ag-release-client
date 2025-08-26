@@ -3,6 +3,7 @@ import Refresh from '@/components/refresh';
 import CreateButton from '@/components/ui/button/create-button';
 import { UseFilterProps } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_TENANT } from '../enums';
 import { DataFilterTenant } from '../types/data';
@@ -26,8 +27,9 @@ export default function TenantHeader({
 }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
+    const { token } = theme.useToken();
     return (
-        <AppHeader>
+        <AppHeader style={{ backgroundColor: token.colorBgContainer }}>
             <AppHeaderGroup>
                 <TenantHeaderFilter
                     dataFilter={dataFilter}

@@ -1,4 +1,5 @@
 'use client';
+import AppContainer from '@/components/app-container';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -6,7 +7,6 @@ import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 import CountriesHeader from '@/modules/countries/components/header';
 import CountriesFormModal from '@/modules/countries/components/modal/countries-form';
 import { CountriesTable } from '@/modules/countries/components/table';
@@ -20,7 +20,6 @@ import { useTranslations } from 'next-intl';
 
 export default function Countries({}: {}) {
     // hooks - state
-    const scrollY = useTableScrollY();
     const messages = useTranslations();
     const {
         dataFilter,
@@ -67,7 +66,7 @@ export default function Countries({}: {}) {
     };
 
     return (
-        <div>
+        <AppContainer title={messages('country.label')}>
             <CountriesHeader
                 dataFilter={dataFilter}
                 onChangeFilter={onChangeFilter}
@@ -77,10 +76,8 @@ export default function Countries({}: {}) {
                 lastUpdatedAt={lastUpdatedAt}
             />
             <CountriesTable
+                sticky
                 dataSource={countriesData.items ?? fakeCountriesData}
-                scroll={{
-                    y: scrollY,
-                }}
                 loading={isLoading}
                 pagination={{
                     pageSize: dataFilter.pageSize ?? PAGE_SIZE,
@@ -122,6 +119,6 @@ export default function Countries({}: {}) {
                     paragraph={`${messages('delete.confirmMessage', { value: dataEdit?.name })}`}
                 />
             )}
-        </div>
+        </AppContainer>
     );
 }

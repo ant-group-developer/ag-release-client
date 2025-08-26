@@ -211,7 +211,7 @@ export default function ReleasesTable({
             ),
         },
         {
-            title: messages('releases.trackCount'),
+            title: messages('tracks.label'),
             key: 'trackCount',
             dataIndex: 'trackCount',
             align: 'center',

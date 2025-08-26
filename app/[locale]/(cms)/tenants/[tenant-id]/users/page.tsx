@@ -4,7 +4,7 @@ import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
-import { formattedDate, setSortOrder } from '@/helpers/common';
+import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import CreateUserModal from '@/modules/user/components/user-create';
@@ -48,9 +48,8 @@ export default function UserPage({}: Props) {
         orderBy: ORDER.DESC,
         tenantIds: tenantId,
     });
-    const { data, dataUpdatedAt, refetch, isFetching } =
-        useUserList(dataFilter);
-    const { removeUser, isPending } = useRemoveUser();
+    const { data } = useUserList(dataFilter);
+    const { removeUser } = useRemoveUser();
 
     const onChangeSort = (pagination: any, filters: any, sort: any) => {
         const orderBy = setSortOrder(sort, ORDER.ASC);
@@ -77,8 +76,6 @@ export default function UserPage({}: Props) {
                     onChangeFilter={onChangeFilter}
                     canClearFilter={canClearFilter}
                     removeFilter={removeFilter}
-                    handleRefresh={() => refetch()}
-                    lastUpdatedAt={formattedDate(dataUpdatedAt || new Date())}
                 />
             </div>
             <UserTable

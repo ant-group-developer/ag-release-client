@@ -8,7 +8,6 @@ import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import { LoadingType, useLoading } from '@/hooks/use-loading';
 import useModalStore from '@/hooks/use-modal';
-import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 import ReleasesHeader from '@/modules/releases/components/header';
 import ReleasesTable from '@/modules/releases/components/table';
 import ReleasesGridTable from '@/modules/releases/components/table/grid-table';
@@ -29,8 +28,6 @@ type Props = {};
 
 export default function Releases({}: Props) {
     // hooks - state
-    const scrollY = useTableScrollY();
-    const scrollYGrid = useTableScrollY({ skipTableHeader: true });
     const [visibleColumns, setVisibleColumns] = useState<
         RELEASES_COLUMNS_DISPLAY[]
     >(() => {
@@ -138,11 +135,9 @@ export default function Releases({}: Props) {
             />
             {layoutTable === LAYOUT_TABLE.LIST && (
                 <ReleasesTable
+                    sticky
                     visibleColumns={visibleColumns}
                     dataSource={releasesData?.items}
-                    scroll={{
-                        y: scrollY,
-                    }}
                     loading={isReleaseDataLoading}
                     onChangeFilter={onChangeFilter}
                     pagination={{
@@ -155,13 +150,7 @@ export default function Releases({}: Props) {
             )}
 
             {layoutTable === LAYOUT_TABLE.GRID && (
-                <ReleasesGridTable
-                    data={releasesData?.items}
-                    loading={false}
-                    scroll={{
-                        y: scrollYGrid,
-                    }}
-                />
+                <ReleasesGridTable data={releasesData?.items} loading={false} />
             )}
 
             <AppPagination

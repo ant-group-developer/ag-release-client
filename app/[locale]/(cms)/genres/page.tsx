@@ -1,4 +1,5 @@
 'use client';
+import AppContainer from '@/components/app-container';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -6,7 +7,6 @@ import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 import GenresHeader from '@/modules/genres/components/header';
 import GenresFormModal from '@/modules/genres/components/modal/genres-form';
 import { GenresTable } from '@/modules/genres/components/table';
@@ -21,7 +21,6 @@ import { useTranslations } from 'next-intl';
 
 export default function Genres() {
     // hooks - state
-    const scrollY = useTableScrollY();
     const messages = useTranslations();
     const {
         dataFilter,
@@ -73,7 +72,7 @@ export default function Genres() {
     };
 
     return (
-        <div>
+        <AppContainer title={messages('genre.label')}>
             <GenresHeader
                 dataFilter={dataFilter}
                 onChangeFilter={onChangeFilter}
@@ -83,10 +82,8 @@ export default function Genres() {
                 lastUpdatedAt={lastUpdatedAt}
             />
             <GenresTable
+                sticky
                 dataSource={genresData.items}
-                scroll={{
-                    y: scrollY,
-                }}
                 loading={isLoading}
                 pagination={{
                     pageSize: dataFilter.pageSize ?? PAGE_SIZE,
@@ -97,7 +94,7 @@ export default function Genres() {
                 onChange={onChangeSort}
             />
             <AppPagination
-                className="border-b border-t"
+                className="border-t"
                 align="end"
                 current={genresData.metadata?.currentPage}
                 pageSize={dataFilter?.pageSize}
@@ -123,6 +120,6 @@ export default function Genres() {
 
             {(typeModal === TYPE_MODAL_GENRES.CREATE ||
                 typeModal === TYPE_MODAL_GENRES.UPDATE) && <GenresFormModal />}
-        </div>
+        </AppContainer>
     );
 }

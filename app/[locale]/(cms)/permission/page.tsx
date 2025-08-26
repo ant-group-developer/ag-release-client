@@ -1,12 +1,12 @@
 'use client';
+import AppContainer from '@/components/app-container';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
-import { formattedDate, setSortOrder } from '@/helpers/common';
+import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 import PermissionHeader from '@/modules/permission/components/header';
 import PermissionActions from '@/modules/permission/components/header/permission-actions';
 import PermissionFormModal from '@/modules/permission/components/modal/permission-form';
@@ -26,7 +26,6 @@ type Props = {};
 
 export default function Permission({}: Props) {
     // hooks - state
-    const scrollY = useTableScrollY();
     const messages = useTranslations();
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
@@ -49,18 +48,12 @@ export default function Permission({}: Props) {
     };
 
     // apis
-    const {
-        dataFilter,
-        canClearFilter,
-        onChangeFilter,
-        onChangePage,
-        removeFilter,
-    } = useFilter<PermissionDataDataFilter>({
-        page: 1,
-        pageSize: PAGE_SIZE,
-    });
-    const { permissionData, dataUpdatedAt, refetch, isFetching } =
-        useGetListPermission(dataFilter);
+    const { dataFilter, onChangeFilter, onChangePage, onSearch } =
+        useFilter<PermissionDataDataFilter>({
+            page: 1,
+            pageSize: PAGE_SIZE,
+        });
+    const { permissionData, isFetching } = useGetListPermission(dataFilter);
     const { deletePermission } = useDeletePermission();
     const { bulkDeletePermission } = useBulkDeletePermission();
 
@@ -77,26 +70,17 @@ export default function Permission({}: Props) {
     };
 
     return (
-        <div>
+        <AppContainer title={messages('permission.label')}>
             <div className="app-header">
-                <PermissionHeader
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                    handleRefresh={() => refetch()}
-                    lastUpdatedAt={formattedDate(dataUpdatedAt || new Date())}
-                />
+                <PermissionHeader dataFilter={dataFilter} onSearch={onSearch} />
                 <PermissionActions
                     selectedRowKeys={selectedRow}
                     resetSelectedRows={() => handleResetSelectedRow()}
                 />
             </div>
             <PermissionTable
+                sticky
                 dataSource={permissionData.items}
-                scroll={{
-                    y: scrollY,
-                }}
                 pagination={{
                     pageSize: dataFilter.pageSize ?? PAGE_SIZE,
                     current: permissionData.metadata.currentPage,
@@ -109,7 +93,6 @@ export default function Permission({}: Props) {
             />
 
             <AppPagination
-                className="border-b border-t"
                 align="end"
                 current={permissionData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}
@@ -166,6 +149,6 @@ export default function Permission({}: Props) {
                     }
                 />
             )}
-        </div>
+        </AppContainer>
     );
 }

@@ -1,4 +1,5 @@
 'use client';
+import AppContainer from '@/components/app-container';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -6,7 +7,6 @@ import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 import LanguagesHeader from '@/modules/languages/components/header';
 import LanguageFormModal from '@/modules/languages/components/modal/language-form';
 import { LanguagesTable } from '@/modules/languages/components/table';
@@ -21,7 +21,6 @@ type Props = {};
 
 export default function Languages({}: Props) {
     // hooks - state
-    const scrollY = useTableScrollY();
     const messages = useTranslations();
     const {
         dataFilter,
@@ -69,7 +68,7 @@ export default function Languages({}: Props) {
     };
 
     return (
-        <div>
+        <AppContainer title={messages('currencies.label')}>
             <LanguagesHeader
                 dataFilter={dataFilter}
                 onChangeFilter={onChangeFilter}
@@ -79,8 +78,8 @@ export default function Languages({}: Props) {
                 lastUpdatedAt={lastUpdatedAt}
             />
             <LanguagesTable
+                sticky
                 dataSource={languagesData?.items}
-                scroll={{ y: scrollY }}
                 loading={isLoading}
                 pagination={{
                     pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
@@ -91,7 +90,7 @@ export default function Languages({}: Props) {
                 onChange={onChangeSort}
             />
             <AppPagination
-                className="border-b border-t"
+                className="border-t"
                 align="end"
                 current={languagesData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}
@@ -119,6 +118,6 @@ export default function Languages({}: Props) {
                 typeModal === TYPE_MODAL_LANGUAGES.UPDATE) && (
                 <LanguageFormModal />
             )}
-        </div>
+        </AppContainer>
     );
 }

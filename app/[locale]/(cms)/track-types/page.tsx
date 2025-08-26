@@ -1,4 +1,5 @@
 'use client';
+import AppContainer from '@/components/app-container';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -6,7 +7,6 @@ import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 import TrackTypeHeader from '@/modules/track-types/components/header';
 import TrackTypeFormModal from '@/modules/track-types/components/modal/track-type-form';
 import { TrackTypeTable } from '@/modules/track-types/components/table';
@@ -24,7 +24,6 @@ type Props = {};
 
 export default function TrackTypes({}: Props) {
     // hooks - state
-    const scrollY = useTableScrollY();
     const messages = useTranslations();
     const {
         dataFilter,
@@ -70,7 +69,10 @@ export default function TrackTypes({}: Props) {
     };
 
     return (
-        <div>
+        <AppContainer
+            title={messages('trackType.label')}
+            description={messages('trackType.description')}
+        >
             <TrackTypeHeader
                 dataFilter={dataFilter}
                 onChangeFilter={onChangeFilter}
@@ -80,8 +82,8 @@ export default function TrackTypes({}: Props) {
                 lastUpdatedAt={lastUpdatedAt}
             />
             <TrackTypeTable
+                sticky
                 dataSource={trackTypesData.items}
-                scroll={{ y: scrollY }}
                 pagination={{
                     pageSize: dataFilter.pageSize ?? PAGE_SIZE,
                     current: trackTypesData.metadata.currentPage,
@@ -92,7 +94,6 @@ export default function TrackTypes({}: Props) {
                 onChange={onChangeSort}
             />
             <AppPagination
-                className="border-b border-t"
                 align="end"
                 current={trackTypesData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}
@@ -102,6 +103,7 @@ export default function TrackTypes({}: Props) {
                 showSizeChanger
                 showQuickJumper
                 pageSizeOptions={PAGE_SIZE_OPTIONS}
+                hideOnSinglePage
             />
 
             {(typeModal === TYPE_MODAL_TRACK_TYPE.CREATE ||
@@ -122,6 +124,6 @@ export default function TrackTypes({}: Props) {
                     })}
                 />
             )}
-        </div>
+        </AppContainer>
     );
 }
