@@ -6,7 +6,6 @@ import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import useModalStore from '@/hooks/use-modal';
-import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 import AcrCloudScanHistoryModal from '@/modules/acr-cloud/components/modal/acr-scan-history-modal';
 import AcrCloudScanModal from '@/modules/acr-cloud/components/modal/acr-scan-modal';
 import AcrCloudScanResultModal from '@/modules/acr-cloud/components/modal/acr-scan-result-modal';
@@ -27,8 +26,6 @@ type Props = {};
 
 export default function Tracks({}: Props) {
     // State - hook
-    const scrollY = useTableScrollY();
-    const scrollYGridTable = useTableScrollY({ skipTableHeader: true });
     const typeModal = useModalStore((state) => state.typeModal);
     const [selectedRow, setSelectedRow] = useState<Key[]>([]);
     const [visibleColumns, setVisibleColumns] = useState<
@@ -138,11 +135,9 @@ export default function Tracks({}: Props) {
             </div>
             {layoutTable === LAYOUT_TABLE.LIST && (
                 <TracksTable
+                    sticky
                     visibleColumns={visibleColumns}
                     dataSource={tracksData.items}
-                    scroll={{
-                        y: scrollY,
-                    }}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
                         current: tracksData.metadata.currentPage,
@@ -158,9 +153,6 @@ export default function Tracks({}: Props) {
                 <TracksGridTable
                     data={tracksData?.items}
                     loading={isTrackDataLoading}
-                    scroll={{
-                        y: scrollYGridTable,
-                    }}
                 />
             )}
 

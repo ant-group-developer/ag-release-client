@@ -24,7 +24,7 @@ export const ArtistRoleTable = ({ dataFilter, ...props }: Props) => {
         {
             title: messages('common.iNo'),
             key: 'iNo',
-            width: 100,
+            width: 80,
             align: 'center',
             render: (_, __, index) =>
                 getIndex(
@@ -39,7 +39,7 @@ export const ArtistRoleTable = ({ dataFilter, ...props }: Props) => {
             dataIndex: 'name',
             ellipsis: true,
             align: 'left',
-            width: 400,
+            width: 300,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -58,7 +58,7 @@ export const ArtistRoleTable = ({ dataFilter, ...props }: Props) => {
             dataIndex: 'code',
             ellipsis: true,
             align: 'left',
-            width: 250,
+            width: 200,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -76,7 +76,7 @@ export const ArtistRoleTable = ({ dataFilter, ...props }: Props) => {
             key: 'createdAt',
             dataIndex: 'createdAt',
             align: 'center',
-            width: 400,
+            width: 150,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -94,7 +94,7 @@ export const ArtistRoleTable = ({ dataFilter, ...props }: Props) => {
             key: 'updatedAt',
             dataIndex: 'updatedAt',
             align: 'center',
-            width: 400,
+            width: 150,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -110,7 +110,7 @@ export const ArtistRoleTable = ({ dataFilter, ...props }: Props) => {
         {
             key: 'actions',
             align: 'center',
-            width: 100,
+            width: 80,
             render: (_, record) => (
                 <ActionButton
                     showDelete

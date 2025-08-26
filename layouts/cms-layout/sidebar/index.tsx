@@ -4,7 +4,7 @@ import TenantSwitch from '@/modules/tenant/components/tenant-switch';
 import { Drawer, DrawerProps, Layout, SiderProps } from 'antd';
 import { useResponsive } from 'antd-style';
 import { Scrollbars } from 'react-custom-scrollbars';
-import SidebarMenu from './side-bar-menu';
+import SidebarMenu from './sidebar-menu';
 
 type Props = {
     drawerProps?: DrawerProps;

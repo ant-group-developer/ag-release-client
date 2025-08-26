@@ -9,7 +9,6 @@ import Forbidden from '@/modules/auth/components/forbidden';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { useCheckPermission } from '@/modules/auth/hooks/use-permission';
 import AudioPlayer from '@/modules/releases/components/release-detail/release-tracks/audio-player';
-import SocketProvider from '@/providers/socket';
 import { Layout } from 'antd';
 import { ReactNode, useEffect } from 'react';
 import Content from './content';
@@ -18,10 +17,9 @@ import Sidebar from './sidebar';
 
 type Props = {
     children: ReactNode;
-    accessToken?: string;
 };
 
-export default function CMSLayout({ children, accessToken }: Props) {
+export default function CMSLayout({ children }: Props) {
     const router = useRouter();
 
     const { isActive, toggleActive, changeActive } = useActive(
@@ -61,31 +59,28 @@ export default function CMSLayout({ children, accessToken }: Props) {
     };
 
     return (
-        <SocketProvider accessToken={accessToken}>
-            <div className="mx-auto max-w-[150rem] overflow-x-hidden border-x border-l-0">
+        // <SocketProvider accessToken={accessToken}>
+        <div className="mx-auto max-w-[150rem] overflow-x-hidden border-x border-l-0">
+            <Layout>
+                <Header collapsed={isActive} toggleCollapsed={toggleActive} />
                 <Layout>
-                    <Header
+                    <Sidebar
                         collapsed={isActive}
-                        toggleCollapsed={toggleActive}
+                        onBreakpoint={changeActive}
+                        trigger={null}
+                        drawerProps={{
+                            onClose: toggleActive,
+                        }}
                     />
                     <Layout>
-                        <Sidebar
-                            collapsed={isActive}
-                            onBreakpoint={changeActive}
-                            trigger={null}
-                            drawerProps={{
-                                onClose: toggleActive,
-                            }}
-                        />
-                        <Layout>
-                            <div className="relative h-[calc(100vh-4rem)] overflow-y-hidden">
-                                <Content>{getChildren()}</Content>
-                                <AudioPlayer />
-                            </div>
-                        </Layout>
+                        <div className="relative h-[calc(100vh-4rem)] overflow-y-hidden">
+                            <Content>{getChildren()}</Content>
+                            <AudioPlayer />
+                        </div>
                     </Layout>
                 </Layout>
-            </div>
-        </SocketProvider>
+            </Layout>
+        </div>
+        // </SocketProvider>
     );
 }

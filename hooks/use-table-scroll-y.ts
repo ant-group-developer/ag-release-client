@@ -8,6 +8,7 @@ interface Props {
     pageTableHeaderClassName?: ClassInput;
     pagePaginationClassName?: ClassInput;
     skipTableHeader?: boolean;
+    pagePadding?: number;
 }
 
 export const useTableScrollY = (props?: Props) => {
@@ -16,6 +17,7 @@ export const useTableScrollY = (props?: Props) => {
         pageTableHeaderClassName = 'ant-table-header',
         pagePaginationClassName = 'ant-pagination',
         skipTableHeader = false,
+        pagePadding = 0,
     } = props || {};
 
     const minHeight = 300;
@@ -42,7 +44,8 @@ export const useTableScrollY = (props?: Props) => {
             appHeaderHeight -
             pageHeaderHeight -
             pageTableHeaderHeight -
-            pagePaginationHeight;
+            pagePaginationHeight -
+            pagePadding;
         return value > minHeight ? value : minHeight;
     }, [
         width,
@@ -50,6 +53,7 @@ export const useTableScrollY = (props?: Props) => {
         pageHeaderHeight,
         pagePaginationHeight,
         pageTableHeaderHeight,
+        pagePadding,
     ]);
 
     return scrollY;

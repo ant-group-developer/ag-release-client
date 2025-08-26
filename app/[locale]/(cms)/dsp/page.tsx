@@ -1,10 +1,10 @@
 'use client';
+import AppContainer from '@/components/app-container';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { useTableScrollY } from '@/hooks/use-table-scroll-y';
 import DspHeader from '@/modules/dsp/components/header';
 import DspFormModal from '@/modules/dsp/components/modal/dsp-form';
 import { DspTable } from '@/modules/dsp/components/table';
@@ -17,7 +17,6 @@ import { useTranslations } from 'next-intl';
 
 export default function Dsp() {
     // hooks - state
-    const scrollY = useTableScrollY();
     const messages = useTranslations();
     const {
         dataFilter,
@@ -51,7 +50,7 @@ export default function Dsp() {
     };
 
     return (
-        <div>
+        <AppContainer title={messages('artist.label')}>
             <DspHeader
                 dataFilter={dataFilter}
                 onChangeFilter={onChangeFilter}
@@ -61,10 +60,8 @@ export default function Dsp() {
                 lastUpdatedAt={lastUpdatedAt}
             />
             <DspTable
+                sticky
                 dataSource={dspData?.items}
-                scroll={{
-                    y: scrollY,
-                }}
                 pagination={{
                     pageSize: dataFilter.pageSize ?? PAGE_SIZE,
                     current: dspData.metadata.currentPage,
@@ -73,7 +70,7 @@ export default function Dsp() {
                 loading={isLoading}
             />
             <AppPagination
-                className="border-b border-t"
+                className="border-t"
                 align="end"
                 current={dspData.metadata.currentPage}
                 pageSize={dataFilter.pageSize}
@@ -99,6 +96,6 @@ export default function Dsp() {
 
             {(typeModal === TYPE_MODAL_DSP.CREATE ||
                 typeModal === TYPE_MODAL_DSP.UPDATE) && <DspFormModal />}
-        </div>
+        </AppContainer>
     );
 }
