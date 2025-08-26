@@ -37,6 +37,7 @@
         "forbiddenDescription": "Please contact the Admin for more details"
     },
     "common": {
+        "compare": "So sánh",
         "isSongCreatedByAi": "Bài hát được tạo bởi AI",
         "policies": "Chính sách",
         "backupNow": "Sao lưu ngay",

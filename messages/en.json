@@ -37,6 +37,7 @@
         "forbiddenDescription": "Please contact the Admin for more details"
     },
     "common": {
+        "compare": "Compare",
         "isSongCreatedByAi": "Is a song created by AI",
         "policies": "Policies",
         "backupNow": "Backup now",
