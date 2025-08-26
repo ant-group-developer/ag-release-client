@@ -29,6 +29,7 @@ export default function Artists({}: Props) {
         onChangePage,
         canClearFilter,
         removeFilter,
+        onSearch,
     } = useFilter<ArtistDataFilter>({
         page: 1,
         pageSize: PAGE_SIZE,
@@ -69,14 +70,7 @@ export default function Artists({}: Props) {
 
     return (
         <AppContainer title={messages('artist.label')}>
-            <ArtistsHeader
-                dataFilter={dataFilter}
-                onChangeFilter={onChangeFilter}
-                canClearFilter={canClearFilter}
-                removeFilter={removeFilter}
-                handleRefresh={handleRefresh}
-                lastUpdatedAt={lastUpdatedAt}
-            />
+            <ArtistsHeader dataFilter={dataFilter} onSearch={onSearch} />
             <ArtistsTable
                 sticky
                 dataSource={artistsData?.items}

@@ -22,16 +22,11 @@ type Props = {};
 export default function Languages({}: Props) {
     // hooks - state
     const messages = useTranslations();
-    const {
-        dataFilter,
-        onChangeFilter,
-        onChangePage,
-        canClearFilter,
-        removeFilter,
-    } = useFilter<LanguageDataFilter>({
-        page: 1,
-        pageSize: PAGE_SIZE,
-    });
+    const { dataFilter, onChangeFilter, onChangePage, onSearch } =
+        useFilter<LanguageDataFilter>({
+            page: 1,
+            pageSize: PAGE_SIZE,
+        });
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore<LanguagesData>((state) => state.dataEdit);
@@ -69,14 +64,7 @@ export default function Languages({}: Props) {
 
     return (
         <AppContainer title={messages('currencies.label')}>
-            <LanguagesHeader
-                dataFilter={dataFilter}
-                onChangeFilter={onChangeFilter}
-                canClearFilter={canClearFilter}
-                removeFilter={removeFilter}
-                handleRefresh={handleRefresh}
-                lastUpdatedAt={lastUpdatedAt}
-            />
+            <LanguagesHeader dataFilter={dataFilter} onSearch={onSearch} />
             <LanguagesTable
                 sticky
                 dataSource={languagesData?.items}

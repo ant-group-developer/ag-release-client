@@ -4,7 +4,7 @@ import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
-import { formattedDate, setSortOrder } from '@/helpers/common';
+import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useLoadingStatus } from '@/hooks/use-loading-status';
 import useModalStore from '@/hooks/use-modal';
@@ -32,16 +32,11 @@ export default function PriceTiers({}: Props) {
     const dataEdit = useModalStore<PriceTiersData>((state) => state.dataEdit);
 
     // apis
-    const {
-        dataFilter,
-        canClearFilter,
-        onChangeFilter,
-        onChangePage,
-        removeFilter,
-    } = useFilter<PriceTiersDataFilter>({
-        page: 1,
-        pageSize: PAGE_SIZE,
-    });
+    const { dataFilter, onChangeFilter, onChangePage, onSearch } =
+        useFilter<PriceTiersDataFilter>({
+            page: 1,
+            pageSize: PAGE_SIZE,
+        });
     const { priceTiersData, dataUpdatedAt, refetch, isFetching } =
         useGetListPriceTiers(dataFilter);
     const { isLoading } = useLoadingStatus({
@@ -64,14 +59,7 @@ export default function PriceTiers({}: Props) {
 
     return (
         <AppContainer title={messages('currencies.label')}>
-            <PriceTiersHeader
-                dataFilter={dataFilter}
-                onChangeFilter={onChangeFilter}
-                canClearFilter={canClearFilter}
-                removeFilter={removeFilter}
-                handleRefresh={() => refetch()}
-                lastUpdatedAt={formattedDate(dataUpdatedAt || new Date())}
-            />
+            <PriceTiersHeader dataFilter={dataFilter} onSearch={onSearch} />
 
             <PriceTiersTable
                 sticky

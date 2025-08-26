@@ -25,16 +25,11 @@ type Props = {};
 export default function ReleaseType({}: Props) {
     // hooks - state
     const messages = useTranslations();
-    const {
-        dataFilter,
-        onChangeFilter,
-        onChangePage,
-        canClearFilter,
-        removeFilter,
-    } = useFilter<ReleaseTypesDataFilter>({
-        page: 1,
-        pageSize: PAGE_SIZE,
-    });
+    const { dataFilter, onChangeFilter, onChangePage, onSearch } =
+        useFilter<ReleaseTypesDataFilter>({
+            page: 1,
+            pageSize: PAGE_SIZE,
+        });
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore<ReleaseTypesData>((state) => state.dataEdit);
     const closeModal = useModalStore((state) => state.closeModal);
@@ -70,14 +65,7 @@ export default function ReleaseType({}: Props) {
 
     return (
         <AppContainer title={messages('releaseType.label')}>
-            <ReleaseTypeHeader
-                dataFilter={dataFilter}
-                onChangeFilter={onChangeFilter}
-                canClearFilter={canClearFilter}
-                removeFilter={removeFilter}
-                handleRefresh={handleRefresh}
-                lastUpdatedAt={lastUpdatedAt}
-            />
+            <ReleaseTypeHeader dataFilter={dataFilter} onSearch={onSearch} />
             <ReleaseTypeTable
                 sticky
                 dataSource={releaseTypesData.items}

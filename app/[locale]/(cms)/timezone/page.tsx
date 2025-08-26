@@ -23,16 +23,11 @@ type Props = {};
 export default function Timezone({}: Props) {
     // hooks - state
     const messages = useTranslations();
-    const {
-        dataFilter,
-        onChangeFilter,
-        onChangePage,
-        canClearFilter,
-        removeFilter,
-    } = useFilter<any>({
-        page: 1,
-        pageSize: PAGE_SIZE,
-    });
+    const { dataFilter, onChangeFilter, onChangePage, onSearch } =
+        useFilter<any>({
+            page: 1,
+            pageSize: PAGE_SIZE,
+        });
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit);
@@ -71,14 +66,7 @@ export default function Timezone({}: Props) {
 
     return (
         <AppContainer title={messages('timezone.label')}>
-            <TimezoneHeader
-                dataFilter={dataFilter}
-                onChangeFilter={onChangeFilter}
-                canClearFilter={canClearFilter}
-                removeFilter={removeFilter}
-                handleRefresh={() => handleRefresh()}
-                lastUpdatedAt={lastUpdatedAt}
-            />
+            <TimezoneHeader dataFilter={dataFilter} onSearch={onSearch} />
             <TimezoneTable
                 sticky
                 dataSource={timezonesData?.items}

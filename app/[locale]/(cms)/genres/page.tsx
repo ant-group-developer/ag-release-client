@@ -22,16 +22,11 @@ import { useTranslations } from 'next-intl';
 export default function Genres() {
     // hooks - state
     const messages = useTranslations();
-    const {
-        dataFilter,
-        onChangeFilter,
-        onChangePage,
-        canClearFilter,
-        removeFilter,
-    } = useFilter<GenresDataFilter>({
-        page: 1,
-        pageSize: PAGE_SIZE,
-    });
+    const { dataFilter, onChangeFilter, onChangePage, onSearch } =
+        useFilter<GenresDataFilter>({
+            page: 1,
+            pageSize: PAGE_SIZE,
+        });
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore<GenresData>((state) => state.dataEdit);
@@ -73,14 +68,7 @@ export default function Genres() {
 
     return (
         <AppContainer title={messages('genre.label')}>
-            <GenresHeader
-                dataFilter={dataFilter}
-                onChangeFilter={onChangeFilter}
-                canClearFilter={canClearFilter}
-                removeFilter={removeFilter}
-                handleRefresh={handleRefresh}
-                lastUpdatedAt={lastUpdatedAt}
-            />
+            <GenresHeader dataFilter={dataFilter} onSearch={onSearch} />
             <GenresTable
                 sticky
                 dataSource={genresData.items}

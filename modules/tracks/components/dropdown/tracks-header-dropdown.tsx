@@ -69,9 +69,10 @@ export default function TracksHeaderDropdown({
         },
         {
             label: messages('tracks.scan'),
-            value: TYPE_FILTER.IS_SCANNED,
-            visible: !dataFilter.isScanned,
-            onClick: () => handleChangeTypeFilter(TYPE_FILTER.IS_SCANNED),
+            value: TYPE_FILTER.SCAN_COPYRIGHT_STATUS,
+            visible: !dataFilter.scanCopyrightStatus,
+            onClick: () =>
+                handleChangeTypeFilter(TYPE_FILTER.SCAN_COPYRIGHT_STATUS),
         },
         {
             label: messages('common.createdAt'),

@@ -25,17 +25,12 @@ type Props = {};
 export default function TrackOriginTypes({}: Props) {
     // hooks - state
     const messages = useTranslations();
-    const {
-        dataFilter,
-        onChangeFilter,
-        onChangePage,
-        canClearFilter,
-        removeFilter,
-    } = useFilter<TrackOriginTypeDataFilter>({
-        page: 1,
-        pageSize: 10,
-        createdAt: '',
-    });
+    const { dataFilter, onChangeFilter, onChangePage, onSearch } =
+        useFilter<TrackOriginTypeDataFilter>({
+            page: 1,
+            pageSize: 10,
+            createdAt: '',
+        });
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore(
         (state) => state.dataEdit as TrackOriginTypeData
@@ -74,11 +69,7 @@ export default function TrackOriginTypes({}: Props) {
         <AppContainer title={messages('trackOriginType.label')}>
             <TrackOriginTypeHeader
                 dataFilter={dataFilter}
-                onChangeFilter={onChangeFilter}
-                canClearFilter={canClearFilter}
-                removeFilter={removeFilter}
-                handleRefresh={handleRefresh}
-                lastUpdatedAt={lastUpdatedAt}
+                onSearch={onSearch}
             />
             <TrackOriginTypeTable
                 sticky

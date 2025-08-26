@@ -58,6 +58,12 @@ export default function TracksTable({
             align: 'left',
             fixed: 'left',
             width: 150,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'title'
+            ),
             render: (_, record) => (
                 <div className="flex items-center gap-4">
                     <TrackCoverArt trackData={record} />

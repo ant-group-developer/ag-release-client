@@ -18,13 +18,7 @@ import { useTranslations } from 'next-intl';
 export default function Dsp() {
     // hooks - state
     const messages = useTranslations();
-    const {
-        dataFilter,
-        onChangeFilter,
-        onChangePage,
-        canClearFilter,
-        removeFilter,
-    } = useFilter<DspDataFilter>({
+    const { dataFilter, onChangePage, onSearch } = useFilter<DspDataFilter>({
         page: 1,
         pageSize: PAGE_SIZE,
     });
@@ -51,14 +45,7 @@ export default function Dsp() {
 
     return (
         <AppContainer title={messages('artist.label')}>
-            <DspHeader
-                dataFilter={dataFilter}
-                onChangeFilter={onChangeFilter}
-                canClearFilter={canClearFilter}
-                removeFilter={removeFilter}
-                handleRefresh={handleRefresh}
-                lastUpdatedAt={lastUpdatedAt}
-            />
+            <DspHeader dataFilter={dataFilter} onSearch={onSearch} />
             <DspTable
                 sticky
                 dataSource={dspData?.items}

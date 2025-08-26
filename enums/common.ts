@@ -116,6 +116,7 @@ export enum TYPE_FILTER {
     IS_SCANNED = 'isScanned',
     ALBUM_FORMAT_ID = 'albumFormatId',
     IS_VARIOUS_ARTIST = 'isVariousArtist',
+    SCAN_COPYRIGHT_STATUS = 'scanCopyRightStatus',
 }
 
 export enum UPLOAD_TYPE {

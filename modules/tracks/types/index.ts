@@ -55,6 +55,7 @@ export interface TrackDataFilter extends CommonParams {
     artistId?: string;
     isScanned?: string;
     genres?: string;
+    scanCopyrightStatus?: string;
 }
 
 export interface TrackPolicyData extends CommonAttribute {

@@ -211,9 +211,9 @@ export default function ReleasesTable({
             ),
         },
         {
-            title: messages('tracks.label'),
-            key: 'trackCount',
-            dataIndex: 'trackCount',
+            title: messages('releases.trackCount'),
+            key: 'tracks_count',
+            dataIndex: 'tracks_count',
             align: 'center',
             width: 100,
             sorter: true,
@@ -228,8 +228,8 @@ export default function ReleasesTable({
         },
         {
             title: messages('releases.duration'),
-            key: 'duration',
-            dataIndex: 'duration',
+            key: 'total_duration',
+            dataIndex: 'total_duration',
             align: 'center',
             width: 100,
             sorter: true,
