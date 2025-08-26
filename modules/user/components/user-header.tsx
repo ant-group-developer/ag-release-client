@@ -59,14 +59,14 @@ export default function UserHeader({
                         {messages('common.removeFilter')}
                     </Button>
                 )}
+                <Button onClick={toggleDrawer}>
+                    <Funnel size={SIZE_ICON_BUTTON} />
+                    {messages('common.filter')}
+                </Button>
             </AppHeaderGroup>
 
             <AppHeaderGroup position="end" className="flex-1">
                 <div className="flex items-center gap-2">
-                    <Button onClick={toggleDrawer}>
-                        <Funnel size={SIZE_ICON_BUTTON} />
-                        {messages('common.filter')}
-                    </Button>
                     {isNotSystemTenant && (
                         <CreateButton
                             canCreate={true}

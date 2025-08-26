@@ -73,6 +73,7 @@ function DetailTenantPage({}: Props) {
 
                 const payload: UpdateTenantPayload = {
                     ...otherValues,
+                    maxLabels: Number(otherValues.maxLabels),
                     icon: iconUrl,
                     logo: logoUrl,
                     primaryColor: hexString,
