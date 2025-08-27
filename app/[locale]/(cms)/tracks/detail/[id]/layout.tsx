@@ -141,7 +141,7 @@ export default function TrackDetail({ children }: PropsWithChildren) {
                     className="flex w-fit items-center gap-1 py-2 hover:underline"
                 >
                     <ArrowLeft size={SIZE_ICON_SMALL} />
-                    {messages('tracks.back')}
+                    {messages('track.back')}
                 </Link>
                 <AppHeaderPage
                     imageSrc={linkReadFile}
@@ -149,7 +149,7 @@ export default function TrackDetail({ children }: PropsWithChildren) {
                     options={renderDownloadTrack()}
                 >
                     <ItemHeaderPage
-                        name={messages('tracks.name')}
+                        name={messages('track.name')}
                         value={`${trackData.title} ${trackData.version && trackData.title && `[${trackData?.version}]`}`}
                     />
 
@@ -164,12 +164,12 @@ export default function TrackDetail({ children }: PropsWithChildren) {
                     />
 
                     <ItemHeaderPage
-                        name={messages('labels.label')}
+                        name={messages('label.label')}
                         value={trackData?.release?.label?.name}
                     />
 
                     <ItemHeaderPage
-                        name={messages('releases.label')}
+                        name={messages('release.label')}
                         value={trackData?.release?.title}
                     />
 

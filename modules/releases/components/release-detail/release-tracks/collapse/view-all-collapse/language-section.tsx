@@ -101,7 +101,7 @@ export default function LanguageSection({
                             </div>
                             <div>
                                 <FormItem
-                                    label={messages('tracks.language')}
+                                    label={messages('track.language')}
                                     ErrorMessage={
                                         errors.trackLanguage?.audioLanguageId
                                             ?.message

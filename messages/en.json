@@ -649,7 +649,7 @@
         "system": "System"
     },
 
-    "releases": {
+    "release": {
         "count": "Releases count",
         "configuration": "Release configuration",
         "otherMetadata": "Other metadata",
@@ -701,9 +701,7 @@
         "coverArt": {
             "required": "Required cover art",
             "size": "Perfectly Square image from 1400x1400 pixels to 4000x4000 pixels"
-        }
-    },
-    "release": {
+        },
         "message": {
             "success": {
                 "create": "Create release successfully",
@@ -744,7 +742,7 @@
         }
     },
 
-    "tracks": {
+    "track": {
         "number": "Track number",
         "add": "Add track",
         "label": "Track",
@@ -810,10 +808,7 @@
         },
         "acrCloud": {
             "compareResult": "Select results to compare"
-        }
-    },
-
-    "track": {
+        },
         "message": {
             "success": {
                 "create": "Create track successfully",
@@ -888,7 +883,7 @@
         "primary": "Primary genre"
     },
     "genre": {
-        "label": "Genre",
+        "label": "Genres",
         "message": {
             "success": {
                 "create": "Create new genre successfully",
@@ -946,9 +941,7 @@
         "create": "Create label",
         "name": "Label name",
         "id": "Label ID",
-        "back": "Back to label list"
-    },
-    "label": {
+        "back": "Back to label list",
         "message": {
             "success": {
                 "create": "Create label successfully",
@@ -961,6 +954,7 @@
             }
         }
     },
+
     "distribution": {
         "label": "Distribution",
         "create": "Create distribution",
@@ -1124,6 +1118,7 @@
             }
         }
     },
+
     "timezone": {
         "label": "Timezone",
         "create": "Create timezone",
@@ -1146,6 +1141,7 @@
             "selectTimezone": "Select timezone"
         }
     },
+
     "tooltipForm": {
         "releaseTitle": "Do not include version information like Remix or Uncut in the main Title field. Use the Version field instead.",
         "version": "A particular iteration of the product that will be delivered to stores and displayed alongside the title. Example: 'Live' , 'Deluxe Version'. If multiple versions of an album exist, use this field to indicate the correct version.",
@@ -1219,6 +1215,7 @@
         "member": "Member",
         "manager": "Manager"
     },
+
     "integration": {
         "label": "Integrations",
         "deal": {
@@ -1238,6 +1235,7 @@
             }
         }
     },
+
     "action": {
         "create": {
             "button": "Create",

@@ -28,7 +28,7 @@ export default function LabelsHeader({ dataFilter, onSearch }: Props) {
                 <div className="flex items-center gap-2">
                     <CreateButton
                         canCreate={true}
-                        text={messages('labels.create')}
+                        text={messages('label.create')}
                         onClick={() => openModal(TYPE_MODAL_LABEL.CREATE)}
                     />
                 </div>

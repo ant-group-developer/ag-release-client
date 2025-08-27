@@ -68,7 +68,7 @@ export default function AddNewTrackModal({ ...props }: Props) {
                         closeModal();
                         return showNotification(
                             'error',
-                            messages('tracks.validation.trackFileName', {
+                            messages('track.validation.trackFileName', {
                                 number: 80,
                             })
                         );
@@ -303,7 +303,7 @@ export default function AddNewTrackModal({ ...props }: Props) {
         <AppModal
             {...props}
             open
-            title={messages('tracks.add')}
+            title={messages('track.add')}
             onOk={form.submit}
             onCancel={closeModal}
             confirmLoading={isActive}

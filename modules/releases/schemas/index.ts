@@ -97,7 +97,7 @@ export const releaseSchema = (messages: any) =>
         //                 artist.artistRole.name === 'Main Artist'
         //         ),
         //     {
-        //         message: messages('releases.validation.mustHaveMainArtist'),
+        //         message: messages('release.validation.mustHaveMainArtist'),
         //     }
         // ),
         pLineOwner: z

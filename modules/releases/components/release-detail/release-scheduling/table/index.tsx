@@ -47,7 +47,7 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
             render: (_: any, __: any, index: number) => index + 1,
         },
         {
-            title: messages('tracks.name'),
+            title: messages('track.name'),
             dataIndex: 'track',
             key: 'track',
             width: 400,

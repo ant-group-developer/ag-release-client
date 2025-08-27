@@ -71,7 +71,7 @@ export default function TrackAndArtistSection({
                     key: 'track-and-artist',
                     label: (
                         <Title level={5} className="!mb-0">
-                            {messages('tracks.label')} &{' '}
+                            {messages('track.label')} &{' '}
                             {messages('artist.label')}
                         </Title>
                     ),
@@ -80,7 +80,7 @@ export default function TrackAndArtistSection({
                             <div className="grid grid-cols-4 items-center gap-5">
                                 <div className="col-span-2">
                                     <FormItem
-                                        label={messages('tracks.name')}
+                                        label={messages('track.name')}
                                         ErrorMessage={errors.title?.message}
                                         required
                                         name="title"
@@ -115,7 +115,7 @@ export default function TrackAndArtistSection({
                                 </div>
                                 <div className="col-span-2">
                                     <FormItem
-                                        label={messages('releases.version')}
+                                        label={messages('release.version')}
                                         ErrorMessage={errors.version?.message}
                                         name="version"
                                     >
@@ -149,7 +149,7 @@ export default function TrackAndArtistSection({
                                 </div>
                                 <div className="col-span-2">
                                     <FormItem
-                                        label={`${messages('tracks.addAllArtistFromRelease')} ?`}
+                                        label={`${messages('track.addAllArtistFromRelease')} ?`}
                                         ErrorMessage={
                                             errors.copyArtistsFromRelease
                                                 ?.message

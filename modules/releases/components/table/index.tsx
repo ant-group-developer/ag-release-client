@@ -66,7 +66,7 @@ export default function ReleasesTable({
                 ),
         },
         {
-            title: messages('releases.name'),
+            title: messages('release.name'),
             key: 'title',
             dataIndex: 'title',
             ellipsis: true,
@@ -172,7 +172,7 @@ export default function ReleasesTable({
             ),
         },
         {
-            title: messages('releases.type'),
+            title: messages('release.type'),
             key: 'type',
             dataIndex: 'type',
             // align: 'center',
@@ -211,7 +211,7 @@ export default function ReleasesTable({
             ),
         },
         {
-            title: messages('releases.trackCount'),
+            title: messages('release.trackCount'),
             key: 'tracks_count',
             dataIndex: 'tracks_count',
             align: 'center',
@@ -227,7 +227,7 @@ export default function ReleasesTable({
             ),
         },
         {
-            title: messages('releases.duration'),
+            title: messages('release.duration'),
             key: 'total_duration',
             dataIndex: 'total_duration',
             align: 'center',
@@ -247,7 +247,7 @@ export default function ReleasesTable({
             },
         },
         {
-            title: messages('releases.releaseDate'),
+            title: messages('release.releaseDate'),
             key: 'releaseDate',
             dataIndex: 'releaseDate',
             align: 'center',

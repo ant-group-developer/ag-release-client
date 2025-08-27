@@ -119,7 +119,7 @@ export default function ReleaseSchedulingForm({}: Props) {
                     <div className="grid grid-cols-2 gap-6">
                         <FormItem
                             name="releaseDate"
-                            label={messages('releases.releaseDate')}
+                            label={messages('release.releaseDate')}
                             required
                             ErrorMessage={errors.releaseDate?.message}
                         >

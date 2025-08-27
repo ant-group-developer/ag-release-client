@@ -95,7 +95,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     )}
                 >
                     <span className="font-medium">
-                        {messages('tracks.label')}
+                        {messages('track.label')}
                     </span>
                 </Link>
             ),
@@ -112,7 +112,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     )}
                 >
                     <span className="font-medium">
-                        {messages('releases.scheduling.label')}
+                        {messages('release.scheduling.label')}
                     </span>
                 </Link>
             ),
@@ -172,7 +172,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     onClick={() => openModal(TYPE_MODAL_RELEASE.ADD_TRACK)}
                     type="primary"
                 >
-                    {messages('tracks.add')}
+                    {messages('track.add')}
                 </Button>
             )}
         </div>
@@ -268,7 +268,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                             className="flex w-fit items-center gap-1 py-2 hover:underline"
                         >
                             <ArrowLeft size={SIZE_ICON_SMALL} />
-                            {messages('releases.back')}
+                            {messages('release.back')}
                         </Link>
                         <ReleaseDetailHeader isScrolled={isScrolled} />
                         <div>

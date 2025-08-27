@@ -116,7 +116,7 @@ export default function AcrCloudScanModal({
                     />
                 </AppFormItem> */}
 
-                <AppFormItem name="track" label={messages('tracks.label')}>
+                <AppFormItem name="track" label={messages('track.label')}>
                     <TracksSelect mode="multiple" allowClear disabled />
                 </AppFormItem>
                 <AppFormItem
@@ -125,19 +125,19 @@ export default function AcrCloudScanModal({
                     label="Option"
                 >
                     <Checkbox defaultChecked={true}>
-                        {messages('tracks.skipScannedTracks')}
+                        {messages('track.skipScannedTracks')}
                     </Checkbox>
                 </AppFormItem>
                 <AppFormItem
                     name="chunkDuration"
-                    label={messages('tracks.chunkDuration')}
+                    label={messages('track.chunkDuration')}
                     rules={[
                         {
                             type: 'number',
                             max: 12,
                             message: messages('validation.stringMax', {
                                 max: 12,
-                                field: messages('tracks.chunkDuration'),
+                                field: messages('track.chunkDuration'),
                             }),
                         },
                         {
@@ -145,7 +145,7 @@ export default function AcrCloudScanModal({
                             min: 1,
                             message: messages('validation.stringMin', {
                                 min: 1,
-                                field: messages('tracks.chunkDuration'),
+                                field: messages('track.chunkDuration'),
                             }),
                         },
                     ]}

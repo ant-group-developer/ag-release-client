@@ -74,7 +74,7 @@ export default function AcrCloudScanResultModal({ ...props }: Props) {
                                                                 item2?.content
                                                                     ?.humming;
                                                             return {
-                                                                label: `${convertSecondsToTime(item2?.key?.startSecond)} - ${convertSecondsToTime(item2?.key?.endSecond)} (${messages('tracks.count')}: ${value?.length ?? 0})`,
+                                                                label: `${convertSecondsToTime(item2?.key?.startSecond)} - ${convertSecondsToTime(item2?.key?.endSecond)} (${messages('track.count')}: ${value?.length ?? 0})`,
                                                                 children: (
                                                                     <div>
                                                                         <ScanResultPanel

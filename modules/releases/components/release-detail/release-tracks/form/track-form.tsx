@@ -121,7 +121,7 @@ export default function TracksForm({ trackData, index }: Props) {
                         <LabelForm
                             htmlFor="title"
                             required
-                            label={messages('tracks.name')}
+                            label={messages('track.name')}
                         />
                         <Controller
                             control={control}
@@ -155,7 +155,7 @@ export default function TracksForm({ trackData, index }: Props) {
                     <div>
                         <LabelForm
                             htmlFor="version"
-                            label={messages('releases.version')}
+                            label={messages('release.version')}
                         />
                         <Controller
                             control={control}
@@ -191,7 +191,7 @@ export default function TracksForm({ trackData, index }: Props) {
                     <div className="col-span-2">
                         <LabelForm
                             htmlFor="copyArtistsFromRelease"
-                            label={`${messages('tracks.addAllArtistFromRelease')} ?`}
+                            label={`${messages('track.addAllArtistFromRelease')} ?`}
                         />
                         <Controller
                             control={control}

@@ -64,7 +64,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
         //     },
         // },
         {
-            title: messages('labels.name'),
+            title: messages('label.name'),
             key: 'name',
             dataIndex: 'name',
             ellipsis: true,
@@ -122,7 +122,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             ),
         },
         {
-            title: messages('releases.count'),
+            title: messages('release.count'),
             key: 'releaseCount',
             dataIndex: 'release_count',
             align: 'center',
@@ -138,7 +138,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             ),
         },
         {
-            title: messages('tracks.count'),
+            title: messages('track.count'),
             key: 'trackCount',
             dataIndex: 'track_count',
             align: 'center',

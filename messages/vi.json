@@ -648,7 +648,7 @@
         "system": "Hệ thống"
     },
 
-    "releases": {
+    "release": {
         "count": "Số lượng bản phát hành",
         "configuration": "Thiết lập phát hành",
         "otherMetadata": "Các metadata khác",
@@ -701,10 +701,7 @@
         "coverArt": {
             "required": "Yêu cầu ảnh bìa",
             "size": "Ảnh phải vuông, từ 1400x1400 pixel đến 4000x4000x pixel"
-        }
-    },
-
-    "release": {
+        },
         "message": {
             "success": {
                 "create": "Thêm mới phát hành thành công",
@@ -745,7 +742,7 @@
         }
     },
 
-    "tracks": {
+    "track": {
         "number": "Bài hát số",
         "add": "Thêm bài hát",
         "label": "Bài hát",
@@ -811,10 +808,7 @@
         },
         "acrCloud": {
             "compareResult": "Chọn kết quả muốn so sánh"
-        }
-    },
-
-    "track": {
+        },
         "message": {
             "success": {
                 "create": "Thêm mới bài hát thành công",
@@ -888,6 +882,7 @@
         "add": "Thêm thể loại",
         "primary": "Thể loại chính"
     },
+
     "genre": {
         "label": "Thể loại",
         "message": {
@@ -906,6 +901,7 @@
             }
         }
     },
+
     "artist": {
         "label": "Nghệ sĩ",
         "create": "Tạo nghệ sĩ",
@@ -942,14 +938,12 @@
         "name": "Tên vai trò"
     },
 
-    "labels": {
+    "label": {
         "label": "Label",
         "create": "Tạo label",
         "name": "Tên label",
         "id": "Mã label",
-        "back": "Trở lại danh sách Label"
-    },
-    "label": {
+        "back": "Trở lại danh sách Label",
         "message": {
             "success": {
                 "create": "Thêm mới label thành công",
@@ -962,6 +956,7 @@
             }
         }
     },
+
     "distribution": {
         "label": "Phân phối",
         "create": "Tạo phân phối",

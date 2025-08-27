@@ -95,7 +95,7 @@ export default function ReleaseConfigurationSection({
                     key: 'release-configuration',
                     label: (
                         <Title level={5} className="!mb-0">
-                            {messages('releases.configuration')}
+                            {messages('release.configuration')}
                         </Title>
                     ),
                     children: (
@@ -104,7 +104,7 @@ export default function ReleaseConfigurationSection({
                                 <div className="col-span-3">
                                     <FormItem
                                         name="title"
-                                        label={messages('releases.name')}
+                                        label={messages('release.name')}
                                         required
                                         ErrorMessage={errors?.title?.message}
                                         tooltipInfor={messages(
@@ -154,7 +154,7 @@ export default function ReleaseConfigurationSection({
                                 <div className="col-span-1">
                                     <FormItem
                                         name="version"
-                                        label={messages('releases.version')}
+                                        label={messages('release.version')}
                                         ErrorMessage={errors.version?.message}
                                         tooltipInfor={messages(
                                             'tooltipForm.version'
@@ -237,7 +237,7 @@ export default function ReleaseConfigurationSection({
                                 <div className="col-span-1">
                                     <FormItem
                                         name="albumFormatId"
-                                        label={messages('releases.type')}
+                                        label={messages('release.type')}
                                         required
                                         ErrorMessage={
                                             errors.albumFormatId?.message

@@ -51,7 +51,7 @@ export default function ArtistSelect({
                                 className="w-full"
                                 onClick={onCreateArtist}
                             >
-                                {messages('releases.createArtist')}
+                                {messages('release.createArtist')}
                             </Button>
                         </div>
                     </div>

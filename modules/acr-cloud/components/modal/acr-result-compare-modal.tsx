@@ -50,7 +50,7 @@ export default function AcrResultCompareModal({ ...props }: Props) {
             <div className="max-h-[600px] space-y-4 overflow-auto">
                 <div className="flex gap-4">
                     <Select
-                        placeholder={messages('tracks.acrCloud.compareResult')}
+                        placeholder={messages('track.acrCloud.compareResult')}
                         options={options}
                         className="flex-1"
                         onChange={(val) => {
@@ -59,7 +59,7 @@ export default function AcrResultCompareModal({ ...props }: Props) {
                         defaultValue={firstResult?.id}
                     />
                     <Select
-                        placeholder={messages('tracks.acrCloud.compareResult')}
+                        placeholder={messages('track.acrCloud.compareResult')}
                         options={options}
                         className="flex-1"
                         onChange={(val) => setRightId(val)}
@@ -102,7 +102,7 @@ export const ResultCollapse = ({ data }: { data: TrackScanHistoryData }) => {
             items={data.result?.map((item: ResultScan) => {
                 const value = item?.content?.music ?? item?.content?.humming;
                 return {
-                    label: `${convertSecondsToTime(item.key.startSecond)} - ${convertSecondsToTime(item.key.endSecond)} (${messages('tracks.count')}: ${value?.length ?? 0})`,
+                    label: `${convertSecondsToTime(item.key.startSecond)} - ${convertSecondsToTime(item.key.endSecond)} (${messages('track.count')}: ${value?.length ?? 0})`,
                     children: <ScanResultPanel data={item} />,
                 };
             })}

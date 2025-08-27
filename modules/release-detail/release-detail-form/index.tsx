@@ -247,7 +247,7 @@
 //                         <div className="col-span-2 flex flex-col">
 //                             <FormItem
 //                                 name="type"
-//                                 label={messages('releases.type')}
+//                                 label={messages('release.type')}
 //                                 required
 //                                 ErrorMessage={errors.type?.message}
 //                             >
@@ -285,7 +285,7 @@
 //                             <LabelForm
 //                                 htmlFor="title"
 //                                 required
-//                                 label={messages('releases.name')}
+//                                 label={messages('release.name')}
 //                             />
 //                             <Controller
 //                                 control={control}
@@ -320,7 +320,7 @@
 
 //                         <FormItem
 //                             name="version"
-//                             label={messages('releases.version')}
+//                             label={messages('release.version')}
 //                             ErrorMessage={errors.version?.message}
 //                         >
 //                             <Controller

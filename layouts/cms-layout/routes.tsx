@@ -104,9 +104,9 @@ export const adminRoutes: RouteNode[] = [
                 required: { permission: [PERMISSION.DASHBOARD.READ] },
             },
             {
-                id: 'releases',
+                id: 'release',
                 type: 'link',
-                label: 'releases.label',
+                label: 'release.label',
                 title: 'Releases',
                 href: APP_ROUTES.RELEASES,
                 icon: DiscAlbum,
@@ -115,7 +115,7 @@ export const adminRoutes: RouteNode[] = [
             {
                 id: 'releaseDetail',
                 type: 'link',
-                label: 'releases.label',
+                label: 'release.label',
                 title: 'Release Detail',
                 href: APP_ROUTES.RELEASES_DETAIL,
                 hidden: true,
@@ -128,9 +128,9 @@ export const adminRoutes: RouteNode[] = [
                 },
             },
             {
-                id: 'tracks',
+                id: 'track',
                 type: 'link',
-                label: 'tracks.label',
+                label: 'track.label',
                 title: 'Tracks',
                 href: APP_ROUTES.TRACKS,
                 icon: Music,
@@ -139,7 +139,7 @@ export const adminRoutes: RouteNode[] = [
             {
                 id: 'trackDetail',
                 type: 'link',
-                label: 'releases.label',
+                label: 'release.label',
                 title: 'Track Detail',
                 href: APP_ROUTES.TRACK_DETAIL,
                 hidden: true,

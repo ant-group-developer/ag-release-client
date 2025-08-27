@@ -19,7 +19,7 @@ export default function ScanResultPanel({ data }: Props) {
     const messages = useTranslations();
     let value = data?.content?.music ?? data?.content?.humming;
 
-    if (!value) return <p>{messages('tracks.noResultMatches')}</p>;
+    if (!value) return <p>{messages('track.noResultMatches')}</p>;
 
     if (!data?.content?.music && data?.content?.humming) {
         value = value?.map((item) => ({
@@ -52,7 +52,7 @@ export default function ScanResultPanel({ data }: Props) {
                 children: (
                     <div>
                         <div>
-                            <span>{messages('tracks.name')}: </span>
+                            <span>{messages('track.name')}: </span>
                             <span className="font-semibold">{item?.title}</span>
                         </div>
                         <div>
@@ -80,7 +80,7 @@ export default function ScanResultPanel({ data }: Props) {
                             </span>
                         </div>
                         <div>
-                            <span>{messages('releases.releaseDate')}: </span>
+                            <span>{messages('release.releaseDate')}: </span>
                             <span className="font-semibold">
                                 {formattedDate(
                                     item?.release_date,
@@ -89,14 +89,14 @@ export default function ScanResultPanel({ data }: Props) {
                             </span>
                         </div>
                         <div>
-                            <span>{messages('tracks.rageDuplicate')}: </span>
+                            <span>{messages('track.rageDuplicate')}: </span>
                             <span className="font-semibold">
                                 {`${convertMsToMinSec(item?.sample_begin_time_offset_ms)} - ${convertMsToMinSec(item?.sample_end_time_offset_ms)}`}
                             </span>
                         </div>
                         <div>
                             <span>
-                                {messages('tracks.rageDuplicateInSongDetected')}
+                                {messages('track.rageDuplicateInSongDetected')}
                                 :{' '}
                             </span>
                             <span className="font-semibold">

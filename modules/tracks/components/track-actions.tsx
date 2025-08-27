@@ -36,7 +36,7 @@ export default function TrackActions({
                     type="primary"
                     onClick={() => openModal(TYPE_MODAL_TRACK.ACR_CLOUD_SCAN)}
                 >
-                    {messages('tracks.scan')}
+                    {messages('track.scan')}
                 </Button>
             </div>
         </div>

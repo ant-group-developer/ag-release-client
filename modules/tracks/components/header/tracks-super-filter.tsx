@@ -110,7 +110,7 @@ export default function TracksSuperFilter({
 
                 <PopoverCheckboxFilter
                     open={typeFilter === TYPE_FILTER.RELEASE_ID}
-                    title={messages('releases.label')}
+                    title={messages('release.label')}
                     loading={isReleaseLoading}
                     options={releasesData?.items?.map((item: ReleasesData) => ({
                         name: item?.title,

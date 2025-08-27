@@ -46,7 +46,7 @@ export default function ArtistDetailLayout({ children }: PropsWithChildren) {
                     className="font-medium"
                     href={ARTIST_DETAIL_TABS.RELEASES}
                 >
-                    {messages('releases.label')}
+                    {messages('release.label')}
                 </Link>
             ),
         },
@@ -54,7 +54,7 @@ export default function ArtistDetailLayout({ children }: PropsWithChildren) {
             key: ARTIST_DETAIL_TABS.TRACKS,
             label: (
                 <Link className="font-medium" href={ARTIST_DETAIL_TABS.TRACKS}>
-                    {messages('tracks.label')}
+                    {messages('track.label')}
                 </Link>
             ),
         },
@@ -118,11 +118,11 @@ export default function ArtistDetailLayout({ children }: PropsWithChildren) {
                         value={artistData.name}
                     />
                     <ItemHeaderPage
-                        name={messages('releases.count')}
+                        name={messages('release.count')}
                         value={artistData?.releaseCount?.toString()}
                     />
                     <ItemHeaderPage
-                        name={messages('tracks.count')}
+                        name={messages('track.count')}
                         value={artistData?.trackCount?.toString()}
                     />
                 </AppHeaderPage>

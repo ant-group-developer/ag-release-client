@@ -126,7 +126,7 @@ export default function ReleasesSuperFilter({
 
                 <PopoverCheckboxFilter
                     open={typeFilter === TYPE_FILTER.ALBUM_FORMAT_ID}
-                    title={messages('releases.type')}
+                    title={messages('release.type')}
                     loading={isReleaseTypesLoading}
                     options={releaseTypesData?.items?.map(
                         (item: ReleaseTypesData) => ({

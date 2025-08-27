@@ -86,7 +86,7 @@ export default function TracksInfo({}: Props) {
                 <div className="mt-1">
                     {audioLang && (
                         <div>
-                            {messages('tracks.language')}: {audioLang}
+                            {messages('track.language')}: {audioLang}
                         </div>
                     )}
                     {country && (
@@ -96,7 +96,7 @@ export default function TracksInfo({}: Props) {
                     )}
                     {recordingCountry && (
                         <div>
-                            {messages('tracks.recordingCountry')}:{' '}
+                            {messages('track.recordingCountry')}:{' '}
                             {recordingCountry}
                         </div>
                     )}
@@ -159,7 +159,7 @@ export default function TracksInfo({}: Props) {
 
     return (
         <div className="space-y-2">
-            <p className="font-semibold"> {messages('tracks.label')} </p>
+            <p className="font-semibold"> {messages('track.label')} </p>
 
             <div className="mb-2 rounded-lg bg-zinc-100 p-4">
                 <p className="text-base font-medium">
@@ -185,11 +185,11 @@ export default function TracksInfo({}: Props) {
                         >
                             <div>
                                 <TrackMetadataInfoItem
-                                    label={messages('tracks.label')}
+                                    label={messages('track.label')}
                                 >
                                     {renderField(
                                         index,
-                                        messages('tracks.name'),
+                                        messages('track.name'),
                                         'title',
                                         true
                                     )}
@@ -235,7 +235,7 @@ export default function TracksInfo({}: Props) {
 
                                 {/* Các metadata khác */}
                                 <TrackMetadataInfoItem
-                                    label={messages('releases.otherMetadata')}
+                                    label={messages('release.otherMetadata')}
                                 >
                                     {renderField(
                                         index,

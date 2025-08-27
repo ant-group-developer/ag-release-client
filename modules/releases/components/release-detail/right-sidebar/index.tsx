@@ -49,14 +49,14 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                 if (parts.length >= 3) {
                     const trackIndex = Number(parts[1]) + 1;
                     const fieldName = parts.slice(2).join('.');
-                    return `${messages('tracks.number')} ${trackIndex}: ${messages(`formFields.${fieldName}` as any) || field}`;
+                    return `${messages('track.number')} ${trackIndex}: ${messages(`formFields.${fieldName}` as any) || field}`;
                 } else if (field == 'maxTrackCount' || 'maxTrackCount') {
-                    return messages('tracks.label');
+                    return messages('track.label');
                 }
                 break;
 
             case RELEASES_TABS.SCHEDULE:
-                return `${messages('releases.scheduling.label')}: ${messages(`formFields.${field}` as any)}`;
+                return `${messages('release.scheduling.label')}: ${messages(`formFields.${field}` as any)}`;
 
             default:
                 return messages(`formFields.${field}` as any);

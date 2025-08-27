@@ -40,7 +40,7 @@ export default function ShowColumnOptionDropdown({
         },
         {
             key: RELEASES_COLUMNS_DISPLAY.TITLE,
-            label: messages('releases.name'),
+            label: messages('release.name'),
         },
         {
             key: RELEASES_COLUMNS_DISPLAY.ARTIST,
@@ -48,15 +48,15 @@ export default function ShowColumnOptionDropdown({
         },
         {
             key: RELEASES_COLUMNS_DISPLAY.PUBLISHER,
-            label: messages('releases.publisher'),
+            label: messages('release.publisher'),
         },
         {
             key: RELEASES_COLUMNS_DISPLAY.RELEASE_ID,
-            label: messages('releases.id'),
+            label: messages('release.id'),
         },
         {
             key: RELEASES_COLUMNS_DISPLAY.TYPE,
-            label: messages('releases.type'),
+            label: messages('release.type'),
         },
         {
             key: RELEASES_COLUMNS_DISPLAY.TENANT,
@@ -72,15 +72,15 @@ export default function ShowColumnOptionDropdown({
         },
         {
             key: RELEASES_COLUMNS_DISPLAY.TRACK_COUNT,
-            label: messages('releases.trackCount'),
+            label: messages('release.trackCount'),
         },
         {
             key: RELEASES_COLUMNS_DISPLAY.DURATION,
-            label: messages('releases.duration'),
+            label: messages('release.duration'),
         },
         {
             key: RELEASES_COLUMNS_DISPLAY.RELEASE_DATE,
-            label: messages('releases.releaseDate'),
+            label: messages('release.releaseDate'),
         },
         {
             key: RELEASES_COLUMNS_DISPLAY.CREATED_AT,

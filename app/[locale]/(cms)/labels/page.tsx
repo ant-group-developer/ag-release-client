@@ -63,7 +63,7 @@ export default function Labels({}: Props) {
     };
 
     return (
-        <AppContainer title={messages('labels.label')}>
+        <AppContainer title={messages('label.label')}>
             <LabelsHeader dataFilter={dataFilter} onSearch={onSearch} />
             <LabelsTable
                 sticky

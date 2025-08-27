@@ -171,7 +171,7 @@ export default function Releases({}: Props) {
                     open
                     onOk={() => handleDeleteRelease()}
                     onCancel={closeModal}
-                    modalTitle={`${messages('common.delete')} ${messages('releases.label').toLowerCase()}`}
+                    modalTitle={`${messages('common.delete')} ${messages('release.label').toLowerCase()}`}
                     paragraph={messages('delete.confirmMessage', {
                         value: dataEdit?.title,
                     })}

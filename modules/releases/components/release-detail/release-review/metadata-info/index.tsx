@@ -100,10 +100,10 @@ export default function MetadataInfo({}: Props) {
             </div>
 
             <div className="grid grid-cols-2 gap-2">
-                <MetadataInfoItem label={messages('releases.name')}>
+                <MetadataInfoItem label={messages('release.name')}>
                     {renderField('title', true)}
                 </MetadataInfoItem>
-                <MetadataInfoItem label={messages('releases.version')}>
+                <MetadataInfoItem label={messages('release.version')}>
                     {renderField('version')}
                 </MetadataInfoItem>
             </div>
@@ -158,16 +158,16 @@ export default function MetadataInfo({}: Props) {
             </div>
 
             <div className="grid grid-cols-2 gap-2">
-                <MetadataInfoItem label={messages('releases.releaseDate')}>
+                <MetadataInfoItem label={messages('release.releaseDate')}>
                     {renderField('releaseDate', true)}
                 </MetadataInfoItem>
-                <MetadataInfoItem label={messages('releases.releaseTime')}>
+                <MetadataInfoItem label={messages('release.releaseTime')}>
                     {renderField('releaseTime', true)}
                 </MetadataInfoItem>
             </div>
 
             <div>
-                <MetadataInfoItem label={messages('releases.type')}>
+                <MetadataInfoItem label={messages('release.type')}>
                     {renderField('type', true)}
                 </MetadataInfoItem>
             </div>

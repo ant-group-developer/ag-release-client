@@ -40,12 +40,12 @@ export default function ShowColumnOptionDropdown({
         },
         {
             key: TRACKS_COLUMNS_DISPLAY.ID,
-            label: messages('tracks.id'),
+            label: messages('track.id'),
             alwaysVisible: true,
         },
         {
             key: TRACKS_COLUMNS_DISPLAY.TITLE,
-            label: messages('tracks.name'),
+            label: messages('track.name'),
         },
         {
             key: TRACKS_COLUMNS_DISPLAY.GENRES,
@@ -53,7 +53,7 @@ export default function ShowColumnOptionDropdown({
         },
         {
             key: TRACKS_COLUMNS_DISPLAY.VERSION,
-            label: messages('releases.version'),
+            label: messages('release.version'),
         },
         {
             key: TRACKS_COLUMNS_DISPLAY.TRACK_ARTIST,

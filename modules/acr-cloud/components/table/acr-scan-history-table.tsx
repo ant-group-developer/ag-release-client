@@ -75,7 +75,7 @@ export default function AcrScanHistoryTable({ ...props }: Props) {
             ),
         },
         // {
-        //     title: messages('tracks.label'),
+        //     title: messages('track.label'),
         //     key: 'tracks',
         //     width: 100,
         //     align: 'left',
@@ -96,7 +96,7 @@ export default function AcrScanHistoryTable({ ...props }: Props) {
             ),
         },
         {
-            title: messages('tracks.totalTrackNeedScan'),
+            title: messages('track.totalTrackNeedScan'),
             key: 'trackNeedScanCount',
             width: 50,
             align: 'center',
@@ -105,7 +105,7 @@ export default function AcrScanHistoryTable({ ...props }: Props) {
             ),
         },
         {
-            title: messages('tracks.numberOfTracksScanned'),
+            title: messages('track.numberOfTracksScanned'),
             key: 'trackScannedCount',
             width: 50,
             align: 'center',
