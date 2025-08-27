@@ -1,9 +1,8 @@
 'use client';
-import AppContainer from '@/components/app-container';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
-import { ORDER } from '@/enums/common';
+import { BOOLEAN_RAW, ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
@@ -40,6 +39,7 @@ export default function UserPage({}: Props) {
         pageSize: PAGE_SIZE,
         fieldOrder: USER_ORDER_BY.UPDATED_AT,
         orderBy: ORDER.DESC,
+        status: BOOLEAN_RAW.TRUE.toString(),
     });
     const { data, isFetching } = useUserList(dataFilter);
     const { removeUser, isPending } = useRemoveUser();
@@ -57,7 +57,7 @@ export default function UserPage({}: Props) {
     };
 
     return (
-        <AppContainer title={messages('user.label')}>
+        <div>
             <UserHeader
                 dataFilter={dataFilter}
                 onChangeFilter={onChangeFilter}
@@ -117,6 +117,6 @@ export default function UserPage({}: Props) {
                     })}
                 />
             )}
-        </AppContainer>
+        </div>
     );
 }

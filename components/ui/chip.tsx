@@ -21,7 +21,7 @@ function Chip({ children, className, onClick, onRemove }: Props) {
             )}
         >
             <div
-                className="ellipsis max-w-80 grow cursor-pointer truncate"
+                className="ellipsis max-w-80 grow cursor-pointer truncate leading-9"
                 onClick={onClick}
             >
                 {children}

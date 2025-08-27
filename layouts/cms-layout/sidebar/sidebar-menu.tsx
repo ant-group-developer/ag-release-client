@@ -1,4 +1,5 @@
 import { SIZE_ICON } from '@/constants/common';
+import { cn } from '@/helpers/tailwind';
 import { Link, usePathname } from '@/i18n/routing';
 import { useCheckPermission } from '@/modules/auth/hooks/use-permission';
 import type { MenuProps } from 'antd';
@@ -14,7 +15,7 @@ import {
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-function SidebarMenu() {
+function SidebarMenu(props: MenuProps) {
     const pathname = usePathname();
     const t = useTranslations();
     const { checkPermission } = useCheckPermission();
@@ -164,10 +165,11 @@ function SidebarMenu() {
 
     return (
         <Menu
-            className="!border-none"
+            defaultOpenKeys={openKeys}
+            {...props}
+            className={cn('!border-none', props.className)}
             items={items}
             selectedKeys={bestActiveLink ? [bestActiveLink.href] : []}
-            defaultOpenKeys={openKeys}
         />
     );
 }

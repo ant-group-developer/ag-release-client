@@ -34,7 +34,12 @@
             "description": "Bạn không có quyền truy cập tài nguyên này. Liên hệ Admin để biết thêm chi tiết."
         },
         "forbiddenTitle": "You do not have access",
-        "forbiddenDescription": "Please contact the Admin for more details"
+        "forbiddenDescription": "Please contact the Admin for more details",
+        "message": {
+            "error": {
+                "invalidCredentials": "Email hoặc mật khẩu không đúng."
+            }
+        }
     },
     "common": {
         "compare": "So sánh",

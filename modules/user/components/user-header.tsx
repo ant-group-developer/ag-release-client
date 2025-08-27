@@ -1,21 +1,13 @@
 import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
-import AppSidebarSectionTitleOnly from '@/components/cms/app-sidebar-section-title-only';
 import CreateButton from '@/components/ui/button/create-button';
-import AppSearch from '@/components/ui/input/search';
-import { SIZE_ICON_BUTTON } from '@/constants/common';
-import { arrayFromString, arrayToString } from '@/helpers/array';
 import { UseFilterProps } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
-import TenantTreeSelect from '@/modules/tenant/components/tenant-tree-select';
 import { UserAddOutlined } from '@ant-design/icons';
-import { Button, Drawer } from 'antd';
-import { Funnel, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
 import { TYPE_MODAL_USER } from '../enums';
 import { DataFilterUser } from '../types/data';
-import UserTypeSelect from './user-type-select';
+import UserHeaderFilter from './user-header-filter';
 
 type Props = {} & Pick<
     UseFilterProps<DataFilterUser>,
@@ -32,19 +24,19 @@ export default function UserHeader({
     const openModal = useModalStore((state) => state.openModal);
     const { isNotSystemTenant } = useAuth();
 
-    const [open, setOpen] = useState(false);
-    const toggleDrawer = () => setOpen(!open);
+    // const [open, setOpen] = useState(false);
+    // const toggleDrawer = () => setOpen(!open);
 
     return (
-        <AppHeader className="app-header px-0 pb-3">
+        <AppHeader className="app-header">
             <AppHeaderGroup>
-                {/* <UserHeaderFilter
+                <UserHeaderFilter
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
                     canClearFilter={canClearFilter}
                     removeFilter={removeFilter}
-                /> */}
-                <div>
+                />
+                {/* <div>
                     <AppSearch
                         className="max-w-60"
                         placeholder={messages('user.search.keyword')}
@@ -62,7 +54,7 @@ export default function UserHeader({
                 <Button onClick={toggleDrawer}>
                     <Funnel size={SIZE_ICON_BUTTON} />
                     {messages('common.filter')}
-                </Button>
+                </Button> */}
             </AppHeaderGroup>
 
             <AppHeaderGroup position="end" className="flex-1">
@@ -88,12 +80,11 @@ export default function UserHeader({
                 </div>
             </AppHeaderGroup>
 
-            <Drawer
+            {/* <Drawer
                 width={330}
                 open={open}
                 title={messages('common.filter')}
                 onClose={toggleDrawer}
-                closeIcon={null}
             >
                 <div className="space-y-4">
                     <AppSidebarSectionTitleOnly title={messages('user.type')}>
@@ -142,7 +133,7 @@ export default function UserHeader({
                         </Button>
                     )}
                 </div>
-            </Drawer>
+            </Drawer> */}
         </AppHeader>
     );
 }
