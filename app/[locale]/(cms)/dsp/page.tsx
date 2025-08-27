@@ -32,9 +32,6 @@ export default function Dsp() {
     const { deleteDsp } = useDeleteDsp();
 
     // func
-    const handleRefresh = () => {
-        refetch();
-    };
     const handleDeleteDsp = () => {
         const variables: DeleteVariables<DspData['id']> = {
             id: dataEdit?.id,

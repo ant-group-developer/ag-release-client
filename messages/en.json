@@ -445,7 +445,8 @@
         "stringMax": "{field} can have up to {max} characters only.",
         "numberMin": "{field} must be at least {min}.",
         "numberMax": "{field} must not exceed {max}.",
-        "invalidType": "{field} must be a valid value."
+        "invalidType": "{field} must be a valid value.",
+        "noUnderscore": "{field} must not contain underscores (_)"
     },
     "form": {
         "searchPlaceholder": "Search"
@@ -936,7 +937,7 @@
         "name": "Role name"
     },
 
-    "labels": {
+    "label": {
         "label": "Label",
         "create": "Create label",
         "name": "Label name",

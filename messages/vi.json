@@ -445,7 +445,8 @@
         "stringMax": "{field} chỉ được tối đa {max} ký tự.",
         "numberMin": "{field} phải từ {min} trở lên.",
         "numberMax": "{field} không được lớn hơn {max}.",
-        "invalidType": "{field} không hợp lệ."
+        "invalidType": "{field} không hợp lệ.",
+        "noUnderscore": "{field} Không được có ký tự (_)"
     },
     "form": {
         "searchPlaceholder": "Tìm kiếm"

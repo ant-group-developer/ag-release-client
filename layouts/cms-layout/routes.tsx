@@ -189,7 +189,7 @@ export const adminRoutes: RouteNode[] = [
             {
                 id: 'labels',
                 type: 'link',
-                label: 'labels.label',
+                label: 'label.label',
                 title: 'Labels',
                 href: APP_ROUTES.LABELS,
                 icon: MicVocal,

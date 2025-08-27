@@ -245,6 +245,18 @@ export default function DspFormModal({ ...props }: Props) {
                                 field: messages('dsp.name'),
                             }),
                         },
+                        {
+                            validator: (_, value) => {
+                                if (value && value.includes('_')) {
+                                    return Promise.reject(
+                                        messages('validation.noUnderscore', {
+                                            field: messages('dsp.name'),
+                                        })
+                                    );
+                                }
+                                return Promise.resolve();
+                            },
+                        },
                     ]}
                 >
                     <Input allowClear />
