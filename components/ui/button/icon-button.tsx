@@ -28,7 +28,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
                 ref={ref}
                 {...props}
                 className={cn(
-                    'inline-grid aspect-square w-8 flex-none cursor-pointer place-content-center text-base hover:bg-gray-200',
+                    'inline-grid aspect-square min-w-8 flex-none cursor-pointer place-content-center p-1.5 text-base hover:bg-gray-200',
                     {
                         '!hidden': hidden,
                         'rounded-full': shape === 'circle',

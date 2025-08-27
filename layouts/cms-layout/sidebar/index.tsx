@@ -39,13 +39,13 @@ function Sidebar({ collapsed, drawerProps, ...props }: Props) {
 
     return (
         <Drawer
+            width={330}
             open={collapsed}
             placement="left"
             {...drawerProps}
             title={<TenantSwitch />}
-            closeIcon={null}
         >
-            <SidebarMenu />
+            <SidebarMenu mode="inline" />
         </Drawer>
     );
 }

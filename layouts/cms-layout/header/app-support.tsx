@@ -1,4 +1,5 @@
 import IconButton from '@/components/ui/button/icon-button';
+import { SIZE_ICON_BIG } from '@/constants/common';
 import { CircleHelp } from 'lucide-react';
 
 type Props = {};
@@ -12,7 +13,7 @@ function AppSupport({}: Props) {
 
     return (
         <IconButton
-            variant="outlined"
+            variant="borderless"
             // onClick={() =>
             //     window.open(
             //         dataSetting?.telegramSupport,
@@ -21,7 +22,7 @@ function AppSupport({}: Props) {
             //     )
             // }
         >
-            <CircleHelp size={16} />
+            <CircleHelp size={SIZE_ICON_BIG} />
         </IconButton>
     );
 }

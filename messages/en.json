@@ -34,7 +34,12 @@
             "description": "You do not have permission to access this resource. Please contact the Admin for more details."
         },
         "forbiddenTitle": "You do not have access",
-        "forbiddenDescription": "Please contact the Admin for more details"
+        "forbiddenDescription": "Please contact the Admin for more details",
+        "message": {
+            "error": {
+                "invalidCredentials": "Invalid email or password."
+            }
+        }
     },
     "common": {
         "compare": "Compare",

@@ -17,6 +17,7 @@ export interface DataFilterUser extends CommonParams {
     id?: string;
     type?: string;
     tenantIds?: string;
+    status?: string;
 }
 
 export interface UserDetail extends CommonAttributeCreator {

@@ -10,11 +10,12 @@ import {
     TenantDspData,
 } from '../types/data';
 
-export function useTenantList(params: DataFilterTenant) {
+export function useTenantList(params: DataFilterTenant, enabled = true) {
     const { data, ...restResponse } = useQuery({
         queryKey: tenantQueryKeys.list(params),
         queryFn: () => tenantApi.getList(params),
         placeholderData: (previousData) => previousData,
+        enabled,
     });
 
     return {

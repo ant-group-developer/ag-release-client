@@ -11,7 +11,7 @@ import {
 } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
-import { Avatar, Switch, Tag, theme } from 'antd';
+import { Avatar, Popover, Switch, Tag, theme } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_USER, USER_ORDER_BY } from '../enums';
@@ -115,18 +115,53 @@ function UserTable({ dataFilter, actionProps, ...props }: Props) {
             title: messages('tenant.label'),
             dataIndex: 'tenant',
             width: 200,
-            render: (cell, record) => (
-                <div className="flex flex-col gap-1">
-                    {record.tenantUser.map((item) => (
-                        <Tag key={item.id} className="w-fit">
-                            {item.tenant.name}:{' '}
-                            {messages(
-                                `tenant.userType.${item.type}.label` as any
-                            )}
-                        </Tag>
-                    ))}
-                </div>
-            ),
+            render: (cell, record) => {
+                if (!record.tenantUser.length) {
+                    return null;
+                }
+
+                const [firstTenantUser, ...restTenantUser] = record.tenantUser;
+
+                const renderTag = ({
+                    name,
+                    type,
+                }: {
+                    name: string;
+                    type: string;
+                }) => (
+                    <Tag className="w-fit">
+                        {name}:{' '}
+                        {messages(`tenant.userType.${type}.label` as any)}
+                    </Tag>
+                );
+
+                return (
+                    <div className="flex flex-wrap">
+                        {renderTag({
+                            name: firstTenantUser.tenant.name,
+                            type: firstTenantUser.type,
+                        })}
+                        {restTenantUser?.length > 0 && (
+                            <Popover
+                                content={
+                                    <div className="grid space-y-2">
+                                        {restTenantUser?.map((item) =>
+                                            renderTag({
+                                                name: item.tenant.name,
+                                                type: item.type,
+                                            })
+                                        )}
+                                    </div>
+                                }
+                            >
+                                <Tag className="w-fit">
+                                    +{restTenantUser.length}
+                                </Tag>
+                            </Popover>
+                        )}
+                    </div>
+                );
+            },
         },
         {
             title: messages('status.label'),
