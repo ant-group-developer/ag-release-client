@@ -70,7 +70,7 @@ export default function TenantPage({}: Props) {
             />
 
             {/* <AppPagination
-                className="border-b border-t"
+                className="border-b "
                 align="end"
                 current={data?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}

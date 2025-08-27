@@ -87,34 +87,9 @@ export default function Distribution({}: Props) {
     const closeModal = useModalStore((state) => state.closeModal);
     const formValues = useReleaseFormStore((state) => state.formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
-    const validationErrors = useReleaseFormStore(
-        (state) => state.validationErrors
-    );
-    const errorsLength = validationErrors?.length;
+
     const releaseId = formValues?.id || '';
     const router = useRouter();
-
-    // const scrollY = () => {
-    //     if (isSmallDevice) return undefined;
-    //     if (!height) return undefined;
-    //     const minHeight = 300;
-    //     const header = 64;
-    //     const pageHeader = 204;
-    //     const pageAction = 49;
-    //     const pageFilter = 49;
-    //     const pagination = 58;
-    //     const headerTable = 39;
-    //     const headerFooterHeight =
-    //         header +
-    //         pageHeader +
-    //         pageFilter +
-    //         pagination +
-    //         headerTable +
-    //         pageAction;
-    //     const value = height - headerFooterHeight;
-    //     if (value > minHeight) return value;
-    //     return minHeight;
-    // };
 
     const handleRefresh = () => {};
 
@@ -149,7 +124,7 @@ export default function Distribution({}: Props) {
                                 }}
                                 className=""
                                 type="primary"
-                                disabled={errorsLength > 0}
+                                // disabled={errorsLength > 0}
                             >
                                 <span>
                                     Phân phối {selectedRow.length}/
@@ -163,7 +138,7 @@ export default function Distribution({}: Props) {
                                     );
                                 }}
                                 danger
-                                disabled={errorsLength > 0}
+                                // disabled={errorsLength > 0}
                             >
                                 <span>
                                     Gỡ xuống {selectedRow.length}/

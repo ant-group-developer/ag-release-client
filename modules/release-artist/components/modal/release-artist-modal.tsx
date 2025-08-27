@@ -23,7 +23,7 @@ import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Checkbox, Form } from 'antd';
 import { useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import ArtistProfilesList from '../../../artist/components/list/artist-profiles';
 import { useUpdateReleaseArtist } from '../../hooks/use-update-release-artist';
 
@@ -126,19 +126,19 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
         }
     };
 
-    useEffect(() => {
-        if (dataEdit?.id) {
-            form.setFieldsValue({
-                artistId: dataEdit?.artistId,
-                roleId: dataEdit?.artistRoleId,
-                addArtistToTracks: dataEdit?.addArtistToTracks ?? true,
-            });
-        } else {
-            form.setFieldsValue({
-                addArtistToTracks: true,
-            });
-        }
-    }, [dataEdit]);
+    // useEffect(() => {
+    //     if (dataEdit?.id) {
+    //         form.setFieldsValue({
+    //             artistId: dataEdit?.artistId,
+    //             roleId: dataEdit?.artistRoleId,
+    //             addArtistToTracks: dataEdit?.addArtistToTracks ?? true,
+    //         });
+    //     } else {
+    //         form.setFieldsValue({
+    //             addArtistToTracks: true,
+    //         });
+    //     }
+    // }, [dataEdit]);
 
     return (
         <AppModal

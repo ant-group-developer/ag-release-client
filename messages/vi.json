@@ -971,7 +971,7 @@
             "preview": "Đoạn nghe trước"
         },
         "trackLanguage": {
-            "audioLanguageId": "Ngôn ngữ âm thanh",
+            "audioLanguageId": "Ngôn ngữ bài hát",
             "metadataLanguageId": "Ngôn ngữ metadata",
             "metadataLanguageCountryId": "Ngôn ngữ quốc gia",
             "recordingCountryId": "Quốc gia ghi âm"

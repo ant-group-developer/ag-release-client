@@ -364,7 +364,7 @@
 //                                 <FormItem
 //                                     name="isVariousArtist"
 //                                     label={messages(
-//                                         'releases.isMoreThan4Artists'
+//                                         'release.isMoreThan4Artists'
 //                                     )}
 //                                     required
 //                                     ErrorMessage={''}
@@ -662,7 +662,7 @@
 //                             label="Bản quyền tác phẩm"
 //                             required
 //                             tooltipInfor={messages(
-//                                 'releases.cLineYearDescription'
+//                                 'release.cLineYearDescription'
 //                             )}
 //                             ErrorMessage={errors.cLineOwner?.message}
 //                         >
@@ -728,7 +728,7 @@
 //                             label="Bản quyền ghi âm"
 //                             required
 //                             tooltipInfor={messages(
-//                                 'releases.pLineYearDescription'
+//                                 'release.pLineYearDescription'
 //                             )}
 //                             ErrorMessage={errors.pLineOwner?.message}
 //                         >

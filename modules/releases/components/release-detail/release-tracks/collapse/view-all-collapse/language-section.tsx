@@ -152,7 +152,7 @@ export default function LanguageSection({
                                     required
                                     label={`${messages('language.label')} metadata`}
                                     ErrorMessage={
-                                        errors.trackLanguage?.audioLanguageId
+                                        errors.trackLanguage?.metadataLanguageId
                                             ?.message
                                     }
                                 >
@@ -180,7 +180,7 @@ export default function LanguageSection({
                                                 className="w-full"
                                                 status={
                                                     errors.trackLanguage
-                                                        ?.audioLanguageId
+                                                        ?.metadataLanguageId
                                                         ? 'error'
                                                         : undefined
                                                 }

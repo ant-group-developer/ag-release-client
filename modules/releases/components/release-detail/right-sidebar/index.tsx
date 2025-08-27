@@ -42,7 +42,8 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
 
         switch (page) {
             case RELEASES_TABS.CORE_DETAIL:
-                return `${messages('common.coreInfo')}: ${messages(`formFields.${field}` as any)}`;
+                // return `${messages('common.coreInfo')}: ${messages(`formFields.${field}` as any)}`;
+                return `${messages(`formFields.${field}` as any)}`;
 
             case RELEASES_TABS.TRACKS:
                 const parts = field.split('.');
@@ -56,7 +57,8 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                 break;
 
             case RELEASES_TABS.SCHEDULE:
-                return `${messages('release.scheduling.label')}: ${messages(`formFields.${field}` as any)}`;
+                // return `${messages('release.scheduling.label')}: ${messages(`formFields.${field}` as any)}`;
+                return `${messages(`formFields.${field}` as any)}`;
 
             default:
                 return messages(`formFields.${field}` as any);

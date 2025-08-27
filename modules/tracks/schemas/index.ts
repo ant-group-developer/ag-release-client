@@ -29,12 +29,14 @@ export const releaseTrackSchema = (messages: any) =>
             .refine((val) => val !== null && val !== '', {
                 message: messages('validation.input'),
             }),
-        pLineYear: z
-            .number()
-            .optional()
-            .refine((val) => val !== null, {
-                message: messages('validation.input'),
-            }),
+        pLineYear: z.union([z.number(), z.null()]).superRefine((val, ctx) => {
+            if (val === null) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: messages('validation.input'),
+                });
+            }
+        }),
         primaryGenreId: z
             .string()
             .nullable()
@@ -55,18 +57,21 @@ export const releaseTrackSchema = (messages: any) =>
                 .refine((val) => val !== null && val !== '', {
                     message: messages('validation.input'),
                 }),
+
             audioLanguageId: z
                 .string()
                 .nullable()
                 .refine((val) => val !== null && val !== '', {
                     message: messages('validation.input'),
                 }),
+
             metadataLanguageCountryId: z
                 .string()
                 .nullable()
                 .refine((val) => val !== null && val !== '', {
                     message: messages('validation.input'),
                 }),
+
             recordingCountryId: z
                 .string()
                 .nullable()

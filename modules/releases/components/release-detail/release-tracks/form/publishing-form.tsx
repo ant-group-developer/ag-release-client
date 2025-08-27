@@ -46,7 +46,7 @@ export default function PublishingForm({}: Props) {
                             ]}
                             allowClear
                             // placeholder={messages(
-                            //     'releases.placeholder.selectPublishType'
+                            //     'release.placeholder.selectPublishType'
                             // )}
                         />
                     </AppFormItem>
@@ -77,7 +77,7 @@ export default function PublishingForm({}: Props) {
                                 ]}
                                 allowClear
                                 // placeholder={messages(
-                                //     'releases.placeholder.selectLabel'
+                                //     'release.placeholder.selectLabel'
                                 // )}
                             />
                         </AppFormItem>
@@ -112,7 +112,7 @@ export default function PublishingForm({}: Props) {
                             ]}
                             allowClear
                             // placeholder={messages(
-                            //     'releases.placeholder.selectRole'
+                            //     'release.placeholder.selectRole'
                             // )}
                         />
                     </AppFormItem>
@@ -141,7 +141,7 @@ export default function PublishingForm({}: Props) {
                             ]}
                             allowClear
                             // placeholder={messages(
-                            //     'releases.placeholder.selectMusician'
+                            //     'release.placeholder.selectMusician'
                             // )}
                         />
                     </AppFormItem>

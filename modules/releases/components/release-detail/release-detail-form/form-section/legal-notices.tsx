@@ -96,7 +96,7 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                 name="cLineYear"
                                 label={messages('formFields.cLineYear')}
                                 required
-                                ErrorMessage={''}
+                                ErrorMessage={errors.cLineYear?.message}
                                 tooltipInfor={messages('tooltipForm.cLineYear')}
                             >
                                 <Controller
@@ -184,7 +184,7 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                 name="pLineYear"
                                 label={messages('formFields.pLineYear')}
                                 required
-                                ErrorMessage={''}
+                                ErrorMessage={errors.pLineYear?.message}
                                 tooltipInfor={messages('tooltipForm.pLineYear')}
                             >
                                 <Controller
@@ -214,6 +214,11 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                                     );
                                                 }}
                                                 options={copyRightYears}
+                                                status={
+                                                    errors?.pLineYear
+                                                        ? 'error'
+                                                        : undefined
+                                                }
                                             />
                                         );
                                     }}

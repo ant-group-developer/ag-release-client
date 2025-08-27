@@ -26,8 +26,7 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
     const messages = useTranslations();
     const formMethods = useForm<ReleaseTrackSchema>({
         defaultValues: {
-            ...trackData,
-            pLineYear: trackData?.pLineYear ?? undefined,
+            ...(trackData as ReleaseTrackSchema),
         },
         resolver: zodResolver(releaseTrackSchema(messages)),
         mode: 'onChange',
@@ -46,10 +45,11 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
         trigger,
         reset,
         setValue,
+        setFocus,
     } = formMethods;
 
     useEffect(() => {
-        const handleTriggerField = () => {
+        const handleTriggerField = async () => {
             const hash = window.location.hash;
             if (hash) {
                 const parts = hash.split('.');
@@ -57,7 +57,15 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
                 if (parts.length >= 4) {
                     field = parts.slice(2).join('.');
                 }
-                trigger(field as keyof ReleaseTrackSchema);
+                console.log('🚀 ~ handleTriggerField ~ field:', field);
+
+                const idField = hash.replace('#', '');
+                const el = document.getElementById(idField);
+                if (el) {
+                    el.focus();
+                    el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                }
+                await trigger(field as keyof ReleaseTrackSchema);
             }
         };
         window.addEventListener('hashchange', handleTriggerField);
@@ -67,7 +75,7 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
         return () => {
             window.removeEventListener('hashchange', handleTriggerField);
         };
-    }, []);
+    }, [trigger]);
 
     return (
         <ConfigProvider componentDisabled={isReadMode}>

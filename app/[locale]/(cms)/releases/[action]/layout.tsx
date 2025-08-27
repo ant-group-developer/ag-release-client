@@ -202,25 +202,25 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         // ReleaseData from api into Release zustand global state
         const initialData: ReleaseFormStoreData = {
             ...releaseData,
-            releaseLanguage: releaseData.releaseLanguage ?? {
-                metadataLanguageId: '',
-                audioLanguageId: '',
-                metadataLanguageCountryId: '',
-                releaseId: '',
-            },
-            releaseTerritory: releaseData.releaseTerritory ?? {
-                distributeWorldwide: true,
-            },
-            tracks: tracksData.items.map((track) => ({
-                ...track,
-                isSensitiveContent: !!track.isSensitiveContent,
-            })),
+            // releaseLanguage: releaseData.releaseLanguage ?? {
+            //     metadataLanguageId: '',
+            //     audioLanguageId: '',
+            //     metadataLanguageCountryId: '',
+            //     releaseId: '',
+            // },
+            // releaseTerritory: releaseData.releaseTerritory ?? {
+            //     distributeWorldwide: true,
+            // },
+            // tracks: tracksData.items.map((track) => ({
+            //     ...track,
+            //     isSensitiveContent: !!track.isSensitiveContent,
+            // })),
         };
 
         if (releaseId && releaseData?.id) {
             setFormValues(initialData);
         }
-    }, [releaseId, JSON.stringify(releaseData), tracksData?.items]);
+    }, [releaseId, JSON.stringify(releaseData)]);
 
     useEffect(() => {
         // Chỉ theo dõi scroll khi ở trang core-detail, các trang khác mặc định isScrolled = true
