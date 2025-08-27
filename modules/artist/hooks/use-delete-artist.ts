@@ -1,4 +1,5 @@
 import { showNotification } from '@/helpers/messages-helper';
+import { useApiError } from '@/hooks/use-api-error';
 import { DeleteVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
@@ -9,6 +10,7 @@ import { ArtistData } from '../types';
 export const useDeleteArtist = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
+    const { handleError } = useApiError();
 
     const onSuccess = (
         data: any,
@@ -26,12 +28,7 @@ export const useDeleteArtist = () => {
         data: any,
         { onError }: DeleteVariables<ArtistData['id']>
     ) => {
-        const responseMessages = messages(data?.response?.data?.messageCode);
-
-        showNotification(
-            'error',
-            responseMessages ?? messages('common.somethingWentWrong')
-        );
+        handleError(data);
         onError?.();
     };
 

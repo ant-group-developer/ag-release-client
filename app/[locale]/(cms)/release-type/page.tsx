@@ -79,7 +79,6 @@ export default function ReleaseType({}: Props) {
                 onChange={onChangeSort}
             />
             <AppPagination
-                className="border-t"
                 align="end"
                 current={releaseTypesData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}

@@ -1,4 +1,5 @@
 import { showNotification } from '@/helpers/messages-helper';
+import { useApiError } from '@/hooks/use-api-error';
 import { CreateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
@@ -9,7 +10,7 @@ import { CreateDspPayload } from '../types/payload';
 export const useCreateDsp = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
-
+    const { handleError } = useApiError();
     const onSuccess = (
         data: any,
         { onSuccess }: CreateVariables<CreateDspPayload>
@@ -28,13 +29,8 @@ export const useCreateDsp = () => {
         data: any,
         { onError }: CreateVariables<CreateDspPayload>
     ) => {
-        const responseMessages = messages(data?.response?.data?.messageCode);
-
         onError?.();
-        showNotification(
-            'error',
-            responseMessages || messages('common.somethingWentWrong')
-        );
+        handleError(data);
     };
     const mutation = useMutation({
         mutationFn: ({ payload }: CreateVariables<CreateDspPayload>) =>

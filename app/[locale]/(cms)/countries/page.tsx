@@ -76,7 +76,6 @@ export default function Countries({}: {}) {
                 onChange={onChangeSort}
             />
             <AppPagination
-                className="border-t"
                 align="end"
                 current={dataFilter.page}
                 pageSize={dataFilter.pageSize}

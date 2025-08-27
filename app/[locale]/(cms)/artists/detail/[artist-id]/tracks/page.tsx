@@ -126,7 +126,6 @@ export default function Tracks({}: Props) {
             )}
 
             <AppPagination
-                className="border-t"
                 align="end"
                 current={tracksData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}

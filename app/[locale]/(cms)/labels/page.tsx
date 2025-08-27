@@ -96,7 +96,6 @@ export default function Labels({}: Props) {
             )}
 
             <AppPagination
-                className="border-t"
                 align="end"
                 current={labelsData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}

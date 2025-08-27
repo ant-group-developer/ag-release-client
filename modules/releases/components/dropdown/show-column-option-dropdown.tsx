@@ -87,6 +87,10 @@ export default function ShowColumnOptionDropdown({
             label: messages('common.createdAt'),
         },
         {
+            key: RELEASES_COLUMNS_DISPLAY.UPDATED_AT,
+            label: messages('common.updatedAt'),
+        },
+        {
             key: RELEASES_COLUMNS_DISPLAY.ACTIONS,
             label: messages('common.action'),
             alwaysVisible: true,

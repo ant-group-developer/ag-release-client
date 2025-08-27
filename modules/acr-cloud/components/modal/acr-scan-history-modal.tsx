@@ -76,7 +76,6 @@ export default function AcrCloudScanHistoryModal({ ...props }: Props) {
                         scroll={{ x: SCREEN.MD, y: 600 }}
                     />
                     <AppPagination
-                        className="border-t"
                         align="end"
                         current={scanStatusData?.metadata?.currentPage}
                         pageSize={dataFilter.pageSize}

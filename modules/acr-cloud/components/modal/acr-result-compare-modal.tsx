@@ -4,7 +4,7 @@ import useModalStore from '@/hooks/use-modal';
 import { TrackData } from '@/modules/releases/types';
 import { Collapse, Select, SelectProps } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGetAcrCloudHistory } from '../../hooks/use-get-acr-cloud-history';
 import { ResultScan, TrackScanHistoryData } from '../../types';
 import ScanResultPanel from '../collapses/scan-result-pancel';
@@ -32,6 +32,13 @@ export default function AcrResultCompareModal({ ...props }: Props) {
 
     const firstResult = acrCloudResult?.[0];
     const lastResult = acrCloudResult?.[acrCloudResult.length - 1];
+
+    useEffect(() => {
+        if (acrCloudResult && acrCloudResult.length > 0) {
+            setLeftId(acrCloudResult[0].id);
+            setRightId(acrCloudResult[acrCloudResult.length - 1].id);
+        }
+    }, [acrCloudResult]);
 
     return (
         <AppModal
@@ -63,7 +70,10 @@ export default function AcrResultCompareModal({ ...props }: Props) {
                     <div className="flex-1">
                         {leftData && (
                             <div>
-                                <ResultCollapse data={leftData} />
+                                <ResultCollapse
+                                    key={leftData?.id}
+                                    data={leftData}
+                                />
                             </div>
                         )}
                     </div>
@@ -71,7 +81,10 @@ export default function AcrResultCompareModal({ ...props }: Props) {
                     <div className="flex-1">
                         {rightData && (
                             <div>
-                                <ResultCollapse data={rightData} />
+                                <ResultCollapse
+                                    key={rightData?.id}
+                                    data={rightData}
+                                />
                             </div>
                         )}
                     </div>

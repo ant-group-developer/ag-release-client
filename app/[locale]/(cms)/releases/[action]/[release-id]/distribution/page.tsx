@@ -1,6 +1,7 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
+import { PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { SESSION_STORAGE_KEY } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
@@ -213,7 +214,6 @@ export default function Distribution({}: Props) {
             )}
 
             <AppPagination
-                className="border-t"
                 align="end"
                 current={dataFilter.page}
                 pageSize={dataFilter.pageSize}
@@ -222,7 +222,7 @@ export default function Distribution({}: Props) {
                 showTotalText
                 showSizeChanger
                 showQuickJumper
-                pageSizeOptions={[21, 28, 35]}
+                pageSizeOptions={PAGE_SIZE_OPTIONS}
             />
         </div>
     );

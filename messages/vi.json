@@ -773,6 +773,7 @@
         "scoreWarning": "Điểm cảnh báo",
         "autoScanTime": "Giờ tự động quét",
         "releaseStatusAutoScan": "Trạng thái tự động quét",
+        "chunkDuration": "Thời lượng đoạn",
         "status": {
             "scanning": "Đang quét",
             "running": "Đang chạy",

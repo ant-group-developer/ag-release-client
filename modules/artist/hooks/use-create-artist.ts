@@ -1,4 +1,5 @@
 import { showNotification } from '@/helpers/messages-helper';
+import { useApiError } from '@/hooks/use-api-error';
 import { CreateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
@@ -9,7 +10,7 @@ import { CreateArtistPayload } from '../types/payload';
 export const useCreateArtist = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
-
+    const { handleError } = useApiError();
     const onSuccess = (
         data: any,
         { onSuccess }: CreateVariables<CreateArtistPayload>
@@ -28,13 +29,8 @@ export const useCreateArtist = () => {
         data: any,
         { onError }: CreateVariables<CreateArtistPayload>
     ) => {
-        const responseMessages = messages(data?.response?.data?.messageCode);
-
         onError?.();
-        showNotification(
-            'error',
-            responseMessages || messages('common.somethingWentWrong')
-        );
+        handleError(data);
     };
 
     const mutation = useMutation({

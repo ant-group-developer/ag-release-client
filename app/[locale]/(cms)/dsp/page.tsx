@@ -57,7 +57,6 @@ export default function Dsp() {
                 loading={isLoading}
             />
             <AppPagination
-                className="border-t"
                 align="end"
                 current={dspData.metadata.currentPage}
                 pageSize={dataFilter.pageSize}

@@ -1,4 +1,5 @@
 import { showNotification } from '@/helpers/messages-helper';
+import { useApiError } from '@/hooks/use-api-error';
 import { releasesQueryKeys } from '@/modules/releases/constants/query-keys';
 import { CreateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -9,6 +10,7 @@ import { ReleaseCoverArtPayload } from '../types';
 export const useCreateReleaseCoverArt = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
+    const { handleError } = useApiError();
 
     const onSuccess = (
         data: any,
@@ -28,13 +30,8 @@ export const useCreateReleaseCoverArt = () => {
         data: any,
         { onError }: CreateVariables<ReleaseCoverArtPayload>
     ) => {
-        const responseMessages = messages(data?.response?.data?.messageCode);
-
         onError?.();
-        showNotification(
-            'error',
-            responseMessages || messages('common.somethingWentWrong')
-        );
+        handleError(data);
     };
     const mutation = useMutation({
         mutationFn: ({ payload }: CreateVariables<ReleaseCoverArtPayload>) =>

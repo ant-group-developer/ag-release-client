@@ -69,7 +69,6 @@ export default function Currencies({}: Props) {
             />
 
             <AppPagination
-                className="border-t"
                 align="end"
                 current={currenciesData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}

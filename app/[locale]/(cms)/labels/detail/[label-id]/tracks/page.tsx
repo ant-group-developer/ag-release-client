@@ -1,7 +1,7 @@
 'use client';
 import AppContent from '@/components/ant-music/app-content';
 import AppPagination from '@/components/ui/pagination';
-import { PAGE_SIZE } from '@/constants/page-size';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { LAYOUT_TABLE, SESSION_STORAGE_KEY } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
@@ -125,7 +125,6 @@ export default function Tracks({}: Props) {
             )}
 
             <AppPagination
-                className="border-t"
                 align="end"
                 current={tracksData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}
@@ -134,7 +133,7 @@ export default function Tracks({}: Props) {
                 showTotalText
                 showSizeChanger
                 showQuickJumper
-                pageSizeOptions={[21, 28, 32]}
+                pageSizeOptions={PAGE_SIZE_OPTIONS}
             />
         </AppContent>
     );

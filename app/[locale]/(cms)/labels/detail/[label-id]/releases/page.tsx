@@ -128,7 +128,6 @@ export default function Releases({}: Props) {
             )}
 
             <AppPagination
-                className="border-t"
                 align="end"
                 current={releasesData.metadata.currentPage}
                 pageSize={dataFilter.pageSize}

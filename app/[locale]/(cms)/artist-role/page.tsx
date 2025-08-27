@@ -75,7 +75,6 @@ export default function ArtistRole({}: Props) {
                 onChange={onChangeSort}
             />
             <AppPagination
-                className="border-t"
                 align="end"
                 current={artistsRolesData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}

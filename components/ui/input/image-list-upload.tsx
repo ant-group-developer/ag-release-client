@@ -104,14 +104,13 @@ export default function ImageListUpload({
     const checkWidth = useCallback(() => {
         if (containerRef.current) {
             const width = containerRef.current.offsetWidth;
-            setShowText(width >= 60);
+            setShowText(width > 64);
         }
     }, []);
 
     useEffect(() => {
         checkWidth();
 
-        // Sử dụng ResizeObserver thay vì window resize để theo dõi chính xác
         const resizeObserver = new ResizeObserver(() => {
             checkWidth();
         });

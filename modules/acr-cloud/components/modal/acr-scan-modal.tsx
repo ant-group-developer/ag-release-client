@@ -4,7 +4,7 @@ import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import TracksSelect from '@/components/ui/select/tracks-select';
 import useModalStore from '@/hooks/use-modal';
 import { TrackData } from '@/modules/releases/types';
-import { Checkbox, Form } from 'antd';
+import { Checkbox, Form, InputNumber } from 'antd';
 import { useTranslations } from 'next-intl';
 import { Key, useEffect } from 'react';
 import { useScanTracks } from '../../hooks/use-scan-tracks';
@@ -127,6 +127,30 @@ export default function AcrCloudScanModal({
                     <Checkbox defaultChecked={true}>
                         {messages('tracks.skipScannedTracks')}
                     </Checkbox>
+                </AppFormItem>
+                <AppFormItem
+                    name="chunkDuration"
+                    label={messages('tracks.chunkDuration')}
+                    rules={[
+                        {
+                            type: 'number',
+                            max: 12,
+                            message: messages('validation.stringMax', {
+                                max: 12,
+                                field: messages('tracks.chunkDuration'),
+                            }),
+                        },
+                        {
+                            type: 'number',
+                            min: 1,
+                            message: messages('validation.stringMin', {
+                                min: 1,
+                                field: messages('tracks.chunkDuration'),
+                            }),
+                        },
+                    ]}
+                >
+                    <InputNumber />
                 </AppFormItem>
             </AppForm>
         </AppModal>

@@ -772,6 +772,7 @@
         "scoreWarning": "Score warning",
         "autoScanTime": "Auto scan time",
         "releaseStatusAutoScan": "Release status auto scan",
+        "chunkDuration": "Chunk duration",
         "status": {
             "scanning": "Scanning",
             "running": "Running",

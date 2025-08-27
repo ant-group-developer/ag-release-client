@@ -102,7 +102,6 @@ export default function Artists({}: Props) {
             )}
 
             <AppPagination
-                className="border-t"
                 align="end"
                 current={artistsData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}

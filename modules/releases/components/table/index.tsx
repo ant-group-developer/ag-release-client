@@ -288,6 +288,28 @@ export default function ReleasesTable({
             ),
         },
         {
+            title: messages('common.updatedAt'),
+            key: 'updatedAt',
+            dataIndex: 'updatedAt',
+            align: 'center',
+            width: 130,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'updatedAt'
+            ),
+            render: (value, record) => (
+                <span className="truncate text-wrap">
+                    {' '}
+                    {formattedDate(
+                        record?.updatedAt,
+                        DATE_FORMAT.DATE_ONLY
+                    )}{' '}
+                </span>
+            ),
+        },
+        {
             key: 'actions',
             align: 'center',
             width: 50,

@@ -67,7 +67,7 @@ export default function Genres() {
     };
 
     return (
-        <AppContainer title={messages('genre.label')}>
+        <AppContainer title={messages('common.genres')}>
             <GenresHeader dataFilter={dataFilter} onSearch={onSearch} />
             <GenresTable
                 sticky
@@ -82,7 +82,6 @@ export default function Genres() {
                 onChange={onChangeSort}
             />
             <AppPagination
-                className="border-t"
                 align="end"
                 current={genresData.metadata?.currentPage}
                 pageSize={dataFilter?.pageSize}

@@ -1,4 +1,4 @@
-import { showNotification } from '@/helpers/messages-helper';
+import { useApiError } from '@/hooks/use-api-error';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { artistApi } from '../apis';
@@ -8,6 +8,7 @@ import { DeleteArtistProfiles } from '../types/payload';
 export const useDeleteArtistProfile = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
+    const { handleError } = useApiError();
 
     const onSuccess = (data: any, { onSuccess }: DeleteArtistProfiles) => {
         queryClient.invalidateQueries({
@@ -19,12 +20,7 @@ export const useDeleteArtistProfile = () => {
     };
 
     const onError = (data: any, { onError }: DeleteArtistProfiles) => {
-        const responseMessages = messages(data?.response?.data?.messageCode);
-
-        showNotification(
-            'error',
-            responseMessages ?? messages('common.somethingWentWrong')
-        );
+        handleError(data);
         onError?.();
     };
 
