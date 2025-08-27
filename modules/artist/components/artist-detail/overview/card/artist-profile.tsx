@@ -12,7 +12,6 @@ type Props = {
 export default function ArtistProfileCard({ artistData }: Props) {
     const messages = useTranslations();
     const artistProfiles = artistData?.artistProfiles;
-    const dspData = artistProfiles?.map((item) => item.dsp) ?? [];
     return (
         <AppCard title={messages('artist.profiles')}>
             <div
@@ -20,7 +19,7 @@ export default function ArtistProfileCard({ artistData }: Props) {
                     'flex max-h-[245px] flex-col gap-2 overflow-y-auto rounded-md bg-zinc-100'
                 )}
             >
-                {dspData.map((item, index) => {
+                {artistProfiles?.map((item, index) => {
                     return (
                         <>
                             <div
@@ -35,20 +34,20 @@ export default function ArtistProfileCard({ artistData }: Props) {
                                 <div className="flex items-center gap-2">
                                     <Image
                                         className="rounded-full"
-                                        src={item.picture ?? ''}
-                                        alt={item.name || ''}
+                                        src={item?.dsp?.picture ?? ''}
+                                        alt={item?.dsp?.name || ''}
                                         width={32}
                                         height={32}
                                     />
                                     <span className="font-bold">
-                                        {item.name}
+                                        {item?.dsp?.name}
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Button
-                                        // onClick={() =>
-                                        //     setSelectedPlatform(item)
-                                        // }
+                                        onClick={() => {
+                                            window.open(item?.url, '_blank');
+                                        }}
                                         type="text"
                                         shape="round"
                                         className={cn(
@@ -57,7 +56,9 @@ export default function ArtistProfileCard({ artistData }: Props) {
                                     >
                                         <span>
                                             <p className="flex items-center gap-2">
-                                                Visit profile
+                                                {messages(
+                                                    'artist.visitProfile'
+                                                )}
                                             </p>
                                         </span>
                                     </Button>

@@ -35,16 +35,16 @@ export const getScanStatusColor = (status: SCAN_STATUS): string => {
 export const getScanStatusTranslationKey = (status: SCAN_STATUS): string => {
     switch (status) {
         case SCAN_STATUS.RUNNING:
-            return 'tracks.status.scanning';
+            return 'track.status.scanning';
         case SCAN_STATUS.PENDING:
-            return 'tracks.status.pending';
+            return 'track.status.pending';
         case SCAN_STATUS.FINISHED:
-            return 'tracks.status.finished';
+            return 'track.status.finished';
         case SCAN_STATUS.FAILED:
-            return 'tracks.status.failed';
+            return 'track.status.failed';
         case SCAN_STATUS.CANCEL:
-            return 'tracks.status.cancel';
+            return 'track.status.cancel';
         default:
-            return 'tracks.status.unknown';
+            return 'track.status.unknown';
     }
 };

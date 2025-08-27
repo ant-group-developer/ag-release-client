@@ -3,7 +3,7 @@ import ImageFallback from '@/components/ui/image/image-fallback';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
-import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
+import { getIndex, getSortOrder } from '@/helpers/common';
 import { getLabelDetailRoute } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { Link, useRouter } from '@/i18n/routing';
@@ -122,7 +122,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             ),
         },
         {
-            title: messages('release.count'),
+            title: messages('release.label'),
             key: 'releaseCount',
             dataIndex: 'release_count',
             align: 'center',
@@ -138,7 +138,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             ),
         },
         {
-            title: messages('track.count'),
+            title: messages('track.label'),
             key: 'trackCount',
             dataIndex: 'track_count',
             align: 'center',
@@ -153,44 +153,44 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
                 <p className="truncate">{record?.trackCount}</p>
             ),
         },
-        {
-            title: messages('common.createdAt'),
-            key: 'createdAt',
-            dataIndex: 'createdAt',
-            align: 'center',
-            width: 70,
-            render: (value) => (
-                <span className="truncate text-wrap">
-                    {' '}
-                    {formattedDate(value)}{' '}
-                </span>
-            ),
-            sorter: true,
-            sortOrder: getSortOrder(
-                dataFilter.orderBy,
-                dataFilter.fieldOrder,
-                'createdAt'
-            ),
-        },
-        {
-            title: messages('common.updatedAt'),
-            key: 'updatedAt',
-            dataIndex: 'updatedAt',
-            align: 'center',
-            width: 70,
-            sorter: true,
-            sortOrder: getSortOrder(
-                dataFilter.orderBy,
-                dataFilter.fieldOrder,
-                'updatedAt'
-            ),
-            render: (value) => (
-                <span className="truncate text-wrap">
-                    {' '}
-                    {formattedDate(value)}{' '}
-                </span>
-            ),
-        },
+        // {
+        //     title: messages('common.createdAt'),
+        //     key: 'createdAt',
+        //     dataIndex: 'createdAt',
+        //     align: 'center',
+        //     width: 70,
+        //     render: (value) => (
+        //         <span className="truncate text-wrap">
+        //             {' '}
+        //             {formattedDate(value)}{' '}
+        //         </span>
+        //     ),
+        //     sorter: true,
+        //     sortOrder: getSortOrder(
+        //         dataFilter.orderBy,
+        //         dataFilter.fieldOrder,
+        //         'createdAt'
+        //     ),
+        // },
+        // {
+        //     title: messages('common.updatedAt'),
+        //     key: 'updatedAt',
+        //     dataIndex: 'updatedAt',
+        //     align: 'center',
+        //     width: 70,
+        //     sorter: true,
+        //     sortOrder: getSortOrder(
+        //         dataFilter.orderBy,
+        //         dataFilter.fieldOrder,
+        //         'updatedAt'
+        //     ),
+        //     render: (value) => (
+        //         <span className="truncate text-wrap">
+        //             {' '}
+        //             {formattedDate(value)}{' '}
+        //         </span>
+        //     ),
+        // },
         {
             key: 'actions',
             align: 'center',

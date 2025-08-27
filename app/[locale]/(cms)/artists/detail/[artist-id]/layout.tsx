@@ -118,11 +118,11 @@ export default function ArtistDetailLayout({ children }: PropsWithChildren) {
                         value={artistData.name}
                     />
                     <ItemHeaderPage
-                        name={messages('release.count')}
+                        name={messages('release.label')}
                         value={artistData?.releaseCount?.toString()}
                     />
                     <ItemHeaderPage
-                        name={messages('track.count')}
+                        name={messages('track.label')}
                         value={artistData?.trackCount?.toString()}
                     />
                 </AppHeaderPage>

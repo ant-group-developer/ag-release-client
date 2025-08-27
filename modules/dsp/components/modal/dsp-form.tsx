@@ -48,11 +48,11 @@ export default function DspFormModal({ ...props }: Props) {
         const variables: CreateVariables<CreateDspPayload> = {
             payload: values,
             onSuccess: () => {
+                deActive();
                 form.resetFields();
                 form.setFieldsValue({
                     dspActions: [{ actionId: undefined, isDefault: true }],
                 });
-                deActive();
             },
             onError: () => {
                 deActive();
@@ -227,6 +227,7 @@ export default function DspFormModal({ ...props }: Props) {
                                 </li>
                             </ul>
                         }
+                        disabled={isActive}
                     />
                 </AppFormItem>
                 <AppFormItem

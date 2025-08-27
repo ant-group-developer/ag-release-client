@@ -42,12 +42,16 @@ export default function WebsiteForm({}: Props) {
                     },
                 });
             }
+
             const payload: UpdateSettingPayload = {
                 website: {
                     ...rest,
-                    logo: !hasFileList ? null : !file ? undefined : logoUrl,
+                    logo: logoUrl ? logoUrl : null,
                 },
             };
+            if (hasFileList && !file && payload.website) {
+                delete (payload.website as { logo?: string }).logo;
+            }
 
             updateSetting({
                 payload,

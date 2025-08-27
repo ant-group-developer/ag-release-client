@@ -116,11 +116,11 @@ export default function LabelDetailLayout({ children }: PropsWithChildren) {
                         value={labelData?.name}
                     />
                     <ItemHeaderPage
-                        name={messages('release.count')}
+                        name={messages('release.label')}
                         value={labelData?.releaseCount?.toString()}
                     />
                     <ItemHeaderPage
-                        name={messages('track.count')}
+                        name={messages('track.label')}
                         value={labelData?.trackCount?.toString()}
                     />
                 </AppHeaderPage>

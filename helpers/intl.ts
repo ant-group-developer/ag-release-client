@@ -50,17 +50,17 @@ export const getIntlCodeByReleaseStatus = (
 };
 
 type BackupStatusMessageKey =
-    | 'tracks.status.running'
-    | 'tracks.status.finished'
-    | 'tracks.status.failed';
+    | 'track.status.running'
+    | 'track.status.finished'
+    | 'track.status.failed';
 
 export const getIntlCodeByBackupStatus = (
     value: string
 ): BackupStatusMessageKey => {
     const releaseStatusToMessageMap: Record<string, BackupStatusMessageKey> = {
-        [STATUS_BACKUP.RUNNING]: 'tracks.status.running',
-        [STATUS_BACKUP.SUCCESS]: 'tracks.status.finished',
-        [STATUS_BACKUP.FAILED]: 'tracks.status.failed',
+        [STATUS_BACKUP.RUNNING]: 'track.status.running',
+        [STATUS_BACKUP.SUCCESS]: 'track.status.finished',
+        [STATUS_BACKUP.FAILED]: 'track.status.failed',
     };
     return releaseStatusToMessageMap[value] || 'common.unknown';
 };

@@ -919,6 +919,7 @@
         "role": "Vai trò nghệ sĩ",
         "canLinkArtistProfile": "Có thể liên kết hồ sơ nghệ sĩ",
         "back": "Trở lại danh sách nghệ sĩ",
+        "visitProfile": "Xem hồ sơ",
         "message": {
             "success": {
                 "create": "Thêm mới nghệ sĩ thành công",
@@ -1335,7 +1336,7 @@
 
     "policy": {
         "label": "Chính sách",
-        "name": "Tên Chính sách",
+        "name": "Tên chính sách",
         "action": {
             "delete": "Xoá chính sách"
         }

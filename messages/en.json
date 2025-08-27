@@ -917,6 +917,7 @@
         "role": "Artist role",
         "canLinkArtistProfile": "Can link artist profile",
         "back": "Back to artist list",
+        "visitProfile": "Visit profile",
         "message": {
             "success": {
                 "create": "Add new artist successfully",
