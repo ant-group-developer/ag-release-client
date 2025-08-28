@@ -3,10 +3,8 @@ import DetailSkeleton from '@/components/ui/skeleton/detail-skeleton';
 import { SIZE_ICON_SMALL } from '@/constants/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { cn } from '@/helpers/common';
-import {
-    getReleaseDetailTabRoute,
-    RELEASE_DETAIL_ACTION,
-} from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
 import { Link, useRouter } from '@/i18n/routing';
 import ReleaseDetailHeader from '@/modules/releases/components/release-detail/header';
@@ -17,7 +15,6 @@ import {
     useReleaseFormStore,
 } from '@/modules/releases/hooks/release-form-store';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
-import { useReleaseDetailActionStore } from '@/modules/releases/hooks/use-release-action-store';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { Button, Tabs, TabsProps, theme } from 'antd';
 import { ArrowLeft } from 'lucide-react';
@@ -41,10 +38,8 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         (state) => state.resetFormValues
     );
     const { token } = theme.useToken();
-    const releaseDetailAction = useReleaseDetailActionStore(
-        (state) => state.action
-    );
 
+    const { getReleaseTabRoute, action } = useGetReleaseDetailRoute();
     // state
     const [activeTab, setActiveTab] = useState<string>(
         RELEASES_TABS.CORE_DETAIL
@@ -60,7 +55,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const isCoreDetailPage = pathname.includes(`/${RELEASES_TABS.CORE_DETAIL}`);
     const coreDetailTabsNavigate = isCreateReleasePage
         ? '/releases/create'
-        : getReleaseDetailTabRoute(releaseId, RELEASES_TABS.CORE_DETAIL);
+        : getReleaseTabRoute(releaseId, RELEASES_TABS.CORE_DETAIL);
     const items: TabsProps['items'] = [
         {
             key: RELEASES_TABS.CORE_DETAIL,
@@ -89,10 +84,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                             ? 'pointer-events-none'
                             : ''
                     )}
-                    href={getReleaseDetailTabRoute(
-                        releaseId,
-                        RELEASES_TABS.TRACKS
-                    )}
+                    href={getReleaseTabRoute(releaseId, RELEASES_TABS.TRACKS)}
                 >
                     <span className="font-medium">
                         {messages('track.label')}
@@ -106,10 +98,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             label: (
                 <Link
                     className={cn(isDisableTab ? 'pointer-events-none' : '')}
-                    href={getReleaseDetailTabRoute(
-                        releaseId,
-                        RELEASES_TABS.SCHEDULE
-                    )}
+                    href={getReleaseTabRoute(releaseId, RELEASES_TABS.SCHEDULE)}
                 >
                     <span className="font-medium">
                         {messages('release.scheduling.label')}
@@ -123,7 +112,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             label: (
                 <Link
                     className={cn(isDisableTab ? 'pointer-events-none' : '')}
-                    href={getReleaseDetailTabRoute(
+                    href={getReleaseTabRoute(
                         releaseId,
                         RELEASES_TABS.DISTRIBUTION
                     )}
@@ -140,10 +129,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             label: (
                 <Link
                     className={cn(isDisableTab ? 'pointer-events-none' : '')}
-                    href={getReleaseDetailTabRoute(
-                        releaseId,
-                        RELEASES_TABS.REVIEW
-                    )}
+                    href={getReleaseTabRoute(releaseId, RELEASES_TABS.REVIEW)}
                 >
                     <span className="font-medium">
                         {messages('common.overview')}
@@ -164,7 +150,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     // render
     const isShowAddTrack =
         tracksData?.items?.length < releaseData?.albumFormat?.maxTrackCount &&
-        releaseDetailAction == RELEASE_DETAIL_ACTION.EDIT;
+        action == RELEASE_DETAIL_ACTION.EDIT;
     const extraButton = (
         <div className="flex justify-end gap-2">
             {isTracksPage && isShowAddTrack && (

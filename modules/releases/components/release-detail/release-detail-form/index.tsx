@@ -1,15 +1,12 @@
-import {
-    getReleaseDetailTabRoute,
-    RELEASE_DETAIL_ACTION,
-} from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
+import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { useThemeMode } from '@/hooks/use-theme-mode';
 import { useRouter } from '@/i18n/routing';
 import LabelFormModal from '@/modules/labels/components/modal/label-form';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
-import { useReleaseDetailActionStore } from '@/modules/releases/hooks/use-release-action-store';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
 import { releaseSchema } from '@/modules/releases/schemas';
 import { ReleasesData } from '@/modules/releases/types';
@@ -95,10 +92,8 @@ export default function ReleaseDetailForm() {
     const formValues = useReleaseFormStore((state) => state.formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const [showCreateLabel, setShowCreateLabel] = useState<boolean>(false);
-    const releaseDetailAction = useReleaseDetailActionStore(
-        (state) => state.action
-    );
     const { isDark } = useThemeMode();
+    const { getReleaseTabRoute, action } = useGetReleaseDetailRoute();
 
     //route
     const router = useRouter();
@@ -107,7 +102,7 @@ export default function ReleaseDetailForm() {
     const isCreateReleasePage = params['action'] === 'create';
 
     // const
-    const isReadMode = releaseDetailAction !== RELEASE_DETAIL_ACTION.EDIT;
+    const isReadMode = action !== RELEASE_DETAIL_ACTION.EDIT;
     const customTheme = {
         token: {
             colorBgContainerDisabled: isDark ? '#2a2a2a' : '#fff',
@@ -139,7 +134,7 @@ export default function ReleaseDetailForm() {
         const valid = await trigger();
         if (valid) {
             router.push(
-                getReleaseDetailTabRoute(
+                getReleaseTabRoute(
                     formValues.id as string,
                     RELEASES_TABS.TRACKS
                 )

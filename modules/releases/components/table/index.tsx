@@ -327,7 +327,8 @@ export default function ReleasesTable({
                             router.push(
                                 getReleaseDetailTabRoute(
                                     record?.id,
-                                    RELEASES_TABS.CORE_DETAIL
+                                    RELEASES_TABS.CORE_DETAIL,
+                                    RELEASE_DETAIL_ACTION.READ
                                 )
                             );
                         }}

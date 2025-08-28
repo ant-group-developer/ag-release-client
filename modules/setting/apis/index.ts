@@ -8,6 +8,12 @@ export const settingApis = {
         return axiosInstance.get<DetailResponse<SettingData>>('/app-config');
     },
 
+    getSettingPublic: () => {
+        return axiosInstance.get<DetailResponse<SettingData['website']>>(
+            '/app-config/website'
+        );
+    },
+
     updateSetting: (payload: UpdateSettingPayload) => {
         return axiosInstance.put<DetailResponse<SettingData>>(
             '/app-config',

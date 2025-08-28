@@ -54,10 +54,10 @@ export const PermissionTable = ({ dataFilter, ...props }: Props) => {
             dataIndex: 'note',
             align: 'left',
             width: 300,
-            render: (value) => (
-                <CopyText text={value}>
+            render: (value, record) => (
+                <CopyText text={record?.note}>
                     <span className="line-clamp-3 truncate whitespace-pre-line">
-                        {value}
+                        {record?.note}
                     </span>
                 </CopyText>
             ),

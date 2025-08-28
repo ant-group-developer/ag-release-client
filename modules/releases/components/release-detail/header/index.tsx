@@ -8,6 +8,8 @@ import { formattedDate } from '@/helpers/common';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { showNotification } from '@/helpers/messages-helper';
 import { cn } from '@/helpers/tailwind';
+import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
+import { usePathname, useRouter } from '@/i18n/routing';
 import {
     FEATURING_ARTIST_ROLE,
     MAIN_ARTIST_ROLE,
@@ -15,7 +17,6 @@ import {
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
-import { useReleaseDetailActionStore } from '@/modules/releases/hooks/use-release-action-store';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
 import { ReleasesData } from '@/modules/releases/types';
 import { UpdateReleaseDraftPayload } from '@/modules/releases/types/payload';
@@ -26,7 +27,7 @@ import { UpdateVariables } from '@/types/api';
 import { Form, Segmented, theme } from 'antd';
 import { SegmentedOptions } from 'antd/es/segmented';
 import { useTranslations } from 'next-intl';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 type Props = {
@@ -43,18 +44,17 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const { token } = theme.useToken();
-    const releaseDetailAction = useReleaseDetailActionStore(
-        (state) => state.action
-    );
-    const setReleaseDetailAction = useReleaseDetailActionStore(
-        (state) => state.setAction
-    );
+    const { action } = useGetReleaseDetailRoute();
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
 
     // apis
     const { updateReleaseDraft, isPending: isUpdatingRelease } =
         useUpdateReleaseDraft();
     const coverArtFileId = formValues?.coverArtThumbnails?.['160x160'] ?? '';
-    const { linkReadFile } = useGetLinkReadFile(coverArtFileId);
+    const { linkReadFile, isFetching: isCoverArtLoading } =
+        useGetLinkReadFile(coverArtFileId);
     const { releaseData } = useGetDetailRelease(formValues?.id as string);
 
     // const
@@ -92,7 +92,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
             value: RELEASE_DETAIL_ACTION.EDIT,
         },
     ];
-    const isReadMode = releaseDetailAction === RELEASE_DETAIL_ACTION.READ;
+    const isReadMode = action === RELEASE_DETAIL_ACTION.READ;
 
     // func
     const handleImageUpload = async (info: any) => {
@@ -194,6 +194,13 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         };
         updateReleaseDraft(variables);
     };
+    const handleChangeAction = (value: RELEASE_DETAIL_ACTION) => {
+        const params = new URLSearchParams(searchParams.toString());
+
+        params.set('action', value);
+
+        router.push(`${pathname}?${params.toString()}`);
+    };
 
     useEffect(() => {
         form.setFieldsValue({
@@ -250,7 +257,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                             <AppFormItem name="thumbnail">
                                 <ImageListUpload
                                     id="releaseCoverArts"
-                                    loading={isUploading}
+                                    loading={isUploading || isCoverArtLoading}
                                     disabled={isCreateReleasePage || isReadMode}
                                     className={cn(
                                         'release-detail-header-upload !aspect-square !size-28 !rounded-lg !border-0 !p-0 transition-all duration-300',
@@ -339,11 +346,11 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                             </p>
                             <div className="flex justify-end">
                                 <Segmented
-                                    value={releaseDetailAction}
+                                    value={action}
                                     options={segmentedOptions}
-                                    onChange={(e) =>
-                                        setReleaseDetailAction(
-                                            e as RELEASE_DETAIL_ACTION
+                                    onChange={(val) =>
+                                        handleChangeAction(
+                                            val as RELEASE_DETAIL_ACTION
                                         )
                                     }
                                 />

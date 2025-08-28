@@ -53,19 +53,19 @@ export const CountriesTable = ({ dataFilter, ...props }: Props) => {
                 </CopyText>
             ),
         },
-        {
-            title: 'ISO3',
-            key: 'iso3',
-            dataIndex: 'iso3',
-            align: 'left',
-            width: 60,
-            sorter: true,
-            sortOrder: getSortOrder(
-                dataFilter.orderBy,
-                dataFilter.fieldOrder,
-                'iso3'
-            ),
-        },
+        // {
+        //     title: 'ISO3',
+        //     key: 'iso3',
+        //     dataIndex: 'iso3',
+        //     align: 'left',
+        //     width: 60,
+        //     sorter: true,
+        //     sortOrder: getSortOrder(
+        //         dataFilter.orderBy,
+        //         dataFilter.fieldOrder,
+        //         'iso3'
+        //     ),
+        // },
         {
             title: 'ISO2',
             key: 'iso2',
@@ -79,45 +79,45 @@ export const CountriesTable = ({ dataFilter, ...props }: Props) => {
                 'iso2'
             ),
         },
-        {
-            title: messages('common.numericCode'),
-            key: 'numericCode',
-            dataIndex: 'numericCode',
-            align: 'left',
-            width: 60,
-            sorter: true,
-            sortOrder: getSortOrder(
-                dataFilter.orderBy,
-                dataFilter.fieldOrder,
-                'numericCode'
-            ),
-        },
-        {
-            title: messages('common.capital'),
-            key: 'capital',
-            dataIndex: 'capital',
-            align: 'left',
-            width: 100,
-            sorter: true,
-            sortOrder: getSortOrder(
-                dataFilter.orderBy,
-                dataFilter.fieldOrder,
-                'capital'
-            ),
-        },
-        {
-            title: messages('common.currency'),
-            key: 'currency',
-            dataIndex: 'currency',
-            align: 'left',
-            width: 80,
-            sorter: true,
-            sortOrder: getSortOrder(
-                dataFilter.orderBy,
-                dataFilter.fieldOrder,
-                'currency'
-            ),
-        },
+        // {
+        //     title: messages('common.numericCode'),
+        //     key: 'numericCode',
+        //     dataIndex: 'numericCode',
+        //     align: 'left',
+        //     width: 60,
+        //     sorter: true,
+        //     sortOrder: getSortOrder(
+        //         dataFilter.orderBy,
+        //         dataFilter.fieldOrder,
+        //         'numericCode'
+        //     ),
+        // },
+        // {
+        //     title: messages('common.capital'),
+        //     key: 'capital',
+        //     dataIndex: 'capital',
+        //     align: 'left',
+        //     width: 100,
+        //     sorter: true,
+        //     sortOrder: getSortOrder(
+        //         dataFilter.orderBy,
+        //         dataFilter.fieldOrder,
+        //         'capital'
+        //     ),
+        // },
+        // {
+        //     title: messages('common.currency'),
+        //     key: 'currency',
+        //     dataIndex: 'currency',
+        //     align: 'left',
+        //     width: 80,
+        //     sorter: true,
+        //     sortOrder: getSortOrder(
+        //         dataFilter.orderBy,
+        //         dataFilter.fieldOrder,
+        //         'currency'
+        //     ),
+        // },
         {
             title: messages('common.createdAt'),
             key: 'createdAt',

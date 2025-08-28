@@ -3,13 +3,12 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER, SCREEN, WEEK_DAY } from '@/enums/common';
-import { formattedDate, setSortOrder } from '@/helpers/common';
+import { setSortOrder } from '@/helpers/common';
 import { useActive } from '@/hooks/use-active';
 import { useFilter } from '@/hooks/use-filter';
-import { useBackupDatabase } from '@/modules/backup-dabatase/hooks/use-backup-database';
 import { useListBackupDatabaseLogs } from '@/modules/backup-dabatase/hooks/use-get-backup-database-logs';
 import { BackupDatabaseLogDataFilter } from '@/modules/backup-dabatase/types';
-import { Button, Checkbox, Divider, Form, InputNumber, Select } from 'antd';
+import { Checkbox, Divider, Form, InputNumber, Select } from 'antd';
 import { useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
@@ -28,24 +27,18 @@ export default function BackupDatabaseForm({}: Props) {
     const { settingData } = useGetSetting();
     const backupDatabase = settingData?.backupDatabase;
     const { updateSetting } = useUpdateSetting();
-    const { backupDatabase: backupDatabaseNow, isPending: isBackupPending } =
-        useBackupDatabase();
+
     const { active, deActive, isActive } = useActive();
     const executeCycle = useWatch('executeCycleType', form);
     const nHours = useWatch('nHours', form);
     const nDays = useWatch('nDays', form);
     const nMinutes = useWatch('nMinutes', form);
     const dayOfWeek = useWatch('dayOfWeek', form);
-    const {
-        dataFilter,
-        canClearFilter,
-        onChangeFilter,
-        onChangePage,
-        removeFilter,
-    } = useFilter<BackupDatabaseLogDataFilter>({
-        page: 1,
-        pageSize: PAGE_SIZE,
-    });
+    const { dataFilter, onChangeFilter, onChangePage, onSearch } =
+        useFilter<BackupDatabaseLogDataFilter>({
+            page: 1,
+            pageSize: PAGE_SIZE,
+        });
     const { backupDatabaseLogsData, isFetching, refetch, dataUpdatedAt } =
         useListBackupDatabaseLogs(dataFilter);
 
@@ -112,7 +105,7 @@ export default function BackupDatabaseForm({}: Props) {
 
             case EXECUTE_CYCLE_TYPE.MONTHLY:
                 return messages('setting.executeMessages.monthly', {
-                    days: nDays ?? 1,
+                    days: nDays ?? 0,
                     hours: nHours ?? 0,
                     minutes: nMinutes ?? 0,
                 });
@@ -305,13 +298,13 @@ export default function BackupDatabaseForm({}: Props) {
                         </AppFormItem>
                     </div>
                 </AppFormItem>
-                <AppFormItem label="Backup database">
+                <AppFormItem label={messages('setting.databaseBackupStorage')}>
                     <div className="flex gap-8">
                         <AppFormItem name="toDrive" valuePropName="checked">
-                            <Checkbox>Google drive </Checkbox>
+                            <Checkbox>Google Drive </Checkbox>
                         </AppFormItem>
                         <AppFormItem name="toGcs" valuePropName="checked">
-                            <Checkbox>Google cloud storage</Checkbox>
+                            <Checkbox>Google Cloud Storage</Checkbox>
                         </AppFormItem>
                     </div>
                 </AppFormItem>
@@ -320,26 +313,11 @@ export default function BackupDatabaseForm({}: Props) {
             <div>
                 <div className="flex justify-between py-2 font-semibold">
                     <span>Backup database logs</span>
-                    <Button
-                        type="primary"
-                        onClick={() => {
-                            backupDatabaseNow({});
-                        }}
-                        loading={isBackupPending}
-                    >
-                        {messages('common.backupNow')}
-                    </Button>
                 </div>
-                <div className="rounded-md border">
+                <div>
                     <BackupDatabaseHeader
                         dataFilter={dataFilter}
-                        onChangeFilter={onChangeFilter}
-                        canClearFilter={canClearFilter}
-                        removeFilter={removeFilter}
-                        handleRefresh={() => refetch()}
-                        lastUpdatedAt={formattedDate(
-                            dataUpdatedAt || new Date()
-                        )}
+                        onSearch={onSearch}
                     />
                     <BackupDatabaseLogTable
                         pagination={{

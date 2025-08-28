@@ -37,6 +37,7 @@
         "forbiddenDescription": "Please contact the Admin for more details"
     },
     "common": {
+        "success": "Thành công",
         "compare": "So sánh",
         "isSongCreatedByAi": "Bài hát được tạo bởi AI",
         "policies": "Chính sách",
@@ -370,6 +371,7 @@
         "backupNotification": "Thông báo sao lưu",
         "notifyOnSuccess": "Thông báo khi thành công",
         "notifyOnFailed": "Thông báo khi thất bại",
+        "databaseBackupStorage": "Nơi lưu database backup",
         "executeMessages": {
             "daily": "Mỗi ngày vào giờ {at} thực thi một lần",
             "nDays": "Cứ mỗi {days} ngày {at} thực thi một lần",

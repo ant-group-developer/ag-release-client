@@ -162,6 +162,8 @@ export default function ImageListUpload({
                         justifyContent: 'center',
                         zIndex: 10,
                         borderRadius: '6px',
+                        backgroundColor: 'rgba(255, 255, 255, 0.4)',
+                        backdropFilter: 'blur(8px)',
                     }}
                 >
                     <Spin />

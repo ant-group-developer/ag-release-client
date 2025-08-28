@@ -45,7 +45,7 @@ export default function PermissionFormModal({ ...props }: Props) {
             payload: values,
             onSuccess: () => {
                 form.setFieldsValue({
-                    permissions: [{ name: '', code: '' }],
+                    permissions: [{ name: '', code: '', note: '' }],
                 });
                 deActive();
             },
@@ -90,7 +90,7 @@ export default function PermissionFormModal({ ...props }: Props) {
             // Delay để đảm bảo Form.List đã render
             setTimeout(() => {
                 form.setFieldsValue({
-                    permissions: [{ name: '', code: '' }],
+                    permissions: [{ name: '', code: '', note: '' }],
                 });
             }, 0);
         }
@@ -229,8 +229,7 @@ export default function PermissionFormModal({ ...props }: Props) {
                                                             required
                                                             rules={[
                                                                 {
-                                                                    required:
-                                                                        true,
+                                                                    required: true,
                                                                     message:
                                                                         messages(
                                                                             'validation.input'
@@ -265,8 +264,7 @@ export default function PermissionFormModal({ ...props }: Props) {
                                                             required
                                                             rules={[
                                                                 {
-                                                                    required:
-                                                                        true,
+                                                                    required: true,
                                                                     message:
                                                                         messages(
                                                                             'validation.input'
@@ -290,7 +288,10 @@ export default function PermissionFormModal({ ...props }: Props) {
                                                             <Input allowClear />
                                                         </AppFormItem>
                                                         <AppFormItem
-                                                            name="note"
+                                                            name={[
+                                                                name,
+                                                                'note',
+                                                            ]}
                                                             label={messages(
                                                                 'common.note'
                                                             )}
