@@ -154,10 +154,7 @@ export const adminRoutes: RouteNode[] = [
                 href: APP_ROUTES.DISTRIBUTION,
                 icon: Box,
                 required: {
-                    permission: [
-                        PERMISSION.RELEASE.PUBLISH,
-                        PERMISSION.RELEASE.UNPUBLISH,
-                    ],
+                    permission: [PERMISSION.RELEASE.UPDATE],
                 },
             },
         ],
@@ -392,16 +389,6 @@ export const adminRoutes: RouteNode[] = [
                         icon: Clock,
                         required: SYS_ADMIN_REQ,
                     },
-                    // Example of an even deeper level (can nest as needed)
-                    // {
-                    //   id: 'advanced',
-                    //   type: 'group',
-                    //   label: 'common.advanced',
-                    //   icon: Settings,
-                    //   children: [
-                    //     { id: 'advanced-example', type: 'link', label: 'common.sample', href: '/advanced/example' }
-                    //   ]
-                    // }
                 ],
             },
         ],
