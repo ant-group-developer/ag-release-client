@@ -7,6 +7,7 @@ import { SIZE_ICON_BIG, SIZE_ICON_SMALL } from '@/constants/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { getTrackDetailRoute } from '@/helpers/link';
 import { Link, useRouter } from '@/i18n/routing';
+import AppError from '@/modules/auth/components/error';
 import {
     FEATURING_ARTIST_ROLE,
     MAIN_ARTIST_ROLE,
@@ -36,7 +37,9 @@ export default function TrackDetail({ children }: PropsWithChildren) {
     const pathname = usePathname();
 
     // apis
-    const { trackData, isLoading } = useGetDetailTrack(trackId as string);
+    const { trackData, isLoading, error } = useGetDetailTrack(
+        trackId as string
+    );
     const { linkReadFile } = useGetLinkReadFile(
         trackData?.release?.coverArtThumbnails?.['160x160'] as string
     );
@@ -123,6 +126,10 @@ export default function TrackDetail({ children }: PropsWithChildren) {
         };
         setActiveTab(getActiveTab());
     }, [pathname]);
+
+    if (error) {
+        return <AppError error={error} />;
+    }
 
     if (isLoading || !trackData) {
         return <DetailSkeleton />;

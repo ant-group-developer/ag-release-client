@@ -16,7 +16,9 @@ import {
 } from '@/helpers/link';
 import { OnChangeFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { usePermission } from '@/hooks/use-permission';
 import { Link, useRouter } from '@/i18n/routing';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { ReleaseArtist } from '@/modules/release-artist/types';
@@ -51,6 +53,7 @@ export default function ReleasesTable({
     const openModal = useModalStore((state) => state.openModal);
 
     const { isSystemTenant } = useAuth();
+    const { hasPermission } = usePermission();
 
     const column: ColumnType<ReleasesData>[] = [
         {
@@ -317,9 +320,9 @@ export default function ReleasesTable({
             render: (_, record) => (
                 <div onClick={(e) => e.stopPropagation()}>
                     <ActionButton
-                        showUpdate
+                        showUpdate={hasPermission(PERMISSION.RELEASE.UPDATE)}
                         showDetail
-                        showDelete
+                        showDelete={isSystemTenant}
                         onShowDelete={() =>
                             openModal(TYPE_MODAL_RELEASE.DELETE, record)
                         }

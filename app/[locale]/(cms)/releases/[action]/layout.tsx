@@ -7,6 +7,7 @@ import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
 import { Link, useRouter } from '@/i18n/routing';
+import AppError from '@/modules/auth/components/error';
 import ReleaseDetailHeader from '@/modules/releases/components/release-detail/header';
 import RightSidebar from '@/modules/releases/components/release-detail/right-sidebar';
 import { RELEASES_TABS, TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
@@ -141,8 +142,11 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     ];
 
     // apis
-    const { releaseData, isLoading: isReleaseDataLoading } =
-        useGetDetailRelease(releaseId);
+    const {
+        releaseData,
+        isLoading: isReleaseDataLoading,
+        error,
+    } = useGetDetailRelease(releaseId);
     const { tracksData, isLoading: isTracksLoading } = useGetListTracks({
         releaseId: releaseData?.id || '',
     });
@@ -234,6 +238,10 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     // if (isReleaseDataLoading || !releaseData) {
     //     return <DetailSkeleton />;
     // }
+
+    if (error) {
+        return <AppError error={error} />;
+    }
 
     return (
         <div className="flex h-full overflow-auto" ref={scrollContainerRef}>

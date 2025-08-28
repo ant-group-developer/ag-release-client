@@ -69,7 +69,7 @@ function TenantSwitch({}: Props) {
                 trigger={['click']}
                 content={
                     <Spin spinning={loading}>
-                        <div className="h-[60vh] max-h-[40rem] overflow-auto px-1">
+                        <div className="max-h-[30rem] overflow-auto px-1">
                             <CheckCard.Group
                                 style={{
                                     display: 'grid',

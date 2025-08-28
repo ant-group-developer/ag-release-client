@@ -5,6 +5,7 @@ import DetailSkeleton from '@/components/ui/skeleton/detail-skeleton';
 import { SIZE_ICON_SMALL } from '@/constants/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { Link, usePathname, useRouter } from '@/i18n/routing';
+import AppError from '@/modules/auth/components/error';
 import { LABEL_DETAIL_TABS } from '@/modules/labels/enum';
 import { useGetDetailLabel } from '@/modules/labels/hooks/use-get-detail-label';
 import { Tabs, TabsProps, theme } from 'antd';
@@ -28,7 +29,9 @@ export default function LabelDetailLayout({ children }: PropsWithChildren) {
     const pathname = usePathname();
 
     // Apis
-    const { labelData, isLoading } = useGetDetailLabel(labelId as string);
+    const { labelData, isLoading, error } = useGetDetailLabel(
+        labelId as string
+    );
 
     // Const
     const items: TabsProps['items'] = [
@@ -87,6 +90,10 @@ export default function LabelDetailLayout({ children }: PropsWithChildren) {
             }
         };
     }, [pathname, isOverviewPage, isScroll]);
+
+    if (error) {
+        return <AppError error={error} />;
+    }
 
     if (isLoading || !labelData) {
         return <DetailSkeleton />;

@@ -6,7 +6,10 @@ import { FALLBACK_IMAGE } from '@/constants/common';
 import { getIndex, getSortOrder } from '@/helpers/common';
 import { getLabelDetailRoute } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
+import { usePermission } from '@/hooks/use-permission';
 import { Link, useRouter } from '@/i18n/routing';
+import { PERMISSION } from '@/modules/auth/constants/permission';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { LABEL_DETAIL_TABS, TYPE_MODAL_LABEL } from '../../enum';
@@ -24,6 +27,10 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
     const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
+
+    const { isSystemTenant } = useAuth();
+    const { hasPermission } = usePermission();
+
     const column: ColumnType<LabelData>[] = [
         {
             title: messages('common.iNo'),
@@ -197,9 +204,9 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             width: 50,
             render: (_, record) => (
                 <ActionButton
-                    showUpdate
+                    showUpdate={hasPermission(PERMISSION.LABEL.UPDATE)}
                     showDetail
-                    showDelete
+                    showDelete={isSystemTenant}
                     onShowUpdate={() => {
                         openModal(TYPE_MODAL_LABEL.EDIT, record);
                     }}
