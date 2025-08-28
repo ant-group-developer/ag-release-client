@@ -41,7 +41,7 @@ export default function Dsp() {
     };
 
     return (
-        <AppContainer title={messages('artist.label')}>
+        <AppContainer title={messages('dsp.label')}>
             <DspHeader dataFilter={dataFilter} onSearch={onSearch} />
             <DspTable
                 sticky

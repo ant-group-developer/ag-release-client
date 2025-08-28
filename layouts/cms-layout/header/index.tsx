@@ -1,7 +1,9 @@
 import CreateButton from '@/components/ui/button/create-button';
 import IconButton from '@/components/ui/button/icon-button';
 import { SIZE_ICON_BIG } from '@/constants/common';
+import { usePermission } from '@/hooks/use-permission';
 import { Link } from '@/i18n/routing';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import TenantSwitch from '@/modules/tenant/components/tenant-switch';
 import { Layout } from 'antd';
@@ -20,6 +22,7 @@ const { Header: AntdHeader } = Layout;
 function Header({ collapsed, toggleCollapsed }: Props) {
     const messages = useTranslations();
     const { isNotSystemTenant } = useAuth();
+    const { hasPermission } = usePermission();
 
     return (
         <AntdHeader
@@ -45,14 +48,15 @@ function Header({ collapsed, toggleCollapsed }: Props) {
             </div> */}
 
             <div className="flex flex-1 items-center justify-end gap-2">
-                {isNotSystemTenant && (
-                    <Link href={'/releases/create'}>
-                        <CreateButton
-                            canCreate
-                            text={messages('release.create')}
-                        />
-                    </Link>
-                )}
+                {isNotSystemTenant &&
+                    hasPermission(PERMISSION.RELEASE.CREATE) && (
+                        <Link href={'/releases/create'}>
+                            <CreateButton
+                                canCreate
+                                text={messages('release.create')}
+                            />
+                        </Link>
+                    )}
                 <AppSupport />
                 <AppAvatar />
             </div>

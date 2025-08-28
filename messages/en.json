@@ -29,6 +29,10 @@
             "submit": "Send password reset link",
             "back": "Back to sign in"
         },
+        "notFound": {
+            "title": "Page not found",
+            "description": "The page you’re looking for doesn’t exist, may have been moved, or the URL is incorrect."
+        },
         "forbidden": {
             "title": "Access Denied",
             "description": "You do not have permission to access this resource. Please contact the Admin for more details."

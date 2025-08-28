@@ -29,6 +29,10 @@
             "submit": "Gửi liên kết đặt lại mật khẩu",
             "back": "Trở về trang đăng nhập"
         },
+        "notFound": {
+            "title": "Không tìm thấy trang",
+            "description": "Trang bạn đang tìm không tồn tại, có thể đã được di chuyển hoặc URL không chính xác."
+        },
         "forbidden": {
             "title": "Truy cập bị từ chối",
             "description": "Bạn không có quyền truy cập tài nguyên này. Liên hệ Admin để biết thêm chi tiết."
