@@ -1,17 +1,15 @@
 'use client';
 
 import AppForm from '@/components/ui/antd-form/form';
-import AppFormItem from '@/components/ui/antd-form/form-Item';
 import { APP_ROUTES } from '@/enums/routes';
 import { validatePassword } from '@/helpers/validation';
 import { useApiError } from '@/hooks/use-api-error';
 import { Link } from '@/i18n/routing';
-import { Button, Input, theme } from 'antd';
+import { Alert, Button, Input, theme } from 'antd';
 import { signIn } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { useState } from 'react';
 
 interface FormValues {
     email: string;
@@ -26,14 +24,16 @@ export default function SignInPage() {
 
     const searchParams = useSearchParams();
     const error = searchParams.get('error');
+    const errorMessage = decodeURIComponent(error ?? '');
 
-    useEffect(() => {
-        if (error) {
-            toast(decodeURIComponent(error), {
-                type: 'error',
-            });
-        }
-    }, [error]);
+    // useEffect(() => {
+    //     if (error) {
+    //         toast(decodeURIComponent(error), {
+    //             type: 'error',
+    //             autoClose: false,
+    //         });
+    //     }
+    // }, [error]);
 
     const onFinish = async (values: FormValues) => {
         setIsLoading(true);
@@ -76,6 +76,14 @@ export default function SignInPage() {
                 </p>
             </div>
 
+            {errorMessage && (
+                <Alert
+                    message={messages(errorMessage as any)}
+                    type="error"
+                    showIcon
+                />
+            )}
+
             <AppForm
                 size="large"
                 layout="vertical"
@@ -83,7 +91,7 @@ export default function SignInPage() {
                 disabled={isLoading}
                 showSubmit={false}
             >
-                <AppFormItem
+                <AppForm.Item
                     required
                     label={messages('common.email')}
                     name={'email'}
@@ -113,8 +121,8 @@ export default function SignInPage() {
                     ]}
                 >
                     <Input />
-                </AppFormItem>
-                <AppFormItem
+                </AppForm.Item>
+                <AppForm.Item
                     required
                     label={messages('user.password')}
                     name={'password'}
@@ -156,7 +164,7 @@ export default function SignInPage() {
                     }
                 >
                     <Input.Password />
-                </AppFormItem>
+                </AppForm.Item>
                 <Button
                     type="primary"
                     htmlType="submit"

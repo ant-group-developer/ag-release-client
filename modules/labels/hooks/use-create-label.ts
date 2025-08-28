@@ -27,11 +27,11 @@ export const useCreateLabel = () => {
     };
 
     const onError = (
-        data: any,
+        error: any,
         { onError }: CreateVariables<CreateLabelPayload>
     ) => {
         onError?.();
-        handleError(data);
+        handleError(error);
     };
 
     const mutation = useMutation({

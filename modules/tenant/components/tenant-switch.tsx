@@ -155,7 +155,7 @@ function TenantSwitch({}: Props) {
                     </Spin>
                 }
             >
-                <div className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1 hover:bg-zinc-200/70 dark:hover:bg-zinc-800">
+                <div className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800">
                     <Avatar
                         src={getTenantAvatar({
                             logo: currentData?.logo,

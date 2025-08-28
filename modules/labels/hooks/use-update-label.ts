@@ -28,11 +28,11 @@ export const useUpdateLabel = () => {
     };
 
     const onError = (
-        data: any,
+        error: any,
         { onError }: UpdateVariables<LabelData['id'], UpdateLabelPayload>
     ) => {
         onError?.();
-        handleError(data);
+        handleError(error);
     };
 
     const mutation = useMutation({

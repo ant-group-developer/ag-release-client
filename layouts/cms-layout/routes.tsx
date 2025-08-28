@@ -163,9 +163,9 @@ export const adminRoutes: RouteNode[] = [
         ],
     },
     {
-        id: 'general',
+        id: 'category',
         type: 'group',
-        label: 'common.general',
+        label: 'common.category',
         children: [
             {
                 id: 'artists',
@@ -286,10 +286,10 @@ export const adminRoutes: RouteNode[] = [
                 required: SYS_ADMIN_REQ,
             },
             {
-                id: 'system-category',
+                id: 'general',
                 type: 'group',
-                label: 'common.systemCategories',
-                title: 'System Categories',
+                label: 'common.general',
+                title: 'General',
                 icon: LayoutList,
                 required: SYS_ADMIN_REQ,
                 children: [

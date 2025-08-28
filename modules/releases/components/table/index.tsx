@@ -236,7 +236,7 @@ export default function ReleasesTable({
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'total_duration'
+                RELEASES_COLUMNS_DISPLAY.DURATION
             ),
             render: (value, record) => {
                 const duration = convertSecondsToHoursMinutes(
@@ -252,12 +252,12 @@ export default function ReleasesTable({
             dataIndex: 'releaseDate',
             align: 'center',
             width: 130,
-            sorter: true,
-            sortOrder: getSortOrder(
-                dataFilter.orderBy,
-                dataFilter.fieldOrder,
-                'releaseDate'
-            ),
+            // sorter: true,
+            // sortOrder: getSortOrder(
+            //     dataFilter.orderBy,
+            //     dataFilter.fieldOrder,
+            //     'releaseDate'
+            // ),
             render: (value) => (
                 <span className="truncate text-wrap">
                     {' '}

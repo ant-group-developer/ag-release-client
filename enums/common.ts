@@ -111,7 +111,7 @@ export enum TYPE_FILTER {
     GENRES = 'genres',
     ARTIST_ID = 'artistId',
     ID = 'ID',
-    WORKSPACE = 'workspaceIds',
+    WORKSPACE = 'tenantIds',
     RELEASE_ID = 'releaseId',
     IS_SCANNED = 'isScanned',
     ALBUM_FORMAT_ID = 'albumFormatId',

@@ -4,9 +4,12 @@ import { PopoverInputFilter } from '@/components/filter/popover-input';
 import IconButton from '@/components/ui/button/icon-button';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
-import { TYPE_FILTER } from '@/enums/common';
+import { BOOLEAN_RAW, ORDER, TYPE_FILTER } from '@/enums/common';
 import { arrayFromString, arrayToString } from '@/helpers/array';
+import { flattenData } from '@/helpers/common';
 import { UseFilterProps } from '@/hooks/use-filter';
+import { TENANT_ORDER_BY } from '@/modules/tenant/enums';
+import { useTenantList } from '@/modules/tenant/hooks/use-get-tenant';
 import { ListFilter, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
@@ -30,6 +33,16 @@ export default function UserHeaderFilter({
     const [typeFilter, setTypeFilter] = useState<TYPE_FILTER>();
     const [inputValue, setInputValue] = useState<string>('');
 
+    const { data: dataTenant } = useTenantList(
+        {
+            fieldOrder: TENANT_ORDER_BY.NAME,
+            orderBy: ORDER.ASC,
+            pageSize: 999,
+        },
+        Boolean(dataFilter.tenantIds) || typeFilter === TYPE_FILTER.WORKSPACE
+    );
+    const flattenDataTenant = flattenData(dataTenant.items, {});
+
     const dropdownItems = [
         {
             label: messages('user.search.keyword'),
@@ -50,6 +63,11 @@ export default function UserHeaderFilter({
             label: messages('tenant.label'),
             visible: !dataFilter.type,
             onClick: () => setTypeFilter(TYPE_FILTER.WORKSPACE),
+        },
+        {
+            label: messages('status.label'),
+            visible: !dataFilter.status,
+            onClick: () => setTypeFilter(TYPE_FILTER.STATUS),
         },
     ];
 
@@ -133,6 +151,43 @@ export default function UserHeaderFilter({
                         onChangeFilter({ type: arrayToString(vals) })
                     }
                     onRemove={() => onChangeFilter({ type: undefined })}
+                />
+                <PopoverCheckboxFilter
+                    open={typeFilter === TYPE_FILTER.WORKSPACE}
+                    title={messages('tenant.label')}
+                    options={flattenDataTenant.map((item) => ({
+                        name: item.name,
+                        value: item.id,
+                    }))}
+                    selectedValues={arrayFromString(dataFilter.tenantIds)}
+                    onOpenChange={(val) =>
+                        setTypeFilter(val ? TYPE_FILTER.WORKSPACE : undefined)
+                    }
+                    onConfirm={(vals) =>
+                        onChangeFilter({ tenantIds: arrayToString(vals) })
+                    }
+                    onRemove={() => onChangeFilter({ tenantIds: undefined })}
+                />
+                <PopoverCheckboxFilter
+                    open={typeFilter === TYPE_FILTER.STATUS}
+                    title={messages('status.label')}
+                    options={[
+                        {
+                            name: messages('status.active'),
+                            value: BOOLEAN_RAW.TRUE.toString(),
+                        },
+                        {
+                            name: messages('status.block'),
+                            value: BOOLEAN_RAW.FALSE.toString(),
+                        },
+                    ]}
+                    selectedValues={arrayFromString(dataFilter.status)}
+                    onOpenChange={(val) =>
+                        setTypeFilter(val ? TYPE_FILTER.STATUS : undefined)
+                    }
+                    onConfirm={(vals) =>
+                        onChangeFilter({ status: arrayToString(vals) })
+                    }
                 />
 
                 <div className="grow">

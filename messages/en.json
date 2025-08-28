@@ -34,7 +34,12 @@
             "description": "You do not have permission to access this resource. Please contact the Admin for more details."
         },
         "forbiddenTitle": "You do not have access",
-        "forbiddenDescription": "Please contact the Admin for more details"
+        "forbiddenDescription": "Please contact the Admin for more details",
+        "message": {
+            "error": {
+                "invalidCredentials": "Invalid email or password."
+            }
+        }
     },
     "common": {
         "success": "Success",
@@ -57,7 +62,8 @@
         "settingNote": "Settings apply only to this browser",
         "value": "Value",
         "viewDetail": "View detail",
-        "systemCategories": "Categories",
+        "systemCategories": "System Categories",
+        "category": "Categories",
         "variousArtists": "Various artists",
         "activities": "Activities",
         "revenue": "Revenue",
@@ -1217,7 +1223,12 @@
         },
         "back": "Back to workspaces",
         "member": "Member",
-        "manager": "Manager"
+        "manager": "Manager",
+        "labels": {
+            "max": {
+                "label": "Maximum labels can create"
+            }
+        }
     },
 
     "integration": {

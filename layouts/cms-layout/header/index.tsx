@@ -1,5 +1,6 @@
 import CreateButton from '@/components/ui/button/create-button';
 import IconButton from '@/components/ui/button/icon-button';
+import { SIZE_ICON_BIG } from '@/constants/common';
 import { Link } from '@/i18n/routing';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import TenantSwitch from '@/modules/tenant/components/tenant-switch';
@@ -26,11 +27,9 @@ function Header({ collapsed, toggleCollapsed }: Props) {
             className="flex items-center justify-between border-b !bg-white !pl-2 !pr-5 shadow-md dark:border-b-zinc-800 dark:!bg-bg-dark"
         >
             <div className="flex flex-1 items-center gap-5">
-                <IconButton onClick={toggleCollapsed} className="w-10 text-xl">
-                    {/* {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />} */}
-                    <Menu />
+                <IconButton onClick={toggleCollapsed}>
+                    <Menu size={SIZE_ICON_BIG} />
                 </IconButton>
-                {/* <Logo /> */}
                 <div className="hidden md:block">
                     <TenantSwitch />
                 </div>
@@ -54,8 +53,6 @@ function Header({ collapsed, toggleCollapsed }: Props) {
                         />
                     </Link>
                 )}
-                {/* <LocaleSelect /> */}
-                {/* <ThemeToggle /> */}
                 <AppSupport />
                 <AppAvatar />
             </div>

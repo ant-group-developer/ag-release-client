@@ -34,7 +34,12 @@
             "description": "Bạn không có quyền truy cập tài nguyên này. Liên hệ Admin để biết thêm chi tiết."
         },
         "forbiddenTitle": "You do not have access",
-        "forbiddenDescription": "Please contact the Admin for more details"
+        "forbiddenDescription": "Please contact the Admin for more details",
+        "message": {
+            "error": {
+                "invalidCredentials": "Email hoặc mật khẩu không đúng."
+            }
+        }
     },
     "common": {
         "success": "Thành công",
@@ -58,6 +63,7 @@
         "value": "Giá trị",
         "viewDetail": "Xem chi tiết",
         "systemCategories": "Danh mục hệ thống",
+        "category": "Danh mục",
         "variousArtists": "Nhiều nghệ sĩ",
         "activities": "Hoạt động",
         "revenue": "Doanh thu",
@@ -1220,7 +1226,12 @@
         },
         "back": "Trở lại workspace",
         "member": "Thành viên",
-        "manager": "Quản lý"
+        "manager": "Quản lý",
+        "labels": {
+            "max": {
+                "label": "Số label có thể tạo"
+            }
+        }
     },
     "integration": {
         "label": "Tích hợp",

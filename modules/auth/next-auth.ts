@@ -71,6 +71,8 @@ export const authOptions: NextAuthOptions = {
                 } catch (err: any) {
                     console.log('err:', err);
                     const errorMessage =
+                        err.response?.data?.messageCode ||
+                        err.messageCode ||
                         err.response?.data?.message ||
                         err.message ||
                         'Authentication failed';
