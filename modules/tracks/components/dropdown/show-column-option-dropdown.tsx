@@ -40,12 +40,12 @@ export default function ShowColumnOptionDropdown({
         },
         {
             key: TRACKS_COLUMNS_DISPLAY.ID,
-            label: messages('tracks.id'),
+            label: messages('track.id'),
             alwaysVisible: true,
         },
         {
             key: TRACKS_COLUMNS_DISPLAY.TITLE,
-            label: messages('tracks.name'),
+            label: messages('track.name'),
         },
         {
             key: TRACKS_COLUMNS_DISPLAY.GENRES,
@@ -53,7 +53,7 @@ export default function ShowColumnOptionDropdown({
         },
         {
             key: TRACKS_COLUMNS_DISPLAY.VERSION,
-            label: messages('releases.version'),
+            label: messages('release.version'),
         },
         {
             key: TRACKS_COLUMNS_DISPLAY.TRACK_ARTIST,
@@ -166,7 +166,7 @@ export default function ShowColumnOptionDropdown({
                     >
                         <div className="p-2">
                             <div className="mb-2">
-                                <b> Cột hiển thị </b>
+                                <b> {messages('common.columnsDisplay')} </b>
                             </div>
                             <div className="flex flex-col gap-2">
                                 {/* Checkbox "Tất cả" */}

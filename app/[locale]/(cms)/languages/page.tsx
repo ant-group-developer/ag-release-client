@@ -63,7 +63,7 @@ export default function Languages({}: Props) {
     };
 
     return (
-        <AppContainer title={messages('currencies.label')}>
+        <AppContainer title={messages('language.label')}>
             <LanguagesHeader dataFilter={dataFilter} onSearch={onSearch} />
             <LanguagesTable
                 sticky
@@ -78,7 +78,6 @@ export default function Languages({}: Props) {
                 onChange={onChangeSort}
             />
             <AppPagination
-                className="border-t"
                 align="end"
                 current={languagesData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}

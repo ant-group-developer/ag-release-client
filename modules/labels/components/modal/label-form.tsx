@@ -175,7 +175,7 @@ export default function LabelFormModal({ ...props }: Props) {
                 </div>
                 <AppFormItem
                     name="name"
-                    label={messages('releases.labelName')}
+                    label={messages('label.name')}
                     required
                     rules={[
                         {
@@ -186,8 +186,20 @@ export default function LabelFormModal({ ...props }: Props) {
                             max: MAX_NAME_LENGTH,
                             message: messages('validation.stringMax', {
                                 max: MAX_NAME_LENGTH,
-                                field: messages('releases.labelName'),
+                                field: messages('label.name'),
                             }),
+                        },
+                        {
+                            validator: (_, value) => {
+                                if (value && value.includes('_')) {
+                                    return Promise.reject(
+                                        messages('validation.noUnderscore', {
+                                            field: messages('label.name'),
+                                        })
+                                    );
+                                }
+                                return Promise.resolve();
+                            },
                         },
                     ]}
                 >

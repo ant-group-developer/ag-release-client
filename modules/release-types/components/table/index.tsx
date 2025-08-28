@@ -75,7 +75,7 @@ export const ReleaseTypeTable = ({ dataFilter, ...props }: Props) => {
             ),
         },
         {
-            title: messages('tracks.minTrack'),
+            title: messages('track.minTrack'),
             key: 'minTrackCount',
             dataIndex: 'minTrackCount',
             ellipsis: true,
@@ -94,7 +94,7 @@ export const ReleaseTypeTable = ({ dataFilter, ...props }: Props) => {
             ),
         },
         {
-            title: messages('tracks.maxTrack'),
+            title: messages('track.maxTrack'),
             key: 'maxTrackCount',
             dataIndex: 'maxTrackCount',
             ellipsis: true,

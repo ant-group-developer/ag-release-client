@@ -58,7 +58,7 @@ export default function PriceTiers({}: Props) {
     };
 
     return (
-        <AppContainer title={messages('currencies.label')}>
+        <AppContainer title={messages('price.label')}>
             <PriceTiersHeader dataFilter={dataFilter} onSearch={onSearch} />
 
             <PriceTiersTable
@@ -75,7 +75,6 @@ export default function PriceTiers({}: Props) {
             />
 
             <AppPagination
-                className="border-t"
                 align="end"
                 current={priceTiersData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}

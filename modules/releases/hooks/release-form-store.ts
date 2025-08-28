@@ -1,5 +1,4 @@
 import { USER_TYPE } from '@/modules/user/enums';
-import dayjs from 'dayjs';
 import { ZodIssue } from 'zod';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
@@ -108,8 +107,8 @@ const initialValue: ReleaseFormStoreData = {
         updatedAt: null,
     },
     totalDuration: 0,
-    cLineYear: Number(dayjs().year),
-    pLineYear: Number(dayjs().year),
+    cLineYear: null,
+    pLineYear: null,
     modifier: {
         name: null,
         id: '',
@@ -141,7 +140,7 @@ export const useReleaseFormStore = create<ReleaseFormState>()(
                     formValues: { ...state.formValues, ...values },
                 })),
             resetFormValues: () => set({ formValues: initialValue }),
-            validationErrors: [],
+            validationErrors: [], // isOnRemoving
             setValidationErrors: (errors) => set({ validationErrors: errors }),
         }),
         {

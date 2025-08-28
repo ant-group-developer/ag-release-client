@@ -70,4 +70,5 @@ export enum RELEASES_COLUMNS_DISPLAY {
     RELEASE_DATE = 'releaseDate',
     ACTIONS = 'actions',
     CREATED_AT = 'createdAt',
+    UPDATED_AT = 'updatedAt',
 }

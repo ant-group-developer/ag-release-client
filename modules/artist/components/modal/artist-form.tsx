@@ -48,8 +48,8 @@ export default function ArtistFormModal({ ...props }: Props) {
         const variables: CreateVariables<CreateArtistPayload> = {
             payload: values,
             onSuccess: () => {
-                form.resetFields();
                 deActive();
+                form.resetFields();
             },
             onError: () => {
                 deActive();
@@ -177,6 +177,7 @@ export default function ArtistFormModal({ ...props }: Props) {
                                 </li>
                             </ul>
                         }
+                        disabled={isActive}
                     />
                 </AppFormItem>
                 <AppFormItem
@@ -316,6 +317,7 @@ export default function ArtistFormModal({ ...props }: Props) {
                                                 }
                                             }}
                                             className="absolute right-[-32px] top-0 mb-1"
+                                            disabled={isActive}
                                         >
                                             <Trash
                                                 size={SIZE_ICON}

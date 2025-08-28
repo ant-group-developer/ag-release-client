@@ -49,7 +49,7 @@ function Header({ collapsed, toggleCollapsed }: Props) {
                     <Link href={'/releases/create'}>
                         <CreateButton
                             canCreate
-                            text={messages('releases.create')}
+                            text={messages('release.create')}
                         />
                     </Link>
                 )}

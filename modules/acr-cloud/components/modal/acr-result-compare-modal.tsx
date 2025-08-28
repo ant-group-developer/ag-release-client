@@ -4,7 +4,7 @@ import useModalStore from '@/hooks/use-modal';
 import { TrackData } from '@/modules/releases/types';
 import { Collapse, Select, SelectProps } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGetAcrCloudHistory } from '../../hooks/use-get-acr-cloud-history';
 import { ResultScan, TrackScanHistoryData } from '../../types';
 import ScanResultPanel from '../collapses/scan-result-pancel';
@@ -33,6 +33,13 @@ export default function AcrResultCompareModal({ ...props }: Props) {
     const firstResult = acrCloudResult?.[0];
     const lastResult = acrCloudResult?.[acrCloudResult.length - 1];
 
+    useEffect(() => {
+        if (acrCloudResult && acrCloudResult.length > 0) {
+            setLeftId(acrCloudResult[0].id);
+            setRightId(acrCloudResult[acrCloudResult.length - 1].id);
+        }
+    }, [acrCloudResult]);
+
     return (
         <AppModal
             title={messages('common.compare')}
@@ -43,7 +50,7 @@ export default function AcrResultCompareModal({ ...props }: Props) {
             <div className="max-h-[600px] space-y-4 overflow-auto">
                 <div className="flex gap-4">
                     <Select
-                        placeholder={messages('tracks.acrCloud.compareResult')}
+                        placeholder={messages('track.acrCloud.compareResult')}
                         options={options}
                         className="flex-1"
                         onChange={(val) => {
@@ -52,7 +59,7 @@ export default function AcrResultCompareModal({ ...props }: Props) {
                         defaultValue={firstResult?.id}
                     />
                     <Select
-                        placeholder={messages('tracks.acrCloud.compareResult')}
+                        placeholder={messages('track.acrCloud.compareResult')}
                         options={options}
                         className="flex-1"
                         onChange={(val) => setRightId(val)}
@@ -63,7 +70,10 @@ export default function AcrResultCompareModal({ ...props }: Props) {
                     <div className="flex-1">
                         {leftData && (
                             <div>
-                                <ResultCollapse data={leftData} />
+                                <ResultCollapse
+                                    key={leftData?.id}
+                                    data={leftData}
+                                />
                             </div>
                         )}
                     </div>
@@ -71,7 +81,10 @@ export default function AcrResultCompareModal({ ...props }: Props) {
                     <div className="flex-1">
                         {rightData && (
                             <div>
-                                <ResultCollapse data={rightData} />
+                                <ResultCollapse
+                                    key={rightData?.id}
+                                    data={rightData}
+                                />
                             </div>
                         )}
                     </div>
@@ -89,7 +102,7 @@ export const ResultCollapse = ({ data }: { data: TrackScanHistoryData }) => {
             items={data.result?.map((item: ResultScan) => {
                 const value = item?.content?.music ?? item?.content?.humming;
                 return {
-                    label: `${convertSecondsToTime(item.key.startSecond)} - ${convertSecondsToTime(item.key.endSecond)} (${messages('tracks.count')}: ${value?.length ?? 0})`,
+                    label: `${convertSecondsToTime(item.key.startSecond)} - ${convertSecondsToTime(item.key.endSecond)} (${messages('track.count')}: ${value?.length ?? 0})`,
                     children: <ScanResultPanel data={item} />,
                 };
             })}

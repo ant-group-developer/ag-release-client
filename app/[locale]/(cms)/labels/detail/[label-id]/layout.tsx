@@ -47,7 +47,7 @@ export default function LabelDetailLayout({ children }: PropsWithChildren) {
                     className="pl-4 font-medium"
                     href={LABEL_DETAIL_TABS.RELEASES}
                 >
-                    {messages('releases.label')}
+                    {messages('release.label')}
                 </Link>
             ),
         },
@@ -55,7 +55,7 @@ export default function LabelDetailLayout({ children }: PropsWithChildren) {
             key: LABEL_DETAIL_TABS.TRACKS,
             label: (
                 <Link className="font-medium" href={LABEL_DETAIL_TABS.TRACKS}>
-                    {messages('tracks.label')}
+                    {messages('track.label')}
                 </Link>
             ),
         },
@@ -105,22 +105,22 @@ export default function LabelDetailLayout({ children }: PropsWithChildren) {
                     className="flex w-fit items-center gap-1 py-2 hover:underline"
                 >
                     <ArrowLeft size={SIZE_ICON_SMALL} />
-                    {messages('labels.back')}
+                    {messages('label.back')}
                 </Link>
                 <AppHeaderPage
                     imageSrc={labelData?.picture as string}
                     isScrolled={isScroll}
                 >
                     <ItemHeaderPage
-                        name={messages('labels.label')}
+                        name={messages('label.label')}
                         value={labelData?.name}
                     />
                     <ItemHeaderPage
-                        name={messages('releases.count')}
+                        name={messages('release.label')}
                         value={labelData?.releaseCount?.toString()}
                     />
                     <ItemHeaderPage
-                        name={messages('tracks.count')}
+                        name={messages('track.label')}
                         value={labelData?.trackCount?.toString()}
                     />
                 </AppHeaderPage>

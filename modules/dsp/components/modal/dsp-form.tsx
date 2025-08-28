@@ -48,11 +48,11 @@ export default function DspFormModal({ ...props }: Props) {
         const variables: CreateVariables<CreateDspPayload> = {
             payload: values,
             onSuccess: () => {
+                deActive();
                 form.resetFields();
                 form.setFieldsValue({
                     dspActions: [{ actionId: undefined, isDefault: true }],
                 });
-                deActive();
             },
             onError: () => {
                 deActive();
@@ -227,6 +227,7 @@ export default function DspFormModal({ ...props }: Props) {
                                 </li>
                             </ul>
                         }
+                        disabled={isActive}
                     />
                 </AppFormItem>
                 <AppFormItem
@@ -244,6 +245,18 @@ export default function DspFormModal({ ...props }: Props) {
                                 max: MAX_NAME_LENGTH,
                                 field: messages('dsp.name'),
                             }),
+                        },
+                        {
+                            validator: (_, value) => {
+                                if (value && value.includes('_')) {
+                                    return Promise.reject(
+                                        messages('validation.noUnderscore', {
+                                            field: messages('dsp.name'),
+                                        })
+                                    );
+                                }
+                                return Promise.resolve();
+                            },
                         },
                     ]}
                 >

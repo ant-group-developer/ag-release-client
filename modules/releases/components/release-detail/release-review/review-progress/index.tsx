@@ -12,7 +12,7 @@ export default function ReviewProgress({}: Props) {
         <div>
             <div className="grid grid-cols-3 gap-2">
                 <div>
-                    <MetadataInfoItem label={messages('releases.releaseDate')}>
+                    <MetadataInfoItem label={messages('release.releaseDate')}>
                         <p className="pt-1">
                             {formValues.releaseDate ??
                                 messages('common.notAvailable')}
@@ -21,7 +21,7 @@ export default function ReviewProgress({}: Props) {
                 </div>
 
                 <div>
-                    <MetadataInfoItem label={messages('releases.releaseTime')}>
+                    <MetadataInfoItem label={messages('release.releaseTime')}>
                         <p className="pt-1">
                             {formValues.releaseTime ??
                                 messages('common.notAvailable')}

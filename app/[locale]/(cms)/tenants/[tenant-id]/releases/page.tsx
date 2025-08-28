@@ -152,7 +152,7 @@ export default function Releases({}: Props) {
             )}
 
             <AppPagination
-                className="border-b border-t"
+                className="border-b"
                 align="end"
                 current={releasesData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}
@@ -169,7 +169,7 @@ export default function Releases({}: Props) {
                     open
                     onOk={() => handleDeleteRelease()}
                     onCancel={closeModal}
-                    modalTitle={`${messages('common.delete')} ${messages('releases.label').toLowerCase()}`}
+                    modalTitle={`${messages('common.delete')} ${messages('release.label').toLowerCase()}`}
                     paragraph={messages('delete.confirmMessage', {
                         value: dataEdit?.title,
                     })}

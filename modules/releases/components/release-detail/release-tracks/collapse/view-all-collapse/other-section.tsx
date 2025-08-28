@@ -249,7 +249,7 @@ export default function OtherSection({
 
                             <FormItem
                                 name="trackLanguage.recordingCountryId"
-                                label={messages('tracks.recordingCountry')}
+                                label={messages('track.recordingCountry')}
                                 required
                                 ErrorMessage={
                                     errors.trackLanguage?.recordingCountryId

@@ -32,9 +32,6 @@ export default function Dsp() {
     const { deleteDsp } = useDeleteDsp();
 
     // func
-    const handleRefresh = () => {
-        refetch();
-    };
     const handleDeleteDsp = () => {
         const variables: DeleteVariables<DspData['id']> = {
             id: dataEdit?.id,
@@ -57,7 +54,6 @@ export default function Dsp() {
                 loading={isLoading}
             />
             <AppPagination
-                className="border-t"
                 align="end"
                 current={dspData.metadata.currentPage}
                 pageSize={dataFilter.pageSize}

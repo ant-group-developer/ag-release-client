@@ -1,4 +1,5 @@
 import { showNotification } from '@/helpers/messages-helper';
+import { useApiError } from '@/hooks/use-api-error';
 import { releasesQueryKeys } from '@/modules/releases/constants/query-keys';
 import { DeleteVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -9,6 +10,7 @@ import { ReleasesData } from '../types';
 export const useDeleteRelease = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
+    const { handleError } = useApiError();
 
     const onSuccess = (
         data: any,
@@ -31,13 +33,8 @@ export const useDeleteRelease = () => {
         data: any,
         { onError }: DeleteVariables<ReleasesData['id']>
     ) => {
-        const responseMessages = messages(data?.response?.data?.messageCode);
-
         onError?.();
-        showNotification(
-            'error',
-            responseMessages || messages('common.somethingWentWrong')
-        );
+        handleError(data);
     };
     const mutation = useMutation({
         mutationFn: ({ id }: DeleteVariables<ReleasesData['id']>) =>

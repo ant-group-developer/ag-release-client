@@ -56,7 +56,7 @@ export default function TracksHeaderDropdown({
             onClick: () => handleChangeTypeFilter(TYPE_FILTER.GENRES),
         },
         {
-            label: messages('releases.label'),
+            label: messages('release.label'),
             value: TYPE_FILTER.RELEASE_ID,
             visible: !dataFilter.releaseId,
             onClick: () => handleChangeTypeFilter(TYPE_FILTER.RELEASE_ID),
@@ -68,7 +68,7 @@ export default function TracksHeaderDropdown({
             onClick: () => handleChangeTypeFilter(TYPE_FILTER.ARTIST_ID),
         },
         {
-            label: messages('tracks.scan'),
+            label: messages('track.scan'),
             value: TYPE_FILTER.SCAN_COPYRIGHT_STATUS,
             visible: !dataFilter.scanCopyrightStatus,
             onClick: () =>

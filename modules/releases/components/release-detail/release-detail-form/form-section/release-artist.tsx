@@ -84,7 +84,7 @@ export default function ReleaseArtistSection({ debouncedUpdate }: Props) {
                                 <FormItem
                                     name="isVariousArtist"
                                     label={messages(
-                                        'releases.isMoreThan4Artists'
+                                        'release.isMoreThan4Artists'
                                     )}
                                     required
                                     ErrorMessage={''}

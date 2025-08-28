@@ -11,7 +11,6 @@ import {
     TYPE_MODAL_TRACK,
 } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
-import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import TrackArtistModal from '@/modules/track-artist/components/modal/track-artist-modal';
 import { useDeleteTrackArtist } from '@/modules/track-artist/hooks/use-delete-track-artist';
 import { TrackArtistData } from '@/modules/track-artist/types';
@@ -22,7 +21,7 @@ import { TrackData } from '@/modules/tracks/types';
 import { DeleteVariables } from '@/types/api';
 import { ConfigProvider, theme } from 'antd';
 import { useTranslations } from 'next-intl';
-import { Key, useEffect, useState } from 'react';
+import { Key, useState } from 'react';
 
 export default function Tracks() {
     // hooks - state
@@ -40,7 +39,6 @@ export default function Tracks() {
         releaseId: formValues?.id as string,
         fieldOrder: 'order',
     });
-    const { releaseData } = useGetDetailRelease(formValues?.id as string);
     const { deleteTrack } = useDeleteTrack();
     const { deleteTrackArtist } = useDeleteTrackArtist();
 
@@ -79,17 +77,18 @@ export default function Tracks() {
         },
     };
 
-    useEffect(() => {
-        if (tracksData?.items) {
-            setFormValues({
-                ...formValues,
-                tracks: tracksData.items.map((track) => ({
-                    ...track,
-                    isSensitiveContent: !!track.isSensitiveContent,
-                })),
-            });
-        }
-    }, [tracksData?.items]);
+    // Set tracks vào zustand
+    // useEffect(() => {
+    //     if (tracksData?.items) {
+    //         setFormValues({
+    //             ...formValues,
+    //             tracks: tracksData.items.map((track) => ({
+    //                 ...track,
+    //                 isSensitiveContent: !!track.isSensitiveContent,
+    //             })),
+    //         });
+    //     }
+    // }, [tracksData?.items]);
 
     return (
         <ConfigProvider theme={customTheme}>

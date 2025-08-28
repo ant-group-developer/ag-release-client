@@ -51,7 +51,7 @@ export default function TracksTable({
                 ),
         },
         {
-            title: messages('tracks.name'),
+            title: messages('track.name'),
             key: 'title',
             dataIndex: 'title',
             ellipsis: true,
@@ -86,7 +86,7 @@ export default function TracksTable({
             ),
         },
         {
-            title: messages('releases.version'),
+            title: messages('release.version'),
             key: 'version',
             dataIndex: 'version',
             align: 'left',
@@ -96,7 +96,7 @@ export default function TracksTable({
             },
         },
         {
-            title: messages('tracks.id'),
+            title: messages('track.id'),
             key: 'id',
             dataIndex: 'id',
             align: 'center',
@@ -206,7 +206,7 @@ export default function TracksTable({
         },
 
         // {
-        //     title: messages('releases.duration'),
+        //     title: messages('release.duration'),
         //     key: 'duration',
         //     dataIndex: 'duration',
         //     align: 'center',
@@ -217,7 +217,7 @@ export default function TracksTable({
         //     },
         // },
         // {
-        //     title: messages('releases.releaseDate'),
+        //     title: messages('release.releaseDate'),
         //     key: 'releaseDate',
         //     dataIndex: 'releaseDate',
         //     align: 'center',

@@ -21,16 +21,16 @@ export default function TrackMetadata({}: Props) {
             <AppCard
                 title={
                     <p className="text-lg">
-                        {messages('tracks.label')} & {messages('artist.label')}
+                        {messages('track.label')} & {messages('artist.label')}
                     </p>
                 }
             >
                 <div className="space-y-2">
                     <div className="grid grid-cols-2 gap-2">
-                        <MetadataInfoItem label={messages('tracks.name')}>
+                        <MetadataInfoItem label={messages('track.name')}>
                             {trackData?.title}
                         </MetadataInfoItem>
-                        <MetadataInfoItem label={messages('releases.version')}>
+                        <MetadataInfoItem label={messages('release.version')}>
                             {trackData?.version}
                         </MetadataInfoItem>
                     </div>
@@ -84,14 +84,14 @@ export default function TrackMetadata({}: Props) {
             <AppCard
                 title={
                     <p className="text-lg">
-                        {messages('releases.otherMetadata')}
+                        {messages('release.otherMetadata')}
                     </p>
                 }
             >
                 <div className="space-y-2">
                     <div className="grid grid-cols-2 gap-2">
                         <MetadataInfoItem
-                            label={`${messages('tracks.language')}`}
+                            label={`${messages('track.language')}`}
                         >
                             {trackData?.trackLanguage?.audioLanguage?.name}
                         </MetadataInfoItem>
@@ -118,7 +118,7 @@ export default function TrackMetadata({}: Props) {
                         </MetadataInfoItem>
 
                         <MetadataInfoItem
-                            label={messages('tracks.recordingCountry')}
+                            label={messages('track.recordingCountry')}
                         >
                             {trackData?.trackLanguage?.recordingCountry?.name}
                         </MetadataInfoItem>

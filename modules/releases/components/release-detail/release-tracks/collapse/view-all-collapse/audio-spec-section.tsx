@@ -51,7 +51,7 @@ export default function AudioSpecSection({
                     key: 'audio-specs',
                     label: (
                         <Title level={5} className="!mb-0">
-                            {messages('tracks.audioSpecification')}
+                            {messages('track.audioSpecification')}
                         </Title>
                     ),
                     children: (

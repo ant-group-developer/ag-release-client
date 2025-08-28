@@ -42,7 +42,10 @@ export const releaseSchema = (messages: any) =>
             .object({
                 metadataLanguageId: z
                     .string()
-                    .min(1, { message: messages('validation.input') }),
+                    .nullable()
+                    .refine((val) => val !== null && val !== '', {
+                        message: messages('validation.input'),
+                    }),
                 metadataLanguageCountryId: z
                     .string()
                     .nullable()
@@ -59,9 +62,12 @@ export const releaseSchema = (messages: any) =>
             .refine((val) => val !== null, {
                 message: messages('validation.input'),
             }),
-        labelId: z.string().refine((val) => val !== null && val !== '', {
-            message: messages('validation.input'),
-        }),
+        labelId: z
+            .string()
+            .nullable()
+            .refine((val) => val !== null && val !== '', {
+                message: messages('validation.input'),
+            }),
         catalogId: z
             .string()
             .max(100, messages('validation.max', { number: 100 }))
@@ -97,7 +103,7 @@ export const releaseSchema = (messages: any) =>
         //                 artist.artistRole.name === 'Main Artist'
         //         ),
         //     {
-        //         message: messages('releases.validation.mustHaveMainArtist'),
+        //         message: messages('release.validation.mustHaveMainArtist'),
         //     }
         // ),
         pLineOwner: z
@@ -114,18 +120,22 @@ export const releaseSchema = (messages: any) =>
             .refine((val) => val !== null && val !== '', {
                 message: messages('validation.input'),
             }),
-        pLineYear: z
-            .number()
-            .optional()
-            .refine((val) => val !== null || val !== undefined, {
-                message: messages('validation.input'),
-            }),
-        cLineYear: z
-            .number()
-            .optional()
-            .refine((val) => val !== null || val !== undefined, {
-                message: messages('validation.input'),
-            }),
+        pLineYear: z.union([z.number(), z.null()]).superRefine((val, ctx) => {
+            if (val === null) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: messages('validation.input'),
+                });
+            }
+        }),
+        cLineYear: z.union([z.number(), z.null()]).superRefine((val, ctx) => {
+            if (val === null) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: messages('validation.input'),
+                });
+            }
+        }),
         isVariousArtist: z.boolean(),
         releaseDate: z
             .string()

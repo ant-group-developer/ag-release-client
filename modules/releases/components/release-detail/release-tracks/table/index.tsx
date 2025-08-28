@@ -114,7 +114,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             },
         },
         {
-            title: messages('tracks.name'),
+            title: messages('track.name'),
             dataIndex: 'title',
             key: 'title',
             align: 'left',
@@ -242,7 +242,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                 key: `${record.id}-track-form`,
                 label: (
                     <span className="font-medium">
-                        {messages('tracks.label')} & {messages('artist.label')}
+                        {messages('track.label')} & {messages('artist.label')}
                     </span>
                 ),
                 children: (
@@ -257,7 +257,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                 key: `${record.id}-metadata-form`,
                 label: (
                     <span className="font-medium">
-                        {messages('releases.otherMetadata')}
+                        {messages('release.otherMetadata')}
                     </span>
                 ),
                 children: (

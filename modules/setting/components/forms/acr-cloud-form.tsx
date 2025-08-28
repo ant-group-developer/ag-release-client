@@ -135,7 +135,7 @@ export default function ACRCloudForm({}: Props) {
                     name="releaseStatusAutoScans"
                     label={
                         <span className="text-wrap pb-4">
-                            {messages('tracks.releaseStatusAutoScan')}
+                            {messages('track.releaseStatusAutoScan')}
                         </span>
                     }
                     rules={[
@@ -156,7 +156,7 @@ export default function ACRCloudForm({}: Props) {
                 </AppFormItem>
                 <AppFormItem
                     name="chunkDuration"
-                    label={'Chunk duration'}
+                    label={messages('track.chunkDuration')}
                     required
                     rules={[
                         {
@@ -168,7 +168,7 @@ export default function ACRCloudForm({}: Props) {
                             min: 1,
                             message: messages('validation.numberMin', {
                                 min: 1,
-                                field: 'Chunk duration',
+                                field: messages('track.chunkDuration'),
                             }),
                         },
                         {
@@ -176,7 +176,7 @@ export default function ACRCloudForm({}: Props) {
                             max: 12,
                             message: messages('validation.numberMax', {
                                 max: 12,
-                                field: 'Chunk duration',
+                                field: messages('track.chunkDuration'),
                             }),
                         },
                     ]}
@@ -185,7 +185,7 @@ export default function ACRCloudForm({}: Props) {
                 </AppFormItem>
                 <AppFormItem
                     name="scoreWarning"
-                    label={messages('tracks.scoreWarning')}
+                    label={messages('track.scoreWarning')}
                     required
                     rules={[
                         {
@@ -197,7 +197,7 @@ export default function ACRCloudForm({}: Props) {
                             min: 1,
                             message: messages('validation.numberMin', {
                                 min: 1,
-                                field: messages('tracks.scoreWarning'),
+                                field: messages('track.scoreWarning'),
                             }),
                         },
                         {
@@ -205,7 +205,7 @@ export default function ACRCloudForm({}: Props) {
                             max: MAX_NAME_LENGTH,
                             message: messages('validation.numberMax', {
                                 max: MAX_NAME_LENGTH,
-                                field: messages('tracks.scoreWarning'),
+                                field: messages('track.scoreWarning'),
                             }),
                         },
                     ]}
@@ -215,7 +215,7 @@ export default function ACRCloudForm({}: Props) {
 
                 <AppFormItem
                     name="autoScanTime"
-                    label={messages('tracks.autoScanTime')}
+                    label={messages('track.autoScanTime')}
                 >
                     <TimePicker
                         format="HH:mm"
@@ -225,7 +225,7 @@ export default function ACRCloudForm({}: Props) {
                 </AppFormItem>
                 <AppFormItem
                     name="autoScan"
-                    label={messages('tracks.autoScan')}
+                    label={messages('track.autoScan')}
                     valuePropName="checked"
                 >
                     <Switch defaultChecked={false} />

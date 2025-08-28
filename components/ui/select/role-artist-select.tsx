@@ -52,7 +52,7 @@ export default function RoleArtistSelect({
             //                         openModal(TYPE_MODAL_ARTIST.CREATE)
             //                     }
             //                 >
-            //                     {messages('releases.createArtist')}
+            //                     {messages('release.createArtist')}
             //                 </Button>
             //             </div>
             //         </div>

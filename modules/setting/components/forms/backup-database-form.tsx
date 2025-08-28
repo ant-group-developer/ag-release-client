@@ -356,7 +356,7 @@ export default function BackupDatabaseForm({}: Props) {
                         dataFilter={dataFilter}
                     />
                     <AppPagination
-                        className="border-b border-t"
+                        className="border-b"
                         align="end"
                         current={dataFilter?.page}
                         pageSize={dataFilter.pageSize}

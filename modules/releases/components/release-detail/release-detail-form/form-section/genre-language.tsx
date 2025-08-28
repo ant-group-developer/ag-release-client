@@ -188,7 +188,7 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
 
                             <FormItem
                                 name="releaseLanguage.audioLanguageId"
-                                label={`${messages('tracks.language')}`}
+                                label={`${messages('track.language')}`}
                                 required
                                 ErrorMessage={
                                     errors.releaseLanguage?.audioLanguageId

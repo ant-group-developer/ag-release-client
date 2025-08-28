@@ -247,7 +247,7 @@
 //                         <div className="col-span-2 flex flex-col">
 //                             <FormItem
 //                                 name="type"
-//                                 label={messages('releases.type')}
+//                                 label={messages('release.type')}
 //                                 required
 //                                 ErrorMessage={errors.type?.message}
 //                             >
@@ -285,7 +285,7 @@
 //                             <LabelForm
 //                                 htmlFor="title"
 //                                 required
-//                                 label={messages('releases.name')}
+//                                 label={messages('release.name')}
 //                             />
 //                             <Controller
 //                                 control={control}
@@ -320,7 +320,7 @@
 
 //                         <FormItem
 //                             name="version"
-//                             label={messages('releases.version')}
+//                             label={messages('release.version')}
 //                             ErrorMessage={errors.version?.message}
 //                         >
 //                             <Controller
@@ -364,7 +364,7 @@
 //                                 <FormItem
 //                                     name="isVariousArtist"
 //                                     label={messages(
-//                                         'releases.isMoreThan4Artists'
+//                                         'release.isMoreThan4Artists'
 //                                     )}
 //                                     required
 //                                     ErrorMessage={''}
@@ -662,7 +662,7 @@
 //                             label="Bản quyền tác phẩm"
 //                             required
 //                             tooltipInfor={messages(
-//                                 'releases.cLineYearDescription'
+//                                 'release.cLineYearDescription'
 //                             )}
 //                             ErrorMessage={errors.cLineOwner?.message}
 //                         >
@@ -728,7 +728,7 @@
 //                             label="Bản quyền ghi âm"
 //                             required
 //                             tooltipInfor={messages(
-//                                 'releases.pLineYearDescription'
+//                                 'release.pLineYearDescription'
 //                             )}
 //                             ErrorMessage={errors.pLineOwner?.message}
 //                         >

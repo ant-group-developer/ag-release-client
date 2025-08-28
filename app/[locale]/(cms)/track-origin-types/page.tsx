@@ -84,7 +84,6 @@ export default function TrackOriginTypes({}: Props) {
                 onChange={onChangeSort}
             />
             <AppPagination
-                className="border-t"
                 align="end"
                 current={trackOriginTypesData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}

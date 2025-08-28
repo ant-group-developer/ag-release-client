@@ -1,3 +1,4 @@
+import { useApiError } from '@/hooks/use-api-error';
 import { releasesQueryKeys } from '@/modules/releases/constants/query-keys';
 import { CreateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -9,6 +10,7 @@ import { CreateReleaseArtistPayload } from '../types/payload';
 export const useCreateReleaseArtist = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
+    const { handleError } = useApiError();
 
     const onSuccess = (
         data: any,
@@ -31,13 +33,9 @@ export const useCreateReleaseArtist = () => {
         data: any,
         { onError }: CreateVariables<CreateReleaseArtistPayload>
     ) => {
-        // const responseMessages = messages(data?.response?.data?.messageCode);
+        handleError(data);
 
         onError?.();
-        // showNotification(
-        //     'error',
-        //     responseMessages || messages('common.somethingWentWrong')
-        // );
     };
     const mutation = useMutation({
         mutationFn: ({

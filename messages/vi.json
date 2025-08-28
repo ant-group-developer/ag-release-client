@@ -451,7 +451,8 @@
         "stringMax": "{field} chỉ được tối đa {max} ký tự.",
         "numberMin": "{field} phải từ {min} trở lên.",
         "numberMax": "{field} không được lớn hơn {max}.",
-        "invalidType": "{field} không hợp lệ."
+        "invalidType": "{field} không hợp lệ.",
+        "noUnderscore": "{field} Không được có ký tự (_)"
     },
     "form": {
         "searchPlaceholder": "Tìm kiếm"
@@ -654,7 +655,7 @@
         "system": "Hệ thống"
     },
 
-    "releases": {
+    "release": {
         "count": "Số lượng bản phát hành",
         "configuration": "Thiết lập phát hành",
         "otherMetadata": "Các metadata khác",
@@ -707,10 +708,7 @@
         "coverArt": {
             "required": "Yêu cầu ảnh bìa",
             "size": "Ảnh phải vuông, từ 1400x1400 pixel đến 4000x4000x pixel"
-        }
-    },
-
-    "release": {
+        },
         "message": {
             "success": {
                 "create": "Thêm mới phát hành thành công",
@@ -751,7 +749,7 @@
         }
     },
 
-    "tracks": {
+    "track": {
         "number": "Bài hát số",
         "add": "Thêm bài hát",
         "label": "Bài hát",
@@ -779,6 +777,7 @@
         "scoreWarning": "Điểm cảnh báo",
         "autoScanTime": "Giờ tự động quét",
         "releaseStatusAutoScan": "Trạng thái tự động quét",
+        "chunkDuration": "Thời lượng đoạn",
         "status": {
             "scanning": "Đang quét",
             "running": "Đang chạy",
@@ -816,10 +815,7 @@
         },
         "acrCloud": {
             "compareResult": "Chọn kết quả muốn so sánh"
-        }
-    },
-
-    "track": {
+        },
         "message": {
             "success": {
                 "create": "Thêm mới bài hát thành công",
@@ -893,6 +889,7 @@
         "add": "Thêm thể loại",
         "primary": "Thể loại chính"
     },
+
     "genre": {
         "label": "Thể loại",
         "message": {
@@ -911,6 +908,7 @@
             }
         }
     },
+
     "artist": {
         "label": "Nghệ sĩ",
         "create": "Tạo nghệ sĩ",
@@ -927,6 +925,7 @@
         "role": "Vai trò nghệ sĩ",
         "canLinkArtistProfile": "Có thể liên kết hồ sơ nghệ sĩ",
         "back": "Trở lại danh sách nghệ sĩ",
+        "visitProfile": "Xem hồ sơ",
         "message": {
             "success": {
                 "create": "Thêm mới nghệ sĩ thành công",
@@ -947,14 +946,12 @@
         "name": "Tên vai trò"
     },
 
-    "labels": {
+    "label": {
         "label": "Label",
         "create": "Tạo label",
         "name": "Tên label",
         "id": "Mã label",
-        "back": "Trở lại danh sách Label"
-    },
-    "label": {
+        "back": "Trở lại danh sách Label",
         "message": {
             "success": {
                 "create": "Thêm mới label thành công",
@@ -967,6 +964,7 @@
             }
         }
     },
+
     "distribution": {
         "label": "Phân phối",
         "create": "Tạo phân phối",
@@ -981,7 +979,7 @@
             "preview": "Đoạn nghe trước"
         },
         "trackLanguage": {
-            "audioLanguageId": "Ngôn ngữ âm thanh",
+            "audioLanguageId": "Ngôn ngữ bài hát",
             "metadataLanguageId": "Ngôn ngữ metadata",
             "metadataLanguageCountryId": "Ngôn ngữ quốc gia",
             "recordingCountryId": "Quốc gia ghi âm"
@@ -1349,7 +1347,7 @@
 
     "policy": {
         "label": "Chính sách",
-        "name": "Tên Chính sách",
+        "name": "Tên chính sách",
         "action": {
             "delete": "Xoá chính sách"
         }

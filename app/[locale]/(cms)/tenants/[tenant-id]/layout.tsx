@@ -68,7 +68,7 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
                 <Link
                     href={getTenantDetailRoute(tenantId, TENANT_TABS.RELEASE)}
                 >
-                    {messages('releases.label')}
+                    {messages('release.label')}
                 </Link>
             ),
         },
@@ -76,7 +76,7 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
             key: TENANT_TABS.TRACK,
             label: (
                 <Link href={getTenantDetailRoute(tenantId, TENANT_TABS.TRACK)}>
-                    {messages('tracks.label')}
+                    {messages('track.label')}
                 </Link>
             ),
         },

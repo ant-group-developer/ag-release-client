@@ -80,7 +80,7 @@ export default function Timezone({}: Props) {
                 onChange={onChangeSort}
             />
             <AppPagination
-                className="border-b border-t"
+                className="border-b"
                 align="end"
                 current={timezonesData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}

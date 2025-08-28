@@ -145,7 +145,7 @@ export default function ReleaseTypeFormModal({ ...props }: Props) {
                 </AppFormItem>
                 <AppFormItem
                     name="minTrackCount"
-                    label={messages('tracks.minTrack')}
+                    label={messages('track.minTrack')}
                     required
                     rules={[
                         {
@@ -158,7 +158,7 @@ export default function ReleaseTypeFormModal({ ...props }: Props) {
                 </AppFormItem>
                 <AppFormItem
                     name="maxTrackCount"
-                    label={messages('tracks.maxTrack')}
+                    label={messages('track.maxTrack')}
                     required
                     rules={[
                         {

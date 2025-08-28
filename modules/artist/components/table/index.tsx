@@ -4,7 +4,7 @@ import ImageFallback from '@/components/ui/image/image-fallback';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
-import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
+import { getIndex, getSortOrder } from '@/helpers/common';
 import { getArtistDetailRoute } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { Link, useRouter } from '@/i18n/routing';
@@ -153,7 +153,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
             ),
         },
         {
-            title: messages('releases.count'),
+            title: messages('release.label'),
             key: 'releaseCount',
             dataIndex: 'release_count',
             align: 'center',
@@ -169,7 +169,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
             ),
         },
         {
-            title: messages('tracks.count'),
+            title: messages('track.label'),
             key: 'trackCount',
             dataIndex: 'track_count',
             align: 'center',
@@ -198,44 +198,44 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
                 );
             },
         },
-        {
-            title: messages('common.createdAt'),
-            key: 'createdAt',
-            dataIndex: 'createdAt',
-            align: 'center',
-            width: 150,
-            sorter: true,
-            sortOrder: getSortOrder(
-                dataFilter.orderBy,
-                dataFilter.fieldOrder,
-                'createdAt'
-            ),
-            render: (value) => (
-                <span className="truncate text-wrap">
-                    {' '}
-                    {formattedDate(value)}{' '}
-                </span>
-            ),
-        },
-        {
-            title: messages('common.updatedAt'),
-            key: 'updatedAt',
-            dataIndex: 'updatedAt',
-            align: 'center',
-            width: 150,
-            sorter: true,
-            sortOrder: getSortOrder(
-                dataFilter.orderBy,
-                dataFilter.fieldOrder,
-                'updatedAt'
-            ),
-            render: (value) => (
-                <span className="truncate text-wrap">
-                    {' '}
-                    {formattedDate(value)}{' '}
-                </span>
-            ),
-        },
+        // {
+        //     title: messages('common.createdAt'),
+        //     key: 'createdAt',
+        //     dataIndex: 'createdAt',
+        //     align: 'center',
+        //     width: 150,
+        //     sorter: true,
+        //     sortOrder: getSortOrder(
+        //         dataFilter.orderBy,
+        //         dataFilter.fieldOrder,
+        //         'createdAt'
+        //     ),
+        //     render: (value) => (
+        //         <span className="truncate text-wrap">
+        //             {' '}
+        //             {formattedDate(value)}{' '}
+        //         </span>
+        //     ),
+        // },
+        // {
+        //     title: messages('common.updatedAt'),
+        //     key: 'updatedAt',
+        //     dataIndex: 'updatedAt',
+        //     align: 'center',
+        //     width: 150,
+        //     sorter: true,
+        //     sortOrder: getSortOrder(
+        //         dataFilter.orderBy,
+        //         dataFilter.fieldOrder,
+        //         'updatedAt'
+        //     ),
+        //     render: (value) => (
+        //         <span className="truncate text-wrap">
+        //             {' '}
+        //             {formattedDate(value)}{' '}
+        //         </span>
+        //     ),
+        // },
         {
             key: 'actions',
             align: 'center',

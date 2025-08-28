@@ -105,7 +105,6 @@ export default function Roles({}: Props) {
             />
 
             <AppPagination
-                className="border-t"
                 align="end"
                 current={rolesData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}

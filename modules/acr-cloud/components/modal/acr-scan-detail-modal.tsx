@@ -77,7 +77,7 @@ export default function AcrCloudScanDetailModal({ data, ...props }: Props) {
             render: (_, __, index) => getIndex(PAGE_SIZE, currentPage, index),
         },
         {
-            title: messages('tracks.label'),
+            title: messages('track.label'),
             key: 'track',
             width: 100,
             align: 'left',
@@ -129,7 +129,7 @@ export default function AcrCloudScanDetailModal({ data, ...props }: Props) {
                 <div className="max-h-[600px]">
                     <div className="mb-2 flex flex-wrap gap-4">
                         <div>
-                            {messages('tracks.skipScannedTracks')}:{' '}
+                            {messages('track.skipScannedTracks')}:{' '}
                             <Checkbox
                                 disabled
                                 checked={
@@ -138,13 +138,13 @@ export default function AcrCloudScanDetailModal({ data, ...props }: Props) {
                             />
                         </div>
                         <span>
-                            {messages('tracks.totalTrackNeedScan')}:{' '}
+                            {messages('track.totalTrackNeedScan')}:{' '}
                             <span className="font-semibold">
                                 {scanStatusData?.trackNeedScanIds?.length}
                             </span>
                         </span>
                         <span>
-                            {messages('tracks.scanDate')}:{' '}
+                            {messages('track.scanDate')}:{' '}
                             <span className="font-semibold">
                                 {formattedDate(scanStatusData?.createdAt)}
                             </span>

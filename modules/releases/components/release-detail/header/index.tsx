@@ -230,10 +230,10 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                             title={
                                 <>
                                     <div>
-                                        {messages('releases.coverArt.required')}
+                                        {messages('release.coverArt.required')}
                                     </div>
                                     <div>
-                                        - {messages('releases.coverArt.size')}
+                                        - {messages('release.coverArt.size')}
                                     </div>
                                     <div>
                                         -{' '}
@@ -279,7 +279,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                 )}
                             >
                                 <div className="text-sm">
-                                    <span>{messages('releases.name')}: </span>
+                                    <span>{messages('release.name')}: </span>
                                     <span className="font-bold">
                                         {formValues.title}{' '}
                                         {formValues.version &&

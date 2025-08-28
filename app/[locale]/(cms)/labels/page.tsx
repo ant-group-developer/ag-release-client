@@ -63,7 +63,7 @@ export default function Labels({}: Props) {
     };
 
     return (
-        <AppContainer title={messages('labels.label')}>
+        <AppContainer title={messages('label.label')}>
             <LabelsHeader dataFilter={dataFilter} onSearch={onSearch} />
             <LabelsTable
                 sticky
@@ -96,7 +96,6 @@ export default function Labels({}: Props) {
             )}
 
             <AppPagination
-                className="border-t"
                 align="end"
                 current={labelsData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}

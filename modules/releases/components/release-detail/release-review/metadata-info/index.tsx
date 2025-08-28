@@ -1,9 +1,7 @@
-import { SIZE_ICON } from '@/constants/common';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import type { ReleaseFormStoreData } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
-import { CircleAlert } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import ArtistItem from './artist-item';
 import MetadataInfoItem from './metadata-info-item';
@@ -14,11 +12,6 @@ export default function MetadataInfo({}: Props) {
     const messages = useTranslations();
     const formValue = useReleaseFormStore((state) => state.formValues);
     const { releaseData } = useGetDetailRelease(formValue?.id as string);
-    const formErrors = useReleaseFormStore((state) => state.validationErrors);
-
-    const getFieldError = (fieldPath: keyof ReleaseFormStoreData | string) => {
-        return formErrors.find((error) => error.path.join('.') === fieldPath);
-    };
 
     const getFieldValue = (fieldPath: string) => {
         const value = (releaseData as any)[fieldPath] || '';
@@ -62,7 +55,6 @@ export default function MetadataInfo({}: Props) {
         fieldPath: keyof ReleaseFormStoreData | string,
         isRequired: boolean = false
     ) => {
-        const error = getFieldError(fieldPath);
         const value = getFieldValue(fieldPath);
 
         return (
@@ -83,9 +75,9 @@ export default function MetadataInfo({}: Props) {
                     )}
                     {value && <p className="mt-1">{value}</p>}
                 </div>
-                {error && (
+                {/* {error && (
                     <CircleAlert className="text-red-500" size={SIZE_ICON} />
-                )}
+                )} */}
             </div>
         );
     };
@@ -100,10 +92,10 @@ export default function MetadataInfo({}: Props) {
             </div>
 
             <div className="grid grid-cols-2 gap-2">
-                <MetadataInfoItem label={messages('releases.name')}>
+                <MetadataInfoItem label={messages('release.name')}>
                     {renderField('title', true)}
                 </MetadataInfoItem>
-                <MetadataInfoItem label={messages('releases.version')}>
+                <MetadataInfoItem label={messages('release.version')}>
                     {renderField('version')}
                 </MetadataInfoItem>
             </div>
@@ -158,16 +150,16 @@ export default function MetadataInfo({}: Props) {
             </div>
 
             <div className="grid grid-cols-2 gap-2">
-                <MetadataInfoItem label={messages('releases.releaseDate')}>
+                <MetadataInfoItem label={messages('release.releaseDate')}>
                     {renderField('releaseDate', true)}
                 </MetadataInfoItem>
-                <MetadataInfoItem label={messages('releases.releaseTime')}>
+                <MetadataInfoItem label={messages('release.releaseTime')}>
                     {renderField('releaseTime', true)}
                 </MetadataInfoItem>
             </div>
 
             <div>
-                <MetadataInfoItem label={messages('releases.type')}>
+                <MetadataInfoItem label={messages('release.type')}>
                     {renderField('type', true)}
                 </MetadataInfoItem>
             </div>

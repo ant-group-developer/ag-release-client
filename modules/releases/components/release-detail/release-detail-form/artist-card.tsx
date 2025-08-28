@@ -3,7 +3,6 @@ import { SIZE_ICON } from '@/constants/common';
 import { cn } from '@/helpers/common';
 import { ArtistRoleData } from '@/modules/artist-role/types';
 import { ArtistData } from '@/modules/artist/types';
-import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { Avatar, Checkbox, CheckboxChangeEvent, theme } from 'antd';
 import { Trash2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -35,7 +34,6 @@ export default function ArtistCard({
     const handleChangeChecked = (e: CheckboxChangeEvent) => {
         onApplyToAllTracks?.(e.target.checked);
     };
-    const formValues = useReleaseFormStore((state) => state.formValues);
     const artist = data?.artist;
     const artistRole = data.artistRole;
     const { token } = theme.useToken();

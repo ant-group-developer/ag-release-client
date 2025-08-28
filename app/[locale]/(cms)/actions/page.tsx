@@ -50,7 +50,7 @@ export default function Actions({}: Props) {
     };
 
     return (
-        <AppContainer title={messages('actions.label')}>
+        <AppContainer title={messages('policy.label')}>
             <ActionsHeader dataFilter={dataFilter} onSearch={onSearch} />
 
             <ActionsTable
@@ -67,7 +67,6 @@ export default function Actions({}: Props) {
             />
 
             <AppPagination
-                className="border-t"
                 align="end"
                 current={actionsData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}

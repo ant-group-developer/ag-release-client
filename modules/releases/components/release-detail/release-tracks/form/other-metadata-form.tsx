@@ -355,7 +355,7 @@ export default function OtherMetadataForm({ trackData }: Props) {
                     <FormItem
                         name="trackLanguage.audioLanguageId"
                         required
-                        label={messages('tracks.language')}
+                        label={messages('track.language')}
                         ErrorMessage={
                             errors.trackLanguage?.audioLanguageId?.message
                         }
@@ -432,7 +432,7 @@ export default function OtherMetadataForm({ trackData }: Props) {
 
                     <FormItem
                         name="trackLanguage.recordingCountryId"
-                        label={messages('tracks.recordingCountry')}
+                        label={messages('track.recordingCountry')}
                         required
                         ErrorMessage={
                             errors.trackLanguage?.recordingCountryId?.message

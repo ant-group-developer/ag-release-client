@@ -72,7 +72,7 @@ export const releaseDetailSchema = (messages: any) =>
                         path: ['releaseArtists'],
                         code: z.ZodIssueCode.custom,
                         message: messages(
-                            'releases.validation.mustHaveMainArtist'
+                            'release.validation.mustHaveMainArtist'
                         ),
                     });
                 }
@@ -174,39 +174,13 @@ export default function ReleaseDetailForm() {
         [formValues.id]
     );
 
-    console.log(getValues('cLineYear'));
-
     useEffect(() => {
         if (isCreateReleasePage) {
             reset();
         } else {
             if (releaseId && formValues) {
                 const initialFormValue: ReleaseDetailSchema = {
-                    primaryGenreId: formValues.primaryGenreId ?? '',
-                    subGenreId: formValues.subGenreId ?? '',
-                    title: formValues.title ?? '',
-
-                    releaseArtists: formValues.releaseArtists ?? [],
-                    pLineOwner: formValues.pLineOwner ?? '',
-                    cLineOwner: formValues.cLineOwner ?? '',
-                    isVariousArtist: formValues.isVariousArtist ?? false,
-                    upc: formValues.upc ?? '',
-                    labelId: formValues.labelId ?? '',
-                    catalogId: formValues.catalogId ?? '',
-                    version: formValues.version ?? '',
-                    releaseLanguage: {
-                        metadataLanguageId:
-                            formValues.releaseLanguage?.metadataLanguageId ??
-                            '',
-                        audioLanguageId:
-                            formValues.releaseLanguage?.audioLanguageId ?? '',
-                        metadataLanguageCountryId:
-                            formValues.releaseLanguage
-                                ?.metadataLanguageCountryId ?? '',
-                    },
-                    albumFormatId: formValues?.albumFormatId ?? '',
-                    pLineYear: formValues?.pLineYear ?? undefined,
-                    cLineYear: formValues?.pLineYear ?? undefined,
+                    ...(formValues as ReleaseDetailSchema),
                 };
                 reset(initialFormValue, {
                     keepErrors: true,
@@ -219,15 +193,17 @@ export default function ReleaseDetailForm() {
         const handleTriggerField = async () => {
             const hash = window.location.hash;
             if (!hash) return;
-            const parts = hash.split('.');
-            let field = hash.replace('#', '');
-            if (parts.length >= 2) {
-                field = parts.slice(1).join('.');
+            // const parts = hash.split('.');
+            const field = hash.replace('#', '');
+            // if (parts.length >= 2) {
+            //     field = parts.slice(1).join('.');
+            // }
+            const el = document.getElementById(field);
+            if (el) {
+                el.focus();
+                el.scrollIntoView({ block: 'center', behavior: 'smooth' });
             }
-            // setFocus(field as keyof ReleaseDetailSchema);
-
             await trigger(field as keyof ReleaseDetailSchema);
-            console.log('hashChange');
         };
         window.addEventListener('hashchange', handleTriggerField);
 
@@ -236,7 +212,7 @@ export default function ReleaseDetailForm() {
         return () => {
             window.removeEventListener('hashchange', handleTriggerField);
         };
-    }, [trigger, window.location.hash]);
+    }, [trigger]);
 
     return (
         <ConfigProvider theme={customTheme}>

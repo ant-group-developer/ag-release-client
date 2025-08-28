@@ -1,13 +1,12 @@
-import { showNotification } from '@/helpers/messages-helper';
+import { useApiError } from '@/hooks/use-api-error';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useTranslations } from 'next-intl';
 import { rolesApis } from '../apis';
 import { rolesQueryKeys } from '../constants/query-keys';
 import { DeleteRoleProfile } from '../types/payload';
 
 export const useDeleteRolePermission = () => {
-    const messages = useTranslations();
     const queryClient = useQueryClient();
+    const { handleError } = useApiError();
 
     const onSuccess = (data: any, { onSuccess }: DeleteRoleProfile) => {
         queryClient.invalidateQueries({
@@ -19,12 +18,8 @@ export const useDeleteRolePermission = () => {
     };
 
     const onError = (data: any, { onError }: DeleteRoleProfile) => {
-        const responseMessages = messages(data?.response?.data?.messageCode);
+        handleError(data);
 
-        showNotification(
-            'error',
-            responseMessages ?? messages('common.somethingWentWrong')
-        );
         onError?.();
     };
 
