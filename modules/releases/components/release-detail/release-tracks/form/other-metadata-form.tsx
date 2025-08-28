@@ -5,8 +5,8 @@ import LanguageSelect from '@/components/ui/select/language-select';
 import OriginalTypeSelect from '@/components/ui/select/original-type-select';
 import TrackTypesSelect from '@/components/ui/select/track-types-select';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
-import { useReleaseDetailActionStore } from '@/modules/releases/hooks/use-release-action-store';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
 import { releaseTrackSchema } from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
@@ -67,10 +67,8 @@ export default function OtherMetadataForm({ trackData }: Props) {
         resolver: zodResolver(otherMetadataSchema(messages)),
         mode: 'onChange',
     });
-    const releaseDetailAction = useReleaseDetailActionStore(
-        (state) => state.action
-    );
-    const isReadMode = releaseDetailAction === RELEASE_DETAIL_ACTION.READ;
+    const { action } = useGetReleaseDetailRoute();
+    const isReadMode = action === RELEASE_DETAIL_ACTION.READ;
     const {
         control,
         handleSubmit,

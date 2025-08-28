@@ -42,6 +42,7 @@
         }
     },
     "common": {
+        "success": "Success",
         "compare": "Compare",
         "isSongCreatedByAi": "Is a song created by AI",
         "policies": "Policies",
@@ -376,6 +377,7 @@
         "backupNotification": "Backup notification",
         "notifyOnSuccess": "Notify on success",
         "notifyOnFailed": "Notify on failed",
+        "databaseBackupStorage": "Database backup storage",
         "executeMessages": {
             "daily": "Everyday {at} execute once",
             "nDays": "Every {days} days {at} execute once",

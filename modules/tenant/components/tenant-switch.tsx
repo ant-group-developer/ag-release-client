@@ -1,7 +1,7 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { defaultConfig } from '@/constants/env';
-import { useAppConfig } from '@/modules/app-config/hooks/use-app-config';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
+import { useGetSettingPublic } from '@/modules/setting/hooks/use-get-setting-public';
 import { CheckCard } from '@ant-design/pro-components';
 import { Avatar, Popover, Spin, Tag } from 'antd';
 import { useSession } from 'next-auth/react';
@@ -23,9 +23,8 @@ function TenantSwitch({}: Props) {
     } = useAuth();
     const { update } = useSession();
     const { isAdmin } = useAuth();
-
-    const { data: dataConfig } = useAppConfig();
-    const website = dataConfig?.data?.website;
+    const { settingData: dataConfig } = useGetSettingPublic();
+    const website = dataConfig;
 
     const defaultData = {
         name: website?.name || defaultConfig.APP_SHORT_NAME,

@@ -1,10 +1,10 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
 import ErrorText from '@/components/ui/text/error-text';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
-import { useReleaseDetailActionStore } from '@/modules/releases/hooks/use-release-action-store';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
 import { ReleaseTrackSchema } from '@/modules/tracks/schemas';
@@ -31,9 +31,7 @@ export default function TrackAndArtistSection({
     // hook - state
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
-    const releaseDetailAction = useReleaseDetailActionStore(
-        (state) => state.action
-    );
+    const { action } = useGetReleaseDetailRoute();
     const {
         control,
         formState: { errors },
@@ -47,7 +45,7 @@ export default function TrackAndArtistSection({
     const router = useRouter();
 
     const isAddArtistsFromRelease = watch('copyArtistsFromRelease');
-    const isReadMode = releaseDetailAction === RELEASE_DETAIL_ACTION.READ;
+    const isReadMode = action === RELEASE_DETAIL_ACTION.READ;
 
     const updateTrackDraft = async (data: any, fieldName?: string) => {
         if (fieldName) {

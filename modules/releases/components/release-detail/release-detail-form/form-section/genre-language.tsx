@@ -3,9 +3,9 @@ import CountrySelect from '@/components/ui/select/country-select';
 import GenresSelect from '@/components/ui/select/genres-select';
 import LanguageSelect from '@/components/ui/select/language-select';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
-import { useReleaseDetailActionStore } from '@/modules/releases/hooks/use-release-action-store';
 import Title from 'antd/lib/typography/Title';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
@@ -25,15 +25,13 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
     } = useFormContext<ReleaseDetailSchema>();
     const formValues = useReleaseFormStore((state) => state.formValues);
     const messages = useTranslations();
-    const releaseDetailAction = useReleaseDetailActionStore(
-        (state) => state.action
-    );
+    const { action } = useGetReleaseDetailRoute();
 
     // router - params
     const params = useParams();
     const isReadMode = useMemo(
-        () => releaseDetailAction !== RELEASE_DETAIL_ACTION.EDIT,
-        [releaseDetailAction]
+        () => action !== RELEASE_DETAIL_ACTION.EDIT,
+        [action]
     );
 
     // variables

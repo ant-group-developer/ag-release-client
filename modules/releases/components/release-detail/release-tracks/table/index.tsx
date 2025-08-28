@@ -4,11 +4,11 @@ import SortableTable, {
 } from '@/components/ui/table/sortable-table';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { showNotification } from '@/helpers/messages-helper';
+import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
 import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
-import { useReleaseDetailActionStore } from '@/modules/releases/hooks/use-release-action-store';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
@@ -40,9 +40,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
     const formValues = useReleaseFormStore((state) => state.formValues);
     const openModal = useModalStore((state) => state.openModal);
     const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
-    const releaseDetailAction = useReleaseDetailActionStore(
-        (state) => state.action
-    );
+    const { action } = useGetReleaseDetailRoute();
 
     // apis
     const { updateTrackDraft } = useUpdateTrackDraft();
@@ -52,7 +50,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
     );
 
     // const
-    const isReadMode = releaseDetailAction !== RELEASE_DETAIL_ACTION.EDIT;
+    const isReadMode = action !== RELEASE_DETAIL_ACTION.EDIT;
 
     const handleDragEnd: OnDragEnd<TrackData[]> = (newData) => {
         const payload = newData.map((item, index) => ({

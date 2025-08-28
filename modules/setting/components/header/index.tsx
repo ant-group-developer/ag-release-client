@@ -1,46 +1,40 @@
 import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
-import Refresh from '@/components/refresh';
-import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
+import AppSearch from '@/components/ui/input/search';
+import { UseFilterProps } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { BackupDatabaseLogDataFilter } from '@/modules/backup-dabatase/types';
+import { useBackupDatabase } from '@/modules/backup-dabatase/hooks/use-backup-database';
+import { Button } from 'antd';
 import { useTranslations } from 'next-intl';
-import RolesSuperFilter from './backup-database-super-filter';
+import { SettingDataFilter } from '../../types';
 
-type Props = {
-    dataFilter: BackupDatabaseLogDataFilter;
-    onChangeFilter: OnChangeFilter<BackupDatabaseLogDataFilter>;
-    canClearFilter: boolean;
-    removeFilter: RemoveFilter;
-    handleRefresh: () => void;
-    lastUpdatedAt: string;
-};
+type Props = Pick<UseFilterProps<SettingDataFilter>, 'dataFilter' | 'onSearch'>;
 
-export default function BackupDatabaseHeader({
-    dataFilter,
-    onChangeFilter,
-    canClearFilter,
-    removeFilter,
-    handleRefresh,
-    lastUpdatedAt,
-}: Props) {
+export default function BackupDatabaseHeader({ dataFilter, onSearch }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
+    const { backupDatabase: backupDatabaseNow, isPending: isBackupPending } =
+        useBackupDatabase();
     return (
-        <AppHeader className="app-header">
+        <AppHeader className="app-header px-0 pb-3">
             <AppHeaderGroup>
-                <RolesSuperFilter
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                />
+                <div>
+                    <AppSearch
+                        defaultValue={dataFilter?.keyword}
+                        onChange={onSearch}
+                    />
+                </div>
             </AppHeaderGroup>
             <AppHeaderGroup position="end" className="flex-1">
                 <div className="flex items-center gap-2">
-                    <Refresh
-                        handleRefresh={handleRefresh}
-                        lastTimeUpdated={lastUpdatedAt}
-                    />
+                    <Button
+                        type="primary"
+                        onClick={() => {
+                            backupDatabaseNow({});
+                        }}
+                        loading={isBackupPending}
+                    >
+                        {messages('common.backupNow')}
+                    </Button>
                 </div>
             </AppHeaderGroup>
         </AppHeader>

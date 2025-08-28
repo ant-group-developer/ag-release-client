@@ -5,7 +5,7 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { convertSecondsToHoursMinutes, formattedDate } from '@/helpers/common';
 import { getIntlCodeByReleaseStatus } from '@/helpers/intl';
-import { getReleaseDetailTabRoute } from '@/helpers/link';
+import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
 import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
@@ -27,6 +27,7 @@ export default function DistributionTable({ visibleColumns, ...props }: Props) {
     const messages = useTranslations();
     const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
+    const { getReleaseTabRoute } = useGetReleaseDetailRoute();
     const column: ColumnType<ReleasesData>[] = [
         {
             title: messages('common.iNo'),
@@ -75,7 +76,7 @@ export default function DistributionTable({ visibleColumns, ...props }: Props) {
                         className="flex-shrink-0 cursor-pointer"
                         onClick={() => {
                             router.push(
-                                getReleaseDetailTabRoute(
+                                getReleaseTabRoute(
                                     record?.id,
                                     RELEASES_TABS.CORE_DETAIL
                                 )

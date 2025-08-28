@@ -4,8 +4,8 @@ import TimezoneSelect from '@/components/ui/select/timezone-select';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { DATE_FORMAT, DISTRIBUTE_TYPES } from '@/enums/common';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
-import { useReleaseDetailActionStore } from '@/modules/releases/hooks/use-release-action-store';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
 import { releaseSchema } from '@/modules/releases/schemas';
 import { ReleasesData } from '@/modules/releases/types';
@@ -40,12 +40,11 @@ export default function ReleaseSchedulingForm({}: Props) {
     const formValues = useReleaseFormStore((state) => state.formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const { updateReleaseDraft } = useUpdateReleaseDraft();
-    const releaseDetailAction = useReleaseDetailActionStore(
-        (state) => state.action
-    );
+    const { action } = useGetReleaseDetailRoute();
+
     const isReadMode = useMemo(
-        () => releaseDetailAction !== RELEASE_DETAIL_ACTION.EDIT,
-        [releaseDetailAction]
+        () => action !== RELEASE_DETAIL_ACTION.EDIT,
+        [action]
     );
 
     const formMethods = useForm<ReleaseSchedulingSchema>({

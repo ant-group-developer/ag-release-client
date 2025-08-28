@@ -1,16 +1,13 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
 import LabelSelect from '@/components/ui/select/label-select';
-import {
-    getReleaseDetailTabRoute,
-    RELEASE_DETAIL_ACTION,
-} from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { useRouter } from '@/i18n/routing';
 import { useGetListReleaseTypes } from '@/modules/release-types/hooks/use-get-list-release-types';
 import { ReleaseTypesData } from '@/modules/release-types/types';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
-import { useReleaseDetailActionStore } from '@/modules/releases/hooks/use-release-action-store';
 import { CreateReleaseDraftPayload } from '@/modules/releases/types/payload';
 import { CreateVariables } from '@/types/api';
 import { Button, Input, Radio } from 'antd';
@@ -39,12 +36,7 @@ export default function ReleaseConfigurationSection({
     const { createReleaseDraft, isPending: isOnCreatingDraft } =
         useCreateReleaseDraft();
     const messages = useTranslations();
-    const releaseDetailAction = useReleaseDetailActionStore(
-        (state) => state.action
-    );
-    const setReleaseDetailAction = useReleaseDetailActionStore(
-        (state) => state.setAction
-    );
+    const { getReleaseTabRoute, action } = useGetReleaseDetailRoute();
 
     // router and params
     const params = useParams();
@@ -60,10 +52,8 @@ export default function ReleaseConfigurationSection({
     const title = watch('title') ?? '';
     const isEnableCreateDraftBtn = (!!albumFormatId && !!title) === true;
     const isReadMode = useMemo(
-        () =>
-            releaseDetailAction !== RELEASE_DETAIL_ACTION.EDIT &&
-            !isCreateReleasePage,
-        [releaseDetailAction]
+        () => action !== RELEASE_DETAIL_ACTION.EDIT && !isCreateReleasePage,
+        [action, isCreateReleasePage]
     );
 
     // funtion
@@ -75,11 +65,11 @@ export default function ReleaseConfigurationSection({
                 albumFormatId: albumFormatId ?? '',
             },
             onSuccess: (data) => {
-                setReleaseDetailAction(RELEASE_DETAIL_ACTION.EDIT);
                 router.push(
-                    getReleaseDetailTabRoute(
+                    getReleaseTabRoute(
                         data?.id,
-                        RELEASES_TABS.CORE_DETAIL
+                        RELEASES_TABS.CORE_DETAIL,
+                        RELEASE_DETAIL_ACTION.EDIT
                     )
                 );
             },

@@ -4,7 +4,7 @@ import { ScrollArea } from '@/components/ui/scroll/scroll-area';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
 import { cn } from '@/helpers/common';
-import { getReleaseDetailTabRoute } from '@/helpers/link';
+import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { Link, useRouter } from '@/i18n/routing';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
@@ -29,6 +29,7 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
         formValues?.id as string
     );
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const { getReleaseTabRoute } = useGetReleaseDetailRoute();
 
     // router
     const router = useRouter();
@@ -147,7 +148,7 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                                                 return (
                                                     <Link
                                                         key={index}
-                                                        href={`${getReleaseDetailTabRoute(formValues?.id as string, err.page as RELEASES_TABS)}#${err.field}`}
+                                                        href={`${getReleaseTabRoute(formValues?.id as string, err.page as RELEASES_TABS)}#${err.field}`}
                                                         onClick={() => {
                                                             setTimeout(() => {
                                                                 window.dispatchEvent(

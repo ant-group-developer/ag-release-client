@@ -1,5 +1,5 @@
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
-import { useReleaseDetailActionStore } from '@/modules/releases/hooks/use-release-action-store';
+import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import {
     releaseTrackSchema,
     ReleaseTrackSchema,
@@ -32,10 +32,8 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
         mode: 'onChange',
         reValidateMode: 'onChange',
     });
-    const releaseDetailAction = useReleaseDetailActionStore(
-        (state) => state.action
-    );
-    const isReadMode = releaseDetailAction === RELEASE_DETAIL_ACTION.READ;
+    const { action } = useGetReleaseDetailRoute();
+    const isReadMode = action === RELEASE_DETAIL_ACTION.READ;
 
     const {
         control,
