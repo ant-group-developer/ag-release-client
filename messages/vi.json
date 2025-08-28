@@ -1004,8 +1004,8 @@
         "artists": "Nghệ sĩ",
         "releaseDate": "Ngày phát hành",
         "territoryType": "Khu vực",
-        "cLineYear": "Năm bản quyền tác phẩm",
-        "pLineYear": "Năm bản quyền ghi âm",
+        "cLineYear": "© Năm bản quyền tác phẩm",
+        "pLineYear": "℗ Năm bản quyền ghi âm",
         "nameRelease": "Tên phát hành",
         "timezone": "Múi giờ",
         "releaseType": "Thể loại phát hành",
@@ -1020,8 +1020,8 @@
         "releaseTimezoneId": "Múi giờ",
 
         "releaseArtists": "Nghệ sĩ phát hành",
-        "pLineOwner": "Bản quyền ghi âm",
-        "cLineOwner": "Bản quyền tác phẩm",
+        "pLineOwner": "℗ Bản quyền ghi âm",
+        "cLineOwner": "© Bản quyền tác phẩm",
         "releaseTerritory": {
             "selectedCountries": "Quốc gia phân phối",
             "distributionType": "Tuỳ chọn vòng phân phối"
