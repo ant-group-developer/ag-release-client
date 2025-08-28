@@ -11,7 +11,9 @@ import { BackupDatabaseLogDataFilter } from '@/modules/backup-dabatase/types';
 import { Checkbox, Divider, Form, InputNumber, Select } from 'antd';
 import { useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Cron } from 'react-js-cron';
+import 'react-js-cron/dist/styles.css';
 import { useGetSetting } from '../../hooks/use-get-setting';
 import { useUpdateSetting } from '../../hooks/use-update-role';
 import { EXECUTE_CYCLE_TYPE } from '../../types';
@@ -24,6 +26,7 @@ type Props = {};
 export default function BackupDatabaseForm({}: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
+    const [value, setValue] = useState('30 5 * * 1,6');
     const { settingData } = useGetSetting();
     const backupDatabase = settingData?.backupDatabase;
     const { updateSetting } = useUpdateSetting();
@@ -277,6 +280,9 @@ export default function BackupDatabaseForm({}: Props) {
                             {messagesExecuteCycle()}
                         </span>
                     </div>
+                </AppFormItem>
+                <AppFormItem label={messages('setting.executeCycle')}>
+                    <Cron value={value} setValue={setValue} />
                 </AppFormItem>
                 <AppFormItem label={messages('setting.backupNotification')}>
                     <div className="flex gap-8">
