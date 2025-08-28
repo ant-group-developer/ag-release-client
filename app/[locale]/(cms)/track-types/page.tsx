@@ -35,7 +35,7 @@ export default function TrackTypes({}: Props) {
     const closeModal = useModalStore((state) => state.closeModal);
 
     // apis
-    const { trackTypesData, isLoading, refetch, lastUpdatedAt } =
+    const { trackTypesData, isFetching, refetch, lastUpdatedAt } =
         useGetListTrackTypes(dataFilter);
     const { deleteTrackType } = useDeleteTrackType();
 
@@ -77,7 +77,7 @@ export default function TrackTypes({}: Props) {
                     current: trackTypesData.metadata.currentPage,
                     total: trackTypesData.metadata.totalItems,
                 }}
-                loading={isLoading}
+                loading={isFetching}
                 dataFilter={dataFilter}
                 onChange={onChangeSort}
             />

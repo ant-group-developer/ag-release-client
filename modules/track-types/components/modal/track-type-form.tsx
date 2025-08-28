@@ -97,6 +97,7 @@ export default function TrackTypeFormModal({ ...props }: Props) {
                 onFinish={onFinish}
                 showSubmit={false}
                 layout="vertical"
+                disabled={isActive}
             >
                 <AppFormItem
                     name="name"

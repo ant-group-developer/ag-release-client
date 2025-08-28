@@ -32,7 +32,7 @@ export default function Genres() {
     const dataEdit = useModalStore<GenresData>((state) => state.dataEdit);
 
     // apis
-    const { genresData, isLoading, refetch, lastUpdatedAt } =
+    const { genresData, isFetching, refetch, lastUpdatedAt } =
         useGetListGenres(dataFilter);
     const { deleteGenre } = useDeleteGenre();
 
@@ -72,7 +72,7 @@ export default function Genres() {
             <GenresTable
                 sticky
                 dataSource={genresData.items}
-                loading={isLoading}
+                loading={isFetching}
                 pagination={{
                     pageSize: dataFilter.pageSize ?? PAGE_SIZE,
                     current: genresData.metadata.currentPage,

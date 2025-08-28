@@ -132,13 +132,13 @@ export default function GenresFormModal({ ...props }: Props) {
             onCancel={closeModal}
             onOk={form.submit}
             loading={isActive}
-            className="!top-4"
         >
             <AppForm
                 form={form}
                 showSubmit={false}
                 onFinish={onFinish}
                 layout="vertical"
+                disabled={isActive}
             >
                 <div className="flex items-center gap-4">
                     <AppFormItem

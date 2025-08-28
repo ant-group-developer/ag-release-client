@@ -5,6 +5,7 @@ import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { formattedDate, getIndex } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
+import { Switch } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_DSP } from '../../enums';
@@ -81,16 +82,24 @@ export const DspTable = ({ ...props }: Props) => {
             ),
         },
         {
-            title: messages('artist.canLinkArtistProfile'),
-            key: 'canLinkArtistProfile',
-            dataIndex: 'canLinkArtistProfile',
-            align: 'center',
-            width: 120,
+            title: messages('common.code'),
+            key: 'code',
+            dataIndex: 'code',
+            align: 'left',
+            width: 200,
             render: (value) => (
-                <span className="truncate text-wrap">
-                    {value ? messages('common.yes') : messages('common.no')}
-                </span>
+                <CopyText tooltipProps={{ placement: 'right' }} text={value}>
+                    <p className="truncate">{value}</p>
+                </CopyText>
             ),
+        },
+        {
+            title: messages('status.active'),
+            key: 'isActive',
+            dataIndex: 'isActive',
+            align: 'center',
+            width: 80,
+            render: (value) => <Switch value={value} disabled={true} />,
         },
         {
             title: messages('common.createdAt'),

@@ -31,7 +31,7 @@ export default function Countries({}: {}) {
     const dataEdit = useModalStore((state) => state.dataEdit);
 
     // api
-    const { countriesData, isLoading, refetch, lastUpdatedAt } =
+    const { countriesData, isFetching, refetch, lastUpdatedAt } =
         useGetListCountries(dataFilter);
     const { deleteCountry } = useDeleteCountry();
 
@@ -66,7 +66,7 @@ export default function Countries({}: {}) {
             <CountriesTable
                 sticky
                 dataSource={countriesData.items ?? fakeCountriesData}
-                loading={isLoading}
+                loading={isFetching}
                 pagination={{
                     pageSize: dataFilter.pageSize ?? PAGE_SIZE,
                     current: countriesData.metadata.currentPage,

@@ -1,2 +1,2 @@
-export const MAIN_ARTIST_ROLE = 'main_artist';
-export const FEATURING_ARTIST_ROLE = 'featuring';
+export const MAIN_ARTIST_ROLE = 'MAIN_ARTIST';
+export const FEATURING_ARTIST_ROLE = 'FEATURED_ARTIST';

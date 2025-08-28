@@ -8,7 +8,7 @@ import { useActive } from '@/hooks/use-active';
 import { useFilter } from '@/hooks/use-filter';
 import { useListBackupDatabaseLogs } from '@/modules/backup-dabatase/hooks/use-get-backup-database-logs';
 import { BackupDatabaseLogDataFilter } from '@/modules/backup-dabatase/types';
-import { Checkbox, Divider, Form, InputNumber, Select } from 'antd';
+import { Checkbox, Divider, Form } from 'antd';
 import { useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
@@ -25,10 +25,10 @@ type Props = {};
 
 export default function BackupDatabaseForm({}: Props) {
     const messages = useTranslations();
-    const [form] = Form.useForm();
-    const [value, setValue] = useState('30 5 * * 1,6');
     const { settingData } = useGetSetting();
     const backupDatabase = settingData?.backupDatabase;
+    const [form] = Form.useForm();
+    const [cronValue, setCronValue] = useState(backupDatabase?.cronValue);
     const { updateSetting } = useUpdateSetting();
 
     const { active, deActive, isActive } = useActive();
@@ -125,12 +125,7 @@ export default function BackupDatabaseForm({}: Props) {
             const payload: UpdateSettingPayload = {
                 backupDatabase: {
                     ...rest,
-                    executeConfig: {
-                        nDays,
-                        nHours,
-                        nMinutes,
-                        dayOfWeek,
-                    },
+                    cronValue,
                 },
             };
             updateSetting({
@@ -173,12 +168,14 @@ export default function BackupDatabaseForm({}: Props) {
                 disabled={isActive}
                 submitProps={{ loading: isActive }}
                 submitText={messages('action.update.button')}
-                initialValues={{
-                    executeCycleType: EXECUTE_CYCLE_TYPE.DAILY,
-                    dayOfWeek: WEEK_DAY.MONDAY,
-                }}
+                initialValues={
+                    {
+                        // executeCycleType: EXECUTE_CYCLE_TYPE.DAILY,
+                        // dayOfWeek: WEEK_DAY.MONDAY,
+                    }
+                }
             >
-                <AppFormItem label={messages('setting.executeCycle')}>
+                {/* <AppFormItem label={messages('setting.executeCycle')}>
                     <div className="grid grid-cols-4 gap-8 pb-4">
                         <AppFormItem name="executeCycleType" required>
                             <Select
@@ -280,9 +277,14 @@ export default function BackupDatabaseForm({}: Props) {
                             {messagesExecuteCycle()}
                         </span>
                     </div>
-                </AppFormItem>
+                </AppFormItem> */}
                 <AppFormItem label={messages('setting.executeCycle')}>
-                    <Cron value={value} setValue={setValue} />
+                    <Cron
+                        value={cronValue}
+                        setValue={setCronValue}
+                        clearButtonProps={{ type: 'default' }}
+                        disabled={isActive}
+                    />
                 </AppFormItem>
                 <AppFormItem label={messages('setting.backupNotification')}>
                     <div className="flex gap-8">

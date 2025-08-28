@@ -33,7 +33,7 @@ export default function Languages({}: Props) {
 
     // apis
     const { deleteLanguage } = useDeleteLanguage();
-    const { languagesData, isLoading, refetch, lastUpdatedAt } =
+    const { languagesData, isFetching, refetch, lastUpdatedAt } =
         useGetListLanguage(dataFilter);
 
     // func
@@ -68,7 +68,7 @@ export default function Languages({}: Props) {
             <LanguagesTable
                 sticky
                 dataSource={languagesData?.items}
-                loading={isLoading}
+                loading={isFetching}
                 pagination={{
                     pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
                     current: languagesData.metadata.currentPage,

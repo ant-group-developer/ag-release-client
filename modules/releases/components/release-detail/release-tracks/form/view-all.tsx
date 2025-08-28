@@ -55,7 +55,6 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
                 if (parts.length >= 4) {
                     field = parts.slice(2).join('.');
                 }
-                console.log('🚀 ~ handleTriggerField ~ field:', field);
 
                 const idField = hash.replace('#', '');
                 const el = document.getElementById(idField);

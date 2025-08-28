@@ -11,6 +11,8 @@ export enum TRACKS_COLUMNS_DISPLAY {
     ACTIONS = 'actions',
     ACR_CLOUD = 'acrCloud',
     CREATED_AT = 'createdAt',
+    RELEASE_TITLE = 'releaseTitle',
+    LABEL_NAME = 'labelName',
 }
 
 export enum TYPE_MODAL_TRACK_ARTIST {

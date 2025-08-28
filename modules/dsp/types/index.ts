@@ -6,7 +6,7 @@ export interface DspData extends CommonAttribute {
     modifierId?: string;
     name: string;
     picture?: string | null;
-    canLinkArtistProfile: boolean;
+    isActive: boolean;
     formatLinks: string[];
     dspActions: DspActionData[];
 }

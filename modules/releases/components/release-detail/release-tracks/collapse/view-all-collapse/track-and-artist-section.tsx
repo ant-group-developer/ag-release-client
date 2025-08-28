@@ -12,7 +12,6 @@ import { TrackData } from '@/modules/tracks/types';
 import { Button, Input, Switch, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import ArtistCard from '../../../release-detail-form/artist-card';
 const { Title } = Typography;
@@ -56,10 +55,6 @@ export default function TrackAndArtistSection({
         }
         debouncedUpdateTrackDraft(data);
     };
-
-    useEffect(() => {
-        setValue('title', trackData?.title);
-    }, [trackData]);
 
     return (
         <CollapseItem

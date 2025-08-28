@@ -96,6 +96,7 @@ export default function ReleaseTypeFormModal({ ...props }: Props) {
                 onFinish={onFinish}
                 showSubmit={false}
                 layout="vertical"
+                disabled={isActive}
             >
                 <AppFormItem
                     name="name"

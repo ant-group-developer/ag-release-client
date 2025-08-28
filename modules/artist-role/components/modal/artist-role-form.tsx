@@ -88,6 +88,7 @@ export default function ArtistRoleFormModal({ ...props }: Props) {
                 onFinish={onFinish}
                 showSubmit={false}
                 layout="vertical"
+                disabled={isActive}
             >
                 <AppFormItem
                     name="name"

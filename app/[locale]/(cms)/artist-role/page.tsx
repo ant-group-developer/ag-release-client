@@ -34,7 +34,7 @@ export default function ArtistRole({}: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore<ArtistRoleData>((state) => state.dataEdit);
     const closeModal = useModalStore((state) => state.closeModal);
-    const { artistsRolesData, isLoading, refetch, dataUpdatedAt } =
+    const { artistsRolesData, isFetching, refetch, dataUpdatedAt } =
         useGetListArtistRole(dataFilter);
     const { deleteArtistRole } = useDeleteArtistRole();
 
@@ -70,7 +70,7 @@ export default function ArtistRole({}: Props) {
                     current: artistsRolesData.metadata.currentPage,
                     total: artistsRolesData.metadata.totalItems,
                 }}
-                loading={isLoading}
+                loading={isFetching}
                 dataFilter={dataFilter}
                 onChange={onChangeSort}
             />
