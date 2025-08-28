@@ -165,6 +165,7 @@ export default function PermissionFormModal({ ...props }: Props) {
                                 <Input allowClear showCount />
                             </AppFormItem>
                             <AppFormItem
+                                className="!mb-6"
                                 name="note"
                                 label={messages('common.note')}
                                 rules={[

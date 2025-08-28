@@ -38,7 +38,7 @@ export default function TrackOriginTypes({}: Props) {
     const closeModal = useModalStore((state) => state.closeModal);
 
     // apis
-    const { trackOriginTypesData, isLoading, refetch, lastUpdatedAt } =
+    const { trackOriginTypesData, isFetching, refetch, lastUpdatedAt } =
         useGetListTrackOriginTypes(dataFilter);
     const { deleteTrackOriginType } = useDeleteTrackOriginType();
 
@@ -79,7 +79,7 @@ export default function TrackOriginTypes({}: Props) {
                     current: trackOriginTypesData.metadata.currentPage,
                     total: trackOriginTypesData.metadata.totalItems,
                 }}
-                loading={isLoading}
+                loading={isFetching}
                 dataFilter={dataFilter}
                 onChange={onChangeSort}
             />

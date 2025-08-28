@@ -35,7 +35,7 @@ export default function Timezone({}: Props) {
 
     // apis
     const { deleteTimezone } = useDeleteTimezone();
-    const { timezonesData, isLoading, refetch, lastUpdatedAt } =
+    const { timezonesData, isFetching, refetch, lastUpdatedAt } =
         useGetListTimezones(dataFilter);
 
     // func
@@ -70,7 +70,7 @@ export default function Timezone({}: Props) {
             <TimezoneTable
                 sticky
                 dataSource={timezonesData?.items}
-                loading={isLoading}
+                loading={isFetching}
                 pagination={{
                     pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
                     current: timezonesData.metadata.currentPage,

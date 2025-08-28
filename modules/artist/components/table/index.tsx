@@ -121,24 +121,35 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
                 </div>
             ),
         },
+        // {
+        //     title: messages('artist.id'),
+        //     key: 'id',
+        //     dataIndex: 'id',
+        //     align: 'center',
+        //     width: 120,
+        //     render: (value) => (
+        //         <div className="flex justify-center">
+        //             <CopyText
+        //                 tooltipProps={{ placement: 'right' }}
+        //                 text={value}
+        //             >
+        //                 <p className="truncate">{value}</p>
+        //             </CopyText>
+        //         </div>
+        //     ),
+        // },
         {
-            title: messages('artist.id'),
-            key: 'id',
-            dataIndex: 'id',
-            align: 'center',
-            width: 120,
+            title: messages('common.code'),
+            key: 'code',
+            dataIndex: 'code',
+            align: 'left',
+            width: 150,
             render: (value) => (
-                <div className="flex justify-center">
-                    <CopyText
-                        tooltipProps={{ placement: 'right' }}
-                        text={value}
-                    >
-                        <p className="truncate">{value}</p>
-                    </CopyText>
-                </div>
+                <CopyText tooltipProps={{ placement: 'right' }} text={value}>
+                    <p className="truncate">{value}</p>
+                </CopyText>
             ),
         },
-
         {
             title: messages('artist.profiles'),
             key: 'artistProfiles',
@@ -255,6 +266,12 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
                     showDelete={isSystemTenant}
                     onShowUpdate={() => {
                         openModal(TYPE_MODAL_ARTIST.UPDATE, record);
+                    }}
+                    onShowDetail={() => {
+                        getArtistDetailRoute(
+                            record?.id,
+                            ARTIST_DETAIL_TABS.OVERVIEW
+                        );
                     }}
                     onShowDelete={() => {
                         openModal(TYPE_MODAL_ARTIST.DELETE, record);

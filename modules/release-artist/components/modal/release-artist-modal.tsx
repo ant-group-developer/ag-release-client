@@ -4,6 +4,7 @@ import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import ArtistSelect from '@/components/ui/select/artist-select';
 import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import { useActive } from '@/hooks/use-active';
+import { useApiError } from '@/hooks/use-api-error';
 import useModalStore from '@/hooks/use-modal';
 import { useGetListArtistRole } from '@/modules/artist-role/hooks/use-get-list-artist-role';
 import { ArtistRoleData } from '@/modules/artist-role/types';
@@ -46,7 +47,7 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
     const watchArtistName = useWatch(['name'], form);
     const typeModal = useModalStore((state) => state.typeModal);
     const formValues = useReleaseFormStore((state) => state.formValues);
-    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
+    const { handleError } = useApiError();
 
     const isArtistEditModal =
         typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST;
@@ -89,22 +90,12 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
     const disabledArtistIds = getExistingArtistOfSelectedRole();
 
     const handleSubmit = async (values: any) => {
+        console.log('🚀 ~ handleSubmit ~ values:', values);
+        console.log(isArtistEditModal);
         active();
         try {
-            if (!isArtistEditModal) {
-                const variables: CreateVariables<CreateReleaseArtistPayload> = {
-                    payload: {
-                        artistId: values.artistId,
-                        artistRoleId: values.roleId ?? mainArtist.id,
-                        releaseId: formValues.id as string,
-                        addArtistToTracks: !!values?.addArtistToTracks,
-                    },
-                    onSuccess: () => {
-                        closeModal();
-                    },
-                };
-                createReleaseArtist(variables);
-            } else {
+            if (isArtistEditModal) {
+                console.log(1);
                 const variables: UpdateVariables<
                     ReleaseArtist['id'],
                     UpdateReleaseArtistPayload
@@ -120,9 +111,25 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                     },
                 };
                 updateReleaseArtist(variables);
+            } else {
+                console.log(2);
+                const variables: CreateVariables<CreateReleaseArtistPayload> = {
+                    payload: {
+                        artistId: values.artistId,
+                        artistRoleId: values.roleId ?? mainArtist.id,
+                        releaseId: formValues.id as string,
+                        addArtistToTracks: !!values?.addArtistToTracks,
+                    },
+                    onSuccess: () => {
+                        closeModal();
+                    },
+                };
+                console.log(variables);
+                createReleaseArtist(variables);
             }
         } catch (error) {
             deActive();
+            handleError(error);
         }
     };
 

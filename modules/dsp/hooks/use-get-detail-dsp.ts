@@ -13,7 +13,7 @@ export const useGetDetailDsp = (id: DspData['id']) => {
     const defaultData: DspData = {
         creatorId: '',
         name: '',
-        canLinkArtistProfile: false,
+        isActive: false,
         id: '',
         createdAt: '',
         updatedAt: null,

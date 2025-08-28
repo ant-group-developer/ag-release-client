@@ -13,13 +13,12 @@ import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { uploadApi } from '@/modules/upload/apis';
 import { ENTITY_TYPE_PICTURE } from '@/modules/upload/types/data';
 import { CreateVariables, UpdateVariables } from '@/types/api';
-import { Button, Divider, Form, Input } from 'antd';
+import { Button, Divider, Form, Input, Spin } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { useCreateArtist } from '../../hooks/use-create-artist';
-import { useDeleteArtistProfile } from '../../hooks/use-delete-artist-profile';
 import { useGetDetailArtist } from '../../hooks/use-get-detail-artist';
 import { useUpdateArtist } from '../../hooks/use-update-artist';
 import { ArtistData } from '../../types';
@@ -41,8 +40,10 @@ export default function ArtistFormModal({ ...props }: Props) {
     const { createArtist } = useCreateArtist();
     const { updateArtist } = useUpdateArtist();
     const { dspData } = useGetListDsp({});
-    const { artistData } = useGetDetailArtist(dataEdit?.id);
-    const { deleteArtistProfile } = useDeleteArtistProfile();
+    const { artistData, isLoading: isLoadingArtist } = useGetDetailArtist(
+        dataEdit?.id
+    );
+    const isOnLoadingData = isLoadingArtist && !!dataEdit?.id;
 
     const handleCreateArtist = (values: ArtistFormValues) => {
         const variables: CreateVariables<CreateArtistPayload> = {
@@ -132,8 +133,10 @@ export default function ArtistFormModal({ ...props }: Props) {
                   }
                 : undefined,
         };
-        form.setFieldsValue(initialData);
-    }, [artistData]);
+        if (isUpdateForm && dspData) {
+            form.setFieldsValue(initialData);
+        }
+    }, [artistData, isUpdateForm, form, dspData]);
 
     return (
         <AppModal
@@ -144,104 +147,188 @@ export default function ArtistFormModal({ ...props }: Props) {
             onOk={form.submit}
             loading={isActive}
             className="custom-scroll-artist-modal !top-6"
+            confirmLoading={isOnLoadingData}
         >
-            <AppForm
-                form={form}
-                onFinish={onFinish}
-                showSubmit={false}
-                layout="horizontal"
-                disabled={isActive}
-            >
-                <AppFormItem name="pictureFile" label={'Avatar'}>
-                    <ImageListUpload
-                        maxCount={1}
-                        accept="image/png,image/jpeg,image/svg+xml,image/x-icon"
-                        maxSizeMB={3}
-                        description={
-                            <ul className="space-y-1 text-xs">
-                                <li className="flex-1 text-sm text-gray-500">
-                                    {messages(
-                                        'image.validation.supportImageFormat',
-                                        {
-                                            value: 'PNG, JPG, WEBP, SVG, ICON',
-                                        }
-                                    )}
-                                </li>
-                                <li className="flex-1 text-sm text-gray-500">
-                                    {messages(
-                                        'image.validation.mustBeLessThanMB',
-                                        {
-                                            value: '3',
-                                        }
-                                    )}
-                                </li>
-                            </ul>
-                        }
-                        disabled={isActive}
-                    />
-                </AppFormItem>
-                <AppFormItem
-                    name="name"
-                    label={messages('artist.name')}
-                    required
-                    rules={[
-                        {
-                            required: true,
-                            message: messages('validation.input'),
-                        },
-                        {
-                            max: MAX_NAME_LENGTH,
-                            message: messages('validation.stringMax', {
+            <Spin spinning={isOnLoadingData}>
+                <AppForm
+                    form={form}
+                    onFinish={onFinish}
+                    showSubmit={false}
+                    layout="horizontal"
+                    disabled={isActive}
+                >
+                    <AppFormItem name="pictureFile" label={'Avatar'}>
+                        <ImageListUpload
+                            maxCount={1}
+                            accept="image/png,image/jpeg,image/svg+xml,image/x-icon"
+                            maxSizeMB={3}
+                            description={
+                                <ul className="space-y-1 text-xs">
+                                    <li className="flex-1 text-sm text-gray-500">
+                                        {messages(
+                                            'image.validation.supportImageFormat',
+                                            {
+                                                value: 'PNG, JPG, WEBP, SVG, ICON',
+                                            }
+                                        )}
+                                    </li>
+                                    <li className="flex-1 text-sm text-gray-500">
+                                        {messages(
+                                            'image.validation.mustBeLessThanMB',
+                                            {
+                                                value: '3',
+                                            }
+                                        )}
+                                    </li>
+                                </ul>
+                            }
+                            disabled={isActive}
+                        />
+                    </AppFormItem>
+                    <AppFormItem
+                        name="name"
+                        label={messages('artist.name')}
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.input'),
+                            },
+                            {
                                 max: MAX_NAME_LENGTH,
-                                field: messages('artist.name'),
-                            }),
-                        },
-                    ]}
-                >
-                    <Input allowClear />
-                </AppFormItem>
+                                message: messages('validation.stringMax', {
+                                    max: MAX_NAME_LENGTH,
+                                    field: messages('artist.name'),
+                                }),
+                            },
+                        ]}
+                    >
+                        <Input allowClear />
+                    </AppFormItem>
 
-                <AppFormItem
-                    name="biography"
-                    label={messages('common.biography')}
-                    // required
-                    rules={[
-                        // {
-                        //     required: true,
-                        //     message: messages('validation.input'),
-                        // },
-                        {
-                            max: 250,
-                            message: messages('validation.max', {
-                                number: 250,
-                            }),
-                        },
-                    ]}
-                >
-                    <TextArea
-                        showCount
-                        autoSize={{ minRows: 4, maxRows: 6 }}
-                        allowClear
-                        className="mb-2"
-                    />
-                </AppFormItem>
+                    <AppFormItem
+                        name="biography"
+                        label={messages('common.biography')}
+                        // required
+                        rules={[
+                            // {
+                            //     required: true,
+                            //     message: messages('validation.input'),
+                            // },
+                            {
+                                max: 250,
+                                message: messages('validation.max', {
+                                    number: 250,
+                                }),
+                            },
+                        ]}
+                    >
+                        <TextArea
+                            showCount
+                            autoSize={{ minRows: 4, maxRows: 6 }}
+                            allowClear
+                            className="mb-2"
+                        />
+                    </AppFormItem>
 
-                <Form.List name={'artistProfiles'}>
-                    {(fields, { add, remove }) => (
-                        <div className="max-h-[390px] overflow-y-auto">
-                            <Divider />
-                            <p className="mb-2 font-semibold">
-                                {' '}
-                                {messages('dsp.profileList')}{' '}
-                            </p>
-                            {fields.map(({ key, name, ...restField }) => (
-                                <div key={key} className="pr-8">
-                                    <div className="relative">
+                    <Form.List name={'artistProfiles'}>
+                        {(fields, { add, remove }) => (
+                            <div className="max-h-[390px] overflow-y-auto">
+                                <Divider />
+                                <p className="mb-2 font-semibold">
+                                    {' '}
+                                    {messages('dsp.profileList')}{' '}
+                                </p>
+                                {fields.map(({ key, name, ...restField }) => (
+                                    <div key={key} className="pr-8">
+                                        <div className="relative">
+                                            <AppFormItem
+                                                {...restField}
+                                                className="flex-1"
+                                                name={[name, 'url']}
+                                                label={'Url'}
+                                                required
+                                                rules={[
+                                                    {
+                                                        required: true,
+                                                        message:
+                                                            messages(
+                                                                'validation.input'
+                                                            ),
+                                                    },
+                                                    {
+                                                        max: MAX_NAME_LENGTH,
+                                                        message: messages(
+                                                            'validation.stringMax',
+                                                            {
+                                                                max: MAX_NAME_LENGTH,
+                                                                field: 'URL',
+                                                            }
+                                                        ),
+                                                    },
+                                                ]}
+                                            >
+                                                <Input
+                                                    allowClear
+                                                    onChange={(e) => {
+                                                        const url =
+                                                            e.target.value;
+                                                        const matched =
+                                                            dspData?.items.find(
+                                                                (dsp) =>
+                                                                    dsp.formatLinks?.some(
+                                                                        (
+                                                                            link: string
+                                                                        ) =>
+                                                                            url.includes(
+                                                                                link
+                                                                            )
+                                                                    )
+                                                            );
+
+                                                        if (matched) {
+                                                            const current =
+                                                                form.getFieldValue(
+                                                                    'artistProfiles'
+                                                                ) || [];
+                                                            current[name] = {
+                                                                ...(current[
+                                                                    name
+                                                                ] || {}),
+                                                                dspId: matched.id,
+                                                            };
+                                                            form.setFieldsValue(
+                                                                {
+                                                                    artistProfiles:
+                                                                        current,
+                                                                }
+                                                            );
+                                                        }
+                                                    }}
+                                                />
+                                            </AppFormItem>
+                                            <IconButton
+                                                onClick={() => {
+                                                    const currentProfiles =
+                                                        form.getFieldValue(
+                                                            'artistProfiles'
+                                                        ) || [];
+
+                                                    remove(name);
+                                                }}
+                                                className="absolute right-[-32px] top-0 mb-1"
+                                                disabled={isActive}
+                                            >
+                                                <Trash
+                                                    size={SIZE_ICON}
+                                                    className="text-red-500"
+                                                />
+                                            </IconButton>
+                                        </div>
                                         <AppFormItem
                                             {...restField}
-                                            className="flex-1"
-                                            name={[name, 'url']}
-                                            label={'Url'}
+                                            name={[name, 'name']}
+                                            label={messages('channel.name')}
                                             required
                                             rules={[
                                                 {
@@ -257,136 +344,50 @@ export default function ArtistFormModal({ ...props }: Props) {
                                                         'validation.stringMax',
                                                         {
                                                             max: MAX_NAME_LENGTH,
-                                                            field: 'URL',
+                                                            field: messages(
+                                                                'channel.name'
+                                                            ),
                                                         }
                                                     ),
                                                 },
                                             ]}
                                         >
-                                            <Input
-                                                allowClear
-                                                onChange={(e) => {
-                                                    const url = e.target.value;
-                                                    const matched =
-                                                        dspData?.items.find(
-                                                            (dsp) =>
-                                                                dsp.formatLinks?.some(
-                                                                    (
-                                                                        link: string
-                                                                    ) =>
-                                                                        url.includes(
-                                                                            link
-                                                                        )
-                                                                )
-                                                        );
-
-                                                    if (matched) {
-                                                        const current =
-                                                            form.getFieldValue(
-                                                                'artistProfiles'
-                                                            ) || [];
-                                                        current[name] = {
-                                                            ...(current[name] ||
-                                                                {}),
-                                                            dspId: matched.id,
-                                                        };
-                                                        form.setFieldsValue({
-                                                            artistProfiles:
-                                                                current,
-                                                        });
-                                                    }
-                                                }}
-                                            />
+                                            <Input allowClear />
                                         </AppFormItem>
-                                        <IconButton
-                                            onClick={() => {
-                                                const currentProfiles =
-                                                    form.getFieldValue(
-                                                        'artistProfiles'
-                                                    ) || [];
-                                                const profileToRemove =
-                                                    currentProfiles[name];
-                                                remove(name);
-                                                if (profileToRemove?.id) {
-                                                    deleteArtistProfile({
-                                                        artistId:
-                                                            artistData?.id,
-                                                        profileId:
-                                                            profileToRemove.id,
-                                                    });
-                                                }
-                                            }}
-                                            className="absolute right-[-32px] top-0 mb-1"
-                                            disabled={isActive}
-                                        >
-                                            <Trash
-                                                size={SIZE_ICON}
-                                                className="text-red-500"
-                                            />
-                                        </IconButton>
-                                    </div>
-                                    <AppFormItem
-                                        {...restField}
-                                        name={[name, 'name']}
-                                        label={messages('channel.name')}
-                                        required
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    messages(
-                                                        'validation.input'
-                                                    ),
-                                            },
-                                            {
-                                                max: MAX_NAME_LENGTH,
-                                                message: messages(
-                                                    'validation.stringMax',
-                                                    {
-                                                        max: MAX_NAME_LENGTH,
-                                                        field: messages(
-                                                            'channel.name'
+                                        <AppFormItem
+                                            {...restField}
+                                            className="!mb-8 border-b !pb-8"
+                                            name={[name, 'dspId']}
+                                            label={messages('common.platforms')}
+                                            required
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message:
+                                                        messages(
+                                                            'validation.input'
                                                         ),
-                                                    }
-                                                ),
-                                            },
-                                        ]}
+                                                },
+                                            ]}
+                                        >
+                                            <PlatformSelect allowClear />
+                                        </AppFormItem>
+                                    </div>
+                                ))}
+                                <div className="mb-4">
+                                    <Button
+                                        className="w-full"
+                                        type="dashed"
+                                        onClick={() => add()}
                                     >
-                                        <Input allowClear />
-                                    </AppFormItem>
-                                    <AppFormItem
-                                        {...restField}
-                                        className="!mb-8 border-b !pb-8"
-                                        name={[name, 'dspId']}
-                                        label={messages('common.platforms')}
-                                        required
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    messages(
-                                                        'validation.input'
-                                                    ),
-                                            },
-                                        ]}
-                                    >
-                                        <PlatformSelect allowClear />
-                                    </AppFormItem>
+                                        + {messages('action.create.button')}
+                                    </Button>
                                 </div>
-                            ))}
-                            <div className="mb-4">
-                                <Button
-                                    className="w-full"
-                                    type="dashed"
-                                    onClick={() => add()}
-                                >
-                                    + {messages('action.create.button')}
-                                </Button>
                             </div>
-                        </div>
-                    )}
-                </Form.List>
-            </AppForm>
+                        )}
+                    </Form.List>
+                </AppForm>
+            </Spin>
         </AppModal>
     );
 }

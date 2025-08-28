@@ -18,14 +18,16 @@ export default function CoreDetail() {
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as ReleaseArtist);
     const closeModal = useModalStore((state) => state.closeModal);
-    const { deleteReleaseArtist } = useDeleteReleaseArtist();
+    const { deleteReleaseArtist, isPending } = useDeleteReleaseArtist();
 
     const handleRemoveArtistList = () => {
         const variables: DeleteVariables<ReleaseArtist['id']> = {
             id: dataEdit?.id,
+            onSuccess: () => {
+                closeModal();
+            },
         };
         deleteReleaseArtist(variables);
-        closeModal();
     };
 
     return (

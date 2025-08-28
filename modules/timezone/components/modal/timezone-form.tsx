@@ -64,9 +64,13 @@ export default function TimezoneFormModal({ ...props }: Props) {
 
     const onfinish = (values: TimezoneFormValues) => {
         active();
-        return isUpdateForm
-            ? handleUpdateTimezone(values)
-            : handleCreateTimezone(values);
+        try {
+            return isUpdateForm
+                ? handleUpdateTimezone(values)
+                : handleCreateTimezone(values);
+        } catch (error) {
+            deActive();
+        }
     };
 
     const modalTitle = () => {
@@ -95,6 +99,7 @@ export default function TimezoneFormModal({ ...props }: Props) {
                 showSubmit={false}
                 onFinish={onfinish}
                 layout="vertical"
+                disabled={isActive}
             >
                 <AppFormItem
                     name="name"

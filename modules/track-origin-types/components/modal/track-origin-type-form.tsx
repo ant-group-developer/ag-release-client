@@ -98,6 +98,7 @@ export default function TrackOriginTypeFormModal({ ...props }: Props) {
                 onFinish={onFinish}
                 showSubmit={false}
                 layout="vertical"
+                disabled={isActive}
             >
                 <AppFormItem
                     name="name"

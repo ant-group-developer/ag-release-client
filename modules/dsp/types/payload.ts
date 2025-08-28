@@ -3,7 +3,7 @@ import { CommonFunction } from '@/types/api';
 export interface CreateDspPayload {
     name: string;
     picture?: string | null;
-    canLinkArtistProfile: boolean;
+    isActive: boolean;
 }
 
 export interface UpdateDspPayload extends Partial<CreateDspPayload> {}

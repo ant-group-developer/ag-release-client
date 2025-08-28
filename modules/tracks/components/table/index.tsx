@@ -1,3 +1,4 @@
+import CopyText from '@/components/ui/copy-text/copy-text';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
@@ -105,6 +106,35 @@ export default function TracksTable({
                 <CustomTooltip size="small" title={value}>
                     <span className="truncate"> {value} </span>
                 </CustomTooltip>
+            ),
+        },
+        {
+            title: messages('release.name'),
+            key: TRACKS_COLUMNS_DISPLAY.RELEASE_TITLE,
+            dataIndex: 'releaseTitle',
+            align: 'left',
+            width: 80,
+            ellipsis: true,
+            render: (_, record) => (
+                <CopyText text={record?.release?.title}>
+                    <span className="truncate"> {record?.release?.title} </span>
+                </CopyText>
+            ),
+        },
+        {
+            title: messages('label.name'),
+            key: TRACKS_COLUMNS_DISPLAY.LABEL_NAME,
+            dataIndex: 'labelName',
+            align: 'left',
+            width: 80,
+            ellipsis: true,
+            render: (_, record) => (
+                <CopyText text={record?.release?.label?.name}>
+                    <span className="truncate">
+                        {' '}
+                        {record?.release?.label?.name}{' '}
+                    </span>
+                </CopyText>
             ),
         },
         {

@@ -19,16 +19,17 @@ export interface WebsiteConfig {
 }
 
 export interface BackupDatabaseConfig {
-    executeCycleType: EXECUTE_CYCLE_TYPE;
+    // executeCycleType: EXECUTE_CYCLE_TYPE;
 
-    executeConfig: {
-        nDays?: number; // backup mỗi N ngày
-        nHours?: number; // backup mỗi N giờ
-        nMinutes?: number; // backup mỗi N phút
-        dayOfWeek?: string; // backup hàng tuần: "monday", "tuesday", ...
-        dayOfMonth?: number; // backup hàng tháng: 1–31
-        time?: string; // giờ thực hiện: "01:30"
-    };
+    // executeConfig: {
+    //     nDays?: number; // backup mỗi N ngày
+    //     nHours?: number; // backup mỗi N giờ
+    //     nMinutes?: number; // backup mỗi N phút
+    //     dayOfWeek?: string; // backup hàng tuần: "monday", "tuesday", ...
+    //     dayOfMonth?: number; // backup hàng tháng: 1–31
+    //     time?: string; // giờ thực hiện: "01:30"
+    // };
+    cronValue: string;
 
     notifyOnFailed: boolean;
     notifyOnSuccess: boolean;

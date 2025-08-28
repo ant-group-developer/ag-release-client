@@ -3,6 +3,7 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import InputNumber from '@/components/ui/input/input-number';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import { MAX_NAME_LENGTH } from '@/constants/validate';
+import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form, Input } from 'antd';
@@ -31,6 +32,7 @@ export default function CountriesFormModal({ ...props }: Props) {
     const isFormUpdate = dataEdit?.id;
     const { createCountry, isPending: createPending } = useCreateCountry();
     const { updateCountry, isPending: updatePending } = useUpdateCountry();
+    const { active, deActive, isActive } = useActive();
 
     const handleCreate = (values: CountriesFormValues) => {
         const variables: CreateVariables<CreateCountryPayload> = {
@@ -40,6 +42,10 @@ export default function CountriesFormModal({ ...props }: Props) {
             },
             onSuccess: () => {
                 form.resetFields();
+                deActive();
+            },
+            onError: () => {
+                deActive();
             },
         };
         createCountry(variables);
@@ -52,12 +58,23 @@ export default function CountriesFormModal({ ...props }: Props) {
         > = {
             id: dataEdit?.id,
             payload: values,
+            onSuccess: () => {
+                deActive();
+            },
+            onError: () => {
+                deActive();
+            },
         };
         updateCountry(variables);
     };
 
     const onFinish = (values: CountriesFormValues) => {
-        return isFormUpdate ? handleUpdate(values) : handleCreate(values);
+        active();
+        try {
+            return isFormUpdate ? handleUpdate(values) : handleCreate(values);
+        } catch (error) {
+            deActive();
+        }
     };
 
     function renderTitle() {
@@ -89,6 +106,7 @@ export default function CountriesFormModal({ ...props }: Props) {
                 showSubmit={false}
                 onFinish={onFinish}
                 layout="vertical"
+                disabled={isActive}
             >
                 <AppFormItem
                     name="name"

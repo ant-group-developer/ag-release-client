@@ -33,7 +33,7 @@ export const CurrenciesTable = ({ dataFilter, ...props }: Props) => {
                 ),
         },
         {
-            title: messages('actions.name'),
+            title: messages('currencies.label'),
             key: 'name',
             dataIndex: 'name',
             align: 'left',

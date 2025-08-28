@@ -133,6 +133,7 @@ export default function LabelFormModal({ ...props }: Props) {
                 onFinish={onFinish}
                 showSubmit={false}
                 layout="vertical"
+                disabled={isActive}
             >
                 <div className="flex items-center gap-4">
                     <AppFormItem
@@ -150,6 +151,7 @@ export default function LabelFormModal({ ...props }: Props) {
                             maxCount={1}
                             accept="image/png,image/jpeg,image/svg+xml,image/x-icon"
                             maxSizeMB={2}
+                            disabled={isActive}
                             description={
                                 <ul className="space-y-1 text-xs">
                                     <li className="flex-1 text-sm text-gray-500">

@@ -161,7 +161,7 @@ export default function ReleaseDetailForm() {
                 id: formValues.id ?? '',
                 payload: data,
                 onSuccess: (data: ReleasesData) => {
-                    setFormValues(data);
+                    // setFormValues(data);
                 },
             };
             updateReleaseDraft(variables);

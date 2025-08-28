@@ -137,7 +137,7 @@ export default function ImageListUpload({
             <Upload
                 listType="picture-card"
                 // multiple
-                disabled={loading} // Disable upload khi đang loading
+                disabled={loading || props.disabled} // Disable upload khi đang loading
                 {...props}
                 fileList={fileList}
                 onPreview={handlePreview}
