@@ -1,26 +1,19 @@
-import AppForm from '@/components/ui/antd-form/form';
-import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
-import { useLoading } from '@/hooks/use-loading';
-import useModalStore from '@/hooks/use-modal';
-import { Form, Progress } from 'antd';
-import axios from 'axios';
-import { useTranslations } from 'next-intl';
-import { useState } from 'react';
-
-import AppFormItem from '@/components/ui/antd-form/form-Item';
-import WaveAudioUpload from '@/components/ui/input/wave-audio-upload';
+'use client';
 import { TYPE_UPLOAD_BUCKET } from '@/enums/common';
 import extractAudioMetadata, { getPeakData } from '@/helpers/common';
 import { showNotification } from '@/helpers/messages-helper';
-import { useActive } from '@/hooks/use-active';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useCreateTrackDraft } from '@/modules/tracks/hooks/use-create-track-draft';
 import { TrackPayload } from '@/modules/tracks/types/payload';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { AudioFileBucket, CreateBucketFile } from '@/modules/upload/types/data';
 import { CreateVariables } from '@/types/api';
-
-type Props = {} & Omit<AppModalProps, 'children'>;
+import { Progress } from 'antd';
+import axios from 'axios';
+import { debounce } from 'lodash';
+import { useTranslations } from 'next-intl';
+import { useMemo, useState } from 'react';
+import DndAudioUpload from '../../../components/ui/input/dnd-audio-upload';
 
 interface TracksPayload {
     title: string;
@@ -35,23 +28,27 @@ interface UploadProgress {
     key: string;
 }
 
-export default function AddNewTrackModal({ ...props }: Props) {
-    const messages = useTranslations();
-    const isLoading = useLoading();
-    const [form] = Form.useForm();
-    const typeModal = useModalStore((state) => state.typeModal);
-    const closeModal = useModalStore((state) => state.closeModal);
-    const formValues = useReleaseFormStore((state) => state.formValues);
-    const [uploadProgress, setUploadProgress] = useState<UploadProgress[]>([]);
-
-    const { isActive, active, deActive } = useActive();
+export default function DropUploadTracks() {
+    const formValues = useReleaseFormStore((s) => s.formValues);
     const { createTrackDraft } = useCreateTrackDraft();
+    const [uploadProgress, setUploadProgress] = useState<UploadProgress[]>([]);
+    const messages = useTranslations();
 
-    const onFinish = async () => {
+    const handleUpload = async (files: any[]) => {
         try {
-            active();
-            const values = await form.validateFields();
-            const files = values.tracks?.fileList || [];
+            const preparingProgress: UploadProgress[] = files.map(
+                (file: any, index: number) => ({
+                    fileName:
+                        file.name ||
+                        file.originFileObj?.name ||
+                        `File ${index + 1}`,
+                    progress: 0,
+                    key: `track-${index}`,
+                    status: 'preparing',
+                })
+            );
+
+            setUploadProgress(preparingProgress);
 
             const tracksPayload: TracksPayload[] = [];
 
@@ -65,7 +62,6 @@ export default function AddNewTrackModal({ ...props }: Props) {
                     const fileOriginal = file.originFileObj;
 
                     if (fileOriginal.name.length > 80) {
-                        closeModal();
                         return showNotification(
                             'error',
                             messages('track.validation.trackFileName', {
@@ -172,7 +168,9 @@ export default function AddNewTrackModal({ ...props }: Props) {
                 }
             );
 
-            const newTracks = (await Promise.all(newTracksPromises)).flat();
+            const newTracks = (await Promise.all(newTracksPromises))
+                .flat()
+                .filter((item): item is CreateBucketFile => !!item);
 
             // create bucket
             const response = await bucketApi.createBuckets({
@@ -279,20 +277,12 @@ export default function AddNewTrackModal({ ...props }: Props) {
 
             const variables: CreateVariables<TrackPayload[]> = {
                 payload: tracksPayload,
-                onSuccess: () => {
-                    deActive();
-                    closeModal();
-                },
-                onError: () => {
-                    deActive();
-                },
             };
+            console.log('🚀 ~ handleUpload ~ variables:', variables);
 
             createTrackDraft(variables);
         } catch (error) {
             setUploadProgress([]);
-            form.resetFields();
-            deActive();
             showNotification(
                 'error',
                 messages('file.message.uploadFileFailed')
@@ -300,68 +290,33 @@ export default function AddNewTrackModal({ ...props }: Props) {
         }
     };
 
-    return (
-        <AppModal
-            {...props}
-            open
-            title={messages('track.add')}
-            onOk={form.submit}
-            onCancel={closeModal}
-            confirmLoading={isActive}
-            loading={isActive}
-            width={750}
-            style={{ top: '4rem' }}
-        >
-            <AppForm
-                form={form}
-                layout="vertical"
-                onFinish={onFinish}
-                showSubmit={false}
-                disabled={isActive}
-            >
-                <AppFormItem name="tracks">
-                    <WaveAudioUpload
-                        multiple
-                        accept="audio/wav"
-                        placeholder={
-                            <div className="flex flex-col justify-start gap-2">
-                                <p>
-                                    {messages('placeholder.dragAndDropAudio')}
-                                </p>
-                                <p>
-                                    {messages('placeholder.supportFormats', {
-                                        accept: 'wav',
-                                    })}
-                                </p>
-                            </div>
-                        }
-                    />
+    const debouncedHandleUpload = useMemo(
+        () =>
+            debounce((files: any[]) => {
+                handleUpload(files);
+            }, 300),
+        [formValues.id, createTrackDraft]
+    );
 
-                    {/* Progress bars ngay dưới WaveAudioUpload */}
-                    {uploadProgress.length > 0 && (
-                        <div className="mt-4 space-y-3">
-                            {uploadProgress.map((progress) => (
-                                <div key={progress.key}>
-                                    <div className="mb-1 flex items-center justify-between text-sm">
-                                        <span
-                                            className="max-w-[300px] truncate"
-                                            title={progress.fileName}
-                                        >
-                                            {progress.fileName}
-                                        </span>
-                                        {/* <span>{progress.progress}%</span> */}
-                                    </div>
-                                    <Progress
-                                        percent={progress.progress}
-                                        size="small"
-                                        strokeColor="#1890ff"
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </AppFormItem>
-            </AppForm>
-        </AppModal>
+    return (
+        <div>
+            {uploadProgress?.length < 1 && (
+                <DndAudioUpload
+                    multiple
+                    accept="audio/wav"
+                    onChange={({ fileList }) => {
+                        debouncedHandleUpload(fileList);
+                    }}
+                    showAudio={false}
+                />
+            )}
+
+            {uploadProgress.map((p) => (
+                <div key={p.key} className="mt-2 flex flex-col justify-start">
+                    <span className="text-left">{p.fileName}</span>
+                    <Progress percent={p.progress} size="small" />
+                </div>
+            ))}
+        </div>
     );
 }

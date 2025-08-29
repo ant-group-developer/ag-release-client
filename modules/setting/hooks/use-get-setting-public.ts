@@ -10,7 +10,7 @@ export const useGetSettingPublic = () => {
     });
 
     return {
-        settingData: data?.data?.data ?? ({} as SettingData['website']),
+        settingData: data?.data?.data ?? ({} as SettingData),
         ...res,
     };
 };

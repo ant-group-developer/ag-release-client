@@ -99,7 +99,7 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
                     dataIndex: `dsp_${dsp.id}`,
                     key: dsp.id,
                     align: 'left' as const,
-                    width: 200,
+                    width: 250,
                     render: (value: string, record: TrackData) => {
                         const trackPolicy = record.trackPolicies?.find(
                             (p) => p.dspId === dsp?.id

@@ -282,18 +282,26 @@ export default function ReleaseConfigurationSection({
                                 </div>
                             </div>
                             {isCreateReleasePage && (
-                                <div className="col-span-3 flex w-full justify-end">
-                                    <Button
-                                        type="primary"
-                                        onClick={() =>
-                                            handleCreateReleaseDraft()
-                                        }
-                                        disabled={!isEnableCreateDraftBtn}
-                                        loading={isOnCreatingDraft}
-                                    >
-                                        {messages('common.continue')}
-                                    </Button>
-                                </div>
+                                <>
+                                    <div className="col-span-3 flex w-full justify-end">
+                                        <Button
+                                            type="primary"
+                                            onClick={() =>
+                                                handleCreateReleaseDraft()
+                                            }
+                                            disabled={!isEnableCreateDraftBtn}
+                                            loading={isOnCreatingDraft}
+                                        >
+                                            {messages('common.continue')}
+                                        </Button>
+                                    </div>
+                                    <div className="flex justify-end py-2 text-sm italic">
+                                        *
+                                        {messages(
+                                            'release.placeholder.enterTitleAndReleaseType'
+                                        )}
+                                    </div>
+                                </>
                             )}
                         </div>
                     ),

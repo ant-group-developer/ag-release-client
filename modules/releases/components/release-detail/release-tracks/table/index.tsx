@@ -2,15 +2,17 @@ import SortableTable, {
     OnDragEnd,
     SortableTableProps,
 } from '@/components/ui/table/sortable-table';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { SIZE_ICON } from '@/constants/common';
+import { getTrackDetailRoute, RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { showNotification } from '@/helpers/messages-helper';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
+import { useRouter } from '@/i18n/routing';
 import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
 import { TrackArtistData } from '@/modules/track-artist/types';
-import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
+import { TRACK_TABS, TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
 import { useUpdateTrackOrder } from '@/modules/tracks/hooks/use-update-track-order';
 import { TrackData } from '@/modules/tracks/types';
@@ -23,6 +25,7 @@ import { UpdateVariables } from '@/types/api';
 import { Input, Tabs, Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { debounce } from 'lodash';
+import { ChevronsDown, ChevronsUp } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState } from 'react';
 import TrackActionButton from '../button/track-action';
@@ -41,6 +44,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
     const openModal = useModalStore((state) => state.openModal);
     const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
     const { action } = useGetReleaseDetailRoute();
+    const router = useRouter();
 
     // apis
     const { updateTrackDraft } = useUpdateTrackDraft();
@@ -102,7 +106,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             width: 300,
             render: (value, record, index) => {
                 return (
-                    <div className="w-[300px]">
+                    <div className="min-h-10 w-[300px]">
                         <TrackWaveform
                             key={`${record.id}-${index}`}
                             data={record}
@@ -217,10 +221,19 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                     <TrackActionButton
                         disabled={isReadMode}
                         showDelete
+                        showDownload
+                        showDetail
+                        onShowDetail={() => {
+                            router.push(
+                                getTrackDetailRoute(
+                                    record?.id,
+                                    TRACK_TABS.METADATA
+                                )
+                            );
+                        }}
                         onShowDelete={() =>
                             openModal(TYPE_MODAL_TRACK.DELETE, record)
                         }
-                        showDownload
                         onShowDownload={async () => {
                             const response =
                                 await bucketApi.getLinkDownloadFile(
@@ -366,6 +379,23 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                     expandedRowKeys,
                     onExpand: handleExpand,
                     expandedRowClassName: () => '!z-0 custom-track-expanded',
+                    expandIcon: ({ expanded, onExpand, record }) => {
+                        return expanded ? (
+                            <div
+                                onClick={(e) => onExpand(record, e)}
+                                className="flex cursor-pointer justify-center hover:text-blue-500"
+                            >
+                                <ChevronsUp size={SIZE_ICON} />
+                            </div>
+                        ) : (
+                            <div
+                                onClick={(e) => onExpand(record, e)}
+                                className="flex cursor-pointer justify-center hover:text-blue-500"
+                            >
+                                <ChevronsDown size={SIZE_ICON} />
+                            </div>
+                        );
+                    },
                 }}
             />
         </div>

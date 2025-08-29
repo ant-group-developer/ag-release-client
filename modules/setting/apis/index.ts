@@ -9,8 +9,8 @@ export const settingApis = {
     },
 
     getSettingPublic: () => {
-        return axiosInstance.get<DetailResponse<SettingData['website']>>(
-            '/app-config/website'
+        return axiosInstance.get<DetailResponse<SettingData>>(
+            '/app-config/public'
         );
     },
 

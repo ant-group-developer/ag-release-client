@@ -11,6 +11,7 @@ import IconButton from '../button/icon-button';
 interface DndAudioUploadProps extends UploadProps {
     value?: any;
     placeholder?: ReactNode;
+    showAudio?: boolean;
 }
 
 const { Dragger } = Upload;
@@ -27,6 +28,7 @@ const DndAudioUpload = ({
     disabled,
     placeholder,
     multiple = true,
+    showAudio = true,
     ...props
 }: DndAudioUploadProps) => {
     const [audioFiles, setAudioFiles] = useState<AudioFile[]>([]);
@@ -121,7 +123,7 @@ const DndAudioUpload = ({
                 </p>
             </Dragger>
 
-            {audioFiles.length > 0 && (
+            {showAudio && audioFiles.length > 0 && (
                 <div className="mt-4 max-h-[400px] space-y-4 overflow-y-auto">
                     {audioFiles.map((audioFile, index) => (
                         <div key={index} className="rounded border p-3">
