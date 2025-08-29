@@ -1,3 +1,4 @@
+import { TenantData } from '@/modules/tenant/types/data';
 import { CommonAttribute, CommonParams } from '@/types/api';
 
 export interface LabelData extends CommonAttribute {
@@ -8,6 +9,8 @@ export interface LabelData extends CommonAttribute {
     description: string;
     releaseCount: number;
     trackCount: number;
+    tenantId: TenantData['id'];
+    tenant: Pick<TenantData, 'id' | 'name'>;
 }
 
 export interface LabelDataFilter extends CommonParams {

@@ -36,7 +36,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
         {
             title: messages('common.iNo'),
             key: 'iNo',
-            width: 30,
+            width: 80,
             align: 'center',
             render: (_, __, index) =>
                 getIndex(
@@ -78,7 +78,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             ellipsis: true,
             align: 'left',
             fixed: 'left',
-            width: 200,
+            width: 180,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -133,7 +133,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             dataIndex: 'description',
             ellipsis: true,
             align: 'left',
-            width: 150,
+            width: 200,
             render: (value) => (
                 <span className="line-clamp-3 truncate whitespace-pre-line">
                     {' '}
@@ -145,8 +145,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             title: messages('release.label'),
             key: 'releaseCount',
             dataIndex: 'release_count',
-            align: 'center',
-            width: 90,
+            width: 120,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -161,8 +160,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             title: messages('track.label'),
             key: 'trackCount',
             dataIndex: 'track_count',
-            align: 'center',
-            width: 70,
+            width: 120,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -172,6 +170,15 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             render: (value, record) => (
                 <p className="truncate">{record?.trackCount}</p>
             ),
+        },
+        {
+            title: messages('tenant.label'),
+            key: 'tenant',
+            dataIndex: 'tenant',
+            width: 150,
+            render: (_, record) => {
+                return record.tenant?.name;
+            },
         },
         // {
         //     title: messages('common.createdAt'),
