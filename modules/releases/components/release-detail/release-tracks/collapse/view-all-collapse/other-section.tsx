@@ -322,6 +322,37 @@ export default function OtherSection({
                                 />
                             </FormItem>
                             <FormItem
+                                label="ISRC"
+                                ErrorMessage={errors.isrc?.message}
+                                name="isrc"
+                            >
+                                <Controller
+                                    name="isrc"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input
+                                            id={`tracks.${index}.isrc`}
+                                            {...field}
+                                            value={field.value ?? ''}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                field.onChange(value);
+                                                updateTrackDraft(
+                                                    { isrc: value },
+                                                    'isrc'
+                                                );
+                                            }}
+                                            allowClear
+                                            status={
+                                                errors.isrc
+                                                    ? 'error'
+                                                    : undefined
+                                            }
+                                        />
+                                    )}
+                                />
+                            </FormItem>
+                            <FormItem
                                 name="pLineYear"
                                 label={messages('formFields.pLineYear')}
                                 required
@@ -413,37 +444,7 @@ export default function OtherSection({
                                     )}
                                 />
                             </FormItem>
-                            <FormItem
-                                label="ISRC"
-                                ErrorMessage={errors.isrc?.message}
-                                name="isrc"
-                            >
-                                <Controller
-                                    name="isrc"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            id={`tracks.${index}.isrc`}
-                                            {...field}
-                                            value={field.value ?? ''}
-                                            onChange={(e) => {
-                                                const value = e.target.value;
-                                                field.onChange(value);
-                                                updateTrackDraft(
-                                                    { isrc: value },
-                                                    'isrc'
-                                                );
-                                            }}
-                                            allowClear
-                                            status={
-                                                errors.isrc
-                                                    ? 'error'
-                                                    : undefined
-                                            }
-                                        />
-                                    )}
-                                />
-                            </FormItem>
+
                             <FormItem
                                 className="col-span-2"
                                 label={messages('formFields.tracks.lyrics')}

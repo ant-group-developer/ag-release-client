@@ -48,9 +48,9 @@ export default function DspFormModal({ ...props }: Props) {
             onSuccess: () => {
                 deActive();
                 form.resetFields();
-                form.setFieldsValue({
-                    dspActions: [{ actionId: undefined, isDefault: true }],
-                });
+                // form.setFieldsValue({
+                //     dspActions: [{ actionId: undefined, isDefault: true }],
+                // });
             },
             onError: () => {
                 deActive();

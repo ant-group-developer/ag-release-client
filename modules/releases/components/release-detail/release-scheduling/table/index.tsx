@@ -67,7 +67,7 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
             title: messages('common.price'),
             dataIndex: 'priceCode',
             key: 'priceCode',
-            width: 197,
+            width: 150,
 
             align: 'left',
             render: (value: string, record) => {
@@ -99,7 +99,7 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
                     dataIndex: `dsp_${dsp.id}`,
                     key: dsp.id,
                     align: 'left' as const,
-                    width: 250,
+                    width: 200,
                     render: (value: string, record: TrackData) => {
                         const trackPolicy = record.trackPolicies?.find(
                             (p) => p.dspId === dsp?.id
