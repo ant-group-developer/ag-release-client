@@ -1,6 +1,8 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
 import { useThemeMode } from '@/hooks/use-theme-mode';
 import DropUploadTracks from '@/modules/releases/components/drop-track-upload';
@@ -34,6 +36,8 @@ export default function Tracks() {
     const dataEdit = useModalStore((state) => state.dataEdit);
     const closeModal = useModalStore((state) => state.closeModal);
     const openModal = useModalStore((state) => state.openModal);
+    const { action } = useGetReleaseDetailRoute();
+    const isEditAction = action === RELEASE_DETAIL_ACTION.EDIT;
 
     // apis
     const { tracksData, isLoading } = useGetListTracks({
@@ -113,7 +117,11 @@ export default function Tracks() {
                         ),
                     }}
                     locale={{
-                        emptyText: isLoading ? <Empty /> : <DropUploadTracks />,
+                        emptyText: isLoading ? (
+                            <Empty />
+                        ) : (
+                            <DropUploadTracks disabled={!isEditAction} />
+                        ),
                     }}
                 />
 

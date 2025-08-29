@@ -8,14 +8,16 @@ import { TrackPayload } from '@/modules/tracks/types/payload';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { AudioFileBucket, CreateBucketFile } from '@/modules/upload/types/data';
 import { CreateVariables } from '@/types/api';
-import { Progress } from 'antd';
+import { Progress, UploadProps } from 'antd';
 import axios from 'axios';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import DndAudioUpload from '../../../components/ui/input/dnd-audio-upload';
 
-interface TracksPayload {
+interface Props extends UploadProps {}
+
+interface TracksPayload extends UploadProps {
     title: string;
     releaseId: string;
     audioFileDraft: AudioFileBucket;
@@ -28,7 +30,7 @@ interface UploadProgress {
     key: string;
 }
 
-export default function DropUploadTracks() {
+export default function DropUploadTracks({ ...props }: Props) {
     const formValues = useReleaseFormStore((s) => s.formValues);
     const { createTrackDraft } = useCreateTrackDraft();
     const [uploadProgress, setUploadProgress] = useState<UploadProgress[]>([]);
@@ -302,6 +304,7 @@ export default function DropUploadTracks() {
         <div>
             {uploadProgress?.length < 1 && (
                 <DndAudioUpload
+                    {...props}
                     multiple
                     accept="audio/wav"
                     onChange={({ fileList }) => {
