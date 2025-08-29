@@ -5,6 +5,7 @@ import { APP_ROUTES } from '@/enums/routes';
 import { getAvatarPlaceholder } from '@/helpers/common';
 import { useLoadingStatus } from '@/hooks/use-loading-status';
 import { Link, usePathname } from '@/i18n/routing';
+import AppError from '@/modules/auth/components/error';
 import { tenantQueryKeys } from '@/modules/tenant/constants';
 import { TENANT_TABS } from '@/modules/tenant/enums';
 import { useTenantDetail } from '@/modules/tenant/hooks/use-get-tenant';
@@ -35,7 +36,8 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
 
     const value = useParams();
     const tenantId = value['tenant-id'] as string;
-    const { dataTenant } = useTenantDetail(tenantId);
+    const { dataTenant, error } = useTenantDetail(tenantId);
+    console.log('error:', error);
 
     const { isLoading } = useLoadingStatus({
         queryKeys: [tenantQueryKeys.detail(tenantId)],
@@ -94,6 +96,10 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
             ),
         },
     ];
+
+    if (error) {
+        return <AppError error={error} />;
+    }
 
     return (
         <Spin spinning={isLoading}>

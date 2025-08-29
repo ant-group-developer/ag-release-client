@@ -7,7 +7,10 @@ import { FALLBACK_IMAGE } from '@/constants/common';
 import { getIndex, getSortOrder } from '@/helpers/common';
 import { getArtistDetailRoute } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
+import { usePermission } from '@/hooks/use-permission';
 import { Link, useRouter } from '@/i18n/routing';
+import { PERMISSION } from '@/modules/auth/constants/permission';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { Avatar } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
@@ -26,6 +29,10 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
     const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
+
+    const { isSystemTenant } = useAuth();
+    const { hasPermission } = usePermission();
+
     const column: ColumnType<ArtistData>[] = [
         {
             title: messages('common.iNo'),
@@ -254,9 +261,9 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
             fixed: 'right',
             render: (_, record) => (
                 <ActionButton
-                    showUpdate
+                    showUpdate={hasPermission(PERMISSION.ARTIST.UPDATE)}
                     showDetail
-                    showDelete
+                    showDelete={isSystemTenant}
                     onShowUpdate={() => {
                         openModal(TYPE_MODAL_ARTIST.UPDATE, record);
                     }}
