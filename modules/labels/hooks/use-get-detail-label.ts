@@ -20,6 +20,11 @@ export const useGetDetailLabel = (id: LabelData['id']) => {
         updatedAt: null,
         releaseCount: 0,
         trackCount: 0,
+        tenantId: '',
+        tenant: {
+            id: '',
+            name: '',
+        },
     };
 
     return {
