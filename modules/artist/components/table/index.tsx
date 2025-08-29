@@ -256,7 +256,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
                 <ActionButton
                     showUpdate
                     showDetail
-                    // showDelete
+                    showDelete
                     onShowUpdate={() => {
                         openModal(TYPE_MODAL_ARTIST.UPDATE, record);
                     }}
