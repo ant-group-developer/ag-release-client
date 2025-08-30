@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 import { useAuth } from './use-auth';
 
 export const useCheckPermission = () => {
-    const { isLoading, profile } = useAuth();
+    const { profile } = useAuth();
 
     const pathname = usePathname();
     const locale = useLocale();
@@ -27,6 +27,12 @@ export const useCheckPermission = () => {
         if ('tenantType' in required) {
             return required.tenantType.some(
                 (item) => item === profile.tenantType
+            );
+        }
+
+        if ('tenantUserType' in required) {
+            return required.tenantUserType.some(
+                (item) => item === profile.tenantUserType
             );
         }
 
@@ -53,8 +59,6 @@ export const useCheckPermission = () => {
     };
 
     function checkCanAccessCurrentRoute() {
-        if (isLoading) return true;
-
         const flattenRoutes = flattenData(adminRoutes, {});
 
         // Build list of candidate matches, then pick the most specific
@@ -85,7 +89,6 @@ export const useCheckPermission = () => {
     }
 
     return {
-        isLoading,
         isForbiddenPage,
         checkCanAccessCurrentRoute,
         checkPermission,

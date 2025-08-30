@@ -26,4 +26,9 @@ export const PERMISSION = {
     TRACK: {
         READ: 'track.read',
     },
+    WORKSPACE: {
+        CREATE: 'workspace.create',
+        READ: 'workspace.read',
+        UPDATE: 'workspace.update',
+    },
 } as const;

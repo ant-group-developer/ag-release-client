@@ -1,8 +1,9 @@
 import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
-import Refresh from '@/components/refresh';
 import CreateButton from '@/components/ui/button/create-button';
 import { UseFilterProps } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
+import { checkTenantType } from '@/modules/user/utils/role';
 import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_TENANT } from '../enums';
@@ -28,6 +29,12 @@ export default function TenantHeader({
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const { token } = theme.useToken();
+
+    const {
+        profile: { tenantType },
+    } = useAuth();
+    const { isTypeWhiteLabel } = checkTenantType(tenantType);
+
     return (
         <AppHeader style={{ backgroundColor: token.colorBgContainer }}>
             <AppHeaderGroup>
@@ -41,17 +48,19 @@ export default function TenantHeader({
 
             <AppHeaderGroup position="end" className="flex-1">
                 <div className="flex items-center gap-2">
-                    <Refresh
+                    {/* <Refresh
                         handleRefresh={handleRefresh}
                         lastTimeUpdated={lastUpdatedAt}
-                    />
-                    <CreateButton
-                        canCreate={true}
-                        text={messages('action.create.title', {
-                            label: messages('tenant.label'),
-                        })}
-                        onClick={() => openModal(TYPE_MODAL_TENANT.CREATE)}
-                    />
+                    /> */}
+                    {isTypeWhiteLabel && (
+                        <CreateButton
+                            canCreate={true}
+                            text={messages('action.create.title', {
+                                label: messages('tenant.label'),
+                            })}
+                            onClick={() => openModal(TYPE_MODAL_TENANT.CREATE)}
+                        />
+                    )}
                 </div>
             </AppHeaderGroup>
         </AppHeader>

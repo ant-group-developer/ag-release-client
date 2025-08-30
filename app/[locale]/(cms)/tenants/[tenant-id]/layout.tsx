@@ -37,7 +37,6 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
     const value = useParams();
     const tenantId = value['tenant-id'] as string;
     const { dataTenant, error } = useTenantDetail(tenantId);
-    console.log('error:', error);
 
     const { isLoading } = useLoadingStatus({
         queryKeys: [tenantQueryKeys.detail(tenantId)],

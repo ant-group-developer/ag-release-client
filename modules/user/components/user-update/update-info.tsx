@@ -40,7 +40,10 @@ function UpdateInfo({ dataEdit }: Props) {
         if (dataUser) {
             const initialValues = {
                 ...dataUser,
-                tenantType: getTenantUserType(dataUser.tenantUser, tenantId),
+                tenantUserType: getTenantUserType(
+                    dataUser.tenantUser,
+                    tenantId
+                ),
             };
 
             form.setFieldsValue(initialValues);

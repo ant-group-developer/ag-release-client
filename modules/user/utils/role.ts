@@ -1,5 +1,5 @@
 import { SYSTEM_TENANT_ID } from '@/modules/tenant/constants';
-import { TENANT_USER_TYPE } from '@/modules/tenant/enums';
+import { TENANT_TYPE, TENANT_USER_TYPE } from '@/modules/tenant/enums';
 import { USER_TYPE } from '../enums';
 import { UserDetail } from '../types/data';
 
@@ -23,10 +23,10 @@ export const checkIsSystemAdmin = (type: USER_TYPE): boolean => {
 
 export const checkCanAccessTenantAll = (
     systemType: USER_TYPE,
-    tenantType: TENANT_USER_TYPE
+    tenantUserType: TENANT_USER_TYPE
 ): boolean => {
     const isSystemAdmin = checkIsSystemAdmin(systemType);
-    const isTenantOwnerOrAdmin = checkIsTenantOwnerOrAdmin(tenantType);
+    const isTenantOwnerOrAdmin = checkIsTenantOwnerOrAdmin(tenantUserType);
     return isSystemAdmin || isTenantOwnerOrAdmin;
 };
 
@@ -38,4 +38,11 @@ export const getTenantUserType = (
     tenantId: string
 ) => {
     return data.find((item) => item.tenant.id === tenantId)?.type;
+};
+
+export const checkTenantType = (type: TENANT_TYPE) => {
+    return {
+        isTypeLabel: type === TENANT_TYPE.LABEL,
+        isTypeWhiteLabel: type === TENANT_TYPE.WHITE_LABEL,
+    };
 };

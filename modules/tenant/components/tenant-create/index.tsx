@@ -1,8 +1,10 @@
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import { useActive } from '@/hooks/use-active';
 import { useApiError } from '@/hooks/use-api-error';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { uploadApi } from '@/modules/upload/apis';
 import { ENTITY_TYPE_PICTURE } from '@/modules/upload/types/data';
+import { checkIsSystemTenant } from '@/modules/user/utils/role';
 import { Button, Form } from 'antd';
 import { useTranslations } from 'next-intl';
 import { TENANT_TYPE } from '../../enums';
@@ -17,6 +19,10 @@ function CreateTenantModal({ ...props }: Props) {
     const [form] = Form.useForm();
     const { active, isActive, deActive } = useActive();
     const { handleError } = useApiError();
+
+    const {
+        profile: { tenantId },
+    } = useAuth();
 
     const { createTenant } = useCreateTenant();
 
@@ -104,12 +110,16 @@ function CreateTenantModal({ ...props }: Props) {
                     emailVerified: true,
                     isActive: true,
                     type: TENANT_TYPE.LABEL,
+                    maxLabels: 1,
+                    parentId: checkIsSystemTenant(tenantId)
+                        ? undefined
+                        : tenantId,
                 }}
                 form={form}
                 showSubmit={false}
             />
             <div className="text-right">
-                <Button type="primary" onClick={onFinish}>
+                <Button type="primary" onClick={onFinish} loading={isActive}>
                     {messages('common.submit')}
                 </Button>
             </div>

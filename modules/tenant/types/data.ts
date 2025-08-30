@@ -36,6 +36,7 @@ export interface TenantDetail extends CommonAttributeCreator {
     children: TenantDetail[];
     tenantUser: TenantUser[];
     tenantUserCount: number;
+    maxLabels: number;
 }
 
 export type TenantActiveData = Pick<
@@ -57,6 +58,7 @@ export type TenantData = Pick<
     | 'children'
     | 'tenantUser'
     | 'tenantUserCount'
+    | 'maxLabels'
 >;
 
 export interface UpdateTenantPayload {
