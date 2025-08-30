@@ -66,13 +66,15 @@ axiosInstance.interceptors.response.use(
             return Promise.reject(error);
         }
 
-        const shouldSignout = errName === TOKEN_ERROR_NAME;
+        const shouldSignout =
+            errName === TOKEN_ERROR_NAME ||
+            (errName !== TOKEN_EXPIRED_NAME && status === 401);
         if (shouldSignout) {
             return signOut();
         }
 
         // Decide when to refresh: message match OR 401 (adjust to your API)
-        const shouldRefresh = errName === TOKEN_EXPIRED_NAME || status === 401;
+        const shouldRefresh = errName === TOKEN_EXPIRED_NAME && status === 401;
 
         if (!shouldRefresh) {
             return Promise.reject(error);

@@ -1,7 +1,7 @@
 import { APP_ROUTES } from '@/enums/routes';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { SYSTEM_TENANT_ID } from '@/modules/tenant/constants';
-import { TENANT_USER_TYPE } from '@/modules/tenant/enums';
+import { TENANT_TYPE, TENANT_USER_TYPE } from '@/modules/tenant/enums';
 import { USER_TYPE } from '@/modules/user/enums';
 import {
     Banknote,
@@ -38,7 +38,8 @@ import type { ForwardRefExoticComponent, RefAttributes } from 'react';
  */
 export type RouteRequired =
     | { userType: USER_TYPE[]; tenantId: string[] }
-    | { tenantType: TENANT_USER_TYPE[] }
+    | { tenantType: TENANT_TYPE[] }
+    | { tenantUserType: TENANT_USER_TYPE[] }
     | { permission: string[] };
 
 /** Reusable icon type */
@@ -81,7 +82,7 @@ const SYS_ADMIN_REQ: RouteRequired = {
 };
 
 const OWNER_OR_ADMIN_TENANT_REQ: RouteRequired = {
-    tenantType: [TENANT_USER_TYPE.OWNER, TENANT_USER_TYPE.ADMIN],
+    tenantUserType: [TENANT_USER_TYPE.OWNER, TENANT_USER_TYPE.ADMIN],
 };
 
 /**

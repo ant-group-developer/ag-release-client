@@ -1,12 +1,12 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import {
-    formattedDate,
     formattedNumber,
     getAvatarPlaceholder,
     getIndex,
     getSortOrder,
 } from '@/helpers/common';
 import { Link } from '@/i18n/routing';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { Avatar, Switch, theme, Tooltip } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
@@ -27,9 +27,11 @@ type Props = {
 function TenantTable({ dataFilter, ...props }: Props) {
     const messages = useTranslations();
     const { token } = theme.useToken();
-    const canUpdate = true;
+    const {
+        profile: { tenantId },
+    } = useAuth();
 
-    const { updateTenant } = useUpdateTenant();
+    const { updateTenant, isPending } = useUpdateTenant();
 
     const updateTenantStatus = (tenantId: string, status: boolean) => {
         updateTenant({
@@ -107,16 +109,17 @@ function TenantTable({ dataFilter, ...props }: Props) {
             },
         },
         {
-            title: messages('tenant.type.titleShort'),
-            dataIndex: 'type',
-            width: 120,
-            render: (cell) => <TenantTag type={cell} />,
-        },
-        {
             title: messages('tenant.title'),
             dataIndex: 'title',
             width: 250,
             ellipsis: true,
+        },
+        {
+            title: messages('tenant.type.titleShort'),
+            dataIndex: 'type',
+            align: 'center',
+            width: 120,
+            render: (cell) => <TenantTag type={cell} />,
         },
         // {
         //     title: messages('tenant.primaryColor'),
@@ -133,7 +136,7 @@ function TenantTable({ dataFilter, ...props }: Props) {
             render: (cell, record) => (
                 <Switch
                     checked={cell}
-                    disabled={!canUpdate}
+                    disabled={tenantId === record.id}
                     onChange={(status) => updateTenantStatus(record.id, status)}
                 />
             ),
@@ -159,6 +162,14 @@ function TenantTable({ dataFilter, ...props }: Props) {
                 return '-';
             },
         },
+        {
+            title: messages('tenant.labels.max.label'),
+            dataIndex: 'maxLabels',
+            align: 'center',
+            width: 120,
+            sorter: true,
+            render: (cell, record) => formattedNumber(record.maxLabels),
+        },
         // {
         //     title: messages('common.createdAt'),
         //     dataIndex: TENANT_ORDER_BY.CREATED_AT,
@@ -172,19 +183,19 @@ function TenantTable({ dataFilter, ...props }: Props) {
         //     ),
         //     render: (cell) => formattedDate(cell),
         // },
-        {
-            title: messages('common.updatedAt'),
-            dataIndex: TENANT_ORDER_BY.UPDATED_AT,
-            align: 'center',
-            width: 120,
-            sorter: true,
-            sortOrder: getSortOrder(
-                dataFilter.orderBy,
-                dataFilter.fieldOrder,
-                TENANT_ORDER_BY.UPDATED_AT
-            ),
-            render: (cell) => formattedDate(cell),
-        },
+        // {
+        //     title: messages('common.updatedAt'),
+        //     dataIndex: TENANT_ORDER_BY.UPDATED_AT,
+        //     align: 'center',
+        //     width: 120,
+        //     sorter: true,
+        //     sortOrder: getSortOrder(
+        //         dataFilter.orderBy,
+        //         dataFilter.fieldOrder,
+        //         TENANT_ORDER_BY.UPDATED_AT
+        //     ),
+        //     render: (cell) => formattedDate(cell),
+        // },
     ];
 
     // if (canUpdate) {
@@ -204,7 +215,14 @@ function TenantTable({ dataFilter, ...props }: Props) {
     //     });
     // }
 
-    return <AppTable {...props} pagination={false} columns={columns} />;
+    return (
+        <AppTable
+            {...props}
+            loading={isPending || props.loading}
+            pagination={false}
+            columns={columns}
+        />
+    );
 }
 
 export default TenantTable;

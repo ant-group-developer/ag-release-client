@@ -44,7 +44,7 @@ function TenantSelect({
             if (excludeIds) {
                 result = !excludeIds.includes(item.id);
             }
-            if (type) {
+            if (result && type) {
                 result = type.includes(item.type);
             }
             return result;

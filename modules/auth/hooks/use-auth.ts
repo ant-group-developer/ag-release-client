@@ -1,5 +1,5 @@
 import { getAvatarUrl } from '@/helpers/avatar-tailwind';
-import { TENANT_USER_TYPE } from '@/modules/tenant/enums';
+import { TENANT_TYPE, TENANT_USER_TYPE } from '@/modules/tenant/enums';
 import { userQueryKeys } from '@/modules/user/constants';
 import { USER_TYPE } from '@/modules/user/enums';
 import {
@@ -10,7 +10,7 @@ import {
     checkIsTenantOwnerOrAdmin,
 } from '@/modules/user/utils/role';
 import { useQuery } from '@tanstack/react-query';
-import { signOut, useSession } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
 import { authApi } from '../api';
 import { UserInfoData } from '../types/auth';
 
@@ -23,14 +23,12 @@ export const defaultProfile: UserInfoData = {
     isActive: false,
     type: USER_TYPE.USER,
     tenantId: '',
-    tenantType: TENANT_USER_TYPE.MEMBER,
+    tenantType: TENANT_TYPE.LABEL,
+    tenantUserType: TENANT_USER_TYPE.MEMBER,
 };
 
 export const useAuth = () => {
-    const session = useSession();
-    // const tenantId = session.data?.user?.tenantId as string;
-
-    const { data, error, refetch, isLoading } = useQuery({
+    const { data, ...rest } = useQuery({
         queryKey: userQueryKeys.info(),
         queryFn: () => authApi.getInfo(),
         refetchOnWindowFocus: true,
@@ -40,11 +38,13 @@ export const useAuth = () => {
 
     const isAdmin = checkIsSystemAdmin(profile.type);
     const isUser = !isAdmin;
-    const isTenantOwner = checkIsTenantOwner(profile.tenantType);
-    const isTenantOwnerOrAdmin = checkIsTenantOwnerOrAdmin(profile.tenantType);
+    const isTenantOwner = checkIsTenantOwner(profile.tenantUserType);
+    const isTenantOwnerOrAdmin = checkIsTenantOwnerOrAdmin(
+        profile.tenantUserType
+    );
     const canAccessTenantAll = checkCanAccessTenantAll(
         profile.type,
-        profile.tenantType
+        profile.tenantUserType
     );
     const isSystemTenant = checkIsSystemTenant(profile.tenantId) && isAdmin;
 
@@ -55,11 +55,10 @@ export const useAuth = () => {
     }
 
     return {
+        ...rest,
         permission: profile.permission || [],
         profile,
-        error,
         isAuthenticated,
-        isLoading,
         isAdmin,
         isUser,
         isTenantOwner,
@@ -68,6 +67,5 @@ export const useAuth = () => {
         isSystemTenant,
         isNotSystemTenant: !isSystemTenant,
         logout,
-        refreshProfile: refetch,
     };
 };

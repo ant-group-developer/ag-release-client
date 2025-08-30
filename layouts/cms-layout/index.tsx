@@ -28,8 +28,9 @@ export default function CMSLayout({ children }: Props) {
             : localStorage.getItem(LOCAL_STORAGE_KEY.OPEN_SIDE_BAR) === 'true'
     );
 
-    const { isLoading, permission } = useAuth();
+    const { permission, isLoading } = useAuth();
     const { checkCanAccessCurrentRoute } = useCheckPermission();
+    const canAccessCurrentRoute = checkCanAccessCurrentRoute();
 
     const setPermission = usePermissionStore((state) => state.setPermission);
 
@@ -47,11 +48,7 @@ export default function CMSLayout({ children }: Props) {
     }, [isActive]);
 
     const getChildren = () => {
-        if (isLoading) {
-            return <AppLoader className="bg-white" />;
-        }
-
-        if (checkCanAccessCurrentRoute()) {
+        if (canAccessCurrentRoute) {
             return children;
         }
 
@@ -75,6 +72,10 @@ export default function CMSLayout({ children }: Props) {
                     <Layout>
                         <div className="relative h-[calc(100vh-4rem)] overflow-y-hidden">
                             <Content>{getChildren()}</Content>
+                            <AppLoader
+                                className="bg-white"
+                                loading={isLoading}
+                            />
                             <AudioPlayer />
                         </div>
                     </Layout>

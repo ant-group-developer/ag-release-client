@@ -1,5 +1,5 @@
 import { Locale } from '@/i18n/routing';
-import { TENANT_USER_TYPE } from '@/modules/tenant/enums';
+import { TENANT_TYPE, TENANT_USER_TYPE } from '@/modules/tenant/enums';
 import { TenantData } from '@/modules/tenant/types/data';
 import { UserDetail } from '@/modules/user/types/data';
 
@@ -40,5 +40,6 @@ export type UserInfoData = Pick<
 > & {
     permission: string[];
     tenantId: TenantData['id'];
-    tenantType: TENANT_USER_TYPE;
+    tenantUserType: TENANT_USER_TYPE;
+    tenantType: TENANT_TYPE;
 };

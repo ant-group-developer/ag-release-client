@@ -11,14 +11,12 @@ import { getTenantOwnerId } from '@/modules/tenant/utils';
 import { uploadApi } from '@/modules/upload/apis';
 import { ENTITY_TYPE_PICTURE } from '@/modules/upload/types/data';
 import { Form } from 'antd';
-import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useEffect } from 'react';
 
 type Props = {};
 
 function DetailTenantPage({}: Props) {
-    const messages = useTranslations();
     const { active, isActive, deActive } = useActive();
 
     const value = useParams();
@@ -135,11 +133,12 @@ function DetailTenantPage({}: Props) {
             <div className="max-w-screen-xl">
                 <TenantForm
                     layout="vertical"
-                    className="grid grid-cols-1 gap-5 lg:grid-cols-2"
+                    wrapperClassName="grid grid-cols-1 gap-5 lg:grid-cols-2"
                     form={form}
                     submitProps={{ loading: isActive }}
                     excludeIds={[tenantId]}
                     showSubmit={false}
+                    tenantId={tenantId}
                 />
                 <div className="text-right">
                     <SubmitButton onClick={onFinish} loading={isActive} />

@@ -1,8 +1,6 @@
 import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
-import Refresh from '@/components/refresh';
 import TableLayoutSegmented from '@/components/ui/semented/table-layout-semented';
-import { DATE_FORMAT, LAYOUT_TABLE } from '@/enums/common';
-import { formattedDate } from '@/helpers/common';
+import { LAYOUT_TABLE } from '@/enums/common';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import { RELEASES_COLUMNS_DISPLAY } from '../../enums';
@@ -45,13 +43,13 @@ export default function ReleasesHeader({
 
             <AppHeaderGroup position="end" className="flex-1">
                 <div className="flex items-center gap-2">
-                    <Refresh
+                    {/* <Refresh
                         handleRefresh={handleRefresh}
                         lastTimeUpdated={formattedDate(
                             dataUpdatedAt,
                             DATE_FORMAT.HOUR_MINUTE_SECOND
                         )}
-                    />
+                    /> */}
 
                     {layoutTable === LAYOUT_TABLE.LIST && (
                         <ShowColumnOptionDropdown
