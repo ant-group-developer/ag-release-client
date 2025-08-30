@@ -24,7 +24,7 @@ function TenantSwitch({}: Props) {
     const { update } = useSession();
     const { isAdmin } = useAuth();
     const { settingData: dataConfig } = useGetSettingPublic();
-    const website = dataConfig;
+    const website = dataConfig?.website;
 
     const defaultData = {
         name: website?.name || defaultConfig.APP_SHORT_NAME,

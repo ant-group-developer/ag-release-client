@@ -173,9 +173,15 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
         },
         {
             title: messages('tenant.label'),
-            key: 'tenant',
+            key: 'tenant.name',
             dataIndex: 'tenant',
             width: 150,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'tenant.name'
+            ),
             render: (_, record) => {
                 return record.tenant?.name;
             },

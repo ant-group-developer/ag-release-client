@@ -4,6 +4,7 @@ import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import TracksSelect from '@/components/ui/select/tracks-select';
 import useModalStore from '@/hooks/use-modal';
 import { TrackData } from '@/modules/releases/types';
+import { useGetSettingPublic } from '@/modules/setting/hooks/use-get-setting-public';
 import { Checkbox, Form, InputNumber } from 'antd';
 import { useTranslations } from 'next-intl';
 import { Key, useEffect } from 'react';
@@ -31,6 +32,8 @@ export default function AcrCloudScanModal({
     const [form] = Form.useForm();
     const { scanTracks, isPending: isPendingScan } = useScanTracks();
     const dataEdit = useModalStore<TrackData>((state) => state.dataEdit);
+    const { settingData } = useGetSettingPublic();
+    const acrConfig = settingData?.acrCloud;
 
     const handleSubmit = (values: any) => {
         const { date, track, ...rest } = values;
@@ -150,7 +153,7 @@ export default function AcrCloudScanModal({
                         },
                     ]}
                 >
-                    <InputNumber />
+                    <InputNumber defaultValue={acrConfig?.chunkDuration} />
                 </AppFormItem>
             </AppForm>
         </AppModal>

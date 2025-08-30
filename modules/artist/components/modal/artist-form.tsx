@@ -147,7 +147,9 @@ export default function ArtistFormModal({ ...props }: Props) {
             onOk={form.submit}
             loading={isActive}
             className="custom-scroll-artist-modal !top-6"
-            confirmLoading={isOnLoadingData}
+            okButtonProps={{
+                disabled: isOnLoadingData,
+            }}
         >
             <Spin spinning={isOnLoadingData}>
                 <AppForm

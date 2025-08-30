@@ -1,8 +1,11 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
 import { useThemeMode } from '@/hooks/use-theme-mode';
+import DropUploadTracks from '@/modules/releases/components/drop-track-upload';
 import AddNewTrackModal from '@/modules/releases/components/release-detail/release-tracks/modal/add-new-track-modal';
 import ReleaseTracksTable from '@/modules/releases/components/release-detail/release-tracks/table';
 import {
@@ -19,7 +22,7 @@ import { useDeleteTrack } from '@/modules/tracks/hooks/use-delete-track';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { TrackData } from '@/modules/tracks/types';
 import { DeleteVariables } from '@/types/api';
-import { ConfigProvider, theme } from 'antd';
+import { ConfigProvider, Empty, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { Key, useState } from 'react';
 
@@ -33,6 +36,8 @@ export default function Tracks() {
     const dataEdit = useModalStore((state) => state.dataEdit);
     const closeModal = useModalStore((state) => state.closeModal);
     const openModal = useModalStore((state) => state.openModal);
+    const { action } = useGetReleaseDetailRoute();
+    const isEditAction = action === RELEASE_DETAIL_ACTION.EDIT;
 
     // apis
     const { tracksData, isLoading } = useGetListTracks({
@@ -94,6 +99,7 @@ export default function Tracks() {
         <ConfigProvider theme={customTheme}>
             <div>
                 <ReleaseTracksTable
+                    className="!p-0"
                     dataSource={tracksData?.items}
                     // rowSelection={rowSelection}
                     // sticky={{ offsetHeader: 174 }}
@@ -108,6 +114,13 @@ export default function Tracks() {
                                 {range[0]}–{range[1]} {messages('common.of')}{' '}
                                 {total}
                             </span>
+                        ),
+                    }}
+                    locale={{
+                        emptyText: isLoading ? (
+                            <Empty />
+                        ) : (
+                            <DropUploadTracks disabled={!isEditAction} />
                         ),
                     }}
                 />

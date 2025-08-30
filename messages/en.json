@@ -700,7 +700,8 @@
             "selectPublishType": "Select publish type",
             "selectRole": "Select role",
             "selectMusician": "Select musician",
-            "selectLanguageMetadata": "Select language metadata"
+            "selectLanguageMetadata": "Select language metadata",
+            "enterTitleAndReleaseType": "Enter release name and release type to continue"
         },
 
         "validation": {

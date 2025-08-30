@@ -268,9 +268,11 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
                         openModal(TYPE_MODAL_ARTIST.UPDATE, record);
                     }}
                     onShowDetail={() => {
-                        getArtistDetailRoute(
-                            record?.id,
-                            ARTIST_DETAIL_TABS.OVERVIEW
+                        router.push(
+                            getArtistDetailRoute(
+                                record?.id,
+                                ARTIST_DETAIL_TABS.OVERVIEW
+                            )
                         );
                     }}
                     onShowDelete={() => {

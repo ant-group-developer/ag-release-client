@@ -685,6 +685,7 @@
         "isMoreThan4Artists": "Có nhiều hơn 4 nghệ sĩ hay không",
         "cLineYearDescription": "Năm đầu tiên xuất bản phiên bản này ở bất kỳ nơi nào trên thế giới.",
         "pLineYearDescription": "Năm bản ghi âm đầu tiên được phát hành trên toàn thế giới.",
+
         "select": {
             "artist": "Chọn nghệ sĩ",
             "subArtist": "Chọn nghệ sĩ phụ"
@@ -700,7 +701,8 @@
             "selectPublishType": "Chọn loại xuất bản",
             "selectRole": "Chọn vai trò",
             "selectMusician": "Chọn nhạc sĩ",
-            "selectLanguageMetadata": "Chọn ngôn ngữ metadata"
+            "selectLanguageMetadata": "Chọn ngôn ngữ metadata",
+            "enterTitleAndReleaseType": "Nhập tên phát hành và loại phát hành để tiếp tục"
         },
 
         "validation": {
@@ -1022,7 +1024,6 @@
         "primaryGenreId": "Thể loại chính",
         "releaseTime": "Giờ phát hành",
         "releaseTimezoneId": "Múi giờ",
-
         "releaseArtists": "Nghệ sĩ phát hành",
         "pLineOwner": "℗ Bản quyền ghi âm",
         "cLineOwner": "© Bản quyền tác phẩm",

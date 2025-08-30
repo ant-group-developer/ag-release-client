@@ -67,7 +67,7 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
             title: messages('common.price'),
             dataIndex: 'priceCode',
             key: 'priceCode',
-            width: 197,
+            width: 150,
 
             align: 'left',
             render: (value: string, record) => {

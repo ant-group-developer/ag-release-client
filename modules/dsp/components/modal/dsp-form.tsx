@@ -48,9 +48,9 @@ export default function DspFormModal({ ...props }: Props) {
             onSuccess: () => {
                 deActive();
                 form.resetFields();
-                form.setFieldsValue({
-                    dspActions: [{ actionId: undefined, isDefault: true }],
-                });
+                // form.setFieldsValue({
+                //     dspActions: [{ actionId: undefined, isDefault: true }],
+                // });
             },
             onError: () => {
                 deActive();
@@ -157,7 +157,6 @@ export default function DspFormModal({ ...props }: Props) {
                       ],
                   }
                 : undefined,
-            isActive: dspData?.isActive ?? false,
         };
         if (isUpdate && dspData) {
             form.setFieldsValue(initialData);
@@ -181,8 +180,8 @@ export default function DspFormModal({ ...props }: Props) {
             title={`${isUpdate ? messages('common.update') : messages('common.create')} DSP`}
             open
             onCancel={closeModal}
+            okButtonProps={{ disabled: isOnLoadingData }}
             onOk={form.submit}
-            confirmLoading={isOnLoadingData}
             loading={isActive}
             className="!top-8"
         >
@@ -193,6 +192,9 @@ export default function DspFormModal({ ...props }: Props) {
                     showSubmit={false}
                     layout="vertical"
                     disabled={isActive}
+                    initialValues={{
+                        isActive: false,
+                    }}
                 >
                     <AppFormItem
                         name="pictureFile"
