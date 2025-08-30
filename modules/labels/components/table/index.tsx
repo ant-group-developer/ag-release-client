@@ -174,7 +174,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
         {
             title: messages('tenant.label'),
             key: 'tenant.name',
-            dataIndex: 'tenant',
+            dataIndex: 'tenant.name',
             width: 150,
             sorter: true,
             sortOrder: getSortOrder(

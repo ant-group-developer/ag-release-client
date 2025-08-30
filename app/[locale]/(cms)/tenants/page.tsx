@@ -25,7 +25,7 @@ export default function TenantPage({}: Props) {
     const { dataFilter, canClearFilter, onChangeFilter, removeFilter } =
         useFilter<DataFilterTenant>({
             page: 1,
-            pageSize: 21,
+            pageSize: PAGE_SIZE,
             fieldOrder: TENANT_ORDER_BY.UPDATED_AT,
             orderBy: ORDER.DESC,
         });

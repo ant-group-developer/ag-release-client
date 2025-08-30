@@ -1,6 +1,10 @@
 import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
-import { PermissionData, PermissionDataDataFilter } from '../types';
+import {
+    PermissionData,
+    PermissionDataDataFilter,
+    PermissionSimpleData,
+} from '../types';
 import {
     BulkCreatePermissionPayload,
     BulkDeletePermission,
@@ -15,6 +19,12 @@ export const permissionApis = {
             {
                 params,
             }
+        );
+    },
+
+    getListSimple: () => {
+        return axiosInstance.get<DetailResponse<PermissionSimpleData[]>>(
+            '/permission/simple'
         );
     },
 

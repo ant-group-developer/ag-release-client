@@ -1,7 +1,5 @@
-import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { toNonAccentVietnamese } from '@/helpers/string';
-import { useGetListTimezones } from '@/modules/timezone/hooks/use-get-list-timezones';
-import { TimezoneData } from '@/modules/timezone/types';
+import { useGetListSimpleTimezones } from '@/modules/timezone/hooks/use-get-list-simple-timezones';
 import { Select, SelectProps } from 'antd';
 import { useTranslations } from 'next-intl';
 
@@ -9,9 +7,9 @@ interface TimezoneSelectProps extends SelectProps {}
 
 export default function TimezoneSelect({ ...props }: TimezoneSelectProps) {
     const messages = useTranslations();
-    const { timezonesData } = useGetListTimezones({ pageSize: PAGE_SIZE_EXTRA_LARGE });
+    const { timezonesData } = useGetListSimpleTimezones();
 
-    const options = timezonesData.items.map((item: TimezoneData) => ({
+    const options = timezonesData.map((item) => ({
         id: item.id,
         value: item.id,
         label: item.name,

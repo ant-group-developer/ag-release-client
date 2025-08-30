@@ -1,6 +1,6 @@
 import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
-import { ArtistData, ArtistDataFilter } from '../types';
+import { ArtistData, ArtistDataFilter, ArtistDataSimple } from '../types';
 import {
     CreateArtistPayload,
     DeleteArtistProfiles,
@@ -12,6 +12,15 @@ export const artistApi = {
         return axiosInstance.get<PaginationResponse<ArtistData>>('/artists', {
             params,
         });
+    },
+
+    getListSimple: (params: ArtistDataFilter) => {
+        return axiosInstance.get<PaginationResponse<ArtistDataSimple>>(
+            '/artists/simple',
+            {
+                params,
+            }
+        );
     },
 
     getDetail: (id: ArtistData['id']) => {

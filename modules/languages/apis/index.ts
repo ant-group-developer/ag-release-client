@@ -1,6 +1,10 @@
 import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
-import { LanguageDataFilter, LanguagesData } from '../types';
+import {
+    LanguageDataFilter,
+    LanguagesData,
+    LanguagesSimpleData,
+} from '../types';
 import { CreateLanguagePayload, UpdateLanguagePayload } from '../types/payload';
 
 export const languageApi = {
@@ -10,6 +14,12 @@ export const languageApi = {
             {
                 params,
             }
+        );
+    },
+
+    getListSimple: () => {
+        return axiosInstance.get<DetailResponse<LanguagesSimpleData[]>>(
+            '/languages/simple'
         );
     },
 

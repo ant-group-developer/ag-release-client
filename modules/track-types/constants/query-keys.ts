@@ -5,6 +5,11 @@ export const trackTypeQueryKeys = {
 
     lists: () =>
         [...trackTypeQueryKeys.all, QUERY_KEY.TRACK_TYPE.GET_LIST] as const,
+    listsSimple: () =>
+        [
+            ...trackTypeQueryKeys.all,
+            QUERY_KEY.TRACK_TYPE.GET_LIST_SIMPLE,
+        ] as const,
     list: (params?: Record<string, any>) =>
         params
             ? ([...trackTypeQueryKeys.lists(), params] as const)

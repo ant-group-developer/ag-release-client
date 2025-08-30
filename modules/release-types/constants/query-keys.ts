@@ -9,6 +9,11 @@ export const releaseTypesQueryKeys = {
             ...releaseTypesQueryKeys.all,
             QUERY_KEY.RELEASE_TYPE.GET_LIST,
         ] as const,
+    listsSimple: () =>
+        [
+            ...releaseTypesQueryKeys.all,
+            QUERY_KEY.RELEASE_TYPE.GET_LIST,
+        ] as const,
     list: (params?: ReleaseTypesDataFilter) =>
         params
             ? ([...releaseTypesQueryKeys.lists(), params] as const)

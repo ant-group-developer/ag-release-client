@@ -1,7 +1,6 @@
 import { toNonAccentVietnamese } from '@/helpers/string';
 import useModalStore from '@/hooks/use-modal';
-import { useGetListLabels } from '@/modules/labels/hooks/use-get-list-labels';
-import { LabelData } from '@/modules/labels/types';
+import { useGetListLabelsSimple } from '@/modules/labels/hooks/use-get-list-simple-labels';
 import { Button, Select, SelectProps } from 'antd';
 import { useTranslations } from 'next-intl';
 
@@ -18,9 +17,9 @@ export default function LabelSelect({
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
 
-    const { labelsData } = useGetListLabels({});
+    const { labelsData } = useGetListLabelsSimple();
 
-    const option = labelsData.items.map((item: LabelData) => {
+    const option = labelsData?.map((item) => {
         return {
             id: item.id,
             value: item.id,

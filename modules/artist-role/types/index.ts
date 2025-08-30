@@ -7,6 +7,9 @@ export interface ArtistRoleData extends CommonAttribute {
     modifierId: string;
 }
 
+export interface ArtistRoleSimpleData
+    extends Pick<ArtistRoleData, 'id' | 'name' | 'code'> {}
+
 export interface ArtistRoleDataFilter extends CommonParams {
     keyword?: string;
     createdAt?: string;

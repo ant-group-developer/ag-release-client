@@ -1,6 +1,6 @@
 import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
-import { ActionsData, ActionsDataFilter } from '../types';
+import { ActionsData, ActionsDataFilter, ActionsSimpleData } from '../types';
 import { CreateActionPayload, UpdateActionPayload } from '../types/payload';
 
 export const actionsApis = {
@@ -8,6 +8,12 @@ export const actionsApis = {
         return axiosInstance.get<PaginationResponse<ActionsData>>('/actions', {
             params,
         });
+    },
+
+    getListSimple: () => {
+        return axiosInstance.get<DetailResponse<ActionsSimpleData[]>>(
+            '/actions/simple'
+        );
     },
 
     getDetail: (id: ActionsData['id']) => {

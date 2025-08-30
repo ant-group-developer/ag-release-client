@@ -7,6 +7,9 @@ export interface TrackTypeData extends CommonAttribute {
     modifierId: string;
 }
 
+export interface TrackTypeSimpleData
+    extends Pick<TrackTypeData, 'id' | 'code' | 'name'> {}
+
 export interface TrackTypeDataFilter extends CommonParams {
     keyword?: string;
     createdAt?: string;

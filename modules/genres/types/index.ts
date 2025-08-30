@@ -7,6 +7,9 @@ export interface GenresData extends CommonAttribute {
     description: string;
 }
 
+export interface GenresSimpleData
+    extends Pick<GenresData, 'id' | 'code' | 'name'> {}
+
 export interface GenresDataFilter extends CommonParams {
     keyword?: string;
     dateCreated?: string;

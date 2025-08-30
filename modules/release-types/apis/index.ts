@@ -16,6 +16,12 @@ export const releaseTypesApi = {
         );
     },
 
+    getListSimple: () => {
+        return axiosInstance.get<DetailResponse<ReleaseTypesData[]>>(
+            '/album-formats/simple'
+        );
+    },
+
     getDetail: (id: ReleaseTypesData['id']) => {
         return axiosInstance.get<DetailResponse<ReleaseTypesData>>(
             `/album-formats/${id}`

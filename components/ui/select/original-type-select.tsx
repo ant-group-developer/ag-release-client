@@ -1,6 +1,5 @@
 import { toNonAccentVietnamese } from '@/helpers/string';
-import { useGetListTrackOriginTypes } from '@/modules/track-origin-types/hooks/use-get-list-track-origin-types';
-import { TrackOriginTypeData } from '@/modules/track-origin-types/types';
+import { useGetListSimpleTrackOriginTypes } from '@/modules/track-origin-types/hooks/use-get-list-simple-track-origin-types';
 import { Select, SelectProps } from 'antd';
 
 type Props = Omit<SelectProps, 'options'> & {
@@ -14,17 +13,13 @@ export enum OriginType {
 }
 
 export default function OriginalTypeSelect({ fallBack, ...props }: Props) {
-    const { trackOriginTypesData } = useGetListTrackOriginTypes({
-        pageSize: 999,
-    });
+    const { trackOriginTypesData } = useGetListSimpleTrackOriginTypes();
 
-    const options = trackOriginTypesData.items.map(
-        (item: TrackOriginTypeData) => ({
-            id: item.id,
-            value: item.id,
-            label: item.name,
-        })
-    );
+    const options = trackOriginTypesData.map((item) => ({
+        id: item.id,
+        value: item.id,
+        label: item.name,
+    }));
 
     const labelRender = (props: any) => {
         const { value, label } = props;

@@ -1,6 +1,5 @@
 import { toNonAccentVietnamese } from '@/helpers/string';
-import { useGetListLanguage } from '@/modules/languages/hooks/use-get-list-language';
-import { LanguagesData } from '@/modules/languages/types';
+import { useGetListSimpleLanguage } from '@/modules/languages/hooks/use-get-list-simple-language';
 import { Select, SelectProps } from 'antd';
 
 type Props = Omit<SelectProps, 'options'> & {
@@ -8,17 +7,14 @@ type Props = Omit<SelectProps, 'options'> & {
 };
 
 export default function LanguageSelect({ fallBack, ...props }: Props) {
-    // const messages = useTranslations();
-    const { languagesData } = useGetListLanguage({});
-    const option = languagesData?.items.map(
-        (item: LanguagesData, index: number) => {
-            return {
-                id: item.id,
-                value: item.id,
-                label: item.name,
-            };
-        }
-    );
+    const { languagesData } = useGetListSimpleLanguage();
+    const option = languagesData?.map((item) => {
+        return {
+            id: item.id,
+            value: item.id,
+            label: item.name,
+        };
+    });
 
     const labelRender = (props: any) => {
         const { value, label } = props;

@@ -6,4 +6,6 @@ export interface TimezoneData extends CommonAttribute {
     zone: string;
 }
 
+export interface TimezoneSimpleData extends Pick<TimezoneData, 'id' | 'name'> {}
+
 export interface TimezoneDataFilter extends CommonParams {}

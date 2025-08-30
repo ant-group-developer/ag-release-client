@@ -1,7 +1,6 @@
 import { cn } from '@/helpers/common';
 import { toNonAccentVietnamese } from '@/helpers/string';
-import { useGetListPermission } from '@/modules/permission/hooks/use-get-list-permission';
-import { PermissionData } from '@/modules/permission/types';
+import { useGetListSimplePermission } from '@/modules/permission/hooks/use-get-list-simple-permission';
 import { Select, SelectProps, Spin } from 'antd';
 import { useTranslations } from 'next-intl';
 
@@ -12,9 +11,7 @@ type Props = {
 function PermissionSelect({ className, ...props }: Props) {
     const messages = useTranslations();
 
-    const { permissionData, isFetching } = useGetListPermission({
-        pageSize: 999,
-    });
+    const { permissionData, isFetching } = useGetListSimplePermission();
 
     const allOption = {
         key: 'all',
@@ -22,7 +19,7 @@ function PermissionSelect({ className, ...props }: Props) {
         value: 'all',
     };
 
-    const options = permissionData.items.map((data: PermissionData) => ({
+    const options = permissionData.map((data) => ({
         key: data?.id,
         value: data?.id,
         label: data?.name,

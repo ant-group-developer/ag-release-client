@@ -5,6 +5,8 @@ export const genreQueryKeys = {
     all: [QUERY_KEY.GENRE.KEY] as const,
 
     lists: () => [...genreQueryKeys.all, QUERY_KEY.GENRE.GET_LIST] as const,
+    listsSimple: () =>
+        [...genreQueryKeys.all, QUERY_KEY.GENRE.GET_LIST_SIMPLE] as const,
     list: (params?: GenresDataFilter) =>
         params
             ? ([...genreQueryKeys.lists(), params] as const)

@@ -7,4 +7,7 @@ export interface ReleaseTypesData extends CommonAttribute {
     maxTrackCount: number;
 }
 
+export interface ReleaseTypesSimpleData
+    extends Pick<ReleaseTypesData, 'id' | 'code' | 'name'> {}
+
 export interface ReleaseTypesDataFilter extends CommonParams {}

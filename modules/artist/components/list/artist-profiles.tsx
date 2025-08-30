@@ -12,24 +12,12 @@ type Props = {
         name?: string;
         id: string;
     }[];
-    linkedPlatforms?: {
-        id: string;
-        name: string;
-    }[];
     className?: string;
 };
 
-export default function ArtistProfilesList({
-    list,
-    linkedPlatforms = [],
-    className,
-}: Props) {
+export default function ArtistProfilesList({ list, className }: Props) {
     const [selectedPlatform, setSelectedPlatform] = useState<any>(null);
     if (list.length === 0) return null;
-
-    const isLinked = (platformId: string) => {
-        return linkedPlatforms.some((platform) => platform.id === platformId);
-    };
 
     return (
         <div
@@ -39,7 +27,7 @@ export default function ArtistProfilesList({
             )}
         >
             {list.map((item, index) => {
-                const linked = isLinked(item.id);
+                const linked = true;
                 return (
                     <>
                         <div

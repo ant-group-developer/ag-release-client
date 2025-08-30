@@ -6,4 +6,7 @@ export interface ActionsData extends CommonAttribute {
     note: string;
 }
 
+export interface ActionsSimpleData
+    extends Pick<ActionsData, 'id' | 'code' | 'name' | 'note'> {}
+
 export interface ActionsDataFilter extends CommonParams {}

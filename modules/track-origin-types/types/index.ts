@@ -6,6 +6,8 @@ export interface TrackOriginTypeData extends CommonAttribute {
     creatorId: string;
     modifierId: string;
 }
+export interface TrackOriginTypeSimpleData
+    extends Pick<TrackOriginTypeData, 'id' | 'code' | 'name'> {}
 
 export interface TrackOriginTypeDataFilter extends CommonParams {
     keyword?: string;

@@ -8,6 +8,9 @@ export interface PermissionData extends CommonAttribute {
     note: string;
 }
 
+export interface PermissionSimpleData
+    extends Pick<PermissionData, 'id' | 'code' | 'name'> {}
+
 export interface PermissionDataDataFilter extends CommonParams {
     startDateCreated?: string;
     endDateCreated?: string;

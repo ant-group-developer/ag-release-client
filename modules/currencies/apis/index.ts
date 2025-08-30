@@ -1,6 +1,10 @@
 import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
-import { CurrenciesData, CurrenciesDataFilter } from '../types';
+import {
+    CurrenciesData,
+    CurrenciesDataFilter,
+    CurrenciesSimpleData,
+} from '../types';
 import {
     CreateCurrenciesPayload,
     UpdateCurrenciesPayload,
@@ -13,6 +17,12 @@ export const currenciesApis = {
             {
                 params,
             }
+        );
+    },
+
+    getListSimple: () => {
+        return axiosInstance.get<DetailResponse<CurrenciesSimpleData[]>>(
+            '/currencies/simple'
         );
     },
 

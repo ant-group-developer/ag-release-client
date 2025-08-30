@@ -9,8 +9,11 @@ export interface ArtistData extends CommonAttribute {
     modifierId?: string;
     releaseCount: number;
     trackCount: number;
+    code: string;
     artistProfiles?: ArtistProfileData[];
 }
+export interface ArtistDataSimple
+    extends Pick<ArtistData, 'id' | 'name' | 'code' | 'artistProfiles'> {}
 
 export interface ArtistProfileData extends CommonAttribute {
     name: string;

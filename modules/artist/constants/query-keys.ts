@@ -8,4 +8,12 @@ export const artistQueryKeys = {
         params ? [...artistQueryKeys.lists(), params] : artistQueryKeys.lists(),
     getDetails: () => [...artistQueryKeys.all, QUERY_KEY.ARTIST.GET_DETAIL],
     detail: (id: string) => [...artistQueryKeys.getDetails(), id],
+    listsSimple: () => [
+        ...artistQueryKeys.all,
+        QUERY_KEY.ARTIST.GET_LIST_SIMPLE,
+    ],
+    listSimple: (params: ArtistDataFilter) =>
+        params
+            ? [...artistQueryKeys.lists(), params]
+            : artistQueryKeys.listsSimple(),
 };

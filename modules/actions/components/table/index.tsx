@@ -1,4 +1,5 @@
 import ActionButton from '@/components/ui/button/action-button';
+import CopyText from '@/components/ui/copy-text/copy-text';
 import AppTable from '@/components/ui/table/normal-table';
 import { SortableTableProps } from '@/components/ui/table/sortable-table';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
@@ -41,9 +42,9 @@ export const ActionsTable = ({ dataFilter, ...props }: Props) => {
             width: 150,
             ellipsis: true,
             render: (value, record) => (
-                <span className="flex items-center gap-1">
+                <CopyText text={value}>
                     <span className="truncate">{value}</span>
-                </span>
+                </CopyText>
             ),
         },
         {
@@ -54,9 +55,9 @@ export const ActionsTable = ({ dataFilter, ...props }: Props) => {
             width: 150,
             ellipsis: true,
             render: (value, record) => (
-                <span className="flex items-center gap-1">
+                <CopyText text={value}>
                     <span className="truncate">{value}</span>
-                </span>
+                </CopyText>
             ),
         },
         {
@@ -67,9 +68,11 @@ export const ActionsTable = ({ dataFilter, ...props }: Props) => {
             width: 200,
 
             render: (value) => (
-                <span className="line-clamp-3 truncate whitespace-pre-line">
-                    {value}
-                </span>
+                <CopyText text={value}>
+                    <span className="line-clamp-3 truncate whitespace-pre-line">
+                        {value}
+                    </span>
+                </CopyText>
             ),
         },
 

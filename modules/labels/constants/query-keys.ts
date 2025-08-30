@@ -3,7 +3,6 @@ import { LabelDataFilter } from '../types';
 
 export const labelsQueryKeys = {
     all: [QUERY_KEY.LABELS.KEY] as const,
-
     lists: () => [...labelsQueryKeys.all, QUERY_KEY.LABELS.GET_LIST] as const,
     list: (params?: LabelDataFilter) =>
         params
@@ -13,4 +12,10 @@ export const labelsQueryKeys = {
     details: () =>
         [...labelsQueryKeys.all, QUERY_KEY.LABELS.GET_DETAIL] as const,
     detail: (id: string) => [...labelsQueryKeys.details(), id] as const,
+    listsSimple: () =>
+        [...labelsQueryKeys.all, QUERY_KEY.LABELS.GET_LIST_SIMPLE] as const,
+    listSimple: (params?: LabelDataFilter) =>
+        params
+            ? ([...labelsQueryKeys.listsSimple(), params] as const)
+            : labelsQueryKeys.listsSimple(),
 };

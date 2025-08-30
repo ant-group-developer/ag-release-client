@@ -8,10 +8,14 @@ export interface LabelData extends CommonAttribute {
     modifierId: string;
     description: string;
     releaseCount: number;
+    code: string;
     trackCount: number;
     tenantId: TenantData['id'];
     tenant: Pick<TenantData, 'id' | 'name'>;
 }
+
+export interface LabelSimpleData
+    extends Pick<LabelData, 'id' | 'name' | 'code'> {}
 
 export interface LabelDataFilter extends CommonParams {
     keyword?: string;

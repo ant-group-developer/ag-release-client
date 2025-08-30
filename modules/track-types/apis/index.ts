@@ -1,7 +1,7 @@
 import axiosInstance from '@/api/axios-auth';
 import { ArtistDataFilter } from '@/modules/artist/types';
 import { DetailResponse, PaginationResponse } from '@/types/api';
-import { TrackTypeData } from '../types';
+import { TrackTypeData, TrackTypeSimpleData } from '../types';
 import {
     CreateTrackTypePayload,
     UpdateTrackTypePayload,
@@ -14,6 +14,12 @@ export const trackTypeApi = {
             {
                 params,
             }
+        );
+    },
+
+    getListSimple: () => {
+        return axiosInstance.get<DetailResponse<TrackTypeSimpleData[]>>(
+            '/track-types/simple'
         );
     },
 
