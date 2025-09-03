@@ -1,5 +1,5 @@
 import { toNonAccentVietnamese } from '@/helpers/string';
-import { useGetListTrackTypes } from '@/modules/track-types/hooks/use-get-list-track-types';
+import { useGetListSimpleTrackTypes } from '@/modules/track-types/hooks/use-get-list-simple-track-types';
 import { Select, SelectProps } from 'antd';
 
 type Props = Omit<SelectProps, 'option'> & {
@@ -7,9 +7,9 @@ type Props = Omit<SelectProps, 'option'> & {
 };
 
 export default function TrackTypesSelect({ fallBack, ...props }: Props) {
-    const { trackTypesData } = useGetListTrackTypes({});
+    const { trackTypesData } = useGetListSimpleTrackTypes();
 
-    const options = trackTypesData.items.map((item) => {
+    const options = trackTypesData.map((item) => {
         return {
             id: item.id,
             value: item.id,

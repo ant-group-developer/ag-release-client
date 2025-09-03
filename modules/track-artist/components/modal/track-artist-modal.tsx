@@ -210,7 +210,7 @@ export default function TrackArtistModal({ ...props }: Props) {
                                 name: item.name,
                                 id: item.id,
                             }))}
-                            linkedPlatforms={fakeLinkedPlatforms}
+                            // linkedPlatforms={fakeLinkedPlatforms}
                         />
                     </div>
                 )}

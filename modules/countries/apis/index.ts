@@ -1,6 +1,10 @@
 import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
-import { CountriesData, CountriesDataFilter } from '../types';
+import {
+    CountriesData,
+    CountriesDataFilter,
+    CountriesSimpleData,
+} from '../types';
 import { CreateCountryPayload, UpdateCountryPayload } from '../types/payload';
 
 export const countriesApi = {
@@ -10,6 +14,11 @@ export const countriesApi = {
             {
                 params,
             }
+        );
+    },
+    getListSimple: () => {
+        return axiosInstance.get<DetailResponse<CountriesSimpleData[]>>(
+            '/countries/simple'
         );
     },
     getDetail: (id: CountriesData['id']) => {

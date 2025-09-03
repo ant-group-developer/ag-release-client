@@ -1,4 +1,5 @@
 import ActionButton from '@/components/ui/button/action-button';
+import CopyText from '@/components/ui/copy-text/copy-text';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
@@ -37,25 +38,29 @@ export const CurrenciesTable = ({ dataFilter, ...props }: Props) => {
             key: 'name',
             dataIndex: 'name',
             align: 'left',
-            width: 150,
+            width: 200,
             ellipsis: true,
             render: (value, record) => (
-                <span className="flex items-center gap-1">
-                    <span className="truncate">{value}</span>
-                </span>
+                <CopyText text={value}>
+                    <span className="flex items-center gap-1">
+                        <span className="truncate">{value}</span>
+                    </span>
+                </CopyText>
             ),
         },
         {
             title: messages('common.code'),
             key: 'code',
             dataIndex: 'code',
-            align: 'left',
-            width: 150,
+            align: 'center',
+            width: 50,
             ellipsis: true,
             render: (value, record) => (
-                <span className="flex items-center gap-1">
-                    <span className="truncate">{value}</span>
-                </span>
+                <div className="flex justify-center">
+                    <CopyText text={value}>
+                        <span className="truncate">{value}</span>
+                    </CopyText>
+                </div>
             ),
         },
 
@@ -64,7 +69,7 @@ export const CurrenciesTable = ({ dataFilter, ...props }: Props) => {
             key: 'createdAt',
             dataIndex: 'createdAt',
             align: 'center',
-            width: 100,
+            width: 150,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -82,7 +87,7 @@ export const CurrenciesTable = ({ dataFilter, ...props }: Props) => {
             key: 'updatedAt',
             dataIndex: 'updatedAt',
             align: 'center',
-            width: 100,
+            width: 150,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -98,7 +103,7 @@ export const CurrenciesTable = ({ dataFilter, ...props }: Props) => {
         {
             key: 'actions',
             align: 'center',
-            width: 100,
+            width: 50,
             render: (_, record) => (
                 <ActionButton
                     showDelete

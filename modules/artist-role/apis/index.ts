@@ -1,7 +1,7 @@
 import axiosInstance from '@/api/axios-auth';
 import { ArtistDataFilter } from '@/modules/artist/types';
 import { DetailResponse, PaginationResponse } from '@/types/api';
-import { ArtistRoleData } from '../types';
+import { ArtistRoleData, ArtistRoleSimpleData } from '../types';
 import {
     CreateArtistRolePayload,
     UpdateArtistRolePayload,
@@ -12,6 +12,12 @@ export const artistRoleApi = {
         return axiosInstance.get<PaginationResponse<ArtistRoleData>>(
             '/artist-roles',
             { params }
+        );
+    },
+
+    getListSimple: () => {
+        return axiosInstance.get<DetailResponse<ArtistRoleSimpleData[]>>(
+            '/artist-roles/simple'
         );
     },
 

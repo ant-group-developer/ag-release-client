@@ -1,6 +1,5 @@
 import { toNonAccentVietnamese } from '@/helpers/string';
-import { useGetListActions } from '@/modules/actions/hooks/use-get-list-actions';
-import { ActionsData } from '@/modules/actions/types';
+import { useGetListSimpleActions } from '@/modules/actions/hooks/use-get-list-simple-actions';
 import { Select, SelectProps } from 'antd';
 import IconInfoTooltip from '../tooltip/icon-info-tooltip';
 
@@ -9,11 +8,9 @@ type Props = Omit<SelectProps, 'options'> & {
 };
 
 export default function ActionsSelect({ fallBack, ...props }: Props) {
-    const { actionsData } = useGetListActions({
-        pageSize: 999,
-    });
+    const { actionsData } = useGetListSimpleActions();
 
-    const options = actionsData.items.map((item: ActionsData) => ({
+    const options = actionsData.map((item) => ({
         id: item.id,
         value: item.id,
         name: item?.name,

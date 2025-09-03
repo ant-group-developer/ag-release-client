@@ -9,6 +9,11 @@ export const trackOriginTypeQueryKeys = {
             ...trackOriginTypeQueryKeys.all,
             QUERY_KEY.TRACK_ORIGIN_TYPE.GET_LIST,
         ] as const,
+    listsSimple: () =>
+        [
+            ...trackOriginTypeQueryKeys.all,
+            QUERY_KEY.TRACK_ORIGIN_TYPE.GET_LIST_SIMPLE,
+        ] as const,
     list: (params?: TrackOriginTypeDataFilter) =>
         params
             ? ([...trackOriginTypeQueryKeys.lists(), params] as const)

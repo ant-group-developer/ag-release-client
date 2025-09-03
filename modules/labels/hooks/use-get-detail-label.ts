@@ -25,6 +25,7 @@ export const useGetDetailLabel = (id: LabelData['id']) => {
             id: '',
             name: '',
         },
+        code: '',
     };
 
     return {

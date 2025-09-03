@@ -6,6 +6,8 @@ export const timezoneQueryKeys = {
 
     lists: () =>
         [...timezoneQueryKeys.all, QUERY_KEY.TIMEZONE.GET_LIST] as const,
+    listsSimple: () =>
+        [...timezoneQueryKeys.all, QUERY_KEY.TIMEZONE.GET_LIST_SIMPLE] as const,
     list: (params?: TimezoneDataFilter) =>
         params
             ? ([...timezoneQueryKeys.lists(), params] as const)

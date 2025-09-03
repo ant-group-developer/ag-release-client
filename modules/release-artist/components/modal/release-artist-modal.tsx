@@ -10,7 +10,6 @@ import { useGetListArtistRole } from '@/modules/artist-role/hooks/use-get-list-a
 import { ArtistRoleData } from '@/modules/artist-role/types';
 import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
-import { DspData } from '@/modules/dsp/types';
 import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { useCreateReleaseArtist } from '@/modules/release-artist/hooks/use-create-release-artist';
 import { ReleaseArtist } from '@/modules/release-artist/types';
@@ -25,18 +24,11 @@ import { Checkbox, Form } from 'antd';
 import { useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import ArtistProfilesList from '../../../artist/components/list/artist-profiles';
 import { useUpdateReleaseArtist } from '../../hooks/use-update-release-artist';
 
 type Props = Omit<AppModalProps, 'children'> & {
     isSetMainArtist: boolean;
 };
-
-// Dữ liệu mẫu cho các platform đã liên kết
-const fakeLinkedPlatforms = [
-    { id: '2', name: 'Apple Music' },
-    { id: '5', name: 'Youtube Music' },
-];
 
 export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
     const [form] = Form.useForm();
@@ -44,7 +36,7 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
     const [showCreateArtistModal, setShowCreateArtistModal] = useState(false);
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
-    const watchArtistName = useWatch(['name'], form);
+    const watchArtistName = useWatch('name', form);
     const typeModal = useModalStore((state) => state.typeModal);
     const formValues = useReleaseFormStore((state) => state.formValues);
     const { handleError } = useApiError();
@@ -90,12 +82,9 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
     const disabledArtistIds = getExistingArtistOfSelectedRole();
 
     const handleSubmit = async (values: any) => {
-        console.log('🚀 ~ handleSubmit ~ values:', values);
-        console.log(isArtistEditModal);
         active();
         try {
             if (isArtistEditModal) {
-                console.log(1);
                 const variables: UpdateVariables<
                     ReleaseArtist['id'],
                     UpdateReleaseArtistPayload
@@ -112,7 +101,6 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                 };
                 updateReleaseArtist(variables);
             } else {
-                console.log(2);
                 const variables: CreateVariables<CreateReleaseArtistPayload> = {
                     payload: {
                         artistId: values.artistId,
@@ -214,9 +202,9 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                     </AppFormItem>
                 )}
 
-                {watchArtistName && (
+                {/* {!watchArtistName && (
                     <div>
-                        <p className="mb-2 text-sm font-bold">
+                        <p className="mb-2 text-sm font-semibold">
                             {messages('artist.profiles')}
                         </p>
                         <ArtistProfilesList
@@ -225,10 +213,9 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                                 name: item.name,
                                 id: item.id,
                             }))}
-                            linkedPlatforms={fakeLinkedPlatforms}
                         />
                     </div>
-                )}
+                )} */}
 
                 <AppFormItem name="addArtistToTracks" valuePropName="checked">
                     <Checkbox>

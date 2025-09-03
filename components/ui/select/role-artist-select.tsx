@@ -1,8 +1,6 @@
 import { toNonAccentVietnamese } from '@/helpers/string';
-import useModalStore from '@/hooks/use-modal';
-import { useGetListArtistRole } from '@/modules/artist-role/hooks/use-get-list-artist-role';
+import { useGetListSimpleArtistRole } from '@/modules/artist-role/hooks/use-get-list-simple-artist-role';
 import { Select, SelectProps } from 'antd';
-import { useTranslations } from 'next-intl';
 
 type Props = Omit<SelectProps, 'options'> & {
     fallBack?: string;
@@ -14,10 +12,7 @@ export default function RoleArtistSelect({
     fallBack,
     ...props
 }: Props) {
-    const messages = useTranslations();
-    const openModal = useModalStore((state) => state.openModal);
-
-    const { artistsRolesData } = useGetListArtistRole({});
+    const { artistsRolesData } = useGetListSimpleArtistRole();
     const labelRender = (props: any) => {
         const { value, label } = props;
         if (value) {
@@ -34,7 +29,7 @@ export default function RoleArtistSelect({
                     .toLowerCase()
                     .includes(toNonAccentVietnamese(input).toLowerCase())
             }
-            options={artistsRolesData.items.map((item) => ({
+            options={artistsRolesData.map((item) => ({
                 id: item.id,
                 value: item.id,
                 label: item.name,

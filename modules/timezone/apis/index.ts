@@ -1,6 +1,6 @@
 import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
-import { TimezoneData, TimezoneDataFilter } from '../types';
+import { TimezoneData, TimezoneDataFilter, TimezoneSimpleData } from '../types';
 import { CreateTimezonePayload, UpdateTimezonePayload } from '../types/payload';
 
 export const timezoneApi = {
@@ -10,6 +10,11 @@ export const timezoneApi = {
             {
                 params,
             }
+        );
+    },
+    getListSimple: () => {
+        return axiosInstance.get<DetailResponse<TimezoneSimpleData[]>>(
+            '/timezones/simple'
         );
     },
     getDetail: (id: TimezoneData['id']) => {

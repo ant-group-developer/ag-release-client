@@ -1,6 +1,5 @@
 import { toNonAccentVietnamese } from '@/helpers/string';
-import { useGetListGenres } from '@/modules/genres/hooks/use-get-list-genres';
-import { GenresData } from '@/modules/genres/types';
+import { useGetListSimpleGenres } from '@/modules/genres/hooks/use-get-list-simple-genres';
 import { Select, SelectProps } from 'antd';
 
 type Props = Omit<SelectProps, 'options'> & {
@@ -8,8 +7,8 @@ type Props = Omit<SelectProps, 'options'> & {
 };
 
 export default function GenresSelect({ fallBack, ...props }: Props) {
-    const { genresData } = useGetListGenres({});
-    const option = genresData?.items.map((item: GenresData, index: number) => {
+    const { genresData } = useGetListSimpleGenres();
+    const option = genresData?.map((item) => {
         return {
             id: item.id,
             value: item.id,

@@ -1,5 +1,5 @@
 import { toNonAccentVietnamese } from '@/helpers/string';
-import { useGetListCountries } from '@/modules/countries/hooks/use-get-list-countries';
+import { useGetListSimpleCountries } from '@/modules/countries/hooks/use-get-list-simple-countries';
 import { Select, SelectProps } from 'antd';
 
 type Props = Omit<SelectProps, 'option'> & {
@@ -7,9 +7,9 @@ type Props = Omit<SelectProps, 'option'> & {
 };
 
 export default function CountrySelect({ fallBack, ...props }: Props) {
-    const { countriesData } = useGetListCountries({ pageSize: 9999 });
+    const { countriesData } = useGetListSimpleCountries();
 
-    const options = countriesData.items.map((item) => {
+    const options = countriesData.map((item) => {
         return {
             id: item.id,
             value: item.id,

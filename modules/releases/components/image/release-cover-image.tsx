@@ -2,6 +2,7 @@ import ImageFallback from '@/components/ui/image/image-fallback';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { useIntersectionObserver } from '@uidotdev/usehooks';
+import { useState } from 'react';
 import { ReleasesData } from '../../types';
 
 type Props = {
@@ -9,6 +10,7 @@ type Props = {
 };
 
 export default function ReleaseCoverImage({ data }: Props) {
+    const [loaded, setLoaded] = useState(false);
     const imgFileId =
         data?.coverArtThumbnails?.['75x75'] ??
         data?.coverArtThumbnails?.original;
@@ -35,6 +37,7 @@ export default function ReleaseCoverImage({ data }: Props) {
                 width={40}
                 height={40}
                 className="aspect-square rounded-lg object-cover"
+                onLoad={() => setLoaded(true)}
             />
         </div>
     );

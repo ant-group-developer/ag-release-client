@@ -1,6 +1,6 @@
 import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
-import { LabelData, LabelDataFilter } from '../types';
+import { LabelData, LabelDataFilter, LabelSimpleData } from '../types';
 import { CreateLabelPayload, UpdateLabelPayload } from '../types/payload';
 
 export const labelsApi = {
@@ -8,6 +8,12 @@ export const labelsApi = {
         return axiosInstance.get<PaginationResponse<LabelData>>('/labels', {
             params,
         });
+    },
+
+    getListSimple: () => {
+        return axiosInstance.get<DetailResponse<LabelSimpleData[]>>(
+            '/labels/simple'
+        );
     },
 
     getDetail: (id: LabelData['id']) => {

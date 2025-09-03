@@ -1,6 +1,6 @@
 import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
-import { GenresData, GenresDataFilter } from '../types';
+import { GenresData, GenresDataFilter, GenresSimpleData } from '../types';
 import { CreateGenrePayload, UpdateGenrePayload } from '../types/payload';
 
 export const genresApi = {
@@ -8,6 +8,12 @@ export const genresApi = {
         return axiosInstance.get<PaginationResponse<GenresData>>('/genres', {
             params,
         });
+    },
+
+    getListSimple: () => {
+        return axiosInstance.get<DetailResponse<GenresSimpleData[]>>(
+            '/genres/simple'
+        );
     },
 
     getDetail: (id: GenresData['id']) => {

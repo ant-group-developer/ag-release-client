@@ -4,6 +4,11 @@ import { CountriesDataFilter } from '../types';
 export const countriesQueryKeys = {
     all: [QUERY_KEY.COUNTRIES.KEY],
     lists: () => [...countriesQueryKeys.all, QUERY_KEY.COUNTRIES.GET_LIST],
+    listsSimple: () => [
+        ...countriesQueryKeys.all,
+        QUERY_KEY.COUNTRIES.GET_LIST_SIMPLE,
+    ],
+
     list: (params?: CountriesDataFilter) =>
         params
             ? [...countriesQueryKeys.lists(), params]

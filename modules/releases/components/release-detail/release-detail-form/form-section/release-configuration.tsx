@@ -3,7 +3,7 @@ import LabelSelect from '@/components/ui/select/label-select';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { useRouter } from '@/i18n/routing';
-import { useGetListReleaseTypes } from '@/modules/release-types/hooks/use-get-list-release-types';
+import { useGetListSimpleReleaseTypes } from '@/modules/release-types/hooks/use-get-list-simple-release-types';
 import { ReleaseTypesData } from '@/modules/release-types/types';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { RELEASES_TABS } from '@/modules/releases/enums';
@@ -43,7 +43,7 @@ export default function ReleaseConfigurationSection({
     const router = useRouter();
 
     // apis
-    const { releaseTypesData } = useGetListReleaseTypes({});
+    const { releaseTypesData } = useGetListSimpleReleaseTypes();
 
     // variables
     const isCreateReleasePage = params['action'] === 'create';
@@ -256,9 +256,9 @@ export default function ReleaseConfigurationSection({
                                                         isReadMode
                                                     }
                                                 >
-                                                    {releaseTypesData.items
-                                                        .length > 0 &&
-                                                        releaseTypesData.items.map(
+                                                    {releaseTypesData.length >
+                                                        0 &&
+                                                        releaseTypesData.map(
                                                             (
                                                                 type: ReleaseTypesData
                                                             ) => (

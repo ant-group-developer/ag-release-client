@@ -6,6 +6,8 @@ export const languageQueryKeys = {
 
     lists: () =>
         [...languageQueryKeys.all, QUERY_KEY.LANGUAGE.GET_LIST] as const,
+    listsSimple: () =>
+        [...languageQueryKeys.all, QUERY_KEY.LANGUAGE.GET_LIST_SIMPLE] as const,
     list: (params?: LanguageDataFilter) =>
         params
             ? ([...languageQueryKeys.lists(), params] as const)

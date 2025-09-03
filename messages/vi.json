@@ -382,6 +382,7 @@
         "notifyOnSuccess": "Thông báo khi thành công",
         "notifyOnFailed": "Thông báo khi thất bại",
         "databaseBackupStorage": "Nơi lưu database backup",
+        "backupFileName": "Tên file sao lưu",
         "executeMessages": {
             "daily": "Mỗi ngày vào giờ {at} thực thi một lần",
             "nDays": "Cứ mỗi {days} ngày {at} thực thi một lần",

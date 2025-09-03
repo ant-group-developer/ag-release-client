@@ -382,6 +382,7 @@
         "notifyOnSuccess": "Notify on success",
         "notifyOnFailed": "Notify on failed",
         "databaseBackupStorage": "Database backup storage",
+        "backupFileName": "Backup file name",
         "executeMessages": {
             "daily": "Everyday {at} execute once",
             "nDays": "Every {days} days {at} execute once",

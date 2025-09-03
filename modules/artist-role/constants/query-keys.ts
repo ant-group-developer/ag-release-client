@@ -4,6 +4,10 @@ import { ArtistRoleDataFilter } from '../types';
 export const artistRoleQueryKeys = {
     all: [QUERY_KEY.ARTIST_ROLE.KEY],
     list: () => [...artistRoleQueryKeys.all, QUERY_KEY.ARTIST_ROLE.GET_LIST],
+    listSimple: () => [
+        ...artistRoleQueryKeys.all,
+        QUERY_KEY.ARTIST_ROLE.GET_LIST_SIMPLE,
+    ],
     lists: (params: ArtistRoleDataFilter) => {
         const result: any[] = [...artistRoleQueryKeys.list()];
         if (params) {

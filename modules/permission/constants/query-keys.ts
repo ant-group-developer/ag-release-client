@@ -9,6 +9,11 @@ export const permissionQueryKeys = {
             ...permissionQueryKeys.all,
             QUERY_KEY.PERMISSION.GET_LIST_PERMISSION,
         ] as const,
+    listsSimple: () =>
+        [
+            ...permissionQueryKeys.all,
+            QUERY_KEY.PERMISSION.GET_LIST_SIMPLE_PERMISSION,
+        ] as const,
     list: (params?: PermissionDataDataFilter) =>
         params
             ? ([...permissionQueryKeys.lists(), params] as const)

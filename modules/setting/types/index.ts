@@ -29,6 +29,8 @@ export interface BackupDatabaseConfig {
     //     dayOfMonth?: number; // backup hàng tháng: 1–31
     //     time?: string; // giờ thực hiện: "01:30"
     // };
+    fileName: string;
+    shell: string;
     cronValue: string;
 
     notifyOnFailed: boolean;

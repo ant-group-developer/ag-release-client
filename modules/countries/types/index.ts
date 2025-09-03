@@ -14,6 +14,9 @@ export interface CountriesData extends CommonAttribute {
     regionId: number;
 }
 
+export interface CountriesSimpleData
+    extends Pick<CountriesData, 'id' | 'name'> {}
+
 export interface CountriesDataFilter extends CommonParams {
     keyword?: string;
     dateCreated?: string;
