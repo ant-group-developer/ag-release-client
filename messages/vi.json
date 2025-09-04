@@ -41,7 +41,25 @@
         "forbiddenDescription": "Please contact the Admin for more details",
         "message": {
             "error": {
-                "invalidCredentials": "Email hoặc mật khẩu không đúng."
+                "invalidCredentials": "Email hoặc mật khẩu không đúng.",
+                "unauthorized": "Yêu cầu xác thực.",
+                "invalidToken": "Token truy cập không hợp lệ hoặc bị thiếu.",
+                "invalidTokenType": "Loại token không hợp lệ.",
+                "tokenExpired": "Token truy cập đã hết hạn.",
+                "sessionExpired": "Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.",
+                "forbidden": "Bạn không có quyền truy cập tài nguyên này.",
+                "insufficientPermissions": "Quyền hạn không đủ.",
+                "systemAdminOnly": "Chỉ quản trị viên hệ thống mới có thể truy cập tài nguyên này.",
+                "tenantWhiteLabelOnly": "Chỉ loại tenant white label mới có thể truy cập tài nguyên này.",
+                "tenantOwnerOnly": "Chỉ chủ sở hữu workspace mới có thể truy cập tài nguyên này.",
+                "tenantOwnerOrAdminOnly": "Chỉ chủ sở hữu hoặc quản trị viên workspace mới có thể truy cập tài nguyên này.",
+                "tenantIdRequired": "Yêu cầu cung cấp mã định danh workspace.",
+                "tenantAccessDenied": "Bạn không thuộc workspace này.",
+                "tenantMismatch": "Workspace được yêu cầu không khớp với phiên làm việc của bạn.",
+                "userInactive": "Tài khoản của bạn đang không hoạt động.",
+                "accountLocked": "Tài khoản của bạn đã bị khóa.",
+                "mfaRequired": "Yêu cầu xác thực đa yếu tố.",
+                "mfaInvalid": "Mã xác minh không hợp lệ."
             }
         }
     },
@@ -615,6 +633,27 @@
             "tenant": {
                 "changeOwnerHint": "Nếu muốn thay đổi người sở hữu, hãy vào mục <element>Workspace</element>",
                 "conflictError": "Các Workspace không được trùng nhau"
+            }
+        },
+        "message": {
+            "success": {
+                "invite": "Đã gửi lời mời thành công"
+            },
+            "error": {
+                "email": {
+                    "conflict": "Địa chỉ email đã tồn tại"
+                },
+                "tenant": {
+                    "confilict": "Người dùng đã thuộc về Workspace này",
+                    "forbidden": "Người dùng không có quyền truy cập Workspace này",
+                    "notFound": "Người dùng không thuộc về bất cứ Workspace nào",
+                    "delete": {
+                        "declineDeleteSystemAdmin": "Không thể xoá quyền Admin hệ thống",
+                        "declineDeleteTenantOWner": "Không thể xoá quyền chủ sở hữu Workspace",
+                        "declineDeleteTenantAdmin": "Không thể xoá quyền Admin Workspace"
+                    }
+                },
+                "blocked": "Người dùng đã bị chặn"
             }
         }
     },
@@ -1236,6 +1275,12 @@
         "labels": {
             "max": {
                 "label": "Số label có thể tạo"
+            }
+        },
+        "message": {
+            "error": {
+                "notFound": "Không tìm thấy Workspace nào với thông tin đã cung cấp",
+                "blocked": "Workspace này đã bị chặn"
             }
         }
     },
