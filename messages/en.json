@@ -708,7 +708,7 @@
         "otherMetadata": "Other metadata",
         "label": "Release",
         "create": "Create release",
-        "lastedRelease": "Lasted release",
+        "lastedReleases": "Lasted releases",
         "name": "Release name",
         "id": "Release ID",
         "type": "Release type",

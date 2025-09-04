@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { OnPlay, OnSeek, usePlaySongStore } from './usePlaySongStore';
+import { OnPlay, OnSeek, usePlaySongStore } from './use-play-song-store';
 
 interface UseSongStatusProps {
     //   peakData: string;

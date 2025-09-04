@@ -707,7 +707,7 @@
         "otherMetadata": "Các metadata khác",
         "label": "Phát hành",
         "create": "Tạo phát hành ",
-        "lastedRelease": "Phát hành gần đây",
+        "lastedReleases": "Phát hành gần đây",
         "name": "Tên phát hành",
         "id": "Mã phát hành",
         "type": "Loại phát hành",
