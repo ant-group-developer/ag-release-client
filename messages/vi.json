@@ -1486,5 +1486,13 @@
         "success": {
             "startedPleaseWait": "Đang sao lưu, xin vui lòng đợi..."
         }
+    },
+
+    "analytics": {
+        "label": "Phân tích",
+        "name": "Tên phân tích",
+        "action": {
+            "delete": "Xoá phân tích"
+        }
     }
 }

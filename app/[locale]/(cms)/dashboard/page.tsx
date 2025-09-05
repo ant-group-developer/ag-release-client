@@ -2,6 +2,7 @@
 
 import { useFilter } from '@/hooks/use-filter';
 import { useRouter } from '@/i18n/routing';
+import DspChart from '@/modules/dashboard/components/area-chart/dsp-chart';
 import StreamChart from '@/modules/dashboard/components/area-chart/stream-chart';
 import DashboardHeader from '@/modules/dashboard/components/header';
 import ListNews from '@/modules/dashboard/components/list-news';
@@ -38,6 +39,8 @@ function Dashboard({}: Props) {
 
             <div className="flex flex-col gap-4 overflow-auto px-4 py-4">
                 <StatsOverview />
+
+                <DspChart />
 
                 <ListTop />
 

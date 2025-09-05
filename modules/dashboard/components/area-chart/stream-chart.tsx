@@ -58,7 +58,7 @@ export default function StreamChart({ color = '#90D5FF' }: Props) {
                 Stream
             </p>
 
-            <div className="min-h-[250px] px-4 pb-4">
+            <div className="h-[250px] px-4 pb-4">
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={data}>
                         <defs>
