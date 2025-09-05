@@ -1,8 +1,10 @@
 import WorldMap from 'react-svg-worldmap';
 
-type Props = {};
+type Props = {
+    className?: string;
+};
 
-export default function MapChart({}: Props) {
+export default function MapChart({ className }: Props) {
     const data = [
         { country: 'cn', value: 138961 }, // china
         { country: 'in', value: 1311559204 }, // india
@@ -17,7 +19,7 @@ export default function MapChart({}: Props) {
         { country: 'vn', value: 12731218112 }, // vietnam
     ];
     return (
-        <div className="rounded-lg border">
+        <div className={`rounded-lg border ${className}`}>
             <p className="px-6 py-4 pb-4 text-left text-base font-bold">
                 Stream map
             </p>
@@ -25,7 +27,7 @@ export default function MapChart({}: Props) {
                 <WorldMap
                     color="red"
                     value-suffix="people"
-                    size="xl"
+                    size="md"
                     data={data}
                 />
             </div>

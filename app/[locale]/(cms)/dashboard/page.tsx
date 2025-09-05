@@ -41,9 +41,13 @@ function Dashboard({}: Props) {
 
                 <ListTop />
 
-                <div className="grid max-h-[550px] gap-4 overflow-hidden sm:grid-cols-1 lg:grid-cols-2">
-                    <MapChart />
-                    <StreamChart />
+                <div className="grid max-h-[550px] gap-4 overflow-hidden sm:grid-cols-1 lg:grid-cols-4">
+                    <div className="col-span-1">
+                        <MapChart />
+                    </div>
+                    <div className="col-span-3">
+                        <StreamChart />
+                    </div>
                 </div>
 
                 <ListRelease data={releasesData.items.slice(0, 14)} />

@@ -48,5 +48,7 @@ async function proxy(req: NextRequest, { path }: { path: string[] }) {
 
     const res = await fetch(url, init);
     const body = await res.arrayBuffer();
-    return new NextResponse(body, { status: res.status, headers: res.headers });
+    const headers = Object.fromEntries(res.headers);
+    delete headers['content-encoding']; // tránh double decode
+    return new NextResponse(body, { status: res.status, headers });
 }
