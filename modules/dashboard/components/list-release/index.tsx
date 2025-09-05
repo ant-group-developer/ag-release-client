@@ -16,7 +16,7 @@ export default function ListRelease({ data }: Props) {
         <div className="mt-8">
             <div className="flex items-center justify-between pb-2">
                 <p className="text-lg font-bold">
-                    {messages('release.lastedRelease')}
+                    {messages('release.latestReleases')}
                 </p>
 
                 <div>

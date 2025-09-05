@@ -52,6 +52,8 @@ export async function getCurrentTenant(
                 cache: 'no-store', // tenant can change per-request
             }
         );
+        // const text = await res.text();
+        // console.log('Backend error body:', text);
         if (!res.ok) return null;
         const json = await res.json();
         return (json?.data ?? json) as TenantDetail;

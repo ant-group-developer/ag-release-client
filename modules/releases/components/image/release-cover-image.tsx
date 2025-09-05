@@ -2,6 +2,7 @@ import ImageFallback from '@/components/ui/image/image-fallback';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { useIntersectionObserver } from '@uidotdev/usehooks';
+import { Skeleton } from 'antd';
 import { useState } from 'react';
 import { ReleasesData } from '../../types';
 
@@ -28,17 +29,26 @@ export default function ReleaseCoverImage({ data }: Props) {
         }
     );
 
+    const showSkeleton = isFetching;
+
     return (
         <div ref={ref}>
-            <ImageFallback
-                fallbackSrc={FALLBACK_IMAGE}
-                src={linkReadFile as string}
-                alt="cover"
-                width={40}
-                height={40}
-                className="aspect-square rounded-lg object-cover"
-                onLoad={() => setLoaded(true)}
-            />
+            {showSkeleton ? (
+                <Skeleton.Node
+                    active
+                    className="aspect-square !h-10 !w-10 !rounded-lg"
+                />
+            ) : (
+                <ImageFallback
+                    fallbackSrc={FALLBACK_IMAGE}
+                    src={linkReadFile as string}
+                    alt="cover"
+                    width={40}
+                    height={40}
+                    className="aspect-square rounded-lg object-cover"
+                    onLoad={() => setLoaded(true)}
+                />
+            )}
         </div>
     );
 }

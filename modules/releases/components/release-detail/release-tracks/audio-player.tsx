@@ -1,4 +1,4 @@
-import { usePlaySongStore } from '@/app/hooks/usePlaySongStore';
+import { usePlaySongStore } from '@/hooks/use-play-song-store';
 import { useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player';
 

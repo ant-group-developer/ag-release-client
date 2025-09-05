@@ -4,12 +4,15 @@ import { FALLBACK_IMAGE } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
 import { getIntlCodeByReleaseStatus } from '@/helpers/intl';
-import { getReleaseDetailTabRoute } from '@/helpers/link';
+import {
+    getReleaseDetailTabRoute,
+    RELEASE_DETAIL_ACTION,
+} from '@/helpers/link';
 import { Link, useRouter } from '@/i18n/routing';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { ReleasesData } from '@/modules/releases/types';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
-import { Card, CardProps } from 'antd';
+import { Card, CardProps, Skeleton } from 'antd';
 import Meta from 'antd/es/card/Meta';
 import { useTranslations } from 'next-intl';
 
@@ -25,7 +28,12 @@ export default function CardRelease({ data, ...props }: Props) {
         data?.coverArtThumbnails?.['300x300'] ??
         data?.coverArtThumbnails?.original;
 
-    const { linkReadFile } = useGetLinkReadFile(imageFileId as string);
+    const { linkReadFile, isFetching } = useGetLinkReadFile(
+        imageFileId as string
+    );
+
+    const showSkeleton = isFetching;
+
     return (
         <Card
             {...props}
@@ -35,17 +43,25 @@ export default function CardRelease({ data, ...props }: Props) {
                     <Link
                         href={getReleaseDetailTabRoute(
                             data.id,
-                            RELEASES_TABS.CORE_DETAIL
+                            RELEASES_TABS.CORE_DETAIL,
+                            RELEASE_DETAIL_ACTION.READ
                         )}
                     >
-                        <ImageFallback
-                            fallbackSrc={FALLBACK_IMAGE}
-                            className="cursor-pointer overflow-hidden object-cover duration-300 hover:scale-110"
-                            alt="example"
-                            src={linkReadFile || FALLBACK_IMAGE}
-                            width={300}
-                            height={300}
-                        />
+                        {showSkeleton ? (
+                            <Skeleton.Node
+                                active
+                                className="!h-[300px] !w-[300px] !rounded-lg"
+                            />
+                        ) : (
+                            <ImageFallback
+                                fallbackSrc={FALLBACK_IMAGE}
+                                className="cursor-pointer overflow-hidden object-cover duration-300 hover:scale-110"
+                                alt="example"
+                                src={linkReadFile || FALLBACK_IMAGE}
+                                width={300}
+                                height={300}
+                            />
+                        )}
                     </Link>
                     <div className="absolute right-2 top-2 rounded-lg bg-black/80 p-1 px-2 text-xs font-medium text-white">
                         <span>

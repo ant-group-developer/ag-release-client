@@ -41,11 +41,30 @@
         "forbiddenDescription": "Please contact the Admin for more details",
         "message": {
             "error": {
-                "invalidCredentials": "Invalid email or password."
+                "invalidCredentials": "Invalid email or password.",
+                "unauthorized": "Authentication required.",
+                "invalidToken": "Invalid or missing access token.",
+                "invalidTokenType": "Invalid token type.",
+                "tokenExpired": "Access token has expired.",
+                "sessionExpired": "Session has expired. Please sign in again.",
+                "forbidden": "You do not have permission to access this resource.",
+                "insufficientPermissions": "Insufficient permissions.",
+                "systemAdminOnly": "Only system administrators can access this resource.",
+                "tenantWhiteLabelOnly": "Only tenant type white label can access this resource.",
+                "tenantOwnerOnly": "Only tenant owners can access this resource.",
+                "tenantOwnerOrAdminOnly": "Only tenant owners or tenant admins can access this resource.",
+                "tenantIdRequired": "Tenant identifier is required.",
+                "tenantAccessDenied": "You do not belong to this workspace.",
+                "tenantMismatch": "Requested workspace does not match your session.",
+                "userInactive": "Your account is inactive.",
+                "accountLocked": "Your account is locked.",
+                "mfaRequired": "Multi-factor authentication required.",
+                "mfaInvalid": "Invalid verification code."
             }
         }
     },
     "common": {
+        "streams": "Streams",
         "success": "Success",
         "compare": "Compare",
         "isSongCreatedByAi": "Is a song created by AI",
@@ -617,6 +636,27 @@
                 "changeOwnerHint": "To change the owner, go to the <element>Workspace</element> section",
                 "conflictError": "Tenant must be unique"
             }
+        },
+        "message": {
+            "success": {
+                "invite": "Invitation sent successfully"
+            },
+            "error": {
+                "email": {
+                    "conflict": "Email address already exists"
+                },
+                "tenant": {
+                    "conflict": "User already belongs to this Workspace",
+                    "forbidden": "User does not have permission to access this Workspace",
+                    "notFound": "User does not belong to any Workspace",
+                    "delete": {
+                        "declineDeleteSystemAdmin": "Cannot delete System Admin role",
+                        "declineDeleteTenantOwner": "Cannot delete Workspace Owner role",
+                        "declineDeleteTenantAdmin": "Cannot delete Workspace Admin role"
+                    }
+                },
+                "blocked": "User has been blocked"
+            }
         }
     },
     "file": {
@@ -669,7 +709,7 @@
         "otherMetadata": "Other metadata",
         "label": "Release",
         "create": "Create release",
-        "lastedRelease": "Lasted release",
+        "latestReleases": "Latest releases",
         "name": "Release name",
         "id": "Release ID",
         "type": "Release type",
@@ -1233,6 +1273,12 @@
         "labels": {
             "max": {
                 "label": "Maximum labels can create"
+            }
+        },
+        "message": {
+            "error": {
+                "notFound": "No workspace was found with the provided information",
+                "blocked": "This workspace has been blocked"
             }
         }
     },

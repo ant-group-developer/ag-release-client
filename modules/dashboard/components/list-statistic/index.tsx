@@ -1,195 +1,120 @@
-import {
-    BadgeAlert,
-    BriefcaseBusiness,
-    CircleDollarSign,
-    CircleHelp,
-    Users,
-} from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import StatCard from './stat-card';
 
 type Props = {};
 
-export default function ListStatistic({}: Props) {
+export default function StatsOverview({}: Props) {
     const messages = useTranslations();
+
+    const issuesCard = {
+        title: 'Issues',
+        value: '15',
+        trend: 32.4,
+        data: [
+            { date: '2025-01-01', value: 12 },
+            { date: '2025-01-02', value: 18 },
+            { date: '2025-01-03', value: 15 },
+            { date: '2025-01-04', value: 20 },
+            { date: '2025-01-05', value: 22 },
+            { date: '2025-01-06', value: 25 },
+            { date: '2025-01-07', value: 28 },
+            { date: '2025-01-08', value: 30 },
+            { date: '2025-01-09', value: 26 },
+            { date: '2025-01-10', value: 29 },
+            { date: '2025-01-11', value: 31 },
+            { date: '2025-01-12', value: 33 },
+        ],
+    };
+
+    const whiteLabelCard = {
+        title: 'White label/Label',
+        value: '8',
+        trend: 18.45,
+        data: [
+            { date: '2025-01-01', value: 5 },
+            { date: '2025-01-02', value: 8 },
+            { date: '2025-01-03', value: 6 },
+            { date: '2025-01-04', value: 10 },
+            { date: '2025-01-05', value: 7 },
+            { date: '2025-01-06', value: 12 },
+            { date: '2025-01-07', value: 9 },
+            { date: '2025-01-08', value: 14 },
+            { date: '2025-01-09', value: 11 },
+            { date: '2025-01-10', value: 15 },
+            { date: '2025-01-11', value: 13 },
+            { date: '2025-01-12', value: 16 },
+        ],
+    };
+
+    const releasesCard = {
+        title: 'Releases',
+        value: '10',
+        trend: -20.34,
+        data: [
+            { date: '2025-01-01', value: 15 },
+            { date: '2025-01-02', value: 20 },
+            { date: '2025-01-03', value: 25 },
+            { date: '2025-01-04', value: 30 }, // đỉnh
+            { date: '2025-01-05', value: 28 },
+            { date: '2025-01-06', value: 24 },
+            { date: '2025-01-07', value: 20 },
+            { date: '2025-01-08', value: 18 },
+            { date: '2025-01-09', value: 14 },
+            { date: '2025-01-10', value: 12 },
+            { date: '2025-01-11', value: 10 },
+            { date: '2025-01-12', value: 8 },
+        ],
+    };
+
+    const tracksCard = {
+        title: 'Tracks',
+        value: '32',
+        trend: 14.45,
+        data: [
+            { date: '2025-01-01', value: 10 },
+            { date: '2025-01-02', value: 15 },
+            { date: '2025-01-03', value: 22 }, // đỉnh 1
+            { date: '2025-01-04', value: 18 },
+            { date: '2025-01-05', value: 12 },
+            { date: '2025-01-06', value: 20 },
+            { date: '2025-01-07', value: 28 }, // đỉnh 2
+            { date: '2025-01-08', value: 25 },
+            { date: '2025-01-09', value: 19 },
+            { date: '2025-01-10', value: 24 },
+            { date: '2025-01-11', value: 30 }, // đỉnh nhỏ
+            { date: '2025-01-12', value: 26 },
+        ],
+    };
+
     return (
-        <div>
-            {/* <p className="text-lg font-bold">{messages('common.statistic')}</p> */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-4 lg:grid-cols-4">
+            <StatCard
+                title="Issues"
+                value="15"
+                trend={32.4}
+                data={issuesCard.data}
+            />
 
-            <div className="grid grid-cols-4 gap-4">
-                <div className="flex justify-between gap-6 rounded-lg border !border-gray-200 p-4 dark:!border-zinc-800">
-                    <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full">
-                        {/* <Image
-                            width={48}
-                            height={48}
-                            src="/icon/deal.png"
-                            alt=""
-                            className="rounded-full"
-                        /> */}
-                        <BriefcaseBusiness
-                            // className="text-[#f56015]"
-                            size={28}
-                        />
-                    </div>
-                    <div className="flex flex-1 flex-col justify-center">
-                        <p className="text-lg font-bold">
-                            {messages('common.partners')}
-                        </p>
-                        <p className="text-lg font-medium">32</p>
-                    </div>
-                    <div className="flex flex-col items-center justify-between gap-2 text-xl font-bold">
-                        <div className="flex w-full justify-end">
-                            <CircleHelp />
-                        </div>
-                        <span className="text-green-600">+24%</span>
-                    </div>
-                </div>
+            <StatCard
+                title="White label/Label"
+                value="8"
+                trend={18.45}
+                data={whiteLabelCard.data}
+            />
 
-                <div className="flex justify-between gap-6 rounded-lg border !border-gray-200 p-4 dark:!border-zinc-800">
-                    <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full">
-                        {/* <Image
-                            width={48}
-                            height={48}
-                            src="/icon/deal.png"
-                            alt=""
-                            className="rounded-full"
-                        /> */}
-                        <CircleDollarSign
-                            // className="text-[#f56015]"
-                            size={28}
-                        />
-                    </div>
-                    <div className="flex flex-1 flex-col justify-center">
-                        <p className="text-lg font-bold">
-                            {messages('common.revenue')}
-                        </p>
-                        <p className="text-lg font-medium">20.231.253$</p>
-                    </div>
-                    <div className="flex flex-col items-center justify-between gap-2 text-xl font-bold">
-                        <div className="flex w-full justify-end">
-                            <CircleHelp />
-                        </div>
-                        <span className="text-green-600">+24%</span>
-                    </div>
-                </div>
+            <StatCard
+                title="Releases"
+                value="10"
+                trend={-20.34}
+                data={releasesCard.data}
+            />
 
-                <div className="flex justify-between gap-6 rounded-lg border !border-gray-200 p-4 dark:!border-zinc-800">
-                    <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full">
-                        {/* <Image
-                            width={48}
-                            height={48}
-                            src="/icon/deal.png"
-                            alt=""
-                            className="rounded-full"
-                        /> */}
-                        <BadgeAlert
-                            // className="text-[#f56015]"
-                            size={28}
-                        />
-                    </div>
-                    <div className="flex flex-1 flex-col justify-center">
-                        <p className="text-lg font-bold">
-                            {messages('common.issues')}
-                        </p>
-                        <p className="text-lg font-medium">10</p>
-                    </div>
-                    <div className="flex flex-col items-center justify-between gap-2 text-xl font-bold">
-                        <div className="flex w-full justify-end">
-                            <CircleHelp />
-                        </div>
-                        <span className="text-red-600">+24%</span>
-                    </div>
-                </div>
-
-                <div className="flex justify-between gap-6 rounded-lg border !border-gray-200 p-4 dark:!border-zinc-800">
-                    <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full">
-                        {/* <Image
-                            width={48}
-                            height={48}
-                            src="/icon/deal.png"
-                            alt=""
-                            className="rounded-full"
-                        /> */}
-                        <Users
-                            // className="text-[#f56015]"
-                            size={28}
-                        />
-                    </div>
-                    <div className="flex flex-1 flex-col justify-center">
-                        <p className="text-lg font-bold">
-                            {messages('common.activities')}
-                        </p>
-                        <p className="text-lg font-medium">15</p>
-                    </div>
-                    <div className="flex flex-col items-center justify-between gap-2 text-xl font-bold">
-                        <div className="flex w-full justify-end">
-                            <CircleHelp />
-                        </div>
-                        <span className="text-green-600">+20%</span>
-                    </div>
-                </div>
-
-                {/* <div className="flex justify-between gap-6 rounded-lg border !border-gray-200 p-4 dark:!border-zinc-800">
-                    <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full bg-[#ffece7]">
-                        <Image
-                            width={48}
-                            height={48}
-                            src="/icon/wallet.png"
-                            alt=""
-                            className="rounded-full"
-                        />
-                    </div>
-                    <div className="flex flex-1 flex-col justify-center">
-                        <p className="text-lg font-bold">Doanh thu</p>
-                        <p className="text-base font-medium">100.000.000VNĐ</p>
-                    </div>
-                    <div className="flex flex-col items-center justify-between text-2xl font-bold">
-                        <div className="flex w-full justify-end">
-                            <CircleHelp />
-                        </div>
-                        <span className="text-green-600">+24%</span>
-                    </div>
-                </div>
-                <div className="flex justify-between gap-6 rounded-lg border !border-gray-200 p-4 dark:!border-zinc-800">
-                    <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full bg-[#ffece7]">
-                        <Image
-                            width={48}
-                            height={48}
-                            src="/icon/warning.png"
-                            alt=""
-                        />
-                    </div>
-                    <div className="flex flex-1 flex-col justify-center">
-                        <p className="text-lg font-bold">Vấn đề</p>
-                        <p className="text-base font-medium">12</p>
-                    </div>
-                    <div className="flex flex-col items-center justify-between text-2xl font-bold">
-                        <div className="flex w-full justify-end">
-                            <CircleHelp />
-                        </div>
-                        <span className="text-red-600">+24%</span>
-                    </div>
-                </div>
-                <div className="flex justify-between gap-6 rounded-lg border !border-gray-200 p-4 dark:!border-zinc-800">
-                    <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full bg-[#ffece7]">
-                        <Image
-                            width={48}
-                            height={48}
-                            src="/icon/group.png"
-                            alt=""
-                        />
-                    </div>
-                    <div className="flex flex-1 flex-col justify-center">
-                        <p className="text-lg font-bold">Hoạt động</p>
-                        <p className="text-base font-medium">10</p>
-                    </div>
-                    <div className="flex flex-col items-center justify-between text-2xl font-bold">
-                        <div className="flex w-full justify-end">
-                            <CircleHelp />
-                        </div>
-                        <span className="text-red-600">+24%</span>
-                    </div>
-                </div> */}
-            </div>
+            <StatCard
+                title="Tracks"
+                value="32"
+                trend={14.45}
+                data={tracksCard.data}
+            />
         </div>
     );
 }
