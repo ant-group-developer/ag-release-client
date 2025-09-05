@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "streams": "Streams",
         "success": "Success",
         "compare": "Compare",
         "isSongCreatedByAi": "Is a song created by AI",
@@ -708,7 +709,7 @@
         "otherMetadata": "Other metadata",
         "label": "Release",
         "create": "Create release",
-        "lastedReleases": "Lasted releases",
+        "latestReleases": "Latest releases",
         "name": "Release name",
         "id": "Release ID",
         "type": "Release type",

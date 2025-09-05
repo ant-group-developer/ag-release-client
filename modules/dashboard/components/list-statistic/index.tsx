@@ -11,18 +11,18 @@ export default function StatsOverview({}: Props) {
         value: '15',
         trend: 32.4,
         data: [
-            { name: 'P1', value: 12 },
-            { name: 'P2', value: 18 },
-            { name: 'P3', value: 15 },
-            { name: 'P4', value: 20 },
-            { name: 'P5', value: 22 },
-            { name: 'P6', value: 25 },
-            { name: 'P7', value: 28 },
-            { name: 'P8', value: 30 },
-            { name: 'P9', value: 26 },
-            { name: 'P10', value: 29 },
-            { name: 'P11', value: 31 },
-            { name: 'P12', value: 33 },
+            { date: '2025-01-01', value: 12 },
+            { date: '2025-01-02', value: 18 },
+            { date: '2025-01-03', value: 15 },
+            { date: '2025-01-04', value: 20 },
+            { date: '2025-01-05', value: 22 },
+            { date: '2025-01-06', value: 25 },
+            { date: '2025-01-07', value: 28 },
+            { date: '2025-01-08', value: 30 },
+            { date: '2025-01-09', value: 26 },
+            { date: '2025-01-10', value: 29 },
+            { date: '2025-01-11', value: 31 },
+            { date: '2025-01-12', value: 33 },
         ],
     };
 
@@ -31,18 +31,18 @@ export default function StatsOverview({}: Props) {
         value: '8',
         trend: 18.45,
         data: [
-            { name: 'P1', value: 5 },
-            { name: 'P2', value: 7 },
-            { name: 'P3', value: 8 },
-            { name: 'P4', value: 6 },
-            { name: 'P5', value: 9 },
-            { name: 'P6', value: 10 },
-            { name: 'P7', value: 12 },
-            { name: 'P8', value: 11 },
-            { name: 'P9', value: 14 },
-            { name: 'P10', value: 15 },
-            { name: 'P11', value: 13 },
-            { name: 'P12', value: 16 },
+            { date: '2025-01-01', value: 5 },
+            { date: '2025-01-02', value: 8 },
+            { date: '2025-01-03', value: 6 },
+            { date: '2025-01-04', value: 10 },
+            { date: '2025-01-05', value: 7 },
+            { date: '2025-01-06', value: 12 },
+            { date: '2025-01-07', value: 9 },
+            { date: '2025-01-08', value: 14 },
+            { date: '2025-01-09', value: 11 },
+            { date: '2025-01-10', value: 15 },
+            { date: '2025-01-11', value: 13 },
+            { date: '2025-01-12', value: 16 },
         ],
     };
 
@@ -51,18 +51,18 @@ export default function StatsOverview({}: Props) {
         value: '10',
         trend: -20.34,
         data: [
-            { name: 'P1', value: 30 },
-            { name: 'P2', value: 28 },
-            { name: 'P3', value: 25 },
-            { name: 'P4', value: 27 },
-            { name: 'P5', value: 24 },
-            { name: 'P6', value: 22 },
-            { name: 'P7', value: 20 },
-            { name: 'P8', value: 18 },
-            { name: 'P9', value: 16 },
-            { name: 'P10', value: 14 },
-            { name: 'P11', value: 12 },
-            { name: 'P12', value: 10 },
+            { date: '2025-01-01', value: 15 },
+            { date: '2025-01-02', value: 20 },
+            { date: '2025-01-03', value: 25 },
+            { date: '2025-01-04', value: 30 }, // đỉnh
+            { date: '2025-01-05', value: 28 },
+            { date: '2025-01-06', value: 24 },
+            { date: '2025-01-07', value: 20 },
+            { date: '2025-01-08', value: 18 },
+            { date: '2025-01-09', value: 14 },
+            { date: '2025-01-10', value: 12 },
+            { date: '2025-01-11', value: 10 },
+            { date: '2025-01-12', value: 8 },
         ],
     };
 
@@ -71,23 +71,23 @@ export default function StatsOverview({}: Props) {
         value: '32',
         trend: 14.45,
         data: [
-            { name: 'P1', value: 15 },
-            { name: 'P2', value: 18 },
-            { name: 'P3', value: 20 },
-            { name: 'P4', value: 22 },
-            { name: 'P5', value: 25 },
-            { name: 'P6', value: 28 },
-            { name: 'P7', value: 30 },
-            { name: 'P8', value: 33 },
-            { name: 'P9', value: 35 },
-            { name: 'P10', value: 37 },
-            { name: 'P11', value: 40 },
-            { name: 'P12', value: 42 },
+            { date: '2025-01-01', value: 10 },
+            { date: '2025-01-02', value: 15 },
+            { date: '2025-01-03', value: 22 }, // đỉnh 1
+            { date: '2025-01-04', value: 18 },
+            { date: '2025-01-05', value: 12 },
+            { date: '2025-01-06', value: 20 },
+            { date: '2025-01-07', value: 28 }, // đỉnh 2
+            { date: '2025-01-08', value: 25 },
+            { date: '2025-01-09', value: 19 },
+            { date: '2025-01-10', value: 24 },
+            { date: '2025-01-11', value: 30 }, // đỉnh nhỏ
+            { date: '2025-01-12', value: 26 },
         ],
     };
 
     return (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-4 lg:grid-cols-4">
             <StatCard
                 title="Issues"
                 value="15"

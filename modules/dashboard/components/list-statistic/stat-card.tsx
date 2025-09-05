@@ -1,4 +1,14 @@
-import { Area, AreaChart, Line, ResponsiveContainer, Tooltip } from 'recharts';
+import { DATE_FORMAT } from '@/enums/common';
+import { formattedDate } from '@/helpers/common';
+import {
+    Area,
+    AreaChart,
+    Line,
+    ResponsiveContainer,
+    Tooltip,
+    XAxis,
+    YAxis,
+} from 'recharts';
 
 type StatCardProps = {
     title: string;
@@ -6,7 +16,7 @@ type StatCardProps = {
     trend: number;
     chartClass?: string;
     color?: string; // màu chính cho chart
-    data: { name: string; value: number }[];
+    data: { date: string; value: number }[];
 };
 
 export default function StatCard({
@@ -67,14 +77,24 @@ export default function StatCard({
                                 </linearGradient>
                             </defs>
 
+                            <XAxis dataKey="date" hide />
+                            <YAxis hide />
+
                             <Tooltip
-                                formatter={(value: number) => [
-                                    `${value}`,
-                                    'Lượt phát',
-                                ]}
-                                labelFormatter={(label) => {
-                                    console.log('🚀 ~ label:', label);
-                                    return `Ngày: ${label}`;
+                                content={({ active, payload, label }) => {
+                                    if (active && payload && payload.length) {
+                                        return (
+                                            <div className="rounded border bg-white p-2 shadow-lg">
+                                                <p className="text-sm">
+                                                    {formattedDate(
+                                                        label,
+                                                        DATE_FORMAT.DATE_ONLY
+                                                    )}
+                                                    : {payload[0].value}
+                                                </p>
+                                            </div>
+                                        );
+                                    }
                                 }}
                             />
 

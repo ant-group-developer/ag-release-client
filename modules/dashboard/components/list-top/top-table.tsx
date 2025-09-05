@@ -41,7 +41,7 @@ export default function TopTable({ titleHeader, ...props }: Props) {
         },
 
         {
-            title: messages('common.views'),
+            title: messages('common.streams'),
             dataIndex: 'total',
             key: 'total',
             width: 100,

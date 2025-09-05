@@ -1,9 +1,11 @@
+export const dynamic = 'force-dynamic';
 import GoogleAnalytics from '@/components/google-analytics';
 import { defaultConfig } from '@/constants/env';
 import { DEFAULT_ROUTE } from '@/enums/routes';
 import { flattenData } from '@/helpers/common';
 import { redirect, routing } from '@/i18n/routing';
 import { adminRoutes } from '@/layouts/cms-layout/routes';
+import { getCurrentTenant } from '@/modules/auth/api';
 import AntdProvider from '@/providers/antd';
 import type { Metadata } from 'next';
 import { pathname } from 'next-extra/pathname';
@@ -16,6 +18,7 @@ import {
     getTimeZone,
 } from 'next-intl/server';
 import { Inter, Open_Sans } from 'next/font/google';
+import { cookies } from 'next/headers';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { PropsWithChildren } from 'react';
 
@@ -46,9 +49,8 @@ export async function generateMetadata({
     const now = await getNow({ locale });
     const timeZone = await getTimeZone({ locale });
     const route = await pathname();
-
-    // const settingData = await getCurrentTenant(cookies()?.toString?.());
-    const settingData = null as any;
+    const settingData = await getCurrentTenant(cookies()?.toString?.());
+    // const settingData = null as any;
 
     const getTitle = () => {
         const flattenRoutes = flattenData(adminRoutes, {});

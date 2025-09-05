@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "streams": "Lượt phát",
         "success": "Thành công",
         "compare": "So sánh",
         "isSongCreatedByAi": "Bài hát được tạo bởi AI",
@@ -707,7 +708,7 @@
         "otherMetadata": "Các metadata khác",
         "label": "Phát hành",
         "create": "Tạo phát hành ",
-        "lastedReleases": "Phát hành gần đây",
+        "latestReleases": "Phát hành gần đây",
         "name": "Tên phát hành",
         "id": "Mã phát hành",
         "type": "Loại phát hành",
