@@ -1481,5 +1481,13 @@
         "success": {
             "startedPleaseWait": "Backup has started, please wait..."
         }
+    },
+
+    "analytics": {
+        "label": "Analytics",
+        "name": "Analytics name",
+        "action": {
+            "delete": "Delete analytics"
+        }
     }
 }

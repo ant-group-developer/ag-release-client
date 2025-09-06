@@ -40,6 +40,7 @@ export enum APP_ROUTES {
     ACTIONS = '/actions',
     CURRENCIES = '/currencies',
     PRICE_TIERS = '/price-tiers',
+    ANALYTICS = '/analytics',
 }
 
 export const AUTH_ROUTES: string[] = [APP_ROUTES.SIGN_IN];
