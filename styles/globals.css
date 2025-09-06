@@ -73,6 +73,10 @@ body {
     @apply dark:!text-gray-300;
 }
 
+.custom-fullscreen-modal .ant-modal-content {
+    @apply rounded-none p-0 !important;
+}
+
 .recharts-surface:focus {
     outline: none;
 }

@@ -27,7 +27,7 @@ export default function Dsp() {
     const closeModal = useModalStore((state) => state.closeModal);
 
     // apis
-    const { dspData, isLoading, refetch, lastUpdatedAt } =
+    const { dspData, isFetching, refetch, lastUpdatedAt } =
         useGetListDsp(dataFilter);
     const { deleteDsp } = useDeleteDsp();
 
@@ -51,7 +51,7 @@ export default function Dsp() {
                     current: dspData.metadata.currentPage,
                     total: dspData.metadata.totalItems,
                 }}
-                loading={isLoading}
+                loading={isFetching}
             />
             <AppPagination
                 align="end"

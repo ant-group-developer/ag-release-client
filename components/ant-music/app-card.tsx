@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 
 type Props = {
     title: ReactNode;
-    headerButtonText?: string;
+    headerButtonText?: string | undefined;
     headerButtonProps?: ButtonProps;
     children: React.ReactNode;
     className?: string;
@@ -18,18 +18,15 @@ export default function AppCard({
     className,
 }: Props) {
     return (
-        <div
-            className={cn(
-                'flex flex-col gap-2 rounded-lg border p-6',
-                className
-            )}
-        >
+        <div className={cn('flex flex-col gap-2 rounded-lg border', className)}>
             <div className="flex items-center justify-between">
-                <div className="font-bold">{title}</div>
+                <div className="p-4 py-2 text-base font-bold">{title}</div>
                 {headerButtonText && (
-                    <Button shape="round" {...headerButtonProps}>
-                        {headerButtonText}
-                    </Button>
+                    <div className="px-2 py-2">
+                        <Button shape="round" {...headerButtonProps}>
+                            {headerButtonText}
+                        </Button>
+                    </div>
                 )}
             </div>
             {children}

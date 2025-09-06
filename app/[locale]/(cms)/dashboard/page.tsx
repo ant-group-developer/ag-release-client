@@ -1,5 +1,6 @@
 'use client';
 
+import { PAGE_SIZE } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
 import { useRouter } from '@/i18n/routing';
 import DspChart from '@/modules/dashboard/components/area-chart/dsp-chart';
@@ -13,6 +14,7 @@ import MapChart from '@/modules/dashboard/components/map-chart';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { ReleasesDataFilter } from '@/modules/releases/types';
 import { theme } from 'antd';
+import dayjs from 'dayjs';
 
 type Props = {};
 
@@ -28,14 +30,19 @@ function Dashboard({}: Props) {
         removeFilter,
     } = useFilter<ReleasesDataFilter>({
         page: 1,
-        pageSize: 21,
+        pageSize: PAGE_SIZE,
+        startDateCreated: dayjs().subtract(30, 'day').format('YYYY-MM-DD'),
+        endDateCreated: dayjs().format('YYYY-MM-DD'),
     });
 
     const { releasesData } = useGetListReleases(dataFilter);
 
     return (
         <div>
-            <DashboardHeader />
+            <DashboardHeader
+                dataFilter={dataFilter}
+                onChangeFilter={onChangeFilter}
+            />
 
             <div className="flex flex-col gap-4 overflow-auto px-4 py-4">
                 <StatsOverview />
