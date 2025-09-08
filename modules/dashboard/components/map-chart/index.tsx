@@ -1,3 +1,4 @@
+import AppCard from '@/components/ant-music/app-card';
 import WorldMap from 'react-svg-worldmap';
 
 type Props = {
@@ -19,10 +20,7 @@ export default function MapChart({ className }: Props) {
         { country: 'vn', value: 12731218112 }, // vietnam
     ];
     return (
-        <div className={`rounded-lg border ${className}`}>
-            <p className="px-6 py-4 pb-4 text-left text-base font-bold">
-                Stream map
-            </p>
+        <AppCard className={`${className}`} title={'Stream map'}>
             <div className="flex w-full flex-col items-center justify-center">
                 <WorldMap
                     color="red"
@@ -31,6 +29,6 @@ export default function MapChart({ className }: Props) {
                     data={data}
                 />
             </div>
-        </div>
+        </AppCard>
     );
 }

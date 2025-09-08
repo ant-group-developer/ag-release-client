@@ -1,21 +1,18 @@
 import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
 import DateSelect from '@/components/ui/select/date-select';
 import { TYPE_GRAPH, TYPE_SELECT } from '@/enums/common';
-import { useFilter } from '@/hooks/use-filter';
-import { Tabs, TabsProps, theme } from 'antd';
-import dayjs from 'dayjs';
+import { OnChangeFilter } from '@/hooks/use-filter';
+import { TabsProps, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 
-type Props = {};
+type Props = {
+    dataFilter: any;
+    onChangeFilter: OnChangeFilter<any>;
+};
 
-export default function DashboardHeader({}: Props) {
+export default function DashboardHeader({ dataFilter, onChangeFilter }: Props) {
     const { token } = theme.useToken();
     const messages = useTranslations();
-
-    const { dataFilter, onChangeFilter } = useFilter<any>({
-        startDateCreated: dayjs().subtract(30, 'day').format('YYYY-MM-DD'),
-        endDateCreated: dayjs().format('YYYY-MM-DD'),
-    });
 
     const items: TabsProps['items'] = [
         {
@@ -75,7 +72,7 @@ export default function DashboardHeader({}: Props) {
             className="sticky top-0 z-10 border-b px-0 py-0 dark:border-b-zinc-800"
             style={{ backgroundColor: token.colorBgContainer }}
         >
-            <AppHeaderGroup className="px-4">
+            <AppHeaderGroup className="p-4">
                 <span className="mr-2 text-lg font-bold">
                     {messages('common.statisticIn')}
                 </span>
@@ -94,14 +91,14 @@ export default function DashboardHeader({}: Props) {
                     />
                 </div>
             </AppHeaderGroup>
-            <AppHeaderGroup position="end" className="px-4">
+            {/* <AppHeaderGroup position="end" className="px-4">
                 <Tabs
                     items={items}
                     centered
                     // activeKey={dataFilter.type}
                     onChange={onChangeTab}
                 />
-            </AppHeaderGroup>
+            </AppHeaderGroup> */}
         </AppHeader>
     );
 }

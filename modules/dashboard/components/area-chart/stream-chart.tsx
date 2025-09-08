@@ -1,3 +1,4 @@
+import AppCard from '@/components/ant-music/app-card';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
 import { useTranslations } from 'next-intl';
@@ -14,9 +15,10 @@ import {
 type Props = {
     data?: { name: string; value: number }[];
     color?: string;
+    className?: string;
 };
 
-export default function StreamChart({ color = '#90D5FF' }: Props) {
+export default function StreamChart({ color = '#90D5FF', className }: Props) {
     const messages = useTranslations();
     const gradientId = `stream-gradient-${Math.random()}`;
     const data = [
@@ -53,12 +55,8 @@ export default function StreamChart({ color = '#90D5FF' }: Props) {
         { date: '2024-01-31', value: 2550 },
     ];
     return (
-        <div className="flex flex-col justify-between rounded-lg border">
-            <p className="px-6 py-4 pb-4 text-left text-base font-bold">
-                Stream
-            </p>
-
-            <div className="h-[250px] px-4 pb-4">
+        <AppCard className="flex flex-col justify-between" title={'Stream'}>
+            <div className={`h-[250px] px-4 pb-4 ${className}`}>
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={data}>
                         <defs>
@@ -136,6 +134,6 @@ export default function StreamChart({ color = '#90D5FF' }: Props) {
                     </AreaChart>
                 </ResponsiveContainer>
             </div>
-        </div>
+        </AppCard>
     );
 }

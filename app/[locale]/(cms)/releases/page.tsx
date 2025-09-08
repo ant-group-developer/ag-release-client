@@ -73,7 +73,7 @@ export default function Releases({}: Props) {
     // apis
     const {
         releasesData,
-        isPending: isReleaseDataLoading,
+        isFetching: isReleaseDataLoading,
         refetch,
         dataUpdatedAt,
     } = useGetListReleases(dataFilter);

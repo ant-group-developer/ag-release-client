@@ -40,7 +40,7 @@ export default function Artists({}: Props) {
 
     // api
     const { deleteArtist } = useDeleteArtist();
-    const { artistsData, isLoading, lastUpdatedAt, refetch } =
+    const { artistsData, isFetching, lastUpdatedAt, refetch } =
         useGetListArtist(dataFilter);
 
     // func
@@ -79,7 +79,7 @@ export default function Artists({}: Props) {
                     current: artistsData.metadata.currentPage,
                     total: artistsData.metadata.totalItems,
                 }}
-                loading={isLoading}
+                loading={isFetching}
                 onChange={onChangeSort}
                 dataFilter={dataFilter}
             />

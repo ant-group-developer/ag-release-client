@@ -1,3 +1,4 @@
+import AppCard from '@/components/ant-music/app-card';
 import {
     Area,
     AreaChart,
@@ -7,32 +8,6 @@ import {
     XAxis,
     YAxis,
 } from 'recharts';
-
-function CustomTooltip({ active, payload, label }: any) {
-    if (active && payload && payload.length) {
-        return (
-            <div className="rounded-lg border border-gray-200 bg-white px-4 py-2 shadow-md">
-                <p className="mb-2 font-semibold">{label}</p>
-                {payload.map((entry: any, index: number) => (
-                    <p
-                        key={`item-${index}`}
-                        className="m-0 flex items-center gap-2 text-sm"
-                    >
-                        <span
-                            className="h-2.5 w-2.5 rounded-full"
-                            style={{ backgroundColor: entry.color }}
-                        />
-                        <span style={{ color: entry.color }}>
-                            {entry.name}:
-                        </span>
-                        <span className="font-medium">{entry.value}</span>
-                    </p>
-                ))}
-            </div>
-        );
-    }
-    return null;
-}
 
 export default function DspChart() {
     const dspData = [
@@ -102,12 +77,35 @@ export default function DspChart() {
         },
     ];
 
+    const CustomTooltip = ({ active, payload, label }: any) => {
+        if (active && payload && payload.length) {
+            return (
+                <div className="rounded-lg border border-gray-200 bg-white px-4 py-2 shadow-md">
+                    <p className="mb-2 font-semibold">{label}</p>
+                    {payload.map((entry: any, index: number) => (
+                        <p
+                            key={`item-${index}`}
+                            className="m-0 flex items-center gap-2 text-sm"
+                        >
+                            <span
+                                className="h-2.5 w-2.5 rounded-full"
+                                style={{ backgroundColor: entry.color }}
+                            />
+                            <span style={{ color: entry.color }}>
+                                {entry.name}:
+                            </span>
+                            <span className="font-medium">{entry.value}</span>
+                        </p>
+                    ))}
+                </div>
+            );
+        }
+        return null;
+    };
+
     return (
-        <div className="rounded-lg border">
-            <p className="px-6 py-4 pb-4 text-left text-base font-bold">
-                Revenue
-            </p>
-            <div className="h-[350px] px-4 pb-4">
+        <AppCard title={'Revenue'}>
+            <div className="h-[350px] px-4">
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={dspData}>
                         <XAxis
@@ -128,12 +126,12 @@ export default function DspChart() {
                             >
                                 <stop
                                     offset="5%"
-                                    stopColor="#34D399"
+                                    stopColor="#22C55E"
                                     stopOpacity={0.3}
                                 />
                                 <stop
                                     offset="95%"
-                                    stopColor="#34D399"
+                                    stopColor="#22C55E"
                                     stopOpacity={0}
                                 />
                             </linearGradient>
@@ -146,12 +144,12 @@ export default function DspChart() {
                             >
                                 <stop
                                     offset="5%"
-                                    stopColor="#F87171"
+                                    stopColor="#EF4444"
                                     stopOpacity={0.3}
                                 />
                                 <stop
                                     offset="95%"
-                                    stopColor="#F87171"
+                                    stopColor="#EF4444"
                                     stopOpacity={0}
                                 />
                             </linearGradient>
@@ -164,12 +162,12 @@ export default function DspChart() {
                             >
                                 <stop
                                     offset="5%"
-                                    stopColor="#A78BFA"
+                                    stopColor="#8B5CF6"
                                     stopOpacity={0.3}
                                 />
                                 <stop
                                     offset="95%"
-                                    stopColor="#A78BFA"
+                                    stopColor="#8B5CF6"
                                     stopOpacity={0}
                                 />
                             </linearGradient>
@@ -182,12 +180,12 @@ export default function DspChart() {
                             >
                                 <stop
                                     offset="5%"
-                                    stopColor="#FBBF24"
+                                    stopColor="#F59E0B"
                                     stopOpacity={0.3}
                                 />
                                 <stop
                                     offset="95%"
-                                    stopColor="#FBBF24"
+                                    stopColor="#F59E0B"
                                     stopOpacity={0}
                                 />
                             </linearGradient>
@@ -200,12 +198,12 @@ export default function DspChart() {
                             >
                                 <stop
                                     offset="5%"
-                                    stopColor="#60A5FA"
+                                    stopColor="#3B82F6"
                                     stopOpacity={0.3}
                                 />
                                 <stop
                                     offset="95%"
-                                    stopColor="#60A5FA"
+                                    stopColor="#3B82F6"
                                     stopOpacity={0}
                                 />
                             </linearGradient>
@@ -214,36 +212,36 @@ export default function DspChart() {
                         <Area
                             type="monotone"
                             dataKey="Spotify"
-                            stroke="#34D399"
+                            stroke="#22C55E"
                             fill="url(#spotifyGradient)"
                         />
                         <Area
                             type="monotone"
                             dataKey="YouTubeMusic"
-                            stroke="#F87171"
+                            stroke="#EF4444"
                             fill="url(#youtubeGradient)"
                         />
                         <Area
                             type="monotone"
                             dataKey="TikTok"
-                            stroke="#A78BFA"
+                            stroke="#8B5CF6"
                             fill="url(#tiktokGradient)"
                         />
                         <Area
                             type="monotone"
                             dataKey="Amazon"
-                            stroke="#FBBF24"
+                            stroke="#F59E0B"
                             fill="url(#amazonGradient)"
                         />
                         <Area
                             type="monotone"
                             dataKey="Deezer"
-                            stroke="#60A5FA"
+                            stroke="#3B82F6"
                             fill="url(#deezerGradient)"
                         />
                     </AreaChart>
                 </ResponsiveContainer>
             </div>
-        </div>
+        </AppCard>
     );
 }
