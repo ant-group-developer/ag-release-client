@@ -8,7 +8,7 @@ type Props = {
 export default function ListTop({ className }: Props) {
     return (
         <div
-            className={`grid gap-4 sm:grid-cols-1 md:grid-cols-4 lg:grid-cols-4 ${className}`}
+            className={`grid gap-4 sm:grid-cols-1 md:grid-cols-4 lg:grid-cols-3 ${className}`}
         >
             <TopStreamsTable
                 titleHeader="Top releases"
@@ -98,6 +98,46 @@ export default function ListTop({ className }: Props) {
                     { id: 8, name: 'Echo Chamber Records', total: 150 },
                     { id: 1, name: 'IndieWave Records', total: 120 },
                     { id: 3, name: 'Golden Gate Sounds', total: 95 },
+                ]}
+            />
+
+            <TopStreamsTable
+                titleHeader="Top DSPs"
+                dataFilter={{}}
+                orderByField={undefined}
+                orderField={ORDER.ASC}
+                pagination={{ pageSize: 10, current: 1 }}
+                dataSource={[
+                    { id: 1, name: 'Spotify', total: 12500 },
+                    { id: 2, name: 'Apple Music', total: 9800 },
+                    { id: 3, name: 'YouTube Music', total: 8700 },
+                    { id: 4, name: 'Amazon Music', total: 6400 },
+                    { id: 5, name: 'Deezer', total: 5100 },
+                    { id: 6, name: 'Tidal', total: 4300 },
+                    { id: 7, name: 'SoundCloud', total: 3800 },
+                    { id: 8, name: 'Napster', total: 2100 },
+                    { id: 9, name: 'Pandora', total: 1600 },
+                    { id: 10, name: 'Anghami', total: 1200 },
+                ]}
+            />
+
+            <TopStreamsTable
+                titleHeader="Top partners"
+                dataFilter={{}}
+                orderByField={undefined}
+                orderField={ORDER.ASC}
+                pagination={{ pageSize: 10, current: 1 }}
+                dataSource={[
+                    { id: 1, name: 'Universal Music Group', total: 15000 },
+                    { id: 2, name: 'Sony Music Entertainment', total: 13200 },
+                    { id: 3, name: 'Warner Music Group', total: 11800 },
+                    { id: 4, name: 'Believe Digital', total: 9400 },
+                    { id: 5, name: 'Empire Distribution', total: 8600 },
+                    { id: 6, name: 'Ditto Music', total: 7200 },
+                    { id: 7, name: 'CD Baby', total: 6100 },
+                    { id: 8, name: 'TuneCore', total: 5800 },
+                    { id: 9, name: 'DistroKid', total: 5300 },
+                    { id: 10, name: 'Repost by SoundCloud', total: 4800 },
                 ]}
             />
         </div>
