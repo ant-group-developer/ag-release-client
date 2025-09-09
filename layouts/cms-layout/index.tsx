@@ -48,9 +48,9 @@ export default function CMSLayout({ children }: Props) {
     }, [isActive]);
 
     const getChildren = () => {
-        // if (canAccessCurrentRoute) {
-        return children;
-        // }
+        if (canAccessCurrentRoute) {
+            return children;
+        }
 
         return <Forbidden className="min-h-fit py-24" />;
     };
