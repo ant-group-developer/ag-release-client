@@ -74,11 +74,11 @@ export default function ReleasesTable({
             dataIndex: 'title',
             ellipsis: true,
             align: 'left',
-            width: 220,
+            width: 320,
             fixed: 'left',
             render: (value, record) => (
                 <div className="flex items-center gap-4">
-                    <div>
+                    <div className="h-10 min-w-10">
                         <ReleaseCoverImage data={record} />
                     </div>
                     <CustomTooltip
@@ -92,9 +92,9 @@ export default function ReleasesTable({
                                 RELEASE_DETAIL_ACTION.READ
                             )}
                         >
-                            <span className="cursor-pointer truncate hover:text-blue-500 hover:underline">
+                            <div className="!max-w-80 cursor-pointer truncate hover:text-blue-500 hover:underline">
                                 {value}
-                            </span>
+                            </div>
                         </Link>
                     </CustomTooltip>
                 </div>
@@ -106,16 +106,16 @@ export default function ReleasesTable({
             dataIndex: 'artist',
             align: 'left',
             ellipsis: true,
-            width: 180,
+            width: 250,
             render: (value, record) => {
                 const releaseArtists = record?.releaseArtists || [];
+                console.log('🚀 ~ releaseArtists:', releaseArtists);
                 const isVariousArtist = record?.isVariousArtist;
 
                 const mainArtist = !isVariousArtist
                     ? releaseArtists.find(
                           (item: ReleaseArtist) =>
-                              item?.artistRole?.code?.toLowerCase() ===
-                              MAIN_ARTIST_ROLE
+                              item?.artistRole?.code === MAIN_ARTIST_ROLE
                       )
                     : null;
 
@@ -161,7 +161,7 @@ export default function ReleasesTable({
             key: 'publisher',
             dataIndex: 'publisher',
             align: 'left',
-            width: 150,
+            width: 200,
             ellipsis: true,
             render: (value, record) => (
                 // <CustomTooltip size="small" title={record?.label?.name}>
@@ -178,8 +178,8 @@ export default function ReleasesTable({
             title: messages('release.type'),
             key: 'type',
             dataIndex: 'type',
-            // align: 'center',
-            width: 120,
+            align: 'center',
+            width: 130,
             render: (_, record) => {
                 return (
                     <span className="cursor-pointer truncate">

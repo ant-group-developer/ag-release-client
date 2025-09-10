@@ -1,5 +1,6 @@
 import { useTranslations } from 'next-intl';
 import StatCard from './stat-card';
+import UpdatesCard from './update-card';
 
 type Props = {};
 
@@ -86,35 +87,57 @@ export default function StatsOverview({}: Props) {
         ],
     };
 
+    const data = [
+        { label: 'Reference overlaps', count: 0 },
+        { label: 'invalid references', count: 0 },
+        { label: 'Ownership conflicts', count: 0 },
+        { label: 'Ownership transfers', count: 0 },
+        { label: 'Potential claims', count: 0 },
+        { label: 'Disputed claims', count: 0 },
+        { label: 'Appealed claims', count: 0 },
+        { label: 'Policies ignored', count: 0 },
+    ];
+
+    const overviewData = [
+        {
+            label: 'Releases',
+            count: 32,
+        },
+        {
+            label: 'Tracks',
+            count: 52,
+        },
+        {
+            label: 'Labels',
+            count: 12,
+        },
+        {
+            label: 'Artists',
+            count: 132,
+        },
+    ];
+
     return (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-4 lg:grid-cols-4">
-            <StatCard
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-3">
+            <StatCard title="Issue" data={data} />
+
+            <StatCard title="Overview" data={overviewData} />
+
+            <UpdatesCard />
+
+            {/* <StatCard
                 title="Issues"
                 value="15"
                 trend={32.4}
                 data={issuesCard.data}
-            />
+            /> */}
 
-            <StatCard
+            {/* <StatCard
                 title="White label/Label"
                 value="8"
                 trend={18.45}
                 data={whiteLabelCard.data}
-            />
-
-            <StatCard
-                title="Releases"
-                value="10"
-                trend={-20.34}
-                data={releasesCard.data}
-            />
-
-            <StatCard
-                title="Tracks"
-                value="32"
-                trend={14.45}
-                data={tracksCard.data}
-            />
+            /> */}
         </div>
     );
 }

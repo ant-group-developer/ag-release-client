@@ -18,7 +18,7 @@ export default function AppCard({
     className,
 }: Props) {
     return (
-        <div className={cn('flex flex-col gap-2 rounded-lg border', className)}>
+        <div className={cn('flex flex-col rounded-lg border', className)}>
             <div className="flex items-center justify-between">
                 <div className="p-4 py-2 text-base font-bold">{title}</div>
                 {headerButtonText && (

@@ -73,6 +73,25 @@ body {
     @apply dark:!text-gray-300;
 }
 
+/* custom menu filter analytics */
+.custom-filter-menu .ant-menu-submenu-title {
+    padding-left: 12px !important; /* cha */
+}
+
+.custom-filter-menu .ant-menu-item-selected {
+    background-color: transparent !important;
+}
+
+.custom-filter-menu .ant-menu-sub {
+    padding-left: 12px !important; /* con */
+}
+
+.custom-filter-menu .ant-menu-item {
+    padding-left: 8px !important; /* item */
+}
+
+/* end */
+
 .custom-fullscreen-modal .ant-modal-content {
     @apply rounded-none p-0 !important;
 }

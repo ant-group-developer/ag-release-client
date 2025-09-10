@@ -105,7 +105,7 @@ export default function DspChart() {
 
     return (
         <AppCard title={'Revenue'}>
-            <div className="h-[350px] px-4">
+            <div className="h-[300px] px-4">
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={dspData}>
                         <XAxis

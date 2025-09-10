@@ -25,7 +25,7 @@ export default function MapChart({ className }: Props) {
                 <WorldMap
                     color="red"
                     value-suffix="people"
-                    size="md"
+                    size="lg"
                     data={data}
                 />
             </div>
