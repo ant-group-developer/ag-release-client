@@ -109,7 +109,6 @@ export default function ReleasesTable({
             width: 250,
             render: (value, record) => {
                 const releaseArtists = record?.releaseArtists || [];
-                console.log('🚀 ~ releaseArtists:', releaseArtists);
                 const isVariousArtist = record?.isVariousArtist;
 
                 const mainArtist = !isVariousArtist

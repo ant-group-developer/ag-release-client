@@ -28,7 +28,7 @@ export default function ArtistSelect({
         fetchNextPage,
         isFetching,
     } = useGetArtistSimpleList({
-        pageSize: 5,
+        pageSize: 50,
         keyword: searchKeyword,
     });
 
@@ -55,7 +55,7 @@ export default function ArtistSelect({
     return (
         <Select
             {...props}
-            loading={isLoading}
+            loading={isFetching}
             showSearch
             onSearch={(value) => debounceSearch(value)}
             filterOption={false}

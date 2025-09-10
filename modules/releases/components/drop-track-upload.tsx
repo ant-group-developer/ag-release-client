@@ -10,9 +10,8 @@ import { AudioFileBucket, CreateBucketFile } from '@/modules/upload/types/data';
 import { CreateVariables } from '@/types/api';
 import { Progress, UploadProps } from 'antd';
 import axios from 'axios';
-import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { useMemo, useState } from 'react';
+import { useRef, useState } from 'react';
 import DndAudioUpload from '../../../components/ui/input/dnd-audio-upload';
 
 interface Props extends UploadProps {}
@@ -35,9 +34,11 @@ export default function DropUploadTracks({ ...props }: Props) {
     const { createTrackDraft } = useCreateTrackDraft();
     const [uploadProgress, setUploadProgress] = useState<UploadProgress[]>([]);
     const messages = useTranslations();
+    const prevLength = useRef(0);
 
     const handleUpload = async (files: any[]) => {
         try {
+            console.log('123');
             const preparingProgress: UploadProgress[] = files.map(
                 (file: any, index: number) => ({
                     fileName:
@@ -49,8 +50,13 @@ export default function DropUploadTracks({ ...props }: Props) {
                     status: 'preparing',
                 })
             );
-
+            console.log('456');
             setUploadProgress(preparingProgress);
+
+            // Cho React render UI trước khi chạy các hàm nặng
+            await new Promise((resolve) =>
+                requestAnimationFrame(() => resolve(null))
+            );
 
             const tracksPayload: TracksPayload[] = [];
 
@@ -280,7 +286,6 @@ export default function DropUploadTracks({ ...props }: Props) {
             const variables: CreateVariables<TrackPayload[]> = {
                 payload: tracksPayload,
             };
-            console.log('🚀 ~ handleUpload ~ variables:', variables);
 
             createTrackDraft(variables);
         } catch (error) {
@@ -292,13 +297,13 @@ export default function DropUploadTracks({ ...props }: Props) {
         }
     };
 
-    const debouncedHandleUpload = useMemo(
-        () =>
-            debounce((files: any[]) => {
-                handleUpload(files);
-            }, 300),
-        [formValues.id, createTrackDraft]
-    );
+    // const debouncedHandleUpload = useMemo(
+    //     () =>
+    //         debounce((files: any[]) => {
+    //             handleUpload(files);
+    //         }, 300),
+    //     [formValues.id, createTrackDraft]
+    // );
 
     return (
         <div>
@@ -308,7 +313,10 @@ export default function DropUploadTracks({ ...props }: Props) {
                     multiple
                     accept="audio/wav"
                     onChange={({ fileList }) => {
-                        debouncedHandleUpload(fileList);
+                        if (fileList.length > prevLength.current) {
+                            handleUpload(fileList);
+                        }
+                        prevLength.current = fileList.length;
                     }}
                     showAudio={false}
                 />

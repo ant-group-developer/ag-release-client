@@ -112,7 +112,6 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                         closeModal();
                     },
                 };
-                console.log(variables);
                 createReleaseArtist(variables);
             }
         } catch (error) {
