@@ -2,10 +2,11 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import { MAX_NAME_LENGTH } from '@/constants/validate';
+import { getCodeFormatted } from '@/helpers/string';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
-import { Form, Input } from 'antd';
+import { Form, Input, Switch } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { useCreateTrackOriginType } from '../../hooks/use-create-track-origin-type';
@@ -73,6 +74,7 @@ export default function TrackOriginTypeFormModal({ ...props }: Props) {
     useEffect(() => {
         const initialData = {
             ...dataEdit,
+            isDefault: dataEdit?.isDefault ?? false,
         };
         form.setFieldsValue(initialData);
     }, [dataEdit]);
@@ -118,11 +120,17 @@ export default function TrackOriginTypeFormModal({ ...props }: Props) {
                         },
                     ]}
                 >
-                    <Input allowClear />
+                    <Input
+                        allowClear
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            form.setFieldValue('code', getCodeFormatted(value));
+                        }}
+                    />
                 </AppFormItem>
                 <AppFormItem
-                    name="value"
-                    label={messages('trackOriginType.value')}
+                    name="code"
+                    label={messages('common.code')}
                     required
                     rules={[
                         {
@@ -138,6 +146,13 @@ export default function TrackOriginTypeFormModal({ ...props }: Props) {
                     ]}
                 >
                     <Input allowClear />
+                </AppFormItem>
+                <AppFormItem
+                    name="isDefault"
+                    label={messages('common.setIsDefault')}
+                    valuePropName="checked"
+                >
+                    <Switch />
                 </AppFormItem>
             </AppForm>
         </AppModal>

@@ -6,10 +6,12 @@ import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
+import { useLoadingStatus } from '@/hooks/use-loading-status';
 import useModalStore from '@/hooks/use-modal';
 import TrackOriginTypeHeader from '@/modules/track-origin-types/components/header';
 import TrackOriginTypeFormModal from '@/modules/track-origin-types/components/modal/track-origin-type-form';
 import { TrackOriginTypeTable } from '@/modules/track-origin-types/components/table';
+import { trackOriginTypeQueryKeys } from '@/modules/track-origin-types/constants/query-keys';
 import { TYPE_MODAL_TRACK_ORIGIN_TYPE } from '@/modules/track-origin-types/enums';
 import { useDeleteTrackOriginType } from '@/modules/track-origin-types/hooks/use-delete-track-origin-type';
 import { useGetListTrackOriginTypes } from '@/modules/track-origin-types/hooks/use-get-list-track-origin-types';
@@ -28,14 +30,17 @@ export default function TrackOriginTypes({}: Props) {
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
         useFilter<TrackOriginTypeDataFilter>({
             page: 1,
-            pageSize: 10,
-            createdAt: '',
+            pageSize: PAGE_SIZE,
         });
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore(
         (state) => state.dataEdit as TrackOriginTypeData
     );
     const closeModal = useModalStore((state) => state.closeModal);
+    const { isLoading } = useLoadingStatus({
+        queryKeys: [trackOriginTypeQueryKeys.lists()],
+        mutationKeys: [trackOriginTypeQueryKeys.all],
+    });
 
     // apis
     const { trackOriginTypesData, isFetching, refetch, lastUpdatedAt } =
@@ -79,7 +84,7 @@ export default function TrackOriginTypes({}: Props) {
                     current: trackOriginTypesData.metadata.currentPage,
                     total: trackOriginTypesData.metadata.totalItems,
                 }}
-                loading={isFetching}
+                loading={isLoading}
                 dataFilter={dataFilter}
                 onChange={onChangeSort}
             />

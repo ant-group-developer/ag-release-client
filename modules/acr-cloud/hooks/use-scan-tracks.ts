@@ -1,4 +1,4 @@
-import { useApiError } from '@/hooks/use-api-error';
+import { useApiNotify } from '@/hooks/use-api-notify';
 import { trackQueryKeys } from '@/modules/tracks/constants/query-keys';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { acrCloudApis } from '../apis';
@@ -6,7 +6,7 @@ import { acrCloudQueryKeys } from '../constants/query-keys';
 import { ScanTracksPayload } from '../types/payloads';
 
 export const useScanTracks = () => {
-    const { handleError } = useApiError();
+    const { handleError } = useApiNotify();
     const queryClient = useQueryClient();
     const onSuccess = (data: any, { onSuccess }: ScanTracksPayload) => {
         onSuccess?.();

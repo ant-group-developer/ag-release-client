@@ -5,6 +5,7 @@ export interface TrackTypeData extends CommonAttribute {
     code: string;
     creatorId: string;
     modifierId: string;
+    isDefault: boolean;
 }
 
 export interface TrackTypeSimpleData

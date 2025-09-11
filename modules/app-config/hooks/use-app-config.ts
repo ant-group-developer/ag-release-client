@@ -1,5 +1,5 @@
 import { showNotification } from '@/helpers/messages-helper';
-import { useApiError } from '@/hooks/use-api-error';
+import { useApiNotify } from '@/hooks/use-api-notify';
 import { DetailResponse } from '@/types/api';
 import {
     useMutation,
@@ -17,7 +17,7 @@ export const appConfigKeys = {
 };
 
 export const useAppConfig = () => {
-    const { handleError } = useApiError();
+    const { handleError } = useApiNotify();
     return useQuery<DetailResponse<AppConfigShape>>({
         queryKey: appConfigKeys.details(),
         queryFn: async () => {
@@ -31,7 +31,7 @@ export const useAppConfig = () => {
 export const useUpdateAppConfig = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
-    const { handleError } = useApiError();
+    const { handleError } = useApiNotify();
 
     return useMutation({
         mutationFn: ({ data }: { data: UpdateConfigPayload }) =>

@@ -2,7 +2,7 @@ import { USER_TYPE } from '@/modules/user/enums';
 import { useQuery } from '@tanstack/react-query';
 import { releasesApi } from '../apis';
 import { releasesQueryKeys } from '../constants/query-keys';
-import { RELEASES_STATUS } from '../enums';
+import { RELEASE_TIME_MODE, RELEASES_STATUS } from '../enums';
 import { ReleasesData } from '../types';
 
 export const useGetDetailRelease = (id: ReleasesData['id']) => {
@@ -80,6 +80,7 @@ export const useGetDetailRelease = (id: ReleasesData['id']) => {
             id: '',
             name: '',
         },
+        releaseTimeMode: RELEASE_TIME_MODE.GLOBAL_MIDNIGHT,
     };
 
     return {

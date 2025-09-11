@@ -1,22 +1,17 @@
-import { showNotification } from '@/helpers/messages-helper';
 import { useApiNotify } from '@/hooks/use-api-notify';
 import { releasesQueryKeys } from '@/modules/releases/constants/query-keys';
 import { trackQueryKeys } from '@/modules/tracks/constants/query-keys';
-import { DeleteVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { trackApi } from '../apis';
-import { TrackData } from '../types';
+import { DeleteTracksPayload } from '../types/payload';
 
-export const useDeleteTrack = () => {
+export const useBulkDeleteTracks = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
-    const { handleError } = useApiNotify();
+    const { handleError, handleSuccess } = useApiNotify();
 
-    const onSuccess = (
-        data: any,
-        { onSuccess }: DeleteVariables<TrackData['id']>
-    ) => {
+    const onSuccess = (data: any, { onSuccess }: DeleteTracksPayload) => {
         queryClient.invalidateQueries({
             queryKey: trackQueryKeys.lists(),
         });
@@ -24,32 +19,27 @@ export const useDeleteTrack = () => {
             queryKey: releasesQueryKeys.validations(),
         });
 
-        const responseMessages = messages(data?.data?.messageCode);
-
         onSuccess?.();
-        showNotification('success', responseMessages);
+        handleSuccess(data?.data?.messageCode);
     };
 
-    const onError = (
-        data: any,
-        { onError }: DeleteVariables<TrackData['id']>
-    ) => {
+    const onError = (data: any, { onError }: DeleteTracksPayload) => {
         onError?.();
         handleError(data);
     };
     const mutation = useMutation({
-        mutationFn: ({ id }: DeleteVariables<TrackData['id']>) =>
-            trackApi.deleteTrackDraft(id),
+        mutationFn: ({ ids }: DeleteTracksPayload) =>
+            trackApi.bulkDeleteTrackDraft(ids),
         onSuccess,
         onError,
     });
 
-    const deleteTrack = (variables: DeleteVariables<TrackData['id']>) => {
+    const deleteTracks = (variables: DeleteTracksPayload) => {
         return mutation.mutate(variables);
     };
 
     return {
-        deleteTrack,
+        deleteTracks,
         ...mutation,
     };
 };

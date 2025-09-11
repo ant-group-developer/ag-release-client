@@ -9,7 +9,7 @@ import {
     getSortOrder,
 } from '@/helpers/common';
 import { getIntlCodeByBackupStatus } from '@/helpers/intl';
-import { useApiError } from '@/hooks/use-api-error';
+import { useApiNotify } from '@/hooks/use-api-notify';
 import useModalStore from '@/hooks/use-modal';
 import {
     BackupDatabaseLogData,
@@ -30,7 +30,7 @@ type Props = Omit<AppTableProps<BackupDatabaseLogData>, 'columns'> & {
 
 export const BackupDatabaseLogTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
-    const { handleError } = useApiError();
+    const { handleError } = useApiNotify();
     const openModal = useModalStore((state) => state.openModal);
 
     const column: ColumnType<BackupDatabaseLogData>[] = [

@@ -52,7 +52,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     // apis
     const { updateReleaseDraft, isPending: isUpdatingRelease } =
         useUpdateReleaseDraft();
-    const coverArtFileId = formValues?.coverArtThumbnails?.['160x160'] ?? '';
+    const coverArtFileId = formValues?.coverArtThumbnails?.original ?? '';
     const { linkReadFile, isFetching: isCoverArtLoading } =
         useGetLinkReadFile(coverArtFileId);
     const { releaseData } = useGetDetailRelease(formValues?.id as string);

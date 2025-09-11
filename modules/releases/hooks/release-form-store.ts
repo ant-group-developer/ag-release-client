@@ -2,7 +2,7 @@ import { USER_TYPE } from '@/modules/user/enums';
 import { ZodIssue } from 'zod';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import { RELEASES_STATUS } from '../enums';
+import { RELEASE_TIME_MODE, RELEASES_STATUS } from '../enums';
 import { ReleasesData } from '../types';
 
 export interface ReleaseFormStoreData extends Omit<ReleasesData, 'tenant'> {}
@@ -129,6 +129,7 @@ const initialValue: ReleaseFormStoreData = {
         },
         tenantUser: [],
     },
+    releaseTimeMode: RELEASE_TIME_MODE.GLOBAL_MIDNIGHT,
 };
 
 export const useReleaseFormStore = create<ReleaseFormState>()(

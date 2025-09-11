@@ -9,6 +9,7 @@ import { Switch } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_DSP } from '../../enums';
+import { useUpdateDsp } from '../../hooks/use-update-dsp';
 import { DspData } from '../../types';
 
 type Props = Omit<AppTableProps<DspData>, 'columns'> & {
@@ -21,6 +22,7 @@ type Props = Omit<AppTableProps<DspData>, 'columns'> & {
 export const DspTable = ({ ...props }: Props) => {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
+    const { updateDsp } = useUpdateDsp();
     const column: ColumnType<DspData>[] = [
         {
             title: messages('common.iNo'),
@@ -99,7 +101,14 @@ export const DspTable = ({ ...props }: Props) => {
             dataIndex: 'isActive',
             align: 'center',
             width: 80,
-            render: (value) => <Switch value={value} disabled={true} />,
+            render: (value, record) => (
+                <Switch
+                    value={value}
+                    onChange={(e) =>
+                        updateDsp({ id: record?.id, payload: { isActive: e } })
+                    }
+                />
+            ),
         },
         {
             title: messages('common.createdAt'),

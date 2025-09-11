@@ -1,5 +1,5 @@
 import { showNotification } from '@/helpers/messages-helper';
-import { useApiError } from '@/hooks/use-api-error';
+import { useApiNotify } from '@/hooks/use-api-notify';
 import { DeleteVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
@@ -10,7 +10,7 @@ import { GenresData } from '../types';
 export const useDeleteGenre = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
-    const { handleError } = useApiError();
+    const { handleError } = useApiNotify();
 
     const onSuccess = (
         data: any,

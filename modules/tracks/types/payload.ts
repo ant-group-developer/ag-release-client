@@ -1,5 +1,6 @@
 import { AudioFileBucket } from '@/modules/upload/types/data';
 import { CommonFunction } from '@/types/api';
+import { Key } from 'react';
 import { TrackData } from '.';
 
 export interface TrackPayload {
@@ -21,4 +22,8 @@ export interface UpdateTrackPolicy extends CommonFunction {
     id: TrackData['id'];
     trackPolicyId: string;
     actionId: string;
+}
+
+export interface DeleteTracksPayload extends CommonFunction {
+    ids: Key[];
 }

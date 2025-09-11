@@ -485,6 +485,7 @@
     },
     "placeholder": {
         "dragAndDropAudio": "Kéo thả tệp âm thanh vào đây!",
+        "dragAndDropFile": "Kéo thả tệp vào đây!",
         "selectArtist": "Chọn nghệ sĩ",
         "selectRegion": "Chọn khu vực",
         "supportFormats": "Định dạng hỗ trợ: {accept}"
@@ -751,7 +752,10 @@
         },
 
         "scheduling": {
-            "label": "Lên lịch"
+            "label": "Lên lịch",
+            "atMidnightInEveryCountry": "Vào lúc nửa đêm ở mọi quốc gia trên thế giới",
+            "atSpecificTime": "Vào một thời điểm cụ thể trong một múi giờ cụ thể",
+            "goLiveTime": "Bạn muốn phát hành thời điểm nào?"
         },
 
         "coverArt": {
@@ -835,6 +839,9 @@
             "failed": "Thất bại",
             "cancel": "Đã hủy",
             "unknown": "Không xác định"
+        },
+        "action": {
+            "deleteTracks": "Xoá bài hát"
         },
         "original": {
             "label": "Tác phẩm gốc",

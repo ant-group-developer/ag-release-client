@@ -1,4 +1,5 @@
 'use client';
+import DndUpload from '@/components/ui/input/dnd-upload';
 import { TYPE_UPLOAD_BUCKET } from '@/enums/common';
 import extractAudioMetadata, { getPeakData } from '@/helpers/common';
 import { showNotification } from '@/helpers/messages-helper';
@@ -12,7 +13,6 @@ import { Progress, UploadProps } from 'antd';
 import axios from 'axios';
 import { useTranslations } from 'next-intl';
 import { useRef, useState } from 'react';
-import DndAudioUpload from '../../../components/ui/input/dnd-audio-upload';
 
 interface Props extends UploadProps {}
 
@@ -21,6 +21,7 @@ interface TracksPayload extends UploadProps {
     releaseId: string;
     audioFileDraft: AudioFileBucket;
     key: string;
+    order: number;
 }
 
 interface UploadProgress {
@@ -37,9 +38,13 @@ export default function DropUploadTracks({ ...props }: Props) {
     const prevLength = useRef(0);
 
     const handleUpload = async (files: any[]) => {
+        const sortedFiles = [...files].sort((a, b) => {
+            const nameA = (a.name || a.originFileObj?.name || '').toLowerCase();
+            const nameB = (b.name || b.originFileObj?.name || '').toLowerCase();
+            return nameA.localeCompare(nameB);
+        });
         try {
-            console.log('123');
-            const preparingProgress: UploadProgress[] = files.map(
+            const preparingProgress: UploadProgress[] = sortedFiles.map(
                 (file: any, index: number) => ({
                     fileName:
                         file.name ||
@@ -50,20 +55,13 @@ export default function DropUploadTracks({ ...props }: Props) {
                     status: 'preparing',
                 })
             );
-            console.log('456');
             setUploadProgress(preparingProgress);
-
-            // Cho React render UI trước khi chạy các hàm nặng
-            await new Promise((resolve) =>
-                requestAnimationFrame(() => resolve(null))
-            );
-
             const tracksPayload: TracksPayload[] = [];
 
             // temp for handle store file and key
             const temp: { file: any; key: string }[] = [];
 
-            const newTracksPromises = files.map(
+            const newTracksPromises = sortedFiles.map(
                 async (file: any, index: number) => {
                     let songDuration = 0;
                     let peakData: number[] = [];
@@ -134,6 +132,7 @@ export default function DropUploadTracks({ ...props }: Props) {
                             preview: null,
                         },
                         key: `track-${index}`,
+                        order: index,
                     });
 
                     temp.push({
@@ -308,7 +307,7 @@ export default function DropUploadTracks({ ...props }: Props) {
     return (
         <div>
             {uploadProgress?.length < 1 && (
-                <DndAudioUpload
+                <DndUpload
                     {...props}
                     multiple
                     accept="audio/wav"
@@ -318,7 +317,6 @@ export default function DropUploadTracks({ ...props }: Props) {
                         }
                         prevLength.current = fileList.length;
                     }}
-                    showAudio={false}
                 />
             )}
 

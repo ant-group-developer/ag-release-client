@@ -3,7 +3,7 @@
 import AppForm from '@/components/ui/antd-form/form';
 import { APP_ROUTES } from '@/enums/routes';
 import { validatePassword } from '@/helpers/validation';
-import { useApiError } from '@/hooks/use-api-error';
+import { useApiNotify } from '@/hooks/use-api-notify';
 import { Link } from '@/i18n/routing';
 import { Alert, Button, Input, theme } from 'antd';
 import { signIn } from 'next-auth/react';
@@ -20,7 +20,7 @@ export default function SignInPage() {
     const { token } = theme.useToken();
     const [isLoading, setIsLoading] = useState(false);
     const messages = useTranslations();
-    const { handleError } = useApiError();
+    const { handleError } = useApiNotify();
 
     const searchParams = useSearchParams();
     const error = searchParams.get('error');

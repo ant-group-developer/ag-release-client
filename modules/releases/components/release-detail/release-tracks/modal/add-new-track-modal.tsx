@@ -306,7 +306,10 @@ export default function AddNewTrackModal({ ...props }: Props) {
             open
             title={messages('track.add')}
             onOk={form.submit}
-            onCancel={closeModal}
+            onCancel={() => {
+                closeModal();
+                form.resetFields();
+            }}
             confirmLoading={isActive}
             loading={isActive}
             width={750}

@@ -1,5 +1,5 @@
 import { showNotification } from '@/helpers/messages-helper';
-import { useApiError } from '@/hooks/use-api-error';
+import { useApiNotify } from '@/hooks/use-api-notify';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { permissionApis } from '../apis';
@@ -9,7 +9,7 @@ import { BulkDeletePermission } from '../types/payload';
 export const useBulkDeletePermission = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
-    const { handleError } = useApiError();
+    const { handleError } = useApiNotify();
 
     const onSuccess = (data: any, { onSuccess }: BulkDeletePermission) => {
         queryClient.invalidateQueries({

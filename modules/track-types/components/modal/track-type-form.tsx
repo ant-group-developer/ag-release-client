@@ -6,7 +6,7 @@ import { getCodeFormatted } from '@/helpers/string';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
-import { Form, Input } from 'antd';
+import { Form, Input, Switch } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { useCreateTrackType } from '../../hooks/use-create-track-type';
@@ -72,9 +72,10 @@ export default function TrackTypeFormModal({ ...props }: Props) {
     useEffect(() => {
         const initialData = {
             ...dataEdit,
+            isDefault: dataEdit?.isDefault ?? false,
         };
         form.setFieldsValue(initialData);
-    }, [dataEdit]);
+    }, [dataEdit, form]);
 
     function renderTitle() {
         return `${dataEdit?.id ? messages('common.update') : messages('common.create')} `;
@@ -145,6 +146,12 @@ export default function TrackTypeFormModal({ ...props }: Props) {
                     ]}
                 >
                     <Input allowClear />
+                </AppFormItem>
+                <AppFormItem
+                    name="isDefault"
+                    label={messages('common.setIsDefault')}
+                >
+                    <Switch />
                 </AppFormItem>
             </AppForm>
         </AppModal>

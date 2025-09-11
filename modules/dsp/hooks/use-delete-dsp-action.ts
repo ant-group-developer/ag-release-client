@@ -1,4 +1,4 @@
-import { useApiError } from '@/hooks/use-api-error';
+import { useApiNotify } from '@/hooks/use-api-notify';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { dspApi } from '../apis';
@@ -8,7 +8,7 @@ import { DeleteDspAction } from '../types/payload';
 export const useDeleteDspAction = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
-    const { handleError } = useApiError();
+    const { handleError } = useApiNotify();
 
     const onSuccess = (data: any, { onSuccess }: DeleteDspAction) => {
         queryClient.invalidateQueries({

@@ -1,5 +1,6 @@
 import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
+import { Key } from 'react';
 import { TrackData, TrackDataFilter } from '../types';
 import {
     TrackPayload,
@@ -58,5 +59,9 @@ export const trackApi = {
 
     deleteTrackDraft: (id: TrackData['id']) => {
         return axiosInstance.delete(`/tracks/draft/${id}`);
+    },
+
+    bulkDeleteTrackDraft: (ids: Key[]) => {
+        return axiosInstance.post(`/tracks/draft/bulk-delete`, { ids });
     },
 };

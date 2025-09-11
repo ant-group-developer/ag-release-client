@@ -9,7 +9,7 @@ import { TimezoneData } from '@/modules/timezone/types';
 import { TrackData } from '@/modules/tracks/types';
 import { UserData } from '@/modules/user/types/data';
 import { CommonAttribute, CommonParams } from '@/types/api';
-import { RELEASES_STATUS, RELEASES_TYPE } from '../enums';
+import { RELEASE_TIME_MODE, RELEASES_STATUS, RELEASES_TYPE } from '../enums';
 
 export interface ReleaseCoverArt {
     '75x75': string | null;
@@ -55,6 +55,7 @@ export interface ReleasesData extends CommonAttribute {
     tracksCount: number;
     totalDuration: number;
     tenant?: Pick<TenantData, 'id' | 'name'>;
+    releaseTimeMode: RELEASE_TIME_MODE;
 }
 
 export interface ReleasesDataFilter extends CommonParams {

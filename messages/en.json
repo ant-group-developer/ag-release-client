@@ -485,6 +485,7 @@
     },
     "placeholder": {
         "dragAndDropAudio": "Drag and drop audio file here!",
+        "dragAndDropFile": "Drag and drop file here!",
         "selectArtist": "Select artist",
         "selectRegion": "Select region",
         "supportFormats": "Support formats: {accept}"
@@ -750,7 +751,10 @@
         },
 
         "scheduling": {
-            "label": "Scheduling"
+            "label": "Scheduling",
+            "atMidnightInEveryCountry": "At midnight in every country around the world",
+            "atSpecificTime": "At a specific time in a specific time zone",
+            "goLiveTime": "What time would you like it to go live"
         },
 
         "coverArt": {
@@ -834,6 +838,9 @@
             "failed": "Failed",
             "cancel": "Canceled",
             "unknown": "Unknown"
+        },
+        "action": {
+            "deleteTracks": "Delete tracks"
         },
         "original": {
             "label": "Original Work",

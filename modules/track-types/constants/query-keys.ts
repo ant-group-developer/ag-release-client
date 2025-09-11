@@ -18,4 +18,6 @@ export const trackTypeQueryKeys = {
     details: () =>
         [...trackTypeQueryKeys.all, QUERY_KEY.TRACK_TYPE.GET_DETAIL] as const,
     detail: (id: string) => [...trackTypeQueryKeys.details(), id] as const,
+    updates: () =>
+        [...trackTypeQueryKeys.all, QUERY_KEY.TRACK_TYPE.UPDATE] as const,
 };

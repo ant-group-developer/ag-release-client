@@ -9,7 +9,7 @@ interface ApiErrorResponse {
     statusCode: number;
 }
 
-export function useApiError() {
+export function useApiNotify() {
     const messages = useTranslations();
 
     const handleError = (error: unknown) => {
@@ -42,5 +42,19 @@ export function useApiError() {
         });
     };
 
-    return { handleError };
+    const handleSuccess = (message: string) => {
+        // Kiểm tra xem message có phải là messageCode (translation key) không
+        if (messages.has(message as any)) {
+            toast.success(messages(message as any), {
+                toastId: message,
+            });
+        } else {
+            // Nếu không phải messageCode thì hiển thị message trực tiếp
+            toast.success(message, {
+                toastId: message,
+            });
+        }
+    };
+
+    return { handleError, handleSuccess };
 }
