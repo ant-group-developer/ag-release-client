@@ -130,6 +130,7 @@ export default function DropUploadTracks({ ...props }: Props) {
                             fileId: null,
                             peakId: null,
                             preview: null,
+                            sampleLength: null,
                         },
                         key: `track-${index}`,
                         order: index,

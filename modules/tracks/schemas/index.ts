@@ -110,7 +110,15 @@ export const releaseTrackSchema = (messages: any) =>
                         .max(100, messages('validation.max', { number: 100 })),
                     urlRead: z.string().nullable().optional(),
                 }),
-
+                sampleLength: z
+                    .number({
+                        required_error: messages('validation.input'),
+                        invalid_type_error: messages('validation.input'),
+                    })
+                    .nullable()
+                    .refine((val) => val !== null && val !== 0, {
+                        message: messages('validation.input'),
+                    }),
                 preview: z
                     .number({
                         required_error: messages('validation.input'),
@@ -131,7 +139,22 @@ export const releaseTrackSchema = (messages: any) =>
                         path: ['preview'],
                         code: z.ZodIssueCode.custom,
                         message: messages(
-                            'tracks.validation.previewMustBeLessThanDuration'
+                            'track.validation.previewMustBeLessThanDuration'
+                        ),
+                    });
+                }
+
+                if (
+                    data.sampleLength != null &&
+                    data.duration != null &&
+                    data.preview != null &&
+                    data.sampleLength > data.duration - data.preview
+                ) {
+                    ctx.addIssue({
+                        path: ['sampleLength'],
+                        code: z.ZodIssueCode.custom,
+                        message: messages(
+                            'track.validation.sampleLengthMustBeLessThanDuration'
                         ),
                     });
                 }

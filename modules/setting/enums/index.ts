@@ -3,6 +3,7 @@ export enum SETTING_TABS {
     BACK_UP_DATABASE = 'backupDatabase',
     TELEGRAM = 'telegram',
     ACR_CLOUD = 'acrCloud',
+    GENERAL = 'general',
 }
 
 export enum STATUS_BACKUP {

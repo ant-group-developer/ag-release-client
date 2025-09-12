@@ -64,6 +64,10 @@
         }
     },
     "common": {
+        "distribute": "Phân phối",
+        "preparingDownload": "Đang chuẩn bị tải xuống",
+        "preparingDownloadDesc": "Quá trình có thể mất vài giây, vui lòng chờ",
+        "assets": "Tài sản",
         "streams": "Lượt phát",
         "success": "Thành công",
         "compare": "So sánh",
@@ -759,6 +763,7 @@
         },
 
         "coverArt": {
+            "label": "Ảnh bìa",
             "required": "Yêu cầu ảnh bìa",
             "size": "Ảnh phải vuông, từ 1400x1400 pixel đến 4000x4000x pixel"
         },
@@ -831,6 +836,14 @@
         "autoScanTime": "Giờ tự động quét",
         "releaseStatusAutoScan": "Trạng thái tự động quét",
         "chunkDuration": "Thời lượng đoạn",
+        "sampleLength": {
+            "label": "Độ dài mẫu",
+            "tooltip": "Xác định độ dài đoạn nhạc mẫu mà khán giả được nghe thử"
+        },
+        "preview": {
+            "label": "Điểm bắt đầu preview",
+            "tooltip": "Xác định thời điểm trong bài hát mà đoạn nghe thử bắt đầu"
+        },
         "status": {
             "scanning": "Đang quét",
             "running": "Đang chạy",
@@ -866,6 +879,7 @@
         },
         "validation": {
             "previewMustBeLessThanDuration": "Thời gian xem trước phải nhỏ hơn thời gian bài hát",
+            "sampleLengthMustBeLessThanDuration": "Thời lượng đoạn mẫu phải nhỏ hơn thời gian bài hát",
             "trackUpload": "{type} chỉ tải lên tối đa được {maxCount} bài",
             "trackFileName": "Tên File không được vượt quá {number} ký tự"
         },
@@ -1097,6 +1111,7 @@
             "trackTypeId": "Thể loại bài hát",
             "primaryGenreId": "Thể loại chính",
             "pLineOwner": "Bản quyền ghi âm",
+            "sampleLength": "Độ dài đoạn nghe mẫu",
             "previewTrack": "Đoạn nghe trước",
             "trackOrigin": "Nguồn gốc bài hát",
             "trackName": "Tên bài hát",

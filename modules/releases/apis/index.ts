@@ -49,4 +49,34 @@ export const releasesApi = {
             );
         }
     },
+
+    downloadAssets: (id: ReleasesData['id']) => {
+        return axiosInstance.get(`/releases/${id}/download/assets`, {
+            responseType: 'blob',
+        });
+    },
+
+    downloadCoverArt: (id: ReleasesData['id']) => {
+        return axiosInstance.get(`/releases/${id}/download/cover-art`, {
+            responseType: 'blob',
+        });
+    },
+
+    downloadCsvMetadata: (id: ReleasesData['id']) => {
+        return axiosInstance.get(`/releases/${id}/download/csv-metadata`, {
+            responseType: 'blob',
+        });
+    },
+
+    downloadXlsxMetadata: (id: ReleasesData['id']) => {
+        return axiosInstance.get(`/releases/${id}/download/xlsx-metadata`, {
+            responseType: 'blob',
+        });
+    },
+
+    downloadTxtMetadata: (id: ReleasesData['id']) => {
+        return axiosInstance.get(`/releases/${id}/download/txt-metadata`, {
+            responseType: 'blob',
+        });
+    },
 };

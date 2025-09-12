@@ -42,7 +42,7 @@ export default function Tracks() {
     const isEditAction = action === RELEASE_DETAIL_ACTION.EDIT;
 
     // apis
-    const { tracksData, isFetching } = useGetListTracks({
+    const { tracksData, isLoading } = useGetListTracks({
         releaseId: formValues?.id as string,
         fieldOrder: 'order',
     });
@@ -115,7 +115,7 @@ export default function Tracks() {
                     dataSource={tracksData?.items}
                     rowSelection={rowSelection}
                     // sticky={{ offsetHeader: 174 }}
-                    loading={isFetching}
+                    loading={isLoading}
                     pagination={{
                         pageSize: PAGE_SIZE,
                         total: tracksData?.metadata?.totalItems,
@@ -129,7 +129,7 @@ export default function Tracks() {
                         ),
                     }}
                     locale={{
-                        emptyText: isFetching ? (
+                        emptyText: isLoading ? (
                             <Empty />
                         ) : (
                             <DropUploadTracks disabled={!isEditAction} />

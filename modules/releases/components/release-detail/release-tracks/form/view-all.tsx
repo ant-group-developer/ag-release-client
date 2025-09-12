@@ -98,7 +98,6 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
                         debouncedUpdateTrackDraft={updateTrackDraft}
                         trackData={trackData}
                     />
-
                     <AudioSpecSection
                         index={index}
                         debouncedUpdateTrackDraft={updateTrackDraft}

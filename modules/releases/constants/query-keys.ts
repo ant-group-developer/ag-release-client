@@ -4,13 +4,16 @@ import { ReleasesDataFilter } from '../types';
 export const releasesQueryKeys = {
     all: [QUERY_KEY.RELEASES.KEY] as const,
 
+    downloadAssets: () => [
+        ...releasesQueryKeys.all,
+        QUERY_KEY.RELEASES.DOWNLOAD_ASSET,
+    ],
     lists: () =>
         [...releasesQueryKeys.all, QUERY_KEY.RELEASES.GET_LIST] as const,
     list: (params?: ReleasesDataFilter) =>
         params
             ? ([...releasesQueryKeys.lists(), params] as const)
             : releasesQueryKeys.lists(),
-
     details: () =>
         [...releasesQueryKeys.all, QUERY_KEY.RELEASES.GET_DETAIL] as const,
     detail: (id: string) => [...releasesQueryKeys.details(), id] as const,

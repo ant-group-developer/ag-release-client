@@ -1,9 +1,10 @@
 import { useGetArtistSimpleList } from '@/modules/artist/hooks/use-get-artist-simple-list';
 import { ArtistDataSimple } from '@/modules/artist/types';
-import { Button, Empty, Select, SelectProps, Spin } from 'antd';
+import { Avatar, Button, Empty, Select, SelectProps, Spin } from 'antd';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
+import CustomTooltip from '../tooltip/custom-tooltip';
 
 type Props = SelectProps & {
     onCreateArtist?: () => void;
@@ -40,6 +41,43 @@ export default function ArtistSelect({
         [setSearchKeyword]
     );
 
+    const options = artistsData?.map((item: ArtistDataSimple, idx) => ({
+        key: `${item.id}_${idx}`,
+        id: item.id,
+        value: item.id,
+        label: (
+            <div className="grid grid-cols-3 items-center gap-1">
+                <span className="truncate">
+                    <CustomTooltip title={item.name}>{item.name}</CustomTooltip>
+                </span>
+                <div className="flex gap-1">
+                    {/* <span>{item?.country?.name}</span>
+                    <span>{item?.genre?.name}</span> */}
+                    <span>{'Việt Nam'}</span> | <span>{'Rap hiphop'}</span>
+                </div>
+                <div className="flex justify-end gap-1">
+                    <Avatar
+                        size={26}
+                        src="/icon/spotify.png"
+                        className="hover:opacity-40"
+                        onClick={(e) => {
+                            e?.stopPropagation();
+                        }}
+                    />
+                    <Avatar
+                        size={26}
+                        src="/icon/apple-music.svg"
+                        className="hover:opacity-40"
+                        onClick={(e) => {
+                            e?.stopPropagation();
+                        }}
+                    />
+                </div>
+            </div>
+        ),
+        disabled: disabledArtistIds?.includes(item.id) ?? false,
+    }));
+
     useEffect(() => {
         return () => {
             debounceSearch.cancel();
@@ -55,17 +93,12 @@ export default function ArtistSelect({
     return (
         <Select
             {...props}
+            className={''}
             loading={isFetching}
             showSearch
             onSearch={(value) => debounceSearch(value)}
             filterOption={false}
-            options={artistsData?.map((item: ArtistDataSimple, idx) => ({
-                key: `${item.id}_${idx}`,
-                id: item.id,
-                value: item.id,
-                label: item.name,
-                disabled: disabledArtistIds?.includes(item.id) ?? false,
-            }))}
+            options={options}
             labelRender={labelRender}
             dropdownRender={(menu) => {
                 return (

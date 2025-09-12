@@ -46,6 +46,7 @@ export default function AudioSpecifications({ trackData }: Props) {
             fileName: trackData?.audioFile?.file?.fileName ?? '',
         },
         preview: trackData?.audioFile?.preview ?? 0,
+        sampleLength: trackData?.audioFile?.sampleLength ?? 0,
         duration: trackData?.audioFile?.duration ?? 0,
     });
     const formMethods = useForm<AudioSpecificationsSchema>({
@@ -92,24 +93,85 @@ export default function AudioSpecifications({ trackData }: Props) {
             <FormProvider {...formMethods}>
                 <form className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
+                        <div className="col-span-2">
+                            <FormItem
+                                name="audioFile.file.fileName"
+                                label={messages('common.fileName')}
+                                required
+                                ErrorMessage={
+                                    errors.audioFile?.file?.fileName?.message
+                                }
+                            >
+                                <Controller
+                                    control={control}
+                                    name="audioFile.file.fileName"
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            value={field.value ?? ''}
+                                            readOnly={true}
+                                            status={
+                                                errors.audioFile?.file?.fileName
+                                                    ? 'error'
+                                                    : undefined
+                                            }
+                                        />
+                                    )}
+                                />
+                            </FormItem>
+                        </div>
+
                         <FormItem
-                            name="audioFile.file.fileName"
-                            label={messages('common.fileName')}
+                            name="audioFile.sampleLength"
+                            label={messages('formFields.tracks.sampleLength')}
                             required
                             ErrorMessage={
-                                errors.audioFile?.file?.fileName?.message
+                                errors.audioFile?.sampleLength?.message
                             }
                         >
                             <Controller
                                 control={control}
-                                name="audioFile.file.fileName"
+                                name="audioFile.sampleLength"
                                 render={({ field }) => (
-                                    <Input
+                                    <TimePicker
+                                        className="w-full"
+                                        showNow={false}
                                         {...field}
-                                        value={field.value ?? ''}
-                                        readOnly={true}
+                                        value={
+                                            typeof field.value === 'number' &&
+                                            field.value > 0
+                                                ? dayjs(
+                                                      convertSecondsToHoursMinutes(
+                                                          field.value
+                                                      ),
+                                                      DATE_FORMAT.HOUR_MINUTE_SECOND
+                                                  )
+                                                : null
+                                        }
+                                        onChange={(time) => {
+                                            const value = time
+                                                ? time.format(
+                                                      DATE_FORMAT.HOUR_MINUTE_SECOND
+                                                  )
+                                                : '';
+                                            const seconds = value
+                                                ? timeStringToSeconds(value)
+                                                : 0;
+                                            field.onChange(seconds);
+                                            debouncedUpdateTrackDraft(
+                                                {
+                                                    audioFile: {
+                                                        sampleLength: seconds,
+                                                    },
+                                                },
+                                                'audioFile.sampleLength'
+                                            );
+                                        }}
+                                        onBlur={field.onBlur}
+                                        size="middle"
+                                        format={DATE_FORMAT.HOUR_MINUTE_SECOND}
                                         status={
-                                            errors.audioFile?.file?.fileName
+                                            !!errors.audioFile?.sampleLength
                                                 ? 'error'
                                                 : undefined
                                         }

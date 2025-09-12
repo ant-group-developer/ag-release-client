@@ -3,9 +3,11 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import IconButton from '@/components/ui/button/icon-button';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
+import CountrySelect from '@/components/ui/select/country-select';
+import GenresSelect from '@/components/ui/select/genres-select';
 import PlatformSelect from '@/components/ui/select/platform-select';
 import { SIZE_ICON } from '@/constants/common';
-import { MAX_NAME_LENGTH } from '@/constants/validate';
+import { ACCEPT_IMAGE, MAX_NAME_LENGTH } from '@/constants/validate';
 import { getAvatarUrl } from '@/helpers/avatar-tailwind';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
@@ -162,7 +164,7 @@ export default function ArtistFormModal({ ...props }: Props) {
                     <AppFormItem name="pictureFile" label={'Avatar'}>
                         <ImageListUpload
                             maxCount={1}
-                            accept="image/png,image/jpeg,image/svg+xml,image/x-icon"
+                            accept={ACCEPT_IMAGE}
                             maxSizeMB={3}
                             description={
                                 <ul className="space-y-1 text-xs">
@@ -206,6 +208,34 @@ export default function ArtistFormModal({ ...props }: Props) {
                         ]}
                     >
                         <Input allowClear />
+                    </AppFormItem>
+
+                    <AppFormItem
+                        name="country"
+                        label={messages('country.label')}
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <CountrySelect />
+                    </AppFormItem>
+
+                    <AppFormItem
+                        name="genre"
+                        label={messages('genre.label')}
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <GenresSelect />
                     </AppFormItem>
 
                     <AppFormItem

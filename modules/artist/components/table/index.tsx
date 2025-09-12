@@ -171,6 +171,40 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
             ),
         },
         {
+            title: messages('country.label'),
+            key: 'country',
+            dataIndex: 'country',
+            align: 'left',
+            width: 180,
+            ellipsis: true,
+            // sorter: true,
+            // sortOrder: getSortOrder(
+            //     dataFilter.orderBy,
+            //     dataFilter.fieldOrder,
+            //     'country'
+            // ),
+            render: (value, record) => (
+                <p className="truncate">{record?.country?.name}</p>
+            ),
+        },
+        {
+            title: messages('genre.label'),
+            key: 'genre',
+            dataIndex: 'genre',
+            align: 'left',
+            width: 180,
+            ellipsis: true,
+            // sorter: true,
+            // sortOrder: getSortOrder(
+            //     dataFilter.orderBy,
+            //     dataFilter.fieldOrder,
+            //     'genre'
+            // ),
+            render: (value, record) => (
+                <p className="truncate">{record?.genre?.name}</p>
+            ),
+        },
+        {
             title: messages('release.label'),
             key: 'releaseCount',
             dataIndex: 'release_count',

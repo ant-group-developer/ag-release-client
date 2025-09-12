@@ -6,6 +6,7 @@ export interface SettingData {
     backupDatabase: BackupDatabaseConfig;
     telegram: TelegramConfig;
     acrCloud: ACRCloudConfig;
+    general: GeneralConfig;
 }
 
 export interface SettingDataFilter extends CommonParams {}
@@ -16,6 +17,11 @@ export interface WebsiteConfig {
     name: string;
     title: string;
     description: string;
+}
+
+export interface GeneralConfig {
+    sampleLength: number;
+    preview: number;
 }
 
 export interface BackupDatabaseConfig {

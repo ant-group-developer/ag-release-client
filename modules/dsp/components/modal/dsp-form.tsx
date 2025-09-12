@@ -5,7 +5,7 @@ import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import ActionsSelect from '@/components/ui/select/actions-select';
 import { SIZE_ICON } from '@/constants/common';
-import { MAX_NAME_LENGTH } from '@/constants/validate';
+import { ACCEPT_IMAGE, MAX_NAME_LENGTH } from '@/constants/validate';
 import { getAvatarUrl } from '@/helpers/avatar-tailwind';
 import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
@@ -209,7 +209,7 @@ export default function DspFormModal({ ...props }: Props) {
                     >
                         <ImageListUpload
                             maxCount={1}
-                            accept="image/png,image/jpeg,image/svg+xml,image/x-icon"
+                            accept={ACCEPT_IMAGE}
                             maxSizeMB={3}
                             description={
                                 <ul className="space-y-1 text-xs">
