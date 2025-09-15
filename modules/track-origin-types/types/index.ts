@@ -5,6 +5,7 @@ export interface TrackOriginTypeData extends CommonAttribute {
     code: string;
     creatorId: string;
     modifierId: string;
+    isDefault: boolean;
 }
 export interface TrackOriginTypeSimpleData
     extends Pick<TrackOriginTypeData, 'id' | 'code' | 'name'> {}

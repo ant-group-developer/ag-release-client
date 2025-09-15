@@ -33,7 +33,7 @@ export default function Labels({}: Props) {
     const dataEdit = useModalStore<LabelData>((state) => state.dataEdit);
 
     // apis
-    const { labelsData, isLoading, lastUpdatedAt, refetch } =
+    const { labelsData, isFetching, lastUpdatedAt, refetch } =
         useGetListLabels(dataFilter);
     const { deleteLabel } = useDeleteLabel();
 
@@ -73,7 +73,7 @@ export default function Labels({}: Props) {
                     current: labelsData.metadata.currentPage,
                     total: labelsData.metadata.totalItems,
                 }}
-                loading={isLoading}
+                loading={isFetching}
                 dataFilter={dataFilter}
                 onChange={onChangeSort}
             />

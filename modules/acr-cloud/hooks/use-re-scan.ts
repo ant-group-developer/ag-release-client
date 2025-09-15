@@ -1,5 +1,5 @@
 import { showNotification } from '@/helpers/messages-helper';
-import { useApiError } from '@/hooks/use-api-error';
+import { useApiNotify } from '@/hooks/use-api-notify';
 import { DeleteVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
@@ -7,7 +7,7 @@ import { acrCloudApis } from '../apis';
 import { acrCloudQueryKeys } from '../constants/query-keys';
 
 export const useReScan = () => {
-    const { handleError } = useApiError();
+    const { handleError } = useApiNotify();
     const queryClient = useQueryClient();
     const messages = useTranslations();
 

@@ -15,6 +15,7 @@ export enum TYPE_MODAL_RELEASE {
 export enum TYPE_MODAL_TRACK {
     ADD = 'ADD',
     DELETE = 'DELETE',
+    BULK_DELETE = 'BULK_DELETE',
     ACR_CLOUD_SCAN = 'ACR_CLOUD_SCAN',
     ACR_CLOUD_SCAN_HISTORY = 'ACR_CLOUD_SCAN_HISTORY',
     ACR_CLOUD_SCAN_RESULT = 'ACR_CLOUD_SCAN_RESULT',
@@ -71,4 +72,9 @@ export enum RELEASES_COLUMNS_DISPLAY {
     ACTIONS = 'actions',
     CREATED_AT = 'createdAt',
     UPDATED_AT = 'updatedAt',
+}
+
+export enum RELEASE_TIME_MODE {
+    GLOBAL_MIDNIGHT = 'global_midnight',
+    SPECIFIC_TIMEZONE = 'specific_timezone',
 }

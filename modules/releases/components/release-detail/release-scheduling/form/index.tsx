@@ -5,6 +5,7 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { DATE_FORMAT, DISTRIBUTE_TYPES } from '@/enums/common';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
+import { RELEASE_TIME_MODE } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
 import { releaseSchema } from '@/modules/releases/schemas';
@@ -17,7 +18,7 @@ import dayjs from 'dayjs';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo } from 'react';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
 const releaseSchedulingSchema = (messages: any) =>
@@ -26,6 +27,7 @@ const releaseSchedulingSchema = (messages: any) =>
         releaseTime: true,
         releaseTimezoneId: true,
         releaseTerritory: true,
+        releaseTimeMode: true,
     });
 
 export type ReleaseSchedulingSchema = z.infer<
@@ -60,6 +62,7 @@ export default function ReleaseSchedulingForm({}: Props) {
                 selectedCountries:
                     formValues?.releaseTerritory?.selectedCountries,
             },
+            releaseTimeMode: formValues?.releaseTimeMode,
         },
         resolver: zodResolver(releaseSchedulingSchema(messages)),
         mode: 'onChange',
@@ -73,6 +76,8 @@ export default function ReleaseSchedulingForm({}: Props) {
         trigger,
         setValue,
     } = formMethods;
+
+    const releaseTimeMode = useWatch({ control, name: 'releaseTimeMode' });
 
     const distributeWorldwide = watch('releaseTerritory.distributeWorldwide');
 
@@ -116,132 +121,199 @@ export default function ReleaseSchedulingForm({}: Props) {
             <FormProvider {...formMethods}>
                 <form className="flex flex-col gap-4">
                     <div className="grid grid-cols-2 gap-6">
-                        <FormItem
-                            name="releaseDate"
-                            label={messages('release.releaseDate')}
-                            required
-                            ErrorMessage={errors.releaseDate?.message}
-                        >
-                            <Controller
-                                control={control}
+                        <div className="col-span-2">
+                            <FormItem
+                                className="w-2/6"
                                 name="releaseDate"
-                                render={({ field }) => {
-                                    return (
-                                        <DatePicker
-                                            id="releaseDate"
-                                            className="w-full"
-                                            format={DATE_FORMAT.DATE_ONLY}
-                                            disabledDate={(date) =>
-                                                date &&
-                                                date < dayjs().startOf('day')
-                                            }
-                                            value={
-                                                field.value
-                                                    ? dayjs(field.value)
-                                                    : null
-                                            }
-                                            onChange={(date) => {
-                                                field.onChange(
-                                                    date.toISOString()
-                                                );
+                                label={messages('release.releaseDate')}
+                                required
+                                ErrorMessage={errors.releaseDate?.message}
+                            >
+                                <Controller
+                                    control={control}
+                                    name="releaseDate"
+                                    render={({ field }) => {
+                                        return (
+                                            <DatePicker
+                                                id="releaseDate"
+                                                className="w-full"
+                                                format={DATE_FORMAT.DATE_ONLY}
+                                                disabledDate={(date) =>
+                                                    date &&
+                                                    date <
+                                                        dayjs().startOf('day')
+                                                }
+                                                value={
+                                                    field.value
+                                                        ? dayjs(field.value)
+                                                        : null
+                                                }
+                                                onChange={(date) => {
+                                                    field.onChange(
+                                                        date.toISOString()
+                                                    );
+                                                    debouncedUpdate({
+                                                        releaseDate: date,
+                                                    });
+                                                }}
+                                                status={
+                                                    errors.releaseDate
+                                                        ? 'error'
+                                                        : undefined
+                                                }
+                                                disabled={isReadMode}
+                                            />
+                                        );
+                                    }}
+                                />
+                            </FormItem>
+                        </div>
+                        <div className="space-y-8">
+                            <FormItem
+                                name="releaseTimeMode"
+                                label={messages(
+                                    'release.scheduling.goLiveTime'
+                                )}
+                                required
+                                ErrorMessage={errors.releaseTimezoneId?.message}
+                            >
+                                <Controller
+                                    control={control}
+                                    name="releaseTimeMode"
+                                    render={({ field }) => (
+                                        <Radio.Group
+                                            {...field}
+                                            id="releaseTimeMode"
+                                            className="space-y-2"
+                                            onChange={(e) => {
+                                                field.onChange(e.target.value);
                                                 debouncedUpdate({
-                                                    releaseDate: date,
+                                                    releaseTimeMode:
+                                                        e.target.value,
                                                 });
                                             }}
-                                            status={
-                                                errors.releaseDate
-                                                    ? 'error'
-                                                    : undefined
-                                            }
                                             disabled={isReadMode}
+                                        >
+                                            <Radio
+                                                value={
+                                                    RELEASE_TIME_MODE.GLOBAL_MIDNIGHT
+                                                }
+                                            >
+                                                {messages(
+                                                    'release.scheduling.atMidnightInEveryCountry'
+                                                )}
+                                            </Radio>
+                                            <Radio
+                                                value={
+                                                    RELEASE_TIME_MODE.SPECIFIC_TIMEZONE
+                                                }
+                                            >
+                                                {messages(
+                                                    'release.scheduling.atSpecificTime'
+                                                )}
+                                            </Radio>
+                                        </Radio.Group>
+                                    )}
+                                />
+                            </FormItem>
+
+                            {releaseTimeMode ===
+                                RELEASE_TIME_MODE.SPECIFIC_TIMEZONE && (
+                                <div className="space-y-2">
+                                    <FormItem
+                                        name="releaseTimezoneId"
+                                        label={messages('timezone.zone')}
+                                        required
+                                        ErrorMessage={
+                                            errors.releaseTimezoneId?.message
+                                        }
+                                    >
+                                        <Controller
+                                            control={control}
+                                            name="releaseTimezoneId"
+                                            render={({ field }) => (
+                                                <TimezoneSelect
+                                                    fallBack={
+                                                        formValues?.timeZone
+                                                            ?.name
+                                                    }
+                                                    id="releaseTimezoneId"
+                                                    className="w-full"
+                                                    {...field}
+                                                    placeholder={messages(
+                                                        'timezone.placeholder.selectTimezone'
+                                                    )}
+                                                    onChange={(e) => {
+                                                        field.onChange(e);
+                                                        debouncedUpdate({
+                                                            releaseTimezoneId:
+                                                                e,
+                                                        });
+                                                    }}
+                                                    status={
+                                                        errors.releaseTimezoneId
+                                                            ? 'error'
+                                                            : undefined
+                                                    }
+                                                    disabled={isReadMode}
+                                                />
+                                            )}
                                         />
-                                    );
-                                }}
-                            />
-                        </FormItem>
+                                    </FormItem>
 
-                        <FormItem
-                            name="releaseTime"
-                            label={messages('common.releaseTime')}
-                            required
-                            ErrorMessage={errors.releaseTime?.message}
-                        >
-                            <Controller
-                                control={control}
-                                name="releaseTime"
-                                render={({ field }) => (
-                                    <TimePicker
-                                        id="releaseTime"
-                                        className="w-full"
-                                        value={
-                                            field.value
-                                                ? dayjs(
-                                                      field.value,
-                                                      DATE_FORMAT.HOUR_MINUTE
-                                                  )
-                                                : null
+                                    <FormItem
+                                        name="releaseTime"
+                                        label={messages('common.releaseTime')}
+                                        required
+                                        ErrorMessage={
+                                            errors.releaseTime?.message
                                         }
-                                        onChange={(time) => {
-                                            field.onChange(
-                                                time
-                                                    ? time.format(
-                                                          DATE_FORMAT.HOUR_MINUTE
-                                                      )
-                                                    : ''
-                                            );
-                                            debouncedUpdate({
-                                                releaseTime: time
-                                                    ? time.format(
-                                                          DATE_FORMAT.HOUR_MINUTE
-                                                      )
-                                                    : '',
-                                            });
-                                        }}
-                                        status={
-                                            errors.releaseTime
-                                                ? 'error'
-                                                : undefined
-                                        }
-                                        showSecond={false}
-                                        disabled={isReadMode}
-                                    />
-                                )}
-                            />
-                        </FormItem>
-
-                        <FormItem
-                            name="releaseTimezoneId"
-                            label={messages('timezone.zone')}
-                            required
-                            ErrorMessage={errors.releaseTimezoneId?.message}
-                        >
-                            <Controller
-                                control={control}
-                                name="releaseTimezoneId"
-                                render={({ field }) => (
-                                    <TimezoneSelect
-                                        id="releaseTimezoneId"
-                                        className="w-full"
-                                        {...field}
-                                        placeholder={messages(
-                                            'timezone.placeholder.selectTimezone'
-                                        )}
-                                        onChange={(e) => {
-                                            field.onChange(e);
-                                            debouncedUpdate({
-                                                releaseTimezoneId: e,
-                                            });
-                                        }}
-                                        status={
-                                            errors.releaseTimezoneId
-                                                ? 'error'
-                                                : undefined
-                                        }
-                                        disabled={isReadMode}
-                                    />
-                                )}
-                            />
-                        </FormItem>
+                                    >
+                                        <Controller
+                                            control={control}
+                                            name="releaseTime"
+                                            render={({ field }) => (
+                                                <TimePicker
+                                                    id="releaseTime"
+                                                    className="w-full"
+                                                    value={
+                                                        field.value
+                                                            ? dayjs(
+                                                                  field.value,
+                                                                  DATE_FORMAT.HOUR_MINUTE
+                                                              )
+                                                            : null
+                                                    }
+                                                    onChange={(time) => {
+                                                        field.onChange(
+                                                            time
+                                                                ? time.format(
+                                                                      DATE_FORMAT.HOUR_MINUTE
+                                                                  )
+                                                                : ''
+                                                        );
+                                                        debouncedUpdate({
+                                                            releaseTime: time
+                                                                ? time.format(
+                                                                      DATE_FORMAT.HOUR_MINUTE
+                                                                  )
+                                                                : '',
+                                                        });
+                                                    }}
+                                                    status={
+                                                        errors.releaseTime
+                                                            ? 'error'
+                                                            : undefined
+                                                    }
+                                                    showSecond={false}
+                                                    disabled={isReadMode}
+                                                />
+                                            )}
+                                        />
+                                    </FormItem>
+                                </div>
+                            )}
+                        </div>
 
                         <div className="space-y-2">
                             <FormItem

@@ -1,4 +1,4 @@
-import { useApiError } from '@/hooks/use-api-error';
+import { useApiNotify } from '@/hooks/use-api-notify';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { artistApi } from '../apis';
@@ -8,7 +8,7 @@ import { DeleteArtistProfiles } from '../types/payload';
 export const useDeleteArtistProfile = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
-    const { handleError } = useApiError();
+    const { handleError } = useApiNotify();
 
     const onSuccess = (data: any, { onSuccess }: DeleteArtistProfiles) => {
         queryClient.invalidateQueries({

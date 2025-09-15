@@ -1,5 +1,5 @@
 import { showNotification } from '@/helpers/messages-helper';
-import { useApiError } from '@/hooks/use-api-error';
+import { useApiNotify } from '@/hooks/use-api-notify';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { userApi } from '../api';
@@ -13,7 +13,7 @@ import {
 export const useUpdateUser = () => {
     const queryClient = useQueryClient();
     const messages = useTranslations();
-    const { handleError } = useApiError();
+    const { handleError } = useApiNotify();
 
     const onSuccess = (data: any, { onSuccess, userId }: UpdateUser) => {
         queryClient.invalidateQueries({
@@ -47,7 +47,7 @@ export const useUpdateUser = () => {
 export const useUpdateUserRole = () => {
     const queryClient = useQueryClient();
     const messages = useTranslations();
-    const { handleError } = useApiError();
+    const { handleError } = useApiNotify();
 
     const onSuccess = (data: any, { onSuccess, payload }: UpdateUserRole) => {
         queryClient.invalidateQueries({
@@ -80,7 +80,7 @@ export const useUpdateUserRole = () => {
 export const useBulkUpdateTenantUser = () => {
     const queryClient = useQueryClient();
     const messages = useTranslations();
-    const { handleError } = useApiError();
+    const { handleError } = useApiNotify();
 
     const onSuccess = (
         data: any,

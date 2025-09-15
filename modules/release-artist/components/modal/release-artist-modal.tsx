@@ -4,7 +4,7 @@ import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import ArtistSelect from '@/components/ui/select/artist-select';
 import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import { useActive } from '@/hooks/use-active';
-import { useApiError } from '@/hooks/use-api-error';
+import { useApiNotify } from '@/hooks/use-api-notify';
 import useModalStore from '@/hooks/use-modal';
 import { useGetListArtistRole } from '@/modules/artist-role/hooks/use-get-list-artist-role';
 import { ArtistRoleData } from '@/modules/artist-role/types';
@@ -39,7 +39,7 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
     const watchArtistName = useWatch('name', form);
     const typeModal = useModalStore((state) => state.typeModal);
     const formValues = useReleaseFormStore((state) => state.formValues);
-    const { handleError } = useApiError();
+    const { handleError } = useApiNotify();
 
     const isArtistEditModal =
         typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST;
@@ -112,7 +112,6 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                         closeModal();
                     },
                 };
-                console.log(variables);
                 createReleaseArtist(variables);
             }
         } catch (error) {

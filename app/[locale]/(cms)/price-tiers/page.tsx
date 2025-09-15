@@ -37,7 +37,7 @@ export default function PriceTiers({}: Props) {
             page: 1,
             pageSize: PAGE_SIZE,
         });
-    const { priceTiersData, dataUpdatedAt, refetch, isFetching } =
+    const { priceTiersData, dataUpdatedAt, refetch } =
         useGetListPriceTiers(dataFilter);
     const { isLoading } = useLoadingStatus({
         queryKeys: [priceTiersQueryKeys.lists()],

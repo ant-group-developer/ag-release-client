@@ -20,6 +20,30 @@ export const useGetDetailArtist = (id: ArtistData['id']) => {
         releaseCount: 0,
         trackCount: 0,
         code: '',
+        country: {
+            name: '',
+            iso3: '',
+            iso2: '',
+            numericCode: '',
+            phoneCode: '',
+            capital: '',
+            currency: '',
+            currencyName: '',
+            currencySymbol: '',
+            nationality: '',
+            regionId: 0,
+            id: '',
+            createdAt: '',
+            updatedAt: null,
+        },
+        genre: {
+            name: '',
+            code: '',
+            description: '',
+            id: '',
+            createdAt: '',
+            updatedAt: null,
+        },
     };
 
     return {

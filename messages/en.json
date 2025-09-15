@@ -64,6 +64,10 @@
         }
     },
     "common": {
+        "distribute": "Distribute",
+        "preparingDownload": "Preparing download",
+        "preparingDownloadDesc": "Process can take a few seconds, please wait",
+        "assets": "Assets",
         "streams": "Streams",
         "success": "Success",
         "compare": "Compare",
@@ -485,6 +489,7 @@
     },
     "placeholder": {
         "dragAndDropAudio": "Drag and drop audio file here!",
+        "dragAndDropFile": "Drag and drop file here!",
         "selectArtist": "Select artist",
         "selectRegion": "Select region",
         "supportFormats": "Support formats: {accept}"
@@ -750,10 +755,14 @@
         },
 
         "scheduling": {
-            "label": "Scheduling"
+            "label": "Scheduling",
+            "atMidnightInEveryCountry": "At midnight in every country around the world",
+            "atSpecificTime": "At a specific time in a specific time zone",
+            "goLiveTime": "What time would you like it to go live"
         },
 
         "coverArt": {
+            "label": "Cover art",
             "required": "Required cover art",
             "size": "Perfectly Square image from 1400x1400 pixels to 4000x4000 pixels"
         },
@@ -826,6 +835,14 @@
         "autoScanTime": "Auto scan time",
         "releaseStatusAutoScan": "Release status auto scan",
         "chunkDuration": "Chunk duration",
+        "sampleLength": {
+            "label": "Sample length",
+            "tooltip": "Defines the duration of the audio sample that listeners can preview"
+        },
+        "preview": {
+            "label": "Preview start",
+            "tooltip": "Specifies the point in the track where the preview begins"
+        },
         "status": {
             "scanning": "Scanning",
             "running": "Running",
@@ -834,6 +851,9 @@
             "failed": "Failed",
             "cancel": "Canceled",
             "unknown": "Unknown"
+        },
+        "action": {
+            "deleteTracks": "Delete tracks"
         },
         "original": {
             "label": "Original Work",
@@ -858,6 +878,7 @@
         },
         "validation": {
             "previewMustBeLessThanDuration": "Preview duration must be less than track duration",
+            "sampleLengthMustBeLessThanDuration": "Sample length must be less than track duration",
             "trackUpload": "{type} can upload a maximum of {maxCount} track",
             "trackFileName": "File name cannot over {number} characters"
         },
@@ -1082,6 +1103,7 @@
             "trackLanguage": "Ngôn ngữ bài hát",
             "recordingCountryId": "Recording country",
             "preview": "Preview track",
+            "sampleLength": "Sample length",
             "primaryGenreId": "Primary genre",
             "pLineOwner": "Recoding copyright",
             "previewTrack": "Preview track",

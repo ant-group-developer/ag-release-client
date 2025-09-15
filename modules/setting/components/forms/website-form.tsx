@@ -1,7 +1,11 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
-import { MAX_NAME_LENGTH, MAX_NOTE_LENGTH } from '@/constants/validate';
+import {
+    ACCEPT_IMAGE,
+    MAX_NAME_LENGTH,
+    MAX_NOTE_LENGTH,
+} from '@/constants/validate';
 import { useActive } from '@/hooks/use-active';
 import { uploadApi } from '@/modules/upload/apis';
 import { ENTITY_TYPE_PICTURE } from '@/modules/upload/types/data';
@@ -95,7 +99,7 @@ export default function WebsiteForm({}: Props) {
                 <AppFormItem name="logo" label="Logo">
                     <ImageListUpload
                         maxCount={1}
-                        accept="image/png,image/jpeg,image/svg+xml,image/x-icon"
+                        accept={ACCEPT_IMAGE}
                         maxSizeMB={2}
                         disabled={isActive}
                     />

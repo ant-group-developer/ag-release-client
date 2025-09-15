@@ -4,18 +4,22 @@ import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { DATE_FORMAT, TYPE_UPLOAD_BUCKET } from '@/enums/common';
+import { APP_ROUTES } from '@/enums/routes';
 import { formattedDate } from '@/helpers/common';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { showNotification } from '@/helpers/messages-helper';
 import { cn } from '@/helpers/tailwind';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
+import useModalStore from '@/hooks/use-modal';
 import { usePathname, useRouter } from '@/i18n/routing';
 import {
     FEATURING_ARTIST_ROLE,
     MAIN_ARTIST_ROLE,
 } from '@/modules/release-artist/constants';
 import { ReleaseArtist } from '@/modules/release-artist/types';
+import { TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
 import { ReleasesData } from '@/modules/releases/types';
@@ -23,12 +27,15 @@ import { UpdateReleaseDraftPayload } from '@/modules/releases/types/payload';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { CreateBucketFile } from '@/modules/upload/types/data';
-import { UpdateVariables } from '@/types/api';
+import { DeleteVariables, UpdateVariables } from '@/types/api';
 import { Form, Segmented, theme } from 'antd';
 import { SegmentedOptions } from 'antd/es/segmented';
 import { useTranslations } from 'next-intl';
 import { useParams, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import DownloadMenu from './download-menu';
+import OptionsMenu from './options-menu';
+import { ACCEPT_IMAGE } from '@/constants/validate';
 
 type Props = {
     isScrolled: boolean;
@@ -36,6 +43,9 @@ type Props = {
 
 export default function ReleaseDetailHeader({ isScrolled }: Props) {
     // hooks - state
+    const typeModal = useModalStore((state) => state.typeModal);
+    const closeModal = useModalStore((state) => state.closeModal);
+
     const messages = useTranslations();
     const [form] = Form.useForm();
     const formValues = useReleaseFormStore((state) => state.formValues);
@@ -52,10 +62,11 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     // apis
     const { updateReleaseDraft, isPending: isUpdatingRelease } =
         useUpdateReleaseDraft();
-    const coverArtFileId = formValues?.coverArtThumbnails?.['160x160'] ?? '';
+    const coverArtFileId = formValues?.coverArtThumbnails?.original ?? '';
     const { linkReadFile, isFetching: isCoverArtLoading } =
         useGetLinkReadFile(coverArtFileId);
     const { releaseData } = useGetDetailRelease(formValues?.id as string);
+    const { deleteRelease } = useDeleteRelease();
 
     // const
     const isVariousArtist = !!formValues?.isVariousArtist;
@@ -201,6 +212,16 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
 
         router.push(`${pathname}?${params.toString()}`);
     };
+    const handleDeleteRelease = () => {
+        const variables: DeleteVariables<ReleasesData['id']> = {
+            id: releaseData?.id,
+            onSuccess: () => {
+                closeModal();
+                router.push(APP_ROUTES.RELEASES);
+            },
+        };
+        deleteRelease(variables);
+    };
 
     useEffect(() => {
         form.setFieldsValue({
@@ -266,7 +287,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                                 isScrolled,
                                         }
                                     )}
-                                    accept="image/png,image/jpeg,image/svg+xml,image/x-icon"
+                                    accept={ACCEPT_IMAGE}
                                     maxCount={1}
                                     minWidth={1400}
                                     maxSizeMB={10}
@@ -308,12 +329,12 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                         {renderArtistName()}
                                     </span>
                                 </div>
-                                <div className="text-sm">
+                                {/* <div className="text-sm">
                                     <span>{messages('common.genres')}: </span>
                                     <span className="font-bold">
                                         {formValues?.primaryGenre?.name}
                                     </span>
-                                </div>
+                                </div> */}
                                 <div>
                                     <span>
                                         {messages('common.releaseDate')}:{' '}
@@ -338,23 +359,31 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                         </div>
                     </div>
                     {!isCreateReleasePage && (
-                        <div className="space-y-1">
-                            <p className="text-nowrap text-xs text-gray-500">
-                                {messages('common.lastEdit')}:{' '}
-                                {releaseData?.modifier?.name} |{' '}
-                                {formattedDate(releaseData?.updatedAt)}
-                            </p>
-                            <div className="flex justify-end">
-                                <Segmented
-                                    value={action}
-                                    options={segmentedOptions}
-                                    onChange={(val) =>
-                                        handleChangeAction(
-                                            val as RELEASE_DETAIL_ACTION
-                                        )
-                                    }
-                                />
+                        <div className="flex flex-col justify-between gap-2">
+                            <div className="space-y-2">
+                                <p className="text-nowrap text-xs text-gray-500">
+                                    {messages('common.lastEdit')}:{' '}
+                                    {releaseData?.modifier?.name} |{' '}
+                                    {formattedDate(releaseData?.updatedAt)}
+                                </p>
+                                <div className="flex justify-end">
+                                    <Segmented
+                                        value={action}
+                                        options={segmentedOptions}
+                                        onChange={(val) =>
+                                            handleChangeAction(
+                                                val as RELEASE_DETAIL_ACTION
+                                            )
+                                        }
+                                    />
+                                </div>
                             </div>
+                            {!isScrolled && (
+                                <div className="flex justify-end space-x-2">
+                                    <DownloadMenu />
+                                    <OptionsMenu />
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>
@@ -368,6 +397,18 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                 onCancel={() => setIsConfirmOpen(false)}
                 onOk={handleConfirmRemove}
             />
+
+            {typeModal === TYPE_MODAL_RELEASE.DELETE && (
+                <AppConfirm
+                    open
+                    onOk={() => handleDeleteRelease()}
+                    onCancel={closeModal}
+                    modalTitle={`${messages('common.delete')} ${messages('release.label').toLowerCase()}`}
+                    paragraph={messages('delete.confirmMessage', {
+                        value: releaseData?.title,
+                    })}
+                />
+            )}
         </div>
     );
 }

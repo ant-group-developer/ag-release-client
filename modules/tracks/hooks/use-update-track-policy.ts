@@ -1,4 +1,4 @@
-import { useApiError } from '@/hooks/use-api-error';
+import { useApiNotify } from '@/hooks/use-api-notify';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { trackApi } from '../apis';
@@ -7,7 +7,7 @@ import { UpdateTrackPolicy } from '../types/payload';
 export const useUpdateTrackPolicy = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
-    const { handleError } = useApiError();
+    const { handleError } = useApiNotify();
 
     const onSuccess = (data: any, { onSuccess }: UpdateTrackPolicy) => {
         onSuccess?.(data?.data?.data);

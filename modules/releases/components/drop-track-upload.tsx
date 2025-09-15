@@ -1,4 +1,5 @@
 'use client';
+import DndUpload from '@/components/ui/input/dnd-upload';
 import { TYPE_UPLOAD_BUCKET } from '@/enums/common';
 import extractAudioMetadata, { getPeakData } from '@/helpers/common';
 import { showNotification } from '@/helpers/messages-helper';
@@ -10,10 +11,8 @@ import { AudioFileBucket, CreateBucketFile } from '@/modules/upload/types/data';
 import { CreateVariables } from '@/types/api';
 import { Progress, UploadProps } from 'antd';
 import axios from 'axios';
-import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { useMemo, useState } from 'react';
-import DndAudioUpload from '../../../components/ui/input/dnd-audio-upload';
+import { useRef, useState } from 'react';
 
 interface Props extends UploadProps {}
 
@@ -22,6 +21,7 @@ interface TracksPayload extends UploadProps {
     releaseId: string;
     audioFileDraft: AudioFileBucket;
     key: string;
+    order: number;
 }
 
 interface UploadProgress {
@@ -35,10 +35,16 @@ export default function DropUploadTracks({ ...props }: Props) {
     const { createTrackDraft } = useCreateTrackDraft();
     const [uploadProgress, setUploadProgress] = useState<UploadProgress[]>([]);
     const messages = useTranslations();
+    const prevLength = useRef(0);
 
     const handleUpload = async (files: any[]) => {
+        const sortedFiles = [...files].sort((a, b) => {
+            const nameA = (a.name || a.originFileObj?.name || '').toLowerCase();
+            const nameB = (b.name || b.originFileObj?.name || '').toLowerCase();
+            return nameA.localeCompare(nameB);
+        });
         try {
-            const preparingProgress: UploadProgress[] = files.map(
+            const preparingProgress: UploadProgress[] = sortedFiles.map(
                 (file: any, index: number) => ({
                     fileName:
                         file.name ||
@@ -49,15 +55,13 @@ export default function DropUploadTracks({ ...props }: Props) {
                     status: 'preparing',
                 })
             );
-
             setUploadProgress(preparingProgress);
-
             const tracksPayload: TracksPayload[] = [];
 
             // temp for handle store file and key
             const temp: { file: any; key: string }[] = [];
 
-            const newTracksPromises = files.map(
+            const newTracksPromises = sortedFiles.map(
                 async (file: any, index: number) => {
                     let songDuration = 0;
                     let peakData: number[] = [];
@@ -126,8 +130,10 @@ export default function DropUploadTracks({ ...props }: Props) {
                             fileId: null,
                             peakId: null,
                             preview: null,
+                            sampleLength: null,
                         },
                         key: `track-${index}`,
+                        order: index,
                     });
 
                     temp.push({
@@ -280,7 +286,6 @@ export default function DropUploadTracks({ ...props }: Props) {
             const variables: CreateVariables<TrackPayload[]> = {
                 payload: tracksPayload,
             };
-            console.log('🚀 ~ handleUpload ~ variables:', variables);
 
             createTrackDraft(variables);
         } catch (error) {
@@ -292,25 +297,27 @@ export default function DropUploadTracks({ ...props }: Props) {
         }
     };
 
-    const debouncedHandleUpload = useMemo(
-        () =>
-            debounce((files: any[]) => {
-                handleUpload(files);
-            }, 300),
-        [formValues.id, createTrackDraft]
-    );
+    // const debouncedHandleUpload = useMemo(
+    //     () =>
+    //         debounce((files: any[]) => {
+    //             handleUpload(files);
+    //         }, 300),
+    //     [formValues.id, createTrackDraft]
+    // );
 
     return (
         <div>
             {uploadProgress?.length < 1 && (
-                <DndAudioUpload
+                <DndUpload
                     {...props}
                     multiple
                     accept="audio/wav"
                     onChange={({ fileList }) => {
-                        debouncedHandleUpload(fileList);
+                        if (fileList.length > prevLength.current) {
+                            handleUpload(fileList);
+                        }
+                        prevLength.current = fileList.length;
                     }}
-                    showAudio={false}
                 />
             )}
 

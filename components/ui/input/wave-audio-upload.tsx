@@ -2,7 +2,7 @@ import { SIZE_ICON } from '@/constants/common';
 import { getPeakData } from '@/helpers/common';
 import { showNotification } from '@/helpers/messages-helper';
 import type { UploadProps } from 'antd';
-import { Button, Upload } from 'antd';
+import { Button, Spin, Upload } from 'antd';
 import { TrashIcon, UploadIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
@@ -89,6 +89,7 @@ const AudioItem = ({
                 <div>
                     <Button
                         type="link"
+                        htmlType="button"
                         icon={
                             <IconButton>
                                 <TrashIcon
@@ -97,7 +98,9 @@ const AudioItem = ({
                                 />
                             </IconButton>
                         }
-                        onClick={() => {
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
                             const uploadFile = fileList[index];
                             if (uploadFile) onRemove(uploadFile);
                         }}
@@ -126,6 +129,7 @@ const WaveAudioUpload = ({
     ...props
 }: DndAudioUploadProps) => {
     const [audioFiles, setAudioFiles] = useState<AudioFile[]>([]);
+    const [isProcessing, setIsProcessing] = useState(false);
     const fileList = value?.fileList || [];
     const message = useTranslations();
 
@@ -151,31 +155,48 @@ const WaveAudioUpload = ({
     }
 
     const onChange: UploadProps['onChange'] = async (info) => {
+        setIsProcessing(true);
         const { fileList } = info;
-        const newAudioFiles: AudioFile[] = [];
 
-        for (const fileInfo of fileList) {
-            if (fileInfo.originFileObj) {
-                const file = fileInfo.originFileObj;
-                const audioObjectUrl = URL.createObjectURL(file);
-                const fileName = fileInfo.name;
+        try {
+            const results = await Promise.all(
+                fileList?.map(async (fileInfo) => {
+                    if (!fileInfo.originFileObj) return null;
 
-                try {
-                    const { peakData, songDuration: duration } =
-                        await getPeakData(file);
-                    newAudioFiles.push({
-                        url: audioObjectUrl,
-                        duration,
-                        name: fileName,
-                        peakData,
-                    });
-                } catch (error) {
-                    console.error('Error getting audio data:', error);
-                }
-            }
+                    const file = fileInfo.originFileObj;
+                    const audioObjectUrl = URL.createObjectURL(file);
+                    const fileName = fileInfo.name;
+
+                    try {
+                        const { peakData, songDuration: duration } =
+                            await getPeakData(file);
+
+                        return {
+                            url: audioObjectUrl,
+                            duration,
+                            name: fileName,
+                            peakData,
+                        } as AudioFile;
+                    } catch (error) {
+                        console.error('Error getting audio data:', error);
+                        return null;
+                    }
+                })
+            );
+
+            const newAudioFiles: AudioFile[] = results.filter(
+                (item): item is AudioFile => item !== null
+            );
+            setAudioFiles(
+                newAudioFiles
+                    .filter((item): item is AudioFile => item !== null)
+                    .sort((a, b) => a.name.localeCompare(b.name))
+            );
+        } catch (err) {
+            console.error('Error processing files:', err);
+        } finally {
+            setIsProcessing(false);
         }
-
-        setAudioFiles(newAudioFiles);
         props.onChange?.(info);
     };
 
@@ -204,7 +225,7 @@ const WaveAudioUpload = ({
 
     return (
         <React.Fragment>
-            <Dragger {...uploadProps}>
+            <Dragger {...uploadProps} disabled={isProcessing}>
                 <p className="mx-auto mb-3 grid aspect-square w-14 place-content-center rounded-full bg-gray-200 text-2xl">
                     <UploadIcon />
                 </p>
@@ -224,6 +245,15 @@ const WaveAudioUpload = ({
                             fileList={fileList}
                         />
                     ))}
+                </div>
+            )}
+            {audioFiles.length <= 0 && isProcessing && (
+                <div className="flex min-h-24 flex-col items-center justify-center">
+                    <Spin spinning={true} />
+                    <p className="py-2 text-center font-semibold">
+                        {' '}
+                        {message('common.processing')}...
+                    </p>
                 </div>
             )}
         </React.Fragment>

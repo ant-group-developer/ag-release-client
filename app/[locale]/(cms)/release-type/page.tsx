@@ -35,7 +35,7 @@ export default function ReleaseType({}: Props) {
     const closeModal = useModalStore((state) => state.closeModal);
 
     // apis
-    const { releaseTypesData, isLoading, refetch, lastUpdatedAt } =
+    const { releaseTypesData, isFetching, refetch, lastUpdatedAt } =
         useGetListReleaseTypes(dataFilter);
     const { deleteReleaseType } = useDeleteReleaseType();
 
@@ -74,7 +74,7 @@ export default function ReleaseType({}: Props) {
                     current: releaseTypesData.metadata.currentPage,
                     total: releaseTypesData.metadata.totalItems,
                 }}
-                loading={isLoading}
+                loading={isFetching}
                 dataFilter={dataFilter}
                 onChange={onChangeSort}
             />

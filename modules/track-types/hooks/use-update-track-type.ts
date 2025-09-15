@@ -1,5 +1,5 @@
 import { showNotification } from '@/helpers/messages-helper';
-import { useApiError } from '@/hooks/use-api-error';
+import { useApiNotify } from '@/hooks/use-api-notify';
 import { UpdateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
@@ -11,7 +11,7 @@ import { UpdateTrackTypePayload } from '../types/payload';
 export const useUpdateTrackType = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
-    const { handleError } = useApiError();
+    const { handleError } = useApiNotify();
 
     const onSuccess = (
         data: any,
@@ -39,6 +39,7 @@ export const useUpdateTrackType = () => {
         handleError(data);
     };
     const mutation = useMutation({
+        mutationKey: trackTypeQueryKeys.updates(),
         mutationFn: ({
             id,
             payload,

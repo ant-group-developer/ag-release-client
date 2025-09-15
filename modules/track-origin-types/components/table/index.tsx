@@ -3,9 +3,11 @@ import CopyText from '@/components/ui/copy-text/copy-text';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
+import { Switch } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_TRACK_ORIGIN_TYPE } from '../../enums';
+import { useUpdateTrackOriginType } from '../../hooks/use-update-track-origin-type';
 import { TrackOriginTypeData, TrackOriginTypeDataFilter } from '../../types';
 
 type Props = Omit<AppTableProps<TrackOriginTypeData>, 'columns'> & {
@@ -19,6 +21,7 @@ type Props = Omit<AppTableProps<TrackOriginTypeData>, 'columns'> & {
 export const TrackOriginTypeTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
+    const { updateTrackOriginType } = useUpdateTrackOriginType();
     const column: ColumnType<TrackOriginTypeData>[] = [
         {
             title: messages('common.iNo'),
@@ -56,9 +59,9 @@ export const TrackOriginTypeTable = ({ dataFilter, ...props }: Props) => {
             ),
         },
         {
-            title: messages('trackOriginType.value'),
-            key: 'value',
-            dataIndex: 'value',
+            title: messages('common.code'),
+            key: 'code',
+            dataIndex: 'code',
             ellipsis: true,
             align: 'left',
             width: 300,
@@ -66,12 +69,30 @@ export const TrackOriginTypeTable = ({ dataFilter, ...props }: Props) => {
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'value'
+                'code'
             ),
             render: (value) => (
                 <CopyText tooltipProps={{ placement: 'right' }} text={value}>
                     <p className="truncate">{value}</p>
                 </CopyText>
+            ),
+        },
+        {
+            title: messages('common.setIsDefault'),
+            key: 'isDefault',
+            dataIndex: 'isDefault',
+            width: 150,
+            align: 'center',
+            render: (value, record) => (
+                <Switch
+                    value={value}
+                    onChange={(e) =>
+                        updateTrackOriginType({
+                            id: record?.id,
+                            payload: { isDefault: e },
+                        })
+                    }
+                />
             ),
         },
         {

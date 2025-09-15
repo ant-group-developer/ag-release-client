@@ -4,10 +4,12 @@ import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
+import { useLoadingStatus } from '@/hooks/use-loading-status';
 import useModalStore from '@/hooks/use-modal';
 import DspHeader from '@/modules/dsp/components/header';
 import DspFormModal from '@/modules/dsp/components/modal/dsp-form';
 import { DspTable } from '@/modules/dsp/components/table';
+import { dspQueryKeys } from '@/modules/dsp/constants/query-keys';
 import { TYPE_MODAL_DSP } from '@/modules/dsp/enums';
 import { useDeleteDsp } from '@/modules/dsp/hooks/use-delete-dsp';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
@@ -25,6 +27,10 @@ export default function Dsp() {
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore<DspData>((state) => state.dataEdit);
     const closeModal = useModalStore((state) => state.closeModal);
+    const { isLoading } = useLoadingStatus({
+        queryKeys: [dspQueryKeys.lists()],
+        mutationKeys: [dspQueryKeys.all],
+    });
 
     // apis
     const { dspData, isFetching, refetch, lastUpdatedAt } =
@@ -51,7 +57,7 @@ export default function Dsp() {
                     current: dspData.metadata.currentPage,
                     total: dspData.metadata.totalItems,
                 }}
-                loading={isFetching}
+                loading={isLoading}
             />
             <AppPagination
                 align="end"

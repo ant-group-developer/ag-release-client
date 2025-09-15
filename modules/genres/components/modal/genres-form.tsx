@@ -2,7 +2,7 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
-import { MAX_NAME_LENGTH } from '@/constants/validate';
+import { ACCEPT_IMAGE, MAX_NAME_LENGTH } from '@/constants/validate';
 import { getAvatarUrl } from '@/helpers/avatar-tailwind';
 import { getCodeFormatted } from '@/helpers/string';
 import { useActive } from '@/hooks/use-active';
@@ -155,7 +155,7 @@ export default function GenresFormModal({ ...props }: Props) {
                         <ImageListUpload
                             maxCount={1}
                             maxSizeMB={2}
-                            accept="image/png,image/jpeg,image/svg+xml,image/x-icon"
+                            accept={ACCEPT_IMAGE}
                             description={
                                 <ul className="space-y-1 text-xs">
                                     <li className="flex-1 text-sm text-gray-500">

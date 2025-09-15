@@ -1,4 +1,4 @@
-import { useApiError } from '@/hooks/use-api-error';
+import { useApiNotify } from '@/hooks/use-api-notify';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { rolesApis } from '../apis';
 import { rolesQueryKeys } from '../constants/query-keys';
@@ -6,7 +6,7 @@ import { DeleteRoleProfile } from '../types/payload';
 
 export const useDeleteRolePermission = () => {
     const queryClient = useQueryClient();
-    const { handleError } = useApiError();
+    const { handleError } = useApiNotify();
 
     const onSuccess = (data: any, { onSuccess }: DeleteRoleProfile) => {
         queryClient.invalidateQueries({

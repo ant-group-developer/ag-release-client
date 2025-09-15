@@ -3,9 +3,14 @@ import { useGetListSimpleTimezones } from '@/modules/timezone/hooks/use-get-list
 import { Select, SelectProps } from 'antd';
 import { useTranslations } from 'next-intl';
 
-interface TimezoneSelectProps extends SelectProps {}
+interface TimezoneSelectProps extends SelectProps {
+    fallBack?: string;
+}
 
-export default function TimezoneSelect({ ...props }: TimezoneSelectProps) {
+export default function TimezoneSelect({
+    fallBack,
+    ...props
+}: TimezoneSelectProps) {
     const messages = useTranslations();
     const { timezonesData } = useGetListSimpleTimezones();
 
@@ -14,6 +19,13 @@ export default function TimezoneSelect({ ...props }: TimezoneSelectProps) {
         value: item.id,
         label: item.name,
     }));
+
+    const labelRender = (props: any) => {
+        const { value, label } = props;
+        if (value) {
+            return fallBack || label;
+        }
+    };
 
     return (
         <Select
@@ -28,6 +40,7 @@ export default function TimezoneSelect({ ...props }: TimezoneSelectProps) {
             optionFilterProp="label"
             options={options}
             allowClear
+            labelRender={labelRender}
         />
     );
 }

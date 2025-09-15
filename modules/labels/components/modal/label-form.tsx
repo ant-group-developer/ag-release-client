@@ -2,7 +2,7 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
-import { MAX_NAME_LENGTH } from '@/constants/validate';
+import { ACCEPT_IMAGE, MAX_NAME_LENGTH } from '@/constants/validate';
 import { getAvatarUrl } from '@/helpers/avatar-tailwind';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
@@ -149,7 +149,7 @@ export default function LabelFormModal({ ...props }: Props) {
                     >
                         <ImageListUpload
                             maxCount={1}
-                            accept="image/png,image/jpeg,image/svg+xml,image/x-icon"
+                            accept={ACCEPT_IMAGE}
                             maxSizeMB={2}
                             disabled={isActive}
                             description={

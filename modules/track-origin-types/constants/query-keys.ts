@@ -26,4 +26,9 @@ export const trackOriginTypeQueryKeys = {
         ] as const,
     detail: (id: string) =>
         [...trackOriginTypeQueryKeys.details(), id] as const,
+    updates: () =>
+        [
+            ...trackOriginTypeQueryKeys.all,
+            QUERY_KEY.TRACK_ORIGIN_TYPE.UPDATE,
+        ] as const,
 };

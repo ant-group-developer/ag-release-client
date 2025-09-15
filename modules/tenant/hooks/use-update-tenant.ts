@@ -1,5 +1,5 @@
 import { showNotification } from '@/helpers/messages-helper';
-import { useApiError } from '@/hooks/use-api-error';
+import { useApiNotify } from '@/hooks/use-api-notify';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { tenantApi } from '../api';
@@ -9,7 +9,7 @@ import { UpdateTenant, UpdateTenantDsp } from '../types/data';
 export const useUpdateTenant = () => {
     const queryClient = useQueryClient();
     const messages = useTranslations();
-    const { handleError } = useApiError();
+    const { handleError } = useApiNotify();
 
     const onSuccess = (data: any, { onSuccess, tenantId }: UpdateTenant) => {
         queryClient.invalidateQueries({
@@ -44,7 +44,7 @@ export const useUpdateTenant = () => {
 export const useUpdateTenantDsp = () => {
     const queryClient = useQueryClient();
     const messages = useTranslations();
-    const { handleError } = useApiError();
+    const { handleError } = useApiNotify();
 
     const onSuccess = (
         data: any,

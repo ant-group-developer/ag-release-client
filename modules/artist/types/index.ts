@@ -1,4 +1,6 @@
+import { CountriesData } from '@/modules/countries/types';
 import { DspData } from '@/modules/dsp/types';
+import { GenresData } from '@/modules/genres/types';
 import { CommonAttribute, CommonParams } from '@/types/api';
 
 export interface ArtistData extends CommonAttribute {
@@ -11,9 +13,14 @@ export interface ArtistData extends CommonAttribute {
     trackCount: number;
     code: string;
     artistProfiles?: ArtistProfileData[];
+    country: CountriesData;
+    genre: GenresData;
 }
 export interface ArtistDataSimple
-    extends Pick<ArtistData, 'id' | 'name' | 'code' | 'artistProfiles'> {}
+    extends Pick<
+        ArtistData,
+        'id' | 'name' | 'code' | 'artistProfiles' | 'country' | 'genre'
+    > {}
 
 export interface ArtistProfileData extends CommonAttribute {
     name: string;

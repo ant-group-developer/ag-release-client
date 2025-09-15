@@ -6,10 +6,12 @@ import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
+import { useLoadingStatus } from '@/hooks/use-loading-status';
 import useModalStore from '@/hooks/use-modal';
 import TrackTypeHeader from '@/modules/track-types/components/header';
 import TrackTypeFormModal from '@/modules/track-types/components/modal/track-type-form';
 import { TrackTypeTable } from '@/modules/track-types/components/table';
+import { trackTypeQueryKeys } from '@/modules/track-types/constants/query-keys';
 import { TYPE_MODAL_TRACK_TYPE } from '@/modules/track-types/enums';
 import { useDeleteTrackType } from '@/modules/track-types/hooks/use-delete-track-type';
 import { useGetListTrackTypes } from '@/modules/track-types/hooks/use-get-list-track-types';
@@ -33,9 +35,13 @@ export default function TrackTypes({}: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as TrackTypeData);
     const closeModal = useModalStore((state) => state.closeModal);
+    const { isLoading } = useLoadingStatus({
+        queryKeys: [trackTypeQueryKeys.lists()],
+        mutationKeys: [trackTypeQueryKeys.all],
+    });
 
     // apis
-    const { trackTypesData, isFetching, refetch, lastUpdatedAt } =
+    const { trackTypesData, refetch, lastUpdatedAt } =
         useGetListTrackTypes(dataFilter);
     const { deleteTrackType } = useDeleteTrackType();
 
@@ -77,7 +83,7 @@ export default function TrackTypes({}: Props) {
                     current: trackTypesData.metadata.currentPage,
                     total: trackTypesData.metadata.totalItems,
                 }}
-                loading={isFetching}
+                loading={isLoading}
                 dataFilter={dataFilter}
                 onChange={onChangeSort}
             />

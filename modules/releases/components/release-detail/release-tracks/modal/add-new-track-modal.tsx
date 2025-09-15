@@ -128,6 +128,7 @@ export default function AddNewTrackModal({ ...props }: Props) {
                             fileId: null,
                             peakId: null,
                             preview: null,
+                            sampleLength: null,
                         },
                         key: `track-${index}`,
                     });
@@ -306,7 +307,10 @@ export default function AddNewTrackModal({ ...props }: Props) {
             open
             title={messages('track.add')}
             onOk={form.submit}
-            onCancel={closeModal}
+            onCancel={() => {
+                closeModal();
+                form.resetFields();
+            }}
             confirmLoading={isActive}
             loading={isActive}
             width={750}

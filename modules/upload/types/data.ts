@@ -34,6 +34,7 @@ export interface AudioFileBucket {
     bitDepth: number | null;
     duration?: number;
     preview: number | null;
+    sampleLength: number | null;
     hook?: number | null;
     trackId?: string | null;
     fileId?: string | null;
@@ -76,6 +77,7 @@ export enum ENTITY_TYPE_PICTURE {
     TRACK = 'tracks',
     TENANT = 'tenants',
     LOGO = 'logo',
+    TRACK_SENSITIVE = 'track_sensitive',
 }
 
 export interface DownloadNonFile {

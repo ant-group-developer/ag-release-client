@@ -137,12 +137,19 @@ export const releaseSchema = (messages: any) =>
             }
         }),
         isVariousArtist: z.boolean(),
+        releaseTimeMode: z
+            .string()
+            .nullable()
+            .refine((val) => val !== null && val !== '', {
+                message: messages('validation.input'),
+            }),
         releaseDate: z
             .string()
             .nullable()
             .refine((val) => val !== null && val !== '', {
                 message: messages('validation.input'),
             }),
+
         releaseTime: z
             .string()
             .nullable()

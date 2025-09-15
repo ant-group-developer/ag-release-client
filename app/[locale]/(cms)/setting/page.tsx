@@ -4,6 +4,7 @@ import AppContainer from '@/components/cms/app-container';
 import { useLoadingStatus } from '@/hooks/use-loading-status';
 import AcrCloudForm from '@/modules/setting/components/forms/acr-cloud-form';
 import BackupDatabaseForm from '@/modules/setting/components/forms/backup-database-form';
+import GeneralForm from '@/modules/setting/components/forms/general-form';
 import TelegramForm from '@/modules/setting/components/forms/telegram-form';
 import WebsiteForm from '@/modules/setting/components/forms/website-form';
 import { settingQueryKeys } from '@/modules/setting/constants/query-keys';
@@ -48,6 +49,11 @@ export default function SettingPage({}: Props) {
     // }, [count]);
 
     const tabItems: TabsProps['items'] = [
+        {
+            key: SETTING_TABS.GENERAL,
+            label: 'General',
+            children: <GeneralForm />,
+        },
         {
             key: SETTING_TABS.WEBSITE,
             label: 'Website',

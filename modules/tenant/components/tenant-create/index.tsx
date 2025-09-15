@@ -1,6 +1,6 @@
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import { useActive } from '@/hooks/use-active';
-import { useApiError } from '@/hooks/use-api-error';
+import { useApiNotify } from '@/hooks/use-api-notify';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { uploadApi } from '@/modules/upload/apis';
 import { ENTITY_TYPE_PICTURE } from '@/modules/upload/types/data';
@@ -18,7 +18,7 @@ function CreateTenantModal({ ...props }: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
     const { active, isActive, deActive } = useActive();
-    const { handleError } = useApiError();
+    const { handleError } = useApiNotify();
 
     const {
         profile: { tenantId },

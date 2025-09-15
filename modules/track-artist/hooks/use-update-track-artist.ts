@@ -1,4 +1,4 @@
-import { useApiError } from '@/hooks/use-api-error';
+import { useApiNotify } from '@/hooks/use-api-notify';
 import { releasesQueryKeys } from '@/modules/releases/constants/query-keys';
 import { trackQueryKeys } from '@/modules/tracks/constants/query-keys';
 import { CreateVariables, UpdateVariables } from '@/types/api';
@@ -11,7 +11,7 @@ import { UpdateTrackArtistPayload } from '../types/payload';
 export const useUpdateTrackArtist = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
-    const { handleError } = useApiError();
+    const { handleError } = useApiNotify();
 
     const onSuccess = (
         data: any,

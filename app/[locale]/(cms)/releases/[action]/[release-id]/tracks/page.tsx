@@ -8,16 +8,13 @@ import { useThemeMode } from '@/hooks/use-theme-mode';
 import DropUploadTracks from '@/modules/releases/components/drop-track-upload';
 import AddNewTrackModal from '@/modules/releases/components/release-detail/release-tracks/modal/add-new-track-modal';
 import ReleaseTracksTable from '@/modules/releases/components/release-detail/release-tracks/table';
-import {
-    TYPE_MODAL_RELEASE,
-    TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST,
-    TYPE_MODAL_TRACK,
-} from '@/modules/releases/enums';
+import { TYPE_MODAL_RELEASE, TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import TrackArtistModal from '@/modules/track-artist/components/modal/track-artist-modal';
 import { useDeleteTrackArtist } from '@/modules/track-artist/hooks/use-delete-track-artist';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
+import { useBulkDeleteTracks } from '@/modules/tracks/hooks/use-bulk-delete-tracks';
 import { useDeleteTrack } from '@/modules/tracks/hooks/use-delete-track';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { TrackData } from '@/modules/tracks/types';
@@ -25,18 +22,23 @@ import { DeleteVariables } from '@/types/api';
 import { ConfigProvider, Empty, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { Key, useState } from 'react';
+import TrackActions from './track-actions';
 
 export default function Tracks() {
     // hooks - state
     const messages = useTranslations();
-    const formValues = useReleaseFormStore((state) => state.formValues);
     const [selectedRow, setSelectedRow] = useState<Key[]>([]);
-    const typeModal = useModalStore((state) => state.typeModal);
+
+    const formValues = useReleaseFormStore((state) => state.formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
+    const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore((state) => state.dataEdit);
     const closeModal = useModalStore((state) => state.closeModal);
     const openModal = useModalStore((state) => state.openModal);
+
     const { action } = useGetReleaseDetailRoute();
+    const { deleteTracks } = useBulkDeleteTracks();
+
     const isEditAction = action === RELEASE_DETAIL_ACTION.EDIT;
 
     // apis
@@ -66,6 +68,15 @@ export default function Tracks() {
             onSuccess: () => closeModal(),
         };
         deleteTrackArtist(variable);
+    };
+    const handleBulkDeleteTracks = () => {
+        deleteTracks({
+            ids: selectedRow,
+            onSuccess: () => {
+                closeModal();
+                setSelectedRow([]);
+            },
+        });
     };
 
     // const
@@ -98,10 +109,11 @@ export default function Tracks() {
     return (
         <ConfigProvider theme={customTheme}>
             <div>
+                <TrackActions selectedRowKeys={selectedRow} />
                 <ReleaseTracksTable
                     className="!p-0"
                     dataSource={tracksData?.items}
-                    // rowSelection={rowSelection}
+                    rowSelection={rowSelection}
                     // sticky={{ offsetHeader: 174 }}
                     loading={isLoading}
                     pagination={{
@@ -141,16 +153,34 @@ export default function Tracks() {
                     <TrackArtistModal />
                 )}
 
-                {typeModal ===
+                {typeModal === TYPE_MODAL_TRACK.BULK_DELETE && (
+                    <AppConfirm
+                        open
+                        modalTitle={messages('action.delete.title', {
+                            label: '',
+                        })}
+                        paragraph={messages('action.delete.alert', {
+                            label: '',
+                        })}
+                        onCancel={closeModal}
+                        onOk={handleBulkDeleteTracks}
+                    />
+                )}
+
+                {/* {typeModal ===
                     TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.DELETE_ARTIST && (
                     <AppConfirm
                         open
-                        modalTitle={messages('delete.confirmTitle')}
-                        paragraph={'Are you sure you want to delete ?'}
+                        modalTitle={messages('action.delete.title', {
+                            label: '',
+                        })}
+                        paragraph={messages('action.delete.alert', {
+                            label: '',
+                        })}
                         onCancel={closeModal}
                         onOk={() => {}}
                     />
-                )}
+                )} */}
 
                 {typeModal === TYPE_MODAL_TRACK_ARTIST.DELETE && (
                     <AppConfirm

@@ -17,6 +17,7 @@ export const useGetDetailTrackOriginType = (id: TrackOriginTypeData['id']) => {
         createdAt: '',
         updatedAt: null,
         code: '',
+        isDefault: false,
     };
 
     return {
