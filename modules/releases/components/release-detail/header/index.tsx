@@ -3,6 +3,7 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { ACCEPT_IMAGE } from '@/constants/validate';
 import { DATE_FORMAT, TYPE_UPLOAD_BUCKET } from '@/enums/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedDate } from '@/helpers/common';
@@ -35,7 +36,6 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import DownloadMenu from './download-menu';
 import OptionsMenu from './options-menu';
-import { ACCEPT_IMAGE } from '@/constants/validate';
 
 type Props = {
     isScrolled: boolean;
@@ -313,6 +313,12 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                         {formValues.version &&
                                             formValues.title &&
                                             `[${formValues.version}]`}
+                                    </span>
+                                </div>
+                                <div className="text-sm">
+                                    <span>{messages('release.type')}: </span>
+                                    <span className="font-bold">
+                                        {formValues.albumFormat?.name}
                                     </span>
                                 </div>
                                 {formValues.labelId && (

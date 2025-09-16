@@ -4,6 +4,7 @@ export interface CreateDspPayload {
     name: string;
     picture?: string | null;
     isActive: boolean;
+    enablePolicy: boolean;
 }
 
 export interface UpdateDspPayload extends Partial<CreateDspPayload> {}

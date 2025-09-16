@@ -8,11 +8,11 @@ import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 
-import { useDeleteLabel } from '@/modules/labels/hooks/use-delete-label';
 import TrackSensitiveHeader from '@/modules/track-sensitive/components/header';
 import TrackSensitiveFormModal from '@/modules/track-sensitive/components/modal/track-sensitive-form';
 import { TrackSensitiveTable } from '@/modules/track-sensitive/components/table';
 import { TYPE_MODAL_TRACK_SENSITIVE } from '@/modules/track-sensitive/enum';
+import { useDeleteTrackSensitive } from '@/modules/track-sensitive/hooks/use-delete-track-sensitive';
 import { useGetListTrackSensitive } from '@/modules/track-sensitive/hooks/use-get-list-track-sensitive';
 import {
     TrackSensitiveData,
@@ -40,20 +40,20 @@ export default function TrackSensitive({}: Props) {
     // apis
     const { trackSensitiveData, isFetching, refetch } =
         useGetListTrackSensitive(dataFilter);
-    const { deleteLabel } = useDeleteLabel();
+    const { deleteTrackSensitive } = useDeleteTrackSensitive();
 
     // func
     const handleRefresh = () => {
         refetch();
     };
-    const handleDeleteLabel = () => {
+    const handleDeleteSensitiveContent = () => {
         const variables: DeleteVariables<TrackSensitiveData['id']> = {
             id: dataEdit?.id,
             onSuccess: () => {
                 closeModal();
             },
         };
-        deleteLabel(variables);
+        deleteTrackSensitive(variables);
     };
     const onChangeSort = (pagination: any, filters: any, sort: any) => {
         const orderBy = setSortOrder(sort, ORDER.ASC);
@@ -68,7 +68,7 @@ export default function TrackSensitive({}: Props) {
     };
 
     return (
-        <AppContainer title={messages('label.label')}>
+        <AppContainer title={messages('trackSensitive.label')}>
             <TrackSensitiveHeader dataFilter={dataFilter} onSearch={onSearch} />
             <TrackSensitiveTable
                 sticky
@@ -91,9 +91,9 @@ export default function TrackSensitive({}: Props) {
             {typeModal === TYPE_MODAL_TRACK_SENSITIVE.DELETE && (
                 <AppConfirm
                     open
-                    onOk={() => handleDeleteLabel()}
+                    onOk={() => handleDeleteSensitiveContent()}
                     onCancel={closeModal}
-                    modalTitle={`${messages('common.delete')} label`}
+                    modalTitle={`${messages('common.delete')} ${messages('trackSensitive.label').toLowerCase()}`}
                     paragraph={messages('delete.confirmMessage', {
                         value: dataEdit?.name,
                     })}

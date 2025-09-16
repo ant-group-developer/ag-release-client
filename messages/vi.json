@@ -646,6 +646,7 @@
                 "invite": "Đã gửi lời mời thành công"
             },
             "error": {
+                "notFound": "Tài khoản này không tồn tại",
                 "email": {
                     "conflict": "Địa chỉ email đã tồn tại"
                 },
@@ -939,6 +940,28 @@
                 "duplicateCodeTrackOriginType": "Mã nguồn gốc bài hát này đã tồn tại",
                 "duplicateNameTrackOriginType": "Nguồn gốc bài hát này đã tồn tại",
                 "cannotDeleteBecauseLinkedTracks": "Không thể xóa nguồn gốc bài hát này vì đang được liên kết với bài hát."
+            }
+        }
+    },
+
+    "trackSensitive": {
+        "label": "Nội dung nhạy cảm",
+        "name": "Tên nội dung nhạy cảm",
+        "explicitContentEdited": "Nội dung nhạy cảm đã được chỉnh sửa",
+        "notExplicit": "Không có nội dung nhạy cảm",
+        "noAdviceAvailable": "Không có khuyến nghị nào",
+        "parentalAdvisory": "Cảnh báo của phụ huynh",
+        "message": {
+            "success": {
+                "create": "Thêm mới nội dung nhạy cảm thành công",
+                "update": "Cập nhật nội dung nhạy cảm thành công",
+                "delete": "Xoá nội dung nhạy cảm thành công"
+            },
+            "error": {
+                "notFound": "Không tìm thấy nội dung nhạy cảm này",
+                "duplicateCode": "Mã nội dung nhạy cảm này đã tồn tại",
+                "duplicateName": "Tên nội dung nhạy cảm này đã tồn tại",
+                "cannotDeleteRelationWithTrack": "Cannot delete because it is already used in a track"
             }
         }
     },

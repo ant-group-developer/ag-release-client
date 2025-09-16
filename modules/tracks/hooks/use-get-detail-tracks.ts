@@ -1,4 +1,5 @@
 import { OriginType } from '@/components/ui/select/original-type-select';
+import { TrackSensitiveData } from '@/modules/track-sensitive/types';
 import { useQuery } from '@tanstack/react-query';
 import { trackApi } from '../apis';
 import { trackQueryKeys } from '../constants/query-keys';
@@ -26,7 +27,6 @@ export const useGetDetailTrack = (id: TrackData['id']) => {
         subGenre: null,
         originTypeId: '',
         originType: OriginType.ORIGINAL,
-        isSensitiveContent: false,
         lyric: '',
         trackTypeId: '',
         trackType: null,
@@ -68,6 +68,8 @@ export const useGetDetailTrack = (id: TrackData['id']) => {
         scanCopyrightStatus: SCAN_COPYRIGHT_STATUS.UN_SCANNED,
         isByAi: false,
         sampleLength: '',
+        trackSensitiveId: '',
+        trackSensitive: {} as TrackSensitiveData,
     };
 
     return {

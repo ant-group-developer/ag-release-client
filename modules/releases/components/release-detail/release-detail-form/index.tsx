@@ -105,7 +105,7 @@ export default function ReleaseDetailForm() {
     const isReadMode = action !== RELEASE_DETAIL_ACTION.EDIT;
     const customTheme = {
         token: {
-            colorBgContainerDisabled: isDark ? '#2a2a2a' : '#fff',
+            // colorBgContainerDisabled: isDark ? '#2a2a2a' : '#fff',
             colorTextDisabled: token?.colorText,
         },
     };

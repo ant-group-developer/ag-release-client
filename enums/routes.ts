@@ -30,6 +30,7 @@ export enum APP_ROUTES {
     TIMEZONE = '/timezone',
     TRACK_TYPE = '/track-types',
     TRACK_ORIGIN_TYPE = '/track-origin-types',
+    TRACK_SENSITIVE = '/track-sensitive',
     TENANT = '/tenants',
     TENANT_DETAIL = '/tenants/*',
     SETTING = '/setting',

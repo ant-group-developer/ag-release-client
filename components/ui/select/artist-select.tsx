@@ -33,6 +33,16 @@ export default function ArtistSelect({
         keyword: searchKeyword,
     });
 
+    const spotify = artistsData?.map((item) => {
+        item.artistProfiles?.map((artistProfile) => {
+            if (artistProfile.name == 'Spotify') {
+                return artistProfile;
+            }
+            return;
+        });
+    });
+    console.log('🚀 ~ ArtistSelect ~ spotify:', spotify);
+
     const debounceSearch = useMemo(
         () =>
             debounce((value: string) => {
@@ -51,9 +61,9 @@ export default function ArtistSelect({
                     <CustomTooltip title={item.name}>{item.name}</CustomTooltip>
                 </span>
                 <div className="flex gap-1">
-                    {/* <span>{item?.country?.name}</span>
-                    <span>{item?.genre?.name}</span> */}
-                    <span>{'Việt Nam'}</span> | <span>{'Rap hiphop'}</span>
+                    <span>{item?.country?.name}</span>
+                    {item?.country?.name ? '|' : ''}
+                    <span>{item?.genre?.name}</span>
                 </div>
                 <div className="flex justify-end gap-1">
                     <Avatar
@@ -62,6 +72,11 @@ export default function ArtistSelect({
                         className="hover:opacity-40"
                         onClick={(e) => {
                             e?.stopPropagation();
+                            window.open(
+                                'https://open.spotify.com/',
+                                '_blank',
+                                'noopener'
+                            );
                         }}
                     />
                     <Avatar
@@ -70,6 +85,11 @@ export default function ArtistSelect({
                         className="hover:opacity-40"
                         onClick={(e) => {
                             e?.stopPropagation();
+                            window.open(
+                                'https://open.spotify.com/',
+                                '_blank',
+                                'noopener'
+                            );
                         }}
                     />
                 </div>

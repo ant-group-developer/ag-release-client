@@ -29,7 +29,7 @@ export const TrackSensitiveTable = ({ dataFilter, ...props }: Props) => {
         {
             title: messages('common.iNo'),
             key: 'iNo',
-            width: 80,
+            width: 50,
             align: 'center',
             render: (_, __, index) =>
                 getIndex(
@@ -40,7 +40,7 @@ export const TrackSensitiveTable = ({ dataFilter, ...props }: Props) => {
         },
 
         {
-            title: messages('label.name'),
+            title: messages('trackSensitive.name'),
             key: 'name',
             dataIndex: 'name',
             ellipsis: true,
@@ -49,6 +49,16 @@ export const TrackSensitiveTable = ({ dataFilter, ...props }: Props) => {
             width: 180,
             render: (value, record) => (
                 <div className="flex items-center gap-4">
+                    <div className="flex-shrink-0">
+                        <ImageFallback
+                            fallbackSrc={FALLBACK_IMAGE}
+                            src={record?.icon ?? ''}
+                            alt="genre"
+                            width={40}
+                            height={40}
+                            className="aspect-square rounded-lg object-cover"
+                        />
+                    </div>
                     <CustomTooltip
                         placement="right"
                         title={messages('common.viewDetail')}
@@ -64,16 +74,6 @@ export const TrackSensitiveTable = ({ dataFilter, ...props }: Props) => {
                         </p>
                         {/* </Link> */}
                     </CustomTooltip>
-                    <div className="flex-shrink-0">
-                        <ImageFallback
-                            fallbackSrc={FALLBACK_IMAGE}
-                            src={record?.icon ?? ''}
-                            alt="genre"
-                            width={40}
-                            height={40}
-                            className="aspect-square rounded-lg object-cover"
-                        />
-                    </div>
                 </div>
             ),
         },

@@ -216,7 +216,7 @@ export default function ReleaseConfigurationSection({
                                                             : undefined
                                                     }
                                                     disabled={
-                                                        isCreateReleasePage ||
+                                                        isOnCreatingDraft ||
                                                         isReadMode
                                                     }
                                                 />

@@ -87,7 +87,7 @@ export default function TrackSensitiveFormModal({ ...props }: Props) {
                     file: file,
                 });
                 if (urlPublic) {
-                    payloadValues.picture = urlPublic;
+                    payloadValues.icon = urlPublic;
                 }
             } catch (error) {
                 deActive();
@@ -95,7 +95,7 @@ export default function TrackSensitiveFormModal({ ...props }: Props) {
         } else if (!file && !oldFile) {
             // payloadValues.picture = null;
             const defaultImage = getAvatarUrl(values.name);
-            payloadValues.picture = defaultImage;
+            payloadValues.icon = defaultImage;
         }
 
         return isUpdateModal
@@ -126,7 +126,7 @@ export default function TrackSensitiveFormModal({ ...props }: Props) {
         <AppModal
             width={600}
             {...props}
-            title={`${isUpdateModal ? messages('common.update') : messages('common.create')} label`}
+            title={`${isUpdateModal ? messages('common.update') : messages('common.create')} ${messages('trackSensitive.label').toLowerCase()}`}
             open
             onOk={form.submit}
             loading={isActive}
@@ -169,7 +169,7 @@ export default function TrackSensitiveFormModal({ ...props }: Props) {
                                         {messages(
                                             'image.validation.mustBeLessThanMB',
                                             {
-                                                value: '3',
+                                                value: '2',
                                             }
                                         )}
                                     </li>
@@ -180,7 +180,7 @@ export default function TrackSensitiveFormModal({ ...props }: Props) {
                 </div>
                 <AppFormItem
                     name="name"
-                    label={messages('label.name')}
+                    label={messages('trackSensitive.name')}
                     required
                     rules={[
                         {
@@ -191,7 +191,7 @@ export default function TrackSensitiveFormModal({ ...props }: Props) {
                             max: MAX_NAME_LENGTH,
                             message: messages('validation.stringMax', {
                                 max: MAX_NAME_LENGTH,
-                                field: messages('label.name'),
+                                field: messages('trackSensitive.name'),
                             }),
                         },
                     ]}
@@ -206,7 +206,7 @@ export default function TrackSensitiveFormModal({ ...props }: Props) {
                 </AppFormItem>
                 <AppFormItem
                     name="code"
-                    label={messages('label.name')}
+                    label={messages('common.code')}
                     required
                     rules={[
                         {
@@ -217,7 +217,7 @@ export default function TrackSensitiveFormModal({ ...props }: Props) {
                             max: MAX_NAME_LENGTH,
                             message: messages('validation.stringMax', {
                                 max: MAX_NAME_LENGTH,
-                                field: messages('label.name'),
+                                field: messages('common.code'),
                             }),
                         },
                     ]}

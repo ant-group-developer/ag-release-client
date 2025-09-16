@@ -97,6 +97,27 @@ export default function DropUploadTracks({ ...props }: Props) {
                         file.originFileObj
                     );
 
+                    // validate track
+                    if (
+                        metadata?.bitDepth !== 16 ||
+                        metadata?.sampleRate !== 44100
+                    ) {
+                        const reasons: string[] = [];
+                        if (metadata.bitDepth !== 16)
+                            reasons.push(`BitDepth must be 16bit`);
+                        if (metadata.sampleRate !== 44100)
+                            reasons.push(`SampleRate must be 44100Hz`);
+
+                        showNotification(
+                            'error',
+                            `${fileOriginal.name}: ${reasons.join(', ')}`,
+                            {
+                                autoClose: 8000,
+                            }
+                        );
+                        return;
+                    }
+
                     const trackInfor: CreateBucketFile = {
                         folderBucket: {
                             releaseId: formValues.id ?? '',

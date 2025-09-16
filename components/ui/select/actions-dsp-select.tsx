@@ -1,27 +1,32 @@
 import { toNonAccentVietnamese } from '@/helpers/string';
-import { ActionsData } from '@/modules/actions/types';
-import { useGetListDspActionByDspId } from '@/modules/dsp-action/hooks/use-get-list-dsp-action-by-id';
+import { DspActionData } from '@/modules/dsp-action/types';
 import { Select, SelectProps } from 'antd';
 import IconInfoTooltip from '../tooltip/icon-info-tooltip';
 
-type Props = Omit<SelectProps, 'options'> & {
+type Props = SelectProps & {
     fallBack?: string;
     dspId?: string;
+    actions: DspActionData[];
 };
 
-export default function ActionsDspSelect({ dspId, fallBack, ...props }: Props) {
-    const { dspActionsData } = useGetListDspActionByDspId(dspId as string);
+export default function ActionsDspSelect({
+    actions,
+    dspId,
+    fallBack,
+    ...props
+}: Props) {
+    // const { dspActionsData } = useGetListDspActionByDspId(dspId as string);
 
-    const actions = dspActionsData?.map((item) => item.action) ?? [];
+    // const actions = dspActionsData?.map((item) => item.action) ?? [];
 
-    const options = actions?.map((item: ActionsData) => ({
-        id: item.id,
-        value: item.id,
-        name: item?.name,
+    const options = actions?.map((item: DspActionData) => ({
+        id: item?.action?.id,
+        value: item?.action?.id,
+        name: item?.action?.name,
         label: (
             <p className="flex items-center justify-between gap-1">
-                <span>{item?.name}</span>
-                <IconInfoTooltip title={item.note} />
+                <span>{item?.action?.name}</span>
+                <IconInfoTooltip title={item?.action?.note} />
             </p>
         ),
     }));

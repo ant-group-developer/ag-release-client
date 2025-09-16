@@ -21,6 +21,10 @@ export const useUpdateDsp = () => {
             queryKey: dspQueryKeys.lists(),
         });
 
+        queryClient.invalidateQueries({
+            queryKey: dspQueryKeys.detail(data?.data?.data?.id),
+        });
+
         const responseMessages = messages(data?.data?.messageCode);
 
         onSuccess?.();

@@ -111,6 +111,24 @@ export const DspTable = ({ ...props }: Props) => {
             ),
         },
         {
+            title: `${messages('status.active')} ${messages('common.policies').toLowerCase()}`,
+            key: 'enablePolicy',
+            dataIndex: 'enablePolicy',
+            align: 'center',
+            width: 100,
+            render: (value, record) => (
+                <Switch
+                    value={value}
+                    onChange={(e) =>
+                        updateDsp({
+                            id: record?.id,
+                            payload: { enablePolicy: e },
+                        })
+                    }
+                />
+            ),
+        },
+        {
             title: messages('common.createdAt'),
             key: 'createdAt',
             dataIndex: 'createdAt',

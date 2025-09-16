@@ -36,4 +36,10 @@ export const dspApi = {
     deleteDspAction: ({ dspId, actionId }: DeleteDspAction) => {
         return axiosInstance.delete(`/dsps/${dspId}/dsp-actions/${actionId}`);
     },
+
+    getListDspByEnablePolicy: () => {
+        return axiosInstance.get<DetailResponse<DspData[]>>(
+            '/dsps/enable-policy'
+        );
+    },
 };
