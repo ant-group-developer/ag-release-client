@@ -77,22 +77,38 @@ export default function GeneralForm({}: Props) {
                     name="sampleLength"
                     label={messages('track.sampleLength.label')}
                     tooltipInfo={messages('track.sampleLength.tooltip')}
+                    required
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.input'),
+                        },
+                    ]}
                 >
                     <TimePicker
                         className="w-full"
                         showNow={false}
                         format={DATE_FORMAT.HOUR_MINUTE_SECOND}
+                        allowClear={false}
                     />
                 </AppFormItem>
                 <AppFormItem
                     name="preview"
                     label={messages('track.preview.label')}
                     tooltipInfo={messages('track.preview.tooltip')}
+                    required
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.input'),
+                        },
+                    ]}
                 >
                     <TimePicker
                         className="w-full"
                         showNow={false}
                         format={DATE_FORMAT.HOUR_MINUTE_SECOND}
+                        allowClear={false}
                     />
                 </AppFormItem>
             </AppForm>

@@ -47,9 +47,9 @@ export default function ArtistCard({
                     'cursor-not-allowed': disabled,
                 }
             )}
-            style={{
-                background: token.colorBgContainer,
-            }}
+            // style={{
+            //     background: token.colorBgContainer,
+            // }}
             {...props}
         >
             <div className="flex items-center gap-4">
@@ -60,10 +60,6 @@ export default function ArtistCard({
                 </div>
                 <div className="flex flex-col gap-1">
                     <p className="font-bold">{artist?.name}</p>
-                    <p>
-                        <span>{artist?.id} | </span>
-                        <span>{artistRole?.name}</span>
-                    </p>
                     {showApplyToAllTracks && (
                         <div
                             onClick={(e: React.MouseEvent<HTMLDivElement>) => {
@@ -71,8 +67,8 @@ export default function ArtistCard({
                             }}
                         >
                             <Checkbox
-                                // defaultChecked={data?.addArtistToTracks}
-                                checked={data?.addArtistToTracks}
+                                defaultChecked={data?.addArtistToTracks}
+                                // checked={data?.addArtistToTracks}
                                 onChange={(e: CheckboxChangeEvent) => {
                                     handleChangeChecked(e);
                                 }}
@@ -82,6 +78,46 @@ export default function ArtistCard({
                         </div>
                     )}
                 </div>
+            </div>
+            <div className="flex gap-6">
+                <div className="flex flex-col text-gray-500">
+                    <span>{messages('roles.label')} </span>
+                    <span>{messages('country.label')} </span>
+                    <span>{messages('genre.label')} </span>
+                </div>
+                <div className="flex flex-col font-medium">
+                    <span>{artistRole?.name}</span>
+                    <span>{artist?.country?.name} Việt Nam</span>
+                    <span>{artist?.genre?.name} Hiphop</span>
+                </div>
+            </div>
+            <div className="flex justify-end gap-1">
+                <Avatar
+                    size={28}
+                    src="/icon/spotify.png"
+                    className="hover:opacity-40"
+                    onClick={(e) => {
+                        e?.stopPropagation();
+                        window.open(
+                            'https://open.spotify.com/',
+                            '_blank',
+                            'noopener'
+                        );
+                    }}
+                />
+                <Avatar
+                    size={28}
+                    src="/icon/apple-music.svg"
+                    className="hover:opacity-40"
+                    onClick={(e) => {
+                        e?.stopPropagation();
+                        window.open(
+                            'https://open.spotify.com/',
+                            '_blank',
+                            'noopener'
+                        );
+                    }}
+                />
             </div>
             <div className="flex items-center gap-2">
                 {/* <div>

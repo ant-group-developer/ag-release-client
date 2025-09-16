@@ -1539,5 +1539,43 @@
         "action": {
             "delete": "Xoá phân tích"
         }
+    },
+
+    "issue": {
+        "label": "Vấn đề",
+        "name": "Tên vấn đề"
+    },
+
+    "issueLevel": {
+        "label": "Mức độ vấn đề",
+        "name": "Tên mức độ vấn đề",
+        "severityRank": "Thứ hạng nghiêm trọng",
+        "message": {
+            "success": {
+                "create": "Thêm mới mức độ vấn đề thành công",
+                "update": "Cập nhật mức độ vấn đề thành công",
+                "delete": "Xóa mức độ vấn đề thành công",
+                "updateOrder": "Cập nhật thứ tự thành công"
+            },
+            "error": {
+                "notFound": "Không tìm thấy mức độ vấn đề này",
+                "duplicateNameVi": "Tên tiếng Việt đã tồn tại",
+                "duplicateNameEn": "Tên tiếng Anh đã tồn tại",
+                "duplicateCode": "Mã mức độ vấn đề đã tồn tại",
+                "cannotDeleteBecauseLinkedIssues": "Không thể xóa mức độ vấn đề này vì đã được liên kết với các vấn đề khác"
+            }
+        }
+    },
+
+    "issueCategory": {
+        "label": "Danh mục vấn đề"
+    },
+
+    "tenantIssue": {
+        "label": "Vấn đề tenant"
+    },
+
+    "tenantTier": {
+        "label": "Xếp hạng tenant"
     }
 }

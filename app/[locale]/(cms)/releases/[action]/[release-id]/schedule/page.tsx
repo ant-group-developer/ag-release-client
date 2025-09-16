@@ -18,7 +18,7 @@ export default function Schedule() {
     const { isDark } = useThemeMode();
     const customTheme = {
         token: {
-            colorBgContainerDisabled: isDark ? '#2a2a2a' : '#fff',
+            // colorBgContainerDisabled: isDark ? '#2a2a2a' : '#fff',
             colorTextDisabled: token?.colorText,
         },
     };

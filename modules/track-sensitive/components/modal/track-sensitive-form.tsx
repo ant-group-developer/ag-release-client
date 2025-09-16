@@ -3,7 +3,6 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import { ACCEPT_IMAGE, MAX_NAME_LENGTH } from '@/constants/validate';
-import { getAvatarUrl } from '@/helpers/avatar-tailwind';
 import { getCodeFormatted } from '@/helpers/string';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
@@ -94,8 +93,8 @@ export default function TrackSensitiveFormModal({ ...props }: Props) {
             }
         } else if (!file && !oldFile) {
             // payloadValues.picture = null;
-            const defaultImage = getAvatarUrl(values.name);
-            payloadValues.icon = defaultImage;
+            // const defaultImage = getAvatarUrl(values.name);
+            payloadValues.icon = null;
         }
 
         return isUpdateModal

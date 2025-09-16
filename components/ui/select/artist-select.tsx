@@ -41,7 +41,6 @@ export default function ArtistSelect({
             return;
         });
     });
-    console.log('🚀 ~ ArtistSelect ~ spotify:', spotify);
 
     const debounceSearch = useMemo(
         () =>
@@ -96,7 +95,57 @@ export default function ArtistSelect({
             </div>
         ),
         disabled: disabledArtistIds?.includes(item.id) ?? false,
+        artistData: item,
     }));
+
+    const optionRender = (oriOption: any) => {
+        const item = oriOption.data.artistData as ArtistDataSimple;
+        return (
+            <div className="grid grid-cols-3 items-center gap-1">
+                <span className="truncate">
+                    <CustomTooltip title={item.name}>{item.name}</CustomTooltip>
+                </span>
+                <div className="flex gap-4">
+                    <div className="flex flex-col text-gray-500">
+                        <span>{messages('country.label')}</span>
+                        <span> {messages('genre.label')}</span>
+                    </div>
+                    <div className="flex flex-col font-medium">
+                        <span>{item?.country?.name}</span>
+                        <span>{item?.genre?.name}</span>
+                    </div>
+                </div>
+                <div className="flex justify-end gap-1">
+                    <Avatar
+                        size={26}
+                        src="/icon/spotify.png"
+                        className="hover:opacity-40"
+                        onClick={(e) => {
+                            e?.stopPropagation();
+                            window.open(
+                                'https://open.spotify.com/',
+                                '_blank',
+                                'noopener'
+                            );
+                        }}
+                    />
+                    <Avatar
+                        size={26}
+                        src="/icon/apple-music.svg"
+                        className="hover:opacity-40"
+                        onClick={(e) => {
+                            e?.stopPropagation();
+                            window.open(
+                                'https://open.spotify.com/',
+                                '_blank',
+                                'noopener'
+                            );
+                        }}
+                    />
+                </div>
+            </div>
+        );
+    };
 
     useEffect(() => {
         return () => {
@@ -119,6 +168,7 @@ export default function ArtistSelect({
             onSearch={(value) => debounceSearch(value)}
             filterOption={false}
             options={options}
+            optionRender={optionRender}
             labelRender={labelRender}
             dropdownRender={(menu) => {
                 return (

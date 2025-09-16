@@ -146,7 +146,7 @@
         "minutes": "minutes",
         "hours": "hours",
         "dateRelease": "Date release",
-        "genres": "Song genre",
+        "genres": "Genre",
         "track": "Track",
         "artist": "Artist",
         "release": "Release",
@@ -982,7 +982,7 @@
         "primary": "Primary genre"
     },
     "genre": {
-        "label": "Genres",
+        "label": "Genre",
         "message": {
             "success": {
                 "create": "Create new genre successfully",
@@ -1534,5 +1534,43 @@
         "action": {
             "delete": "Delete analytics"
         }
+    },
+
+    "issue": {
+        "label": "Issue",
+        "name": "Name issue"
+    },
+
+    "issueLevel": {
+        "label": "Issue level",
+        "name": "Name issue level",
+        "severityRank": "Severity rank",
+        "message": {
+            "success": {
+                "create": "Create issue level successfully",
+                "update": "Update issue level successfully",
+                "delete": "Delete issue level successfully",
+                "updateOrder": "Update order successfully"
+            },
+            "error": {
+                "notFound": "This issue level was not found",
+                "duplicateNameVi": "Vietnamese name already exists",
+                "duplicateNameEn": "English name already exists",
+                "duplicateCode": "Issue level code already exists",
+                "cannotDeleteBecauseLinkedIssues": "Cannot delete this issue level because it is linked to issues"
+            }
+        }
+    },
+
+    "issueCategory": {
+        "label": "Issue category"
+    },
+
+    "tenantIssue": {
+        "label": "Tenant issue"
+    },
+
+    "tenantTier": {
+        "label": "Tenant tier"
     }
 }

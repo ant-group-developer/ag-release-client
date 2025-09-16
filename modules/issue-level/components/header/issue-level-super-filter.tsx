@@ -1,6 +1,7 @@
 import DateCreatedDialog from '@/components/filter-dialog/date-create-dialog';
 import DateUpdateDialog from '@/components/filter-dialog/date-update-dialog';
 import SearchDialog from '@/components/filter-dialog/search-dialog';
+import { PopoverFilterDropdown } from '@/components/filter/popover-dropdown';
 import IconButton from '@/components/ui/button/icon-button';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
@@ -9,17 +10,16 @@ import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
 import { ListFilter, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
-import { LabelDataFilter } from '../../types';
-import LabelsHeaderDropdown from '../dropdown/labels-header-dropdown';
+import { IssueLevelDataFilter } from '../../types';
 
 type Props = {
-    dataFilter: LabelDataFilter;
-    onChangeFilter: OnChangeFilter<LabelDataFilter>;
+    dataFilter: IssueLevelDataFilter;
+    onChangeFilter: OnChangeFilter<IssueLevelDataFilter>;
     canClearFilter: boolean;
     removeFilter: RemoveFilter;
 };
 
-export default function LabelsSuperFilter({
+export default function IssueLevelSuperFilter({
     dataFilter,
     onChangeFilter,
     canClearFilter,
@@ -29,10 +29,25 @@ export default function LabelsSuperFilter({
     const messages = useTranslations();
 
     const [typeFilter, setTypeFilter] = useState<TYPE_FILTER>();
+    const [inputValue, setInputValue] = useState<string>('');
 
     const handleChangeTypeFilter = (value?: TYPE_FILTER) => {
         setTypeFilter(value);
     };
+
+    const dropdownItems = [
+        {
+            label: messages('form.searchPlaceholder'),
+            visible: !dataFilter.keyword,
+            onClick: () => setTypeFilter(TYPE_FILTER.KEYWORD),
+        },
+        {
+            label: messages('common.createdAt'),
+            value: TYPE_FILTER.DATE_CREATED,
+            visible: !dataFilter.startCreatedAt && !dataFilter.endCreatedAt,
+            onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_CREATED),
+        },
+    ];
 
     useEffect(() => {
         const handleOutSideClick = (event: any) => {
@@ -99,11 +114,15 @@ export default function LabelsSuperFilter({
                 />
 
                 <div className="grow">
-                    <LabelsHeaderDropdown
+                    <PopoverFilterDropdown
                         open={typeFilter === TYPE_FILTER.DROPDOWN}
-                        dataFilter={dataFilter}
-                        onChangeFilter={onChangeFilter}
-                        handleChangeTypeFilter={handleChangeTypeFilter}
+                        title={messages('common.filter')}
+                        options={dropdownItems}
+                        value={inputValue}
+                        onInputChange={setInputValue}
+                        onSearch={() => onChangeFilter({ keyword: inputValue })}
+                        onOpenChange={() => setTypeFilter(undefined)}
+                        placeholder={messages('common.filter')}
                     />
                 </div>
             </div>
@@ -120,5 +139,6 @@ export default function LabelsSuperFilter({
                 </div>
             )}
         </div>
+        // </div>
     );
 }

@@ -43,6 +43,7 @@ export enum APP_ROUTES {
     PRICE_TIERS = '/price-tiers',
     ANALYTICS = '/analytics',
     ANALYTIC_DETAIL = '/analytics/*',
+    ISSUE_LEVEL = '/issue-level',
 }
 
 export const AUTH_ROUTES: string[] = [APP_ROUTES.SIGN_IN];
