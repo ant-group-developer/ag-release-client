@@ -5,11 +5,12 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { getTrackDetailRoute, RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { Link } from '@/i18n/routing';
+import { useGetListEnablePolicyDsp } from '@/modules/dsp/hooks/use-get-list-enable-policy-dsp';
+import { DspData } from '@/modules/dsp/types';
 import { TrackData } from '@/modules/releases/types';
 import { TRACK_TABS } from '@/modules/tracks/enums';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
 import { useUpdateTrackPolicy } from '@/modules/tracks/hooks/use-update-track-policy';
-import { TrackPolicyData } from '@/modules/tracks/types';
 import { TableColumnsType } from 'antd';
 import { useTranslations } from 'next-intl';
 
@@ -22,13 +23,15 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
 
     const { updateTrackPolicy } = useUpdateTrackPolicy();
 
+    const { dspData } = useGetListEnablePolicyDsp();
+
     const { action } = useGetReleaseDetailRoute();
 
     const isCanEdit = action === RELEASE_DETAIL_ACTION.EDIT;
 
-    const trackPolicies = props?.dataSource?.find(
-        (track) => track?.trackPolicies?.length > 0
-    )?.trackPolicies;
+    // const trackPolicies = props?.dataSource?.find(
+    //     (track) => track?.trackPolicies?.length > 0
+    // )?.trackPolicies;
 
     const columns: TableColumnsType<TrackData> = [
         {
@@ -90,23 +93,24 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
         },
         {
             title: messages('common.policy'),
-            colSpan: trackPolicies?.length,
+            colSpan: dspData?.length,
             align: 'center',
-            children: trackPolicies?.map((item: TrackPolicyData) => {
-                const dsp = item?.dsp;
+            children: dspData?.map((item: DspData) => {
+                console.log('🚀 ~ item:', item);
                 return {
-                    title: dsp.name,
-                    dataIndex: `dsp_${dsp.id}`,
-                    key: dsp.id,
+                    title: item.name,
+                    dataIndex: `dsp_${item.id}`,
+                    key: item.id,
                     align: 'left' as const,
                     width: 250,
                     render: (value: string, record: TrackData) => {
                         const trackPolicy = record.trackPolicies?.find(
-                            (p) => p.dspId === dsp?.id
+                            (p) => p.dspId === item?.id
                         );
+
                         return (
                             <ActionsDspSelect
-                                dspId={dsp?.id}
+                                dspId={item?.id}
                                 defaultValue={trackPolicy?.action?.id}
                                 disabled={!isCanEdit}
                                 className="w-full"
@@ -118,6 +122,7 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
                                             trackPolicy?.id as string,
                                     })
                                 }
+                                actions={item?.dspActions}
                             />
                         );
                     },

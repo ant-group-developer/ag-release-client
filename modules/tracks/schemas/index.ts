@@ -83,7 +83,7 @@ export const releaseTrackSchema = (messages: any) =>
             .array(z.custom<TrackArtistData>())
             .min(1, messages('validation.input')),
         copyArtistsFromRelease: z.boolean().optional(),
-        isSensitiveContent: z.boolean().optional(),
+        trackSensitiveId: z.string().optional(),
         isByAi: z.boolean().optional(),
         lyric: z
             .string()

@@ -161,16 +161,6 @@ export default function DspFormModal({ ...props }: Props) {
         if (isUpdate && dspData) {
             form.setFieldsValue(initialData);
         }
-
-        // Nếu là create và chưa có dspActions => thêm 1 item trống
-        // if (!isUpdate) {
-        //     const current = form.getFieldValue('dspActions');
-        //     if (!Array.isArray(current) || current.length === 0) {
-        //         form.setFieldsValue({
-        //             dspActions: [{ actionId: undefined, isDefault: true }],
-        //         });
-        //     }
-        // }
     }, [isUpdate, form, dspData]);
 
     return (
@@ -194,6 +184,7 @@ export default function DspFormModal({ ...props }: Props) {
                     disabled={isActive}
                     initialValues={{
                         isActive: false,
+                        enablePolicy: true,
                     }}
                 >
                     <AppFormItem
@@ -317,13 +308,29 @@ export default function DspFormModal({ ...props }: Props) {
                         <Switch />
                     </AppFormItem>
 
+                    <AppFormItem
+                        className="!mb-1"
+                        name="enablePolicy"
+                        valuePropName="checked"
+                        label={
+                            <div className="text-wrap pb-2">
+                                {messages('status.active')}{' '}
+                                {messages('common.policies').toLowerCase()}
+                            </div>
+                        }
+                    >
+                        <Switch />
+                    </AppFormItem>
+
                     <Form.List name="dspActions">
                         {(fields, { add, remove }) => (
                             <div className="max-h-[300px] overflow-auto">
                                 <Divider />
+
                                 <p className="mb-2 font-semibold">
                                     {messages('common.policies')}
                                 </p>
+
                                 {fields.map(({ key, name, ...restField }) => (
                                     <div key={key}>
                                         <div className="relative flex items-center gap-x-4">

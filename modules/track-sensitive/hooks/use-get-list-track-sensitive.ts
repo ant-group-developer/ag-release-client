@@ -1,8 +1,9 @@
 import { DEFAULT_DATA_PAGINATION } from '@/constants/common';
+import { PaginationResponse } from '@/types/api';
 import { useQuery } from '@tanstack/react-query';
 import { trackSensitiveApis } from '../apis';
 import { trackSensitiveQueryKeys } from '../constants/query-keys';
-import { TrackSensitiveFilter } from '../types';
+import { TrackSensitiveData, TrackSensitiveFilter } from '../types';
 
 export const useGetListTrackSensitive = (params: TrackSensitiveFilter) => {
     const { data, ...res } = useQuery({
@@ -11,7 +12,9 @@ export const useGetListTrackSensitive = (params: TrackSensitiveFilter) => {
         placeholderData: (prev) => prev,
     });
 
-    const trackSensitiveData = data?.data?.data ?? DEFAULT_DATA_PAGINATION;
+    const trackSensitiveData =
+        data?.data?.data ??
+        (DEFAULT_DATA_PAGINATION as PaginationResponse<TrackSensitiveData>['data']);
 
     return {
         trackSensitiveData,

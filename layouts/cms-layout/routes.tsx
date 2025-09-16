@@ -15,6 +15,7 @@ import {
     DiscAlbum,
     Earth,
     FileMusic,
+    FileVolume,
     Globe,
     House,
     Layers,
@@ -379,6 +380,15 @@ export const adminRoutes: RouteNode[] = [
                         title: 'Track Origin',
                         href: APP_ROUTES.TRACK_ORIGIN_TYPE,
                         icon: FileMusic,
+                        required: SYS_ADMIN_REQ,
+                    },
+                    {
+                        id: 'track-sensitive',
+                        type: 'link',
+                        label: 'trackSensitive.label',
+                        title: 'Track sensitive',
+                        href: APP_ROUTES.TRACK_SENSITIVE,
+                        icon: FileVolume,
                         required: SYS_ADMIN_REQ,
                     },
                     {

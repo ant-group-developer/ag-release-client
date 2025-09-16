@@ -10,7 +10,7 @@ import {
 export const trackSensitiveApis = {
     getList: (params: TrackScanStatusDataFilter) => {
         return axiosInstance.get<PaginationResponse<TrackSensitiveData>>(
-            '/track-sensitive',
+            '/track-sensitives',
             {
                 params,
             }
@@ -19,13 +19,13 @@ export const trackSensitiveApis = {
 
     getDetail: (id: TrackSensitiveData['id']) => {
         return axiosInstance.get<DetailResponse<TrackSensitiveData>>(
-            `/track-sensitive/${id}`
+            `/track-sensitives/${id}`
         );
     },
 
     createTrackSensitive: (payload: CreateTrackSensitivePayload) => {
         return axiosInstance.post<DetailResponse<TrackSensitiveData>>(
-            '/track-sensitive',
+            '/track-sensitives',
             payload
         );
     },
@@ -35,12 +35,12 @@ export const trackSensitiveApis = {
         payload: UpdateTrackSensitivePayload
     ) => {
         return axiosInstance.put<DetailResponse<TrackSensitiveData>>(
-            `track-sensitive/${id}`,
+            `track-sensitives/${id}`,
             payload
         );
     },
 
     deleteTrackSensitive: (id: TrackSensitiveData['id']) => {
-        return axiosInstance.delete(`/track-sensitive/${id}`);
+        return axiosInstance.delete(`/track-sensitives/${id}`);
     },
 };

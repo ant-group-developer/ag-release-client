@@ -8,6 +8,7 @@ import { PriceTiersData } from '@/modules/price_tiers/types';
 import { ReleasesData } from '@/modules/releases/types';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { TrackOriginTypeData } from '@/modules/track-origin-types/types';
+import { TrackSensitiveData } from '@/modules/track-sensitive/types';
 import { TrackTypeData } from '@/modules/track-types/types';
 import { AudioFileBucket } from '@/modules/upload/types/data';
 import { CommonAttribute, CommonParams } from '@/types/api';
@@ -31,7 +32,8 @@ export interface TrackData extends CommonAttribute {
     originType: OriginType;
     trackLanguage?: TrackLanguage;
     trackArtists?: TrackArtistData[];
-    isSensitiveContent: boolean;
+    trackSensitiveId: string;
+    trackSensitive: TrackSensitiveData;
     lyric: string;
     trackTypeId: string;
     trackType: TrackTypeData | null;
@@ -60,10 +62,10 @@ export interface TrackDataFilter extends CommonParams {
 }
 
 export interface TrackPolicyData extends CommonAttribute {
-    actionId: string;
+    actionId: string | null;
     dspId: string;
     dsp: DspData;
-    action: ActionsData;
+    action: ActionsData | null;
 }
 
 export interface TrackLanguage {

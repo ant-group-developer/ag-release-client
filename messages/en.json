@@ -647,6 +647,7 @@
                 "invite": "Invitation sent successfully"
             },
             "error": {
+                "notFound": "Email address not exists",
                 "email": {
                     "conflict": "Email address already exists"
                 },
@@ -938,6 +939,28 @@
                 "duplicateNameTrackOriginType": "This track origin is already exists",
                 "cannotDeleteBecauseLinkedTracks": "Cannot delete this track origin because it is linked to tracks",
                 "duplicateCodeTrackOriginType": "This track origin code already exists"
+            }
+        }
+    },
+
+    "trackSensitive": {
+        "label": "Sensitive Content",
+        "explicitContentEdited": "Explicit content (edited)",
+        "notExplicit": "Not explicit",
+        "noAdviceAvailable": "No advice available",
+        "parentalAdvisory": "Parental advisory",
+        "name": "Name sensitive content",
+        "message": {
+            "success": {
+                "create": "Sensitive content added successfully",
+                "update": "Sensitive content updated successfully",
+                "delete": "Sensitive content deleted successfully"
+            },
+            "error": {
+                "notFound": "Sensitive content not found",
+                "duplicateCode": "This sensitive content code already exists",
+                "duplicateName": "This sensitive content name already exists",
+                "cannotDeleteRelationWithTrack": "Cannot delete because it is using in track"
             }
         }
     },

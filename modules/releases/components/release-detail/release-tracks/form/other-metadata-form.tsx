@@ -1,6 +1,7 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
 import CountrySelect from '@/components/ui/select/country-select';
 import GenresSelect from '@/components/ui/select/genres-select';
+import SensitiveContentSelect from '@/components/ui/select/isSensitiveContent-select';
 import LanguageSelect from '@/components/ui/select/language-select';
 import OriginalTypeSelect from '@/components/ui/select/original-type-select';
 import TrackTypesSelect from '@/components/ui/select/track-types-select';
@@ -26,7 +27,7 @@ const otherMetadataSchema = (messages: any) =>
     releaseTrackSchema(messages).pick({
         primaryGenreId: true,
         subGenreId: true,
-        isSensitiveContent: true,
+        trackSensitiveId: true,
         isByAi: true,
         trackLanguage: true,
         lyric: true,
@@ -54,7 +55,7 @@ export default function OtherMetadataForm({ trackData }: Props) {
         defaultValues: {
             primaryGenreId: trackData.primaryGenreId ?? '',
             subGenreId: trackData?.subGenreId ?? '',
-            isSensitiveContent: trackData?.isSensitiveContent ?? false,
+            trackSensitiveId: trackData?.trackSensitiveId ?? '',
             isByAi: trackData?.isByAi ?? false,
             trackLanguage: trackData?.trackLanguage ?? {},
             lyric: trackData?.lyric ?? '',
@@ -193,57 +194,47 @@ export default function OtherMetadataForm({ trackData }: Props) {
                     </FormItem>
 
                     <FormItem
-                        name="isSensitiveContent"
+                        name="trackSensitiveId"
                         label={messages('formFields.tracks.sensitiveContent')}
                         required
-                        ErrorMessage={errors.isSensitiveContent?.message}
+                        ErrorMessage={errors.trackSensitiveId?.message}
                     >
                         <Controller
-                            name="isSensitiveContent"
+                            name="trackSensitiveId"
                             control={control}
                             render={({ field }) => (
-                                // <Select
-                                //     className="w-full"
-                                //     showSearch
-                                //     options={[
-                                //         {
-                                //             label: messages('common.yes'),
-                                //             value: true,
-                                //         },
-                                //         {
-                                //             label: messages('common.no'),
-                                //             value: false,
-                                //         },
-                                //     ]}
-                                //     {...field}
-                                //     onChange={(e) => {
-                                //         field.onChange(e);
-                                //         debouncedUpdateTrackDraft({
-                                //             isSensitiveContent: e,
-                                //         });
-                                //     }}
-                                //     status={
-                                //         errors.isSensitiveContent
-                                //             ? 'error'
-                                //             : undefined
-                                //     }
-                                // />
-                                <Radio.Group
+                                <SensitiveContentSelect
+                                    className="w-full"
+                                    showSearch
                                     {...field}
                                     onChange={(e) => {
                                         field.onChange(e);
                                         debouncedUpdateTrackDraft({
-                                            isSensitiveContent: e.target.value,
+                                            trackSensitiveId: e,
                                         });
                                     }}
-                                >
-                                    <Radio value={true}>
-                                        {messages('common.yes')}
-                                    </Radio>
-                                    <Radio value={false}>
-                                        {messages('common.no')}
-                                    </Radio>
-                                </Radio.Group>
+                                    status={
+                                        errors.trackSensitiveId
+                                            ? 'error'
+                                            : undefined
+                                    }
+                                />
+                                // <Radio.Group
+                                //     {...field}
+                                //     onChange={(e) => {
+                                //         field.onChange(e);
+                                //         debouncedUpdateTrackDraft({
+                                //             isSensitiveContent: e.target.value,
+                                //         });
+                                //     }}
+                                // >
+                                //     <Radio value={true}>
+                                //         {messages('common.yes')}
+                                //     </Radio>
+                                //     <Radio value={false}>
+                                //         {messages('common.no')}
+                                //     </Radio>
+                                // </Radio.Group>
                             )}
                         />
                     </FormItem>

@@ -6,9 +6,9 @@ export const showNotification = (
     toastOptions?: ToastOptions
 ) => {
     const options: ToastOptions = {
+        autoClose: 3000,
         ...toastOptions,
         type,
-        autoClose: 3000,
     };
 
     toast(message, {

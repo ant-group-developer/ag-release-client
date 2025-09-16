@@ -107,7 +107,7 @@ export default function TrackMetadata({}: Props) {
                                 'formFields.tracks.isSensitiveContent'
                             )}
                         >
-                            {trackData?.isSensitiveContent}
+                            {trackData?.trackSensitive?.name}
                         </MetadataInfoItem>
                         <MetadataInfoItem
                             label={messages('formFields.tracks.preview')}

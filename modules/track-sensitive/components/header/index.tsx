@@ -37,7 +37,7 @@ export default function TrackSensitiveHeader({ dataFilter, onSearch }: Props) {
                 <div className="flex items-center gap-2">
                     <CreateButton
                         canCreate={true}
-                        text={messages('label.create')}
+                        text={messages('action.create.button')}
                         onClick={() =>
                             openModal(TYPE_MODAL_TRACK_SENSITIVE.CREATE)
                         }

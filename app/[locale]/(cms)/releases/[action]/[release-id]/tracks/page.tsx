@@ -93,19 +93,6 @@ export default function Tracks() {
         },
     };
 
-    // Set tracks vào zustand
-    // useEffect(() => {
-    //     if (tracksData?.items) {
-    //         setFormValues({
-    //             ...formValues,
-    //             tracks: tracksData.items.map((track) => ({
-    //                 ...track,
-    //                 isSensitiveContent: !!track.isSensitiveContent,
-    //             })),
-    //         });
-    //     }
-    // }, [tracksData?.items]);
-
     return (
         <ConfigProvider theme={customTheme}>
             <div>

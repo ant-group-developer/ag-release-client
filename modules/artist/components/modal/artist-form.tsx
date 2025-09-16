@@ -211,7 +211,7 @@ export default function ArtistFormModal({ ...props }: Props) {
                     </AppFormItem>
 
                     <AppFormItem
-                        name="country"
+                        name="countryId"
                         label={messages('country.label')}
                         required
                         rules={[
@@ -225,7 +225,7 @@ export default function ArtistFormModal({ ...props }: Props) {
                     </AppFormItem>
 
                     <AppFormItem
-                        name="genre"
+                        name="genreId"
                         label={messages('genre.label')}
                         required
                         rules={[

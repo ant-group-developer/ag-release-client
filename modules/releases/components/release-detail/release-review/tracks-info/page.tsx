@@ -207,7 +207,7 @@ export default function TracksInfo({}: Props) {
                                         messages(
                                             'formFields.tracks.sensitiveContent'
                                         ),
-                                        'isSensitiveContent',
+                                        'trackSensitiveId',
                                         true
                                     )}
                                     {renderField(
