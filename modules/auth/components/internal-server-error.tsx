@@ -10,7 +10,7 @@ type Props = {
     className?: string;
 };
 
-function Forbidden({ className }: Props) {
+function InternalServerError({ className }: Props) {
     const messages = useTranslations();
     const { logout } = useAuth();
     return (
@@ -21,16 +21,18 @@ function Forbidden({ className }: Props) {
             )}
         >
             <Image
-                src={'/auth/403.jpg'}
-                alt="forbidden"
-                width={500}
+                src={
+                    'https://img.freepik.com/premium-vector/error-500-character-illustration_854078-620.jpg?w=1480'
+                }
+                alt="notFound"
+                width={300}
                 height={400}
             />
             <h1 className="mb-2 pt-10 text-2xl font-bold capitalize">
-                {messages('auth.forbidden.title')}
+                {messages('system.internalServerError.title')}
             </h1>
             <p className="max-w-[30rem] text-base">
-                {messages('auth.forbidden.description')}
+                {messages('system.internalServerError.description')}
             </p>
             <div className="mt-4 flex w-64 flex-col gap-2">
                 <Link href={APP_ROUTES.DASHBOARD}>
@@ -46,4 +48,4 @@ function Forbidden({ className }: Props) {
     );
 }
 
-export default Forbidden;
+export default InternalServerError;
