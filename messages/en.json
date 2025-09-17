@@ -1184,7 +1184,7 @@
         "id": "Distribute ID",
         "onlyIn": "Distribute only in",
         "everyWhereExcept": "Distribute everywhere except",
-        "wordWide": "Distribute world wide"
+        "wordWide": "Distribute worldwide"
     },
 
     "emailSender": {

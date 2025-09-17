@@ -7,11 +7,10 @@ import SortableTable, {
 } from '@/components/ui/table/sortable-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { getIndex } from '@/helpers/common';
+import { getNameByLocale } from '@/helpers/string';
 import useModalStore from '@/hooks/use-modal';
-import { usePermission } from '@/hooks/use-permission';
-import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { ColumnType } from 'antd/es/table';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { TYPE_MODAL_ISSUE_LEVEL } from '../../enums';
 import { useBulkUpdateIssueLevel } from '../../hooks/use-bulk-update';
 import { IssueLevelData, IssueLevelDataFilter } from '../../types';
@@ -27,10 +26,11 @@ type Props = Omit<SortableTableProps<IssueLevelData>, 'columns'> & {
 export default function IssueLevelTable({ dataFilter, ...props }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
+    const locale = useLocale();
     const { bulkUpdateIssueLevel } = useBulkUpdateIssueLevel();
 
-    const { isSystemTenant } = useAuth();
-    const { hasPermission } = usePermission();
+    // const { isSystemTenant } = useAuth();
+    // const { hasPermission } = usePermission();
 
     const handleDragEnd: OnDragEnd<IssueLevelData[]> = (newData) => {
         const payload = newData.map((item, index) => ({
@@ -62,40 +62,29 @@ export default function IssueLevelTable({ dataFilter, ...props }: Props) {
                 ),
         },
         {
-            title: `${messages('common.name')} VI`,
+            title: `${messages('common.name')}`,
             key: 'name',
             dataIndex: 'name',
             ellipsis: true,
             align: 'left',
             width: 200,
-            render: (value, record) => (
-                <div className="flex items-center gap-4">
-                    <CopyText
-                        tooltipProps={{ placement: 'right' }}
-                        text={record?.nameVi}
-                    >
-                        <p className="truncate">{record?.nameVi}</p>
-                    </CopyText>
-                </div>
-            ),
-        },
-        {
-            title: `${messages('common.name')} EN`,
-            key: 'name',
-            dataIndex: 'name',
-            ellipsis: true,
-            align: 'left',
-            width: 200,
-            render: (value, record) => (
-                <div className="flex items-center gap-4">
-                    <CopyText
-                        tooltipProps={{ placement: 'right' }}
-                        text={record?.nameEn}
-                    >
-                        <p className="truncate">{record?.nameEn}</p>
-                    </CopyText>
-                </div>
-            ),
+            render: (value, record) => {
+                const name = getNameByLocale(
+                    record?.nameEn,
+                    record?.nameVi,
+                    locale
+                );
+                return (
+                    <div className="flex items-center gap-4">
+                        <CopyText
+                            tooltipProps={{ placement: 'right' }}
+                            text={name}
+                        >
+                            <p className="truncate">{name}</p>
+                        </CopyText>
+                    </div>
+                );
+            },
         },
         {
             title: messages('common.code'),

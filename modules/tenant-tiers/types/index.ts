@@ -6,6 +6,7 @@ export interface TenantTiersData extends CommonAttribute {
     nameVi: string;
     nameEn: string;
     code: string;
+    color: string;
     minScore: number;
     maxScore: number;
     note: string;

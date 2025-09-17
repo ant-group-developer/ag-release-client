@@ -1,5 +1,6 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
+import AppColorPicker from '@/components/ui/colorPicker/app-color-picker';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import { MAX_NAME_LENGTH, MAX_NOTE_LENGTH } from '@/constants/validate';
 import { getCodeFormatted } from '@/helpers/string';
@@ -65,10 +66,13 @@ export default function TenantTiersFormModal({ ...props }: Props) {
     };
 
     const onFinish = async (values: any) => {
-        const { ...res } = values;
+        const { color, ...res } = values;
         active();
+        const hexString =
+            typeof color === 'string' ? color : color?.toHexString();
         const payloadValues = {
             ...res,
+            color: hexString,
         };
         return isUpdateModal
             ? handleUpdate(payloadValues)
@@ -190,6 +194,19 @@ export default function TenantTiersFormModal({ ...props }: Props) {
                     ]}
                 >
                     <InputNumber className="!w-full" />
+                </AppFormItem>
+                <AppFormItem
+                    name="color"
+                    label={messages('common.color')}
+                    required
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.input'),
+                        },
+                    ]}
+                >
+                    <AppColorPicker />
                 </AppFormItem>
                 <AppFormItem
                     name="description"

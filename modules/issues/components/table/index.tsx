@@ -4,6 +4,7 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { getIndex } from '@/helpers/common';
 import { getNameByLocale } from '@/helpers/string';
 import useModalStore from '@/hooks/use-modal';
+import { Badge } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useLocale, useTranslations } from 'next-intl';
 import { TYPE_MODAL_ISSUES } from '../../enums';
@@ -39,34 +40,26 @@ export default function IssueTable({ dataFilter, ...props }: Props) {
                 ),
         },
         {
-            title: `${messages('common.name')} VI`,
+            title: `${messages('common.name')}`,
             key: 'name',
             dataIndex: 'name',
             ellipsis: true,
             align: 'left',
             width: 200,
-            render: (value, record) => (
-                <div className="flex items-center gap-4">
-                    <CustomTooltip title={record?.nameVi}>
-                        <span className="truncate">{record?.nameVi}</span>
-                    </CustomTooltip>
-                </div>
-            ),
-        },
-        {
-            title: `${messages('common.name')} EN`,
-            key: 'name',
-            dataIndex: 'name',
-            ellipsis: true,
-            align: 'left',
-            width: 200,
-            render: (value, record) => (
-                <div className="flex items-center gap-4">
-                    <CustomTooltip title={record?.nameEn}>
-                        <span className="truncate">{record?.nameEn}</span>
-                    </CustomTooltip>
-                </div>
-            ),
+            render: (value, record) => {
+                const name = getNameByLocale(
+                    record?.nameEn,
+                    record?.nameVi,
+                    locale
+                );
+                return (
+                    <div className="flex items-center gap-4">
+                        <CustomTooltip title={name}>
+                            <span className="truncate">{name}</span>
+                        </CustomTooltip>
+                    </div>
+                );
+            },
         },
         {
             title: messages('common.code'),
@@ -87,9 +80,16 @@ export default function IssueTable({ dataFilter, ...props }: Props) {
             align: 'left',
             width: 200,
             render: (_, record) => (
-                <span className="truncate">
-                    {getNameByLocale(record?.nameEn, record?.nameVi, locale)}
-                </span>
+                <div className="space-x-2 truncate">
+                    <Badge size="small" color={record?.issueLevel?.color} />
+                    <span>
+                        {getNameByLocale(
+                            record?.issueLevel?.nameEn,
+                            record?.issueLevel?.nameVi,
+                            locale
+                        )}
+                    </span>
+                </div>
             ),
         },
         {

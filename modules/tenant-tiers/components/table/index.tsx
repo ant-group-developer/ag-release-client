@@ -1,7 +1,9 @@
 import ActionButton from '@/components/ui/button/action-button';
+import AppColorPicker from '@/components/ui/colorPicker/app-color-picker';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { getIndex } from '@/helpers/common';
+import { getNameByLocale } from '@/helpers/string';
 import useModalStore from '@/hooks/use-modal';
 import { ColumnType } from 'antd/es/table';
 import { useLocale, useTranslations } from 'next-intl';
@@ -38,34 +40,26 @@ export default function TenantTiersTable({ dataFilter, ...props }: Props) {
                 ),
         },
         {
-            title: `${messages('common.name')} VI`,
+            title: `${messages('common.name')}`,
             key: 'name',
             dataIndex: 'name',
             ellipsis: true,
             align: 'left',
             width: 200,
-            render: (value, record) => (
-                <div className="flex items-center gap-4">
-                    <CustomTooltip title={record?.nameVi}>
-                        <span className="truncate">{record?.nameVi}</span>
-                    </CustomTooltip>
-                </div>
-            ),
-        },
-        {
-            title: `${messages('common.name')} EN`,
-            key: 'name',
-            dataIndex: 'name',
-            ellipsis: true,
-            align: 'left',
-            width: 200,
-            render: (value, record) => (
-                <div className="flex items-center gap-4">
-                    <CustomTooltip title={record?.nameEn}>
-                        <span className="truncate">{record?.nameEn}</span>
-                    </CustomTooltip>
-                </div>
-            ),
+            render: (value, record) => {
+                const name = getNameByLocale(
+                    record?.nameEn,
+                    record?.nameVi,
+                    locale
+                );
+                return (
+                    <div className="flex items-center gap-4">
+                        <CustomTooltip title={name}>
+                            <span className="truncate">{name}</span>
+                        </CustomTooltip>
+                    </div>
+                );
+            },
         },
         {
             title: messages('common.code'),
@@ -78,6 +72,14 @@ export default function TenantTiersTable({ dataFilter, ...props }: Props) {
                     <span className="truncate">{value}</span>
                 </CustomTooltip>
             ),
+        },
+        {
+            title: messages('common.color'),
+            key: 'color',
+            dataIndex: 'color',
+            align: 'left',
+            width: 150,
+            render: (value) => <AppColorPicker disabled value={value} />,
         },
         {
             title: messages('common.minScore'),
