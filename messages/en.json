@@ -454,7 +454,11 @@
         "name": "Channel name"
     },
     "system": {
-        "label": "System"
+        "label": "System",
+        "internalServerError": {
+            "title": "Oops, something went wrong",
+            "description": "An unexpected error has occurred. Please try again later."
+        }
     },
     "validation": {
         "error": "Validation error",

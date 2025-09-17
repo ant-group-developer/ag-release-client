@@ -26,7 +26,7 @@ function NotFound({ className }: Props) {
                 width={500}
                 height={400}
             />
-            <h1 className="mb-2 pt-10 text-2xl font-bold">
+            <h1 className="mb-2 pt-10 text-2xl font-bold capitalize">
                 {messages('auth.notFound.title')}
             </h1>
             <p className="max-w-[30rem] text-base">

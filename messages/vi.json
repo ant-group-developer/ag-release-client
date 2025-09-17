@@ -454,7 +454,11 @@
         "name": "Tên kênh"
     },
     "system": {
-        "label": "Hệ thống"
+        "label": "Hệ thống",
+        "internalServerError": {
+            "title": "Rất tiếc, hệ thống gặp sự cố",
+            "description": "Chúng tôi đang khắc phục ngay. Bạn vui lòng quay lại sau ít phút"
+        }
     },
     "validation": {
         "error": "Lỗi xác thực",
