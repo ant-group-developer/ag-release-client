@@ -168,7 +168,7 @@ export default function ReleaseSchedulingForm({}: Props) {
                                 />
                             </FormItem>
                         </div>
-                        <div className="space-y-8">
+                        <div className="space-y-2">
                             <FormItem
                                 name="releaseTimeMode"
                                 label={messages(
@@ -184,7 +184,7 @@ export default function ReleaseSchedulingForm({}: Props) {
                                         <Radio.Group
                                             {...field}
                                             id="releaseTimeMode"
-                                            className="space-y-2"
+                                            className="space-y-3"
                                             onChange={(e) => {
                                                 field.onChange(e.target.value);
                                                 debouncedUpdate({
@@ -361,9 +361,8 @@ export default function ReleaseSchedulingForm({}: Props) {
                             {!distributeWorldwide && (
                                 <>
                                     <FormItem
-                                        required
                                         name="releaseTerritory.distributionType"
-                                        label={messages('select.option')}
+                                        label={''}
                                         ErrorMessage={
                                             errors.releaseTerritory
                                                 ?.distributionType?.message

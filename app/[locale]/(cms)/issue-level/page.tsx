@@ -42,7 +42,7 @@ export default function IssueLevel({}: Props) {
     const { deleteIssueLevel } = useDeleteIssueLevel();
 
     // func
-    const handleDeleteSensitiveContent = () => {
+    const handleDelete = () => {
         const variables: DeleteVariables<IssueLevelData['id']> = {
             id: dataEdit?.id,
             onSuccess: () => {
@@ -87,7 +87,7 @@ export default function IssueLevel({}: Props) {
             {typeModal === TYPE_MODAL_ISSUE_LEVEL.DELETE && (
                 <AppConfirm
                     open
-                    onOk={() => handleDeleteSensitiveContent()}
+                    onOk={() => handleDelete()}
                     onCancel={closeModal}
                     modalTitle={`${messages('common.delete')} ${messages('issueLevel.label').toLowerCase()}`}
                     paragraph={messages('delete.confirmMessage', {

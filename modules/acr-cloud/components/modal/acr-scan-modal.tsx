@@ -12,21 +12,16 @@ import { useScanTracks } from '../../hooks/use-scan-tracks';
 
 type Props = Omit<AppModalProps, 'children'> & {
     selectedTrackIds?: Key[];
-    handleResetSelectedRow: () => void;
+    handleResetSelectedRow?: () => void;
+    hideSkipScannedOption?: boolean;
 };
 
 export default function AcrCloudScanModal({
     selectedTrackIds,
     handleResetSelectedRow,
+    hideSkipScannedOption = false,
     ...props
 }: Props) {
-    // const defaultStart = dayjs()
-    //     .subtract(30, 'day')
-    //     .startOf('day')
-    //     .toISOString();
-    // const defaultEnd = dayjs().endOf('day').toISOString();
-    // const [tempStartDate, setTempStartDate] = useState<string>(defaultStart);
-    // const [tempEndDate, setTempEndDate] = useState<string>(defaultEnd);
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
     const [form] = Form.useForm();
@@ -37,11 +32,8 @@ export default function AcrCloudScanModal({
 
     const handleSubmit = (values: any) => {
         const { date, track, ...rest } = values;
-        // const trackCreatedAtStart = dayjs(date[0]).toISOString();
-        // const trackCreatedAtEnd = dayjs(date[1]).toISOString();
+
         const payload = {
-            // trackCreatedAtStart,
-            // trackCreatedAtEnd,
             trackIds: values?.track,
             ...rest,
         };
@@ -49,28 +41,19 @@ export default function AcrCloudScanModal({
             filter: payload,
             onSuccess: () => {
                 closeModal();
-                handleResetSelectedRow();
+                handleResetSelectedRow?.();
             },
         });
     };
 
-    // const handleDateChange = (
-    //     startDateRelease: string | undefined,
-    //     endDateRelease: string | undefined
-    // ) => {
-    //     setTempStartDate(startDateRelease || '');
-    //     setTempEndDate(endDateRelease || '');
-    // };
-
     useEffect(() => {
         form.setFieldsValue({
-            ignoreTrackScanned: true,
-            // date: [dayjs(defaultStart), dayjs(defaultEnd)],
             track: Array.from(
                 new Set(
                     [...(selectedTrackIds ?? []), dataEdit?.id].filter(Boolean)
                 )
             ),
+            chunkDuration: acrConfig?.chunkDuration,
         });
     }, [selectedTrackIds]);
 
@@ -122,15 +105,17 @@ export default function AcrCloudScanModal({
                 <AppFormItem name="track" label={messages('track.label')}>
                     <TracksSelect mode="multiple" allowClear disabled />
                 </AppFormItem>
-                <AppFormItem
-                    valuePropName="checked"
-                    name="ignoreTrackScanned"
-                    label="Option"
-                >
-                    <Checkbox defaultChecked={true}>
-                        {messages('track.skipScannedTracks')}
-                    </Checkbox>
-                </AppFormItem>
+                {!hideSkipScannedOption && (
+                    <AppFormItem
+                        valuePropName="checked"
+                        name="ignoreTrackScanned"
+                        label="Option"
+                    >
+                        <Checkbox>
+                            {messages('track.skipScannedTracks')}
+                        </Checkbox>
+                    </AppFormItem>
+                )}
                 <AppFormItem
                     name="chunkDuration"
                     label={messages('track.chunkDuration')}
@@ -153,7 +138,7 @@ export default function AcrCloudScanModal({
                         },
                     ]}
                 >
-                    <InputNumber defaultValue={acrConfig?.chunkDuration} />
+                    <InputNumber />
                 </AppFormItem>
             </AppForm>
         </AppModal>

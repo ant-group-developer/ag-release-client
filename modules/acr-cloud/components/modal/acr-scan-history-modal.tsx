@@ -45,10 +45,14 @@ export default function AcrCloudScanHistoryModal({ ...props }: Props) {
         return (
             <div className="flex items-center justify-between pr-4">
                 <span>{`${messages('common.history')} ${messages('common.scan').toLowerCase()}  ACRCloud`}</span>
-                <Refresh
-                    handleRefresh={() => refetch()}
-                    lastTimeUpdated={formattedDate(dataUpdatedAt || new Date())}
-                />
+                <div className="mr-6 text-sm">
+                    <Refresh
+                        handleRefresh={() => refetch()}
+                        lastTimeUpdated={formattedDate(
+                            dataUpdatedAt || new Date()
+                        )}
+                    />
+                </div>
             </div>
         );
     };

@@ -9,6 +9,7 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import ScanResultPanel from '../collapses/scan-result-pancel';
 import AcrResultCompareModal from './acr-result-compare-modal';
+import AcrCloudScanModal from './acr-scan-modal';
 
 type Props = Omit<AppModalProps, 'children'> & {};
 
@@ -18,6 +19,7 @@ export default function AcrCloudScanResultModal({ ...props }: Props) {
     const dataEdit = useModalStore<TrackData>((state) => state.dataEdit);
     const { acrCloudResult, isPending } = useGetAcrCloudHistory(dataEdit?.id);
     const [isOpenCompareModal, setOpenCompareModal] = useState<boolean>(false);
+    const [isOpenReScan, setIsOpenReScan] = useState<boolean>(false);
 
     const renderTitle = () => {
         return (
@@ -29,6 +31,13 @@ export default function AcrCloudScanResultModal({ ...props }: Props) {
                     type="primary"
                 >
                     <span>{messages('common.compare')}</span>
+                </Button>
+                <Button
+                    onClick={() => setIsOpenReScan(true)}
+                    size="small"
+                    type="primary"
+                >
+                    <span>{messages('common.reScan')}</span>
                 </Button>
             </div>
         );
@@ -99,6 +108,12 @@ export default function AcrCloudScanResultModal({ ...props }: Props) {
                 <AcrResultCompareModal
                     open={isOpenCompareModal}
                     onCancel={() => setOpenCompareModal(false)}
+                />
+                <AcrCloudScanModal
+                    open={isOpenReScan}
+                    hideSkipScannedOption
+                    selectedTrackIds={[dataEdit?.id]}
+                    onCancel={() => setIsOpenReScan(false)}
                 />
             </>
         </AppModal>

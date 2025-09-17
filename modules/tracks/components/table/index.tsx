@@ -287,6 +287,10 @@ export default function TracksTable({
                 <TrackActionButton
                     showDownload
                     showDetail
+                    showScan
+                    onShowScan={() =>
+                        openModal(TYPE_MODAL_TRACK.ACR_CLOUD_SCAN, record)
+                    }
                     onShowDetail={() => {
                         router.push(
                             getTrackDetailRoute(record?.id, TRACK_TABS.METADATA)

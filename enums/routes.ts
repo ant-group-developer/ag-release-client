@@ -33,6 +33,7 @@ export enum APP_ROUTES {
     TRACK_SENSITIVE = '/track-sensitive',
     TENANT = '/tenants',
     TENANT_DETAIL = '/tenants/*',
+    TENANT_TIERS = '/tenant-tiers',
     SETTING = '/setting',
     SIGN_IN = '/sign-in',
     FORGOT_PASSWORD = '/forgot-password',
@@ -44,6 +45,7 @@ export enum APP_ROUTES {
     ANALYTICS = '/analytics',
     ANALYTIC_DETAIL = '/analytics/*',
     ISSUE_LEVEL = '/issue-level',
+    ISSUES = '/issues',
 }
 
 export const AUTH_ROUTES: string[] = [APP_ROUTES.SIGN_IN];

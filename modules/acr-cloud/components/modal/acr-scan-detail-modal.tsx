@@ -91,7 +91,7 @@ export default function AcrCloudScanDetailModal({ data, ...props }: Props) {
             render: (_, record) => {
                 const statusLabel =
                     record?.status === TRACK_ITEM_STATUS.NEED_SCAN
-                        ? messages('common.notScanned')
+                        ? messages('status.pending')
                         : messages('common.scanned');
                 const color =
                     record?.status === TRACK_ITEM_STATUS.NEED_SCAN

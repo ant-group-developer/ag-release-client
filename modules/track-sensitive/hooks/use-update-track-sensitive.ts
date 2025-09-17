@@ -25,7 +25,7 @@ export const useUpdateTrackSensitive = () => {
             queryKey: trackSensitiveQueryKeys.lists(),
         });
 
-        handleSuccess(data?.data?.messageCode);
+        handleSuccess(data?.data);
         onSuccess?.();
     };
 
