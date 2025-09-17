@@ -17,7 +17,8 @@ export default function TimezoneSelect({
     const options = timezonesData.map((item) => ({
         id: item.id,
         value: item.id,
-        label: item.name,
+        name: item.name,
+        label: `${item.name} ${item.utc}`,
     }));
 
     const labelRender = (props: any) => {
@@ -33,11 +34,11 @@ export default function TimezoneSelect({
             {...props}
             showSearch
             filterOption={(input, option) =>
-                toNonAccentVietnamese(option?.label ?? '')
+                toNonAccentVietnamese(option?.name ?? '')
                     .toLowerCase()
                     .includes(toNonAccentVietnamese(input).toLowerCase())
             }
-            optionFilterProp="label"
+            optionFilterProp="name"
             options={options}
             allowClear
             labelRender={labelRender}
