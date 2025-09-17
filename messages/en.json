@@ -64,6 +64,9 @@
         }
     },
     "common": {
+        "score": "Score",
+        "minScore": "Min score",
+        "maxScore": "Max score",
         "distribute": "Distribute",
         "preparingDownload": "Preparing download",
         "preparingDownloadDesc": "Process can take a few seconds, please wait",
@@ -1538,7 +1541,22 @@
 
     "issue": {
         "label": "Issue",
-        "name": "Name issue"
+        "name": "Name issue",
+        "numberOfDaysAffect": "Number of day affect",
+        "message": {
+            "success": {
+                "create": "Create success",
+                "update": "Update success",
+                "delete": "Delete success"
+            },
+            "error": {
+                "notFound": "Not found",
+                "duplicateNameVi": "Duplicate Vietnamese name",
+                "duplicateNameEn": "Duplicate English name",
+                "duplicateCode": "Duplicate code",
+                "issueLevelNotFound": "Issue level not found"
+            }
+        }
     },
 
     "issueLevel": {
@@ -1571,6 +1589,20 @@
     },
 
     "tenantTier": {
-        "label": "Tenant tier"
+        "label": "Tenant tier",
+        "name": "Tenant tier name",
+        "message": {
+            "success": {
+                "create": "Create success",
+                "update": "Update success",
+                "delete": "Delete success"
+            },
+            "error": {
+                "notFound": "Not found",
+                "duplicateNameVi": "Duplicate Vietnamese name",
+                "duplicateNameEn": "Duplicate English name",
+                "duplicateCode": "Duplicate code"
+            }
+        }
     }
 }

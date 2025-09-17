@@ -1,7 +1,7 @@
 import IconButton from '@/components/ui/button/icon-button';
 import { SIZE_ICON, SIZE_ICON_SMALL } from '@/constants/common';
 import { Dropdown, DropdownProps, MenuProps } from 'antd';
-import { Download, Eye, MoreVertical, Trash } from 'lucide-react';
+import { Download, Eye, MoreVertical, ScanSearch, Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { MouseEventHandler } from 'react';
 
@@ -9,6 +9,8 @@ type Props = {
     showDownload?: boolean;
     showDelete?: boolean;
     showDetail?: boolean;
+    showScan?: boolean;
+    onShowScan?: () => void;
     onShowDetail?: () => void;
     onShowDownload?: () => void;
     onShowDelete?: () => void;
@@ -23,12 +25,15 @@ enum ACTION_BUTTON {
     CANCEL = 'cancel',
     CONTINUE = 'continue',
     DOWNLOAD = 'download',
+    SCAN = 'scan',
 }
 
 export default function TrackActionButton({
     showDelete,
     showDownload,
     showDetail,
+    showScan,
+    onShowScan,
     onShowDetail,
     onShowDelete,
     onShowDownload,
@@ -36,6 +41,18 @@ export default function TrackActionButton({
 }: Props) {
     const messages = useTranslations();
     const items: MenuProps['items'] = [];
+    if (showScan) {
+        items.push({
+            key: ACTION_BUTTON.SCAN,
+            label: (
+                <div className="flex items-center gap-2">
+                    <ScanSearch size={SIZE_ICON_SMALL} />
+                    <span>{messages('common.scan')}</span>
+                </div>
+            ),
+        });
+    }
+
     if (showDownload) {
         items.push({
             key: ACTION_BUTTON.DOWNLOAD,
@@ -82,6 +99,7 @@ export default function TrackActionButton({
             [ACTION_BUTTON.DELETE]: onShowDelete,
             [ACTION_BUTTON.DOWNLOAD]: onShowDownload,
             [ACTION_BUTTON.DETAIL]: onShowDetail,
+            [ACTION_BUTTON.SCAN]: onShowScan,
         };
 
         const callback = callbacks[key];

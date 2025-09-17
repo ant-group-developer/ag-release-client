@@ -18,7 +18,7 @@ export const useBulkUpdateIssueLevel = () => {
             queryKey: issueLevelQueryKeys.lists(),
         });
 
-        handleSuccess(data?.data?.messageCode);
+        handleSuccess(data?.data);
         onSuccess?.();
     };
 

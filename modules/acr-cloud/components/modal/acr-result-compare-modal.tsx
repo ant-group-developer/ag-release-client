@@ -22,11 +22,7 @@ export default function AcrResultCompareModal({ ...props }: Props) {
     const rightData = acrCloudResult?.find((item) => item.id === rightId);
 
     const options: SelectProps['options'] = acrCloudResult?.map((item) => ({
-        label: (
-            <span className="font-semibold">
-                {formattedDate(item?.createdAt)}
-            </span>
-        ),
+        label: <span>{formattedDate(item?.createdAt)}</span>,
         value: item?.id,
     }));
 
@@ -48,7 +44,7 @@ export default function AcrResultCompareModal({ ...props }: Props) {
             {...props}
         >
             <div className="max-h-[600px] space-y-4 overflow-auto">
-                <div className="flex gap-4">
+                <div className="sticky top-0 z-10 flex gap-4">
                     <Select
                         placeholder={messages('track.acrCloud.compareResult')}
                         options={options}

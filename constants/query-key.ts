@@ -256,6 +256,12 @@ export const QUERY_KEY = {
         UPDATE: 'UPDATE_TENANT',
         CREATE: 'CREATE_TENANT',
     },
+    TENANT_TIERS: {
+        KEY: 'TENANT_TIERS',
+        GET_LIST: 'GET_LIST_TENANT_TIERS',
+        UPDATE: 'UPDATE_TENANT_TIERS',
+        CREATE: 'CREATE_TENANT_TIERS',
+    },
     ACR_CLOUD: {
         KEY: 'ACR_CLOUD',
         GET_LIST: 'ACR_CLOUD_GET_LIST',
@@ -284,6 +290,11 @@ export const QUERY_KEY = {
     BACKUP_DATABASE: {
         KEY: 'BACKUP_DATABASE',
         GET_LIST: 'GET_LIST_DATABASE_LOGS',
+    },
+    ISSUES: {
+        KEY: 'ISSUES',
+        GET_LIST: 'GET_LIST_ISSUES',
+        UPDATE: 'UPDATE_ISSUES',
     },
     ISSUE_LEVEL: {
         KEY: 'ISSUE_LEVEL',

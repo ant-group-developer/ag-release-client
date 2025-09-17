@@ -19,7 +19,7 @@ export const useDeleteIssueLevel = () => {
             queryKey: issueLevelQueryKeys.lists(),
         });
 
-        handleSuccess(data?.data?.messageCode);
+        handleSuccess(data?.data);
         onSuccess?.();
     };
 

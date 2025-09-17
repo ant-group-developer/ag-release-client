@@ -3,7 +3,7 @@ import { FALLBACK_IMAGE } from '@/constants/common';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { useIntersectionObserver } from '@uidotdev/usehooks';
 import { Skeleton } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ReleasesData } from '../../types';
 
 type Props = {
@@ -31,6 +31,12 @@ export default function ReleaseCoverImage({ data }: Props) {
 
     const showSkeleton = isFetching;
 
+    useEffect(() => {
+        if (linkReadFile) {
+            setLoaded(false);
+        }
+    }, [linkReadFile]);
+
     return (
         <div ref={ref}>
             {showSkeleton ? (
@@ -46,7 +52,12 @@ export default function ReleaseCoverImage({ data }: Props) {
                     width={40}
                     height={40}
                     className="aspect-square rounded-lg object-cover"
-                    onLoad={() => setLoaded(true)}
+                    onLoad={() => {
+                        setLoaded(true);
+                    }}
+                    onError={(e) => {
+                        setLoaded(true);
+                    }}
                 />
             )}
         </div>

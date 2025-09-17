@@ -5,6 +5,7 @@ import SortableTable, {
     OnDragEnd,
     SortableTableProps,
 } from '@/components/ui/table/sortable-table';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { getIndex } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { usePermission } from '@/hooks/use-permission';
@@ -136,14 +137,14 @@ export default function IssueLevelTable({ dataFilter, ...props }: Props) {
             title: messages('common.note'),
             key: 'note',
             dataIndex: 'note',
-            ellipsis: true,
             align: 'left',
             width: 200,
             render: (value) => (
-                <span className="line-clamp-3 truncate whitespace-pre-line">
-                    {' '}
-                    {value}{' '}
-                </span>
+                <CustomTooltip title={value}>
+                    <span className="line-clamp-3 truncate whitespace-pre-line">
+                        {value}
+                    </span>
+                </CustomTooltip>
             ),
         },
         // {
