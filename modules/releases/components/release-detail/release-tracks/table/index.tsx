@@ -219,7 +219,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             render: (value, record) => {
                 return (
                     <TrackActionButton
-                        disabled={isReadMode}
+                        // disabled={isReadMode}
                         showDelete
                         showDownload
                         showDetail

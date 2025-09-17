@@ -29,7 +29,7 @@ export const trackApi = {
         actionId: string
     ) => {
         return axiosInstance.put<DetailResponse<TrackData[]>>(
-            `/tracks/draft/${id}/trackPolicies/${trackPolicyId}`,
+            `/tracks/draft/${id}/track-policies/${trackPolicyId}`,
             {
                 actionId,
             }

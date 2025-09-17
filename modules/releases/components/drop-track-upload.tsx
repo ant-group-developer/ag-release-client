@@ -5,10 +5,8 @@ import extractAudioMetadata, { getPeakData } from '@/helpers/common';
 import { showNotification } from '@/helpers/messages-helper';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useCreateTrackDraft } from '@/modules/tracks/hooks/use-create-track-draft';
-import { TrackPayload } from '@/modules/tracks/types/payload';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { AudioFileBucket, CreateBucketFile } from '@/modules/upload/types/data';
-import { CreateVariables } from '@/types/api';
 import { Progress, UploadProps } from 'antd';
 import axios from 'axios';
 import { useTranslations } from 'next-intl';
@@ -37,14 +35,174 @@ export default function DropUploadTracks({ ...props }: Props) {
     const messages = useTranslations();
     const prevLength = useRef(0);
 
-    const handleUpload = async (files: any[]) => {
-        const sortedFiles = [...files].sort((a, b) => {
-            const nameA = (a.name || a.originFileObj?.name || '').toLowerCase();
-            const nameB = (b.name || b.originFileObj?.name || '').toLowerCase();
-            return nameA.localeCompare(nameB);
+    // Validate file and audio metadata
+    const validateFile = (fileOriginal: any, metadata: any): boolean => {
+        // Check file name length
+        if (fileOriginal.name.length > 80) {
+            showNotification(
+                'error',
+                messages('track.validation.trackFileName', { number: 80 })
+            );
+            return false;
+        }
+
+        // Check audio metadata
+        if (metadata?.bitDepth !== 16 || metadata?.sampleRate !== 44100) {
+            const reasons: string[] = [];
+            if (metadata.bitDepth !== 16)
+                reasons.push(`BitDepth must be 16bit`);
+            if (metadata.sampleRate !== 44100)
+                reasons.push(`SampleRate must be 44100Hz`);
+
+            showNotification(
+                'error',
+                `${fileOriginal.name}: ${reasons.join(', ')}`,
+                { autoClose: 8000 }
+            );
+            return false;
+        }
+
+        return true;
+    };
+
+    // Create bucket file infos for track and peak
+    const createBucketInfos = (
+        fileOriginal: any,
+        file: any,
+        peakData: number[],
+        index: number
+    ): [CreateBucketFile, CreateBucketFile] => {
+        const fileNameWithoutExtension =
+            fileOriginal.name.lastIndexOf('.') !== -1
+                ? fileOriginal.name.substring(
+                      0,
+                      fileOriginal.name.lastIndexOf('.')
+                  )
+                : fileOriginal.name;
+
+        // Track bucket info
+        const trackInfo: CreateBucketFile = {
+            folderBucket: {
+                releaseId: formValues.id ?? '',
+                uploadPurpose: TYPE_UPLOAD_BUCKET.TRACK,
+                trackFileName: fileNameWithoutExtension,
+            },
+            file: {
+                fileName: fileOriginal.name,
+                contentType: fileOriginal.type,
+                extension: fileOriginal.name.split('.').pop(),
+                fileSize: file.size,
+            },
+            key: `track-${index}`,
+        };
+
+        // Peak file and bucket info
+        const peakJson = JSON.stringify(peakData);
+        const peakBlob = new Blob([peakJson], { type: 'application/json' });
+        const peakFile = new File(
+            [peakBlob],
+            fileOriginal.name.replace(/\.\w+$/, '.json'),
+            { type: 'application/json' }
+        );
+
+        const peakInfo: CreateBucketFile = {
+            folderBucket: {
+                releaseId: formValues.id ?? '',
+                uploadPurpose: TYPE_UPLOAD_BUCKET.TRACK,
+                trackFileName: fileNameWithoutExtension,
+            },
+            file: {
+                fileName: peakFile.name,
+                contentType: peakFile.type,
+                extension: 'json',
+                fileSize: peakFile.size,
+            },
+            key: `peak-${index}`,
+        };
+
+        return [trackInfo, peakInfo];
+    };
+
+    // Process single file
+    const processFile = async (
+        file: any,
+        index: number,
+        tracksPayload: TracksPayload[],
+        temp: { file: any; key: string }[]
+    ): Promise<CreateBucketFile[] | void> => {
+        const fileOriginal = file.originFileObj;
+
+        let songDuration = 0;
+        let peakData: number[] = [];
+
+        if (fileOriginal) {
+            const { peakData: data, songDuration: duration } =
+                await getPeakData(file.originFileObj);
+            if (!data) return;
+            peakData = data;
+            songDuration = duration;
+        }
+
+        const metadata = await extractAudioMetadata(file.originFileObj);
+
+        // Validate file
+        if (!validateFile(fileOriginal, metadata)) return;
+
+        // Create bucket infos
+        const [trackInfo, peakInfo] = createBucketInfos(
+            fileOriginal,
+            file,
+            peakData,
+            index
+        );
+
+        // Create peak file for upload
+        const peakJson = JSON.stringify(peakData);
+        const peakBlob = new Blob([peakJson], { type: 'application/json' });
+        const peakFile = new File(
+            [peakBlob],
+            fileOriginal.name.replace(/\.\w+$/, '.json'),
+            { type: 'application/json' }
+        );
+
+        // Add to tracks payload
+        const fileNameWithoutExtension =
+            fileOriginal.name.lastIndexOf('.') !== -1
+                ? fileOriginal.name.substring(
+                      0,
+                      fileOriginal.name.lastIndexOf('.')
+                  )
+                : fileOriginal.name;
+
+        tracksPayload.push({
+            title: fileNameWithoutExtension,
+            releaseId: formValues.id as string,
+            audioFileDraft: {
+                sampleRate: metadata.sampleRate.toString(),
+                bitDepth: metadata.bitDepth,
+                duration: metadata.duration,
+                bitrate: metadata.bitrate.toString(),
+                trackId: null,
+                fileId: null,
+                peakId: null,
+                preview: null,
+                sampleLength: null,
+            },
+            key: `track-${index}`,
+            order: index,
         });
-        try {
-            const preparingProgress: UploadProgress[] = sortedFiles.map(
+
+        // Add to temp storage
+        temp.push({ file: file, key: `track-${index}` });
+        temp.push({ file: peakFile, key: `peak-${index}` });
+
+        return [trackInfo, peakInfo];
+    };
+
+    // Handle progress updates
+    const manageProgress = {
+        initialize: (files: any[]) => {
+            const preparingProgress: UploadProgress[] = files.map(
                 (file: any, index: number) => ({
                     fileName:
                         file.name ||
@@ -52,163 +210,17 @@ export default function DropUploadTracks({ ...props }: Props) {
                         `File ${index + 1}`,
                     progress: 0,
                     key: `track-${index}`,
-                    status: 'preparing',
                 })
             );
             setUploadProgress(preparingProgress);
-            const tracksPayload: TracksPayload[] = [];
+        },
 
-            // temp for handle store file and key
-            const temp: { file: any; key: string }[] = [];
-
-            const newTracksPromises = sortedFiles.map(
-                async (file: any, index: number) => {
-                    let songDuration = 0;
-                    let peakData: number[] = [];
-                    const fileOriginal = file.originFileObj;
-
-                    if (fileOriginal.name.length > 80) {
-                        return showNotification(
-                            'error',
-                            messages('track.validation.trackFileName', {
-                                number: 80,
-                            })
-                        );
-                    }
-                    const fileNameWithoutExtension =
-                        fileOriginal.name.lastIndexOf('.') !== -1
-                            ? fileOriginal.name.substring(
-                                  0,
-                                  fileOriginal.name.lastIndexOf('.')
-                              )
-                            : fileOriginal.name;
-
-                    if (fileOriginal) {
-                        const { peakData: data, songDuration: duration } =
-                            await getPeakData(file.originFileObj);
-
-                        if (!data) return;
-
-                        peakData = data;
-                        songDuration = duration;
-                    }
-
-                    const metadata = await extractAudioMetadata(
-                        file.originFileObj
-                    );
-
-                    // validate track
-                    if (
-                        metadata?.bitDepth !== 16 ||
-                        metadata?.sampleRate !== 44100
-                    ) {
-                        const reasons: string[] = [];
-                        if (metadata.bitDepth !== 16)
-                            reasons.push(`BitDepth must be 16bit`);
-                        if (metadata.sampleRate !== 44100)
-                            reasons.push(`SampleRate must be 44100Hz`);
-
-                        showNotification(
-                            'error',
-                            `${fileOriginal.name}: ${reasons.join(', ')}`,
-                            {
-                                autoClose: 8000,
-                            }
-                        );
-                        return;
-                    }
-
-                    const trackInfor: CreateBucketFile = {
-                        folderBucket: {
-                            releaseId: formValues.id ?? '',
-                            uploadPurpose: TYPE_UPLOAD_BUCKET.TRACK,
-                            trackFileName: fileNameWithoutExtension,
-                        },
-                        file: {
-                            fileName: fileOriginal.name,
-                            contentType: fileOriginal.type,
-                            extension: fileOriginal.name.split('.').pop(),
-                            fileSize: file.size,
-                        },
-                        key: `track-${index}`,
-                    };
-
-                    tracksPayload.push({
-                        title:
-                            fileOriginal.name.lastIndexOf('.') !== -1
-                                ? fileOriginal.name.substring(
-                                      0,
-                                      fileOriginal.name.lastIndexOf('.')
-                                  )
-                                : fileOriginal.name,
-                        releaseId: formValues.id as string,
-                        audioFileDraft: {
-                            sampleRate: metadata.sampleRate.toString(),
-                            bitDepth: metadata.bitDepth,
-                            duration: metadata.duration,
-                            bitrate: metadata.bitrate.toString(),
-                            trackId: null,
-                            fileId: null,
-                            peakId: null,
-                            preview: null,
-                            sampleLength: null,
-                        },
-                        key: `track-${index}`,
-                        order: index,
-                    });
-
-                    temp.push({
-                        file: file,
-                        key: `track-${index}`,
-                    });
-
-                    const peakJson = JSON.stringify(peakData);
-                    const peakBlob = new Blob([peakJson], {
-                        type: 'application/json',
-                    });
-                    const peakFile = new File(
-                        [peakBlob],
-                        fileOriginal.name.replace(/\.\w+$/, '.json'),
-                        {
-                            type: 'application/json',
-                        }
-                    );
-
-                    const peakInfor: CreateBucketFile = {
-                        folderBucket: {
-                            releaseId: formValues.id ?? '',
-                            uploadPurpose: TYPE_UPLOAD_BUCKET.TRACK,
-                            trackFileName: fileNameWithoutExtension,
-                        },
-                        file: {
-                            fileName: peakFile.name,
-                            contentType: peakFile.type,
-                            extension: 'json',
-                            fileSize: peakFile.size,
-                        },
-                        key: `peak-${index}`,
-                    };
-                    temp.push({
-                        file: peakFile,
-                        key: `peak-${index}`,
-                    });
-
-                    return [trackInfor, peakInfor];
-                }
-            );
-
-            const newTracks = (await Promise.all(newTracksPromises))
-                .flat()
-                .filter((item): item is CreateBucketFile => !!item);
-
-            // create bucket
-            const response = await bucketApi.createBuckets({
-                bucketDtos: newTracks,
-            });
-
-            // Initialize progress state
+        updateAfterBucketCreation: (
+            bucketResponse: any[],
+            temp: { file: any; key: string }[]
+        ) => {
             const initialProgress: UploadProgress[] = [];
-            response.data.forEach((item: any) => {
+            bucketResponse.forEach((item: any) => {
                 if (item.key.startsWith('track-')) {
                     const matchedFile = temp.find((i) =>
                         item.key.includes(i.key)
@@ -226,105 +238,122 @@ export default function DropUploadTracks({ ...props }: Props) {
                 }
             });
             setUploadProgress(initialProgress);
+        },
 
-            // Put file into bucket
-            const uploadPromises = response.data.map(async (item: any) => {
-                const matchedFile = temp.find((i) => {
-                    return item.key.includes(i.key);
-                });
-                if (matchedFile) {
-                    try {
-                        const fileToUpload =
-                            matchedFile.file.originFileObj ?? matchedFile.file;
+        updateUploadProgress: (key: string, progress: number) => {
+            setUploadProgress((prev) =>
+                prev.map((p) => (p.key === key ? { ...p, progress } : p))
+            );
+        },
 
-                        const uploadResponse = await axios.put(
-                            item.urlUpload,
-                            fileToUpload,
-                            {
-                                headers: {
-                                    'Content-Type':
-                                        matchedFile.file.type ||
-                                        'application/octet-stream',
-                                },
-                                onUploadProgress: (progressEvent) => {
-                                    const percentCompleted = Math.round(
-                                        (progressEvent.loaded * 100) /
-                                            (progressEvent.total || 1)
-                                    );
+        reset: () => {
+            setUploadProgress([]);
+        },
+    };
 
-                                    setUploadProgress((prev) =>
-                                        prev.map((progress) =>
-                                            progress.key === item.key
-                                                ? {
-                                                      ...progress,
-                                                      progress:
-                                                          percentCompleted,
-                                                  }
-                                                : progress
-                                        )
-                                    );
-                                },
-                            }
+    // Upload files and map IDs
+    const uploadAndMapFiles = async (
+        bucketResponse: any[],
+        temp: { file: any; key: string }[],
+        tracksPayload: TracksPayload[]
+    ) => {
+        // Upload files
+        const uploadPromises = bucketResponse.map(async (item: any) => {
+            const matchedFile = temp.find((i) => item.key.includes(i.key));
+            if (!matchedFile) return;
+
+            const fileToUpload =
+                matchedFile.file.originFileObj ?? matchedFile.file;
+
+            const uploadResponse = await axios.put(
+                item.urlUpload,
+                fileToUpload,
+                {
+                    headers: {
+                        'Content-Type':
+                            matchedFile.file.type || 'application/octet-stream',
+                    },
+                    onUploadProgress: (progressEvent) => {
+                        const percentCompleted = Math.round(
+                            (progressEvent.loaded * 100) /
+                                (progressEvent.total || 1)
                         );
-
-                        if (
-                            !uploadResponse.status ||
-                            uploadResponse.status >= 400
-                        ) {
-                            throw new Error(
-                                `Failed to upload file. Please try again later.`
-                            );
-                        }
-                    } catch (uploadError) {
-                        throw uploadError;
-                    }
+                        manageProgress.updateUploadProgress(
+                            item.key,
+                            percentCompleted
+                        );
+                    },
                 }
+            );
 
-                if (item.key.startsWith('peak-')) {
-                    const index = item.key.split('-')[1]; // Lấy index từ "peak-0"
-                    const track = tracksPayload.find(
-                        (tp) => tp.key === `track-${index}`
-                    );
-                    if (track) {
-                        track.audioFileDraft.peakId = item.fileId;
-                    }
-                } else if (item.key.startsWith('track-')) {
-                    const track = tracksPayload.find(
-                        (tp) => tp.key === item.key
-                    );
-                    if (track) {
-                        track.audioFileDraft.fileId = item.fileId;
-                    }
-                }
+            if (!uploadResponse.status || uploadResponse.status >= 400) {
+                throw new Error(
+                    `Failed to upload file. Please try again later.`
+                );
+            }
+        });
+
+        await Promise.all(uploadPromises);
+
+        // Map file IDs to tracks
+        bucketResponse.forEach((item: any) => {
+            if (item.key.startsWith('peak-')) {
+                const index = item.key.split('-')[1];
+                const track = tracksPayload.find(
+                    (tp) => tp.key === `track-${index}`
+                );
+                if (track) track.audioFileDraft.peakId = item.fileId;
+            } else if (item.key.startsWith('track-')) {
+                const track = tracksPayload.find((tp) => tp.key === item.key);
+                if (track) track.audioFileDraft.fileId = item.fileId;
+            }
+        });
+    };
+
+    const handleUpload = async (files: any[]) => {
+        const sortedFiles = [...files].sort((a, b) => {
+            const nameA = (a.name || a.originFileObj?.name || '').toLowerCase();
+            const nameB = (b.name || b.originFileObj?.name || '').toLowerCase();
+            return nameA.localeCompare(nameB);
+        });
+
+        try {
+            manageProgress.initialize(sortedFiles);
+
+            const tracksPayload: TracksPayload[] = [];
+            const temp: { file: any; key: string }[] = [];
+
+            // Process all files
+            const newTracksPromises = sortedFiles.map(
+                (file: any, index: number) =>
+                    processFile(file, index, tracksPayload, temp)
+            );
+
+            const newTracks = (await Promise.all(newTracksPromises))
+                .flat()
+                .filter((item): item is CreateBucketFile => !!item);
+
+            // Create buckets and upload files
+            const response = await bucketApi.createBuckets({
+                bucketDtos: newTracks,
             });
+            manageProgress.updateAfterBucketCreation(response.data, temp);
+            await uploadAndMapFiles(response.data, temp, tracksPayload);
 
-            await Promise.all(uploadPromises);
-
+            // Submit files
             const fileIdsSubmit = response.data.map((item: any) => item.fileId);
-            // submit file
             await bucketApi.submit({ ids: fileIdsSubmit });
 
-            const variables: CreateVariables<TrackPayload[]> = {
-                payload: tracksPayload,
-            };
-
-            createTrackDraft(variables);
+            // Create track drafts
+            createTrackDraft({ payload: tracksPayload });
         } catch (error) {
-            setUploadProgress([]);
+            manageProgress.reset();
             showNotification(
                 'error',
                 messages('file.message.uploadFileFailed')
             );
         }
     };
-
-    // const debouncedHandleUpload = useMemo(
-    //     () =>
-    //         debounce((files: any[]) => {
-    //             handleUpload(files);
-    //         }, 300),
-    //     [formValues.id, createTrackDraft]
-    // );
 
     return (
         <div>

@@ -285,4 +285,9 @@ export const QUERY_KEY = {
         KEY: 'BACKUP_DATABASE',
         GET_LIST: 'GET_LIST_DATABASE_LOGS',
     },
+    ISSUE_LEVEL: {
+        KEY: 'ISSUE_LEVEL',
+        GET_LIST: 'GET_LIST_ISSUE_LEVEL',
+        UPDATE: 'UPDATE_ISSUE_LEVEL',
+    },
 };

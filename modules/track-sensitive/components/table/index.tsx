@@ -2,8 +2,6 @@ import ActionButton from '@/components/ui/button/action-button';
 import CopyText from '@/components/ui/copy-text/copy-text';
 import ImageFallback from '@/components/ui/image/image-fallback';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
-import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { FALLBACK_IMAGE } from '@/constants/common';
 import { getIndex } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
@@ -48,32 +46,21 @@ export const TrackSensitiveTable = ({ dataFilter, ...props }: Props) => {
             fixed: 'left',
             width: 180,
             render: (value, record) => (
-                <div className="flex items-center gap-4">
-                    <div className="flex-shrink-0">
-                        <ImageFallback
-                            fallbackSrc={FALLBACK_IMAGE}
-                            src={record?.icon ?? ''}
-                            alt="genre"
-                            width={40}
-                            height={40}
-                            className="aspect-square rounded-lg object-cover"
-                        />
-                    </div>
-                    <CustomTooltip
-                        placement="right"
-                        title={messages('common.viewDetail')}
-                    >
-                        {/* <Link
-                            href={getLabelDetailRoute(
-                                record?.id,
-                                LABEL_DETAIL_TABS.RELEASES
-                            )}
-                        > */}
-                        <p className="truncate hover:text-blue-500 hover:underline">
-                            {value}
-                        </p>
-                        {/* </Link> */}
-                    </CustomTooltip>
+                <div className="flex items-center gap-2">
+                    {record?.icon && (
+                        <div className="flex-shrink-0">
+                            <ImageFallback
+                                src={record?.icon ?? ''}
+                                alt="genre"
+                                width={32}
+                                height={32}
+                                className="aspect-square rounded-lg object-cover"
+                            />
+                        </div>
+                    )}
+                    <CopyText text={value}>
+                        <p className="truncate">{value}</p>
+                    </CopyText>
                 </div>
             ),
         },
@@ -84,7 +71,7 @@ export const TrackSensitiveTable = ({ dataFilter, ...props }: Props) => {
             align: 'left',
             width: 150,
             render: (value) => (
-                <CopyText tooltipProps={{ placement: 'right' }} text={value}>
+                <CopyText text={value}>
                     <p className="truncate">{value}</p>
                 </CopyText>
             ),
