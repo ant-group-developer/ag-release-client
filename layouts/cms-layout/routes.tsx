@@ -24,7 +24,6 @@ import {
     Layers,
     LayoutList,
     Library,
-    List,
     ListOrdered,
     LockKeyhole,
     LucideProps,
@@ -246,7 +245,7 @@ export const adminRoutes: RouteNode[] = [
             {
                 id: 'issues',
                 type: 'link',
-                label: 'issue.label',
+                label: 'issueCategory.label',
                 title: 'Issues',
                 href: APP_ROUTES.ISSUES,
                 icon: CircleAlert,
@@ -260,19 +259,11 @@ export const adminRoutes: RouteNode[] = [
                 icon: ListOrdered,
             },
             {
-                id: 'issue-category',
-                type: 'link',
-                label: 'issueCategory.label',
-                title: 'Issue category',
-                href: '',
-                icon: List,
-            },
-            {
                 id: 'tenant-issue',
                 type: 'link',
                 label: 'tenantIssue.label',
                 title: 'Tenant issue',
-                href: '',
+                href: APP_ROUTES.TENANT_ISSUE,
                 icon: Flag,
             },
             {

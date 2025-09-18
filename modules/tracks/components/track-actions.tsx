@@ -1,6 +1,5 @@
 import { cn } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
-import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { Button } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -17,7 +16,7 @@ export default function TrackActions({
 }: Props) {
     const openModal = useModalStore((state) => state.openModal);
     const messages = useTranslations();
-    const { isAdmin } = useAuth();
+    // const { isAdmin } = useAuth();
     return (
         <div
             className={cn(

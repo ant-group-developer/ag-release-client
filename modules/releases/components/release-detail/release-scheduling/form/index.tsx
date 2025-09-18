@@ -233,10 +233,10 @@ export default function ReleaseSchedulingForm({}: Props) {
                                             name="releaseTimezoneId"
                                             render={({ field }) => (
                                                 <TimezoneSelect
-                                                    fallBack={
+                                                    fallBack={`${
                                                         formValues?.timeZone
                                                             ?.name
-                                                    }
+                                                    } ${formValues?.timeZone?.utc}`}
                                                     id="releaseTimezoneId"
                                                     className="w-full"
                                                     {...field}

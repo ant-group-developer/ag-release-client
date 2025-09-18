@@ -64,6 +64,9 @@
         }
     },
     "common": {
+        "dateAffect": "Ngày ảnh hưởng",
+        "startDateAffect": "Ngày bắt đầu ảnh hưởng",
+        "endDateAffect": "Ngày kết thúc ảnh hưởng",
         "score": "Điểm",
         "minScore": "Điểm tối thiểu",
         "maxScore": "Điểm tối đa",
@@ -1337,6 +1340,7 @@
             }
         }
     },
+
     "integration": {
         "label": "Tích hợp",
         "deal": {
@@ -1356,6 +1360,7 @@
             }
         }
     },
+
     "action": {
         "create": {
             "button": "Thêm mới",
@@ -1592,9 +1597,21 @@
     "issueCategory": {
         "label": "Danh mục vấn đề"
     },
-
     "tenantIssue": {
-        "label": "Vấn đề tenant"
+        "label": "Vấn đề tenant",
+        "message": {
+            "success": {
+                "create": "Tạo vấn đề tenant thành công",
+                "update": "Cập nhật vấn đề tenant thành công",
+                "delete": "Xóa vấn đề tenant thành công"
+            },
+            "error": {
+                "notFound": "Không tìm thấy vấn đề tenant",
+                "duplicate": "Tenant này đã có vấn đề đang hoạt động",
+                "tenantNotFound": "Không tìm thấy tenant",
+                "issueNotFound": "Không tìm thấy vấn đề"
+            }
+        }
     },
 
     "tenantTier": {

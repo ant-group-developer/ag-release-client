@@ -18,6 +18,12 @@ export const tenantApi = {
         });
     },
 
+    getListSimple: () => {
+        return axiosInstance.get<DetailResponse<TenantData[]>>(
+            '/tenants/simple'
+        );
+    },
+
     getActive() {
         return axiosInstance.get<PaginationResponse<TenantActiveData>>(
             `/tenants/active`

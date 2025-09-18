@@ -34,6 +34,7 @@ export enum APP_ROUTES {
     TENANT = '/tenants',
     TENANT_DETAIL = '/tenants/*',
     TENANT_TIERS = '/tenant-tiers',
+    TENANT_ISSUE = '/tenant-issue',
     SETTING = '/setting',
     SIGN_IN = '/sign-in',
     FORGOT_PASSWORD = '/forgot-password',

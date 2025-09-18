@@ -64,6 +64,9 @@
         }
     },
     "common": {
+        "dateAffect": "Date affect",
+        "startDateAffect": "Start date affect",
+        "endDateAffect": "End date affect",
         "score": "Score",
         "minScore": "Min score",
         "maxScore": "Max score",
@@ -1589,7 +1592,20 @@
     },
 
     "tenantIssue": {
-        "label": "Tenant issue"
+        "label": "Tenant issue",
+        "message": {
+            "success": {
+                "create": "Create success",
+                "update": "Update success",
+                "delete": "Delete success"
+            },
+            "error": {
+                "notFound": "Tenant issue not found",
+                "duplicate": "This tenant already has this issue active",
+                "tenantNotFound": "Tenant not found",
+                "issueNotFound": "Issue not found"
+            }
+        }
     },
 
     "tenantTier": {

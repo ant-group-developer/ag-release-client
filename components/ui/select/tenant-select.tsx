@@ -1,24 +1,25 @@
 import { toNonAccentVietnamese } from '@/helpers/string';
-import { useGetListSimpleTimezones } from '@/modules/timezone/hooks/use-get-list-simple-timezones';
+import { useGetListSimpleTenant } from '@/modules/tenant/hooks/use-get-simple-list';
 import { Select, SelectProps } from 'antd';
-import { useTranslations } from 'next-intl';
+import { useLocale } from 'next-intl';
 
-interface TimezoneSelectProps extends SelectProps {
+type Props = Omit<SelectProps, 'options'> & {
     fallBack?: string;
-}
+};
 
-export default function TimezoneSelect({
-    fallBack,
-    ...props
-}: TimezoneSelectProps) {
-    const messages = useTranslations();
-    const { timezonesData } = useGetListSimpleTimezones();
+export default function TenantSelect({ fallBack, ...props }: Props) {
+    const { tenantSimpleData } = useGetListSimpleTenant();
+    const locale = useLocale();
 
-    const options = timezonesData.map((item) => ({
+    const options = tenantSimpleData.map((item) => ({
         id: item.id,
         value: item.id,
-        name: item.name,
-        label: `${item.name} ${item.utc}`,
+        name: item?.name,
+        label: (
+            <p className="flex items-center justify-between gap-1">
+                <span>{item?.name}</span>
+            </p>
+        ),
     }));
 
     const labelRender = (props: any) => {
@@ -30,7 +31,6 @@ export default function TimezoneSelect({
 
     return (
         <Select
-            placeholder={messages('timezone.placeholder.selectTimezone')}
             {...props}
             showSearch
             filterOption={(input, option) =>
@@ -38,9 +38,7 @@ export default function TimezoneSelect({
                     .toLowerCase()
                     .includes(toNonAccentVietnamese(input).toLowerCase())
             }
-            optionFilterProp="name"
             options={options}
-            allowClear
             labelRender={labelRender}
         />
     );

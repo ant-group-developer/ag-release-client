@@ -19,6 +19,7 @@ import TrackActions from '@/modules/tracks/components/track-actions';
 import { defaultVisibleColumnsTracks } from '@/modules/tracks/constants';
 import { TRACKS_COLUMNS_DISPLAY } from '@/modules/tracks/enums';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
+import { theme } from 'antd';
 import dayjs from 'dayjs';
 import { Key, useEffect, useState } from 'react';
 
@@ -26,6 +27,7 @@ type Props = {};
 
 export default function Tracks({}: Props) {
     // State - hook
+    const { token } = theme.useToken();
     const typeModal = useModalStore((state) => state.typeModal);
     const [selectedRow, setSelectedRow] = useState<Key[]>([]);
     const [visibleColumns, setVisibleColumns] = useState<
@@ -128,6 +130,11 @@ export default function Tracks({}: Props) {
                     handleChangeVisibleColumns={handleChangeVisibleColumns}
                     visibleColumn={visibleColumns}
                 />
+            </div>
+            <div
+                className="sticky top-0 z-50"
+                style={{ backgroundColor: token.colorBgContainer }}
+            >
                 <TrackActions
                     selectedRowKeys={selectedRow}
                     resetSelectedRows={handleResetSelectedRow}
@@ -135,7 +142,7 @@ export default function Tracks({}: Props) {
             </div>
             {layoutTable === LAYOUT_TABLE.LIST && (
                 <TracksTable
-                    sticky
+                    sticky={{ offsetHeader: selectedRow.length > 0 ? 48 : 0 }}
                     visibleColumns={visibleColumns}
                     dataSource={tracksData.items}
                     pagination={{

@@ -5,6 +5,7 @@ import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SCAN_STATUS } from '../../enums';
 import { useCancelScan } from '../../hooks/use-cancel-scan';
 import { useReScan } from '../../hooks/use-re-scan';
@@ -70,7 +71,14 @@ export default function AcrScanHistoryTable({ ...props }: Props) {
             render: (_, record) => (
                 <div className="space-x-1">
                     <Avatar src={record?.creator?.avatar} />
-                    <span className="truncate">{record?.creator?.name}</span>
+                    <CustomTooltip title={messages('common.viewDetail')}>
+                        <span
+                            className="cursor-pointer truncate hover:text-blue-500 hover:underline"
+                            onClick={() => handleOpenModal(record)}
+                        >
+                            {record?.creator?.name}
+                        </span>
+                    </CustomTooltip>
                 </div>
             ),
         },
