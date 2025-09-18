@@ -86,10 +86,12 @@ export default function TenantIssueFormModal({ ...props }: Props) {
     };
 
     const onFinish = async (values: any) => {
-        const { ...res } = values;
+        const { dateAffect, ...res } = values;
         active();
         const payloadValues = {
             ...res,
+            startDateAffect: dateAffect[0],
+            endDateAffect: dateAffect[1],
         };
         return isUpdateModal
             ? handleUpdate(payloadValues)
