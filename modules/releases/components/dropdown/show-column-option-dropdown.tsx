@@ -48,7 +48,7 @@ export default function ShowColumnOptionDropdown({
         },
         {
             key: RELEASES_COLUMNS_DISPLAY.PUBLISHER,
-            label: messages('release.publisher'),
+            label: 'Label',
         },
         {
             key: RELEASES_COLUMNS_DISPLAY.RELEASE_ID,

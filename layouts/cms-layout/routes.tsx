@@ -240,24 +240,8 @@ export const adminRoutes: RouteNode[] = [
     {
         id: 'issues',
         type: 'group',
-        label: 'common.issues',
+        label: 'issueCategory.label',
         children: [
-            {
-                id: 'issues',
-                type: 'link',
-                label: 'issueCategory.label',
-                title: 'Issues',
-                href: APP_ROUTES.ISSUES,
-                icon: CircleAlert,
-            },
-            {
-                id: 'issue-level',
-                type: 'link',
-                label: 'issueLevel.label',
-                title: 'Issue level',
-                href: APP_ROUTES.ISSUE_LEVEL,
-                icon: ListOrdered,
-            },
             {
                 id: 'tenant-issue',
                 type: 'link',
@@ -273,6 +257,22 @@ export const adminRoutes: RouteNode[] = [
                 title: 'Tenant tier',
                 href: APP_ROUTES.TENANT_TIERS,
                 icon: ChevronsUp,
+            },
+            {
+                id: 'issues',
+                type: 'link',
+                label: 'common.issues',
+                title: 'Issues',
+                href: APP_ROUTES.ISSUES,
+                icon: CircleAlert,
+            },
+            {
+                id: 'issue-level',
+                type: 'link',
+                label: 'issueLevel.label',
+                title: 'Issue level',
+                href: APP_ROUTES.ISSUE_LEVEL,
+                icon: ListOrdered,
             },
         ],
     },

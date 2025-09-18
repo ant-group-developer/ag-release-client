@@ -58,6 +58,7 @@ export default function AddNewTrackModal({ ...props }: Props) {
             // temp for handle store file and key
             const temp: { file: any; key: string }[] = [];
 
+            // map and create track and peak data object to create bucket
             const newTracksPromises = files.map(
                 async (file: any, index: number) => {
                     let songDuration = 0;

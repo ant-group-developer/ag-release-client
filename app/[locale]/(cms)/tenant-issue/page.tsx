@@ -27,11 +27,17 @@ type Props = {};
 export default function TenantIssue({}: Props) {
     const messages = useTranslations();
     const locale = useLocale();
-    const { dataFilter, onChangeFilter, onChangePage, onSearch } =
-        useFilter<TenantIssueDataFilter>({
-            page: 1,
-            pageSize: PAGE_SIZE,
-        });
+    const {
+        dataFilter,
+        onChangeFilter,
+        onChangePage,
+        onSearch,
+        removeFilter,
+        canClearFilter,
+    } = useFilter<TenantIssueDataFilter>({
+        page: 1,
+        pageSize: PAGE_SIZE,
+    });
 
     const { isLoading } = useLoadingStatus({
         queryKeys: [tenantIssuesQueryKeys.lists()],
@@ -71,7 +77,13 @@ export default function TenantIssue({}: Props) {
 
     return (
         <AppContainer title={messages('tenantIssue.label')}>
-            <TenantIssueHeader dataFilter={dataFilter} onSearch={onSearch} />
+            <TenantIssueHeader
+                dataFilter={dataFilter}
+                onSearch={onSearch}
+                canClearFilter={canClearFilter}
+                onChangeFilter={onChangeFilter}
+                removeFilter={removeFilter}
+            />
             <TenantIssueTable
                 sticky
                 dataSource={tenantIssueData?.items}
