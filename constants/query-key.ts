@@ -262,6 +262,12 @@ export const QUERY_KEY = {
         UPDATE: 'UPDATE_TENANT_TIERS',
         CREATE: 'CREATE_TENANT_TIERS',
     },
+    TENANT_ISSUE: {
+        KEY: 'TENANT_ISSUE',
+        GET_LIST: 'GET_LIST_TENANT_ISSUE',
+        UPDATE: 'UPDATE_TENANT_ISSUE',
+        CREATE: 'CREATE_TENANT_ISSUE',
+    },
     ACR_CLOUD: {
         KEY: 'ACR_CLOUD',
         GET_LIST: 'ACR_CLOUD_GET_LIST',
