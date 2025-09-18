@@ -199,17 +199,7 @@ export default function TenantIssueFormModal({ ...props }: Props) {
                     <DateRangePicker className="w-full" />
                 </AppFormItem>
 
-                <AppFormItem
-                    name="isActive"
-                    label={messages('status.active')}
-                    required
-                    rules={[
-                        {
-                            required: true,
-                            message: messages('validation.input'),
-                        },
-                    ]}
-                >
+                <AppFormItem name="isActive" label={messages('status.active')}>
                     <Switch />
                 </AppFormItem>
 
