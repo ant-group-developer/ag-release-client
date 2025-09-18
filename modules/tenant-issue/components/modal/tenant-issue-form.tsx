@@ -86,10 +86,12 @@ export default function TenantIssueFormModal({ ...props }: Props) {
     };
 
     const onFinish = async (values: any) => {
-        const { ...res } = values;
+        const { dateAffect, ...res } = values;
         active();
         const payloadValues = {
             ...res,
+            startDateAffect: dateAffect[0],
+            endDateAffect: dateAffect[1],
         };
         return isUpdateModal
             ? handleUpdate(payloadValues)
@@ -118,8 +120,8 @@ export default function TenantIssueFormModal({ ...props }: Props) {
             const initialData = {
                 dateAffect: [dayjs(startDateAffect), dayjs(endDateAffect)],
                 score,
+                isActive: false,
             };
-            console.log('🚀 ~ initialData:', initialData);
             form.setFieldsValue(initialData);
         }
     }, [dataEdit, issueId, currentIssue, form]);
@@ -197,17 +199,7 @@ export default function TenantIssueFormModal({ ...props }: Props) {
                     <DateRangePicker className="w-full" />
                 </AppFormItem>
 
-                <AppFormItem
-                    name="isActive"
-                    label={messages('status.active')}
-                    required
-                    rules={[
-                        {
-                            required: true,
-                            message: messages('validation.input'),
-                        },
-                    ]}
-                >
+                <AppFormItem name="isActive" label={messages('status.active')}>
                     <Switch />
                 </AppFormItem>
 
