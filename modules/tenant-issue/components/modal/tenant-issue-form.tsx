@@ -118,8 +118,8 @@ export default function TenantIssueFormModal({ ...props }: Props) {
             const initialData = {
                 dateAffect: [dayjs(startDateAffect), dayjs(endDateAffect)],
                 score,
+                isActive: false,
             };
-            console.log('🚀 ~ initialData:', initialData);
             form.setFieldsValue(initialData);
         }
     }, [dataEdit, issueId, currentIssue, form]);
