@@ -1,6 +1,6 @@
-import { Popover, Tag } from 'antd';
+import { Popover, Tag, TagProps, Typography } from 'antd';
 
-type Props = {
+type Props = TagProps & {
     tags?: string[];
     maxVisibleTags?: number;
 };
@@ -23,8 +23,12 @@ export default function PopoverTags({
                 {hiddenTags.map((item, index) => {
                     return (
                         <Tag key={item} className="!mr-0">
-                            {' '}
-                            {item}{' '}
+                            <Typography.Text
+                                ellipsis={{ tooltip: true }}
+                                style={{ maxWidth: 200 }}
+                            >
+                                {item}
+                            </Typography.Text>
                         </Tag>
                     );
                 })}
@@ -36,7 +40,12 @@ export default function PopoverTags({
         <div>
             {visibleTags.map((tag, index) => (
                 <Tag key={tag} className="!mr-1">
-                    {tag}
+                    <Typography.Text
+                        ellipsis={{ tooltip: true }}
+                        style={{ maxWidth: 200 }}
+                    >
+                        {tag}
+                    </Typography.Text>
                 </Tag>
             ))}
             {hiddenTags.length > 0 && (

@@ -1,7 +1,14 @@
 import IconButton from '@/components/ui/button/icon-button';
 import { SIZE_ICON, SIZE_ICON_SMALL } from '@/constants/common';
 import { Dropdown, DropdownProps, MenuProps } from 'antd';
-import { Download, Eye, MoreVertical, ScanSearch, Trash } from 'lucide-react';
+import {
+    Download,
+    Eye,
+    FileScan,
+    MoreVertical,
+    ScanSearch,
+    Trash,
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { MouseEventHandler } from 'react';
 
@@ -10,6 +17,8 @@ type Props = {
     showDelete?: boolean;
     showDetail?: boolean;
     showScan?: boolean;
+    showScanResult?: boolean;
+    onShowScanResult?: () => void;
     onShowScan?: () => void;
     onShowDetail?: () => void;
     onShowDownload?: () => void;
@@ -26,6 +35,7 @@ enum ACTION_BUTTON {
     CONTINUE = 'continue',
     DOWNLOAD = 'download',
     SCAN = 'scan',
+    SHOW_SCAN_RESULT = 'showScanResult',
 }
 
 export default function TrackActionButton({
@@ -33,6 +43,8 @@ export default function TrackActionButton({
     showDownload,
     showDetail,
     showScan,
+    showScanResult,
+    onShowScanResult,
     onShowScan,
     onShowDetail,
     onShowDelete,
@@ -52,7 +64,17 @@ export default function TrackActionButton({
             ),
         });
     }
-
+    if (showScanResult) {
+        items.push({
+            key: ACTION_BUTTON.SHOW_SCAN_RESULT,
+            label: (
+                <div className="flex items-center gap-2">
+                    <FileScan size={SIZE_ICON_SMALL} />
+                    <span>{messages('common.scanResult')}</span>
+                </div>
+            ),
+        });
+    }
     if (showDownload) {
         items.push({
             key: ACTION_BUTTON.DOWNLOAD,
@@ -100,6 +122,7 @@ export default function TrackActionButton({
             [ACTION_BUTTON.DOWNLOAD]: onShowDownload,
             [ACTION_BUTTON.DETAIL]: onShowDetail,
             [ACTION_BUTTON.SCAN]: onShowScan,
+            [ACTION_BUTTON.SHOW_SCAN_RESULT]: onShowScanResult,
         };
 
         const callback = callbacks[key];

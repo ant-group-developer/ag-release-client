@@ -1,6 +1,9 @@
+import IconButton from '@/components/ui/button/icon-button';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
+import { SIZE_ICON } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
 import {
+    cn,
     convertMsToMinSec,
     convertSecondsToTime,
     formattedDate,
@@ -8,7 +11,8 @@ import {
 import useModalStore from '@/hooks/use-modal';
 import { useGetAcrCloudHistory } from '@/modules/acr-cloud/hooks/use-get-acr-cloud-history';
 import { TrackData } from '@/modules/tracks/types';
-import { Button, Drawer, Spin, Tabs } from 'antd';
+import { Button, Spin, Tabs } from 'antd';
+import { X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -32,7 +36,6 @@ export default function AcrCloudScanResultModal({ ...props }: Props) {
     const { acrCloudResult, isPending } = useGetAcrCloudHistory(dataEdit?.id);
     const [isOpenCompareModal, setOpenCompareModal] = useState<boolean>(false);
     const [isOpenReScan, setIsOpenReScan] = useState<boolean>(false);
-    const [drawerOpen, setDrawerOpen] = useState(false);
     const [selectedResultScan, setSelectedResultScan] =
         useState<ResultScan | null>(null);
     const resultContent =
@@ -67,7 +70,9 @@ export default function AcrCloudScanResultModal({ ...props }: Props) {
             children: (
                 <div className="grid grid-cols-12 gap-2 overflow-auto">
                     <TableTrackTimeRange
-                        className="col-span-8 w-full max-w-[800px]"
+                        className={cn('col-span-full w-full max-w-[800px]', {
+                            'col-span-8': resultContent?.length ?? 0 > 0,
+                        })}
                         bordered
                         size="middle"
                         dataSource={item?.result}
@@ -75,190 +80,224 @@ export default function AcrCloudScanResultModal({ ...props }: Props) {
                         onRow={(record) => ({
                             onClick: () => {
                                 setSelectedResultScan(record);
-                                setDrawerOpen(true);
                             },
                         })}
                     />
-                    <div className="col-span-4 max-h-[700px] overflow-y-auto rounded border p-4">
-                        {resultContent?.map((item: any, idx: number) => {
-                            const externalMetadata = item?.external_metadata;
-                            const youtubeVid = externalMetadata?.youtube?.vid;
-                            const spotifyTrackId =
-                                externalMetadata?.spotify?.track?.id;
-                            const deezerTrackId =
-                                externalMetadata?.deezer?.track?.id;
-                            const getLinkTrack = (
-                                platform: EXTERNAL_PLATFORM
-                            ) => {
-                                switch (platform) {
-                                    case EXTERNAL_PLATFORM.YOUTUBE:
-                                        return `https://www.youtube.com/watch?v=${externalMetadata?.youtube?.vid}`;
-                                    case EXTERNAL_PLATFORM.SPOTIFY:
-                                        return `https://open.spotify.com/track/${externalMetadata?.spotify?.track?.id}`;
-                                    case EXTERNAL_PLATFORM.DEEZER:
-                                        return `https://www.deezer.com/en/track/${externalMetadata?.deezer?.track?.id}`;
-                                    default:
-                                        break;
-                                }
-                            };
-                            return (
-                                <div key={idx} className="border-b py-2">
-                                    <div>
-                                        <span>{messages('track.name')}: </span>
-                                        <span className="font-semibold">
-                                            {item?.title}
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <span>ISRC: </span>
-                                        <span className="font-semibold">
-                                            {item?.external_ids?.isrc}
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <span>Label: </span>
-                                        <span className="font-semibold">
-                                            {item?.label}
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <span>
-                                            {messages('artist.label')}:{' '}
-                                        </span>
-                                        <span className="font-semibold">
-                                            {item?.artists
-                                                .map(
-                                                    (artist: any) => artist.name
-                                                )
-                                                .join(' & ')}
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <span>Album: </span>
-                                        <span className="font-semibold">
-                                            {item?.album?.name}
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <span>
-                                            {messages('release.releaseDate')}
-                                            :{' '}
-                                        </span>
-                                        <span className="font-semibold">
-                                            {formattedDate(
-                                                item?.release_date,
-                                                DATE_FORMAT.DATE_ONLY
+                    {resultContent?.length && resultContent?.length > 0 && (
+                        <div className="col-span-4 max-h-[700px] overflow-y-auto rounded border p-4">
+                            <div className="flex items-center justify-between border-b pb-2">
+                                <p className="text-base font-semibold">
+                                    {convertSecondsToTime(
+                                        selectedResultScan?.key?.startSecond
+                                    )}{' '}
+                                    -{' '}
+                                    {convertSecondsToTime(
+                                        selectedResultScan?.key?.endSecond
+                                    )}{' '}
+                                    | {formattedDate(item?.createdAt)}
+                                </p>
+                                <IconButton
+                                    onClick={() => setSelectedResultScan(null)}
+                                >
+                                    <X size={SIZE_ICON} />
+                                </IconButton>
+                            </div>
+                            {resultContent?.map((item: any, idx: number) => {
+                                const externalMetadata =
+                                    item?.external_metadata;
+                                const youtubeVid =
+                                    externalMetadata?.youtube?.vid;
+                                const spotifyTrackId =
+                                    externalMetadata?.spotify?.track?.id;
+                                const deezerTrackId =
+                                    externalMetadata?.deezer?.track?.id;
+                                const getLinkTrack = (
+                                    platform: EXTERNAL_PLATFORM
+                                ) => {
+                                    switch (platform) {
+                                        case EXTERNAL_PLATFORM.YOUTUBE:
+                                            return `https://www.youtube.com/watch?v=${externalMetadata?.youtube?.vid}`;
+                                        case EXTERNAL_PLATFORM.SPOTIFY:
+                                            return `https://open.spotify.com/track/${externalMetadata?.spotify?.track?.id}`;
+                                        case EXTERNAL_PLATFORM.DEEZER:
+                                            return `https://www.deezer.com/en/track/${externalMetadata?.deezer?.track?.id}`;
+                                        default:
+                                            break;
+                                    }
+                                };
+
+                                return (
+                                    <div
+                                        key={idx}
+                                        className="border-b py-2 last:border-b-0"
+                                    >
+                                        <div>
+                                            <span className="text-gray-500">
+                                                {messages('track.name')}:{' '}
+                                            </span>
+                                            <span>{item?.title}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-gray-500">
+                                                ISRC:{' '}
+                                            </span>
+                                            <span>
+                                                {item?.external_ids?.isrc}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span className="text-gray-500">
+                                                Label:{' '}
+                                            </span>
+                                            <span>{item?.label}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-gray-500">
+                                                {messages('artist.label')}:{' '}
+                                            </span>
+                                            <span>
+                                                {item?.artists
+                                                    ?.map(
+                                                        (artist: any) =>
+                                                            artist.name
+                                                    )
+                                                    .join(' & ')}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span className="text-gray-500">
+                                                Album:{' '}
+                                            </span>
+                                            <span>{item?.album?.name}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-gray-500">
+                                                {messages(
+                                                    'release.releaseDate'
+                                                )}
+                                                :{' '}
+                                            </span>
+                                            <span>
+                                                {formattedDate(
+                                                    item?.release_date,
+                                                    DATE_FORMAT.DATE_ONLY
+                                                )}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span className="text-gray-500">
+                                                {messages(
+                                                    'track.rageDuplicate'
+                                                )}
+                                                :{' '}
+                                            </span>
+                                            <span>
+                                                {`${convertMsToMinSec(item?.sample_begin_time_offset_ms)} - ${convertMsToMinSec(
+                                                    item?.sample_end_time_offset_ms
+                                                )}`}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span className="text-gray-500">
+                                                {messages(
+                                                    'track.rageDuplicateInSongDetected'
+                                                )}
+                                                :{' '}
+                                            </span>
+                                            <span>
+                                                {`${convertMsToMinSec(item?.db_begin_time_offset_ms)} - ${convertMsToMinSec(
+                                                    item?.db_end_time_offset_ms
+                                                )}`}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span className="text-gray-500">
+                                                {messages('common.accuracy')}
+                                                :{' '}
+                                            </span>
+                                            <span>{item?.score}</span>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            {youtubeVid && (
+                                                <a
+                                                    href={getLinkTrack(
+                                                        EXTERNAL_PLATFORM.YOUTUBE
+                                                    )}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    <Button
+                                                        icon={
+                                                            <Image
+                                                                src={
+                                                                    '/icon/youtube.png'
+                                                                }
+                                                                alt=""
+                                                                width={18}
+                                                                height={18}
+                                                            />
+                                                        }
+                                                    >
+                                                        Youtube{' '}
+                                                    </Button>
+                                                </a>
                                             )}
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <span>
-                                            {messages('track.rageDuplicate')}
-                                            :{' '}
-                                        </span>
-                                        <span className="font-semibold">
-                                            {`${convertMsToMinSec(item?.sample_begin_time_offset_ms)} - ${convertMsToMinSec(item?.sample_end_time_offset_ms)}`}
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <span>
-                                            {messages(
-                                                'track.rageDuplicateInSongDetected'
+                                            {spotifyTrackId && (
+                                                <a
+                                                    href={getLinkTrack(
+                                                        EXTERNAL_PLATFORM.SPOTIFY
+                                                    )}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    <Button
+                                                        icon={
+                                                            <Image
+                                                                src={
+                                                                    '/icon/spotify.png'
+                                                                }
+                                                                alt=""
+                                                                width={18}
+                                                                height={18}
+                                                            />
+                                                        }
+                                                    >
+                                                        {' '}
+                                                        Spotify{' '}
+                                                    </Button>
+                                                </a>
                                             )}
-                                            :{' '}
-                                        </span>
-                                        <span className="font-semibold">
-                                            {`${convertMsToMinSec(item?.db_begin_time_offset_ms)} - ${convertMsToMinSec(item?.db_end_time_offset_ms)}`}
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <span>
-                                            {messages('common.accuracy')}:{' '}
-                                        </span>
-                                        <span className="font-semibold">
-                                            {item?.score}
-                                        </span>
-                                    </div>
-                                    <div className="flex gap-2">
-                                        {youtubeVid && (
-                                            <a
-                                                href={getLinkTrack(
-                                                    EXTERNAL_PLATFORM.YOUTUBE
-                                                )}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                            >
-                                                <Button
-                                                    icon={
-                                                        <Image
-                                                            src={
-                                                                '/icon/youtube.png'
-                                                            }
-                                                            alt=""
-                                                            width={18}
-                                                            height={18}
-                                                        />
-                                                    }
+                                            {deezerTrackId && (
+                                                <a
+                                                    href={getLinkTrack(
+                                                        EXTERNAL_PLATFORM.DEEZER
+                                                    )}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
                                                 >
-                                                    Youtube{' '}
-                                                </Button>
-                                            </a>
-                                        )}
-                                        {spotifyTrackId && (
-                                            <a
-                                                href={getLinkTrack(
-                                                    EXTERNAL_PLATFORM.SPOTIFY
-                                                )}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                            >
-                                                <Button
-                                                    icon={
-                                                        <Image
-                                                            src={
-                                                                '/icon/spotify.png'
-                                                            }
-                                                            alt=""
-                                                            width={18}
-                                                            height={18}
-                                                        />
-                                                    }
-                                                >
-                                                    {' '}
-                                                    Spotify{' '}
-                                                </Button>
-                                            </a>
-                                        )}
-                                        {deezerTrackId && (
-                                            <a
-                                                href={getLinkTrack(
-                                                    EXTERNAL_PLATFORM.DEEZER
-                                                )}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                            >
-                                                <Button
-                                                    icon={
-                                                        <Image
-                                                            src={
-                                                                '/icon/deezer.svg'
-                                                            }
-                                                            alt=""
-                                                            width={18}
-                                                            height={18}
-                                                        />
-                                                    }
-                                                >
-                                                    {' '}
-                                                    Deezer{' '}
-                                                </Button>
-                                            </a>
-                                        )}
+                                                    <Button
+                                                        icon={
+                                                            <Image
+                                                                src={
+                                                                    '/icon/deezer.svg'
+                                                                }
+                                                                alt=""
+                                                                width={18}
+                                                                height={18}
+                                                            />
+                                                        }
+                                                    >
+                                                        {' '}
+                                                        Deezer{' '}
+                                                    </Button>
+                                                </a>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
-                            );
-                        })}
-                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
                 </div>
             ),
         })) || [];
@@ -333,184 +372,16 @@ export default function AcrCloudScanResultModal({ ...props }: Props) {
                             items={tabItems}
                             className="h-full"
                             style={{ height: '700px' }}
+                            tabBarExtraContent={{
+                                left: (
+                                    <span className="font-bold">
+                                        {messages('common.scanHistory')}
+                                    </span>
+                                ),
+                            }}
                         />
                     </div>
                 </Spin>
-
-                <Drawer
-                    title={`${convertSecondsToTime(selectedResultScan?.key?.startSecond)} - ${convertSecondsToTime(selectedResultScan?.key?.endSecond)}`}
-                    placement="right"
-                    width={500}
-                    onClose={() => setDrawerOpen(false)}
-                    open={drawerOpen}
-                >
-                    {resultContent?.map((item: any, idx: number) => {
-                        const externalMetadata = item?.external_metadata;
-                        const youtubeVid = externalMetadata?.youtube?.vid;
-                        const spotifyTrackId =
-                            externalMetadata?.spotify?.track?.id;
-                        const deezerTrackId =
-                            externalMetadata?.deezer?.track?.id;
-                        const getLinkTrack = (platform: EXTERNAL_PLATFORM) => {
-                            switch (platform) {
-                                case EXTERNAL_PLATFORM.YOUTUBE:
-                                    return `https://www.youtube.com/watch?v=${externalMetadata?.youtube?.vid}`;
-                                case EXTERNAL_PLATFORM.SPOTIFY:
-                                    return `https://open.spotify.com/track/${externalMetadata?.spotify?.track?.id}`;
-                                case EXTERNAL_PLATFORM.DEEZER:
-                                    return `https://www.deezer.com/en/track/${externalMetadata?.deezer?.track?.id}`;
-                                default:
-                                    break;
-                            }
-                        };
-                        return (
-                            <div key={idx} className="border-b py-2">
-                                <div>
-                                    <span>{messages('track.name')}: </span>
-                                    <span className="font-semibold">
-                                        {item?.title}
-                                    </span>
-                                </div>
-                                <div>
-                                    <span>ISRC: </span>
-                                    <span className="font-semibold">
-                                        {item?.external_ids?.isrc}
-                                    </span>
-                                </div>
-                                <div>
-                                    <span>Label: </span>
-                                    <span className="font-semibold">
-                                        {item?.label}
-                                    </span>
-                                </div>
-                                <div>
-                                    <span>{messages('artist.label')}: </span>
-                                    <span className="font-semibold">
-                                        {item?.artists
-                                            .map((artist: any) => artist.name)
-                                            .join(' & ')}
-                                    </span>
-                                </div>
-                                <div>
-                                    <span>Album: </span>
-                                    <span className="font-semibold">
-                                        {item?.album?.name}
-                                    </span>
-                                </div>
-                                <div>
-                                    <span>
-                                        {messages('release.releaseDate')}:{' '}
-                                    </span>
-                                    <span className="font-semibold">
-                                        {formattedDate(
-                                            item?.release_date,
-                                            DATE_FORMAT.DATE_ONLY
-                                        )}
-                                    </span>
-                                </div>
-                                <div>
-                                    <span>
-                                        {messages('track.rageDuplicate')}:{' '}
-                                    </span>
-                                    <span className="font-semibold">
-                                        {`${convertMsToMinSec(item?.sample_begin_time_offset_ms)} - ${convertMsToMinSec(item?.sample_end_time_offset_ms)}`}
-                                    </span>
-                                </div>
-                                <div>
-                                    <span>
-                                        {messages(
-                                            'track.rageDuplicateInSongDetected'
-                                        )}
-                                        :{' '}
-                                    </span>
-                                    <span className="font-semibold">
-                                        {`${convertMsToMinSec(item?.db_begin_time_offset_ms)} - ${convertMsToMinSec(item?.db_end_time_offset_ms)}`}
-                                    </span>
-                                </div>
-                                <div>
-                                    <span>{messages('common.accuracy')}: </span>
-                                    <span className="font-semibold">
-                                        {item?.score}
-                                    </span>
-                                </div>
-                                <div className="flex gap-2">
-                                    {youtubeVid && (
-                                        <a
-                                            href={getLinkTrack(
-                                                EXTERNAL_PLATFORM.YOUTUBE
-                                            )}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >
-                                            <Button
-                                                icon={
-                                                    <Image
-                                                        src={
-                                                            '/icon/youtube.png'
-                                                        }
-                                                        alt=""
-                                                        width={18}
-                                                        height={18}
-                                                    />
-                                                }
-                                            >
-                                                Youtube{' '}
-                                            </Button>
-                                        </a>
-                                    )}
-                                    {spotifyTrackId && (
-                                        <a
-                                            href={getLinkTrack(
-                                                EXTERNAL_PLATFORM.SPOTIFY
-                                            )}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >
-                                            <Button
-                                                icon={
-                                                    <Image
-                                                        src={
-                                                            '/icon/spotify.png'
-                                                        }
-                                                        alt=""
-                                                        width={18}
-                                                        height={18}
-                                                    />
-                                                }
-                                            >
-                                                {' '}
-                                                Spotify{' '}
-                                            </Button>
-                                        </a>
-                                    )}
-                                    {deezerTrackId && (
-                                        <a
-                                            href={getLinkTrack(
-                                                EXTERNAL_PLATFORM.DEEZER
-                                            )}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >
-                                            <Button
-                                                icon={
-                                                    <Image
-                                                        src={'/icon/deezer.svg'}
-                                                        alt=""
-                                                        width={18}
-                                                        height={18}
-                                                    />
-                                                }
-                                            >
-                                                {' '}
-                                                Deezer{' '}
-                                            </Button>
-                                        </a>
-                                    )}
-                                </div>
-                            </div>
-                        );
-                    })}
-                </Drawer>
 
                 <AcrResultCompareModal
                     open={isOpenCompareModal}
