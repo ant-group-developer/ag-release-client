@@ -97,7 +97,7 @@ export default function AcrScanHistoryTable({ ...props }: Props) {
         {
             title: messages('common.status'),
             key: 'status',
-            width: 50,
+            width: 30,
             align: 'center',
             render: (_, record) => (
                 <TagTrackScanStatus status={record?.status} />

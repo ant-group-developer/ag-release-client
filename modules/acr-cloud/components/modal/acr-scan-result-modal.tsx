@@ -37,7 +37,14 @@ export default function AcrCloudScanResultModal({ ...props }: Props) {
     const [isOpenCompareModal, setOpenCompareModal] = useState<boolean>(false);
     const [isOpenReScan, setIsOpenReScan] = useState<boolean>(false);
     const [selectedResultScan, setSelectedResultScan] =
-        useState<ResultScan | null>(null);
+        useState<ResultScan | null>(acrCloudResult[0]?.result[0] ?? null);
+    const [selectedRow, setSelectedRow] = useState<string[]>([
+        `${acrCloudResult[0]?.result[0]?.key.startSecond} ${acrCloudResult[0]?.result[0]?.key.endSecond}`,
+    ]);
+    const rowSelection = {
+        selectedRowKeys: selectedRow,
+        onChange: (keys: any) => setSelectedRow(keys),
+    };
     const resultContent =
         selectedResultScan?.content?.humming ??
         selectedResultScan?.content?.music;
@@ -80,22 +87,37 @@ export default function AcrCloudScanResultModal({ ...props }: Props) {
                         onRow={(record) => ({
                             onClick: () => {
                                 setSelectedResultScan(record);
+                                setSelectedRow([
+                                    `${record.key.startSecond} ${record.key.endSecond}`,
+                                ]);
                             },
                         })}
+                        rowSelection={{ type: 'radio', ...rowSelection }}
                     />
                     {resultContent?.length && resultContent?.length > 0 && (
                         <div className="col-span-4 max-h-[700px] overflow-y-auto rounded border p-4">
                             <div className="flex items-center justify-between border-b pb-2">
-                                <p className="text-base font-semibold">
-                                    {convertSecondsToTime(
-                                        selectedResultScan?.key?.startSecond
-                                    )}{' '}
-                                    -{' '}
-                                    {convertSecondsToTime(
-                                        selectedResultScan?.key?.endSecond
-                                    )}{' '}
-                                    | {formattedDate(item?.createdAt)}
-                                </p>
+                                <div>
+                                    <div className="font-semibold">
+                                        <span>
+                                            {messages('common.timeRange')}:{' '}
+                                        </span>
+                                        {convertSecondsToTime(
+                                            selectedResultScan?.key?.startSecond
+                                        )}{' '}
+                                        -{' '}
+                                        {convertSecondsToTime(
+                                            selectedResultScan?.key?.endSecond
+                                        )}{' '}
+                                    </div>
+                                    <div className="font-semibold">
+                                        <span>
+                                            {' '}
+                                            {messages('common.dateScan')}:
+                                        </span>{' '}
+                                        {formattedDate(item?.createdAt)}
+                                    </div>
+                                </div>
                                 <IconButton
                                     onClick={() => setSelectedResultScan(null)}
                                 >

@@ -64,6 +64,8 @@
         }
     },
     "common": {
+        "dateScan": "Date scan",
+        "timeRange": "Time range",
         "scanResult": "Scan result",
         "scanHistory": "Scan history",
         "dateAffect": "Date affect",

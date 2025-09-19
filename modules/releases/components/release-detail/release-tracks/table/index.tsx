@@ -172,16 +172,21 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                                 </Tag>
                             )
                         )}
-                        <Tag
-                            key={`${record.id}-add-artist`}
-                            className="border-dashed hover:border-blue-500"
-                            onClick={() => {
-                                if (isReadMode) return;
-                                openModal(TYPE_MODAL_TRACK_ARTIST.ADD, record);
-                            }}
-                        >
-                            + {messages('artist.add')}
-                        </Tag>
+                        {!isReadMode && (
+                            <Tag
+                                key={`${record.id}-add-artist`}
+                                className="border-dashed hover:border-blue-500"
+                                onClick={() => {
+                                    if (isReadMode) return;
+                                    openModal(
+                                        TYPE_MODAL_TRACK_ARTIST.ADD,
+                                        record
+                                    );
+                                }}
+                            >
+                                + {messages('artist.add')}
+                            </Tag>
+                        )}
                     </div>
                 );
             },
@@ -220,7 +225,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                 return (
                     <TrackActionButton
                         // disabled={isReadMode}
-                        showDelete
+                        showDelete={!isReadMode}
                         showDownload
                         showDetail
                         onShowDetail={() => {

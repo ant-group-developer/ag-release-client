@@ -106,7 +106,9 @@ export default function UserHeaderFilter({
                 className="h-10 text-2xl"
                 onClick={() => setTypeFilter(TYPE_FILTER.DROPDOWN)}
             >
-                <ListFilter />
+                <CustomTooltip title={messages('common.filter')}>
+                    <ListFilter />
+                </CustomTooltip>
             </button>
 
             <div className="flex flex-1 flex-wrap items-center gap-1">

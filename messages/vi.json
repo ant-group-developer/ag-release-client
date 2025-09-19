@@ -64,6 +64,8 @@
         }
     },
     "common": {
+        "dateScan": "Ngày quét",
+        "timeRange": "Khoảng thời gian",
         "scanResult": "Kết quả quét",
         "scanHistory": "Lịch sử quét",
         "dateAffect": "Ngày ảnh hưởng",

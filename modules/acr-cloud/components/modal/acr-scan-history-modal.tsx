@@ -47,6 +47,7 @@ export default function AcrCloudScanHistoryModal({ ...props }: Props) {
                 <span>{`${messages('common.history')} ${messages('common.scan').toLowerCase()}  ACRCloud`}</span>
                 <div className="mr-6 text-sm">
                     <Refresh
+                        className="font-normal"
                         handleRefresh={() => refetch()}
                         lastTimeUpdated={formattedDate(
                             dataUpdatedAt || new Date()
