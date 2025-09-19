@@ -17,4 +17,7 @@ export interface TenantIssueData extends CommonAttribute {
     description: string;
 }
 
-export interface TenantIssueDataFilter extends CommonParams {}
+export interface TenantIssueDataFilter extends CommonParams {
+    issueLevelId?: string;
+    issueId?: string;
+}

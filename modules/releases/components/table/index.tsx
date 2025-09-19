@@ -195,9 +195,14 @@ export default function ReleasesTable({
             align: 'center',
             width: 120,
             render: (value, record) => (
-                <CustomTooltip size="small" title={record?.upc}>
-                    <span className="truncate"> {record?.upc} </span>
-                </CustomTooltip>
+                <div className="flex justify-center">
+                    <CopyText text={record?.upc}>
+                        <span className="truncate text-center">
+                            {' '}
+                            {record?.upc}{' '}
+                        </span>
+                    </CopyText>
+                </div>
             ),
         },
         {

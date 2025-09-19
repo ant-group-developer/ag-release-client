@@ -61,7 +61,11 @@ export default function Issues({}: Props) {
 
     return (
         <AppContainer title={messages('issue.label')}>
-            <IssueHeader dataFilter={dataFilter} onSearch={onSearch} />
+            <IssueHeader
+                dataFilter={dataFilter}
+                onSearch={onSearch}
+                onChangeFilter={onChangeFilter}
+            />
             <IssueTable
                 sticky
                 dataSource={issueData?.items}

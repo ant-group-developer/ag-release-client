@@ -16,4 +16,6 @@ export interface IssueData extends CommonAttribute {
     description: string;
 }
 
-export interface IssueDataFilter extends CommonParams {}
+export interface IssueDataFilter extends CommonParams {
+    issueLevelId?: string;
+}

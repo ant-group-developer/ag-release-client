@@ -4,7 +4,7 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { formattedDate, getIndex } from '@/helpers/common';
 import { getNameByLocale } from '@/helpers/string';
 import useModalStore from '@/hooks/use-modal';
-import { Switch } from 'antd';
+import { Badge, Switch } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useLocale, useTranslations } from 'next-intl';
 import { TYPE_MODAL_TENANT_ISSUES } from '../../enums';
@@ -72,8 +72,10 @@ export default function TenantIssueTable({ dataFilter, ...props }: Props) {
                     record?.issue?.nameVi,
                     locale
                 );
+                const color = record?.issue?.issueLevel?.color;
                 return (
                     <div className="flex items-center gap-4">
+                        {color && <Badge color={color} />}
                         <CustomTooltip title={name}>
                             <span className="truncate">{name}</span>
                         </CustomTooltip>
