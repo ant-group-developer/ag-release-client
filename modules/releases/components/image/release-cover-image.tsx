@@ -39,25 +39,27 @@ export default function ReleaseCoverImage({ data }: Props) {
 
     return (
         <div ref={ref}>
-            {showSkeleton ? (
+            {/* Skeleton */}
+            {showSkeleton && (
                 <Skeleton.Node
                     active
                     className="aspect-square !h-10 !w-10 !rounded-lg"
                 />
-            ) : (
+            )}
+
+            {/* Image */}
+            {!showSkeleton && (
                 <ImageFallback
                     fallbackSrc={FALLBACK_IMAGE}
-                    src={linkReadFile as string}
+                    src={linkReadFile}
                     alt="cover"
                     width={40}
                     height={40}
-                    className="aspect-square rounded-lg object-cover"
-                    onLoad={() => {
-                        setLoaded(true);
-                    }}
-                    onError={(e) => {
-                        setLoaded(true);
-                    }}
+                    className={`aspect-square rounded-lg object-cover transition-opacity duration-300 ${
+                        loaded ? 'opacity-100' : 'opacity-0'
+                    }`}
+                    onLoad={() => setLoaded(true)}
+                    onError={() => setLoaded(true)}
                 />
             )}
         </div>

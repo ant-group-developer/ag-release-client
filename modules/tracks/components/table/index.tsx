@@ -168,9 +168,9 @@ export default function TracksTable({
             align: 'left',
             width: 60,
             render: (value) => (
-                // <CustomTooltip size="small" title={value}>
-                <span className="truncate"> {value} </span>
-                // </CustomTooltip>
+                <CopyText text={value}>
+                    <span className="truncate"> {value} </span>
+                </CopyText>
             ),
         },
         {
@@ -283,27 +283,43 @@ export default function TracksTable({
             align: 'center',
             width: 30,
             fixed: 'right',
-            render: (_, record) => (
-                <TrackActionButton
-                    showDownload
-                    showDetail
-                    showScan
-                    onShowScan={() =>
-                        openModal(TYPE_MODAL_TRACK.ACR_CLOUD_SCAN, record)
-                    }
-                    onShowDetail={() => {
-                        router.push(
-                            getTrackDetailRoute(record?.id, TRACK_TABS.METADATA)
-                        );
-                    }}
-                    onShowDownload={async () => {
-                        const response = await bucketApi.getLinkDownloadFile(
-                            record?.audioFile?.fileId as string
-                        );
-                        window.open(response?.data?.data);
-                    }}
-                />
-            ),
+            render: (_, record) => {
+                const isUnScanned =
+                    record?.scanCopyrightStatus ==
+                    SCAN_COPYRIGHT_STATUS.UN_SCANNED;
+                return (
+                    <TrackActionButton
+                        showDownload
+                        showDetail
+                        showScan
+                        showScanResult={!isUnScanned}
+                        onShowScanResult={() =>
+                            openModal(
+                                TYPE_MODAL_TRACK.ACR_CLOUD_SCAN_RESULT,
+                                record
+                            )
+                        }
+                        onShowScan={() =>
+                            openModal(TYPE_MODAL_TRACK.ACR_CLOUD_SCAN, record)
+                        }
+                        onShowDetail={() => {
+                            router.push(
+                                getTrackDetailRoute(
+                                    record?.id,
+                                    TRACK_TABS.METADATA
+                                )
+                            );
+                        }}
+                        onShowDownload={async () => {
+                            const response =
+                                await bucketApi.getLinkDownloadFile(
+                                    record?.audioFile?.fileId as string
+                                );
+                            window.open(response?.data?.data);
+                        }}
+                    />
+                );
+            },
         },
     ];
 

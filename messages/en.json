@@ -64,6 +64,8 @@
         }
     },
     "common": {
+        "scanResult": "Scan result",
+        "scanHistory": "Scan history",
         "dateAffect": "Date affect",
         "startDateAffect": "Start date affect",
         "endDateAffect": "End date affect",
