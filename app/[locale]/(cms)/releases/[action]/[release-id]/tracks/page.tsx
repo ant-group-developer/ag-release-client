@@ -20,6 +20,7 @@ import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { TrackData } from '@/modules/tracks/types';
 import { DeleteVariables } from '@/types/api';
 import { ConfigProvider, Empty, theme } from 'antd';
+import { TableRowSelection } from 'antd/es/table/interface';
 import { useTranslations } from 'next-intl';
 import { Key, useState } from 'react';
 import TrackActions from './track-actions';
@@ -80,9 +81,12 @@ export default function Tracks() {
     };
 
     // const
-    const rowSelection = {
-        selectedRow,
+    const rowSelection: TableRowSelection<TrackData> = {
+        selectedRowKeys: selectedRow,
         onChange: handleRowSelection,
+        getCheckboxProps: (record: any) => ({
+            disabled: !isEditAction,
+        }),
     };
     const { token } = theme.useToken();
     const { isDark } = useThemeMode();

@@ -1,6 +1,7 @@
 import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
 import IconButton from '@/components/ui/button/icon-button';
 import TableLayoutSegmented from '@/components/ui/semented/table-layout-semented';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
 import { LAYOUT_TABLE } from '@/enums/common';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
@@ -9,6 +10,7 @@ import useModalStore from '@/hooks/use-modal';
 import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { TRACKS_COLUMNS_DISPLAY } from '@/modules/tracks/enums';
 import { CalendarSearch } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { TrackDataFilter } from '../../types';
 import ShowColumnOptionDropdown from '../dropdown/show-column-option-dropdown';
 import TracksSuperFilter from './tracks-super-filter';
@@ -36,6 +38,7 @@ export default function TracksHeader({
 }: Props) {
     const { layoutTable, toggleLayoutTable } = useTableLayoutToggle();
     const openModal = useModalStore((state) => state.openModal);
+    const messages = useTranslations();
     return (
         <AppHeader className="app-header">
             <AppHeaderGroup>
@@ -75,7 +78,9 @@ export default function TracksHeader({
                                 )
                             }
                         >
-                            <CalendarSearch size={SIZE_ICON} />
+                            <CustomTooltip title={messages('common.filter')}>
+                                <CalendarSearch size={SIZE_ICON} />
+                            </CustomTooltip>
                         </IconButton>
                     </div>
 

@@ -171,6 +171,7 @@ export default function AcrCloudScanDetailModal({ data, ...props }: Props) {
                             onChange: (page) => {
                                 setCurrentPage(page);
                             },
+                            hideOnSinglePage: true,
                         }}
                     />
                 </div>

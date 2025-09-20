@@ -45,7 +45,7 @@ export default function TableTrackTimeRange({ ...props }: Props) {
             dataIndex: 'track',
             key: 'track',
             ellipsis: true,
-            width: 550,
+            width: 500,
             render: (value, record) => {
                 let matches =
                     record?.content?.music ?? record?.content?.humming;

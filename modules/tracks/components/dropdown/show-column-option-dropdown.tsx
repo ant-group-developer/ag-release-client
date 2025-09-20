@@ -41,7 +41,6 @@ export default function ShowColumnOptionDropdown({
         {
             key: TRACKS_COLUMNS_DISPLAY.ID,
             label: messages('track.id'),
-            alwaysVisible: true,
         },
         {
             key: TRACKS_COLUMNS_DISPLAY.TITLE,
@@ -69,11 +68,11 @@ export default function ShowColumnOptionDropdown({
         },
         {
             key: TRACKS_COLUMNS_DISPLAY.RELEASE_TITLE,
-            label: messages('release.name'),
+            label: messages('release.label'),
         },
         {
             key: TRACKS_COLUMNS_DISPLAY.LABEL_NAME,
-            label: messages('label.name'),
+            label: messages('label.label'),
         },
         {
             key: TRACKS_COLUMNS_DISPLAY.CREATED_AT,

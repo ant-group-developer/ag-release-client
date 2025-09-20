@@ -17,6 +17,7 @@ import {
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
 import { TrackData, TrackDataFilter } from '../../types';
 import TagScanCopyright from '../tags/tag-scan-coppyright';
 import TrackCoverArt from './trackCoverArt';
@@ -38,6 +39,7 @@ export default function TracksTable({
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const router = useRouter();
+    const params = useParams();
     const column: ColumnType<TrackData>[] = [
         {
             title: messages('common.iNo'),
@@ -109,7 +111,7 @@ export default function TracksTable({
             ),
         },
         {
-            title: messages('release.name'),
+            title: messages('release.label'),
             key: TRACKS_COLUMNS_DISPLAY.RELEASE_TITLE,
             dataIndex: 'releaseTitle',
             align: 'left',
@@ -122,7 +124,7 @@ export default function TracksTable({
             ),
         },
         {
-            title: messages('label.name'),
+            title: messages('label.label'),
             key: TRACKS_COLUMNS_DISPLAY.LABEL_NAME,
             dataIndex: 'labelName',
             align: 'left',

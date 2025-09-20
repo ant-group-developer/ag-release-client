@@ -1,9 +1,10 @@
 import IconButton from '@/components/ui/button/icon-button';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
 import { cn } from '@/helpers/common';
 import { ArtistRoleData } from '@/modules/artist-role/types';
 import { ArtistData } from '@/modules/artist/types';
-import { Avatar, Checkbox, CheckboxChangeEvent, theme } from 'antd';
+import { Avatar, Checkbox, CheckboxChangeEvent, theme, Typography } from 'antd';
 import { Trash2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { HTMLAttributes } from 'react';
@@ -79,45 +80,55 @@ export default function ArtistCard({
                     )}
                 </div>
             </div>
-            <div className="flex gap-6">
-                <div className="flex flex-col text-gray-500">
-                    <span>{messages('roles.label')} </span>
-                    <span>{messages('country.label')} </span>
-                    <span>{messages('genre.label')} </span>
+            <div className="flex gap-6 [&_.ant-typography]:text-xs">
+                <div className="flex flex-col">
+                    <Typography.Text type="secondary">
+                        {messages('roles.label')}{' '}
+                    </Typography.Text>
+                    <Typography.Text type="secondary">
+                        {messages('country.label')}{' '}
+                    </Typography.Text>
+                    <Typography.Text type="secondary">
+                        {messages('genre.label')}{' '}
+                    </Typography.Text>
                 </div>
-                <div className="flex flex-col font-medium">
-                    <span>{artistRole?.name}</span>
-                    <span>{artist?.country?.name} Việt Nam</span>
-                    <span>{artist?.genre?.name} Hiphop</span>
+                <div className="flex flex-col">
+                    <Typography.Text>{artistRole?.name}</Typography.Text>
+                    <Typography.Text>{artist?.country?.name} </Typography.Text>
+                    <Typography.Text>{artist?.genre?.name} </Typography.Text>
                 </div>
             </div>
             <div className="flex justify-end gap-1">
-                <Avatar
-                    size={28}
-                    src="/icon/spotify.png"
-                    className="hover:opacity-40"
-                    onClick={(e) => {
-                        e?.stopPropagation();
-                        window.open(
-                            'https://open.spotify.com/',
-                            '_blank',
-                            'noopener'
-                        );
-                    }}
-                />
-                <Avatar
-                    size={28}
-                    src="/icon/apple-music.svg"
-                    className="hover:opacity-40"
-                    onClick={(e) => {
-                        e?.stopPropagation();
-                        window.open(
-                            'https://open.spotify.com/',
-                            '_blank',
-                            'noopener'
-                        );
-                    }}
-                />
+                <CustomTooltip title={messages('artist.visitProfile')}>
+                    <Avatar
+                        size={28}
+                        src="/icon/spotify.png"
+                        className="hover:opacity-40"
+                        onClick={(e) => {
+                            e?.stopPropagation();
+                            window.open(
+                                'https://open.spotify.com/',
+                                '_blank',
+                                'noopener'
+                            );
+                        }}
+                    />
+                </CustomTooltip>
+                <CustomTooltip title={messages('artist.visitProfile')}>
+                    <Avatar
+                        size={28}
+                        src="/icon/apple-music.svg"
+                        className="hover:opacity-40"
+                        onClick={(e) => {
+                            e?.stopPropagation();
+                            window.open(
+                                'https://open.spotify.com/',
+                                '_blank',
+                                'noopener'
+                            );
+                        }}
+                    />
+                </CustomTooltip>
             </div>
             <div className="flex items-center gap-2">
                 {/* <div>
@@ -147,6 +158,7 @@ export default function ArtistCard({
                             e.stopPropagation();
                             onDelete?.();
                         }}
+                        className="hover:bg-gray-300"
                     >
                         <Trash2 size={SIZE_ICON} className="text-red-500" />
                     </IconButton>
