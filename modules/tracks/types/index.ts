@@ -45,7 +45,7 @@ export interface TrackData extends CommonAttribute {
     isScanned: boolean;
     release: Pick<
         ReleasesData,
-        'id' | 'title' | 'label' | 'coverArtThumbnails'
+        'id' | 'title' | 'label' | 'coverArtThumbnails' | 'tenant'
     >;
     priceTierId: PriceTiersData['id'];
     priceTier: PriceTiersData;
@@ -59,6 +59,7 @@ export interface TrackDataFilter extends CommonParams {
     isScanned?: string;
     genres?: string;
     scanCopyrightStatus?: string;
+    idInclude?: string;
 }
 
 export interface TrackPolicyData extends CommonAttribute {

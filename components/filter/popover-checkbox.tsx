@@ -1,7 +1,7 @@
 import { AppPopover } from '@/components/shared/app-popover';
 import { Chip } from '@/components/ui/chip';
-import { Checkbox, Empty } from 'antd';
-import { ReactNode, useEffect, useState } from 'react';
+import { Checkbox, Empty, Input, Spin } from 'antd';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
 
 export type PopoverCheckboxFilterProps<T extends string | number> = {
     /** Whether the popover is open */
@@ -21,6 +21,9 @@ export type PopoverCheckboxFilterProps<T extends string | number> = {
     /** Optional CSS class for container */
     className?: string;
     loading?: boolean;
+    onPopupScroll?: (e: React.UIEvent<HTMLDivElement>) => void;
+
+    onSearch?: (keyword: string, selectedValues?: string[]) => void;
 };
 
 export function PopoverCheckboxFilter<T extends string | number>({
@@ -33,6 +36,8 @@ export function PopoverCheckboxFilter<T extends string | number>({
     onRemove,
     className = '',
     loading = false,
+    onPopupScroll,
+    onSearch,
 }: PopoverCheckboxFilterProps<T>) {
     const [value, setValue] = useState<any[]>(selectedValues);
 
@@ -57,6 +62,22 @@ export function PopoverCheckboxFilter<T extends string | number>({
         handleCancel();
     };
 
+    // Handle scroll event
+    const handleScroll = useCallback(
+        (e: React.UIEvent<HTMLDivElement>) => {
+            if (!onPopupScroll) return;
+
+            // const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+            // const threshold = 10; // Trigger when within 10px of bottom
+
+            // // Check if scrolled to bottom (or very close)
+            // if (scrollTop + clientHeight >= scrollHeight - threshold) {
+            onPopupScroll(e);
+            // }
+        },
+        [onPopupScroll]
+    );
+
     // Only render when needed
     if ((!selectedValues || selectedValues.length === 0) && !open) return null;
 
@@ -70,7 +91,6 @@ export function PopoverCheckboxFilter<T extends string | number>({
 
             <AppPopover
                 className="top-[41px]"
-                loading={loading}
                 open={open}
                 title={title}
                 showFooter
@@ -83,7 +103,16 @@ export function PopoverCheckboxFilter<T extends string | number>({
                     onClick: handleSubmit,
                 }}
             >
-                <div className="max-h-60 overflow-auto">
+                {onSearch && (
+                    <div className="mb-2">
+                        <Input
+                            placeholder="Search..."
+                            onChange={(e) => onSearch(e.target.value, value)}
+                            allowClear
+                        />
+                    </div>
+                )}
+                <div className="max-h-60 overflow-auto" onScroll={handleScroll}>
                     <Checkbox.Group
                         value={value}
                         onChange={setValue}
@@ -104,8 +133,11 @@ export function PopoverCheckboxFilter<T extends string | number>({
                                 )}
                             </div>
                         ))}
-                        {options?.length < 1 && <Empty />}
+                        {options?.length < 1 && !loading && <Empty />}
                     </Checkbox.Group>
+                    <div className="flex items-center justify-center py-1">
+                        {loading && <Spin size="small" spinning={true} />}
+                    </div>
                 </div>
             </AppPopover>
         </div>

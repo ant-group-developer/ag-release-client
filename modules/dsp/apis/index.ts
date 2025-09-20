@@ -14,6 +14,10 @@ export const dspApi = {
         });
     },
 
+    getListSimple: () => {
+        return axiosInstance.get<DetailResponse<DspData[]>>('/dsps/simple');
+    },
+
     getDetail: (id: DspData['id']) => {
         return axiosInstance.get<DetailResponse<DspData>>(`/dsps/${id}`);
     },

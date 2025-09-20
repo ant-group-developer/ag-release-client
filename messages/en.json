@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "date": "Date",
         "dateScan": "Date scan",
         "timeRange": "Time range",
         "scanResult": "Scan result",

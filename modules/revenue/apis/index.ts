@@ -4,8 +4,11 @@ import { RevenueData, RevenueDataFilter } from '../types';
 
 export const revenueApi = {
     getList: (params: RevenueDataFilter) => {
-        return axiosInstance.get<PaginationResponse<RevenueData>>(`/revenue`, {
-            params,
-        });
+        return axiosInstance.get<PaginationResponse<RevenueData>>(
+            `/track-revenue`,
+            {
+                params,
+            }
+        );
     },
 };

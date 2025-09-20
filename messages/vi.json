@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "date": "Ngày",
         "dateScan": "Ngày quét",
         "timeRange": "Khoảng thời gian",
         "scanResult": "Kết quả quét",
