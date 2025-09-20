@@ -58,6 +58,9 @@ export interface ReleasesData extends CommonAttribute {
     releaseTimeMode: RELEASE_TIME_MODE;
 }
 
+export interface ReleasesDataSimple
+    extends Pick<ReleasesData, 'id' | 'title'> {}
+
 export interface ReleasesDataFilter extends CommonParams {
     type?: RELEASES_TYPE;
     status?: RELEASES_STATUS;
@@ -71,6 +74,7 @@ export interface ReleasesDataFilter extends CommonParams {
     albumFormatId?: string;
     releaseId?: string;
     isVariousArtist?: string;
+    idInclude?: string;
 }
 
 export interface ReleaseTerritory extends CommonParams {

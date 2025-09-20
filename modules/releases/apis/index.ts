@@ -1,6 +1,11 @@
 import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
-import { ReleasesData, ReleasesDataFilter, ReleaseValidate } from '../types';
+import {
+    ReleasesData,
+    ReleasesDataFilter,
+    ReleasesDataSimple,
+    ReleaseValidate,
+} from '../types';
 import {
     CreateReleaseDraftPayload,
     UpdateReleaseDraftPayload,
@@ -15,6 +20,16 @@ export const releasesApi = {
             }
         );
     },
+
+    getListSimple: (params: ReleasesDataFilter) => {
+        return axiosInstance.get<PaginationResponse<ReleasesDataSimple>>(
+            '/releases/simple',
+            {
+                params,
+            }
+        );
+    },
+
     getDetail: (id: ReleasesData['id']) => {
         return axiosInstance.get<DetailResponse<ReleasesData>>(
             `/releases/${id}`

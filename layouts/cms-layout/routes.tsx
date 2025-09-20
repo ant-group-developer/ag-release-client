@@ -12,6 +12,7 @@ import {
     ChevronsUp,
     CircleAlert,
     CircleDollarSign,
+    ClipboardList,
     Clock,
     Contact,
     DiscAlbum,
@@ -180,6 +181,14 @@ export const adminRoutes: RouteNode[] = [
                 required: {
                     permission: [PERMISSION.RELEASE.UPDATE],
                 },
+            },
+            {
+                id: 'revenue',
+                type: 'link',
+                label: 'common.revenue',
+                title: 'Revenue',
+                href: APP_ROUTES.REVENUE,
+                icon: ClipboardList,
             },
         ],
     },

@@ -46,6 +46,15 @@ export const trackApi = {
         });
     },
 
+    getListSimple: (params: TrackDataFilter) => {
+        return axiosInstance.get<PaginationResponse<TrackData>>(
+            '/tracks/simple',
+            {
+                params,
+            }
+        );
+    },
+
     getDetailTrack: (id: TrackData['id']) => {
         return axiosInstance.get<DetailResponse<TrackData>>(`/tracks/${id}`);
     },

@@ -14,6 +14,7 @@ export const releasesQueryKeys = {
         params
             ? ([...releasesQueryKeys.lists(), params] as const)
             : releasesQueryKeys.lists(),
+
     details: () =>
         [...releasesQueryKeys.all, QUERY_KEY.RELEASES.GET_DETAIL] as const,
     detail: (id: string) => [...releasesQueryKeys.details(), id] as const,

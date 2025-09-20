@@ -1,18 +1,23 @@
-import { ArtistData } from '@/modules/artist/types';
-import { LabelData } from '@/modules/labels/types';
-import { ReleasesData, TrackData } from '@/modules/releases/types';
+import { DspData } from '@/modules/dsp/types';
+import { TrackData } from '@/modules/releases/types';
 import { CommonAttribute, CommonParams } from '@/types/api';
 
 export interface RevenueData extends CommonAttribute {
-    date: string;
-    releaseId: string;
-    release: ReleasesData;
+    reportDate: string;
+    dspId: string;
+    dsp: DspData;
+    countryCode: string;
+    currencyCode: string;
+    amount: string;
+    configuration: string;
     trackId: string;
     track: TrackData;
-    labelId: string;
-    label: LabelData;
-    artistId: string;
-    artist: ArtistData;
-    genreId: string;
 }
-export interface RevenueDataFilter extends CommonParams {}
+export interface RevenueDataFilter extends CommonParams {
+    releaseId?: string;
+    artistId?: string;
+    trackId?: string;
+    labelId?: string;
+    dspId?: string;
+    tenantId?: string;
+}
