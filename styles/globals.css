@@ -95,6 +95,32 @@ body {
 .custom-fullscreen-modal .ant-modal-content {
     @apply rounded-none p-0 !important;
 }
+.full-screen-modal {
+    @apply !w-screen;
+    @apply !max-w-full;
+    @apply !top-0;
+    @apply !pb-0;
+}
+
+.full-screen-modal .ant-modal-content {
+    @apply !rounded-none;
+    @apply !p-0;
+}
+
+.full-screen-modal .ant-modal-header {
+    @apply !px-5;
+    @apply !py-3;
+    @apply !border-b;
+    @apply !border-gray-300;
+    @apply !border-solid;
+}
+
+.full-screen-modal .ant-modal-body {
+    height: calc(100vh - 67px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    @apply !p-5;
+}
 
 .recharts-surface:focus {
     outline: none;

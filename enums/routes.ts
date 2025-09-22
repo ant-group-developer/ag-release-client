@@ -48,6 +48,8 @@ export enum APP_ROUTES {
     ISSUE_LEVEL = '/issue-level',
     ISSUES = '/issues',
     REVENUE = '/revenue',
+    NEWS_CATEGORY = '/news-category',
+    NEWS = '/news',
 }
 
 export const AUTH_ROUTES: string[] = [APP_ROUTES.SIGN_IN];

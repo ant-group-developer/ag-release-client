@@ -46,6 +46,9 @@ export const QUERY_KEY = {
         GET_CHANNEL: 'GET_DASHBOARD_CHANNEL',
         GET_STATS: 'GET_DASHBOARD_STATS',
         GET_PARTNER: 'GET_DASHBOARD_PARTNER',
+        GET_COUNT_ISSUE: 'GET_COUNT_ISSUE',
+        GET_COUNT_OVERVIEW: 'GET_COUNT_OVERVIEW',
+        GET_COUNT_COUNTRY: 'GET_COUNT_COUNTRY',
     },
     GROUP: {
         KEY: 'GROUP',
@@ -310,5 +313,15 @@ export const QUERY_KEY = {
         KEY: 'ISSUE_LEVEL',
         GET_LIST: 'GET_LIST_ISSUE_LEVEL',
         UPDATE: 'UPDATE_ISSUE_LEVEL',
+    },
+    NEWS_CATEGORY: {
+        KEY: 'NEWS_CATEGORY',
+        GET_LIST: 'GET_LIST_NEWS_CATEGORY',
+        UPDATE: 'UPDATE_NEWS_CATEGORY',
+    },
+    NEWS: {
+        KEY: 'NEWS',
+        GET_LIST: 'GET_LIST_NEWS',
+        UPDATE: 'UPDATE_NEWS',
     },
 };

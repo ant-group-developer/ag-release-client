@@ -64,6 +64,8 @@
         }
     },
     "common": {
+        "public": "Công khai",
+        "private": "Riêng tư",
         "date": "Ngày",
         "dateScan": "Ngày quét",
         "timeRange": "Khoảng thời gian",
@@ -1632,6 +1634,47 @@
                 "notFound": "Không tìm thấy tenant",
                 "duplicateNameVi": "Tên tiếng Việt bị trùng",
                 "duplicateNameEn": "Tên tiếng Anh bị trùng",
+                "duplicateCode": "Mã bị trùng"
+            }
+        }
+    },
+
+    "newsCategory": {
+        "label": "Danh mục tin tức",
+        "name": "Tên danh mục",
+        "message": {
+            "success": {
+                "create": "Tạo danh mục tin tức thành công",
+                "update": "Cập nhật danh mục tin tức thành công",
+                "delete": "Xóa danh mục tin tức thành công",
+                "bulkUpdateOrder": "Thay đổi vị trí thành công"
+            },
+            "error": {
+                "notFound": "Không tìm thấy danh mục tin tức",
+                "duplicateNameVi": "Tên tiếng Việt bị trùng",
+                "duplicateNameEn": "Tên tiếng Anh bị trùng",
+                "duplicateCode": "Mã bị trùng"
+            }
+        }
+    },
+
+    "news": {
+        "label": "Tin tức",
+        "name": "Tiêu đề tin tức"
+    },
+
+    "newsPost": {
+        "message": {
+            "success": {
+                "create": "Tạo tin tức thành công",
+                "update": "Cập nhật tin tức thành công",
+                "delete": "Xóa tin tức thành công",
+                "bulkUpdateOrder": "Thay đổi vị trí thành công"
+            },
+            "error": {
+                "notFound": "Không tìm thấy tin tức",
+                "duplicateNameVi": "Tiêu đề tiếng Việt bị trùng",
+                "duplicateNameEn": "Tiêu đề tiếng Anh bị trùng",
                 "duplicateCode": "Mã bị trùng"
             }
         }

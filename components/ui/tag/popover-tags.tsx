@@ -37,9 +37,9 @@ export default function PopoverTags({
     };
 
     return (
-        <div>
+        <div className="flex flex-wrap gap-1">
             {visibleTags.map((tag, index) => (
-                <Tag key={tag} className="!mr-1">
+                <Tag key={tag} className="!mr-0">
                     <Typography.Text
                         ellipsis={{ tooltip: true }}
                         style={{ maxWidth: 200 }}

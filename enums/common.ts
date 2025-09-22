@@ -100,6 +100,7 @@ export enum TYPE_NOTIFICATION {
 
 export enum TYPE_FILTER {
     KEYWORD = 'keyword',
+    KEYWORDS = 'keywords',
     IS_ACTIVE = 'is_active',
     CREATOR = 'creator',
     STATUS = 'status',
@@ -121,6 +122,7 @@ export enum TYPE_FILTER {
     ALBUM_FORMAT_ID = 'albumFormatId',
     IS_VARIOUS_ARTIST = 'isVariousArtist',
     SCAN_COPYRIGHT_STATUS = 'scanCopyRightStatus',
+    NEWS_CATEGORY = 'newsCategory',
 }
 
 export enum UPLOAD_TYPE {

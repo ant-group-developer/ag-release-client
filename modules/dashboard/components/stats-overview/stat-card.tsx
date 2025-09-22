@@ -1,4 +1,5 @@
 import AppCard from '@/components/ant-music/app-card';
+import { Skeleton } from 'antd';
 import { ReactNode } from 'react';
 
 type Props = {
@@ -7,9 +8,13 @@ type Props = {
         label: string;
         count: number;
     }[];
+    loading?: boolean;
 };
 
-export default function StatCard({ title, data }: Props) {
+export default function StatCard({ loading = false, title, data }: Props) {
+    if (loading) {
+        return <Skeleton active className="rounded-lg border px-4 py-2" />;
+    }
     return (
         <AppCard title={title}>
             <div className="space-y-2 px-4 pb-4">
