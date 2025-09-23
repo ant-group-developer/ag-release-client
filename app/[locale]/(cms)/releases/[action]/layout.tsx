@@ -149,6 +149,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     } = useGetDetailRelease(releaseId);
     const { tracksData, isLoading: isTracksLoading } = useGetListTracks({
         releaseId: releaseData?.id || '',
+        fieldOrder: 'order',
     });
 
     // render

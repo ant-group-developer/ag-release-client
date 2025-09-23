@@ -1,5 +1,5 @@
 import { QUERY_KEY } from '@/constants/query-key';
-import { NewsDataFilter } from '../types';
+import { NewsData, NewsDataFilter } from '../types';
 
 export const newsQueryKeys = {
     all: [QUERY_KEY.NEWS.KEY] as const,
@@ -9,4 +9,5 @@ export const newsQueryKeys = {
             ? ([...newsQueryKeys.lists(), params] as const)
             : newsQueryKeys.lists(),
     getKeywords: () => [...newsQueryKeys.all, 'keywords'],
+    getDetail: (slug: NewsData['slug']) => [newsQueryKeys.all, slug],
 };

@@ -81,7 +81,7 @@ export default function News({}: Props) {
                     current: newsData.metadata.currentPage,
                     total: newsData.metadata.totalItems,
                 }}
-                loading={false}
+                loading={isFetching}
                 dataFilter={dataFilter}
                 onChange={onChangeSort}
                 scroll={{ x: SCREEN.XL }}

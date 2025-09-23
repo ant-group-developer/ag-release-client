@@ -2,17 +2,23 @@ import { SIZE_ICON } from '@/constants/common';
 import { Button, Divider, Input, InputRef, Select, SelectProps } from 'antd';
 import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-type Props = SelectProps & {};
+type Props = Omit<SelectProps, 'options'> & {
+    keywords?: string[];
+};
 
-export default function TagSelect({ onChange, value, ...props }: Props) {
+export default function TagSelect({
+    keywords,
+    onChange,
+    value,
+    ...props
+}: Props) {
     const [inputValue, setInputValue] = useState('');
     const [options, setOptions] = useState<string[]>([]);
 
     const inputRef = useRef<InputRef>(null);
     const messages = useTranslations();
-    // const { keywordsData, isFetching } = useGetListKeywords();
 
     const addItem = (e: any) => {
         e.preventDefault();
@@ -32,9 +38,11 @@ export default function TagSelect({ onChange, value, ...props }: Props) {
         }, 0);
     };
 
-    // useEffect(() => {
-    //     setOptions(keywordsData || []);
-    // }, [keywordsData]);
+    useEffect(() => {
+        if (keywords) {
+            setOptions(keywords);
+        }
+    }, [keywords]);
 
     return (
         <Select

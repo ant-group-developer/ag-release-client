@@ -1654,24 +1654,13 @@
 
     "news": {
         "label": "News",
-        "name": "News title",
-        "message": {
-            "success": {
-                "create": "News created successfully",
-                "update": "News updated successfully",
-                "delete": "News deleted successfully",
-                "bulkUpdateOrder": "Reordering successful"
-            },
-            "error": {
-                "notFound": "News not found",
-                "duplicateNameVi": "Vietnamese title is duplicated",
-                "duplicateNameEn": "English title is duplicated",
-                "duplicateCode": "Code is duplicated"
-            }
-        }
+        "name": "News title"
     },
 
     "newsPost": {
+        "label": "News post",
+        "latest": "Latest news",
+        "related": "Related news",
         "message": {
             "success": {
                 "create": "News created successfully",

@@ -24,6 +24,7 @@ import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { NEWS_STATUS } from '../../enums';
 import { useCreateNews } from '../../hooks/use-create';
+import { useGetListKeywords } from '../../hooks/use-get-keywords';
 import { useUpdateNews } from '../../hooks/use-update';
 import { NewsData } from '../../types';
 import { CreateNewsPayload, UpdateNewsPayload } from '../../types/payloads';
@@ -38,6 +39,7 @@ export default function NewsFormModal({ ...props }: Props) {
     const { active, isActive, deActive } = useActive();
     const isUpdateModal = dataEdit?.id;
 
+    const { keywordsData } = useGetListKeywords();
     const { createNews } = useCreateNews();
     const { updateNews } = useUpdateNews();
 
@@ -141,7 +143,11 @@ export default function NewsFormModal({ ...props }: Props) {
             loading={isActive}
             showAction
             actionProps={{
-                icon: <Save size={SIZE_ICON} />,
+                icon: (
+                    <div>
+                        <Save size={SIZE_ICON} />
+                    </div>
+                ),
                 onClick: () => {
                     form.submit();
                 },
@@ -288,7 +294,7 @@ export default function NewsFormModal({ ...props }: Props) {
                     </AppFormItem>
                 </div>
 
-                <div className="col-span-2 flex justify-between gap-8 border-t pt-8">
+                <div className="col-span-2 flex gap-8 border-t pt-8">
                     <AppFormItem
                         name="pictureFile"
                         label={`${messages('common.thumbnail')}`}
@@ -340,19 +346,7 @@ export default function NewsFormModal({ ...props }: Props) {
                         />
                     </AppFormItem>
                     <AppFormItem
-                        name="slug"
-                        label={`Slug`}
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.input'),
-                            },
-                        ]}
-                    >
-                        <Input placeholder={'Slug'} className="!min-w-96" />
-                    </AppFormItem>
-                    <AppFormItem
+                        className="flex-1"
                         name="keywords"
                         label={`${messages('common.keyword')}`}
                         required
@@ -364,6 +358,7 @@ export default function NewsFormModal({ ...props }: Props) {
                         ]}
                     >
                         <TagSelect
+                            keywords={keywordsData}
                             placeholder={messages('common.keyword')}
                             className="min-w-96"
                         />

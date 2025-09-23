@@ -50,6 +50,7 @@ export enum APP_ROUTES {
     REVENUE = '/revenue',
     NEWS_CATEGORY = '/news-category',
     NEWS = '/news',
+    NEWS_DETAIL = '/news/*',
 }
 
 export const AUTH_ROUTES: string[] = [APP_ROUTES.SIGN_IN];

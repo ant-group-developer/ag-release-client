@@ -1,15 +1,14 @@
 import ActionButton from '@/components/ui/button/action-button';
 import ImageFallback from '@/components/ui/image/image-fallback';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
-import PopoverTags from '@/components/ui/tag/popover-tags';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { LOCALE } from '@/enums/common';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import { getNameByLocale } from '@/helpers/string';
 import useModalStore from '@/hooks/use-modal';
-import { Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useLocale, useTranslations } from 'next-intl';
+import Link from 'next/link';
 import { NEWS_STATUS, TYPE_MODAL_NEWS } from '../../enums';
 import { NewsData, NewsDataFilter } from '../../types';
 
@@ -47,7 +46,7 @@ export default function NewsTable({ dataFilter, ...props }: Props) {
             key: 'thumbnail',
             dataIndex: 'thumbnail',
             align: 'center',
-            width: 100,
+            width: 50,
             render: (value, record) => {
                 const src = record?.thumbnail;
                 return (
@@ -69,7 +68,7 @@ export default function NewsTable({ dataFilter, ...props }: Props) {
             dataIndex: 'title',
             ellipsis: true,
             align: 'left',
-            width: 350,
+            width: 300,
             render: (value, record) => {
                 const title = getNameByLocale(
                     record?.titleEn,
@@ -77,11 +76,13 @@ export default function NewsTable({ dataFilter, ...props }: Props) {
                     locale
                 );
                 return (
-                    <div className="flex cursor-pointer items-center gap-4">
-                        <CustomTooltip title={title}>
-                            <p className="truncate">{title}</p>
-                        </CustomTooltip>
-                    </div>
+                    <CustomTooltip title={title}>
+                        <Link href={`news/${record?.slug}`}>
+                            <span className="truncate hover:text-blue-500 hover:underline">
+                                {title}
+                            </span>
+                        </Link>
+                    </CustomTooltip>
                 );
             },
         },
@@ -90,27 +91,13 @@ export default function NewsTable({ dataFilter, ...props }: Props) {
             key: 'status',
             dataIndex: 'status',
             align: 'center',
-            width: 100,
+            width: 50,
             render: (_, record) => {
                 const status =
                     record?.status === NEWS_STATUS.PUBLIC
                         ? messages('common.public')
                         : messages('common.private');
-                const color =
-                    record?.status === NEWS_STATUS.PUBLIC ? 'green' : 'blue';
-                return <Tag color={color}> {status} </Tag>;
-            },
-        },
-        {
-            title: 'Tags',
-            key: 'tags',
-            dataIndex: 'tags',
-            align: 'left',
-            width: 200,
-            render: (_, record) => {
-                return (
-                    <PopoverTags tags={record?.keywords} maxVisibleTags={2} />
-                );
+                return <span> {status} </span>;
             },
         },
         {
@@ -126,47 +113,22 @@ export default function NewsTable({ dataFilter, ...props }: Props) {
                         : record?.newsCategory?.nameEn;
                 return (
                     <CustomTooltip title={name}>
-                        <span className="line-clamp-3 truncate whitespace-pre-line">
-                            {name}
-                        </span>
+                        <span className="truncate">{name}</span>
                     </CustomTooltip>
                 );
             },
         },
         {
-            title: 'Slug',
-            key: 'slug',
-            dataIndex: 'slug',
+            title: messages('common.creator'),
+            key: 'creator',
+            dataIndex: 'creator',
             align: 'left',
-            width: 250,
-            ellipsis: true,
-            render: (_, record) => {
-                return (
-                    <CustomTooltip title={record?.slug}>
-                        <span className="truncate"> {record?.slug} </span>
-                    </CustomTooltip>
-                );
-            },
-        },
-        {
-            title: messages('common.description'),
-            key: 'description',
-            dataIndex: 'description',
-            align: 'left',
-            width: 350,
-            render: (_, record) => {
-                const description =
-                    locale === LOCALE?.VI
-                        ? record?.descriptionVi
-                        : record?.descriptionEn;
-                return (
-                    <CustomTooltip title={description}>
-                        <span className="line-clamp-3 truncate whitespace-pre-line">
-                            {description}
-                        </span>
-                    </CustomTooltip>
-                );
-            },
+            width: 150,
+            render: (value, record) => (
+                <CustomTooltip title={record?.creator?.email}>
+                    <span className="truncate">{record?.creator?.email}</span>
+                </CustomTooltip>
+            ),
         },
         {
             title: messages('common.createdAt'),
@@ -185,25 +147,6 @@ export default function NewsTable({ dataFilter, ...props }: Props) {
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
                 'createdAt'
-            ),
-        },
-        {
-            title: messages('common.updatedAt'),
-            key: 'updatedAt',
-            dataIndex: 'updatedAt',
-            align: 'center',
-            width: 150,
-            sorter: true,
-            sortOrder: getSortOrder(
-                dataFilter.orderBy,
-                dataFilter.fieldOrder,
-                'updatedAt'
-            ),
-            render: (value) => (
-                <span className="truncate text-wrap">
-                    {' '}
-                    {formattedDate(value)}{' '}
-                </span>
             ),
         },
         {
