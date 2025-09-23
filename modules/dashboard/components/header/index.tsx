@@ -83,11 +83,11 @@ export default function DashboardHeader({ dataFilter, onChangeFilter }: Props) {
                         rangeClassName="w-[250px]"
                         externalOnChange={(fromDate, toDate) =>
                             onChangeFilter({
-                                startDateCreated: fromDate,
-                                endDateCreated: toDate,
+                                startDate: fromDate,
+                                endDate: toDate,
                             })
                         }
-                        value={`${dataFilter.startDateCreated},${dataFilter.endDateCreated}`}
+                        value={`${dataFilter.startDate},${dataFilter.endDate}`}
                     />
                 </div>
             </AppHeaderGroup>

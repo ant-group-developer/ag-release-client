@@ -64,6 +64,8 @@
         }
     },
     "common": {
+        "public": "Public",
+        "private": "Private",
         "date": "Date",
         "dateScan": "Date scan",
         "timeRange": "Time range",
@@ -1627,6 +1629,61 @@
                 "duplicateNameVi": "Duplicate Vietnamese name",
                 "duplicateNameEn": "Duplicate English name",
                 "duplicateCode": "Duplicate code"
+            }
+        }
+    },
+
+    "newsCategory": {
+        "label": "News category",
+        "name": "Category name",
+        "message": {
+            "success": {
+                "create": "News category created successfully",
+                "update": "News category updated successfully",
+                "delete": "News category deleted successfully",
+                "bulkUpdateOrder": "Change the position successfully"
+            },
+            "error": {
+                "notFound": "News category not found",
+                "duplicateNameVi": "Vietnamese name is duplicated",
+                "duplicateNameEn": "English name is duplicated",
+                "duplicateCode": "Code is duplicated"
+            }
+        }
+    },
+
+    "news": {
+        "label": "News",
+        "name": "News title",
+        "message": {
+            "success": {
+                "create": "News created successfully",
+                "update": "News updated successfully",
+                "delete": "News deleted successfully",
+                "bulkUpdateOrder": "Reordering successful"
+            },
+            "error": {
+                "notFound": "News not found",
+                "duplicateNameVi": "Vietnamese title is duplicated",
+                "duplicateNameEn": "English title is duplicated",
+                "duplicateCode": "Code is duplicated"
+            }
+        }
+    },
+
+    "newsPost": {
+        "message": {
+            "success": {
+                "create": "News created successfully",
+                "update": "News updated successfully",
+                "delete": "News deleted successfully",
+                "bulkUpdateOrder": "Reordering successful"
+            },
+            "error": {
+                "notFound": "News not found",
+                "duplicateNameVi": "Vietnamese title is duplicated",
+                "duplicateNameEn": "English title is duplicated",
+                "duplicateCode": "Code is duplicated"
             }
         }
     }

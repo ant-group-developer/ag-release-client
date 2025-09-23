@@ -29,7 +29,7 @@ const updates: UpdateItem[] = [
     },
 ];
 
-export default function UpdatesCard() {
+export default function NewUpdatesCard() {
     return (
         <AppCard title="New updates">
             <ul className="divide-y divide-gray-200">
@@ -52,7 +52,7 @@ export default function UpdatesCard() {
                     </li>
                 ))}
             </ul>
-            <div className="mt-3 flex justify-end px-4">
+            <div className="mt-3 flex justify-end p-4">
                 <a
                     href="/updates"
                     className="text-xs font-medium text-blue-600 hover:underline"

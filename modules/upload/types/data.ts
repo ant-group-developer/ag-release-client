@@ -78,6 +78,7 @@ export enum ENTITY_TYPE_PICTURE {
     TENANT = 'tenants',
     LOGO = 'logo',
     TRACK_SENSITIVE = 'track_sensitive',
+    NEWS_POST_THUMBNAIL = 'news_post_thumbnail',
 }
 
 export interface DownloadNonFile {

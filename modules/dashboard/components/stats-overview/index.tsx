@@ -1,129 +1,62 @@
 import { useTranslations } from 'next-intl';
+import { IssueCountData, OverviewCountData } from '../../types';
 import StatCard from './stat-card';
-import UpdatesCard from './update-card';
+import NewUpdatesCard from './update-card';
 
-type Props = {};
+type Props = {
+    issuesData: IssueCountData[];
+    isIssuesLoading: boolean;
+    overviewData: OverviewCountData;
+    isOverviewLoading: boolean;
+};
 
-export default function StatsOverview({}: Props) {
+export default function StatsOverview({
+    issuesData,
+    isIssuesLoading,
+    overviewData,
+    isOverviewLoading,
+}: Props) {
     const messages = useTranslations();
 
-    const issuesCard = {
-        title: 'Issues',
-        value: '15',
-        trend: 32.4,
-        data: [
-            { date: '2025-01-01', value: 12 },
-            { date: '2025-01-02', value: 18 },
-            { date: '2025-01-03', value: 15 },
-            { date: '2025-01-04', value: 20 },
-            { date: '2025-01-05', value: 22 },
-            { date: '2025-01-06', value: 25 },
-            { date: '2025-01-07', value: 28 },
-            { date: '2025-01-08', value: 30 },
-            { date: '2025-01-09', value: 26 },
-            { date: '2025-01-10', value: 29 },
-            { date: '2025-01-11', value: 31 },
-            { date: '2025-01-12', value: 33 },
-        ],
-    };
+    const issuesCount = issuesData?.map((item) => ({
+        label: item?.nameEn,
+        count: Number(item?.total),
+    }));
 
-    const whiteLabelCard = {
-        title: 'White label/Label',
-        value: '8',
-        trend: 18.45,
-        data: [
-            { date: '2025-01-01', value: 5 },
-            { date: '2025-01-02', value: 8 },
-            { date: '2025-01-03', value: 6 },
-            { date: '2025-01-04', value: 10 },
-            { date: '2025-01-05', value: 7 },
-            { date: '2025-01-06', value: 12 },
-            { date: '2025-01-07', value: 9 },
-            { date: '2025-01-08', value: 14 },
-            { date: '2025-01-09', value: 11 },
-            { date: '2025-01-10', value: 15 },
-            { date: '2025-01-11', value: 13 },
-            { date: '2025-01-12', value: 16 },
-        ],
-    };
-
-    const releasesCard = {
-        title: 'Releases',
-        value: '10',
-        trend: -20.34,
-        data: [
-            { date: '2025-01-01', value: 15 },
-            { date: '2025-01-02', value: 20 },
-            { date: '2025-01-03', value: 25 },
-            { date: '2025-01-04', value: 30 }, // đỉnh
-            { date: '2025-01-05', value: 28 },
-            { date: '2025-01-06', value: 24 },
-            { date: '2025-01-07', value: 20 },
-            { date: '2025-01-08', value: 18 },
-            { date: '2025-01-09', value: 14 },
-            { date: '2025-01-10', value: 12 },
-            { date: '2025-01-11', value: 10 },
-            { date: '2025-01-12', value: 8 },
-        ],
-    };
-
-    const tracksCard = {
-        title: 'Tracks',
-        value: '32',
-        trend: 14.45,
-        data: [
-            { date: '2025-01-01', value: 10 },
-            { date: '2025-01-02', value: 15 },
-            { date: '2025-01-03', value: 22 }, // đỉnh 1
-            { date: '2025-01-04', value: 18 },
-            { date: '2025-01-05', value: 12 },
-            { date: '2025-01-06', value: 20 },
-            { date: '2025-01-07', value: 28 }, // đỉnh 2
-            { date: '2025-01-08', value: 25 },
-            { date: '2025-01-09', value: 19 },
-            { date: '2025-01-10', value: 24 },
-            { date: '2025-01-11', value: 30 }, // đỉnh nhỏ
-            { date: '2025-01-12', value: 26 },
-        ],
-    };
-
-    const data = [
-        { label: 'Reference overlaps', count: 0 },
-        { label: 'invalid references', count: 0 },
-        { label: 'Ownership conflicts', count: 0 },
-        { label: 'Ownership transfers', count: 0 },
-        { label: 'Potential claims', count: 0 },
-        { label: 'Disputed claims', count: 0 },
-        { label: 'Appealed claims', count: 0 },
-        { label: 'Policies ignored', count: 0 },
-    ];
-
-    const overviewData = [
+    const overviewCount = [
         {
-            label: 'Releases',
-            count: 32,
+            label: messages('release.label'),
+            count: overviewData?.releasesCount,
         },
         {
-            label: 'Tracks',
-            count: 52,
+            label: messages('track.label'),
+            count: overviewData?.tracksCount,
         },
         {
-            label: 'Labels',
-            count: 12,
+            label: messages('label.label'),
+            count: overviewData?.labelsCount,
         },
         {
-            label: 'Artists',
-            count: 132,
+            label: messages('artist.label'),
+            count: overviewData?.artistsCount,
         },
     ];
 
     return (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-3">
-            <StatCard title="Issue" data={data} />
+            <StatCard
+                title={messages('common.issues')}
+                data={issuesCount}
+                loading={isIssuesLoading}
+            />
 
-            <StatCard title="Overview" data={overviewData} />
+            <StatCard
+                title={messages('common.overview')}
+                data={overviewCount}
+                loading={isOverviewLoading}
+            />
 
-            <UpdatesCard />
+            <NewUpdatesCard />
 
             {/* <StatCard
                 title="Issues"
