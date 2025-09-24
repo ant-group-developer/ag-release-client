@@ -3,10 +3,11 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
+import { getNameByLocale } from '@/helpers/string';
 import { NewsData } from '@/modules/news/types';
 import { Card, CardProps } from 'antd';
 import Meta from 'antd/es/card/Meta';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 type Props = CardProps & {
     data: NewsData;
@@ -14,6 +15,7 @@ type Props = CardProps & {
 
 export default function CardNews({ data, ...props }: Props) {
     const messages = useTranslations();
+    const locale = useLocale();
     return (
         <Card
             {...props}
@@ -35,7 +37,13 @@ export default function CardNews({ data, ...props }: Props) {
             <Meta
                 title={
                     <CustomTooltip title="Meet Revelator at Music Biz 2025: Breaking Borders & Building Global Strategies">
-                        <span className="cursor-pointer">{data.contentVi}</span>
+                        <span className="cursor-pointer">
+                            {getNameByLocale(
+                                data?.titleEn,
+                                data?.titleVi,
+                                locale
+                            )}
+                        </span>
                     </CustomTooltip>
                 }
                 description={
@@ -45,7 +53,7 @@ export default function CardNews({ data, ...props }: Props) {
                                 data.createdAt,
                                 DATE_FORMAT.DATE_ONLY
                             )}{' '}
-                            | 30 {messages('common.views')}
+                            {/* | 30 {messages('common.views')} */}
                         </p>
                     </div>
                 }

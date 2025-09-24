@@ -150,7 +150,10 @@ export default function Releases({}: Props) {
             )}
 
             {layoutTable === LAYOUT_TABLE.GRID && (
-                <ReleasesGridTable data={releasesData?.items} loading={false} />
+                <ReleasesGridTable
+                    data={releasesData?.items}
+                    loading={isReleaseDataLoading}
+                />
             )}
 
             <AppPagination

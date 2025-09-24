@@ -1664,6 +1664,9 @@
     },
 
     "newsPost": {
+        "label": "Tin tức mới",
+        "latest": "Tin mới nhất",
+        "related": "Tin tức liên quan",
         "message": {
             "success": {
                 "create": "Tạo tin tức thành công",

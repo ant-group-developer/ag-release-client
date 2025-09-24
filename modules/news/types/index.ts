@@ -1,9 +1,11 @@
 import { NewsCategoryData } from '@/modules/news-category/types';
+import { UserData } from '@/modules/user/types/data';
 import { CommonAttribute, CommonParams } from '@/types/api';
 import { NEWS_STATUS } from '../enums';
 
 export interface NewsData extends CommonAttribute {
     creatorId: string;
+    creator: UserData;
     modifierId: string;
     titleVi: string;
     titleEn: string;

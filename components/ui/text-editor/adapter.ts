@@ -15,7 +15,7 @@ function uploadAdapter(loader: FileLoader): UploadAdapter {
                     const file = await loader.file;
 
                     const dataPayload = {
-                        entityType: ENTITY_TYPE_PICTURE.NEWS_POST_THUMBNAIL,
+                        entityType: ENTITY_TYPE_PICTURE.NEWS_POST_CONTENT,
                         fileName: file?.name ?? '',
                         contentType: file?.type ?? '',
                         fileSize: file?.size ?? 0,

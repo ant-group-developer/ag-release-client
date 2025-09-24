@@ -10,8 +10,23 @@ export const newsApis = {
         });
     },
 
+    getListPublic: (params: NewsDataFilter) => {
+        return axiosInstance.get<PaginationResponse<NewsData>>(
+            '/news-posts/public',
+            {
+                params,
+            }
+        );
+    },
+
     getDetail: (id: NewsData['id']) => {
         return axiosInstance.get<DetailResponse<NewsData>>(`/news-posts/${id}`);
+    },
+
+    getDetailBySlug: (slug: NewsData['slug']) => {
+        return axiosInstance.get<DetailResponse<NewsData>>(
+            `/news-posts/public/${slug}`
+        );
     },
 
     getKeywords: () => {
