@@ -8,10 +8,9 @@ import { getNameByLocale } from '@/helpers/string';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import useModalStore from '@/hooks/use-modal';
-import { NewsHeader } from '@/modules/news/components/header';
 import NewsFormModal from '@/modules/news/components/modal/news-form';
-import NewsTable from '@/modules/news/components/table';
 import NewsGridTable from '@/modules/news/components/table/grid-table';
+import NewsTablePro from '@/modules/news/components/table/news-table-pro';
 import { TYPE_MODAL_NEWS } from '@/modules/news/enums';
 import { useDeleteNews } from '@/modules/news/hooks/use-delete';
 import { useGetListNews } from '@/modules/news/hooks/use-get-list';
@@ -69,15 +68,15 @@ export default function News({}: Props) {
 
     return (
         <div>
-            <NewsHeader
+            {/* <NewsHeader
                 dataFilter={dataFilter}
                 onSearch={onSearch}
                 canClearFilter={canClearFilter}
                 onChangeFilter={onChangeFilter}
                 removeFilter={removeFilter}
-            />
+            /> */}
 
-            {layoutTable === LAYOUT_TABLE.LIST && (
+            {/* {layoutTable === LAYOUT_TABLE.LIST && (
                 <NewsTable
                     sticky
                     dataSource={newsData?.items}
@@ -90,6 +89,35 @@ export default function News({}: Props) {
                     dataFilter={dataFilter}
                     onChange={onChangeSort}
                     scroll={{ x: SCREEN.XL }}
+                />
+            )} */}
+
+            {layoutTable === LAYOUT_TABLE.LIST && (
+                <NewsTablePro
+                    sticky
+                    dataSource={newsData?.items}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: newsData.metadata.currentPage,
+                        total: newsData.metadata.totalItems,
+                    }}
+                    loading={isFetching}
+                    dataFilter={dataFilter}
+                    onChange={onChangeSort}
+                    scroll={{ x: SCREEN.XL }}
+                    className=""
+                    toolbar={{
+                        className: 'border-t',
+                    }}
+                    // toolBarRender={false}
+                    options={false}
+                    // options={{
+                    //     density: false,
+                    // }}
+
+                    onSubmit={(params) => {
+                        onChangeFilter(params);
+                    }}
                 />
             )}
 
