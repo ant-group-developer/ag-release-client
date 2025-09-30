@@ -24,7 +24,7 @@ export default function NewsGridTable({ scroll, data, loading }: Props) {
     const messages = useTranslations();
     const locale = useLocale();
     return (
-        <Spin spinning={loading} delay={200}>
+        <Spin spinning={loading}>
             <AppGrid
                 className="px-4 py-4"
                 style={{
@@ -44,7 +44,7 @@ export default function NewsGridTable({ scroll, data, loading }: Props) {
                             <Card
                                 className="custom-card-body !bg-card-bg dark:!bg-card-bg-dark"
                                 cover={
-                                    <div className="relative overflow-hidden">
+                                    <div className="relative h-[150px] overflow-hidden">
                                         <Link href={`news/${item?.slug}`}>
                                             {loading ? (
                                                 <Skeleton.Node
@@ -53,7 +53,7 @@ export default function NewsGridTable({ scroll, data, loading }: Props) {
                                                 />
                                             ) : (
                                                 <ImageFallback
-                                                    className="cursor-pointer overflow-hidden object-cover duration-300 hover:scale-110"
+                                                    className="h-full w-full cursor-pointer overflow-hidden object-cover duration-300 hover:scale-110"
                                                     alt="example"
                                                     src={
                                                         item?.thumbnail ||
