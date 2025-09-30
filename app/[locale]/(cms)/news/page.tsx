@@ -1,4 +1,5 @@
 'use client';
+import AppContainer from '@/components/app-container';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -8,6 +9,7 @@ import { getNameByLocale } from '@/helpers/string';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import useModalStore from '@/hooks/use-modal';
+import { NewsHeaderV2 } from '@/modules/news/components/header/index-v2';
 import NewsFormModal from '@/modules/news/components/modal/news-form';
 import NewsGridTable from '@/modules/news/components/table/grid-table';
 import NewsTablePro from '@/modules/news/components/table/news-table-pro';
@@ -67,7 +69,7 @@ export default function News({}: Props) {
     };
 
     return (
-        <div>
+        <AppContainer title={messages('news.label')}>
             {/* <NewsHeader
                 dataFilter={dataFilter}
                 onSearch={onSearch}
@@ -75,6 +77,14 @@ export default function News({}: Props) {
                 onChangeFilter={onChangeFilter}
                 removeFilter={removeFilter}
             /> */}
+
+            <NewsHeaderV2
+                dataFilter={dataFilter}
+                onSearch={onSearch}
+                canClearFilter={canClearFilter}
+                onChangeFilter={onChangeFilter}
+                removeFilter={removeFilter}
+            />
 
             {/* {layoutTable === LAYOUT_TABLE.LIST && (
                 <NewsTable
@@ -106,15 +116,11 @@ export default function News({}: Props) {
                     onChange={onChangeSort}
                     scroll={{ x: SCREEN.XL }}
                     className=""
-                    toolbar={{
-                        className: 'border-t',
-                    }}
                     // toolBarRender={false}
                     options={false}
                     // options={{
                     //     density: false,
                     // }}
-
                     onSubmit={(params) => {
                         onChangeFilter(params);
                     }}
@@ -157,6 +163,6 @@ export default function News({}: Props) {
                 showQuickJumper
                 pageSizeOptions={PAGE_SIZE_OPTIONS}
             />
-        </div>
+        </AppContainer>
     );
 }
