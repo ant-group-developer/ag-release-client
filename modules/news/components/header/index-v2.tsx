@@ -1,7 +1,6 @@
 import CreateButton from '@/components/ui/button/create-button';
 import DateRangePicker from '@/components/ui/input/date-range-picker';
 import NewsCategorySelect from '@/components/ui/select/news-category-select';
-import TableLayoutSegmented from '@/components/ui/semented/table-layout-semented';
 import { UseFilterProps } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import useModalStore from '@/hooks/use-modal';
@@ -83,7 +82,7 @@ export const NewsHeaderV2 = ({
     return (
         <div className="app-header">
             <QueryFilter
-                className="border-b !px-0 !pt-0"
+                className="border-b"
                 form={form}
                 onFinish={handleSubmit}
                 onReset={handleReset}
@@ -184,11 +183,11 @@ export const NewsHeaderV2 = ({
                 </ProForm.Item>
             </QueryFilter>
             <div className="flex justify-end gap-2 border-b py-2">
-                <TableLayoutSegmented
+                {/* <TableLayoutSegmented
                     className="!mr-2"
                     value={layoutTable}
                     onChange={toggleLayoutTable}
-                />
+                /> */}
                 <CreateButton
                     canCreate={true}
                     text={messages('action.create.button')}

@@ -5,7 +5,6 @@ import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { LOCALE } from '@/enums/common';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
-import { getNameByLocale } from '@/helpers/string';
 import useModalStore from '@/hooks/use-modal';
 import { Link } from '@/i18n/routing';
 import { ProColumns } from '@ant-design/pro-components';
@@ -77,16 +76,6 @@ export default function NewsTablePro({ dataFilter, ...props }: Props) {
                 placeholder: '',
             },
             render: (value, record) => {
-                const title = getNameByLocale(
-                    record?.titleEn,
-                    record?.titleVi,
-                    locale
-                );
-                const description = getNameByLocale(
-                    record?.descriptionEn,
-                    record?.descriptionVi,
-                    locale
-                );
                 const src = record?.thumbnail;
                 return (
                     // <CustomTooltip title={title}>
@@ -104,17 +93,17 @@ export default function NewsTablePro({ dataFilter, ...props }: Props) {
                             alt=""
                             src={src}
                         />
-                        <div className="flex max-w-[650px] flex-1 flex-col justify-between">
+                        <div className="flex max-w-[650px] flex-1 flex-col">
                             <Link href={`news/${record?.slug}`}>
                                 <Typography.Text
                                     className="font-semibold hover:text-blue-500 hover:underline"
                                     ellipsis={{ tooltip: true }}
                                 >
-                                    {title}
+                                    {record?.title}
                                 </Typography.Text>
                             </Link>
                             <Typography.Text ellipsis>
-                                {description}
+                                {record?.description}
                             </Typography.Text>
                         </div>
                     </div>
@@ -228,6 +217,14 @@ export default function NewsTablePro({ dataFilter, ...props }: Props) {
                 <ActionButton
                     showUpdate
                     showDelete
+                    // showAddTranslate
+                    showTranslation
+                    onShowTranslation={() =>
+                        openModal(TYPE_MODAL_NEWS.TRANSLATE_LIST, record)
+                    }
+                    // onShowAddTranslate={() =>
+                    //     openModal(TYPE_MODAL_NEWS.ADD_TRANSLATE, record)
+                    // }
                     onShowUpdate={() => {
                         openModal(TYPE_MODAL_NEWS.EDIT, record);
                     }}

@@ -1,19 +1,18 @@
 import { toNonAccentVietnamese } from '@/helpers/string';
-import { useGetListSimpleCountries } from '@/modules/countries/hooks/use-get-list-simple-countries';
+import { useGetListSimpleLanguage } from '@/modules/languages/hooks/use-get-list-simple-language';
 import { Select, SelectProps } from 'antd';
 
-type Props = Omit<SelectProps, 'option'> & {
+type Props = Omit<SelectProps, 'options'> & {
     fallBack?: string;
 };
 
-export default function CountrySelect({ fallBack, ...props }: Props) {
-    const { countriesData } = useGetListSimpleCountries();
-
-    const options = countriesData.map((item) => {
+export default function CodeLanguageSelect({ fallBack, ...props }: Props) {
+    const { languagesData } = useGetListSimpleLanguage();
+    const option = languagesData?.map((item) => {
         return {
             id: item.id,
-            value: item.id,
-            label: `${item.name} - ${item?.iso2}`,
+            value: item.code,
+            label: `${item.name} - ${item.code}`,
         };
     });
 
@@ -33,7 +32,7 @@ export default function CountrySelect({ fallBack, ...props }: Props) {
                     .toLowerCase()
                     .includes(toNonAccentVietnamese(input).toLowerCase())
             }
-            options={options}
+            options={option}
             labelRender={labelRender}
         />
     );

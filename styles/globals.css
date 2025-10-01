@@ -119,7 +119,16 @@ body {
     height: calc(100vh - 67px);
     overflow-y: auto;
     overflow-x: hidden;
-    @apply !p-5;
+}
+
+/* Disable padding query filter */
+.ant-pro-query-filter {
+    @apply !px-0 !pt-0;
+}
+
+/* Label form query filter font bold */
+.ant-form-vertical .ant-form-item-label > label {
+    @apply font-semibold;
 }
 
 .recharts-surface:focus {

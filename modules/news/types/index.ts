@@ -7,22 +7,32 @@ export interface NewsData extends CommonAttribute {
     creatorId: string;
     creator: UserData;
     modifierId: string;
-    titleVi: string;
-    titleEn: string;
-    descriptionVi: string;
-    descriptionEn: string;
-    contentVi: string;
-    contentEn: string;
+    title: string;
+    description: string;
+    content: string;
     thumbnail: string;
     status: NEWS_STATUS;
     newsCategory: NewsCategoryData;
     newsCategoryId: string;
     slug: string;
     keywords: string[];
+    languageCode: string;
+    languageName: string;
 }
 
 export interface NewsDataFilter extends CommonParams {
     status?: string;
     keywords?: string;
     newsCategoryId?: string;
+    languageCode?: string;
+}
+
+export interface TranslationData extends CommonAttribute {
+    title: string;
+    description: string;
+    content: string;
+    languageCode: string;
+    languageName: string;
+    creator: UserData;
+    creatorId: string;
 }

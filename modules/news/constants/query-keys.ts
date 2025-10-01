@@ -10,4 +10,8 @@ export const newsQueryKeys = {
             : newsQueryKeys.lists(),
     getKeywords: () => [...newsQueryKeys.all, 'keywords'],
     getDetail: (slug: NewsData['slug']) => [newsQueryKeys.all, slug],
+    getDetailTranslation: (newsId: string, translationId: string) => [
+        newsQueryKeys.getDetail,
+        { newsId, translationId },
+    ],
 };

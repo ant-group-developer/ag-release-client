@@ -64,6 +64,8 @@
         }
     },
     "common": {
+        "translation": "Translation",
+        "addTranslate": "Add translate",
         "public": "Public",
         "private": "Private",
         "date": "Date",
@@ -440,6 +442,7 @@
         "vietnamese": "Vietnamese",
         "select": "Select language",
         "add": "Add language",
+        "original": "Original language",
         "message": {
             "success": {
                 "create": "Add new language successfully",
@@ -1654,7 +1657,8 @@
 
     "news": {
         "label": "News",
-        "name": "News title"
+        "name": "News title",
+        "addTranslate": "Add translate"
     },
 
     "newsPost": {

@@ -64,6 +64,8 @@
         }
     },
     "common": {
+        "translation": "Bản dịch",
+        "addTranslate": "Thêm bản dịch",
         "public": "Công khai",
         "private": "Riêng tư",
         "date": "Ngày",
@@ -433,6 +435,7 @@
         "label": "Log"
     },
     "language": {
+        "original": "Ngôn ngữ gốc",
         "english": "English",
         "label": "Ngôn ngữ",
         "name": "Tên ngôn ngữ",
@@ -1660,7 +1663,8 @@
 
     "news": {
         "label": "Tin tức",
-        "name": "Tiêu đề tin tức"
+        "name": "Tiêu đề tin tức",
+        "addTranslate": "Thêm bản dịch"
     },
 
     "newsPost": {

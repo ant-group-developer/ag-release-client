@@ -11,10 +11,14 @@ const CustomEditor = dynamic(
 
 type Props = CustomEditorProps & { className?: string };
 
-function TextEditor({ className, onChange, value = '' }: Props) {
+function TextEditor({ className, onChange, value = '', disabled }: Props) {
     return (
         <div className={cn('ck-container', className)}>
-            <CustomEditor onChange={onChange} value={value} />
+            <CustomEditor
+                disabled={disabled}
+                onChange={onChange}
+                value={value}
+            />
         </div>
     );
 }
