@@ -35,4 +35,5 @@ export interface TranslationData extends CommonAttribute {
     languageName: string;
     creator: UserData;
     creatorId: string;
+    isDefault: boolean;
 }

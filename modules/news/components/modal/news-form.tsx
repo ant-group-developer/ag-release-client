@@ -85,12 +85,13 @@ export default function NewsFormModal({ ...props }: Props) {
     };
 
     const onFinish = async (values: any) => {
-        const { pictureFile, ...res } = values;
+        const { pictureFile, keywords, ...res } = values;
         const file = values?.pictureFile?.fileList[0]?.originFileObj;
         active();
 
         const payloadValues = {
             ...res,
+            keywords: keywords ?? [],
         };
 
         if (file) {
@@ -170,7 +171,7 @@ export default function NewsFormModal({ ...props }: Props) {
                 }}
             >
                 <div className="m-auto grid h-[calc(100vh-68px)] w-full grid-cols-12 overflow-y-auto">
-                    <div className="col-span-10 border-r px-8">
+                    <div className="col-span-10 border-r px-8 py-4">
                         {/* <div className="flex items-center gap-2">
                             <Image alt="Việt Nam" src="/languages/vi.svg" />
                             <Typography.Text strong={true} className="!text-lg">
@@ -247,7 +248,7 @@ export default function NewsFormModal({ ...props }: Props) {
                             <TextEditor className="editor-large" />
                         </AppFormItem>
                     </div>
-                    <div className="sticky top-0 col-span-2 flex w-full flex-col gap-4 px-8">
+                    <div className="sticky top-0 col-span-2 flex w-full flex-col gap-4 px-8 py-4">
                         <AppFormItem
                             name="pictureFile"
                             label={`${messages('common.thumbnail')}`}
@@ -302,13 +303,13 @@ export default function NewsFormModal({ ...props }: Props) {
                             className="w-full"
                             name="keywords"
                             label={`${messages('common.keyword')}`}
-                            required
-                            rules={[
-                                {
-                                    required: true,
-                                    message: messages('validation.input'),
-                                },
-                            ]}
+                            // required
+                            // rules={[
+                            //     {
+                            //         required: true,
+                            //         message: messages('validation.input'),
+                            //     },
+                            // ]}
                         >
                             <TagSelect
                                 keywords={keywordsData}

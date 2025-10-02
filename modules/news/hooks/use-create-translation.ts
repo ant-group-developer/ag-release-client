@@ -13,7 +13,9 @@ export const useCreateTranslation = () => {
 
     const onSuccess = (data: any, { onSuccess }: CreateTranslation) => {
         queryClient.invalidateQueries({
-            queryKey: newsQueryKeys.lists(),
+            queryKey: newsQueryKeys.getListTranslation(
+                data?.data?.data?.newsPostId
+            ),
         });
 
         const responseMessages = messages(data?.data?.messageCode);
@@ -28,8 +30,8 @@ export const useCreateTranslation = () => {
     };
 
     const mutation = useMutation({
-        mutationFn: ({ newsId, payload }: CreateTranslation) =>
-            newsApis.createTranslate(newsId, payload),
+        mutationFn: ({ payload }: CreateTranslation) =>
+            newsApis.createTranslate(payload),
         onSuccess,
         onError,
     });

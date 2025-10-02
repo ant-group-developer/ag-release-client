@@ -96,7 +96,6 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
             colSpan: dspData?.length,
             align: 'center',
             children: dspData?.map((item: DspData) => {
-                console.log('🚀 ~ item:', item);
                 return {
                     title: item.name,
                     dataIndex: `dsp_${item.id}`,

@@ -5,12 +5,16 @@ import {
     CreateNewsPayload,
     CreateTranslationPayload,
     UpdateNewsPayload,
+    UpdateTranslationPayload,
 } from '../types/payloads';
 
 export const newsApis = {
     getList: (params: NewsDataFilter) => {
-        return axiosInstance.get<PaginationResponse<NewsData>>('/news-posts', {
+        return axiosInstance.get<PaginationResponse<NewsData>>(`/news-posts`, {
             params,
+            headers: {
+                locale: params?.languageCode,
+            },
         });
     },
 
@@ -19,12 +23,15 @@ export const newsApis = {
             '/news-posts/public',
             {
                 params,
+                headers: {
+                    locale: params?.languageCode,
+                },
             }
         );
     },
 
-    getListNewsWithTranslate: (newsId: string) => {
-        return axiosInstance.get<DetailResponse<NewsData[]>>(
+    getListTranslations: (newsId: string) => {
+        return axiosInstance.get<DetailResponse<TranslationData[]>>(
             `/news-posts/${newsId}/translations`
         );
     },
@@ -33,18 +40,26 @@ export const newsApis = {
         return axiosInstance.get<DetailResponse<NewsData>>(`/news-posts/${id}`);
     },
 
-    getDetailBySlug: (slug: NewsData['slug']) => {
+    getDetailBySlug: (locale: string, slug: NewsData['slug']) => {
         return axiosInstance.get<DetailResponse<NewsData>>(
-            `/news-posts/public/${slug}`
+            `/news-posts/public/${slug}`,
+            {
+                headers: {
+                    locale: locale,
+                },
+            }
         );
     },
 
-    getDetailTranslation: (
-        newsId: NewsData['id'],
-        translationId: TranslationData['id']
-    ) => {
+    getDetailTranslation: (translationId: TranslationData['id']) => {
         return axiosInstance.get<DetailResponse<TranslationData>>(
-            `/news-posts/${newsId}/translations/${translationId}`
+            `/news-posts/translations/${translationId}`
+        );
+    },
+
+    getOriginalTranslation: (newsId: NewsData['id']) => {
+        return axiosInstance.get<DetailResponse<TranslationData>>(
+            `/news-posts/${newsId}/translations/default`
         );
     },
 
@@ -61,21 +76,37 @@ export const newsApis = {
         );
     },
 
-    createTranslate: (newsId: string, payload: CreateTranslationPayload) => {
+    createTranslate: (payload: CreateTranslationPayload) => {
         return axiosInstance.post<DetailResponse<TranslationData>>(
-            `/news-posts/${newsId}/add-translation`,
+            `/news-posts/translations`,
             payload
         );
     },
 
     update: (id: NewsData['id'], payload: UpdateNewsPayload) => {
         return axiosInstance.put<DetailResponse<NewsData>>(
-            `news-posts/${id}`,
+            `/news-posts/${id}`,
+            payload
+        );
+    },
+
+    updateTranslation: (
+        id: TranslationData['id'],
+        payload: UpdateTranslationPayload
+    ) => {
+        return axiosInstance.put<DetailResponse<TranslationData>>(
+            `/news-posts/translations/${id}`,
             payload
         );
     },
 
     delete: (id: NewsData['id']) => {
         return axiosInstance.delete(`/news-posts/${id}`);
+    },
+
+    deleteTranslation: (translationId: TranslationData['id']) => {
+        return axiosInstance.delete(
+            `/news-posts/translations/${translationId}`
+        );
     },
 };

@@ -6,11 +6,10 @@ export interface CreateNewsPayload extends Partial<NewsData> {}
 export interface UpdateNewsPayload extends CreateNewsPayload {}
 
 export interface CreateTranslationPayload extends Partial<TranslationData> {
-    newsId: string;
+    newsPostId?: string;
 }
 
 export interface CreateTranslation extends CommonFunction {
-    newsId: string;
     payload: CreateTranslationPayload;
 }
 

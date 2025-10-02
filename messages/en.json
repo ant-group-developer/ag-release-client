@@ -64,7 +64,9 @@
         }
     },
     "common": {
+        "reset": "Reset",
         "translation": "Translation",
+        "translations": "Translations",
         "addTranslate": "Add translate",
         "public": "Public",
         "private": "Private",
@@ -1658,7 +1660,8 @@
     "news": {
         "label": "News",
         "name": "News title",
-        "addTranslate": "Add translate"
+        "addTranslate": "Add translate",
+        "updateTranslate": "Update translate"
     },
 
     "newsPost": {
@@ -1677,6 +1680,25 @@
                 "duplicateNameVi": "Vietnamese title is duplicated",
                 "duplicateNameEn": "English title is duplicated",
                 "duplicateCode": "Code is duplicated"
+            }
+        }
+    },
+
+    "newsPostTranslation": {
+        "label": "News post translation",
+        "message": {
+            "success": {
+                "create": "Create translation successfully",
+                "update": "Update translation successfully",
+                "delete": "Delete translation successfully"
+            },
+            "error": {
+                "notFound": "Translation not found",
+                "postNotFound": "News post not found",
+                "languageNotFound": "Language not found",
+                "cannotDeleteDefault": "Cannot delete default translation",
+                "uniqueConstraint": "Translation for this news post and language already exists",
+                "mustHaveOneDefault": "At least one translation must be set as default"
             }
         }
     }

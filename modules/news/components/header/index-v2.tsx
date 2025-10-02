@@ -1,4 +1,3 @@
-import CreateButton from '@/components/ui/button/create-button';
 import DateRangePicker from '@/components/ui/input/date-range-picker';
 import NewsCategorySelect from '@/components/ui/select/news-category-select';
 import { UseFilterProps } from '@/hooks/use-filter';
@@ -8,7 +7,7 @@ import { ProForm, ProFormText, QueryFilter } from '@ant-design/pro-components';
 import { Select } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
-import { NEWS_STATUS, TYPE_MODAL_NEWS } from '../../enums';
+import { NEWS_STATUS } from '../../enums';
 import { useGetListKeywords } from '../../hooks/use-get-keywords';
 import { NewsDataFilter } from '../../types';
 
@@ -80,29 +79,19 @@ export const NewsHeaderV2 = ({
     }, []);
 
     return (
-        <div className="app-header">
+        <div className="app-header mb-4">
             <QueryFilter
-                className="border-b"
+                className="rounded-md bg-white"
                 form={form}
                 onFinish={handleSubmit}
                 onReset={handleReset}
                 layout="vertical"
-                // submitter={{
-                //     render: (props, doms) => {
-                //         return [
-                //             ...doms,
-                //             <div key={'create'}>
-                //                 <CreateButton
-                //                     canCreate={true}
-                //                     text={messages('action.create.button')}
-                //                     onClick={() =>
-                //                         openModal(TYPE_MODAL_NEWS.CREATE)
-                //                     }
-                //                 />
-                //             </div>,
-                //         ];
-                //     },
-                // }}
+                submitter={{
+                    searchConfig: {
+                        submitText: messages('common.search'),
+                        resetText: messages('common.reset'),
+                    },
+                }}
             >
                 <ProFormText
                     name="title"
@@ -182,18 +171,18 @@ export const NewsHeaderV2 = ({
                     />
                 </ProForm.Item>
             </QueryFilter>
-            <div className="flex justify-end gap-2 border-b py-2">
-                {/* <TableLayoutSegmented
+            {/* <div className="flex justify-end gap-2 border-b py-2"> */}
+            {/* <TableLayoutSegmented
                     className="!mr-2"
                     value={layoutTable}
                     onChange={toggleLayoutTable}
                 /> */}
-                <CreateButton
+            {/* <CreateButton
                     canCreate={true}
                     text={messages('action.create.button')}
                     onClick={() => openModal(TYPE_MODAL_NEWS.CREATE)}
                 />
-            </div>
+            </div> */}
         </div>
     );
 };

@@ -1,14 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { newsApis } from '../apis';
 import { newsQueryKeys } from '../constants/query-keys';
-import { TranslationData } from '../types';
+import { NewsData, TranslationData } from '../types';
 
-export const useGetDetailTranslation = (transId: TranslationData['id']) => {
+export const useGetOriginalTranslation = (newsId: NewsData['id']) => {
     const { data, ...res } = useQuery({
-        queryKey: newsQueryKeys.getDetailTranslation(transId),
-        queryFn: () => newsApis.getDetailTranslation(transId),
+        queryKey: newsQueryKeys.getDetailTranslation(newsId),
+        queryFn: () => newsApis.getOriginalTranslation(newsId),
         placeholderData: (prev) => prev,
-        enabled: !!transId,
     });
 
     const translationData = data?.data?.data ?? ({} as TranslationData);

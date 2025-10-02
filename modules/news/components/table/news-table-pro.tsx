@@ -86,13 +86,15 @@ export default function NewsTablePro({ dataFilter, ...props }: Props) {
                     //     </Link>
                     // </CustomTooltip>
                     <div className="flex gap-2">
-                        <ImageFallback
-                            className="rounded-lg"
-                            width={80}
-                            height={80}
-                            alt=""
-                            src={src}
-                        />
+                        <div className="h-14 w-20 flex-shrink-0 overflow-hidden rounded-lg">
+                            <ImageFallback
+                                src={src}
+                                alt=""
+                                width={80} // Khớp với w-20 (20*4=80px)
+                                height={50} // Khớp với h-10 (10*4=40px)
+                                className="h-full w-full rounded-lg object-cover"
+                            />
+                        </div>
                         <div className="flex max-w-[650px] flex-1 flex-col">
                             <Link href={`news/${record?.slug}`}>
                                 <Typography.Text
@@ -184,8 +186,8 @@ export default function NewsTablePro({ dataFilter, ...props }: Props) {
         },
         {
             title: messages('common.createdAt'),
-            key: 'createdAt',
-            dataIndex: 'createdAt',
+            key: 'newsPost.createdAt',
+            dataIndex: 'newsPost.createdAt',
             align: 'center',
             width: 200,
             fieldProps: {
@@ -204,7 +206,7 @@ export default function NewsTablePro({ dataFilter, ...props }: Props) {
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'createdAt'
+                'newsPost.createdAt'
             ),
         },
         {

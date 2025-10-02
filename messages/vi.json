@@ -64,7 +64,9 @@
         }
     },
     "common": {
+        "reset": "Đặt lại",
         "translation": "Bản dịch",
+        "translations": "Bản dịch",
         "addTranslate": "Thêm bản dịch",
         "public": "Công khai",
         "private": "Riêng tư",
@@ -1664,7 +1666,8 @@
     "news": {
         "label": "Tin tức",
         "name": "Tiêu đề tin tức",
-        "addTranslate": "Thêm bản dịch"
+        "addTranslate": "Thêm bản dịch",
+        "updateTranslate": "Cập nhật bản dịch"
     },
 
     "newsPost": {
@@ -1683,6 +1686,25 @@
                 "duplicateNameVi": "Tiêu đề tiếng Việt bị trùng",
                 "duplicateNameEn": "Tiêu đề tiếng Anh bị trùng",
                 "duplicateCode": "Mã bị trùng"
+            }
+        }
+    },
+
+    "newsPostTranslation": {
+        "label": "Bản dịch tin tức",
+        "message": {
+            "success": {
+                "create": "Tạo bản dịch thành công",
+                "update": "Cập nhật bản dịch thành công",
+                "delete": "Xóa bản dịch thành công"
+            },
+            "error": {
+                "notFound": "Không tìm thấy bản dịch",
+                "postNotFound": "Không tìm thấy tin tức gốc",
+                "languageNotFound": "Không tìm thấy ngôn ngữ",
+                "cannotDeleteDefault": "Không thể xóa bản dịch mặc định",
+                "uniqueConstraint": "Bản dịch cho tin tức này và ngôn ngữ này đã tồn tại",
+                "mustHaveOneDefault": "Phải có ít nhất một bản dịch được đặt làm mặc định"
             }
         }
     }

@@ -122,9 +122,9 @@ body {
 }
 
 /* Disable padding query filter */
-.ant-pro-query-filter {
+/* .ant-pro-query-filter {
     @apply !px-0 !pt-0;
-}
+} */
 
 /* Label form query filter font bold */
 .ant-form-vertical .ant-form-item-label > label {

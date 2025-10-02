@@ -9,9 +9,19 @@ export const newsQueryKeys = {
             ? ([...newsQueryKeys.lists(), params] as const)
             : newsQueryKeys.lists(),
     getKeywords: () => [...newsQueryKeys.all, 'keywords'],
-    getDetail: (slug: NewsData['slug']) => [newsQueryKeys.all, slug],
-    getDetailTranslation: (newsId: string, translationId: string) => [
-        newsQueryKeys.getDetail,
-        { newsId, translationId },
+    getDetail: (locale: string, slug: NewsData['slug']) => [
+        newsQueryKeys.all,
+        locale,
+        slug,
+    ],
+    getDetailTranslation: (translationId: string) => [
+        newsQueryKeys.all,
+        QUERY_KEY.NEWS.GET_DETAIL_TRANSLATION,
+        translationId,
+    ],
+    getListTranslation: (newsId: string) => [
+        newsQueryKeys.all,
+        QUERY_KEY.NEWS.GET_LIST_TRANSLATIONS,
+        newsId,
     ],
 };

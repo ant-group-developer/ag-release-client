@@ -4,7 +4,6 @@ import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { LOCALE } from '@/enums/common';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
-import { getNameByLocale } from '@/helpers/string';
 import useModalStore from '@/hooks/use-modal';
 import { ColumnType } from 'antd/es/table';
 import { useLocale, useTranslations } from 'next-intl';
@@ -70,11 +69,7 @@ export default function NewsTable({ dataFilter, ...props }: Props) {
             align: 'left',
             width: 300,
             render: (value, record) => {
-                const title = getNameByLocale(
-                    record?.titleEn,
-                    record?.titleVi,
-                    locale
-                );
+                const title = record?.title;
                 return (
                     <CustomTooltip title={title}>
                         <Link href={`news/${record?.slug}`}>
