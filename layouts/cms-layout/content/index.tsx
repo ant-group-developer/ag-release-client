@@ -13,6 +13,7 @@ function ContentComponent({ children }: Props) {
         <Content>
             <div
                 style={{ backgroundColor: token.colorBgContainer }}
+                // style={{ backgroundColor: '#f5f7fa' }}
                 className="h-[calc(100vh-4rem)] overflow-auto"
             >
                 {children}

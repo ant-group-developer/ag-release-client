@@ -6,12 +6,12 @@ type Props = Omit<SelectProps, 'options'> & {
     fallBack?: string;
 };
 
-export default function LanguageSelect({ fallBack, ...props }: Props) {
+export default function CodeLanguageSelect({ fallBack, ...props }: Props) {
     const { languagesData } = useGetListSimpleLanguage();
     const option = languagesData?.map((item) => {
         return {
             id: item.id,
-            value: item.id,
+            value: item.code,
             label: (
                 <div className="space-x-1">
                     <Typography.Text className="!text-xs">

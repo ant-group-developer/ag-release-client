@@ -4,7 +4,6 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
-import { getNameByLocale } from '@/helpers/string';
 import { Link } from '@/i18n/routing';
 import { Card, Skeleton, Spin } from 'antd';
 import Meta from 'antd/es/card/Meta';
@@ -34,11 +33,7 @@ export default function NewsGridTable({ scroll, data, loading }: Props) {
                 }}
             >
                 {data?.map((item) => {
-                    const title = getNameByLocale(
-                        item?.titleEn,
-                        item?.titleVi,
-                        locale
-                    );
+                    const title = item?.title;
                     return (
                         <div key={item?.id}>
                             <Card

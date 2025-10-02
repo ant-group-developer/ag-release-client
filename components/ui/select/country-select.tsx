@@ -1,6 +1,6 @@
 import { toNonAccentVietnamese } from '@/helpers/string';
 import { useGetListSimpleCountries } from '@/modules/countries/hooks/use-get-list-simple-countries';
-import { Select, SelectProps } from 'antd';
+import { Select, SelectProps, Typography } from 'antd';
 
 type Props = Omit<SelectProps, 'option'> & {
     fallBack?: string;
@@ -13,7 +13,15 @@ export default function CountrySelect({ fallBack, ...props }: Props) {
         return {
             id: item.id,
             value: item.id,
-            label: item.name,
+            label: (
+                <div className="space-x-1">
+                    <Typography.Text className="!text-xs">
+                        {item?.iso2}
+                    </Typography.Text>
+                    <Typography.Text>{item?.name}</Typography.Text>
+                </div>
+            ),
+            name: item?.name,
         };
     });
 
@@ -29,7 +37,7 @@ export default function CountrySelect({ fallBack, ...props }: Props) {
             {...props}
             showSearch
             filterOption={(input, option) =>
-                toNonAccentVietnamese(option?.label ?? '')
+                toNonAccentVietnamese(option?.name ?? '')
                     .toLowerCase()
                     .includes(toNonAccentVietnamese(input).toLowerCase())
             }

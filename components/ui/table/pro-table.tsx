@@ -9,7 +9,7 @@ export type AppProTableProps<RecordType extends object> = ProTableProps<
 
 export default function AppProTable<RecordType extends object>({
     scroll,
-    search,
+    search = false,
     ...props
 }: AppProTableProps<RecordType>) {
     return (

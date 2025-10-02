@@ -5,7 +5,6 @@ import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { LOCALE } from '@/enums/common';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
-import { getNameByLocale } from '@/helpers/string';
 import useModalStore from '@/hooks/use-modal';
 import { Link } from '@/i18n/routing';
 import { ProColumns } from '@ant-design/pro-components';
@@ -77,16 +76,6 @@ export default function NewsTablePro({ dataFilter, ...props }: Props) {
                 placeholder: '',
             },
             render: (value, record) => {
-                const title = getNameByLocale(
-                    record?.titleEn,
-                    record?.titleVi,
-                    locale
-                );
-                const description = getNameByLocale(
-                    record?.descriptionEn,
-                    record?.descriptionVi,
-                    locale
-                );
                 const src = record?.thumbnail;
                 return (
                     // <CustomTooltip title={title}>
@@ -97,24 +86,26 @@ export default function NewsTablePro({ dataFilter, ...props }: Props) {
                     //     </Link>
                     // </CustomTooltip>
                     <div className="flex gap-2">
-                        <ImageFallback
-                            className="rounded-lg"
-                            width={80}
-                            height={80}
-                            alt=""
-                            src={src}
-                        />
-                        <div className="flex max-w-[650px] flex-1 flex-col justify-between">
+                        <div className="h-14 w-20 flex-shrink-0 overflow-hidden rounded-lg">
+                            <ImageFallback
+                                src={src}
+                                alt=""
+                                width={80} // Khớp với w-20 (20*4=80px)
+                                height={50} // Khớp với h-10 (10*4=40px)
+                                className="h-full w-full rounded-lg object-cover"
+                            />
+                        </div>
+                        <div className="flex max-w-[650px] flex-1 flex-col">
                             <Link href={`news/${record?.slug}`}>
                                 <Typography.Text
                                     className="font-semibold hover:text-blue-500 hover:underline"
                                     ellipsis={{ tooltip: true }}
                                 >
-                                    {title}
+                                    {record?.title}
                                 </Typography.Text>
                             </Link>
                             <Typography.Text ellipsis>
-                                {description}
+                                {record?.description}
                             </Typography.Text>
                         </div>
                     </div>
@@ -195,8 +186,8 @@ export default function NewsTablePro({ dataFilter, ...props }: Props) {
         },
         {
             title: messages('common.createdAt'),
-            key: 'createdAt',
-            dataIndex: 'createdAt',
+            key: 'newsPost.createdAt',
+            dataIndex: 'newsPost.createdAt',
             align: 'center',
             width: 200,
             fieldProps: {
@@ -215,7 +206,7 @@ export default function NewsTablePro({ dataFilter, ...props }: Props) {
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'createdAt'
+                'newsPost.createdAt'
             ),
         },
         {
@@ -228,6 +219,14 @@ export default function NewsTablePro({ dataFilter, ...props }: Props) {
                 <ActionButton
                     showUpdate
                     showDelete
+                    // showAddTranslate
+                    showTranslation
+                    onShowTranslation={() =>
+                        openModal(TYPE_MODAL_NEWS.TRANSLATE_LIST, record)
+                    }
+                    // onShowAddTranslate={() =>
+                    //     openModal(TYPE_MODAL_NEWS.ADD_TRANSLATE, record)
+                    // }
                     onShowUpdate={() => {
                         openModal(TYPE_MODAL_NEWS.EDIT, record);
                     }}

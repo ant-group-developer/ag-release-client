@@ -3,6 +3,7 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import FullScreenModal from '@/components/ui/modal/fullScreenModal';
 import { AppModalProps } from '@/components/ui/modal/normal-modal';
+import CodeLanguageSelect from '@/components/ui/select/code-language-select';
 import NewsCategorySelect from '@/components/ui/select/news-category-select';
 import TagSelect from '@/components/ui/tag/tag-select';
 import TextEditor from '@/components/ui/text-editor';
@@ -17,10 +18,10 @@ import useModalStore from '@/hooks/use-modal';
 import { uploadApi } from '@/modules/upload/apis';
 import { ENTITY_TYPE_PICTURE } from '@/modules/upload/types/data';
 import { CreateVariables, UpdateVariables } from '@/types/api';
-import { Form, Image, Input, Select, Typography } from 'antd';
+import { Form, Input, Select } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { Save } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { NEWS_STATUS } from '../../enums';
 import { useCreateNews } from '../../hooks/use-create';
@@ -34,6 +35,7 @@ type Props = Omit<AppModalProps, 'children'> & {};
 export default function NewsFormModal({ ...props }: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
+    const locale = useLocale();
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as NewsData);
     const { active, isActive, deActive } = useActive();
@@ -83,12 +85,13 @@ export default function NewsFormModal({ ...props }: Props) {
     };
 
     const onFinish = async (values: any) => {
-        const { pictureFile, ...res } = values;
+        const { pictureFile, keywords, ...res } = values;
         const file = values?.pictureFile?.fileList[0]?.originFileObj;
         active();
 
         const payloadValues = {
             ...res,
+            keywords: keywords ?? [],
         };
 
         if (file) {
@@ -126,7 +129,7 @@ export default function NewsFormModal({ ...props }: Props) {
                               uid: dataEdit?.id,
                               thumbUrl: dataEdit?.thumbnail,
                               url: dataEdit?.thumbnail,
-                              name: dataEdit?.titleEn,
+                              name: dataEdit?.title,
                           },
                       ],
                   }
@@ -162,207 +165,158 @@ export default function NewsFormModal({ ...props }: Props) {
                 showSubmit={false}
                 layout="vertical"
                 disabled={isActive}
-                className="grid grid-cols-2 gap-8"
+                initialValues={{
+                    status: NEWS_STATUS.PUBLIC,
+                    languageCode: locale ?? '',
+                }}
             >
-                <div>
-                    <div className="flex items-center gap-2">
-                        <Image alt="Việt Nam" src="/languages/vi.svg" />
-                        <Typography.Text strong={true} className="!text-lg">
-                            {messages('language.vietnamese')}
-                        </Typography.Text>
-                    </div>
-                    <AppFormItem
-                        name="titleVi"
-                        label={`${messages('common.title')}`}
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.input'),
-                            },
-                            {
-                                max: MAX_NAME_LENGTH,
-                                message: messages('validation.stringMax', {
+                <div className="m-auto grid h-[calc(100vh-68px)] w-full grid-cols-12 overflow-y-auto">
+                    <div className="col-span-10 border-r px-8 py-4">
+                        {/* <div className="flex items-center gap-2">
+                            <Image alt="Việt Nam" src="/languages/vi.svg" />
+                            <Typography.Text strong={true} className="!text-lg">
+                                {messages('language.vietnamese')}
+                            </Typography.Text>
+                        </div> */}
+                        <AppFormItem
+                            name="languageCode"
+                            label={`${messages('language.label')}`}
+                            required
+                            rules={[
+                                {
+                                    required: true,
+                                    message: messages('validation.input'),
+                                },
+                            ]}
+                        >
+                            <CodeLanguageSelect allowClear />
+                        </AppFormItem>
+                        <AppFormItem
+                            name="title"
+                            label={`${messages('common.title')}`}
+                            required
+                            rules={[
+                                {
+                                    required: true,
+                                    message: messages('validation.input'),
+                                },
+                                {
                                     max: MAX_NAME_LENGTH,
-                                    field: messages('common.title'),
-                                }),
-                            },
-                        ]}
-                    >
-                        <Input allowClear />
-                    </AppFormItem>
+                                    message: messages('validation.stringMax', {
+                                        max: MAX_NAME_LENGTH,
+                                        field: messages('common.title'),
+                                    }),
+                                },
+                            ]}
+                        >
+                            <Input allowClear />
+                        </AppFormItem>
 
-                    <AppFormItem
-                        name="descriptionVi"
-                        label={messages('common.description')}
-                        rules={[
-                            {
-                                max: MAX_NOTE_LENGTH,
-                                message: messages('validation.stringMax', {
+                        <AppFormItem
+                            name="description"
+                            label={messages('common.description')}
+                            rules={[
+                                {
                                     max: MAX_NOTE_LENGTH,
-                                    field: messages('common.description'),
-                                }),
-                            },
-                        ]}
-                    >
-                        <TextArea
-                            autoSize={{
-                                minRows: 3,
-                                maxRows: 7,
-                            }}
-                            showCount
-                        />
-                    </AppFormItem>
+                                    message: messages('validation.stringMax', {
+                                        max: MAX_NOTE_LENGTH,
+                                        field: messages('common.description'),
+                                    }),
+                                },
+                            ]}
+                        >
+                            <TextArea
+                                autoSize={{
+                                    minRows: 3,
+                                    maxRows: 7,
+                                }}
+                                showCount
+                            />
+                        </AppFormItem>
 
-                    <AppFormItem
-                        name="contentVi"
-                        label={messages('common.content')}
-                        rules={[
-                            {
-                                required: true,
-                                whitespace: true,
-                                message: messages('validation.input'),
-                            },
-                        ]}
-                    >
-                        <TextEditor className="editor-large" />
-                    </AppFormItem>
-                </div>
-
-                <div>
-                    <div className="flex items-center gap-2">
-                        <Image alt="English" src="/languages/en.svg" />
-                        <Typography.Text strong={true} className="!text-lg">
-                            {messages('language.english')}
-                        </Typography.Text>
+                        <AppFormItem
+                            name="content"
+                            label={messages('common.content')}
+                            rules={[
+                                {
+                                    required: true,
+                                    whitespace: true,
+                                    message: messages('validation.input'),
+                                },
+                            ]}
+                        >
+                            <TextEditor className="editor-large" />
+                        </AppFormItem>
                     </div>
-                    <AppFormItem
-                        name="titleEn"
-                        label={`${messages('common.title')}`}
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.input'),
-                            },
-                            {
-                                max: MAX_NAME_LENGTH,
-                                message: messages('validation.stringMax', {
-                                    max: MAX_NAME_LENGTH,
-                                    field: messages('common.title'),
-                                }),
-                            },
-                        ]}
-                    >
-                        <Input allowClear />
-                    </AppFormItem>
-
-                    <AppFormItem
-                        name="descriptionEn"
-                        label={messages('common.description')}
-                        rules={[
-                            {
-                                max: MAX_NOTE_LENGTH,
-                                message: messages('validation.stringMax', {
-                                    max: MAX_NOTE_LENGTH,
-                                    field: messages('common.description'),
-                                }),
-                            },
-                        ]}
-                    >
-                        <TextArea
-                            autoSize={{
-                                minRows: 3,
-                                maxRows: 7,
-                            }}
-                            showCount
-                        />
-                    </AppFormItem>
-
-                    <AppFormItem
-                        name="contentEn"
-                        label={messages('common.content')}
-                        rules={[
-                            {
-                                required: true,
-                                whitespace: true,
-                                message: messages('validation.input'),
-                            },
-                        ]}
-                    >
-                        <TextEditor className="editor-large" />
-                    </AppFormItem>
-                </div>
-
-                <div className="col-span-2 flex gap-8 border-t pt-8">
-                    <AppFormItem
-                        name="pictureFile"
-                        label={`${messages('common.thumbnail')}`}
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.input'),
-                            },
-                        ]}
-                    >
-                        <ImageListUpload
-                            maxCount={1}
-                            accept={ACCEPT_IMAGE}
-                            maxSizeMB={3}
-                        />
-                    </AppFormItem>
-                    <AppFormItem
-                        name="status"
-                        label={`${messages('common.status')}`}
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.input'),
-                            },
-                        ]}
-                    >
-                        <Select
-                            options={statusOptions}
-                            placeholder={messages('common.status')}
-                            className="min-w-96"
-                        />
-                    </AppFormItem>
-                    <AppFormItem
-                        name="newsCategoryId"
-                        label={`${messages('newsCategory.label')}`}
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.input'),
-                            },
-                        ]}
-                    >
-                        <NewsCategorySelect
-                            placeholder={messages('newsCategory.label')}
-                            className="min-w-96"
-                        />
-                    </AppFormItem>
-                    <AppFormItem
-                        className="flex-1"
-                        name="keywords"
-                        label={`${messages('common.keyword')}`}
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.input'),
-                            },
-                        ]}
-                    >
-                        <TagSelect
-                            keywords={keywordsData}
-                            placeholder={messages('common.keyword')}
-                            className="min-w-96"
-                        />
-                    </AppFormItem>
+                    <div className="sticky top-0 col-span-2 flex w-full flex-col gap-4 px-8 py-4">
+                        <AppFormItem
+                            name="pictureFile"
+                            label={`${messages('common.thumbnail')}`}
+                            required
+                            rules={[
+                                {
+                                    required: true,
+                                    message: messages('validation.input'),
+                                },
+                            ]}
+                        >
+                            <ImageListUpload
+                                maxCount={1}
+                                accept={ACCEPT_IMAGE}
+                                maxSizeMB={3}
+                            />
+                        </AppFormItem>
+                        <AppFormItem
+                            name="status"
+                            label={`${messages('common.status')}`}
+                            required
+                            rules={[
+                                {
+                                    required: true,
+                                    message: messages('validation.input'),
+                                },
+                            ]}
+                        >
+                            <Select
+                                options={statusOptions}
+                                placeholder={messages('common.status')}
+                                className="w-full"
+                            />
+                        </AppFormItem>
+                        <AppFormItem
+                            name="newsCategoryId"
+                            label={`${messages('newsCategory.label')}`}
+                            required
+                            rules={[
+                                {
+                                    required: true,
+                                    message: messages('validation.input'),
+                                },
+                            ]}
+                        >
+                            <NewsCategorySelect
+                                placeholder={messages('newsCategory.label')}
+                                className="w-full"
+                            />
+                        </AppFormItem>
+                        <AppFormItem
+                            className="w-full"
+                            name="keywords"
+                            label={`${messages('common.keyword')}`}
+                            // required
+                            // rules={[
+                            //     {
+                            //         required: true,
+                            //         message: messages('validation.input'),
+                            //     },
+                            // ]}
+                        >
+                            <TagSelect
+                                keywords={keywordsData}
+                                placeholder={messages('common.keyword')}
+                            />
+                        </AppFormItem>
+                    </div>
                 </div>
             </AppForm>
         </FullScreenModal>

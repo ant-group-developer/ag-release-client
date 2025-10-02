@@ -6,7 +6,7 @@ export interface LanguagesData extends CommonAttribute {
 }
 
 export interface LanguagesSimpleData
-    extends Pick<LanguagesData, 'id' | 'name'> {}
+    extends Pick<LanguagesData, 'id' | 'name' | 'code'> {}
 
 export interface LanguageDataFilter extends CommonParams {
     keyword?: string;

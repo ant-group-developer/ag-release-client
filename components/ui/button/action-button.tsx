@@ -5,6 +5,8 @@ import {
     CircleX,
     Download,
     Eye,
+    Globe,
+    Languages,
     MessageCircleMore,
     MoreVertical,
     Pencil,
@@ -24,6 +26,10 @@ export interface ActionButtonProps {
     showCancel?: boolean;
     showContinue?: boolean;
     showDownload?: boolean;
+    showAddTranslate?: boolean;
+    showTranslation?: boolean;
+    onShowTranslation?: MouseEventHandler<HTMLElement>;
+    onShowAddTranslate?: MouseEventHandler<HTMLElement>;
     onShowDownload?: MouseEventHandler<HTMLElement>;
     onShowContinue?: MouseEventHandler<HTMLElement>;
     onShowCancel?: MouseEventHandler<HTMLElement>;
@@ -43,6 +49,8 @@ enum ACTION_BUTTON {
     CANCEL = 'cancel',
     CONTINUE = 'continue',
     DOWNLOAD = 'download',
+    SHOW_ADD_TRANSLATE = 'showAddTranslate',
+    SHOW_TRANSLATIONS = 'showTranslations',
 }
 
 export default function ActionButton({
@@ -54,6 +62,10 @@ export default function ActionButton({
     showCancel,
     showContinue,
     showDownload,
+    showAddTranslate,
+    showTranslation,
+    onShowTranslation,
+    onShowAddTranslate,
     onShowDownload,
     onShowContinue,
     onShowCancel,
@@ -95,6 +107,28 @@ export default function ActionButton({
                 <div className="flex items-center gap-2">
                     <Eye size={SIZE_ICON_SMALL} />
                     {messages('common.detail')}
+                </div>
+            ),
+        });
+    }
+    if (showAddTranslate) {
+        items.push({
+            key: ACTION_BUTTON.SHOW_ADD_TRANSLATE,
+            label: (
+                <div className="flex items-center gap-2">
+                    <Languages size={SIZE_ICON_SMALL} />
+                    {messages('common.addTranslate')}
+                </div>
+            ),
+        });
+    }
+    if (showTranslation) {
+        items.push({
+            key: ACTION_BUTTON.SHOW_TRANSLATIONS,
+            label: (
+                <div className="flex items-center gap-2">
+                    <Globe size={SIZE_ICON_SMALL} />
+                    {messages('common.translation')}
                 </div>
             ),
         });
@@ -175,6 +209,8 @@ export default function ActionButton({
             [ACTION_BUTTON.CANCEL]: onShowCancel,
             [ACTION_BUTTON.CONTINUE]: onShowContinue,
             [ACTION_BUTTON.DOWNLOAD]: onShowDownload,
+            [ACTION_BUTTON.SHOW_ADD_TRANSLATE]: onShowAddTranslate,
+            [ACTION_BUTTON.SHOW_TRANSLATIONS]: onShowTranslation,
         };
 
         const callback = callbacks[key];

@@ -1,5 +1,4 @@
 import { getListPostPublic } from '@/app/api/newsPost';
-import { getNameByLocale } from '@/helpers/string';
 import { PaginationResponse } from '@/types/api';
 import dayjs from 'dayjs';
 import { getLocale, getTranslations } from 'next-intl/server';
@@ -11,8 +10,8 @@ type Props = {};
 
 export default async function LatestNews({}: Props) {
     const t = await getTranslations();
-    const res = await getListPostPublic({ pageSize: 10 });
     const locale = await getLocale();
+    const res = await getListPostPublic({ pageSize: 6, languageCode: locale });
     const data = res?.data as PaginationResponse<NewsData>['data'];
     const latestNews = [...(data?.items ?? [])].slice(0, 6).sort(
         (a, b) => dayjs(b.createdAt).diff(dayjs(a.createdAt)) // DESC
@@ -41,11 +40,7 @@ export default async function LatestNews({}: Props) {
 
                             <div className="line-clamp-4 text-wrap">
                                 <h3 className="break-words font-semibold sm:line-clamp-1 md:line-clamp-2 lg:line-clamp-4">
-                                    {getNameByLocale(
-                                        item?.titleEn,
-                                        item?.titleVi,
-                                        locale
-                                    )}
+                                    {item?.title}
                                 </h3>
                                 {/* <p>
                                     {getNameByLocale(

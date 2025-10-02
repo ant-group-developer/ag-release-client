@@ -15,7 +15,7 @@ export interface CountriesData extends CommonAttribute {
 }
 
 export interface CountriesSimpleData
-    extends Pick<CountriesData, 'id' | 'name'> {}
+    extends Pick<CountriesData, 'id' | 'name' | 'iso2'> {}
 
 export interface CountriesDataFilter extends CommonParams {
     keyword?: string;

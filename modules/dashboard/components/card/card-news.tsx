@@ -3,7 +3,6 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
-import { getNameByLocale } from '@/helpers/string';
 import { NewsData } from '@/modules/news/types';
 import { Card, CardProps } from 'antd';
 import Meta from 'antd/es/card/Meta';
@@ -37,13 +36,7 @@ export default function CardNews({ data, ...props }: Props) {
             <Meta
                 title={
                     <CustomTooltip title="Meet Revelator at Music Biz 2025: Breaking Borders & Building Global Strategies">
-                        <span className="cursor-pointer">
-                            {getNameByLocale(
-                                data?.titleEn,
-                                data?.titleVi,
-                                locale
-                            )}
-                        </span>
+                        <span className="cursor-pointer">{data?.title}</span>
                     </CustomTooltip>
                 }
                 description={

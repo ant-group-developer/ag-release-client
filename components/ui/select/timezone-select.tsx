@@ -1,6 +1,6 @@
 import { toNonAccentVietnamese } from '@/helpers/string';
 import { useGetListSimpleTimezones } from '@/modules/timezone/hooks/use-get-list-simple-timezones';
-import { Select, SelectProps } from 'antd';
+import { Select, SelectProps, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 
 interface TimezoneSelectProps extends SelectProps {
@@ -18,7 +18,14 @@ export default function TimezoneSelect({
         id: item.id,
         value: item.id,
         name: item.name,
-        label: `${item.name} ${item.utc}`,
+        label: (
+            <div className="space-x-1">
+                <Typography.Text className="!text-xs">
+                    {item?.utc}
+                </Typography.Text>
+                <Typography.Text>{item?.name}</Typography.Text>
+            </div>
+        ),
     }));
 
     const labelRender = (props: any) => {
