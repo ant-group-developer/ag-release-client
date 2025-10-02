@@ -39,7 +39,7 @@ export default function NewsFormModal({ ...props }: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as NewsData);
     const { active, isActive, deActive } = useActive();
-    const isUpdateModal = dataEdit?.id;
+    const isUpdateModal = !!dataEdit?.id;
 
     const { keywordsData } = useGetListKeywords();
     const { createNews } = useCreateNews();
@@ -171,7 +171,7 @@ export default function NewsFormModal({ ...props }: Props) {
                 }}
             >
                 <div className="m-auto grid h-[calc(100vh-68px)] w-full grid-cols-12 overflow-y-auto">
-                    <div className="col-span-10 border-r px-8 py-4">
+                    <div className="col-span-9 border-r px-8 py-4">
                         {/* <div className="flex items-center gap-2">
                             <Image alt="Việt Nam" src="/languages/vi.svg" />
                             <Typography.Text strong={true} className="!text-lg">
@@ -189,7 +189,10 @@ export default function NewsFormModal({ ...props }: Props) {
                                 },
                             ]}
                         >
-                            <CodeLanguageSelect allowClear />
+                            <CodeLanguageSelect
+                                disabled={isUpdateModal}
+                                allowClear
+                            />
                         </AppFormItem>
                         <AppFormItem
                             name="title"
@@ -248,7 +251,7 @@ export default function NewsFormModal({ ...props }: Props) {
                             <TextEditor className="editor-large" />
                         </AppFormItem>
                     </div>
-                    <div className="sticky top-0 col-span-2 flex w-full flex-col gap-4 px-8 py-4">
+                    <div className="sticky top-0 col-span-3 flex w-full flex-col gap-4 px-8 py-4">
                         <AppFormItem
                             name="pictureFile"
                             label={`${messages('common.thumbnail')}`}

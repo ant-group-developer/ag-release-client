@@ -197,7 +197,7 @@ export const adminRoutes: RouteNode[] = [
     {
         id: 'category',
         type: 'group',
-        label: 'common.category',
+        label: 'common.categories',
         children: [
             {
                 id: 'artists',

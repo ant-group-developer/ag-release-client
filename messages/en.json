@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "clearFilter": "Clear filter",
         "reset": "Reset",
         "translation": "Translation",
         "translations": "Translations",
@@ -107,7 +108,8 @@
         "value": "Value",
         "viewDetail": "View detail",
         "systemCategories": "System Categories",
-        "category": "Categories",
+        "category": "Category",
+        "categories": "Categories",
         "variousArtists": "Various artists",
         "activities": "Activities",
         "revenue": "Revenue",
@@ -514,7 +516,9 @@
         "dragAndDropFile": "Drag and drop file here!",
         "selectArtist": "Select artist",
         "selectRegion": "Select region",
-        "supportFormats": "Support formats: {accept}"
+        "supportFormats": "Support formats: {accept}",
+        "searchBy": "Search by ...",
+        "filterBy": "Filter by ..."
     },
     "status": {
         "label": "Status",

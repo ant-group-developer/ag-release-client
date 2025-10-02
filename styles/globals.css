@@ -131,6 +131,10 @@ body {
     @apply font-semibold;
 }
 
+.news-table .ant-table-thead > tr > th {
+    background-color: #fff !important;
+}
+
 .recharts-surface:focus {
     outline: none;
 }

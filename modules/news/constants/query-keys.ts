@@ -24,4 +24,5 @@ export const newsQueryKeys = {
         QUERY_KEY.NEWS.GET_LIST_TRANSLATIONS,
         newsId,
     ],
+    updates: () => [...newsQueryKeys.all, QUERY_KEY.NEWS.UPDATE] as const,
 };

@@ -5,6 +5,7 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
+import { formattedDate } from '@/helpers/common';
 import { Link } from '@/i18n/routing';
 import CopyLink from '@/modules/news/components/copy-link';
 import LatestNews from '@/modules/news/components/latest-news';
@@ -56,7 +57,7 @@ export default async function NewsDetail({ params }: Props) {
             ),
         },
         {
-            title: post?.slug,
+            title: post?.title,
         },
     ];
 
@@ -93,6 +94,16 @@ export default async function NewsDetail({ params }: Props) {
                     </div>
                 </div>
                 <div className="col-span-7 rounded-lg">
+                    <div>
+                        <strong className="text-2xl font-extrabold">
+                            {post?.title}
+                        </strong>
+                        <div className="pt-4">
+                            <span className="italic text-gray-500">
+                                {formattedDate(post?.createdAt)}
+                            </span>
+                        </div>
+                    </div>
                     <CKContent value={content || ''} className="font-normal" />
                 </div>
                 <div className="col-span-4">
