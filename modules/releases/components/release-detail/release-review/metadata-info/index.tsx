@@ -43,8 +43,10 @@ export default function MetadataInfo({}: Props) {
                 return releaseData.albumFormat.name || value;
 
             case 'cLineOwner':
+                return `${releaseData.cLineYear ?? ''}  ${releaseData.cLineOwner ?? ''}`.trim();
+
             case 'pLineOwner':
-                return value.length > 4 ? value.trim() : '';
+                return `${releaseData.pLineYear ?? ''}  ${releaseData.pLineOwner ?? ''}`.trim();
 
             default:
                 return value;

@@ -19,11 +19,12 @@ import {
 } from '@/modules/release-artist/types/payload';
 import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Checkbox, Form } from 'antd';
 import { useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useUpdateReleaseArtist } from '../../hooks/use-update-release-artist';
 
 type Props = Omit<AppModalProps, 'children'> & {
@@ -36,9 +37,11 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
     const [showCreateArtistModal, setShowCreateArtistModal] = useState(false);
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
-    const watchArtistName = useWatch('name', form);
+    // const watchArtistName = useWatch('name', form);
     const typeModal = useModalStore((state) => state.typeModal);
     const formValues = useReleaseFormStore((state) => state.formValues);
+    const releaseId = formValues?.id;
+    const { releaseData } = useGetDetailRelease(releaseId as string);
     const { handleError } = useApiNotify();
 
     const isArtistEditModal =
@@ -58,7 +61,7 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
     // Handle disabled role that this artist already exists
     const getExistingRoleIdsOfSelectedArtist = () => {
         return (
-            formValues?.releaseArtists
+            releaseData?.releaseArtists
                 ?.filter(
                     (item: ReleaseArtist) => item.artist?.id === watchArtistId
                 )
@@ -71,7 +74,7 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
     const watchRoleId = useWatch('roleId', form);
     const getExistingArtistOfSelectedRole = () => {
         return (
-            formValues?.releaseArtists
+            releaseData?.releaseArtists
                 ?.filter(
                     (item: ReleaseArtist) =>
                         item?.artistRole?.id === watchRoleId
@@ -120,19 +123,19 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
         }
     };
 
-    // useEffect(() => {
-    //     if (dataEdit?.id) {
-    //         form.setFieldsValue({
-    //             artistId: dataEdit?.artistId,
-    //             roleId: dataEdit?.artistRoleId,
-    //             addArtistToTracks: dataEdit?.addArtistToTracks ?? true,
-    //         });
-    //     } else {
-    //         form.setFieldsValue({
-    //             addArtistToTracks: true,
-    //         });
-    //     }
-    // }, [dataEdit]);
+    useEffect(() => {
+        if (dataEdit?.id) {
+            form.setFieldsValue({
+                artistId: dataEdit?.artistId,
+                roleId: dataEdit?.artistRoleId,
+                addArtistToTracks: dataEdit?.addArtistToTracks ?? true,
+            });
+        } else {
+            form.setFieldsValue({
+                addArtistToTracks: true,
+            });
+        }
+    }, [dataEdit]);
 
     return (
         <AppModal

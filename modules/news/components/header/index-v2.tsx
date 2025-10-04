@@ -120,7 +120,6 @@ export const NewsHeaderV2 = ({
                 <ProForm.Item
                     name="keywords"
                     label={messages('common.keyword')}
-                    placeholder={messages('placeholder.filterBy')}
                 >
                     <Select
                         // defaultValue={value}
@@ -129,7 +128,7 @@ export const NewsHeaderV2 = ({
                         allowClear
                         mode="tags"
                         className="min-w-72"
-                        placeholder={messages('common.keyword')}
+                        placeholder={messages('placeholder.filterBy')}
                         options={option}
                         popupMatchSelectWidth={false}
                         dropdownStyle={{ zIndex: 9999 }}

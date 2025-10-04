@@ -88,7 +88,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     href={getReleaseTabRoute(releaseId, RELEASES_TABS.TRACKS)}
                 >
                     <span className="font-medium">
-                        {messages('track.label')}
+                        {messages('common.tracks')}
                     </span>
                 </Link>
             ),

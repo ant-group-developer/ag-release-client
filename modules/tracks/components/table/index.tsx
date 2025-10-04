@@ -150,8 +150,7 @@ export default function TracksTable({
                 const trackArtist = record?.trackArtists ?? [];
                 const mainArtist = trackArtist?.find(
                     (item: TrackArtistData) =>
-                        item.artistRole?.code?.toLowerCase() ===
-                        MAIN_ARTIST_ROLE
+                        item.artistRole?.code == MAIN_ARTIST_ROLE
                 );
                 return (
                     // <CustomTooltip size="small" title={value}>

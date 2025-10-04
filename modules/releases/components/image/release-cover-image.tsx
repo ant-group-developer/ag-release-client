@@ -29,10 +29,8 @@ export default function ReleaseCoverImage({ data }: Props) {
         }
     );
 
-    const showSkeleton = isFetching;
-
     useEffect(() => {
-        if (linkReadFile) {
+        if (linkReadFile || linkReadFile === '') {
             setLoaded(false);
         }
     }, [linkReadFile]);
@@ -40,7 +38,7 @@ export default function ReleaseCoverImage({ data }: Props) {
     return (
         <div ref={ref}>
             {/* Skeleton */}
-            {showSkeleton && (
+            {!loaded && (
                 <Skeleton.Node
                     active
                     className="aspect-square !h-10 !w-10 !rounded-lg"
@@ -48,20 +46,19 @@ export default function ReleaseCoverImage({ data }: Props) {
             )}
 
             {/* Image */}
-            {!showSkeleton && (
-                <ImageFallback
-                    fallbackSrc={FALLBACK_IMAGE}
-                    src={linkReadFile}
-                    alt="cover"
-                    width={40}
-                    height={40}
-                    className={`aspect-square rounded-lg object-cover transition-opacity duration-300 ${
-                        loaded ? 'opacity-100' : 'opacity-0'
-                    }`}
-                    onLoad={() => setLoaded(true)}
-                    onError={() => setLoaded(true)}
-                />
-            )}
+
+            <ImageFallback
+                fallbackSrc={FALLBACK_IMAGE}
+                src={linkReadFile}
+                alt="cover"
+                width={40}
+                height={40}
+                className={`aspect-square rounded-lg object-cover transition-opacity duration-300 ${
+                    loaded ? 'opacity-100' : 'opacity-0'
+                }`}
+                onLoad={() => setLoaded(true)}
+                onError={() => setLoaded(true)}
+            />
         </div>
     );
 }
