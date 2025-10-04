@@ -1,21 +1,32 @@
 import { NewsData, NewsDataFilter } from '@/modules/news/types';
 
 export const getDetailPostBySlug = async (slug: string, locale?: string) => {
-    const res = await fetch(
-        `${process.env.API_URL}/news-posts/public/${encodeURIComponent(slug)}`,
-        {
-            cache: 'no-store',
-            headers: {
-                accept: 'application/json',
-                locale: locale as string,
-            },
+    try {
+        const res = await fetch(
+            `${process.env.API_URL}/news-posts/public/${encodeURIComponent(slug)}`,
+            {
+                cache: 'no-store',
+                headers: {
+                    accept: 'application/json',
+                    'Accept-Language': locale || 'en', // nên dùng chuẩn header
+                },
+            }
+        );
+
+        // Nếu status không phải 2xx thì return undefined
+        if (!res.ok) {
+            console.error(
+                `getDetailPostBySlug failed: ${res.status} ${res.statusText}`
+            );
+            return undefined;
         }
-    );
-    if (res.status !== 200) {
-        return;
+
+        const json = await res.json().catch(() => null); // tránh crash khi body không phải JSON
+        return (json?.data as NewsData) ?? undefined;
+    } catch (err) {
+        console.error('getDetailPostBySlug error:', err);
+        return undefined;
     }
-    const json = await res.json();
-    return (json?.data as NewsData) ?? ({} as NewsData);
 };
 
 export const getListPostPublic = async (params: NewsDataFilter = {}) => {
@@ -36,6 +47,10 @@ export const getListPostPublic = async (params: NewsDataFilter = {}) => {
             },
         }
     );
+
+    if (res.status !== 200) {
+        return;
+    }
 
     const data = res.json();
 

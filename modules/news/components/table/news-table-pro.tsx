@@ -113,6 +113,32 @@ export default function NewsTablePro({ dataFilter, ...props }: Props) {
             },
         },
         {
+            title: messages('common.categories'),
+            key: 'newsCategory',
+            dataIndex: 'newsCategory',
+            align: 'center',
+            width: 150,
+            valueType: 'select',
+            valueEnum: {},
+            fieldProps: {
+                placeholder: '',
+            },
+            renderFormItem: (_, { type, defaultRender, ...rest }, form) => {
+                return <NewsCategorySelect {...rest} />;
+            },
+            render: (_, record) => {
+                const name =
+                    locale === LOCALE?.VI
+                        ? record?.newsCategory?.nameVi
+                        : record?.newsCategory?.nameEn;
+                return (
+                    <CustomTooltip title={name}>
+                        <span className="truncate">{name}</span>
+                    </CustomTooltip>
+                );
+            },
+        },
+        {
             title: messages('common.status'),
             key: 'status',
             dataIndex: 'status',
@@ -140,32 +166,6 @@ export default function NewsTablePro({ dataFilter, ...props }: Props) {
                         ? messages('common.public')
                         : messages('common.private');
                 return <span> {status} </span>;
-            },
-        },
-        {
-            title: messages('newsCategory.label'),
-            key: 'newsCategory',
-            dataIndex: 'newsCategory',
-            align: 'left',
-            width: 150,
-            valueType: 'select',
-            valueEnum: {},
-            fieldProps: {
-                placeholder: '',
-            },
-            renderFormItem: (_, { type, defaultRender, ...rest }, form) => {
-                return <NewsCategorySelect {...rest} />;
-            },
-            render: (_, record) => {
-                const name =
-                    locale === LOCALE?.VI
-                        ? record?.newsCategory?.nameVi
-                        : record?.newsCategory?.nameEn;
-                return (
-                    <CustomTooltip title={name}>
-                        <span className="truncate">{name}</span>
-                    </CustomTooltip>
-                );
             },
         },
         {
@@ -241,6 +241,7 @@ export default function NewsTablePro({ dataFilter, ...props }: Props) {
     return (
         <AppProTable
             key="main"
+            className="news-table"
             {...props}
             pagination={false}
             columns={column}

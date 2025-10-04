@@ -39,6 +39,7 @@ export const useUpdateTranslation = () => {
     };
 
     const mutation = useMutation({
+        mutationKey: newsQueryKeys.updates(),
         mutationFn: ({
             id,
             payload,

@@ -73,7 +73,7 @@ export default function News({}: Props) {
     };
 
     return (
-        <div className="min-h-[calc(100vh-64px)] bg-[#f5f7fa]">
+        <div className="min-h-[calc(100vh-64px)] bg-[#fafafa]">
             <PageContainer
                 fixedHeader
                 header={{

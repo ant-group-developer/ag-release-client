@@ -89,30 +89,38 @@ export const NewsHeaderV2 = ({
                 submitter={{
                     searchConfig: {
                         submitText: messages('common.search'),
-                        resetText: messages('common.reset'),
+                        resetText: messages('common.clearFilter'),
                     },
                 }}
             >
                 <ProFormText
                     name="title"
-                    label={messages('common.title')}
-                    placeholder={''}
+                    label={messages('common.search')}
+                    placeholder={messages('placeholder.searchBy')}
                 />
                 <ProForm.Item
                     name="newsCategoryId"
                     label={messages('newsCategory.label')}
                 >
-                    <NewsCategorySelect />
+                    <NewsCategorySelect
+                        mode="multiple"
+                        allowClear
+                        placeholder={messages('placeholder.filterBy')}
+                    />
                 </ProForm.Item>
-                <ProForm.Item
-                    name="status"
-                    label={messages('newsCategory.label')}
-                >
-                    <Select options={statusOptions} />
+
+                <ProForm.Item name="status" label={messages('common.status')}>
+                    <Select
+                        mode="multiple"
+                        allowClear
+                        options={statusOptions}
+                        placeholder={messages('placeholder.filterBy')}
+                    />
                 </ProForm.Item>
                 <ProForm.Item
                     name="keywords"
                     label={messages('common.keyword')}
+                    placeholder={messages('placeholder.filterBy')}
                 >
                     <Select
                         // defaultValue={value}
