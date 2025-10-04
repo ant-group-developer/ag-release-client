@@ -1,10 +1,13 @@
+import IconButton from '@/components/ui/button/icon-button';
 import DateRangePicker from '@/components/ui/input/date-range-picker';
 import NewsCategorySelect from '@/components/ui/select/news-category-select';
+import { SIZE_ICON } from '@/constants/common';
 import { UseFilterProps } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import useModalStore from '@/hooks/use-modal';
 import { ProForm, ProFormText, QueryFilter } from '@ant-design/pro-components';
 import { Select } from 'antd';
+import { ChevronsDown, ChevronsUp } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { NEWS_STATUS } from '../../enums';
@@ -86,12 +89,25 @@ export const NewsHeaderV2 = ({
                 onFinish={handleSubmit}
                 onReset={handleReset}
                 layout="vertical"
+                defaultColsNumber={5}
+                span={4}
                 submitter={{
                     searchConfig: {
                         submitText: messages('common.search'),
                         resetText: messages('common.clearFilter'),
                     },
                 }}
+                collapseRender={(collapsed) =>
+                    collapsed ? (
+                        <IconButton>
+                            <ChevronsDown size={SIZE_ICON} />
+                        </IconButton>
+                    ) : (
+                        <IconButton>
+                            <ChevronsUp size={SIZE_ICON} />
+                        </IconButton>
+                    )
+                }
             >
                 <ProFormText
                     name="title"
@@ -127,7 +143,6 @@ export const NewsHeaderV2 = ({
                         // onChange={(e) => setValue(e)}
                         allowClear
                         mode="tags"
-                        className="min-w-72"
                         placeholder={messages('placeholder.filterBy')}
                         options={option}
                         popupMatchSelectWidth={false}
