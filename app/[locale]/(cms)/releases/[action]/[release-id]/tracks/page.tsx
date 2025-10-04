@@ -6,7 +6,8 @@ import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
 import { useThemeMode } from '@/hooks/use-theme-mode';
 import DropUploadTracks from '@/modules/releases/components/drop-track-upload';
-import AddNewTrackModal from '@/modules/releases/components/release-detail/release-tracks/modal/add-new-track-modal';
+import AddNewTrackModal from '@/modules/releases/components/release-detail/release-tracks/modal/add-new-track';
+import TrackDetailModal from '@/modules/releases/components/release-detail/release-tracks/modal/track-detail';
 import ReleaseTracksTable from '@/modules/releases/components/release-detail/release-tracks/table';
 import { TYPE_MODAL_RELEASE, TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
@@ -142,6 +143,10 @@ export default function Tracks() {
                 {(typeModal === TYPE_MODAL_TRACK_ARTIST.ADD ||
                     typeModal === TYPE_MODAL_TRACK_ARTIST.UPDATE) && (
                     <TrackArtistModal />
+                )}
+
+                {typeModal === TYPE_MODAL_RELEASE.DETAIL_TRACK_RELEASE && (
+                    <TrackDetailModal />
                 )}
 
                 {typeModal === TYPE_MODAL_TRACK.BULK_DELETE && (
