@@ -12,6 +12,7 @@ import useModalStore from '@/hooks/use-modal';
 import { DeleteVariables } from '@/types/api';
 import { ProColumns } from '@ant-design/pro-components';
 import { Switch } from 'antd';
+import dayjs from 'dayjs';
 import { CircleCheck } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -135,6 +136,8 @@ export default function TranslationModal({ ...props }: Props) {
             fieldProps: {
                 placeholder: '',
             },
+            sorter: (a, b) =>
+                dayjs(a.createdAt).unix() - dayjs(b.createdAt).unix(),
             search: false,
             render: (value, record) => {
                 return (
@@ -147,19 +150,21 @@ export default function TranslationModal({ ...props }: Props) {
         },
         {
             title: messages('common.updatedAt'),
-            key: 'createdAt',
-            dataIndex: 'createdAt',
+            key: 'updatedAt',
+            dataIndex: 'updatedAt',
             align: 'center',
             width: 100,
             fieldProps: {
                 placeholder: '',
             },
             search: false,
+            sorter: (a, b) =>
+                dayjs(a.updatedAt).unix() - dayjs(b.updatedAt).unix(),
             render: (value, record) => {
                 return (
                     <span className="truncate text-wrap">
                         {' '}
-                        {formattedDate(record?.createdAt)}{' '}
+                        {formattedDate(record?.updatedAt)}{' '}
                     </span>
                 );
             },
