@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 
 import { useActive } from '@/hooks/use-active';
 import { TrackData } from '@/modules/releases/types';
+import { useGetDetailTrack } from '@/modules/tracks/hooks/use-get-detail-tracks';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
 import { UpdateTrackPayload } from '@/modules/tracks/types/payload';
 import { UpdateVariables } from '@/types/api';
@@ -28,6 +29,7 @@ export default function TrackDetailModal({ ...props }: Props) {
     }>((state) => state.dataEdit);
     const { isActive, active, deActive } = useActive();
     const { updateTrackDraft } = useUpdateTrackDraft();
+    const { trackData } = useGetDetailTrack(record?.id);
 
     const debouncedUpdate = useCallback(
         debounce((id, data) => {
@@ -55,7 +57,7 @@ export default function TrackDetailModal({ ...props }: Props) {
             children: (
                 <TracksForm
                     key={`${record.id}-${record.title}-track-form-content`}
-                    trackData={record}
+                    trackData={trackData}
                     index={index}
                 />
             ),
@@ -70,7 +72,7 @@ export default function TrackDetailModal({ ...props }: Props) {
             children: (
                 <OtherMetadataForm
                     key={`${record.id}-metadata-form-content`}
-                    trackData={record}
+                    trackData={trackData}
                 />
             ),
         },
@@ -84,7 +86,7 @@ export default function TrackDetailModal({ ...props }: Props) {
             children: (
                 <AudioSpecifications
                     key={`${record.id}-audio-specs-content`}
-                    trackData={record}
+                    trackData={trackData}
                 />
             ),
         },
@@ -98,7 +100,7 @@ export default function TrackDetailModal({ ...props }: Props) {
             children: (
                 <ViewAll
                     key={`${record.id}-view-all`}
-                    trackData={record}
+                    trackData={trackData}
                     updateTrackDraft={(data) =>
                         debouncedUpdate(record.id, data)
                     }

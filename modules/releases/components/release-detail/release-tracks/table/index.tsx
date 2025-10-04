@@ -26,7 +26,7 @@ import { UpdateVariables } from '@/types/api';
 import { Input, Tabs, Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { debounce } from 'lodash';
-import { ChevronsDown, ChevronsUp, PictureInPicture2 } from 'lucide-react';
+import { SquarePen } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState } from 'react';
 import TrackActionButton from '../button/track-action';
@@ -260,7 +260,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                                 )
                             }
                         >
-                            <PictureInPicture2 size={SIZE_ICON} />
+                            <SquarePen size={SIZE_ICON} />
                         </IconButton>
                     </div>
                 );
@@ -395,29 +395,29 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                 columns={columns}
                 rowClassName={() => 'group'}
                 onDragEnd={handleDragEnd}
-                expandable={{
-                    expandedRowRender,
-                    expandedRowKeys,
-                    onExpand: handleExpand,
-                    expandedRowClassName: () => '!z-0 custom-track-expanded',
-                    expandIcon: ({ expanded, onExpand, record }) => {
-                        return expanded ? (
-                            <div
-                                onClick={(e) => onExpand(record, e)}
-                                className="flex cursor-pointer justify-center hover:text-blue-500"
-                            >
-                                <ChevronsUp size={SIZE_ICON} />
-                            </div>
-                        ) : (
-                            <div
-                                onClick={(e) => onExpand(record, e)}
-                                className="flex cursor-pointer justify-center hover:text-blue-500"
-                            >
-                                <ChevronsDown size={SIZE_ICON} />
-                            </div>
-                        );
-                    },
-                }}
+                // expandable={{
+                //     expandedRowRender,
+                //     expandedRowKeys,
+                //     onExpand: handleExpand,
+                //     expandedRowClassName: () => '!z-0 custom-track-expanded',
+                //     expandIcon: ({ expanded, onExpand, record }) => {
+                //         return expanded ? (
+                //             <div
+                //                 onClick={(e) => onExpand(record, e)}
+                //                 className="flex cursor-pointer justify-center hover:text-blue-500"
+                //             >
+                //                 <ChevronsUp size={SIZE_ICON} />
+                //             </div>
+                //         ) : (
+                //             <div
+                //                 onClick={(e) => onExpand(record, e)}
+                //                 className="flex cursor-pointer justify-center hover:text-blue-500"
+                //             >
+                //                 <ChevronsDown size={SIZE_ICON} />
+                //             </div>
+                //         );
+                //     },
+                // }}
             />
         </div>
     );

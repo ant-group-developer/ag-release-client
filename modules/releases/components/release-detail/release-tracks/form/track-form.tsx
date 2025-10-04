@@ -114,146 +114,153 @@ export default function TracksForm({ trackData, index }: Props) {
     return (
         <ConfigProvider componentDisabled={isReadMode}>
             <FormProvider {...formMethods}>
-                <form className="grid grid-cols-2 gap-4">
-                    <div>
-                        <LabelForm
-                            htmlFor="title"
-                            required
-                            label={messages('track.name')}
-                        />
-                        <Controller
-                            control={control}
-                            name="title"
-                            render={({ field }) => (
-                                <Input
-                                    id={`tracks.${index}.title`}
-                                    {...field}
-                                    allowClear
-                                    value={field.value ?? ''}
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-                                        field.onChange(value);
-                                        debouncedUpdateTrackDraft(
-                                            {
-                                                title: value,
-                                            },
-                                            'title'
-                                        );
-                                    }}
-                                    status={errors.title ? 'error' : undefined}
-                                />
-                            )}
-                        />
-                        <ErrorText
-                            isError={!!errors.title}
-                            message={errors.title?.message}
-                        />
-                    </div>
-
-                    <div>
-                        <LabelForm
-                            htmlFor="version"
-                            label={messages('release.version')}
-                        />
-                        <Controller
-                            control={control}
-                            name="version"
-                            render={({ field }) => (
-                                <Input
-                                    id="version"
-                                    {...field}
-                                    value={field.value ?? ''}
-                                    allowClear
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-                                        field.onChange(value);
-                                        debouncedUpdateTrackDraft(
-                                            {
-                                                version: value,
-                                            },
-                                            'version'
-                                        );
-                                    }}
-                                    status={
-                                        errors.version ? 'error' : undefined
-                                    }
-                                />
-                            )}
-                        />
-                        <ErrorText
-                            isError={!!errors.version}
-                            message={errors.version?.message}
-                        />
-                    </div>
-
-                    <div className="col-span-2">
-                        <LabelForm
-                            htmlFor="copyArtistsFromRelease"
-                            label={`${messages('track.addAllArtistFromRelease')} ?`}
-                        />
-                        <Controller
-                            control={control}
-                            name="copyArtistsFromRelease"
-                            render={({ field }) => {
-                                return (
-                                    <Switch
+                <div className="max-h-[80vh] overflow-y-auto">
+                    <form className="grid grid-cols-2 gap-4">
+                        <div>
+                            <LabelForm
+                                htmlFor="title"
+                                required
+                                label={messages('track.name')}
+                            />
+                            <Controller
+                                control={control}
+                                name="title"
+                                render={({ field }) => (
+                                    <Input
+                                        id={`tracks.${index}.title`}
                                         {...field}
-                                        checked={!!field.value}
+                                        allowClear
+                                        value={field.value ?? ''}
                                         onChange={(e) => {
-                                            field.onChange(e);
-                                            debouncedUpdateTrackDraft({
-                                                copyArtistsFromRelease: e,
-                                            });
+                                            const value = e.target.value;
+                                            field.onChange(value);
+                                            debouncedUpdateTrackDraft(
+                                                {
+                                                    title: value,
+                                                },
+                                                'title'
+                                            );
                                         }}
+                                        status={
+                                            errors.title ? 'error' : undefined
+                                        }
                                     />
-                                );
-                            }}
-                        />
-                    </div>
-
-                    {!isAddArtistsFromRelease && (
-                        <div className="col-span-2">
-                            <div className="grid grid-cols-2 gap-4">
-                                {trackData?.trackArtists?.map(
-                                    (item: TrackArtistData, index: number) => (
-                                        <ArtistCard
-                                            key={item.id}
-                                            data={{
-                                                artist: item.artist,
-                                                artistRole: item.artistRole,
-                                            }}
-                                            onDelete={() =>
-                                                openModal(
-                                                    TYPE_MODAL_TRACK_ARTIST.DELETE,
-                                                    item
-                                                )
-                                            }
-                                            onClick={() => {
-                                                openModal(
-                                                    TYPE_MODAL_TRACK_ARTIST.UPDATE,
-                                                    item
-                                                );
-                                            }}
-                                            index={index}
-                                            disabled={isReadMode}
-                                        />
-                                    )
                                 )}
-                            </div>
-                            <Button
-                                onClick={() =>
-                                    openModal(
-                                        TYPE_MODAL_TRACK_ARTIST.ADD,
-                                        trackData
-                                    )
-                                }
-                                className="mt-4"
-                            >
-                                {messages('artist.add')}
-                            </Button>
+                            />
+                            <ErrorText
+                                isError={!!errors.title}
+                                message={errors.title?.message}
+                            />
                         </div>
-                    )}
-                </form>
+
+                        <div>
+                            <LabelForm
+                                htmlFor="version"
+                                label={messages('release.version')}
+                            />
+                            <Controller
+                                control={control}
+                                name="version"
+                                render={({ field }) => (
+                                    <Input
+                                        id="version"
+                                        {...field}
+                                        value={field.value ?? ''}
+                                        allowClear
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            field.onChange(value);
+                                            debouncedUpdateTrackDraft(
+                                                {
+                                                    version: value,
+                                                },
+                                                'version'
+                                            );
+                                        }}
+                                        status={
+                                            errors.version ? 'error' : undefined
+                                        }
+                                    />
+                                )}
+                            />
+                            <ErrorText
+                                isError={!!errors.version}
+                                message={errors.version?.message}
+                            />
+                        </div>
+
+                        <div className="col-span-2">
+                            <LabelForm
+                                htmlFor="copyArtistsFromRelease"
+                                label={`${messages('track.addAllArtistFromRelease')} ?`}
+                            />
+                            <Controller
+                                control={control}
+                                name="copyArtistsFromRelease"
+                                render={({ field }) => {
+                                    return (
+                                        <Switch
+                                            {...field}
+                                            checked={!!field.value}
+                                            onChange={(e) => {
+                                                field.onChange(e);
+                                                debouncedUpdateTrackDraft({
+                                                    copyArtistsFromRelease: e,
+                                                });
+                                            }}
+                                        />
+                                    );
+                                }}
+                            />
+                        </div>
+
+                        {!isAddArtistsFromRelease && (
+                            <div className="col-span-2">
+                                <div className="grid grid-cols-2 gap-4">
+                                    {trackData?.trackArtists?.map(
+                                        (
+                                            item: TrackArtistData,
+                                            index: number
+                                        ) => (
+                                            <ArtistCard
+                                                key={item.id}
+                                                data={{
+                                                    artist: item.artist,
+                                                    artistRole: item.artistRole,
+                                                }}
+                                                onDelete={() =>
+                                                    openModal(
+                                                        TYPE_MODAL_TRACK_ARTIST.DELETE,
+                                                        item
+                                                    )
+                                                }
+                                                onClick={() => {
+                                                    openModal(
+                                                        TYPE_MODAL_TRACK_ARTIST.UPDATE,
+                                                        item
+                                                    );
+                                                }}
+                                                index={index}
+                                                disabled={isReadMode}
+                                            />
+                                        )
+                                    )}
+                                </div>
+                                <Button
+                                    onClick={() =>
+                                        openModal(
+                                            TYPE_MODAL_TRACK_ARTIST.ADD,
+                                            trackData
+                                        )
+                                    }
+                                    className="mt-4"
+                                >
+                                    {messages('artist.add')}
+                                </Button>
+                            </div>
+                        )}
+                    </form>
+                </div>
             </FormProvider>
         </ConfigProvider>
     );

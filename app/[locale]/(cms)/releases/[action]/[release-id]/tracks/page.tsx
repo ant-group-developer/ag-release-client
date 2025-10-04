@@ -23,7 +23,7 @@ import { DeleteVariables } from '@/types/api';
 import { ConfigProvider, Empty, theme } from 'antd';
 import { TableRowSelection } from 'antd/es/table/interface';
 import { useTranslations } from 'next-intl';
-import { Key, useState } from 'react';
+import { Key, useEffect, useState } from 'react';
 import TrackActions from './track-actions';
 
 export default function Tracks() {
@@ -97,6 +97,28 @@ export default function Tracks() {
             colorTextDisabled: token?.colorText,
         },
     };
+
+    useEffect(() => {
+        const handleOpenDetailTrack = () => {
+            const hash = window.location.hash;
+            if (hash && hash.startsWith('#tracks.')) {
+                const parts = hash.split('.');
+                let trackIndex;
+                if (parts[0] === '#tracks') {
+                    trackIndex = Number(parts[1]);
+                }
+                const trackData = tracksData?.items[trackIndex as number];
+                openModal(TYPE_MODAL_RELEASE.DETAIL_TRACK_RELEASE, {
+                    record: trackData,
+                    index: trackIndex,
+                });
+            }
+        };
+        window.addEventListener('hashchange', handleOpenDetailTrack);
+        return () => {
+            window.removeEventListener('hashchange', handleOpenDetailTrack);
+        };
+    }, [typeModal, openModal, tracksData?.items]);
 
     return (
         <ConfigProvider theme={customTheme}>
