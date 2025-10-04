@@ -66,7 +66,8 @@ export default function IssueTable({ dataFilter, ...props }: Props) {
             key: 'code',
             dataIndex: 'code',
             align: 'left',
-            width: 200,
+            width: 250,
+            ellipsis: true,
             render: (value) => (
                 <CustomTooltip title={value}>
                     <span className="truncate">{value}</span>
@@ -78,7 +79,7 @@ export default function IssueTable({ dataFilter, ...props }: Props) {
             key: 'issueLevel',
             dataIndex: 'issueLevel',
             align: 'left',
-            width: 200,
+            width: 100,
             render: (_, record) => (
                 <div className="space-x-2 truncate">
                     <Badge size="small" color={record?.issueLevel?.color} />
