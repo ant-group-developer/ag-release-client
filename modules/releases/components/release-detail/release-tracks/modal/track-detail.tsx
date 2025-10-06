@@ -29,7 +29,7 @@ export default function TrackDetailModal({ ...props }: Props) {
     }>((state) => state.dataEdit);
     const { isActive, active, deActive } = useActive();
     const { updateTrackDraft } = useUpdateTrackDraft();
-    const { trackData } = useGetDetailTrack(record?.id);
+    const { trackData, isFetching } = useGetDetailTrack(record?.id);
 
     const debouncedUpdate = useCallback(
         debounce((id, data) => {
@@ -125,6 +125,7 @@ export default function TrackDetailModal({ ...props }: Props) {
             loading={isActive}
             width={'70vw'}
             style={{ top: '1rem' }}
+            spinning={isFetching}
         >
             <Tabs items={items} defaultActiveKey={`${record.id}-view-all`} />
         </AppModal>

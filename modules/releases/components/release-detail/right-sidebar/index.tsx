@@ -99,7 +99,7 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
     return (
         <div
             className={cn(
-                'sticky top-0 h-[calc(100vh-4rem)] w-[300px] border-x transition-all duration-300',
+                'sticky top-0 h-[calc(100vh-4rem)] w-[300px] shrink-0 border-x transition-all duration-300',
                 isSidebarOpen ? 'w-[300px]' : 'w-[75px]'
             )}
         >
@@ -133,7 +133,7 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                 {/* Content */}
                 {/* <div className="h-[calc(100%-8rem)] overflow-auto"> */}
                 <ScrollArea className="h-[86vh]">
-                    <div className="max-w-[300px] p-3">
+                    <div className="w-full max-w-[300px] p-3">
                         {/* Errors */}
                         <div className="mb-4">
                             {isSidebarOpen && (
