@@ -1,14 +1,16 @@
+import IconButton from '@/components/ui/button/icon-button';
 import SortableTable, {
     OnDragEnd,
     SortableTableProps,
 } from '@/components/ui/table/sortable-table';
 import { SIZE_ICON } from '@/constants/common';
+import { getIndex } from '@/helpers/common';
 import { getTrackDetailRoute, RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { showNotification } from '@/helpers/messages-helper';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
-import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
+import { TYPE_MODAL_RELEASE, TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
 import { TrackArtistData } from '@/modules/track-artist/types';
@@ -25,7 +27,7 @@ import { UpdateVariables } from '@/types/api';
 import { Input, Tabs, Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { debounce } from 'lodash';
-import { ChevronsDown, ChevronsUp } from 'lucide-react';
+import { SquarePen } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState } from 'react';
 import TrackActionButton from '../button/track-action';
@@ -35,7 +37,12 @@ import TracksForm from '../form/track-form';
 import ViewAll from '../form/view-all';
 import { TrackWaveform } from '../track-wave-form';
 
-type Props = {} & Omit<SortableTableProps<TrackData>, 'columns'>;
+type Props = {
+    pagination: {
+        pageSize: number;
+        current: number;
+    };
+} & Omit<SortableTableProps<TrackData>, 'columns'>;
 
 export default function ReleaseTracksTable({ ...props }: Props) {
     // hooks - state
@@ -96,7 +103,12 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             key: 'index',
             align: 'center',
             width: 50,
-            render: (_, __, index) => index + 1,
+            render: (_, __, index) =>
+                getIndex(
+                    props.pagination.pageSize,
+                    props.pagination.current,
+                    index
+                ),
         },
         {
             title: '',
@@ -221,32 +233,47 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             key: 'action',
             align: 'center',
             width: 40,
-            render: (value, record) => {
+            render: (value, record, index) => {
                 return (
-                    <TrackActionButton
-                        // disabled={isReadMode}
-                        showDelete={!isReadMode}
-                        showDownload
-                        showDetail
-                        onShowDetail={() => {
-                            router.push(
-                                getTrackDetailRoute(
-                                    record?.id,
-                                    TRACK_TABS.METADATA
-                                )
-                            );
-                        }}
-                        onShowDelete={() =>
-                            openModal(TYPE_MODAL_TRACK.DELETE, record)
-                        }
-                        onShowDownload={async () => {
-                            const response =
-                                await bucketApi.getLinkDownloadFile(
-                                    record?.audioFile?.fileId as string
+                    <div className="flex items-center gap-2">
+                        <TrackActionButton
+                            // disabled={isReadMode}
+                            showDelete={!isReadMode}
+                            showDownload
+                            showDetail
+                            onShowDetail={() => {
+                                router.push(
+                                    getTrackDetailRoute(
+                                        record?.id,
+                                        TRACK_TABS.METADATA
+                                    )
                                 );
-                            window.open(response?.data?.data);
-                        }}
-                    />
+                            }}
+                            onShowDelete={() =>
+                                openModal(TYPE_MODAL_TRACK.DELETE, record)
+                            }
+                            onShowDownload={async () => {
+                                const response =
+                                    await bucketApi.getLinkDownloadFile(
+                                        record?.audioFile?.fileId as string
+                                    );
+                                window.open(response?.data?.data);
+                            }}
+                        />
+                        <IconButton
+                            onClick={() =>
+                                openModal(
+                                    TYPE_MODAL_RELEASE.DETAIL_TRACK_RELEASE,
+                                    {
+                                        record,
+                                        index,
+                                    }
+                                )
+                            }
+                        >
+                            <SquarePen size={SIZE_ICON} />
+                        </IconButton>
+                    </div>
                 );
             },
         },
@@ -374,34 +401,34 @@ export default function ReleaseTracksTable({ ...props }: Props) {
         <div className="w-full">
             <SortableTable
                 key="main"
-                pagination={false}
                 {...props}
+                pagination={false}
                 columns={columns}
                 rowClassName={() => 'group'}
                 onDragEnd={handleDragEnd}
-                expandable={{
-                    expandedRowRender,
-                    expandedRowKeys,
-                    onExpand: handleExpand,
-                    expandedRowClassName: () => '!z-0 custom-track-expanded',
-                    expandIcon: ({ expanded, onExpand, record }) => {
-                        return expanded ? (
-                            <div
-                                onClick={(e) => onExpand(record, e)}
-                                className="flex cursor-pointer justify-center hover:text-blue-500"
-                            >
-                                <ChevronsUp size={SIZE_ICON} />
-                            </div>
-                        ) : (
-                            <div
-                                onClick={(e) => onExpand(record, e)}
-                                className="flex cursor-pointer justify-center hover:text-blue-500"
-                            >
-                                <ChevronsDown size={SIZE_ICON} />
-                            </div>
-                        );
-                    },
-                }}
+                // expandable={{
+                //     expandedRowRender,
+                //     expandedRowKeys,
+                //     onExpand: handleExpand,
+                //     expandedRowClassName: () => '!z-0 custom-track-expanded',
+                //     expandIcon: ({ expanded, onExpand, record }) => {
+                //         return expanded ? (
+                //             <div
+                //                 onClick={(e) => onExpand(record, e)}
+                //                 className="flex cursor-pointer justify-center hover:text-blue-500"
+                //             >
+                //                 <ChevronsUp size={SIZE_ICON} />
+                //             </div>
+                //         ) : (
+                //             <div
+                //                 onClick={(e) => onExpand(record, e)}
+                //                 className="flex cursor-pointer justify-center hover:text-blue-500"
+                //             >
+                //                 <ChevronsDown size={SIZE_ICON} />
+                //             </div>
+                //         );
+                //     },
+                // }}
             />
         </div>
     );

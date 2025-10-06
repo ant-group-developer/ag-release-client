@@ -212,10 +212,7 @@ export default function ReleaseDetailForm() {
     return (
         <ConfigProvider theme={customTheme}>
             <FormProvider {...formMethods}>
-                <form
-                    className="py-4"
-                    onSubmit={handleSubmit(handleNext, handleFormError)}
-                >
+                <form onSubmit={handleSubmit(handleNext, handleFormError)}>
                     <div className="flex flex-col gap-6">
                         <ReleaseConfigurationSection
                             debouncedUpdate={debouncedUpdate}

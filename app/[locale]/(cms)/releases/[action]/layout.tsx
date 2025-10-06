@@ -1,6 +1,5 @@
 'use client';
 import DetailSkeleton from '@/components/ui/skeleton/detail-skeleton';
-import { SIZE_ICON_SMALL } from '@/constants/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { cn } from '@/helpers/common';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
@@ -17,8 +16,7 @@ import {
 } from '@/modules/releases/hooks/release-form-store';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
-import { Button, Tabs, TabsProps, theme } from 'antd';
-import { ArrowLeft } from 'lucide-react';
+import { Breadcrumb, Button, Tabs, TabsProps, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname } from 'next/navigation';
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
@@ -240,31 +238,49 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     //     return <DetailSkeleton />;
     // }
 
+    const breadcrumbItems = [
+        {
+            title: messages('dashboard.label'),
+            href: APP_ROUTES.DASHBOARD,
+        },
+        {
+            title: messages('release.label'),
+            href: APP_ROUTES.RELEASES,
+        },
+        {
+            title: releaseData?.title,
+        },
+    ];
+
     if (error) {
         return <AppError error={error} />;
     }
 
     return (
-        <div className="flex h-full overflow-auto" ref={scrollContainerRef}>
+        <div
+            className="flex h-full overflow-auto bg-[#f5f5f5]"
+            ref={scrollContainerRef}
+        >
             {isReleaseDataLoading || !releaseData ? (
                 <div className="w-[100vw] px-8">
                     <DetailSkeleton />
                 </div>
             ) : (
                 <div className="mx-auto flex h-[calc(100vh-4rem)] max-w-screen-xl flex-1 flex-col">
+                    <Breadcrumb items={breadcrumbItems} className="!py-4" />
                     <div
-                        className="sticky top-0 z-10"
+                        className="sticky top-0 z-10 mb-4 rounded-lg p-4"
                         style={{
                             backgroundColor: token.colorBgContainer,
                         }}
                     >
-                        <Link
+                        {/* <Link
                             href={APP_ROUTES.RELEASES}
                             className="flex w-fit items-center gap-1 py-2 hover:underline"
                         >
                             <ArrowLeft size={SIZE_ICON_SMALL} />
                             {messages('release.back')}
-                        </Link>
+                        </Link> */}
                         <ReleaseDetailHeader isScrolled={isScrolled} />
                         <div>
                             <Tabs

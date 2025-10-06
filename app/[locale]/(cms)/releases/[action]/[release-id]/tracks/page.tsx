@@ -1,12 +1,15 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
+import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { useFilter } from '@/hooks/use-filter';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
 import { useThemeMode } from '@/hooks/use-theme-mode';
 import DropUploadTracks from '@/modules/releases/components/drop-track-upload';
-import AddNewTrackModal from '@/modules/releases/components/release-detail/release-tracks/modal/add-new-track-modal';
+import AddNewTrackModal from '@/modules/releases/components/release-detail/release-tracks/modal/add-new-track';
+import TrackDetailModal from '@/modules/releases/components/release-detail/release-tracks/modal/track-detail';
 import ReleaseTracksTable from '@/modules/releases/components/release-detail/release-tracks/table';
 import { TYPE_MODAL_RELEASE, TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
@@ -17,12 +20,12 @@ import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
 import { useBulkDeleteTracks } from '@/modules/tracks/hooks/use-bulk-delete-tracks';
 import { useDeleteTrack } from '@/modules/tracks/hooks/use-delete-track';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
-import { TrackData } from '@/modules/tracks/types';
+import { TrackData, TrackDataFilter } from '@/modules/tracks/types';
 import { DeleteVariables } from '@/types/api';
 import { ConfigProvider, Empty, theme } from 'antd';
 import { TableRowSelection } from 'antd/es/table/interface';
 import { useTranslations } from 'next-intl';
-import { Key, useState } from 'react';
+import { Key, useEffect, useState } from 'react';
 import TrackActions from './track-actions';
 
 export default function Tracks() {
@@ -42,11 +45,14 @@ export default function Tracks() {
 
     const isEditAction = action === RELEASE_DETAIL_ACTION.EDIT;
 
-    // apis
-    const { tracksData, isLoading } = useGetListTracks({
+    const { dataFilter, onChangePage } = useFilter<TrackDataFilter>({
         releaseId: formValues?.id as string,
         fieldOrder: 'order',
+        pageSize: PAGE_SIZE,
     });
+
+    // apis
+    const { tracksData, isLoading, isFetching } = useGetListTracks(dataFilter);
     const { deleteTrack } = useDeleteTrack();
     const { deleteTrackArtist } = useDeleteTrackArtist();
 
@@ -97,6 +103,28 @@ export default function Tracks() {
         },
     };
 
+    useEffect(() => {
+        const handleOpenDetailTrack = () => {
+            const hash = window.location.hash;
+            if (hash && hash.startsWith('#tracks.')) {
+                const parts = hash.split('.');
+                let trackIndex;
+                if (parts[0] === '#tracks') {
+                    trackIndex = Number(parts[1]);
+                }
+                const trackData = tracksData?.items[trackIndex as number];
+                openModal(TYPE_MODAL_RELEASE.DETAIL_TRACK_RELEASE, {
+                    record: trackData,
+                    index: trackIndex,
+                });
+            }
+        };
+        window.addEventListener('hashchange', handleOpenDetailTrack);
+        return () => {
+            window.removeEventListener('hashchange', handleOpenDetailTrack);
+        };
+    }, [typeModal, openModal, tracksData?.items]);
+
     return (
         <ConfigProvider theme={customTheme}>
             <div>
@@ -106,18 +134,11 @@ export default function Tracks() {
                     dataSource={tracksData?.items}
                     rowSelection={rowSelection}
                     // sticky={{ offsetHeader: 174 }}
-                    loading={isLoading}
+                    loading={isFetching}
                     pagination={{
-                        pageSize: PAGE_SIZE,
-                        total: tracksData?.metadata?.totalItems,
-                        size: 'default',
-                        pageSizeOptions: PAGE_SIZE_OPTIONS,
-                        showTotal: (total, range) => (
-                            <span className="font-semibold">
-                                {range[0]}–{range[1]} {messages('common.of')}{' '}
-                                {total}
-                            </span>
-                        ),
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: tracksData.metadata.currentPage,
+                        total: tracksData.metadata.totalItems,
                     }}
                     locale={{
                         emptyText: isLoading ? (
@@ -126,6 +147,19 @@ export default function Tracks() {
                             <DropUploadTracks disabled={!isEditAction} />
                         ),
                     }}
+                />
+
+                <AppPagination
+                    className="mb-4 rounded-b-[8px] bg-white"
+                    align="end"
+                    current={tracksData?.metadata?.currentPage}
+                    pageSize={dataFilter.pageSize}
+                    total={tracksData.metadata?.totalItems}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
                 />
 
                 {typeModal === TYPE_MODAL_RELEASE.ADD_TRACK && (
@@ -142,6 +176,10 @@ export default function Tracks() {
                 {(typeModal === TYPE_MODAL_TRACK_ARTIST.ADD ||
                     typeModal === TYPE_MODAL_TRACK_ARTIST.UPDATE) && (
                     <TrackArtistModal />
+                )}
+
+                {typeModal === TYPE_MODAL_RELEASE.DETAIL_TRACK_RELEASE && (
+                    <TrackDetailModal />
                 )}
 
                 {typeModal === TYPE_MODAL_TRACK.BULK_DELETE && (

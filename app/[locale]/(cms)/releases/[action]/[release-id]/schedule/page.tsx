@@ -1,18 +1,25 @@
 'use client';
-import { SCREEN } from '@/enums/common';
+import AppPagination from '@/components/ui/pagination';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { useFilter } from '@/hooks/use-filter';
 import { useThemeMode } from '@/hooks/use-theme-mode';
 import ReleaseSchedulingForm from '@/modules/releases/components/release-detail/release-scheduling/form';
 import ReleaseSchedulingTable from '@/modules/releases/components/release-detail/release-scheduling/table';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useGetListTracksWithPolicies } from '@/modules/tracks/hooks/use-get-list-tracks-with-policies';
+import { TrackDataFilter } from '@/modules/tracks/types';
 import { ConfigProvider, theme } from 'antd';
 
 export default function Schedule() {
     const formValues = useReleaseFormStore((state) => state.formValues);
 
-    const { tracksData, isFetching } = useGetListTracksWithPolicies({
-        releaseId: formValues.id,
+    const { dataFilter, onChangePage } = useFilter<TrackDataFilter>({
+        releaseId: formValues?.id as string,
+        fieldOrder: 'order',
+        pageSize: PAGE_SIZE,
     });
+
+    const { tracksData, isFetching } = useGetListTracksWithPolicies(dataFilter);
 
     const { token } = theme.useToken();
     const { isDark } = useThemeMode();
@@ -25,15 +32,32 @@ export default function Schedule() {
 
     return (
         <ConfigProvider theme={customTheme}>
-            <div className="w-full space-y-4 py-4">
+            <div className="w-full space-y-4 pb-4">
                 <ReleaseSchedulingForm />
 
                 <ReleaseSchedulingTable
                     dataSource={tracksData?.items}
                     loading={isFetching}
-                    scroll={{
-                        x: SCREEN.XL,
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: tracksData.metadata.currentPage,
+                        total: tracksData.metadata.totalItems,
                     }}
+                    scroll={{
+                        x: 'max-content',
+                    }}
+                />
+                <AppPagination
+                    className="!mt-0 rounded-b-[8px] bg-white"
+                    align="end"
+                    current={tracksData?.metadata?.currentPage}
+                    pageSize={dataFilter.pageSize}
+                    total={tracksData.metadata?.totalItems}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
                 />
             </div>
         </ConfigProvider>
