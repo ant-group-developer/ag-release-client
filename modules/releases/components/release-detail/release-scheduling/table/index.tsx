@@ -2,6 +2,7 @@ import ActionsDspSelect from '@/components/ui/select/actions-dsp-select';
 import PriceTiersSelect from '@/components/ui/select/price-tiers-select';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { getIndex } from '@/helpers/common';
 import { getTrackDetailRoute, RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { Link } from '@/i18n/routing';
@@ -14,7 +15,12 @@ import { useUpdateTrackPolicy } from '@/modules/tracks/hooks/use-update-track-po
 import { TableColumnsType } from 'antd';
 import { useTranslations } from 'next-intl';
 
-type Props = Omit<AppTableProps<TrackData>, 'columns'> & {};
+type Props = Omit<AppTableProps<TrackData>, 'columns'> & {
+    pagination: {
+        pageSize: number;
+        current: number;
+    };
+};
 
 export default function ReleaseSchedulingTable({ ...props }: Props) {
     const messages = useTranslations();
@@ -41,7 +47,12 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
             width: 50,
             fixed: 'left',
             align: 'center',
-            render: (_: any, __: any, index: number) => index + 1,
+            render: (_: any, __: any, index: number) =>
+                getIndex(
+                    props.pagination.pageSize,
+                    props.pagination.current,
+                    index
+                ),
         },
         {
             title: messages('track.name'),
@@ -70,8 +81,7 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
             title: messages('common.price'),
             dataIndex: 'priceCode',
             key: 'priceCode',
-            width: 150,
-
+            width: 175,
             align: 'left',
             render: (value: string, record) => {
                 return (
@@ -101,7 +111,7 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
                     dataIndex: `dsp_${item.id}`,
                     key: item.id,
                     align: 'left' as const,
-                    width: 250,
+                    width: 150,
                     render: (value: string, record: TrackData) => {
                         const trackPolicy = record.trackPolicies?.find(
                             (p) => p.dspId === item?.id
@@ -133,10 +143,10 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
     return (
         <AppTable
             bordered
-            pagination={false}
             rowClassName={'group'}
             columns={columns}
             {...props}
+            pagination={false}
         />
     );
 }

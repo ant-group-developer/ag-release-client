@@ -4,6 +4,7 @@ import SortableTable, {
     SortableTableProps,
 } from '@/components/ui/table/sortable-table';
 import { SIZE_ICON } from '@/constants/common';
+import { getIndex } from '@/helpers/common';
 import { getTrackDetailRoute, RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { showNotification } from '@/helpers/messages-helper';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
@@ -36,7 +37,12 @@ import TracksForm from '../form/track-form';
 import ViewAll from '../form/view-all';
 import { TrackWaveform } from '../track-wave-form';
 
-type Props = {} & Omit<SortableTableProps<TrackData>, 'columns'>;
+type Props = {
+    pagination: {
+        pageSize: number;
+        current: number;
+    };
+} & Omit<SortableTableProps<TrackData>, 'columns'>;
 
 export default function ReleaseTracksTable({ ...props }: Props) {
     // hooks - state
@@ -97,7 +103,12 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             key: 'index',
             align: 'center',
             width: 50,
-            render: (_, __, index) => index + 1,
+            render: (_, __, index) =>
+                getIndex(
+                    props.pagination.pageSize,
+                    props.pagination.current,
+                    index
+                ),
         },
         {
             title: '',
@@ -390,8 +401,8 @@ export default function ReleaseTracksTable({ ...props }: Props) {
         <div className="w-full">
             <SortableTable
                 key="main"
-                pagination={false}
                 {...props}
+                pagination={false}
                 columns={columns}
                 rowClassName={() => 'group'}
                 onDragEnd={handleDragEnd}

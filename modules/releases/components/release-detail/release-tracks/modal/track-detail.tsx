@@ -123,7 +123,7 @@ export default function TrackDetailModal({ ...props }: Props) {
             footer={null}
             confirmLoading={isActive}
             loading={isActive}
-            width={'70vw'}
+            width={'60vw'}
             style={{ top: '1rem' }}
             spinning={isFetching}
         >

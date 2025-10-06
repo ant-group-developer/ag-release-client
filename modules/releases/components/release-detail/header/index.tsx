@@ -252,7 +252,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                 layout="vertical"
                 showSubmit={false}
             >
-                <div className="flex justify-between py-2">
+                <div className="flex justify-between">
                     <div className="flex w-full items-start gap-4">
                         <CustomTooltip
                             title={

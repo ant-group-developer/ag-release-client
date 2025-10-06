@@ -99,7 +99,7 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
     return (
         <div
             className={cn(
-                'sticky top-0 h-[calc(100vh-4rem)] w-[300px] shrink-0 border-x transition-all duration-300',
+                'sticky top-0 h-[calc(100vh-4rem)] w-[300px] shrink-0 border-x bg-white transition-all duration-300',
                 isSidebarOpen ? 'w-[300px]' : 'w-[75px]'
             )}
         >

@@ -9,7 +9,8 @@ export const CollapseItem = ({ items, ...props }: Props) => {
     const { token } = theme.useToken();
 
     const panelStyle: React.CSSProperties = {
-        background: token.colorFillAlter,
+        // background: token.colorFillAlter,
+        background: 'white',
         borderRadius: token.borderRadiusLG,
         border: 'none',
     };
