@@ -19,7 +19,7 @@ export default function DistributionStatus({ onChangeFilter, value }: Props) {
     };
 
     return (
-        <div className="flex items-center gap-2 p-4 py-2">
+        <div className="flex w-full items-center gap-2 rounded-lg bg-white p-4 py-2">
             <Segmented
                 options={Object.values(DISTRIBUTION_STATUS).map(
                     (item, index) => ({

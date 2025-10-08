@@ -5,10 +5,10 @@ import TracksInfo from '@/modules/releases/components/release-detail/release-rev
 
 export default function Review() {
     return (
-        <div className="flex flex-col gap-8 p-4">
+        <div className="my-4 flex flex-col gap-8">
             <ReviewProgress />
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-2 rounded-lg bg-white p-4">
                 <MetadataInfo />
                 <TracksInfo />
             </div>

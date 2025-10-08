@@ -126,6 +126,7 @@ export default function TrackDetailModal({ ...props }: Props) {
             width={'60vw'}
             style={{ top: '1rem' }}
             spinning={isFetching}
+            bodyStyle={{ backgroundColor: 'white' }}
         >
             <Tabs items={items} defaultActiveKey={`${record.id}-view-all`} />
         </AppModal>
