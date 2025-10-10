@@ -23,17 +23,17 @@ export default function TrackDetailModal({ ...props }: Props) {
     const [form] = Form.useForm();
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
-    const { record, index } = useModalStore<{
-        record: TrackData;
+    const { trackId, index } = useModalStore<{
+        trackId: TrackData['id'];
         index: number;
     }>((state) => state.dataEdit);
     const { isActive, active, deActive } = useActive();
     const { updateTrackDraft } = useUpdateTrackDraft();
-    const { trackData, isFetching } = useGetDetailTrack(record?.id);
+    const { trackData, isFetching } = useGetDetailTrack(trackId);
 
     const debouncedUpdate = useCallback(
         debounce((id, data) => {
-            if (!record.id) return;
+            if (!trackId) return;
             const variables: UpdateVariables<
                 TrackData['id'],
                 UpdateTrackPayload
@@ -43,12 +43,12 @@ export default function TrackDetailModal({ ...props }: Props) {
             };
             updateTrackDraft(variables);
         }, 800),
-        [record.id]
+        [trackId]
     );
 
     const items = [
         {
-            key: `${record.id}-track-form`,
+            key: `${trackId}-track-form`,
             label: (
                 <span className="font-medium">
                     {messages('track.label')} & {messages('artist.label')}
@@ -56,14 +56,14 @@ export default function TrackDetailModal({ ...props }: Props) {
             ),
             children: (
                 <TracksForm
-                    key={`${record.id}-${record.title}-track-form-content`}
+                    key={`${trackId}-${trackData.title}-track-form-content`}
                     trackData={trackData}
                     index={index}
                 />
             ),
         },
         {
-            key: `${record.id}-metadata-form`,
+            key: `${trackId}-metadata-form`,
             label: (
                 <span className="font-medium">
                     {messages('release.otherMetadata')}
@@ -71,13 +71,13 @@ export default function TrackDetailModal({ ...props }: Props) {
             ),
             children: (
                 <OtherMetadataForm
-                    key={`${record.id}-metadata-form-content`}
+                    key={`${trackId}-metadata-form-content`}
                     trackData={trackData}
                 />
             ),
         },
         {
-            key: `${record.id}-audio-specs`,
+            key: `${trackId}-audio-specs`,
             label: (
                 <span className="font-medium">
                     {messages('common.specification')}
@@ -85,13 +85,13 @@ export default function TrackDetailModal({ ...props }: Props) {
             ),
             children: (
                 <AudioSpecifications
-                    key={`${record.id}-audio-specs-content`}
+                    key={`${trackId}-audio-specs-content`}
                     trackData={trackData}
                 />
             ),
         },
         {
-            key: `${record.id}-view-all`,
+            key: `${trackId}-view-all`,
             label: (
                 <span className="font-medium">
                     {messages('common.viewAll')}
@@ -99,11 +99,9 @@ export default function TrackDetailModal({ ...props }: Props) {
             ),
             children: (
                 <ViewAll
-                    key={`${record.id}-view-all`}
+                    key={`${trackId}-view-all`}
                     trackData={trackData}
-                    updateTrackDraft={(data) =>
-                        debouncedUpdate(record.id, data)
-                    }
+                    updateTrackDraft={(data) => debouncedUpdate(trackId, data)}
                     index={index}
                 />
             ),
@@ -114,7 +112,7 @@ export default function TrackDetailModal({ ...props }: Props) {
         <AppModal
             {...props}
             open
-            title={record.title}
+            title={trackData.title}
             onOk={form.submit}
             onCancel={() => {
                 closeModal();
@@ -128,7 +126,7 @@ export default function TrackDetailModal({ ...props }: Props) {
             spinning={isFetching}
             bodyStyle={{ backgroundColor: 'white' }}
         >
-            <Tabs items={items} defaultActiveKey={`${record.id}-view-all`} />
+            <Tabs items={items} defaultActiveKey={`${trackId}-view-all`} />
         </AppModal>
     );
 }

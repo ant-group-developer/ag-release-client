@@ -18,7 +18,7 @@ import {
     MAIN_ARTIST_ROLE,
 } from '@/modules/release-artist/constants';
 import { ReleaseArtist } from '@/modules/release-artist/types';
-import { TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
+import { RELEASES_STATUS, TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
@@ -29,14 +29,20 @@ import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { CreateBucketFile } from '@/modules/upload/types/data';
 import { DeleteVariables, UpdateVariables } from '@/types/api';
-import { Form, Segmented, theme } from 'antd';
+import { Form, Segmented, Steps, StepsProps, theme } from 'antd';
 import { SegmentedOptions } from 'antd/es/segmented';
+import {
+    Box,
+    CircleAlert,
+    FileSearch,
+    NotebookText,
+    PackageX,
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import DownloadMenu from './download-menu';
 import OptionsMenu from './options-menu';
-
 type Props = {
     isScrolled: boolean;
 };
@@ -104,6 +110,29 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         },
     ];
     const isReadMode = action === RELEASE_DETAIL_ACTION.READ;
+    const a = RELEASES_STATUS;
+    const statusItems: StepsProps['items'] = [
+        {
+            title: messages('common.draft'),
+            icon: <NotebookText />,
+        },
+        {
+            title: messages('common.processing'),
+            icon: <FileSearch />,
+        },
+        {
+            title: messages('issue.label'),
+            icon: <CircleAlert />,
+        },
+        {
+            title: messages('common.distributed'),
+            icon: <Box />,
+        },
+        {
+            title: messages('common.takenDown'),
+            icon: <PackageX />,
+        },
+    ];
 
     // func
     const handleImageUpload = async (info: any) => {
@@ -246,6 +275,13 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                 backgroundColor: token.colorBgContainer,
             }}
         >
+            {!isScrolled && (
+                <div className="flex justify-center pb-2">
+                    <div className="w-3/6">
+                        <Steps size="small" items={statusItems} />
+                    </div>
+                </div>
+            )}
             <AppForm
                 form={form}
                 // onFinish={handleFinish}

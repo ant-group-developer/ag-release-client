@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "quantity": "Số lượng",
         "tracks": "Bài hát",
         "clearFilter": "Xoá bộ lọc",
         "reset": "Đặt lại",

@@ -1,5 +1,5 @@
 'use client';
-import StreamChart from '@/modules/dashboard/components/area-chart/stream-chart';
+import StreamChart from '@/modules/dashboard/components/bar-chart/stream-chart';
 import ListTop from '@/modules/dashboard/components/list-top';
 
 type Props = {};

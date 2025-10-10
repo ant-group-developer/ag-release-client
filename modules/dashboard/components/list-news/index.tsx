@@ -1,4 +1,6 @@
+import SeeMoreButton from '@/components/ui/button/see-more-button';
 import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
+import { APP_ROUTES } from '@/enums/routes';
 import PostCard from '@/modules/news/components/post-card';
 import { useGetListNewsPublic } from '@/modules/news/hooks/use-get-list-public';
 import { Skeleton } from 'antd';
@@ -18,11 +20,13 @@ export default function ListNews({}: Props) {
 
     return (
         <div className="my-8">
-            <div className="flex items-center justify-between pb-2">
+            <div className="flex items-center justify-between">
                 <p className="text-lg font-bold">
                     {messages('dashboard.latestNews')}
                 </p>
-                {/* <SeeMoreButton /> */}
+                <Link href={APP_ROUTES.NEWS}>
+                    <SeeMoreButton type="default" />
+                </Link>
             </div>
 
             {isFetching && (

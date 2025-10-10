@@ -25,7 +25,7 @@ export default function PostCard({ data }: Props) {
             <Meta
                 title={data?.title}
                 description={
-                    <p className="line-clamp-2">{data?.description}</p>
+                    <p className="line-clamp-2 h-11">{data?.description}</p>
                 }
             />
         </Card>

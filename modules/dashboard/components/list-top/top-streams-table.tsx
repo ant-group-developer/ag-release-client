@@ -1,4 +1,3 @@
-import AppCard from '@/components/ant-music/app-card';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { ORDER } from '@/enums/common';
 import { formattedNumber, getIndex } from '@/helpers/common';
@@ -7,7 +6,7 @@ import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 
 type Props = Omit<AppTableProps<any>, 'columns'> & {
-    titleHeader: string;
+    titleHeader?: string;
     dataFilter: any;
     orderByField: string | undefined;
     orderField: ORDER;
@@ -59,18 +58,18 @@ export default function TopStreamsTable({
     ];
 
     return (
-        <AppCard
-            className="px-0"
-            title={<p className="text-base font-bold">{titleHeader}</p>}
-            headerButtonText={headerButtonText}
-            headerButtonProps={headerButtonProps}
-        >
-            <AppTable
-                {...props}
-                pagination={false}
-                columns={columns}
-                scroll={{ x: 'max-content' }}
-            />
-        </AppCard>
+        // <AppCard
+        //     className="rounded-lg border-0 px-0"
+        //     title={<p className="text-base font-bold">{''}</p>}
+        //     headerButtonText={headerButtonText}
+        //     headerButtonProps={headerButtonProps}
+        // >
+        <AppTable
+            {...props}
+            pagination={false}
+            columns={columns}
+            scroll={{ x: 'max-content', y: 255 }}
+        />
+        // </AppCard>
     );
 }

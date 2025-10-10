@@ -3,6 +3,7 @@ import { Button, ButtonProps } from 'antd';
 import { ReactNode } from 'react';
 
 type Props = {
+    icon?: ReactNode;
     title: ReactNode;
     headerButtonText?: string | undefined;
     headerButtonProps?: ButtonProps;
@@ -11,6 +12,7 @@ type Props = {
 };
 
 export default function AppCard({
+    icon,
     title,
     headerButtonText,
     headerButtonProps,
@@ -20,7 +22,9 @@ export default function AppCard({
     return (
         <div className={cn('flex flex-col rounded-lg border', className)}>
             <div className="flex items-center justify-between">
-                <div className="p-4 py-2 text-base font-bold">{title}</div>
+                <div className="flex items-center gap-2 p-4 py-2 text-base font-bold">
+                    {icon} {title}
+                </div>
                 {headerButtonText && (
                     <div className="px-2 py-2">
                         <Button shape="round" {...headerButtonProps}>

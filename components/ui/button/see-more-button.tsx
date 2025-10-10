@@ -8,7 +8,8 @@ export default function SeeMoreButton({ ...props }: Props) {
     return (
         <Button
             type="text"
-            className="!rounded-2xl !bg-card-bg hover:!bg-card-bg-hover dark:!bg-card-bg-dark dark:hover:!bg-card-bg-hover-dark"
+            // className="!rounded-2xl !bg-card-bg hover:!bg-card-bg-hover dark:!bg-card-bg-dark dark:hover:!bg-card-bg-hover-dark"
+            className="!rounded-2xl"
             {...props}
         >
             {messages('common.seeMore')}

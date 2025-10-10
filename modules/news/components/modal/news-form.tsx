@@ -25,6 +25,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { NEWS_STATUS } from '../../enums';
 import { useCreateNews } from '../../hooks/use-create';
+import { useGetDetailNews } from '../../hooks/use-get-detail';
 import { useGetListKeywords } from '../../hooks/use-get-keywords';
 import { useUpdateNews } from '../../hooks/use-update';
 import { NewsData } from '../../types';
@@ -39,6 +40,7 @@ export default function NewsFormModal({ ...props }: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as NewsData);
     const { active, isActive, deActive } = useActive();
+    const { newsData } = useGetDetailNews(locale, dataEdit?.slug);
     const isUpdateModal = !!dataEdit?.id;
 
     const { keywordsData } = useGetListKeywords();
@@ -121,22 +123,22 @@ export default function NewsFormModal({ ...props }: Props) {
 
     useEffect(() => {
         const initialData = {
-            ...dataEdit,
-            pictureFile: dataEdit?.thumbnail
+            ...newsData,
+            pictureFile: newsData?.thumbnail
                 ? {
                       fileList: [
                           {
-                              uid: dataEdit?.id,
-                              thumbUrl: dataEdit?.thumbnail,
-                              url: dataEdit?.thumbnail,
-                              name: dataEdit?.title,
+                              uid: newsData?.id,
+                              thumbUrl: newsData?.thumbnail,
+                              url: newsData?.thumbnail,
+                              name: newsData?.title,
                           },
                       ],
                   }
                 : undefined,
         };
         form.setFieldsValue(initialData);
-    }, [dataEdit]);
+    }, [newsData]);
 
     return (
         <FullScreenModal

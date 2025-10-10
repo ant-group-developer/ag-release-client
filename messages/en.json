@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "quantity": "Quantity",
         "tracks": "Tracks",
         "clearFilter": "Clear filter",
         "reset": "Reset",
