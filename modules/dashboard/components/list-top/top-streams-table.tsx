@@ -64,12 +64,7 @@ export default function TopStreamsTable({
         //     headerButtonText={headerButtonText}
         //     headerButtonProps={headerButtonProps}
         // >
-        <AppTable
-            {...props}
-            pagination={false}
-            columns={columns}
-            scroll={{ x: 'max-content', y: 255 }}
-        />
+        <AppTable {...props} pagination={false} columns={columns} />
         // </AppCard>
     );
 }

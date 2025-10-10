@@ -109,7 +109,7 @@ function Dashboard({}: Props) {
                     </div>
 
                     {/* <DspChart /> */}
-                    <div className="grid max-h-[500px] grid-cols-3 gap-4">
+                    <div className="grid grid-cols-3 gap-4">
                         <ListTop />
                         <div className="col-span-2">
                             <StreamChart />

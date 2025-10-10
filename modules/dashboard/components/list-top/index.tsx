@@ -20,6 +20,7 @@ export default function ListTop({ className }: Props) {
                     orderByField={undefined}
                     orderField={ORDER.ASC}
                     pagination={{ pageSize: 10, current: 1 }}
+                    scroll={{ x: 'max-content' }}
                     dataSource={[
                         { id: 10, name: 'Aurora Nights', total: 23400 },
                         { id: 5, name: 'Falling Leaves', total: 22100 },
@@ -45,6 +46,7 @@ export default function ListTop({ className }: Props) {
                     orderByField={undefined}
                     orderField={ORDER.ASC}
                     pagination={{ pageSize: 10, current: 1 }}
+                    scroll={{ x: 'max-content' }}
                     dataSource={[
                         { id: 7, name: 'City Pop Nights', total: 7200 },
                         { id: 10, name: 'Starlight Whisper', total: 6700 },
@@ -70,6 +72,7 @@ export default function ListTop({ className }: Props) {
                     orderByField={undefined}
                     orderField={ORDER.ASC}
                     pagination={{ pageSize: 10, current: 1 }}
+                    scroll={{ x: 'max-content' }}
                     dataSource={[
                         { id: 10, name: 'Starlight Entertainment', total: 400 },
                         { id: 4, name: 'Oceanic Tunes', total: 340 },
@@ -95,6 +98,7 @@ export default function ListTop({ className }: Props) {
                     orderByField={undefined}
                     orderField={ORDER.ASC}
                     pagination={{ pageSize: 10, current: 1 }}
+                    scroll={{ x: 'max-content' }}
                     dataSource={[
                         { id: 2, name: 'Kai Nakamura', total: 187500 },
                         { id: 7, name: 'Maya Santos', total: 174800 },
@@ -120,6 +124,7 @@ export default function ListTop({ className }: Props) {
                     orderByField={undefined}
                     orderField={ORDER.ASC}
                     pagination={{ pageSize: 10, current: 1 }}
+                    scroll={{ x: 'max-content' }}
                     dataSource={[
                         { id: 1, name: 'Spotify', total: 12500 },
                         { id: 2, name: 'Apple Music', total: 9800 },
@@ -145,6 +150,7 @@ export default function ListTop({ className }: Props) {
                     orderByField={undefined}
                     orderField={ORDER.ASC}
                     pagination={{ pageSize: 10, current: 1 }}
+                    scroll={{ x: 'max-content' }}
                     dataSource={[
                         { id: 1, name: 'Universal Music Group', total: 15000 },
                         {

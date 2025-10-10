@@ -36,10 +36,10 @@ export default function StreamChart({ color = '#90D5FF', className }: Props) {
 
     return (
         <AppCard
-            className="flex flex-col justify-between bg-white"
+            className="flex h-full flex-col justify-between bg-white"
             title={'Stream by DSP'}
         >
-            <div className={`h-[300px] px-4 pb-4 ${className}`}>
+            <div className={`h-full px-4 pb-4 ${className}`}>
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                         data={data}
