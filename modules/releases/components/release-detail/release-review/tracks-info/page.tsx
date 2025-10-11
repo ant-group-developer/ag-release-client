@@ -12,7 +12,10 @@ type Props = {};
 export default function TracksInfo({}: Props) {
     const messages = useTranslations();
     const formValue = useReleaseFormStore((state) => state.formValues);
-    const { tracksData } = useGetListTracks({ releaseId: formValue?.id });
+    const { tracksData } = useGetListTracks({
+        releaseId: formValue?.id,
+        fieldOrder: 'order',
+    });
 
     // Hàm lấy giá trị hiển thị cho từng field
     const getFieldValue = (
@@ -20,46 +23,78 @@ export default function TracksInfo({}: Props) {
         field: keyof TrackData
     ) => {
         if (!track) return '';
-        if (
-            field === 'trackLanguage' &&
-            typeof track.trackLanguage === 'object'
-        ) {
-            const lang = track.trackLanguage;
-            const audioLang = lang?.audioLanguage?.name;
-            const country = lang?.metadataLanguageCountry?.name;
-            const recordingCountry = (lang as any)?.recordingCountry?.name;
-            return (
-                <div className="mt-1">
-                    {audioLang && (
-                        <div>
-                            {messages('track.language')}: {audioLang}
+
+        switch (field) {
+            case 'trackLanguage': {
+                if (typeof track.trackLanguage === 'object') {
+                    const lang = track.trackLanguage;
+                    const audioLang = lang?.audioLanguage?.name;
+                    const country = lang?.metadataLanguageCountry?.name;
+                    const recordingCountry = (lang as any)?.recordingCountry
+                        ?.name;
+
+                    return (
+                        <div className="mt-1">
+                            {audioLang && (
+                                <div>
+                                    {messages('track.language')}: {audioLang}
+                                </div>
+                            )}
+                            {country && (
+                                <div>
+                                    {messages('common.language')} metadata:{' '}
+                                    {country}
+                                </div>
+                            )}
+                            {recordingCountry && (
+                                <div>
+                                    {messages('track.recordingCountry')}:{' '}
+                                    {recordingCountry}
+                                </div>
+                            )}
                         </div>
-                    )}
-                    {country && (
-                        <div>
-                            {messages('common.language')} metadata: {country}
-                        </div>
-                    )}
-                    {recordingCountry && (
-                        <div>
-                            {messages('track.recordingCountry')}:{' '}
-                            {recordingCountry}
-                        </div>
-                    )}
-                </div>
-            );
+                    );
+                }
+                return '';
+            }
+
+            case 'primaryGenreId':
+                return track.primaryGenre?.name || track.primaryGenreId || '';
+
+            case 'subGenreId':
+                return track.subGenre?.name || track.subGenreId || '';
+
+            case 'trackSensitiveId':
+                return (
+                    track.trackSensitive?.name || track.trackSensitiveId || ''
+                );
+
+            case 'pLineOwner':
+                return `${track.pLineYear ?? ''}  ${track.pLineOwner ?? ''}`.trim();
+
+            case 'trackTypeId':
+                return track.trackType?.name || track.trackTypeId || '';
+
+            case 'trackOriginTypeId':
+                return (
+                    track.trackOriginType?.name || track.trackOriginTypeId || ''
+                );
+
+            case 'trackTypeId':
+                return track.trackType?.name || track.trackTypeId || '';
+
+            default: {
+                const value = track[field];
+                if (typeof value === 'boolean') {
+                    return value
+                        ? messages('common.yes')
+                        : messages('common.no');
+                }
+                return value !== undefined && value !== null
+                    ? String(value)
+                    : '';
+            }
         }
-        if (field === 'primaryGenreId') {
-            return track.primaryGenre?.name || track.primaryGenreId || '';
-        }
-        if (field === 'subGenreId') {
-            return track.subGenre?.name || track.subGenreId || '';
-        }
-        const value = track[field];
-        if (typeof value === 'boolean') {
-            return value ? messages('common.yes') : messages('common.no');
-        }
-        return value !== undefined && value !== null ? String(value) : '';
     };
 
     const renderField = (
@@ -187,7 +222,7 @@ export default function TracksInfo({}: Props) {
                                         messages(
                                             'formFields.tracks.trackOriginTypeId'
                                         ),
-                                        'originType',
+                                        'trackOriginTypeId',
                                         true
                                     )}
                                     {renderField(

@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "tracks": "Tracks",
         "clearFilter": "Clear filter",
         "reset": "Reset",
         "translation": "Translation",
@@ -478,8 +479,8 @@
         }
     },
     "validation": {
-        "error": "Validation error",
-        "noError": "No validation error",
+        "error": "Validation errors",
+        "noError": "No validation errors",
         "emailFormat": "Please enter a valid email!",
         "select": "Please select information!",
         "radio": "Please choose information!",

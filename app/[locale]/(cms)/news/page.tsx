@@ -11,7 +11,7 @@ import useModalStore from '@/hooks/use-modal';
 import { NewsHeaderV2 } from '@/modules/news/components/header/index-v2';
 import NewsFormModal from '@/modules/news/components/modal/news-form';
 import TranslationFormModal from '@/modules/news/components/modal/translation-form';
-import TranslateModal from '@/modules/news/components/modal/translation-modal';
+import TranslationModal from '@/modules/news/components/modal/translation-modal';
 import NewsGridTable from '@/modules/news/components/table/grid-table';
 import NewsTablePro from '@/modules/news/components/table/news-table-pro';
 import { TYPE_MODAL_NEWS } from '@/modules/news/enums';
@@ -73,7 +73,7 @@ export default function News({}: Props) {
     };
 
     return (
-        <div className="min-h-[calc(100vh-64px)] bg-[#fafafa]">
+        <div className="min-h-[calc(100vh-64px)] bg-[#f5f5f5]">
             <PageContainer
                 fixedHeader
                 header={{
@@ -171,7 +171,7 @@ export default function News({}: Props) {
                 )}
 
                 {typeModal === TYPE_MODAL_NEWS.TRANSLATE_LIST && (
-                    <TranslateModal open onCancel={closeModal} />
+                    <TranslationModal open onCancel={closeModal} />
                 )}
 
                 {typeModal === TYPE_MODAL_NEWS.DELETE && (

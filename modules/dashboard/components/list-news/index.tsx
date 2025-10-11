@@ -1,4 +1,5 @@
 import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
+import PostCard from '@/modules/news/components/post-card';
 import { useGetListNewsPublic } from '@/modules/news/hooks/use-get-list-public';
 import { Skeleton } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -7,7 +8,6 @@ import 'swiper/css'; // style cơ bản
 import 'swiper/css/pagination'; // nếu dùng pagination
 import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import CardNews from '../card/card-news';
 type Props = {};
 
 export default function ListNews({}: Props) {
@@ -44,9 +44,9 @@ export default function ListNews({}: Props) {
                     pagination={{ clickable: true }}
                 >
                     {newsData?.items?.map((item, index) => (
-                        <SwiperSlide key={index}>
+                        <SwiperSlide className="pb-8 pt-4" key={index}>
                             <Link href={`/news/${item?.slug}`}>
-                                <CardNews data={item} />
+                                <PostCard data={item} />
                             </Link>
                         </SwiperSlide>
                     ))}

@@ -22,7 +22,12 @@ export default function PostCard({ data }: Props) {
                 />
             }
         >
-            <Meta title="Europe Street beat" description="www.instagram.com" />
+            <Meta
+                title={data?.title}
+                description={
+                    <p className="line-clamp-2">{data?.description}</p>
+                }
+            />
         </Card>
     );
 }

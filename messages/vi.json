@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "tracks": "Bài hát",
         "clearFilter": "Xoá bộ lọc",
         "reset": "Đặt lại",
         "translation": "Bản dịch",

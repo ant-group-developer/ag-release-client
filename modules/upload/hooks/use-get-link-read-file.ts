@@ -11,7 +11,7 @@ export const useGetLinkReadFile = (
         enabled: !!id && (options?.enabled ?? true),
     });
 
-    const linkReadFile = data?.data?.data;
+    const linkReadFile = (data?.data?.data as string) ?? '';
 
     return {
         linkReadFile,

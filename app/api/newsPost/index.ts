@@ -8,7 +8,7 @@ export const getDetailPostBySlug = async (slug: string, locale?: string) => {
                 cache: 'no-store',
                 headers: {
                     accept: 'application/json',
-                    'Accept-Language': locale || 'en', // nên dùng chuẩn header
+                    locale: locale || '',
                 },
             }
         );
