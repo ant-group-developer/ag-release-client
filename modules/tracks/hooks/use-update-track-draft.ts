@@ -17,9 +17,9 @@ export const useUpdateTrackDraft = () => {
         data: any,
         { onSuccess }: UpdateVariables<TrackData['id'], UpdateTrackPayload>
     ) => {
-        // queryClient.invalidateQueries({
-        //     queryKey: [...releasesQueryKeys.getDetail],
-        // });
+        queryClient.invalidateQueries({
+            queryKey: trackQueryKeys.detail(data?.data?.data?.id),
+        });
         queryClient.invalidateQueries({
             queryKey: releasesQueryKeys.validations(),
         });

@@ -348,7 +348,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                                 openModal(
                                     TYPE_MODAL_RELEASE.DETAIL_TRACK_RELEASE,
                                     {
-                                        record,
+                                        trackId: record?.id,
                                         index,
                                     }
                                 )

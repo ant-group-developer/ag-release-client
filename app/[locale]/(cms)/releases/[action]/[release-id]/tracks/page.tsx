@@ -6,7 +6,6 @@ import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useFilter } from '@/hooks/use-filter';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
-import { useThemeMode } from '@/hooks/use-theme-mode';
 import DropUploadTracks from '@/modules/releases/components/drop-track-upload';
 import AddNewTrackModal from '@/modules/releases/components/release-detail/release-tracks/modal/add-new-track';
 import TrackDetailModal from '@/modules/releases/components/release-detail/release-tracks/modal/track-detail';
@@ -47,7 +46,7 @@ export default function Tracks() {
 
     const { dataFilter, onChangePage } = useFilter<TrackDataFilter>({
         releaseId: formValues?.id as string,
-        fieldOrder: 'order',
+        // fieldOrder: 'order',
         pageSize: PAGE_SIZE,
     });
 
@@ -95,7 +94,7 @@ export default function Tracks() {
         }),
     };
     const { token } = theme.useToken();
-    const { isDark } = useThemeMode();
+    // const { isDark } = useThemeMode();
     const customTheme = {
         token: {
             // colorBgContainerDisabled: isDark ? '#2a2a2a' : '#fff',

@@ -48,8 +48,9 @@ export default function ReleaseConfigurationSection({
     // variables
     const isCreateReleasePage = params['action'] === 'create';
     const version = watch('version') ?? '';
-    const albumFormatId = watch('albumFormatId');
+    const albumFormatId = watch('albumFormatId') ?? '';
     const title = watch('title') ?? '';
+    const labelId = watch('labelId') ?? '';
     const isEnableCreateDraftBtn = (!!albumFormatId && !!title) === true;
     const isReadMode = useMemo(
         () => action !== RELEASE_DETAIL_ACTION.EDIT && !isCreateReleasePage,
@@ -60,9 +61,10 @@ export default function ReleaseConfigurationSection({
     const handleCreateReleaseDraft = () => {
         const variables: CreateVariables<CreateReleaseDraftPayload> = {
             payload: {
-                title: title ?? '',
-                version: version ?? '',
-                albumFormatId: albumFormatId ?? '',
+                title,
+                version,
+                albumFormatId,
+                labelId,
             },
             onSuccess: (data) => {
                 router.push(
