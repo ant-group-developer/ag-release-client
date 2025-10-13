@@ -64,6 +64,11 @@
         }
     },
     "common": {
+        "statistics": "Statistics",
+        "list": "List",
+        "pieChart": "Pie chart",
+        "barChart": "Bar chart",
+        "quantity": "Quantity",
         "tracks": "Tracks",
         "clearFilter": "Clear filter",
         "reset": "Reset",

@@ -245,6 +245,10 @@ a {
     @apply !mb-0;
 }
 
+.tab-mb-0 .ant-tabs-nav {
+    @apply !mb-0;
+}
+
 .custom-track-expanded .ant-table-cell {
     @apply !bg-white;
 }

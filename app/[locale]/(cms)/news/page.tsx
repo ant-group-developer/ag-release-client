@@ -3,7 +3,7 @@ import CreateButton from '@/components/ui/button/create-button';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
-import { LAYOUT_TABLE, ORDER, SCREEN } from '@/enums/common';
+import { ORDER, SCREEN } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
@@ -12,7 +12,6 @@ import { NewsHeaderV2 } from '@/modules/news/components/header/index-v2';
 import NewsFormModal from '@/modules/news/components/modal/news-form';
 import TranslationFormModal from '@/modules/news/components/modal/translation-form';
 import TranslationModal from '@/modules/news/components/modal/translation-modal';
-import NewsGridTable from '@/modules/news/components/table/grid-table';
 import NewsTablePro from '@/modules/news/components/table/news-table-pro';
 import { TYPE_MODAL_NEWS } from '@/modules/news/enums';
 import { useDeleteNews } from '@/modules/news/hooks/use-delete';
@@ -119,47 +118,46 @@ export default function News({}: Props) {
                         />
                     )} */}
 
-                {layoutTable === LAYOUT_TABLE.LIST && (
-                    <NewsTablePro
-                        sticky
-                        dataSource={newsData?.items}
-                        pagination={{
-                            pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                            current: newsData.metadata.currentPage,
-                            total: newsData.metadata.totalItems,
-                        }}
-                        loading={isFetching}
-                        dataFilter={dataFilter}
-                        onChange={onChangeSort}
-                        scroll={{ x: SCREEN.XL }}
-                        // toolBarRender={false}
-                        options={false}
-                        // options={{
-                        //     density: false,
-                        // }}
-                        onSubmit={(params) => {
-                            onChangeFilter(params);
-                        }}
-                        // toolBarRender={() => [
-                        //     <div key="new" className="py-1">
-                        //         <CreateButton
-                        //             canCreate={true}
-                        //             text={messages('action.create.button')}
-                        //             onClick={() =>
-                        //                 openModal(TYPE_MODAL_NEWS.CREATE)
-                        //             }
-                        //         />
-                        //     </div>,
-                        // ]}
-                    />
-                )}
+                <NewsTablePro
+                    sticky
+                    dataSource={newsData?.items}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: newsData.metadata.currentPage,
+                        total: newsData.metadata.totalItems,
+                    }}
+                    loading={isFetching}
+                    dataFilter={dataFilter}
+                    onChange={onChangeSort}
+                    scroll={{ x: SCREEN.XL }}
+                    // toolBarRender={false}
+                    options={false}
+                    // options={{
+                    //     density: false,
+                    // }}
+                    onSubmit={(params) => {
+                        onChangeFilter(params);
+                    }}
+                    // toolBarRender={() => [
+                    //     <div key="new" className="py-1">
+                    //         <CreateButton
+                    //             canCreate={true}
+                    //             text={messages('action.create.button')}
+                    //             onClick={() =>
+                    //                 openModal(TYPE_MODAL_NEWS.CREATE)
+                    //             }
+                    //         />
+                    //     </div>,
+                    // ]}
+                />
 
+                {/* 
                 {layoutTable === LAYOUT_TABLE.GRID && (
                     <NewsGridTable
                         data={newsData?.items}
                         loading={isFetching}
                     />
-                )}
+                )} */}
 
                 {(typeModal === TYPE_MODAL_NEWS.CREATE ||
                     typeModal === TYPE_MODAL_NEWS.EDIT) && (

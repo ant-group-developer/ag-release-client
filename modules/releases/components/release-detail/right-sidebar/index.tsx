@@ -5,7 +5,7 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
 import { cn } from '@/helpers/common';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
-import { Link, useRouter } from '@/i18n/routing';
+import { Link } from '@/i18n/routing';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
@@ -32,7 +32,7 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
     const { getReleaseTabRoute } = useGetReleaseDetailRoute();
 
     // router
-    const router = useRouter();
+    // const router = useRouter();
 
     // variables
     const errorCount = releaseValidateData.length;
@@ -99,7 +99,7 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
     return (
         <div
             className={cn(
-                'sticky top-0 h-[calc(100vh-4rem)] w-[300px] border-x transition-all duration-300',
+                'sticky top-0 h-[calc(100vh-4rem)] w-[300px] shrink-0 border-x bg-white transition-all duration-300',
                 isSidebarOpen ? 'w-[300px]' : 'w-[75px]'
             )}
         >
@@ -133,7 +133,7 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                 {/* Content */}
                 {/* <div className="h-[calc(100%-8rem)] overflow-auto"> */}
                 <ScrollArea className="h-[86vh]">
-                    <div className="max-w-[300px] p-3">
+                    <div className="w-full max-w-[300px] p-3">
                         {/* Errors */}
                         <div className="mb-4">
                             {isSidebarOpen && (

@@ -64,6 +64,11 @@
         }
     },
     "common": {
+        "statistics": "Phân tích",
+        "list": "Danh sách",
+        "pieChart": "Biểu đồ tròn",
+        "barChart": "Biểu đồ cột",
+        "quantity": "Số lượng",
         "tracks": "Bài hát",
         "clearFilter": "Xoá bộ lọc",
         "reset": "Đặt lại",

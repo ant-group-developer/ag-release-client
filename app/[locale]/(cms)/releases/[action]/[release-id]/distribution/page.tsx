@@ -15,7 +15,6 @@ import {
     DISTRIBUTION_STATUS,
 } from '@/modules/distribution/enum';
 import { DistributionDataFilter } from '@/modules/distribution/types';
-import DistributionHeader from '@/modules/releases/components/release-detail/release-distribution/components/header';
 import DistributionStatus from '@/modules/releases/components/release-detail/release-distribution/components/header-action/distribution-status';
 import DistributionTable from '@/modules/releases/components/release-detail/release-distribution/components/table';
 import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
@@ -91,12 +90,6 @@ export default function Distribution({}: Props) {
     const releaseId = formValues?.id || '';
     const router = useRouter();
 
-    const handleRefresh = () => {};
-
-    const dataTable = distributionData.filter((item) => {
-        return selectedRow.includes(item.id);
-    });
-
     const handleDistribution = () => {
         setFormValues({
             ...formValues,
@@ -108,8 +101,8 @@ export default function Distribution({}: Props) {
 
     return (
         <div className="flex h-full flex-col justify-between">
-            <div className="">
-                <div className="flex justify-between border-b">
+            <div className="space-y-4">
+                <div className="flex justify-between rounded-lg bg-white">
                     <DistributionStatus
                         onChangeFilter={onChangeFilter}
                         value={dataFilter.status ?? DISTRIBUTION_STATUS.ALL}
@@ -149,7 +142,7 @@ export default function Distribution({}: Props) {
                     )}
                 </div>
 
-                <DistributionHeader
+                {/* <DistributionHeader
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
                     canClearFilter={canClearFilter}
@@ -157,7 +150,7 @@ export default function Distribution({}: Props) {
                     handleRefresh={handleRefresh}
                     handleChangeVisibleColumns={handleChangeVisibleColumns}
                     visibleColumn={visibleColumns}
-                />
+                /> */}
 
                 <DistributionTable
                     dataSource={distributionData}
@@ -189,6 +182,7 @@ export default function Distribution({}: Props) {
             )}
 
             <AppPagination
+                className="rounded-b-lg bg-white"
                 align="end"
                 current={dataFilter.page}
                 pageSize={dataFilter.pageSize}

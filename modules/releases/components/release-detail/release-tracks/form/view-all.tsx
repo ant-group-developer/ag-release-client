@@ -77,7 +77,7 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
     return (
         <ConfigProvider componentDisabled={isReadMode}>
             <FormProvider {...formMethods}>
-                <div className="flex flex-col gap-4">
+                <div className="flex h-[80vh] flex-col gap-4 overflow-y-auto">
                     <TrackAndArtistSection
                         trackData={trackData}
                         debouncedUpdateTrackDraft={updateTrackDraft}

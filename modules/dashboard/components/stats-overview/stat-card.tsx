@@ -9,14 +9,20 @@ type Props = {
         count: number;
     }[];
     loading?: boolean;
+    className?: string;
 };
 
-export default function StatCard({ loading = false, title, data }: Props) {
+export default function StatCard({
+    className,
+    loading = false,
+    title,
+    data,
+}: Props) {
     if (loading) {
         return <Skeleton active className="rounded-lg border px-4 py-2" />;
     }
     return (
-        <AppCard title={title}>
+        <AppCard title={title} className={className}>
             <div className="space-y-2 px-4 pb-4">
                 {data?.map((item, index) => {
                     return (

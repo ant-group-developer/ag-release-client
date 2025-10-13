@@ -29,9 +29,9 @@ const updates: UpdateItem[] = [
     },
 ];
 
-export default function NewUpdatesCard() {
+export default function NewsUpdatedCard() {
     return (
-        <AppCard title="New updates">
+        <AppCard title="Updated news" className="bg-white">
             <ul className="divide-y divide-gray-200">
                 {updates.map((item) => (
                     <li key={item.id}>

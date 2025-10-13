@@ -17,7 +17,7 @@ function RelatedNews({ data = [] }: Props) {
     const messages = useTranslations();
     return (
         <div>
-            <div className="flex items-center justify-between pb-2">
+            <div className="flex items-center justify-between">
                 <p className="mb-2 text-xl font-bold">
                     {messages('newsPost.related')}
                 </p>

@@ -1,7 +1,9 @@
+import { SIZE_ICON } from '@/constants/common';
+import { formattedNumber } from '@/helpers/common';
+import { Statistic, Tag } from 'antd';
+import { Building2, Disc2, DiscAlbum, TrendingUp, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { IssueCountData, OverviewCountData } from '../../types';
-import StatCard from './stat-card';
-import NewUpdatesCard from './update-card';
 
 type Props = {
     issuesData: IssueCountData[];
@@ -18,59 +20,84 @@ export default function StatsOverview({
 }: Props) {
     const messages = useTranslations();
 
-    const issuesCount = issuesData?.map((item) => ({
-        label: item?.nameEn,
-        count: Number(item?.total),
-    }));
-
     const overviewCount = [
         {
             label: messages('release.label'),
             count: overviewData?.releasesCount,
+            icon: <DiscAlbum size={SIZE_ICON} />,
         },
         {
             label: messages('track.label'),
             count: overviewData?.tracksCount,
+            icon: <Disc2 size={SIZE_ICON} />,
         },
         {
             label: messages('label.label'),
             count: overviewData?.labelsCount,
+            icon: <Building2 size={SIZE_ICON} />,
         },
         {
             label: messages('artist.label'),
             count: overviewData?.artistsCount,
+            icon: <Users size={SIZE_ICON} />,
         },
     ];
 
     return (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-3">
-            <StatCard
-                title={messages('common.issues')}
-                data={issuesCount}
-                loading={isIssuesLoading}
-            />
-
-            <StatCard
-                title={messages('common.overview')}
-                data={overviewCount}
-                loading={isOverviewLoading}
-            />
-
-            <NewUpdatesCard />
-
-            {/* <StatCard
-                title="Issues"
-                value="15"
-                trend={32.4}
-                data={issuesCard.data}
-            /> */}
-
-            {/* <StatCard
-                title="White label/Label"
-                value="8"
-                trend={18.45}
-                data={whiteLabelCard.data}
-            /> */}
+        <div>
+            <div className="grid grid-cols-4 gap-4">
+                {/* <AppCard
+                    icon={<DiscAlbum size={SIZE_ICON} />}
+                    title={messages('release.label')}
+                    className="bg-white"
+                >
+                    <div className="flex items-center justify-between gap-2 px-4 py-2">
+                        <Typography.Text className="!text-lg font-semibold">
+                            {formattedNumber(23412312)}
+                        </Typography.Text>
+                        <Tag color="green" bordered={false}>
+                            <div className="flex gap-1">
+                                <span>15%</span>
+                                <TrendingUp size={SIZE_ICON} />
+                            </div>
+                        </Tag>
+                    </div>
+                </AppCard> */}
+                {overviewCount?.map((item) => {
+                    return (
+                        <div
+                            key={item.label}
+                            className="rounded-lg border bg-white p-4"
+                        >
+                            <Statistic
+                                title={
+                                    <div className="flex items-center gap-2">
+                                        {item.icon}
+                                        <span>{item?.label}</span>
+                                    </div>
+                                }
+                                valueRender={() => {
+                                    return (
+                                        <div className="flex items-center justify-between gap-2 py-2">
+                                            <span>
+                                                {formattedNumber(item?.count)}
+                                            </span>
+                                            <Tag color="green">
+                                                <div className="flex items-center gap-1">
+                                                    <span>{15}%</span>
+                                                    <TrendingUp
+                                                        size={SIZE_ICON}
+                                                    />
+                                                </div>
+                                            </Tag>
+                                        </div>
+                                    );
+                                }}
+                            />
+                        </div>
+                    );
+                })}
+            </div>
         </div>
     );
 }

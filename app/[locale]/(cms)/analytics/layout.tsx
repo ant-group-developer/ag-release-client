@@ -1,10 +1,11 @@
 'use client';
+import DateSelect from '@/components/ui/select/date-select';
 import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
 import { Link } from '@/i18n/routing';
-import AnalyticsHeader from '@/modules/analytics/header';
-import { Menu, theme } from 'antd';
+import { PageContainer } from '@ant-design/pro-components';
+import { theme } from 'antd';
 import { ItemType } from 'antd/es/menu/interface';
 import dayjs from 'dayjs';
 import { CircleDollarSign, Tv } from 'lucide-react';
@@ -42,21 +43,38 @@ export default function AnalyticsLayout({ children }: PropsWithChildren) {
         },
     ];
     return (
-        <div className="">
-            <div className="sticky top-0 z-10 bg-white">
-                <AnalyticsHeader
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                />
-                <Menu
-                    defaultSelectedKeys={['1']}
-                    defaultOpenKeys={['sub1']}
-                    mode="horizontal"
-                    items={items}
-                    style={{ backgroundColor: token.colorBgContainer }}
-                />
-            </div>
-            <div>{children}</div>
+        <div className="bg-[#f5f5f5]">
+            <PageContainer
+                title={messages('common.statistics')}
+                extra={
+                    <DateSelect
+                        selectClassName="w-[150px]"
+                        rangeClassName="w-[250px]"
+                        externalOnChange={(fromDate, toDate) =>
+                            onChangeFilter({
+                                startDateCreated: fromDate,
+                                endDateCreated: toDate,
+                            })
+                        }
+                        value={`${dataFilter.startDateCreated},${dataFilter.endDateCreated}`}
+                    />
+                }
+            >
+                {/* <div className="sticky top-0 z-10 bg-white"> */}
+                {/* <AnalyticsHeader
+                        dataFilter={dataFilter}
+                        onChangeFilter={onChangeFilter}
+                    /> */}
+                {/* <Menu
+                        defaultSelectedKeys={['1']}
+                        defaultOpenKeys={['sub1']}
+                        mode="horizontal"
+                        items={items}
+                        style={{ backgroundColor: token.colorBgContainer }}
+                    /> */}
+                {/* </div> */}
+                <div>{children}</div>
+            </PageContainer>
         </div>
     );
 }

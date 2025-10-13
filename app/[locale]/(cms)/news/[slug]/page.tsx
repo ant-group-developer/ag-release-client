@@ -72,7 +72,7 @@ export default async function NewsDetail({ params }: Props) {
     }
 
     return (
-        <div className="mx-auto w-full max-w-screen-lg space-y-8 pb-5">
+        <div className="mx-auto w-full max-w-screen-lg space-y-8 px-4 pb-5">
             <div className="py-2">
                 <Breadcrumb items={breadCrumbItems} />
             </div>
@@ -93,7 +93,7 @@ export default async function NewsDetail({ params }: Props) {
                         <CopyLink />
                     </div>
                 </div>
-                <div className="col-span-7 rounded-lg">
+                <div className="col-span-11 rounded-lg lg:col-span-7">
                     <div>
                         <strong className="text-2xl font-extrabold">
                             {post?.title}
@@ -106,7 +106,7 @@ export default async function NewsDetail({ params }: Props) {
                     </div>
                     <CKContent value={content || ''} className="font-normal" />
                 </div>
-                <div className="col-span-4">
+                <div className="col-span-4 hidden lg:block">
                     <LatestNews />
                 </div>
             </div>

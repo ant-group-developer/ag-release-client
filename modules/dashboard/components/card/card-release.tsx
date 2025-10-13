@@ -37,7 +37,8 @@ export default function CardRelease({ data, ...props }: Props) {
     return (
         <Card
             {...props}
-            className="custom-card-body !bg-card-bg dark:!bg-card-bg-dark"
+            hoverable
+            // className="custom-card-body !bg-card-bg dark:!bg-card-bg-dark"
             cover={
                 <div className="relative aspect-square overflow-hidden">
                     <Link
