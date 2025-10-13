@@ -65,32 +65,36 @@ export default function Revenue({}: Props) {
             <div
                 className={`grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2`}
             >
-                <div className="h-[450px]">
+                <div className="h-[520px]">
                     <ChartSwitcher
                         title="Top releases"
                         data={topReleases}
                         className="h-full"
+                        defaultChart="bar"
                     />
                 </div>
-                <div className="h-[450px]">
+                <div className="h-[520px]">
                     <ChartSwitcher
                         title="Top tracks"
                         data={topTrack}
                         className="h-full"
+                        defaultChart="bar"
                     />
                 </div>
-                <div className="h-[450px]">
+                <div className="h-[520px]">
                     <ChartSwitcher
                         title="Top artists"
                         data={topArtist}
                         className="h-full"
+                        defaultChart="bar"
                     />
                 </div>
-                <div className="h-[450px]">
+                <div className="h-[520px]">
                     <ChartSwitcher
                         title="Top labels"
                         data={topLabels}
                         className="h-full"
+                        defaultChart="bar"
                     />
                 </div>
             </div>

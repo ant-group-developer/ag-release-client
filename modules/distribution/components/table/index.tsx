@@ -5,6 +5,7 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { convertSecondsToHoursMinutes, formattedDate } from '@/helpers/common';
 import { getIntlCodeByReleaseStatus } from '@/helpers/intl';
+import { OnChangeFilter } from '@/hooks/use-filter';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
@@ -18,12 +19,20 @@ import {
     DISTRIBUTION_COLUMNS_DISPLAY,
     TYPE_MODAL_DISTRIBUTION,
 } from '../../enum';
+import { DistributionDataFilter } from '../../types';
 
 type Props = Omit<AppTableProps<ReleasesData>, 'columns'> & {
+    dataFilter: DistributionDataFilter;
+    onChangeFilter: OnChangeFilter<DistributionDataFilter>;
     visibleColumns: DISTRIBUTION_COLUMNS_DISPLAY[];
 };
 
-export default function DistributionTable({ visibleColumns, ...props }: Props) {
+export default function DistributionTable({
+    dataFilter,
+    onChangeFilter,
+    visibleColumns,
+    ...props
+}: Props) {
     const messages = useTranslations();
     const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
@@ -248,7 +257,11 @@ export default function DistributionTable({ visibleColumns, ...props }: Props) {
             align: 'center',
             width: 50,
             fixed: 'right',
-            render: () => <ActionButton showUpdate showDetail showDelete />,
+            render: () => (
+                <div onClick={(e) => e.stopPropagation()}>
+                    <ActionButton showUpdate showDetail showDelete />
+                </div>
+            ),
         },
     ];
 

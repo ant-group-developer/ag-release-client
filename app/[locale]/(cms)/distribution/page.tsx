@@ -18,6 +18,7 @@ import {
 } from '@/modules/distribution/enum';
 import { DistributionDataFilter } from '@/modules/distribution/types';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
+import { ReleasesDataFilter } from '@/modules/releases/types';
 import { Button } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
@@ -65,7 +66,9 @@ export default function Distribution({}: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
 
     // apis
-    const { releasesData, isFetching } = useGetListReleases({});
+    const { releasesData, isFetching } = useGetListReleases(
+        dataFilter as ReleasesDataFilter
+    );
 
     // func
     const handleChangeVisibleColumns = (
@@ -114,11 +117,11 @@ export default function Distribution({}: Props) {
                 visibleColumn={visibleColumns}
             />
             <DistributionTable
+                sticky
                 visibleColumns={visibleColumns}
                 dataSource={releasesData?.items}
-                scroll={{
-                    y: scrollY,
-                }}
+                dataFilter={dataFilter}
+                onChangeFilter={onChangeFilter}
                 pagination={{
                     pageSize: dataFilter.pageSize,
                     current: releasesData.metadata.currentPage,

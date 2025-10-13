@@ -2,10 +2,11 @@
 import DateSelect from '@/components/ui/select/date-select';
 import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE } from '@/constants/page-size';
+import { APP_ROUTES } from '@/enums/routes';
 import { useFilter } from '@/hooks/use-filter';
 import { Link } from '@/i18n/routing';
 import { PageContainer } from '@ant-design/pro-components';
-import { theme } from 'antd';
+import { Button, theme } from 'antd';
 import { ItemType } from 'antd/es/menu/interface';
 import dayjs from 'dayjs';
 import { CircleDollarSign, Tv } from 'lucide-react';
@@ -47,17 +48,22 @@ export default function AnalyticsLayout({ children }: PropsWithChildren) {
             <PageContainer
                 title={messages('common.statistics')}
                 extra={
-                    <DateSelect
-                        selectClassName="w-[150px]"
-                        rangeClassName="w-[250px]"
-                        externalOnChange={(fromDate, toDate) =>
-                            onChangeFilter({
-                                startDateCreated: fromDate,
-                                endDateCreated: toDate,
-                            })
-                        }
-                        value={`${dataFilter.startDateCreated},${dataFilter.endDateCreated}`}
-                    />
+                    <div className="flex items-center gap-2">
+                        <Link href={`${APP_ROUTES.ANALYTICS}/advanced`}>
+                            <Button> {messages('common.seeMore')} </Button>
+                        </Link>
+                        <DateSelect
+                            selectClassName="w-[150px]"
+                            rangeClassName="w-[250px]"
+                            externalOnChange={(fromDate, toDate) =>
+                                onChangeFilter({
+                                    startDateCreated: fromDate,
+                                    endDateCreated: toDate,
+                                })
+                            }
+                            value={`${dataFilter.startDateCreated},${dataFilter.endDateCreated}`}
+                        />
+                    </div>
                 }
             >
                 {/* <div className="sticky top-0 z-10 bg-white"> */}
