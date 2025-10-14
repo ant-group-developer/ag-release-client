@@ -45,6 +45,7 @@ export default function CardRelease({ data, ...props }: Props) {
             <Card
                 {...props}
                 hoverable
+                bordered={false}
                 // className="custom-card-body !bg-card-bg dark:!bg-card-bg-dark"
                 cover={
                     <div className="relative aspect-square overflow-hidden">
@@ -59,8 +60,8 @@ export default function CardRelease({ data, ...props }: Props) {
                                 className="cursor-pointer overflow-hidden object-cover duration-300 hover:scale-110"
                                 alt="example"
                                 src={linkReadFile || FALLBACK_IMAGE}
-                                width={300}
-                                height={300}
+                                width={600}
+                                height={600}
                             />
                         )}
 

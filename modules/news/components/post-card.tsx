@@ -11,6 +11,7 @@ export default function PostCard({ data }: Props) {
     return (
         <Card
             hoverable
+            bordered={false}
             cover={
                 <Image
                     draggable={false}

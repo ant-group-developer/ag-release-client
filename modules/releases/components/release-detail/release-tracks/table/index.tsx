@@ -112,10 +112,10 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             dataIndex: 'waveform',
             key: 'waveform',
             align: 'center',
-            width: 300,
+            width: 200,
             render: (value, record, index) => {
                 return (
-                    <div className="min-h-10 w-[300px]">
+                    <div className="min-h-10 w-80">
                         <TrackWaveform
                             key={`${record.id}-${index}`}
                             data={record}
@@ -129,7 +129,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             dataIndex: 'title',
             key: 'title',
             align: 'left',
-            width: 250,
+            width: 350,
             render: (value, record) => {
                 return (
                     <div className="space-y-2">
@@ -274,7 +274,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             dataIndex: 'ISRC',
             key: 'ISRC',
             align: 'left',
-            width: 200,
+            width: 150,
             ellipsis: true,
             render: (value, record) => {
                 return (

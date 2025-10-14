@@ -9,7 +9,6 @@ type Props = CardProps & {
 };
 
 export default function GridCardTracks({ data, ...props }: Props) {
-    console.log('🚀 ~ GridCardTracks ~ data:', data);
     return (
         <Card
             {...props}

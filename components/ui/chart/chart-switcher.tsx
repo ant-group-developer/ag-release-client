@@ -60,14 +60,18 @@ const renderCustomizedLabel = ({
 const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
         const fullName = payload[0]?.payload?.user?.name || label;
+
         return (
             <div className="rounded border border-gray-200 bg-white p-3 shadow-lg">
                 <p className="mb-2 font-medium">{fullName}</p>
-                {payload.map((entry: any, index: number) => (
-                    <p key={index} className="text-sm">
-                        {entry.name}: {formattedNumber(entry.value)}
-                    </p>
-                ))}
+                {payload.map((entry: any, index: number) => {
+                    const roundValue = Math.round(entry.value);
+                    return (
+                        <p key={index} className="text-sm">
+                            {entry.name}: {formattedNumber(roundValue)}
+                        </p>
+                    );
+                })}
             </div>
         );
     }
@@ -124,7 +128,10 @@ export default function ChartSwitcher({
                                 dataKey="value"
                                 position="top"
                                 fontSize={13}
-                                formatter={(v: any) => formattedNumber(v)}
+                                formatter={(v: any) => {
+                                    const round = Math.round(v);
+                                    return formattedNumber(round);
+                                }}
                             />
                         </Bar>
                     </BarChart>
@@ -139,7 +146,7 @@ export default function ChartSwitcher({
                             cy="50%"
                             labelLine={false}
                             label={renderCustomizedLabel}
-                            innerRadius={60}
+                            innerRadius={80}
                             dataKey="value"
                         >
                             {data?.map((entry, index) => {
@@ -157,10 +164,10 @@ export default function ChartSwitcher({
                             })}
                         </Pie>
                         <Tooltip
-                            formatter={(value: number, name: string) => [
-                                `${formattedNumber(value)}`,
-                                name,
-                            ]}
+                            formatter={(value: number, name: string) => {
+                                const roundValue = Math.round(value);
+                                return [`${formattedNumber(roundValue)}`, name];
+                            }}
                             contentStyle={{ borderRadius: 8 }}
                         />
                         <Legend verticalAlign="bottom" height={36} />
@@ -188,12 +195,13 @@ export default function ChartSwitcher({
                         },
                     },
                     {
-                        title: `${messages('common.quantity')}`,
-                        key: 'quantity',
-                        dataIndex: 'quantity',
+                        title: `${messages('common.total')}`,
+                        key: 'total',
+                        dataIndex: 'total',
                         align: 'center',
                         render: (_, record) => {
-                            return <div>{record?.value}</div>;
+                            const roundedValue = Math.round(record?.value || 0);
+                            return <div>{formattedNumber(roundedValue)}</div>;
                         },
                     },
                 ];

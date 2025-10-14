@@ -5,5 +5,5 @@ type Props = {};
 
 export default function Analytics({}: Props) {
     const locale = useLocale();
-    return redirect({ href: '/analytics/dashboard', locale });
+    return redirect({ href: '/analytics/revenue/dashboard', locale });
 }

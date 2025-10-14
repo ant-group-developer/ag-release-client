@@ -5,7 +5,20 @@ import { Button, Col, Row } from 'antd';
 import { CirclePause, CirclePlay } from 'lucide-react';
 import PropTypes from 'prop-types';
 import Waveform from 'react-audio-waveform';
-// import { StyledSongItemDuration, StyledSongItemPlayback } from './index.styled';
+
+// interface WaveformProps {
+//     peaks: number[];
+//     height?: number;
+//     pos?: number;
+//     duration?: number;
+//     onClick?: (value: any) => void;
+//     color?: string;
+//     progressColor?: string;
+//     transitionDuration?: number;
+// }
+// const Waveform = dynamic<WaveformProps>(() => import('react-audio-waveform'), {
+//     ssr: false,
+// });
 
 const WaveformElement = ({
     peakData = [0],
@@ -17,6 +30,10 @@ const WaveformElement = ({
 }) => {
     // const peaks = (peakData && peakData.split(';')) || [];
     // const peaks = parsePeakData(peakData);
+
+    if (typeof window == undefined) {
+        return null;
+    }
 
     return (
         <Row align="middle" wrap={false}>
