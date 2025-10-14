@@ -70,10 +70,6 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                                                 className="w-full"
                                                 id="primaryGenreId"
                                                 {...field}
-                                                fallBack={
-                                                    formValues?.primaryGenre
-                                                        ?.name
-                                                }
                                                 onChange={(e) => {
                                                     field.onChange(e);
                                                     debouncedUpdate({
@@ -111,9 +107,6 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                                             showSearch
                                             id="subGenres"
                                             {...field}
-                                            fallBack={
-                                                formValues?.subGenre?.name
-                                            }
                                             onChange={(e) => {
                                                 field.onChange(e);
                                                 debouncedUpdate({
@@ -150,15 +143,11 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                                     control={control}
                                     name="releaseLanguage.metadataLanguageId"
                                     render={({ field }) => {
-                                        const fallBackLabel =
-                                            formValues?.releaseLanguage
-                                                ?.metadataLanguage?.name;
                                         return (
                                             <LanguageSelect
                                                 className="w-full"
                                                 id="releaseLanguage.metadataLanguageId"
                                                 {...field}
-                                                fallBack={fallBackLabel}
                                                 onChange={(e) => {
                                                     field.onChange(e);
                                                     debouncedUpdate({
@@ -200,16 +189,12 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                                     control={control}
                                     name="releaseLanguage.audioLanguageId"
                                     render={({ field }) => {
-                                        const fallBackLabel =
-                                            formValues?.releaseLanguage
-                                                ?.audioLanguage?.name;
                                         return (
                                             <LanguageSelect
                                                 className="w-full"
                                                 id="releaseLanguage.audioLanguageId"
                                                 showSearch
                                                 {...field}
-                                                fallBack={fallBackLabel}
                                                 onChange={(e) => {
                                                     field.onChange(e);
                                                     debouncedUpdate({

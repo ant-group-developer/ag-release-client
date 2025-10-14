@@ -11,16 +11,16 @@ type Props = {};
 export default function EmailSender({}: Props) {
     const option: SelectProps['options'] = [
         {
-            label: 'Nguyễn A',
-            value: 'A',
+            label: 'Marketing Team',
+            value: 'marketing',
         },
         {
-            label: 'Nguyễn B',
-            value: 'B',
+            label: 'Tech Department',
+            value: 'tech',
         },
         {
-            label: 'Nguyễn C',
-            value: 'C',
+            label: 'Operations Team',
+            value: 'operation',
         },
     ];
 
@@ -43,13 +43,27 @@ export default function EmailSender({}: Props) {
                     <div className="my-2">
                         <div className="cursor-pointer px-4 py-2 hover:bg-card-bg-hover">
                             <div className="flex items-center justify-between gap-1">
-                                <div className="space-x-1">
-                                    <Avatar shape="square"> A </Avatar>
-                                    <span className="font-bold">Nguyễn A</span>
-                                    <span className="text-gray-500">
-                                        nguyena@gmail.com
-                                    </span>
+                                <div className="flex w-full items-center gap-2">
+                                    <div>
+                                        <Avatar
+                                            shape="square"
+                                            src={
+                                                'https://storage.googleapis.com/ant-music-assets/tenants/20250827160028_channels4_profile.jpg'
+                                            }
+                                        >
+                                            A
+                                        </Avatar>
+                                    </div>
+                                    <div className="max-w-56">
+                                        <p className="truncate font-bold">
+                                            Beta Music
+                                        </p>
+                                        <p className="truncate text-gray-500">
+                                            beta@ant-group.net
+                                        </p>
+                                    </div>
                                 </div>
+
                                 <div>
                                     <IconButton>
                                         <UserRoundX
@@ -62,13 +76,28 @@ export default function EmailSender({}: Props) {
                         </div>
                         <div className="cursor-pointer px-4 py-2 hover:bg-card-bg-hover">
                             <div className="flex items-center justify-between gap-1">
-                                <div className="space-x-1">
-                                    <Avatar shape="square"> B </Avatar>
-                                    <span className="font-bold">Nguyễn B</span>
-                                    <span className="text-gray-500">
-                                        nguyena@gmail.com
-                                    </span>
+                                <div className="flex w-full items-center gap-2">
+                                    <div>
+                                        <Avatar
+                                            shape="square"
+                                            src={
+                                                'https://storage.googleapis.com/ant-music-assets/tenants/20251014111519_winstar.jpg'
+                                            }
+                                        >
+                                            {' '}
+                                            A{' '}
+                                        </Avatar>
+                                    </div>
+                                    <div className="max-w-56">
+                                        <p className="truncate font-bold">
+                                            Winstar Media
+                                        </p>
+                                        <p className="truncate text-gray-500">
+                                            admin@rise-media.us
+                                        </p>
+                                    </div>
                                 </div>
+
                                 <div>
                                     <IconButton>
                                         <UserRoundX

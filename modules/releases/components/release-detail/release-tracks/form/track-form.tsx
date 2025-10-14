@@ -87,26 +87,6 @@ export default function TracksForm({ trackData, index }: Props) {
 
     const isAddArtistsFromRelease = watch('copyArtistsFromRelease');
 
-    // const watchedAllFields = useWatch({ control });
-
-    // useEffect(() => {
-    //     setFormValues({
-    //         ...formValues,
-    //         tracks: formValues?.tracks?.map((track: TrackData) => {
-    //             if (track.id === trackData.id) {
-    //                 const { ...restFields } = watchedAllFields;
-
-    //                 return {
-    //                     ...track,
-    //                     ...restFields,
-    //                     title: restFields.title ?? track.title,
-    //                 } as TrackData;
-    //             }
-    //             return track;
-    //         }),
-    //     });
-    // }, [watchedAllFields]);
-
     useEffect(() => {
         reset({ ...trackData });
     }, [trackData, reset]);

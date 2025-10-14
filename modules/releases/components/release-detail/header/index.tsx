@@ -29,7 +29,7 @@ import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { CreateBucketFile } from '@/modules/upload/types/data';
 import { DeleteVariables, UpdateVariables } from '@/types/api';
-import { Form, Segmented, Steps, StepsProps, theme } from 'antd';
+import { Form, Segmented, StepsProps, theme } from 'antd';
 import { SegmentedOptions } from 'antd/es/segmented';
 import {
     Box,
@@ -275,13 +275,13 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                 backgroundColor: token.colorBgContainer,
             }}
         >
-            {!isScrolled && (
+            {/* {!isScrolled && (
                 <div className="flex justify-center pb-2">
                     <div className="w-3/6">
                         <Steps size="small" items={statusItems} />
                     </div>
                 </div>
-            )}
+            )} */}
             <AppForm
                 form={form}
                 // onFinish={handleFinish}

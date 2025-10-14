@@ -1,7 +1,12 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { DATE_FORMAT } from '@/enums/common';
-import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
+import {
+    formatCurrency,
+    formattedDate,
+    getIndex,
+    getSortOrder,
+} from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
 import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
@@ -240,6 +245,31 @@ export default function RevenueTable({ dataFilter, ...props }: Props) {
                         <CustomTooltip title={name}>
                             <p className="truncate">{name}</p>
                         </CustomTooltip>
+                    </div>
+                );
+            },
+        },
+        {
+            title: messages('common.revenue'),
+            key: 'revenue',
+            dataIndex: 'revenue',
+            ellipsis: true,
+            align: 'left',
+            width: 100,
+            // sorter: true,
+            // sortOrder: getSortOrder(
+            //     dataFilter.orderBy,
+            //     dataFilter.fieldOrder,
+            //     'dsp.name'
+            // ),
+            render: (_, record) => {
+                return (
+                    <div className="truncate">
+                        {formatCurrency(
+                            Number(record?.amount),
+                            record?.currencyCode
+                        )}{' '}
+                        {record?.currencyCode}
                     </div>
                 );
             },

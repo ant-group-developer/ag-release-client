@@ -2,11 +2,11 @@
 import DateSelect from '@/components/ui/select/date-select';
 import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE } from '@/constants/page-size';
+import { APP_ROUTES } from '@/enums/routes';
 import { useFilter } from '@/hooks/use-filter';
 import { Link } from '@/i18n/routing';
 import { PageContainer } from '@ant-design/pro-components';
-import { theme } from 'antd';
-import { ItemType } from 'antd/es/menu/interface';
+import { Button, Tabs, TabsProps, theme } from 'antd';
 import dayjs from 'dayjs';
 import { CircleDollarSign, Tv } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -22,42 +22,51 @@ export default function AnalyticsLayout({ children }: PropsWithChildren) {
         startDateCreated: dayjs().subtract(30, 'day').format('YYYY-MM-DD'),
         endDateCreated: dayjs().format('YYYY-MM-DD'),
     });
-    const items: ItemType[] = [
+    const items: TabsProps['items'] = [
         {
             key: '1',
-            icon: <CircleDollarSign size={SIZE_ICON} />,
             label: (
                 <Link href="/analytics/revenue/dashboard">
-                    {messages('common.revenue')}
+                    <div className="flex items-center gap-2">
+                        <CircleDollarSign size={SIZE_ICON} />
+                        {messages('common.revenue')}
+                    </div>
                 </Link>
             ),
         },
         {
             key: '2',
-            icon: <Tv size={SIZE_ICON} />,
             label: (
                 <Link href="/analytics/streams/dashboard">
-                    {messages('common.streams')}
+                    <div className="flex items-center gap-2">
+                        <Tv size={SIZE_ICON} />
+                        {messages('common.streams')}
+                    </div>
                 </Link>
             ),
         },
     ];
     return (
-        <div className="bg-[#f5f5f5]">
+        <div className="min-h-screen bg-[#f5f5f5]">
             <PageContainer
-                title={messages('common.statistics')}
+                title={messages('analytics.label')}
                 extra={
-                    <DateSelect
-                        selectClassName="w-[150px]"
-                        rangeClassName="w-[250px]"
-                        externalOnChange={(fromDate, toDate) =>
-                            onChangeFilter({
-                                startDateCreated: fromDate,
-                                endDateCreated: toDate,
-                            })
-                        }
-                        value={`${dataFilter.startDateCreated},${dataFilter.endDateCreated}`}
-                    />
+                    <div className="flex items-center gap-2">
+                        <Link href={`${APP_ROUTES.ANALYTICS}/revenue/advanced`}>
+                            <Button> {messages('common.seeMore')} </Button>
+                        </Link>
+                        <DateSelect
+                            selectClassName="w-[150px]"
+                            rangeClassName="w-[250px]"
+                            externalOnChange={(fromDate, toDate) =>
+                                onChangeFilter({
+                                    startDateCreated: fromDate,
+                                    endDateCreated: toDate,
+                                })
+                            }
+                            value={`${dataFilter.startDateCreated},${dataFilter.endDateCreated}`}
+                        />
+                    </div>
                 }
             >
                 {/* <div className="sticky top-0 z-10 bg-white"> */}
@@ -65,13 +74,11 @@ export default function AnalyticsLayout({ children }: PropsWithChildren) {
                         dataFilter={dataFilter}
                         onChangeFilter={onChangeFilter}
                     /> */}
-                {/* <Menu
-                        defaultSelectedKeys={['1']}
-                        defaultOpenKeys={['sub1']}
-                        mode="horizontal"
-                        items={items}
-                        style={{ backgroundColor: token.colorBgContainer }}
-                    /> */}
+                <Tabs
+                    items={items}
+                    className="!mb-4 rounded-lg !px-4"
+                    style={{ backgroundColor: token.colorBgContainer }}
+                />
                 {/* </div> */}
                 <div>{children}</div>
             </PageContainer>

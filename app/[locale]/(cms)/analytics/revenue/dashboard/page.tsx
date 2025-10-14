@@ -1,96 +1,117 @@
 'use client';
 import ChartSwitcher from '@/components/ui/chart/chart-switcher';
-import { useRouter } from '@/i18n/routing';
+import { formattedNumber } from '@/helpers/common';
 import DspChart from '@/modules/analytics/chart/dsp-chart';
+import { Card } from 'antd';
 import { useTranslations } from 'next-intl';
 
 type Props = {};
 
 export default function Revenue({}: Props) {
     const messages = useTranslations();
-    const router = useRouter();
+
     const topReleases = [
-        { id: 10, name: 'Aurora Nights', value: 23400 },
-        { id: 5, name: 'Falling Leaves', value: 22100 },
-        { id: 2, name: 'Summer Breeze', value: 19820 },
-        { id: 7, name: 'City Lights', value: 19500 },
-        { id: 9, name: 'Wanderlust', value: 18990 },
-        { id: 8, name: 'Silent Rain', value: 16780 },
-        { id: 3, name: 'Neon Dreams', value: 15340 },
-        { id: 6, name: 'Golden Horizon', value: 14230 },
-        { id: 1, name: 'Midnight Echoes', value: 12450 },
-        { id: 4, name: 'Ocean Whispers', value: 8750 },
+        { id: 1, name: 'Old Skool Kinda Girl', value: 48327.56 },
+        { id: 2, name: 'Midnight in Tokyo', value: 45783.42 },
+        { id: 3, name: 'Waves of Nostalgia', value: 43219.88 },
+        { id: 4, name: 'Lost Frequencies', value: 40492.37 },
+        { id: 5, name: 'Neon Skyline', value: 39204.61 },
+        { id: 6, name: 'Golden Hour Memories', value: 37672.94 },
+        { id: 7, name: 'Silent Nights', value: 35984.23 },
+        { id: 8, name: 'After Rain Comes Light', value: 34169.58 },
+        { id: 9, name: 'Chasing Echoes', value: 32941.07 },
+        { id: 10, name: 'Eternal Youth', value: 31312.44 },
     ];
+
     const topTrack = [
-        { id: 7, name: 'City Pop Nights', value: 7200 },
-        { id: 10, name: 'Starlight Whisper', value: 6700 },
-        { id: 5, name: 'Golden Hour', value: 6100 },
-        { id: 9, name: 'Ocean Drive', value: 5800 },
-        { id: 2, name: 'Midnight Coffee', value: 5400 },
-        { id: 3, name: 'Chasing Dreams', value: 4800 },
-        { id: 6, name: 'Raindrop Melody', value: 4300 },
-        { id: 8, name: 'Autumn Jazz', value: 3900 },
-        { id: 1, name: 'Lost in the Waves', value: 3200 },
-        { id: 4, name: 'Silent Streets', value: 2600 },
+        { id: 1, name: 'Twenty Five and Up', value: 21543.82 },
+        { id: 2, name: 'City Lights Again', value: 19847.39 },
+        { id: 3, name: 'Falling for You', value: 18726.05 },
+        { id: 4, name: 'The Way You Move', value: 17358.77 },
+        { id: 5, name: 'Drifting Dreams', value: 16281.63 },
+        { id: 6, name: 'Love Me Tonight', value: 15469.11 },
+        { id: 7, name: 'Midnight Drive', value: 14638.9 },
+        { id: 8, name: 'Hold On Tight', value: 13782.57 },
+        { id: 9, name: 'Never Let Go', value: 12946.18 },
+        { id: 10, name: 'Shades of You', value: 12113.42 },
     ];
+
     const topArtist = [
-        { id: 2, name: 'Kai Nakamura', value: 187500 },
-        { id: 7, name: 'Maya Santos', value: 174800 },
-        { id: 5, name: 'Aiko Tanaka', value: 165400 },
-        { id: 9, name: 'Hana Suzuki', value: 143600 },
-        { id: 1, name: 'Luna Rivera', value: 152000 },
-        { id: 3, name: 'Sofia Marquez', value: 134200 },
-        { id: 6, name: 'Ethan Cole', value: 121300 },
-        { id: 8, name: 'Leo Martins', value: 110500 },
-        { id: 10, name: 'Oliver Hayes', value: 102900 },
-        { id: 4, name: 'Noah Bennett', value: 98000 },
+        { id: 1, name: 'Avail Hollywood', value: 126487.63 },
+        { id: 2, name: 'Luna Rivera', value: 118392.48 },
+        { id: 3, name: 'Aiko Tanaka', value: 112347.11 },
+        { id: 4, name: 'Kai Nakamura', value: 109871.9 },
+        { id: 5, name: 'Noah Bennett', value: 101276.54 },
+        { id: 6, name: 'Hana Suzuki', value: 97214.83 },
+        { id: 7, name: 'Sofia Marquez', value: 94828.29 },
+        { id: 8, name: 'Ethan Cole', value: 90361.92 },
+        { id: 9, name: 'Leo Martins', value: 86459.7 },
+        { id: 10, name: 'Maya Santos', value: 82248.15 },
     ];
+
     const topLabels = [
-        { id: 10, name: 'Starlight Entertainment', value: 400 },
-        { id: 4, name: 'Oceanic Tunes', value: 340 },
-        { id: 7, name: 'Sunset Vibes', value: 300 },
-        { id: 9, name: 'Velvet Night Music', value: 275 },
-        { id: 6, name: 'Aurora Beats', value: 260 },
-        { id: 2, name: 'Skyline Music', value: 210 },
-        { id: 5, name: 'Lofi Dreams Studio', value: 180 },
-        { id: 8, name: 'Echo Chamber Records', value: 150 },
-        { id: 1, name: 'IndieWave Records', value: 120 },
-        { id: 3, name: 'Golden Gate Sounds', value: 95 },
+        { id: 1, name: 'Avail Hollywood', value: 875.23 },
+        { id: 2, name: 'Midnight Records', value: 828.74 },
+        { id: 3, name: 'Sunset Vibes', value: 793.66 },
+        { id: 4, name: 'Echo Chamber Records', value: 741.38 },
+        { id: 5, name: 'Golden Gate Sounds', value: 698.52 },
+        { id: 6, name: 'Oceanic Tunes', value: 657.09 },
+        { id: 7, name: 'IndieWave Records', value: 615.82 },
+        { id: 8, name: 'Starlight Entertainment', value: 582.94 },
+        { id: 9, name: 'Skyline Music', value: 547.33 },
+        { id: 10, name: 'Aurora Beats', value: 512.77 },
     ];
     return (
         <div className="flex flex-col gap-4">
-            <div className="h-[300px] rounded-lg border bg-white">
-                <DspChart />
-            </div>
+            <Card
+                className="rounded-lg border bg-white"
+                title={'Revenue'}
+                extra={
+                    <div>
+                        <span className="text-base font-semibold">
+                            {messages('common.total')}:{' '}
+                            {formattedNumber(323423)}
+                        </span>
+                    </div>
+                }
+            >
+                <div className="h-[300px]">
+                    <DspChart />
+                </div>
+            </Card>
             <div
                 className={`grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2`}
             >
-                <div className="h-[450px]">
+                <div className="h-[520px]">
                     <ChartSwitcher
                         title="Top releases"
                         data={topReleases}
                         className="h-full"
+                        defaultChart="bar"
                     />
                 </div>
-                <div className="h-[450px]">
+                <div className="h-[520px]">
                     <ChartSwitcher
                         title="Top tracks"
                         data={topTrack}
                         className="h-full"
+                        defaultChart="bar"
                     />
                 </div>
-                <div className="h-[450px]">
+                <div className="h-[520px]">
                     <ChartSwitcher
                         title="Top artists"
                         data={topArtist}
                         className="h-full"
+                        defaultChart="bar"
                     />
                 </div>
-                <div className="h-[450px]">
+                <div className="h-[520px]">
                     <ChartSwitcher
                         title="Top labels"
                         data={topLabels}
                         className="h-full"
+                        defaultChart="bar"
                     />
                 </div>
             </div>

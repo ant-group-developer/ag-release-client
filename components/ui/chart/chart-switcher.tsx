@@ -1,6 +1,7 @@
 import { BAR_COLOR, COLORS } from '@/constants/color';
 import { formattedNumber } from '@/helpers/common';
 import { Card, Segmented } from 'antd';
+import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import {
@@ -16,6 +17,7 @@ import {
     XAxis,
     YAxis,
 } from 'recharts';
+import AppTable from '../table/normal-table';
 
 type DefaultChart = 'bar' | 'pie' | 'list';
 
@@ -58,14 +60,18 @@ const renderCustomizedLabel = ({
 const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
         const fullName = payload[0]?.payload?.user?.name || label;
+
         return (
             <div className="rounded border border-gray-200 bg-white p-3 shadow-lg">
                 <p className="mb-2 font-medium">{fullName}</p>
-                {payload.map((entry: any, index: number) => (
-                    <p key={index} className="text-sm">
-                        {entry.name}: {formattedNumber(entry.value)}
-                    </p>
-                ))}
+                {payload.map((entry: any, index: number) => {
+                    const roundValue = Math.round(entry.value);
+                    return (
+                        <p key={index} className="text-sm">
+                            {entry.name}: {formattedNumber(roundValue)}
+                        </p>
+                    );
+                })}
             </div>
         );
     }
@@ -122,7 +128,10 @@ export default function ChartSwitcher({
                                 dataKey="value"
                                 position="top"
                                 fontSize={13}
-                                formatter={(v: any) => formattedNumber(v)}
+                                formatter={(v: any) => {
+                                    const round = Math.round(v);
+                                    return formattedNumber(round);
+                                }}
                             />
                         </Bar>
                     </BarChart>
@@ -137,7 +146,7 @@ export default function ChartSwitcher({
                             cy="50%"
                             labelLine={false}
                             label={renderCustomizedLabel}
-                            outerRadius={90}
+                            innerRadius={80}
                             dataKey="value"
                         >
                             {data?.map((entry, index) => {
@@ -155,10 +164,10 @@ export default function ChartSwitcher({
                             })}
                         </Pie>
                         <Tooltip
-                            formatter={(value: number, name: string) => [
-                                `${formattedNumber(value)}`,
-                                name,
-                            ]}
+                            formatter={(value: number, name: string) => {
+                                const roundValue = Math.round(value);
+                                return [`${formattedNumber(roundValue)}`, name];
+                            }}
                             contentStyle={{ borderRadius: 8 }}
                         />
                         <Legend verticalAlign="bottom" height={36} />
@@ -166,23 +175,43 @@ export default function ChartSwitcher({
                 );
 
             case 'list':
+                const columns: ColumnType<any>[] = [
+                    {
+                        title: messages('common.iNo'),
+                        key: 'iNo',
+                        width: 50,
+                        align: 'center',
+                        render: (_, __, i) => (i = i + 1),
+                    },
+                    {
+                        title: `${messages('common.name')}`,
+                        key: 'name',
+                        dataIndex: 'name',
+                        ellipsis: true,
+                        align: 'left',
+                        width: 500,
+                        render: (_, record) => {
+                            return <div>{record?.name}</div>;
+                        },
+                    },
+                    {
+                        title: `${messages('common.total')}`,
+                        key: 'total',
+                        dataIndex: 'total',
+                        align: 'center',
+                        render: (_, record) => {
+                            const roundedValue = Math.round(record?.value || 0);
+                            return <div>{formattedNumber(roundedValue)}</div>;
+                        },
+                    },
+                ];
                 return (
                     <div className="">
-                        <ul className="space-y-2">
-                            {data.map((item: any, index: number) => (
-                                <li
-                                    key={index}
-                                    className="flex items-center justify-between border-b border-gray-200 py-1 text-sm"
-                                >
-                                    <span className="font-medium text-gray-700">
-                                        {item.name}
-                                    </span>
-                                    <span className="text-gray-500">
-                                        {formattedNumber(item.value)}
-                                    </span>
-                                </li>
-                            ))}
-                        </ul>
+                        <AppTable
+                            dataSource={data}
+                            columns={columns}
+                            scroll={{ x: 'max-content' }}
+                        />
                     </div>
                 );
             default:
@@ -195,7 +224,9 @@ export default function ChartSwitcher({
             title={title}
             className={className}
             bodyStyle={{
-                height: '85%',
+                height: '90%',
+                overflowY: 'auto',
+                padding: '8px 24px',
             }}
             extra={
                 <Segmented

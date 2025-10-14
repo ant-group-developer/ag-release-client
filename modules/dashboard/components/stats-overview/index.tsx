@@ -1,7 +1,7 @@
 import { SIZE_ICON } from '@/constants/common';
 import { formattedNumber } from '@/helpers/common';
-import { Statistic, Tag } from 'antd';
-import { Building2, Disc2, DiscAlbum, TrendingUp, Users } from 'lucide-react';
+import { Statistic } from 'antd';
+import { Building2, Disc2, DiscAlbum, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { IssueCountData, OverviewCountData } from '../../types';
 
@@ -82,14 +82,14 @@ export default function StatsOverview({
                                             <span>
                                                 {formattedNumber(item?.count)}
                                             </span>
-                                            <Tag color="green">
+                                            {/* <Tag color="green">
                                                 <div className="flex items-center gap-1">
                                                     <span>{15}%</span>
                                                     <TrendingUp
                                                         size={SIZE_ICON}
                                                     />
                                                 </div>
-                                            </Tag>
+                                            </Tag> */}
                                         </div>
                                     );
                                 }}

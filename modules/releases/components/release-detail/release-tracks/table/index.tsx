@@ -1,3 +1,4 @@
+'use client';
 import IconButton from '@/components/ui/button/icon-button';
 import SortableTable, {
     OnDragEnd,
@@ -24,17 +25,13 @@ import {
 } from '@/modules/tracks/types/payload';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { UpdateVariables } from '@/types/api';
-import { Input, Tabs, Tag } from 'antd';
+import { Input, Tag, Typography } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { debounce } from 'lodash';
 import { SquarePen } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import TrackActionButton from '../button/track-action';
-import AudioSpecifications from '../form/audio-specifications';
-import OtherMetadataForm from '../form/other-metadata-form';
-import TracksForm from '../form/track-form';
-import ViewAll from '../form/view-all';
 import { TrackWaveform } from '../track-wave-form';
 
 type Props = {
@@ -49,7 +46,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
     const openModal = useModalStore((state) => state.openModal);
-    const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
+    // const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
     const { action } = useGetReleaseDetailRoute();
     const router = useRouter();
 
@@ -115,10 +112,10 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             dataIndex: 'waveform',
             key: 'waveform',
             align: 'center',
-            width: 300,
+            width: 200,
             render: (value, record, index) => {
                 return (
-                    <div className="min-h-10 w-[300px]">
+                    <div className="min-h-10 w-80">
                         <TrackWaveform
                             key={`${record.id}-${index}`}
                             data={record}
@@ -132,74 +129,160 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             dataIndex: 'title',
             key: 'title',
             align: 'left',
-            width: 250,
+            width: 350,
             render: (value, record) => {
                 return (
-                    <Input
-                        key={record.id + '-' + record.title}
-                        maxLength={100}
-                        minLength={1}
-                        defaultValue={record.title}
-                        disabled={isReadMode}
-                        onChange={(e) => {
-                            const value = e.target.value;
-                            if (value.length < 1) {
-                                return showNotification(
-                                    'error',
-                                    messages('validation.min', { number: 1 })
-                                );
+                    <div className="space-y-2">
+                        {/* <Input
+                            key={record.id + '-' + record.title}
+                            size="small"
+                            maxLength={100}
+                            minLength={1}
+                            defaultValue={record.title}
+                            disabled={isReadMode}
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                if (value.length < 1) {
+                                    return showNotification(
+                                        'error',
+                                        messages('validation.min', {
+                                            number: 1,
+                                        })
+                                    );
+                                }
+                                debouncedUpdate(record.id, {
+                                    title: value,
+                                });
+                            }}
+                        /> */}
+                        <Typography.Paragraph
+                            editable={
+                                isReadMode
+                                    ? false
+                                    : {
+                                          onChange(value) {
+                                              if (value === record.title)
+                                                  return;
+                                              if (value.length < 1) {
+                                                  return showNotification(
+                                                      'error',
+                                                      messages(
+                                                          'validation.min',
+                                                          {
+                                                              number: 1,
+                                                          }
+                                                      )
+                                                  );
+                                              }
+                                              debouncedUpdate(record.id, {
+                                                  title: value,
+                                              });
+                                          },
+                                      }
                             }
-                            debouncedUpdate(record.id, {
-                                title: value,
-                            });
-                        }}
-                    />
+                            className="!mb-0"
+                        >
+                            {record?.title}
+                        </Typography.Paragraph>
+                        <div className="flex flex-wrap gap-y-2">
+                            {record?.trackArtists?.map(
+                                (trackArtist: TrackArtistData) => (
+                                    <Tag
+                                        key={`${record.id}-${trackArtist.id}`}
+                                        closeIcon
+                                        onClose={(e) => {
+                                            e.preventDefault();
+                                            openModal(
+                                                TYPE_MODAL_TRACK_ARTIST.DELETE,
+                                                trackArtist
+                                            );
+                                        }}
+                                        closable={!isReadMode}
+                                    >
+                                        {trackArtist?.artist?.name}
+                                    </Tag>
+                                )
+                            )}
+                            {!isReadMode && (
+                                <Tag
+                                    key={`${record.id}-add-artist`}
+                                    className="border-dashed hover:border-blue-500"
+                                    onClick={() => {
+                                        if (isReadMode) return;
+                                        openModal(
+                                            TYPE_MODAL_TRACK_ARTIST.ADD,
+                                            record
+                                        );
+                                    }}
+                                >
+                                    + {messages('artist.add')}
+                                </Tag>
+                            )}
+                        </div>
+                    </div>
                 );
             },
         },
+        // {
+        //     title: messages('common.artist'),
+        //     dataIndex: 'artists',
+        //     key: 'artists',
+        //     align: 'left',
+        //     width: 300,
+        //     render: (value, record, index) => {
+        //         return (
+        //             <div className="flex flex-wrap gap-y-2">
+        //                 {record?.trackArtists?.map(
+        //                     (trackArtist: TrackArtistData) => (
+        //                         <Tag
+        //                             key={`${record.id}-${trackArtist.id}`}
+        //                             closeIcon
+        //                             onClose={(e) => {
+        //                                 e.preventDefault();
+        //                                 openModal(
+        //                                     TYPE_MODAL_TRACK_ARTIST.DELETE,
+        //                                     trackArtist
+        //                                 );
+        //                             }}
+        //                             closable={!isReadMode}
+        //                         >
+        //                             {trackArtist?.artist?.name}
+        //                         </Tag>
+        //                     )
+        //                 )}
+        //                 {!isReadMode && (
+        //                     <Tag
+        //                         key={`${record.id}-add-artist`}
+        //                         className="border-dashed hover:border-blue-500"
+        //                         onClick={() => {
+        //                             if (isReadMode) return;
+        //                             openModal(
+        //                                 TYPE_MODAL_TRACK_ARTIST.ADD,
+        //                                 record
+        //                             );
+        //                         }}
+        //                     >
+        //                         + {messages('artist.add')}
+        //                     </Tag>
+        //                 )}
+        //             </div>
+        //         );
+        //     },
+        // },
         {
-            title: messages('common.artist'),
-            dataIndex: 'artists',
-            key: 'artists',
+            title: 'ISRC',
+            dataIndex: 'ISRC',
+            key: 'ISRC',
             align: 'left',
-            width: 300,
-            render: (value, record, index) => {
+            width: 150,
+            ellipsis: true,
+            render: (value, record) => {
                 return (
-                    <div className="flex flex-wrap gap-y-2">
-                        {record?.trackArtists?.map(
-                            (trackArtist: TrackArtistData) => (
-                                <Tag
-                                    key={`${record.id}-${trackArtist.id}`}
-                                    closeIcon
-                                    onClose={(e) => {
-                                        e.preventDefault();
-                                        openModal(
-                                            TYPE_MODAL_TRACK_ARTIST.DELETE,
-                                            trackArtist
-                                        );
-                                    }}
-                                    closable={!isReadMode}
-                                >
-                                    {trackArtist?.artist?.name}
-                                </Tag>
-                            )
-                        )}
-                        {!isReadMode && (
-                            <Tag
-                                key={`${record.id}-add-artist`}
-                                className="border-dashed hover:border-blue-500"
-                                onClick={() => {
-                                    if (isReadMode) return;
-                                    openModal(
-                                        TYPE_MODAL_TRACK_ARTIST.ADD,
-                                        record
-                                    );
-                                }}
-                            >
-                                + {messages('artist.add')}
-                            </Tag>
-                        )}
-                    </div>
+                    <Input
+                        disabled={isReadMode}
+                        size="small"
+                        defaultValue={record?.isrc ?? ''}
+                    />
                 );
             },
         },
@@ -265,7 +348,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                                 openModal(
                                     TYPE_MODAL_RELEASE.DETAIL_TRACK_RELEASE,
                                     {
-                                        record,
+                                        trackId: record?.id,
                                         index,
                                     }
                                 )
@@ -279,123 +362,123 @@ export default function ReleaseTracksTable({ ...props }: Props) {
         },
     ];
 
-    const expandedRowRender = (record: TrackData, index: number) => {
-        const items = [
-            {
-                key: `${record.id}-track-form`,
-                label: (
-                    <span className="font-medium">
-                        {messages('track.label')} & {messages('artist.label')}
-                    </span>
-                ),
-                children: (
-                    <TracksForm
-                        key={`${record.id}-${record.title}-track-form-content`}
-                        trackData={record}
-                        index={index}
-                    />
-                ),
-            },
-            {
-                key: `${record.id}-metadata-form`,
-                label: (
-                    <span className="font-medium">
-                        {messages('release.otherMetadata')}
-                    </span>
-                ),
-                children: (
-                    <OtherMetadataForm
-                        key={`${record.id}-metadata-form-content`}
-                        trackData={record}
-                    />
-                ),
-            },
-            {
-                key: `${record.id}-audio-specs`,
-                label: (
-                    <span className="font-medium">
-                        {messages('common.specification')}
-                    </span>
-                ),
-                children: (
-                    <AudioSpecifications
-                        key={`${record.id}-audio-specs-content`}
-                        trackData={record}
-                    />
-                ),
-            },
-            {
-                key: `${record.id}-view-all`,
-                label: (
-                    <span className="font-medium">
-                        {messages('common.viewAll')}
-                    </span>
-                ),
-                children: (
-                    <ViewAll
-                        key={`${record.id}-view-all`}
-                        trackData={record}
-                        updateTrackDraft={(data) =>
-                            debouncedUpdate(record.id, data)
-                        }
-                        index={index}
-                    />
-                ),
-            },
-        ];
-        return (
-            <div className="px-20 py-4">
-                <Tabs
-                    items={items}
-                    defaultActiveKey={`${record.id}-view-all`}
-                />
-            </div>
-        );
-    };
-    // const { height, width } = useWindowSize();
-    // const isSmallDevice = Number(width) <= SCREEN.MD;
-    // const scrollY = () => {
-    //     if (isSmallDevice) return undefined;
-    //     if (!height) return undefined;
-    //     return height - 140 - 64;
+    // const expandedRowRender = (record: TrackData, index: number) => {
+    //     const items = [
+    //         {
+    //             key: `${record.id}-track-form`,
+    //             label: (
+    //                 <span className="font-medium">
+    //                     {messages('track.label')} & {messages('artist.label')}
+    //                 </span>
+    //             ),
+    //             children: (
+    //                 <TracksForm
+    //                     key={`${record.id}-${record.title}-track-form-content`}
+    //                     trackData={record}
+    //                     index={index}
+    //                 />
+    //             ),
+    //         },
+    //         {
+    //             key: `${record.id}-metadata-form`,
+    //             label: (
+    //                 <span className="font-medium">
+    //                     {messages('release.otherMetadata')}
+    //                 </span>
+    //             ),
+    //             children: (
+    //                 <OtherMetadataForm
+    //                     key={`${record.id}-metadata-form-content`}
+    //                     trackData={record}
+    //                 />
+    //             ),
+    //         },
+    //         {
+    //             key: `${record.id}-audio-specs`,
+    //             label: (
+    //                 <span className="font-medium">
+    //                     {messages('common.specification')}
+    //                 </span>
+    //             ),
+    //             children: (
+    //                 <AudioSpecifications
+    //                     key={`${record.id}-audio-specs-content`}
+    //                     trackData={record}
+    //                 />
+    //             ),
+    //         },
+    //         {
+    //             key: `${record.id}-view-all`,
+    //             label: (
+    //                 <span className="font-medium">
+    //                     {messages('common.viewAll')}
+    //                 </span>
+    //             ),
+    //             children: (
+    //                 <ViewAll
+    //                     key={`${record.id}-view-all`}
+    //                     trackData={record}
+    //                     updateTrackDraft={(data) =>
+    //                         debouncedUpdate(record.id, data)
+    //                     }
+    //                     index={index}
+    //                 />
+    //             ),
+    //         },
+    //     ];
+    //     return (
+    //         <div className="px-20 py-4">
+    //             <Tabs
+    //                 items={items}
+    //                 defaultActiveKey={`${record.id}-view-all`}
+    //             />
+    //         </div>
+    //     );
+    // };
+    // // const { height, width } = useWindowSize();
+    // // const isSmallDevice = Number(width) <= SCREEN.MD;
+    // // const scrollY = () => {
+    // //     if (isSmallDevice) return undefined;
+    // //     if (!height) return undefined;
+    // //     return height - 140 - 64;
+    // // };
+
+    // // Cho phép mở nhiều hàng cùng lúc
+    // const handleExpand = (expanded: boolean, record: TrackData) => {
+    //     const newExpandedKeys = [...expandedRowKeys];
+    //     if (expanded) {
+    //         newExpandedKeys.push(record.id);
+    //     } else {
+    //         const index = newExpandedKeys.indexOf(record.id);
+    //         if (index !== -1) {
+    //             newExpandedKeys.splice(index, 1);
+    //         }
+    //     }
+    //     setExpandedRowKeys(newExpandedKeys);
     // };
 
-    // Cho phép mở nhiều hàng cùng lúc
-    const handleExpand = (expanded: boolean, record: TrackData) => {
-        const newExpandedKeys = [...expandedRowKeys];
-        if (expanded) {
-            newExpandedKeys.push(record.id);
-        } else {
-            const index = newExpandedKeys.indexOf(record.id);
-            if (index !== -1) {
-                newExpandedKeys.splice(index, 1);
-            }
-        }
-        setExpandedRowKeys(newExpandedKeys);
-    };
+    // useEffect(() => {
+    //     const handleHashChange = () => {
+    //         const hash = window.location.hash;
+    //         const match = hash.match(/tracks\.(\d+)/);
+    //         if (match && props.dataSource) {
+    //             const index = parseInt(match[1]);
+    //             if (index >= 0 && index < props.dataSource.length) {
+    //                 const trackId = props.dataSource[index].id;
+    //                 setExpandedRowKeys([trackId]);
+    //             }
+    //         }
+    //     };
 
-    useEffect(() => {
-        const handleHashChange = () => {
-            const hash = window.location.hash;
-            const match = hash.match(/tracks\.(\d+)/);
-            if (match && props.dataSource) {
-                const index = parseInt(match[1]);
-                if (index >= 0 && index < props.dataSource.length) {
-                    const trackId = props.dataSource[index].id;
-                    setExpandedRowKeys([trackId]);
-                }
-            }
-        };
+    //     handleHashChange();
 
-        handleHashChange();
+    //     // Thêm listener để xử lý khi hash thay đổi
+    //     window.addEventListener('hashchange', handleHashChange);
 
-        // Thêm listener để xử lý khi hash thay đổi
-        window.addEventListener('hashchange', handleHashChange);
-
-        return () => {
-            window.removeEventListener('hashchange', handleHashChange);
-        };
-    }, [props.dataSource, window?.location?.hash]);
+    //     return () => {
+    //         window.removeEventListener('hashchange', handleHashChange);
+    //     };
+    // }, [props.dataSource, window?.location?.hash]);
 
     return (
         <div className="w-full">

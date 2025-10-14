@@ -35,19 +35,20 @@ export default function CardRelease({ data, ...props }: Props) {
     const showSkeleton = isFetching;
 
     return (
-        <Card
-            {...props}
-            hoverable
-            // className="custom-card-body !bg-card-bg dark:!bg-card-bg-dark"
-            cover={
-                <div className="relative aspect-square overflow-hidden">
-                    <Link
-                        href={getReleaseDetailTabRoute(
-                            data.id,
-                            RELEASES_TABS.CORE_DETAIL,
-                            RELEASE_DETAIL_ACTION.READ
-                        )}
-                    >
+        <Link
+            href={getReleaseDetailTabRoute(
+                data.id,
+                RELEASES_TABS.CORE_DETAIL,
+                RELEASE_DETAIL_ACTION.READ
+            )}
+        >
+            <Card
+                {...props}
+                hoverable
+                bordered={false}
+                // className="custom-card-body !bg-card-bg dark:!bg-card-bg-dark"
+                cover={
+                    <div className="relative aspect-square overflow-hidden">
                         {showSkeleton ? (
                             <Skeleton.Node
                                 active
@@ -59,45 +60,46 @@ export default function CardRelease({ data, ...props }: Props) {
                                 className="cursor-pointer overflow-hidden object-cover duration-300 hover:scale-110"
                                 alt="example"
                                 src={linkReadFile || FALLBACK_IMAGE}
-                                width={300}
-                                height={300}
+                                width={600}
+                                height={600}
                             />
                         )}
-                    </Link>
-                    <div className="absolute right-2 top-2 rounded-lg bg-black/80 p-1 px-2 text-xs font-medium text-white">
-                        <span>
-                            {' '}
-                            {messages(
-                                getIntlCodeByReleaseStatus(data?.status)
-                            )}{' '}
-                        </span>
-                    </div>
-                </div>
-            }
-        >
-            <Meta
-                title={
-                    <CustomTooltip title={data.title}>
-                        <span className="cursor-pointer text-sm">
-                            {' '}
-                            {data.title}
-                        </span>
-                    </CustomTooltip>
-                }
-                description={
-                    <div className="flex flex-col font-medium">
-                        <p className="flex justify-between">
-                            <p> {data?.albumFormat.name} </p>
+
+                        <div className="absolute right-2 top-2 rounded-lg bg-black/80 p-1 px-2 text-xs font-medium text-white">
                             <span>
-                                {formattedDate(
-                                    data.releaseDate,
-                                    DATE_FORMAT.DATE_ONLY
+                                {' '}
+                                {messages(
+                                    getIntlCodeByReleaseStatus(data?.status)
                                 )}{' '}
                             </span>
-                        </p>
+                        </div>
                     </div>
                 }
-            />
-        </Card>
+            >
+                <Meta
+                    title={
+                        <CustomTooltip title={data.title}>
+                            <span className="cursor-pointer text-sm">
+                                {' '}
+                                {data.title}
+                            </span>
+                        </CustomTooltip>
+                    }
+                    description={
+                        <div className="flex flex-col font-medium">
+                            <p className="flex justify-between">
+                                <p> {data?.albumFormat.name} </p>
+                                <span>
+                                    {formattedDate(
+                                        data.releaseDate,
+                                        DATE_FORMAT.DATE_ONLY
+                                    )}{' '}
+                                </span>
+                            </p>
+                        </div>
+                    }
+                />
+            </Card>
+        </Link>
     );
 }

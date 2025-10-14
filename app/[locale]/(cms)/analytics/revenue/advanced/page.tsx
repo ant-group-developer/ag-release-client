@@ -6,7 +6,7 @@ import { SIZE_ICON } from '@/constants/common';
 import { cn } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import { Link } from '@/i18n/routing';
-import DspChart from '@/modules/dashboard/components/area-chart/dsp-chart';
+import DspChart from '@/modules/analytics/chart/dsp-chart';
 import { Button, Checkbox, Menu, TableProps, theme } from 'antd';
 import { ItemType } from 'antd/es/menu/interface';
 import dayjs from 'dayjs';
@@ -164,7 +164,7 @@ export default function Advanced({}: Props) {
                 <span className="text-lg font-semibold">
                     Advanced analytics
                 </span>
-                <Link href="/analytics/revenue/dashboard">
+                <Link href="/analytics/dashboard">
                     <IconButton>
                         <X size={SIZE_ICON} />
                     </IconButton>
@@ -236,7 +236,9 @@ export default function Advanced({}: Props) {
                             <Button shape="round">Label</Button>
                         </div>
                     </div>
-                    <DspChart />
+                    <div className="h-[300px] rounded-lg border bg-white">
+                        <DspChart />
+                    </div>
                     <AdvancedRevenueTable
                         dataSource={fakeDataSource}
                         rowSelection={rowSelection}

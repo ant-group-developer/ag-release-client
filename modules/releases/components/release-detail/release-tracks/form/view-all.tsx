@@ -74,6 +74,12 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
         };
     }, [trigger]);
 
+    useEffect(() => {
+        if (trackData) {
+            reset(trackData as ReleaseTrackSchema);
+        }
+    }, [trackData, reset]);
+
     return (
         <ConfigProvider componentDisabled={isReadMode}>
             <FormProvider {...formMethods}>
