@@ -19,6 +19,7 @@ import {
 import { DashboardDataFilter } from '@/modules/dashboard/types';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { PageContainer } from '@ant-design/pro-components';
+import { Card } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -94,13 +95,18 @@ function Dashboard({}: Props) {
                             }))}
                             loading={isIssuesLoading}
                         /> */}
-                        <div className="rounded-lg border bg-white">
-                            <IssueTable
-                                className="h-full"
-                                dataSource={countIssuesData}
-                                scroll={{ x: 'max-content', y: 300 }}
-                            />
-                        </div>
+                        <Card
+                            title={messages('common.issues')}
+                            styles={{ body: { padding: 0 } }}
+                        >
+                            <div className="bg-white">
+                                <IssueTable
+                                    className="h-full"
+                                    dataSource={countIssuesData}
+                                    scroll={{ x: 'max-content', y: 300 }}
+                                />
+                            </div>
+                        </Card>
                         <NewUpdatesCard />
                         <MapChart
                             className="bg-white"

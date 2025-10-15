@@ -1,23 +1,11 @@
-import { BAR_COLOR, COLORS } from '@/constants/color';
 import { formattedNumber } from '@/helpers/common';
 import { Card, Segmented } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import {
-    Bar,
-    BarChart,
-    Cell,
-    LabelList,
-    Legend,
-    Pie,
-    PieChart,
-    ResponsiveContainer,
-    Tooltip,
-    XAxis,
-    YAxis,
-} from 'recharts';
-import AppTable from '../table/normal-table';
+import AppTable from '../../../components/ui/table/normal-table';
+import BarChartAnalytics from './bar-chart';
+import PieChartAnalytics from './pie-chart';
 
 type DefaultChart = 'bar' | 'pie' | 'list';
 
@@ -34,27 +22,6 @@ type Props = {
               color?: string;
           }[]
         | any[];
-};
-
-const renderCustomizedLabel = ({
-    cx,
-    cy,
-    midAngle,
-    innerRadius,
-    outerRadius,
-    percent,
-}: any) => {
-    if (percent < 0.05) return null;
-    const RADIAN = Math.PI / 180;
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-(midAngle ?? 0) * RADIAN);
-    const y = cy + radius * Math.sin(-(midAngle ?? 0) * RADIAN);
-
-    return (
-        <text x={x} y={y} fill="white" textAnchor="middle" fontSize={13}>
-            {`${((percent ?? 1) * 100).toFixed(0)}%`}
-        </text>
-    );
 };
 
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -92,87 +59,20 @@ export default function ChartSwitcher({
     data = [],
 }: Props) {
     const [typeChart, setTypeChart] = useState<DefaultChart>(defaultChart);
-    const isLessThanNumberItems = data?.length && data?.length < 5;
     const messages = useTranslations();
 
     const renderChart = () => {
         switch (typeChart) {
             case 'bar':
                 return (
-                    <BarChart data={data} margin={{ top: 20 }} barSize={30}>
-                        <XAxis
-                            dataKey="name"
-                            // axisLine={false}
-                            tickLine={false}
-                            interval={0} // luôn hiển thị đủ label
-                            tickFormatter={(v) =>
-                                formatUserName(v, maxLengthName)
-                            }
-                            angle={isLessThanNumberItems ? 0 : -60}
-                            textAnchor={
-                                isLessThanNumberItems ? 'middle' : 'end'
-                            } // neo chữ về cuối để không đè lên bar
-                            height={90} // tăng chiều cao để chữ không bị cắt
-                        />
-                        <YAxis axisLine={false} tickLine={false} />
-                        <Tooltip content={<CustomTooltip />} />
-                        <Legend />
-
-                        <Bar
-                            dataKey="value"
-                            fill={BAR_COLOR}
-                            name={messages('common.quantity')}
-                            radius={[6, 6, 0, 0]}
-                        >
-                            <LabelList
-                                dataKey="value"
-                                position="top"
-                                fontSize={13}
-                                formatter={(v: any) => {
-                                    const round = Math.round(v);
-                                    return formattedNumber(round);
-                                }}
-                            />
-                        </Bar>
-                    </BarChart>
+                    <BarChartAnalytics
+                        data={data}
+                        maxLengthName={maxLengthName}
+                    />
                 );
 
             case 'pie':
-                return (
-                    <PieChart>
-                        <Pie
-                            data={data}
-                            cx="50%"
-                            cy="50%"
-                            labelLine={false}
-                            label={renderCustomizedLabel}
-                            innerRadius={80}
-                            dataKey="value"
-                        >
-                            {data?.map((entry, index) => {
-                                const name = entry?.name;
-                                return (
-                                    <Cell
-                                        key={index}
-                                        name={`${name}`}
-                                        fill={
-                                            entry?.color ??
-                                            COLORS[index % COLORS.length]
-                                        }
-                                    />
-                                );
-                            })}
-                        </Pie>
-                        <Tooltip
-                            formatter={(value: number, name: string) => {
-                                const roundValue = Math.round(value);
-                                return [`${formattedNumber(roundValue)}`, name];
-                            }}
-                            contentStyle={{ borderRadius: 8 }}
-                        />
-                        <Legend verticalAlign="bottom" height={36} />
-                    </PieChart>
-                );
+                return <PieChartAnalytics data={data} />;
 
             case 'list':
                 const columns: ColumnType<any>[] = [
@@ -214,6 +114,7 @@ export default function ChartSwitcher({
                         />
                     </div>
                 );
+
             default:
                 return <></>;
         }
@@ -249,9 +150,7 @@ export default function ChartSwitcher({
                 />
             }
         >
-            <ResponsiveContainer key={typeChart} height="100%" width="100%">
-                {renderChart()}
-            </ResponsiveContainer>
+            {renderChart()}
         </Card>
     );
 }

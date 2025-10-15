@@ -1,6 +1,6 @@
 'use client';
-import ChartSwitcher from '@/components/ui/chart/chart-switcher';
 import { formattedNumber } from '@/helpers/common';
+import ChartSwitcher from '@/modules/analytics/chart/chart-switcher';
 import DspChart from '@/modules/analytics/chart/dsp-chart';
 import { Card } from 'antd';
 import { useTranslations } from 'next-intl';

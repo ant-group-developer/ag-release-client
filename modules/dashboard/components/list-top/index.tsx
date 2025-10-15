@@ -172,10 +172,10 @@ export default function ListTop({ className }: Props) {
         },
     ];
     return (
-        <div className="overflow-hidden rounded-lg border">
+        <div className="overflow-hidden rounded-lg">
             <Tabs
                 items={tabItems}
-                className="tab-mb-0 rounded-lg bg-white [&_.ant-tabs-nav]:px-4"
+                className="tab-mb-0 rounded-lg bg-white [&_.ant-tabs-nav]:px-4 [&_.ant-tabs-nav]:pb-[10px]"
             />
             {/* <div
                 className={`grid gap-4 sm:grid-cols-1 md:grid-cols-4 lg:grid-cols-3 ${className}`}
