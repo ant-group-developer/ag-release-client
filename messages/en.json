@@ -1137,8 +1137,8 @@
         "metaDataLanguage": "Metadata language",
         "primaryGenreId": "Primary genre",
         "releaseArtists": "Release artist",
-        "pLineOwner": "℗ copyright",
-        "cLineOwner": "© copyright",
+        "pLineOwner": "℗ Copyright",
+        "cLineOwner": "© Copyright",
         "releaseTime": "Release time",
         "releaseTimezoneId": "Timezone",
         "releaseTerritory": {

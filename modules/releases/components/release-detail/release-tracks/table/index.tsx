@@ -125,7 +125,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             },
         },
         {
-            title: messages('track.name'),
+            title: `${messages('track.label')} / ${messages('artist.label')}`,
             dataIndex: 'title',
             key: 'title',
             align: 'left',
@@ -133,28 +133,6 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             render: (value, record) => {
                 return (
                     <div className="space-y-2">
-                        {/* <Input
-                            key={record.id + '-' + record.title}
-                            size="small"
-                            maxLength={100}
-                            minLength={1}
-                            defaultValue={record.title}
-                            disabled={isReadMode}
-                            onChange={(e) => {
-                                const value = e.target.value;
-                                if (value.length < 1) {
-                                    return showNotification(
-                                        'error',
-                                        messages('validation.min', {
-                                            number: 1,
-                                        })
-                                    );
-                                }
-                                debouncedUpdate(record.id, {
-                                    title: value,
-                                });
-                            }}
-                        /> */}
                         <Typography.Paragraph
                             editable={
                                 isReadMode
@@ -279,9 +257,11 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             render: (value, record) => {
                 return (
                     <Input
+                        variant="filled"
                         disabled={isReadMode}
                         size="small"
                         defaultValue={record?.isrc ?? ''}
+                        onCopy={(e) => {}}
                     />
                 );
             },
@@ -299,7 +279,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                 });
                 const color = isTrackError ? 'red' : 'green';
                 return (
-                    <Tag bordered color={color}>
+                    <Tag bordered={false} color={color}>
                         {/* <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline"> */}
                         {/* {messages('common.draft')} */}
                         {isTrackError
@@ -319,6 +299,19 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             render: (value, record, index) => {
                 return (
                     <div className="flex items-center gap-2">
+                        <IconButton
+                            onClick={() =>
+                                openModal(
+                                    TYPE_MODAL_RELEASE.DETAIL_TRACK_RELEASE,
+                                    {
+                                        trackId: record?.id,
+                                        index,
+                                    }
+                                )
+                            }
+                        >
+                            <SquarePen size={SIZE_ICON} />
+                        </IconButton>
                         <TrackActionButton
                             // disabled={isReadMode}
                             showDelete={!isReadMode}
@@ -343,142 +336,11 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                                 window.open(response?.data?.data);
                             }}
                         />
-                        <IconButton
-                            onClick={() =>
-                                openModal(
-                                    TYPE_MODAL_RELEASE.DETAIL_TRACK_RELEASE,
-                                    {
-                                        trackId: record?.id,
-                                        index,
-                                    }
-                                )
-                            }
-                        >
-                            <SquarePen size={SIZE_ICON} />
-                        </IconButton>
                     </div>
                 );
             },
         },
     ];
-
-    // const expandedRowRender = (record: TrackData, index: number) => {
-    //     const items = [
-    //         {
-    //             key: `${record.id}-track-form`,
-    //             label: (
-    //                 <span className="font-medium">
-    //                     {messages('track.label')} & {messages('artist.label')}
-    //                 </span>
-    //             ),
-    //             children: (
-    //                 <TracksForm
-    //                     key={`${record.id}-${record.title}-track-form-content`}
-    //                     trackData={record}
-    //                     index={index}
-    //                 />
-    //             ),
-    //         },
-    //         {
-    //             key: `${record.id}-metadata-form`,
-    //             label: (
-    //                 <span className="font-medium">
-    //                     {messages('release.otherMetadata')}
-    //                 </span>
-    //             ),
-    //             children: (
-    //                 <OtherMetadataForm
-    //                     key={`${record.id}-metadata-form-content`}
-    //                     trackData={record}
-    //                 />
-    //             ),
-    //         },
-    //         {
-    //             key: `${record.id}-audio-specs`,
-    //             label: (
-    //                 <span className="font-medium">
-    //                     {messages('common.specification')}
-    //                 </span>
-    //             ),
-    //             children: (
-    //                 <AudioSpecifications
-    //                     key={`${record.id}-audio-specs-content`}
-    //                     trackData={record}
-    //                 />
-    //             ),
-    //         },
-    //         {
-    //             key: `${record.id}-view-all`,
-    //             label: (
-    //                 <span className="font-medium">
-    //                     {messages('common.viewAll')}
-    //                 </span>
-    //             ),
-    //             children: (
-    //                 <ViewAll
-    //                     key={`${record.id}-view-all`}
-    //                     trackData={record}
-    //                     updateTrackDraft={(data) =>
-    //                         debouncedUpdate(record.id, data)
-    //                     }
-    //                     index={index}
-    //                 />
-    //             ),
-    //         },
-    //     ];
-    //     return (
-    //         <div className="px-20 py-4">
-    //             <Tabs
-    //                 items={items}
-    //                 defaultActiveKey={`${record.id}-view-all`}
-    //             />
-    //         </div>
-    //     );
-    // };
-    // // const { height, width } = useWindowSize();
-    // // const isSmallDevice = Number(width) <= SCREEN.MD;
-    // // const scrollY = () => {
-    // //     if (isSmallDevice) return undefined;
-    // //     if (!height) return undefined;
-    // //     return height - 140 - 64;
-    // // };
-
-    // // Cho phép mở nhiều hàng cùng lúc
-    // const handleExpand = (expanded: boolean, record: TrackData) => {
-    //     const newExpandedKeys = [...expandedRowKeys];
-    //     if (expanded) {
-    //         newExpandedKeys.push(record.id);
-    //     } else {
-    //         const index = newExpandedKeys.indexOf(record.id);
-    //         if (index !== -1) {
-    //             newExpandedKeys.splice(index, 1);
-    //         }
-    //     }
-    //     setExpandedRowKeys(newExpandedKeys);
-    // };
-
-    // useEffect(() => {
-    //     const handleHashChange = () => {
-    //         const hash = window.location.hash;
-    //         const match = hash.match(/tracks\.(\d+)/);
-    //         if (match && props.dataSource) {
-    //             const index = parseInt(match[1]);
-    //             if (index >= 0 && index < props.dataSource.length) {
-    //                 const trackId = props.dataSource[index].id;
-    //                 setExpandedRowKeys([trackId]);
-    //             }
-    //         }
-    //     };
-
-    //     handleHashChange();
-
-    //     // Thêm listener để xử lý khi hash thay đổi
-    //     window.addEventListener('hashchange', handleHashChange);
-
-    //     return () => {
-    //         window.removeEventListener('hashchange', handleHashChange);
-    //     };
-    // }, [props.dataSource, window?.location?.hash]);
 
     return (
         <div className="w-full">
@@ -489,29 +351,6 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                 columns={columns}
                 rowClassName={() => 'group'}
                 onDragEnd={handleDragEnd}
-                // expandable={{
-                //     expandedRowRender,
-                //     expandedRowKeys,
-                //     onExpand: handleExpand,
-                //     expandedRowClassName: () => '!z-0 custom-track-expanded',
-                //     expandIcon: ({ expanded, onExpand, record }) => {
-                //         return expanded ? (
-                //             <div
-                //                 onClick={(e) => onExpand(record, e)}
-                //                 className="flex cursor-pointer justify-center hover:text-blue-500"
-                //             >
-                //                 <ChevronsUp size={SIZE_ICON} />
-                //             </div>
-                //         ) : (
-                //             <div
-                //                 onClick={(e) => onExpand(record, e)}
-                //                 className="flex cursor-pointer justify-center hover:text-blue-500"
-                //             >
-                //                 <ChevronsDown size={SIZE_ICON} />
-                //             </div>
-                //         );
-                //     },
-                // }}
             />
         </div>
     );

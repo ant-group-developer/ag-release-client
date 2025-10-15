@@ -45,6 +45,7 @@ const config: Config = {
                 'card-bg-dark': 'var(--card-bg-dark)',
                 'card-bg-hover-dark': 'var(--card-bg-hover-dark)',
                 'bg-dark': 'var(--bg-dark)',
+                main: '#f5f5f5',
             },
         },
     },

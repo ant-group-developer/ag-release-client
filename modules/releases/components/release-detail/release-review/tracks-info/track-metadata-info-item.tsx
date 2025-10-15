@@ -10,7 +10,7 @@ const MetadataInfoItem: React.FC<MetadataInfoItemProps> = ({
     children,
 }) => {
     return (
-        <div className="grid grid-cols-6 bg-card-bg p-4">
+        <div className="bg-main grid grid-cols-6 p-4">
             <span className="col-span-2 font-medium">{label}</span>
             <div className="col-span-4 flex flex-col gap-2">{children}</div>
         </div>

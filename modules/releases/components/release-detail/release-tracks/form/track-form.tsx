@@ -94,7 +94,7 @@ export default function TracksForm({ trackData, index }: Props) {
     return (
         <ConfigProvider componentDisabled={isReadMode}>
             <FormProvider {...formMethods}>
-                <div className="max-h-[80vh] overflow-y-auto">
+                <div className="max-h-[80vh] overflow-y-auto rounded-lg bg-white p-4">
                     <form className="grid grid-cols-2 gap-4">
                         <div>
                             <LabelForm

@@ -1,7 +1,6 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
-import AppPagination from '@/components/ui/pagination';
-import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { PAGE_SIZE } from '@/constants/page-size';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useFilter } from '@/hooks/use-filter';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
@@ -47,7 +46,7 @@ export default function Tracks() {
     const { dataFilter, onChangePage } = useFilter<TrackDataFilter>({
         releaseId: formValues?.id as string,
         // fieldOrder: 'order',
-        pageSize: PAGE_SIZE,
+        pageSize: 30,
     });
 
     // apis
@@ -126,7 +125,7 @@ export default function Tracks() {
 
     return (
         <ConfigProvider theme={customTheme}>
-            <div>
+            <div className="pb-4">
                 <TrackActions selectedRowKeys={selectedRow} />
                 <ReleaseTracksTable
                     className="!p-0"
@@ -149,7 +148,7 @@ export default function Tracks() {
                     }}
                 />
 
-                <AppPagination
+                {/* <AppPagination
                     className="mb-4 rounded-b-[8px] bg-white"
                     align="end"
                     current={tracksData?.metadata?.currentPage}
@@ -160,7 +159,7 @@ export default function Tracks() {
                     showSizeChanger
                     showQuickJumper
                     pageSizeOptions={PAGE_SIZE_OPTIONS}
-                />
+                /> */}
 
                 {typeModal === TYPE_MODAL_RELEASE.ADD_TRACK && (
                     <AddNewTrackModal />

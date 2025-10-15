@@ -1,6 +1,5 @@
 'use client';
-import AppPagination from '@/components/ui/pagination';
-import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { PAGE_SIZE } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
 import { useThemeMode } from '@/hooks/use-theme-mode';
 import ReleaseSchedulingForm from '@/modules/releases/components/release-detail/release-scheduling/form';
@@ -16,7 +15,7 @@ export default function Schedule() {
     const { dataFilter, onChangePage } = useFilter<TrackDataFilter>({
         releaseId: formValues?.id as string,
         fieldOrder: 'order',
-        pageSize: PAGE_SIZE,
+        pageSize: 30,
     });
 
     const { tracksData, isFetching } = useGetListTracksWithPolicies(dataFilter);
@@ -47,7 +46,7 @@ export default function Schedule() {
                         x: 'max-content',
                     }}
                 />
-                <AppPagination
+                {/* <AppPagination
                     className="!mt-0 rounded-b-[8px] bg-white"
                     align="end"
                     current={tracksData?.metadata?.currentPage}
@@ -58,7 +57,7 @@ export default function Schedule() {
                     showSizeChanger
                     showQuickJumper
                     pageSizeOptions={PAGE_SIZE_OPTIONS}
-                />
+                /> */}
             </div>
         </ConfigProvider>
     );
