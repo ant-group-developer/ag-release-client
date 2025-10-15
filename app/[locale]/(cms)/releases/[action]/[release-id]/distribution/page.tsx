@@ -100,7 +100,7 @@ export default function Distribution({}: Props) {
     };
 
     return (
-        <div className="flex h-full flex-col justify-between">
+        <div className="flex h-full flex-col justify-between pb-4">
             <div className="space-y-4">
                 <div className="flex justify-between rounded-lg bg-white">
                     <DistributionStatus

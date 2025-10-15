@@ -112,7 +112,7 @@ export default function TrackDetailModal({ ...props }: Props) {
         <AppModal
             {...props}
             open
-            title={trackData.title}
+            title={<p className="bg-[#f5f5f5]">{trackData.title}</p>}
             onOk={form.submit}
             onCancel={() => {
                 closeModal();
@@ -124,9 +124,13 @@ export default function TrackDetailModal({ ...props }: Props) {
             width={'60vw'}
             style={{ top: '1rem' }}
             spinning={isFetching}
-            bodyStyle={{ backgroundColor: 'white' }}
+            className="bg-content"
         >
-            <Tabs items={items} defaultActiveKey={`${trackId}-view-all`} />
+            <Tabs
+                className="rounded"
+                items={items}
+                defaultActiveKey={`${trackId}-view-all`}
+            />
         </AppModal>
     );
 }

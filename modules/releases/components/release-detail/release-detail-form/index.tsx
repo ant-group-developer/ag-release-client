@@ -239,7 +239,7 @@ export default function ReleaseDetailForm() {
                             onClick={handleNext}
                             disabled={isReadMode}
                             type="primary"
-                            className="my-8"
+                            className="my-4"
                             loading={isActive}
                         >
                             {messages('common.continue')}
