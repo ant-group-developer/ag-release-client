@@ -1,6 +1,5 @@
 import { SIZE_ICON } from '@/constants/common';
 import { formattedNumber } from '@/helpers/common';
-import { Statistic } from 'antd';
 import { Building2, Disc2, DiscAlbum, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { IssueCountData, OverviewCountData } from '../../types';
@@ -25,21 +24,25 @@ export default function StatsOverview({
             label: messages('release.label'),
             count: overviewData?.releasesCount,
             icon: <DiscAlbum size={SIZE_ICON} />,
+            color: 'bg-yellow-50 text-yellow-500', // vàng nhạt
         },
         {
             label: messages('track.label'),
             count: overviewData?.tracksCount,
             icon: <Disc2 size={SIZE_ICON} />,
+            color: 'bg-red-50 text-red-500', // đỏ nhạt
         },
         {
             label: messages('label.label'),
             count: overviewData?.labelsCount,
             icon: <Building2 size={SIZE_ICON} />,
+            color: 'bg-green-50 text-green-500', // xanh lá nhạt
         },
         {
             label: messages('artist.label'),
             count: overviewData?.artistsCount,
             icon: <Users size={SIZE_ICON} />,
+            color: 'bg-blue-50 text-blue-500', // xanh dương nhạt
         },
     ];
 
@@ -69,7 +72,7 @@ export default function StatsOverview({
                             key={item.label}
                             className="rounded-lg border bg-white p-4"
                         >
-                            <Statistic
+                            {/* <Statistic
                                 title={
                                     <div className="flex items-center gap-2">
                                         {item.icon}
@@ -82,18 +85,25 @@ export default function StatsOverview({
                                             <span>
                                                 {formattedNumber(item?.count)}
                                             </span>
-                                            {/* <Tag color="green">
-                                                <div className="flex items-center gap-1">
-                                                    <span>{15}%</span>
-                                                    <TrendingUp
-                                                        size={SIZE_ICON}
-                                                    />
-                                                </div>
-                                            </Tag> */}
                                         </div>
                                     );
                                 }}
-                            />
+                            /> */}
+                            <div className="flex items-center gap-3">
+                                <div
+                                    className={`rounded-full p-3 ${item.color}`}
+                                >
+                                    {item.icon}
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-lg font-semibold">
+                                        {formattedNumber(item?.count)}
+                                    </span>
+                                    <span className="text-gray-500">
+                                        {item?.label}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     );
                 })}

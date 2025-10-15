@@ -1,5 +1,5 @@
-import AppCard from '@/components/ant-music/app-card';
 import { formattedNumber } from '@/helpers/common';
+import { Card } from 'antd';
 import { useTranslations } from 'next-intl';
 import {
     Bar,
@@ -35,9 +35,10 @@ export default function StreamChart({ color = '#90D5FF', className }: Props) {
     ];
 
     return (
-        <AppCard
+        <Card
             className="flex h-full flex-col justify-between bg-white"
             title={'Stream by DSP'}
+            styles={{ body: { padding: 0, height: '100%' } }}
         >
             <div className={`h-full px-4 pb-4 ${className}`}>
                 <ResponsiveContainer width="100%" height="100%">
@@ -94,6 +95,6 @@ export default function StreamChart({ color = '#90D5FF', className }: Props) {
                     </BarChart>
                 </ResponsiveContainer>
             </div>
-        </AppCard>
+        </Card>
     );
 }

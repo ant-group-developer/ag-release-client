@@ -1,4 +1,4 @@
-import AppCard from '@/components/ant-music/app-card';
+import { Card } from 'antd';
 import WorldMap from 'react-svg-worldmap';
 import { CountryCountData } from '../../types';
 
@@ -14,7 +14,11 @@ export default function MapChart({ data, className }: Props) {
     }));
 
     return (
-        <AppCard className={`${className}`} title={'Stream map'}>
+        <Card
+            className={`${className}`}
+            title={'Stream map'}
+            styles={{ body: { padding: 1 } }}
+        >
             <div className="flex w-full flex-col items-center justify-center">
                 <WorldMap
                     color="#0071ff"
@@ -23,6 +27,6 @@ export default function MapChart({ data, className }: Props) {
                     data={countData}
                 />
             </div>
-        </AppCard>
+        </Card>
     );
 }
