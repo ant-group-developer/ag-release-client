@@ -110,9 +110,9 @@ export default function Tracks() {
                 if (parts[0] === '#tracks') {
                     trackIndex = Number(parts[1]);
                 }
-                const trackData = tracksData?.items[trackIndex as number];
+                const trackId = parts[parts.length - 1];
                 openModal(TYPE_MODAL_RELEASE.DETAIL_TRACK_RELEASE, {
-                    record: trackData,
+                    trackId,
                     index: trackIndex,
                 });
             }
@@ -121,7 +121,7 @@ export default function Tracks() {
         return () => {
             window.removeEventListener('hashchange', handleOpenDetailTrack);
         };
-    }, [typeModal, openModal, tracksData?.items]);
+    }, [openModal]);
 
     return (
         <ConfigProvider theme={customTheme}>
@@ -165,20 +165,13 @@ export default function Tracks() {
                     <AddNewTrackModal />
                 )}
 
-                {/* On checking to delete */}
-                {/* {(typeModal === TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.ADD_ARTIST ||
-                    typeModal ===
-                        TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.EDIT_ARTIST) && (
-                    <ReleaseArtistModal isSetMainArtist />
-                )} */}
+                {typeModal === TYPE_MODAL_RELEASE.DETAIL_TRACK_RELEASE && (
+                    <TrackDetailModal />
+                )}
 
                 {(typeModal === TYPE_MODAL_TRACK_ARTIST.ADD ||
                     typeModal === TYPE_MODAL_TRACK_ARTIST.UPDATE) && (
                     <TrackArtistModal />
-                )}
-
-                {typeModal === TYPE_MODAL_RELEASE.DETAIL_TRACK_RELEASE && (
-                    <TrackDetailModal />
                 )}
 
                 {typeModal === TYPE_MODAL_TRACK.BULK_DELETE && (

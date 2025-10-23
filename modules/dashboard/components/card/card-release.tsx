@@ -13,8 +13,9 @@ import { RELEASES_TABS } from '@/modules/releases/enums';
 import { ReleasesData } from '@/modules/releases/types';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { Card, CardProps, Skeleton } from 'antd';
-import Meta from 'antd/es/card/Meta';
 import { useTranslations } from 'next-intl';
+
+const { Meta } = Card;
 
 type Props = CardProps & {
     data: ReleasesData;
@@ -35,20 +36,20 @@ export default function CardRelease({ data, ...props }: Props) {
     const showSkeleton = isFetching;
 
     return (
-        <Link
-            href={getReleaseDetailTabRoute(
-                data.id,
-                RELEASES_TABS.CORE_DETAIL,
-                RELEASE_DETAIL_ACTION.READ
-            )}
-        >
-            <Card
-                {...props}
-                hoverable
-                bordered={false}
-                // className="custom-card-body !bg-card-bg dark:!bg-card-bg-dark"
-                cover={
-                    <div className="relative aspect-square overflow-hidden">
+        <Card
+            {...props}
+            hoverable
+            bordered={false}
+            // className="custom-card-body !bg-card-bg dark:!bg-card-bg-dark"
+            cover={
+                <Link
+                    href={getReleaseDetailTabRoute(
+                        data.id,
+                        RELEASES_TABS.CORE_DETAIL,
+                        RELEASE_DETAIL_ACTION.READ
+                    )}
+                >
+                    <div className="relative aspect-square overflow-hidden rounded-t-lg">
                         {showSkeleton ? (
                             <Skeleton.Node
                                 active
@@ -74,32 +75,40 @@ export default function CardRelease({ data, ...props }: Props) {
                             </span>
                         </div>
                     </div>
-                }
-            >
-                <Meta
-                    title={
+                </Link>
+            }
+        >
+            <Meta
+                title={
+                    <Link
+                        href={getReleaseDetailTabRoute(
+                            data.id,
+                            RELEASES_TABS.CORE_DETAIL,
+                            RELEASE_DETAIL_ACTION.READ
+                        )}
+                    >
                         <CustomTooltip title={data.title}>
                             <span className="cursor-pointer text-sm">
                                 {' '}
                                 {data.title}
                             </span>
                         </CustomTooltip>
-                    }
-                    description={
-                        <div className="flex flex-col font-medium">
-                            <p className="flex justify-between">
-                                <p> {data?.albumFormat.name} </p>
-                                <span>
-                                    {formattedDate(
-                                        data.releaseDate,
-                                        DATE_FORMAT.DATE_ONLY
-                                    )}{' '}
-                                </span>
-                            </p>
-                        </div>
-                    }
-                />
-            </Card>
-        </Link>
+                    </Link>
+                }
+                description={
+                    <div className="flex flex-col font-medium">
+                        <p className="flex justify-between">
+                            <p> {data?.albumFormat.name} </p>
+                            <span>
+                                {formattedDate(
+                                    data.releaseDate,
+                                    DATE_FORMAT.DATE_ONLY
+                                )}{' '}
+                            </span>
+                        </p>
+                    </div>
+                }
+            />
+        </Card>
     );
 }
