@@ -8,7 +8,7 @@ import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import { LoadingType, useLoading } from '@/hooks/use-loading';
 import useModalStore from '@/hooks/use-modal';
-import ReleasesHeader from '@/modules/releases/components/header';
+import ReleasesHeaderV2 from '@/modules/releases/components/header/index-v2';
 import ReleasesTable from '@/modules/releases/components/table';
 import ReleasesGridTable from '@/modules/releases/components/table/grid-table';
 import { defaultVisibleColumnsReleases } from '@/modules/releases/constants';
@@ -20,6 +20,7 @@ import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
 import { DeleteVariables } from '@/types/api';
+import { PageContainer } from '@ant-design/pro-components';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
@@ -122,64 +123,78 @@ export default function Releases({}: Props) {
     }, [visibleColumns]);
 
     return (
-        <div>
-            <ReleasesHeader
-                dataFilter={dataFilter}
-                onChangeFilter={onChangeFilter}
-                canClearFilter={canClearFilter}
-                removeFilter={removeFilter}
-                handleRefresh={handleRefresh}
-                handleChangeVisibleColumns={handleChangeVisibleColumns}
-                visibleColumn={visibleColumns}
-                dataUpdatedAt={dataUpdatedAt}
-            />
-            {layoutTable === LAYOUT_TABLE.LIST && (
-                <ReleasesTable
-                    sticky
-                    visibleColumns={visibleColumns}
-                    dataSource={releasesData?.items}
-                    loading={isReleaseDataLoading}
-                    onChangeFilter={onChangeFilter}
-                    pagination={{
-                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: releasesData.metadata.currentPage,
-                    }}
-                    onChange={onChangeSort}
+        <div className="bg-[#f5f5f5]">
+            <PageContainer title={messages('release.releases')}>
+                {/* <ReleasesHeader
                     dataFilter={dataFilter}
-                />
-            )}
+                    onChangeFilter={onChangeFilter}
+                    canClearFilter={canClearFilter}
+                    removeFilter={removeFilter}
+                    handleRefresh={handleRefresh}
+                    handleChangeVisibleColumns={handleChangeVisibleColumns}
+                    visibleColumn={visibleColumns}
+                    dataUpdatedAt={dataUpdatedAt}
+                /> */}
 
-            {layoutTable === LAYOUT_TABLE.GRID && (
-                <ReleasesGridTable
-                    data={releasesData?.items}
-                    loading={isReleaseDataLoading}
+                <ReleasesHeaderV2
+                    dataFilter={dataFilter}
+                    onChangeFilter={onChangeFilter}
+                    canClearFilter={canClearFilter}
+                    removeFilter={removeFilter}
+                    handleRefresh={handleRefresh}
+                    handleChangeVisibleColumns={handleChangeVisibleColumns}
+                    visibleColumn={visibleColumns}
+                    dataUpdatedAt={dataUpdatedAt}
                 />
-            )}
 
-            <AppPagination
-                className="border-b"
-                align="end"
-                current={releasesData?.metadata?.currentPage}
-                pageSize={dataFilter.pageSize}
-                total={releasesData?.metadata.totalItems}
-                onChange={onChangePage}
-                showTotalText
-                showSizeChanger
-                showQuickJumper
-                pageSizeOptions={PAGE_SIZE_OPTIONS}
-            />
+                {layoutTable === LAYOUT_TABLE.LIST && (
+                    <ReleasesTable
+                        sticky
+                        visibleColumns={visibleColumns}
+                        dataSource={releasesData?.items}
+                        loading={isReleaseDataLoading}
+                        onChangeFilter={onChangeFilter}
+                        pagination={{
+                            pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                            current: releasesData.metadata.currentPage,
+                        }}
+                        onChange={onChangeSort}
+                        dataFilter={dataFilter}
+                    />
+                )}
 
-            {typeModal === TYPE_MODAL_RELEASE.DELETE && (
-                <AppConfirm
-                    open
-                    onOk={() => handleDeleteRelease()}
-                    onCancel={closeModal}
-                    modalTitle={`${messages('common.delete')} ${messages('release.label').toLowerCase()}`}
-                    paragraph={messages('delete.confirmMessage', {
-                        value: dataEdit?.title,
-                    })}
+                {layoutTable === LAYOUT_TABLE.GRID && (
+                    <ReleasesGridTable
+                        data={releasesData?.items}
+                        loading={isReleaseDataLoading}
+                    />
+                )}
+
+                <AppPagination
+                    className="rounded-b-md bg-white"
+                    align="end"
+                    current={releasesData?.metadata?.currentPage}
+                    pageSize={dataFilter.pageSize}
+                    total={releasesData?.metadata.totalItems}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
                 />
-            )}
+
+                {typeModal === TYPE_MODAL_RELEASE.DELETE && (
+                    <AppConfirm
+                        open
+                        onOk={() => handleDeleteRelease()}
+                        onCancel={closeModal}
+                        modalTitle={`${messages('common.delete')} ${messages('release.label').toLowerCase()}`}
+                        paragraph={messages('delete.confirmMessage', {
+                            value: dataEdit?.title,
+                        })}
+                    />
+                )}
+            </PageContainer>
         </div>
     );
 }

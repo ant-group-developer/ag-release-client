@@ -69,44 +69,13 @@ export default function ReleasesTable({
                 ),
         },
         {
-            title: messages('release.name'),
+            title: messages('common.title'),
             key: 'title',
             dataIndex: 'title',
             ellipsis: true,
             align: 'left',
             width: 320,
             fixed: 'left',
-            render: (value, record) => (
-                <div className="flex items-center gap-4">
-                    <div className="h-10 min-w-10">
-                        <ReleaseCoverImage data={record} />
-                    </div>
-                    <CustomTooltip
-                        title={messages('common.viewDetail')}
-                        placement="right"
-                    >
-                        <Link
-                            href={getReleaseDetailTabRoute(
-                                record?.id,
-                                RELEASES_TABS.CORE_DETAIL,
-                                RELEASE_DETAIL_ACTION.READ
-                            )}
-                        >
-                            <div className="!max-w-80 cursor-pointer truncate hover:text-blue-500 hover:underline">
-                                {value}
-                            </div>
-                        </Link>
-                    </CustomTooltip>
-                </div>
-            ),
-        },
-        {
-            title: messages('common.artist'),
-            key: 'artist',
-            dataIndex: 'artist',
-            align: 'left',
-            ellipsis: true,
-            width: 250,
             render: (value, record) => {
                 const releaseArtists = record?.releaseArtists || [];
                 const isVariousArtist = record?.isVariousArtist;
@@ -122,39 +91,118 @@ export default function ReleasesTable({
                     ? messages('common.variousArtists')
                     : mainArtist?.artist?.name || '';
                 return (
-                    <CustomTooltip
-                        size="small"
-                        title={messages('filter.filterByValue', {
-                            value: displayName,
-                        })}
-                    >
-                        {isVariousArtist ? (
-                            <span
-                                className="cursor-pointer truncate hover:text-blue-500 group-hover:underline"
-                                onClick={() =>
-                                    onChangeFilter({
-                                        isVariousArtist: 'true',
-                                    })
-                                }
+                    <div className="flex items-center gap-4">
+                        <div className="h-10 min-w-10">
+                            <ReleaseCoverImage data={record} />
+                        </div>
+                        <div>
+                            <CustomTooltip
+                                title={messages('common.viewDetail')}
+                                placement="right"
                             >
-                                {messages('common.variousArtists')}
-                            </span>
-                        ) : (
-                            <span
-                                onClick={() =>
-                                    onChangeFilter({
-                                        artistId: mainArtist?.artist?.id,
-                                    })
-                                }
-                                className="cursor-pointer truncate hover:text-blue-500 group-hover:underline"
+                                <Link
+                                    href={getReleaseDetailTabRoute(
+                                        record?.id,
+                                        RELEASES_TABS.CORE_DETAIL,
+                                        RELEASE_DETAIL_ACTION.READ
+                                    )}
+                                >
+                                    <div className="!max-w-80 cursor-pointer truncate hover:text-blue-500 hover:underline">
+                                        {value}
+                                    </div>
+                                </Link>
+                            </CustomTooltip>
+                            <CustomTooltip
+                                title={messages('filter.filterByValue', {
+                                    value: displayName,
+                                })}
+                                placement="right"
                             >
-                                {mainArtist?.artist?.name || ''}
-                            </span>
-                        )}
-                    </CustomTooltip>
+                                {isVariousArtist ? (
+                                    <span
+                                        className="cursor-pointer truncate text-gray-500 group-hover:underline"
+                                        onClick={() =>
+                                            onChangeFilter({
+                                                isVariousArtist: 'true',
+                                            })
+                                        }
+                                    >
+                                        {messages('common.variousArtists')}
+                                    </span>
+                                ) : (
+                                    <span
+                                        onClick={() =>
+                                            onChangeFilter({
+                                                artistId:
+                                                    mainArtist?.artist?.id,
+                                            })
+                                        }
+                                        className="cursor-pointer truncate text-gray-500 group-hover:underline"
+                                    >
+                                        {mainArtist?.artist?.name || ''}
+                                    </span>
+                                )}
+                            </CustomTooltip>
+                        </div>
+                    </div>
                 );
             },
         },
+        // {
+        //     title: messages('common.artist'),
+        //     key: 'artist',
+        //     dataIndex: 'artist',
+        //     align: 'left',
+        //     ellipsis: true,
+        //     width: 250,
+        //     render: (value, record) => {
+        //         const releaseArtists = record?.releaseArtists || [];
+        //         const isVariousArtist = record?.isVariousArtist;
+
+        //         const mainArtist = !isVariousArtist
+        //             ? releaseArtists.find(
+        //                   (item: ReleaseArtist) =>
+        //                       item?.artistRole?.code === MAIN_ARTIST_ROLE
+        //               )
+        //             : null;
+
+        //         const displayName = isVariousArtist
+        //             ? messages('common.variousArtists')
+        //             : mainArtist?.artist?.name || '';
+        //         return (
+        //             <CustomTooltip
+        //                 size="small"
+        //                 title={messages('filter.filterByValue', {
+        //                     value: displayName,
+        //                 })}
+        //             >
+        //                 {isVariousArtist ? (
+        //                     <span
+        //                         className="cursor-pointer truncate hover:text-blue-500 group-hover:underline"
+        //                         onClick={() =>
+        //                             onChangeFilter({
+        //                                 isVariousArtist: 'true',
+        //                             })
+        //                         }
+        //                     >
+        //                         {messages('common.variousArtists')}
+        //                     </span>
+        //                 ) : (
+        //                     <span
+        //                         onClick={() =>
+        //                             onChangeFilter({
+        //                                 artistId: mainArtist?.artist?.id,
+        //                             })
+        //                         }
+        //                         className="cursor-pointer truncate hover:text-blue-500 group-hover:underline"
+        //                     >
+        //                         {mainArtist?.artist?.name || ''}
+        //                     </span>
+        //                 )}
+        //             </CustomTooltip>
+        //         );
+        //     },
+        // },
         {
             title: 'Label',
             key: 'publisher',
@@ -368,9 +416,9 @@ export default function ReleasesTable({
 
     const newColumns = column.map((column) => ({
         ...column,
-        hidden: !visibleColumns?.includes(
-            column.key as RELEASES_COLUMNS_DISPLAY
-        ),
+        // hidden: !visibleColumns?.includes(
+        //     column.key as RELEASES_COLUMNS_DISPLAY
+        // ),
     }));
 
     return (

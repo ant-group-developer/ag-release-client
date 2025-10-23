@@ -742,6 +742,7 @@
     },
 
     "release": {
+        "releases": "Releases",
         "count": "Releases count",
         "configuration": "Release configuration",
         "otherMetadata": "Other metadata",
