@@ -781,7 +781,7 @@
             "selectRole": "Chọn vai trò",
             "selectMusician": "Chọn nhạc sĩ",
             "selectLanguageMetadata": "Chọn ngôn ngữ metadata",
-            "enterTitleAndReleaseType": "Nhập tên phát hành và loại phát hành để tiếp tục"
+            "enterTitleAndReleaseType": "Nhập tên phát hành, label và loại phát hành để tiếp tục"
         },
 
         "validation": {
@@ -1115,6 +1115,8 @@
             "metadataLanguageCountryId": "Ngôn ngữ quốc gia",
             "recordingCountryId": "Quốc gia ghi âm"
         },
+        "upc": "UPC",
+        "trackSensitiveId": "Nội dung nhạy cảm",
         "recordingCountryId": "Quốc gia ghi âm",
         "trackArtists": "Nghệ sĩ bài hát",
         "distributionType": "Loại phát hành",

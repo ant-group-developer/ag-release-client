@@ -5,7 +5,7 @@ import { cn } from '@/helpers/common';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
-import { Link, useRouter } from '@/i18n/routing';
+import { Link } from '@/i18n/routing';
 import AppError from '@/modules/auth/components/error';
 import ReleaseDetailHeader from '@/modules/releases/components/release-detail/header';
 import RightSidebar from '@/modules/releases/components/release-detail/right-sidebar';
@@ -26,7 +26,6 @@ type Props = {};
 export default function ReleaseDetail({ children }: PropsWithChildren) {
     // hooks
     const messages = useTranslations();
-    const router = useRouter();
     const params = useParams();
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const formValues = useReleaseFormStore((state) => state.formValues);
@@ -233,10 +232,6 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             }
         };
     }, [isCoreDetailPage]);
-
-    // if (isReleaseDataLoading || !releaseData) {
-    //     return <DetailSkeleton />;
-    // }
 
     const breadcrumbItems = [
         {

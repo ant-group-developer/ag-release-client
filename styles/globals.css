@@ -126,6 +126,10 @@ body {
     @apply !px-0 !pt-0;
 } */
 
+.ant-pro-query-filter-row {
+    @apply !gap-y-3;
+}
+
 /* Label form query filter font bold */
 .ant-form-vertical .ant-form-item-label > label {
     @apply font-semibold;

@@ -148,7 +148,8 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                                                 return (
                                                     <Link
                                                         key={index}
-                                                        href={`${getReleaseTabRoute(formValues?.id as string, err.page as RELEASES_TABS)}#${err.field}`}
+                                                        // prefetch
+                                                        href={`${getReleaseTabRoute(formValues?.id as string, err.page as RELEASES_TABS)}#${err.field}${err?.trackId ? `.${err.trackId}` : ''}`}
                                                         onClick={() => {
                                                             setTimeout(() => {
                                                                 window.dispatchEvent(

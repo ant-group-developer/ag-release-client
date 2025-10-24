@@ -98,6 +98,7 @@ export interface ReleaseValidate {
     message: string;
     page: string;
     field: string;
+    trackId?: string;
 }
 
 export type { TrackData } from '@/modules/tracks/types';

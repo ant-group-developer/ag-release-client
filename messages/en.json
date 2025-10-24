@@ -780,7 +780,7 @@
             "selectRole": "Select role",
             "selectMusician": "Select musician",
             "selectLanguageMetadata": "Select language metadata",
-            "enterTitleAndReleaseType": "Enter release name and release type to continue"
+            "enterTitleAndReleaseType": "Enter release name, label and release type to continue"
         },
 
         "validation": {
@@ -1112,6 +1112,8 @@
             "metadataLanguageCountryId": "Metadata country language",
             "recordingCountryId": "Recording country"
         },
+        "upc": "UPC",
+        "trackSensitiveId": "Sensitive content",
         "recordingCountryId": "Recording country",
         "trackArtists": "track artist",
         "distributionType": "Release type",

@@ -192,6 +192,25 @@ export const NewsHeaderV2 = ({
                         // }
                     />
                 </ProForm.Item>
+                <ProForm.Item
+                    name="dateUpdated"
+                    label={messages('common.dateUpdated')}
+                >
+                    <DateRangePicker
+                        allowClear
+                        className="w-full"
+                        // value={
+                        //     tempStartDate && tempEndDate
+                        //         ? [dayjs(tempStartDate), dayjs(tempEndDate)]
+                        //         : undefined
+                        // }
+                        // externalOnChange={handleDateChange}
+                        placement="topLeft"
+                        // disabledDate={(current) =>
+                        //     current && current > dayjs().endOf('day')
+                        // }
+                    />
+                </ProForm.Item>
             </QueryFilter>
             {/* <div className="flex justify-end gap-2 border-b py-2"> */}
             {/* <TableLayoutSegmented

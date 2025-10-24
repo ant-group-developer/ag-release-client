@@ -24,25 +24,25 @@ export default function StatsOverview({
             label: messages('release.label'),
             count: overviewData?.releasesCount,
             icon: <DiscAlbum size={SIZE_ICON} />,
-            color: 'bg-yellow-50 text-yellow-500', // vàng nhạt
+            color: 'bg-yellow-50 text-yellow-500',
         },
         {
             label: messages('track.label'),
             count: overviewData?.tracksCount,
             icon: <Disc2 size={SIZE_ICON} />,
-            color: 'bg-red-50 text-red-500', // đỏ nhạt
+            color: 'bg-red-50 text-red-500',
         },
         {
             label: messages('label.label'),
             count: overviewData?.labelsCount,
             icon: <Building2 size={SIZE_ICON} />,
-            color: 'bg-green-50 text-green-500', // xanh lá nhạt
+            color: 'bg-green-50 text-green-500',
         },
         {
             label: messages('artist.label'),
             count: overviewData?.artistsCount,
             icon: <Users size={SIZE_ICON} />,
-            color: 'bg-blue-50 text-blue-500', // xanh dương nhạt
+            color: 'bg-blue-50 text-blue-500',
         },
     ];
 

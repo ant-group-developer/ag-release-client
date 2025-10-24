@@ -1,7 +1,7 @@
 import AppGrid from '@/components/ui/grid/app-grid';
+import CardRelease from '@/modules/dashboard/components/card/card-release';
 import { Spin } from 'antd';
 import { ReleasesData } from '../../types';
-import GridCardRelease from './grid-card';
 
 type Props = {
     data: ReleasesData[];
@@ -26,7 +26,8 @@ export default function ReleasesGridTable({ scroll, data, loading }: Props) {
                 {data?.map((item) => {
                     return (
                         <>
-                            <GridCardRelease key={item.id} data={item} />
+                            <CardRelease key={item.id} data={item} />
+                            {/* <GridCardRelease key={item.id} data={item} /> */}
                         </>
                     );
                 })}

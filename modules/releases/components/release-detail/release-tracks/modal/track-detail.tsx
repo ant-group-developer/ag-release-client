@@ -3,7 +3,6 @@ import useModalStore from '@/hooks/use-modal';
 import { Form, Tabs } from 'antd';
 import { useTranslations } from 'next-intl';
 
-import { useActive } from '@/hooks/use-active';
 import { TrackData } from '@/modules/releases/types';
 import { useGetDetailTrack } from '@/modules/tracks/hooks/use-get-detail-tracks';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
@@ -27,7 +26,7 @@ export default function TrackDetailModal({ ...props }: Props) {
         trackId: TrackData['id'];
         index: number;
     }>((state) => state.dataEdit);
-    const { isActive, active, deActive } = useActive();
+    // const { isActive, active, deActive } = useActive();
     const { updateTrackDraft } = useUpdateTrackDraft();
     const { trackData, isFetching } = useGetDetailTrack(trackId);
 
@@ -119,8 +118,6 @@ export default function TrackDetailModal({ ...props }: Props) {
                 form.resetFields();
             }}
             footer={null}
-            confirmLoading={isActive}
-            loading={isActive}
             width={'60vw'}
             style={{ top: '1rem' }}
             spinning={isFetching}
