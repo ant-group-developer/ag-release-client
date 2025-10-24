@@ -30,13 +30,22 @@ export default function AppProTable<RecordType extends object>({
                           ),
                       }
             }
+            options={{
+                density: false,
+                fullScreen: true,
+                reload: false,
+                setting: true,
+            }}
             {...props}
+            headerTitle={
+                <span className="font-semibold">{props?.headerTitle}</span>
+            }
             cardProps={{
                 bodyStyle: { padding: 0 },
                 ...props?.cardProps,
             }}
             className={cn(
-                '[&_.ant-pro-table-list-toolbar-container]:!p-1 [&_.ant-pro-table-list-toolbar-container]:!px-6',
+                '[&_.ant-pro-table-list-toolbar-container]:!px-4 [&_.ant-pro-table-list-toolbar-container]:!py-2',
                 props?.className
             )}
             scroll={{

@@ -742,6 +742,7 @@
     },
 
     "release": {
+        "list": "Release list",
         "releases": "Releases",
         "count": "Releases count",
         "configuration": "Release configuration",

@@ -1,6 +1,6 @@
 import ActionButton from '@/components/ui/button/action-button';
 import CopyText from '@/components/ui/copy-text/copy-text';
-import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { DATE_FORMAT } from '@/enums/common';
 import {
@@ -22,7 +22,7 @@ import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { ReleaseArtist } from '@/modules/release-artist/types';
-import { ColumnType } from 'antd/es/table';
+import { ProColumns } from '@ant-design/pro-components';
 import { useTranslations } from 'next-intl';
 import {
     RELEASES_COLUMNS_DISPLAY,
@@ -32,7 +32,7 @@ import {
 import { ReleasesData, ReleasesDataFilter } from '../../types';
 import ReleaseCoverImage from '../image/release-cover-image';
 
-type Props = Omit<AppTableProps<ReleasesData>, 'columns'> & {
+type Props = Omit<AppProTableProps<ReleasesData>, 'columns'> & {
     dataFilter: ReleasesDataFilter;
     visibleColumns: RELEASES_COLUMNS_DISPLAY[];
     onChangeFilter: OnChangeFilter<ReleasesDataFilter>;
@@ -55,7 +55,7 @@ export default function ReleasesTable({
     const { isSystemTenant } = useAuth();
     const { hasPermission } = usePermission();
 
-    const column: ColumnType<ReleasesData>[] = [
+    const column: ProColumns<ReleasesData>[] = [
         {
             title: messages('common.iNo'),
             key: 'iNo',
@@ -225,7 +225,7 @@ export default function ReleasesTable({
             title: messages('release.type'),
             key: 'type',
             dataIndex: 'type',
-            align: 'center',
+            align: 'left',
             width: 130,
             render: (_, record) => {
                 return (
@@ -240,28 +240,26 @@ export default function ReleasesTable({
             title: 'UPC',
             key: 'upc',
             dataIndex: 'UPC',
-            align: 'center',
-            width: 120,
+            align: 'left',
+            width: 150,
             render: (value, record) => (
-                <div className="flex justify-center">
-                    <CopyText text={record?.upc}>
-                        <span className="truncate text-center">
-                            {' '}
-                            {record?.upc}{' '}
-                        </span>
-                    </CopyText>
-                </div>
+                <CopyText text={record?.upc}>
+                    <span className="truncate text-center">
+                        {' '}
+                        {record?.upc}{' '}
+                    </span>
+                </CopyText>
             ),
         },
         {
             title: messages('common.status'),
             key: 'status',
             dataIndex: 'status',
-            align: 'center',
+            align: 'left',
             width: 120,
-            render: (value) => (
+            render: (value, record) => (
                 <span className="cursor-pointer truncate">
-                    {messages(getIntlCodeByReleaseStatus(value))}
+                    {messages(getIntlCodeByReleaseStatus(record?.status))}
                 </span>
             ),
         },
@@ -269,8 +267,8 @@ export default function ReleasesTable({
             title: messages('release.trackCount'),
             key: 'tracks_count',
             dataIndex: 'tracks_count',
-            align: 'center',
-            width: 100,
+            align: 'left',
+            width: 120,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -285,7 +283,7 @@ export default function ReleasesTable({
             title: messages('release.duration'),
             key: 'total_duration',
             dataIndex: 'total_duration',
-            align: 'center',
+            align: 'left',
             width: 100,
             sorter: true,
             sortOrder: getSortOrder(
@@ -305,7 +303,7 @@ export default function ReleasesTable({
             title: messages('release.releaseDate'),
             key: 'releaseDate',
             dataIndex: 'releaseDate',
-            align: 'center',
+            align: 'left',
             width: 130,
             // sorter: true,
             // sortOrder: getSortOrder(
@@ -313,10 +311,13 @@ export default function ReleasesTable({
             //     dataFilter.fieldOrder,
             //     'releaseDate'
             // ),
-            render: (value) => (
+            render: (value, record) => (
                 <span className="truncate text-wrap">
                     {' '}
-                    {formattedDate(value, DATE_FORMAT.DATE_ONLY)}{' '}
+                    {formattedDate(
+                        record?.releaseDate,
+                        DATE_FORMAT.DATE_ONLY
+                    )}{' '}
                 </span>
             ),
         },
@@ -324,7 +325,7 @@ export default function ReleasesTable({
             title: messages('common.createdAt'),
             key: 'createdAt',
             dataIndex: 'createdAt',
-            align: 'center',
+            align: 'left',
             width: 130,
             sorter: true,
             sortOrder: getSortOrder(
@@ -346,7 +347,7 @@ export default function ReleasesTable({
             title: messages('common.updatedAt'),
             key: 'updatedAt',
             dataIndex: 'updatedAt',
-            align: 'center',
+            align: 'left',
             width: 130,
             sorter: true,
             sortOrder: getSortOrder(
@@ -422,11 +423,18 @@ export default function ReleasesTable({
     }));
 
     return (
-        <AppTable
+        // <div className="rounded-lg bg-white px-6 pt-2">
+        <AppProTable
+            headerTitle={messages('release.list')}
             {...props}
             pagination={false}
             columns={newColumns}
             rowClassName={'group'}
+            columnsState={{
+                persistenceKey: 'releases-table-columns',
+                persistenceType: 'sessionStorage',
+            }}
         />
+        // </div>
     );
 }
