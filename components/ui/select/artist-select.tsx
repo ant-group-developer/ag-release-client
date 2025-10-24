@@ -10,12 +10,14 @@ type Props = SelectProps & {
     onCreateArtist?: () => void;
     fallBack?: string;
     disabledArtistIds?: string[];
+    showCreate?: boolean;
 };
 
 export default function ArtistSelect({
     fallBack,
     disabledArtistIds,
     onCreateArtist,
+    showCreate = true,
     ...props
 }: Props) {
     const [searchKeyword, setSearchKeyword] = useState('');
@@ -64,7 +66,7 @@ export default function ArtistSelect({
                     {item?.country?.name ? '|' : ''}
                     <span>{item?.genre?.name}</span>
                 </div>
-                <div className="flex justify-end gap-1">
+                {/* <div className="flex justify-end gap-1">
                     <Avatar
                         size={26}
                         src="/icon/spotify.png"
@@ -91,7 +93,7 @@ export default function ArtistSelect({
                             );
                         }}
                     />
-                </div>
+                </div> */}
             </div>
         ),
         disabled: disabledArtistIds?.includes(item.id) ?? false,
@@ -177,15 +179,17 @@ export default function ArtistSelect({
                         <div className="p-2 text-center">
                             <Spin spinning={isFetchingNextPage} size="small" />
                         </div>
-                        <div className="py-1">
-                            <Button
-                                type="primary"
-                                className="w-full"
-                                onClick={onCreateArtist}
-                            >
-                                {messages('release.createArtist')}
-                            </Button>
-                        </div>
+                        {showCreate && (
+                            <div className="py-1">
+                                <Button
+                                    type="primary"
+                                    className="w-full"
+                                    onClick={onCreateArtist}
+                                >
+                                    {messages('release.createArtist')}
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 );
             }}

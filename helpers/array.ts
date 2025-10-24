@@ -1,4 +1,5 @@
 import { ARRAY_SEPARATOR } from '@/constants/common';
+import dayjs, { Dayjs } from 'dayjs';
 import { cloneDeep } from 'lodash';
 
 export const removeEmptyChildren = (data: any[]) => {
@@ -37,4 +38,11 @@ export function arrayFromString(
         return value.split(separator);
     }
     return undefined;
+}
+
+export function getDateRange(
+    start?: string | Date | null,
+    end?: string | Date | null
+): [Dayjs | null, Dayjs | null] {
+    return [start ? dayjs(start) : null, end ? dayjs(end) : null];
 }

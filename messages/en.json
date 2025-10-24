@@ -742,6 +742,8 @@
     },
 
     "release": {
+        "list": "Release list",
+        "releases": "Releases",
         "count": "Releases count",
         "configuration": "Release configuration",
         "otherMetadata": "Other metadata",
@@ -840,6 +842,7 @@
     },
 
     "track": {
+        "list": "Track list",
         "number": "Track number",
         "add": "Add track",
         "label": "Track",

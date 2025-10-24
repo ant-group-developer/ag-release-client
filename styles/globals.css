@@ -122,9 +122,9 @@ body {
 }
 
 /* Disable padding query filter */
-/* .ant-pro-query-filter {
-    @apply !px-0 !pt-0;
-} */
+.ant-pro-query-filter.ant-pro-query-filter {
+    @apply !p-4 !pt-3;
+}
 
 .ant-pro-query-filter-row {
     @apply !gap-y-3;
