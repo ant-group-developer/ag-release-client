@@ -160,6 +160,12 @@ export default function Releases({}: Props) {
                         }}
                         onChange={onChangeSort}
                         dataFilter={dataFilter}
+                        options={{
+                            fullScreen: true,
+                            reload: () => {
+                                handleRefresh();
+                            },
+                        }}
                     />
                 )}
 
@@ -179,7 +185,6 @@ export default function Releases({}: Props) {
                     onChange={onChangePage}
                     showTotalText
                     showSizeChanger
-                    showQuickJumper
                     pageSizeOptions={PAGE_SIZE_OPTIONS}
                 />
 
