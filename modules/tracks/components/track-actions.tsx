@@ -23,7 +23,7 @@ export default function TrackActions({
                 'flex grow flex-wrap items-center justify-start gap-2 overflow-hidden font-medium lg:h-12',
                 {
                     'h-0 lg:h-0': selectedRowKeys.length === 0,
-                    'border-b px-5 py-2': selectedRowKeys.length > 0,
+                    'px-5 py-2': selectedRowKeys.length > 0,
                 }
             )}
         >

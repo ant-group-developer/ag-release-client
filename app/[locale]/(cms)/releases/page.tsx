@@ -123,7 +123,7 @@ export default function Releases({}: Props) {
     }, [visibleColumns]);
 
     return (
-        <div className="bg-[#f5f5f5]">
+        <div className="min-h-[calc(100vh-64px)] bg-[#f5f5f5]">
             <PageContainer title={messages('release.releases')}>
                 {/* <ReleasesHeader
                     dataFilter={dataFilter}

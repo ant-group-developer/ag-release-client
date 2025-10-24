@@ -1,5 +1,5 @@
 import CopyText from '@/components/ui/copy-text/copy-text';
-import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import { getTrackDetailRoute } from '@/helpers/link';
@@ -15,37 +15,33 @@ import {
     TRACKS_COLUMNS_DISPLAY,
 } from '@/modules/tracks/enums';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
-import { ColumnType } from 'antd/es/table';
+import { ProColumns } from '@ant-design/pro-components';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { TrackData, TrackDataFilter } from '../../types';
 import TagScanCopyright from '../tags/tag-scan-coppyright';
 import TrackCoverArt from './trackCoverArt';
 
-type Props = Omit<AppTableProps<TrackData>, 'columns'> & {
+type Props = Omit<AppProTableProps<TrackData>, 'columns'> & {
     dataFilter: TrackDataFilter;
-    visibleColumns: TRACKS_COLUMNS_DISPLAY[];
     pagination: {
         pageSize: number;
         current: number;
     };
 };
 
-export default function TracksTable({
-    dataFilter,
-    visibleColumns,
-    ...props
-}: Props) {
+export default function TracksTable({ dataFilter, ...props }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const router = useRouter();
     const params = useParams();
-    const column: ColumnType<TrackData>[] = [
+    const column: ProColumns<TrackData>[] = [
         {
             title: messages('common.iNo'),
             key: 'iNo',
             width: 30,
             align: 'center',
+            fixed: 'left',
             render: (_, __, index) =>
                 getIndex(
                     props?.pagination?.pageSize,
@@ -67,26 +63,38 @@ export default function TracksTable({
                 dataFilter.fieldOrder,
                 'title'
             ),
-            render: (_, record) => (
-                <div className="flex items-center gap-4">
-                    <TrackCoverArt trackData={record} />
-                    <CustomTooltip
-                        title={messages('common.viewDetail')}
-                        placement="right"
-                    >
-                        <Link
-                            href={getTrackDetailRoute(
-                                record?.id,
-                                TRACK_TABS.METADATA
-                            )}
-                        >
-                            <p className="truncate hover:cursor-pointer hover:text-blue-500 hover:underline">
-                                {record?.title}
-                            </p>
-                        </Link>
-                    </CustomTooltip>
-                </div>
-            ),
+            render: (_, record) => {
+                const trackArtist = record?.trackArtists ?? [];
+                const mainArtist = trackArtist?.find(
+                    (item: TrackArtistData) =>
+                        item.artistRole?.code == MAIN_ARTIST_ROLE
+                );
+                return (
+                    <div className="flex items-center gap-4">
+                        <TrackCoverArt trackData={record} />
+                        <div>
+                            <CustomTooltip
+                                title={messages('common.viewDetail')}
+                                placement="right"
+                            >
+                                <Link
+                                    href={getTrackDetailRoute(
+                                        record?.id,
+                                        TRACK_TABS.METADATA
+                                    )}
+                                >
+                                    <p className="truncate hover:cursor-pointer hover:text-blue-500 hover:underline">
+                                        {record?.title}
+                                    </p>
+                                </Link>
+                            </CustomTooltip>
+                            <span className="truncate text-gray-500">
+                                {mainArtist && mainArtist?.artist?.name}
+                            </span>
+                        </div>
+                    </div>
+                );
+            },
         },
         {
             title: messages('release.version'),
@@ -102,7 +110,7 @@ export default function TracksTable({
             title: messages('track.id'),
             key: 'id',
             dataIndex: 'id',
-            align: 'center',
+            align: 'left',
             width: 60,
             render: (value) => (
                 <CustomTooltip size="small" title={value}>
@@ -139,38 +147,37 @@ export default function TracksTable({
                 </CopyText>
             ),
         },
-        {
-            title: messages('common.artist'),
-            key: 'trackArtists',
-            dataIndex: 'trackArtists',
-            align: 'left',
-            ellipsis: true,
-            width: 100,
-            render: (value, record) => {
-                const trackArtist = record?.trackArtists ?? [];
-                const mainArtist = trackArtist?.find(
-                    (item: TrackArtistData) =>
-                        item.artistRole?.code == MAIN_ARTIST_ROLE
-                );
-                return (
-                    // <CustomTooltip size="small" title={value}>
-                    <span className="truncate">
-                        {mainArtist && mainArtist?.artist?.name}
-                    </span>
-                    // </CustomTooltip>
-                );
-            },
-        },
-
+        // {
+        //     title: messages('common.artist'),
+        //     key: 'trackArtists',
+        //     dataIndex: 'trackArtists',
+        //     align: 'left',
+        //     ellipsis: true,
+        //     width: 100,
+        //     render: (value, record) => {
+        //         const trackArtist = record?.trackArtists ?? [];
+        //         const mainArtist = trackArtist?.find(
+        //             (item: TrackArtistData) =>
+        //                 item.artistRole?.code == MAIN_ARTIST_ROLE
+        //         );
+        //         return (
+        //             // <CustomTooltip size="small" title={value}>
+        //             <span className="truncate">
+        //                 {mainArtist && mainArtist?.artist?.name}
+        //             </span>
+        //             // </CustomTooltip>
+        //         );
+        //     },
+        // },
         {
             title: 'ISRC',
             key: 'isrc',
             dataIndex: 'isrc',
             align: 'left',
             width: 60,
-            render: (value) => (
-                <CopyText text={value}>
-                    <span className="truncate"> {value} </span>
+            render: (_, record) => (
+                <CopyText text={record?.isrc as string}>
+                    <span className="truncate"> {record?.isrc} </span>
                 </CopyText>
             ),
         },
@@ -178,7 +185,7 @@ export default function TracksTable({
             title: 'ACRCloud',
             key: 'acrCloud',
             dataIndex: 'acrCloud',
-            align: 'center',
+            align: 'left',
             width: 80,
             render: (value, record) => {
                 const isUnScanned =
@@ -186,35 +193,6 @@ export default function TracksTable({
                     SCAN_COPYRIGHT_STATUS.UN_SCANNED;
                 return (
                     <div>
-                        {/* <Tag
-                            onClick={() => {
-                                if (!isScanned) {
-                                    return openModal(
-                                        TYPE_MODAL_TRACK.ACR_CLOUD_SCAN,
-                                        record
-                                    );
-                                }
-                                openModal(
-                                    TYPE_MODAL_TRACK.ACR_CLOUD_SCAN_RESULT,
-                                    record
-                                );
-                            }}
-                            color={isScanned ? 'green' : 'blue'}
-                            className="!border-0 hover:cursor-pointer hover:!border hover:opacity-80"
-                        >
-                            {isScanned ? (
-                                <div className="flex items-center gap-1">
-                                    {' '}
-                                    <SearchCheck size={SIZE_ICON} />{' '}
-                                    {messages('common.scanned')}
-                                </div>
-                            ) : (
-                                <div className="flex items-center gap-1">
-                                    <SearchX size={SIZE_ICON} />{' '}
-                                    {messages('common.notScanned')}
-                                </div>
-                            )}
-                        </Tag> */}
                         <TagScanCopyright
                             className="!border-0 hover:cursor-pointer hover:!border hover:opacity-80"
                             onClick={() => {
@@ -235,36 +213,11 @@ export default function TracksTable({
                 );
             },
         },
-
-        // {
-        //     title: messages('release.duration'),
-        //     key: 'duration',
-        //     dataIndex: 'duration',
-        //     align: 'center',
-        //     width: 100,
-        //     render: (value) => {
-        //         const duration = convertSecondsToHoursMinutes(Number(value));
-        //         return <span className="truncate">{duration}</span>;
-        //     },
-        // },
-        // {
-        //     title: messages('release.releaseDate'),
-        //     key: 'releaseDate',
-        //     dataIndex: 'releaseDate',
-        //     align: 'center',
-        //     width: 100,
-        //     render: (value,record) => (
-        //         <span className="truncate text-wrap">
-        //             {' '}
-        //             {formattedDate(value)}{' '}
-        //         </span>
-        //     ),
-        // },
         {
             title: messages('common.createdAt'),
             key: 'createdAt',
             dataIndex: 'createdAt',
-            align: 'center',
+            align: 'left',
             width: 60,
             sorter: true,
             sortOrder: getSortOrder(
@@ -324,16 +277,12 @@ export default function TracksTable({
         },
     ];
 
-    const newColumns = column.map((column) => ({
-        ...column,
-        hidden: !visibleColumns?.includes(column.key as TRACKS_COLUMNS_DISPLAY),
-    }));
-
     return (
-        <AppTable
+        <AppProTable
+            headerTitle={messages('track.list')}
             {...props}
             pagination={false}
-            columns={newColumns}
+            columns={column}
             rowClassName={'group'}
         />
     );

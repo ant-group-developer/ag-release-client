@@ -843,6 +843,7 @@
     },
 
     "track": {
+        "list": "Danh sách bài hát",
         "number": "Bài hát số",
         "add": "Thêm bài hát",
         "label": "Bài hát",

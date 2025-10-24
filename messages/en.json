@@ -842,6 +842,7 @@
     },
 
     "track": {
+        "list": "Track list",
         "number": "Track number",
         "add": "Add track",
         "label": "Track",

@@ -30,12 +30,6 @@ export default function AppProTable<RecordType extends object>({
                           ),
                       }
             }
-            options={{
-                density: false,
-                fullScreen: true,
-                reload: false,
-                setting: true,
-            }}
             {...props}
             headerTitle={
                 <span className="font-semibold">{props?.headerTitle}</span>

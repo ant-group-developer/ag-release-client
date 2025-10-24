@@ -23,6 +23,7 @@ import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { ProColumns } from '@ant-design/pro-components';
+import { Tag } from 'antd';
 import { useTranslations } from 'next-intl';
 import {
     RELEASES_COLUMNS_DISPLAY,
@@ -61,6 +62,7 @@ export default function ReleasesTable({
             key: 'iNo',
             width: 50,
             align: 'center',
+            fixed: 'left',
             render: (_, __, index) =>
                 getIndex(
                     props?.pagination?.pageSize,
@@ -120,7 +122,7 @@ export default function ReleasesTable({
                             >
                                 {isVariousArtist ? (
                                     <span
-                                        className="cursor-pointer truncate text-gray-500 group-hover:underline"
+                                        className="cursor-pointer truncate text-gray-500 hover:underline"
                                         onClick={() =>
                                             onChangeFilter({
                                                 isVariousArtist: 'true',
@@ -137,7 +139,7 @@ export default function ReleasesTable({
                                                     mainArtist?.artist?.id,
                                             })
                                         }
-                                        className="cursor-pointer truncate text-gray-500 group-hover:underline"
+                                        className="cursor-pointer truncate text-gray-500 hover:underline"
                                     >
                                         {mainArtist?.artist?.name || ''}
                                     </span>
@@ -257,11 +259,13 @@ export default function ReleasesTable({
             dataIndex: 'status',
             align: 'left',
             width: 120,
-            render: (value, record) => (
-                <span className="cursor-pointer truncate">
-                    {messages(getIntlCodeByReleaseStatus(record?.status))}
-                </span>
-            ),
+            render: (value, record) => {
+                return (
+                    <Tag className="cursor-pointer truncate">
+                        {messages(getIntlCodeByReleaseStatus(record?.status))}
+                    </Tag>
+                );
+            },
         },
         {
             title: messages('release.trackCount'),
@@ -415,24 +419,23 @@ export default function ReleasesTable({
         });
     }
 
-    const newColumns = column.map((column) => ({
-        ...column,
-        // hidden: !visibleColumns?.includes(
-        //     column.key as RELEASES_COLUMNS_DISPLAY
-        // ),
-    }));
-
     return (
         // <div className="rounded-lg bg-white px-6 pt-2">
         <AppProTable
             headerTitle={messages('release.list')}
             {...props}
             pagination={false}
-            columns={newColumns}
+            columns={column}
             rowClassName={'group'}
             columnsState={{
                 persistenceKey: 'releases-table-columns',
                 persistenceType: 'sessionStorage',
+                defaultValue: {
+                    tenant: { show: false },
+                    tracks_count: { show: false },
+                    total_duration: { show: false },
+                    updatedAt: { show: false },
+                },
             }}
         />
         // </div>
