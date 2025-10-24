@@ -107,7 +107,6 @@ export default function Tracks({}: Props) {
             {layoutTable === LAYOUT_TABLE.LIST && (
                 <TracksTable
                     sticky={{ offsetHeader: 216 }}
-                    visibleColumns={visibleColumns}
                     dataSource={tracksData?.items}
                     loading={isFetching}
                     pagination={{
