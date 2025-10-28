@@ -46,6 +46,7 @@ export default function AppFilter({
                 )
             }
             span={{ xs: 24, sm: 12, md: 8, lg: 6, xl: 6, xxl: 4 }}
+            colon={false}
             {...props}
             labelWidth="auto"
         >

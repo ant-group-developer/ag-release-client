@@ -1,6 +1,6 @@
 import ActionButton from '@/components/ui/button/action-button';
 import ImageFallback from '@/components/ui/image/image-fallback';
-import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { convertSecondsToHoursMinutes, formattedDate } from '@/helpers/common';
@@ -13,71 +13,42 @@ import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { ReleasesData } from '@/modules/releases/types';
-import { ColumnType } from 'antd/es/table';
+import { ProColumns } from '@ant-design/pro-components';
+import { Button, Tag } from 'antd';
 import { useTranslations } from 'next-intl';
-import {
-    DISTRIBUTION_COLUMNS_DISPLAY,
-    TYPE_MODAL_DISTRIBUTION,
-} from '../../enum';
+import { TYPE_MODAL_DISTRIBUTION } from '../../enum';
 import { DistributionDataFilter } from '../../types';
 
-type Props = Omit<AppTableProps<ReleasesData>, 'columns'> & {
+type Props = Omit<AppProTableProps<ReleasesData>, 'columns'> & {
     dataFilter: DistributionDataFilter;
     onChangeFilter: OnChangeFilter<DistributionDataFilter>;
-    visibleColumns: DISTRIBUTION_COLUMNS_DISPLAY[];
 };
 
 export default function DistributionTable({
     dataFilter,
     onChangeFilter,
-    visibleColumns,
     ...props
 }: Props) {
     const messages = useTranslations();
     const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
     const { getReleaseTabRoute } = useGetReleaseDetailRoute();
-    const column: ColumnType<ReleasesData>[] = [
+    const column: ProColumns<ReleasesData>[] = [
         {
             title: messages('common.iNo'),
             key: 'iNo',
             width: 50,
             align: 'center',
+            fixed: 'left',
             render: (_, __, index) => index + 1,
         },
-        // {
-        //     // title: messages('common.thumbnail'),
-        //     key: 'thumbnail',
-        //     dataIndex: 'thumbnail',
-        //     align: 'center',
-        //     width: 100,
-        //     fixed: 'left',
-        //     render: (value, record) => (
-        //         <div
-        //             className="flex items-center justify-center"
-        //             // onClick={() =>
-        //             //     router.push(
-        //             //         `${APP_ROUTES.RELEASES}/detail/${record.releaseId}/core-detail`
-        //             //     )
-        //             // }
-        //         >
-        //             <Image
-        //                 src={value}
-        //                 alt="thumbnail"
-        //                 width={200}
-        //                 height={200}
-        //                 className="h-12 w-12 cursor-pointer rounded-lg object-cover"
-        //             />
-        //         </div>
-        //     ),
-        // },
         {
             title: messages('release.name'),
             key: 'title',
             dataIndex: 'title',
             ellipsis: true,
             align: 'left',
-            width: 200,
+            width: 300,
             fixed: 'left',
             render: (value, record) => (
                 <div className="flex items-center gap-4">
@@ -128,7 +99,7 @@ export default function DistributionTable({
                     ? messages('common.variousArtists')
                     : mainArtist?.artist?.name || '';
                 return (
-                    <CustomTooltip size="small" title={value}>
+                    <CustomTooltip size="small" title={displayName}>
                         <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
                             {displayName}
                         </span>
@@ -144,70 +115,61 @@ export default function DistributionTable({
             width: 200,
             ellipsis: true,
             render: (value, record) => (
-                <CustomTooltip size="small" title={value}>
+                <CustomTooltip size="small" title={record?.label?.name}>
                     <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
                         {record?.label?.name}
                     </span>
                 </CustomTooltip>
             ),
         },
-        {
-            title: messages('release.releaseDate'),
-            key: 'releaseDate',
-            dataIndex: 'releaseDate',
-            align: 'center',
-            width: 180,
-            render: (value) => (
-                <span className="truncate text-wrap">
-                    {' '}
-                    {formattedDate(value)}{' '}
-                </span>
-            ),
-        },
-        {
-            title: messages('common.createdAt'),
-            key: 'createdAt',
-            dataIndex: 'createdAt',
-            align: 'center',
-            width: 180,
-            render: (value) => (
-                <span className="truncate text-wrap">
-                    {' '}
-                    {formattedDate(value)}{' '}
-                </span>
-            ),
-        },
+
         {
             title: messages('common.status'),
             key: 'status',
             dataIndex: 'status',
-            align: 'center',
+            align: 'left',
             width: 120,
-            render: (value) => (
-                <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
-                    {messages(getIntlCodeByReleaseStatus(value))}
-                </span>
+            render: (value, record) => (
+                <Tag className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
+                    {messages(getIntlCodeByReleaseStatus(record?.status))}
+                </Tag>
             ),
         },
         {
             title: messages('release.trackCount'),
             key: 'trackCount',
             dataIndex: 'trackCount',
-            align: 'center',
+            align: 'left',
             width: 100,
-            render: (value) => <span className="truncate"> {value} </span>,
+            render: (value, record) => (
+                <span className="truncate"> {record?.tracksCount} </span>
+            ),
+        },
+        {
+            title: messages('release.duration'),
+            key: 'duration',
+            dataIndex: 'duration',
+            align: 'left',
+            width: 100,
+            render: (value, record) => {
+                const duration = convertSecondsToHoursMinutes(
+                    Number(record?.totalDuration)
+                );
+
+                return <span className="truncate">{duration}</span>;
+            },
         },
         {
             title: messages('release.type'),
             key: 'type',
             dataIndex: 'type',
-            align: 'center',
+            align: 'left',
             width: 120,
-            render: (value) => {
+            render: (value, record) => {
                 return (
                     <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
                         {' '}
-                        {value}{' '}
+                        {record?.albumFormat?.name}{' '}
                     </span>
                 );
             },
@@ -216,12 +178,11 @@ export default function DistributionTable({
             title: messages('release.id'),
             key: 'releaseId',
             dataIndex: 'releaseId',
-            align: 'center',
-            fixed: 'left',
-            width: 120,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
+            align: 'left',
+            width: 320,
+            render: (value, record) => (
+                <CustomTooltip size="small" title={record?.id}>
+                    <span className="truncate"> {record?.id} </span>
                 </CustomTooltip>
             ),
         },
@@ -230,28 +191,14 @@ export default function DistributionTable({
             title: 'UPC',
             key: 'upc',
             dataIndex: 'UPC',
-            align: 'center',
+            align: 'left',
             width: 120,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
+            render: (value, record) => (
+                <CustomTooltip size="small" title={record?.upc}>
+                    <span className="truncate"> {record?.upc} </span>
                 </CustomTooltip>
             ),
         },
-
-        {
-            title: messages('release.duration'),
-            key: 'duration',
-            dataIndex: 'duration',
-            align: 'center',
-            width: 100,
-            render: (value) => {
-                const duration = convertSecondsToHoursMinutes(Number(value));
-
-                return <span className="truncate">{duration}</span>;
-            },
-        },
-
         {
             key: 'actions',
             align: 'center',
@@ -263,25 +210,72 @@ export default function DistributionTable({
                 </div>
             ),
         },
+        {
+            title: messages('release.releaseDate'),
+            key: 'releaseDate',
+            dataIndex: 'releaseDate',
+            align: 'left',
+            width: 180,
+            render: (value, record) => (
+                <span className="truncate text-wrap">
+                    {' '}
+                    {formattedDate(record?.releaseDate)}{' '}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.createdAt'),
+            key: 'createdAt',
+            dataIndex: 'createdAt',
+            align: 'left',
+            width: 180,
+            render: (value, record) => (
+                <span className="truncate text-wrap">
+                    {' '}
+                    {formattedDate(record?.createdAt)}{' '}
+                </span>
+            ),
+        },
     ];
 
-    const newColumns = column.map((column) => ({
-        ...column,
-        hidden: !visibleColumns?.includes(
-            column.key as DISTRIBUTION_COLUMNS_DISPLAY
-        ),
-    }));
-
     return (
-        <AppTable
+        <AppProTable
+            headerTitle={messages('release.list')}
             {...props}
             pagination={false}
-            columns={newColumns}
+            columns={column}
             rowClassName={'group cursor-pointer'}
             onRow={(record) => ({
                 onClick: () =>
                     openModal(TYPE_MODAL_DISTRIBUTION.DETAIL, record),
             })}
+            columnsState={{
+                persistenceKey: 'distribute-table-columns',
+                persistenceType: 'sessionStorage',
+                defaultValue: {
+                    releaseDate: { show: false },
+                    createdAt: { show: false },
+                    releaseId: { show: false },
+                },
+            }}
+            tableAlertRender={({
+                selectedRowKeys,
+                selectedRows,
+                onCleanSelected,
+            }) => (
+                <div className="flex items-center gap-1 font-semibold">
+                    <span>{selectedRowKeys.length}</span>
+                    <span>{messages('common.selected')}</span>
+                    <Button className="" type="primary">
+                        <span>
+                            {messages('distribution.batchDistribution')}
+                        </span>
+                    </Button>
+                    <Button danger>
+                        <span>{messages('distribution.batchTakeDown')}</span>
+                    </Button>
+                </div>
+            )}
         />
     );
 }
