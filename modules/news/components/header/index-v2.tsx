@@ -112,7 +112,9 @@ export const NewsHeaderV2 = ({
                 <ProFormText
                     name="title"
                     label={messages('common.search')}
-                    placeholder={messages('placeholder.searchBy')}
+                    placeholder={messages('placeholder.searchBy', {
+                        value: messages('common.keyword').toLowerCase(),
+                    })}
                 />
                 <ProForm.Item
                     name="newsCategoryId"

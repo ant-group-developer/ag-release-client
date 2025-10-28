@@ -185,6 +185,7 @@ export default function Releases({}: Props) {
                     onChange={onChangePage}
                     showTotalText
                     showSizeChanger
+                    showQuickJumper
                     pageSizeOptions={PAGE_SIZE_OPTIONS}
                 />
 

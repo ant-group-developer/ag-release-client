@@ -97,7 +97,9 @@ export default function ReleasesHeaderV2({
                 <ProFormText
                     name="keyword"
                     label={messages('common.search')}
-                    placeholder={messages('placeholder.searchBy')}
+                    placeholder={messages('placeholder.searchBy', {
+                        value: messages('common.keyword').toLowerCase(),
+                    })}
                 />
                 <ProFormSelect
                     name="albumFormatId"

@@ -73,6 +73,15 @@ body {
     @apply dark:!text-gray-300;
 }
 
+.ant-pro-page-container-children-container {
+    padding: 0 32px 32px !important;
+}
+
+/* Rounded none action table  */
+.ant-pro-table-alert {
+    border-radius: 0 !important;
+}
+
 /* custom menu filter analytics */
 .custom-filter-menu .ant-menu-submenu-title {
     padding-left: 12px !important; /* cha */

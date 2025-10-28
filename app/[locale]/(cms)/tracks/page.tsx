@@ -15,7 +15,6 @@ import TrackHeaderV2 from '@/modules/tracks/components/header/index-v2';
 
 import TracksTable from '@/modules/tracks/components/table';
 import TracksGridTable from '@/modules/tracks/components/table/grid-table';
-import TrackActions from '@/modules/tracks/components/track-actions';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { PageContainer } from '@ant-design/pro-components';
 import { theme } from 'antd';
@@ -115,7 +114,7 @@ export default function Tracks({}: Props) {
                     dataUpdatedAt={dataUpdatedAt}
                 />
 
-                <div
+                {/* <div
                     className="sticky top-0 z-50 mb-4 rounded-lg"
                     style={{ backgroundColor: token.colorBgContainer }}
                 >
@@ -123,12 +122,10 @@ export default function Tracks({}: Props) {
                         selectedRowKeys={selectedRow}
                         resetSelectedRows={handleResetSelectedRow}
                     />
-                </div>
+                </div> */}
                 {layoutTable === LAYOUT_TABLE.LIST && (
                     <TracksTable
-                        sticky={{
-                            offsetHeader: selectedRow.length > 0 ? 48 : 0,
-                        }}
+                        sticky
                         dataSource={tracksData.items}
                         pagination={{
                             pageSize: dataFilter.pageSize ?? PAGE_SIZE,
@@ -138,6 +135,11 @@ export default function Tracks({}: Props) {
                         rowSelection={rowSelection}
                         onChange={onChangeSort}
                         dataFilter={dataFilter}
+                        options={{
+                            reload: () => {
+                                handleRefresh();
+                            },
+                        }}
                     />
                 )}
 

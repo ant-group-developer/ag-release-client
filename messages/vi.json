@@ -523,7 +523,7 @@
         "selectArtist": "Chọn nghệ sĩ",
         "selectRegion": "Chọn khu vực",
         "supportFormats": "Định dạng hỗ trợ: {accept}",
-        "searchBy": "Tìm kiếm theo ...",
+        "searchBy": "Tìm kiếm theo {value}",
         "filterBy": "Lọc theo ..."
     },
     "status": {

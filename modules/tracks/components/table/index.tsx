@@ -16,6 +16,7 @@ import {
 } from '@/modules/tracks/enums';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { ProColumns } from '@ant-design/pro-components';
+import { Button } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { TrackData, TrackDataFilter } from '../../types';
@@ -72,7 +73,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
                 return (
                     <div className="flex items-center gap-4">
                         <TrackCoverArt trackData={record} />
-                        <div>
+                        <div className="min-w-0 flex-1 truncate">
                             <CustomTooltip
                                 title={messages('common.viewDetail')}
                                 placement="right"
@@ -82,10 +83,9 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
                                         record?.id,
                                         TRACK_TABS.METADATA
                                     )}
+                                    className="block truncate hover:cursor-pointer hover:text-blue-500 hover:underline"
                                 >
-                                    <p className="truncate hover:cursor-pointer hover:text-blue-500 hover:underline">
-                                        {record?.title}
-                                    </p>
+                                    {record?.title}
                                 </Link>
                             </CustomTooltip>
                             <span className="truncate text-gray-500">
@@ -218,7 +218,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
             key: 'createdAt',
             dataIndex: 'createdAt',
             align: 'left',
-            width: 60,
+            width: 80,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -280,6 +280,28 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
     return (
         <AppProTable
             headerTitle={messages('track.list')}
+            tableAlertRender={({
+                selectedRowKeys,
+                selectedRows,
+                onCleanSelected,
+            }) => (
+                <div className="flex items-center gap-1 font-semibold">
+                    <span>{selectedRowKeys.length}</span>
+                    <span>{messages('common.selected')}</span>
+                    <Button
+                        type="primary"
+                        onClick={() =>
+                            openModal(TYPE_MODAL_TRACK.ACR_CLOUD_SCAN)
+                        }
+                    >
+                        {messages('track.scan')}
+                    </Button>
+                </div>
+            )}
+            columnsState={{
+                persistenceKey: 'tracks-table-columns',
+                persistenceType: 'sessionStorage',
+            }}
             {...props}
             pagination={false}
             columns={column}

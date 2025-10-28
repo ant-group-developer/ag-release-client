@@ -229,8 +229,8 @@
         "custom": "Custom",
         "filterByMonth": "Filter by month",
         "filterByYear": "Filter by year",
-        "toDate": "to date",
-        "fromDate": "from date",
+        "toDate": "To date",
+        "fromDate": "From date",
         "unknown": "Unknown",
         "horizontal": "Horizontal",
         "vertical": "Vertical",
@@ -523,7 +523,7 @@
         "selectArtist": "Select artist",
         "selectRegion": "Select region",
         "supportFormats": "Support formats: {accept}",
-        "searchBy": "Search by ...",
+        "searchBy": "Search by {value}",
         "filterBy": "Filter by ..."
     },
     "status": {

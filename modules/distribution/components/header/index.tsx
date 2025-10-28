@@ -5,9 +5,7 @@ import { formattedDate } from '@/helpers/common';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { useTranslations } from 'next-intl';
-import { DISTRIBUTION_COLUMNS_DISPLAY } from '../../enum';
 import { DistributionDataFilter } from '../../types';
-import ShowColumnOptionDropdown from '../dropdown/show-column-option-dropdown';
 import DistributionSuperFilter from './distribution-super-filter';
 
 type Props = {
@@ -16,10 +14,6 @@ type Props = {
     canClearFilter: boolean;
     removeFilter: RemoveFilter;
     handleRefresh: () => void;
-    handleChangeVisibleColumns: (
-        columns: DISTRIBUTION_COLUMNS_DISPLAY[]
-    ) => void;
-    visibleColumn: DISTRIBUTION_COLUMNS_DISPLAY[];
 };
 
 export default function DistributionHeader({
@@ -28,8 +22,6 @@ export default function DistributionHeader({
     canClearFilter,
     removeFilter,
     handleRefresh,
-    handleChangeVisibleColumns,
-    visibleColumn,
 }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
@@ -53,11 +45,11 @@ export default function DistributionHeader({
                             DATE_FORMAT.HOUR_MINUTE_SECOND
                         )}
                     />
-
+                    {/* 
                     <ShowColumnOptionDropdown
                         visibleColumns={visibleColumn}
                         handleSetVisibleColumns={handleChangeVisibleColumns}
-                    />
+                    /> */}
                 </div>
             </AppHeaderGroup>
         </AppHeader>

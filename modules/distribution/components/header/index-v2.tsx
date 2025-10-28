@@ -3,8 +3,10 @@ import DateRangePicker from '@/components/ui/input/date-range-picker';
 import ArtistSelect from '@/components/ui/select/artist-select';
 import GenresSelect from '@/components/ui/select/genres-select';
 import { arrayFromString, getDateRange } from '@/helpers/array';
-import { getIntlCodeByScanCopyrightStatus } from '@/helpers/intl';
+import { getIntlCodeByReleaseStatus } from '@/helpers/intl';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
+import { useGetListSimpleReleaseTypes } from '@/modules/release-types/hooks/use-get-list-simple-release-types';
+import { RELEASES_STATUS } from '@/modules/releases/enums';
 import {
     ProForm,
     ProFormSelect,
@@ -12,19 +14,18 @@ import {
 } from '@ant-design/pro-components';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
-import { SCAN_COPYRIGHT_STATUS } from '../../enums';
-import { TrackDataFilter } from '../../types';
+import { DistributionDataFilter } from '../../types';
 
 type Props = {
-    dataFilter: TrackDataFilter;
-    onChangeFilter: OnChangeFilter<TrackDataFilter>;
+    dataFilter: DistributionDataFilter;
+    onChangeFilter: OnChangeFilter<DistributionDataFilter>;
     canClearFilter: boolean;
     dataUpdatedAt: number | null;
     removeFilter: RemoveFilter;
     handleRefresh: () => void;
 };
 
-export default function TrackHeaderV2({
+export default function DistributionHeaderV2({
     dataFilter,
     onChangeFilter,
     canClearFilter,
@@ -35,27 +36,41 @@ export default function TrackHeaderV2({
     // const { layoutTable, toggleLayoutTable } = useTableLayoutToggle();
     const [form] = ProForm.useForm();
     const messages = useTranslations();
+    const { releaseTypesData } = useGetListSimpleReleaseTypes();
+    const releaseStatus = Object.values(RELEASES_STATUS).map((item) => ({
+        label: messages(getIntlCodeByReleaseStatus(item)),
+        value: item,
+    }));
 
     const initialValue = {
         ...dataFilter,
+        albumFormatId: arrayFromString(dataFilter?.albumFormatId),
         artistId: arrayFromString(dataFilter?.artistId),
+        status: arrayFromString(dataFilter?.status),
         genres: arrayFromString(dataFilter?.genres),
-        scanCopyrightStatus: arrayFromString(dataFilter?.scanCopyrightStatus),
         dateCreated: getDateRange(
             dataFilter?.startCreatedAt,
             dataFilter?.endCreatedAt
+        ),
+        dateUpdated: getDateRange(
+            dataFilter?.startUpdatedAt,
+            dataFilter?.endUpdatedAt
         ),
     };
 
     const handleSubmit = (values: any) => {
         const { dateCreated, dateUpdated, ...res } = values;
-        const startCreatedAt = dateCreated?.[0] ?? null;
-        const endCreatedAt = dateCreated?.[1] ?? null;
+        const startCreatedAt = dateCreated?.[0] ? dateCreated[0] : null;
+        const endCreatedAt = dateCreated?.[1] ? dateCreated[1] : null;
 
+        const startUpdatedAt = dateUpdated?.[0] ?? null;
+        const endUpdatedAt = dateUpdated?.[1] ?? null;
         onChangeFilter({
             ...res,
             startCreatedAt,
             endCreatedAt,
+            startUpdatedAt,
+            endUpdatedAt,
         });
     };
 
@@ -82,21 +97,15 @@ export default function TrackHeaderV2({
                         value: messages('common.keyword').toLowerCase(),
                     })}
                 />
-
                 <ProFormSelect
-                    name="scanCopyrightStatus"
-                    label={messages('common.scan')}
-                    options={Object.values(SCAN_COPYRIGHT_STATUS).map(
-                        (item) => ({
-                            label: messages(
-                                getIntlCodeByScanCopyrightStatus(item) as any
-                            ),
-                            value: item,
-                        })
-                    )}
+                    name="albumFormatId"
+                    label={messages('releaseType.label')}
+                    options={releaseTypesData?.map((item) => ({
+                        value: item?.id,
+                        label: item?.name,
+                    }))}
                     mode="multiple"
                 />
-
                 <ProForm.Item name="artistId" label={messages('artist.label')}>
                     <ArtistSelect
                         showCreate={false}
@@ -106,6 +115,13 @@ export default function TrackHeaderV2({
                         mode="multiple"
                     />
                 </ProForm.Item>
+
+                <ProFormSelect
+                    name="status"
+                    label={messages('common.status')}
+                    options={releaseStatus}
+                    mode="multiple"
+                />
 
                 <ProForm.Item name="genres" label={messages('genre.label')}>
                     <GenresSelect
@@ -124,6 +140,16 @@ export default function TrackHeaderV2({
                     <DateRangePicker
                         className="w-full"
                         allowClear
+                        placement="topLeft"
+                    />
+                </ProForm.Item>
+                <ProForm.Item
+                    name="dateUpdated"
+                    label={messages('common.dateUpdated')}
+                >
+                    <DateRangePicker
+                        allowClear
+                        className="w-full"
                         placement="topLeft"
                     />
                 </ProForm.Item>
