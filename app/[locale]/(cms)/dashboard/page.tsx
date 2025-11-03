@@ -19,7 +19,7 @@ import {
 import { DashboardDataFilter } from '@/modules/dashboard/types';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card } from 'antd';
+import { Card, theme } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -28,7 +28,7 @@ type Props = {};
 
 function Dashboard({}: Props) {
     // const router = useRouter();
-    // const { token } = theme.useToken();
+    const { token } = theme.useToken();
     const [startDate] = useState(() =>
         dayjs().subtract(30, 'day').toISOString()
     );
@@ -55,7 +55,11 @@ function Dashboard({}: Props) {
     const { countCountriesData } = useGetCountCountries(dataFilter);
 
     return (
-        <div className="bg-[#f5f5f5]">
+        <div
+            style={{
+                backgroundColor: token.colorBgLayout,
+            }}
+        >
             <PageContainer
                 title={messages('dashboard.label')}
                 extra={
@@ -97,9 +101,9 @@ function Dashboard({}: Props) {
                         /> */}
                         <Card
                             title={messages('common.issues')}
-                            styles={{ body: { padding: 0 } }}
+                            styles={{ body: { padding: 0, paddingTop: 1 } }}
                         >
-                            <div className="bg-white">
+                            <div>
                                 <IssueTable
                                     className="h-full"
                                     dataSource={countIssuesData}
@@ -108,10 +112,7 @@ function Dashboard({}: Props) {
                             </div>
                         </Card>
                         <NewUpdatesCard />
-                        <MapChart
-                            className="bg-white"
-                            data={countCountriesData}
-                        />
+                        <MapChart data={countCountriesData} />
                     </div>
 
                     {/* <DspChart /> */}

@@ -1,6 +1,7 @@
 import { SIZE_ICON } from '@/constants/common';
 import { cn } from '@/helpers/common';
 import { QueryFilter, QueryFilterProps } from '@ant-design/pro-components';
+import { theme } from 'antd';
 import { ChevronsDown, ChevronsUp } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import IconButton from '../button/icon-button';
@@ -15,10 +16,12 @@ export default function AppFilter({
 }: Props) {
     const messages = useTranslations();
     const isVertical = layout !== 'horizontal';
+    const { token } = theme.useToken();
     return (
         <QueryFilter
+            style={{ backgroundColor: token.colorBgContainer }}
             className={cn(
-                'rounded-md bg-white',
+                'rounded-md',
                 isVertical && [
                     // ép label/input dọc chỉ khi layout != horizontal
                     '[&_.ant-form-item-horizontal]:!flex-col',

@@ -1,5 +1,5 @@
 import { ORDER } from '@/enums/common';
-import { Tabs, TabsProps } from 'antd';
+import { Tabs, TabsProps, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import TopStreamsTable from './top-streams-table';
 
@@ -9,6 +9,7 @@ type Props = {
 
 export default function ListTop({ className }: Props) {
     const messages = useTranslations();
+    const { token } = theme.useToken();
     const tabItems: TabsProps['items'] = [
         {
             key: 'release',
@@ -175,7 +176,8 @@ export default function ListTop({ className }: Props) {
         <div className="overflow-hidden rounded-lg">
             <Tabs
                 items={tabItems}
-                className="tab-mb-0 rounded-lg bg-white [&_.ant-tabs-nav]:px-4 [&_.ant-tabs-nav]:pb-[10px]"
+                className="tab-mb-0 rounded-lg [&_.ant-tabs-nav]:px-4 [&_.ant-tabs-nav]:pb-[10px]"
+                style={{ backgroundColor: token.colorBgContainer }}
             />
             {/* <div
                 className={`grid gap-4 sm:grid-cols-1 md:grid-cols-4 lg:grid-cols-3 ${className}`}

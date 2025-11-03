@@ -1,5 +1,6 @@
 import { BAR_COLOR } from '@/constants/color';
 import { formattedNumber } from '@/helpers/common';
+import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import {
     Bar,
@@ -26,6 +27,7 @@ type Props = {
 export default function BarChartAnalytics({ data, maxLengthName = 10 }: Props) {
     const isLessThanNumberItems = data?.length && data?.length < 5;
     const messages = useTranslations();
+    const { token } = theme.useToken();
 
     const formatUserName = (name: string, maxLength: number = 10) => {
         return name.length > maxLength
@@ -37,7 +39,10 @@ export default function BarChartAnalytics({ data, maxLengthName = 10 }: Props) {
             const fullName = payload[0]?.payload?.user?.name || label;
 
             return (
-                <div className="rounded border border-gray-200 bg-white p-3 shadow-lg">
+                <div
+                    className="rounded border border-gray-200 p-3 shadow-lg"
+                    style={{ backgroundColor: token.colorBgContainer }}
+                >
                     <p className="mb-2 font-medium">{fullName}</p>
                     {payload.map((entry: any, index: number) => {
                         const roundValue = Math.round(entry.value);

@@ -21,6 +21,7 @@ import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releas
 import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
 import { DeleteVariables } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
+import { theme } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
@@ -70,6 +71,7 @@ export default function Releases({}: Props) {
     const isLoading = useLoading(LoadingType.Fetching);
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as ReleasesData);
+    const { token } = theme.useToken();
 
     // apis
     const {
@@ -123,7 +125,10 @@ export default function Releases({}: Props) {
     }, [visibleColumns]);
 
     return (
-        <div className="min-h-[calc(100vh-64px)] bg-[#f5f5f5]">
+        <div
+            className="min-h-[calc(100vh-64px)]"
+            style={{ backgroundColor: token.colorBgLayout }}
+        >
             <PageContainer title={messages('release.releases')}>
                 {/* <ReleasesHeader
                     dataFilter={dataFilter}
@@ -177,7 +182,8 @@ export default function Releases({}: Props) {
                 )}
 
                 <AppPagination
-                    className="rounded-b-md bg-white"
+                    className="rounded-b-md"
+                    style={{ backgroundColor: token.colorBgContainer }}
                     align="end"
                     current={releasesData?.metadata?.currentPage}
                     pageSize={dataFilter.pageSize}
