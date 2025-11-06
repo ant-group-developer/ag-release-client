@@ -112,10 +112,10 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             dataIndex: 'waveform',
             key: 'waveform',
             align: 'center',
-            width: 200,
+            width: 250,
             render: (value, record, index) => {
                 return (
-                    <div className="min-h-10 w-80">
+                    <div className="">
                         <TrackWaveform
                             key={`${record.id}-${index}`}
                             data={record}
@@ -130,6 +130,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             key: 'title',
             align: 'left',
             width: 350,
+            ellipsis: true,
             render: (value, record) => {
                 return (
                     <div className="space-y-2">
@@ -201,52 +202,6 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                 );
             },
         },
-        // {
-        //     title: messages('common.artist'),
-        //     dataIndex: 'artists',
-        //     key: 'artists',
-        //     align: 'left',
-        //     width: 300,
-        //     render: (value, record, index) => {
-        //         return (
-        //             <div className="flex flex-wrap gap-y-2">
-        //                 {record?.trackArtists?.map(
-        //                     (trackArtist: TrackArtistData) => (
-        //                         <Tag
-        //                             key={`${record.id}-${trackArtist.id}`}
-        //                             closeIcon
-        //                             onClose={(e) => {
-        //                                 e.preventDefault();
-        //                                 openModal(
-        //                                     TYPE_MODAL_TRACK_ARTIST.DELETE,
-        //                                     trackArtist
-        //                                 );
-        //                             }}
-        //                             closable={!isReadMode}
-        //                         >
-        //                             {trackArtist?.artist?.name}
-        //                         </Tag>
-        //                     )
-        //                 )}
-        //                 {!isReadMode && (
-        //                     <Tag
-        //                         key={`${record.id}-add-artist`}
-        //                         className="border-dashed hover:border-blue-500"
-        //                         onClick={() => {
-        //                             if (isReadMode) return;
-        //                             openModal(
-        //                                 TYPE_MODAL_TRACK_ARTIST.ADD,
-        //                                 record
-        //                             );
-        //                         }}
-        //                     >
-        //                         + {messages('artist.add')}
-        //                     </Tag>
-        //                 )}
-        //             </div>
-        //         );
-        //     },
-        // },
         {
             title: 'ISRC',
             dataIndex: 'ISRC',
@@ -295,7 +250,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             dataIndex: 'action',
             key: 'action',
             align: 'center',
-            width: 40,
+            width: 80,
             render: (value, record, index) => {
                 return (
                     <div className="flex items-center gap-2">

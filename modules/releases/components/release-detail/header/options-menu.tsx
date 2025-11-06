@@ -57,10 +57,7 @@ export default function OptionsMenu({}: Props) {
             trigger={['click']}
             placement="bottomRight"
         >
-            <IconButton
-                shape="circle"
-                className="!bg-zinc-100 hover:!bg-zinc-200"
-            >
+            <IconButton shape="circle">
                 <EllipsisVertical size={SIZE_ICON} />
             </IconButton>
         </Dropdown>

@@ -328,7 +328,7 @@ select {
 
 /* Custom bg detail release track */
 .bg-content .ant-modal-content {
-    @apply !bg-[#f5f5f5];
+    @apply !bg-[#f5f5f5] dark:!bg-[#1c1c1c];
 }
 /* CKeditor css */
 .home .ql-container {

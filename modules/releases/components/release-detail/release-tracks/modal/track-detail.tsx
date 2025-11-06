@@ -1,6 +1,6 @@
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import useModalStore from '@/hooks/use-modal';
-import { Form, Tabs } from 'antd';
+import { Form, Tabs, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 
 import { TrackData } from '@/modules/releases/types';
@@ -20,8 +20,9 @@ type Props = {} & Omit<AppModalProps, 'children'>;
 export default function TrackDetailModal({ ...props }: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
-    const typeModal = useModalStore((state) => state.typeModal);
+    // const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
+    const { token } = theme.useToken();
     const { trackId, index } = useModalStore<{
         trackId: TrackData['id'];
         index: number;
@@ -111,7 +112,7 @@ export default function TrackDetailModal({ ...props }: Props) {
         <AppModal
             {...props}
             open
-            title={<p className="bg-[#f5f5f5]">{trackData.title}</p>}
+            title={<p>{trackData.title}</p>}
             onOk={form.submit}
             onCancel={() => {
                 closeModal();
@@ -119,9 +120,11 @@ export default function TrackDetailModal({ ...props }: Props) {
             }}
             footer={null}
             width={'60vw'}
-            style={{ top: '1rem' }}
+            style={{
+                top: '1rem',
+            }}
             spinning={isFetching}
-            className="bg-content"
+            // className="bg-content"
         >
             <Tabs
                 className="rounded"

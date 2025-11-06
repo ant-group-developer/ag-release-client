@@ -5,6 +5,7 @@ import ArtistItem from '@/modules/releases/components/release-detail/release-rev
 import MetadataInfoItem from '@/modules/releases/components/release-detail/release-review/metadata-info/metadata-info-item';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { useGetDetailTrack } from '@/modules/tracks/hooks/use-get-detail-tracks';
+import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 
@@ -15,10 +16,17 @@ export default function TrackMetadata({}: Props) {
     const params = useParams();
     const trackId = params['id'];
     const { trackData } = useGetDetailTrack(trackId as string);
+    const { token } = theme.useToken();
+
+    const styleCard = {
+        backgroundColor: token.colorBgContainer,
+        border: 0,
+    };
 
     return (
-        <div className="space-y-8 pb-8">
+        <div className="space-y-4">
             <AppCard
+                style={styleCard}
                 title={
                     <p className="text-lg">
                         {messages('track.label')} & {messages('artist.label')}
@@ -58,6 +66,7 @@ export default function TrackMetadata({}: Props) {
 
             <AppCard
                 title={<p className="text-lg">{messages('genre.label')}</p>}
+                style={styleCard}
             >
                 <div className="space-y-2 p-2">
                     <div className="grid grid-cols-2 gap-2">
@@ -87,6 +96,7 @@ export default function TrackMetadata({}: Props) {
                         {messages('release.otherMetadata')}
                     </p>
                 }
+                style={styleCard}
             >
                 <div className="space-y-2 p-2">
                     <div className="grid grid-cols-2 gap-2">

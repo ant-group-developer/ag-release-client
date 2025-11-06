@@ -10,8 +10,7 @@ import { RELEASES_TABS } from '@/modules/releases/enums';
 import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
 import { CreateReleaseDraftPayload } from '@/modules/releases/types/payload';
 import { CreateVariables } from '@/types/api';
-import { Button, Input, Radio } from 'antd';
-import Title from 'antd/lib/typography/Title';
+import { Button, Input, Radio, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useMemo } from 'react';
@@ -37,6 +36,7 @@ export default function ReleaseConfigurationSection({
         useCreateReleaseDraft();
     const messages = useTranslations();
     const { getReleaseTabRoute, action } = useGetReleaseDetailRoute();
+    const { token } = theme.useToken();
 
     // router and params
     const params = useParams();
@@ -86,9 +86,9 @@ export default function ReleaseConfigurationSection({
                 {
                     key: 'release-configuration',
                     label: (
-                        <Title level={5} className="!mb-0">
+                        <span className="text-base font-semibold">
                             {messages('release.configuration')}
-                        </Title>
+                        </span>
                     ),
                     children: (
                         <div>

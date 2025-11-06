@@ -5,7 +5,7 @@ import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { LAYOUT_TABLE, SESSION_STORAGE_KEY } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
-import ReleasesHeader from '@/modules/releases/components/header';
+import ReleasesHeaderV2 from '@/modules/releases/components/header/index-v2';
 import ReleasesTable from '@/modules/releases/components/table';
 import ReleasesGridTable from '@/modules/releases/components/table/grid-table';
 import { defaultVisibleColumnsReleases } from '@/modules/releases/constants';
@@ -96,22 +96,22 @@ export default function Releases({}: Props) {
                 style={{
                     background: token.colorBgContainer,
                 }}
-            >
-                <ReleasesHeader
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
-                    handleChangeVisibleColumns={handleChangeVisibleColumns}
-                    visibleColumn={visibleColumns}
-                    dataUpdatedAt={dataUpdatedAt}
-                />
-            </div>
+            ></div>
+
+            <ReleasesHeaderV2
+                dataFilter={dataFilter}
+                onChangeFilter={onChangeFilter}
+                canClearFilter={canClearFilter}
+                removeFilter={removeFilter}
+                handleRefresh={handleRefresh}
+                handleChangeVisibleColumns={handleChangeVisibleColumns}
+                visibleColumn={visibleColumns}
+                dataUpdatedAt={dataUpdatedAt}
+            />
+
             {layoutTable === LAYOUT_TABLE.LIST && (
                 <ReleasesTable
-                    sticky={{ offsetHeader: 216 }}
-                    visibleColumns={visibleColumns}
+                    sticky={{ offsetHeader: 163 }}
                     dataSource={releasesData?.items}
                     onChangeFilter={onChangeFilter}
                     loading={isFetching}
@@ -128,6 +128,8 @@ export default function Releases({}: Props) {
             )}
 
             <AppPagination
+                className="rounded-b-lg"
+                style={{ background: token.colorBgContainer }}
                 align="end"
                 current={releasesData.metadata.currentPage}
                 pageSize={dataFilter.pageSize}

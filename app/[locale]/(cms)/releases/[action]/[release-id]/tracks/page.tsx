@@ -131,7 +131,7 @@ export default function Tracks() {
                     className="!p-0"
                     dataSource={tracksData?.items}
                     rowSelection={rowSelection}
-                    scroll={{ x: 'max-content' }}
+                    // scroll={{ x: 1280 }}
                     // sticky={{ offsetHeader: 174 }}
                     loading={isFetching}
                     pagination={{

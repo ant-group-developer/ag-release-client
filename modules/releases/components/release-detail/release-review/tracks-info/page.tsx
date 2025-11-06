@@ -141,7 +141,7 @@ export default function TracksInfo({}: Props) {
         <div className="space-y-2">
             <p className="font-semibold"> {messages('track.label')} </p>
 
-            <div className="mb-2 rounded-lg bg-[#f5f5f5] p-4">
+            <div className="mb-2 rounded-lg bg-[#f5f5f5] p-4 dark:bg-zinc-900">
                 <p className="text-base font-medium">
                     {messages('common.coreInfo')}
                 </p>
@@ -151,7 +151,7 @@ export default function TracksInfo({}: Props) {
                 {tracksData?.items?.map((track: TrackData, index: number) => (
                     <Collapse
                         key={String(index + 1)}
-                        className="release-review-collapse !bg-main !border-none !py-2"
+                        className="release-review-collapse !border-none !bg-main !py-2 dark:!bg-zinc-900"
                         size="small"
                         bordered={false}
                     >

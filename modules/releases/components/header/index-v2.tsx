@@ -23,8 +23,8 @@ type Props = {
     dataUpdatedAt: number | null;
     removeFilter: RemoveFilter;
     handleRefresh: () => void;
-    visibleColumn: RELEASES_COLUMNS_DISPLAY[];
-    handleChangeVisibleColumns: (columns: RELEASES_COLUMNS_DISPLAY[]) => void;
+    visibleColumn?: RELEASES_COLUMNS_DISPLAY[];
+    handleChangeVisibleColumns?: (columns: RELEASES_COLUMNS_DISPLAY[]) => void;
 };
 
 export default function ReleasesHeaderV2({
@@ -109,6 +109,9 @@ export default function ReleasesHeaderV2({
                         label: item?.name,
                     }))}
                     mode="multiple"
+                    fieldProps={{
+                        maxTagCount: 2,
+                    }}
                 />
                 <ProForm.Item name="artistId" label={messages('artist.label')}>
                     <ArtistSelect
@@ -117,6 +120,7 @@ export default function ReleasesHeaderV2({
                         dropdownMatchSelectWidth={false}
                         placeholder={messages('placeholder.selectArtist')}
                         mode="multiple"
+                        maxTagCount={2}
                     />
                 </ProForm.Item>
 
@@ -125,6 +129,9 @@ export default function ReleasesHeaderV2({
                     label={messages('common.status')}
                     options={releaseStatus}
                     mode="multiple"
+                    fieldProps={{
+                        maxTagCount: 2,
+                    }}
                 />
 
                 <ProForm.Item name="genres" label={messages('genre.label')}>
@@ -134,6 +141,7 @@ export default function ReleasesHeaderV2({
                             'release.placeholder.selectGenres'
                         )}
                         mode="multiple"
+                        maxTagCount={2}
                     />
                 </ProForm.Item>
 

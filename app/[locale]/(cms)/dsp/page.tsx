@@ -1,5 +1,4 @@
 'use client';
-import AppContainer from '@/components/app-container';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -15,6 +14,7 @@ import { useDeleteDsp } from '@/modules/dsp/hooks/use-delete-dsp';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { DspData, DspDataFilter } from '@/modules/dsp/types';
 import { DeleteVariables } from '@/types/api';
+import { PageContainer } from '@ant-design/pro-components';
 import { useTranslations } from 'next-intl';
 
 export default function Dsp() {
@@ -47,9 +47,10 @@ export default function Dsp() {
     };
 
     return (
-        <AppContainer title={messages('dsp.label')}>
+        <PageContainer title={messages('dsp.label')}>
             <DspHeader dataFilter={dataFilter} onSearch={onSearch} />
             <DspTable
+                className="rounded-t-lg border"
                 sticky
                 dataSource={dspData?.items}
                 pagination={{
@@ -85,6 +86,6 @@ export default function Dsp() {
 
             {(typeModal === TYPE_MODAL_DSP.CREATE ||
                 typeModal === TYPE_MODAL_DSP.UPDATE) && <DspFormModal />}
-        </AppContainer>
+        </PageContainer>
     );
 }

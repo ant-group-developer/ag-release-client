@@ -1,5 +1,4 @@
 'use client';
-import AppContainer from '@/components/app-container';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -16,6 +15,7 @@ import { useDeleteLabel } from '@/modules/labels/hooks/use-delete-label';
 import { useGetListLabels } from '@/modules/labels/hooks/use-get-list-labels';
 import { LabelData, LabelDataFilter } from '@/modules/labels/types';
 import { DeleteVariables } from '@/types/api';
+import { PageContainer } from '@ant-design/pro-components';
 import { useTranslations } from 'next-intl';
 
 type Props = {};
@@ -63,9 +63,10 @@ export default function Labels({}: Props) {
     };
 
     return (
-        <AppContainer title={messages('label.label')}>
+        <PageContainer title={messages('label.label')}>
             <LabelsHeader dataFilter={dataFilter} onSearch={onSearch} />
             <LabelsTable
+                className="rounded-t-lg border"
                 sticky
                 dataSource={labelsData?.items}
                 pagination={{
@@ -106,6 +107,6 @@ export default function Labels({}: Props) {
                 showQuickJumper
                 pageSizeOptions={PAGE_SIZE_OPTIONS}
             />
-        </AppContainer>
+        </PageContainer>
     );
 }

@@ -95,6 +95,9 @@ export default function TrackHeaderV2({
                         })
                     )}
                     mode="multiple"
+                    fieldProps={{
+                        maxTagCount: 2,
+                    }}
                 />
 
                 <ProForm.Item name="artistId" label={messages('artist.label')}>
@@ -104,6 +107,7 @@ export default function TrackHeaderV2({
                         dropdownMatchSelectWidth={false}
                         placeholder={messages('placeholder.selectArtist')}
                         mode="multiple"
+                        maxTagCount={2}
                     />
                 </ProForm.Item>
 
@@ -114,6 +118,7 @@ export default function TrackHeaderV2({
                             'release.placeholder.selectGenres'
                         )}
                         mode="multiple"
+                        maxCount={2}
                     />
                 </ProForm.Item>
 

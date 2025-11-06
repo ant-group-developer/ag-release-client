@@ -10,7 +10,7 @@ import { RELEASES_TABS } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
 import { ReleaseValidate } from '@/modules/releases/types';
-import { Alert } from 'antd';
+import { Alert, theme } from 'antd';
 import {
     AlertCircle,
     AlertTriangle,
@@ -30,6 +30,7 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
     );
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const { getReleaseTabRoute } = useGetReleaseDetailRoute();
+    const { token } = theme.useToken();
 
     // router
     // const router = useRouter();
@@ -99,9 +100,10 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
     return (
         <div
             className={cn(
-                'sticky top-0 h-[calc(100vh-4rem)] w-[300px] shrink-0 border-x bg-white transition-all duration-300',
+                'sticky top-0 h-[calc(100vh-4rem)] w-[300px] shrink-0 border-x transition-all duration-300',
                 isSidebarOpen ? 'w-[300px]' : 'w-[75px]'
             )}
+            style={{ backgroundColor: token.colorBgContainer }}
         >
             <div>
                 {/* Header */}

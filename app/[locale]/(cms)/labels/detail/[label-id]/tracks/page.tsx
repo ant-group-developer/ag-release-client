@@ -6,7 +6,7 @@ import { LAYOUT_TABLE, SESSION_STORAGE_KEY } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import { ReleasesDataFilter } from '@/modules/releases/types';
-import TracksHeader from '@/modules/tracks/components/header';
+import TrackHeaderV2 from '@/modules/tracks/components/header/index-v2';
 import TracksTable from '@/modules/tracks/components/table';
 import TracksGridTable from '@/modules/tracks/components/table/grid-table';
 import { defaultVisibleColumnsTracks } from '@/modules/tracks/constants';
@@ -87,25 +87,24 @@ export default function Tracks({}: Props) {
     return (
         <AppContent>
             <div
-                className="sticky top-44 z-10 border-t"
+                className="sticky top-44 z-10"
                 style={{
                     background: token.colorBgContainer,
                 }}
-            >
-                <TracksHeader
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
-                    handleChangeVisibleColumns={handleChangeVisibleColumns}
-                    visibleColumn={visibleColumns}
-                    dataUpdatedAt={dataUpdatedAt}
-                />
-            </div>
+            ></div>
+
+            <TrackHeaderV2
+                dataFilter={dataFilter}
+                onChangeFilter={onChangeFilter}
+                canClearFilter={canClearFilter}
+                removeFilter={removeFilter}
+                handleRefresh={handleRefresh}
+                dataUpdatedAt={dataUpdatedAt}
+            />
+
             {layoutTable === LAYOUT_TABLE.LIST && (
                 <TracksTable
-                    sticky={{ offsetHeader: 216 }}
+                    sticky={{ offsetHeader: 163 }}
                     dataSource={tracksData?.items}
                     loading={isFetching}
                     pagination={{
@@ -124,6 +123,8 @@ export default function Tracks({}: Props) {
             )}
 
             <AppPagination
+                className="rounded-b-lg"
+                style={{ background: token.colorBgContainer }}
                 align="end"
                 current={tracksData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}

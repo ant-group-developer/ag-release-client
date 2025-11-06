@@ -8,7 +8,6 @@ import { ReleaseTrackSchema } from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
 import { Input, Radio, Select } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import Title from 'antd/lib/typography/Title';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -67,9 +66,9 @@ export default function OtherSection({
                 {
                     key: 'other',
                     label: (
-                        <Title level={5} className="!mb-0">
+                        <span className="text-base font-semibold">
                             {messages('common.other')}
-                        </Title>
+                        </span>
                     ),
                     children: (
                         <div className="grid grid-cols-2 gap-4">

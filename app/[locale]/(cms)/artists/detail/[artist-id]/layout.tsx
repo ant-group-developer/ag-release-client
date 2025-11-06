@@ -2,18 +2,18 @@
 import AppHeaderPage from '@/components/ant-music/app-header-page';
 import ItemHeaderPage from '@/components/ant-music/item-header-page';
 import DetailSkeleton from '@/components/ui/skeleton/detail-skeleton';
-import { SIZE_ICON_SMALL } from '@/constants/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { Link, usePathname, useRouter } from '@/i18n/routing';
 import { ARTIST_DETAIL_TABS } from '@/modules/artist/enum';
 import { useGetDetailArtist } from '@/modules/artist/hooks/use-get-detail-artist';
+import { PageContainer } from '@ant-design/pro-components';
 import { Tabs, TabsProps, theme } from 'antd';
-import { ArrowLeft } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import { PropsWithChildren, useRef, useState } from 'react';
 
 export default function ArtistDetailLayout({ children }: PropsWithChildren) {
+    console.log('🚀 ~ ArtistDetailLayout ~ children:', children);
     // hooks - state
     const { token } = theme.useToken();
     const [isScroll, setIsScrolled] = useState(false);
@@ -32,10 +32,10 @@ export default function ArtistDetailLayout({ children }: PropsWithChildren) {
             key: ARTIST_DETAIL_TABS.OVERVIEW,
             label: (
                 <Link
-                    className="pl-4 font-medium"
+                    className="font-medium"
                     href={ARTIST_DETAIL_TABS.OVERVIEW}
                 >
-                    {messages('artist.profiles')}
+                    {messages('artist.label')}
                 </Link>
             ),
         },
@@ -46,7 +46,7 @@ export default function ArtistDetailLayout({ children }: PropsWithChildren) {
                     className="font-medium"
                     href={ARTIST_DETAIL_TABS.RELEASES}
                 >
-                    {messages('release.label')}
+                    {messages('release.releases')}
                 </Link>
             ),
         },
@@ -54,7 +54,7 @@ export default function ArtistDetailLayout({ children }: PropsWithChildren) {
             key: ARTIST_DETAIL_TABS.TRACKS,
             label: (
                 <Link className="font-medium" href={ARTIST_DETAIL_TABS.TRACKS}>
-                    {messages('track.label')}
+                    {messages('common.tracks')}
                 </Link>
             ),
         },
@@ -66,75 +66,108 @@ export default function ArtistDetailLayout({ children }: PropsWithChildren) {
     // apis
     const { artistData, isLoading } = useGetDetailArtist(artistId as string);
 
-    useEffect(() => {
-        if (!isOverviewPage) {
-            setIsScrolled(true);
-            return;
-        } else {
-            setIsScrolled(false);
-        }
-        const handleScroll = () => {
-            const scrollTop = scrollContainerRef.current?.scrollTop || 0;
+    const lastSegment = pathname.split('/').pop();
+    const breadcrumb = [
+        {
+            title: messages('artist.label'),
+            href: APP_ROUTES.ARTISTS,
+        },
+        {
+            title: artistData?.name || '',
+        },
+        {
+            title:
+                lastSegment === ARTIST_DETAIL_TABS.OVERVIEW
+                    ? messages('artist.label')
+                    : lastSegment === ARTIST_DETAIL_TABS.RELEASES
+                      ? messages('release.releases')
+                      : lastSegment === ARTIST_DETAIL_TABS.TRACKS
+                        ? messages('common.tracks')
+                        : '',
+        },
+    ];
 
-            setIsScrolled(scrollTop > 0);
-        };
-        const scrollEl = scrollContainerRef.current;
+    // useEffect(() => {
+    //     if (!isOverviewPage) {
+    //         setIsScrolled(true);
+    //         return;
+    //     } else {
+    //         setIsScrolled(false);
+    //     }
+    //     const handleScroll = () => {
+    //         const scrollTop = scrollContainerRef.current?.scrollTop || 0;
 
-        if (scrollEl) {
-            scrollEl.addEventListener('scroll', handleScroll);
-        }
-        return () => {
-            if (scrollEl) {
-                scrollEl.removeEventListener('scroll', handleScroll);
-            }
-        };
-    }, [pathname, isOverviewPage]);
+    //         setIsScrolled(scrollTop > 0);
+    //     };
+    //     const scrollEl = scrollContainerRef.current;
+
+    //     if (scrollEl) {
+    //         scrollEl.addEventListener('scroll', handleScroll);
+    //     }
+    //     return () => {
+    //         if (scrollEl) {
+    //             scrollEl.removeEventListener('scroll', handleScroll);
+    //         }
+    //     };
+    // }, [pathname, isOverviewPage]);
 
     if (isLoading || !artistData) {
         return <DetailSkeleton />;
     }
 
     return (
-        <div className="mx-auto max-w-screen-2xl px-2" ref={scrollContainerRef}>
-            <div
-                className="sticky top-0 z-10"
-                style={{
-                    background: token.colorBgContainer,
+        <div
+            className="h-full overflow-auto"
+            style={{
+                background: token.colorBgLayout,
+            }}
+        >
+            <PageContainer
+                title={false}
+                header={{
+                    breadcrumb: {
+                        items: breadcrumb,
+                    },
                 }}
             >
-                <Link
-                    href={APP_ROUTES.ARTISTS}
-                    className="flex w-fit items-center gap-1 py-2 hover:underline"
+                <div
+                    className="sticky top-0 z-10 rounded-lg px-4 py-2"
+                    style={{
+                        background: token.colorBgContainer,
+                    }}
+                    onScroll={(e) => {
+                        const scrollTop =
+                            (e.target as HTMLDivElement).scrollTop || 0;
+                        setIsScrolled(scrollTop > 0);
+                    }}
                 >
-                    <ArrowLeft size={SIZE_ICON_SMALL} />
-                    {messages('artist.back')}
-                </Link>
-                <AppHeaderPage
-                    imageSrc={artistData?.picture as string}
-                    isScrolled={isScroll}
-                >
-                    <ItemHeaderPage
-                        name={messages('artist.name')}
-                        value={artistData.name}
-                    />
-                    <ItemHeaderPage
-                        name={messages('release.label')}
-                        value={artistData?.releaseCount?.toString()}
-                    />
-                    <ItemHeaderPage
-                        name={messages('track.label')}
-                        value={artistData?.trackCount?.toString()}
-                    />
-                </AppHeaderPage>
-                <div>
-                    <Tabs
-                        activeKey={tabKey}
-                        className="tab-release-detail"
-                        items={items}
-                    />
+                    <AppHeaderPage
+                        imageSrc={artistData?.picture as string}
+                        isScrolled={isScroll}
+                    >
+                        <ItemHeaderPage
+                            name={messages('artist.name')}
+                            value={artistData.name}
+                        />
+                        <ItemHeaderPage
+                            name={messages('release.label')}
+                            value={artistData?.releaseCount?.toString()}
+                        />
+                        <ItemHeaderPage
+                            name={messages('track.label')}
+                            value={artistData?.trackCount?.toString()}
+                        />
+                    </AppHeaderPage>
+                    <div>
+                        <Tabs
+                            activeKey={tabKey}
+                            className="tab-release-detail"
+                            items={items}
+                        />
+                    </div>
                 </div>
-            </div>
-            <div>{children}</div>
+                <div>{children}</div>
+            </PageContainer>
         </div>
     );
 }

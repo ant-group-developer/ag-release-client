@@ -162,7 +162,6 @@ export default function ImageListUpload({
                         justifyContent: 'center',
                         zIndex: 10,
                         borderRadius: '6px',
-                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
                         backdropFilter: 'blur(10px)',
                     }}
                 >

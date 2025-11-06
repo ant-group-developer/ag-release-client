@@ -174,7 +174,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
             key: 'isrc',
             dataIndex: 'isrc',
             align: 'left',
-            width: 60,
+            width: 80,
             render: (_, record) => (
                 <CopyText text={record?.isrc as string}>
                     <span className="truncate"> {record?.isrc} </span>
