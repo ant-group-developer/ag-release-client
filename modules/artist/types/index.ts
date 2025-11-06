@@ -32,4 +32,5 @@ export interface ArtistProfileData extends CommonAttribute {
 
 export interface ArtistDataFilter extends CommonParams {
     artistId?: string;
+    idInclude?: string;
 }

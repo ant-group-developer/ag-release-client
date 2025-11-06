@@ -1,11 +1,11 @@
 import AppFilter from '@/components/ui/antd-form/app-filter';
-import DateRangePicker from '@/components/ui/input/date-range-picker';
 import ArtistSelect from '@/components/ui/select/artist-select';
-import GenresSelect from '@/components/ui/select/genres-select';
+import LabelSelect from '@/components/ui/select/label-select';
+import ReleasesSelect from '@/components/ui/select/releases-select';
+import TracksSelect from '@/components/ui/select/tracks-select';
 import { arrayFromString, getDateRange } from '@/helpers/array';
-import { getIntlCodeByReleaseStatus } from '@/helpers/intl';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
-import { useGetListSimpleReleaseTypes } from '@/modules/release-types/hooks/use-get-list-simple-release-types';
+import { useGetListDspSimple } from '@/modules/dsp/hooks/use-get-list-simple-dsp';
 import {
     ProForm,
     ProFormSelect,
@@ -13,45 +13,37 @@ import {
 } from '@ant-design/pro-components';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
-import { RELEASES_COLUMNS_DISPLAY, RELEASES_STATUS } from '../../enums';
-import { ReleasesDataFilter } from '../../types';
+import { RevenueDataFilter } from '../../types';
 
 type Props = {
-    dataFilter: ReleasesDataFilter;
-    onChangeFilter: OnChangeFilter<ReleasesDataFilter>;
+    dataFilter: RevenueDataFilter;
+    onChangeFilter: OnChangeFilter<RevenueDataFilter>;
     canClearFilter: boolean;
     dataUpdatedAt: number | null;
     removeFilter: RemoveFilter;
     handleRefresh: () => void;
-    visibleColumn?: RELEASES_COLUMNS_DISPLAY[];
-    handleChangeVisibleColumns?: (columns: RELEASES_COLUMNS_DISPLAY[]) => void;
 };
 
-export default function ReleasesHeaderV2({
+export default function RevenueHeaderV2({
     dataFilter,
     onChangeFilter,
     canClearFilter,
     dataUpdatedAt,
     removeFilter,
     handleRefresh,
-    visibleColumn,
-    handleChangeVisibleColumns,
 }: Props) {
-    // const { layoutTable, toggleLayoutTable } = useTableLayoutToggle();
     const [form] = ProForm.useForm();
     const messages = useTranslations();
-    const { releaseTypesData } = useGetListSimpleReleaseTypes();
-    const releaseStatus = Object.values(RELEASES_STATUS).map((item) => ({
-        label: messages(getIntlCodeByReleaseStatus(item)),
-        value: item,
-    }));
+
+    const { dspData, isFetching: isDspFetching } = useGetListDspSimple();
 
     const initialValue = {
         ...dataFilter,
-        albumFormatId: arrayFromString(dataFilter?.albumFormatId),
+        releaseId: arrayFromString(dataFilter?.releaseId),
         artistId: arrayFromString(dataFilter?.artistId),
-        status: arrayFromString(dataFilter?.status),
-        genres: arrayFromString(dataFilter?.genres),
+        trackId: arrayFromString(dataFilter?.trackId),
+        labelId: arrayFromString(dataFilter?.labelId),
+        dspId: arrayFromString(dataFilter?.dspId),
         dateCreated: getDateRange(
             dataFilter?.startCreatedAt,
             dataFilter?.endCreatedAt
@@ -85,7 +77,7 @@ export default function ReleasesHeaderV2({
 
     useEffect(() => {
         form.setFieldsValue(initialValue);
-    }, [JSON.stringify(dataFilter)]);
+    }, [dataFilter, form]);
 
     return (
         <div className="app-header mb-4">
@@ -101,18 +93,7 @@ export default function ReleasesHeaderV2({
                         value: messages('common.keyword').toLowerCase(),
                     })}
                 />
-                <ProFormSelect
-                    name="albumFormatId"
-                    label={messages('releaseType.label')}
-                    options={releaseTypesData?.map((item) => ({
-                        value: item?.id,
-                        label: item?.name,
-                    }))}
-                    mode="multiple"
-                    fieldProps={{
-                        maxTagCount: 2,
-                    }}
-                />
+
                 <ProForm.Item name="artistId" label={messages('artist.label')}>
                     <ArtistSelect
                         showCreate={false}
@@ -124,47 +105,45 @@ export default function ReleasesHeaderV2({
                     />
                 </ProForm.Item>
 
-                <ProFormSelect
-                    name="status"
-                    label={messages('common.status')}
-                    options={releaseStatus}
-                    mode="multiple"
-                    fieldProps={{
-                        maxTagCount: 2,
-                    }}
-                />
-
-                <ProForm.Item name="genres" label={messages('genre.label')}>
-                    <GenresSelect
+                <ProForm.Item
+                    name="releaseId"
+                    label={messages('release.label')}
+                >
+                    <ReleasesSelect
+                        placeholder={messages('placeholder.selectRelease')}
                         allowClear
-                        placeholder={messages(
-                            'release.placeholder.selectGenres'
-                        )}
                         mode="multiple"
                         maxTagCount={2}
                     />
                 </ProForm.Item>
 
-                <ProForm.Item
-                    name="dateCreated"
-                    label={messages('common.dateCreated')}
-                >
-                    <DateRangePicker
-                        className="w-full"
+                <ProForm.Item name="trackId" label={messages('track.label')}>
+                    <TracksSelect
+                        placeholder={messages('placeholder.selectTrack')}
                         allowClear
-                        placement="topLeft"
+                        mode="multiple"
+                        maxTagCount={2}
                     />
                 </ProForm.Item>
-                <ProForm.Item
-                    name="dateUpdated"
-                    label={messages('common.dateUpdated')}
-                >
-                    <DateRangePicker
+
+                <ProForm.Item name="labelId" label={messages('label.label')}>
+                    <LabelSelect
+                        placeholder={messages('placeholder.selectLabel')}
                         allowClear
-                        className="w-full"
-                        placement="topLeft"
+                        mode="multiple"
+                        maxTagCount={2}
                     />
                 </ProForm.Item>
+
+                <ProFormSelect
+                    name={'dspId'}
+                    label="DSP"
+                    placeholder={messages('placeholder.selectDsp')}
+                    options={dspData?.map((item) => ({
+                        label: item?.name,
+                        value: item?.id,
+                    }))}
+                />
             </AppFilter>
         </div>
     );

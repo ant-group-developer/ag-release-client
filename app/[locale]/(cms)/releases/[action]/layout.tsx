@@ -233,17 +233,17 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         };
     }, [isCoreDetailPage]);
 
+    const currentItem = items.find((item) => item.key === activeTab);
     const breadcrumbItems = [
         {
-            title: messages('dashboard.label'),
-            href: APP_ROUTES.DASHBOARD,
-        },
-        {
-            title: messages('release.label'),
+            title: messages('release.releases'),
             href: APP_ROUTES.RELEASES,
         },
         {
-            title: releaseData?.title,
+            title: releaseData?.title || messages('common.create'),
+        },
+        {
+            title: currentItem?.label,
         },
     ];
 
@@ -262,7 +262,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     <DetailSkeleton />
                 </div>
             ) : (
-                <div className="mx-auto flex h-[calc(100vh-4rem)] max-w-screen-xl flex-1 flex-col">
+                <div className="mx-auto flex h-[calc(100vh-4rem)] flex-1 flex-col px-8">
                     <Breadcrumb items={breadcrumbItems} className="!py-4" />
                     <div
                         className="sticky top-0 z-10 mb-4 rounded-lg p-4"

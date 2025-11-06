@@ -518,10 +518,15 @@
         "searchPlaceholder": "Search"
     },
     "placeholder": {
+        "select": "Select {value}",
+        "selectRelease": "Select release",
+        "selectTrack": "Select track",
+        "selectDsp": "Select dsp",
         "dragAndDropAudio": "Drag and drop audio file here!",
         "dragAndDropFile": "Drag and drop file here!",
         "selectArtist": "Select artist",
         "selectRegion": "Select region",
+        "selectLabel": "Select label",
         "supportFormats": "Support formats: {accept}",
         "searchBy": "Search by {value}",
         "filterBy": "Filter by ..."
@@ -1035,6 +1040,7 @@
         }
     },
     "artist": {
+        "artists": "Artists",
         "label": "Artist",
         "create": "Create artist",
         "name": "Artist name",
@@ -1072,6 +1078,7 @@
     },
 
     "label": {
+        "labels": "Labels",
         "label": "Label",
         "create": "Create label",
         "name": "Label name",

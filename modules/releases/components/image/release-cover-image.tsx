@@ -1,5 +1,4 @@
 import ImageFallback from '@/components/ui/image/image-fallback';
-import { FALLBACK_IMAGE } from '@/constants/common';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { useIntersectionObserver } from '@uidotdev/usehooks';
 import { Skeleton } from 'antd';
@@ -11,7 +10,7 @@ type Props = {
 };
 
 export default function ReleaseCoverImage({ data }: Props) {
-    const [loaded, setLoaded] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const imgFileId =
         data?.coverArtThumbnails?.['75x75'] ??
         data?.coverArtThumbnails?.original;
@@ -22,42 +21,43 @@ export default function ReleaseCoverImage({ data }: Props) {
         threshold: 0,
     });
 
-    const { linkReadFile, isFetching } = useGetLinkReadFile(
-        imgFileId as string,
-        {
-            enabled: !!entry?.isIntersecting,
-        }
-    );
+    const { linkReadFile } = useGetLinkReadFile(imgFileId as string, {
+        enabled: !!entry?.isIntersecting,
+    });
 
     useEffect(() => {
-        if (linkReadFile || linkReadFile === '') {
-            setLoaded(false);
+        if (imgFileId && linkReadFile) {
+            setIsLoading(false);
         }
-    }, [linkReadFile]);
+        if (!imgFileId) {
+            const timeout = setTimeout(() => setIsLoading(false), 1000);
+            return () => clearTimeout(timeout);
+        }
+    }, [imgFileId, linkReadFile, isLoading]);
 
-    return (
-        <div ref={ref}>
-            {/* Skeleton */}
-            {!loaded && (
+    if (isLoading) {
+        return (
+            <div ref={ref}>
                 <Skeleton.Node
                     active
                     className="aspect-square !h-10 !w-10 !rounded-lg"
                 />
-            )}
+            </div>
+        );
+    }
 
+    return (
+        <div ref={ref}>
             {/* Image */}
 
             <ImageFallback
-                fallbackSrc={FALLBACK_IMAGE}
                 src={linkReadFile}
                 alt="cover"
                 width={40}
                 height={40}
-                className={`aspect-square rounded-lg object-cover transition-opacity duration-300 ${
-                    loaded ? 'opacity-100' : 'opacity-0'
-                }`}
-                onLoad={() => setLoaded(true)}
-                onError={() => setLoaded(true)}
+                className={`aspect-square rounded-lg object-cover transition-opacity duration-300`}
+                onLoad={() => setIsLoading(false)}
+                onError={() => setIsLoading(false)}
             />
         </div>
     );

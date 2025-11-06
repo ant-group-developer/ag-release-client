@@ -52,16 +52,6 @@ export default function DistributionTable({
                 return (
                     <div className="flex items-center gap-4">
                         <div className="flex-shrink-0 cursor-pointer">
-                            {/* <ImageFallback
-                                fallbackSrc={FALLBACK_IMAGE}
-                                src={
-                                    record?.coverArtThumbnails?.['75x75'] ?? ''
-                                }
-                                alt="genre"
-                                width={40}
-                                height={40}
-                                className="aspect-square rounded-lg object-cover"
-                            /> */}
                             <ReleaseCoverImage data={record} />
                         </div>
 

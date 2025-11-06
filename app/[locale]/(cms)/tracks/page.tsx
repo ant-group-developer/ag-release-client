@@ -77,18 +77,6 @@ export default function Tracks({}: Props) {
         columnWidth: 30,
     };
 
-    // useEffect(() => {
-    //     if (typeof window !== 'undefined') {
-    //         sessionStorage.setItem(
-    //             SESSION_STORAGE_KEY.VISIBLE_COLUMNS_TRACKS,
-    //             JSON.stringify({
-    //                 value: visibleColumns,
-    //                 timestamp: dayjs().toISOString(),
-    //             })
-    //         );
-    //     }
-    // }, [visibleColumns]);
-
     return (
         <div
             className="min-h-[calc(100vh-64px)]"

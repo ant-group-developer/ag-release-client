@@ -4,20 +4,22 @@ import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER, SCREEN } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
-import useModalStore from '@/hooks/use-modal';
-import RevenueHeader from '@/modules/revenue/components/header';
+import RevenueHeaderV2 from '@/modules/revenue/components/header/index-v2';
 import RevenueTable from '@/modules/revenue/components/table';
 import { useGetListRevenue } from '@/modules/revenue/hooks/use-get-list-tracks';
 import { RevenueDataFilter } from '@/modules/revenue/types';
+import { PageContainer } from '@ant-design/pro-components';
 
 import { theme } from 'antd';
+import { useTranslations } from 'next-intl';
 
 type Props = {};
 
 export default function Revenue({}: Props) {
     // State - hook
     const { token } = theme.useToken();
-    const typeModal = useModalStore((state) => state.typeModal);
+    // const typeModal = useModalStore((state) => state.typeModal);
+    const messages = useTranslations();
     const {
         dataFilter,
         onSearch,
@@ -53,43 +55,62 @@ export default function Revenue({}: Props) {
     };
 
     return (
-        <div>
-            <div className="app-header">
-                <RevenueHeader
+        <div
+            className="min-h-[calc(100vh-64px)]"
+            style={{
+                backgroundColor: token?.colorBgLayout,
+            }}
+        >
+            <PageContainer title={messages('common.revenue')}>
+                <div className="app-header">
+                    {/* <RevenueHeader
+                        dataFilter={dataFilter}
+                        onChangeFilter={onChangeFilter}
+                        canClearFilter={canClearFilter}
+                        removeFilter={removeFilter}
+                        handleRefresh={handleRefresh}
+                        dataUpdatedAt={dataUpdatedAt}
+                    /> */}
+
+                    <RevenueHeaderV2
+                        dataFilter={dataFilter}
+                        onChangeFilter={onChangeFilter}
+                        canClearFilter={canClearFilter}
+                        removeFilter={removeFilter}
+                        handleRefresh={handleRefresh}
+                        dataUpdatedAt={dataUpdatedAt}
+                    />
+                </div>
+
+                <RevenueTable
+                    sticky
+                    dataSource={revenueData.items}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: revenueData.metadata.currentPage,
+                    }}
+                    loading={isTrackDataLoading}
+                    onChange={onChangeSort}
                     dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
-                    dataUpdatedAt={dataUpdatedAt}
+                    scroll={{ x: SCREEN.XXL }}
                 />
-            </div>
 
-            <RevenueTable
-                sticky
-                dataSource={revenueData.items}
-                pagination={{
-                    pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                    current: revenueData.metadata.currentPage,
-                }}
-                loading={isTrackDataLoading}
-                onChange={onChangeSort}
-                dataFilter={dataFilter}
-                scroll={{ x: SCREEN.XXL }}
-            />
-
-            <AppPagination
-                className="border-b"
-                align="end"
-                current={revenueData?.metadata?.currentPage}
-                pageSize={dataFilter?.pageSize}
-                total={revenueData?.metadata?.totalItems}
-                onChange={onChangePage}
-                showTotalText
-                showSizeChanger
-                showQuickJumper
-                pageSizeOptions={PAGE_SIZE_OPTIONS}
-            />
+                <AppPagination
+                    className="rounded-b-lg"
+                    style={{
+                        backgroundColor: token.colorBgContainer,
+                    }}
+                    align="end"
+                    current={revenueData?.metadata?.currentPage}
+                    pageSize={dataFilter?.pageSize}
+                    total={revenueData?.metadata?.totalItems}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
+                />
+            </PageContainer>
         </div>
     );
 }

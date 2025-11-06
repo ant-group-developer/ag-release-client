@@ -773,6 +773,10 @@
         },
 
         "placeholder": {
+            "select": "Chọn {value}",
+            "selectRelease": "Chọn phát hành",
+            "selectTrack": "Chọn bài hát",
+            "selectDsp": "Chọn nền tảng",
             "selectArtist": "Chọn nghệ sĩ",
             "selectSubArtist": "Chọn nghệ sĩ phụ",
             "selectGenres": "Chọn thể loại",
@@ -1038,6 +1042,7 @@
     },
 
     "artist": {
+        "artists": "Nghệ sĩ",
         "label": "Nghệ sĩ",
         "create": "Tạo nghệ sĩ",
         "name": "Tên nghệ sĩ",
@@ -1075,6 +1080,7 @@
     },
 
     "label": {
+        "labels": "Labels",
         "label": "Label",
         "create": "Tạo label",
         "name": "Tên label",

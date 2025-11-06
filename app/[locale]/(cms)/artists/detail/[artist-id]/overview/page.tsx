@@ -18,7 +18,6 @@ export default function Overview({}: Props) {
     const artistId = params['artist-id'];
     const { artistData } = useGetDetailArtist(artistId as string);
     const { token } = theme.useToken();
-
     const statStyles = {
         backgroundColor: token.colorBgContainer,
     };

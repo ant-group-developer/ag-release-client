@@ -1,16 +1,14 @@
 'use client';
-import { SIZE_ICON_SMALL } from '@/constants/common';
+import { PageContainer } from '@ant-design/pro-components';
 import { Divider, Skeleton } from 'antd';
-import { ArrowLeft } from 'lucide-react';
 
 interface DetailSkeletonProps {}
 
 export default function DetailSkeleton({}: DetailSkeletonProps) {
     return (
-        <div className="mx-auto max-w-screen-2xl px-2">
+        <PageContainer>
             <div className="sticky top-0 z-10">
-                <div className="flex w-fit items-center gap-1 py-2">
-                    <ArrowLeft size={SIZE_ICON_SMALL} />
+                <div className="flex h-16 w-fit items-center gap-1 py-2">
                     <Skeleton.Input active size="small" style={{ width: 80 }} />
                 </div>
 
@@ -29,6 +27,6 @@ export default function DetailSkeleton({}: DetailSkeletonProps) {
                     <Skeleton.Node active={true} className="!h-full !w-full" />
                 </div>
             </div>
-        </div>
+        </PageContainer>
     );
 }

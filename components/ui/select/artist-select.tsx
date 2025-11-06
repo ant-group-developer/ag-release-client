@@ -1,3 +1,4 @@
+import { arrayToString } from '@/helpers/array';
 import { useGetArtistSimpleList } from '@/modules/artist/hooks/use-get-artist-simple-list';
 import { ArtistDataSimple } from '@/modules/artist/types';
 import { Avatar, Button, Empty, Select, SelectProps, Spin } from 'antd';
@@ -33,16 +34,17 @@ export default function ArtistSelect({
     } = useGetArtistSimpleList({
         pageSize: 50,
         keyword: searchKeyword,
+        idInclude: props?.value ? arrayToString(props?.value) : '',
     });
 
-    const spotify = artistsData?.map((item) => {
-        item.artistProfiles?.map((artistProfile) => {
-            if (artistProfile.name == 'Spotify') {
-                return artistProfile;
-            }
-            return;
-        });
-    });
+    // const spotify = artistsData?.map((item) => {
+    //     item.artistProfiles?.map((artistProfile) => {
+    //         if (artistProfile.name == 'Spotify') {
+    //             return artistProfile;
+    //         }
+    //         return;
+    //     });
+    // });
 
     const debounceSearch = useMemo(
         () =>
@@ -57,15 +59,15 @@ export default function ArtistSelect({
         id: item.id,
         value: item.id,
         label: (
-            <div className="grid grid-cols-3 items-center gap-1">
+            <div className="flex items-center gap-1">
                 <span className="truncate">
                     <CustomTooltip title={item.name}>{item.name}</CustomTooltip>
                 </span>
-                <div className="flex gap-1">
+                {/* <div className="flex gap-1">
                     <span>{item?.country?.name}</span>
                     {item?.country?.name ? '|' : ''}
                     <span>{item?.genre?.name}</span>
-                </div>
+                </div> */}
                 {/* <div className="flex justify-end gap-1">
                     <Avatar
                         size={26}
@@ -117,7 +119,7 @@ export default function ArtistSelect({
                         <span>{item?.genre?.name}</span>
                     </div>
                 </div>
-                <div className="flex justify-end gap-1">
+                <div className="mr-2 flex justify-end gap-1">
                     <Avatar
                         size={26}
                         src="/icon/spotify.png"
