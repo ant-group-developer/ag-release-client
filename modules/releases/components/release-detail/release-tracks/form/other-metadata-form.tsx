@@ -130,7 +130,7 @@ export default function OtherMetadataForm({ trackData }: Props) {
         <ConfigProvider componentDisabled={isReadMode}>
             <FormProvider {...formMethods}>
                 <form
-                    className="grid grid-cols-2 gap-4 rounded-lg bg-white p-4"
+                    className="grid grid-cols-2 gap-4 rounded-lg p-4"
                     onSubmit={handleSubmit(() => {})}
                 >
                     <FormItem

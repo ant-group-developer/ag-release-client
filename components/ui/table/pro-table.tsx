@@ -1,7 +1,7 @@
 import { SCREEN } from '@/enums/common';
 import { cn } from '@/helpers/common';
 import { ProTable, ProTableProps } from '@ant-design/pro-components';
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, theme } from 'antd';
 
 export type AppProTableProps<RecordType extends object> = ProTableProps<
     RecordType,
@@ -13,6 +13,7 @@ export default function AppProTable<RecordType extends object>({
     search = false,
     ...props
 }: AppProTableProps<RecordType>) {
+    const { token } = theme.useToken();
     return (
         <ConfigProvider
             theme={{
@@ -46,6 +47,7 @@ export default function AppProTable<RecordType extends object>({
                 }
                 cardProps={{
                     bodyStyle: { padding: 0 },
+                    style: { backgroundColor: token.colorBgContainer },
                     ...props?.cardProps,
                 }}
                 className={cn(

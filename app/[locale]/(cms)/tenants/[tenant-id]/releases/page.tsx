@@ -135,7 +135,6 @@ export default function Releases({}: Props) {
             {layoutTable === LAYOUT_TABLE.LIST && (
                 <ReleasesTable
                     sticky={{ offsetHeader: 216 }}
-                    visibleColumns={visibleColumns}
                     dataSource={releasesData?.items}
                     loading={isReleaseDataLoading}
                     onChangeFilter={onChangeFilter}

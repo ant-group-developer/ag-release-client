@@ -9,6 +9,7 @@ type Props = {
     headerButtonProps?: ButtonProps;
     children: React.ReactNode;
     className?: string;
+    style?: React.CSSProperties;
 };
 
 export default function AppCard({
@@ -18,9 +19,13 @@ export default function AppCard({
     headerButtonProps,
     children,
     className,
+    style,
 }: Props) {
     return (
-        <div className={cn('flex flex-col rounded-lg border', className)}>
+        <div
+            className={cn('flex flex-col rounded-lg border', className)}
+            style={style}
+        >
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 p-4 py-2 text-base font-bold">
                     {icon} {title}

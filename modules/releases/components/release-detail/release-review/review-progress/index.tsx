@@ -1,4 +1,5 @@
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import MetadataInfoItem from '../metadata-info/metadata-info-item';
 
@@ -7,13 +8,16 @@ type Props = {};
 export default function ReviewProgress({}: Props) {
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
+    const { token } = theme.useToken();
 
     return (
         <div>
             <div className="grid grid-cols-3 gap-2">
                 <div>
                     <MetadataInfoItem
-                        className="!bg-white"
+                        style={{
+                            backgroundColor: token.colorBgContainer,
+                        }}
                         label={messages('release.releaseDate')}
                     >
                         <p className="pt-1">
@@ -25,7 +29,9 @@ export default function ReviewProgress({}: Props) {
 
                 <div>
                     <MetadataInfoItem
-                        className="!bg-white"
+                        style={{
+                            backgroundColor: token.colorBgContainer,
+                        }}
                         label={messages('release.releaseTime')}
                     >
                         <p className="pt-1">
@@ -37,7 +43,9 @@ export default function ReviewProgress({}: Props) {
 
                 <div>
                     <MetadataInfoItem
-                        className="!bg-white"
+                        style={{
+                            backgroundColor: token.colorBgContainer,
+                        }}
                         label={messages('timezone.label')}
                     >
                         <p className="pt-1">

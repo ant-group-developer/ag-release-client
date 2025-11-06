@@ -11,7 +11,6 @@ import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { UpdateVariables } from '@/types/api';
 import { Button, Radio } from 'antd';
-import Title from 'antd/lib/typography/Title';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useMemo } from 'react';
@@ -71,10 +70,10 @@ export default function ReleaseArtistSection({ debouncedUpdate }: Props) {
                 {
                     key: 'Release Artists',
                     label: (
-                        <Title level={5} className="!mb-0">
+                        <span className="text-base font-semibold">
                             {' '}
                             {messages('releaseArtist.label')}{' '}
-                        </Title>
+                        </span>
                     ),
                     children: (
                         <div className="grid grid-cols-3 items-center gap-5">

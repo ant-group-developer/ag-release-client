@@ -1,10 +1,12 @@
 'use client';
 
-import ArtistProfileCard from '@/modules/artist/components/artist-detail/overview/card/artist-profile';
-import CountAnalysisCard from '@/modules/artist/components/artist-detail/overview/card/count-analysis-card';
+import { SIZE_ICON } from '@/constants/common';
 import RevenueAnalysisCard from '@/modules/artist/components/artist-detail/overview/card/revenue-analysis';
+import StatItem from '@/modules/artist/components/artist-detail/overview/card/stat-item';
 import StreamsAnalysisCard from '@/modules/artist/components/artist-detail/overview/card/streams-analysis';
 import { useGetDetailArtist } from '@/modules/artist/hooks/use-get-detail-artist';
+import { theme } from 'antd';
+import { Disc2, DiscAlbum, Music4 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 
@@ -15,19 +17,47 @@ export default function Overview({}: Props) {
     const params = useParams();
     const artistId = params['artist-id'];
     const { artistData } = useGetDetailArtist(artistId as string);
+    const { token } = theme.useToken();
+
+    const statStyles = {
+        backgroundColor: token.colorBgContainer,
+    };
 
     return (
         <div className="py-4">
             <div className="grid grid-cols-3 gap-4">
-                <CountAnalysisCard
+                <StatItem
+                    iconBgColor="bg-green-50"
                     title={messages('release.count')}
-                    number={artistData?.releaseCount}
+                    value={artistData?.releaseCount}
+                    icon={
+                        <DiscAlbum
+                            size={SIZE_ICON}
+                            className="text-green-500"
+                        />
+                    }
+                    style={statStyles}
                 />
-                <CountAnalysisCard
+
+                <StatItem
+                    iconBgColor="bg-blue-50"
                     title={messages('track.count')}
-                    number={artistData?.trackCount}
+                    value={artistData?.trackCount}
+                    icon={<Disc2 size={SIZE_ICON} className="text-blue-500" />}
+                    style={statStyles}
                 />
-                <ArtistProfileCard artistData={artistData} />
+
+                <StatItem
+                    iconBgColor="bg-purple-50"
+                    title={messages('artist.profiles')}
+                    value={artistData?.artistProfiles?.length}
+                    icon={
+                        <Music4 size={SIZE_ICON} className="text-purple-500" />
+                    }
+                    style={statStyles}
+                />
+
+                {/* <ArtistProfileCard artistData={artistData} /> */}
             </div>
             <div className="mt-4 grid grid-cols-2 gap-4">
                 <StreamsAnalysisCard />

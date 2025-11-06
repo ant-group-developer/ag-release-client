@@ -47,7 +47,10 @@ export default function AnalyticsLayout({ children }: PropsWithChildren) {
         },
     ];
     return (
-        <div className="min-h-screen bg-[#f5f5f5]">
+        <div
+            className="min-h-screen"
+            style={{ backgroundColor: token.colorBgLayout }}
+        >
             <PageContainer
                 title={messages('analytics.label')}
                 extra={

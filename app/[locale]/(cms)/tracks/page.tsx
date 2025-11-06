@@ -90,7 +90,12 @@ export default function Tracks({}: Props) {
     // }, [visibleColumns]);
 
     return (
-        <div className="min-h-[calc(100vh-64px)] bg-[#f5f5f5]">
+        <div
+            className="min-h-[calc(100vh-64px)]"
+            style={{
+                backgroundColor: token.colorBgLayout,
+            }}
+        >
             <PageContainer title={messages('common.tracks')}>
                 {/* <div className="app-header">
                     <TracksHeader
@@ -151,7 +156,8 @@ export default function Tracks({}: Props) {
                 )}
 
                 <AppPagination
-                    className="rounded-b-md border-b bg-white"
+                    className="rounded-b-md"
+                    style={{ backgroundColor: token.colorBgContainer }}
                     align="end"
                     current={tracksData?.metadata?.currentPage}
                     pageSize={dataFilter?.pageSize}

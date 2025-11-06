@@ -36,12 +36,13 @@ export default function Distribution({}: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
 
     // apis
-    const { releasesData, isFetching, dataUpdatedAt } = useGetListReleases(
-        dataFilter as ReleasesDataFilter
-    );
+    const { releasesData, isFetching, dataUpdatedAt, refetch } =
+        useGetListReleases(dataFilter as ReleasesDataFilter);
 
     // func
-    const handleRefresh = () => {};
+    const handleRefresh = () => {
+        refetch();
+    };
     const handleSelectedRow = (selectedRowKeys: Key[]) => {
         setSelectedRow(selectedRowKeys);
     };
@@ -102,6 +103,12 @@ export default function Distribution({}: Props) {
                     }}
                     loading={isFetching}
                     rowSelection={rowSelection}
+                    options={{
+                        fullScreen: true,
+                        reload: () => {
+                            handleRefresh();
+                        },
+                    }}
                 />
 
                 {typeModal === TYPE_MODAL_DISTRIBUTION.DETAIL && (

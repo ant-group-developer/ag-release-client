@@ -20,7 +20,7 @@ export default function LabelsHeader({ dataFilter, onSearch }: Props) {
     const { hasPermission } = usePermission();
 
     return (
-        <AppHeader className="app-header px-0 pb-3">
+        <AppHeader className="app-header border-b-0 px-0 pb-3">
             <AppHeaderGroup>
                 <div>
                     <AppSearch

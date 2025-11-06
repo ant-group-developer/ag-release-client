@@ -46,9 +46,9 @@ export default function GenreSection({
                 {
                     key: 'genre',
                     label: (
-                        <Title level={5} className="!mb-0">
+                        <span className="text-base font-semibold">
                             {messages('genre.label')}
-                        </Title>
+                        </span>
                     ),
                     children: (
                         <div className="grid grid-cols-2 gap-4">

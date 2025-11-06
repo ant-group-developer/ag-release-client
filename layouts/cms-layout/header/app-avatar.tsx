@@ -24,7 +24,10 @@ function AppAvatar({}: Props) {
 
     const { token } = antdTheme.useToken();
 
-    const currentLocale = locale === LOCALE.VI ? 'Tiếng việt' : 'English';
+    const currentLocale =
+        locale === LOCALE.VI
+            ? messages('language.vietnamese')
+            : messages('language.english');
 
     let themeIntl = '';
     switch (themeMode) {

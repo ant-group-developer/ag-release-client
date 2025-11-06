@@ -35,7 +35,6 @@ import ReleaseCoverImage from '../image/release-cover-image';
 
 type Props = Omit<AppProTableProps<ReleasesData>, 'columns'> & {
     dataFilter: ReleasesDataFilter;
-    visibleColumns: RELEASES_COLUMNS_DISPLAY[];
     onChangeFilter: OnChangeFilter<ReleasesDataFilter>;
     pagination: {
         pageSize: number;
@@ -45,7 +44,6 @@ type Props = Omit<AppProTableProps<ReleasesData>, 'columns'> & {
 
 export default function ReleasesTable({
     onChangeFilter,
-    visibleColumns,
     dataFilter,
     ...props
 }: Props) {

@@ -253,7 +253,8 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
 
     return (
         <div
-            className="flex h-full overflow-auto bg-[#f5f5f5]"
+            className="flex h-full overflow-auto"
+            style={{ backgroundColor: token.colorBgLayout }}
             ref={scrollContainerRef}
         >
             {isReleaseDataLoading || !releaseData ? (

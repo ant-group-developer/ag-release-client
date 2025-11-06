@@ -3,7 +3,6 @@ import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { Input } from 'antd';
-import Title from 'antd/lib/typography/Title';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useMemo } from 'react';
@@ -38,10 +37,10 @@ export default function CodesSection({ debouncedUpdate }: Props) {
                 {
                     key: 'codes',
                     label: (
-                        <Title level={5} className="!mb-0">
+                        <span className="text-base font-semibold">
                             {' '}
                             {messages('common.code')}{' '}
-                        </Title>
+                        </span>
                     ),
                     children: (
                         <div className="grid grid-cols-3 items-center gap-5">

@@ -6,7 +6,6 @@ import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
-import Title from 'antd/lib/typography/Title';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useMemo } from 'react';
@@ -44,10 +43,10 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                 {
                     key: 'Genre & Language',
                     label: (
-                        <Title level={5} className="!mb-0">
+                        <span className="text-base font-semibold">
                             {messages('genre.label')} &{' '}
                             {messages('language.label')}
-                        </Title>
+                        </span>
                     ),
                     children: (
                         <div className="grid grid-cols-3 items-center gap-5">

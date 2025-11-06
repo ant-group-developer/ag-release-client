@@ -1,5 +1,4 @@
 'use client';
-import AppContainer from '@/components/app-container';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -15,6 +14,7 @@ import { useDeleteArtist } from '@/modules/artist/hooks/use-delete-artist';
 import { useGetListArtist } from '@/modules/artist/hooks/use-get-list-artists';
 import { ArtistData, ArtistDataFilter } from '@/modules/artist/types';
 import { DeleteVariables } from '@/types/api';
+import { PageContainer } from '@ant-design/pro-components';
 
 import { useTranslations } from 'next-intl';
 
@@ -69,49 +69,52 @@ export default function Artists({}: Props) {
     };
 
     return (
-        <AppContainer title={messages('artist.label')}>
-            <ArtistsHeader dataFilter={dataFilter} onSearch={onSearch} />
-            <ArtistsTable
-                sticky
-                dataSource={artistsData?.items}
-                pagination={{
-                    pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                    current: artistsData.metadata.currentPage,
-                    total: artistsData.metadata.totalItems,
-                }}
-                loading={isFetching}
-                onChange={onChangeSort}
-                dataFilter={dataFilter}
-            />
-
-            {(typeModal === TYPE_MODAL_ARTIST.CREATE ||
-                typeModal === TYPE_MODAL_ARTIST.UPDATE) && (
-                <ArtistFormModal onCancel={closeModal} />
-            )}
-
-            {typeModal === TYPE_MODAL_ARTIST.DELETE && (
-                <AppConfirm
-                    open
-                    onOk={() => handleDeleteArtist()}
-                    onCancel={closeModal}
-                    modalTitle={`${messages('artist.delete')} `}
-                    paragraph={messages('delete.confirmMessage', {
-                        value: dataEdit?.name,
-                    })}
+        <div>
+            <PageContainer title={messages('artist.label')}>
+                <ArtistsHeader dataFilter={dataFilter} onSearch={onSearch} />
+                <ArtistsTable
+                    className="rounded-t-lg border"
+                    sticky
+                    dataSource={artistsData?.items}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: artistsData.metadata.currentPage,
+                        total: artistsData.metadata.totalItems,
+                    }}
+                    loading={isFetching}
+                    onChange={onChangeSort}
+                    dataFilter={dataFilter}
                 />
-            )}
 
-            <AppPagination
-                align="end"
-                current={artistsData?.metadata?.currentPage}
-                pageSize={dataFilter.pageSize}
-                total={artistsData?.metadata?.totalItems}
-                onChange={onChangePage}
-                showTotalText
-                showSizeChanger
-                showQuickJumper
-                pageSizeOptions={PAGE_SIZE_OPTIONS}
-            />
-        </AppContainer>
+                {(typeModal === TYPE_MODAL_ARTIST.CREATE ||
+                    typeModal === TYPE_MODAL_ARTIST.UPDATE) && (
+                    <ArtistFormModal onCancel={closeModal} />
+                )}
+
+                {typeModal === TYPE_MODAL_ARTIST.DELETE && (
+                    <AppConfirm
+                        open
+                        onOk={() => handleDeleteArtist()}
+                        onCancel={closeModal}
+                        modalTitle={`${messages('artist.delete')} `}
+                        paragraph={messages('delete.confirmMessage', {
+                            value: dataEdit?.name,
+                        })}
+                    />
+                )}
+
+                <AppPagination
+                    align="end"
+                    current={artistsData?.metadata?.currentPage}
+                    pageSize={dataFilter.pageSize}
+                    total={artistsData?.metadata?.totalItems}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
+                />
+            </PageContainer>
+        </div>
     );
 }

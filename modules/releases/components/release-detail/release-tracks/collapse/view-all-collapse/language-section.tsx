@@ -4,7 +4,6 @@ import LanguageSelect from '@/components/ui/select/language-select';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { ReleaseTrackSchema } from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
-import Title from 'antd/lib/typography/Title';
 import { useTranslations } from 'next-intl';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -45,9 +44,9 @@ export default function LanguageSection({
                 {
                     key: 'language',
                     label: (
-                        <Title level={5} className="!mb-0">
+                        <span className="text-base font-semibold">
                             {messages('language.label')}
-                        </Title>
+                        </span>
                     ),
                     children: (
                         <div className="grid grid-cols-2 gap-4">

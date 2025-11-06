@@ -13,7 +13,7 @@ import { ReleasesData } from '@/modules/releases/types';
 import { UpdateReleaseDraftPayload } from '@/modules/releases/types/payload';
 import { UpdateVariables } from '@/types/api';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DatePicker, Radio, TimePicker } from 'antd';
+import { DatePicker, Radio, theme, TimePicker } from 'antd';
 import dayjs from 'dayjs';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
@@ -38,7 +38,7 @@ type Props = {};
 
 export default function ReleaseSchedulingForm({}: Props) {
     const messages = useTranslations();
-
+    const { token } = theme.useToken();
     const formValues = useReleaseFormStore((state) => state.formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const { updateReleaseDraft } = useUpdateReleaseDraft();
@@ -117,7 +117,10 @@ export default function ReleaseSchedulingForm({}: Props) {
     }, []);
 
     return (
-        <div className="rounded-lg bg-white p-4">
+        <div
+            className="rounded-lg p-4"
+            style={{ backgroundColor: token.colorBgContainer }}
+        >
             <FormProvider {...formMethods}>
                 <form className="flex flex-col gap-4">
                     <div className="grid grid-cols-2 gap-6">

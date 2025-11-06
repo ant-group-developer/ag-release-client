@@ -25,6 +25,7 @@ export default function MapChart({ data, className }: Props) {
                     value-suffix="people"
                     size="md"
                     data={countData}
+                    backgroundColor="transparent"
                 />
             </div>
         </Card>

@@ -1,7 +1,7 @@
 import AppCard from '@/components/ant-music/app-card';
 import { cn } from '@/helpers/common';
 import { ArtistData } from '@/modules/artist/types';
-import { Button } from 'antd';
+import { Button, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
@@ -12,11 +12,15 @@ type Props = {
 export default function ArtistProfileCard({ artistData }: Props) {
     const messages = useTranslations();
     const artistProfiles = artistData?.artistProfiles;
+    const { token } = theme.useToken();
     return (
-        <AppCard title={messages('artist.profiles')}>
+        <AppCard
+            title={messages('artist.profiles')}
+            style={{ backgroundColor: token.colorBgContainer, border: 'none' }}
+        >
             <div
                 className={cn(
-                    'flex max-h-[245px] flex-col gap-2 overflow-y-auto rounded-md bg-zinc-100'
+                    'flex max-h-[245px] flex-col overflow-y-auto rounded-md'
                 )}
             >
                 {artistProfiles?.map((item, index) => {
@@ -25,11 +29,19 @@ export default function ArtistProfileCard({ artistData }: Props) {
                             <div
                                 key={item?.id}
                                 className={cn(
-                                    'flex cursor-pointer items-center justify-between rounded-md p-3 hover:bg-gray-200'
+                                    'flex cursor-pointer items-center justify-between p-3'
                                     // linked
                                     //     ? 'bg-green-500 text-white hover:bg-green-500'
                                     //     : 'bg-gray-100'
                                 )}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor =
+                                        token.colorFillAlter;
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor =
+                                        token.colorBgContainer;
+                                }}
                             >
                                 <div className="flex items-center gap-2">
                                     <Image
@@ -48,11 +60,9 @@ export default function ArtistProfileCard({ artistData }: Props) {
                                         onClick={() => {
                                             window.open(item?.url, '_blank');
                                         }}
-                                        type="text"
+                                        type="default"
                                         shape="round"
-                                        className={cn(
-                                            'group !bg-zinc-300/50 font-medium hover:!bg-zinc-300'
-                                        )}
+                                        className={cn('group font-medium')}
                                     >
                                         <span>
                                             <p className="flex items-center gap-2">

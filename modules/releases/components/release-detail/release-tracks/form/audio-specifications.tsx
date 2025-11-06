@@ -91,7 +91,7 @@ export default function AudioSpecifications({ trackData }: Props) {
     return (
         <ConfigProvider componentDisabled={isReadMode}>
             <FormProvider {...formMethods}>
-                <form className="space-y-4 rounded-lg bg-white p-4">
+                <form className="space-y-4 rounded-lg p-4">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-2">
                             <FormItem

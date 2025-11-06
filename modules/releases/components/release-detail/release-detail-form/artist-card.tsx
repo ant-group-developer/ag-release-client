@@ -42,21 +42,27 @@ export default function ArtistCard({
     return (
         <div
             className={cn(
-                'flex cursor-pointer items-center justify-between rounded-lg bg-gray-100 px-3 py-2 hover:bg-gray-200',
+                'flex cursor-pointer items-center justify-between rounded-lg px-3 py-2',
                 {
                     'pointer-events-none': disabled,
                     'cursor-not-allowed': disabled,
                 }
             )}
-            // style={{
-            //     background: token.colorBgContainer,
-            // }}
+            style={{
+                background: token.colorPrimaryBg,
+            }}
+            onMouseEnter={(e) => {
+                e.currentTarget.style.background = token.colorPrimaryBgHover;
+            }}
+            onMouseLeave={(e) => {
+                e.currentTarget.style.background = token.colorPrimaryBg;
+            }}
             {...props}
         >
             <div className="flex items-center gap-4">
                 <div>
                     <Avatar size={40} shape="circle" src={artist?.picture}>
-                        {'A'}
+                        {artist?.name.charAt(0).toUpperCase()}
                     </Avatar>
                 </div>
                 <div className="flex flex-col gap-1">

@@ -19,7 +19,7 @@ import DistributionStatus from '@/modules/releases/components/release-detail/rel
 import DistributionTable from '@/modules/releases/components/release-detail/release-distribution/components/table';
 import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
-import { Button } from 'antd';
+import { Button, theme } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { Key, useState } from 'react';
@@ -82,6 +82,7 @@ export default function Distribution({}: Props) {
 
     // const { height, width } = useWindowSize();
     // const isSmallDevice = Number(width) <= SCREEN.MD;
+    const { token } = theme.useToken();
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const formValues = useReleaseFormStore((state) => state.formValues);
@@ -102,7 +103,10 @@ export default function Distribution({}: Props) {
     return (
         <div className="flex h-full flex-col justify-between pb-4">
             <div className="space-y-4">
-                <div className="flex justify-between rounded-lg bg-white">
+                <div
+                    className="flex justify-between rounded-lg p-2"
+                    style={{ backgroundColor: token.colorBgContainer }}
+                >
                     <DistributionStatus
                         onChangeFilter={onChangeFilter}
                         value={dataFilter.status ?? DISTRIBUTION_STATUS.ALL}
@@ -182,7 +186,8 @@ export default function Distribution({}: Props) {
             )}
 
             <AppPagination
-                className="rounded-b-lg bg-white"
+                className="rounded-b-lg"
+                style={{ backgroundColor: token.colorBgContainer }}
                 align="end"
                 current={dataFilter.page}
                 pageSize={dataFilter.pageSize}

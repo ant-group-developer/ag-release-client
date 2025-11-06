@@ -30,12 +30,6 @@ import {
 
 type Props = Omit<AppModalProps, 'children'> & {};
 
-// Dữ liệu mẫu cho các platform đã liên kết
-const fakeLinkedPlatforms = [
-    { id: '2', name: 'Apple Music' },
-    { id: '5', name: 'Youtube Music' },
-];
-
 export default function TrackArtistModal({ ...props }: Props) {
     const [form] = Form.useForm();
     const [showCreateArtist, setShowCreateArtist] = useState<boolean>(false);

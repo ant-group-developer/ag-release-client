@@ -1,8 +1,6 @@
 import ActionButton from '@/components/ui/button/action-button';
-import ImageFallback from '@/components/ui/image/image-fallback';
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { FALLBACK_IMAGE } from '@/constants/common';
 import { convertSecondsToHoursMinutes, formattedDate } from '@/helpers/common';
 import { getIntlCodeByReleaseStatus } from '@/helpers/intl';
 import { OnChangeFilter } from '@/hooks/use-filter';
@@ -11,7 +9,7 @@ import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
 import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { ReleaseArtist } from '@/modules/release-artist/types';
-import { RELEASES_TABS } from '@/modules/releases/enums';
+import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { ReleasesData } from '@/modules/releases/types';
 import { ProColumns } from '@ant-design/pro-components';
 import { Button, Tag } from 'antd';
@@ -50,32 +48,27 @@ export default function DistributionTable({
             align: 'left',
             width: 300,
             fixed: 'left',
-            render: (value, record) => (
-                <div className="flex items-center gap-4">
-                    <div
-                        className="flex-shrink-0 cursor-pointer"
-                        onClick={() => {
-                            router.push(
-                                getReleaseTabRoute(
-                                    record?.id,
-                                    RELEASES_TABS.CORE_DETAIL
-                                )
-                            );
-                        }}
-                    >
-                        <ImageFallback
-                            fallbackSrc={FALLBACK_IMAGE}
-                            src={record?.coverArtThumbnails?.['75x75'] ?? ''}
-                            alt="genre"
-                            width={40}
-                            height={40}
-                            className="aspect-square rounded-lg object-cover"
-                        />
-                    </div>
+            render: (value, record) => {
+                return (
+                    <div className="flex items-center gap-4">
+                        <div className="flex-shrink-0 cursor-pointer">
+                            {/* <ImageFallback
+                                fallbackSrc={FALLBACK_IMAGE}
+                                src={
+                                    record?.coverArtThumbnails?.['75x75'] ?? ''
+                                }
+                                alt="genre"
+                                width={40}
+                                height={40}
+                                className="aspect-square rounded-lg object-cover"
+                            /> */}
+                            <ReleaseCoverImage data={record} />
+                        </div>
 
-                    <p className="truncate">{value}</p>
-                </div>
-            ),
+                        <p className="truncate">{value}</p>
+                    </div>
+                );
+            },
         },
         {
             title: messages('common.artist'),

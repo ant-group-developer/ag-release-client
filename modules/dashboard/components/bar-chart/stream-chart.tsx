@@ -1,6 +1,5 @@
 import { formattedNumber } from '@/helpers/common';
-import { Card } from 'antd';
-import { useTranslations } from 'next-intl';
+import { Card, theme } from 'antd';
 import {
     Bar,
     BarChart,
@@ -18,7 +17,8 @@ type Props = {
 };
 
 export default function StreamChart({ color = '#90D5FF', className }: Props) {
-    const messages = useTranslations();
+    // const messages = useTranslations();
+    const { token } = theme.useToken();
 
     // 🔹 Fake data: các DSP phổ biến
     const data = [
@@ -48,7 +48,6 @@ export default function StreamChart({ color = '#90D5FF', className }: Props) {
                         barSize={40}
                     >
                         <CartesianGrid strokeDasharray="3 3" vertical={false} />
-
                         <XAxis
                             dataKey="name"
                             axisLine={false}
@@ -56,19 +55,23 @@ export default function StreamChart({ color = '#90D5FF', className }: Props) {
                             tick={{ fontSize: 12 }}
                             interval={0}
                         />
-
                         <YAxis
                             axisLine={false}
                             tickLine={false}
                             tick={{ fontSize: 12 }}
                         />
-
                         <Tooltip
                             content={({ active, payload }) => {
                                 if (active && payload && payload.length) {
                                     const { name, value } = payload[0].payload;
                                     return (
-                                        <div className="rounded border bg-white px-3 py-2 shadow-md">
+                                        <div
+                                            className="rounded border px-3 py-2 shadow-md"
+                                            style={{
+                                                backgroundColor:
+                                                    token.colorBgContainer,
+                                            }}
+                                        >
                                             <p className="text-sm font-semibold">
                                                 {name}
                                             </p>
@@ -84,7 +87,6 @@ export default function StreamChart({ color = '#90D5FF', className }: Props) {
                                 return null;
                             }}
                         />
-
                         <Bar
                             dataKey="value"
                             fill={'#2e95e4'}

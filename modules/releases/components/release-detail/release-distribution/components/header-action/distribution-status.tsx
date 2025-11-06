@@ -1,4 +1,4 @@
-import { Badge, Segmented } from 'antd';
+import { Badge, Segmented, theme } from 'antd';
 
 import { getIntlCodeByDistributionStatus } from '@/helpers/intl';
 import { OnChangeFilter } from '@/hooks/use-filter';
@@ -13,13 +13,17 @@ type Props = {
 
 export default function DistributionStatus({ onChangeFilter, value }: Props) {
     const messages = useTranslations();
+    const { token } = theme.useToken();
 
     const handleChangeStatus = (status: DISTRIBUTION_STATUS) => {
         onChangeFilter({ status });
     };
 
     return (
-        <div className="flex w-full items-center gap-2 rounded-lg bg-white p-4 py-2">
+        <div
+            className="flex w-full items-center gap-2 rounded-lg"
+            style={{ backgroundColor: token.colorBgContainer }}
+        >
             <Segmented
                 options={Object.values(DISTRIBUTION_STATUS).map(
                     (item, index) => ({

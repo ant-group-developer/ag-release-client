@@ -36,7 +36,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
         {
             title: messages('common.iNo'),
             key: 'iNo',
-            width: 80,
+            width: 40,
             align: 'center',
             render: (_, __, index) =>
                 getIndex(

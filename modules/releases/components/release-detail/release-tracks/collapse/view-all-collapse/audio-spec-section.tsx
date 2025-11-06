@@ -8,7 +8,6 @@ import { CollapseItem } from '@/modules/releases/components/collapse/collapse-it
 import { ReleaseTrackSchema } from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
 import { Input, TimePicker } from 'antd';
-import Title from 'antd/lib/typography/Title';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -50,9 +49,9 @@ export default function AudioSpecSection({
                 {
                     key: 'audio-specs',
                     label: (
-                        <Title level={5} className="!mb-0">
+                        <span className="text-base font-semibold">
                             {messages('track.audioSpecification')}
-                        </Title>
+                        </span>
                     ),
                     children: (
                         <div>

@@ -421,7 +421,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                 </div>
                             </div>
                             {!isScrolled && (
-                                <div className="flex justify-end space-x-2">
+                                <div className="flex justify-end">
                                     <DownloadMenu />
                                     <OptionsMenu />
                                 </div>

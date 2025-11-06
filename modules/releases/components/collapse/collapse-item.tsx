@@ -10,7 +10,7 @@ export const CollapseItem = ({ items, ...props }: Props) => {
 
     const panelStyle: React.CSSProperties = {
         // background: token.colorFillAlter,
-        background: 'white',
+        background: token.colorBgContainer,
         borderRadius: token.borderRadiusLG,
         border: 'none',
     };

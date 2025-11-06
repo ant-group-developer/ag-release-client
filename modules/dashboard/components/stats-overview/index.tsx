@@ -1,5 +1,6 @@
 import { SIZE_ICON } from '@/constants/common';
 import { formattedNumber } from '@/helpers/common';
+import { theme } from 'antd';
 import { Building2, Disc2, DiscAlbum, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { IssueCountData, OverviewCountData } from '../../types';
@@ -18,6 +19,7 @@ export default function StatsOverview({
     isOverviewLoading,
 }: Props) {
     const messages = useTranslations();
+    const { token } = theme.useToken();
 
     const overviewCount = [
         {
@@ -70,7 +72,8 @@ export default function StatsOverview({
                     return (
                         <div
                             key={item.label}
-                            className="rounded-lg border bg-white p-4"
+                            className="rounded-lg border p-4"
+                            style={{ backgroundColor: token.colorBgContainer }}
                         >
                             {/* <Statistic
                                 title={

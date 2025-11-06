@@ -9,7 +9,6 @@ import { CollapseItem } from '@/modules/releases/components/collapse/collapse-it
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { UpdateVariables } from '@/types/api';
 import { Input, Select } from 'antd';
-import Title from 'antd/lib/typography/Title';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
@@ -83,9 +82,9 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                 {
                     key: 'Legal Notices',
                     label: (
-                        <Title level={5} className="!mb-0">
+                        <span className="text-base font-semibold">
                             {messages('common.legalNotices')}
-                        </Title>
+                        </span>
                     ),
                     children: (
                         <div className="grid grid-cols-4 items-center gap-5">
