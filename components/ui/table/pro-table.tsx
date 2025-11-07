@@ -51,7 +51,7 @@ export default function AppProTable<RecordType extends object>({
                     ...props?.cardProps,
                 }}
                 className={cn(
-                    '[&_.ant-pro-table-list-toolbar-container]:!px-4 [&_.ant-pro-table-list-toolbar-container]:!py-2',
+                    // '[&_.ant-pro-table-list-toolbar-container]:!px-4 [&_.ant-pro-table-list-toolbar-container]:!py-2',
                     props?.className
                 )}
                 scroll={{

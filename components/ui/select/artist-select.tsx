@@ -1,4 +1,4 @@
-import { arrayToString } from '@/helpers/array';
+import { useQueryParams } from '@/hooks/use-query-params';
 import { useGetArtistSimpleList } from '@/modules/artist/hooks/use-get-artist-simple-list';
 import { ArtistDataSimple } from '@/modules/artist/types';
 import { Avatar, Button, Empty, Select, SelectProps, Spin } from 'antd';
@@ -23,6 +23,8 @@ export default function ArtistSelect({
 }: Props) {
     const [searchKeyword, setSearchKeyword] = useState('');
     const messages = useTranslations();
+    const queryParams = useQueryParams();
+    const artistId = queryParams['artistId'];
 
     const {
         artistsData,
@@ -34,7 +36,7 @@ export default function ArtistSelect({
     } = useGetArtistSimpleList({
         pageSize: 50,
         keyword: searchKeyword,
-        idInclude: props?.value ? arrayToString(props?.value) : '',
+        idInclude: artistId,
     });
 
     // const spotify = artistsData?.map((item) => {

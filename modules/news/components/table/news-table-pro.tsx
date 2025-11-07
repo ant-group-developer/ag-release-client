@@ -8,7 +8,7 @@ import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { Link } from '@/i18n/routing';
 import { ProColumns } from '@ant-design/pro-components';
-import { Select, Typography } from 'antd';
+import { Select, theme, Typography } from 'antd';
 import { useLocale, useTranslations } from 'next-intl';
 import { NEWS_STATUS, TYPE_MODAL_NEWS } from '../../enums';
 import { NewsData, NewsDataFilter } from '../../types';
@@ -25,6 +25,7 @@ export default function NewsTablePro({ dataFilter, ...props }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const locale = useLocale();
+    const { token } = theme.useToken();
 
     // const { isSystemTenant } = useAuth();
     // const { hasPermission } = usePermission();
@@ -241,11 +242,15 @@ export default function NewsTablePro({ dataFilter, ...props }: Props) {
     return (
         <AppProTable
             key="main"
-            className="news-table"
             {...props}
             pagination={false}
             columns={column}
             rowClassName={'group'}
+            className={`rounded-t-lg px-4 ${props?.className}`}
+            style={{
+                backgroundColor: token.colorBgContainer,
+                ...props?.style,
+            }}
         />
     );
 }

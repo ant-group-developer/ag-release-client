@@ -1695,6 +1695,7 @@
         "label": "Tin tức mới",
         "latest": "Tin mới nhất",
         "related": "Tin tức liên quan",
+        "list": "Danh sách bài viết",
         "message": {
             "success": {
                 "create": "Tạo tin tức thành công",

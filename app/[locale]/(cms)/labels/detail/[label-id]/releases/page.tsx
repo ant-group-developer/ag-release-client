@@ -66,6 +66,10 @@ export default function Releases({}: Props) {
 
             {layoutTable === LAYOUT_TABLE.LIST && (
                 <ReleasesTable
+                    className="rounded-t-lg px-4"
+                    style={{
+                        backgroundColor: token.colorBgContainer,
+                    }}
                     sticky={{ offsetHeader: headerLayoutHeight }}
                     dataSource={releasesData?.items}
                     onChangeFilter={onChangeFilter}

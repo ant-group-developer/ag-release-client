@@ -1,16 +1,16 @@
 import ActionButton from '@/components/ui/button/action-button';
-import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { getIndex } from '@/helpers/common';
 import { getNameByLocale } from '@/helpers/string';
 import useModalStore from '@/hooks/use-modal';
-import { Badge } from 'antd';
-import { ColumnType } from 'antd/es/table';
+import { ProColumns } from '@ant-design/pro-components';
+import { Badge, theme } from 'antd';
 import { useLocale, useTranslations } from 'next-intl';
 import { TYPE_MODAL_ISSUES } from '../../enums';
 import { IssueData, IssueDataFilter } from '../../types';
 
-type Props = Omit<AppTableProps<IssueData>, 'columns'> & {
+type Props = Omit<AppProTableProps<IssueData>, 'columns'> & {
     pagination: {
         pageSize: number;
         current: number;
@@ -22,11 +22,12 @@ export default function IssueTable({ dataFilter, ...props }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const locale = useLocale();
+    const { token } = theme.useToken();
 
     // const { isSystemTenant } = useAuth();
     // const { hasPermission } = usePermission();
 
-    const column: ColumnType<IssueData>[] = [
+    const column: ProColumns<IssueData>[] = [
         {
             title: messages('common.iNo'),
             key: 'iNo',
@@ -198,9 +199,14 @@ export default function IssueTable({ dataFilter, ...props }: Props) {
     ];
 
     return (
-        <AppTable
-            key="main"
+        <AppProTable
+            key="issueTable"
             {...props}
+            className={`rounded-t-lg px-4 ${props?.className}`}
+            style={{
+                backgroundColor: token.colorBgContainer,
+                ...props?.style,
+            }}
             pagination={false}
             columns={column}
             rowClassName={'group'}

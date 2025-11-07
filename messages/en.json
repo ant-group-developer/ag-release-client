@@ -1690,6 +1690,7 @@
         "label": "News post",
         "latest": "Latest news",
         "related": "Related news",
+        "list": "Post list",
         "message": {
             "success": {
                 "create": "News created successfully",

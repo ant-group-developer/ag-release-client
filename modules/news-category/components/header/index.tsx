@@ -16,7 +16,7 @@ export const NewsCategoryHeader = ({ dataFilter, onSearch }: Props) => {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     return (
-        <AppHeader className="px-0 pb-3">
+        <AppHeader className="border-b-0 px-0 pb-3">
             <AppHeaderGroup>
                 <div>
                     <AppSearch

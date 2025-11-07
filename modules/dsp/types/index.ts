@@ -10,6 +10,7 @@ export interface DspData extends CommonAttribute {
     enablePolicy: boolean;
     formatLinks: string[];
     dspActions: DspActionData[];
+    code: string;
 }
 
 export interface DspDataFilter extends CommonParams {

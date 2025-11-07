@@ -1,4 +1,7 @@
 'use client';
+import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
+import CreateButton from '@/components/ui/button/create-button';
+import AppSearch from '@/components/ui/input/search';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -6,8 +9,10 @@ import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { usePermission } from '@/hooks/use-permission';
+import { PERMISSION } from '@/modules/auth/constants/permission';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 
-import LabelsHeader from '@/modules/labels/components/header';
 import LabelFormModal from '@/modules/labels/components/modal/label-form';
 import { LabelsTable } from '@/modules/labels/components/table';
 import { TYPE_MODAL_LABEL } from '@/modules/labels/enum';
@@ -33,6 +38,9 @@ export default function Labels({}: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore<LabelData>((state) => state.dataEdit);
+    const openModal = useModalStore((state) => state.openModal);
+    const { isNotSystemTenant } = useAuth();
+    const { hasPermission } = usePermission();
 
     // apis
     const { labelsData, isFetching, lastUpdatedAt, refetch } =
@@ -65,21 +73,29 @@ export default function Labels({}: Props) {
     };
 
     return (
-        <div
-            className="min-h-[calc(100vh-64px)]"
-            style={{
-                backgroundColor: token?.colorBgLayout,
-            }}
-        >
+        <AppPageWrapper>
             <PageContainer
                 title={messages('label.label')}
                 style={{
                     backgroundColor: token.colorBgLayout,
                 }}
+                extra={
+                    <div className="flex items-center gap-2">
+                        {isNotSystemTenant &&
+                            hasPermission(PERMISSION.LABEL.CREATE) && (
+                                <CreateButton
+                                    canCreate={true}
+                                    text={messages('label.create')}
+                                    onClick={() =>
+                                        openModal(TYPE_MODAL_LABEL.CREATE)
+                                    }
+                                />
+                            )}
+                    </div>
+                }
             >
-                <LabelsHeader dataFilter={dataFilter} onSearch={onSearch} />
+                {/* <LabelsHeader dataFilter={dataFilter} onSearch={onSearch} /> */}
                 <LabelsTable
-                    className="rounded-t-lg"
                     sticky
                     dataSource={labelsData?.items}
                     pagination={{
@@ -90,6 +106,13 @@ export default function Labels({}: Props) {
                     loading={isFetching}
                     dataFilter={dataFilter}
                     onChange={onChangeSort}
+                    headerTitle={
+                        <AppSearch
+                            className="max-w-52"
+                            onChange={onSearch}
+                            defaultValue={dataFilter.keyword}
+                        />
+                    }
                 />
 
                 {(typeModal === TYPE_MODAL_LABEL.CREATE ||
@@ -125,6 +148,6 @@ export default function Labels({}: Props) {
                     pageSizeOptions={PAGE_SIZE_OPTIONS}
                 />
             </PageContainer>
-        </div>
+        </AppPageWrapper>
     );
 }

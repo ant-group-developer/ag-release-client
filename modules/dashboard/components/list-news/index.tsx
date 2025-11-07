@@ -49,7 +49,7 @@ export default function ListNews({}: Props) {
                 >
                     {newsData?.items?.map((item, index) => (
                         <SwiperSlide className="pb-8 pt-4" key={index}>
-                            <Link href={`/news/${item?.slug}`}>
+                            <Link href={`${APP_ROUTES.NEWS}/${item?.slug}`}>
                                 <PostCard data={item} />
                             </Link>
                         </SwiperSlide>

@@ -25,7 +25,7 @@ export default function ListRelease({ data }: Props) {
                     <SeeMoreButton type="default" />
                 </Link>
             </div>
-            <AppGrid className="overflow-hidden py-4">
+            <AppGrid className="overflow-visible py-4">
                 <FlatList
                     data={data}
                     renderItem={({ item }) => <CardRelease data={item} />}

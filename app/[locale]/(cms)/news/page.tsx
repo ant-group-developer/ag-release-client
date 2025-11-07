@@ -131,10 +131,9 @@ export default function News({}: Props) {
                     onChange={onChangeSort}
                     scroll={{ x: SCREEN.XL }}
                     // toolBarRender={false}
-                    options={false}
-                    // options={{
-                    //     density: false,
-                    // }}
+                    options={{
+                        reload: false,
+                    }}
                     onSubmit={(params) => {
                         onChangeFilter(params);
                     }}
@@ -149,6 +148,7 @@ export default function News({}: Props) {
                     //         />
                     //     </div>,
                     // ]}
+                    headerTitle={messages('newsPost.list')}
                 />
 
                 {/* 

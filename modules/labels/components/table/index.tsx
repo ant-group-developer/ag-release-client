@@ -1,7 +1,7 @@
 import ActionButton from '@/components/ui/button/action-button';
 import CopyText from '@/components/ui/copy-text/copy-text';
 import ImageFallback from '@/components/ui/image/image-fallback';
-import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { getIndex, getSortOrder } from '@/helpers/common';
@@ -11,12 +11,13 @@ import { usePermission } from '@/hooks/use-permission';
 import { Link, useRouter } from '@/i18n/routing';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
-import { ColumnType } from 'antd/es/table';
+import { ProColumns } from '@ant-design/pro-components';
+import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { LABEL_DETAIL_TABS, TYPE_MODAL_LABEL } from '../../enum';
 import { LabelData, LabelDataFilter } from '../../types';
 
-type Props = Omit<AppTableProps<LabelData>, 'columns'> & {
+type Props = Omit<AppProTableProps<LabelData>, 'columns'> & {
     pagination: {
         pageSize: number;
         current: number;
@@ -28,11 +29,12 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
     const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
+    const { token } = theme.useToken();
 
     const { isSystemTenant } = useAuth();
     const { hasPermission } = usePermission();
 
-    const column: ColumnType<LabelData>[] = [
+    const column: ProColumns<LabelData>[] = [
         {
             title: messages('common.iNo'),
             key: 'iNo',
@@ -108,7 +110,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
                             )}
                         >
                             <p className="truncate hover:text-blue-500 hover:underline">
-                                {value}
+                                {record?.name}
                             </p>
                         </Link>
                     </CustomTooltip>
@@ -121,9 +123,12 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             dataIndex: 'code',
             align: 'left',
             width: 150,
-            render: (value) => (
-                <CopyText tooltipProps={{ placement: 'right' }} text={value}>
-                    <p className="truncate">{value}</p>
+            render: (value, record) => (
+                <CopyText
+                    tooltipProps={{ placement: 'right' }}
+                    text={record?.code}
+                >
+                    <p className="truncate">{record?.code}</p>
                 </CopyText>
             ),
         },
@@ -134,10 +139,9 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             ellipsis: true,
             align: 'left',
             width: 200,
-            render: (value) => (
+            render: (value, record) => (
                 <span className="line-clamp-3 truncate whitespace-pre-line">
-                    {' '}
-                    {value}{' '}
+                    {record?.description}
                 </span>
             ),
         },
@@ -245,8 +249,13 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
     ];
 
     return (
-        <AppTable
+        <AppProTable
             {...props}
+            className={`rounded-t-lg px-4 ${props?.className}`}
+            style={{
+                backgroundColor: token.colorBgContainer,
+                ...props?.style,
+            }}
             pagination={false}
             columns={column}
             rowClassName={'group'}
