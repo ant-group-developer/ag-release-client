@@ -15,6 +15,7 @@ import { useGetListArtist } from '@/modules/artist/hooks/use-get-list-artists';
 import { ArtistData, ArtistDataFilter } from '@/modules/artist/types';
 import { DeleteVariables } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
+import { theme } from 'antd';
 
 import { useTranslations } from 'next-intl';
 
@@ -23,6 +24,7 @@ type Props = {};
 export default function Artists({}: Props) {
     // hooks - state
     const messages = useTranslations();
+    const { token } = theme.useToken();
     const {
         dataFilter,
         onChangeFilter,
@@ -69,11 +71,16 @@ export default function Artists({}: Props) {
     };
 
     return (
-        <div>
+        <div
+            className="min-h-[calc(100vh-64px)]"
+            style={{
+                backgroundColor: token?.colorBgLayout,
+            }}
+        >
             <PageContainer title={messages('artist.label')}>
                 <ArtistsHeader dataFilter={dataFilter} onSearch={onSearch} />
                 <ArtistsTable
-                    className="rounded-t-lg border"
+                    className="rounded-t-lg"
                     sticky
                     dataSource={artistsData?.items}
                     pagination={{
@@ -105,6 +112,10 @@ export default function Artists({}: Props) {
 
                 <AppPagination
                     align="end"
+                    className="rounded-b-lg"
+                    style={{
+                        backgroundColor: token?.colorBgContainer,
+                    }}
                     current={artistsData?.metadata?.currentPage}
                     pageSize={dataFilter.pageSize}
                     total={artistsData?.metadata?.totalItems}

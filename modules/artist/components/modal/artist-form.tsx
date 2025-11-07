@@ -7,6 +7,7 @@ import CountrySelect from '@/components/ui/select/country-select';
 import GenresSelect from '@/components/ui/select/genres-select';
 import PlatformSelect from '@/components/ui/select/platform-select';
 import { SIZE_ICON } from '@/constants/common';
+import { PAGE_SIZE_LARGE } from '@/constants/page-size';
 import { ACCEPT_IMAGE, MAX_NAME_LENGTH } from '@/constants/validate';
 import { getAvatarUrl } from '@/helpers/avatar-tailwind';
 import { useActive } from '@/hooks/use-active';
@@ -41,7 +42,7 @@ export default function ArtistFormModal({ ...props }: Props) {
 
     const { createArtist } = useCreateArtist();
     const { updateArtist } = useUpdateArtist();
-    const { dspData } = useGetListDsp({});
+    const { dspData } = useGetListDsp({ pageSize: PAGE_SIZE_LARGE });
     const { artistData, isLoading: isLoadingArtist } = useGetDetailArtist(
         dataEdit?.id
     );
@@ -265,7 +266,7 @@ export default function ArtistFormModal({ ...props }: Props) {
 
                     <Form.List name={'artistProfiles'}>
                         {(fields, { add, remove }) => (
-                            <div className="max-h-[390px] overflow-y-auto">
+                            <div className="max-h-[350px] overflow-y-auto">
                                 <Divider />
                                 <p className="mb-2 font-semibold">
                                     {' '}
@@ -304,7 +305,7 @@ export default function ArtistFormModal({ ...props }: Props) {
                                                     allowClear
                                                     onChange={(e) => {
                                                         const url =
-                                                            e.target.value;
+                                                            e.target.value.toLowerCase();
                                                         const matched =
                                                             dspData?.items.find(
                                                                 (dsp) =>
@@ -313,11 +314,10 @@ export default function ArtistFormModal({ ...props }: Props) {
                                                                             link: string
                                                                         ) =>
                                                                             url.includes(
-                                                                                link
+                                                                                link.toLowerCase()
                                                                             )
                                                                     )
                                                             );
-
                                                         if (matched) {
                                                             const current =
                                                                 form.getFieldValue(

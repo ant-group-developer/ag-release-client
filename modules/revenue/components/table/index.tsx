@@ -1,12 +1,7 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { DATE_FORMAT } from '@/enums/common';
-import {
-    formatCurrency,
-    formattedDate,
-    getIndex,
-    getSortOrder,
-} from '@/helpers/common';
+import { formatCurrency, formattedDate, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
 import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
@@ -29,24 +24,24 @@ export default function RevenueTable({ dataFilter, ...props }: Props) {
     const router = useRouter();
     const params = useParams();
     const column: ColumnType<RevenueData>[] = [
-        {
-            title: messages('common.iNo'),
-            key: 'iNo',
-            width: 50,
-            align: 'center',
-            render: (_, __, index) =>
-                getIndex(
-                    props?.pagination?.pageSize,
-                    props?.pagination?.current,
-                    index
-                ),
-        },
+        // {
+        //     title: messages('common.iNo'),
+        //     key: 'iNo',
+        //     width: 50,
+        //     align: 'center',
+        //     render: (_, __, index) =>
+        //         getIndex(
+        //             props?.pagination?.pageSize,
+        //             props?.pagination?.current,
+        //             index
+        //         ),
+        // },
         {
             title: messages('common.date'),
             key: 'reportDate',
             dataIndex: 'trackRevenue.reportDate',
-            align: 'center',
-            width: 100,
+            align: 'left',
+            width: 120,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -269,7 +264,6 @@ export default function RevenueTable({ dataFilter, ...props }: Props) {
                             Number(record?.amount),
                             record?.currencyCode
                         )}{' '}
-                        {record?.currencyCode}
                     </div>
                 );
             },

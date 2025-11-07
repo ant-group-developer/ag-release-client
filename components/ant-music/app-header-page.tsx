@@ -22,7 +22,7 @@ export default function AppHeaderPage({
 
     return (
         <div
-            className={cn('mb-5 mt-3 flex justify-between', className)}
+            className={cn('mt-3 flex justify-between', className)}
             style={{
                 backgroundColor: token.colorBgContainer,
             }}

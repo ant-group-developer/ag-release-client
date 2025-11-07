@@ -104,7 +104,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
                         <Link
                             href={getLabelDetailRoute(
                                 record?.id,
-                                LABEL_DETAIL_TABS.RELEASES
+                                LABEL_DETAIL_TABS.OVERVIEW
                             )}
                         >
                             <p className="truncate hover:text-blue-500 hover:underline">

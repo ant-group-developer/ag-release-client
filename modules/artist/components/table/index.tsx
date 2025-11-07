@@ -241,7 +241,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
             key: 'biography',
             dataIndex: 'biography',
             align: 'left',
-            width: 300,
+            width: 210,
             render: (value, record) => {
                 return (
                     <span className="line-clamp-3 whitespace-pre-line">

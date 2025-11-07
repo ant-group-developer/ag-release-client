@@ -18,17 +18,22 @@ import {
     ChevronRight,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 interface RightSidebarProps {}
 
 export default function RightSidebar({ ...props }: RightSidebarProps) {
     // hook - state
+    const params = useParams();
+    // const defaultOpenValidate = params['action'] == 'create';
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
     const { releaseValidateData } = useReleaseValidate(
         formValues?.id as string
     );
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+    const validateLength = releaseValidateData && releaseValidateData?.length;
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const { getReleaseTabRoute } = useGetReleaseDetailRoute();
     const { token } = theme.useToken();
 
@@ -82,20 +87,12 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
     const toggleSidebar = () => {
         setIsSidebarOpen((prevState) => !prevState);
     };
-    // const handleErrorClick = async (field: string, page: RELEASES_TABS) => {
-    //     const newUrl = `${getReleaseDetailTabRoute(formValues?.id as string, page)}#${field}`;
-    //     // new scroll
-    //     await router.push(newUrl);
-    //     setTimeout(() => {
-    //         const el = document.getElementById(field);
-    //         el?.scrollIntoView({
-    //             behavior: 'smooth',
-    //             block: 'center',
-    //             inline: 'center',
-    //         });
-    //         window.dispatchEvent(new HashChangeEvent('hashchange'));
-    //     }, 100);
-    // };
+
+    useEffect(() => {
+        if (validateLength > 0) {
+            setIsSidebarOpen(true);
+        }
+    }, [validateLength]);
 
     return (
         <div

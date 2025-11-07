@@ -16,6 +16,7 @@ import { useGetListLabels } from '@/modules/labels/hooks/use-get-list-labels';
 import { LabelData, LabelDataFilter } from '@/modules/labels/types';
 import { DeleteVariables } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
+import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
 
 type Props = {};
@@ -23,6 +24,7 @@ type Props = {};
 export default function Labels({}: Props) {
     // hooks - state
     const messages = useTranslations();
+    const { token } = theme.useToken();
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
         useFilter<LabelDataFilter>({
             page: 1,
@@ -63,50 +65,66 @@ export default function Labels({}: Props) {
     };
 
     return (
-        <PageContainer title={messages('label.label')}>
-            <LabelsHeader dataFilter={dataFilter} onSearch={onSearch} />
-            <LabelsTable
-                className="rounded-t-lg border"
-                sticky
-                dataSource={labelsData?.items}
-                pagination={{
-                    pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                    current: labelsData.metadata.currentPage,
-                    total: labelsData.metadata.totalItems,
+        <div
+            className="min-h-[calc(100vh-64px)]"
+            style={{
+                backgroundColor: token?.colorBgLayout,
+            }}
+        >
+            <PageContainer
+                title={messages('label.label')}
+                style={{
+                    backgroundColor: token.colorBgLayout,
                 }}
-                loading={isFetching}
-                dataFilter={dataFilter}
-                onChange={onChangeSort}
-            />
-
-            {(typeModal === TYPE_MODAL_LABEL.CREATE ||
-                typeModal === TYPE_MODAL_LABEL.EDIT) && (
-                <LabelFormModal onCancel={closeModal} />
-            )}
-
-            {typeModal === TYPE_MODAL_LABEL.DELETE && (
-                <AppConfirm
-                    open
-                    onOk={() => handleDeleteLabel()}
-                    onCancel={closeModal}
-                    modalTitle={`${messages('common.delete')} label`}
-                    paragraph={messages('delete.confirmMessage', {
-                        value: dataEdit?.name,
-                    })}
+            >
+                <LabelsHeader dataFilter={dataFilter} onSearch={onSearch} />
+                <LabelsTable
+                    className="rounded-t-lg"
+                    sticky
+                    dataSource={labelsData?.items}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: labelsData.metadata.currentPage,
+                        total: labelsData.metadata.totalItems,
+                    }}
+                    loading={isFetching}
+                    dataFilter={dataFilter}
+                    onChange={onChangeSort}
                 />
-            )}
 
-            <AppPagination
-                align="end"
-                current={labelsData?.metadata?.currentPage}
-                pageSize={dataFilter.pageSize}
-                total={labelsData.metadata?.totalItems}
-                onChange={onChangePage}
-                showTotalText
-                showSizeChanger
-                showQuickJumper
-                pageSizeOptions={PAGE_SIZE_OPTIONS}
-            />
-        </PageContainer>
+                {(typeModal === TYPE_MODAL_LABEL.CREATE ||
+                    typeModal === TYPE_MODAL_LABEL.EDIT) && (
+                    <LabelFormModal onCancel={closeModal} />
+                )}
+
+                {typeModal === TYPE_MODAL_LABEL.DELETE && (
+                    <AppConfirm
+                        open
+                        onOk={() => handleDeleteLabel()}
+                        onCancel={closeModal}
+                        modalTitle={`${messages('common.delete')} label`}
+                        paragraph={messages('delete.confirmMessage', {
+                            value: dataEdit?.name,
+                        })}
+                    />
+                )}
+
+                <AppPagination
+                    align="end"
+                    className="rounded-b-lg"
+                    style={{
+                        backgroundColor: token?.colorBgContainer,
+                    }}
+                    current={labelsData?.metadata?.currentPage}
+                    pageSize={dataFilter.pageSize}
+                    total={labelsData.metadata?.totalItems}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
+                />
+            </PageContainer>
+        </div>
     );
 }

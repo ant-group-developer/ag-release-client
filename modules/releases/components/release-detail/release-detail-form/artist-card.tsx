@@ -49,13 +49,16 @@ export default function ArtistCard({
                 }
             )}
             style={{
-                background: token.colorPrimaryBg,
+                backgroundColor: disabled
+                    ? token?.colorBgContainerDisabled
+                    : token.colorPrimaryBg,
             }}
             onMouseEnter={(e) => {
-                e.currentTarget.style.background = token.colorPrimaryBgHover;
+                e.currentTarget.style.backgroundColor =
+                    token.colorPrimaryBgHover;
             }}
             onMouseLeave={(e) => {
-                e.currentTarget.style.background = token.colorPrimaryBg;
+                e.currentTarget.style.backgroundColor = token.colorPrimaryBg;
             }}
             {...props}
         >

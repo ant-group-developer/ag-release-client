@@ -1,5 +1,4 @@
 import { toNonAccentVietnamese } from '@/helpers/string';
-import useModalStore from '@/hooks/use-modal';
 import { useGetListLabelsSimple } from '@/modules/labels/hooks/use-get-list-simple-labels';
 import { Button, Select, SelectProps } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -7,15 +6,16 @@ import { useTranslations } from 'next-intl';
 type Props = SelectProps & {
     onCreateLabel?: () => void;
     fallBack?: string;
+    showCreate?: boolean;
 };
 
 export default function LabelSelect({
     onCreateLabel,
     fallBack,
+    showCreate = false,
     ...props
 }: Props) {
     const messages = useTranslations();
-    const openModal = useModalStore((state) => state.openModal);
 
     const { labelsData } = useGetListLabelsSimple();
 
@@ -49,15 +49,17 @@ export default function LabelSelect({
                 return (
                     <div>
                         {menu}
-                        <div className="flex w-full pt-2">
-                            <Button
-                                type="primary"
-                                className="w-full"
-                                onClick={onCreateLabel}
-                            >
-                                {messages('common.create')} label
-                            </Button>
-                        </div>
+                        {showCreate && (
+                            <div className="flex w-full pt-2">
+                                <Button
+                                    type="primary"
+                                    className="w-full"
+                                    onClick={onCreateLabel}
+                                >
+                                    {messages('common.create')} label
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 );
             }}

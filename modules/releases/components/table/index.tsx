@@ -24,6 +24,7 @@ import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { ProColumns } from '@ant-design/pro-components';
 import { Tag } from 'antd';
+import Paragraph from 'antd/es/typography/Paragraph';
 import { useTranslations } from 'next-intl';
 import {
     RELEASES_COLUMNS_DISPLAY,
@@ -96,10 +97,7 @@ export default function ReleasesTable({
                             <ReleaseCoverImage data={record} />
                         </div>
                         <div>
-                            <CustomTooltip
-                                title={messages('common.viewDetail')}
-                                placement="right"
-                            >
+                            <CustomTooltip title={record?.title}>
                                 <Link
                                     href={getReleaseDetailTabRoute(
                                         record?.id,
@@ -107,8 +105,10 @@ export default function ReleasesTable({
                                         RELEASE_DETAIL_ACTION.READ
                                     )}
                                 >
-                                    <div className="!max-w-80 cursor-pointer truncate hover:text-blue-500 hover:underline">
-                                        {value}
+                                    <div className="!max-w-80 truncate">
+                                        <span className="cursor-pointer hover:underline">
+                                            {record?.title}
+                                        </span>
                                     </div>
                                 </Link>
                             </CustomTooltip>
@@ -116,7 +116,6 @@ export default function ReleasesTable({
                                 title={messages('filter.filterByValue', {
                                     value: displayName,
                                 })}
-                                placement="right"
                             >
                                 {isVariousArtist ? (
                                     <span
@@ -243,12 +242,7 @@ export default function ReleasesTable({
             align: 'left',
             width: 150,
             render: (value, record) => (
-                <CopyText text={record?.upc}>
-                    <span className="truncate text-center">
-                        {' '}
-                        {record?.upc}{' '}
-                    </span>
-                </CopyText>
+                <Paragraph copyable={!!record?.upc}>{record?.upc}</Paragraph>
             ),
         },
         {

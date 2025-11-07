@@ -5,6 +5,7 @@ import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { LAYOUT_TABLE } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
+import { useArtistContext } from '@/modules/artist/hooks/use-artist-context';
 import ReleasesHeaderV2 from '@/modules/releases/components/header/index-v2';
 import ReleasesTable from '@/modules/releases/components/table';
 import ReleasesGridTable from '@/modules/releases/components/table/grid-table';
@@ -19,6 +20,7 @@ export default function Releases({}: Props) {
     const { token } = theme.useToken();
     const { layoutTable } = useTableLayoutToggle();
     const artistId = params['artist-id'] as string;
+    const { headerLayoutHeight } = useArtistContext();
     const {
         dataFilter,
         onSearch,
@@ -74,7 +76,7 @@ export default function Releases({}: Props) {
 
             {layoutTable === LAYOUT_TABLE.LIST && (
                 <ReleasesTable
-                    sticky={{ offsetHeader: 178 }}
+                    sticky={{ offsetHeader: headerLayoutHeight }}
                     dataSource={releasesData.items}
                     onChangeFilter={onChangeFilter}
                     loading={isFetching}

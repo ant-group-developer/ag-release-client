@@ -15,11 +15,13 @@ import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { DspData, DspDataFilter } from '@/modules/dsp/types';
 import { DeleteVariables } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
+import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
 
 export default function Dsp() {
     // hooks - state
     const messages = useTranslations();
+    const { token } = theme.useToken();
     const { dataFilter, onChangePage, onSearch } = useFilter<DspDataFilter>({
         page: 1,
         pageSize: PAGE_SIZE,
@@ -47,45 +49,61 @@ export default function Dsp() {
     };
 
     return (
-        <PageContainer title={messages('dsp.label')}>
-            <DspHeader dataFilter={dataFilter} onSearch={onSearch} />
-            <DspTable
-                className="rounded-t-lg border"
-                sticky
-                dataSource={dspData?.items}
-                pagination={{
-                    pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                    current: dspData.metadata.currentPage,
-                    total: dspData.metadata.totalItems,
+        <div
+            className="min-h-[calc(100vh-64px)]"
+            style={{
+                backgroundColor: token?.colorBgLayout,
+            }}
+        >
+            <PageContainer
+                title={messages('dsp.label')}
+                style={{
+                    backgroundColor: token.colorBgLayout,
                 }}
-                loading={isLoading}
-            />
-            <AppPagination
-                align="end"
-                current={dspData.metadata.currentPage}
-                pageSize={dataFilter.pageSize}
-                total={dspData.metadata.totalItems}
-                onChange={onChangePage}
-                showTotalText
-                showSizeChanger
-                showQuickJumper
-                pageSizeOptions={PAGE_SIZE_OPTIONS}
-            />
-
-            {typeModal === TYPE_MODAL_DSP.DELETE && (
-                <AppConfirm
-                    open
-                    modalTitle={messages('delete.confirmTitle')}
-                    paragraph={messages('delete.confirmMessage', {
-                        value: dataEdit?.name,
-                    })}
-                    onCancel={closeModal}
-                    onOk={() => handleDeleteDsp()}
+            >
+                <DspHeader dataFilter={dataFilter} onSearch={onSearch} />
+                <DspTable
+                    className="rounded-t-lg"
+                    sticky
+                    dataSource={dspData?.items}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: dspData.metadata.currentPage,
+                        total: dspData.metadata.totalItems,
+                    }}
+                    loading={isLoading}
                 />
-            )}
+                <AppPagination
+                    align="end"
+                    className="rounded-b-lg"
+                    style={{
+                        backgroundColor: token?.colorBgContainer,
+                    }}
+                    current={dspData.metadata.currentPage}
+                    pageSize={dataFilter.pageSize}
+                    total={dspData.metadata.totalItems}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
+                />
 
-            {(typeModal === TYPE_MODAL_DSP.CREATE ||
-                typeModal === TYPE_MODAL_DSP.UPDATE) && <DspFormModal />}
-        </PageContainer>
+                {typeModal === TYPE_MODAL_DSP.DELETE && (
+                    <AppConfirm
+                        open
+                        modalTitle={messages('delete.confirmTitle')}
+                        paragraph={messages('delete.confirmMessage', {
+                            value: dataEdit?.name,
+                        })}
+                        onCancel={closeModal}
+                        onOk={() => handleDeleteDsp()}
+                    />
+                )}
+
+                {(typeModal === TYPE_MODAL_DSP.CREATE ||
+                    typeModal === TYPE_MODAL_DSP.UPDATE) && <DspFormModal />}
+            </PageContainer>
+        </div>
     );
 }
