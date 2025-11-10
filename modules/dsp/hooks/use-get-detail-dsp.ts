@@ -20,6 +20,7 @@ export const useGetDetailDsp = (id: DspData['id']) => {
         formatLinks: [],
         dspActions: [],
         enablePolicy: false,
+        code: '',
     };
 
     return {

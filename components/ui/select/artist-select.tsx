@@ -1,4 +1,5 @@
 import { useQueryParams } from '@/hooks/use-query-params';
+import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
 import { useGetArtistSimpleList } from '@/modules/artist/hooks/use-get-artist-simple-list';
 import { ArtistDataSimple } from '@/modules/artist/types';
 import { Avatar, Button, Empty, Select, SelectProps, Spin } from 'antd';
@@ -8,7 +9,6 @@ import { useEffect, useMemo, useState } from 'react';
 import CustomTooltip from '../tooltip/custom-tooltip';
 
 type Props = SelectProps & {
-    onCreateArtist?: () => void;
     fallBack?: string;
     disabledArtistIds?: string[];
     showCreate?: boolean;
@@ -17,11 +17,11 @@ type Props = SelectProps & {
 export default function ArtistSelect({
     fallBack,
     disabledArtistIds,
-    onCreateArtist,
     showCreate = true,
     ...props
 }: Props) {
     const [searchKeyword, setSearchKeyword] = useState('');
+    const [openCreate, setOpenCreate] = useState(false);
     const messages = useTranslations();
     const queryParams = useQueryParams();
     const artistId = queryParams['artistId'];
@@ -166,57 +166,66 @@ export default function ArtistSelect({
         }
     };
     return (
-        <Select
-            {...props}
-            className={''}
-            loading={isFetching}
-            showSearch
-            onSearch={(value) => debounceSearch(value)}
-            filterOption={false}
-            options={options}
-            optionRender={optionRender}
-            labelRender={labelRender}
-            dropdownRender={(menu) => {
-                return (
-                    <div>
-                        {menu}
-                        <div className="p-2 text-center">
-                            <Spin spinning={isFetchingNextPage} size="small" />
-                        </div>
-                        {showCreate && (
-                            <div className="py-1">
-                                <Button
-                                    type="primary"
-                                    className="w-full"
-                                    onClick={onCreateArtist}
-                                >
-                                    {messages('release.createArtist')}
-                                </Button>
+        <>
+            <Select
+                {...props}
+                className={''}
+                loading={isFetching}
+                showSearch
+                onSearch={(value) => debounceSearch(value)}
+                filterOption={false}
+                options={options}
+                optionRender={optionRender}
+                labelRender={labelRender}
+                dropdownRender={(menu) => {
+                    return (
+                        <div>
+                            {menu}
+                            <div className="p-2 text-center">
+                                <Spin
+                                    spinning={isFetchingNextPage}
+                                    size="small"
+                                />
                             </div>
-                        )}
-                    </div>
-                );
-            }}
-            onPopupScroll={(e) => {
-                const target = e.target as HTMLElement;
-                if (
-                    target.scrollTop + target.offsetHeight >=
-                    target.scrollHeight - 50
-                ) {
-                    if (hasNextPage && !isFetchingNextPage) {
-                        fetchNextPage();
+                            {showCreate && (
+                                <div className="py-1">
+                                    <Button
+                                        type="primary"
+                                        className="w-full"
+                                        onClick={() => setOpenCreate(true)}
+                                    >
+                                        {messages('release.createArtist')}
+                                    </Button>
+                                </div>
+                            )}
+                        </div>
+                    );
+                }}
+                onPopupScroll={(e) => {
+                    const target = e.target as HTMLElement;
+                    if (
+                        target.scrollTop + target.offsetHeight >=
+                        target.scrollHeight - 50
+                    ) {
+                        if (hasNextPage && !isFetchingNextPage) {
+                            fetchNextPage();
+                        }
                     }
+                }}
+                notFoundContent={
+                    isFetching ? (
+                        <div className="min-h-5 text-center">
+                            <Spin spinning={true} />
+                        </div>
+                    ) : (
+                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                    )
                 }
-            }}
-            notFoundContent={
-                isFetching ? (
-                    <div className="min-h-5 text-center">
-                        <Spin spinning={true} />
-                    </div>
-                ) : (
-                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                )
-            }
-        />
+            />
+            <ArtistFormModal
+                open={openCreate}
+                onCancel={() => setOpenCreate(false)}
+            />
+        </>
     );
 }

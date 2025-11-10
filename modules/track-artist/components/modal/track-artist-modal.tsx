@@ -165,7 +165,6 @@ export default function TrackArtistModal({ ...props }: Props) {
                         disabledArtistIds={disabledArtistIds}
                         showSearch
                         placeholder={messages('artist.select')}
-                        onCreateArtist={() => setShowCreateArtist(true)}
                     />
                 </AppFormItem>
 
