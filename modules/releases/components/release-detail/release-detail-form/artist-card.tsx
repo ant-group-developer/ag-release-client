@@ -160,18 +160,17 @@ export default function ArtistCard({
                     </Avatar.Group>
                 </div> */}
 
-                <div className="w-8" onClick={(e) => e.stopPropagation()}>
-                    <IconButton
-                        onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            onDelete?.();
-                        }}
-                        className="hover:bg-gray-300"
-                    >
-                        <Trash2 size={SIZE_ICON} className="text-red-500" />
-                    </IconButton>
-                </div>
+                <IconButton
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onDelete?.();
+                    }}
+                    shape="circle"
+                    className="hover:bg-red-200"
+                >
+                    <Trash2 size={SIZE_ICON} className="text-red-500" />
+                </IconButton>
             </div>
         </div>
     );

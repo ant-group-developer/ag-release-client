@@ -36,7 +36,10 @@ type Props = Omit<AppModalProps, 'children'> & {};
 export default function ArtistFormModal({ ...props }: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
-    const dataEdit = useModalStore((state) => state.dataEdit as ArtistData);
+    const dataEdit = useModalStore((state) => {
+        return state.dataEdit as ArtistData;
+    });
+
     const { active, isActive, deActive } = useActive();
     const isUpdateForm = dataEdit?.id;
 
@@ -146,7 +149,6 @@ export default function ArtistFormModal({ ...props }: Props) {
             width={600}
             {...props}
             title={titleModal}
-            open
             onOk={form.submit}
             loading={isActive}
             className="custom-scroll-artist-modal !top-6"

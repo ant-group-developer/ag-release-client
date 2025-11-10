@@ -8,7 +8,6 @@ import { useApiNotify } from '@/hooks/use-api-notify';
 import useModalStore from '@/hooks/use-modal';
 import { useGetListArtistRole } from '@/modules/artist-role/hooks/use-get-list-artist-role';
 import { ArtistRoleData } from '@/modules/artist-role/types';
-import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { useCreateReleaseArtist } from '@/modules/release-artist/hooks/use-create-release-artist';
@@ -24,7 +23,7 @@ import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Checkbox, Form } from 'antd';
 import { useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useUpdateReleaseArtist } from '../../hooks/use-update-release-artist';
 
 type Props = Omit<AppModalProps, 'children'> & {
@@ -34,7 +33,6 @@ type Props = Omit<AppModalProps, 'children'> & {
 export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
     const [form] = Form.useForm();
     const { active, deActive, isActive } = useActive();
-    const [showCreateArtistModal, setShowCreateArtistModal] = useState(false);
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
     // const watchArtistName = useWatch('name', form);
@@ -172,17 +170,16 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                         showSearch
                         // fallBack={dataEdit?.artist?.name}
                         placeholder={messages('artist.select')}
-                        onCreateArtist={() => setShowCreateArtistModal(true)}
                         disabledArtistIds={disabledArtistIds}
                     />
                 </AppFormItem>
 
-                {showCreateArtistModal && (
+                {/* {showCreateArtistModal && (
                     <ArtistFormModal
                         open
                         onCancel={() => setShowCreateArtistModal(false)}
                     />
-                )}
+                )} */}
 
                 {!isSetMainArtist && (
                     <AppFormItem
