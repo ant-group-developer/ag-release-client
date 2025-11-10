@@ -113,6 +113,11 @@ export default function Artists({}: Props) {
                             defaultValue={dataFilter.keyword}
                         />
                     }
+                    options={{
+                        reload: () => {
+                            handleRefresh();
+                        },
+                    }}
                 />
 
                 <AppPagination

@@ -89,6 +89,11 @@ export default function Releases({}: Props) {
                         current: releasesData.metadata.currentPage,
                     }}
                     dataFilter={dataFilter}
+                    options={{
+                        reload: () => {
+                            handleRefresh();
+                        },
+                    }}
                 />
             )}
 

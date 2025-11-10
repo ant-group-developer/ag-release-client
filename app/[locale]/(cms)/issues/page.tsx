@@ -64,6 +64,9 @@ export default function Issues({}: Props) {
             false
         );
     };
+    const handleRefresh = () => {
+        refetch();
+    };
 
     return (
         <AppPageWrapper>
@@ -110,6 +113,11 @@ export default function Issues({}: Props) {
                     loading={isFetching}
                     dataFilter={dataFilter}
                     onChange={onChangeSort}
+                    options={{
+                        reload: () => {
+                            handleRefresh();
+                        },
+                    }}
                 />
 
                 <AppPagination

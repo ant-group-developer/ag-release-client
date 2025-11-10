@@ -52,6 +52,9 @@ export default function Dsp() {
         };
         deleteDsp(variables);
     };
+    const handleRefresh = () => {
+        refetch();
+    };
 
     return (
         <AppPageWrapper>
@@ -90,6 +93,11 @@ export default function Dsp() {
                             defaultValue={dataFilter.keyword}
                         />
                     }
+                    options={{
+                        reload: () => {
+                            handleRefresh();
+                        },
+                    }}
                 />
                 <AppPagination
                     align="end"

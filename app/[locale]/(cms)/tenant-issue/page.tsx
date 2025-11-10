@@ -81,6 +81,9 @@ export default function TenantIssue({}: Props) {
             false
         );
     };
+    const handleRefresh = () => {
+        refetch();
+    };
 
     return (
         <AppPageWrapper>
@@ -107,13 +110,13 @@ export default function TenantIssue({}: Props) {
                     headerTitle={
                         <div className="flex gap-2">
                             <AppSearch
-                                className="max-w-52"
+                                className="w-52 flex-shrink-0"
                                 onChange={onSearch}
                                 defaultValue={dataFilter.keyword}
                             />
                             <IssueLevelSelect
                                 placeholder={messages('issueLevel.label')}
-                                className="min-w-44"
+                                className="min-w-48 flex-shrink-0"
                                 allowClear
                                 onChange={(e) =>
                                     onChangeFilter({ issueLevelId: e })
@@ -121,7 +124,7 @@ export default function TenantIssue({}: Props) {
                             />
                             <IssueSelect
                                 placeholder={messages('issue.label')}
-                                className="min-w-44"
+                                className="min-w-48 flex-shrink-0"
                                 allowClear
                                 onChange={(e) => onChangeFilter({ issueId: e })}
                             />
@@ -137,6 +140,11 @@ export default function TenantIssue({}: Props) {
                     loading={isLoading}
                     dataFilter={dataFilter}
                     onChange={onChangeSort}
+                    options={{
+                        reload: () => {
+                            handleRefresh();
+                        },
+                    }}
                 />
 
                 <AppPagination

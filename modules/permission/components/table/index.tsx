@@ -1,14 +1,15 @@
 import ActionButton from '@/components/ui/button/action-button';
 import CopyText from '@/components/ui/copy-text/copy-text';
-import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
-import { ColumnType } from 'antd/es/table';
+import { ProColumns } from '@ant-design/pro-components';
+import { Button, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_PERMISSION } from '../../enums';
 import { PermissionData, PermissionDataDataFilter } from '../../types';
 
-type Props = Omit<AppTableProps<PermissionData>, 'columns'> & {
+type Props = Omit<AppProTableProps<PermissionData>, 'columns'> & {
     pagination: {
         pageSize: number;
         current: number;
@@ -19,7 +20,8 @@ type Props = Omit<AppTableProps<PermissionData>, 'columns'> & {
 export const PermissionTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
-    const column: ColumnType<PermissionData>[] = [
+    const { token } = theme.useToken();
+    const column: ProColumns<PermissionData>[] = [
         {
             title: messages('common.iNo'),
             key: 'iNo',
@@ -38,7 +40,7 @@ export const PermissionTable = ({ dataFilter, ...props }: Props) => {
             dataIndex: 'name',
             align: 'left',
             width: 200,
-            render: (value) => <CopyText text={value} />,
+            render: (value, record) => <CopyText text={record?.name} />,
         },
         {
             title: messages('common.code'),
@@ -46,7 +48,7 @@ export const PermissionTable = ({ dataFilter, ...props }: Props) => {
             dataIndex: 'code',
             align: 'left',
             width: 200,
-            render: (value) => <CopyText text={value} />,
+            render: (value, record) => <CopyText text={record?.code} />,
         },
         {
             title: messages('common.note'),
@@ -74,9 +76,9 @@ export const PermissionTable = ({ dataFilter, ...props }: Props) => {
                 dataFilter.fieldOrder,
                 'createdAt'
             ),
-            render: (value) => (
+            render: (value, record) => (
                 <span className="truncate text-wrap">
-                    {formattedDate(value)}
+                    {formattedDate(record?.createdAt)}
                 </span>
             ),
         },
@@ -92,9 +94,9 @@ export const PermissionTable = ({ dataFilter, ...props }: Props) => {
                 dataFilter.fieldOrder,
                 'updatedAt'
             ),
-            render: (value) => (
+            render: (value, record) => (
                 <span className="truncate text-wrap">
-                    {formattedDate(value)}
+                    {formattedDate(record?.updatedAt)}
                 </span>
             ),
         },
@@ -118,11 +120,33 @@ export const PermissionTable = ({ dataFilter, ...props }: Props) => {
     ];
 
     return (
-        <AppTable
+        <AppProTable
             {...props}
             pagination={false}
             columns={column}
             rowClassName={'group cursor-pointer'}
+            className={`rounded-t-lg px-4 ${props?.className}`}
+            style={{
+                backgroundColor: token.colorBgContainer,
+                ...props?.style,
+            }}
+            tableAlertRender={({ selectedRowKeys }) => (
+                <div className="flex items-center gap-2 font-semibold">
+                    <div className="space-x-1">
+                        <span>{selectedRowKeys.length}</span>
+                        <span>{messages('common.selected')}</span>
+                    </div>
+                    <Button
+                        danger
+                        type="primary"
+                        onClick={() =>
+                            openModal(TYPE_MODAL_PERMISSION.BULK_DELETE)
+                        }
+                    >
+                        {messages('permission.action.delete')}
+                    </Button>
+                </div>
+            )}
         />
     );
 };

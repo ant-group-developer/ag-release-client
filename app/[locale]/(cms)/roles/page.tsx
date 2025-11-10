@@ -1,5 +1,7 @@
 'use client';
-import AppContainer from '@/components/app-container';
+import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
+import CreateButton from '@/components/ui/button/create-button';
+import AppSearch from '@/components/ui/input/search';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -8,8 +10,6 @@ import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 
-import RolesHeader from '@/modules/roles/components/header';
-import RolesActions from '@/modules/roles/components/header/roles-actions';
 import RolesFormModal from '@/modules/roles/components/modal/roles-form';
 import { RolesTable } from '@/modules/roles/components/table';
 import { TYPE_MODAL_ROLES } from '@/modules/roles/enums';
@@ -17,6 +17,8 @@ import { useBulkDeleteRoles } from '@/modules/roles/hooks/use-bulk-delete-roles'
 import { useDeleteRole } from '@/modules/roles/hooks/use-delete-role';
 import { useGetListRoles } from '@/modules/roles/hooks/use-get-list-roles';
 import { RolesData, RolesDataDataFilter } from '@/modules/roles/types';
+import { PageContainer } from '@ant-design/pro-components';
+import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { Key, useState } from 'react';
 
@@ -27,8 +29,10 @@ export default function Roles({}: Props) {
     const messages = useTranslations();
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
+    const openModal = useModalStore((state) => state.openModal);
     const dataEdit = useModalStore<RolesData>((state) => state.dataEdit);
     const [selectedRow, setSelectedRow] = useState<Key[]>([]);
+    const { token } = theme.useToken();
 
     // func
     const handleResetSelectedRow = () => {
@@ -67,86 +71,117 @@ export default function Roles({}: Props) {
             false
         );
     };
+    const handleRefresh = () => {
+        refetch();
+    };
 
     return (
-        <AppContainer title={messages('roles.label')}>
-            <div className="app-header">
-                <RolesHeader dataFilter={dataFilter} onSearch={onSearch} />
-                <RolesActions
-                    selectedRowKeys={selectedRow}
-                    resetSelectedRows={() => handleResetSelectedRow()}
-                />
-            </div>
-
-            <RolesTable
-                sticky
-                dataSource={rolesData.items}
-                pagination={{
-                    pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                    current: rolesData.metadata.currentPage,
-                    total: rolesData.metadata.totalItems,
-                }}
-                loading={isFetching}
-                dataFilter={dataFilter}
-                onChange={onChangeSort}
-                rowSelection={rowSelection}
-            />
-
-            <AppPagination
-                align="end"
-                current={rolesData?.metadata?.currentPage}
-                pageSize={dataFilter.pageSize}
-                total={rolesData.metadata?.totalItems}
-                onChange={onChangePage}
-                showTotalText
-                showSizeChanger
-                showQuickJumper
-                pageSizeOptions={PAGE_SIZE_OPTIONS}
-            />
-
-            {(typeModal === TYPE_MODAL_ROLES.CREATE ||
-                typeModal === TYPE_MODAL_ROLES.UPDATE) && <RolesFormModal />}
-
-            {typeModal === TYPE_MODAL_ROLES.DELETE && (
-                <AppConfirm
-                    open
-                    modalTitle={messages('action.delete.title', {
-                        label: dataEdit?.name,
-                    })}
-                    paragraph={messages('action.delete.alert', {
-                        label: dataEdit?.name,
-                    })}
-                    onCancel={closeModal}
-                    onOk={() =>
-                        deleteRole({
-                            id: dataEdit?.id,
-                            onSuccess: () => closeModal(),
-                        })
+        <AppPageWrapper>
+            <PageContainer
+                title={messages('role.roles')}
+                extra={
+                    <CreateButton
+                        canCreate={true}
+                        text={messages('common.create')}
+                        onClick={() => openModal(TYPE_MODAL_ROLES.CREATE)}
+                    />
+                }
+            >
+                {/* <div className="app-header">
+                    <RolesHeader dataFilter={dataFilter} onSearch={onSearch} />
+                    <RolesActions
+                        selectedRowKeys={selectedRow}
+                        resetSelectedRows={() => handleResetSelectedRow()}
+                    />
+                </div> */}
+                <RolesTable
+                    sticky
+                    dataSource={rolesData.items}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: rolesData.metadata.currentPage,
+                        total: rolesData.metadata.totalItems,
+                    }}
+                    loading={isFetching}
+                    dataFilter={dataFilter}
+                    onChange={onChangeSort}
+                    rowSelection={rowSelection}
+                    headerTitle={
+                        <AppSearch
+                            className="max-w-52"
+                            onChange={onSearch}
+                            defaultValue={dataFilter.keyword}
+                        />
                     }
+                    options={{
+                        reload: () => {
+                            handleRefresh();
+                        },
+                    }}
                 />
-            )}
 
-            {typeModal === TYPE_MODAL_ROLES.BULK_DELETE && (
-                <AppConfirm
-                    open
-                    modalTitle={messages('action.delete.title', {
-                        label: '',
-                    })}
-                    paragraph={messages('action.delete.alert', {
-                        label: '',
-                    })}
-                    onCancel={closeModal}
-                    onOk={() =>
-                        bulkDeleteRoles({
-                            ids: selectedRow,
-                            onSuccess: () => {
-                                closeModal();
-                                handleResetSelectedRow();
-                            },
-                        })
-                    }
+                <AppPagination
+                    align="end"
+                    className="rounded-b-lg"
+                    style={{
+                        backgroundColor: token?.colorBgContainer,
+                    }}
+                    current={rolesData?.metadata?.currentPage}
+                    pageSize={dataFilter.pageSize}
+                    total={rolesData.metadata?.totalItems}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
                 />
-            )}
-        </AppContainer>
+
+                {(typeModal === TYPE_MODAL_ROLES.CREATE ||
+                    typeModal === TYPE_MODAL_ROLES.UPDATE) && (
+                    <RolesFormModal />
+                )}
+
+                {typeModal === TYPE_MODAL_ROLES.DELETE && (
+                    <AppConfirm
+                        open
+                        modalTitle={messages('action.delete.title', {
+                            label: dataEdit?.name,
+                        })}
+                        paragraph={messages('action.delete.alert', {
+                            label: dataEdit?.name,
+                        })}
+                        onCancel={closeModal}
+                        onOk={() =>
+                            deleteRole({
+                                id: dataEdit?.id,
+                                onSuccess: () => closeModal(),
+                            })
+                        }
+                    />
+                )}
+
+                {typeModal === TYPE_MODAL_ROLES.BULK_DELETE && (
+                    <AppConfirm
+                        open
+                        modalTitle={messages('action.delete.title', {
+                            label: '',
+                        })}
+                        paragraph={messages('action.delete.alert', {
+                            label: '',
+                        })}
+                        onCancel={closeModal}
+                        onOk={() =>
+                            bulkDeleteRoles({
+                                ids: selectedRow,
+                                onSuccess: () => {
+                                    closeModal();
+                                    handleResetSelectedRow();
+                                },
+                            })
+                        }
+                    />
+                )}
+            </PageContainer>
+        </AppPageWrapper>
     );
 }

@@ -1074,6 +1074,7 @@
     },
 
     "role": {
+        "roles": "Vai trò",
         "add": "Thêm vai trò",
         "update": "Cập nhật vai trò",
         "name": "Tên vai trò"

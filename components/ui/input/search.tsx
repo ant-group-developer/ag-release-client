@@ -16,7 +16,7 @@ export type AppSearchProps = {
 export default function AppSearch({
     onChange = () => {},
     wrapperClassName,
-    delay = 300,
+    delay = 800,
     onSearch,
     ...props
 }: AppSearchProps) {

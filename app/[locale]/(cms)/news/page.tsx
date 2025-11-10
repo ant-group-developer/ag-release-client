@@ -1,4 +1,5 @@
 'use client';
+import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import CreateButton from '@/components/ui/button/create-button';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
@@ -70,9 +71,12 @@ export default function News({}: Props) {
             false
         );
     };
+    const handleRefresh = () => {
+        refetch();
+    };
 
     return (
-        <div className="min-h-[calc(100vh-64px)] bg-[#f5f5f5]">
+        <AppPageWrapper>
             <PageContainer
                 fixedHeader
                 header={{
@@ -132,7 +136,9 @@ export default function News({}: Props) {
                     scroll={{ x: SCREEN.XL }}
                     // toolBarRender={false}
                     options={{
-                        reload: false,
+                        reload: () => {
+                            handleRefresh();
+                        },
                     }}
                     onSubmit={(params) => {
                         onChangeFilter(params);
@@ -197,6 +203,6 @@ export default function News({}: Props) {
                     pageSizeOptions={PAGE_SIZE_OPTIONS}
                 />
             </PageContainer>
-        </div>
+        </AppPageWrapper>
     );
 }

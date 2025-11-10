@@ -1072,6 +1072,7 @@
     },
 
     "role": {
+        "roles": "Roles",
         "add": "Add role artist",
         "update": "Update role",
         "name": "Role name"

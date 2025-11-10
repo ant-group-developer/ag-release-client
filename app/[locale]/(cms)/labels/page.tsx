@@ -113,6 +113,11 @@ export default function Labels({}: Props) {
                             defaultValue={dataFilter.keyword}
                         />
                     }
+                    options={{
+                        reload: () => {
+                            handleRefresh();
+                        },
+                    }}
                 />
 
                 {(typeModal === TYPE_MODAL_LABEL.CREATE ||

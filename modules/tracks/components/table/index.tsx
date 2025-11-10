@@ -286,9 +286,11 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
                 selectedRows,
                 onCleanSelected,
             }) => (
-                <div className="flex items-center gap-1 font-semibold">
-                    <span>{selectedRowKeys.length}</span>
-                    <span>{messages('common.selected')}</span>
+                <div className="flex items-center gap-2 font-semibold">
+                    <div className="space-x-1">
+                        <span>{selectedRowKeys.length}</span>
+                        <span>{messages('common.selected')}</span>
+                    </div>
                     <Button
                         type="primary"
                         onClick={() =>
