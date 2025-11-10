@@ -1,18 +1,18 @@
 import ActionButton from '@/components/ui/button/action-button';
 import CopyText from '@/components/ui/copy-text/copy-text';
 import ImageFallback from '@/components/ui/image/image-fallback';
-import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { formattedDate, getIndex } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
-import { Switch } from 'antd';
-import { ColumnType } from 'antd/es/table';
+import { ProColumns } from '@ant-design/pro-components';
+import { Switch, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_DSP } from '../../enums';
 import { useUpdateDsp } from '../../hooks/use-update-dsp';
 import { DspData } from '../../types';
 
-type Props = Omit<AppTableProps<DspData>, 'columns'> & {
+type Props = Omit<AppProTableProps<DspData>, 'columns'> & {
     pagination: {
         pageSize: number;
         current: number;
@@ -23,7 +23,9 @@ export const DspTable = ({ ...props }: Props) => {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const { updateDsp } = useUpdateDsp();
-    const column: ColumnType<DspData>[] = [
+    const { token } = theme.useToken();
+
+    const column: ProColumns<DspData>[] = [
         {
             title: messages('common.iNo'),
             key: 'iNo',
@@ -76,9 +78,9 @@ export const DspTable = ({ ...props }: Props) => {
                     </div>
                     <CopyText
                         tooltipProps={{ placement: 'right' }}
-                        text={value}
+                        text={record?.name}
                     >
-                        <p className="truncate">{value}</p>
+                        <p className="truncate">{record?.name}</p>
                     </CopyText>
                 </div>
             ),
@@ -89,9 +91,12 @@ export const DspTable = ({ ...props }: Props) => {
             dataIndex: 'code',
             align: 'left',
             width: 200,
-            render: (value) => (
-                <CopyText tooltipProps={{ placement: 'right' }} text={value}>
-                    <p className="truncate">{value}</p>
+            render: (value, record) => (
+                <CopyText
+                    tooltipProps={{ placement: 'right' }}
+                    text={record?.code}
+                >
+                    <p className="truncate">{record?.code}</p>
                 </CopyText>
             ),
         },
@@ -103,7 +108,7 @@ export const DspTable = ({ ...props }: Props) => {
             width: 80,
             render: (value, record) => (
                 <Switch
-                    value={value}
+                    value={record?.isActive}
                     onChange={(e) =>
                         updateDsp({ id: record?.id, payload: { isActive: e } })
                     }
@@ -118,7 +123,7 @@ export const DspTable = ({ ...props }: Props) => {
             width: 100,
             render: (value, record) => (
                 <Switch
-                    value={value}
+                    value={record?.enablePolicy}
                     onChange={(e) =>
                         updateDsp({
                             id: record?.id,
@@ -134,9 +139,9 @@ export const DspTable = ({ ...props }: Props) => {
             dataIndex: 'createdAt',
             align: 'center',
             width: 200,
-            render: (value) => (
+            render: (value, record) => (
                 <span className="truncate text-wrap">
-                    {formattedDate(value)}
+                    {formattedDate(record.createdAt)}
                 </span>
             ),
         },
@@ -146,9 +151,9 @@ export const DspTable = ({ ...props }: Props) => {
             dataIndex: 'updatedAt',
             align: 'center',
             width: 200,
-            render: (value) => (
+            render: (value, record) => (
                 <span className="truncate text-wrap">
-                    {formattedDate(value)}
+                    {formattedDate(record.updatedAt)}
                 </span>
             ),
         },
@@ -173,11 +178,16 @@ export const DspTable = ({ ...props }: Props) => {
     ];
 
     return (
-        <AppTable
+        <AppProTable
             {...props}
             pagination={false}
             columns={column}
             rowClassName={'group cursor-pointer'}
+            className={`rounded-t-lg px-4 ${props?.className}`}
+            style={{
+                backgroundColor: token.colorBgContainer,
+                ...props?.style,
+            }}
         />
     );
 };

@@ -1,5 +1,5 @@
 'use client';
-import AppContainer from '@/components/app-container';
+import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -19,6 +19,8 @@ import {
     NewsCategoryDataFilter,
 } from '@/modules/news-category/types';
 import { DeleteVariables } from '@/types/api';
+import { PageContainer } from '@ant-design/pro-components';
+import { theme } from 'antd';
 import { useLocale, useTranslations } from 'next-intl';
 
 type Props = {};
@@ -26,12 +28,13 @@ type Props = {};
 export default function NewsCategory({}: Props) {
     const messages = useTranslations();
     const locale = useLocale();
+    const { token } = theme.useToken();
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
         useFilter<NewsCategoryDataFilter>({
             page: 1,
             pageSize: PAGE_SIZE,
         });
-
+    const openModal = useModalStore((state) => state.openModal);
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore<NewsCategoryData>((state) => state.dataEdit);
@@ -64,53 +67,62 @@ export default function NewsCategory({}: Props) {
     };
 
     return (
-        <AppContainer title={messages('newsCategory.label')}>
-            <NewsCategoryHeader dataFilter={dataFilter} onSearch={onSearch} />
-            <NewsCategoryTable
-                sticky
-                dataSource={newsCategoryData?.items}
-                pagination={{
-                    pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                    current: newsCategoryData.metadata.currentPage,
-                    total: newsCategoryData.metadata.totalItems,
-                }}
-                loading={isFetching}
-                dataFilter={dataFilter}
-                onChange={onChangeSort}
-            />
-
-            {(typeModal === TYPE_MODAL_NEWS_CATEGORY.CREATE ||
-                typeModal === TYPE_MODAL_NEWS_CATEGORY.EDIT) && (
-                <NewsCategoryFormModal onCancel={closeModal} />
-            )}
-
-            {typeModal === TYPE_MODAL_NEWS_CATEGORY.DELETE && (
-                <AppConfirm
-                    open
-                    onOk={() => handleDelete()}
-                    onCancel={closeModal}
-                    modalTitle={`${messages('common.delete')} ${messages('newsCategory.label').toLowerCase()}`}
-                    paragraph={messages('delete.confirmMessage', {
-                        value: getNameByLocale(
-                            dataEdit?.nameEn,
-                            dataEdit?.nameVi,
-                            locale
-                        ),
-                    })}
+        <AppPageWrapper>
+            <PageContainer title={messages('newsCategory.label')}>
+                <NewsCategoryHeader
+                    dataFilter={dataFilter}
+                    onSearch={onSearch}
                 />
-            )}
+                <NewsCategoryTable
+                    sticky
+                    dataSource={newsCategoryData?.items}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: newsCategoryData.metadata.currentPage,
+                        total: newsCategoryData.metadata.totalItems,
+                    }}
+                    loading={isFetching}
+                    dataFilter={dataFilter}
+                    onChange={onChangeSort}
+                />
 
-            <AppPagination
-                align="end"
-                current={newsCategoryData?.metadata?.currentPage}
-                pageSize={dataFilter.pageSize}
-                total={newsCategoryData.metadata?.totalItems}
-                onChange={onChangePage}
-                showTotalText
-                showSizeChanger
-                showQuickJumper
-                pageSizeOptions={PAGE_SIZE_OPTIONS}
-            />
-        </AppContainer>
+                {(typeModal === TYPE_MODAL_NEWS_CATEGORY.CREATE ||
+                    typeModal === TYPE_MODAL_NEWS_CATEGORY.EDIT) && (
+                    <NewsCategoryFormModal onCancel={closeModal} />
+                )}
+
+                {typeModal === TYPE_MODAL_NEWS_CATEGORY.DELETE && (
+                    <AppConfirm
+                        open
+                        onOk={() => handleDelete()}
+                        onCancel={closeModal}
+                        modalTitle={`${messages('common.delete')} ${messages('newsCategory.label').toLowerCase()}`}
+                        paragraph={messages('delete.confirmMessage', {
+                            value: getNameByLocale(
+                                dataEdit?.nameEn,
+                                dataEdit?.nameVi,
+                                locale
+                            ),
+                        })}
+                    />
+                )}
+
+                <AppPagination
+                    align="end"
+                    className="rounded-b-lg"
+                    style={{
+                        backgroundColor: token.colorBgContainer,
+                    }}
+                    current={newsCategoryData?.metadata?.currentPage}
+                    pageSize={dataFilter.pageSize}
+                    total={newsCategoryData.metadata?.totalItems}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
+                />
+            </PageContainer>
+        </AppPageWrapper>
     );
 }

@@ -74,6 +74,11 @@ export default function Tracks({}: Props) {
                         pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
                     }}
                     dataFilter={dataFilter}
+                    options={{
+                        reload: () => {
+                            handleRefresh();
+                        },
+                    }}
                 />
             )}
 

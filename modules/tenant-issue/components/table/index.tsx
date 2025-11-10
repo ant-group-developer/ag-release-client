@@ -1,17 +1,17 @@
 import ActionButton from '@/components/ui/button/action-button';
-import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { formattedDate, getIndex } from '@/helpers/common';
 import { getNameByLocale } from '@/helpers/string';
 import useModalStore from '@/hooks/use-modal';
-import { Badge, Switch } from 'antd';
-import { ColumnType } from 'antd/es/table';
+import { ProColumns } from '@ant-design/pro-components';
+import { Badge, Switch, theme } from 'antd';
 import { useLocale, useTranslations } from 'next-intl';
 import { TYPE_MODAL_TENANT_ISSUES } from '../../enums';
 import { useUpdateTenantIssue } from '../../hooks/use-update';
 import { TenantIssueData, TenantIssueDataFilter } from '../../types';
 
-type Props = Omit<AppTableProps<TenantIssueData>, 'columns'> & {
+type Props = Omit<AppProTableProps<TenantIssueData>, 'columns'> & {
     pagination: {
         pageSize: number;
         current: number;
@@ -24,11 +24,12 @@ export default function TenantIssueTable({ dataFilter, ...props }: Props) {
     const openModal = useModalStore((state) => state.openModal);
     const locale = useLocale();
     const { updateTenantIssue } = useUpdateTenantIssue();
+    const { token } = theme.useToken();
 
     // const { isSystemTenant } = useAuth();
     // const { hasPermission } = usePermission();
 
-    const column: ColumnType<TenantIssueData>[] = [
+    const column: ProColumns<TenantIssueData>[] = [
         {
             title: messages('common.iNo'),
             key: 'iNo',
@@ -89,7 +90,9 @@ export default function TenantIssueTable({ dataFilter, ...props }: Props) {
             dataIndex: 'score',
             align: 'center',
             width: 80,
-            render: (value) => <span className="truncate">{value}</span>,
+            render: (value, record) => (
+                <span className="truncate">{record?.score}</span>
+            ),
         },
         {
             title: messages('common.startDateAffect'),
@@ -97,8 +100,10 @@ export default function TenantIssueTable({ dataFilter, ...props }: Props) {
             dataIndex: 'startDateAffect',
             align: 'center',
             width: 150,
-            render: (value) => (
-                <span className="truncate">{formattedDate(value)}</span>
+            render: (value, record) => (
+                <span className="truncate">
+                    {formattedDate(record?.startDateAffect)}
+                </span>
             ),
         },
         {
@@ -107,8 +112,10 @@ export default function TenantIssueTable({ dataFilter, ...props }: Props) {
             dataIndex: 'endDateAffect',
             align: 'center',
             width: 150,
-            render: (value) => (
-                <span className="truncate">{formattedDate(value)}</span>
+            render: (value, record) => (
+                <span className="truncate">
+                    {formattedDate(record?.endDateAffect)}
+                </span>
             ),
         },
         {
@@ -119,7 +126,7 @@ export default function TenantIssueTable({ dataFilter, ...props }: Props) {
             width: 100,
             render: (value, record) => (
                 <Switch
-                    checked={value}
+                    checked={record?.isActive}
                     onChange={(e) =>
                         updateTenantIssue({
                             id: record?.id,
@@ -138,10 +145,10 @@ export default function TenantIssueTable({ dataFilter, ...props }: Props) {
             ellipsis: true,
             align: 'left',
             width: 200,
-            render: (value) => (
+            render: (value, record) => (
                 <CustomTooltip title={value}>
                     <span className="line-clamp-3 truncate whitespace-pre-line">
-                        {value}
+                        {record?.description}
                     </span>
                 </CustomTooltip>
             ),
@@ -153,10 +160,10 @@ export default function TenantIssueTable({ dataFilter, ...props }: Props) {
             ellipsis: true,
             align: 'left',
             width: 200,
-            render: (value) => (
+            render: (value, record) => (
                 <CustomTooltip title={value}>
                     <span className="line-clamp-3 truncate whitespace-pre-line">
-                        {value}
+                        {record?.note}
                     </span>
                 </CustomTooltip>
             ),
@@ -219,12 +226,17 @@ export default function TenantIssueTable({ dataFilter, ...props }: Props) {
     ];
 
     return (
-        <AppTable
+        <AppProTable
             key="main"
             {...props}
             pagination={false}
             columns={column}
             rowClassName={'group'}
+            className={`rounded-t-lg px-4 ${props?.className}`}
+            style={{
+                backgroundColor: token.colorBgContainer,
+                ...props?.style,
+            }}
         />
     );
 }

@@ -1074,6 +1074,7 @@
     },
 
     "role": {
+        "roles": "Vai trò",
         "add": "Thêm vai trò",
         "update": "Cập nhật vai trò",
         "name": "Tên vai trò"
@@ -1695,6 +1696,7 @@
         "label": "Tin tức mới",
         "latest": "Tin mới nhất",
         "related": "Tin tức liên quan",
+        "list": "Danh sách bài viết",
         "message": {
             "success": {
                 "create": "Tạo tin tức thành công",

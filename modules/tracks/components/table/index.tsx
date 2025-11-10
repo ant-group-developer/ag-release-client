@@ -16,7 +16,7 @@ import {
 } from '@/modules/tracks/enums';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { ProColumns } from '@ant-design/pro-components';
-import { Button } from 'antd';
+import { Button, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { TrackData, TrackDataFilter } from '../../types';
@@ -36,6 +36,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
     const openModal = useModalStore((state) => state.openModal);
     const router = useRouter();
     const params = useParams();
+    const { token } = theme.useToken();
     const column: ProColumns<TrackData>[] = [
         {
             title: messages('common.iNo'),
@@ -285,9 +286,11 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
                 selectedRows,
                 onCleanSelected,
             }) => (
-                <div className="flex items-center gap-1 font-semibold">
-                    <span>{selectedRowKeys.length}</span>
-                    <span>{messages('common.selected')}</span>
+                <div className="flex items-center gap-2 font-semibold">
+                    <div className="space-x-1">
+                        <span>{selectedRowKeys.length}</span>
+                        <span>{messages('common.selected')}</span>
+                    </div>
                     <Button
                         type="primary"
                         onClick={() =>
@@ -303,6 +306,11 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
                 persistenceType: 'sessionStorage',
             }}
             {...props}
+            className={`rounded-t-lg px-4 ${props?.className}`}
+            style={{
+                backgroundColor: token.colorBgContainer,
+                ...props?.style,
+            }}
             pagination={false}
             columns={column}
             rowClassName={'group'}

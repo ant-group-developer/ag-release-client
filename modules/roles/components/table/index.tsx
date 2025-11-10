@@ -1,15 +1,17 @@
 import ActionButton from '@/components/ui/button/action-button';
 import CopyText from '@/components/ui/copy-text/copy-text';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
-import { Badge, Empty } from 'antd';
+import { ProColumns } from '@ant-design/pro-components';
+import { Badge, Button, Empty, theme } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_ROLES } from '../../enums';
 import { RolePermission, RolesData, RolesDataDataFilter } from '../../types';
 
-type Props = Omit<AppTableProps<RolesData>, 'columns'> & {
+type Props = Omit<AppProTableProps<RolesData>, 'columns'> & {
     pagination: {
         pageSize: number;
         current: number;
@@ -20,8 +22,9 @@ type Props = Omit<AppTableProps<RolesData>, 'columns'> & {
 export const RolesTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
+    const { token } = theme.useToken();
 
-    const column: ColumnType<RolesData>[] = [
+    const column: ProColumns<RolesData>[] = [
         {
             title: messages('common.iNo'),
             key: 'iNo',
@@ -42,9 +45,12 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
             width: 150,
             ellipsis: true,
             render: (value, record) => (
-                <CopyText text={value} className="flex items-center gap-2">
+                <CopyText
+                    text={record?.name}
+                    className="flex items-center gap-2"
+                >
                     <Badge color={record.color} />
-                    <span className="flex-1 truncate">{value}</span>
+                    <span className="flex-1 truncate">{record?.name}</span>
                 </CopyText>
             ),
         },
@@ -55,7 +61,7 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
             align: 'left',
             width: 150,
             ellipsis: true,
-            render: (value) => <CopyText text={value} />,
+            render: (value, record) => <CopyText text={record?.code ?? ''} />,
         },
         {
             title: messages('common.note'),
@@ -64,10 +70,10 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
             align: 'left',
             width: 300,
             ellipsis: true,
-            render: (value) => (
-                <CopyText text={value}>
+            render: (value, record) => (
+                <CopyText text={record?.note ?? ''}>
                     <span className="line-clamp-3 truncate whitespace-pre-line">
-                        {value}
+                        {record?.note}
                     </span>
                 </CopyText>
             ),
@@ -85,9 +91,9 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
                 dataFilter.fieldOrder,
                 'createdAt'
             ),
-            render: (value) => (
+            render: (value, record) => (
                 <span className="truncate text-wrap">
-                    {formattedDate(value)}
+                    {formattedDate(record?.createdAt)}
                 </span>
             ),
         },
@@ -103,9 +109,9 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
                 dataFilter.fieldOrder,
                 'updatedAt'
             ),
-            render: (value) => (
+            render: (value, record) => (
                 <span className="truncate text-wrap">
-                    {formattedDate(value)}
+                    {formattedDate(record?.updatedAt)}
                 </span>
             ),
         },
@@ -187,14 +193,15 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
             ];
 
             return (
-                <div className="p-2">
+                <div>
                     <AppTable
-                        className="ml-24 rounded-lg border"
+                        className="ml-24 rounded-lg border p-2"
                         columns={childColumns}
                         dataSource={rows}
                         pagination={{
                             pageSize: 5,
                             showSizeChanger: false,
+                            size: 'default',
                         }}
                     />
                 </div>
@@ -206,13 +213,37 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
     };
 
     return (
-        <AppTable
+        <AppProTable
             key="main"
             {...props}
             pagination={false}
             columns={column}
             rowClassName={'group cursor-pointer'}
             expandable={expandable}
+            className={`rounded-t-lg px-4 ${props?.className}`}
+            style={{
+                backgroundColor: token.colorBgContainer,
+                ...props?.style,
+            }}
+            tableAlertRender={({
+                selectedRowKeys,
+                selectedRows,
+                onCleanSelected,
+            }) => (
+                <div className="flex items-center gap-2 font-semibold">
+                    <div className="space-x-1">
+                        <span>{selectedRowKeys.length}</span>
+                        <span>{messages('common.selected')}</span>
+                    </div>
+                    <Button
+                        danger
+                        type="primary"
+                        onClick={() => openModal(TYPE_MODAL_ROLES.BULK_DELETE)}
+                    >
+                        {messages('roles.action.delete')}
+                    </Button>
+                </div>
+            )}
         />
     );
 };

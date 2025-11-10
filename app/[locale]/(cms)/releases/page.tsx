@@ -1,4 +1,5 @@
 'use client';
+import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -125,10 +126,7 @@ export default function Releases({}: Props) {
     }, [visibleColumns]);
 
     return (
-        <div
-            className="min-h-[calc(100vh-64px)]"
-            style={{ backgroundColor: token.colorBgLayout }}
-        >
+        <AppPageWrapper>
             <PageContainer title={messages('release.releases')}>
                 {/* <ReleasesHeader
                     dataFilter={dataFilter}
@@ -206,6 +204,6 @@ export default function Releases({}: Props) {
                     />
                 )}
             </PageContainer>
-        </div>
+        </AppPageWrapper>
     );
 }

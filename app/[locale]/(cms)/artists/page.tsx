@@ -1,4 +1,7 @@
 'use client';
+import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
+import CreateButton from '@/components/ui/button/create-button';
+import AppSearch from '@/components/ui/input/search';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -6,13 +9,14 @@ import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import ArtistsHeader from '@/modules/artist/components/header';
+import { usePermission } from '@/hooks/use-permission';
 import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
 import { ArtistsTable } from '@/modules/artist/components/table';
 import { TYPE_MODAL_ARTIST } from '@/modules/artist/enum';
 import { useDeleteArtist } from '@/modules/artist/hooks/use-delete-artist';
 import { useGetListArtist } from '@/modules/artist/hooks/use-get-list-artists';
 import { ArtistData, ArtistDataFilter } from '@/modules/artist/types';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { DeleteVariables } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { theme } from 'antd';
@@ -23,6 +27,8 @@ type Props = {};
 
 export default function Artists({}: Props) {
     // hooks - state
+    const openModal = useModalStore((state) => state.openModal);
+    const { hasPermission } = usePermission();
     const messages = useTranslations();
     const { token } = theme.useToken();
     const {
@@ -71,16 +77,25 @@ export default function Artists({}: Props) {
     };
 
     return (
-        <div
-            className="min-h-[calc(100vh-64px)]"
-            style={{
-                backgroundColor: token?.colorBgLayout,
-            }}
-        >
-            <PageContainer title={messages('artist.label')}>
-                <ArtistsHeader dataFilter={dataFilter} onSearch={onSearch} />
+        <AppPageWrapper>
+            <PageContainer
+                title={messages('artist.label')}
+                extra={
+                    <>
+                        {hasPermission(PERMISSION.ARTIST.CREATE) && (
+                            <CreateButton
+                                canCreate={true}
+                                text={messages('artist.create')}
+                                onClick={() =>
+                                    openModal(TYPE_MODAL_ARTIST.CREATE)
+                                }
+                            />
+                        )}
+                    </>
+                }
+            >
+                {/* <ArtistsHeader dataFilter={dataFilter} onSearch={onSearch} /> */}
                 <ArtistsTable
-                    className="rounded-t-lg"
                     sticky
                     dataSource={artistsData?.items}
                     pagination={{
@@ -91,6 +106,34 @@ export default function Artists({}: Props) {
                     loading={isFetching}
                     onChange={onChangeSort}
                     dataFilter={dataFilter}
+                    headerTitle={
+                        <AppSearch
+                            className="max-w-52"
+                            onChange={onSearch}
+                            defaultValue={dataFilter.keyword}
+                        />
+                    }
+                    options={{
+                        reload: () => {
+                            handleRefresh();
+                        },
+                    }}
+                />
+
+                <AppPagination
+                    align="end"
+                    className="rounded-b-lg"
+                    style={{
+                        backgroundColor: token?.colorBgContainer,
+                    }}
+                    current={artistsData?.metadata?.currentPage}
+                    pageSize={dataFilter.pageSize}
+                    total={artistsData?.metadata?.totalItems}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
                 />
 
                 {(typeModal === TYPE_MODAL_ARTIST.CREATE ||
@@ -109,23 +152,7 @@ export default function Artists({}: Props) {
                         })}
                     />
                 )}
-
-                <AppPagination
-                    align="end"
-                    className="rounded-b-lg"
-                    style={{
-                        backgroundColor: token?.colorBgContainer,
-                    }}
-                    current={artistsData?.metadata?.currentPage}
-                    pageSize={dataFilter.pageSize}
-                    total={artistsData?.metadata?.totalItems}
-                    onChange={onChangePage}
-                    showTotalText
-                    showSizeChanger
-                    showQuickJumper
-                    pageSizeOptions={PAGE_SIZE_OPTIONS}
-                />
             </PageContainer>
-        </div>
+        </AppPageWrapper>
     );
 }

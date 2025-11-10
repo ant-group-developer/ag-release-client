@@ -1,4 +1,5 @@
 'use client';
+import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { LAYOUT_TABLE, ORDER } from '@/enums/common';
@@ -78,12 +79,7 @@ export default function Tracks({}: Props) {
     };
 
     return (
-        <div
-            className="min-h-[calc(100vh-64px)]"
-            style={{
-                backgroundColor: token.colorBgLayout,
-            }}
-        >
+        <AppPageWrapper>
             <PageContainer title={messages('common.tracks')}>
                 {/* <div className="app-header">
                     <TracksHeader
@@ -172,6 +168,6 @@ export default function Tracks({}: Props) {
                     <AcrCloudScanResultModal />
                 )}
             </PageContainer>
-        </div>
+        </AppPageWrapper>
     );
 }

@@ -1072,6 +1072,7 @@
     },
 
     "role": {
+        "roles": "Roles",
         "add": "Add role artist",
         "update": "Update role",
         "name": "Role name"
@@ -1690,6 +1691,7 @@
         "label": "News post",
         "latest": "Latest news",
         "related": "Related news",
+        "list": "Post list",
         "message": {
             "success": {
                 "create": "News created successfully",

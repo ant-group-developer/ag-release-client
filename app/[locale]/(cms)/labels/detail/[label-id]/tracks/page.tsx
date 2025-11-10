@@ -70,6 +70,11 @@ export default function Tracks({}: Props) {
                         current: tracksData?.metadata?.currentPage,
                     }}
                     dataFilter={dataFilter}
+                    options={{
+                        reload: () => {
+                            handleRefresh();
+                        },
+                    }}
                 />
             )}
 

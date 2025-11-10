@@ -1,7 +1,7 @@
 import ActionButton from '@/components/ui/button/action-button';
 import CopyText from '@/components/ui/copy-text/copy-text';
 import ImageFallback from '@/components/ui/image/image-fallback';
-import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { getIndex, getSortOrder } from '@/helpers/common';
@@ -11,13 +11,13 @@ import { usePermission } from '@/hooks/use-permission';
 import { Link, useRouter } from '@/i18n/routing';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
-import { Avatar } from 'antd';
-import { ColumnType } from 'antd/es/table';
+import { ProColumns } from '@ant-design/pro-components';
+import { Avatar, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { ARTIST_DETAIL_TABS, TYPE_MODAL_ARTIST } from '../../enum';
 import { ArtistData, ArtistDataFilter } from '../../types';
 
-type Props = Omit<AppTableProps<ArtistData>, 'columns'> & {
+type Props = Omit<AppProTableProps<ArtistData>, 'columns'> & {
     pagination: {
         pageSize: number;
         current: number;
@@ -29,16 +29,18 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
     const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
+    const { token } = theme.useToken();
 
     const { isSystemTenant } = useAuth();
     const { hasPermission } = usePermission();
 
-    const column: ColumnType<ArtistData>[] = [
+    const column: ProColumns<ArtistData>[] = [
         {
             title: messages('common.iNo'),
             key: 'iNo',
             width: 60,
             align: 'center',
+            fixed: 'left',
             render: (_, __, index) =>
                 getIndex(
                     props.pagination.pageSize,
@@ -77,7 +79,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
             ellipsis: true,
             align: 'left',
             fixed: 'left',
-            width: 300,
+            width: 280,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -114,7 +116,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
                             )}
                         >
                             <p className="truncate hover:text-blue-500">
-                                {value}
+                                {record?.name}
                             </p>
                         </Link>
                     </CustomTooltip>
@@ -144,9 +146,12 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
             dataIndex: 'code',
             align: 'left',
             width: 150,
-            render: (value) => (
-                <CopyText tooltipProps={{ placement: 'right' }} text={value}>
-                    <p className="truncate">{value}</p>
+            render: (value, record) => (
+                <CopyText
+                    tooltipProps={{ placement: 'right' }}
+                    text={record?.code}
+                >
+                    <p className="truncate">{record?.code}</p>
                 </CopyText>
             ),
         },
@@ -154,7 +159,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
             title: messages('artist.profiles'),
             key: 'artistProfiles',
             dataIndex: 'artistProfiles',
-            width: 200,
+            width: 180,
             render: (_, record) => (
                 <div>
                     <Avatar.Group
@@ -245,49 +250,11 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
             render: (value, record) => {
                 return (
                     <span className="line-clamp-3 whitespace-pre-line">
-                        {value}
+                        {record?.biography}
                     </span>
                 );
             },
         },
-        // {
-        //     title: messages('common.createdAt'),
-        //     key: 'createdAt',
-        //     dataIndex: 'createdAt',
-        //     align: 'center',
-        //     width: 150,
-        //     sorter: true,
-        //     sortOrder: getSortOrder(
-        //         dataFilter.orderBy,
-        //         dataFilter.fieldOrder,
-        //         'createdAt'
-        //     ),
-        //     render: (value) => (
-        //         <span className="truncate text-wrap">
-        //             {' '}
-        //             {formattedDate(value)}{' '}
-        //         </span>
-        //     ),
-        // },
-        // {
-        //     title: messages('common.updatedAt'),
-        //     key: 'updatedAt',
-        //     dataIndex: 'updatedAt',
-        //     align: 'center',
-        //     width: 150,
-        //     sorter: true,
-        //     sortOrder: getSortOrder(
-        //         dataFilter.orderBy,
-        //         dataFilter.fieldOrder,
-        //         'updatedAt'
-        //     ),
-        //     render: (value) => (
-        //         <span className="truncate text-wrap">
-        //             {' '}
-        //             {formattedDate(value)}{' '}
-        //         </span>
-        //     ),
-        // },
         {
             key: 'actions',
             align: 'center',
@@ -318,11 +285,17 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
     ];
 
     return (
-        <AppTable
+        <AppProTable
             {...props}
+            className={`rounded-t-lg px-4 ${props?.className}`}
+            style={{
+                backgroundColor: token.colorBgContainer,
+                ...props?.style,
+            }}
             pagination={false}
             columns={column}
             rowClassName={'group cursor-pointer'}
+            search={false}
         />
     );
 };

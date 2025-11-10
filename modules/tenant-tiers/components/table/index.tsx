@@ -1,16 +1,17 @@
 import ActionButton from '@/components/ui/button/action-button';
 import AppColorPicker from '@/components/ui/colorPicker/app-color-picker';
-import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { getIndex } from '@/helpers/common';
 import { getNameByLocale } from '@/helpers/string';
 import useModalStore from '@/hooks/use-modal';
-import { ColumnType } from 'antd/es/table';
+import { ProColumns } from '@ant-design/pro-components';
+import { theme } from 'antd';
 import { useLocale, useTranslations } from 'next-intl';
 import { TYPE_MODAL_TENANT_TIERS } from '../../enums';
 import { TenantTiersData, TenantTiersDataFilter } from '../../types';
 
-type Props = Omit<AppTableProps<TenantTiersData>, 'columns'> & {
+type Props = Omit<AppProTableProps<TenantTiersData>, 'columns'> & {
     pagination: {
         pageSize: number;
         current: number;
@@ -22,11 +23,12 @@ export default function TenantTiersTable({ dataFilter, ...props }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const locale = useLocale();
+    const { token } = theme.useToken();
 
     // const { isSystemTenant } = useAuth();
     // const { hasPermission } = usePermission();
 
-    const column: ColumnType<TenantTiersData>[] = [
+    const column: ProColumns<TenantTiersData>[] = [
         {
             title: messages('common.iNo'),
             key: 'iNo',
@@ -67,9 +69,9 @@ export default function TenantTiersTable({ dataFilter, ...props }: Props) {
             dataIndex: 'code',
             align: 'left',
             width: 200,
-            render: (value) => (
-                <CustomTooltip title={value}>
-                    <span className="truncate">{value}</span>
+            render: (value, record) => (
+                <CustomTooltip title={record?.code}>
+                    <span className="truncate">{record?.code}</span>
                 </CustomTooltip>
             ),
         },
@@ -79,7 +81,9 @@ export default function TenantTiersTable({ dataFilter, ...props }: Props) {
             dataIndex: 'color',
             align: 'left',
             width: 150,
-            render: (value) => <AppColorPicker disabled value={value} />,
+            render: (value, record) => (
+                <AppColorPicker disabled value={record?.color} />
+            ),
         },
         {
             title: messages('common.minScore'),
@@ -87,7 +91,9 @@ export default function TenantTiersTable({ dataFilter, ...props }: Props) {
             dataIndex: 'minScore',
             align: 'center',
             width: 100,
-            render: (value) => <p className="truncate">{value}</p>,
+            render: (value, record) => (
+                <p className="truncate">{record?.minScore}</p>
+            ),
         },
         {
             title: messages('common.maxScore'),
@@ -95,7 +101,9 @@ export default function TenantTiersTable({ dataFilter, ...props }: Props) {
             dataIndex: 'maxScore',
             align: 'center',
             width: 100,
-            render: (value) => <p className="truncate">{value}</p>,
+            render: (value, record) => (
+                <p className="truncate">{record.maxScore}</p>
+            ),
         },
         {
             title: messages('common.description'),
@@ -104,11 +112,10 @@ export default function TenantTiersTable({ dataFilter, ...props }: Props) {
             ellipsis: true,
             align: 'left',
             width: 200,
-            render: (value) => (
-                <CustomTooltip title={value}>
+            render: (value, record) => (
+                <CustomTooltip title={record?.description}>
                     <span className="line-clamp-3 truncate whitespace-pre-line">
-                        {' '}
-                        {value}{' '}
+                        {record?.description}
                     </span>
                 </CustomTooltip>
             ),
@@ -120,11 +127,10 @@ export default function TenantTiersTable({ dataFilter, ...props }: Props) {
             ellipsis: true,
             align: 'left',
             width: 200,
-            render: (value) => (
+            render: (value, record) => (
                 <CustomTooltip title={value}>
                     <span className="line-clamp-3 truncate whitespace-pre-line">
-                        {' '}
-                        {value}{' '}
+                        {record?.note}
                     </span>
                 </CustomTooltip>
             ),
@@ -187,12 +193,17 @@ export default function TenantTiersTable({ dataFilter, ...props }: Props) {
     ];
 
     return (
-        <AppTable
+        <AppProTable
             key="main"
             {...props}
             pagination={false}
             columns={column}
             rowClassName={'group'}
+            className={`rounded-t-lg px-4 ${props?.className}`}
+            style={{
+                backgroundColor: token.colorBgContainer,
+                ...props?.style,
+            }}
         />
     );
 }

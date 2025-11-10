@@ -1,11 +1,14 @@
 'use client';
+import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
+import CreateButton from '@/components/ui/button/create-button';
+import AppSearch from '@/components/ui/input/search';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
 import { useLoadingStatus } from '@/hooks/use-loading-status';
 import useModalStore from '@/hooks/use-modal';
-import DspHeader from '@/modules/dsp/components/header';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import DspFormModal from '@/modules/dsp/components/modal/dsp-form';
 import { DspTable } from '@/modules/dsp/components/table';
 import { dspQueryKeys } from '@/modules/dsp/constants/query-keys';
@@ -33,6 +36,8 @@ export default function Dsp() {
         queryKeys: [dspQueryKeys.lists()],
         mutationKeys: [dspQueryKeys.all],
     });
+    const openModal = useModalStore((state) => state.openModal);
+    const { isSystemTenant } = useAuth();
 
     // apis
     const { dspData, isFetching, refetch, lastUpdatedAt } =
@@ -47,21 +52,30 @@ export default function Dsp() {
         };
         deleteDsp(variables);
     };
+    const handleRefresh = () => {
+        refetch();
+    };
 
     return (
-        <div
-            className="min-h-[calc(100vh-64px)]"
-            style={{
-                backgroundColor: token?.colorBgLayout,
-            }}
-        >
+        <AppPageWrapper>
             <PageContainer
                 title={messages('dsp.label')}
                 style={{
                     backgroundColor: token.colorBgLayout,
                 }}
+                extra={
+                    <div className="">
+                        {isSystemTenant && (
+                            <CreateButton
+                                canCreate={true}
+                                text={messages('dsp.add')}
+                                onClick={() => openModal(TYPE_MODAL_DSP.CREATE)}
+                            />
+                        )}
+                    </div>
+                }
             >
-                <DspHeader dataFilter={dataFilter} onSearch={onSearch} />
+                {/* <DspHeader dataFilter={dataFilter} onSearch={onSearch} /> */}
                 <DspTable
                     className="rounded-t-lg"
                     sticky
@@ -72,6 +86,18 @@ export default function Dsp() {
                         total: dspData.metadata.totalItems,
                     }}
                     loading={isLoading}
+                    headerTitle={
+                        <AppSearch
+                            className="max-w-52"
+                            onChange={onSearch}
+                            defaultValue={dataFilter.keyword}
+                        />
+                    }
+                    options={{
+                        reload: () => {
+                            handleRefresh();
+                        },
+                    }}
                 />
                 <AppPagination
                     align="end"
@@ -104,6 +130,6 @@ export default function Dsp() {
                 {(typeModal === TYPE_MODAL_DSP.CREATE ||
                     typeModal === TYPE_MODAL_DSP.UPDATE) && <DspFormModal />}
             </PageContainer>
-        </div>
+        </AppPageWrapper>
     );
 }

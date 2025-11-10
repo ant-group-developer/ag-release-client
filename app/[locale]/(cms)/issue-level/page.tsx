@@ -1,5 +1,5 @@
 'use client';
-import AppContainer from '@/components/app-container';
+import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -12,6 +12,7 @@ import { IssueLevelHeader } from '@/modules/issue-level/components/header';
 import IssueLevelFormModal from '@/modules/issue-level/components/modal/issue-level-form';
 import IssueLevelTable from '@/modules/issue-level/components/table';
 import { TYPE_MODAL_ISSUE_LEVEL } from '@/modules/issue-level/enums';
+import { useBulkUpdateIssueLevel } from '@/modules/issue-level/hooks/use-bulk-update';
 import { useDeleteIssueLevel } from '@/modules/issue-level/hooks/use-delete';
 import { useGetListIssueLevel } from '@/modules/issue-level/hooks/use-get-list';
 import {
@@ -19,6 +20,8 @@ import {
     IssueLevelDataFilter,
 } from '@/modules/issue-level/types';
 import { DeleteVariables } from '@/types/api';
+import { PageContainer } from '@ant-design/pro-components';
+import { theme } from 'antd';
 import { useLocale, useTranslations } from 'next-intl';
 
 type Props = {};
@@ -31,10 +34,11 @@ export default function IssueLevel({}: Props) {
             page: 1,
             pageSize: PAGE_SIZE,
         });
-
+    const { token } = theme.useToken();
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore<IssueLevelData>((state) => state.dataEdit);
+    const { bulkUpdateIssueLevel } = useBulkUpdateIssueLevel();
 
     // apis
     const { issueLevelData, isFetching, refetch } =
@@ -63,54 +67,75 @@ export default function IssueLevel({}: Props) {
         );
     };
 
+    const handleDragEnd = (
+        preIndex: number,
+        afterIndex: number,
+        newData: IssueLevelData[]
+    ) => {
+        const payload = newData.map((item, index) => ({
+            id: item.id,
+            severityRank: index + 1,
+        }));
+
+        bulkUpdateIssueLevel({
+            issueLevels: payload,
+        });
+    };
+
     return (
-        <AppContainer title={messages('issueLevel.label')}>
-            <IssueLevelHeader dataFilter={dataFilter} onSearch={onSearch} />
-            <IssueLevelTable
-                sticky
-                dataSource={issueLevelData?.items}
-                pagination={{
-                    pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                    current: issueLevelData.metadata.currentPage,
-                    total: issueLevelData.metadata.totalItems,
-                }}
-                loading={isFetching}
-                dataFilter={dataFilter}
-                onChange={onChangeSort}
-            />
-
-            {(typeModal === TYPE_MODAL_ISSUE_LEVEL.CREATE ||
-                typeModal === TYPE_MODAL_ISSUE_LEVEL.EDIT) && (
-                <IssueLevelFormModal onCancel={closeModal} />
-            )}
-
-            {typeModal === TYPE_MODAL_ISSUE_LEVEL.DELETE && (
-                <AppConfirm
-                    open
-                    onOk={() => handleDelete()}
-                    onCancel={closeModal}
-                    modalTitle={`${messages('common.delete')} ${messages('issueLevel.label').toLowerCase()}`}
-                    paragraph={messages('delete.confirmMessage', {
-                        value: getNameByLocale(
-                            dataEdit?.nameEn,
-                            dataEdit?.nameVi,
-                            locale
-                        ),
-                    })}
+        <AppPageWrapper>
+            <PageContainer title={messages('issueLevel.label')}>
+                <IssueLevelHeader dataFilter={dataFilter} onSearch={onSearch} />
+                <IssueLevelTable
+                    sticky
+                    dataSource={issueLevelData?.items}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: issueLevelData.metadata.currentPage,
+                        total: issueLevelData.metadata.totalItems,
+                    }}
+                    loading={isFetching}
+                    dataFilter={dataFilter}
+                    onChange={onChangeSort}
                 />
-            )}
 
-            <AppPagination
-                align="end"
-                current={issueLevelData?.metadata?.currentPage}
-                pageSize={dataFilter.pageSize}
-                total={issueLevelData.metadata?.totalItems}
-                onChange={onChangePage}
-                showTotalText
-                showSizeChanger
-                showQuickJumper
-                pageSizeOptions={PAGE_SIZE_OPTIONS}
-            />
-        </AppContainer>
+                {(typeModal === TYPE_MODAL_ISSUE_LEVEL.CREATE ||
+                    typeModal === TYPE_MODAL_ISSUE_LEVEL.EDIT) && (
+                    <IssueLevelFormModal onCancel={closeModal} />
+                )}
+
+                {typeModal === TYPE_MODAL_ISSUE_LEVEL.DELETE && (
+                    <AppConfirm
+                        open
+                        onOk={() => handleDelete()}
+                        onCancel={closeModal}
+                        modalTitle={`${messages('common.delete')} ${messages('issueLevel.label').toLowerCase()}`}
+                        paragraph={messages('delete.confirmMessage', {
+                            value: getNameByLocale(
+                                dataEdit?.nameEn,
+                                dataEdit?.nameVi,
+                                locale
+                            ),
+                        })}
+                    />
+                )}
+
+                <AppPagination
+                    align="end"
+                    className="rounded-b-lg"
+                    style={{
+                        backgroundColor: token.colorBgContainer,
+                    }}
+                    current={issueLevelData?.metadata?.currentPage}
+                    pageSize={dataFilter.pageSize}
+                    total={issueLevelData.metadata?.totalItems}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
+                />
+            </PageContainer>
+        </AppPageWrapper>
     );
 }

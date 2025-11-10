@@ -23,7 +23,7 @@ import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { ProColumns } from '@ant-design/pro-components';
-import { Tag } from 'antd';
+import { Tag, theme } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
 import { useTranslations } from 'next-intl';
 import {
@@ -51,7 +51,7 @@ export default function ReleasesTable({
     const messages = useTranslations();
     const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
-
+    const { token } = theme.useToken();
     const { isSystemTenant } = useAuth();
     const { hasPermission } = usePermission();
 
@@ -419,6 +419,11 @@ export default function ReleasesTable({
             pagination={false}
             columns={column}
             rowClassName={'group'}
+            className={`rounded-t-lg px-4 ${props?.className}`}
+            style={{
+                backgroundColor: token.colorBgContainer,
+                ...props?.style,
+            }}
             columnsState={{
                 persistenceKey: 'releases-table-columns',
                 persistenceType: 'sessionStorage',

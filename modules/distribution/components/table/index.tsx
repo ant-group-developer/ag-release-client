@@ -12,7 +12,7 @@ import { ReleaseArtist } from '@/modules/release-artist/types';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { ReleasesData } from '@/modules/releases/types';
 import { ProColumns } from '@ant-design/pro-components';
-import { Button, Tag } from 'antd';
+import { Button, Tag, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_DISTRIBUTION } from '../../enum';
 import { DistributionDataFilter } from '../../types';
@@ -31,6 +31,7 @@ export default function DistributionTable({
     const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
     const { getReleaseTabRoute } = useGetReleaseDetailRoute();
+    const { token } = theme.useToken();
     const column: ProColumns<ReleasesData>[] = [
         {
             title: messages('common.iNo'),
@@ -225,6 +226,11 @@ export default function DistributionTable({
         <AppProTable
             headerTitle={messages('release.list')}
             {...props}
+            className={`rounded-t-lg px-4 ${props?.className}`}
+            style={{
+                backgroundColor: token.colorBgContainer,
+                ...props?.style,
+            }}
             pagination={false}
             columns={column}
             rowClassName={'group cursor-pointer'}
