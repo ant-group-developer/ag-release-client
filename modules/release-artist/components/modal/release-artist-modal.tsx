@@ -168,7 +168,7 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                 >
                     <ArtistSelect
                         showSearch
-                        // fallBack={dataEdit?.artist?.name}
+                        fallBack={dataEdit?.artist?.name}
                         placeholder={messages('artist.select')}
                         disabledArtistIds={disabledArtistIds}
                     />
@@ -194,7 +194,7 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                         ]}
                     >
                         <RoleArtistSelect
-                            // fallBack={dataEdit?.artistRole?.name}
+                            fallBack={dataEdit?.artistRole?.name}
                             placeholder={messages('common.role')}
                             disabledRoleIds={disabledRoleIds}
                         />

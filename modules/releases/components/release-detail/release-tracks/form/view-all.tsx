@@ -1,5 +1,6 @@
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
+import { useHash } from '@/hooks/use-hash';
 import {
     releaseTrackSchema,
     ReleaseTrackSchema,
@@ -34,7 +35,7 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
     });
     const { action } = useGetReleaseDetailRoute();
     const isReadMode = action === RELEASE_DETAIL_ACTION.READ;
-
+    const hash = useHash();
     const {
         control,
         handleSubmit,
@@ -47,43 +48,36 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
     } = formMethods;
 
     useEffect(() => {
-        const handleTriggerField = async () => {
-            const hash = window.location.hash;
-            if (hash) {
-                const parts = hash.split('.');
-                let field = parts[2];
-                if (parts.length >= 4) {
-                    field = parts.slice(2).join('.');
-                }
-
-                const idField = hash.replace('#', '');
-                const el = document.getElementById(idField);
-                if (el) {
-                    el.focus();
-                    el.scrollIntoView({ block: 'center', behavior: 'smooth' });
-                }
-                await trigger(field as keyof ReleaseTrackSchema);
-            }
-        };
-        window.addEventListener('hashchange', handleTriggerField);
-
-        handleTriggerField();
-
-        return () => {
-            window.removeEventListener('hashchange', handleTriggerField);
-        };
-    }, [trigger]);
-
-    useEffect(() => {
         if (trackData) {
-            reset(trackData as ReleaseTrackSchema);
+            reset(trackData as ReleaseTrackSchema, { keepErrors: true });
         }
     }, [trackData, reset]);
+
+    useEffect(() => {
+        if (!hash) return;
+        const newHash = hash.replace('#', '');
+        // #tracks.2.trackLanguage.audioLanguageId.trackId -> tracks.2.trackLanguage.audioLanguageId.trackId
+        const parts = newHash.split('.');
+        // tracks.2.trackLanguage.audioLanguageId.trackId -> tracks.2.trackLanguage.audioLanguageId
+        if (parts.length > 3) parts.pop();
+        const idField = parts.join('.');
+        const fieldNameTrigger = parts.slice(2).join('.');
+        console.log('🚀 ~ ViewAll ~ fieldNameTrigger:', fieldNameTrigger);
+        // const timer = setTimeout(async () => {
+        const el = document.getElementById(idField);
+        if (el) {
+            el.focus();
+            el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            trigger(fieldNameTrigger as keyof ReleaseTrackSchema);
+        }
+        // }, 100);
+        // return () => clearTimeout(timer);
+    }, [trigger, hash]);
 
     return (
         <ConfigProvider componentDisabled={isReadMode}>
             <FormProvider {...formMethods}>
-                <div className="flex h-[80vh] flex-col gap-4 overflow-y-auto pr-1">
+                <form className="flex h-[80vh] flex-col gap-4 overflow-y-auto pr-1">
                     <TrackAndArtistSection
                         trackData={trackData}
                         debouncedUpdateTrackDraft={updateTrackDraft}
@@ -109,7 +103,7 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
                         debouncedUpdateTrackDraft={updateTrackDraft}
                         trackData={trackData}
                     />
-                </div>
+                </form>
             </FormProvider>
         </ConfigProvider>
     );

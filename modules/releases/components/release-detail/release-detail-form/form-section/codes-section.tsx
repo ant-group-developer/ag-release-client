@@ -61,7 +61,7 @@ export default function CodesSection({ debouncedUpdate }: Props) {
                                                 id="upc"
                                                 {...field}
                                                 value={field.value ?? ''}
-                                                onChange={(e) => {
+                                                onBlur={(e) => {
                                                     const value =
                                                         e.target.value;
                                                     field.onChange(value);
@@ -101,7 +101,7 @@ export default function CodesSection({ debouncedUpdate }: Props) {
                                                 id="catalogId"
                                                 {...field}
                                                 value={field.value ?? ''}
-                                                onChange={(e) => {
+                                                onBlur={(e) => {
                                                     const value =
                                                         e.target.value;
                                                     field.onChange(value);

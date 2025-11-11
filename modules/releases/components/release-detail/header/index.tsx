@@ -345,23 +345,23 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                 <div className="text-sm">
                                     <span>{messages('release.name')}: </span>
                                     <span className="font-bold">
-                                        {formValues.title}{' '}
-                                        {formValues.version &&
-                                            formValues.title &&
-                                            `[${formValues.version}]`}
+                                        {releaseData.title}{' '}
+                                        {releaseData.version &&
+                                            releaseData.title &&
+                                            `[${releaseData.version}]`}
                                     </span>
                                 </div>
                                 <div className="text-sm">
                                     <span>{messages('release.type')}: </span>
                                     <span className="font-bold">
-                                        {formValues.albumFormat?.name}
+                                        {releaseData.albumFormat?.name}
                                     </span>
                                 </div>
-                                {formValues.labelId && (
+                                {releaseData.labelId && (
                                     <div className="text-sm">
                                         <span>Label: </span>
                                         <span className="font-bold">
-                                            {formValues?.label?.name}
+                                            {releaseData?.label?.name}
                                         </span>
                                     </div>
                                 )}
@@ -383,17 +383,17 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                     </span>
                                     <span className="font-bold">
                                         {formattedDate(
-                                            formValues.releaseDate,
+                                            releaseData.releaseDate,
                                             DATE_FORMAT.DATE_ONLY
                                         )}
                                     </span>
                                 </div>
 
-                                {formValues.upc && (
+                                {releaseData.upc && (
                                     <div>
                                         <span>UPC: </span>
                                         <span className="font-bold">
-                                            {formValues.upc}
+                                            {releaseData.upc}
                                         </span>
                                     </div>
                                 )}

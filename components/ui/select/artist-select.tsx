@@ -201,17 +201,17 @@ export default function ArtistSelect({
                         </div>
                     );
                 }}
-                onPopupScroll={(e) => {
-                    const target = e.target as HTMLElement;
-                    if (
-                        target.scrollTop + target.offsetHeight >=
-                        target.scrollHeight - 50
-                    ) {
-                        if (hasNextPage && !isFetchingNextPage) {
-                            fetchNextPage();
-                        }
-                    }
-                }}
+                // onPopupScroll={(e) => {
+                //     const target = e.target as HTMLElement;
+                //     if (
+                //         target.scrollTop + target.offsetHeight >=
+                //         target.scrollHeight - 50
+                //     ) {
+                //         if (hasNextPage && !isFetchingNextPage) {
+                //             fetchNextPage();
+                //         }
+                //     }
+                // }}
                 notFoundContent={
                     isFetching ? (
                         <div className="min-h-5 text-center">

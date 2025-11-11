@@ -1,5 +1,4 @@
 import ActionButton from '@/components/ui/button/action-button';
-import CopyText from '@/components/ui/copy-text/copy-text';
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { DATE_FORMAT } from '@/enums/common';
@@ -17,11 +16,9 @@ import {
 import { OnChangeFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { usePermission } from '@/hooks/use-permission';
-import { Link, useRouter } from '@/i18n/routing';
+import { useRouter } from '@/i18n/routing';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
-import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
-import { ReleaseArtist } from '@/modules/release-artist/types';
 import { ProColumns } from '@ant-design/pro-components';
 import { Tag, theme } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
@@ -32,7 +29,7 @@ import {
     TYPE_MODAL_RELEASE,
 } from '../../enums';
 import { ReleasesData, ReleasesDataFilter } from '../../types';
-import ReleaseCoverImage from '../image/release-cover-image';
+import ReleaseTitleColumn from './title-column';
 
 type Props = Omit<AppProTableProps<ReleasesData>, 'columns'> & {
     dataFilter: ReleasesDataFilter;
@@ -78,130 +75,14 @@ export default function ReleasesTable({
             width: 320,
             fixed: 'left',
             render: (value, record) => {
-                const releaseArtists = record?.releaseArtists || [];
-                const isVariousArtist = record?.isVariousArtist;
-
-                const mainArtist = !isVariousArtist
-                    ? releaseArtists.find(
-                          (item: ReleaseArtist) =>
-                              item?.artistRole?.code === MAIN_ARTIST_ROLE
-                      )
-                    : null;
-
-                const displayName = isVariousArtist
-                    ? messages('common.variousArtists')
-                    : mainArtist?.artist?.name || '';
                 return (
-                    <div className="flex items-center gap-4">
-                        <div className="h-10 min-w-10">
-                            <ReleaseCoverImage data={record} />
-                        </div>
-                        <div>
-                            <CustomTooltip title={record?.title}>
-                                <Link
-                                    href={getReleaseDetailTabRoute(
-                                        record?.id,
-                                        RELEASES_TABS.CORE_DETAIL,
-                                        RELEASE_DETAIL_ACTION.READ
-                                    )}
-                                >
-                                    <div className="!max-w-80 truncate">
-                                        <span className="cursor-pointer hover:underline">
-                                            {record?.title}
-                                        </span>
-                                    </div>
-                                </Link>
-                            </CustomTooltip>
-                            <CustomTooltip
-                                title={messages('filter.filterByValue', {
-                                    value: displayName,
-                                })}
-                            >
-                                {isVariousArtist ? (
-                                    <span
-                                        className="cursor-pointer truncate text-gray-500 hover:underline"
-                                        onClick={() =>
-                                            onChangeFilter({
-                                                isVariousArtist: 'true',
-                                            })
-                                        }
-                                    >
-                                        {messages('common.variousArtists')}
-                                    </span>
-                                ) : (
-                                    <span
-                                        onClick={() =>
-                                            onChangeFilter({
-                                                artistId:
-                                                    mainArtist?.artist?.id,
-                                            })
-                                        }
-                                        className="cursor-pointer truncate text-gray-500 hover:underline"
-                                    >
-                                        {mainArtist?.artist?.name || ''}
-                                    </span>
-                                )}
-                            </CustomTooltip>
-                        </div>
-                    </div>
+                    <ReleaseTitleColumn
+                        record={record}
+                        onChangeFilter={onChangeFilter}
+                    />
                 );
             },
         },
-        // {
-        //     title: messages('common.artist'),
-        //     key: 'artist',
-        //     dataIndex: 'artist',
-        //     align: 'left',
-        //     ellipsis: true,
-        //     width: 250,
-        //     render: (value, record) => {
-        //         const releaseArtists = record?.releaseArtists || [];
-        //         const isVariousArtist = record?.isVariousArtist;
-
-        //         const mainArtist = !isVariousArtist
-        //             ? releaseArtists.find(
-        //                   (item: ReleaseArtist) =>
-        //                       item?.artistRole?.code === MAIN_ARTIST_ROLE
-        //               )
-        //             : null;
-
-        //         const displayName = isVariousArtist
-        //             ? messages('common.variousArtists')
-        //             : mainArtist?.artist?.name || '';
-        //         return (
-        //             <CustomTooltip
-        //                 size="small"
-        //                 title={messages('filter.filterByValue', {
-        //                     value: displayName,
-        //                 })}
-        //             >
-        //                 {isVariousArtist ? (
-        //                     <span
-        //                         className="cursor-pointer truncate hover:text-blue-500 group-hover:underline"
-        //                         onClick={() =>
-        //                             onChangeFilter({
-        //                                 isVariousArtist: 'true',
-        //                             })
-        //                         }
-        //                     >
-        //                         {messages('common.variousArtists')}
-        //                     </span>
-        //                 ) : (
-        //                     <span
-        //                         onClick={() =>
-        //                             onChangeFilter({
-        //                                 artistId: mainArtist?.artist?.id,
-        //                             })
-        //                         }
-        //                         className="cursor-pointer truncate hover:text-blue-500 group-hover:underline"
-        //                     >
-        //                         {mainArtist?.artist?.name || ''}
-        //                     </span>
-        //                 )}
-        //             </CustomTooltip>
-        //         );
-        //     },
-        // },
         {
             title: 'Label',
             key: 'publisher',
@@ -210,14 +91,22 @@ export default function ReleasesTable({
             width: 200,
             ellipsis: true,
             render: (value, record) => (
-                // <CustomTooltip size="small" title={record?.label?.name}>
-                //     <span className="cursor-pointer truncate ">
-                //         {record?.label?.name}
-                //     </span>
-                // </CustomTooltip>
-                <CopyText text={record?.label?.name}>
-                    {record?.label?.name}
-                </CopyText>
+                <CustomTooltip
+                    title={messages('filter.filterByValue', {
+                        value: record?.label?.name,
+                    })}
+                >
+                    <span
+                        onClick={() =>
+                            onChangeFilter({
+                                labelId: record?.labelId,
+                            })
+                        }
+                        className="cursor-pointer truncate hover:underline"
+                    >
+                        {record?.label?.name}
+                    </span>
+                </CustomTooltip>
             ),
         },
         {
@@ -228,10 +117,9 @@ export default function ReleasesTable({
             width: 130,
             render: (_, record) => {
                 return (
-                    <span className="cursor-pointer truncate">
-                        {' '}
-                        {record?.albumFormat?.name}{' '}
-                    </span>
+                    <Tag className="cursor-pointer truncate">
+                        {record?.albumFormat?.name}
+                    </Tag>
                 );
             },
         },

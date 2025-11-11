@@ -157,7 +157,7 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                                     isReadMode
                                                 }
                                                 allowClear
-                                                onChange={(e) => {
+                                                onBlur={(e) => {
                                                     const value =
                                                         e.target.value;
                                                     field.onChange(value);
@@ -245,7 +245,7 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                                     isReadMode
                                                 }
                                                 allowClear
-                                                onChange={(e) => {
+                                                onBlur={(e) => {
                                                     const newOwner =
                                                         e.target.value;
                                                     field.onChange(newOwner);

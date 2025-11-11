@@ -22,10 +22,13 @@ export const useUpdateReleaseDraft = () => {
             queryKey: releasesQueryKeys.lists(),
         });
         queryClient.invalidateQueries({
+            queryKey: releasesQueryKeys.detail(data?.data?.data?.id),
+        });
+        queryClient.invalidateQueries({
             queryKey: releasesQueryKeys.validations(),
         });
 
-        const responseMessages = messages(data?.data?.messageCode);
+        // const responseMessages = messages(data?.data?.messageCode);
 
         onSuccess?.(data?.data?.data);
         // showNotification('success', responseMessages);

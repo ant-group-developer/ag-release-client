@@ -10,7 +10,7 @@ import { RELEASES_TABS } from '@/modules/releases/enums';
 import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
 import { CreateReleaseDraftPayload } from '@/modules/releases/types/payload';
 import { CreateVariables } from '@/types/api';
-import { Button, Input, Radio, theme } from 'antd';
+import { Alert, Button, Input, Radio, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useMemo } from 'react';
@@ -18,12 +18,10 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { ReleaseDetailSchema } from '..';
 
 type Props = {
-    setShowCreateLabel: (show: boolean) => void;
     debouncedUpdate: (data: any, fieldName?: string) => void;
 };
 
 export default function ReleaseConfigurationSection({
-    setShowCreateLabel,
     debouncedUpdate,
 }: Props) {
     // hook - state
@@ -51,7 +49,8 @@ export default function ReleaseConfigurationSection({
     const albumFormatId = watch('albumFormatId') ?? '';
     const title = watch('title') ?? '';
     const labelId = watch('labelId') ?? '';
-    const isEnableCreateDraftBtn = (!!albumFormatId && !!title) === true;
+    const isEnableCreateDraftBtn =
+        (!!albumFormatId && !!title && !!labelId) === true;
     const isReadMode = useMemo(
         () => action !== RELEASE_DETAIL_ACTION.EDIT && !isCreateReleasePage,
         [action, isCreateReleasePage]
@@ -114,7 +113,7 @@ export default function ReleaseConfigurationSection({
                                                         value={
                                                             field.value ?? ''
                                                         }
-                                                        onChange={(e) => {
+                                                        onBlur={(e) => {
                                                             const value =
                                                                 e.target.value;
                                                             field.onChange(
@@ -160,7 +159,7 @@ export default function ReleaseConfigurationSection({
                                                     id="version"
                                                     {...field}
                                                     value={field.value ?? ''}
-                                                    onChange={(e) => {
+                                                    onBlur={(e) => {
                                                         const value =
                                                             e.target.value;
                                                         field.onChange(value);
@@ -203,9 +202,6 @@ export default function ReleaseConfigurationSection({
                                                     showSearch
                                                     id="labelId"
                                                     {...field}
-                                                    onCreateLabel={() =>
-                                                        setShowCreateLabel(true)
-                                                    }
                                                     onChange={(e) => {
                                                         field.onChange(e);
                                                         debouncedUpdate({
@@ -297,11 +293,18 @@ export default function ReleaseConfigurationSection({
                                             {messages('common.continue')}
                                         </Button>
                                     </div>
-                                    <div className="flex justify-end py-2 text-sm italic">
-                                        *
+                                    <div className="flex justify-end py-2 text-sm">
+                                        {/* *
                                         {messages(
                                             'release.placeholder.enterTitleAndReleaseType'
-                                        )}
+                                        )} */}
+                                        <Alert
+                                            message={messages(
+                                                'release.placeholder.enterTitleAndReleaseType'
+                                            )}
+                                            type="info"
+                                            showIcon
+                                        />
                                     </div>
                                 </>
                             )}

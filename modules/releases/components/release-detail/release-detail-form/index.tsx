@@ -2,9 +2,7 @@ import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
-import { useThemeMode } from '@/hooks/use-theme-mode';
 import { useRouter } from '@/i18n/routing';
-import LabelFormModal from '@/modules/labels/components/modal/label-form';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
@@ -17,7 +15,7 @@ import { Button, ConfigProvider, theme } from 'antd';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import CodesSection from './form-section/codes-section';
@@ -90,9 +88,6 @@ export default function ReleaseDetailForm() {
 
     // zustand store - state
     const formValues = useReleaseFormStore((state) => state.formValues);
-    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
-    const [showCreateLabel, setShowCreateLabel] = useState<boolean>(false);
-    const { isDark } = useThemeMode();
     const { getReleaseTabRoute, action } = useGetReleaseDetailRoute();
 
     //route
@@ -215,7 +210,6 @@ export default function ReleaseDetailForm() {
                     <div className="flex flex-col gap-6">
                         <ReleaseConfigurationSection
                             debouncedUpdate={debouncedUpdate}
-                            setShowCreateLabel={setShowCreateLabel}
                         />
 
                         <CodesSection debouncedUpdate={debouncedUpdate} />
@@ -247,12 +241,12 @@ export default function ReleaseDetailForm() {
                 </form>
             </FormProvider>
 
-            {showCreateLabel && (
+            {/* {showCreateLabel && (
                 <LabelFormModal
                     open={showCreateLabel}
                     onCancel={() => setShowCreateLabel(false)}
                 />
-            )}
+            )} */}
         </ConfigProvider>
     );
 }

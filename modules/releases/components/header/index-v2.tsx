@@ -2,6 +2,7 @@ import AppFilter from '@/components/ui/antd-form/app-filter';
 import DateRangePicker from '@/components/ui/input/date-range-picker';
 import ArtistSelect from '@/components/ui/select/artist-select';
 import GenresSelect from '@/components/ui/select/genres-select';
+import LabelSelect from '@/components/ui/select/label-select';
 import { arrayFromString, getDateRange } from '@/helpers/array';
 import { getIntlCodeByReleaseStatus } from '@/helpers/intl';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
@@ -113,6 +114,16 @@ export default function ReleasesHeaderV2({
                         maxTagCount: 2,
                     }}
                 />
+
+                <ProForm.Item name="labelId" label={messages('label.label')}>
+                    <LabelSelect
+                        placeholder={messages('placeholder.selectLabel')}
+                        allowClear
+                        mode="multiple"
+                        maxTagCount={2}
+                    />
+                </ProForm.Item>
+
                 <ProForm.Item name="artistId" label={messages('artist.label')}>
                     <ArtistSelect
                         showCreate={false}

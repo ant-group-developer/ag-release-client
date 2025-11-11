@@ -11,6 +11,7 @@ import useModalStore from '@/hooks/use-modal';
 import { IssueLevelHeader } from '@/modules/issue-level/components/header';
 import IssueLevelFormModal from '@/modules/issue-level/components/modal/issue-level-form';
 import IssueLevelTable from '@/modules/issue-level/components/table';
+import IssueLevelTableV2 from '@/modules/issue-level/components/table/index-v2';
 import { TYPE_MODAL_ISSUE_LEVEL } from '@/modules/issue-level/enums';
 import { useBulkUpdateIssueLevel } from '@/modules/issue-level/hooks/use-bulk-update';
 import { useDeleteIssueLevel } from '@/modules/issue-level/hooks/use-delete';
@@ -87,6 +88,19 @@ export default function IssueLevel({}: Props) {
             <PageContainer title={messages('issueLevel.label')}>
                 <IssueLevelHeader dataFilter={dataFilter} onSearch={onSearch} />
                 <IssueLevelTable
+                    sticky
+                    dataSource={issueLevelData?.items}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: issueLevelData.metadata.currentPage,
+                        total: issueLevelData.metadata.totalItems,
+                    }}
+                    loading={isFetching}
+                    dataFilter={dataFilter}
+                    onChange={onChangeSort}
+                />
+
+                <IssueLevelTableV2
                     sticky
                     dataSource={issueLevelData?.items}
                     pagination={{
