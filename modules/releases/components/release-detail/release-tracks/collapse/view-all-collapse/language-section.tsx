@@ -121,16 +121,7 @@ export default function LanguageSection({
                                     //     trackData?.trackLanguage?.audioLanguage
                                     //         ?.name
                                     // }
-                                    status={
-                                        form.getFieldError([
-                                            'tracks',
-                                            index,
-                                            'trackLanguage',
-                                            'audioLanguageId',
-                                        ]).length
-                                            ? 'error'
-                                            : undefined
-                                    }
+
                                     onChange={(value) => {
                                         form.setFieldValue(
                                             [

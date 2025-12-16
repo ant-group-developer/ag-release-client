@@ -3,16 +3,22 @@ import useModalStore from '@/hooks/use-modal';
 import { Form, Tabs, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 
+import AppForm from '@/components/ui/antd-form/form';
+import { DATE_FORMAT } from '@/enums/common';
+import { convertSecondsToHoursMinutes } from '@/helpers/common';
 import { TrackData } from '@/modules/releases/types';
 import { useGetDetailTrack } from '@/modules/tracks/hooks/use-get-detail-tracks';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
 import { UpdateTrackPayload } from '@/modules/tracks/types/payload';
 import { UpdateVariables } from '@/types/api';
+import dayjs from 'dayjs';
 import { debounce } from 'lodash';
-import { useCallback } from 'react';
-import AudioSpecifications from '../form/audio-specifications';
-import OtherMetadataForm from '../form/other-metadata-form';
-import TracksForm from '../form/track-form';
+import { useCallback, useEffect } from 'react';
+import AudioSpecSection from '../collapse/view-all-collapse/audio-spec-section';
+import GenreSection from '../collapse/view-all-collapse/genre-section';
+import LanguageSection from '../collapse/view-all-collapse/language-section';
+import OtherSection from '../collapse/view-all-collapse/other-section';
+import TrackAndArtistSection from '../collapse/view-all-collapse/track-and-artist-section';
 import ViewAll from '../form/view-all';
 
 type Props = {} & Omit<AppModalProps, 'children'>;
@@ -55,11 +61,20 @@ export default function TrackDetailModal({ ...props }: Props) {
                 </span>
             ),
             children: (
-                <TracksForm
-                    key={`${trackId}-${trackData.title}-track-form-content`}
-                    trackData={trackData}
-                    index={index}
-                />
+                // <TracksForm
+                //     key={`${trackId}-${trackData.title}-track-form-content`}
+                //     trackData={trackData}
+                //     index={index}
+                // />
+                <div className="max-h-[80vh] overflow-y-auto">
+                    <TrackAndArtistSection
+                        trackData={trackData}
+                        debouncedUpdateTrackDraft={(data) =>
+                            debouncedUpdate(trackId, data)
+                        }
+                        index={index}
+                    />
+                </div>
             ),
         },
         {
@@ -70,10 +85,33 @@ export default function TrackDetailModal({ ...props }: Props) {
                 </span>
             ),
             children: (
-                <OtherMetadataForm
-                    key={`${trackId}-metadata-form-content`}
-                    trackData={trackData}
-                />
+                // <OtherMetadataForm
+                //     key={`${trackId}-metadata-form-content`}
+                //     trackData={trackData}
+                // />
+                <div className="max-h-[80vh] space-y-4 overflow-y-auto">
+                    <GenreSection
+                        index={index}
+                        debouncedUpdateTrackDraft={(data) =>
+                            debouncedUpdate(trackId, data)
+                        }
+                        trackData={trackData}
+                    />
+                    <LanguageSection
+                        index={index}
+                        debouncedUpdateTrackDraft={(data) =>
+                            debouncedUpdate(trackId, data)
+                        }
+                        trackData={trackData}
+                    />
+                    <OtherSection
+                        index={index}
+                        debouncedUpdateTrackDraft={(data) =>
+                            debouncedUpdate(trackId, data)
+                        }
+                        trackData={trackData}
+                    />
+                </div>
             ),
         },
         {
@@ -84,8 +122,15 @@ export default function TrackDetailModal({ ...props }: Props) {
                 </span>
             ),
             children: (
-                <AudioSpecifications
-                    key={`${trackId}-audio-specs-content`}
+                // <AudioSpecifications
+                //     key={`${trackId}-audio-specs-content`}
+                //     trackData={trackData}
+                // />
+                <AudioSpecSection
+                    index={index}
+                    debouncedUpdateTrackDraft={(data) =>
+                        debouncedUpdate(trackId, data)
+                    }
                     trackData={trackData}
                 />
             ),
@@ -107,6 +152,39 @@ export default function TrackDetailModal({ ...props }: Props) {
             ),
         },
     ];
+
+    useEffect(() => {
+        if (trackData?.id) {
+            form.setFieldsValue({
+                ...trackData,
+                trackLanguage: {
+                    ...trackData.trackLanguage,
+                },
+                audioFile: {
+                    ...trackData?.audioFile,
+                    sampleLength: trackData?.audioFile?.sampleLength
+                        ? dayjs(
+                              convertSecondsToHoursMinutes(
+                                  trackData?.audioFile?.sampleLength
+                              ),
+                              DATE_FORMAT.HOUR_MINUTE_SECOND
+                          )
+                        : undefined,
+                    preview: trackData?.audioFile?.preview
+                        ? dayjs(
+                              convertSecondsToHoursMinutes(
+                                  trackData?.audioFile?.preview
+                              ),
+                              DATE_FORMAT.HOUR_MINUTE_SECOND
+                          )
+                        : undefined,
+                    duration: convertSecondsToHoursMinutes(
+                        trackData?.audioFile?.duration ?? 0
+                    ),
+                },
+            });
+        }
+    }, [trackData, form]);
 
     return (
         <AppModal
@@ -130,11 +208,13 @@ export default function TrackDetailModal({ ...props }: Props) {
             }}
             // className="bg-content"
         >
-            <Tabs
-                className="rounded"
-                items={items}
-                defaultActiveKey={`${trackId}-view-all`}
-            />
+            <AppForm form={form} layout="vertical" showSubmit={false}>
+                <Tabs
+                    className="rounded"
+                    items={items}
+                    defaultActiveKey={`${trackId}-view-all`}
+                />
+            </AppForm>
         </AppModal>
     );
 }

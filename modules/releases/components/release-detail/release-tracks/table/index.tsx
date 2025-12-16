@@ -25,12 +25,12 @@ import {
 } from '@/modules/tracks/types/payload';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { UpdateVariables } from '@/types/api';
-import { Input, Tag, Typography } from 'antd';
+import { Input, Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { debounce } from 'lodash';
 import { SquarePen } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useCallback } from 'react';
+import { useEffect, useMemo } from 'react';
 import TrackActionButton from '../button/track-action';
 import { TrackWaveform } from '../track-wave-form';
 
@@ -73,9 +73,10 @@ export default function ReleaseTracksTable({ ...props }: Props) {
         updateTrackOrder(variables);
     };
 
-    const debouncedUpdate = useCallback(
-        debounce((id, data) => {
-            if (!formValues.id) return;
+    const debouncedUpdate = useMemo(() => {
+        return debounce((id: TrackData['id'], data: UpdateTrackPayload) => {
+            if (!formValues?.id) return;
+
             const variables: UpdateVariables<
                 TrackData['id'],
                 UpdateTrackPayload
@@ -83,10 +84,16 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                 id,
                 payload: data,
             };
+
             updateTrackDraft(variables);
-        }, 800),
-        [formValues.id]
-    );
+        }, 800);
+    }, [formValues?.id, updateTrackDraft]);
+
+    useEffect(() => {
+        return () => {
+            debouncedUpdate.cancel();
+        };
+    }, [debouncedUpdate]);
 
     const columns: ColumnType<TrackData>[] = [
         {
@@ -107,6 +114,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                     index
                 ),
         },
+
         {
             title: '',
             dataIndex: 'waveform',
@@ -115,7 +123,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             width: 250,
             render: (value, record, index) => {
                 return (
-                    <div className="">
+                    <div>
                         <TrackWaveform
                             key={`${record.id}-${index}`}
                             data={record}
@@ -134,35 +142,27 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             render: (value, record) => {
                 return (
                     <div className="space-y-2">
-                        <Typography.Paragraph
-                            editable={
-                                isReadMode
-                                    ? false
-                                    : {
-                                          onChange(value) {
-                                              if (value === record.title)
-                                                  return;
-                                              if (value.length < 1) {
-                                                  return showNotification(
-                                                      'error',
-                                                      messages(
-                                                          'validation.min',
-                                                          {
-                                                              number: 1,
-                                                          }
-                                                      )
-                                                  );
-                                              }
-                                              debouncedUpdate(record.id, {
-                                                  title: value,
-                                              });
-                                          },
-                                      }
-                            }
-                            className="!mb-0"
-                        >
-                            {record?.title}
-                        </Typography.Paragraph>
+                        <Input
+                            size="small"
+                            defaultValue={record.title}
+                            disabled={isReadMode}
+                            onBlur={(e) => {
+                                const value = e.target.value;
+                                if (value.length < 1) {
+                                    return showNotification(
+                                        'error',
+                                        messages('validation.min', {
+                                            number: 1,
+                                        })
+                                    );
+                                }
+                                if (value !== record.title) {
+                                    debouncedUpdate(record.id, {
+                                        title: value,
+                                    });
+                                }
+                            }}
+                        />
                         <div className="flex flex-wrap gap-y-2">
                             {record?.trackArtists?.map(
                                 (trackArtist: TrackArtistData) => (
@@ -177,6 +177,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                                             );
                                         }}
                                         closable={!isReadMode}
+                                        className="max-w-full whitespace-normal break-words"
                                     >
                                         {trackArtist?.artist?.name}
                                     </Tag>

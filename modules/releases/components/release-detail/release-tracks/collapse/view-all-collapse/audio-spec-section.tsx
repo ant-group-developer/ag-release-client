@@ -197,17 +197,6 @@ export default function AudioSpecSection({
                                         ''
                                     }
                                     disabled={isReadMode}
-                                    status={
-                                        form.getFieldError([
-                                            'tracks',
-                                            index,
-                                            'audioFile',
-                                            'file',
-                                            'fileName',
-                                        ]).length
-                                            ? 'error'
-                                            : undefined
-                                    }
                                 />
                             </AppFormItem>
 

@@ -201,15 +201,7 @@ export default function OtherSection({
                                     allowClear
                                     disabled={isReadMode}
                                     // fallback={trackData?.trackType?.name}
-                                    status={
-                                        form.getFieldError([
-                                            'tracks',
-                                            index,
-                                            'trackTypeId',
-                                        ]).length
-                                            ? 'error'
-                                            : undefined
-                                    }
+
                                     onChange={(value) => {
                                         form.setFieldValue(
                                             ['tracks', index, 'trackTypeId'],
