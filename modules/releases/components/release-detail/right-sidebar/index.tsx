@@ -104,6 +104,8 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
     useEffect(() => {
         if (validateLength > 0) {
             setIsSidebarOpen(true);
+        } else {
+            setIsSidebarOpen(false);
         }
     }, [validateLength]);
 

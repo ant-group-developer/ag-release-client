@@ -44,17 +44,24 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
                 },
                 audioFile: {
                     ...trackData?.audioFile,
-                    sampleLength: dayjs(
-                        convertSecondsToHoursMinutes(
-                            trackData?.audioFile?.sampleLength ?? 0
-                        ),
-                        DATE_FORMAT.HOUR_MINUTE_SECOND
-                    ),
-                    preview: dayjs(
-                        convertSecondsToHoursMinutes(
-                            trackData?.audioFile?.preview ?? 0
-                        ),
-                        DATE_FORMAT.HOUR_MINUTE_SECOND
+                    sampleLength: trackData?.audioFile?.sampleLength
+                        ? dayjs(
+                              convertSecondsToHoursMinutes(
+                                  trackData?.audioFile?.sampleLength
+                              ),
+                              DATE_FORMAT.HOUR_MINUTE_SECOND
+                          )
+                        : undefined,
+                    preview: trackData?.audioFile?.preview
+                        ? dayjs(
+                              convertSecondsToHoursMinutes(
+                                  trackData?.audioFile?.preview
+                              ),
+                              DATE_FORMAT.HOUR_MINUTE_SECOND
+                          )
+                        : undefined,
+                    duration: convertSecondsToHoursMinutes(
+                        trackData?.audioFile?.duration ?? 0
                     ),
                 },
             });

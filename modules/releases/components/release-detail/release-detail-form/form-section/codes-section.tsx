@@ -38,8 +38,7 @@ export default function CodesSection({ debouncedUpdate }: Props) {
                     key: 'codes',
                     label: (
                         <span className="text-base font-semibold">
-                            {' '}
-                            {messages('common.code')}{' '}
+                            {messages('common.code')}
                         </span>
                     ),
                     children: (

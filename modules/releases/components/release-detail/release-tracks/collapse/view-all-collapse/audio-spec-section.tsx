@@ -11,6 +11,7 @@ import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { TrackData } from '@/modules/tracks/types';
 import { Form, Input, TimePicker } from 'antd';
+import { NamePath } from 'antd/es/form/interface';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 
@@ -30,7 +31,7 @@ export default function AudioSpecSection({
     const { action } = useGetReleaseDetailRoute();
     const isReadMode = action === RELEASE_DETAIL_ACTION.READ;
 
-    const updateTrackDraft = async (data: any, fieldName?: string) => {
+    const updateTrackDraft = async (data: any, fieldName?: NamePath) => {
         if (fieldName) {
             try {
                 await form.validateFields([fieldName]);
@@ -39,6 +40,128 @@ export default function AudioSpecSection({
             }
         }
         debouncedUpdateTrackDraft(data);
+    };
+
+    const handleOnChangePreview = async (time: dayjs.Dayjs | null) => {
+        form.setFieldValue(['audioFile', 'preview'], time);
+
+        try {
+            // Validate cả preview và sampleLength
+            await form.validateFields([
+                ['audioFile', 'preview'],
+                ['audioFile', 'sampleLength'],
+            ]);
+
+            // Chỉ update khi validate OK
+            updateTrackDraft(
+                {
+                    audioFile: {
+                        preview: time
+                            ? timeStringToSeconds(
+                                  time.format(DATE_FORMAT.HOUR_MINUTE_SECOND)
+                              )
+                            : 0,
+                    },
+                },
+                ['audioFile', 'preview']
+            );
+        } catch (error) {
+            // Validate failed, không update
+            return;
+        }
+    };
+
+    const handleOnChangeSampleLength = async (time: dayjs.Dayjs | null) => {
+        form.setFieldValue(['audioFile', 'sampleLength'], time);
+
+        try {
+            // Validate cả sampleLength và preview
+            await form.validateFields([
+                ['audioFile', 'sampleLength'],
+                ['audioFile', 'preview'],
+            ]);
+
+            // Chỉ update khi validate OK
+            updateTrackDraft(
+                {
+                    audioFile: {
+                        sampleLength: time
+                            ? timeStringToSeconds(
+                                  time.format(DATE_FORMAT.HOUR_MINUTE_SECOND)
+                              )
+                            : 0,
+                    },
+                },
+                ['audioFile', 'sampleLength']
+            );
+        } catch (error) {
+            // Validate failed, không update
+            return;
+        }
+    };
+
+    const validatePreview = (messages: any, form: any) => {
+        return (_: any, value: dayjs.Dayjs | null) => {
+            if (!value || !dayjs.isDayjs(value)) {
+                return Promise.reject(messages('validation.input'));
+            }
+
+            const previewSeconds = timeStringToSeconds(
+                value.format(DATE_FORMAT.HOUR_MINUTE_SECOND)
+            );
+
+            const durationRaw = form.getFieldValue(['audioFile', 'duration']);
+            const durationSeconds =
+                typeof durationRaw === 'string'
+                    ? timeStringToSeconds(durationRaw)
+                    : durationRaw;
+
+            if (durationSeconds != null && previewSeconds >= durationSeconds) {
+                return Promise.reject(
+                    messages('track.validation.previewMustBeLessThanDuration')
+                );
+            }
+
+            return Promise.resolve();
+        };
+    };
+
+    const validateSampleLength = (messages: any, form: any) => {
+        return (_: any, value: dayjs.Dayjs | null) => {
+            if (!value || !dayjs.isDayjs(value)) {
+                return Promise.reject(messages('validation.input'));
+            }
+
+            const sampleSeconds = timeStringToSeconds(
+                value.format(DATE_FORMAT.HOUR_MINUTE_SECOND)
+            );
+
+            const durationRaw = form.getFieldValue(['audioFile', 'duration']);
+            const durationSeconds =
+                typeof durationRaw === 'string'
+                    ? timeStringToSeconds(durationRaw)
+                    : durationRaw;
+
+            const previewValue = form.getFieldValue(['audioFile', 'preview']);
+            const previewSeconds = dayjs.isDayjs(previewValue)
+                ? timeStringToSeconds(
+                      previewValue.format(DATE_FORMAT.HOUR_MINUTE_SECOND)
+                  )
+                : 0;
+
+            if (
+                durationSeconds != null &&
+                sampleSeconds > durationSeconds - previewSeconds
+            ) {
+                return Promise.reject(
+                    messages(
+                        'track.validation.sampleLengthMustBeLessThanDuration'
+                    )
+                );
+            }
+
+            return Promise.resolve();
+        };
     };
 
     return (
@@ -88,6 +211,20 @@ export default function AudioSpecSection({
                                 />
                             </AppFormItem>
 
+                            <AppFormItem
+                                name={['audioFile', 'duration']}
+                                label={messages('common.duration')}
+                                required
+                            >
+                                <Input
+                                    readOnly
+                                    value={convertSecondsToHoursMinutes(
+                                        trackData.audioFile?.duration ?? 0
+                                    )}
+                                    disabled
+                                />
+                            </AppFormItem>
+
                             {/* Sample Length */}
                             <AppFormItem
                                 name={['audioFile', 'sampleLength']}
@@ -97,8 +234,10 @@ export default function AudioSpecSection({
                                 required
                                 rules={[
                                     {
-                                        required: true,
-                                        message: messages('validation.input'),
+                                        validator: validatePreview(
+                                            messages,
+                                            form
+                                        ),
                                     },
                                 ]}
                             >
@@ -108,56 +247,7 @@ export default function AudioSpecSection({
                                     disabled={isReadMode}
                                     showNow={false}
                                     format={DATE_FORMAT.HOUR_MINUTE_SECOND}
-                                    value={
-                                        typeof trackData.audioFile
-                                            ?.sampleLength === 'number' &&
-                                        trackData.audioFile?.sampleLength > 0
-                                            ? dayjs(
-                                                  convertSecondsToHoursMinutes(
-                                                      trackData.audioFile
-                                                          .sampleLength
-                                                  ),
-                                                  DATE_FORMAT.HOUR_MINUTE_SECOND
-                                              )
-                                            : null
-                                    }
-                                    onChange={(time) => {
-                                        const value = time
-                                            ? time.format(
-                                                  DATE_FORMAT.HOUR_MINUTE_SECOND
-                                              )
-                                            : '';
-                                        const seconds = value
-                                            ? timeStringToSeconds(value)
-                                            : 0;
-                                        form.setFieldValue(
-                                            [
-                                                'tracks',
-                                                index,
-                                                'audioFile',
-                                                'sampleLength',
-                                            ],
-                                            seconds
-                                        );
-                                        updateTrackDraft(
-                                            {
-                                                audioFile: {
-                                                    sampleLength: seconds,
-                                                },
-                                            },
-                                            'audioFile.sampleLength'
-                                        );
-                                    }}
-                                    status={
-                                        form.getFieldError([
-                                            'tracks',
-                                            index,
-                                            'audioFile',
-                                            'sampleLength',
-                                        ]).length
-                                            ? 'error'
-                                            : undefined
-                                    }
+                                    onChange={handleOnChangeSampleLength}
                                 />
                             </AppFormItem>
 
@@ -168,8 +258,10 @@ export default function AudioSpecSection({
                                 required
                                 rules={[
                                     {
-                                        required: true,
-                                        message: messages('validation.input'),
+                                        validator: validateSampleLength(
+                                            messages,
+                                            form
+                                        ),
                                     },
                                 ]}
                             >
@@ -179,56 +271,7 @@ export default function AudioSpecSection({
                                     disabled={isReadMode}
                                     showNow={false}
                                     format={DATE_FORMAT.HOUR_MINUTE_SECOND}
-                                    value={
-                                        typeof trackData.audioFile?.preview ===
-                                            'number' &&
-                                        trackData.audioFile?.preview > 0
-                                            ? dayjs(
-                                                  convertSecondsToHoursMinutes(
-                                                      trackData.audioFile
-                                                          ?.preview
-                                                  ),
-                                                  DATE_FORMAT.HOUR_MINUTE_SECOND
-                                              )
-                                            : null
-                                    }
-                                    onChange={(time) => {
-                                        const value = time
-                                            ? time.format(
-                                                  DATE_FORMAT.HOUR_MINUTE_SECOND
-                                              )
-                                            : '';
-                                        const seconds = value
-                                            ? timeStringToSeconds(value)
-                                            : 0;
-                                        form.setFieldValue(
-                                            [
-                                                'tracks',
-                                                index,
-                                                'audioFile',
-                                                'preview',
-                                            ],
-                                            seconds
-                                        );
-                                        updateTrackDraft(
-                                            {
-                                                audioFile: {
-                                                    preview: seconds,
-                                                },
-                                            },
-                                            'audioFile.preview'
-                                        );
-                                    }}
-                                    status={
-                                        form.getFieldError([
-                                            'tracks',
-                                            index,
-                                            'audioFile',
-                                            'preview',
-                                        ]).length
-                                            ? 'error'
-                                            : undefined
-                                    }
+                                    onChange={handleOnChangePreview}
                                 />
                             </AppFormItem>
 

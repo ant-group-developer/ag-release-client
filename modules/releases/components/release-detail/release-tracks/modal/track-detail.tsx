@@ -124,6 +124,10 @@ export default function TrackDetailModal({ ...props }: Props) {
                 top: '1rem',
             }}
             spinning={isLoading}
+            styles={{
+                content: { backgroundColor: token?.colorBgLayout },
+                header: { backgroundColor: token?.colorBgLayout },
+            }}
             // className="bg-content"
         >
             <Tabs

@@ -234,16 +234,12 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                                     control={control}
                                     name="releaseLanguage.metadataLanguageCountryId"
                                     render={({ field }) => {
-                                        const fallBackLabel =
-                                            formValues?.releaseLanguage
-                                                ?.metadataLanguageCountry?.name;
                                         return (
                                             <CountrySelect
                                                 className="w-full"
                                                 id="releaseLanguage.metadataLanguageCountryId"
                                                 showSearch
                                                 {...field}
-                                                fallBack={fallBackLabel}
                                                 onChange={(e) => {
                                                     field.onChange(e);
                                                     debouncedUpdate({
