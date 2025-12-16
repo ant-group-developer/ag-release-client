@@ -4,7 +4,7 @@ import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { ACCEPT_IMAGE } from '@/constants/validate';
-import { DATE_FORMAT, TYPE_UPLOAD_BUCKET } from '@/enums/common';
+import { TYPE_UPLOAD_BUCKET } from '@/enums/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedDate } from '@/helpers/common';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
@@ -13,12 +13,7 @@ import { cn } from '@/helpers/tailwind';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
 import { usePathname, useRouter } from '@/i18n/routing';
-import {
-    FEATURING_ARTIST_ROLE,
-    MAIN_ARTIST_ROLE,
-} from '@/modules/release-artist/constants';
-import { ReleaseArtist } from '@/modules/release-artist/types';
-import { RELEASES_STATUS, TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
+import { TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
@@ -29,20 +24,14 @@ import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { CreateBucketFile } from '@/modules/upload/types/data';
 import { DeleteVariables, UpdateVariables } from '@/types/api';
-import { Form, Segmented, StepsProps, theme } from 'antd';
+import { Form, Segmented, theme } from 'antd';
 import { SegmentedOptions } from 'antd/es/segmented';
-import {
-    Box,
-    CircleAlert,
-    FileSearch,
-    NotebookText,
-    PackageX,
-} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import DownloadMenu from './download-menu';
 import OptionsMenu from './options-menu';
+import ReleaseInfo from './release-info';
 type Props = {
     isScrolled: boolean;
 };
@@ -75,29 +64,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     const { deleteRelease } = useDeleteRelease();
 
     // const
-    const isVariousArtist = !!formValues?.isVariousArtist;
     const isCreateReleasePage = params['action'] === 'create';
-    const mainArtist = formValues?.releaseArtists?.find(
-        (releaseArtist: ReleaseArtist) =>
-            releaseArtist.artistRole?.code === MAIN_ARTIST_ROLE
-    );
-    const featuringArtistNames = formValues?.releaseArtists
-        ?.map((item: ReleaseArtist) => {
-            if (item?.artistRole?.code == FEATURING_ARTIST_ROLE) {
-                return item?.artist?.name;
-            }
-        })
-        .filter(Boolean)
-        .join(', ');
-
-    const renderArtistName = () => {
-        if (isVariousArtist) {
-            return messages('artist.variousArtists');
-        } else if (mainArtist) {
-            return `${mainArtist?.artist?.name} ${featuringArtistNames && featuringArtistNames?.length > 0 ? `(feat. ${featuringArtistNames})` : ''}`;
-        }
-        return '';
-    };
 
     const segmentedOptions: SegmentedOptions = [
         {
@@ -110,31 +77,31 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         },
     ];
     const isReadMode = action === RELEASE_DETAIL_ACTION.READ;
-    const a = RELEASES_STATUS;
-    const statusItems: StepsProps['items'] = [
-        {
-            title: messages('common.draft'),
-            icon: <NotebookText />,
-        },
-        {
-            title: messages('common.processing'),
-            icon: <FileSearch />,
-        },
-        {
-            title: messages('issue.label'),
-            icon: <CircleAlert />,
-        },
-        {
-            title: messages('common.distributed'),
-            icon: <Box />,
-        },
-        {
-            title: messages('common.takenDown'),
-            icon: <PackageX />,
-        },
-    ];
+    // const statusItems: StepsProps['items'] = [
+    //     {
+    //         title: messages('common.draft'),
+    //         icon: <NotebookText />,
+    //     },
+    //     {
+    //         title: messages('common.processing'),
+    //         icon: <FileSearch />,
+    //     },
+    //     {
+    //         title: messages('issue.label'),
+    //         icon: <CircleAlert />,
+    //     },
+    //     {
+    //         title: messages('common.distributed'),
+    //         icon: <Box />,
+    //     },
+    //     {
+    //         title: messages('common.takenDown'),
+    //         icon: <PackageX />,
+    //     },
+    // ];
 
     // func
+
     const handleImageUpload = async (info: any) => {
         setIsUploading(true);
         const file = info.fileList[0];
@@ -333,72 +300,8 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                 />
                             </AppFormItem>
                         </CustomTooltip>
-                        <div>
-                            <div
-                                className={cn(
-                                    'flex h-28 flex-col flex-wrap content-start gap-x-8 gap-y-2',
-                                    {
-                                        'h-16': isScrolled,
-                                    }
-                                )}
-                            >
-                                <div className="text-sm">
-                                    <span>{messages('release.name')}: </span>
-                                    <span className="font-bold">
-                                        {releaseData.title}{' '}
-                                        {releaseData.version &&
-                                            releaseData.title &&
-                                            `[${releaseData.version}]`}
-                                    </span>
-                                </div>
-                                <div className="text-sm">
-                                    <span>{messages('release.type')}: </span>
-                                    <span className="font-bold">
-                                        {releaseData.albumFormat?.name}
-                                    </span>
-                                </div>
-                                {releaseData.labelId && (
-                                    <div className="text-sm">
-                                        <span>Label: </span>
-                                        <span className="font-bold">
-                                            {releaseData?.label?.name}
-                                        </span>
-                                    </div>
-                                )}
-                                <div className="text-sm">
-                                    <span>{messages('artist.label')}: </span>
-                                    <span className="font-bold">
-                                        {renderArtistName()}
-                                    </span>
-                                </div>
-                                {/* <div className="text-sm">
-                                    <span>{messages('common.genres')}: </span>
-                                    <span className="font-bold">
-                                        {formValues?.primaryGenre?.name}
-                                    </span>
-                                </div> */}
-                                <div>
-                                    <span>
-                                        {messages('common.releaseDate')}:{' '}
-                                    </span>
-                                    <span className="font-bold">
-                                        {formattedDate(
-                                            releaseData.releaseDate,
-                                            DATE_FORMAT.DATE_ONLY
-                                        )}
-                                    </span>
-                                </div>
-
-                                {releaseData.upc && (
-                                    <div>
-                                        <span>UPC: </span>
-                                        <span className="font-bold">
-                                            {releaseData.upc}
-                                        </span>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
+                        {/* release info */}
+                        <ReleaseInfo isScrolled />
                     </div>
                     {!isCreateReleasePage && (
                         <div className="flex flex-col justify-between gap-2">

@@ -10,7 +10,7 @@ import { RELEASES_TABS } from '@/modules/releases/enums';
 import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
 import { CreateReleaseDraftPayload } from '@/modules/releases/types/payload';
 import { CreateVariables } from '@/types/api';
-import { Alert, Button, Input, Radio, theme } from 'antd';
+import { Button, Input, Radio, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useMemo } from 'react';
@@ -106,38 +106,32 @@ export default function ReleaseConfigurationSection({
                                             control={control}
                                             name="title"
                                             render={({ field }) => (
-                                                <div>
-                                                    <Input
-                                                        id="title"
-                                                        {...field}
-                                                        value={
-                                                            field.value ?? ''
-                                                        }
-                                                        onBlur={(e) => {
-                                                            const value =
-                                                                e.target.value;
-                                                            field.onChange(
-                                                                value
-                                                            );
-                                                            debouncedUpdate(
-                                                                {
-                                                                    title: value,
-                                                                },
-                                                                'title'
-                                                            );
-                                                        }}
-                                                        allowClear
-                                                        disabled={
-                                                            isOnCreatingDraft ||
-                                                            isReadMode
-                                                        }
-                                                        status={
-                                                            errors.title
-                                                                ? 'error'
-                                                                : undefined
-                                                        }
-                                                    />
-                                                </div>
+                                                <Input
+                                                    id="title"
+                                                    {...field}
+                                                    value={field.value ?? ''}
+                                                    onBlur={(e) => {
+                                                        const value =
+                                                            e.target.value;
+                                                        field.onChange(value);
+                                                        debouncedUpdate(
+                                                            {
+                                                                title: value,
+                                                            },
+                                                            'title'
+                                                        );
+                                                    }}
+                                                    allowClear
+                                                    disabled={
+                                                        isOnCreatingDraft ||
+                                                        isReadMode
+                                                    }
+                                                    status={
+                                                        errors.title
+                                                            ? 'error'
+                                                            : undefined
+                                                    }
+                                                />
                                             )}
                                         />
                                     </FormItem>
@@ -293,18 +287,11 @@ export default function ReleaseConfigurationSection({
                                             {messages('common.continue')}
                                         </Button>
                                     </div>
-                                    <div className="flex justify-end py-2 text-sm">
-                                        {/* *
+                                    <div className="flex justify-end py-2 text-sm italic text-zinc-500">
+                                        *
                                         {messages(
                                             'release.placeholder.enterTitleAndReleaseType'
-                                        )} */}
-                                        <Alert
-                                            message={messages(
-                                                'release.placeholder.enterTitleAndReleaseType'
-                                            )}
-                                            type="info"
-                                            showIcon
-                                        />
+                                        )}
                                     </div>
                                 </>
                             )}
