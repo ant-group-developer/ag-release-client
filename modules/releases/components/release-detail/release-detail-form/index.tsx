@@ -138,7 +138,9 @@ export default function ReleaseDetailForm() {
             showNotification('error', messages('validation.error'));
         }
     };
+
     const handleFormError = (errors: any) => {};
+
     const debouncedUpdate = useCallback(
         debounce(async (data: any, fieldName?: string) => {
             if (fieldName) {

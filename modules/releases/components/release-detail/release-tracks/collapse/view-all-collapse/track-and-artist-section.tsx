@@ -1,20 +1,16 @@
-import FormItem from '@/components/ui/react-hook-form/form-item';
-import ErrorText from '@/components/ui/text/error-text';
+import AppFormItem from '@/components/ui/antd-form/form-Item';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
-import { useRouter } from '@/i18n/routing';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import TrackArtistModal from '@/modules/track-artist/components/modal/track-artist-modal';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
-import { ReleaseTrackSchema } from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
-import { Button, Input, Switch, Typography } from 'antd';
+import { Button, Form, Input, Switch, Typography } from 'antd';
+import { useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
-import { useParams } from 'next/navigation';
 import { useState } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
 import ArtistCard from '../../../release-detail-form/artist-card';
 const { Title } = Typography;
 
@@ -34,27 +30,21 @@ export default function TrackAndArtistSection({
     const openModal = useModalStore((state) => state.openModal);
     const { action } = useGetReleaseDetailRoute();
     const [isOpenArtistForm, setOpenArtistForm] = useState(false);
-    const {
-        control,
-        formState: { errors },
-        watch,
-        trigger,
-        setValue,
-    } = useFormContext<ReleaseTrackSchema>();
-
+    const form = Form.useFormInstance();
     // router
-    const params = useParams();
-    const router = useRouter();
+    // const params = useParams();
+    // const router = useRouter();
 
-    const isAddArtistsFromRelease = watch('copyArtistsFromRelease');
+    const isAddArtistsFromRelease = useWatch('copyArtistsFromRelease', form);
     const isReadMode = action === RELEASE_DETAIL_ACTION.READ;
 
     const updateTrackDraft = async (data: any, fieldName?: string) => {
         if (fieldName) {
-            const isValid = await trigger(
-                fieldName as keyof ReleaseTrackSchema
-            );
-            if (!isValid) return;
+            try {
+                await form.validateFields([fieldName]);
+            } catch {
+                return;
+            }
         }
         debouncedUpdateTrackDraft(data);
     };
@@ -76,118 +66,71 @@ export default function TrackAndArtistSection({
                             <div>
                                 <div className="grid grid-cols-4 items-center gap-5">
                                     <div className="col-span-2">
-                                        <FormItem
+                                        <AppFormItem
                                             label={messages('track.name')}
-                                            ErrorMessage={errors.title?.message}
                                             required
                                             name="title"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message:
+                                                        messages(
+                                                            'validation.input'
+                                                        ),
+                                                },
+                                            ]}
                                         >
-                                            <Controller
-                                                control={control}
-                                                name="title"
-                                                render={({ field }) => (
-                                                    <Input
-                                                        id={`tracks.${index}.title`}
-                                                        {...field}
-                                                        allowClear
-                                                        value={
-                                                            field.value ?? ''
-                                                        }
-                                                        onChange={(e) => {
-                                                            const value =
-                                                                e.target.value;
-                                                            field.onChange(
-                                                                value
-                                                            );
-                                                            updateTrackDraft(
-                                                                {
-                                                                    title: value,
-                                                                },
-                                                                'title'
-                                                            );
-                                                        }}
-                                                        status={
-                                                            errors.title
-                                                                ? 'error'
-                                                                : undefined
-                                                        }
-                                                    />
-                                                )}
+                                            <Input
+                                                id={`tracks.${index}.title`}
+                                                allowClear
+                                                onBlur={(e) => {
+                                                    const value =
+                                                        e.target.value;
+                                                    updateTrackDraft(
+                                                        {
+                                                            title: value,
+                                                        },
+                                                        'title'
+                                                    );
+                                                }}
                                             />
-                                        </FormItem>
+                                        </AppFormItem>
                                     </div>
                                     <div className="col-span-2">
-                                        <FormItem
+                                        <AppFormItem
                                             label={messages('release.version')}
-                                            ErrorMessage={
-                                                errors.version?.message
-                                            }
                                             name="version"
                                         >
-                                            <Controller
-                                                control={control}
-                                                name="version"
-                                                render={({ field }) => (
-                                                    <Input
-                                                        id={`tracks.${index}.version`}
-                                                        {...field}
-                                                        value={
-                                                            field.value ?? ''
-                                                        }
-                                                        allowClear
-                                                        onChange={(e) => {
-                                                            const value =
-                                                                e.target.value;
-                                                            field.onChange(
-                                                                value
-                                                            );
-                                                            updateTrackDraft(
-                                                                {
-                                                                    version:
-                                                                        value,
-                                                                },
-                                                                'version'
-                                                            );
-                                                        }}
-                                                        status={
-                                                            errors.version
-                                                                ? 'error'
-                                                                : undefined
-                                                        }
-                                                    />
-                                                )}
+                                            <Input
+                                                id={`tracks.${index}.version`}
+                                                allowClear
+                                                onChange={(e) => {
+                                                    const value =
+                                                        e.target.value;
+                                                    updateTrackDraft(
+                                                        {
+                                                            version: value,
+                                                        },
+                                                        'version'
+                                                    );
+                                                }}
                                             />
-                                        </FormItem>
+                                        </AppFormItem>
                                     </div>
                                     <div className="col-span-2">
-                                        <FormItem
+                                        <AppFormItem
                                             label={`${messages('track.addAllArtistFromRelease')} ?`}
-                                            ErrorMessage={
-                                                errors.copyArtistsFromRelease
-                                                    ?.message
-                                            }
                                             name="copyArtistsFromRelease"
                                         >
-                                            <Controller
-                                                control={control}
-                                                name="copyArtistsFromRelease"
-                                                render={({ field }) => (
-                                                    <Switch
-                                                        {...field}
-                                                        checked={!!field.value}
-                                                        onChange={(e) => {
-                                                            field.onChange(e);
-                                                            debouncedUpdateTrackDraft(
-                                                                {
-                                                                    copyArtistsFromRelease:
-                                                                        e,
-                                                                }
-                                                            );
-                                                        }}
-                                                    />
-                                                )}
+                                            <Switch
+                                                onChange={(e) => {
+                                                    debouncedUpdateTrackDraft({
+                                                        copyArtistsFromRelease:
+                                                            e,
+                                                    });
+                                                }}
                                             />
-                                        </FormItem>
+                                        </AppFormItem>
                                     </div>
 
                                     {!isAddArtistsFromRelease && (
@@ -235,15 +178,15 @@ export default function TrackAndArtistSection({
                                                         setOpenArtistForm(true)
                                                     }
                                                     className="mt-4"
-                                                    danger={
-                                                        errors.trackArtists
-                                                            ? true
-                                                            : false
-                                                    }
+                                                    // danger={
+                                                    //     errors.trackArtists
+                                                    //         ? true
+                                                    //         : false
+                                                    // }
                                                 >
                                                     {messages('artist.add')}
                                                 </Button>
-                                                <ErrorText
+                                                {/* <ErrorText
                                                     isError={
                                                         !!errors.trackArtists
                                                     }
@@ -251,7 +194,7 @@ export default function TrackAndArtistSection({
                                                         errors.trackArtists
                                                             ?.message
                                                     }
-                                                />
+                                                /> */}
                                             </div>
                                         </div>
                                     )}

@@ -1,11 +1,13 @@
-import FormItem from '@/components/ui/react-hook-form/form-item';
+'use client';
+
+import AppFormItem from '@/components/ui/antd-form/form-Item';
 import GenresSelect from '@/components/ui/select/genres-select';
+import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
-import { ReleaseTrackSchema } from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
-import { Typography } from 'antd';
+import { Form, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
-import { Controller, useFormContext } from 'react-hook-form';
 
 const { Title } = Typography;
 
@@ -20,25 +22,25 @@ export default function GenreSection({
     debouncedUpdateTrackDraft,
     trackData,
 }: Props) {
+    // hooks
     const messages = useTranslations();
+    const { action } = useGetReleaseDetailRoute();
+    const form = Form.useFormInstance();
 
-    const {
-        control,
-        formState: { errors },
-        watch,
-        trigger,
-        setValue,
-    } = useFormContext<ReleaseTrackSchema>();
+    const isReadMode = action === RELEASE_DETAIL_ACTION.READ;
 
+    // handle change
     const updateTrackDraft = async (data: any, fieldName?: string) => {
         if (fieldName) {
-            const isValid = await trigger(
-                fieldName as keyof ReleaseTrackSchema
-            );
-            if (!isValid) return;
+            try {
+                await form.validateFields([fieldName]);
+            } catch {
+                return;
+            }
         }
         debouncedUpdateTrackDraft(data);
     };
+
     return (
         <CollapseItem
             defaultActiveKey={['genre']}
@@ -52,81 +54,59 @@ export default function GenreSection({
                     ),
                     children: (
                         <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <FormItem
-                                    label={messages('genres.primary')}
-                                    ErrorMessage={
-                                        errors.primaryGenreId?.message
-                                    }
-                                    required
-                                    name="primaryGenreId"
-                                >
-                                    <Controller
-                                        name="primaryGenreId"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <GenresSelect
-                                                id={`tracks.${index}.primaryGenreId`}
-                                                className="w-full"
-                                                showSearch
-                                                {...field}
-                                                fallBack={
-                                                    trackData?.primaryGenre
-                                                        ?.name
-                                                }
-                                                onChange={(e) => {
-                                                    field.onChange(e);
-                                                    updateTrackDraft(
-                                                        { primaryGenreId: e },
-                                                        'primaryGenreId'
-                                                    );
-                                                }}
-                                                status={
-                                                    errors.primaryGenreId
-                                                        ? 'error'
-                                                        : undefined
-                                                }
-                                            />
-                                        )}
-                                    />
-                                </FormItem>
-                            </div>
-                            <div>
-                                <FormItem
-                                    label={messages('common.subGenres')}
-                                    ErrorMessage={errors.subGenreId?.message}
-                                    name="subGenreId"
-                                >
-                                    <Controller
-                                        name="subGenreId"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <GenresSelect
-                                                id={`tracks.${index}.subGenreId`}
-                                                className="w-full"
-                                                showSearch
-                                                allowClear
-                                                {...field}
-                                                fallBack={
-                                                    trackData?.subGenre?.name
-                                                }
-                                                onChange={(e) => {
-                                                    field.onChange(e);
-                                                    updateTrackDraft(
-                                                        { subGenreId: e },
-                                                        'subGenreId'
-                                                    );
-                                                }}
-                                                status={
-                                                    errors.subGenreId
-                                                        ? 'error'
-                                                        : undefined
-                                                }
-                                            />
-                                        )}
-                                    />
-                                </FormItem>
-                            </div>
+                            {/* Primary Genre */}
+                            <AppFormItem
+                                label={messages('genres.primary')}
+                                name="primaryGenreId"
+                                required
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: messages('validation.input'),
+                                    },
+                                ]}
+                            >
+                                <GenresSelect
+                                    id={`tracks.${index}.primaryGenreId`}
+                                    className="w-full"
+                                    showSearch
+                                    allowClear
+                                    disabled={isReadMode}
+                                    onChange={(value) => {
+                                        updateTrackDraft(
+                                            { primaryGenreId: value },
+                                            'primaryGenreId'
+                                        );
+                                    }}
+                                />
+                            </AppFormItem>
+
+                            {/* Sub Genre */}
+                            <AppFormItem
+                                label={messages('common.subGenres')}
+                                name="subGenreId"
+                                required
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: messages('validation.input'),
+                                    },
+                                ]}
+                            >
+                                <GenresSelect
+                                    id={`tracks.${index}.subGenreId`}
+                                    className="w-full"
+                                    showSearch
+                                    allowClear
+                                    disabled={isReadMode}
+                                    onChange={(value) => {
+                                        updateTrackDraft(
+                                            { subGenreId: value },
+                                            'subGenreId'
+                                        );
+                                    }}
+                                />
+                            </AppFormItem>
                         </div>
                     ),
                 },

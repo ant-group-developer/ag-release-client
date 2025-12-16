@@ -31,7 +31,7 @@ const WaveformElement = ({
     // const peaks = (peakData && peakData.split(';')) || [];
     // const peaks = parsePeakData(peakData);
 
-    if (typeof window == undefined) {
+    if (typeof window == 'undefined') {
         return null;
     }
 

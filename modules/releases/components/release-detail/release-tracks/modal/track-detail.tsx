@@ -20,7 +20,7 @@ type Props = {} & Omit<AppModalProps, 'children'>;
 export default function TrackDetailModal({ ...props }: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
-    // const typeModal = useModalStore((state) => state.typeModal);
+    const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const { token } = theme.useToken();
     const { trackId, index } = useModalStore<{
@@ -29,7 +29,7 @@ export default function TrackDetailModal({ ...props }: Props) {
     }>((state) => state.dataEdit);
     // const { isActive, active, deActive } = useActive();
     const { updateTrackDraft } = useUpdateTrackDraft();
-    const { trackData, isFetching } = useGetDetailTrack(trackId);
+    const { trackData, isLoading } = useGetDetailTrack(trackId);
 
     const debouncedUpdate = useCallback(
         debounce((id, data) => {
@@ -123,7 +123,7 @@ export default function TrackDetailModal({ ...props }: Props) {
             style={{
                 top: '1rem',
             }}
-            spinning={isFetching}
+            spinning={isLoading}
             // className="bg-content"
         >
             <Tabs

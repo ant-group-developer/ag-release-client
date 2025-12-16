@@ -90,21 +90,15 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
         setIsSidebarOpen((prevState) => !prevState);
     };
     const handleClickError = (err: ReleaseValidate) => {
-        // setTimeout(() => {
-        window.dispatchEvent(new HashChangeEvent('hashchange'));
-        // }, 200);
-        if (err?.trackId) {
-            const hash = window.location.hash;
-            const parts = hash.split('.');
-            let trackIndex;
-            if (parts[0] === '#tracks') {
-                trackIndex = Number(parts[1]);
-            }
-            openModal(TYPE_MODAL_RELEASE.DETAIL_TRACK_RELEASE, {
-                trackId: err?.trackId,
-                index: trackIndex,
-            });
-        }
+        if (!err?.trackId || !err?.field) return;
+        const parts = err.field.split('.');
+        const trackIndex = Number(parts[1]);
+
+        openModal(TYPE_MODAL_RELEASE.DETAIL_TRACK_RELEASE, {
+            trackId: err.trackId,
+            index: trackIndex,
+            focusField: err.field,
+        });
     };
 
     useEffect(() => {

@@ -32,7 +32,7 @@ export default function Tracks() {
     const [selectedRow, setSelectedRow] = useState<Key[]>([]);
 
     const formValues = useReleaseFormStore((state) => state.formValues);
-    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
+    // const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore((state) => state.dataEdit);
     const closeModal = useModalStore((state) => state.closeModal);
@@ -45,8 +45,8 @@ export default function Tracks() {
 
     const { dataFilter, onChangePage } = useFilter<TrackDataFilter>({
         releaseId: formValues?.id as string,
-        // fieldOrder: 'order',
-        pageSize: 30,
+        fieldOrder: 'order',
+        pageSize: 999,
     });
 
     // apis
