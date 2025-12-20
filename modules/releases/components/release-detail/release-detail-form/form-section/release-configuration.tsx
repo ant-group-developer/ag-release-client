@@ -1,3 +1,4 @@
+import AppRadio from '@/components/ui/radio/app-radio';
 import FormItem from '@/components/ui/react-hook-form/form-item';
 import LabelSelect from '@/components/ui/select/label-select';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
@@ -248,25 +249,18 @@ export default function ReleaseConfigurationSection({
                                                         isReadMode
                                                     }
                                                 >
-                                                    {releaseTypesData.length >
-                                                        0 &&
-                                                        releaseTypesData.map(
-                                                            (
-                                                                type: ReleaseTypesData
-                                                            ) => (
-                                                                <Radio
-                                                                    key={
-                                                                        type.id
-                                                                    }
-                                                                    value={
-                                                                        type.id
-                                                                    }
-                                                                    className="capitalize"
-                                                                >
-                                                                    {type?.name}
-                                                                </Radio>
-                                                            )
-                                                        )}
+                                                    {releaseTypesData?.map(
+                                                        (
+                                                            type: ReleaseTypesData
+                                                        ) => (
+                                                            <AppRadio
+                                                                key={type.id}
+                                                                value={type.id}
+                                                            >
+                                                                {type?.name}
+                                                            </AppRadio>
+                                                        )
+                                                    )}
                                                 </Radio.Group>
                                             )}
                                         />

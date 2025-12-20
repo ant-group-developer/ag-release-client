@@ -42,9 +42,6 @@ export default function Schedule() {
                         current: tracksData.metadata.currentPage,
                         total: tracksData.metadata.totalItems,
                     }}
-                    scroll={{
-                        x: 'max-content',
-                    }}
                 />
                 {/* <AppPagination
                     className="!mt-0 rounded-b-[8px] bg-white"

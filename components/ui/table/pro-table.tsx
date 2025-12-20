@@ -25,7 +25,7 @@ export default function AppProTable<RecordType extends object>({
             }}
         >
             <ProTable<RecordType, Record<string, any>>
-                pagination={false} // để bạn tự quản lý phân trang
+                pagination={false}
                 rowKey="id" // mặc định rowKey, có thể override
                 search={
                     search === false

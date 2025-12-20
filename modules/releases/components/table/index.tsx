@@ -130,7 +130,9 @@ export default function ReleasesTable({
             align: 'left',
             width: 150,
             render: (value, record) => (
-                <Paragraph copyable={!!record?.upc}>{record?.upc}</Paragraph>
+                <Paragraph className="!mb-0" copyable={!!record?.upc}>
+                    {record?.upc}
+                </Paragraph>
             ),
         },
         {
@@ -302,12 +304,17 @@ export default function ReleasesTable({
     return (
         // <div className="rounded-lg bg-white px-6 pt-2">
         <AppProTable
+            toolbar={{
+                style: {
+                    padding: '0px 12px',
+                },
+            }}
             headerTitle={messages('release.list')}
             {...props}
             pagination={false}
             columns={column}
             rowClassName={'group'}
-            className={`rounded-t-lg px-4 ${props?.className}`}
+            className={`rounded-t-lg ${props?.className}`}
             style={{
                 backgroundColor: token.colorBgContainer,
                 ...props?.style,

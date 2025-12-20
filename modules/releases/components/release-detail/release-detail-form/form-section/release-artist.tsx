@@ -1,3 +1,4 @@
+import AppRadio from '@/components/ui/radio/app-radio';
 import FormItem from '@/components/ui/react-hook-form/form-item';
 import ErrorText from '@/components/ui/text/error-text';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
@@ -76,7 +77,7 @@ export default function ReleaseArtistSection({ debouncedUpdate }: Props) {
                         </span>
                     ),
                     children: (
-                        <div className="grid grid-cols-3 items-center gap-5">
+                        <div className="grid grid-cols-3 items-center gap-4">
                             <div className="col-span-3">
                                 <FormItem
                                     name="isVariousArtist"
@@ -93,7 +94,7 @@ export default function ReleaseArtistSection({ debouncedUpdate }: Props) {
                                         control={control}
                                         name="isVariousArtist"
                                         render={({ field }) => (
-                                            <div className="pb-2 pt-1">
+                                            <div className="pt-1">
                                                 <Radio.Group
                                                     {...field}
                                                     onChange={(e) => {
@@ -110,13 +111,13 @@ export default function ReleaseArtistSection({ debouncedUpdate }: Props) {
                                                         isReadMode
                                                     }
                                                 >
-                                                    <Radio value={false}>
+                                                    <AppRadio value={false}>
                                                         {messages('common.no')}
-                                                    </Radio>
-                                                    <Radio value={true}>
+                                                    </AppRadio>
+                                                    <AppRadio value={true}>
                                                         {messages('common.yes')}{' '}
                                                         {` (${messages('artist.descriptionVariantArtists')})`}
-                                                    </Radio>
+                                                    </AppRadio>
                                                 </Radio.Group>
                                             </div>
                                         )}
@@ -124,8 +125,8 @@ export default function ReleaseArtistSection({ debouncedUpdate }: Props) {
                                 </FormItem>
                             </div>
                             {!isVariousArtist && (
-                                <div className="col-span-3">
-                                    <div className="mb-4 grid grid-cols-2 gap-x-4 gap-y-4">
+                                <div className="col-span-3 space-y-4">
+                                    <div className="grid grid-cols-2 gap-x-4 gap-y-4">
                                         {releaseArtist.map(
                                             (
                                                 releaseArtist: ReleaseArtist,
@@ -171,7 +172,7 @@ export default function ReleaseArtistSection({ debouncedUpdate }: Props) {
                                             )
                                         )}
                                     </div>
-                                    <div className="relative">
+                                    <div>
                                         <Button
                                             id={'releaseArtists'}
                                             onClick={() =>
