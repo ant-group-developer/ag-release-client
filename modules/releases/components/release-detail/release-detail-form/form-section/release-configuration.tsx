@@ -3,6 +3,7 @@ import FormItem from '@/components/ui/react-hook-form/form-item';
 import LabelSelect from '@/components/ui/select/label-select';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
 import { useGetListSimpleReleaseTypes } from '@/modules/release-types/hooks/use-get-list-simple-release-types';
 import { ReleaseTypesData } from '@/modules/release-types/types';
@@ -34,7 +35,8 @@ export default function ReleaseConfigurationSection({
     const { createReleaseDraft, isPending: isOnCreatingDraft } =
         useCreateReleaseDraft();
     const messages = useTranslations();
-    const { getReleaseTabRoute, action } = useGetReleaseDetailRoute();
+    const { getReleaseTabRoute } = useGetReleaseDetailRoute();
+    const releaseAction = useReleaseActionStore((state) => state.action);
     const { token } = theme.useToken();
 
     // router and params
@@ -53,8 +55,10 @@ export default function ReleaseConfigurationSection({
     const isEnableCreateDraftBtn =
         (!!albumFormatId && !!title && !!labelId) === true;
     const isReadMode = useMemo(
-        () => action !== RELEASE_DETAIL_ACTION.EDIT && !isCreateReleasePage,
-        [action, isCreateReleasePage]
+        () =>
+            releaseAction !== RELEASE_DETAIL_ACTION.EDIT &&
+            !isCreateReleasePage,
+        [releaseAction, isCreateReleasePage]
     );
 
     // funtion

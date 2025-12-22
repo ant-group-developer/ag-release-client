@@ -10,8 +10,8 @@ import { formattedDate } from '@/helpers/common';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { showNotification } from '@/helpers/messages-helper';
 import { cn } from '@/helpers/tailwind';
-import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { usePathname, useRouter } from '@/i18n/routing';
 import { TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
@@ -49,10 +49,12 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const { token } = theme.useToken();
-    const { action } = useGetReleaseDetailRoute();
+    // const { action } = useGetReleaseDetailRoute();
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
+    const releaseAction = useReleaseActionStore((state) => state.action);
+    const setReleaseAction = useReleaseActionStore((state) => state.setAction);
 
     // apis
     const { updateReleaseDraft, isPending: isUpdatingRelease } =
@@ -76,7 +78,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
             value: RELEASE_DETAIL_ACTION.EDIT,
         },
     ];
-    const isReadMode = action === RELEASE_DETAIL_ACTION.READ;
+    const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
     // const statusItems: StepsProps['items'] = [
     //     {
     //         title: messages('common.draft'),
@@ -202,11 +204,10 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         updateReleaseDraft(variables);
     };
     const handleChangeAction = (value: RELEASE_DETAIL_ACTION) => {
-        const params = new URLSearchParams(searchParams.toString());
-
-        params.set('action', value);
-
-        router.push(`${pathname}?${params.toString()}`);
+        // const params = new URLSearchParams(searchParams.toString());
+        // params.set('action', value);
+        // router.push(`${pathname}?${params.toString()}`);
+        setReleaseAction(value);
     };
     const handleDeleteRelease = () => {
         const variables: DeleteVariables<ReleasesData['id']> = {
@@ -313,7 +314,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                 </p>
                                 <div className="flex justify-end">
                                     <Segmented
-                                        value={action}
+                                        value={releaseAction}
                                         options={segmentedOptions}
                                         onChange={(val) =>
                                             handleChangeAction(
