@@ -4,7 +4,7 @@ import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { getIndex } from '@/helpers/common';
 import { getTrackDetailRoute, RELEASE_DETAIL_ACTION } from '@/helpers/link';
-import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { Link } from '@/i18n/routing';
 import { useGetListEnablePolicyDsp } from '@/modules/dsp/hooks/use-get-list-enable-policy-dsp';
 import { DspData } from '@/modules/dsp/types';
@@ -31,7 +31,7 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
 
     const { dspData } = useGetListEnablePolicyDsp();
 
-    const { action } = useGetReleaseDetailRoute();
+    const action = useReleaseActionStore((s) => s.action);
 
     const isCanEdit = action === RELEASE_DETAIL_ACTION.EDIT;
 

@@ -1,8 +1,5 @@
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import {
-    getReleaseDetailTabRoute,
-    RELEASE_DETAIL_ACTION,
-} from '@/helpers/link';
+import { getReleaseDetailTabRoute } from '@/helpers/link';
 import { OnChangeFilter } from '@/hooks/use-filter';
 import { Link } from '@/i18n/routing';
 import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
@@ -41,8 +38,7 @@ export default function ReleaseTitleColumn({ record, onChangeFilter }: Props) {
                 <Link
                     href={getReleaseDetailTabRoute(
                         record?.id,
-                        RELEASES_TABS.CORE_DETAIL,
-                        RELEASE_DETAIL_ACTION.READ
+                        RELEASES_TABS.CORE_DETAIL
                     )}
                 >
                     <div className="!max-w-80 truncate">

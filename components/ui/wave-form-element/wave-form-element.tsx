@@ -3,10 +3,11 @@ import { SIZE_ICON_BIG } from '@/constants/common';
 import { convertSecondsToTime } from '@/helpers/common';
 import { Button, Col, Row } from 'antd';
 import { CirclePause, CirclePlay } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 // import Waveform from 'react-audio-waveform';
-
-let Waveform: any = null;
+const Waveform = dynamic<any>(() => import('react-audio-waveform'), {
+    ssr: false,
+});
 
 interface WaveformElementProps {
     peakData?: number[];
@@ -27,24 +28,8 @@ const WaveformElement = ({
 }: WaveformElementProps) => {
     // const peaks = (peakData && peakData.split(';')) || [];
     // const peaks = parsePeakData(peakData);
-
-    const [, forceRender] = useState(0);
-
-    useEffect(() => {
-        if (typeof window === 'undefined') return;
-
-        import('react-audio-waveform').then((mod) => {
-            Waveform = mod.default;
-            forceRender((v) => v + 1);
-        });
-    }, []);
-
-    if (typeof window == 'undefined') {
-        return null;
-    }
-
     return (
-        <Row align="middle" wrap={false}>
+        <Row suppressHydrationWarning align="middle" wrap={false}>
             <Col className="block" flex="50px">
                 <Button
                     type="text"

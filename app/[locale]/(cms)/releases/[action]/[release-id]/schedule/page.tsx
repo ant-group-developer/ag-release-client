@@ -1,7 +1,6 @@
 'use client';
 import { PAGE_SIZE } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
-import { useThemeMode } from '@/hooks/use-theme-mode';
 import ReleaseSchedulingForm from '@/modules/releases/components/release-detail/release-scheduling/form';
 import ReleaseSchedulingTable from '@/modules/releases/components/release-detail/release-scheduling/table';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
@@ -21,7 +20,7 @@ export default function Schedule() {
     const { tracksData, isFetching } = useGetListTracksWithPolicies(dataFilter);
 
     const { token } = theme.useToken();
-    const { isDark } = useThemeMode();
+    // const { isDark } = useThemeMode();
     const customTheme = {
         token: {
             // colorBgContainerDisabled: isDark ? '#2a2a2a' : '#fff',
