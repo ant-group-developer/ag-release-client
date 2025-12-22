@@ -1,13 +1,27 @@
 'use client';
 import axiosInstance from '@/api/axios-auth';
-import WaveformElement from '@/components/ui/wave-form-element/wave-form-element';
+// import WaveformElement from '@/components/ui/wave-form-element/wave-form-element';
 import { showNotification } from '@/helpers/messages-helper';
 import { useSongStatus } from '@/hooks/use-song-status';
 import { TrackData } from '@/modules/tracks/types';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { useIntersectionObserver } from '@uidotdev/usehooks';
+import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
+
+const WaveformElement = dynamic(
+    () =>
+        import('@/components/ui/wave-form-element/wave-form-element').then(
+            (mod) => mod.default
+        ),
+    {
+        ssr: false,
+        loading: () => (
+            <div className="h-16 w-full animate-pulse rounded bg-gray-200" />
+        ),
+    }
+);
 
 export function TrackWaveform({ data }: { data: TrackData }) {
     const { id, audioFile } = data;

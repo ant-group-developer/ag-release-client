@@ -117,7 +117,7 @@ export default function LabelFormModal({ ...props }: Props) {
                 : undefined,
         };
         form.setFieldsValue(initialData);
-    }, [dataEdit]);
+    }, [JSON.stringify(dataEdit)]);
 
     return (
         <AppModal

@@ -3,22 +3,19 @@ import { SIZE_ICON_BIG } from '@/constants/common';
 import { convertSecondsToTime } from '@/helpers/common';
 import { Button, Col, Row } from 'antd';
 import { CirclePause, CirclePlay } from 'lucide-react';
-import PropTypes from 'prop-types';
-import Waveform from 'react-audio-waveform';
+import { useEffect, useState } from 'react';
+// import Waveform from 'react-audio-waveform';
 
-// interface WaveformProps {
-//     peaks: number[];
-//     height?: number;
-//     pos?: number;
-//     duration?: number;
-//     onClick?: (value: any) => void;
-//     color?: string;
-//     progressColor?: string;
-//     transitionDuration?: number;
-// }
-// const Waveform = dynamic<WaveformProps>(() => import('react-audio-waveform'), {
-//     ssr: false,
-// });
+let Waveform: any = null;
+
+interface WaveformElementProps {
+    peakData?: number[];
+    songDuration?: number;
+    playedTime?: number;
+    playing?: boolean;
+    togglePlayback?: () => void;
+    handleSeeking?: (value: any) => void;
+}
 
 const WaveformElement = ({
     peakData = [0],
@@ -27,9 +24,20 @@ const WaveformElement = ({
     playing = false,
     togglePlayback = () => {},
     handleSeeking = (value: any) => {},
-}) => {
+}: WaveformElementProps) => {
     // const peaks = (peakData && peakData.split(';')) || [];
     // const peaks = parsePeakData(peakData);
+
+    const [, forceRender] = useState(0);
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+
+        import('react-audio-waveform').then((mod) => {
+            Waveform = mod.default;
+            forceRender((v) => v + 1);
+        });
+    }, []);
 
     if (typeof window == 'undefined') {
         return null;
@@ -88,14 +96,14 @@ const WaveformElement = ({
 
 export default WaveformElement;
 
-WaveformElement.propTypes = {
-    peakData: PropTypes.any,
-    songDuration: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    playing: PropTypes.bool,
-    playedTime: PropTypes.number,
-    togglePlayback: PropTypes.func,
-    /**
-     * Hàm callback khi seek, nhận giá trị seek từ waveform
-     */
-    handleSeeking: PropTypes.func,
-};
+// WaveformElement.propTypes = {
+//     peakData: PropTypes.any,
+//     songDuration: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+//     playing: PropTypes.bool,
+//     playedTime: PropTypes.number,
+//     togglePlayback: PropTypes.func,
+//     /**
+//      * Hàm callback khi seek, nhận giá trị seek từ waveform
+//      */
+//     handleSeeking: PropTypes.func,
+// };

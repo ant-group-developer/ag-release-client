@@ -28,12 +28,23 @@ export default function CustomTooltip({
         <Tooltip
             {...props}
             className={cn(className)}
-            overlayClassName={cn(props?.overlayClassName, {
-                '!text-xs': size === 'small',
-            })}
-            overlayInnerStyle={{
-                ...smallOverlayInnerStyle,
-                ...props.overlayInnerStyle,
+            classNames={{
+                root: cn(props?.overlayClassName, {
+                    '!text-xs': size === 'small',
+                }),
+            }}
+            // overlayClassName={cn(props?.overlayClassName, {
+            //     '!text-xs': size === 'small',
+            // })}
+            // overlayInnerStyle={{
+            //     ...smallOverlayInnerStyle,
+            //     ...props.overlayInnerStyle,
+            // }}
+            styles={{
+                body: {
+                    ...smallOverlayInnerStyle,
+                    ...props.styles?.body,
+                },
             }}
         />
     );

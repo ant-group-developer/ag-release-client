@@ -3,8 +3,8 @@ import AppConfirm from '@/components/ui/modal/confirm-modal';
 import { PAGE_SIZE } from '@/constants/page-size';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useFilter } from '@/hooks/use-filter';
-import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import DropUploadTracks from '@/modules/releases/components/drop-track-upload';
 import AddNewTrackModal from '@/modules/releases/components/release-detail/release-tracks/modal/add-new-track';
 import TrackDetailModal from '@/modules/releases/components/release-detail/release-tracks/modal/track-detail';
@@ -38,10 +38,11 @@ export default function Tracks() {
     const closeModal = useModalStore((state) => state.closeModal);
     const openModal = useModalStore((state) => state.openModal);
 
-    const { action } = useGetReleaseDetailRoute();
+    // const { action } = useGetReleaseDetailRoute();
+    const releaseAction = useReleaseActionStore((state) => state.action);
     const { deleteTracks } = useBulkDeleteTracks();
 
-    const isEditAction = action === RELEASE_DETAIL_ACTION.EDIT;
+    const isReleaseReadAction = releaseAction === RELEASE_DETAIL_ACTION.READ;
 
     const { dataFilter, onChangePage } = useFilter<TrackDataFilter>({
         releaseId: formValues?.id as string,
@@ -89,7 +90,7 @@ export default function Tracks() {
         selectedRowKeys: selectedRow,
         onChange: handleRowSelection,
         getCheckboxProps: (record: any) => ({
-            disabled: !isEditAction,
+            disabled: isReleaseReadAction,
         }),
     };
     const { token } = theme.useToken();
@@ -119,23 +120,10 @@ export default function Tracks() {
                         emptyText: isLoading ? (
                             <Empty />
                         ) : (
-                            <DropUploadTracks disabled={!isEditAction} />
+                            <DropUploadTracks disabled={isReleaseReadAction} />
                         ),
                     }}
                 />
-
-                {/* <AppPagination
-                    className="mb-4 rounded-b-[8px] bg-white"
-                    align="end"
-                    current={tracksData?.metadata?.currentPage}
-                    pageSize={dataFilter.pageSize}
-                    total={tracksData.metadata?.totalItems}
-                    onChange={onChangePage}
-                    showTotalText
-                    showSizeChanger
-                    showQuickJumper
-                    pageSizeOptions={PAGE_SIZE_OPTIONS}
-                /> */}
 
                 {typeModal === TYPE_MODAL_RELEASE.ADD_TRACK && (
                     <AddNewTrackModal />
@@ -163,21 +151,6 @@ export default function Tracks() {
                         onOk={handleBulkDeleteTracks}
                     />
                 )}
-
-                {/* {typeModal ===
-                    TYPE_MODAL_RELEASE_TRACK_ARTIST_LIST.DELETE_ARTIST && (
-                    <AppConfirm
-                        open
-                        modalTitle={messages('action.delete.title', {
-                            label: '',
-                        })}
-                        paragraph={messages('action.delete.alert', {
-                            label: '',
-                        })}
-                        onCancel={closeModal}
-                        onOk={() => {}}
-                    />
-                )} */}
 
                 {typeModal === TYPE_MODAL_TRACK_ARTIST.DELETE && (
                     <AppConfirm

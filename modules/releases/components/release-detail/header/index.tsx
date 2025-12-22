@@ -12,7 +12,7 @@ import { showNotification } from '@/helpers/messages-helper';
 import { cn } from '@/helpers/tailwind';
 import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
-import { usePathname, useRouter } from '@/i18n/routing';
+import { useRouter } from '@/i18n/routing';
 import { TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
@@ -27,7 +27,7 @@ import { DeleteVariables, UpdateVariables } from '@/types/api';
 import { Form, Segmented, theme } from 'antd';
 import { SegmentedOptions } from 'antd/es/segmented';
 import { useTranslations } from 'next-intl';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import DownloadMenu from './download-menu';
 import OptionsMenu from './options-menu';
@@ -49,10 +49,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const { token } = theme.useToken();
-    // const { action } = useGetReleaseDetailRoute();
     const router = useRouter();
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
     const releaseAction = useReleaseActionStore((state) => state.action);
     const setReleaseAction = useReleaseActionStore((state) => state.setAction);
 
@@ -277,7 +274,11 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                 </>
                             }
                             placement="right"
-                            overlayInnerStyle={{ minWidth: '300px' }}
+                            styles={{
+                                body: {
+                                    minWidth: '300px',
+                                },
+                            }}
                         >
                             <AppFormItem name="thumbnail">
                                 <ImageListUpload

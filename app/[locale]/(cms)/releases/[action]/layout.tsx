@@ -5,6 +5,7 @@ import { cn } from '@/helpers/common';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { Link } from '@/i18n/routing';
 import AppError from '@/modules/auth/components/error';
 import ReleaseDetailHeader from '@/modules/releases/components/release-detail/header';
@@ -36,8 +37,9 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         (state) => state.resetFormValues
     );
     const { token } = theme.useToken();
+    const { getReleaseTabRoute } = useGetReleaseDetailRoute();
+    const releaseAction = useReleaseActionStore((s) => s.action);
 
-    const { getReleaseTabRoute, action } = useGetReleaseDetailRoute();
     // state
     const [activeTab, setActiveTab] = useState<string>(
         RELEASES_TABS.CORE_DETAIL
@@ -152,7 +154,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     // render
     const isShowAddTrack =
         tracksData?.items?.length < releaseData?.albumFormat?.maxTrackCount &&
-        action == RELEASE_DETAIL_ACTION.EDIT;
+        releaseAction == RELEASE_DETAIL_ACTION.EDIT;
     const extraButton = (
         <div className="flex justify-end gap-2">
             {isTracksPage && isShowAddTrack && (
@@ -270,13 +272,6 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                             backgroundColor: token.colorBgContainer,
                         }}
                     >
-                        {/* <Link
-                            href={APP_ROUTES.RELEASES}
-                            className="flex w-fit items-center gap-1 py-2 hover:underline"
-                        >
-                            <ArrowLeft size={SIZE_ICON_SMALL} />
-                            {messages('release.back')}
-                        </Link> */}
                         <ReleaseDetailHeader isScrolled={isScrolled} />
                         <div>
                             <Tabs

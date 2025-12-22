@@ -8,8 +8,8 @@ import { SIZE_ICON } from '@/constants/common';
 import { getIndex } from '@/helpers/common';
 import { getTrackDetailRoute, RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { showNotification } from '@/helpers/messages-helper';
-import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
 import { TYPE_MODAL_RELEASE, TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
@@ -47,7 +47,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
     const formValues = useReleaseFormStore((state) => state.formValues);
     const openModal = useModalStore((state) => state.openModal);
     // const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
-    const { action } = useGetReleaseDetailRoute();
+    const action = useReleaseActionStore((s) => s.action);
     const router = useRouter();
 
     // apis
@@ -114,7 +114,6 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                     index
                 ),
         },
-
         {
             title: '',
             dataIndex: 'waveform',
@@ -163,42 +162,44 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                                 }
                             }}
                         />
-                        <div className="flex flex-wrap gap-y-2">
-                            {record?.trackArtists?.map(
-                                (trackArtist: TrackArtistData) => (
+                        {!isReadMode && (
+                            <div className="flex flex-wrap gap-y-2">
+                                {record?.trackArtists?.map(
+                                    (trackArtist: TrackArtistData) => (
+                                        <Tag
+                                            key={`${record.id}-${trackArtist.id}`}
+                                            closeIcon
+                                            onClose={(e) => {
+                                                e.preventDefault();
+                                                openModal(
+                                                    TYPE_MODAL_TRACK_ARTIST.DELETE,
+                                                    trackArtist
+                                                );
+                                            }}
+                                            closable={!isReadMode}
+                                            className="max-w-full whitespace-normal break-words"
+                                        >
+                                            {trackArtist?.artist?.name}
+                                        </Tag>
+                                    )
+                                )}
+                                {!isReadMode && (
                                     <Tag
-                                        key={`${record.id}-${trackArtist.id}`}
-                                        closeIcon
-                                        onClose={(e) => {
-                                            e.preventDefault();
+                                        key={`${record.id}-add-artist`}
+                                        className="border-dashed hover:border-blue-500"
+                                        onClick={() => {
+                                            if (isReadMode) return;
                                             openModal(
-                                                TYPE_MODAL_TRACK_ARTIST.DELETE,
-                                                trackArtist
+                                                TYPE_MODAL_TRACK_ARTIST.ADD,
+                                                record
                                             );
                                         }}
-                                        closable={!isReadMode}
-                                        className="max-w-full whitespace-normal break-words"
                                     >
-                                        {trackArtist?.artist?.name}
+                                        + {messages('artist.add')}
                                     </Tag>
-                                )
-                            )}
-                            {!isReadMode && (
-                                <Tag
-                                    key={`${record.id}-add-artist`}
-                                    className="border-dashed hover:border-blue-500"
-                                    onClick={() => {
-                                        if (isReadMode) return;
-                                        openModal(
-                                            TYPE_MODAL_TRACK_ARTIST.ADD,
-                                            record
-                                        );
-                                    }}
-                                >
-                                    + {messages('artist.add')}
-                                </Tag>
-                            )}
-                        </div>
+                                )}
+                            </div>
+                        )}
                     </div>
                 );
             },
@@ -254,25 +255,26 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             width: 80,
             render: (value, record, index) => {
                 return (
-                    <div className="flex items-center gap-2">
-                        <IconButton
-                            onClick={() =>
-                                openModal(
-                                    TYPE_MODAL_RELEASE.DETAIL_TRACK_RELEASE,
-                                    {
-                                        trackId: record?.id,
-                                        index,
-                                    }
-                                )
-                            }
-                        >
-                            <SquarePen size={SIZE_ICON} />
-                        </IconButton>
+                    <div className="flex items-center justify-center">
+                        {!isReadMode && (
+                            <IconButton
+                                onClick={() =>
+                                    openModal(
+                                        TYPE_MODAL_RELEASE.DETAIL_TRACK_RELEASE,
+                                        {
+                                            trackId: record?.id,
+                                            index,
+                                        }
+                                    )
+                                }
+                            >
+                                <SquarePen size={SIZE_ICON} />
+                            </IconButton>
+                        )}
                         <TrackActionButton
                             // disabled={isReadMode}
                             showDelete={!isReadMode}
                             showDownload
-                            showDetail
                             onShowDetail={() => {
                                 router.push(
                                     getTrackDetailRoute(
