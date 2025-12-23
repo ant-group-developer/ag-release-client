@@ -28,10 +28,16 @@ export default function AppHeaderPage({
             }}
         >
             <div className={'flex items-start gap-4'}>
-                <div>
+                <div
+                    className={cn(
+                        'overflow-hidden rounded-lg',
+                        'transition-[width,height] duration-300 ease-out',
+                        isScrolled ? 'size-16' : 'size-28'
+                    )}
+                >
                     <Image
                         className={cn(
-                            '!aspect-square !rounded-lg object-cover transition-all ease-out'
+                            '!aspect-square h-full w-full !rounded-lg object-cover'
                             // {
                             //     'transition-all duration-700 ease-out':
                             //         isScrolled,
@@ -41,8 +47,8 @@ export default function AppHeaderPage({
                             maskClassName: cn('rounded-lg'),
                         }}
                         fallback={'/image/fallback-image.png'}
-                        width={isScrolled ? 64 : 110}
-                        height={isScrolled ? 64 : 110}
+                        // width={isScrolled ? 64 : 110}
+                        // height={isScrolled ? 64 : 110}
                         src={imageSrc}
                         alt=""
                     />

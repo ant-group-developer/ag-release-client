@@ -74,10 +74,9 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
                 return (
                     <div className="flex items-center gap-4">
                         <TrackCoverArt trackData={record} />
-                        <div className="min-w-0 flex-1 truncate">
+                        <div className="truncate">
                             <CustomTooltip
                                 title={messages('common.viewDetail')}
-                                placement="right"
                             >
                                 <Link
                                     href={getTrackDetailRoute(
@@ -113,10 +112,10 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
             dataIndex: 'id',
             align: 'left',
             width: 60,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
+            render: (value, record) => (
+                <CopyText text={record?.id}>
                     <span className="truncate"> {value} </span>
-                </CustomTooltip>
+                </CopyText>
             ),
         },
         {
@@ -195,7 +194,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
                 return (
                     <div>
                         <TagScanCopyright
-                            className="!border-0 hover:cursor-pointer hover:!border hover:opacity-80"
+                            className="!border-0 hover:cursor-pointer hover:opacity-70"
                             onClick={() => {
                                 if (isUnScanned) {
                                     return openModal(
@@ -306,7 +305,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
                 persistenceType: 'sessionStorage',
             }}
             {...props}
-            className={`rounded-t-lg px-4 ${props?.className}`}
+            className={`rounded-t-lg ${props?.className}`}
             style={{
                 backgroundColor: token.colorBgContainer,
                 ...props?.style,
@@ -314,6 +313,9 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
             pagination={false}
             columns={column}
             rowClassName={'group'}
+            toolbar={{
+                className: 'px-4',
+            }}
         />
     );
 }

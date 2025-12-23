@@ -1,7 +1,7 @@
 import AppCard from '@/components/ant-music/app-card';
 import { cn } from '@/helpers/common';
 import { ArtistData } from '@/modules/artist/types';
-import { Button, theme } from 'antd';
+import { Empty, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
@@ -13,6 +13,10 @@ export default function ArtistProfileCard({ artistData }: Props) {
     const messages = useTranslations();
     const artistProfiles = artistData?.artistProfiles;
     const { token } = theme.useToken();
+    const handleOpenLink = (link: string) => {
+        if (!link) return;
+        window.open(link, '_blank');
+    };
     return (
         <AppCard
             title={messages('artist.profiles')}
@@ -20,7 +24,7 @@ export default function ArtistProfileCard({ artistData }: Props) {
         >
             <div
                 className={cn(
-                    'flex max-h-[245px] flex-col overflow-y-auto rounded-md'
+                    'flex gap-2 overflow-y-auto rounded-md px-4 pb-4'
                 )}
             >
                 {artistProfiles?.map((item, index) => {
@@ -29,54 +33,29 @@ export default function ArtistProfileCard({ artistData }: Props) {
                             <div
                                 key={item?.id}
                                 className={cn(
-                                    'flex cursor-pointer items-center justify-between p-3'
-                                    // linked
-                                    //     ? 'bg-green-500 text-white hover:bg-green-500'
-                                    //     : 'bg-gray-100'
+                                    'cursor-pointer items-center justify-between rounded-lg !bg-zinc-100 px-24 py-8 hover:!bg-zinc-200'
                                 )}
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.backgroundColor =
-                                        token.colorFillAlter;
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.backgroundColor =
-                                        token.colorBgContainer;
-                                }}
+                                onClick={() => handleOpenLink(item?.url)}
                             >
-                                <div className="flex items-center gap-2">
+                                <div className="">
                                     <Image
                                         className="rounded-full"
                                         src={item?.dsp?.picture ?? ''}
                                         alt={item?.dsp?.name || ''}
-                                        width={32}
-                                        height={32}
+                                        width={40}
+                                        height={40}
                                     />
-                                    <span className="font-bold">
-                                        {item?.dsp?.name}
-                                    </span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Button
-                                        onClick={() => {
-                                            window.open(item?.url, '_blank');
-                                        }}
-                                        type="default"
-                                        shape="round"
-                                        className={cn('group font-medium')}
-                                    >
-                                        <span>
-                                            <p className="flex items-center gap-2">
-                                                {messages(
-                                                    'artist.visitProfile'
-                                                )}
-                                            </p>
-                                        </span>
-                                    </Button>
                                 </div>
                             </div>
                         </>
                     );
                 })}
+
+                {artistProfiles && artistProfiles?.length <= 0 && (
+                    <div className="flex flex-1 justify-center">
+                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                    </div>
+                )}
             </div>
         </AppCard>
     );

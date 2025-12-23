@@ -10,14 +10,14 @@ import { ReleaseTypesData } from '@/modules/release-types/types';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
+import { ReleaseDetailSchema } from '@/modules/releases/schemas';
 import { CreateReleaseDraftPayload } from '@/modules/releases/types/payload';
 import { CreateVariables } from '@/types/api';
-import { Button, Input, Radio, theme } from 'antd';
+import { Button, Input, Radio } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { ReleaseDetailSchema } from '..';
 
 type Props = {
     debouncedUpdate: (data: any, fieldName?: string) => void;
@@ -37,7 +37,7 @@ export default function ReleaseConfigurationSection({
     const messages = useTranslations();
     const { getReleaseTabRoute } = useGetReleaseDetailRoute();
     const releaseAction = useReleaseActionStore((state) => state.action);
-    const { token } = theme.useToken();
+    // const { token } = theme.useToken();
 
     // router and params
     const params = useParams();

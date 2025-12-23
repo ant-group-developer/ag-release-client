@@ -251,7 +251,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
     return (
         <AppProTable
             {...props}
-            className={`rounded-t-lg px-4 ${props?.className}`}
+            className={`rounded-t-lg ${props?.className}`}
             style={{
                 backgroundColor: token.colorBgContainer,
                 ...props?.style,
@@ -259,6 +259,9 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             pagination={false}
             columns={column}
             rowClassName={'group'}
+            toolbar={{
+                className: 'px-4',
+            }}
         />
     );
 };

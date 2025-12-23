@@ -305,9 +305,7 @@ export default function ReleasesTable({
         // <div className="rounded-lg bg-white px-6 pt-2">
         <AppProTable
             toolbar={{
-                style: {
-                    padding: '0px 12px',
-                },
+                className: 'px-4',
             }}
             headerTitle={messages('release.list')}
             {...props}

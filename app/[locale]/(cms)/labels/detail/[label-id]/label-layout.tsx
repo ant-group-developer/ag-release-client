@@ -94,7 +94,7 @@ export default function LabelDetailLayout({ children }: PropsWithChildren) {
             className="h-full min-h-[calc(100vh-64px)] overflow-auto"
             onScroll={(e) => {
                 const el = e.currentTarget;
-                setIsScrolled(el.scrollTop > 0);
+                setIsScrolled(el.scrollTop > 20);
             }}
             style={{ backgroundColor: token.colorBgLayout }}
         >

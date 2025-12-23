@@ -62,7 +62,7 @@ export default function Tracks({}: Props) {
 
             {layoutTable === LAYOUT_TABLE.LIST && (
                 <TracksTable
-                    sticky={{ offsetHeader: headerLayoutHeight }}
+                    sticky={{ offsetHeader: headerLayoutHeight - 50 }}
                     dataSource={tracksData?.items}
                     loading={isFetching}
                     pagination={{
