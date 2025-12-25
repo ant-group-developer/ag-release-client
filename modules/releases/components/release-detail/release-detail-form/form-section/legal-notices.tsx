@@ -101,7 +101,7 @@ export default function LegalNoticesSection({
                                 <Controller
                                     control={control}
                                     name="cLineYear"
-                                    render={({ field }) => {
+                                    render={({ field: { ref, ...field } }) => {
                                         return (
                                             <Select
                                                 id="cLineYear"
@@ -148,7 +148,7 @@ export default function LegalNoticesSection({
                                 <Controller
                                     control={control}
                                     name="cLineOwner"
-                                    render={({ field }) => {
+                                    render={({ field: { ref, ...field } }) => {
                                         return (
                                             <Input
                                                 id="cLineOwner"
@@ -189,7 +189,7 @@ export default function LegalNoticesSection({
                                 <Controller
                                     control={control}
                                     name="pLineYear"
-                                    render={({ field }) => {
+                                    render={({ field: { ref, ...field } }) => {
                                         return (
                                             <Select
                                                 id="pLineYear"
@@ -236,7 +236,7 @@ export default function LegalNoticesSection({
                                 <Controller
                                     control={control}
                                     name="pLineOwner"
-                                    render={({ field }) => {
+                                    render={({ field: { ref, ...field } }) => {
                                         return (
                                             <Input
                                                 {...field}

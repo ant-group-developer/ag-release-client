@@ -111,7 +111,9 @@ export default function ReleaseConfigurationSection({
                                         <Controller
                                             control={control}
                                             name="title"
-                                            render={({ field }) => (
+                                            render={({
+                                                field: { ref, ...field },
+                                            }) => (
                                                 <Input
                                                     id="title"
                                                     {...field}
@@ -154,7 +156,9 @@ export default function ReleaseConfigurationSection({
                                         <Controller
                                             control={control}
                                             name="version"
-                                            render={({ field }) => (
+                                            render={({
+                                                field: { ref, ...field },
+                                            }) => (
                                                 <Input
                                                     id="version"
                                                     {...field}
@@ -196,7 +200,9 @@ export default function ReleaseConfigurationSection({
                                         <Controller
                                             control={control}
                                             name="labelId"
-                                            render={({ field }) => (
+                                            render={({
+                                                field: { ref, ...field },
+                                            }) => (
                                                 <LabelSelect
                                                     className="w-full"
                                                     showSearch
@@ -237,7 +243,9 @@ export default function ReleaseConfigurationSection({
                                         <Controller
                                             control={control}
                                             name="albumFormatId"
-                                            render={({ field }) => (
+                                            render={({
+                                                field: { ref, ...field },
+                                            }) => (
                                                 <Radio.Group
                                                     {...field}
                                                     onChange={(e) => {

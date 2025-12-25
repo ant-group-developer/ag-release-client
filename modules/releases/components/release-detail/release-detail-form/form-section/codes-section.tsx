@@ -54,7 +54,9 @@ export default function CodesSection({ isReadMode, debouncedUpdate }: Props) {
                                     <Controller
                                         control={control}
                                         name="upc"
-                                        render={({ field }) => (
+                                        render={({
+                                            field: { ref, ...field },
+                                        }) => (
                                             <Input
                                                 id="upc"
                                                 {...field}
@@ -94,7 +96,9 @@ export default function CodesSection({ isReadMode, debouncedUpdate }: Props) {
                                     <Controller
                                         control={control}
                                         name="catalogId"
-                                        render={({ field }) => (
+                                        render={({
+                                            field: { ref, ...field },
+                                        }) => (
                                             <Input
                                                 id="catalogId"
                                                 {...field}

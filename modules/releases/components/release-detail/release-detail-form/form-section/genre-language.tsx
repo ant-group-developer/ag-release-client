@@ -64,7 +64,7 @@ export default function GenreLanguageSection({
                                 <Controller
                                     control={control}
                                     name="primaryGenreId"
-                                    render={({ field }) => {
+                                    render={({ field: { ref, ...field } }) => {
                                         return (
                                             <GenresSelect
                                                 showSearch
@@ -101,7 +101,7 @@ export default function GenreLanguageSection({
                                 <Controller
                                     control={control}
                                     name="subGenreId"
-                                    render={({ field }) => (
+                                    render={({ field: { ref, ...field } }) => (
                                         <GenresSelect
                                             className="w-full"
                                             allowClear
@@ -143,7 +143,7 @@ export default function GenreLanguageSection({
                                 <Controller
                                     control={control}
                                     name="releaseLanguage.metadataLanguageId"
-                                    render={({ field }) => {
+                                    render={({ field: { ref, ...field } }) => {
                                         return (
                                             <LanguageSelect
                                                 className="w-full"
@@ -189,7 +189,7 @@ export default function GenreLanguageSection({
                                 <Controller
                                     control={control}
                                     name="releaseLanguage.audioLanguageId"
-                                    render={({ field }) => {
+                                    render={({ field: { ref, ...field } }) => {
                                         return (
                                             <LanguageSelect
                                                 className="w-full"
@@ -235,7 +235,7 @@ export default function GenreLanguageSection({
                                 <Controller
                                     control={control}
                                     name="releaseLanguage.metadataLanguageCountryId"
-                                    render={({ field }) => {
+                                    render={({ field: { ref, ...field } }) => {
                                         return (
                                             <CountrySelect
                                                 className="w-full"

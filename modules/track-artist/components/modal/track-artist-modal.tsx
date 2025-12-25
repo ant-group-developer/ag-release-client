@@ -176,6 +176,7 @@ export default function TrackArtistModal({
                         showSearch
                         placeholder={messages('artist.select')}
                         artistId={watchArtistId}
+                        allowClear
                     />
                 </AppFormItem>
 
@@ -200,6 +201,7 @@ export default function TrackArtistModal({
                     <RoleArtistSelect
                         disabledRoleIds={disabledRoleIds}
                         placeholder={messages('common.role')}
+                        allowClear
                     />
                 </AppFormItem>
 

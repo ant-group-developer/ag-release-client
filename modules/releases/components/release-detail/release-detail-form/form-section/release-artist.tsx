@@ -73,7 +73,9 @@ export default function ReleaseArtistSection({
                                     <Controller
                                         control={control}
                                         name="isVariousArtist"
-                                        render={({ field }) => (
+                                        render={({
+                                            field: { ref, ...field },
+                                        }) => (
                                             <div className="pt-1">
                                                 <Radio.Group
                                                     {...field}

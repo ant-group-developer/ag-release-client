@@ -55,7 +55,7 @@ export default function ArtistSelect({
     const debounceSearch = useMemo(
         () =>
             debounce((value: string) => {
-                setSearchKeyword(value);
+                setSearchKeyword(value || ' ');
             }, 300),
         [setSearchKeyword]
     );
