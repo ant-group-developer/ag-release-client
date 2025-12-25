@@ -8,7 +8,6 @@ import { useApiNotify } from '@/hooks/use-api-notify';
 import useModalStore from '@/hooks/use-modal';
 import { useGetListArtistRole } from '@/modules/artist-role/hooks/use-get-list-artist-role';
 import { ArtistRoleData } from '@/modules/artist-role/types';
-import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { useCreateReleaseArtist } from '@/modules/release-artist/hooks/use-create-release-artist';
 import { ReleaseArtist } from '@/modules/release-artist/types';
@@ -46,7 +45,7 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
         typeModal === TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST;
     const dataEdit = useModalStore((state) => state.dataEdit as ReleaseArtist);
 
-    const { dspData } = useGetListDsp({});
+    // const { dspData } = useGetListDsp({});
     const { createReleaseArtist } = useCreateReleaseArtist();
     const { artistsRolesData } = useGetListArtistRole({});
     const { updateReleaseArtist } = useUpdateReleaseArtist();
@@ -168,7 +167,7 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                 >
                     <ArtistSelect
                         showSearch
-                        fallBack={dataEdit?.artist?.name}
+                        // fallBack={dataEdit?.artist?.name}
                         placeholder={messages('artist.select')}
                         disabledArtistIds={disabledArtistIds}
                     />
@@ -194,7 +193,7 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                         ]}
                     >
                         <RoleArtistSelect
-                            fallBack={dataEdit?.artistRole?.name}
+                            // fallBack={dataEdit?.artistRole?.name}
                             placeholder={messages('common.role')}
                             disabledRoleIds={disabledRoleIds}
                         />

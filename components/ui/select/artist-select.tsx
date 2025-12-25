@@ -1,3 +1,4 @@
+import { cn } from '@/helpers/common';
 import { useQueryParams } from '@/hooks/use-query-params';
 import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
 import { useGetArtistSimpleList } from '@/modules/artist/hooks/use-get-artist-simple-list';
@@ -12,19 +13,22 @@ type Props = SelectProps & {
     fallBack?: string;
     disabledArtistIds?: string[];
     showCreate?: boolean;
+    artistId?: string;
 };
 
 export default function ArtistSelect({
     fallBack,
     disabledArtistIds,
     showCreate = true,
+    artistId,
     ...props
 }: Props) {
     const [searchKeyword, setSearchKeyword] = useState('');
     const [openCreate, setOpenCreate] = useState(false);
     const messages = useTranslations();
     const queryParams = useQueryParams();
-    const artistId = queryParams['artistId'];
+    const artistIdFromParams = queryParams['artistId'];
+    // const { token } = theme.useToken();
 
     const {
         artistsData,
@@ -36,7 +40,7 @@ export default function ArtistSelect({
     } = useGetArtistSimpleList({
         pageSize: 50,
         keyword: searchKeyword,
-        idInclude: artistId,
+        idInclude: artistId ?? artistIdFromParams,
     });
 
     // const spotify = artistsData?.map((item) => {
@@ -106,8 +110,14 @@ export default function ArtistSelect({
 
     const optionRender = (oriOption: any) => {
         const item = oriOption.data.artistData as ArtistDataSimple;
+        const disabled = oriOption.disabled;
         return (
-            <div className="grid grid-cols-3 items-center gap-1">
+            <div
+                className={cn('grid grid-cols-3 items-center gap-1')}
+                style={{
+                    backgroundColor: disabled ? '#ccc' : '',
+                }}
+            >
                 <span className="truncate">
                     <CustomTooltip title={item.name}>{item.name}</CustomTooltip>
                 </span>
@@ -169,8 +179,7 @@ export default function ArtistSelect({
         <>
             <Select
                 {...props}
-                className={''}
-                loading={isFetching}
+                loading={isFetching || props?.loading}
                 showSearch
                 onSearch={(value) => debounceSearch(value)}
                 filterOption={false}

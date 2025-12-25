@@ -18,7 +18,12 @@ export const useUpdateTrackArtist = () => {
         { onSuccess }: CreateVariables<UpdateTrackArtistPayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: trackQueryKeys.lists(),
+            queryKey: trackQueryKeys.list({
+                pageSize: 999,
+            }),
+        });
+        queryClient.invalidateQueries({
+            queryKey: trackQueryKeys.detail(data?.data?.data?.trackId),
         });
         queryClient.invalidateQueries({
             queryKey: releasesQueryKeys.validations(),

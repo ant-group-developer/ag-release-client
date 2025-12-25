@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "information": "Information",
         "statistics": "Statistics",
         "list": "List",
         "pieChart": "Pie chart",

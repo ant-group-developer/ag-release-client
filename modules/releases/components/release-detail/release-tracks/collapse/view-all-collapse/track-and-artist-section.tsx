@@ -1,17 +1,13 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
-import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
-import TrackArtistModal from '@/modules/track-artist/components/modal/track-artist-modal';
-import { TrackArtistData } from '@/modules/track-artist/types';
-import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
 import { TrackData } from '@/modules/tracks/types';
-import { Button, Form, Input, Switch, Typography } from 'antd';
+import { ConfigProvider, Form, Input, Switch, Typography } from 'antd';
 import { useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
-import ArtistCard from '../../../release-detail-form/artist-card';
+import TrackArtistTable from '../../table/track-artist-table';
 const { Title } = Typography;
 
 type Props = {
@@ -28,15 +24,15 @@ export default function TrackAndArtistSection({
     // hook - state
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
-    const { action } = useGetReleaseDetailRoute();
-    const [isOpenArtistForm, setOpenArtistForm] = useState(false);
+    const releaseAction = useReleaseActionStore((s) => s.action);
+
     const form = Form.useFormInstance();
     // router
     // const params = useParams();
     // const router = useRouter();
 
     const isAddArtistsFromRelease = useWatch('copyArtistsFromRelease', form);
-    const isReadMode = action === RELEASE_DETAIL_ACTION.READ;
+    const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
 
     const updateTrackDraft = async (data: any, fieldName?: string) => {
         if (fieldName) {
@@ -50,7 +46,7 @@ export default function TrackAndArtistSection({
     };
 
     return (
-        <>
+        <ConfigProvider componentDisabled={isReadMode}>
             <CollapseItem
                 defaultActiveKey={['track-and-artist']}
                 items={[
@@ -104,7 +100,7 @@ export default function TrackAndArtistSection({
                                             <Input
                                                 id={`tracks.${index}.version`}
                                                 allowClear
-                                                onChange={(e) => {
+                                                onBlur={(e) => {
                                                     const value =
                                                         e.target.value;
                                                     updateTrackDraft(
@@ -117,10 +113,11 @@ export default function TrackAndArtistSection({
                                             />
                                         </AppFormItem>
                                     </div>
-                                    <div className="col-span-2">
+                                    <div className="col-span-4">
                                         <AppFormItem
                                             label={`${messages('track.addAllArtistFromRelease')} ?`}
                                             name="copyArtistsFromRelease"
+                                            className="!mb-0"
                                         >
                                             <Switch
                                                 onChange={(e) => {
@@ -131,83 +128,26 @@ export default function TrackAndArtistSection({
                                                 }}
                                             />
                                         </AppFormItem>
-                                    </div>
 
-                                    {!isAddArtistsFromRelease && (
-                                        <div className="col-span-4">
-                                            <div className="grid grid-cols-2 gap-4">
-                                                {trackData?.trackArtists?.map(
-                                                    (
-                                                        item: TrackArtistData,
-                                                        index: number
-                                                    ) => (
-                                                        <ArtistCard
-                                                            key={item.id}
-                                                            data={{
-                                                                artist: item.artist,
-                                                                artistRole:
-                                                                    item.artistRole,
-                                                            }}
-                                                            onDelete={() =>
-                                                                openModal(
-                                                                    TYPE_MODAL_TRACK_ARTIST.DELETE,
-                                                                    item
-                                                                )
-                                                            }
-                                                            onClick={() => {
-                                                                // openModal(
-                                                                //     TYPE_MODAL_TRACK_ARTIST.UPDATE,
-                                                                //     item
-                                                                // );
-                                                                setOpenArtistForm(
-                                                                    true
-                                                                );
-                                                            }}
-                                                            index={index}
-                                                            disabled={
-                                                                isReadMode
-                                                            }
-                                                        />
-                                                    )
-                                                )}
+                                        {!isAddArtistsFromRelease && (
+                                            <div
+                                                id={`tracks.${index}.trackArtists`}
+                                            >
+                                                <TrackArtistTable
+                                                    dataSource={
+                                                        trackData?.trackArtists
+                                                    }
+                                                    trackData={trackData}
+                                                />
                                             </div>
-                                            <div className="relative">
-                                                <Button
-                                                    id={`tracks.${index}.trackArtists`}
-                                                    onClick={() =>
-                                                        setOpenArtistForm(true)
-                                                    }
-                                                    className="mt-4"
-                                                    // danger={
-                                                    //     errors.trackArtists
-                                                    //         ? true
-                                                    //         : false
-                                                    // }
-                                                >
-                                                    {messages('artist.add')}
-                                                </Button>
-                                                {/* <ErrorText
-                                                    isError={
-                                                        !!errors.trackArtists
-                                                    }
-                                                    message={
-                                                        errors.trackArtists
-                                                            ?.message
-                                                    }
-                                                /> */}
-                                            </div>
-                                        </div>
-                                    )}
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         ),
                     },
                 ]}
             />
-            <TrackArtistModal
-                open={isOpenArtistForm}
-                onCancel={() => setOpenArtistForm(false)}
-            />
-        </>
+        </ConfigProvider>
     );
 }

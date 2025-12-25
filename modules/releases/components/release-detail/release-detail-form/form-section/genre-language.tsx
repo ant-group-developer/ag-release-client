@@ -2,20 +2,22 @@ import FormItem from '@/components/ui/react-hook-form/form-item';
 import CountrySelect from '@/components/ui/select/country-select';
 import GenresSelect from '@/components/ui/select/genres-select';
 import LanguageSelect from '@/components/ui/select/language-select';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { ReleaseDetailSchema } from '@/modules/releases/schemas';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 type Props = {
     debouncedUpdate: (data: any, fieldName?: string) => void;
+    isReadMode: boolean;
 };
 
-export default function GenreLanguageSection({ debouncedUpdate }: Props) {
+export default function GenreLanguageSection({
+    isReadMode,
+    debouncedUpdate,
+}: Props) {
     // hook - state
     const {
         control,
@@ -28,10 +30,10 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
 
     // router - params
     const params = useParams();
-    const isReadMode = useMemo(
-        () => action !== RELEASE_DETAIL_ACTION.EDIT,
-        [action]
-    );
+    // const isReadMode = useMemo(
+    //     () => action !== RELEASE_DETAIL_ACTION.EDIT,
+    //     [action]
+    // );
 
     // variables
     const isCreateReleasePage = params['action'] === 'create';

@@ -8,7 +8,6 @@ import {
     getIndex,
     getSortOrder,
 } from '@/helpers/common';
-import { getIntlCodeByReleaseStatus } from '@/helpers/intl';
 import {
     getReleaseDetailTabRoute,
     RELEASE_DETAIL_ACTION,
@@ -29,6 +28,7 @@ import {
     TYPE_MODAL_RELEASE,
 } from '../../enums';
 import { ReleasesData, ReleasesDataFilter } from '../../types';
+import ReleaseStatusTag from '../tag/release-status-tag';
 import ReleaseTitleColumn from './title-column';
 
 type Props = Omit<AppProTableProps<ReleasesData>, 'columns'> & {
@@ -142,11 +142,7 @@ export default function ReleasesTable({
             align: 'left',
             width: 120,
             render: (value, record) => {
-                return (
-                    <Tag className="cursor-pointer truncate">
-                        {messages(getIntlCodeByReleaseStatus(record?.status))}
-                    </Tag>
-                );
+                return <ReleaseStatusTag status={record?.status} />;
             },
         },
         {
@@ -202,7 +198,7 @@ export default function ReleasesTable({
                     {' '}
                     {formattedDate(
                         record?.releaseDate,
-                        DATE_FORMAT.DATE_ONLY
+                        DATE_FORMAT.DATE_MINUTE
                     )}{' '}
                 </span>
             ),
@@ -224,7 +220,7 @@ export default function ReleasesTable({
                     {' '}
                     {formattedDate(
                         record?.createdAt,
-                        DATE_FORMAT.DATE_ONLY
+                        DATE_FORMAT.DATE_MINUTE
                     )}{' '}
                 </span>
             ),
@@ -246,7 +242,7 @@ export default function ReleasesTable({
                     {' '}
                     {formattedDate(
                         record?.updatedAt,
-                        DATE_FORMAT.DATE_ONLY
+                        DATE_FORMAT.DATE_MINUTE
                     )}{' '}
                 </span>
             ),

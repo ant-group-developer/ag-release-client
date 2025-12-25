@@ -39,7 +39,7 @@ export default function ReleaseDetailForm() {
     // zustand store - state
     const formValues = useReleaseFormStore((state) => state.formValues);
     const { getReleaseTabRoute } = useGetReleaseDetailRoute();
-    const releaseAction = useReleaseActionStore((state) => state?.action);
+    const releaseAction = useReleaseActionStore((s) => s?.action);
 
     //route
     const router = useRouter();
@@ -133,10 +133,9 @@ export default function ReleaseDetailForm() {
             if (!hash) return;
             const field = hash.replace('#', '');
             const el = document.getElementById(field);
-            // if (el) {
-            //     el.focus();
-            //     el.scrollIntoView({ block: 'center', behavior: 'smooth' });
-            // }
+            if (el) {
+                el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            }
             await trigger(field as keyof ReleaseDetailSchema);
         };
         handleTriggerField();
@@ -148,20 +147,27 @@ export default function ReleaseDetailForm() {
                 <form onSubmit={handleSubmit(handleNext, handleFormError)}>
                     <div className="flex flex-col gap-6">
                         <ReleaseConfigurationSection
+                            isReadMode={isReadMode}
                             debouncedUpdate={debouncedUpdate}
                         />
 
-                        <CodesSection debouncedUpdate={debouncedUpdate} />
+                        <CodesSection
+                            isReadMode={isReadMode}
+                            debouncedUpdate={debouncedUpdate}
+                        />
 
                         <GenreLanguageSection
+                            isReadMode={isReadMode}
                             debouncedUpdate={debouncedUpdate}
                         />
 
                         <ReleaseArtistSection
+                            isReadMode={isReadMode}
                             debouncedUpdate={debouncedUpdate}
                         />
 
                         <LegalNoticesSection
+                            isReadMode={isReadMode}
                             debouncedUpdate={debouncedUpdate}
                         />
                     </div>

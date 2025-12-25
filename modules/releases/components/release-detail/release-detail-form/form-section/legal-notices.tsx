@@ -1,5 +1,4 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
@@ -8,12 +7,15 @@ import { Input, Select } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 type Props = {
     debouncedUpdate: (data: any, fieldName?: string) => void;
+    isReadMode: boolean;
 };
-export default function LegalNoticesSection({ debouncedUpdate }: Props) {
+export default function LegalNoticesSection({
+    isReadMode,
+    debouncedUpdate,
+}: Props) {
     // hook - state
     const {
         control,
@@ -33,10 +35,10 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
 
     // router - params
     const params = useParams();
-    const isReadMode = useMemo(
-        () => action !== RELEASE_DETAIL_ACTION.EDIT,
-        [action]
-    );
+    // const isReadMode = useMemo(
+    //     () => action !== RELEASE_DETAIL_ACTION.EDIT,
+    //     [action]
+    // );
 
     // variables
     const isCreateReleasePage = params['action'] === 'create';

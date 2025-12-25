@@ -18,10 +18,15 @@ export default function AppRadio({ ...props }: Props) {
                 borderColor: token.colorPrimaryHover,
             },
 
-            // 👉 KEY POINT: trạng thái checked
             '&.ant-radio-wrapper-checked': {
                 borderColor: token.colorPrimary,
                 background: token.colorBgContainer,
+            },
+
+            '&.ant-radio-wrapper-disabled': {
+                borderColor: token.colorBorderSecondary,
+                background: token.colorBgContainerDisabled,
+                cursor: 'not-allowed',
             },
         },
     }));

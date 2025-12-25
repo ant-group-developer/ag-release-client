@@ -6,6 +6,8 @@ import { useTranslations } from 'next-intl';
 import AppForm from '@/components/ui/antd-form/form';
 import { DATE_FORMAT } from '@/enums/common';
 import { convertSecondsToHoursMinutes } from '@/helpers/common';
+import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { TrackData } from '@/modules/releases/types';
 import { useGetDetailTrack } from '@/modules/tracks/hooks/use-get-detail-tracks';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
@@ -36,6 +38,8 @@ export default function TrackDetailModal({ ...props }: Props) {
     // const { isActive, active, deActive } = useActive();
     const { updateTrackDraft } = useUpdateTrackDraft();
     const { trackData, isLoading } = useGetDetailTrack(trackId);
+    const releaseAction = useReleaseActionStore((s) => s.action);
+    const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
 
     const debouncedUpdate = useCallback(
         debounce((id, data) => {
@@ -208,7 +212,12 @@ export default function TrackDetailModal({ ...props }: Props) {
             }}
             // className="bg-content"
         >
-            <AppForm form={form} layout="vertical" showSubmit={false}>
+            <AppForm
+                form={form}
+                disabled={isReadMode}
+                layout="vertical"
+                showSubmit={false}
+            >
                 <Tabs
                     className="rounded"
                     items={items}

@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "information": "Thông tin",
         "statistics": "Phân tích",
         "list": "Danh sách",
         "pieChart": "Biểu đồ tròn",

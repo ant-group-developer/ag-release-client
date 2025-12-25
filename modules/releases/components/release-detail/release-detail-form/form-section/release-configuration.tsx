@@ -16,15 +16,16 @@ import { CreateVariables } from '@/types/api';
 import { Button, Input, Radio } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 type Props = {
     debouncedUpdate: (data: any, fieldName?: string) => void;
+    isReadMode: boolean;
 };
 
 export default function ReleaseConfigurationSection({
     debouncedUpdate,
+    isReadMode,
 }: Props) {
     // hook - state
     const {
@@ -54,12 +55,12 @@ export default function ReleaseConfigurationSection({
     const labelId = watch('labelId') ?? '';
     const isEnableCreateDraftBtn =
         (!!albumFormatId && !!title && !!labelId) === true;
-    const isReadMode = useMemo(
-        () =>
-            releaseAction !== RELEASE_DETAIL_ACTION.EDIT &&
-            !isCreateReleasePage,
-        [releaseAction, isCreateReleasePage]
-    );
+    // const isReadMode = useMemo(
+    //     () =>
+    //         releaseAction !== RELEASE_DETAIL_ACTION.EDIT &&
+    //         !isCreateReleasePage,
+    //     [releaseAction, isCreateReleasePage]
+    // );
 
     // funtion
     const handleCreateReleaseDraft = () => {

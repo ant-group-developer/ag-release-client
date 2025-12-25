@@ -122,7 +122,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             width: 250,
             render: (value, record, index) => {
                 return (
-                    <div>
+                    <div className="min-h-10">
                         <TrackWaveform
                             key={`${record.id}-${index}`}
                             data={record}
@@ -143,6 +143,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                     <div className="space-y-2">
                         <Input
                             size="small"
+                            variant="underlined"
                             defaultValue={record.title}
                             disabled={isReadMode}
                             onBlur={(e) => {

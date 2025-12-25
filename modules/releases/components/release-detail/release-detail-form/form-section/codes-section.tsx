@@ -1,18 +1,17 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
+import { ReleaseDetailSchema } from '@/modules/releases/schemas';
 import { Input } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { ReleaseDetailSchema } from '..';
 type Props = {
     debouncedUpdate: (data: any, fieldName?: string) => void;
+    isReadMode: boolean;
 };
 
-export default function CodesSection({ debouncedUpdate }: Props) {
+export default function CodesSection({ isReadMode, debouncedUpdate }: Props) {
     // hook - state
     const messages = useTranslations();
     const {
@@ -24,10 +23,10 @@ export default function CodesSection({ debouncedUpdate }: Props) {
 
     // router - params
     const params = useParams();
-    const isReadMode = useMemo(
-        () => action !== RELEASE_DETAIL_ACTION.EDIT,
-        [action]
-    );
+    // const isReadMode = useMemo(
+    //     () => action !== RELEASE_DETAIL_ACTION.EDIT,
+    //     [action]
+    // );
     const isCreateReleasePage = params['action'] === 'create';
 
     return (
