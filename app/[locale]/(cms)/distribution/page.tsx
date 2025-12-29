@@ -1,4 +1,5 @@
 'use client';
+import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
@@ -54,7 +55,7 @@ export default function Distribution({}: Props) {
     };
 
     return (
-        <div className="min-h-[calc(100vh-64px)] bg-[#f5f5f5]">
+        <AppPageWrapper>
             <PageContainer title={messages('distribution.label')}>
                 {/* <div className="flex justify-between border-b">
                     <DistributionStatus
@@ -128,6 +129,6 @@ export default function Distribution({}: Props) {
                     pageSizeOptions={PAGE_SIZE_OPTIONS}
                 />
             </PageContainer>
-        </div>
+        </AppPageWrapper>
     );
 }

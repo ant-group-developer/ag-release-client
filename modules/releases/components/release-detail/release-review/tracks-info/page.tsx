@@ -138,14 +138,14 @@ export default function TracksInfo({}: Props) {
     };
 
     return (
-        <div className="space-y-2">
-            <p className="font-semibold"> {messages('track.label')} </p>
+        <div className="space-y-2 pr-6">
+            {/* <p className="font-semibold"> {messages('track.label')} </p> */}
 
-            <div className="mb-2 rounded-lg bg-[#f5f5f5] p-4 dark:bg-zinc-900">
+            {/* <div className="mb-2 rounded-lg bg-[#f5f5f5] p-4 dark:bg-zinc-900">
                 <p className="text-base font-medium">
                     {messages('common.coreInfo')}
                 </p>
-            </div>
+            </div> */}
 
             <div className="flex flex-col gap-2">
                 {tracksData?.items?.map((track: TrackData, index: number) => (
@@ -158,7 +158,7 @@ export default function TracksInfo({}: Props) {
                         <Collapse.Panel
                             header={
                                 <span className="text-base font-medium">
-                                    {index + 1} {track.title || 'Track'}
+                                    {index + 1}.{track.title || 'Track'}
                                 </span>
                             }
                             key={String(index + 1)}
