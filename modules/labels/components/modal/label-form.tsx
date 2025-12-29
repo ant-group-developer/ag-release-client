@@ -117,14 +117,13 @@ export default function LabelFormModal({ ...props }: Props) {
                 : undefined,
         };
         form.setFieldsValue(initialData);
-    }, [dataEdit]);
+    }, [JSON.stringify(dataEdit)]);
 
     return (
         <AppModal
             width={600}
             {...props}
             title={`${isUpdateModal ? messages('common.update') : messages('common.create')} label`}
-            open
             onOk={form.submit}
             loading={isActive}
         >

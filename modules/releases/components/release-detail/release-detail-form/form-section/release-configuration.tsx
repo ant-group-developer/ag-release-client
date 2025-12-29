@@ -1,30 +1,31 @@
+import AppRadio from '@/components/ui/radio/app-radio';
 import FormItem from '@/components/ui/react-hook-form/form-item';
 import LabelSelect from '@/components/ui/select/label-select';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
 import { useGetListSimpleReleaseTypes } from '@/modules/release-types/hooks/use-get-list-simple-release-types';
 import { ReleaseTypesData } from '@/modules/release-types/types';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
+import { ReleaseDetailSchema } from '@/modules/releases/schemas';
 import { CreateReleaseDraftPayload } from '@/modules/releases/types/payload';
 import { CreateVariables } from '@/types/api';
-import { Button, Input, Radio, theme } from 'antd';
+import { Button, Input, Radio } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { ReleaseDetailSchema } from '..';
 
 type Props = {
-    setShowCreateLabel: (show: boolean) => void;
     debouncedUpdate: (data: any, fieldName?: string) => void;
+    isReadMode: boolean;
 };
 
 export default function ReleaseConfigurationSection({
-    setShowCreateLabel,
     debouncedUpdate,
+    isReadMode,
 }: Props) {
     // hook - state
     const {
@@ -35,8 +36,9 @@ export default function ReleaseConfigurationSection({
     const { createReleaseDraft, isPending: isOnCreatingDraft } =
         useCreateReleaseDraft();
     const messages = useTranslations();
-    const { getReleaseTabRoute, action } = useGetReleaseDetailRoute();
-    const { token } = theme.useToken();
+    const { getReleaseTabRoute } = useGetReleaseDetailRoute();
+    const releaseAction = useReleaseActionStore((state) => state.action);
+    // const { token } = theme.useToken();
 
     // router and params
     const params = useParams();
@@ -51,11 +53,14 @@ export default function ReleaseConfigurationSection({
     const albumFormatId = watch('albumFormatId') ?? '';
     const title = watch('title') ?? '';
     const labelId = watch('labelId') ?? '';
-    const isEnableCreateDraftBtn = (!!albumFormatId && !!title) === true;
-    const isReadMode = useMemo(
-        () => action !== RELEASE_DETAIL_ACTION.EDIT && !isCreateReleasePage,
-        [action, isCreateReleasePage]
-    );
+    const isEnableCreateDraftBtn =
+        (!!albumFormatId && !!title && !!labelId) === true;
+    // const isReadMode = useMemo(
+    //     () =>
+    //         releaseAction !== RELEASE_DETAIL_ACTION.EDIT &&
+    //         !isCreateReleasePage,
+    //     [releaseAction, isCreateReleasePage]
+    // );
 
     // funtion
     const handleCreateReleaseDraft = () => {
@@ -106,39 +111,35 @@ export default function ReleaseConfigurationSection({
                                         <Controller
                                             control={control}
                                             name="title"
-                                            render={({ field }) => (
-                                                <div>
-                                                    <Input
-                                                        id="title"
-                                                        {...field}
-                                                        value={
-                                                            field.value ?? ''
-                                                        }
-                                                        onChange={(e) => {
-                                                            const value =
-                                                                e.target.value;
-                                                            field.onChange(
-                                                                value
-                                                            );
-                                                            debouncedUpdate(
-                                                                {
-                                                                    title: value,
-                                                                },
-                                                                'title'
-                                                            );
-                                                        }}
-                                                        allowClear
-                                                        disabled={
-                                                            isOnCreatingDraft ||
-                                                            isReadMode
-                                                        }
-                                                        status={
-                                                            errors.title
-                                                                ? 'error'
-                                                                : undefined
-                                                        }
-                                                    />
-                                                </div>
+                                            render={({
+                                                field: { ref, ...field },
+                                            }) => (
+                                                <Input
+                                                    id="title"
+                                                    {...field}
+                                                    value={field.value ?? ''}
+                                                    onBlur={(e) => {
+                                                        const value =
+                                                            e.target.value;
+                                                        field.onChange(value);
+                                                        debouncedUpdate(
+                                                            {
+                                                                title: value,
+                                                            },
+                                                            'title'
+                                                        );
+                                                    }}
+                                                    allowClear
+                                                    disabled={
+                                                        isOnCreatingDraft ||
+                                                        isReadMode
+                                                    }
+                                                    status={
+                                                        errors.title
+                                                            ? 'error'
+                                                            : undefined
+                                                    }
+                                                />
                                             )}
                                         />
                                     </FormItem>
@@ -155,12 +156,14 @@ export default function ReleaseConfigurationSection({
                                         <Controller
                                             control={control}
                                             name="version"
-                                            render={({ field }) => (
+                                            render={({
+                                                field: { ref, ...field },
+                                            }) => (
                                                 <Input
                                                     id="version"
                                                     {...field}
                                                     value={field.value ?? ''}
-                                                    onChange={(e) => {
+                                                    onBlur={(e) => {
                                                         const value =
                                                             e.target.value;
                                                         field.onChange(value);
@@ -197,15 +200,14 @@ export default function ReleaseConfigurationSection({
                                         <Controller
                                             control={control}
                                             name="labelId"
-                                            render={({ field }) => (
+                                            render={({
+                                                field: { ref, ...field },
+                                            }) => (
                                                 <LabelSelect
                                                     className="w-full"
                                                     showSearch
                                                     id="labelId"
                                                     {...field}
-                                                    onCreateLabel={() =>
-                                                        setShowCreateLabel(true)
-                                                    }
                                                     onChange={(e) => {
                                                         field.onChange(e);
                                                         debouncedUpdate({
@@ -241,7 +243,9 @@ export default function ReleaseConfigurationSection({
                                         <Controller
                                             control={control}
                                             name="albumFormatId"
-                                            render={({ field }) => (
+                                            render={({
+                                                field: { ref, ...field },
+                                            }) => (
                                                 <Radio.Group
                                                     {...field}
                                                     onChange={(e) => {
@@ -258,25 +262,18 @@ export default function ReleaseConfigurationSection({
                                                         isReadMode
                                                     }
                                                 >
-                                                    {releaseTypesData.length >
-                                                        0 &&
-                                                        releaseTypesData.map(
-                                                            (
-                                                                type: ReleaseTypesData
-                                                            ) => (
-                                                                <Radio
-                                                                    key={
-                                                                        type.id
-                                                                    }
-                                                                    value={
-                                                                        type.id
-                                                                    }
-                                                                    className="capitalize"
-                                                                >
-                                                                    {type?.name}
-                                                                </Radio>
-                                                            )
-                                                        )}
+                                                    {releaseTypesData?.map(
+                                                        (
+                                                            type: ReleaseTypesData
+                                                        ) => (
+                                                            <AppRadio
+                                                                key={type.id}
+                                                                value={type.id}
+                                                            >
+                                                                {type?.name}
+                                                            </AppRadio>
+                                                        )
+                                                    )}
                                                 </Radio.Group>
                                             )}
                                         />
@@ -297,7 +294,7 @@ export default function ReleaseConfigurationSection({
                                             {messages('common.continue')}
                                         </Button>
                                     </div>
-                                    <div className="flex justify-end py-2 text-sm italic">
+                                    <div className="flex justify-end py-2 text-sm italic text-zinc-500">
                                         *
                                         {messages(
                                             'release.placeholder.enterTitleAndReleaseType'

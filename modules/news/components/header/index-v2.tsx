@@ -3,10 +3,8 @@ import DateRangePicker from '@/components/ui/input/date-range-picker';
 import NewsCategorySelect from '@/components/ui/select/news-category-select';
 import { SIZE_ICON } from '@/constants/common';
 import { UseFilterProps } from '@/hooks/use-filter';
-import { useTableLayoutToggle } from '@/hooks/use-layout-table';
-import useModalStore from '@/hooks/use-modal';
 import { ProForm, ProFormText, QueryFilter } from '@ant-design/pro-components';
-import { Select } from 'antd';
+import { Select, theme } from 'antd';
 import { ChevronsDown, ChevronsUp } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
@@ -30,9 +28,11 @@ export const NewsHeaderV2 = ({
     onSearch,
     removeFilter,
 }: Props) => {
+    // hook
     const messages = useTranslations();
-    const openModal = useModalStore((state) => state.openModal);
-    const { layoutTable, toggleLayoutTable } = useTableLayoutToggle();
+    // const openModal = useModalStore((state) => state.openModal);
+    // const { layoutTable, toggleLayoutTable } = useTableLayoutToggle();
+    const { token } = theme.useToken();
 
     const { keywordsData } = useGetListKeywords();
     const [form] = ProForm.useForm();
@@ -108,6 +108,9 @@ export const NewsHeaderV2 = ({
                         </IconButton>
                     )
                 }
+                style={{
+                    backgroundColor: token.colorBgContainer,
+                }}
             >
                 <ProFormText
                     name="title"
@@ -123,7 +126,9 @@ export const NewsHeaderV2 = ({
                     <NewsCategorySelect
                         mode="multiple"
                         allowClear
-                        placeholder={messages('placeholder.filterBy')}
+                        placeholder={messages('placeholder.filterBy', {
+                            value: messages('newsCategory.label').toLowerCase(),
+                        })}
                     />
                 </ProForm.Item>
 
@@ -132,7 +137,9 @@ export const NewsHeaderV2 = ({
                         mode="multiple"
                         allowClear
                         options={statusOptions}
-                        placeholder={messages('placeholder.filterBy')}
+                        placeholder={messages('placeholder.filterBy', {
+                            value: messages('status.label').toLowerCase(),
+                        })}
                     />
                 </ProForm.Item>
                 <ProForm.Item
@@ -145,7 +152,9 @@ export const NewsHeaderV2 = ({
                         // onChange={(e) => setValue(e)}
                         allowClear
                         mode="tags"
-                        placeholder={messages('placeholder.filterBy')}
+                        placeholder={messages('placeholder.filterBy', {
+                            value: messages('common.keyword').toLowerCase(),
+                        })}
                         options={option}
                         popupMatchSelectWidth={false}
                         dropdownStyle={{ zIndex: 9999 }}

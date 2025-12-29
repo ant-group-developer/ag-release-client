@@ -163,7 +163,6 @@ export default function Releases({}: Props) {
                         onChange={onChangeSort}
                         dataFilter={dataFilter}
                         options={{
-                            fullScreen: true,
                             reload: () => {
                                 handleRefresh();
                             },

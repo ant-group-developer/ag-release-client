@@ -1,27 +1,24 @@
+import AppRadio from '@/components/ui/radio/app-radio';
 import FormItem from '@/components/ui/react-hook-form/form-item';
-import ErrorText from '@/components/ui/text/error-text';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
-import { useUpdateReleaseArtist } from '@/modules/release-artist/hooks/use-update-release-artist';
-import { ReleaseArtist } from '@/modules/release-artist/types';
-import { UpdateReleaseArtistPayload } from '@/modules/release-artist/types/payload';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
-import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
-import { UpdateVariables } from '@/types/api';
-import { Button, Radio } from 'antd';
+import { ReleaseDetailSchema } from '@/modules/releases/schemas';
+import { Radio } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { ReleaseDetailSchema } from '..';
-import ArtistCard from '../artist-card';
+import ReleaseArtistTable from '../../../table/release-artist-table';
 type Props = {
     debouncedUpdate: (data: any, fieldName?: string) => void;
+    isReadMode: boolean;
 };
 
-export default function ReleaseArtistSection({ debouncedUpdate }: Props) {
+export default function ReleaseArtistSection({
+    isReadMode,
+    debouncedUpdate,
+}: Props) {
     // hook - state
     const {
         control,
@@ -31,15 +28,14 @@ export default function ReleaseArtistSection({ debouncedUpdate }: Props) {
     const formValues = useReleaseFormStore((state) => state.formValues);
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
-    const { updateReleaseArtist } = useUpdateReleaseArtist();
     const { action } = useGetReleaseDetailRoute();
 
     // router - params
     const params = useParams();
-    const isReadMode = useMemo(
-        () => action !== RELEASE_DETAIL_ACTION.EDIT,
-        [action]
-    );
+    // const isReadMode = useMemo(
+    //     () => action !== RELEASE_DETAIL_ACTION.EDIT,
+    //     [action]
+    // );
 
     // variables
     const isCreateReleasePage = params['action'] === 'create';
@@ -47,21 +43,6 @@ export default function ReleaseArtistSection({ debouncedUpdate }: Props) {
     const releaseArtist = formValues.releaseArtists || [];
 
     // func
-    const handleApplyAllTracks = (
-        releaseArtist: ReleaseArtist,
-        isAddArtistToTracks: boolean
-    ) => {
-        const variables: UpdateVariables<
-            ReleaseArtist['id'],
-            UpdateReleaseArtistPayload
-        > = {
-            id: releaseArtist.id,
-            payload: {
-                addArtistToTracks: isAddArtistToTracks,
-            },
-        };
-        updateReleaseArtist(variables);
-    };
 
     return (
         <CollapseItem
@@ -76,7 +57,7 @@ export default function ReleaseArtistSection({ debouncedUpdate }: Props) {
                         </span>
                     ),
                     children: (
-                        <div className="grid grid-cols-3 items-center gap-5">
+                        <div className="grid grid-cols-3 items-center gap-4">
                             <div className="col-span-3">
                                 <FormItem
                                     name="isVariousArtist"
@@ -92,8 +73,10 @@ export default function ReleaseArtistSection({ debouncedUpdate }: Props) {
                                     <Controller
                                         control={control}
                                         name="isVariousArtist"
-                                        render={({ field }) => (
-                                            <div className="pb-2 pt-1">
+                                        render={({
+                                            field: { ref, ...field },
+                                        }) => (
+                                            <div className="pt-1">
                                                 <Radio.Group
                                                     {...field}
                                                     onChange={(e) => {
@@ -110,90 +93,26 @@ export default function ReleaseArtistSection({ debouncedUpdate }: Props) {
                                                         isReadMode
                                                     }
                                                 >
-                                                    <Radio value={false}>
+                                                    <AppRadio value={false}>
                                                         {messages('common.no')}
-                                                    </Radio>
-                                                    <Radio value={true}>
+                                                    </AppRadio>
+                                                    <AppRadio value={true}>
                                                         {messages('common.yes')}{' '}
                                                         {` (${messages('artist.descriptionVariantArtists')})`}
-                                                    </Radio>
+                                                    </AppRadio>
                                                 </Radio.Group>
                                             </div>
                                         )}
                                     />
                                 </FormItem>
                             </div>
+
                             {!isVariousArtist && (
-                                <div className="col-span-3">
-                                    <div className="mb-4 grid grid-cols-2 gap-x-4 gap-y-4">
-                                        {releaseArtist.map(
-                                            (
-                                                releaseArtist: ReleaseArtist,
-                                                index: number
-                                            ) => (
-                                                <ArtistCard
-                                                    key={releaseArtist?.id}
-                                                    index={index}
-                                                    disabled={
-                                                        isCreateReleasePage ||
-                                                        isReadMode
-                                                    }
-                                                    data={{
-                                                        artist: releaseArtist.artist,
-                                                        artistRole:
-                                                            releaseArtist.artistRole,
-                                                        addArtistToTracks:
-                                                            releaseArtist.addArtistToTracks,
-                                                    }}
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        openModal(
-                                                            TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST,
-                                                            releaseArtist
-                                                        );
-                                                    }}
-                                                    onDelete={() =>
-                                                        openModal(
-                                                            TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST,
-                                                            releaseArtist
-                                                        )
-                                                    }
-                                                    showApplyToAllTracks
-                                                    onApplyToAllTracks={(
-                                                        checked
-                                                    ) =>
-                                                        handleApplyAllTracks(
-                                                            releaseArtist,
-                                                            checked
-                                                        )
-                                                    }
-                                                />
-                                            )
-                                        )}
-                                    </div>
-                                    <div className="relative">
-                                        <Button
-                                            id={'releaseArtists'}
-                                            onClick={() =>
-                                                openModal(
-                                                    TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST
-                                                )
-                                            }
-                                            disabled={
-                                                isCreateReleasePage ||
-                                                isReadMode
-                                            }
-                                            danger={!!errors.releaseArtists}
-                                        >
-                                            {messages('artist.add')}
-                                        </Button>
-                                        <ErrorText
-                                            isError={!!errors.releaseArtists}
-                                            message={
-                                                errors.releaseArtists?.message
-                                            }
-                                        />
-                                    </div>
+                                <div className="col-span-4" id="releaseArtists">
+                                    <ReleaseArtistTable
+                                        dataSource={releaseArtist}
+                                        disabled={isReadMode}
+                                    />
                                 </div>
                             )}
                         </div>

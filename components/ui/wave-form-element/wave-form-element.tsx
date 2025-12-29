@@ -3,22 +3,22 @@ import { SIZE_ICON_BIG } from '@/constants/common';
 import { convertSecondsToTime } from '@/helpers/common';
 import { Button, Col, Row } from 'antd';
 import { CirclePause, CirclePlay } from 'lucide-react';
-import PropTypes from 'prop-types';
+// import dynamic from 'next/dynamic';
+
 import Waveform from 'react-audio-waveform';
 
-// interface WaveformProps {
-//     peaks: number[];
-//     height?: number;
-//     pos?: number;
-//     duration?: number;
-//     onClick?: (value: any) => void;
-//     color?: string;
-//     progressColor?: string;
-//     transitionDuration?: number;
-// }
-// const Waveform = dynamic<WaveformProps>(() => import('react-audio-waveform'), {
+// const Waveform = dynamic<any>(() => import('react-audio-waveform'), {
 //     ssr: false,
 // });
+
+interface WaveformElementProps {
+    peakData?: number[];
+    songDuration?: number;
+    playedTime?: number;
+    playing?: boolean;
+    togglePlayback?: () => void;
+    handleSeeking?: (value: any) => void;
+}
 
 const WaveformElement = ({
     peakData = [0],
@@ -27,16 +27,9 @@ const WaveformElement = ({
     playing = false,
     togglePlayback = () => {},
     handleSeeking = (value: any) => {},
-}) => {
-    // const peaks = (peakData && peakData.split(';')) || [];
-    // const peaks = parsePeakData(peakData);
-
-    if (typeof window == undefined) {
-        return null;
-    }
-
+}: WaveformElementProps) => {
     return (
-        <Row align="middle" wrap={false}>
+        <Row align="middle" wrap={false} className="min-h-10">
             <Col className="block" flex="50px">
                 <Button
                     type="text"
@@ -55,15 +48,17 @@ const WaveformElement = ({
                     }
                 />
             </Col>
-            <Col flex="50px">
-                {/* <StyledSongItemDuration className="text-left"> */}
-                {convertSecondsToTime(playedTime)}
-                {/* </StyledSongItemDuration> */}
-            </Col>
+            <Col flex="50px">{convertSecondsToTime(playedTime)}</Col>
             <Col flex="auto">
-                <div style={{ width: '100%', overflow: 'hidden' }}>
+                <div
+                    style={{
+                        width: '100%',
+                        overflow: 'hidden',
+                    }}
+                >
                     {(peakData.length > 0 && (
                         <Waveform
+                            key={`${songDuration}-${peakData.length}`}
                             peaks={peakData}
                             height={40}
                             pos={playedTime}
@@ -77,25 +72,9 @@ const WaveformElement = ({
                         null}
                 </div>
             </Col>
-            <Col flex="50px">
-                {/* <StyledSongItemDuration> */}
-                {convertSecondsToTime(songDuration)}
-                {/* </StyledSongItemDuration> */}
-            </Col>
+            <Col flex="50px">{convertSecondsToTime(songDuration)}</Col>
         </Row>
     );
 };
 
 export default WaveformElement;
-
-WaveformElement.propTypes = {
-    peakData: PropTypes.any,
-    songDuration: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    playing: PropTypes.bool,
-    playedTime: PropTypes.number,
-    togglePlayback: PropTypes.func,
-    /**
-     * Hàm callback khi seek, nhận giá trị seek từ waveform
-     */
-    handleSeeking: PropTypes.func,
-};

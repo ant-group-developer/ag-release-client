@@ -85,13 +85,13 @@ export default function MetadataInfo({}: Props) {
     };
 
     return (
-        <div className="space-y-2">
-            <p className="font-semibold">MetaData</p>
-            <div className="my-1 rounded-lg bg-main p-4 dark:bg-zinc-900">
+        <div className="space-y-2 pr-6">
+            {/* <p className="font-semibold">MetaData</p> */}
+            {/* <div className="my-1 rounded-lg bg-main p-4 dark:bg-zinc-900">
                 <p className="text-base font-medium">
                     {messages('common.coreInfo')}
                 </p>
-            </div>
+            </div> */}
 
             <div className="grid grid-cols-2 gap-2">
                 <MetadataInfoItem label={messages('release.name')}>

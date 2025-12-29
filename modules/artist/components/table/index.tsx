@@ -12,7 +12,7 @@ import { Link, useRouter } from '@/i18n/routing';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { ProColumns } from '@ant-design/pro-components';
-import { Avatar, theme } from 'antd';
+import { Avatar, theme, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { ARTIST_DETAIL_TABS, TYPE_MODAL_ARTIST } from '../../enum';
 import { ArtistData, ArtistDataFilter } from '../../types';
@@ -48,30 +48,6 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
                     index
                 ),
         },
-        // {
-        //     key: 'picture',
-        //     dataIndex: 'picture',
-        //     align: 'center',
-        //     width: 30,
-        //     fixed: 'left',
-        //     render: (value, record) => (
-        //         <div
-        //             className="flex items-center justify-center"
-        //             onClick={() => {
-        //                 router.push(`/artists/detail/${record.id}/overview`);
-        //             }}
-        //         >
-        //             <ImageFallback
-        //                 fallbackSrc={FALLBACK_IMAGE}
-        //                 src={value ?? ''}
-        //                 alt="genre"
-        //                 width={48}
-        //                 height={48}
-        //                 className="aspect-square rounded-full object-cover"
-        //             />
-        //         </div>
-        //     ),
-        // },
         {
             title: messages('artist.name'),
             key: 'name',
@@ -88,14 +64,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
             ),
             render: (value, record) => (
                 <div className="flex items-center gap-4">
-                    <div
-                        className="flex-shrink-0"
-                        // onClick={() => {
-                        //     router.push(
-                        //         `/artists/detail/${record.id}/overview`
-                        //     );
-                        // }}
-                    >
+                    <div className="flex-shrink-0">
                         <ImageFallback
                             fallbackSrc={FALLBACK_IMAGE}
                             src={record?.picture ?? ''}
@@ -105,41 +74,22 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
                             className="aspect-square rounded-full object-cover"
                         />
                     </div>
-                    <CustomTooltip
-                        placement="right"
-                        title={messages('common.viewDetail')}
-                    >
+                    <CustomTooltip title={messages('common.viewDetail')}>
                         <Link
                             href={getArtistDetailRoute(
                                 record?.id,
                                 ARTIST_DETAIL_TABS.OVERVIEW
                             )}
                         >
-                            <p className="truncate hover:text-blue-500">
+                            <Typography className="truncate hover:text-blue-500 hover:underline hover:underline-offset-2">
                                 {record?.name}
-                            </p>
+                            </Typography>
                         </Link>
                     </CustomTooltip>
                 </div>
             ),
         },
-        // {
-        //     title: messages('artist.id'),
-        //     key: 'id',
-        //     dataIndex: 'id',
-        //     align: 'center',
-        //     width: 120,
-        //     render: (value) => (
-        //         <div className="flex justify-center">
-        //             <CopyText
-        //                 tooltipProps={{ placement: 'right' }}
-        //                 text={value}
-        //             >
-        //                 <p className="truncate">{value}</p>
-        //             </CopyText>
-        //         </div>
-        //     ),
-        // },
+
         {
             title: messages('common.code'),
             key: 'code',
@@ -287,7 +237,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
     return (
         <AppProTable
             {...props}
-            className={`rounded-t-lg px-4 ${props?.className}`}
+            className={`rounded-t-lg ${props?.className}`}
             style={{
                 backgroundColor: token.colorBgContainer,
                 ...props?.style,

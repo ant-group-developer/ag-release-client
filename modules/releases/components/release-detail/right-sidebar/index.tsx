@@ -5,8 +5,9 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
 import { cn } from '@/helpers/common';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
+import useModalStore from '@/hooks/use-modal';
 import { Link } from '@/i18n/routing';
-import { RELEASES_TABS } from '@/modules/releases/enums';
+import { RELEASES_TABS, TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
 import { ReleaseValidate } from '@/modules/releases/types';
@@ -32,6 +33,7 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
         formValues?.id as string
     );
 
+    const openModal = useModalStore((state) => state.openModal);
     const validateLength = releaseValidateData && releaseValidateData?.length;
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const { getReleaseTabRoute } = useGetReleaseDetailRoute();
@@ -87,24 +89,48 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
     const toggleSidebar = () => {
         setIsSidebarOpen((prevState) => !prevState);
     };
+    const handleClickError = (err: ReleaseValidate) => {
+        console.log('🚀 ~ handleClickError ~ err:', err);
+        console.log('🚀 ~ handleClickError ~ err?.trackId :', err?.trackId);
+        console.log('🚀 ~ handleClickError ~ err?.field:', err?.field);
+        if (!err?.trackId || !err?.field) return;
+        const parts = err.field.split('.');
+        const trackIndex = Number(parts[1]);
+
+        openModal(TYPE_MODAL_RELEASE.DETAIL_TRACK_RELEASE, {
+            trackId: err.trackId,
+            index: trackIndex,
+            focusField: err.field,
+        });
+    };
 
     useEffect(() => {
         if (validateLength > 0) {
             setIsSidebarOpen(true);
+        } else {
+            setIsSidebarOpen(false);
         }
     }, [validateLength]);
 
     return (
         <div
             className={cn(
-                'sticky top-0 h-[calc(100vh-4rem)] w-[300px] shrink-0 border-x transition-all duration-300',
+                'sticky top-0 h-[calc(100vh-4rem)] w-[300px] shrink-0 border-l transition-all duration-300',
                 isSidebarOpen ? 'w-[300px]' : 'w-[75px]'
             )}
-            style={{ backgroundColor: token.colorBgContainer }}
+            style={{
+                backgroundColor: token.colorBgContainer,
+                borderColor: token.colorBorderSecondary,
+            }}
         >
             <div>
                 {/* Header */}
-                <div className="flex h-16 w-full items-center justify-center border-b px-3">
+                <div
+                    className="flex h-16 w-full items-center justify-center border-b px-3"
+                    style={{
+                        borderColor: token.colorBorderSecondary,
+                    }}
+                >
                     {isSidebarOpen ? (
                         <>
                             <h3 className="grow font-semibold text-red-500">
@@ -147,27 +173,15 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                                                 return (
                                                     <Link
                                                         key={index}
-                                                        // prefetch
                                                         href={`${getReleaseTabRoute(formValues?.id as string, err.page as RELEASES_TABS)}#${err.field}${err?.trackId ? `.${err.trackId}` : ''}`}
                                                         onClick={() => {
-                                                            setTimeout(() => {
-                                                                window.dispatchEvent(
-                                                                    new HashChangeEvent(
-                                                                        'hashchange'
-                                                                    )
-                                                                );
-                                                            }, 200);
+                                                            handleClickError(
+                                                                err
+                                                            );
                                                         }}
                                                     >
                                                         <Alert
                                                             className="custom-alert-sidebar cursor-pointer !px-[14px] !py-3 !text-sm hover:underline"
-                                                            // key={index}
-                                                            // onClick={() =>
-                                                            //     handleErrorClick(
-                                                            //         err.field,
-                                                            //         err.page as RELEASES_TABS
-                                                            //     )
-                                                            // }
                                                             message={
                                                                 <div className="max-w-full truncate text-sm dark:text-white">
                                                                     <CustomTooltip

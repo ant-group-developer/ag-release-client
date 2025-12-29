@@ -2,6 +2,7 @@ import AppFilter from '@/components/ui/antd-form/app-filter';
 import DateRangePicker from '@/components/ui/input/date-range-picker';
 import ArtistSelect from '@/components/ui/select/artist-select';
 import GenresSelect from '@/components/ui/select/genres-select';
+import LabelSelect from '@/components/ui/select/label-select';
 import { arrayFromString, getDateRange } from '@/helpers/array';
 import { getIntlCodeByReleaseStatus } from '@/helpers/intl';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
@@ -97,13 +98,16 @@ export default function ReleasesHeaderV2({
                 <ProFormText
                     name="keyword"
                     label={messages('common.search')}
-                    placeholder={messages('placeholder.searchBy', {
+                    placeholder={messages('placeholder.filterBy', {
                         value: messages('common.keyword').toLowerCase(),
                     })}
                 />
                 <ProFormSelect
                     name="albumFormatId"
                     label={messages('releaseType.label')}
+                    placeholder={messages('placeholder.filterBy', {
+                        value: messages('releaseType.label').toLowerCase(),
+                    })}
                     options={releaseTypesData?.map((item) => ({
                         value: item?.id,
                         label: item?.name,
@@ -113,12 +117,26 @@ export default function ReleasesHeaderV2({
                         maxTagCount: 2,
                     }}
                 />
+
+                <ProForm.Item name="labelId" label={messages('label.label')}>
+                    <LabelSelect
+                        placeholder={messages('placeholder.filterBy', {
+                            value: messages('label.label').toLowerCase(),
+                        })}
+                        allowClear
+                        mode="multiple"
+                        maxTagCount={2}
+                    />
+                </ProForm.Item>
+
                 <ProForm.Item name="artistId" label={messages('artist.label')}>
                     <ArtistSelect
                         showCreate={false}
                         allowClear
                         dropdownMatchSelectWidth={false}
-                        placeholder={messages('placeholder.selectArtist')}
+                        placeholder={messages('placeholder.filterBy', {
+                            value: messages('artist.label').toLowerCase(),
+                        })}
                         mode="multiple"
                         maxTagCount={2}
                     />
@@ -127,6 +145,9 @@ export default function ReleasesHeaderV2({
                 <ProFormSelect
                     name="status"
                     label={messages('common.status')}
+                    placeholder={messages('placeholder.filterBy', {
+                        value: messages('status.label').toLowerCase(),
+                    })}
                     options={releaseStatus}
                     mode="multiple"
                     fieldProps={{
@@ -137,9 +158,9 @@ export default function ReleasesHeaderV2({
                 <ProForm.Item name="genres" label={messages('genre.label')}>
                     <GenresSelect
                         allowClear
-                        placeholder={messages(
-                            'release.placeholder.selectGenres'
-                        )}
+                        placeholder={messages('placeholder.filterBy', {
+                            value: messages('genre.label').toLowerCase(),
+                        })}
                         mode="multiple"
                         maxTagCount={2}
                     />

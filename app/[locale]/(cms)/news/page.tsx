@@ -123,15 +123,16 @@ export default function News({}: Props) {
                     )} */}
 
                 <NewsTablePro
+                    dataFilter={dataFilter}
                     sticky
+                    headerTitle={messages('newsPost.list')}
                     dataSource={newsData?.items}
+                    loading={isFetching}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
                         current: newsData.metadata.currentPage,
                         total: newsData.metadata.totalItems,
                     }}
-                    loading={isFetching}
-                    dataFilter={dataFilter}
                     onChange={onChangeSort}
                     scroll={{ x: SCREEN.XL }}
                     // toolBarRender={false}
@@ -143,18 +144,11 @@ export default function News({}: Props) {
                     onSubmit={(params) => {
                         onChangeFilter(params);
                     }}
-                    // toolBarRender={() => [
-                    //     <div key="new" className="py-1">
-                    //         <CreateButton
-                    //             canCreate={true}
-                    //             text={messages('action.create.button')}
-                    //             onClick={() =>
-                    //                 openModal(TYPE_MODAL_NEWS.CREATE)
-                    //             }
-                    //         />
-                    //     </div>,
-                    // ]}
-                    headerTitle={messages('newsPost.list')}
+                    toolbar={{
+                        style: {
+                            padding: '0px 12px',
+                        },
+                    }}
                 />
 
                 {/* 

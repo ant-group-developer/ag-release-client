@@ -1,12 +1,13 @@
 'use client';
 
 import { SIZE_ICON } from '@/constants/common';
+import ArtistProfileCard from '@/modules/artist/components/artist-detail/overview/card/artist-profile';
 import RevenueAnalysisCard from '@/modules/artist/components/artist-detail/overview/card/revenue-analysis';
 import StatItem from '@/modules/artist/components/artist-detail/overview/card/stat-item';
 import StreamsAnalysisCard from '@/modules/artist/components/artist-detail/overview/card/streams-analysis';
 import { useGetDetailArtist } from '@/modules/artist/hooks/use-get-detail-artist';
 import { theme } from 'antd';
-import { Disc2, DiscAlbum, Music4 } from 'lucide-react';
+import { DiscAlbum, Music4, User } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 
@@ -23,7 +24,7 @@ export default function Overview({}: Props) {
     };
 
     return (
-        <div className="py-4">
+        <div className="space-y-4 py-4">
             <div className="grid grid-cols-3 gap-4">
                 <StatItem
                     iconBgColor="bg-green-50"
@@ -42,7 +43,7 @@ export default function Overview({}: Props) {
                     iconBgColor="bg-blue-50"
                     title={messages('track.count')}
                     value={artistData?.trackCount}
-                    icon={<Disc2 size={SIZE_ICON} className="text-blue-500" />}
+                    icon={<Music4 size={SIZE_ICON} className="text-blue-500" />}
                     style={statStyles}
                 />
 
@@ -50,21 +51,20 @@ export default function Overview({}: Props) {
                     iconBgColor="bg-purple-50"
                     title={messages('artist.profiles')}
                     value={artistData?.artistProfiles?.length}
-                    icon={
-                        <Music4 size={SIZE_ICON} className="text-purple-500" />
-                    }
+                    icon={<User size={SIZE_ICON} className="text-purple-500" />}
                     style={statStyles}
                 />
-
-                {/* <ArtistProfileCard artistData={artistData} /> */}
             </div>
-            <div className="mt-4 grid grid-cols-2 gap-4">
+
+            <ArtistProfileCard artistData={artistData} />
+
+            <div className="grid grid-cols-2 gap-4">
                 <StreamsAnalysisCard />
                 <RevenueAnalysisCard />
             </div>
-            <div>
-                {/* <ListRelease data={fakeReleasesData.slice(0, 7)} /> */}
-            </div>
+            {/* <div> */}
+            {/* <ListRelease data={fakeReleasesData.slice(0, 7)} /> */}
+            {/* </div> */}
         </div>
     );
 }

@@ -76,13 +76,6 @@ export function TrackWaveform({ data }: { data: TrackData }) {
         }
     };
 
-    // const fetchPeakData = async () => {
-    //     const response = await bucketApi.getLinkReadFile(
-    //         audioFile?.peak?.id as string
-    //     );
-    //     setPeakData(response.data?.data || []);
-    // };
-
     useEffect(() => {
         if (audioFile?.peak?.id && linkReadFilePeak) {
             axiosInstance
@@ -95,10 +88,12 @@ export function TrackWaveform({ data }: { data: TrackData }) {
                 });
         }
     }, [audioFile?.peak?.id, linkReadFilePeak]);
+    
 
     return (
         <div ref={ref}>
             <WaveformElement
+                key="waveform-player"
                 peakData={peakData}
                 playedTime={currentTimePlaying}
                 songDuration={audioFile?.duration}

@@ -1,62 +1,64 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
-import { useUpdateReleaseArtist } from '@/modules/release-artist/hooks/use-update-release-artist';
-import { ReleaseArtist } from '@/modules/release-artist/types';
-import { UpdateReleaseArtistPayload } from '@/modules/release-artist/types/payload';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
-import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
-import { UpdateVariables } from '@/types/api';
+import { ReleaseDetailSchema } from '@/modules/releases/schemas';
 import { Input, Select } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { ReleaseDetailSchema } from '..';
 type Props = {
     debouncedUpdate: (data: any, fieldName?: string) => void;
+    isReadMode: boolean;
 };
-export default function LegalNoticesSection({ debouncedUpdate }: Props) {
+export default function LegalNoticesSection({
+    isReadMode,
+    debouncedUpdate,
+}: Props) {
     // hook - state
     const {
         control,
         formState: { errors },
         watch,
     } = useFormContext<ReleaseDetailSchema>();
-    const formValues = useReleaseFormStore((state) => state.formValues);
+    // const formValues = useReleaseFormStore((state) => state.formValues);
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
-    const { updateReleaseArtist } = useUpdateReleaseArtist();
     const { action } = useGetReleaseDetailRoute();
+    const cLineYear = watch('cLineYear');
+    const cLineOwner = watch('cLineOwner');
+    const pLineYear = watch('pLineYear');
+    const pLineOwner = watch('pLineOwner');
+    const showCLine = !!cLineYear && !!cLineOwner;
+    const showPLine = !!pLineYear && !!pLineOwner;
 
     // router - params
     const params = useParams();
-    const isReadMode = useMemo(
-        () => action !== RELEASE_DETAIL_ACTION.EDIT,
-        [action]
-    );
+    // const isReadMode = useMemo(
+    //     () => action !== RELEASE_DETAIL_ACTION.EDIT,
+    //     [action]
+    // );
 
     // variables
     const isCreateReleasePage = params['action'] === 'create';
 
     // func
-    const handleApplyAllTracks = (
-        releaseArtist: ReleaseArtist,
-        isAddArtistToTracks: boolean
-    ) => {
-        const variables: UpdateVariables<
-            ReleaseArtist['id'],
-            UpdateReleaseArtistPayload
-        > = {
-            id: releaseArtist.id,
-            payload: {
-                addArtistToTracks: isAddArtistToTracks,
-            },
-        };
-        updateReleaseArtist(variables);
-    };
+    // const handleApplyAllTracks = (
+    //     releaseArtist: ReleaseArtist,
+    //     isAddArtistToTracks: boolean
+    // ) => {
+    //     const variables: UpdateVariables<
+    //         ReleaseArtist['id'],
+    //         UpdateReleaseArtistPayload
+    //     > = {
+    //         id: releaseArtist.id,
+    //         payload: {
+    //             addArtistToTracks: isAddArtistToTracks,
+    //         },
+    //     };
+    //     updateReleaseArtist(variables);
+    // };
 
     const copyRightYearList = () => {
         const currentYear = dayjs().year();
@@ -99,7 +101,7 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                 <Controller
                                     control={control}
                                     name="cLineYear"
-                                    render={({ field }) => {
+                                    render={({ field: { ref, ...field } }) => {
                                         return (
                                             <Select
                                                 id="cLineYear"
@@ -146,7 +148,7 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                 <Controller
                                     control={control}
                                     name="cLineOwner"
-                                    render={({ field }) => {
+                                    render={({ field: { ref, ...field } }) => {
                                         return (
                                             <Input
                                                 id="cLineOwner"
@@ -157,7 +159,7 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                                     isReadMode
                                                 }
                                                 allowClear
-                                                onChange={(e) => {
+                                                onBlur={(e) => {
                                                     const value =
                                                         e.target.value;
                                                     field.onChange(value);
@@ -187,7 +189,7 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                 <Controller
                                     control={control}
                                     name="pLineYear"
-                                    render={({ field }) => {
+                                    render={({ field: { ref, ...field } }) => {
                                         return (
                                             <Select
                                                 id="pLineYear"
@@ -234,7 +236,7 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                 <Controller
                                     control={control}
                                     name="pLineOwner"
-                                    render={({ field }) => {
+                                    render={({ field: { ref, ...field } }) => {
                                         return (
                                             <Input
                                                 {...field}
@@ -245,7 +247,7 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                                     isReadMode
                                                 }
                                                 allowClear
-                                                onChange={(e) => {
+                                                onBlur={(e) => {
                                                     const newOwner =
                                                         e.target.value;
                                                     field.onChange(newOwner);
@@ -267,6 +269,30 @@ export default function LegalNoticesSection({ debouncedUpdate }: Props) {
                                     }}
                                 />
                             </FormItem>
+                            {(showCLine || showPLine) && (
+                                <>
+                                    <div className="col-span-2">
+                                        {showCLine && (
+                                            <span>
+                                                © {cLineYear} {cLineOwner}.{' '}
+                                                {messages(
+                                                    'legal.allRightsReserved'
+                                                )}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className="col-span-2">
+                                        {showPLine && (
+                                            <span>
+                                                ℗ {pLineYear} {pLineOwner}.{' '}
+                                                {messages(
+                                                    'legal.allRightsReserved'
+                                                )}
+                                            </span>
+                                        )}
+                                    </div>
+                                </>
+                            )}
                         </div>
                     ),
                 },

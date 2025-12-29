@@ -2,14 +2,13 @@ import { useApiNotify } from '@/hooks/use-api-notify';
 import { releasesQueryKeys } from '@/modules/releases/constants/query-keys';
 import { UpdateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useTranslations } from 'next-intl';
 import { trackApi } from '../apis';
 import { trackQueryKeys } from '../constants/query-keys';
 import { TrackData } from '../types';
 import { UpdateTrackPayload } from '../types/payload';
 
 export const useUpdateTrackDraft = () => {
-    const messages = useTranslations();
+    // const messages = useTranslations();
     const queryClient = useQueryClient();
     const { handleError } = useApiNotify();
 
@@ -25,7 +24,7 @@ export const useUpdateTrackDraft = () => {
         });
 
         queryClient.invalidateQueries({
-            queryKey: trackQueryKeys.list({ fieldOrder: 'order' }),
+            queryKey: trackQueryKeys.list(),
         });
 
         // const responseMessages = messages(data?.data?.messageCode);

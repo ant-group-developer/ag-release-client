@@ -1,15 +1,13 @@
+import AppForm from '@/components/ui/antd-form/form';
+import { DATE_FORMAT } from '@/enums/common';
+import { convertSecondsToHoursMinutes } from '@/helpers/common';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
-import {
-    releaseTrackSchema,
-    ReleaseTrackSchema,
-} from '@/modules/tracks/schemas';
+import useModalStore from '@/hooks/use-modal';
 import { TrackData } from '@/modules/tracks/types';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { ConfigProvider } from 'antd';
-import { useTranslations } from 'next-intl';
+import { Form } from 'antd';
+import dayjs from 'dayjs';
 import { useEffect } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
 import AudioSpecSection from '../collapse/view-all-collapse/audio-spec-section';
 import GenreSection from '../collapse/view-all-collapse/genre-section';
 import LanguageSection from '../collapse/view-all-collapse/language-section';
@@ -23,94 +21,104 @@ type Props = {
 };
 
 export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
-    const messages = useTranslations();
-    const formMethods = useForm<ReleaseTrackSchema>({
-        defaultValues: {
-            ...(trackData as ReleaseTrackSchema),
-        },
-        resolver: zodResolver(releaseTrackSchema(messages)),
-        mode: 'onChange',
-        reValidateMode: 'onChange',
-    });
+    // const messages = useTranslations();
     const { action } = useGetReleaseDetailRoute();
     const isReadMode = action === RELEASE_DETAIL_ACTION.READ;
-
+    const [form] = Form.useForm();
     const {
-        control,
-        handleSubmit,
-        formState: { errors },
-        watch,
-        trigger,
-        reset,
-        setValue,
-        setFocus,
-    } = formMethods;
+        trackId,
+        index: indexTrack,
+        focusField,
+    } = useModalStore<{
+        trackId: TrackData['id'];
+        index: number;
+        focusField: string;
+    }>((state) => state.dataEdit);
 
     useEffect(() => {
-        const handleTriggerField = async () => {
-            const hash = window.location.hash;
-            if (hash) {
-                const parts = hash.split('.');
-                let field = parts[2];
-                if (parts.length >= 4) {
-                    field = parts.slice(2).join('.');
-                }
-
-                const idField = hash.replace('#', '');
-                const el = document.getElementById(idField);
-                if (el) {
-                    el.focus();
-                    el.scrollIntoView({ block: 'center', behavior: 'smooth' });
-                }
-                await trigger(field as keyof ReleaseTrackSchema);
-            }
-        };
-        window.addEventListener('hashchange', handleTriggerField);
-
-        handleTriggerField();
-
-        return () => {
-            window.removeEventListener('hashchange', handleTriggerField);
-        };
-    }, [trigger]);
-
-    useEffect(() => {
-        if (trackData) {
-            reset(trackData as ReleaseTrackSchema);
+        if (trackData?.id) {
+            form.setFieldsValue({
+                ...trackData,
+                trackLanguage: {
+                    ...trackData.trackLanguage,
+                },
+                audioFile: {
+                    ...trackData?.audioFile,
+                    sampleLength: trackData?.audioFile?.sampleLength
+                        ? dayjs(
+                              convertSecondsToHoursMinutes(
+                                  trackData?.audioFile?.sampleLength
+                              ),
+                              DATE_FORMAT.HOUR_MINUTE_SECOND
+                          )
+                        : undefined,
+                    preview: trackData?.audioFile?.preview
+                        ? dayjs(
+                              convertSecondsToHoursMinutes(
+                                  trackData?.audioFile?.preview
+                              ),
+                              DATE_FORMAT.HOUR_MINUTE_SECOND
+                          )
+                        : undefined,
+                    duration: convertSecondsToHoursMinutes(
+                        trackData?.audioFile?.duration ?? 0
+                    ),
+                },
+            });
         }
-    }, [trackData, reset]);
+    }, [trackData, form]);
+
+    // focus and scroll into field
+    useEffect(() => {
+        if (!trackData?.id || !focusField) return;
+
+        // example: focusField = "tracks.15.audioFile.preview"
+        const parts = focusField.split('.');
+        const idField = focusField;
+        const fieldPath = parts.slice(2); // ["audioFile", "preview"]
+
+        const el = document.getElementById(idField);
+        if (el) {
+            el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        }
+
+        form.validateFields([fieldPath]);
+    }, [focusField, trackData?.id]);
 
     return (
-        <ConfigProvider componentDisabled={isReadMode}>
-            <FormProvider {...formMethods}>
-                <div className="flex h-[80vh] flex-col gap-4 overflow-y-auto pr-1">
-                    <TrackAndArtistSection
-                        trackData={trackData}
-                        debouncedUpdateTrackDraft={updateTrackDraft}
-                        index={index}
-                    />
-                    <GenreSection
-                        index={index}
-                        debouncedUpdateTrackDraft={updateTrackDraft}
-                        trackData={trackData}
-                    />
-                    <LanguageSection
-                        index={index}
-                        debouncedUpdateTrackDraft={updateTrackDraft}
-                        trackData={trackData}
-                    />
-                    <OtherSection
-                        index={index}
-                        debouncedUpdateTrackDraft={updateTrackDraft}
-                        trackData={trackData}
-                    />
-                    <AudioSpecSection
-                        index={index}
-                        debouncedUpdateTrackDraft={updateTrackDraft}
-                        trackData={trackData}
-                    />
-                </div>
-            </FormProvider>
-        </ConfigProvider>
+        <AppForm
+            disabled={isReadMode}
+            form={form}
+            layout="vertical"
+            showSubmit={false}
+        >
+            <div className="flex h-[80vh] flex-col gap-4 overflow-y-auto pr-1">
+                <TrackAndArtistSection
+                    trackData={trackData}
+                    debouncedUpdateTrackDraft={updateTrackDraft}
+                    index={index}
+                />
+                <GenreSection
+                    index={index}
+                    debouncedUpdateTrackDraft={updateTrackDraft}
+                    trackData={trackData}
+                />
+                <LanguageSection
+                    index={index}
+                    debouncedUpdateTrackDraft={updateTrackDraft}
+                    trackData={trackData}
+                />
+                <OtherSection
+                    index={index}
+                    debouncedUpdateTrackDraft={updateTrackDraft}
+                    trackData={trackData}
+                />
+                <AudioSpecSection
+                    index={index}
+                    debouncedUpdateTrackDraft={updateTrackDraft}
+                    trackData={trackData}
+                />
+            </div>
+        </AppForm>
     );
 }

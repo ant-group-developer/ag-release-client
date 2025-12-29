@@ -246,7 +246,7 @@ export default function NewsTablePro({ dataFilter, ...props }: Props) {
             pagination={false}
             columns={column}
             rowClassName={'group'}
-            className={`rounded-t-lg px-4 ${props?.className}`}
+            className={`rounded-t-lg ${props?.className}`}
             style={{
                 backgroundColor: token.colorBgContainer,
                 ...props?.style,

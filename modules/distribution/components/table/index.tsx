@@ -226,7 +226,7 @@ export default function DistributionTable({
         <AppProTable
             headerTitle={messages('release.list')}
             {...props}
-            className={`rounded-t-lg px-4 ${props?.className}`}
+            className={`rounded-t-lg ${props?.className}`}
             style={{
                 backgroundColor: token.colorBgContainer,
                 ...props?.style,
@@ -247,22 +247,31 @@ export default function DistributionTable({
                     releaseId: { show: false },
                 },
             }}
+            toolbar={{
+                className: 'px-4',
+            }}
             tableAlertRender={({
                 selectedRowKeys,
                 selectedRows,
                 onCleanSelected,
             }) => (
-                <div className="flex items-center gap-1 font-semibold">
-                    <span>{selectedRowKeys.length}</span>
-                    <span>{messages('common.selected')}</span>
-                    <Button className="" type="primary">
-                        <span>
-                            {messages('distribution.batchDistribution')}
-                        </span>
-                    </Button>
-                    <Button danger>
-                        <span>{messages('distribution.batchTakeDown')}</span>
-                    </Button>
+                <div className="flex items-center gap-2 font-semibold">
+                    <div className="space-x-1">
+                        <span>{selectedRowKeys.length}</span>
+                        <span>{messages('common.selected')}</span>
+                    </div>
+                    <div className="space-x-1">
+                        <Button className="" type="primary">
+                            <span>
+                                {messages('distribution.batchDistribution')}
+                            </span>
+                        </Button>
+                        <Button type="primary" danger>
+                            <span>
+                                {messages('distribution.batchTakeDown')}
+                            </span>
+                        </Button>
+                    </div>
                 </div>
             )}
         />

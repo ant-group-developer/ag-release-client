@@ -4,7 +4,6 @@ import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import ArtistSelect from '@/components/ui/select/artist-select';
 import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import { useActive } from '@/hooks/use-active';
-import useModalStore from '@/hooks/use-modal';
 import { useGetListArtistRole } from '@/modules/artist-role/hooks/use-get-list-artist-role';
 import { ArtistRoleData } from '@/modules/artist-role/types';
 import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
@@ -12,8 +11,7 @@ import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { DspData } from '@/modules/dsp/types';
 import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { ReleaseArtist } from '@/modules/release-artist/types';
-import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
-import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
+import { TrackData } from '@/modules/releases/types';
 import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form } from 'antd';
 import { useWatch } from 'antd/es/form/Form';
@@ -28,28 +26,34 @@ import {
     UpdateTrackArtistPayload,
 } from '../../types/payload';
 
-type Props = Omit<AppModalProps, 'children'> & {};
+type Props = Omit<AppModalProps, 'children'> & {
+    trackData?: TrackData;
+    trackArtistData?: TrackArtistData;
+    setCloseModal?: () => void;
+};
 
-export default function TrackArtistModal({ ...props }: Props) {
+export default function TrackArtistModal({
+    trackData,
+    trackArtistData,
+    setCloseModal,
+    ...props
+}: Props) {
     const [form] = Form.useForm();
     const [showCreateArtist, setShowCreateArtist] = useState<boolean>(false);
     const messages = useTranslations();
-    const closeModal = useModalStore((state) => state.closeModal);
     const watchArtistName = useWatch(['name'], form);
-    const typeModal = useModalStore((state) => state.typeModal);
     const { active, deActive, isActive } = useActive();
-    const formValues = useReleaseFormStore((state) => state.formValues);
+    // const formValues = useReleaseFormStore((state) => state.formValues);
 
-    const isTrackArtistEditModal = typeModal === TYPE_MODAL_TRACK_ARTIST.UPDATE;
-    const dataEdit = useModalStore((state) => state.dataEdit); // Nếu add artist thì dataEdit là TrackData, còn update thì là trackArtistData
+    const isTrackArtistEditModal = !!trackArtistData?.id;
 
-    const trackData = formValues?.tracks?.find((item) => {
-        if (isTrackArtistEditModal) {
-            return item.id == dataEdit?.trackId;
-        } else {
-            return item.id == dataEdit.id;
-        }
-    });
+    // const trackData = formValues?.tracks?.find((item) => {
+    //     if (isTrackArtistEditModal) {
+    //         return item.id == dataEdit?.trackId;
+    //     } else {
+    //         return item.id == dataEdit.id;
+    //     }
+    // });
 
     const { dspData } = useGetListDsp({});
     const { artistsRolesData } = useGetListArtistRole({});
@@ -67,10 +71,12 @@ export default function TrackArtistModal({ ...props }: Props) {
                 payload: {
                     artistId: values.artistId,
                     artistRoleId: values.roleId ?? mainArtist.id,
-                    trackId: dataEdit?.id,
+                    trackId: trackData?.id as string,
                 },
                 onSuccess: () => {
-                    closeModal();
+                    setCloseModal?.();
+                    deActive();
+                    form.resetFields();
                 },
                 onError: () => deActive(),
             };
@@ -80,12 +86,15 @@ export default function TrackArtistModal({ ...props }: Props) {
                 ReleaseArtist['id'],
                 UpdateTrackArtistPayload
             > = {
-                id: dataEdit.id,
+                id: trackArtistData?.id as string,
                 payload: {
                     artistId: values?.artistId,
                     artistRoleId: values.roleId,
                 },
-                onSuccess: () => deActive(),
+                onSuccess: () => {
+                    setCloseModal?.();
+                    deActive();
+                },
                 onError: () => deActive(),
             };
             updateTrackArtist(variables);
@@ -121,13 +130,15 @@ export default function TrackArtistModal({ ...props }: Props) {
     const disabledArtistIds = getExistingArtistOfSelectedRole();
 
     useEffect(() => {
-        if (isTrackArtistEditModal) {
+        if (trackArtistData?.id) {
             form.setFieldsValue({
-                artistId: dataEdit?.artistId,
-                roleId: dataEdit?.artistRoleId,
+                artistId: trackArtistData?.artistId,
+                roleId: trackArtistData?.artistRoleId,
             });
+        } else {
+            form.resetFields();
         }
-    }, [isTrackArtistEditModal, dataEdit, form]);
+    }, [isTrackArtistEditModal, trackArtistData, form]);
 
     return (
         <AppModal
@@ -137,7 +148,6 @@ export default function TrackArtistModal({ ...props }: Props) {
                     ? messages('artist.update')
                     : messages('artist.add')
             }
-            onCancel={closeModal}
             onOk={form.submit}
             // confirmLoading={isActive}
             loading={isActive}
@@ -165,6 +175,8 @@ export default function TrackArtistModal({ ...props }: Props) {
                         disabledArtistIds={disabledArtistIds}
                         showSearch
                         placeholder={messages('artist.select')}
+                        artistId={watchArtistId}
+                        allowClear
                     />
                 </AppFormItem>
 
@@ -189,6 +201,7 @@ export default function TrackArtistModal({ ...props }: Props) {
                     <RoleArtistSelect
                         disabledRoleIds={disabledRoleIds}
                         placeholder={messages('common.role')}
+                        allowClear
                     />
                 </AppFormItem>
 

@@ -113,18 +113,18 @@ export default async function RootLayout({
     const messages = await getMessages({ locale });
 
     return (
-        <html lang={locale}>
-            <body
-                className={`${openSans.variable} ${openSans.className} ${inter.variable} ${inter.className} text-sm antialiased`}
-            >
-                <NextIntlClientProvider locale={locale} messages={messages}>
-                    {/* <ThemeProvider /> */}
-                    <AntdProvider>
-                        <NuqsAdapter>{children}</NuqsAdapter>
-                        <GoogleAnalytics />
-                    </AntdProvider>
-                </NextIntlClientProvider>
-            </body>
-        </html>
+        // <html lang={locale}>
+        //     <body
+        //         className={`${openSans.variable} ${openSans.className} ${inter.variable} ${inter.className} text-sm antialiased`}
+        //     >
+        <NextIntlClientProvider locale={locale} messages={messages}>
+            {/* <ThemeProvider /> */}
+            <AntdProvider>
+                <NuqsAdapter>{children}</NuqsAdapter>
+                <GoogleAnalytics />
+            </AntdProvider>
+        </NextIntlClientProvider>
+        //     </body>
+        // </html>
     );
 }

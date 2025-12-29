@@ -2,20 +2,22 @@ import FormItem from '@/components/ui/react-hook-form/form-item';
 import CountrySelect from '@/components/ui/select/country-select';
 import GenresSelect from '@/components/ui/select/genres-select';
 import LanguageSelect from '@/components/ui/select/language-select';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { ReleaseDetailSchema } from '@/modules/releases/schemas';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { ReleaseDetailSchema } from '..';
 type Props = {
     debouncedUpdate: (data: any, fieldName?: string) => void;
+    isReadMode: boolean;
 };
 
-export default function GenreLanguageSection({ debouncedUpdate }: Props) {
+export default function GenreLanguageSection({
+    isReadMode,
+    debouncedUpdate,
+}: Props) {
     // hook - state
     const {
         control,
@@ -28,10 +30,10 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
 
     // router - params
     const params = useParams();
-    const isReadMode = useMemo(
-        () => action !== RELEASE_DETAIL_ACTION.EDIT,
-        [action]
-    );
+    // const isReadMode = useMemo(
+    //     () => action !== RELEASE_DETAIL_ACTION.EDIT,
+    //     [action]
+    // );
 
     // variables
     const isCreateReleasePage = params['action'] === 'create';
@@ -62,7 +64,7 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                                 <Controller
                                     control={control}
                                     name="primaryGenreId"
-                                    render={({ field }) => {
+                                    render={({ field: { ref, ...field } }) => {
                                         return (
                                             <GenresSelect
                                                 showSearch
@@ -99,7 +101,7 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                                 <Controller
                                     control={control}
                                     name="subGenreId"
-                                    render={({ field }) => (
+                                    render={({ field: { ref, ...field } }) => (
                                         <GenresSelect
                                             className="w-full"
                                             allowClear
@@ -141,7 +143,7 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                                 <Controller
                                     control={control}
                                     name="releaseLanguage.metadataLanguageId"
-                                    render={({ field }) => {
+                                    render={({ field: { ref, ...field } }) => {
                                         return (
                                             <LanguageSelect
                                                 className="w-full"
@@ -187,7 +189,7 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                                 <Controller
                                     control={control}
                                     name="releaseLanguage.audioLanguageId"
-                                    render={({ field }) => {
+                                    render={({ field: { ref, ...field } }) => {
                                         return (
                                             <LanguageSelect
                                                 className="w-full"
@@ -233,17 +235,13 @@ export default function GenreLanguageSection({ debouncedUpdate }: Props) {
                                 <Controller
                                     control={control}
                                     name="releaseLanguage.metadataLanguageCountryId"
-                                    render={({ field }) => {
-                                        const fallBackLabel =
-                                            formValues?.releaseLanguage
-                                                ?.metadataLanguageCountry?.name;
+                                    render={({ field: { ref, ...field } }) => {
                                         return (
                                             <CountrySelect
                                                 className="w-full"
                                                 id="releaseLanguage.metadataLanguageCountryId"
                                                 showSearch
                                                 {...field}
-                                                fallBack={fallBackLabel}
                                                 onChange={(e) => {
                                                     field.onChange(e);
                                                     debouncedUpdate({

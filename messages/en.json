@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "information": "Information",
         "statistics": "Statistics",
         "list": "List",
         "pieChart": "Pie chart",
@@ -529,7 +530,7 @@
         "selectLabel": "Select label",
         "supportFormats": "Support formats: {accept}",
         "searchBy": "Search by {value}",
-        "filterBy": "Filter by ..."
+        "filterBy": "Filter by {value}"
     },
     "status": {
         "label": "Status",
@@ -1725,5 +1726,8 @@
                 "mustHaveOneDefault": "At least one translation must be set as default"
             }
         }
+    },
+    "legal": {
+        "allRightsReserved": "All rights reserved."
     }
 }

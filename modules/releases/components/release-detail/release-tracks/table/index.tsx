@@ -8,8 +8,8 @@ import { SIZE_ICON } from '@/constants/common';
 import { getIndex } from '@/helpers/common';
 import { getTrackDetailRoute, RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { showNotification } from '@/helpers/messages-helper';
-import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
 import { TYPE_MODAL_RELEASE, TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
@@ -25,12 +25,12 @@ import {
 } from '@/modules/tracks/types/payload';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { UpdateVariables } from '@/types/api';
-import { Input, Tag, Typography } from 'antd';
+import { Input, Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { debounce } from 'lodash';
 import { SquarePen } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useCallback } from 'react';
+import { useEffect, useMemo } from 'react';
 import TrackActionButton from '../button/track-action';
 import { TrackWaveform } from '../track-wave-form';
 
@@ -47,7 +47,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
     const formValues = useReleaseFormStore((state) => state.formValues);
     const openModal = useModalStore((state) => state.openModal);
     // const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
-    const { action } = useGetReleaseDetailRoute();
+    const action = useReleaseActionStore((s) => s.action);
     const router = useRouter();
 
     // apis
@@ -73,9 +73,10 @@ export default function ReleaseTracksTable({ ...props }: Props) {
         updateTrackOrder(variables);
     };
 
-    const debouncedUpdate = useCallback(
-        debounce((id, data) => {
-            if (!formValues.id) return;
+    const debouncedUpdate = useMemo(() => {
+        return debounce((id: TrackData['id'], data: UpdateTrackPayload) => {
+            if (!formValues?.id) return;
+
             const variables: UpdateVariables<
                 TrackData['id'],
                 UpdateTrackPayload
@@ -83,10 +84,16 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                 id,
                 payload: data,
             };
+
             updateTrackDraft(variables);
-        }, 800),
-        [formValues.id]
-    );
+        }, 800);
+    }, [formValues?.id, updateTrackDraft]);
+
+    useEffect(() => {
+        return () => {
+            debouncedUpdate.cancel();
+        };
+    }, [debouncedUpdate]);
 
     const columns: ColumnType<TrackData>[] = [
         {
@@ -115,7 +122,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             width: 250,
             render: (value, record, index) => {
                 return (
-                    <div className="">
+                    <div className="min-h-10">
                         <TrackWaveform
                             key={`${record.id}-${index}`}
                             data={record}
@@ -134,70 +141,66 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             render: (value, record) => {
                 return (
                     <div className="space-y-2">
-                        <Typography.Paragraph
-                            editable={
-                                isReadMode
-                                    ? false
-                                    : {
-                                          onChange(value) {
-                                              if (value === record.title)
-                                                  return;
-                                              if (value.length < 1) {
-                                                  return showNotification(
-                                                      'error',
-                                                      messages(
-                                                          'validation.min',
-                                                          {
-                                                              number: 1,
-                                                          }
-                                                      )
-                                                  );
-                                              }
-                                              debouncedUpdate(record.id, {
-                                                  title: value,
-                                              });
-                                          },
-                                      }
-                            }
-                            className="!mb-0"
-                        >
-                            {record?.title}
-                        </Typography.Paragraph>
-                        <div className="flex flex-wrap gap-y-2">
-                            {record?.trackArtists?.map(
-                                (trackArtist: TrackArtistData) => (
+                        <Input
+                            size="small"
+                            variant="underlined"
+                            defaultValue={record.title}
+                            disabled={isReadMode}
+                            onBlur={(e) => {
+                                const value = e.target.value;
+                                if (value.length < 1) {
+                                    return showNotification(
+                                        'error',
+                                        messages('validation.min', {
+                                            number: 1,
+                                        })
+                                    );
+                                }
+                                if (value !== record.title) {
+                                    debouncedUpdate(record.id, {
+                                        title: value,
+                                    });
+                                }
+                            }}
+                        />
+                        {!isReadMode && (
+                            <div className="flex flex-wrap gap-y-2">
+                                {record?.trackArtists?.map(
+                                    (trackArtist: TrackArtistData) => (
+                                        <Tag
+                                            key={`${record.id}-${trackArtist.id}`}
+                                            closeIcon
+                                            onClose={(e) => {
+                                                e.preventDefault();
+                                                openModal(
+                                                    TYPE_MODAL_TRACK_ARTIST.DELETE,
+                                                    trackArtist
+                                                );
+                                            }}
+                                            closable={!isReadMode}
+                                            className="max-w-full whitespace-normal break-words"
+                                        >
+                                            {trackArtist?.artist?.name}
+                                        </Tag>
+                                    )
+                                )}
+                                {!isReadMode && (
                                     <Tag
-                                        key={`${record.id}-${trackArtist.id}`}
-                                        closeIcon
-                                        onClose={(e) => {
-                                            e.preventDefault();
+                                        key={`${record.id}-add-artist`}
+                                        className="border-dashed hover:border-blue-500"
+                                        onClick={() => {
+                                            if (isReadMode) return;
                                             openModal(
-                                                TYPE_MODAL_TRACK_ARTIST.DELETE,
-                                                trackArtist
+                                                TYPE_MODAL_TRACK_ARTIST.ADD,
+                                                record
                                             );
                                         }}
-                                        closable={!isReadMode}
                                     >
-                                        {trackArtist?.artist?.name}
+                                        + {messages('artist.add')}
                                     </Tag>
-                                )
-                            )}
-                            {!isReadMode && (
-                                <Tag
-                                    key={`${record.id}-add-artist`}
-                                    className="border-dashed hover:border-blue-500"
-                                    onClick={() => {
-                                        if (isReadMode) return;
-                                        openModal(
-                                            TYPE_MODAL_TRACK_ARTIST.ADD,
-                                            record
-                                        );
-                                    }}
-                                >
-                                    + {messages('artist.add')}
-                                </Tag>
-                            )}
-                        </div>
+                                )}
+                            </div>
+                        )}
                     </div>
                 );
             },
@@ -253,25 +256,26 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             width: 80,
             render: (value, record, index) => {
                 return (
-                    <div className="flex items-center gap-2">
-                        <IconButton
-                            onClick={() =>
-                                openModal(
-                                    TYPE_MODAL_RELEASE.DETAIL_TRACK_RELEASE,
-                                    {
-                                        trackId: record?.id,
-                                        index,
-                                    }
-                                )
-                            }
-                        >
-                            <SquarePen size={SIZE_ICON} />
-                        </IconButton>
+                    <div className="flex items-center justify-center">
+                        {!isReadMode && (
+                            <IconButton
+                                onClick={() =>
+                                    openModal(
+                                        TYPE_MODAL_RELEASE.DETAIL_TRACK_RELEASE,
+                                        {
+                                            trackId: record?.id,
+                                            index,
+                                        }
+                                    )
+                                }
+                            >
+                                <SquarePen size={SIZE_ICON} />
+                            </IconButton>
+                        )}
                         <TrackActionButton
                             // disabled={isReadMode}
                             showDelete={!isReadMode}
                             showDownload
-                            showDetail
                             onShowDetail={() => {
                                 router.push(
                                     getTrackDetailRoute(

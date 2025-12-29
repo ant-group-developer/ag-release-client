@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "information": "Thông tin",
         "statistics": "Phân tích",
         "list": "Danh sách",
         "pieChart": "Biểu đồ tròn",
@@ -524,7 +525,8 @@
         "selectRegion": "Chọn khu vực",
         "supportFormats": "Định dạng hỗ trợ: {accept}",
         "searchBy": "Tìm kiếm theo {value}",
-        "filterBy": "Lọc theo ..."
+        "filterBy": "Lọc theo {value}",
+        "selectLabel": "Chọn hãng phát hành"
     },
     "status": {
         "label": "Trạng thái",
@@ -1730,5 +1732,8 @@
                 "mustHaveOneDefault": "Phải có ít nhất một bản dịch được đặt làm mặc định"
             }
         }
+    },
+    "legal": {
+        "allRightsReserved": "Đã đăng ký bản quyền."
     }
 }

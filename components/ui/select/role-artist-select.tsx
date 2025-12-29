@@ -12,7 +12,7 @@ export default function RoleArtistSelect({
     fallBack,
     ...props
 }: Props) {
-    const { artistsRolesData } = useGetListSimpleArtistRole();
+    const { artistsRolesData, isLoading } = useGetListSimpleArtistRole();
     const labelRender = (props: any) => {
         const { value, label } = props;
         if (value) {
@@ -23,6 +23,7 @@ export default function RoleArtistSelect({
     return (
         <Select
             {...props}
+            loading={props?.loading || isLoading}
             showSearch
             filterOption={(input, option) =>
                 toNonAccentVietnamese(option?.label ?? '')

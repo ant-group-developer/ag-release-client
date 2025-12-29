@@ -81,30 +81,6 @@ export default function ArtistDetailLayout({ children }: PropsWithChildren) {
         },
     ];
 
-    // useEffect(() => {
-    //     if (!isOverviewPage) {
-    //         setIsScrolled(true);
-    //         return;
-    //     } else {
-    //         setIsScrolled(false);
-    //     }
-    //     const handleScroll = () => {
-    //         const scrollTop = scrollContainerRef.current?.scrollTop || 0;
-
-    //         setIsScrolled(scrollTop > 0);
-    //     };
-    //     const scrollEl = scrollContainerRef.current;
-
-    //     if (scrollEl) {
-    //         scrollEl.addEventListener('scroll', handleScroll);
-    //     }
-    //     return () => {
-    //         if (scrollEl) {
-    //             scrollEl.removeEventListener('scroll', handleScroll);
-    //         }
-    //     };
-    // }, [pathname, isOverviewPage]);
-
     useEffect(() => {
         if (headerLayoutRef.current && artistData) {
             const height =
@@ -125,7 +101,7 @@ export default function ArtistDetailLayout({ children }: PropsWithChildren) {
             }}
             onScroll={(e) => {
                 const el = e.currentTarget;
-                setIsScrolled(el.scrollTop > 0);
+                setIsScrolled(el.scrollTop > 20);
             }}
         >
             <PageContainer

@@ -140,26 +140,6 @@ export default function ArtistCard({
                 </CustomTooltip>
             </div>
             <div className="flex items-center gap-2">
-                {/* <div>
-                    <Avatar.Group
-                        max={{
-                            count: 3,
-                            style: {
-                                color: '#f56a00',
-                                backgroundColor: '#fde3cf',
-                            },
-                        }}
-                        size={24}
-                    >
-                        <Avatar src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/2048px-Spotify_logo_without_text.svg.png" />
-                        <Avatar src="https://inkythuatso.com/uploads/thumbnails/800/2021/11/logo-tiktok-inkythuatso-2-mesa-de-trabajo-1-27-09-13-05.jpg">
-                            A
-                        </Avatar>
-                        <Avatar src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbhvKe4ebnX7xrphoWADoK-wteStypzRFKWQ&s" />
-                        <Avatar src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Youtube_Music_icon.svg/2048px-Youtube_Music_icon.svg.png" />
-                    </Avatar.Group>
-                </div> */}
-
                 <IconButton
                     onClick={(e) => {
                         e.preventDefault();
@@ -167,7 +147,7 @@ export default function ArtistCard({
                         onDelete?.();
                     }}
                     shape="circle"
-                    className="hover:bg-red-200"
+                    className="hover:bg-white"
                 >
                     <Trash2 size={SIZE_ICON} className="text-red-500" />
                 </IconButton>

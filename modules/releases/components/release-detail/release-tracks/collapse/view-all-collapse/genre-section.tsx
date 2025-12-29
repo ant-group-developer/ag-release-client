@@ -1,11 +1,14 @@
-import FormItem from '@/components/ui/react-hook-form/form-item';
+'use client';
+
+import AppFormItem from '@/components/ui/antd-form/form-Item';
 import GenresSelect from '@/components/ui/select/genres-select';
+import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
-import { ReleaseTrackSchema } from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
-import { Typography } from 'antd';
+import { ConfigProvider, Form, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
-import { Controller, useFormContext } from 'react-hook-form';
 
 const { Title } = Typography;
 
@@ -20,117 +23,99 @@ export default function GenreSection({
     debouncedUpdateTrackDraft,
     trackData,
 }: Props) {
+    // hooks
     const messages = useTranslations();
+    const { action } = useGetReleaseDetailRoute();
+    const form = Form.useFormInstance();
+    const releaseAction = useReleaseActionStore((s) => s.action);
+    const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
 
-    const {
-        control,
-        formState: { errors },
-        watch,
-        trigger,
-        setValue,
-    } = useFormContext<ReleaseTrackSchema>();
-
+    // handle change
     const updateTrackDraft = async (data: any, fieldName?: string) => {
         if (fieldName) {
-            const isValid = await trigger(
-                fieldName as keyof ReleaseTrackSchema
-            );
-            if (!isValid) return;
+            try {
+                await form.validateFields([fieldName]);
+            } catch {
+                return;
+            }
         }
         debouncedUpdateTrackDraft(data);
     };
+
     return (
-        <CollapseItem
-            defaultActiveKey={['genre']}
-            items={[
-                {
-                    key: 'genre',
-                    label: (
-                        <span className="text-base font-semibold">
-                            {messages('genre.label')}
-                        </span>
-                    ),
-                    children: (
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <FormItem
+        <ConfigProvider componentDisabled={isReadMode}>
+            <CollapseItem
+                defaultActiveKey={['genre']}
+                items={[
+                    {
+                        key: 'genre',
+                        label: (
+                            <span className="text-base font-semibold">
+                                {messages('genre.label')}
+                            </span>
+                        ),
+                        children: (
+                            <div className="grid grid-cols-2 gap-4">
+                                {/* Primary Genre */}
+                                <AppFormItem
                                     label={messages('genres.primary')}
-                                    ErrorMessage={
-                                        errors.primaryGenreId?.message
-                                    }
-                                    required
                                     name="primaryGenreId"
+                                    required
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                messages('validation.input'),
+                                        },
+                                    ]}
                                 >
-                                    <Controller
-                                        name="primaryGenreId"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <GenresSelect
-                                                id={`tracks.${index}.primaryGenreId`}
-                                                className="w-full"
-                                                showSearch
-                                                {...field}
-                                                fallBack={
-                                                    trackData?.primaryGenre
-                                                        ?.name
-                                                }
-                                                onChange={(e) => {
-                                                    field.onChange(e);
-                                                    updateTrackDraft(
-                                                        { primaryGenreId: e },
-                                                        'primaryGenreId'
-                                                    );
-                                                }}
-                                                status={
-                                                    errors.primaryGenreId
-                                                        ? 'error'
-                                                        : undefined
-                                                }
-                                            />
-                                        )}
+                                    <GenresSelect
+                                        id={`tracks.${index}.primaryGenreId`}
+                                        className="w-full"
+                                        showSearch
+                                        allowClear
+                                        disabled={isReadMode}
+                                        onChange={(value) => {
+                                            updateTrackDraft(
+                                                { primaryGenreId: value },
+                                                'primaryGenreId'
+                                            );
+                                        }}
                                     />
-                                </FormItem>
-                            </div>
-                            <div>
-                                <FormItem
+                                </AppFormItem>
+
+                                {/* Sub Genre */}
+                                <AppFormItem
                                     label={messages('common.subGenres')}
-                                    ErrorMessage={errors.subGenreId?.message}
                                     name="subGenreId"
+                                    required
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                messages('validation.input'),
+                                        },
+                                    ]}
                                 >
-                                    <Controller
-                                        name="subGenreId"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <GenresSelect
-                                                id={`tracks.${index}.subGenreId`}
-                                                className="w-full"
-                                                showSearch
-                                                allowClear
-                                                {...field}
-                                                fallBack={
-                                                    trackData?.subGenre?.name
-                                                }
-                                                onChange={(e) => {
-                                                    field.onChange(e);
-                                                    updateTrackDraft(
-                                                        { subGenreId: e },
-                                                        'subGenreId'
-                                                    );
-                                                }}
-                                                status={
-                                                    errors.subGenreId
-                                                        ? 'error'
-                                                        : undefined
-                                                }
-                                            />
-                                        )}
+                                    <GenresSelect
+                                        id={`tracks.${index}.subGenreId`}
+                                        className="w-full"
+                                        showSearch
+                                        allowClear
+                                        disabled={isReadMode}
+                                        onChange={(value) => {
+                                            updateTrackDraft(
+                                                { subGenreId: value },
+                                                'subGenreId'
+                                            );
+                                        }}
                                     />
-                                </FormItem>
+                                </AppFormItem>
                             </div>
-                        </div>
-                    ),
-                },
-            ]}
-        />
+                        ),
+                    },
+                ]}
+            />
+        </ConfigProvider>
     );
 }

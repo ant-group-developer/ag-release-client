@@ -33,12 +33,20 @@ export default function ImageFallback({
             {...rest}
             alt={rest.alt}
             src={imgSrc ? imgSrc : normalizeImageUrl(fallbackSrc)}
-            onLoadingComplete={(result: {
-                naturalWidth: number;
-                naturalHeight: number;
-            }) => {
-                if (result.naturalWidth === 0) {
-                    // Broken image: fall back to fallbackSrc.
+            // onLoadingComplete={(result: {
+            //     naturalWidth: number;
+            //     naturalHeight: number;
+            // }) => {
+            //     if (result.naturalWidth === 0) {
+            //         // Broken image: fall back to fallbackSrc.
+            //         setImgSrc(normalizeImageUrl(fallbackSrc));
+            //     }
+            // }}
+            onLoad={(e) => {
+                const img = e.currentTarget as HTMLImageElement;
+
+                // 👇 GIỮ NGUYÊN LOGIC CŨ
+                if (img.naturalWidth === 0) {
                     setImgSrc(normalizeImageUrl(fallbackSrc));
                 }
             }}

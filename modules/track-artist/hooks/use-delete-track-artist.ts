@@ -11,12 +11,14 @@ export const useDeleteTrackArtist = () => {
     const queryClient = useQueryClient();
     const { handleError } = useApiNotify();
 
-    const onSuccess = (
-        data: any,
-        { onSuccess }: DeleteVariables<TrackArtistData['id']>
-    ) => {
+    const onSuccess = (data: any, { onSuccess, trackId }: any) => {
         queryClient.invalidateQueries({
-            queryKey: trackQueryKeys.lists(),
+            queryKey: trackQueryKeys.list({
+                pageSize: 999,
+            }),
+        });
+        queryClient.invalidateQueries({
+            queryKey: trackQueryKeys.detail(trackId),
         });
         // queryClient.invalidateQueries({
         //     queryKey: [...releasesQueryKeys.getDetail],
