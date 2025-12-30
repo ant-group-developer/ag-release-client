@@ -1,14 +1,18 @@
-import ActionButton from '@/components/ui/button/action-button';
+import IconButton from '@/components/ui/button/icon-button';
+import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import { SIZE_ICON } from '@/constants/common';
 import useModalStore from '@/hooks/use-modal';
 import { useUpdateReleaseArtist } from '@/modules/release-artist/hooks/use-update-release-artist';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { UpdateReleaseArtistPayload } from '@/modules/release-artist/types/payload';
 import { UpdateVariables } from '@/types/api';
-import { Avatar, Button, Switch } from 'antd';
+import { Avatar, Switch } from 'antd';
 import { ColumnType } from 'antd/es/table';
+import { Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '../../enums';
+import AddArtistForm from './add-artist-form';
 
 type Props = AppTableProps<ReleaseArtist> & {
     disabled?: boolean;
@@ -23,18 +27,16 @@ export default function ReleaseArtistTable({
 
     const { updateReleaseArtist } = useUpdateReleaseArtist();
 
-    const handleApplyAllTracks = (
+    const handleUpdate = (
         releaseArtistId: ReleaseArtist['id'],
-        isAddArtistToTracks: boolean
+        payload: UpdateReleaseArtistPayload
     ) => {
         const variables: UpdateVariables<
             ReleaseArtist['id'],
             UpdateReleaseArtistPayload
         > = {
             id: releaseArtistId,
-            payload: {
-                addArtistToTracks: isAddArtistToTracks,
-            },
+            payload,
         };
         updateReleaseArtist(variables);
     };
@@ -66,7 +68,11 @@ export default function ReleaseArtistTable({
                 return (
                     <Switch
                         disabled={disabled}
-                        onChange={(e) => handleApplyAllTracks(record?.id, e)}
+                        onChange={(e) =>
+                            handleUpdate(record?.id, {
+                                addArtistToTracks: e,
+                            })
+                        }
                         defaultValue={record?.addArtistToTracks}
                     />
                 );
@@ -76,15 +82,19 @@ export default function ReleaseArtistTable({
             title: messages('common.role'),
             width: 100,
             render: (_, record, index) => {
-                return <span>{record?.artistRole?.name}</span>;
-            },
-        },
-        {
-            title: messages('country.label'),
-            width: 100,
-            render: (_, record, index) => {
-                const artist = record?.artist;
-                return <span>{artist?.country?.name}</span>;
+                return (
+                    <div className="max-w-52">
+                        <RoleArtistSelect
+                            defaultValue={record?.artistRole?.id}
+                            className="w-full"
+                            onChange={(e) =>
+                                handleUpdate(record?.id, {
+                                    artistRoleId: e,
+                                })
+                            }
+                        />
+                    </div>
+                );
             },
         },
         {
@@ -95,6 +105,15 @@ export default function ReleaseArtistTable({
                 return <span>{artist?.genre?.name}</span>;
             },
         },
+        {
+            title: messages('country.label'),
+            width: 100,
+            render: (_, record, index) => {
+                const artist = record?.artist;
+                return <span>{artist?.country?.name}</span>;
+            },
+        },
+
         {
             title: messages('artist.profiles'),
             width: 150,
@@ -119,29 +138,21 @@ export default function ReleaseArtistTable({
             },
         },
         {
-            width: 50,
+            width: 40,
             align: 'center',
             render: (_, record, index) => {
                 return (
                     <div onClick={(e) => e.preventDefault()}>
-                        {!disabled && (
-                            <ActionButton
-                                showDelete
-                                showUpdate
-                                onShowDelete={() =>
-                                    openModal(
-                                        TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST,
-                                        record
-                                    )
-                                }
-                                onShowUpdate={() => {
-                                    openModal(
-                                        TYPE_MODAL_RELEASE_ARTIST_LIST.EDIT_ARTIST,
-                                        record
-                                    );
-                                }}
-                            />
-                        )}
+                        <IconButton
+                            onClick={() =>
+                                openModal(
+                                    TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST,
+                                    record
+                                )
+                            }
+                        >
+                            <Trash color="red" size={SIZE_ICON} />
+                        </IconButton>
                     </div>
                 );
             },
@@ -149,23 +160,15 @@ export default function ReleaseArtistTable({
     ];
     return (
         <div className="space-y-2">
-            <div className="flex justify-end">
-                <Button
-                    disabled={disabled}
-                    onClick={() =>
-                        openModal(TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST)
-                    }
-                    type="primary"
-                >
-                    {messages('artist.add')}
-                </Button>
-            </div>
             <div className="overflow-hidden rounded-lg border">
                 <AppTable
                     {...props}
                     columns={columns}
                     scroll={{ x: 'max-content' }}
                 />
+                <div className="px-4 py-2">
+                    <AddArtistForm />
+                </div>
             </div>
         </div>
     );

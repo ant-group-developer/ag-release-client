@@ -25,8 +25,8 @@ export default function Review() {
         <div className="my-4 flex flex-col gap-8">
             <ReviewProgress />
 
-            <div className="rounded-lg bg-white py-6">
-                <Tabs items={tabItems} tabPosition="left" className="py-2" />
+            <div className="rounded-lg bg-white">
+                <Tabs items={tabItems} className="!px-4 !pb-4" />
             </div>
 
             {/* <div

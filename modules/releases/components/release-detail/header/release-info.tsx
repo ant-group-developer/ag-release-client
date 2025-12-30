@@ -52,7 +52,7 @@ export default function ReleaseInfo({ isScrolled }: Props) {
             >
                 <div>
                     <span>{messages('release.name')}: </span>
-                    <span className="font-bold">
+                    <span className="font-semibold">
                         {releaseData.title}{' '}
                         {releaseData.version &&
                             releaseData.title &&
@@ -61,31 +61,31 @@ export default function ReleaseInfo({ isScrolled }: Props) {
                 </div>
                 <div>
                     <span>{messages('release.type')}: </span>
-                    <span className="font-bold">
+                    <span className="font-semibold">
                         {releaseData.albumFormat?.name}
                     </span>
                 </div>
                 {releaseData.labelId && (
                     <div>
                         <span>Label: </span>
-                        <span className="font-bold">
+                        <span className="font-semibold">
                             {releaseData?.label?.name}
                         </span>
                     </div>
                 )}
                 <div>
                     <span>{messages('artist.label')}: </span>
-                    <span className="font-bold">{renderArtistName()}</span>
+                    <span className="font-semibold">{renderArtistName()}</span>
                 </div>
                 {/* <div >
                                     <span>{messages('common.genres')}: </span>
-                                    <span className="font-bold">
+                                    <span className="font-semibold">
                                         {formValues?.primaryGenre?.name}
                                     </span>
                                 </div> */}
                 <div>
                     <span>{messages('common.releaseDate')}: </span>
-                    <span className="font-bold">
+                    <span className="font-semibold">
                         {formattedDate(
                             releaseData.releaseDate,
                             DATE_FORMAT.DATE_ONLY
@@ -96,7 +96,7 @@ export default function ReleaseInfo({ isScrolled }: Props) {
                 {releaseData.upc && (
                     <div>
                         <span>UPC: </span>
-                        <span className="font-bold">{releaseData.upc}</span>
+                        <span className="font-semibold">{releaseData.upc}</span>
                     </div>
                 )}
             </div>

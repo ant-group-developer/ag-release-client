@@ -98,7 +98,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
     const columns: ColumnType<TrackData>[] = [
         {
             key: 'sort',
-            width: 50,
+            width: 30,
             align: 'center',
         },
         {
@@ -106,7 +106,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             dataIndex: 'index',
             key: 'index',
             align: 'center',
-            width: 50,
+            width: 40,
             render: (_, __, index) =>
                 getIndex(
                     props.pagination.pageSize,
@@ -132,18 +132,16 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             },
         },
         {
-            title: `${messages('track.label')} / ${messages('artist.label')}`,
+            title: messages('track.label'),
             dataIndex: 'title',
             key: 'title',
             align: 'left',
-            width: 350,
+            width: 300,
             ellipsis: true,
             render: (value, record) => {
                 return (
                     <div className="space-y-2">
                         <Input
-                            size="small"
-                            variant="underlined"
                             defaultValue={record.title}
                             disabled={isReadMode}
                             onBlur={(e) => {
@@ -163,44 +161,54 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                                 }
                             }}
                         />
-                        {!isReadMode && (
-                            <div className="flex flex-wrap gap-y-2">
-                                {record?.trackArtists?.map(
-                                    (trackArtist: TrackArtistData) => (
-                                        <Tag
-                                            key={`${record.id}-${trackArtist.id}`}
-                                            closeIcon
-                                            onClose={(e) => {
-                                                e.preventDefault();
-                                                openModal(
-                                                    TYPE_MODAL_TRACK_ARTIST.DELETE,
-                                                    trackArtist
-                                                );
-                                            }}
-                                            closable={!isReadMode}
-                                            className="max-w-full whitespace-normal break-words"
-                                        >
-                                            {trackArtist?.artist?.name}
-                                        </Tag>
-                                    )
-                                )}
-                                {!isReadMode && (
+                    </div>
+                );
+            },
+        },
+        {
+            title: messages('artist.label'),
+            align: 'left',
+            dataIndex: 'artist',
+            width: 250,
+            render: (value, record) => {
+                return (
+                    <div>
+                        <div className="flex flex-wrap gap-y-2">
+                            {record?.trackArtists?.map(
+                                (trackArtist: TrackArtistData) => (
                                     <Tag
-                                        key={`${record.id}-add-artist`}
-                                        className="border-dashed hover:border-blue-500"
-                                        onClick={() => {
-                                            if (isReadMode) return;
+                                        key={`${record.id}-${trackArtist.id}`}
+                                        closeIcon
+                                        onClose={(e) => {
+                                            e.preventDefault();
                                             openModal(
-                                                TYPE_MODAL_TRACK_ARTIST.ADD,
-                                                record
+                                                TYPE_MODAL_TRACK_ARTIST.DELETE,
+                                                trackArtist
                                             );
                                         }}
+                                        closable={!isReadMode}
+                                        className="max-w-full whitespace-normal break-words"
                                     >
-                                        + {messages('artist.add')}
+                                        {trackArtist?.artist?.name}
                                     </Tag>
-                                )}
-                            </div>
-                        )}
+                                )
+                            )}
+                            {!isReadMode && (
+                                <Tag
+                                    key={`${record.id}-add-artist`}
+                                    className="border-dashed hover:border-blue-500"
+                                    onClick={() => {
+                                        if (isReadMode) return;
+                                        openModal(
+                                            TYPE_MODAL_TRACK_ARTIST.ADD,
+                                            record
+                                        );
+                                    }}
+                                >
+                                    + {messages('artist.add')}
+                                </Tag>
+                            )}
+                        </div>
                     </div>
                 );
             },
@@ -229,7 +237,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             dataIndex: 'status',
             key: 'status',
             align: 'center',
-            width: 150,
+            width: 100,
             render: (value, record, index) => {
                 const isTrackError = releaseValidateData.some((error) => {
                     const parts = error.field.split('.');
@@ -241,7 +249,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                         {/* <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline"> */}
                         {/* {messages('common.draft')} */}
                         {isTrackError
-                            ? messages('common.missingInformation')
+                            ? messages('common.error')
                             : messages('common.ready')}
                         {/* </span> */}
                     </Tag>

@@ -1,12 +1,12 @@
-'use client';
 import { SIZE_ICON_BIG } from '@/constants/common';
 import { convertSecondsToTime } from '@/helpers/common';
 import { Button, Col, Row } from 'antd';
 import { CirclePause, CirclePlay } from 'lucide-react';
-// import dynamic from 'next/dynamic';
+import WaveElement from './wave-element';
 
-import Waveform from 'react-audio-waveform';
+// import Waveform from 'react-audio-waveform';
 
+// @ts-ignore
 // const Waveform = dynamic<any>(() => import('react-audio-waveform'), {
 //     ssr: false,
 // });
@@ -21,7 +21,7 @@ interface WaveformElementProps {
 }
 
 const WaveformElement = ({
-    peakData = [0],
+    peakData = [],
     songDuration = 0,
     playedTime = 0,
     playing = false,
@@ -56,20 +56,14 @@ const WaveformElement = ({
                         overflow: 'hidden',
                     }}
                 >
-                    {(peakData.length > 0 && (
-                        <Waveform
-                            key={`${songDuration}-${peakData.length}`}
-                            peaks={peakData}
-                            height={40}
-                            pos={playedTime}
-                            duration={songDuration}
-                            onClick={handleSeeking}
-                            color="#c7c7c9"
-                            progressColor="#009AEE"
-                            transitionDuration={100}
-                        />
-                    )) ||
-                        null}
+                    <WaveElement
+                        peakData={peakData}
+                        handleSeeking={handleSeeking}
+                        togglePlayback={togglePlayback}
+                        playedTime={playedTime}
+                        playing={playing}
+                        songDuration={songDuration}
+                    />
                 </div>
             </Col>
             <Col flex="50px">{convertSecondsToTime(songDuration)}</Col>
