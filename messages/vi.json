@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "add": "Thêm",
         "information": "Thông tin",
         "statistics": "Phân tích",
         "list": "Danh sách",

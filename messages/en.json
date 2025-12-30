@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "add": "Add",
         "information": "Information",
         "statistics": "Statistics",
         "list": "List",

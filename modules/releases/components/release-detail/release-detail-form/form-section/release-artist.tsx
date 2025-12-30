@@ -1,7 +1,4 @@
-import AppRadio from '@/components/ui/radio/app-radio';
 import FormItem from '@/components/ui/react-hook-form/form-item';
-import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
-import useModalStore from '@/hooks/use-modal';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { ReleaseDetailSchema } from '@/modules/releases/schemas';
@@ -27,8 +24,8 @@ export default function ReleaseArtistSection({
     } = useFormContext<ReleaseDetailSchema>();
     const formValues = useReleaseFormStore((state) => state.formValues);
     const messages = useTranslations();
-    const openModal = useModalStore((state) => state.openModal);
-    const { action } = useGetReleaseDetailRoute();
+    // const openModal = useModalStore((state) => state.openModal);
+    // const { action } = useGetReleaseDetailRoute();
 
     // router - params
     const params = useParams();
@@ -93,13 +90,13 @@ export default function ReleaseArtistSection({
                                                         isReadMode
                                                     }
                                                 >
-                                                    <AppRadio value={false}>
+                                                    <Radio value={false}>
                                                         {messages('common.no')}
-                                                    </AppRadio>
-                                                    <AppRadio value={true}>
+                                                    </Radio>
+                                                    <Radio value={true}>
                                                         {messages('common.yes')}{' '}
                                                         {` (${messages('artist.descriptionVariantArtists')})`}
-                                                    </AppRadio>
+                                                    </Radio>
                                                 </Radio.Group>
                                             </div>
                                         )}

@@ -161,27 +161,27 @@ export default function ImageListUpload({
                         alignItems: 'center',
                         justifyContent: 'center',
                         zIndex: 10,
-                        borderRadius: '6px',
-                        backdropFilter: 'blur(10px)',
+                        // borderRadius: '6px',
+                        // backdropFilter: 'blur(10px)',
                     }}
                 >
                     <Spin />
                 </div>
             )}
 
-            {previewImage && !loading && (
-                <Image
-                    alt=""
-                    wrapperStyle={{ display: 'none' }}
-                    preview={{
-                        visible: previewOpen,
-                        onVisibleChange: (visible) => setPreviewOpen(visible),
-                        afterOpenChange: (visible) =>
-                            !visible && setPreviewImage(''),
-                    }}
-                    src={previewImage}
-                />
-            )}
+            {/* {previewImage && !loading && ( */}
+            <Image
+                alt=""
+                wrapperStyle={{ display: 'none' }}
+                preview={{
+                    visible: previewOpen,
+                    onVisibleChange: (visible) => setPreviewOpen(visible),
+                    afterOpenChange: (visible) =>
+                        !visible && setPreviewImage(''),
+                }}
+                src={previewImage}
+            />
+            {/* )} */}
         </div>
     );
 }

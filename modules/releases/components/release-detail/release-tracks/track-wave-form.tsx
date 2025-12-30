@@ -1,4 +1,3 @@
-'use client';
 import axiosInstance from '@/api/axios-auth';
 import WaveformElement from '@/components/ui/wave-form-element/wave-form-element';
 import { showNotification } from '@/helpers/messages-helper';
@@ -88,7 +87,6 @@ export function TrackWaveform({ data }: { data: TrackData }) {
                 });
         }
     }, [audioFile?.peak?.id, linkReadFilePeak]);
-    
 
     return (
         <div ref={ref}>

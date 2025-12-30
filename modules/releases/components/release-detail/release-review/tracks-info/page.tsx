@@ -138,7 +138,7 @@ export default function TracksInfo({}: Props) {
     };
 
     return (
-        <div className="space-y-2 pr-6">
+        <div className="space-y-2">
             {/* <p className="font-semibold"> {messages('track.label')} </p> */}
 
             {/* <div className="mb-2 rounded-lg bg-[#f5f5f5] p-4 dark:bg-zinc-900">
