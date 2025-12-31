@@ -744,6 +744,7 @@
     },
 
     "release": {
+        "contributors": "Người tham gia bản phát hành",
         "list": "Danh sách phát hành",
         "releases": "Phát hành",
         "count": "Số lượng bản phát hành",

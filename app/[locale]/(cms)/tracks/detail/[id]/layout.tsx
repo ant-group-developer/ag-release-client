@@ -6,7 +6,7 @@ import DetailSkeleton from '@/components/ui/skeleton/detail-skeleton';
 import { SIZE_ICON_BIG } from '@/constants/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { getTrackDetailRoute } from '@/helpers/link';
-import { Link, useRouter } from '@/i18n/routing';
+import { Link } from '@/i18n/routing';
 import AppError from '@/modules/auth/components/error';
 import {
     FEATURING_ARTIST_ROLE,
@@ -27,11 +27,11 @@ export default function TrackDetail({ children }: PropsWithChildren) {
     // hooks - state
     const messages = useTranslations();
     const [isScroll, setIsScrolled] = useState(false);
-    const [activeTab, setActiveTab] = useState<string>(TRACK_TABS.METADATA);
+    // const [activeTab, setActiveTab] = useState<string>(TRACK_TABS.METADATA);
     const { token } = theme.useToken();
 
     // params - router
-    const router = useRouter();
+    // const router = useRouter();
     const params = useParams();
     const trackId = params['id'];
     const pathname = usePathname();
@@ -40,7 +40,7 @@ export default function TrackDetail({ children }: PropsWithChildren) {
     const { trackData, isLoading, error } = useGetDetailTrack(
         trackId as string
     );
-    const { linkReadFile } = useGetLinkReadFile(
+    const { linkReadFile, isFetching: imageFetching } = useGetLinkReadFile(
         trackData?.release?.coverArtThumbnails?.['160x160'] as string
     );
 
@@ -147,6 +147,7 @@ export default function TrackDetail({ children }: PropsWithChildren) {
                     >
                         <AppHeaderPage
                             imageSrc={linkReadFile}
+                            imageLoading={imageFetching}
                             isScrolled={isScroll}
                             options={renderDownloadTrack()}
                         >

@@ -85,7 +85,7 @@ export default function MetadataInfo({}: Props) {
     };
 
     return (
-        <div className="space-y-2">
+        <div className="space-y-4">
             {/* <p className="font-semibold">MetaData</p> */}
             {/* <div className="my-1 rounded-lg bg-main p-4 dark:bg-zinc-900">
                 <p className="text-base font-medium">
@@ -93,7 +93,7 @@ export default function MetadataInfo({}: Props) {
                 </p>
             </div> */}
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-4">
                 <MetadataInfoItem label={messages('release.name')}>
                     {renderField('title', true)}
                 </MetadataInfoItem>
@@ -118,7 +118,7 @@ export default function MetadataInfo({}: Props) {
                 </MetadataInfoItem>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-4">
                 <MetadataInfoItem label={messages('genres.primary')}>
                     {renderField('primaryGenreId', true)}
                 </MetadataInfoItem>
@@ -135,7 +135,7 @@ export default function MetadataInfo({}: Props) {
                 </MetadataInfoItem>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-4">
                 <MetadataInfoItem label={'Label'}>
                     {renderField('labelId')}
                 </MetadataInfoItem>
@@ -151,7 +151,7 @@ export default function MetadataInfo({}: Props) {
                 </MetadataInfoItem>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-4">
                 <MetadataInfoItem label={messages('release.releaseDate')}>
                     {renderField('releaseDate', true)}
                 </MetadataInfoItem>
@@ -166,7 +166,7 @@ export default function MetadataInfo({}: Props) {
                 </MetadataInfoItem>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-4">
                 <MetadataInfoItem label={`© ${messages('common.copyRight')}`}>
                     {renderField('cLineOwner', true)}
                 </MetadataInfoItem>

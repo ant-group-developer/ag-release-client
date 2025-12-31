@@ -12,7 +12,7 @@ export default function ReviewProgress({}: Props) {
 
     return (
         <div>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-4">
                 <div>
                     <MetadataInfoItem
                         style={{

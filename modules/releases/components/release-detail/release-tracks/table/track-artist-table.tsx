@@ -1,30 +1,34 @@
-import ActionButton from '@/components/ui/button/action-button';
+import IconButton from '@/components/ui/button/icon-button';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
+import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import { SIZE_ICON } from '@/constants/common';
+import { useActive } from '@/hooks/use-active';
+import { ReleaseArtist } from '@/modules/release-artist/types';
 import { TrackData } from '@/modules/releases/types';
-import TrackArtistModal from '@/modules/track-artist/components/modal/track-artist-modal';
 import { useDeleteTrackArtist } from '@/modules/track-artist/hooks/use-delete-track-artist';
+import { useUpdateTrackArtist } from '@/modules/track-artist/hooks/use-update-track-artist';
 import { TrackArtistData } from '@/modules/track-artist/types';
-import { Avatar, Button } from 'antd';
+import { UpdateTrackArtistPayload } from '@/modules/track-artist/types/payload';
+import { UpdateVariables } from '@/types/api';
+import { Avatar } from 'antd';
 import { ColumnType } from 'antd/es/table';
+import { Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
+import AddTrackArtistForm from './add-track-artist-form';
 
 type Props = AppTableProps<TrackArtistData> & {
     trackData: TrackData;
+    trackArtistData?: TrackArtistData;
 };
 
 export default function TrackArtistTable({ trackData, ...props }: Props) {
+    // hooks
+    const { active, deActive, isActive } = useActive();
     const messages = useTranslations();
-    const [artistForm, setArtistForm] = useState<{
-        isOpen: boolean;
-        trackData?: TrackData;
-        trackArtistData?: TrackArtistData;
-    }>({
-        isOpen: false,
-        trackData: undefined,
-        trackArtistData: undefined,
-    });
+
+    // state
     const [deleteArtist, setDeleteArtist] = useState<{
         isOpen: boolean;
         trackArtistData?: TrackArtistData;
@@ -33,7 +37,9 @@ export default function TrackArtistTable({ trackData, ...props }: Props) {
         trackArtistData: undefined,
     });
 
+    // apis
     const { deleteTrackArtist } = useDeleteTrackArtist();
+    const { updateTrackArtist } = useUpdateTrackArtist();
 
     const handleRemoveTrackArtist = () => {
         const variable = {
@@ -48,20 +54,24 @@ export default function TrackArtistTable({ trackData, ...props }: Props) {
         deleteTrackArtist(variable);
     };
 
-    const handleOpenArtistForm = ({
-        isOpen,
-        trackData,
-        trackArtistData,
-    }: {
-        isOpen: boolean;
-        trackData?: TrackData;
-        trackArtistData?: TrackArtistData;
-    }) => {
-        setArtistForm({
-            isOpen,
-            trackData: trackData ?? undefined,
-            trackArtistData: trackArtistData ?? undefined,
-        });
+    const handleUpdateTrackArtist = (
+        id: string,
+        payload: UpdateTrackArtistPayload
+    ) => {
+        const variables: UpdateVariables<
+            ReleaseArtist['id'],
+            UpdateTrackArtistPayload
+        > = {
+            id,
+            payload: {
+                ...payload,
+            },
+            onSuccess: () => {
+                deActive();
+            },
+            onError: () => deActive(),
+        };
+        updateTrackArtist(variables);
     };
 
     const columns: ColumnType<TrackArtistData>[] = [
@@ -88,7 +98,19 @@ export default function TrackArtistTable({ trackData, ...props }: Props) {
             title: messages('common.role'),
             width: 100,
             render: (_, record, index) => {
-                return <span>{record?.artistRole?.name}</span>;
+                return (
+                    <div className="max-w-44">
+                        <RoleArtistSelect
+                            className="w-full"
+                            defaultValue={record?.artistRole?.id}
+                            onChange={() => {
+                                handleUpdateTrackArtist(record?.id, {
+                                    artistRoleId: record?.artistRole?.id,
+                                });
+                            }}
+                        />
+                    </div>
+                );
             },
         },
         {
@@ -136,23 +158,16 @@ export default function TrackArtistTable({ trackData, ...props }: Props) {
             render: (_, record, index) => {
                 return (
                     <div onClick={(e) => e.preventDefault()}>
-                        <ActionButton
-                            showDelete
-                            showUpdate
-                            onShowDelete={() =>
+                        <IconButton
+                            onClick={() => {
                                 setDeleteArtist({
                                     isOpen: true,
                                     trackArtistData: record,
-                                })
-                            }
-                            onShowUpdate={() => {
-                                handleOpenArtistForm({
-                                    isOpen: true,
-                                    trackArtistData: record,
-                                    trackData: trackData,
                                 });
                             }}
-                        />
+                        >
+                            <Trash color="red" size={SIZE_ICON} />
+                        </IconButton>
                     </div>
                 );
             },
@@ -160,19 +175,6 @@ export default function TrackArtistTable({ trackData, ...props }: Props) {
     ];
     return (
         <div className="space-y-2">
-            <div className="flex justify-end">
-                <Button
-                    onClick={() =>
-                        handleOpenArtistForm({
-                            isOpen: true,
-                            trackData: trackData,
-                        })
-                    }
-                    type="primary"
-                >
-                    {messages('artist.add')}
-                </Button>
-            </div>
             <div className="overflow-hidden rounded-lg border">
                 <AppTable
                     {...props}
@@ -180,7 +182,7 @@ export default function TrackArtistTable({ trackData, ...props }: Props) {
                     scroll={{ x: 'max-content' }}
                 />
 
-                <TrackArtistModal
+                {/* <TrackArtistModal
                     open={artistForm.isOpen}
                     onCancel={() =>
                         handleOpenArtistForm({
@@ -194,7 +196,11 @@ export default function TrackArtistTable({ trackData, ...props }: Props) {
                             isOpen: false,
                         });
                     }}
-                />
+                /> */}
+
+                <div className="px-4 py-2">
+                    <AddTrackArtistForm trackData={trackData} />
+                </div>
 
                 <AppConfirm
                     open={deleteArtist.isOpen}

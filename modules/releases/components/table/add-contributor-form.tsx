@@ -1,6 +1,7 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ArtistSelect from '@/components/ui/select/artist-select';
+import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import { SIZE_ICON } from '@/constants/common';
 import { useActive } from '@/hooks/use-active';
 import { useCreateReleaseArtist } from '@/modules/release-artist/hooks/use-create-release-artist';
@@ -13,7 +14,7 @@ import { useReleaseFormStore } from '../../hooks/release-form-store';
 
 type Props = {};
 
-export default function AddArtistForm({}: Props) {
+export default function AddArtistContributorForm({}: Props) {
     // hooks
     const messages = useTranslations();
     const { active, deActive, isActive } = useActive();
@@ -73,7 +74,7 @@ export default function AddArtistForm({}: Props) {
                     />
                 </AppFormItem>
 
-                {/* <AppFormItem
+                <AppFormItem
                     className="flex-1"
                     name="roleId"
                     label={messages('common.role')}
@@ -92,7 +93,7 @@ export default function AddArtistForm({}: Props) {
                         placement="topLeft"
                         allowClear
                     />
-                </AppFormItem> */}
+                </AppFormItem>
 
                 <AppFormItem
                     className="flex-1"
@@ -102,8 +103,6 @@ export default function AddArtistForm({}: Props) {
                 >
                     <Switch />
                 </AppFormItem>
-
-                <div></div>
 
                 <div className="mt-4 flex items-center justify-end space-x-2">
                     <Button
