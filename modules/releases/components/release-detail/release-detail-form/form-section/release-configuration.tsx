@@ -96,7 +96,7 @@ export default function ReleaseConfigurationSection({
                     ),
                     children: (
                         <div>
-                            <div className="grid grid-cols-3 items-center gap-5">
+                            <div className="grid grid-cols-3 items-center gap-4">
                                 <div className="col-span-3">
                                     <FormItem
                                         name="title"

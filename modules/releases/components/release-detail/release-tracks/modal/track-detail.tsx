@@ -210,7 +210,6 @@ export default function TrackDetailModal({ ...props }: Props) {
                 content: { backgroundColor: token?.colorBgLayout },
                 header: { backgroundColor: token?.colorBgLayout },
             }}
-            // className="bg-content"
         >
             <AppForm
                 form={form}

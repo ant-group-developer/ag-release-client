@@ -88,14 +88,14 @@ export default function GenreSection({
                                 <AppFormItem
                                     label={messages('common.subGenres')}
                                     name="subGenreId"
-                                    required
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message:
-                                                messages('validation.input'),
-                                        },
-                                    ]}
+                                    // required
+                                    // rules={[
+                                    //     {
+                                    //         required: true,
+                                    //         message:
+                                    //             messages('validation.input'),
+                                    //     },
+                                    // ]}
                                 >
                                     <GenresSelect
                                         id={`tracks.${index}.subGenreId`}

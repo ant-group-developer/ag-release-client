@@ -7,14 +7,14 @@ interface WaveformElementProps {
     playing?: boolean;
     togglePlayback?: () => void;
     handleSeeking?: (value: any) => void;
+    color?: string;
+    progressColor?: string;
 }
 
 // @ts-ignore
 const Waveform = dynamic<any>(() => import('react-audio-waveform'), {
     ssr: false,
 });
-
-type Props = {};
 
 export default function WaveElement({
     peakData = [],
@@ -23,6 +23,8 @@ export default function WaveElement({
     playing = false,
     togglePlayback = () => {},
     handleSeeking = (value: any) => {},
+    color = '#c7c7c9',
+    progressColor = '009AEE',
 }: WaveformElementProps) {
     if (peakData.length === 0) {
         return null;
@@ -36,8 +38,8 @@ export default function WaveElement({
             pos={playedTime}
             duration={songDuration}
             onClick={handleSeeking}
-            color="#c7c7c9"
-            progressColor="#009AEE"
+            color={color}
+            progressColor={progressColor}
             transitionDuration={100}
         />
     );

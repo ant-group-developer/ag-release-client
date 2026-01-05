@@ -1,5 +1,6 @@
 import IconButton from '@/components/ui/button/icon-button';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
+import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { SIZE_ICON } from '@/constants/common';
 import { useActive } from '@/hooks/use-active';
@@ -15,14 +16,14 @@ import { ColumnType } from 'antd/es/table';
 import { Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import AddTrackArtistForm from './add-track-artist-form';
+import AddTrackContributorForm from './add-track-contributor-form';
 
 type Props = AppTableProps<TrackArtistData> & {
     trackData: TrackData;
     trackArtistData?: TrackArtistData;
 };
 
-export default function TrackArtistTable({ trackData, ...props }: Props) {
+export default function TrackContributorsTable({ trackData, ...props }: Props) {
     // hooks
     const { active, deActive, isActive } = useActive();
     const messages = useTranslations();
@@ -82,7 +83,7 @@ export default function TrackArtistTable({ trackData, ...props }: Props) {
         },
         {
             title: messages('common.name'),
-            width: 300,
+            width: 250,
             render: (_, record, index) => {
                 const artist = record?.artist;
                 return (
@@ -93,25 +94,25 @@ export default function TrackArtistTable({ trackData, ...props }: Props) {
                 );
             },
         },
-        // {
-        //     title: messages('common.role'),
-        //     width: 100,
-        //     render: (_, record, index) => {
-        //         return (
-        //             <div className="max-w-44">
-        //                 <RoleArtistSelect
-        //                     className="w-full"
-        //                     defaultValue={record?.artistRole?.id}
-        //                     onChange={() => {
-        //                         handleUpdateTrackArtist(record?.id, {
-        //                             artistRoleId: record?.artistRole?.id,
-        //                         });
-        //                     }}
-        //                 />
-        //             </div>
-        //         );
-        //     },
-        // },
+        {
+            title: messages('common.role'),
+            width: 150,
+            render: (_, record, index) => {
+                return (
+                    <div className="max-w-44">
+                        <RoleArtistSelect
+                            className="w-full"
+                            defaultValue={record?.artistRole?.id}
+                            onChange={() => {
+                                handleUpdateTrackArtist(record?.id, {
+                                    artistRoleId: record?.artistRole?.id,
+                                });
+                            }}
+                        />
+                    </div>
+                );
+            },
+        },
         {
             title: messages('country.label'),
             width: 150,
@@ -130,7 +131,7 @@ export default function TrackArtistTable({ trackData, ...props }: Props) {
         },
         {
             title: messages('artist.profiles'),
-            width: 200,
+            width: 150,
             render: (_, record, index) => {
                 return (
                     <div className="space-x-2">
@@ -198,7 +199,7 @@ export default function TrackArtistTable({ trackData, ...props }: Props) {
                 /> */}
 
                 <div className="px-4 py-2">
-                    <AddTrackArtistForm trackData={trackData} />
+                    <AddTrackContributorForm trackData={trackData} />
                 </div>
 
                 <AppConfirm

@@ -4,7 +4,6 @@ import AppLoader from '@/components/app-loader';
 import { LOCAL_STORAGE_KEY } from '@/enums/common';
 import { useActive } from '@/hooks/use-active';
 import usePermissionStore from '@/hooks/use-permission-store';
-import { useRouter } from '@/i18n/routing';
 import Forbidden from '@/modules/auth/components/forbidden';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { useCheckPermission } from '@/modules/auth/hooks/use-permission';
@@ -20,7 +19,7 @@ type Props = {
 };
 
 export default function CMSLayout({ children }: Props) {
-    const router = useRouter();
+    // const router = useRouter();
 
     const { isActive, toggleActive, changeActive } = useActive(
         typeof window === 'undefined'

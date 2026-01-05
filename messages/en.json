@@ -64,6 +64,8 @@
         }
     },
     "common": {
+        "errors": "Errors",
+        "contributors": "Contributors",
         "add": "Add",
         "information": "Information",
         "statistics": "Statistics",

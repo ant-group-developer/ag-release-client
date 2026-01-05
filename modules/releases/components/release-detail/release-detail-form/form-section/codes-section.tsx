@@ -41,7 +41,7 @@ export default function CodesSection({ isReadMode, debouncedUpdate }: Props) {
                         </span>
                     ),
                     children: (
-                        <div className="grid grid-cols-3 items-center gap-5">
+                        <div className="grid grid-cols-3 items-center gap-4">
                             <div className="col-span-1">
                                 <FormItem
                                     name="upc"

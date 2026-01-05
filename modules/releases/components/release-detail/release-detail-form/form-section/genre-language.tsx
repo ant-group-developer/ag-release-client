@@ -51,7 +51,7 @@ export default function GenreLanguageSection({
                         </span>
                     ),
                     children: (
-                        <div className="grid grid-cols-3 items-center gap-5">
+                        <div className="grid grid-cols-3 items-center gap-4">
                             <FormItem
                                 name="primaryGenreId"
                                 label={messages('genres.primary')}
