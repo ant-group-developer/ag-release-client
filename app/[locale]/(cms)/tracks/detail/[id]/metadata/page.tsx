@@ -33,7 +33,7 @@ export default function TrackMetadata({}: Props) {
                     </p>
                 }
             >
-                <div className="space-y-2 p-2">
+                <div className="space-y-2 px-4 pb-4">
                     <div className="grid grid-cols-2 gap-2">
                         <MetadataInfoItem label={messages('track.name')}>
                             {trackData?.title}
@@ -68,7 +68,7 @@ export default function TrackMetadata({}: Props) {
                 title={<p className="text-lg">{messages('genre.label')}</p>}
                 style={styleCard}
             >
-                <div className="space-y-2 p-2">
+                <div className="space-y-2 px-4 pb-4">
                     <div className="grid grid-cols-2 gap-2">
                         <MetadataInfoItem label={messages('genres.primary')}>
                             {trackData?.primaryGenre?.name}
@@ -98,7 +98,7 @@ export default function TrackMetadata({}: Props) {
                 }
                 style={styleCard}
             >
-                <div className="space-y-2 p-2">
+                <div className="space-y-2 px-4 pb-4">
                     <div className="grid grid-cols-2 gap-2">
                         <MetadataInfoItem
                             label={`${messages('track.language')}`}

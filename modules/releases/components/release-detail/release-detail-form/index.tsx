@@ -27,6 +27,7 @@ import GenreLanguageSection from './form-section/genre-language';
 import LegalNoticesSection from './form-section/legal-notices';
 import ReleaseArtistSection from './form-section/release-artist';
 import ReleaseConfigurationSection from './form-section/release-configuration';
+import ReleaseContributorsSection from './form-section/release-contributors';
 
 export default function ReleaseDetailForm() {
     //hook
@@ -145,7 +146,7 @@ export default function ReleaseDetailForm() {
         <ConfigProvider theme={customTheme}>
             <FormProvider {...formMethods}>
                 <form onSubmit={handleSubmit(handleNext, handleFormError)}>
-                    <div className="flex flex-col gap-6">
+                    <div className="flex flex-col gap-4">
                         <ReleaseConfigurationSection
                             isReadMode={isReadMode}
                             debouncedUpdate={debouncedUpdate}
@@ -162,6 +163,11 @@ export default function ReleaseDetailForm() {
                         />
 
                         <ReleaseArtistSection
+                            isReadMode={isReadMode}
+                            debouncedUpdate={debouncedUpdate}
+                        />
+
+                        <ReleaseContributorsSection
                             isReadMode={isReadMode}
                             debouncedUpdate={debouncedUpdate}
                         />

@@ -12,6 +12,7 @@ export default function StreamsAnalysisCard({}: Props) {
             style={{
                 backgroundColor: token?.colorBgContainer,
             }}
+            className="!border-none"
         >
             <div className="flex min-h-[200px] items-center justify-center">
                 <span className="font-bold">Không có dữ liệu để hiển thị</span>

@@ -2,56 +2,23 @@
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_OPTIONS } from '@/constants/page-size';
-import { SESSION_STORAGE_KEY } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
-import {
-    defaultVisibleColumnsDistribution,
-    distributionData,
-} from '@/modules/distribution/constants';
-import {
-    DISTRIBUTION_COLUMNS_DISPLAY,
-    DISTRIBUTION_STATUS,
-} from '@/modules/distribution/enum';
+import { distributionData } from '@/modules/distribution/constants';
+import { DISTRIBUTION_STATUS } from '@/modules/distribution/enum';
 import { DistributionDataFilter } from '@/modules/distribution/types';
 import DistributionStatus from '@/modules/releases/components/release-detail/release-distribution/components/header-action/distribution-status';
 import DistributionTable from '@/modules/releases/components/release-detail/release-distribution/components/table';
 import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { Button, theme } from 'antd';
-import dayjs from 'dayjs';
-import { useTranslations } from 'next-intl';
 import { Key, useState } from 'react';
 type Props = {};
 
 export default function Distribution({}: Props) {
-    const messages = useTranslations();
+    // const messages = useTranslations();
     const [selectedRow, setSelectedRow] = useState<Key[]>([]);
-    const [visibleColumns, setVisibleColumns] = useState<
-        DISTRIBUTION_COLUMNS_DISPLAY[]
-    >(() => {
-        if (typeof window !== 'undefined') {
-            const stored = sessionStorage.getItem(
-                SESSION_STORAGE_KEY.VISIBLE_COLUMNS_DISTRIBUTION
-            );
-            if (!stored) return defaultVisibleColumnsDistribution;
-            const { value, timestamp } = JSON.parse(stored) as {
-                value: DISTRIBUTION_COLUMNS_DISPLAY[];
-                timestamp: string;
-            };
-
-            if (dayjs().diff(dayjs(timestamp), 'day') >= 10) {
-                sessionStorage.removeItem(
-                    SESSION_STORAGE_KEY.VISIBLE_COLUMNS_DISTRIBUTION
-                );
-                return defaultVisibleColumnsDistribution;
-            }
-
-            return value;
-        }
-        return defaultVisibleColumnsDistribution;
-    });
 
     const openModal = useModalStore((state) => state.openModal);
 
@@ -64,11 +31,6 @@ export default function Distribution({}: Props) {
         onChange: handleSelectedRow,
     };
 
-    const handleChangeVisibleColumns = (
-        columns: DISTRIBUTION_COLUMNS_DISPLAY[]
-    ) => {
-        setVisibleColumns(columns);
-    };
     const {
         dataFilter,
         onChangeFilter,

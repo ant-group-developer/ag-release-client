@@ -1,12 +1,13 @@
 'use client';
 import { cn } from '@/helpers/common';
-import { Image, theme } from 'antd';
+import { Image, Skeleton, theme } from 'antd';
 import { ReactNode } from 'react';
 
 type Props = {
     className?: string;
     children: ReactNode;
     imageSrc: string;
+    imageLoading?: boolean;
     isScrolled: boolean;
     options?: ReactNode;
 };
@@ -15,11 +16,12 @@ export default function AppHeaderPage({
     className,
     children,
     imageSrc,
+    imageLoading,
     isScrolled = false,
     options,
 }: Props) {
     const { token } = theme.useToken();
-
+    const size = isScrolled ? 64 : 110;
     return (
         <div
             className={cn('mt-3 flex justify-between', className)}
@@ -35,23 +37,26 @@ export default function AppHeaderPage({
                         isScrolled ? 'size-16' : 'size-28'
                     )}
                 >
-                    <Image
-                        className={cn(
-                            '!aspect-square h-full w-full !rounded-lg object-cover'
-                            // {
-                            //     'transition-all duration-700 ease-out':
-                            //         isScrolled,
-                            // }
-                        )}
-                        preview={{
-                            maskClassName: cn('rounded-lg'),
-                        }}
-                        fallback={'/image/fallback-image.png'}
-                        // width={isScrolled ? 64 : 110}
-                        // height={isScrolled ? 64 : 110}
-                        src={imageSrc}
-                        alt=""
-                    />
+                    {imageLoading ? (
+                        <Skeleton.Image
+                            active
+                            style={{
+                                width: size,
+                                height: size,
+                                borderRadius: 8,
+                            }}
+                        />
+                    ) : (
+                        <Image
+                            className="!aspect-square h-full w-full !rounded-lg object-cover"
+                            preview={{
+                                maskClassName: 'rounded-lg',
+                            }}
+                            fallback="/image/fallback-image.png"
+                            src={imageSrc}
+                            alt=""
+                        />
+                    )}
                 </div>
                 <div
                     className={cn(

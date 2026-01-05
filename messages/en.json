@@ -749,6 +749,7 @@
     },
 
     "release": {
+        "contributors": "Release contributors",
         "list": "Release list",
         "releases": "Releases",
         "count": "Releases count",

@@ -9,7 +9,7 @@ export default function ItemHeaderPage({ name, value }: Props) {
     return (
         <div className="text-sm">
             <span>{name}: </span>
-            <span className="font-bold">{value ?? ''}</span>
+            <span className="font-semibold">{value ?? ''}</span>
         </div>
     );
 }

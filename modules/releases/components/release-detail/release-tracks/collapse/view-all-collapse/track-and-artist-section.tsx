@@ -113,7 +113,7 @@ export default function TrackAndArtistSection({
                                             />
                                         </AppFormItem>
                                     </div>
-                                    <div className="col-span-4">
+                                    <div className="col-span-4 space-y-4">
                                         <AppFormItem
                                             label={`${messages('track.addAllArtistFromRelease')} ?`}
                                             name="copyArtistsFromRelease"

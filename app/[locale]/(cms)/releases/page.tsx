@@ -128,17 +128,6 @@ export default function Releases({}: Props) {
     return (
         <AppPageWrapper>
             <PageContainer title={messages('release.releases')}>
-                {/* <ReleasesHeader
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
-                    handleChangeVisibleColumns={handleChangeVisibleColumns}
-                    visibleColumn={visibleColumns}
-                    dataUpdatedAt={dataUpdatedAt}
-                /> */}
-
                 <ReleasesHeaderV2
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}

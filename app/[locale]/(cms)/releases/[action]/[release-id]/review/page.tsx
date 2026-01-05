@@ -22,7 +22,7 @@ export default function Review() {
     ];
 
     return (
-        <div className="my-4 flex flex-col gap-8">
+        <div className="mb-4 flex flex-col gap-4">
             <ReviewProgress />
 
             <div className="rounded-lg bg-white">

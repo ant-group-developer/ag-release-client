@@ -264,7 +264,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     <DetailSkeleton />
                 </div>
             ) : (
-                <div className="mx-auto flex h-[calc(100vh-4rem)] flex-1 flex-col px-8">
+                <div className="mx-auto flex flex-1 flex-col px-8">
                     <Breadcrumb items={breadcrumbItems} className="!py-4" />
                     <div
                         className="sticky top-0 z-10 mb-6 rounded-lg p-4"

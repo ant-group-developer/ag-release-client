@@ -1,4 +1,5 @@
 import IconButton from '@/components/ui/button/icon-button';
+import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { SIZE_ICON } from '@/constants/common';
 import useModalStore from '@/hooks/use-modal';
@@ -11,13 +12,13 @@ import { ColumnType } from 'antd/es/table';
 import { Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '../../enums';
-import AddArtistForm from './add-artist-form';
+import AddArtistContributorForm from './add-contributor-form';
 
 type Props = AppTableProps<ReleaseArtist> & {
     disabled?: boolean;
 };
 
-export default function ReleaseArtistTable({
+export default function ReleaseContributorsTable({
     disabled = false,
     ...props
 }: Props) {
@@ -77,25 +78,25 @@ export default function ReleaseArtistTable({
                 );
             },
         },
-        // {
-        //     title: messages('common.role'),
-        //     width: 100,
-        //     render: (_, record, index) => {
-        //         return (
-        //             <div className="max-w-52">
-        //                 <RoleArtistSelect
-        //                     defaultValue={record?.artistRole?.id}
-        //                     className="w-full"
-        //                     onChange={(e) =>
-        //                         handleUpdate(record?.id, {
-        //                             artistRoleId: e,
-        //                         })
-        //                     }
-        //                 />
-        //             </div>
-        //         );
-        //     },
-        // },
+        {
+            title: messages('common.role'),
+            width: 100,
+            render: (_, record, index) => {
+                return (
+                    <div className="max-w-52">
+                        <RoleArtistSelect
+                            defaultValue={record?.artistRole?.id}
+                            className="w-full"
+                            onChange={(e) =>
+                                handleUpdate(record?.id, {
+                                    artistRoleId: e,
+                                })
+                            }
+                        />
+                    </div>
+                );
+            },
+        },
         {
             title: messages('genre.label'),
             width: 100,
@@ -166,7 +167,7 @@ export default function ReleaseArtistTable({
                     scroll={{ x: 'max-content' }}
                 />
                 <div className="px-4 py-2">
-                    <AddArtistForm />
+                    <AddArtistContributorForm />
                 </div>
             </div>
         </div>
