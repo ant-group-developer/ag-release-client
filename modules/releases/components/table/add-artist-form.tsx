@@ -11,9 +11,11 @@ import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useReleaseFormStore } from '../../hooks/release-form-store';
 
-type Props = {};
+type Props = {
+    disabled?: boolean;
+};
 
-export default function AddArtistForm({}: Props) {
+export default function AddArtistForm({ disabled = false }: Props) {
     // hooks
     const messages = useTranslations();
     const { active, deActive, isActive } = useActive();
@@ -49,7 +51,7 @@ export default function AddArtistForm({}: Props) {
             onFinish={(values) => handleSubmit(values)}
             layout="vertical"
             showSubmit={false}
-            disabled={isActive}
+            disabled={disabled || isActive}
         >
             <div className="grid grid-cols-5 gap-4">
                 <AppFormItem
@@ -107,7 +109,7 @@ export default function AddArtistForm({}: Props) {
 
                 <div className="mt-4 flex items-center justify-end space-x-2">
                     <Button
-                        disabled={isActive}
+                        disabled={disabled || isActive}
                         loading={isActive}
                         onClick={() => form.submit()}
                         icon={

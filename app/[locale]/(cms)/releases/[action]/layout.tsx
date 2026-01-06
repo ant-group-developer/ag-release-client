@@ -192,19 +192,6 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         // ReleaseData from api into Release zustand global state
         const initialData: ReleaseFormStoreData = {
             ...releaseData,
-            // releaseLanguage: releaseData.releaseLanguage ?? {
-            //     metadataLanguageId: '',
-            //     audioLanguageId: '',
-            //     metadataLanguageCountryId: '',
-            //     releaseId: '',
-            // },
-            // releaseTerritory: releaseData.releaseTerritory ?? {
-            //     distributeWorldwide: true,
-            // },
-            // tracks: tracksData.items.map((track) => ({
-            //     ...track,
-            //     isSensitiveContent: !!track.isSensitiveContent,
-            // })),
         };
 
         if (releaseId && releaseData?.id) {
@@ -255,7 +242,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
 
     return (
         <div
-            className="flex h-full overflow-auto"
+            className="flex h-full overflow-y-auto"
             style={{ backgroundColor: token.colorBgLayout }}
             ref={scrollContainerRef}
         >
@@ -264,7 +251,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     <DetailSkeleton />
                 </div>
             ) : (
-                <div className="mx-auto flex flex-1 flex-col px-8">
+                <div className="mx-auto flex flex-1 flex-col px-8 ">
                     <Breadcrumb items={breadcrumbItems} className="!py-4" />
                     <div
                         className="sticky top-0 z-10 mb-6 rounded-lg p-4"

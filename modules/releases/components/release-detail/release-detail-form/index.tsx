@@ -62,6 +62,7 @@ export default function ReleaseDetailForm() {
         mode: 'onChange',
         reValidateMode: 'onChange',
     });
+    
     const {
         control,
         handleSubmit,
@@ -146,7 +147,7 @@ export default function ReleaseDetailForm() {
         <ConfigProvider theme={customTheme}>
             <FormProvider {...formMethods}>
                 <form onSubmit={handleSubmit(handleNext, handleFormError)}>
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-4 mt-4">
                         <ReleaseConfigurationSection
                             isReadMode={isReadMode}
                             debouncedUpdate={debouncedUpdate}

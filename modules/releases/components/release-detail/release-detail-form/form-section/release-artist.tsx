@@ -25,14 +25,10 @@ export default function ReleaseArtistSection({
     const formValues = useReleaseFormStore((state) => state.formValues);
     const messages = useTranslations();
     // const openModal = useModalStore((state) => state.openModal);
-    // const { action } = useGetReleaseDetailRoute();
 
     // router - params
     const params = useParams();
-    // const isReadMode = useMemo(
-    //     () => action !== RELEASE_DETAIL_ACTION.EDIT,
-    //     [action]
-    // );
+
 
     // variables
     const isCreateReleasePage = params['action'] === 'create';

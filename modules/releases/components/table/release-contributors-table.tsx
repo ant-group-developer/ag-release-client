@@ -167,7 +167,7 @@ export default function ReleaseContributorsTable({
                     scroll={{ x: 'max-content' }}
                 />
                 <div className="px-4 py-2">
-                    <AddArtistContributorForm />
+                    <AddArtistContributorForm disabled={disabled} />
                 </div>
             </div>
         </div>

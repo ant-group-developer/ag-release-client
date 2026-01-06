@@ -69,7 +69,7 @@ export default function CMSLayout({ children }: Props) {
                         }}
                     />
                     <Layout>
-                        <div className="relative h-[calc(100vh-4rem)] overflow-y-hidden">
+                        <div className="">
                             <Content>{getChildren()}</Content>
                             <AppLoader
                                 className="bg-white"

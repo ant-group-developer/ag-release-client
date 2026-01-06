@@ -8,13 +8,11 @@ type Props = {
 const { Content } = Layout;
 
 function ContentComponent({ children }: Props) {
-    const { token } = theme.useToken();
+    // const { token } = theme.useToken();
     return (
         <Content>
             <div
-                style={{ backgroundColor: token.colorBgContainer }}
-                // style={{ backgroundColor: '#f5f7fa' }}
-                className="h-[calc(100vh-4rem)]"
+                className="h-[calc(100vh-64px)] overflow-y-auto"
             >
                 {children}
             </div>

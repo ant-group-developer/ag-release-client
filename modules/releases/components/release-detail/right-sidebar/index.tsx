@@ -90,9 +90,6 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
         setIsSidebarOpen((prevState) => !prevState);
     };
     const handleClickError = (err: ReleaseValidate) => {
-        console.log('🚀 ~ handleClickError ~ err:', err);
-        console.log('🚀 ~ handleClickError ~ err?.trackId :', err?.trackId);
-        console.log('🚀 ~ handleClickError ~ err?.field:', err?.field);
         if (!err?.trackId || !err?.field) return;
         const parts = err.field.split('.');
         const trackIndex = Number(parts[1]);

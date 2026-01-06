@@ -17,7 +17,7 @@ export default function ReleaseInfo({ isScrolled }: Props) {
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
     const { releaseData } = useGetDetailRelease(formValues?.id as string);
-    console.log('🚀 ~ ReleaseInfo ~ releaseData:', releaseData);
+    // console.log('🚀 ~ ReleaseInfo ~ releaseData:', releaseData);
 
     const isVariousArtist = !!formValues?.isVariousArtist;
     const mainArtist = formValues?.releaseArtists?.find(

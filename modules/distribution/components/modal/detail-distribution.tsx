@@ -5,7 +5,6 @@ import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { ReleasesData } from '@/modules/releases/types';
-import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
@@ -18,10 +17,9 @@ export default function DetailDistributionModal({ ...props }: Props) {
     const dataEdit = useModalStore<ReleasesData>((state) => {
         return state.dataEdit;
     });
-    console.log('🚀 ~ DetailDistributionModal ~ dataEdit:', dataEdit);
-    const { linkReadFile, isFetching } = useGetLinkReadFile(
-        dataEdit?.coverArtThumbnails?.['160x160'] as string
-    );
+    // const { linkReadFile, isFetching } = useGetLinkReadFile(
+    //     dataEdit?.coverArtThumbnails?.['160x160'] as string
+    // );
 
     const closeModal = useModalStore((state) => state.closeModal);
 

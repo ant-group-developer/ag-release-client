@@ -1,6 +1,13 @@
 import { usePlaySongStore } from '@/hooks/use-play-song-store';
 import { useEffect, useRef } from 'react';
+// import ReactPlayer from 'react-player';
+
+import dynamic from 'next/dynamic';
 import ReactPlayer from 'react-player';
+
+const ReactPlayerNoSSR = dynamic(() => import('react-player'), {
+    ssr: false,
+});
 
 export default function AudioPlayer() {
     const { url, isPlaying, setReactPlayerRef, songId, currentTimePlaying } =
@@ -76,7 +83,7 @@ export default function AudioPlayer() {
     };
 
     return (
-        <ReactPlayer
+        <ReactPlayerNoSSR
             ref={playerRef}
             url={url}
             playing={isPlaying}
