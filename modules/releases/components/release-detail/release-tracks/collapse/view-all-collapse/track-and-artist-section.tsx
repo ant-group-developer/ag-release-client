@@ -55,12 +55,12 @@ export default function TrackAndArtistSection({
                         label: (
                             <span className="text-base font-semibold">
                                 {messages('track.label')} &{' '}
-                                {messages('artist.label')}
+                                {messages('artist.artists')}
                             </span>
                         ),
                         children: (
                             <div>
-                                <div className="grid grid-cols-4 items-center gap-5">
+                                <div className="grid grid-cols-4 items-center gap-4">
                                     <div className="col-span-2">
                                         <AppFormItem
                                             label={messages('track.name')}

@@ -13,6 +13,7 @@ import GenreSection from '../collapse/view-all-collapse/genre-section';
 import LanguageSection from '../collapse/view-all-collapse/language-section';
 import OtherSection from '../collapse/view-all-collapse/other-section';
 import TrackAndArtistSection from '../collapse/view-all-collapse/track-and-artist-section';
+import TrackContributorsSection from '../collapse/view-all-collapse/track-contributors-section';
 
 type Props = {
     trackData: TrackData;
@@ -94,6 +95,11 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
         >
             <div className="flex h-[80vh] flex-col gap-4 overflow-y-auto pr-1">
                 <TrackAndArtistSection
+                    trackData={trackData}
+                    debouncedUpdateTrackDraft={updateTrackDraft}
+                    index={index}
+                />
+                <TrackContributorsSection
                     trackData={trackData}
                     debouncedUpdateTrackDraft={updateTrackDraft}
                     index={index}

@@ -89,7 +89,7 @@ export default function LegalNoticesSection({
                         </span>
                     ),
                     children: (
-                        <div className="grid grid-cols-4 items-center gap-5">
+                        <div className="grid grid-cols-4 items-center gap-4">
                             {/* C-Line Year */}
                             <FormItem
                                 name="cLineYear"

@@ -143,6 +143,7 @@ export default function ReleaseArtistTable({
                 return (
                     <div onClick={(e) => e.preventDefault()}>
                         <IconButton
+                            disabled={disabled}
                             onClick={() =>
                                 openModal(
                                     TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST,
@@ -166,7 +167,7 @@ export default function ReleaseArtistTable({
                     scroll={{ x: 'max-content' }}
                 />
                 <div className="px-4 py-2">
-                    <AddArtistForm />
+                    <AddArtistForm disabled={disabled} />
                 </div>
             </div>
         </div>

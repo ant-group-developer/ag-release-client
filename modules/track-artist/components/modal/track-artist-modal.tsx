@@ -2,7 +2,6 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import ArtistSelect from '@/components/ui/select/artist-select';
-import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import { useActive } from '@/hooks/use-active';
 import { useGetListArtistRole } from '@/modules/artist-role/hooks/use-get-list-artist-role';
 import { ArtistRoleData } from '@/modules/artist-role/types';
@@ -187,7 +186,7 @@ export default function TrackArtistModal({
                     />
                 )}
 
-                <AppFormItem
+                {/* <AppFormItem
                     name="roleId"
                     label={messages('common.role')}
                     required
@@ -203,7 +202,7 @@ export default function TrackArtistModal({
                         placeholder={messages('common.role')}
                         allowClear
                     />
-                </AppFormItem>
+                </AppFormItem> */}
 
                 {watchArtistName && (
                     <div>
@@ -220,9 +219,9 @@ export default function TrackArtistModal({
                         />
                     </div>
                 )}
-                <p className="text-xs text-gray-500">
+                {/* <p className="text-xs text-gray-500">
                     * {messages('trackArtist.message.note')}.
-                </p>
+                </p> */}
             </AppForm>
 
             {/* <LinkProfileArtist

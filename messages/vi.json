@@ -64,6 +64,8 @@
         }
     },
     "common": {
+        "errors": "Lỗi",
+        "contributors": "Người đóng góp",
         "add": "Thêm",
         "information": "Thông tin",
         "statistics": "Phân tích",

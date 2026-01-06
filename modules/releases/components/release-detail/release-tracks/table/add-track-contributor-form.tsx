@@ -1,49 +1,46 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ArtistSelect from '@/components/ui/select/artist-select';
+import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import { SIZE_ICON } from '@/constants/common';
 import { useActive } from '@/hooks/use-active';
-import { useCreateReleaseArtist } from '@/modules/release-artist/hooks/use-create-release-artist';
-import { CreateReleaseArtistPayload } from '@/modules/release-artist/types/payload';
+import { TrackData } from '@/modules/releases/types';
+import { useCreateTrackArtist } from '@/modules/track-artist/hooks/use-create-track-artist';
+import { CreateTrackArtistPayload } from '@/modules/track-artist/types/payload';
 import { CreateVariables } from '@/types/api';
-import { Button, Form, Switch } from 'antd';
+import { Button, Form } from 'antd';
 import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useReleaseFormStore } from '../../hooks/release-form-store';
 
 type Props = {
-    disabled?: boolean;
+    trackData?: TrackData;
 };
 
-export default function AddArtistForm({ disabled = false }: Props) {
+export default function AddTrackContributorForm({ trackData }: Props) {
     // hooks
     const messages = useTranslations();
     const { active, deActive, isActive } = useActive();
     const [form] = Form.useForm();
-    const releaseValues = useReleaseFormStore((state) => state.formValues);
 
     // apis
-    const { createReleaseArtist } = useCreateReleaseArtist();
+    const { createTrackArtist } = useCreateTrackArtist();
 
     // func
     const handleSubmit = async (values: any) => {
         active();
-        const variables: CreateVariables<CreateReleaseArtistPayload> = {
+        const variables: CreateVariables<CreateTrackArtistPayload> = {
             payload: {
                 artistId: values.artistId,
                 artistRoleId: values.roleId,
-                releaseId: releaseValues.id as string,
-                addArtistToTracks: !!values?.addArtistToTracks,
+                trackId: trackData?.id as string,
             },
             onSuccess: () => {
+                deActive();
                 form.resetFields();
-                deActive();
             },
-            onError(e) {
-                deActive();
-            },
+            onError: () => deActive(),
         };
-        createReleaseArtist(variables);
+        createTrackArtist(variables);
     };
     return (
         <AppForm
@@ -51,9 +48,9 @@ export default function AddArtistForm({ disabled = false }: Props) {
             onFinish={(values) => handleSubmit(values)}
             layout="vertical"
             showSubmit={false}
-            disabled={disabled || isActive}
+            disabled={isActive}
         >
-            <div className="grid grid-cols-5 gap-4">
+            <div className="grid grid-cols-4 gap-4">
                 <AppFormItem
                     className="col-span-2"
                     name="artistId"
@@ -75,7 +72,7 @@ export default function AddArtistForm({ disabled = false }: Props) {
                     />
                 </AppFormItem>
 
-                {/* <AppFormItem
+                <AppFormItem
                     className="flex-1"
                     name="roleId"
                     label={messages('common.role')}
@@ -94,22 +91,11 @@ export default function AddArtistForm({ disabled = false }: Props) {
                         placement="topLeft"
                         allowClear
                     />
-                </AppFormItem> */}
-
-                <AppFormItem
-                    className="flex-1"
-                    label={messages('artist.addToTracks')}
-                    name="addArtistToTracks"
-                    valuePropName="checked"
-                >
-                    <Switch />
                 </AppFormItem>
 
-                <div></div>
-
-                <div className="mt-4 flex items-center justify-end space-x-2">
+                <div className="mt-4 flex items-center justify-end">
                     <Button
-                        disabled={disabled || isActive}
+                        disabled={isActive}
                         loading={isActive}
                         onClick={() => form.submit()}
                         icon={

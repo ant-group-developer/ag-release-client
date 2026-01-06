@@ -1,7 +1,6 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ArtistSelect from '@/components/ui/select/artist-select';
-import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import { SIZE_ICON } from '@/constants/common';
 import { useActive } from '@/hooks/use-active';
 import { TrackData } from '@/modules/releases/types';
@@ -50,9 +49,9 @@ export default function AddTrackArtistForm({ trackData }: Props) {
             showSubmit={false}
             disabled={isActive}
         >
-            <div className="flex justify-between gap-4">
+            <div className="grid grid-cols-2 gap-4">
                 <AppFormItem
-                    className="flex-1"
+                    className="flex-2"
                     name="artistId"
                     label={messages('artist.name')}
                     required
@@ -72,7 +71,7 @@ export default function AddTrackArtistForm({ trackData }: Props) {
                     />
                 </AppFormItem>
 
-                <AppFormItem
+                {/* <AppFormItem
                     className="flex-1"
                     name="roleId"
                     label={messages('common.role')}
@@ -91,9 +90,9 @@ export default function AddTrackArtistForm({ trackData }: Props) {
                         placement="topLeft"
                         allowClear
                     />
-                </AppFormItem>
+                </AppFormItem> */}
 
-                <div className="mt-4 flex items-center">
+                <div className="mt-4 flex items-center justify-end">
                     <Button
                         disabled={isActive}
                         loading={isActive}

@@ -11,6 +11,8 @@ import TrackDetailModal from '@/modules/releases/components/release-detail/relea
 import ReleaseTracksTable from '@/modules/releases/components/release-detail/release-tracks/table';
 import { TYPE_MODAL_RELEASE, TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import TrackArtistModal from '@/modules/track-artist/components/modal/track-artist-modal';
+import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
 import { useBulkDeleteTracks } from '@/modules/tracks/hooks/use-bulk-delete-tracks';
 import { useDeleteTrack } from '@/modules/tracks/hooks/use-delete-track';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
@@ -122,10 +124,9 @@ export default function Tracks() {
                     <TrackDetailModal />
                 )}
 
-                {/* {(typeModal === TYPE_MODAL_TRACK_ARTIST.ADD ||
-                    typeModal === TYPE_MODAL_TRACK_ARTIST.UPDATE) && (
-                    <TrackArtistModal />
-                )} */}
+                {typeModal === TYPE_MODAL_TRACK_ARTIST.ADD && (
+                    <TrackArtistModal onCancel={closeModal} />
+                )}
 
                 {typeModal === TYPE_MODAL_TRACK.BULK_DELETE && (
                     <AppConfirm

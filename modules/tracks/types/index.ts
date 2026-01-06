@@ -70,11 +70,12 @@ export interface TrackPolicyData extends CommonAttribute {
 }
 
 export interface TrackLanguage {
+    metadataLanguage: LanguagesData;
     metadataLanguageId: string;
+    audioLanguage: LanguagesData | null;
     audioLanguageId: string;
     metadataLanguageCountryId: string;
+    metadataLanguageCountry: CountriesData | null;
     recordingCountryId: string;
     recordingCountry: CountriesData | null;
-    audioLanguage: LanguagesData | null;
-    metadataLanguageCountry: CountriesData | null;
 }

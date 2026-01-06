@@ -1,62 +1,56 @@
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { SIZE_ICON } from '@/constants/common';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
 import type { TrackData } from '@/modules/releases/types';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { Collapse } from 'antd';
+import { CircleCheck, OctagonAlert } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
 import ArtistItem from '../metadata-info/artist-item';
-import TrackMetadataInfoItem from './track-metadata-info-item';
 
 type Props = {};
 
 export default function TracksInfo({}: Props) {
     const messages = useTranslations();
+    const params = useParams();
+    const releaseId = params['release-id'];
     const formValue = useReleaseFormStore((state) => state.formValues);
     const { tracksData } = useGetListTracks({
         releaseId: formValue?.id,
         fieldOrder: 'order',
     });
+    const { releaseValidateData } = useReleaseValidate(releaseId as string);
+
+    type TrackLanguageField =
+        | 'trackLanguage.audioLanguage'
+        | 'trackLanguage.metadataLanguageCountry'
+        | 'trackLanguage.recordingCountry'
+        | 'trackLanguage.metadataLanguageId';
 
     // Hàm lấy giá trị hiển thị cho từng field
     const getFieldValue = (
         track: TrackData | undefined,
-        field: keyof TrackData
+        field: keyof TrackData | TrackLanguageField
     ) => {
         if (!track) return '';
 
         switch (field) {
-            case 'trackLanguage': {
-                if (typeof track.trackLanguage === 'object') {
-                    const lang = track.trackLanguage;
-                    const audioLang = lang?.audioLanguage?.name;
-                    const country = lang?.metadataLanguageCountry?.name;
-                    const recordingCountry = (lang as any)?.recordingCountry
-                        ?.name;
+            case 'trackLanguage.audioLanguage':
+                return track?.trackLanguage?.audioLanguage?.name ?? '';
 
-                    return (
-                        <div className="mt-1">
-                            {audioLang && (
-                                <div>
-                                    {messages('track.language')}: {audioLang}
-                                </div>
-                            )}
-                            {country && (
-                                <div>
-                                    {messages('common.language')} metadata:{' '}
-                                    {country}
-                                </div>
-                            )}
-                            {recordingCountry && (
-                                <div>
-                                    {messages('track.recordingCountry')}:{' '}
-                                    {recordingCountry}
-                                </div>
-                            )}
-                        </div>
-                    );
-                }
-                return '';
-            }
+            case 'trackLanguage.metadataLanguageCountry':
+                return (
+                    track?.trackLanguage?.metadataLanguageCountry?.name ?? ''
+                );
+
+            case 'trackLanguage.metadataLanguageId':
+                return track?.trackLanguage?.metadataLanguage?.name ?? '';
+
+            case 'trackLanguage.recordingCountry':
+                return track?.trackLanguage?.recordingCountry?.name ?? '';
 
             case 'primaryGenreId':
                 return track.primaryGenre?.name || track.primaryGenreId || '';
@@ -100,13 +94,13 @@ export default function TracksInfo({}: Props) {
     const renderField = (
         trackIndex: number,
         label: string,
-        field: keyof TrackData,
+        field: keyof TrackData | TrackLanguageField,
         isRequired: boolean = false
     ) => {
         const track = tracksData?.items[trackIndex];
         const value = getFieldValue(track, field);
         return (
-            <div className="flex justify-between">
+            <div className="rounded-lg bg-white px-4 py-2">
                 <div>
                     <p className="font-medium">
                         {label}{' '}
@@ -148,38 +142,83 @@ export default function TracksInfo({}: Props) {
             </div> */}
 
             <div className="flex flex-col gap-2">
-                {tracksData?.items?.map((track: TrackData, index: number) => (
-                    <Collapse
-                        key={String(index + 1)}
-                        className="release-review-collapse !border-none !bg-main !py-2 dark:!bg-zinc-900"
-                        size="small"
-                        bordered={false}
-                    >
-                        <Collapse.Panel
-                            header={
-                                <span className="text-base font-medium">
-                                    {index + 1}.{track.title || 'Track'}
-                                </span>
+                {tracksData?.items?.map((track: TrackData, index: number) => {
+                    const errorCount = releaseValidateData?.reduce(
+                        (pre, current) => {
+                            if (current?.trackId === track.id) {
+                                return pre + 1;
                             }
+                            return pre;
+                        },
+                        0
+                    );
+
+                    return (
+                        <Collapse
                             key={String(index + 1)}
+                            className="release-review-collapse !border-none !bg-main !py-2 dark:!bg-zinc-900"
+                            size="small"
+                            bordered={false}
                         >
-                            <div>
-                                <TrackMetadataInfoItem
-                                    label={messages('track.label')}
-                                >
+                            <Collapse.Panel
+                                header={
+                                    <div className="flex justify-between">
+                                        <span className="text-base">
+                                            {index + 1}.{track.title || 'Track'}
+                                        </span>
+                                        {errorCount > 0 && (
+                                            <div className="flex items-center gap-1 text-red-500">
+                                                <span>{errorCount}</span>
+                                                <CustomTooltip
+                                                    title={`${errorCount} ${messages(
+                                                        'common.errors'
+                                                    )}`}
+                                                >
+                                                    <OctagonAlert
+                                                        size={SIZE_ICON}
+                                                    />
+                                                </CustomTooltip>
+                                            </div>
+                                        )}
+                                        {errorCount <= 0 && (
+                                            <CircleCheck
+                                                className="text-green-500"
+                                                size={SIZE_ICON}
+                                            />
+                                        )}
+                                    </div>
+                                }
+                                key={String(index + 1)}
+                            >
+                                <div className="grid grid-cols-2 gap-4 px-4">
                                     {renderField(
                                         index,
                                         messages('track.name'),
                                         'title',
                                         true
                                     )}
-                                    {renderField(index, 'ISRC', 'isrc')}
-                                    {/* {renderField(index, 'ISWC', 'iswc')} */}
                                     {renderField(
                                         index,
                                         messages('formFields.tracks.version'),
                                         'version'
                                     )}
+                                    <div className="col-span-2 rounded-lg bg-white px-4 py-2">
+                                        {track?.trackArtists?.map(
+                                            (
+                                                trackArtist: TrackArtistData,
+                                                index: number
+                                            ) => (
+                                                <ArtistItem
+                                                    key={trackArtist.id}
+                                                    data={{
+                                                        artist: trackArtist?.artist,
+                                                        role: trackArtist?.artistRole,
+                                                    }}
+                                                />
+                                            )
+                                        )}
+                                    </div>
+
                                     {renderField(
                                         index,
                                         messages('genres.primary'),
@@ -191,32 +230,7 @@ export default function TracksInfo({}: Props) {
                                         messages('formFields.tracks.subGenres'),
                                         'subGenreId'
                                     )}
-                                </TrackMetadataInfoItem>
-
-                                {/* Thông tin nghệ sĩ */}
-                                <TrackMetadataInfoItem
-                                    label={messages('artist.label')}
-                                >
-                                    {track?.trackArtists?.map(
-                                        (
-                                            trackArtist: TrackArtistData,
-                                            index: number
-                                        ) => (
-                                            <ArtistItem
-                                                key={trackArtist.id}
-                                                data={{
-                                                    artist: trackArtist?.artist,
-                                                    role: trackArtist?.artistRole,
-                                                }}
-                                            />
-                                        )
-                                    )}
-                                </TrackMetadataInfoItem>
-
-                                {/* Các metadata khác */}
-                                <TrackMetadataInfoItem
-                                    label={messages('release.otherMetadata')}
-                                >
+                                    {renderField(index, 'ISRC', 'isrc')}
                                     {renderField(
                                         index,
                                         messages(
@@ -227,14 +241,30 @@ export default function TracksInfo({}: Props) {
                                     )}
                                     {renderField(
                                         index,
-                                        messages('language.label'),
-                                        'trackLanguage',
+                                        messages('formFields.audioLanguageId'),
+                                        'trackLanguage.audioLanguage',
                                         true
                                     )}
                                     {renderField(
                                         index,
-                                        messages('formFields.pLineOwner'),
-                                        'pLineOwner',
+                                        messages(
+                                            'formFields.metadataLanguageCountryId'
+                                        ),
+                                        'trackLanguage.metadataLanguageCountry',
+                                        true
+                                    )}
+                                    {renderField(
+                                        index,
+                                        messages(
+                                            'formFields.recordingCountryId'
+                                        ),
+                                        'trackLanguage.recordingCountry',
+                                        true
+                                    )}
+                                    {renderField(
+                                        index,
+                                        messages('formFields.metaDataLanguage'),
+                                        'trackLanguage.metadataLanguageId',
                                         true
                                     )}
                                     {renderField(
@@ -245,16 +275,29 @@ export default function TracksInfo({}: Props) {
                                         'trackSensitiveId',
                                         true
                                     )}
+
+                                    {renderField(
+                                        index,
+                                        messages('formFields.pLineOwner'),
+                                        'pLineOwner',
+                                        true
+                                    )}
+                                    {renderField(
+                                        index,
+                                        messages('formFields.pLineYear'),
+                                        'pLineYear',
+                                        true
+                                    )}
                                     {renderField(
                                         index,
                                         messages('trackType.label'),
                                         'trackTypeId'
                                     )}
-                                </TrackMetadataInfoItem>
-                            </div>
-                        </Collapse.Panel>
-                    </Collapse>
-                ))}
+                                </div>
+                            </Collapse.Panel>
+                        </Collapse>
+                    );
+                })}
             </div>
         </div>
     );

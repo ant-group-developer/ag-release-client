@@ -8,7 +8,7 @@ export default function AppPageWrapper({
     const { token } = theme.useToken();
     return (
         <div
-            className="min-h-[calc(100vh-64px)]"
+            // className="min-h-[calc(100vh-64px)]"
             style={{ backgroundColor: token.colorBgLayout }}
         >
             {children}

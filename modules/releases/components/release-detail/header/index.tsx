@@ -303,7 +303,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                             </AppFormItem>
                         </CustomTooltip>
                         {/* release info */}
-                        <ReleaseInfo isScrolled />
+                        <ReleaseInfo isScrolled={isScrolled} />
                     </div>
                     {!isCreateReleasePage && (
                         <div className="flex flex-col justify-between gap-2">

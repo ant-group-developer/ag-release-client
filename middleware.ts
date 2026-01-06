@@ -9,7 +9,7 @@ const nextIntl = createNextIntlMiddleware(routing);
 
 export async function middleware(req: NextRequest) {
     const { pathname } = req.nextUrl;
-
+    const response = NextResponse.next();
     if (pathname.startsWith('/api') && !pathname.startsWith('/api/v1')) {
         return NextResponse.next();
     }
@@ -65,6 +65,13 @@ export async function middleware(req: NextRequest) {
         res.headers.set('Authorization', `Bearer ${token.accessToken}`);
         // *don’t* call nextIntl here—this is an API route
         return res;
+    }
+
+    if (req.nextUrl.pathname.startsWith('/api/v1')) {
+        const accessToken = token?.accessToken;
+        if (accessToken) {
+            response.headers.set('Authorization', 'Bearer ' + accessToken);
+        }
     }
 
     if (pathname.startsWith('/api/proxy')) {
