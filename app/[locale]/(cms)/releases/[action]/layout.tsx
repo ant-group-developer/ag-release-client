@@ -241,7 +241,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
 
     return (
         <div
-            className="flex h-full"
+            className="flex h-full overflow-x-clip"
             style={{ backgroundColor: token.colorBgLayout }}
             ref={scrollContainerRef}
            

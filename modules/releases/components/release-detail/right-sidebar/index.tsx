@@ -112,7 +112,7 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
     return (
         <div
             className={cn(
-                'sticky top-0 h-[calc(100vh-4rem)] w-[300px] shrink-0 border-l transition-all duration-300',
+                'sticky top-0 h-[calc(100vh-4rem)] w-[300px] shrink-0 border-l border-r transition-all duration-300',
                 isSidebarOpen ? 'w-[300px]' : 'w-[75px]'
             )}
             style={{
@@ -130,7 +130,12 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                 >
                     {isSidebarOpen ? (
                         <>
-                            <h3 className="grow font-semibold text-red-500">
+                            <h3 className={cn(
+                                "flex-1 font-semibold text-red-500 text-nowrap transition-all duration-200",
+                                isSidebarOpen 
+                                    ? "opacity-100 w-auto" 
+                                    : "opacity-0 w-0 overflow-hidden"
+                            )}>
                                 {`${messages('validation.error')} (${errorCount})`}
                             </h3>
                             {
@@ -157,9 +162,21 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                 <ScrollArea className="h-[86vh]">
                     <div className="w-full max-w-[300px] p-3">
                         {/* Errors */}
-                        <div className="mb-4">
+                        {!isSidebarOpen && (
+                            <div>
+                                <h4 className="mb-2 flex items-center gap-2 text-red-500">
+                                    <AlertTriangle size={SIZE_ICON} />(
+                                    {errorCount})
+                                </h4>
+                            </div>
+                        )}
+                        <div className="mb-4 ">
                             {isSidebarOpen && (
-                                <ul className="flex flex-col gap-1 space-y-2">
+                                <ul className={cn("flex flex-col gap-1 space-y-2 transition-opacity duration-200",
+                                    isSidebarOpen
+                                    ? 'opacity-100 delay-100'
+                                    : 'opacity-0 pointer-events-none' 
+                                )}>
                                     {releaseValidateData?.length > 0 &&
                                         releaseValidateData?.map(
                                             (err, index) => {
@@ -216,15 +233,7 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                             )}
                         </div>
 
-                        {/* errors */}
-                        {!isSidebarOpen && (
-                            <div>
-                                <h4 className="mb-2 flex items-center gap-2 text-red-500">
-                                    <AlertTriangle size={SIZE_ICON} />(
-                                    {errorCount})
-                                </h4>
-                            </div>
-                        )}
+                      
                     </div>
                 </ScrollArea>
                 {/* </div> */}
