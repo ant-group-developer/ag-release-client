@@ -202,10 +202,13 @@ export default function IssueTable({ dataFilter, ...props }: Props) {
         <AppProTable
             key="issueTable"
             {...props}
-            className={`rounded-t-lg px-4 ${props?.className}`}
+            className={`rounded-t-lg  ${props?.className}`}
             style={{
                 backgroundColor: token.colorBgContainer,
                 ...props?.style,
+            }}
+            toolbar={{
+                className: 'px-4',
             }}
             pagination={false}
             columns={column}

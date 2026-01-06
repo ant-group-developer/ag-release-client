@@ -11,6 +11,7 @@ import { Button, Form, Switch } from 'antd';
 import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useReleaseFormStore } from '../../hooks/release-form-store';
+import { useParams } from 'next/navigation';
 
 type Props = {
     disabled?: boolean;
@@ -22,6 +23,8 @@ export default function AddArtistContributorForm({ disabled = false }: Props) {
     const { active, deActive, isActive } = useActive();
     const [form] = Form.useForm();
     const releaseValues = useReleaseFormStore((state) => state.formValues);
+    const params = useParams();
+    const isCreateReleasePage = params['action'] === 'create';
 
     // apis
     const { createReleaseArtist } = useCreateReleaseArtist();
@@ -68,6 +71,7 @@ export default function AddArtistContributorForm({ disabled = false }: Props) {
                     ]}
                 >
                     <ArtistSelect
+                        disabled={disabled }
                         showSearch
                         // fallBack={dataEdit?.artist?.name}
                         placeholder={messages('artist.select')}
@@ -89,6 +93,7 @@ export default function AddArtistContributorForm({ disabled = false }: Props) {
                     ]}
                 >
                     <RoleArtistSelect
+                        disabled={disabled}
                         // fallBack={dataEdit?.artistRole?.name}
                         placeholder={messages('common.role')}
                         // disabledRoleIds={disabledRoleIds}
@@ -103,12 +108,12 @@ export default function AddArtistContributorForm({ disabled = false }: Props) {
                     name="addArtistToTracks"
                     valuePropName="checked"
                 >
-                    <Switch />
+                    <Switch disabled={disabled} />
                 </AppFormItem>
 
                 <div className="mt-4 flex items-center justify-end space-x-2">
                     <Button
-                        disabled={disabled || isActive}
+                        disabled={disabled || isActive }
                         loading={isActive}
                         onClick={() => form.submit()}
                         icon={

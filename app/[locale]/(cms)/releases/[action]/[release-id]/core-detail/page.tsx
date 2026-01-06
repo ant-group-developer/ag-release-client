@@ -12,8 +12,8 @@ import { useParams } from 'next/navigation';
 
 export default function CoreDetail() {
     const messages = useTranslations();
-    const params = useParams();
-    const formValues = useReleaseFormStore((state) => state.formValues);
+    // const params = useParams();
+    // const formValues = useReleaseFormStore((state) => state.formValues);
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as ReleaseArtist);
     const closeModal = useModalStore((state) => state.closeModal);

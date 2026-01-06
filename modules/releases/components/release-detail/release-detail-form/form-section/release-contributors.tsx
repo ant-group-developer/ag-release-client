@@ -33,8 +33,6 @@ export default function ReleaseContributorsSection({
     // );
 
     // variables
-    const isCreateReleasePage = params['action'] === 'create';
-    const isVariousArtist = watch('isVariousArtist');
     const releaseArtist = formValues.releaseArtists || [];
 
     // func

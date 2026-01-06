@@ -232,7 +232,10 @@ export default function TenantIssueTable({ dataFilter, ...props }: Props) {
             pagination={false}
             columns={column}
             rowClassName={'group'}
-            className={`rounded-t-lg px-4 ${props?.className}`}
+            className={`rounded-t-lg  ${props?.className}`}
+           toolbar={{
+            className: 'px-4'
+           }}
             style={{
                 backgroundColor: token.colorBgContainer,
                 ...props?.style,

@@ -10,6 +10,7 @@ import { Button, Form, Switch } from 'antd';
 import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useReleaseFormStore } from '../../hooks/release-form-store';
+import { useParams } from 'next/navigation';
 
 type Props = {
     disabled?: boolean;
@@ -21,6 +22,8 @@ export default function AddArtistForm({ disabled = false }: Props) {
     const { active, deActive, isActive } = useActive();
     const [form] = Form.useForm();
     const releaseValues = useReleaseFormStore((state) => state.formValues);
+    const params = useParams();
+    const isCreateReleasePage = params['action'] === 'create';
 
     // apis
     const { createReleaseArtist } = useCreateReleaseArtist();
@@ -109,7 +112,7 @@ export default function AddArtistForm({ disabled = false }: Props) {
 
                 <div className="mt-4 flex items-center justify-end space-x-2">
                     <Button
-                        disabled={disabled || isActive}
+                        disabled={disabled || isActive || isCreateReleasePage}
                         loading={isActive}
                         onClick={() => form.submit()}
                         icon={

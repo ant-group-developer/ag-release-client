@@ -68,20 +68,20 @@ export default function IssueLevel({}: Props) {
         );
     };
 
-    const handleDragEnd = (
-        preIndex: number,
-        afterIndex: number,
-        newData: IssueLevelData[]
-    ) => {
-        const payload = newData.map((item, index) => ({
-            id: item.id,
-            severityRank: index + 1,
-        }));
+    // const handleDragEnd = (
+    //     preIndex: number,
+    //     afterIndex: number,
+    //     newData: IssueLevelData[]
+    // ) => {
+    //     const payload = newData.map((item, index) => ({
+    //         id: item.id,
+    //         severityRank: index + 1,
+    //     }));
 
-        bulkUpdateIssueLevel({
-            issueLevels: payload,
-        });
-    };
+    //     bulkUpdateIssueLevel({
+    //         issueLevels: payload,
+    //     });
+    // };
 
     return (
         <AppPageWrapper>
@@ -100,7 +100,7 @@ export default function IssueLevel({}: Props) {
                     onChange={onChangeSort}
                 />
 
-                <IssueLevelTableV2
+                {/* <IssueLevelTableV2
                     sticky
                     dataSource={issueLevelData?.items}
                     pagination={{
@@ -111,7 +111,7 @@ export default function IssueLevel({}: Props) {
                     loading={isFetching}
                     dataFilter={dataFilter}
                     onChange={onChangeSort}
-                />
+                /> */}
 
                 {(typeModal === TYPE_MODAL_ISSUE_LEVEL.CREATE ||
                     typeModal === TYPE_MODAL_ISSUE_LEVEL.EDIT) && (

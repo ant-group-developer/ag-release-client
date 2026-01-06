@@ -15,6 +15,7 @@ import { TYPE_MODAL_USER, USER_ORDER_BY } from '@/modules/user/enums';
 import { useUserList } from '@/modules/user/hooks/use-get-user';
 import { useRemoveUser } from '@/modules/user/hooks/use-remove-user';
 import { DataFilterUser, UserData } from '@/modules/user/types/data';
+import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
 
 type Props = {};
@@ -22,7 +23,7 @@ type Props = {};
 export default function UserPage({}: Props) {
     // hooks - state
     const messages = useTranslations();
-
+    const { token } = theme.useToken();
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore<UserData>((state) => state.dataEdit);
@@ -79,6 +80,9 @@ export default function UserPage({}: Props) {
 
             <AppPagination
                 align="end"
+                style={{
+                    backgroundColor: token.colorBgContainer,
+                }}
                 current={data?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}
                 total={data.metadata?.totalItems}
