@@ -241,7 +241,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
 
     return (
         <div
-            className="flex h-full "
+            className="flex h-full"
             style={{ backgroundColor: token.colorBgLayout }}
             ref={scrollContainerRef}
            
@@ -251,7 +251,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     <DetailSkeleton />
                 </div>
             ) : (
-                <div className="mx-auto flex flex-1 flex-col px-8 ">
+                <div className="mx-auto flex flex-1 flex-col px-8 min-w-0">
                     <Breadcrumb items={breadcrumbItems} className="!py-4" />
                     <div
                         className="sticky top-0 z-10 mb-4 rounded-lg p-4"
