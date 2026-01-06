@@ -12,6 +12,7 @@ import { Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '../../enums';
 import AddArtistForm from './add-artist-form';
+import { useParams } from 'next/navigation';
 
 type Props = AppTableProps<ReleaseArtist> & {
     disabled?: boolean;
@@ -22,6 +23,7 @@ export default function ReleaseArtistTable({
     ...props
 }: Props) {
     const messages = useTranslations();
+
     const openModal = useModalStore((s) => s.openModal);
 
     const { updateReleaseArtist } = useUpdateReleaseArtist();

@@ -92,6 +92,7 @@ export default function ReleaseContributorsTable({
                                     artistRoleId: e,
                                 })
                             }
+                            disabled={disabled}
                         />
                     </div>
                 );
@@ -150,6 +151,7 @@ export default function ReleaseContributorsTable({
                                     record
                                 )
                             }
+                            disabled={disabled}
                         >
                             <Trash color="red" size={SIZE_ICON} />
                         </IconButton>

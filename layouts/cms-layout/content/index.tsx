@@ -12,7 +12,7 @@ function ContentComponent({ children }: Props) {
     return (
         <Content>
             <div
-                className="h-[calc(100vh-64px)] overflow-y-auto"
+                className="h-full"
             >
                 {children}
             </div>

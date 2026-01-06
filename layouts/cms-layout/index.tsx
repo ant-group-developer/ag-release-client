@@ -69,7 +69,11 @@ export default function CMSLayout({ children }: Props) {
                         }}
                     />
                     <Layout>
-                        <div className="">
+                        <div
+                            id='layout-scroll'
+                            className="h-[calc(100vh-4rem)] overflow-y-auto"
+                          
+                        >
                             <Content>{getChildren()}</Content>
                             <AppLoader
                                 className="bg-white"

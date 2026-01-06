@@ -36,6 +36,7 @@ export default function ReleaseDetailForm() {
     const { active, deActive, isActive } = useActive();
     const { token } = theme.useToken();
     const hash = useHash();
+   
 
     // zustand store - state
     const formValues = useReleaseFormStore((state) => state.formValues);
@@ -147,48 +148,47 @@ export default function ReleaseDetailForm() {
         <ConfigProvider theme={customTheme}>
             <FormProvider {...formMethods}>
                 <form onSubmit={handleSubmit(handleNext, handleFormError)}>
-                    <div className="flex flex-col gap-4 mt-4">
+                    <div className="flex flex-col gap-4 ">
                         <ReleaseConfigurationSection
-                            isReadMode={isReadMode}
+                            isReadMode={isReadMode || isCreateReleasePage}
                             debouncedUpdate={debouncedUpdate}
                         />
 
                         <CodesSection
-                            isReadMode={isReadMode}
+                            isReadMode={isReadMode || isCreateReleasePage}
                             debouncedUpdate={debouncedUpdate}
                         />
 
                         <GenreLanguageSection
-                            isReadMode={isReadMode}
+                            isReadMode={isReadMode || isCreateReleasePage}
                             debouncedUpdate={debouncedUpdate}
                         />
 
                         <ReleaseArtistSection
-                            isReadMode={isReadMode}
+                            isReadMode={isReadMode || isCreateReleasePage}
                             debouncedUpdate={debouncedUpdate}
                         />
 
                         <ReleaseContributorsSection
-                            isReadMode={isReadMode}
+                            isReadMode={isReadMode || isCreateReleasePage}
                             debouncedUpdate={debouncedUpdate}
                         />
 
                         <LegalNoticesSection
-                            isReadMode={isReadMode}
+                            isReadMode={isReadMode || isCreateReleasePage}
                             debouncedUpdate={debouncedUpdate}
                         />
                     </div>
 
-                    <div className="flex w-full justify-end">
-                        <Button
+                     <div className="flex w-full justify-end my-4">
+                       {!isCreateReleasePage &&  <Button
                             onClick={handleNext}
                             disabled={isReadMode}
                             type="primary"
-                            className="my-4"
                             loading={isActive}
                         >
                             {messages('common.continue')}
-                        </Button>
+                        </Button>}
                     </div>
                 </form>
             </FormProvider>

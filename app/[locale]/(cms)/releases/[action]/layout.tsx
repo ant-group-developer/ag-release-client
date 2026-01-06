@@ -205,19 +205,18 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             setIsScrolled(true);
             return;
         }
+            const el = document.getElementById('layout-scroll')
 
         // Lắng nghe scroll để set isScrolled chỉ khi ở trang core-detail
         const handleScroll = () => {
-            const scrollTop = scrollContainerRef.current?.scrollTop || 0;
-            setIsScrolled(scrollTop > 0);
+            setIsScrolled(el!.scrollTop > 0);
         };
-        const scrollEl = scrollContainerRef.current;
-        if (scrollEl) {
-            scrollEl.addEventListener('scroll', handleScroll);
+        if (el) {
+            el.addEventListener('scroll', handleScroll);
         }
         return () => {
-            if (scrollEl) {
-                scrollEl.removeEventListener('scroll', handleScroll);
+            if (el) {
+                el.removeEventListener('scroll', handleScroll);
             }
         };
     }, [isCoreDetailPage]);
@@ -242,9 +241,10 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
 
     return (
         <div
-            className="flex h-full overflow-y-auto"
+            className="flex h-full "
             style={{ backgroundColor: token.colorBgLayout }}
             ref={scrollContainerRef}
+           
         >
             {isReleaseDataLoading || !releaseData ? (
                 <div className="w-[100vw] px-8">
@@ -254,7 +254,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                 <div className="mx-auto flex flex-1 flex-col px-8 ">
                     <Breadcrumb items={breadcrumbItems} className="!py-4" />
                     <div
-                        className="sticky top-0 z-10 mb-6 rounded-lg p-4"
+                        className="sticky top-0 z-10 mb-4 rounded-lg p-4"
                         style={{
                             backgroundColor: token.colorBgContainer,
                         }}
