@@ -150,7 +150,7 @@ export default function ReleaseDetailForm() {
                 <form onSubmit={handleSubmit(handleNext, handleFormError)}>
                     <div className="flex flex-col gap-4 ">
                         <ReleaseConfigurationSection
-                            isReadMode={isReadMode || isCreateReleasePage}
+                            isReadMode={!isCreateReleasePage && isReadMode}
                             debouncedUpdate={debouncedUpdate}
                         />
 
