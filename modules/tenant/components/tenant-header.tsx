@@ -1,12 +1,6 @@
 import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
-import CreateButton from '@/components/ui/button/create-button';
 import { UseFilterProps } from '@/hooks/use-filter';
-import useModalStore from '@/hooks/use-modal';
-import { useAuth } from '@/modules/auth/hooks/use-auth';
-import { checkTenantType } from '@/modules/user/utils/role';
 import { theme } from 'antd';
-import { useTranslations } from 'next-intl';
-import { TYPE_MODAL_TENANT } from '../enums';
 import { DataFilterTenant } from '../types/data';
 import TenantHeaderFilter from './tenant-header-filter';
 
@@ -26,14 +20,14 @@ export default function TenantHeader({
     removeFilter,
     handleRefresh,
 }: Props) {
-    const messages = useTranslations();
-    const openModal = useModalStore((state) => state.openModal);
+    // const messages = useTranslations();
+    // const openModal = useModalStore((state) => state.openModal);
     const { token } = theme.useToken();
 
-    const {
-        profile: { tenantType },
-    } = useAuth();
-    const { isTypeWhiteLabel } = checkTenantType(tenantType);
+    // const {
+    //     profile: { tenantType },
+    // } = useAuth();
+    // const { isTypeWhiteLabel } = checkTenantType(tenantType);
 
     return (
         <AppHeader style={{ backgroundColor: token.colorBgContainer }}>
@@ -46,12 +40,8 @@ export default function TenantHeader({
                 />
             </AppHeaderGroup>
 
-            <AppHeaderGroup position="end" className="flex-1">
+            {/* <AppHeaderGroup position="end" className="flex-1">
                 <div className="flex items-center gap-2">
-                    {/* <Refresh
-                        handleRefresh={handleRefresh}
-                        lastTimeUpdated={lastUpdatedAt}
-                    /> */}
                     {isTypeWhiteLabel && (
                         <CreateButton
                             canCreate={true}
@@ -62,7 +52,7 @@ export default function TenantHeader({
                         />
                     )}
                 </div>
-            </AppHeaderGroup>
+            </AppHeaderGroup> */}
         </AppHeader>
     );
 }

@@ -8,7 +8,7 @@ import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import { LoadingType, useLoading } from '@/hooks/use-loading';
 import useModalStore from '@/hooks/use-modal';
-import ReleasesHeader from '@/modules/releases/components/header';
+import ReleasesHeaderV2 from '@/modules/releases/components/header/index-v2';
 import ReleasesTable from '@/modules/releases/components/table';
 import ReleasesGridTable from '@/modules/releases/components/table/grid-table';
 import { defaultVisibleColumnsReleases } from '@/modules/releases/constants';
@@ -114,7 +114,7 @@ export default function Releases({}: Props) {
 
     return (
         <AppContent>
-            <div
+            {/* <div
                 className="sticky top-44 z-10 border-t"
                 style={{
                     background: token.colorBgContainer,
@@ -130,28 +130,43 @@ export default function Releases({}: Props) {
                     visibleColumn={visibleColumns}
                     dataUpdatedAt={dataUpdatedAt}
                 />
+            </div> */}
+
+            <div>
+                <ReleasesHeaderV2
+                    dataFilter={dataFilter}
+                    onChangeFilter={onChangeFilter}
+                    canClearFilter={canClearFilter}
+                    removeFilter={removeFilter}
+                    handleRefresh={handleRefresh}
+                    handleChangeVisibleColumns={handleChangeVisibleColumns}
+                    visibleColumn={visibleColumns}
+                    dataUpdatedAt={dataUpdatedAt}
+                />
+
+                {layoutTable === LAYOUT_TABLE.LIST && (
+                    <ReleasesTable
+                        sticky={{ offsetHeader: 170 }}
+                        dataSource={releasesData?.items}
+                        loading={isReleaseDataLoading}
+                        onChangeFilter={onChangeFilter}
+                        pagination={{
+                            pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
+                            current: releasesData?.metadata?.currentPage,
+                        }}
+                        dataFilter={dataFilter}
+                    />
+                )}
+
+                {layoutTable === LAYOUT_TABLE.GRID && (
+                    <ReleasesGridTable
+                        data={releasesData?.items}
+                        loading={false}
+                    />
+                )}
             </div>
 
-            {layoutTable === LAYOUT_TABLE.LIST && (
-                <ReleasesTable
-                    sticky={{ offsetHeader: 216 }}
-                    dataSource={releasesData?.items}
-                    loading={isReleaseDataLoading}
-                    onChangeFilter={onChangeFilter}
-                    pagination={{
-                        pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
-                        current: releasesData?.metadata?.currentPage,
-                    }}
-                    dataFilter={dataFilter}
-                />
-            )}
-
-            {layoutTable === LAYOUT_TABLE.GRID && (
-                <ReleasesGridTable data={releasesData?.items} loading={false} />
-            )}
-
             <AppPagination
-                className="border-b"
                 align="end"
                 current={releasesData?.metadata?.currentPage}
                 pageSize={dataFilter.pageSize}
@@ -161,6 +176,10 @@ export default function Releases({}: Props) {
                 showSizeChanger
                 showQuickJumper
                 pageSizeOptions={PAGE_SIZE_OPTIONS}
+                style={{
+                    backgroundColor: token.colorBgContainer,
+                }}
+                className="rounded-b-md"
             />
 
             {typeModal === TYPE_MODAL_RELEASE.DELETE && (

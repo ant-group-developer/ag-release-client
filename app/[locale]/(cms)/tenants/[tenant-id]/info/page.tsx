@@ -1,6 +1,5 @@
 'use client';
 
-import AppContainer from '@/components/ant-music/app-container';
 import SubmitButton from '@/components/ui/button/submit-button';
 import { useActive } from '@/hooks/use-active';
 import TenantForm from '@/modules/tenant/components/tenant-create/tenant-form';
@@ -10,7 +9,7 @@ import { UpdateTenant, UpdateTenantPayload } from '@/modules/tenant/types/data';
 import { getTenantOwnerId } from '@/modules/tenant/utils';
 import { uploadApi } from '@/modules/upload/apis';
 import { ENTITY_TYPE_PICTURE } from '@/modules/upload/types/data';
-import { Form } from 'antd';
+import { Form, theme } from 'antd';
 import { useParams } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -18,6 +17,7 @@ type Props = {};
 
 function DetailTenantPage({}: Props) {
     const { active, isActive, deActive } = useActive();
+    const { token } = theme.useToken();
 
     const value = useParams();
     const tenantId = value['tenant-id'] as string;
@@ -129,22 +129,25 @@ function DetailTenantPage({}: Props) {
     }, [dataTenant, form]);
 
     return (
-        <AppContainer>
-            <div className="max-w-screen-xl">
-                <TenantForm
-                    layout="vertical"
-                    wrapperClassName="grid grid-cols-1 gap-5 lg:grid-cols-2"
-                    form={form}
-                    submitProps={{ loading: isActive }}
-                    excludeIds={[tenantId]}
-                    showSubmit={false}
-                    tenantId={tenantId}
-                />
-                <div className="text-right">
-                    <SubmitButton onClick={onFinish} loading={isActive} />
-                </div>
+        <div
+            style={{
+                backgroundColor: token?.colorBgContainer,
+            }}
+            className="rounded-lg p-4"
+        >
+            <TenantForm
+                layout="vertical"
+                wrapperClassName="grid grid-cols-1 gap-5 lg:grid-cols-2"
+                form={form}
+                submitProps={{ loading: isActive }}
+                excludeIds={[tenantId]}
+                showSubmit={false}
+                tenantId={tenantId}
+            />
+            <div className="text-right">
+                <SubmitButton onClick={onFinish} loading={isActive} />
             </div>
-        </AppContainer>
+        </div>
     );
 }
 

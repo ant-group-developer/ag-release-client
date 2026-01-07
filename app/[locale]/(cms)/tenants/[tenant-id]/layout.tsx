@@ -1,6 +1,5 @@
 'use client';
 
-import { SIZE_ICON_SMALL } from '@/constants/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { getAvatarPlaceholder } from '@/helpers/common';
 import { useLoadingStatus } from '@/hooks/use-loading-status';
@@ -15,6 +14,7 @@ import {
 } from '@/modules/tenant/utils';
 import {
     Avatar,
+    Breadcrumb,
     ConfigProvider,
     Spin,
     Tabs,
@@ -22,7 +22,6 @@ import {
     theme,
     Typography,
 } from 'antd';
-import { ArrowLeft } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { PropsWithChildren } from 'react';
@@ -43,6 +42,16 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
         mutationKeys: [tenantQueryKeys.all],
     });
 
+    const breadcrumbItems = [
+        {
+            title: messages('tenant.label'),
+            href: APP_ROUTES.TENANT,
+        },
+        {
+            title: dataTenant?.name,
+        },
+    ];
+
     const items: TabsProps['items'] = [
         {
             key: TENANT_TABS.INFO,
@@ -59,7 +68,7 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
             key: TENANT_TABS.USER,
             label: (
                 <Link href={getTenantDetailRoute(tenantId, TENANT_TABS.USER)}>
-                    {messages('user.label')}
+                    {messages('common.users')}
                 </Link>
             ),
         },
@@ -69,7 +78,7 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
                 <Link
                     href={getTenantDetailRoute(tenantId, TENANT_TABS.RELEASE)}
                 >
-                    {messages('release.label')}
+                    {messages('release.releases')}
                 </Link>
             ),
         },
@@ -77,7 +86,7 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
             key: TENANT_TABS.TRACK,
             label: (
                 <Link href={getTenantDetailRoute(tenantId, TENANT_TABS.TRACK)}>
-                    {messages('track.label')}
+                    {messages('common.tracks')}
                 </Link>
             ),
         },
@@ -102,20 +111,22 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
 
     return (
         <Spin spinning={isLoading}>
-            <div className="mx-auto max-w-screen-2xl px-2 pb-5">
+            <div className="space-y-4 px-8 py-4">
+                <Breadcrumb items={breadcrumbItems} className="" />
+
                 <div
-                    className="sticky top-0 z-10"
+                    className="sticky top-0 z-10 mt-4 rounded-lg p-4"
                     style={{
                         background: token.colorBgContainer,
                     }}
                 >
-                    <Link
+                    {/* <Link
                         href={APP_ROUTES.TENANT}
                         className="flex w-fit items-center gap-1 py-2 hover:underline"
                     >
                         <ArrowLeft size={SIZE_ICON_SMALL} />
                         {messages('tenant.back')}
-                    </Link>
+                    </Link> */}
                     <div className="mb-5 mt-3 flex gap-5">
                         <Avatar
                             src={dataTenant.logo || dataTenant.icon}
@@ -148,7 +159,14 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
                         <Tabs items={items} activeKey={tabKey} />
                     </ConfigProvider>
                 </div>
-                {children}
+                <div
+                    // style={{
+                    //     backgroundColor: token.colorBgContainer,
+                    // }}
+                    className="rounded-lg"
+                >
+                    {children}
+                </div>
             </div>
         </Spin>
     );

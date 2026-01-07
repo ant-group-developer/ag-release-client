@@ -8,7 +8,7 @@ import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import CreateUserModal from '@/modules/user/components/user-create';
-import UserHeader from '@/modules/user/components/user-header';
+import UserHeaderV2 from '@/modules/user/components/user-header-v2';
 import InviteUserModal from '@/modules/user/components/user-invite';
 import UserTable from '@/modules/user/components/user-table';
 import UpdateUserModal from '@/modules/user/components/user-update';
@@ -60,7 +60,7 @@ export default function UserPage({}: Props) {
 
     return (
         <AppContent className="">
-            <div
+            {/* <div
                 className="sticky top-44 z-10 border-t"
                 style={{
                     background: token.colorBgContainer,
@@ -72,20 +72,30 @@ export default function UserPage({}: Props) {
                     canClearFilter={canClearFilter}
                     removeFilter={removeFilter}
                 />
+            </div> */}
+
+            <div className="space-y-4">
+                <UserHeaderV2
+                    dataFilter={dataFilter}
+                    onChangeFilter={onChangeFilter}
+                    canClearFilter={canClearFilter}
+                    removeFilter={removeFilter}
+                />
+
+                <UserTable
+                    sticky={{ offsetHeader: 170 }}
+                    dataSource={data.items}
+                    // scroll={{ y: getScrollYHeight(height, width, 40, 47) }}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: data.metadata.currentPage,
+                        total: data.metadata.totalItems,
+                    }}
+                    // loading={isFetching || isPending}
+                    dataFilter={dataFilter}
+                    onChange={onChangeSort}
+                />
             </div>
-            <UserTable
-                sticky={{ offsetHeader: 216 }}
-                dataSource={data.items}
-                // scroll={{ y: getScrollYHeight(height, width, 40, 47) }}
-                pagination={{
-                    pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                    current: data.metadata.currentPage,
-                    total: data.metadata.totalItems,
-                }}
-                // loading={isFetching || isPending}
-                dataFilter={dataFilter}
-                onChange={onChangeSort}
-            />
 
             <AppPagination
                 align="end"
@@ -97,6 +107,10 @@ export default function UserPage({}: Props) {
                 showSizeChanger
                 showQuickJumper
                 pageSizeOptions={PAGE_SIZE_OPTIONS}
+                style={{
+                    backgroundColor: token.colorBgContainer,
+                }}
+                className="rounded-b-md"
             />
 
             {typeModal === TYPE_MODAL_USER.CREATE && (

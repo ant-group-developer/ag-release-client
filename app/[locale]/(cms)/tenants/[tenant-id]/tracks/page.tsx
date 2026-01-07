@@ -6,7 +6,7 @@ import { LAYOUT_TABLE, SESSION_STORAGE_KEY } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import { ReleasesDataFilter } from '@/modules/releases/types';
-import TracksHeader from '@/modules/tracks/components/header';
+import TrackHeaderV2 from '@/modules/tracks/components/header/index-v2';
 import TracksTable from '@/modules/tracks/components/table';
 import TracksGridTable from '@/modules/tracks/components/table/grid-table';
 import { defaultVisibleColumnsTracks } from '@/modules/tracks/constants';
@@ -88,7 +88,7 @@ export default function Tracks({}: Props) {
 
     return (
         <AppContent>
-            <div
+            {/* <div
                 className="sticky top-44 z-10 border-t"
                 style={{
                     background: token.colorBgContainer,
@@ -104,10 +104,20 @@ export default function Tracks({}: Props) {
                     handleChangeVisibleColumns={handleChangeVisibleColumns}
                     visibleColumn={visibleColumns}
                 />
-            </div>
+            </div> */}
+
+            <TrackHeaderV2
+                dataFilter={dataFilter}
+                onChangeFilter={onChangeFilter}
+                canClearFilter={canClearFilter}
+                removeFilter={removeFilter}
+                handleRefresh={handleRefresh}
+                dataUpdatedAt={dataUpdatedAt}
+            />
+
             {layoutTable === LAYOUT_TABLE.LIST && (
                 <TracksTable
-                    sticky={{ offsetHeader: 216 }}
+                    sticky={{ offsetHeader: 170 }}
                     dataSource={tracksData.items}
                     loading={isTrackDataLoading}
                     pagination={{
@@ -126,7 +136,6 @@ export default function Tracks({}: Props) {
             )}
 
             <AppPagination
-                className="border-b"
                 align="end"
                 current={tracksData?.metadata?.currentPage}
                 pageSize={dataFilter?.pageSize}
@@ -136,6 +145,10 @@ export default function Tracks({}: Props) {
                 showSizeChanger
                 showQuickJumper
                 pageSizeOptions={PAGE_SIZE_OPTIONS}
+                style={{
+                    backgroundColor: token.colorBgContainer,
+                }}
+                className="rounded-b-md"
             />
         </AppContent>
     );

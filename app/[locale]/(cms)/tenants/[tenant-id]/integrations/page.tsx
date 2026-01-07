@@ -179,7 +179,7 @@ function TenantDeals({}: Props) {
     return (
         <div>
             <AppTable
-                sticky={{ offsetHeader: 178 }}
+                sticky={{ offsetHeader: 170 }}
                 columns={column}
                 dataSource={dataSource}
                 loading={isFetching}

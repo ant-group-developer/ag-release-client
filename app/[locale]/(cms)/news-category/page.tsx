@@ -34,7 +34,7 @@ export default function NewsCategory({}: Props) {
             page: 1,
             pageSize: PAGE_SIZE,
         });
-    const openModal = useModalStore((state) => state.openModal);
+    // const openModal = useModalStore((state) => state.openModal);
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore<NewsCategoryData>((state) => state.dataEdit);
@@ -69,11 +69,13 @@ export default function NewsCategory({}: Props) {
     return (
         <AppPageWrapper>
             <PageContainer title={messages('newsCategory.label')}>
-                <NewsCategoryHeader
-                    dataFilter={dataFilter}
-                    onSearch={onSearch}
-                />
                 <NewsCategoryTable
+                    title={() => (
+                        <NewsCategoryHeader
+                            dataFilter={dataFilter}
+                            onSearch={onSearch}
+                        />
+                    )}
                     sticky
                     dataSource={newsCategoryData?.items}
                     pagination={{

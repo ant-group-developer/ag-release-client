@@ -220,10 +220,13 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
             columns={column}
             rowClassName={'group cursor-pointer'}
             expandable={expandable}
-            className={`rounded-t-lg px-4 ${props?.className}`}
+            className={`rounded-t-lg ${props?.className}`}
             style={{
                 backgroundColor: token.colorBgContainer,
                 ...props?.style,
+            }}
+            toolbar={{
+                className: 'px-4',
             }}
             tableAlertRender={({
                 selectedRowKeys,
