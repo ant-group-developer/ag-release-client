@@ -11,7 +11,6 @@ import useModalStore from '@/hooks/use-modal';
 import { IssueLevelHeader } from '@/modules/issue-level/components/header';
 import IssueLevelFormModal from '@/modules/issue-level/components/modal/issue-level-form';
 import IssueLevelTable from '@/modules/issue-level/components/table';
-import IssueLevelTableV2 from '@/modules/issue-level/components/table/index-v2';
 import { TYPE_MODAL_ISSUE_LEVEL } from '@/modules/issue-level/enums';
 import { useBulkUpdateIssueLevel } from '@/modules/issue-level/hooks/use-bulk-update';
 import { useDeleteIssueLevel } from '@/modules/issue-level/hooks/use-delete';
@@ -86,8 +85,13 @@ export default function IssueLevel({}: Props) {
     return (
         <AppPageWrapper>
             <PageContainer title={messages('issueLevel.label')}>
-                <IssueLevelHeader dataFilter={dataFilter} onSearch={onSearch} />
                 <IssueLevelTable
+                    title={() => (
+                        <IssueLevelHeader
+                            dataFilter={dataFilter}
+                            onSearch={onSearch}
+                        />
+                    )}
                     sticky
                     dataSource={issueLevelData?.items}
                     pagination={{

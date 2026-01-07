@@ -2,7 +2,9 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ArtistSelect from '@/components/ui/select/artist-select';
 import { SIZE_ICON } from '@/constants/common';
+import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useActive } from '@/hooks/use-active';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { TrackData } from '@/modules/releases/types';
 import { useCreateTrackArtist } from '@/modules/track-artist/hooks/use-create-track-artist';
 import { CreateTrackArtistPayload } from '@/modules/track-artist/types/payload';
@@ -20,9 +22,13 @@ export default function AddTrackArtistForm({ trackData }: Props) {
     const messages = useTranslations();
     const { active, deActive, isActive } = useActive();
     const [form] = Form.useForm();
+    const releaseAction = useReleaseActionStore((s) => s.action);
 
     // apis
     const { createTrackArtist } = useCreateTrackArtist();
+
+    // const
+    const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
 
     // func
     const handleSubmit = async (values: any) => {
@@ -68,6 +74,7 @@ export default function AddTrackArtistForm({ trackData }: Props) {
                         placeholder={messages('artist.select')}
                         // disabledArtistIds={disabledArtistIds}
                         allowClear
+                        disabled={isReadMode}
                     />
                 </AppFormItem>
 
@@ -94,7 +101,7 @@ export default function AddTrackArtistForm({ trackData }: Props) {
 
                 <div className="mt-4 flex items-center justify-end">
                     <Button
-                        disabled={isActive}
+                        disabled={isActive || isReadMode}
                         loading={isActive}
                         onClick={() => form.submit()}
                         icon={

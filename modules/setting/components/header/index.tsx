@@ -15,7 +15,7 @@ export default function BackupDatabaseHeader({ dataFilter, onSearch }: Props) {
     const { backupDatabase: backupDatabaseNow, isPending: isBackupPending } =
         useBackupDatabase();
     return (
-        <AppHeader className="app-header px-0 pb-3">
+        <AppHeader className="app-header p-4">
             <AppHeaderGroup>
                 <div>
                     <AppSearch

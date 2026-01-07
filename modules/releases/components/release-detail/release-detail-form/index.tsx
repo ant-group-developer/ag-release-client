@@ -36,7 +36,6 @@ export default function ReleaseDetailForm() {
     const { active, deActive, isActive } = useActive();
     const { token } = theme.useToken();
     const hash = useHash();
-   
 
     // zustand store - state
     const formValues = useReleaseFormStore((state) => state.formValues);
@@ -63,7 +62,7 @@ export default function ReleaseDetailForm() {
         mode: 'onChange',
         reValidateMode: 'onChange',
     });
-    
+
     const {
         control,
         handleSubmit,
@@ -148,7 +147,7 @@ export default function ReleaseDetailForm() {
         <ConfigProvider theme={customTheme}>
             <FormProvider {...formMethods}>
                 <form onSubmit={handleSubmit(handleNext, handleFormError)}>
-                    <div className="flex flex-col gap-4 ">
+                    <div className="flex flex-col gap-4">
                         <ReleaseConfigurationSection
                             isReadMode={!isCreateReleasePage && isReadMode}
                             debouncedUpdate={debouncedUpdate}
@@ -180,15 +179,17 @@ export default function ReleaseDetailForm() {
                         />
                     </div>
 
-                     <div className="flex w-full justify-end my-4">
-                       {!isCreateReleasePage &&  <Button
-                            onClick={handleNext}
-                            disabled={isReadMode}
-                            type="primary"
-                            loading={isActive}
-                        >
-                            {messages('common.continue')}
-                        </Button>}
+                    <div className="my-4 flex w-full justify-end">
+                        {!isCreateReleasePage && (
+                            <Button
+                                onClick={handleNext}
+                                disabled={isReadMode}
+                                type="primary"
+                                loading={isActive}
+                            >
+                                {messages('common.continue')}
+                            </Button>
+                        )}
                     </div>
                 </form>
             </FormProvider>

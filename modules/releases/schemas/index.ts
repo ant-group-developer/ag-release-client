@@ -76,14 +76,14 @@ export const releaseSchema = (messages: any) =>
         title: z
             .string()
             .min(1, messages('validation.min', { number: 1 }))
-            .max(100, messages('validation.max', { number: 100 }))
+            .max(150, messages('validation.max', { number: 150 }))
             .nullable()
             .refine((val) => val !== null && val !== '', {
                 message: messages('validation.input'),
             }),
         version: z
             .string()
-            .max(50, messages('validation.max', { number: 50 }))
+            .max(150, messages('validation.max', { number: 150 }))
             .optional()
             .nullable(),
         albumFormatId: z

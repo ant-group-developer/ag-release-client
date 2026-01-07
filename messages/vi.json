@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "users": "Người dùng",
         "errors": "Lỗi",
         "contributors": "Người đóng góp",
         "add": "Thêm",
@@ -1029,6 +1030,7 @@
     },
 
     "genre": {
+        "genres": "Thể loại",
         "label": "Thể loại",
         "message": {
             "success": {

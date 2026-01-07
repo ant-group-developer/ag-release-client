@@ -105,13 +105,18 @@ export default function DistributionHeaderV2({
                         label: item?.name,
                     }))}
                     mode="multiple"
+                    placeholder={messages('placeholder.filterBy', {
+                        value: messages('release.type').toLowerCase(),
+                    })}
                 />
                 <ProForm.Item name="artistId" label={messages('artist.label')}>
                     <ArtistSelect
                         showCreate={false}
                         allowClear
                         dropdownMatchSelectWidth={false}
-                        placeholder={messages('placeholder.selectArtist')}
+                        placeholder={messages('placeholder.filterBy', {
+                            value: messages('artist.artists').toLowerCase(),
+                        })}
                         mode="multiple"
                     />
                 </ProForm.Item>
@@ -121,14 +126,17 @@ export default function DistributionHeaderV2({
                     label={messages('common.status')}
                     options={releaseStatus}
                     mode="multiple"
+                    placeholder={messages('placeholder.filterBy', {
+                        value: messages('common.status').toLowerCase(),
+                    })}
                 />
 
                 <ProForm.Item name="genres" label={messages('genre.label')}>
                     <GenresSelect
                         allowClear
-                        placeholder={messages(
-                            'release.placeholder.selectGenres'
-                        )}
+                        placeholder={messages('placeholder.filterBy', {
+                            value: messages('genre.genres').toLowerCase(),
+                        })}
                         mode="multiple"
                     />
                 </ProForm.Item>

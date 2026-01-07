@@ -253,8 +253,8 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                 layout="vertical"
                 showSubmit={false}
             >
-                <div className="flex justify-between">
-                    <div className="flex w-full items-start gap-4">
+                <div className="flex justify-between gap-4">
+                    <div className="flex w-3/4 items-start gap-4">
                         <CustomTooltip
                             title={
                                 <>
@@ -302,6 +302,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                 />
                             </AppFormItem>
                         </CustomTooltip>
+
                         {/* release info */}
                         <ReleaseInfo isScrolled={isScrolled} />
                     </div>

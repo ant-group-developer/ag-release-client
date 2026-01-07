@@ -2,7 +2,9 @@ import IconButton from '@/components/ui/button/icon-button';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { SIZE_ICON } from '@/constants/common';
+import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useActive } from '@/hooks/use-active';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { TrackData } from '@/modules/releases/types';
 import { useDeleteTrackArtist } from '@/modules/track-artist/hooks/use-delete-track-artist';
@@ -26,6 +28,8 @@ export default function TrackArtistTable({ trackData, ...props }: Props) {
     // hooks
     const { active, deActive, isActive } = useActive();
     const messages = useTranslations();
+    const releaseAction = useReleaseActionStore((s) => s.action);
+    const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
 
     // state
     const [deleteArtist, setDeleteArtist] = useState<{
@@ -158,6 +162,7 @@ export default function TrackArtistTable({ trackData, ...props }: Props) {
                 return (
                     <div onClick={(e) => e.preventDefault()}>
                         <IconButton
+                            disabled={isReadMode}
                             onClick={() => {
                                 setDeleteArtist({
                                     isOpen: true,

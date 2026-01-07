@@ -27,7 +27,7 @@ export default function EmailSender({}: Props) {
     return (
         <div className="h-full">
             <div className="flex h-full overflow-hidden pr-[350px]">
-                <div className="min-w-0 flex-1 overflow-y-auto">
+                <div className="min-w-0 flex-1 overflow-y-auto px-8 py-4">
                     <EmailSenderForm />
                 </div>
                 <div className="fixed right-0 top-16 h-full w-[350px] overflow-y-auto border-l bg-white py-4">

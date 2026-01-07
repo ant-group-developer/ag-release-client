@@ -45,7 +45,7 @@ function AppContainer({
                 <div>{extra?.map((item) => item)}</div>
             </div>
             <div
-                className={cn('rounded-2xl border-0', contentClassName)}
+                className={cn('rounded-lg border-0', contentClassName)}
                 style={{
                     backgroundColor: token.colorBgContainer,
                 }}

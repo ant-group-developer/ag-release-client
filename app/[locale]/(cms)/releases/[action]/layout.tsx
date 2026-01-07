@@ -29,7 +29,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const messages = useTranslations();
     const params = useParams();
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
-    const formValues = useReleaseFormStore((state) => state.formValues);
+    // const formValues = useReleaseFormStore((state) => state.formValues);
     const pathname = usePathname();
     const openModal = useModalStore((state) => state.openModal);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -197,7 +197,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         if (releaseId && releaseData?.id) {
             setFormValues(initialData);
         }
-    }, [releaseId, JSON.stringify(releaseData)]);
+    }, [releaseId, releaseData?.id]);
 
     useEffect(() => {
         // Chỉ theo dõi scroll khi ở trang core-detail, các trang khác mặc định isScrolled = true
@@ -205,7 +205,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             setIsScrolled(true);
             return;
         }
-            const el = document.getElementById('layout-scroll')
+        const el = document.getElementById('layout-scroll');
 
         // Lắng nghe scroll để set isScrolled chỉ khi ở trang core-detail
         const handleScroll = () => {
@@ -244,14 +244,13 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             className="flex h-full overflow-x-clip"
             style={{ backgroundColor: token.colorBgLayout }}
             ref={scrollContainerRef}
-           
         >
             {isReleaseDataLoading || !releaseData ? (
                 <div className="w-[100vw] px-8">
                     <DetailSkeleton />
                 </div>
             ) : (
-                <div className="mx-auto flex flex-1 flex-col px-8 min-w-0">
+                <div className="mx-auto flex min-w-0 flex-1 flex-col px-8">
                     <Breadcrumb items={breadcrumbItems} className="!py-4" />
                     <div
                         className="sticky top-0 z-10 mb-4 rounded-lg p-4"

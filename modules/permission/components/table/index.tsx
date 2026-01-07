@@ -125,10 +125,13 @@ export const PermissionTable = ({ dataFilter, ...props }: Props) => {
             pagination={false}
             columns={column}
             rowClassName={'group cursor-pointer'}
-            className={`rounded-t-lg px-4 ${props?.className}`}
+            className={`rounded-t-lg ${props?.className}`}
             style={{
                 backgroundColor: token.colorBgContainer,
                 ...props?.style,
+            }}
+            toolbar={{
+                className: 'px-4',
             }}
             tableAlertRender={({ selectedRowKeys }) => (
                 <div className="flex items-center gap-2 font-semibold">
