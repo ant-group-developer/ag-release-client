@@ -4,6 +4,7 @@ import AppGrid from '@/components/ui/grid/app-grid';
 import { APP_ROUTES } from '@/enums/routes';
 import { Link } from '@/i18n/routing';
 import { ReleasesData } from '@/modules/releases/types';
+import { Empty, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import CardRelease from '../card/card-release';
 
@@ -13,9 +14,11 @@ type Props = {
 
 export default function ListRelease({ data }: Props) {
     const messages = useTranslations();
+    const { token } = theme.useToken();
+    const releaseLength = data?.length;
 
     return (
-        <div className="mt-8">
+        <div className="mt-8 space-y-4">
             <div className="flex items-center justify-between">
                 <p className="text-lg font-bold">
                     {messages('release.latestReleases')}
@@ -25,7 +28,8 @@ export default function ListRelease({ data }: Props) {
                     <SeeMoreButton type="default" />
                 </Link>
             </div>
-            <AppGrid className="overflow-visible py-4">
+
+            <AppGrid className="overflow-visible">
                 <FlatList
                     data={data}
                     renderItem={({ item }) => <CardRelease data={item} />}
@@ -34,6 +38,15 @@ export default function ListRelease({ data }: Props) {
                     className="contents"
                 />
             </AppGrid>
+
+            {releaseLength <= 0 && (
+                <Empty
+                    className="!mx-0 rounded-lg py-6"
+                    style={{
+                        backgroundColor: token.colorBgContainer,
+                    }}
+                />
+            )}
         </div>
     );
 }

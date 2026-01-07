@@ -3,7 +3,7 @@ import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import PostCard from '@/modules/news/components/post-card';
 import { useGetListNewsPublic } from '@/modules/news/hooks/use-get-list-public';
-import { Skeleton } from 'antd';
+import { Empty, Skeleton, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import 'swiper/css'; // style cơ bản
@@ -17,9 +17,11 @@ export default function ListNews({}: Props) {
     const { newsData, isFetching } = useGetListNewsPublic({
         pageSize: PAGE_SIZE_EXTRA_LARGE,
     });
+    const { token } = theme.useToken();
+    const newsDataLength = newsData?.metadata?.totalItems;
 
     return (
-        <div className="my-8">
+        <div className="my-8 space-y-4">
             <div className="flex items-center justify-between">
                 <p className="text-lg font-bold">
                     {messages('dashboard.latestNews')}
@@ -48,13 +50,22 @@ export default function ListNews({}: Props) {
                     pagination={{ clickable: true }}
                 >
                     {newsData?.items?.map((item, index) => (
-                        <SwiperSlide className="pb-8 pt-4" key={index}>
+                        <SwiperSlide className="pb-8" key={index}>
                             <Link href={`${APP_ROUTES.NEWS}/${item?.slug}`}>
                                 <PostCard data={item} />
                             </Link>
                         </SwiperSlide>
                     ))}
                 </Swiper>
+            )}
+
+            {newsDataLength <= 0 && (
+                <Empty
+                    className="!mx-0 rounded-lg py-6"
+                    style={{
+                        backgroundColor: token.colorBgContainer,
+                    }}
+                />
             )}
         </div>
     );
