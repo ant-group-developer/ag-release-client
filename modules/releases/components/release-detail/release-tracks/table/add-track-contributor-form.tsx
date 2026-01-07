@@ -3,7 +3,9 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ArtistSelect from '@/components/ui/select/artist-select';
 import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import { SIZE_ICON } from '@/constants/common';
+import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useActive } from '@/hooks/use-active';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { TrackData } from '@/modules/releases/types';
 import { useCreateTrackArtist } from '@/modules/track-artist/hooks/use-create-track-artist';
 import { CreateTrackArtistPayload } from '@/modules/track-artist/types/payload';
@@ -21,6 +23,8 @@ export default function AddTrackContributorForm({ trackData }: Props) {
     const messages = useTranslations();
     const { active, deActive, isActive } = useActive();
     const [form] = Form.useForm();
+    const releaseAction = useReleaseActionStore((s) => s.action);
+    const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
 
     // apis
     const { createTrackArtist } = useCreateTrackArtist();
@@ -69,6 +73,7 @@ export default function AddTrackContributorForm({ trackData }: Props) {
                         placeholder={messages('artist.select')}
                         // disabledArtistIds={disabledArtistIds}
                         allowClear
+                        disabled={isReadMode}
                     />
                 </AppFormItem>
 
@@ -90,12 +95,13 @@ export default function AddTrackContributorForm({ trackData }: Props) {
                         // disabledRoleIds={disabledRoleIds}
                         placement="topLeft"
                         allowClear
+                        disabled={isReadMode}
                     />
                 </AppFormItem>
 
                 <div className="mt-4 flex items-center justify-end">
                     <Button
-                        disabled={isActive}
+                        disabled={isActive || isReadMode}
                         loading={isActive}
                         onClick={() => form.submit()}
                         icon={

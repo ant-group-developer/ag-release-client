@@ -28,7 +28,7 @@ type Props = {} & Omit<AppModalProps, 'children'>;
 export default function TrackDetailModal({ ...props }: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
-    const typeModal = useModalStore((state) => state.typeModal);
+    // const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const { token } = theme.useToken();
     const { trackId, index } = useModalStore<{
