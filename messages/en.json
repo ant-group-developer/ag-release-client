@@ -1028,6 +1028,7 @@
     },
     "genre": {
         "label": "Genre",
+        "genres": "Genres",
         "message": {
             "success": {
                 "create": "Create new genre successfully",

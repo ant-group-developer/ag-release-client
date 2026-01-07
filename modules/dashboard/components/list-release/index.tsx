@@ -29,7 +29,7 @@ export default function ListRelease({ data }: Props) {
                 </Link>
             </div>
 
-            <AppGrid className="overflow-visible">
+            <AppGrid className="">
                 <FlatList
                     data={data}
                     renderItem={({ item }) => <CardRelease data={item} />}

@@ -1029,6 +1029,7 @@
     },
 
     "genre": {
+        "genres": "Thể loại",
         "label": "Thể loại",
         "message": {
             "success": {

@@ -98,6 +98,9 @@ export default function TrackHeaderV2({
                     fieldProps={{
                         maxTagCount: 2,
                     }}
+                    placeholder={messages('placeholder.filterBy', {
+                        value: messages('common.scan').toLowerCase(),
+                    })}
                 />
 
                 <ProForm.Item name="artistId" label={messages('artist.label')}>
@@ -105,7 +108,9 @@ export default function TrackHeaderV2({
                         showCreate={false}
                         allowClear
                         dropdownMatchSelectWidth={false}
-                        placeholder={messages('placeholder.selectArtist')}
+                        placeholder={messages('placeholder.filterBy', {
+                            value: messages('artist.artists').toLowerCase(),
+                        })}
                         mode="multiple"
                         maxTagCount={2}
                     />
@@ -114,9 +119,9 @@ export default function TrackHeaderV2({
                 <ProForm.Item name="genres" label={messages('genre.label')}>
                     <GenresSelect
                         allowClear
-                        placeholder={messages(
-                            'release.placeholder.selectGenres'
-                        )}
+                        placeholder={messages('placeholder.filterBy', {
+                            value: messages('genre.genres').toLowerCase(),
+                        })}
                         mode="multiple"
                         maxCount={2}
                     />
