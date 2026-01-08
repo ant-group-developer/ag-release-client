@@ -1,18 +1,18 @@
 import IconButton from '@/components/ui/button/icon-button';
+import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { SIZE_ICON } from '@/constants/common';
-import useModalStore from '@/hooks/use-modal';
+import { useDeleteReleaseArtist } from '@/modules/release-artist/hooks/use-delete-release-artist';
 import { useUpdateReleaseArtist } from '@/modules/release-artist/hooks/use-update-release-artist';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { UpdateReleaseArtistPayload } from '@/modules/release-artist/types/payload';
-import { UpdateVariables } from '@/types/api';
+import { DeleteVariables, UpdateVariables } from '@/types/api';
 import { Avatar, Switch } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '../../enums';
+import { useState } from 'react';
 import AddArtistForm from './add-artist-form';
-import { useParams } from 'next/navigation';
 
 type Props = AppTableProps<ReleaseArtist> & {
     disabled?: boolean;
@@ -22,11 +22,30 @@ export default function ReleaseArtistTable({
     disabled = false,
     ...props
 }: Props) {
+    const [releaseArtistModal, setReleaseArtistModal] = useState<{
+        data?: ReleaseArtist;
+        isOpen: boolean;
+    }>();
     const messages = useTranslations();
 
-    const openModal = useModalStore((s) => s.openModal);
+    // const openModal = useModalStore((s) => s.openModal);
 
     const { updateReleaseArtist } = useUpdateReleaseArtist();
+
+    const { deleteReleaseArtist } = useDeleteReleaseArtist();
+
+    const handleRemoveArtistList = () => {
+        const variables: DeleteVariables<ReleaseArtist['id']> = {
+            id: releaseArtistModal?.data?.id as string,
+            onSuccess: () => {
+                setReleaseArtistModal({
+                    data: undefined,
+                    isOpen: false,
+                });
+            },
+        };
+        deleteReleaseArtist(variables);
+    };
 
     const handleUpdate = (
         releaseArtistId: ReleaseArtist['id'],
@@ -143,15 +162,20 @@ export default function ReleaseArtistTable({
             align: 'center',
             render: (_, record, index) => {
                 return (
-                    <div onClick={(e) => e.preventDefault()}>
+                    <div
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }}
+                    >
                         <IconButton
                             disabled={disabled}
-                            onClick={() =>
-                                openModal(
-                                    TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST,
-                                    record
-                                )
-                            }
+                            onClick={() => {
+                                setReleaseArtistModal({
+                                    isOpen: true,
+                                    data: record,
+                                });
+                            }}
                         >
                             <Trash color="red" size={SIZE_ICON} />
                         </IconButton>
@@ -170,6 +194,20 @@ export default function ReleaseArtistTable({
                 />
                 <div className="px-4 py-2">
                     <AddArtistForm disabled={disabled} />
+                    <AppConfirm
+                        open={releaseArtistModal?.isOpen}
+                        modalTitle={messages('delete.confirmTitle')}
+                        paragraph={messages('delete.confirmMessage', {
+                            value: releaseArtistModal?.data?.artist?.name,
+                        })}
+                        onCancel={() => {
+                            setReleaseArtistModal({
+                                isOpen: false,
+                                data: undefined,
+                            });
+                        }}
+                        onOk={() => handleRemoveArtistList()}
+                    />
                 </div>
             </div>
         </div>

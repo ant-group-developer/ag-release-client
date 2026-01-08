@@ -245,6 +245,10 @@ export const QUERY_KEY = {
         KEY: 'TRACK_ARTIST',
         GET_LIST: 'GET_LIST_TRACK_ARTIST',
     },
+    TRACK_CONTRIBUTOR: {
+        KEY: 'TRACK_CONTRIBUTOR',
+        GET_LIST: 'GET_LIST_TRACK_CONTRIBUTOR',
+    },
     TRACK_TYPE: {
         KEY: 'TRACK_TYPE',
         GET_LIST: 'GET_LIST_TRACK_TYPE',

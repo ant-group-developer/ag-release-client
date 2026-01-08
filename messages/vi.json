@@ -829,6 +829,17 @@
                 "create": "Thêm mới nghệ sĩ phát hành thành công",
                 "update": "Cập nhật nghệ sĩ phát hành thành công",
                 "delete": "Xoá nghệ sĩ phát hành thành công"
+            },
+            "error": {
+                "uniqueConstraint": "Nghệ sĩ này đã tồn tại trong bản phát hành."
+            }
+        }
+    },
+
+    "releaseContributor": {
+        "message": {
+            "error": {
+                "uniqueConstraint": "Người đóng góp với vai trò này đã tồn tại trong bản phát hành."
             }
         }
     },

@@ -9,7 +9,7 @@ import {
 export const releaseContributorApi = {
     create: (payload: CreateReleaseContributorPayload) => {
         return axiosInstance.post<DetailResponse<ReleaseContributor>>(
-            '/release-contributor',
+            '/release-contributors',
             payload
         );
     },
@@ -19,12 +19,12 @@ export const releaseContributorApi = {
         payload: UpdateReleaseContributorPayload
     ) => {
         return axiosInstance.put<DetailResponse<ReleaseContributor>>(
-            `/release-contributor/${id}`,
+            `/release-contributors/${id}`,
             payload
         );
     },
 
     delete: (id: ReleaseContributor['id']) => {
-        return axiosInstance.delete(`/release-contributor/${id}`);
+        return axiosInstance.delete(`/release-contributors/${id}`);
     },
 };

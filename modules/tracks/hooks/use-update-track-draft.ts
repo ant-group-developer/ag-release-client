@@ -1,7 +1,8 @@
 import { useApiNotify } from '@/hooks/use-api-notify';
 import { releasesQueryKeys } from '@/modules/releases/constants/query-keys';
-import { UpdateVariables } from '@/types/api';
+import { DetailResponse, UpdateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosResponse } from 'axios';
 import { trackApi } from '../apis';
 import { trackQueryKeys } from '../constants/query-keys';
 import { TrackData } from '../types';
@@ -12,33 +13,72 @@ export const useUpdateTrackDraft = () => {
     const queryClient = useQueryClient();
     const { handleError } = useApiNotify();
 
-    const onSuccess = (
-        data: any,
-        { onSuccess }: UpdateVariables<TrackData['id'], UpdateTrackPayload>
+    const onMutate = async (
+        variables: UpdateVariables<string, UpdateTrackPayload>
     ) => {
+        const { id, payload } = variables;
+
+        // Cancel query đang pending của detail
+        await queryClient.cancelQueries({
+            queryKey: trackQueryKeys.detail(id),
+        });
+
+        // Snapshot giá trị cũ để rollback nếu lỗi
+        const previousDetail = queryClient.getQueryData(
+            trackQueryKeys.detail(id)
+        );
+
+        // Optimistically update detail
+        queryClient.setQueryData(trackQueryKeys.detail(id), (old: any) => {
+            if (!old) return old;
+            return {
+                ...old,
+                data: {
+                    ...old.data,
+                    data: {
+                        ...old.data?.data,
+                        ...payload,
+                    },
+                },
+            };
+        });
+
+        // Return context với snapshot để rollback
+        return { previousDetail };
+    };
+
+    const onSuccess = (
+        data: AxiosResponse<DetailResponse<TrackData>>,
+        { onSuccess, id }: UpdateVariables<TrackData['id'], UpdateTrackPayload>
+    ) => {
+        // Set data chính xác từ API response vào detail cache
+        queryClient.setQueryData(trackQueryKeys.detail(id), data);
+
+        // Invalidate related queries
         queryClient.invalidateQueries({
-            queryKey: trackQueryKeys.detail(data?.data?.data?.id),
+            queryKey: trackQueryKeys.list(),
         });
         queryClient.invalidateQueries({
             queryKey: releasesQueryKeys.validations(),
         });
 
-        queryClient.invalidateQueries({
-            queryKey: trackQueryKeys.list(),
-        });
-
-        // const responseMessages = messages(data?.data?.messageCode);
-
         onSuccess?.(data?.data?.data);
-        // showNotification('success', responseMessages);
     };
 
     const onError = (
-        data: any,
-        { onError }: UpdateVariables<TrackData['id'], UpdateTrackPayload>
+        error: any,
+        { onError, id }: UpdateVariables<TrackData['id'], UpdateTrackPayload>,
+        context: any
     ) => {
+        if (context?.previousDetail) {
+            queryClient.setQueryData(
+                trackQueryKeys.detail(id),
+                context.previousDetail
+            );
+        }
+
         onError?.();
-        handleError(data);
+        handleError(error);
     };
 
     const mutation = useMutation({
@@ -49,6 +89,7 @@ export const useUpdateTrackDraft = () => {
             trackApi.updateTrackDraft(id, payload),
         onSuccess,
         onError,
+        onMutate,
     });
 
     const updateTrackDraft = (

@@ -1,6 +1,7 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { ReleaseDetailSchema } from '@/modules/releases/schemas';
 import { Radio } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -23,17 +24,17 @@ export default function ReleaseArtistSection({
         watch,
     } = useFormContext<ReleaseDetailSchema>();
     const formValues = useReleaseFormStore((state) => state.formValues);
+    const { releaseData } = useGetDetailRelease(formValues?.id as string);
     const messages = useTranslations();
     // const openModal = useModalStore((state) => state.openModal);
 
     // router - params
     const params = useParams();
 
-
     // variables
     const isCreateReleasePage = params['action'] === 'create';
     const isVariousArtist = watch('isVariousArtist');
-    const releaseArtist = formValues.releaseArtists || [];
+    const releaseArtist = releaseData.releaseArtists || [];
 
     // func
 

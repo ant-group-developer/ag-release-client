@@ -15,8 +15,8 @@ import { useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import ArtistProfilesList from '../../../artist/components/list/artist-profiles';
-import { useCreateTrackArtist } from '../../hooks/use-create-track-artist';
-import { useUpdateTrackArtist } from '../../hooks/use-update-track-artist';
+import { useCreateTrackArtist } from '../../hooks/use-create-track-contributor';
+import { useUpdateTrackArtist } from '../../hooks/use-update-track-contributor';
 import { TrackArtistData } from '../../types';
 import {
     CreateTrackArtistPayload,

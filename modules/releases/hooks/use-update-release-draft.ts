@@ -17,6 +17,9 @@ export const useUpdateReleaseDraft = () => {
     ) => {
         const { id, payload } = variables;
         // Cancel query đang pending của detail
+        await queryClient.cancelQueries({
+            queryKey: releasesQueryKeys.detail(id),
+        });
 
         // Snapshot giá trị cũ để rollback nếu lỗi
         const previousDetail = queryClient.getQueryData(

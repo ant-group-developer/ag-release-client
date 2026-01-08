@@ -2,13 +2,12 @@ import { useApiNotify } from '@/hooks/use-api-notify';
 import { releasesQueryKeys } from '@/modules/releases/constants/query-keys';
 import { CreateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useTranslations } from 'next-intl';
 import { releaseArtistApi } from '../apis';
 import { releaseArtistQueryKeys } from '../constants/query-keys';
 import { CreateReleaseArtistPayload } from '../types/payload';
 
 export const useCreateReleaseArtist = () => {
-    const messages = useTranslations();
+    // const messages = useTranslations();
     const queryClient = useQueryClient();
     const { handleError } = useApiNotify();
 
@@ -21,6 +20,9 @@ export const useCreateReleaseArtist = () => {
         });
         queryClient.invalidateQueries({
             queryKey: releasesQueryKeys.details(),
+        });
+        queryClient.invalidateQueries({
+            queryKey: releasesQueryKeys.validations(),
         });
 
         // const responseMessages = messages(data?.data?.messageCode);

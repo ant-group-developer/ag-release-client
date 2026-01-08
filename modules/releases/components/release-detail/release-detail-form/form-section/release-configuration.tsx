@@ -1,6 +1,5 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
 import LabelSelect from '@/components/ui/select/label-select';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { useRouter } from '@/i18n/routing';
 import { useGetListSimpleReleaseTypes } from '@/modules/release-types/hooks/use-get-list-simple-release-types';
@@ -71,11 +70,7 @@ export default function ReleaseConfigurationSection({
             },
             onSuccess: (data) => {
                 router.push(
-                    getReleaseTabRoute(
-                        data?.id,
-                        RELEASES_TABS.CORE_DETAIL,
-                        RELEASE_DETAIL_ACTION.EDIT
-                    )
+                    getReleaseTabRoute(data?.id, RELEASES_TABS.CORE_DETAIL)
                 );
             },
         };

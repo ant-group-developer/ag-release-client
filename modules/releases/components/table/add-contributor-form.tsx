@@ -4,8 +4,8 @@ import ArtistSelect from '@/components/ui/select/artist-select';
 import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import { SIZE_ICON } from '@/constants/common';
 import { useActive } from '@/hooks/use-active';
-import { useCreateReleaseArtist } from '@/modules/release-artist/hooks/use-create-release-artist';
-import { CreateReleaseArtistPayload } from '@/modules/release-artist/types/payload';
+import { useCreateReleaseContributor } from '@/modules/release-contributor/hooks/use-create-release-contributor';
+import { CreateReleaseContributorPayload } from '@/modules/release-contributor/types/payload';
 import { CreateVariables } from '@/types/api';
 import { Button, Form, Switch } from 'antd';
 import { Plus } from 'lucide-react';
@@ -24,20 +24,20 @@ export default function AddArtistContributorForm({ disabled = false }: Props) {
     const [form] = Form.useForm();
     const releaseValues = useReleaseFormStore((state) => state.formValues);
     const params = useParams();
-    const isCreateReleasePage = params['action'] === 'create';
+    // const isCreateReleasePage = params['action'] === 'create';
 
     // apis
-    const { createReleaseArtist } = useCreateReleaseArtist();
+    const { createReleaseContributor } = useCreateReleaseContributor();
 
     // func
     const handleSubmit = async (values: any) => {
         active();
-        const variables: CreateVariables<CreateReleaseArtistPayload> = {
+        const variables: CreateVariables<CreateReleaseContributorPayload> = {
             payload: {
                 artistId: values.artistId,
-                // artistRoleId: values.roleId,
+                artistRoleId: values.roleId,
                 releaseId: releaseValues.id as string,
-                addArtistToTracks: !!values?.addArtistToTracks,
+                addContributorToTracks: !!values?.addContributorToTracks,
             },
             onSuccess: () => {
                 form.resetFields();
@@ -47,7 +47,7 @@ export default function AddArtistContributorForm({ disabled = false }: Props) {
                 deActive();
             },
         };
-        createReleaseArtist(variables);
+        createReleaseContributor(variables);
     };
     return (
         <AppForm
@@ -71,7 +71,7 @@ export default function AddArtistContributorForm({ disabled = false }: Props) {
                     ]}
                 >
                     <ArtistSelect
-                        disabled={disabled}
+                        disabled={disabled || isActive}
                         showSearch
                         // fallBack={dataEdit?.artist?.name}
                         placeholder={messages('artist.select')}
@@ -93,7 +93,7 @@ export default function AddArtistContributorForm({ disabled = false }: Props) {
                     ]}
                 >
                     <RoleArtistSelect
-                        disabled={disabled}
+                        disabled={disabled || isActive}
                         // fallBack={dataEdit?.artistRole?.name}
                         placeholder={messages('common.role')}
                         // disabledRoleIds={disabledRoleIds}
@@ -105,10 +105,10 @@ export default function AddArtistContributorForm({ disabled = false }: Props) {
                 <AppFormItem
                     className="flex-1"
                     label={messages('artist.addToTracks')}
-                    name="addArtistToTracks"
+                    name="addContributorToTracks"
                     valuePropName="checked"
                 >
-                    <Switch disabled={disabled} />
+                    <Switch disabled={disabled || isActive} />
                 </AppFormItem>
 
                 <div className="mt-4 flex items-center justify-end space-x-2">

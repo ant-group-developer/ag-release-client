@@ -1,25 +1,27 @@
 import { useApiNotify } from '@/hooks/use-api-notify';
 import { releasesQueryKeys } from '@/modules/releases/constants/query-keys';
-import { DeleteVariables } from '@/types/api';
+import { trackQueryKeys } from '@/modules/tracks/constants/query-keys';
+import { CreateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { releaseArtistApi } from '../apis';
-import { releaseArtistQueryKeys } from '../constants/query-keys';
-import { ReleaseArtist } from '../types';
+import { trackContributorApi } from '../apis';
+import { CreateTrackContributorPayload } from '../types/payload';
 
-export const useDeleteReleaseArtist = () => {
+export const useCreateTrackContributor = () => {
     // const messages = useTranslations();
     const queryClient = useQueryClient();
     const { handleError } = useApiNotify();
 
     const onSuccess = (
         data: any,
-        { onSuccess }: DeleteVariables<ReleaseArtist['id']>
+        { onSuccess }: CreateVariables<CreateTrackContributorPayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: releaseArtistQueryKeys.lists(),
+            queryKey: trackQueryKeys.list({
+                pageSize: 999,
+            }),
         });
         queryClient.invalidateQueries({
-            queryKey: releasesQueryKeys.details(),
+            queryKey: trackQueryKeys.detail(data?.data?.data?.trackId),
         });
         queryClient.invalidateQueries({
             queryKey: releasesQueryKeys.validations(),
@@ -27,32 +29,34 @@ export const useDeleteReleaseArtist = () => {
 
         // const responseMessages = messages(data?.data?.messageCode);
 
-        onSuccess?.();
+        onSuccess?.(data?.data?.data);
         // showNotification('success', responseMessages);
     };
 
     const onError = (
         data: any,
-        { onError }: DeleteVariables<ReleaseArtist['id']>
+        { onError }: CreateVariables<CreateTrackContributorPayload>
     ) => {
         onError?.();
         handleError(data);
     };
     const mutation = useMutation({
-        mutationFn: ({ id }: DeleteVariables<ReleaseArtist['id']>) =>
-            releaseArtistApi.deleteReleaseArtist(id),
+        mutationFn: ({
+            payload,
+        }: CreateVariables<CreateTrackContributorPayload>) =>
+            trackContributorApi.create(payload),
         onSuccess,
         onError,
     });
 
-    const deleteReleaseArtist = (
-        variables: DeleteVariables<ReleaseArtist['id']>
+    const createTrackContributor = (
+        variables: CreateVariables<CreateTrackContributorPayload>
     ) => {
-        return mutation.mutate(variables);
+        mutation.mutate(variables);
     };
 
     return {
-        deleteReleaseArtist,
+        createTrackContributor,
         ...mutation,
     };
 };

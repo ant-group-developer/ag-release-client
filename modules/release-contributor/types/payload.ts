@@ -2,7 +2,7 @@ export interface CreateReleaseContributorPayload {
     artistRoleId: string;
     artistId: string;
     releaseId: string;
-    addArtistToTracks: boolean;
+    addContributorToTracks: boolean;
 }
 
 export interface UpdateReleaseContributorPayload

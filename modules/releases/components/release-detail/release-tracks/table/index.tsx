@@ -7,7 +7,6 @@ import SortableTable, {
 import { SIZE_ICON } from '@/constants/common';
 import { getIndex } from '@/helpers/common';
 import { getTrackDetailRoute, RELEASE_DETAIL_ACTION } from '@/helpers/link';
-import { showNotification } from '@/helpers/messages-helper';
 import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
@@ -33,6 +32,7 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useMemo } from 'react';
 import TrackActionButton from '../button/track-action';
 import { TrackWaveform } from '../track-wave-form';
+import { EditableTitle } from './track-edit-title';
 
 type Props = {
     pagination: {
@@ -140,28 +140,12 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             ellipsis: true,
             render: (value, record) => {
                 return (
-                    <div className="space-y-2">
-                        <Input
-                            defaultValue={record.title}
-                            disabled={isReadMode}
-                            onBlur={(e) => {
-                                const value = e.target.value;
-                                if (value.length < 1) {
-                                    return showNotification(
-                                        'error',
-                                        messages('validation.min', {
-                                            number: 1,
-                                        })
-                                    );
-                                }
-                                if (value !== record.title) {
-                                    debouncedUpdate(record.id, {
-                                        title: value,
-                                    });
-                                }
-                            }}
-                        />
-                    </div>
+                    <EditableTitle
+                        record={record}
+                        isReadMode={isReadMode}
+                        onUpdate={debouncedUpdate}
+                        messages={messages}
+                    />
                 );
             },
         },

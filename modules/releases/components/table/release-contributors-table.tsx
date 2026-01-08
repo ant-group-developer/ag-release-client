@@ -1,17 +1,18 @@
 import IconButton from '@/components/ui/button/icon-button';
+import AppConfirm from '@/components/ui/modal/confirm-modal';
 import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { SIZE_ICON } from '@/constants/common';
-import useModalStore from '@/hooks/use-modal';
+import { useDeleteReleaseContributor } from '@/modules/release-contributor/hooks/use-delete-release-contributor';
 import { useUpdateReleaseContributor } from '@/modules/release-contributor/hooks/use-update-release-contributor';
 import { ReleaseContributor } from '@/modules/release-contributor/types';
 import { UpdateReleaseContributorPayload } from '@/modules/release-contributor/types/payload';
-import { UpdateVariables } from '@/types/api';
+import { DeleteVariables, UpdateVariables } from '@/types/api';
 import { Avatar, Switch } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '../../enums';
+import { useState } from 'react';
 import AddArtistContributorForm from './add-contributor-form';
 
 type Props = AppTableProps<ReleaseContributor> & {
@@ -22,10 +23,30 @@ export default function ReleaseContributorsTable({
     disabled = false,
     ...props
 }: Props) {
+    const [releaseContributorModal, setReleaseContributorModal] = useState<{
+        data?: ReleaseContributor;
+        isOpen: boolean;
+    }>();
+
     const messages = useTranslations();
-    const openModal = useModalStore((s) => s.openModal);
+    // const openModal = useModalStore((s) => s.openModal);
 
     const { updateReleaseContributor } = useUpdateReleaseContributor();
+
+    const { deleteReleaseContributor } = useDeleteReleaseContributor();
+
+    const handleRemoveArtistContributor = () => {
+        const variables: DeleteVariables<ReleaseContributor['id']> = {
+            id: releaseContributorModal?.data?.id as string,
+            onSuccess: () => {
+                setReleaseContributorModal({
+                    data: undefined,
+                    isOpen: false,
+                });
+            },
+        };
+        deleteReleaseContributor(variables);
+    };
 
     const handleUpdate = (
         releaseContributorId: ReleaseContributor['id'],
@@ -63,14 +84,14 @@ export default function ReleaseContributorsTable({
         },
         {
             title: messages('artist.addToTracks'),
-            width: 130,
+            width: 180,
             render: (_, record, index) => {
                 return (
                     <Switch
                         disabled={disabled}
                         onChange={(e) =>
                             handleUpdate(record?.id, {
-                                addArtistToTracks: e,
+                                addContributorToTracks: e,
                             })
                         }
                         defaultValue={record?.addArtistToTracks}
@@ -145,12 +166,12 @@ export default function ReleaseContributorsTable({
                 return (
                     <div onClick={(e) => e.preventDefault()}>
                         <IconButton
-                            onClick={() =>
-                                openModal(
-                                    TYPE_MODAL_RELEASE_ARTIST_LIST.DELETE_ARTIST,
-                                    record
-                                )
-                            }
+                            onClick={() => {
+                                setReleaseContributorModal({
+                                    isOpen: true,
+                                    data: record,
+                                });
+                            }}
                             disabled={disabled}
                         >
                             <Trash color="red" size={SIZE_ICON} />
@@ -170,6 +191,20 @@ export default function ReleaseContributorsTable({
                 />
                 <div className="px-4 py-2">
                     <AddArtistContributorForm disabled={disabled} />
+                    <AppConfirm
+                        open={releaseContributorModal?.isOpen}
+                        modalTitle={messages('delete.confirmTitle')}
+                        paragraph={messages('delete.confirmMessage', {
+                            value: releaseContributorModal?.data?.artist?.name,
+                        })}
+                        onCancel={() => {
+                            setReleaseContributorModal({
+                                isOpen: false,
+                                data: undefined,
+                            });
+                        }}
+                        onOk={() => handleRemoveArtistContributor()}
+                    />
                 </div>
             </div>
         </div>

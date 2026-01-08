@@ -828,6 +828,17 @@
                 "create": "Create release artist successfully",
                 "update": "Update release artist successfully",
                 "delete": "Delete release artist successfully"
+            },
+            "error": {
+                "uniqueConstraint": "The artist already exists in the release."
+            }
+        }
+    },
+
+    "releaseContributor": {
+        "message": {
+            "error": {
+                "uniqueConstraint": "This contributor with the specified role already exists in the release."
             }
         }
     },
