@@ -8,10 +8,6 @@ import { APP_ROUTES } from '@/enums/routes';
 import { getTrackDetailRoute } from '@/helpers/link';
 import { Link } from '@/i18n/routing';
 import AppError from '@/modules/auth/components/error';
-import {
-    FEATURING_ARTIST_ROLE,
-    MAIN_ARTIST_ROLE,
-} from '@/modules/release-artist/constants';
 import { TRACK_TABS } from '@/modules/tracks/enums';
 import { useGetDetailTrack } from '@/modules/tracks/hooks/use-get-detail-tracks';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
@@ -74,12 +70,15 @@ export default function TrackDetail({ children }: PropsWithChildren) {
         },
     ];
     const trackArtist = trackData?.trackArtists;
-    const trackMainArtist = trackArtist?.find(
-        (item) => item?.artistRole?.code === MAIN_ARTIST_ROLE
-    );
-    const featuringArtist = trackArtist?.filter(
-        (item) => item.artistRole?.code === FEATURING_ARTIST_ROLE
-    );
+    const trackName = trackArtist
+        ?.map((item) => item?.artist?.name)
+        ?.join(' & ');
+    // const trackMainArtist = trackArtist?.find(
+    //     (item) => item?.artistRole?.code === MAIN_ARTIST_ROLE
+    // );
+    // const featuringArtist = trackArtist?.filter(
+    //     (item) => item.artistRole?.code === FEATURING_ARTIST_ROLE
+    // );
     const renderDownloadTrack = () => {
         const handleOnclick = async () => {
             const response = await bucketApi.getLinkDownloadFile(
@@ -158,7 +157,7 @@ export default function TrackDetail({ children }: PropsWithChildren) {
 
                             <ItemHeaderPage
                                 name={messages('artist.label')}
-                                value={`${trackMainArtist?.artist?.name ?? ''} ${featuringArtist && featuringArtist?.length > 0 ? `(feat. ${featuringArtist.map((item) => item.artist?.name).join(' & ')}` : ''}`}
+                                value={`${trackName}`}
                             />
 
                             <ItemHeaderPage

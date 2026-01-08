@@ -7,8 +7,8 @@ import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useActive } from '@/hooks/use-active';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { TrackData } from '@/modules/releases/types';
-import { useCreateTrackArtist } from '@/modules/track-artist/hooks/use-create-track-artist';
-import { CreateTrackArtistPayload } from '@/modules/track-artist/types/payload';
+import { useCreateTrackContributor } from '@/modules/track-contributor/hooks/use-create-track-contributor';
+import { CreateTrackContributorPayload } from '@/modules/track-contributor/types/payload';
 import { CreateVariables } from '@/types/api';
 import { Button, Form } from 'antd';
 import { Plus } from 'lucide-react';
@@ -27,12 +27,12 @@ export default function AddTrackContributorForm({ trackData }: Props) {
     const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
 
     // apis
-    const { createTrackArtist } = useCreateTrackArtist();
+    const { createTrackContributor } = useCreateTrackContributor();
 
     // func
     const handleSubmit = async (values: any) => {
         active();
-        const variables: CreateVariables<CreateTrackArtistPayload> = {
+        const variables: CreateVariables<CreateTrackContributorPayload> = {
             payload: {
                 artistId: values.artistId,
                 artistRoleId: values.roleId,
@@ -44,7 +44,7 @@ export default function AddTrackContributorForm({ trackData }: Props) {
             },
             onError: () => deActive(),
         };
-        createTrackArtist(variables);
+        createTrackContributor(variables);
     };
     return (
         <AppForm

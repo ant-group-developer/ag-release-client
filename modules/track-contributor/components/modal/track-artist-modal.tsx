@@ -9,19 +9,19 @@ import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { DspData } from '@/modules/dsp/types';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { TrackData } from '@/modules/releases/types';
+import { useCreateTrackArtist } from '@/modules/track-artist/hooks/use-create-track-artist';
+import { TrackArtistData } from '@/modules/track-artist/types';
+import {
+    CreateTrackArtistPayload,
+    UpdateTrackArtistPayload,
+} from '@/modules/track-artist/types/payload';
 import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form } from 'antd';
 import { useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import ArtistProfilesList from '../../../artist/components/list/artist-profiles';
-import { useCreateTrackArtist } from '../../hooks/use-create-track-contributor';
 import { useUpdateTrackArtist } from '../../hooks/use-update-track-contributor';
-import { TrackArtistData } from '../../types';
-import {
-    CreateTrackArtistPayload,
-    UpdateTrackArtistPayload,
-} from '../../types/payload';
 
 type Props = Omit<AppModalProps, 'children'> & {
     trackData?: TrackData;

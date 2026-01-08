@@ -206,7 +206,7 @@ export default function TracksForm({ trackData, index }: Props) {
                                                 key={item.id}
                                                 data={{
                                                     artist: item.artist,
-                                                    artistRole: item.artistRole,
+                                                    artistRole: undefined,
                                                 }}
                                                 onDelete={() =>
                                                     openModal(

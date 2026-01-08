@@ -36,7 +36,7 @@ export default function AddTrackArtistForm({ trackData }: Props) {
         const variables: CreateVariables<CreateTrackArtistPayload> = {
             payload: {
                 artistId: values.artistId,
-                artistRoleId: values.roleId,
+                // artistRoleId: values.roleId,
                 trackId: trackData?.id as string,
             },
             onSuccess: () => {

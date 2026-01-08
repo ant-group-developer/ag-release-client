@@ -59,7 +59,7 @@ export default function TrackContributorsSection({
                         children: (
                             <div id={`tracks.${index}.trackArtists`}>
                                 <TrackContributorsTable
-                                    dataSource={trackData?.trackArtists}
+                                    dataSource={[]}
                                     trackData={trackData}
                                 />
                             </div>

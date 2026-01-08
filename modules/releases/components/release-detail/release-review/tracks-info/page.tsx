@@ -212,7 +212,7 @@ export default function TracksInfo({}: Props) {
                                                     key={trackArtist.id}
                                                     data={{
                                                         artist: trackArtist?.artist,
-                                                        role: trackArtist?.artistRole,
+                                                        // role: trackArtist?.artistRole,
                                                     }}
                                                 />
                                             )

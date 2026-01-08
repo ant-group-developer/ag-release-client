@@ -1,10 +1,10 @@
 import { useApiNotify } from '@/hooks/use-api-notify';
+import { trackArtistApi } from '@/modules/track-artist/apis';
+import { TrackArtistData } from '@/modules/track-artist/types';
 import { trackQueryKeys } from '@/modules/tracks/constants/query-keys';
 import { DeleteVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
-import { trackArtistApi } from '../apis';
-import { TrackArtistData } from '../types';
 
 export const useDeleteTrackArtist = () => {
     const messages = useTranslations();
