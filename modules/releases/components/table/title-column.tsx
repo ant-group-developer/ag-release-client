@@ -2,7 +2,6 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { getReleaseDetailTabRoute } from '@/helpers/link';
 import { OnChangeFilter } from '@/hooks/use-filter';
 import { Link } from '@/i18n/routing';
-import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { useTranslations } from 'next-intl';
 import { RELEASES_TABS } from '../../enums';
@@ -19,16 +18,13 @@ export default function ReleaseTitleColumn({ record, onChangeFilter }: Props) {
     const releaseArtists = record?.releaseArtists || [];
     const isVariousArtist = record?.isVariousArtist;
 
-    const mainArtist = !isVariousArtist
-        ? releaseArtists.find(
-              (item: ReleaseArtist) =>
-                  item?.artistRole?.code === MAIN_ARTIST_ROLE
-          )
-        : null;
+    const artistName = releaseArtists
+        .map((item: ReleaseArtist) => item?.artist?.name)
+        .join(', ');
 
     const displayName = isVariousArtist
         ? messages('common.variousArtists')
-        : mainArtist?.artist?.name || '';
+        : artistName;
     return (
         <div className="flex items-center gap-4">
             <div className="h-10 min-w-10">
@@ -49,11 +45,7 @@ export default function ReleaseTitleColumn({ record, onChangeFilter }: Props) {
                         </CustomTooltip>
                     </div>
                 </Link>
-                <CustomTooltip
-                    title={messages('filter.filterByValue', {
-                        value: displayName,
-                    })}
-                >
+                <CustomTooltip title={displayName}>
                     {isVariousArtist ? (
                         <span
                             className="cursor-pointer truncate text-gray-500 hover:underline"
@@ -67,14 +59,14 @@ export default function ReleaseTitleColumn({ record, onChangeFilter }: Props) {
                         </span>
                     ) : (
                         <span
-                            onClick={() =>
-                                onChangeFilter({
-                                    artistId: mainArtist?.artist?.id,
-                                })
-                            }
-                            className="cursor-pointer truncate text-gray-500 hover:underline"
+                            // onClick={() =>
+                            //     onChangeFilter({
+                            //         artistId: mainArtist?.artist?.id,
+                            //     })
+                            // }
+                            className="inline-block !max-w-80 cursor-pointer truncate text-gray-500"
                         >
-                            {mainArtist?.artist?.name || ''}
+                            {artistName || ''}
                         </span>
                     )}
                 </CustomTooltip>

@@ -1,10 +1,5 @@
 import { DATE_FORMAT } from '@/enums/common';
 import { cn, formattedDate } from '@/helpers/common';
-import {
-    FEATURING_ARTIST_ROLE,
-    MAIN_ARTIST_ROLE,
-} from '@/modules/release-artist/constants';
-import { ReleaseArtist } from '@/modules/release-artist/types';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { useTranslations } from 'next-intl';
@@ -20,24 +15,15 @@ export default function ReleaseInfo({ isScrolled }: Props) {
     // console.log('🚀 ~ ReleaseInfo ~ releaseData:', releaseData);
 
     const isVariousArtist = !!formValues?.isVariousArtist;
-    const mainArtist = formValues?.releaseArtists?.find(
-        (releaseArtist: ReleaseArtist) =>
-            releaseArtist.artistRole?.code === MAIN_ARTIST_ROLE
-    );
-    const featuringArtistNames = formValues?.releaseArtists
-        ?.map((item: ReleaseArtist) => {
-            if (item?.artistRole?.code == FEATURING_ARTIST_ROLE) {
-                return item?.artist?.name;
-            }
-        })
-        .filter(Boolean)
-        .join(', ');
+    const artistName = releaseData?.releaseArtists
+        ?.map((item) => item?.artist?.name)
+        .join(' & ');
 
     const renderArtistName = () => {
         if (isVariousArtist) {
             return messages('artist.variousArtists');
-        } else if (mainArtist) {
-            return `${mainArtist?.artist?.name} ${featuringArtistNames && featuringArtistNames?.length > 0 ? `(feat. ${featuringArtistNames})` : ''}`;
+        } else if (artistName) {
+            return `${artistName}`;
         }
         return '';
     };

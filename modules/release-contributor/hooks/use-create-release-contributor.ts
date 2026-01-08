@@ -2,22 +2,21 @@ import { useApiNotify } from '@/hooks/use-api-notify';
 import { releasesQueryKeys } from '@/modules/releases/constants/query-keys';
 import { CreateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useTranslations } from 'next-intl';
-import { releaseArtistApi } from '../apis';
-import { releaseArtistQueryKeys } from '../constants/query-keys';
-import { CreateReleaseArtistPayload } from '../types/payload';
+import { releaseContributorApi } from '../apis';
+import { releaseContributorQueryKeys } from '../constants/query-keys';
+import { CreateReleaseContributorPayload } from '../types/payload';
 
-export const useCreateReleaseArtist = () => {
-    const messages = useTranslations();
+export const useCreateReleaseContributor = () => {
+    // const messages = useTranslations();
     const queryClient = useQueryClient();
     const { handleError } = useApiNotify();
 
     const onSuccess = (
         data: any,
-        { onSuccess }: CreateVariables<CreateReleaseArtistPayload>
+        { onSuccess }: CreateVariables<CreateReleaseContributorPayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: releaseArtistQueryKeys.lists(),
+            queryKey: releaseContributorQueryKeys.lists(),
         });
         queryClient.invalidateQueries({
             queryKey: releasesQueryKeys.details(),
@@ -31,7 +30,7 @@ export const useCreateReleaseArtist = () => {
 
     const onError = (
         data: any,
-        { onError }: CreateVariables<CreateReleaseArtistPayload>
+        { onError }: CreateVariables<CreateReleaseContributorPayload>
     ) => {
         handleError(data);
 
@@ -40,20 +39,20 @@ export const useCreateReleaseArtist = () => {
     const mutation = useMutation({
         mutationFn: ({
             payload,
-        }: CreateVariables<CreateReleaseArtistPayload>) =>
-            releaseArtistApi.createReleaseArtist(payload),
+        }: CreateVariables<CreateReleaseContributorPayload>) =>
+            releaseContributorApi.create(payload),
         onSuccess,
         onError,
     });
 
-    const createReleaseArtist = (
-        variables: CreateVariables<CreateReleaseArtistPayload>
+    const createReleaseContributor = (
+        variables: CreateVariables<CreateReleaseContributorPayload>
     ) => {
         mutation.mutate(variables);
     };
 
     return {
-        createReleaseArtist,
+        createReleaseContributor,
         ...mutation,
     };
 };

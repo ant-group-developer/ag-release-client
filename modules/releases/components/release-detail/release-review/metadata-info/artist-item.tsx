@@ -5,7 +5,7 @@ import { Avatar } from 'antd';
 interface ArtistItemProps {
     data: {
         artist: ArtistData | undefined;
-        role: ArtistRoleData | undefined;
+        role?: ArtistRoleData | undefined;
     };
 }
 
@@ -22,7 +22,7 @@ export default function ArtistItem({ data }: ArtistItemProps) {
             <div className="flex-1">
                 <p className="text-sm">
                     <span className="font-semibold">{artistName}</span>{' '}
-                    <span>{role?.name}</span>
+                    {role && <span>{role?.name}</span>}
                 </p>
             </div>
         </div>

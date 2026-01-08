@@ -3,9 +3,9 @@ import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { SIZE_ICON } from '@/constants/common';
 import useModalStore from '@/hooks/use-modal';
-import { useUpdateReleaseArtist } from '@/modules/release-artist/hooks/use-update-release-artist';
-import { ReleaseArtist } from '@/modules/release-artist/types';
-import { UpdateReleaseArtistPayload } from '@/modules/release-artist/types/payload';
+import { useUpdateReleaseContributor } from '@/modules/release-contributor/hooks/use-update-release-contributor';
+import { ReleaseContributor } from '@/modules/release-contributor/types';
+import { UpdateReleaseContributorPayload } from '@/modules/release-contributor/types/payload';
 import { UpdateVariables } from '@/types/api';
 import { Avatar, Switch } from 'antd';
 import { ColumnType } from 'antd/es/table';
@@ -14,7 +14,7 @@ import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '../../enums';
 import AddArtistContributorForm from './add-contributor-form';
 
-type Props = AppTableProps<ReleaseArtist> & {
+type Props = AppTableProps<ReleaseContributor> & {
     disabled?: boolean;
 };
 
@@ -25,23 +25,23 @@ export default function ReleaseContributorsTable({
     const messages = useTranslations();
     const openModal = useModalStore((s) => s.openModal);
 
-    const { updateReleaseArtist } = useUpdateReleaseArtist();
+    const { updateReleaseContributor } = useUpdateReleaseContributor();
 
     const handleUpdate = (
-        releaseArtistId: ReleaseArtist['id'],
-        payload: UpdateReleaseArtistPayload
+        releaseContributorId: ReleaseContributor['id'],
+        payload: UpdateReleaseContributorPayload
     ) => {
         const variables: UpdateVariables<
-            ReleaseArtist['id'],
-            UpdateReleaseArtistPayload
+            ReleaseContributor['id'],
+            UpdateReleaseContributorPayload
         > = {
-            id: releaseArtistId,
+            id: releaseContributorId,
             payload,
         };
-        updateReleaseArtist(variables);
+        updateReleaseContributor(variables);
     };
 
-    const columns: ColumnType<ReleaseArtist>[] = [
+    const columns: ColumnType<ReleaseContributor>[] = [
         {
             title: messages('common.iNo'),
             render: (_, __, index) => (index += 1),

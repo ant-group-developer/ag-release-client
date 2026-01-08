@@ -6,9 +6,6 @@ import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import { useActive } from '@/hooks/use-active';
 import { useApiNotify } from '@/hooks/use-api-notify';
 import useModalStore from '@/hooks/use-modal';
-import { useGetListArtistRole } from '@/modules/artist-role/hooks/use-get-list-artist-role';
-import { ArtistRoleData } from '@/modules/artist-role/types';
-import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { useCreateReleaseArtist } from '@/modules/release-artist/hooks/use-create-release-artist';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import {
@@ -17,10 +14,8 @@ import {
 } from '@/modules/release-artist/types/payload';
 import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
-import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Checkbox, Form } from 'antd';
-import { useWatch } from 'antd/es/form/Form';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { useUpdateReleaseArtist } from '../../hooks/use-update-release-artist';
@@ -38,7 +33,7 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
     const formValues = useReleaseFormStore((state) => state.formValues);
     const releaseId = formValues?.id;
-    const { releaseData } = useGetDetailRelease(releaseId as string);
+    // const { releaseData } = useGetDetailRelease(releaseId as string);
     const { handleError } = useApiNotify();
 
     const isArtistEditModal =
@@ -47,39 +42,8 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
 
     // const { dspData } = useGetListDsp({});
     const { createReleaseArtist } = useCreateReleaseArtist();
-    const { artistsRolesData } = useGetListArtistRole({});
+    // const { artistsRolesData } = useGetListArtistRole({});
     const { updateReleaseArtist } = useUpdateReleaseArtist();
-
-    const mainArtist: ArtistRoleData = artistsRolesData.items.find(
-        (item: ArtistRoleData) => item.code === MAIN_ARTIST_ROLE
-    );
-
-    const watchArtistId = useWatch('artistId', form);
-    // Handle disabled role that this artist already exists
-    const getExistingRoleIdsOfSelectedArtist = () => {
-        return (
-            releaseData?.releaseArtists
-                ?.filter(
-                    (item: ReleaseArtist) => item.artist?.id === watchArtistId
-                )
-                .map((item: ReleaseArtist) => item?.artistRole?.id as string) ||
-            []
-        );
-    };
-    const disabledRoleIds = getExistingRoleIdsOfSelectedArtist();
-
-    const watchRoleId = useWatch('roleId', form);
-    const getExistingArtistOfSelectedRole = () => {
-        return (
-            releaseData?.releaseArtists
-                ?.filter(
-                    (item: ReleaseArtist) =>
-                        item?.artistRole?.id === watchRoleId
-                )
-                .map((item: ReleaseArtist) => item?.artist?.id as string) || []
-        );
-    };
-    const disabledArtistIds = getExistingArtistOfSelectedRole();
 
     const handleSubmit = async (values: any) => {
         active();
@@ -92,7 +56,6 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                     id: dataEdit.id,
                     payload: {
                         artistId: values?.artistId,
-                        artistRoleId: values.roleId,
                         addArtistToTracks: !!values?.addArtistToTracks,
                     },
                     onSuccess: () => {
@@ -104,7 +67,6 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                 const variables: CreateVariables<CreateReleaseArtistPayload> = {
                     payload: {
                         artistId: values.artistId,
-                        artistRoleId: values.roleId ?? mainArtist.id,
                         releaseId: formValues.id as string,
                         addArtistToTracks: !!values?.addArtistToTracks,
                     },
@@ -124,7 +86,6 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
         if (dataEdit?.id) {
             form.setFieldsValue({
                 artistId: dataEdit?.artistId,
-                roleId: dataEdit?.artistRoleId,
                 addArtistToTracks: dataEdit?.addArtistToTracks ?? true,
             });
         } else {
@@ -169,7 +130,6 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                         showSearch
                         // fallBack={dataEdit?.artist?.name}
                         placeholder={messages('artist.select')}
-                        disabledArtistIds={disabledArtistIds}
                     />
                 </AppFormItem>
 
@@ -195,25 +155,9 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                         <RoleArtistSelect
                             // fallBack={dataEdit?.artistRole?.name}
                             placeholder={messages('common.role')}
-                            disabledRoleIds={disabledRoleIds}
                         />
                     </AppFormItem>
                 )}
-
-                {/* {!watchArtistName && (
-                    <div>
-                        <p className="mb-2 text-sm font-semibold">
-                            {messages('artist.profiles')}
-                        </p>
-                        <ArtistProfilesList
-                            list={dspData?.items.map((item: DspData) => ({
-                                icon: item.picture ?? '',
-                                name: item.name,
-                                id: item.id,
-                            }))}
-                        />
-                    </div>
-                )} */}
 
                 <AppFormItem name="addArtistToTracks" valuePropName="checked">
                     <Checkbox>
@@ -221,10 +165,6 @@ export default function ReleaseArtistModal({ isSetMainArtist }: Props) {
                     </Checkbox>
                 </AppFormItem>
             </AppForm>
-            {/* <LinkProfileArtist
-                open={showLinkProfile}
-                onClose={() => setShowLinkProfile(false)}
-            /> */}
         </AppModal>
     );
 }

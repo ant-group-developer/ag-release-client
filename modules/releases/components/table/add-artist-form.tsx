@@ -9,8 +9,8 @@ import { CreateVariables } from '@/types/api';
 import { Button, Form, Switch } from 'antd';
 import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useReleaseFormStore } from '../../hooks/release-form-store';
 import { useParams } from 'next/navigation';
+import { useReleaseFormStore } from '../../hooks/release-form-store';
 
 type Props = {
     disabled?: boolean;
@@ -34,7 +34,6 @@ export default function AddArtistForm({ disabled = false }: Props) {
         const variables: CreateVariables<CreateReleaseArtistPayload> = {
             payload: {
                 artistId: values.artistId,
-                artistRoleId: values.roleId,
                 releaseId: releaseValues.id as string,
                 addArtistToTracks: !!values?.addArtistToTracks,
             },

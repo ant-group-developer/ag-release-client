@@ -3,6 +3,7 @@ import { GenresData } from '@/modules/genres/types';
 import { LabelData } from '@/modules/labels/types';
 import { LanguagesData } from '@/modules/languages/types';
 import { ReleaseArtist } from '@/modules/release-artist/types';
+import { ReleaseContributor } from '@/modules/release-contributor/types';
 import { ReleaseTypesData } from '@/modules/release-types/types';
 import { TenantData } from '@/modules/tenant/types/data';
 import { TimezoneData } from '@/modules/timezone/types';
@@ -39,6 +40,7 @@ export interface ReleasesData extends CommonAttribute {
     albumFormat: ReleaseTypesData;
     tracks: TrackData[];
     releaseArtists?: ReleaseArtist[];
+    releaseContributors?: ReleaseContributor[];
     coverArtThumbnails?: ReleaseCoverArt | null;
     pLineOwner: string;
     cLineOwner: string;

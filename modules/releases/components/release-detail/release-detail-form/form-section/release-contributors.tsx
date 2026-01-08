@@ -33,7 +33,7 @@ export default function ReleaseContributorsSection({
     // );
 
     // variables
-    const releaseArtist = formValues.releaseArtists || [];
+    const releaseArtist = formValues.releaseContributors || [];
 
     // func
 
