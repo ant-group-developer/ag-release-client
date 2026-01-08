@@ -4,7 +4,6 @@ import { DATE_FORMAT } from '@/enums/common';
 import { formatCurrency, formattedDate, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
-import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
@@ -140,15 +139,17 @@ export default function RevenueTable({ dataFilter, ...props }: Props) {
                 'artist.name'
             ),
             render: (_, record) => {
-                const trackArtists = record?.track?.trackArtists?.find(
-                    (item) => item?.artistRole?.code === MAIN_ARTIST_ROLE
-                );
+                // const trackArtists = record?.track?.trackArtists?.find(
+                //     (item) => item?.artistRole?.code === MAIN_ARTIST_ROLE
+                // );
+
+                const trackName = record?.track?.trackArtists
+                    ?.map((item) => item)
+                    ?.join(', ');
                 return (
                     <div className="truncate">
-                        <CustomTooltip title={trackArtists?.artist?.name}>
-                            <p className="truncate">
-                                {trackArtists?.artist?.name}
-                            </p>
+                        <CustomTooltip title={trackName}>
+                            <p className="truncate">{trackName}</p>
                         </CustomTooltip>
                     </div>
                 );

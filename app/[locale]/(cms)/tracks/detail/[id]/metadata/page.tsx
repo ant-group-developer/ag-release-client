@@ -54,7 +54,7 @@ export default function TrackMetadata({}: Props) {
                                         key={trackArtists?.id}
                                         data={{
                                             artist: trackArtists?.artist,
-                                            role: trackArtists?.artistRole,
+                                            // role: trackArtists?.artistRole,
                                         }}
                                     />
                                 )

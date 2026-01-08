@@ -10,8 +10,8 @@ import { ReleaseArtist } from '@/modules/release-artist/types';
 import { TrackData } from '@/modules/releases/types';
 import { useDeleteTrackArtist } from '@/modules/track-artist/hooks/use-delete-track-artist';
 import { useUpdateTrackArtist } from '@/modules/track-artist/hooks/use-update-track-artist';
-import { TrackArtistData } from '@/modules/track-artist/types';
 import { UpdateTrackArtistPayload } from '@/modules/track-artist/types/payload';
+import { TrackContributorData } from '@/modules/track-contributor/types';
 import { UpdateVariables } from '@/types/api';
 import { Avatar } from 'antd';
 import { ColumnType } from 'antd/es/table';
@@ -20,9 +20,9 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import AddTrackContributorForm from './add-track-contributor-form';
 
-type Props = AppTableProps<TrackArtistData> & {
+type Props = AppTableProps<TrackContributorData> & {
     trackData: TrackData;
-    trackArtistData?: TrackArtistData;
+    trackArtistData?: TrackContributorData;
 };
 
 export default function TrackContributorsTable({ trackData, ...props }: Props) {
@@ -35,7 +35,7 @@ export default function TrackContributorsTable({ trackData, ...props }: Props) {
     // state
     const [deleteArtist, setDeleteArtist] = useState<{
         isOpen: boolean;
-        trackArtistData?: TrackArtistData;
+        trackArtistData?: TrackContributorData;
     }>({
         isOpen: false,
         trackArtistData: undefined,
@@ -78,7 +78,7 @@ export default function TrackContributorsTable({ trackData, ...props }: Props) {
         updateTrackArtist(variables);
     };
 
-    const columns: ColumnType<TrackArtistData>[] = [
+    const columns: ColumnType<TrackContributorData>[] = [
         {
             title: messages('common.iNo'),
             render: (_, __, index) => (index += 1),
@@ -108,9 +108,9 @@ export default function TrackContributorsTable({ trackData, ...props }: Props) {
                             className="w-full"
                             defaultValue={record?.artistRole?.id}
                             onChange={() => {
-                                handleUpdateTrackArtist(record?.id, {
-                                    artistRoleId: record?.artistRole?.id,
-                                });
+                                // handleUpdateTrackArtist(record?.id, {
+                                //     artistRoleId: record?.artistRole?.id,
+                                // });
                             }}
                         />
                     </div>

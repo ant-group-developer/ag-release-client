@@ -5,10 +5,8 @@ import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import { getTrackDetailRoute } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { Link, useRouter } from '@/i18n/routing';
-import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
 import TrackActionButton from '@/modules/releases/components/release-detail/release-tracks/button/track-action';
 import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
-import { TrackArtistData } from '@/modules/track-artist/types';
 import {
     SCAN_COPYRIGHT_STATUS,
     TRACK_TABS,
@@ -67,10 +65,9 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
             ),
             render: (_, record) => {
                 const trackArtist = record?.trackArtists ?? [];
-                const mainArtist = trackArtist?.find(
-                    (item: TrackArtistData) =>
-                        item.artistRole?.code == MAIN_ARTIST_ROLE
-                );
+                const trackName = trackArtist
+                    ?.map((item) => item?.artist?.name)
+                    ?.join(' & ');
                 return (
                     <div className="flex items-center gap-4">
                         <TrackCoverArt trackData={record} />
@@ -89,7 +86,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
                                 </Link>
                             </CustomTooltip>
                             <span className="truncate text-gray-500">
-                                {mainArtist && mainArtist?.artist?.name}
+                                {trackName}
                             </span>
                         </div>
                     </div>
