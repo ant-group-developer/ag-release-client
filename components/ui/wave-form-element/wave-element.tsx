@@ -1,4 +1,6 @@
-import dynamic from 'next/dynamic';
+// import dynamic from 'next/dynamic';
+// @ts-ignore
+import Waveform from 'react-audio-waveform';
 
 interface WaveformElementProps {
     peakData?: number[];
@@ -12,9 +14,9 @@ interface WaveformElementProps {
 }
 
 // @ts-ignore
-const Waveform = dynamic<any>(() => import('react-audio-waveform'), {
-    ssr: false,
-});
+// const Waveform = dynamic<any>(() => import('react-audio-waveform'), {
+//     ssr: false,
+// });
 
 export default function WaveElement({
     peakData = [],

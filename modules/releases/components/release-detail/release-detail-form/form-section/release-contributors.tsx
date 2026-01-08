@@ -1,8 +1,8 @@
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { ReleaseDetailSchema } from '@/modules/releases/schemas';
 import { useTranslations } from 'next-intl';
-import { useParams } from 'next/navigation';
 import { useFormContext } from 'react-hook-form';
 import ReleaseContributorsTable from '../../../table/release-contributors-table';
 type Props = {
@@ -21,19 +21,20 @@ export default function ReleaseContributorsSection({
         watch,
     } = useFormContext<ReleaseDetailSchema>();
     const formValues = useReleaseFormStore((state) => state.formValues);
+    const { releaseData } = useGetDetailRelease(formValues?.id as string);
     const messages = useTranslations();
     // const openModal = useModalStore((state) => state.openModal);
     // const { action } = useGetReleaseDetailRoute();
 
     // router - params
-    const params = useParams();
-    // const isReadMode = useMemo(
-    //     () => action !== RELEASE_DETAIL_ACTION.EDIT,
-    //     [action]
-    // );
+    // const params = useParams();
+    // // const isReadMode = useMemo(
+    // //     () => action !== RELEASE_DETAIL_ACTION.EDIT,
+    // //     [action]
+    // // );
 
     // variables
-    const releaseArtist = formValues.releaseArtists || [];
+    const releaseContributor = releaseData.releaseContributors || [];
 
     // func
 
@@ -51,7 +52,7 @@ export default function ReleaseContributorsSection({
                     children: (
                         <div className="" id="releaseContributors">
                             <ReleaseContributorsTable
-                                dataSource={releaseArtist}
+                                dataSource={releaseContributor}
                                 disabled={isReadMode}
                             />
                         </div>

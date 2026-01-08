@@ -7,8 +7,6 @@ import { OnChangeFilter } from '@/hooks/use-filter';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
-import { MAIN_ARTIST_ROLE } from '@/modules/release-artist/constants';
-import { ReleaseArtist } from '@/modules/release-artist/types';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { ReleasesData } from '@/modules/releases/types';
 import { ProColumns } from '@ant-design/pro-components';
@@ -72,16 +70,13 @@ export default function DistributionTable({
                 const releaseArtists = record?.releaseArtists || [];
                 const isVariousArtist = record?.isVariousArtist;
 
-                const mainArtist = !isVariousArtist
-                    ? releaseArtists.find(
-                          (item: ReleaseArtist) =>
-                              item?.artistRole?.code === MAIN_ARTIST_ROLE
-                      )
-                    : null;
+                const artistsName = releaseArtists
+                    ?.map((artist) => artist?.artist?.name)
+                    ?.join(' & ');
 
                 const displayName = isVariousArtist
                     ? messages('common.variousArtists')
-                    : mainArtist?.artist?.name || '';
+                    : artistsName;
                 return (
                     <CustomTooltip size="small" title={displayName}>
                         <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">

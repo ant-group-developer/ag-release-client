@@ -17,7 +17,7 @@ export const trackApi = {
     },
 
     updateTrackDraft: (id: TrackData['id'], payload: UpdateTrackPayload) => {
-        return axiosInstance.put<DetailResponse<TrackData[]>>(
+        return axiosInstance.put<DetailResponse<TrackData>>(
             `/tracks/draft/${id}`,
             payload
         );

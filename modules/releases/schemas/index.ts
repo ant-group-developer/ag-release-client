@@ -233,13 +233,7 @@ export const releaseDetailSchema = (messages: any) =>
                         code: z.ZodIssueCode.custom,
                         message: messages('validation.input'),
                     });
-                } else if (
-                    !data.releaseArtists.some(
-                        (artist) =>
-                            artist.artistRole &&
-                            artist.artistRole.name === 'Main Artist'
-                    )
-                ) {
+                } else if (data.releaseArtists.length <= 0) {
                     ctx.addIssue({
                         path: ['releaseArtists'],
                         code: z.ZodIssueCode.custom,

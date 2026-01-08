@@ -34,7 +34,7 @@ export default function Tracks() {
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore((state) => state.dataEdit);
     const closeModal = useModalStore((state) => state.closeModal);
-    const openModal = useModalStore((state) => state.openModal);
+    // const openModal = useModalStore((state) => state.openModal);
 
     // const { action } = useGetReleaseDetailRoute();
     const releaseAction = useReleaseActionStore((state) => state.action);

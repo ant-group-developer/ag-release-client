@@ -110,7 +110,7 @@ export default function MetadataInfo({}: Props) {
                                 key={releaseArtist.id}
                                 data={{
                                     artist: releaseArtist?.artist,
-                                    role: releaseArtist?.artistRole,
+                                    // role: releaseArtist?.artistRole,
                                 }}
                             />
                         )

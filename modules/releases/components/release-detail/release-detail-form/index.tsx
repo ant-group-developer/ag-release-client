@@ -127,6 +127,7 @@ export default function ReleaseDetailForm() {
                 keepErrors: true,
             });
         }
+        // }, [isCreateReleasePage, releaseId, formValues]);
     }, [isCreateReleasePage, releaseId, formValues]);
 
     useEffect(() => {

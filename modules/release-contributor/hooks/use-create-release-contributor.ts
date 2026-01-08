@@ -1,58 +1,58 @@
 import { useApiNotify } from '@/hooks/use-api-notify';
 import { releasesQueryKeys } from '@/modules/releases/constants/query-keys';
-import { DeleteVariables } from '@/types/api';
+import { CreateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { releaseArtistApi } from '../apis';
-import { releaseArtistQueryKeys } from '../constants/query-keys';
-import { ReleaseArtist } from '../types';
+import { releaseContributorApi } from '../apis';
+import { releaseContributorQueryKeys } from '../constants/query-keys';
+import { CreateReleaseContributorPayload } from '../types/payload';
 
-export const useDeleteReleaseArtist = () => {
+export const useCreateReleaseContributor = () => {
     // const messages = useTranslations();
     const queryClient = useQueryClient();
     const { handleError } = useApiNotify();
 
     const onSuccess = (
         data: any,
-        { onSuccess }: DeleteVariables<ReleaseArtist['id']>
+        { onSuccess }: CreateVariables<CreateReleaseContributorPayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: releaseArtistQueryKeys.lists(),
+            queryKey: releaseContributorQueryKeys.lists(),
         });
         queryClient.invalidateQueries({
             queryKey: releasesQueryKeys.details(),
         });
-        queryClient.invalidateQueries({
-            queryKey: releasesQueryKeys.validations(),
-        });
 
         // const responseMessages = messages(data?.data?.messageCode);
 
-        onSuccess?.();
+        onSuccess?.(data?.data?.data);
         // showNotification('success', responseMessages);
     };
 
     const onError = (
         data: any,
-        { onError }: DeleteVariables<ReleaseArtist['id']>
+        { onError }: CreateVariables<CreateReleaseContributorPayload>
     ) => {
-        onError?.();
         handleError(data);
+
+        onError?.();
     };
     const mutation = useMutation({
-        mutationFn: ({ id }: DeleteVariables<ReleaseArtist['id']>) =>
-            releaseArtistApi.deleteReleaseArtist(id),
+        mutationFn: ({
+            payload,
+        }: CreateVariables<CreateReleaseContributorPayload>) =>
+            releaseContributorApi.create(payload),
         onSuccess,
         onError,
     });
 
-    const deleteReleaseArtist = (
-        variables: DeleteVariables<ReleaseArtist['id']>
+    const createReleaseContributor = (
+        variables: CreateVariables<CreateReleaseContributorPayload>
     ) => {
-        return mutation.mutate(variables);
+        mutation.mutate(variables);
     };
 
     return {
-        deleteReleaseArtist,
+        createReleaseContributor,
         ...mutation,
     };
 };
