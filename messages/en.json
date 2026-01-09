@@ -331,7 +331,8 @@
     },
     "delete": {
         "confirmTitle": "Confirm delete",
-        "confirmMessage": "Are you sure you want to delete {value}?"
+        "confirmMessage": "Are you sure you want to delete {value}?",
+        "confirmMessageValue": "Are you sure you want to delete <b>{value}</b> ?"
     },
     "cancel": {
         "confirmTitle": "Confirm cancel",
@@ -962,7 +963,10 @@
                 "update": "Update artist successfully",
                 "delete": "Delete artist successfully"
             },
-            "note": "Editing the artist will interrupt synchronization with the release artist"
+            "note": "Editing the artist will interrupt synchronization with the release artist",
+            "error": {
+                "uniqueConstraint": "The artist already exists in the track."
+            }
         }
     },
 

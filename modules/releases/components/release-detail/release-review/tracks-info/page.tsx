@@ -4,6 +4,7 @@ import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
 import type { TrackData } from '@/modules/releases/types';
 import { TrackArtistData } from '@/modules/track-artist/types';
+import { TrackContributorData } from '@/modules/track-contributor/types';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { Collapse } from 'antd';
 import { CircleCheck, OctagonAlert } from 'lucide-react';
@@ -143,6 +144,12 @@ export default function TracksInfo({}: Props) {
 
             <div className="flex flex-col gap-2">
                 {tracksData?.items?.map((track: TrackData, index: number) => {
+                    const trackArtists = track?.trackArtists;
+                    const trackContributors = track?.trackContributors;
+                    console.log(
+                        '🚀 ~ TracksInfo ~ trackContributors:',
+                        trackContributors
+                    );
                     const errorCount = releaseValidateData?.reduce(
                         (pre, current) => {
                             if (current?.trackId === track.id) {
@@ -202,8 +209,15 @@ export default function TracksInfo({}: Props) {
                                         messages('formFields.tracks.version'),
                                         'version'
                                     )}
-                                    <div className="col-span-2 rounded-lg bg-white px-4 py-2">
-                                        {track?.trackArtists?.map(
+
+                                    <div className="rounded-lg bg-white px-4 py-2">
+                                        <p className="font-medium">
+                                            {messages('artist.artists')}{' '}
+                                            <span className="text-red-500">
+                                                *
+                                            </span>
+                                        </p>
+                                        {trackArtists?.map(
                                             (
                                                 trackArtist: TrackArtistData,
                                                 index: number
@@ -216,6 +230,41 @@ export default function TracksInfo({}: Props) {
                                                     }}
                                                 />
                                             )
+                                        )}
+                                        {(!trackArtists ||
+                                            trackArtists?.length <= 0) && (
+                                            <p className="text-red-500">
+                                                {messages('common.required')}
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    <div className="rounded-lg bg-white px-4 py-2">
+                                        <p className="font-medium">
+                                            {messages('common.contributors')}{' '}
+                                            <span className="text-red-500">
+                                                *
+                                            </span>
+                                        </p>
+                                        {trackContributors?.map(
+                                            (
+                                                item: TrackContributorData,
+                                                index: number
+                                            ) => (
+                                                <ArtistItem
+                                                    key={item.id}
+                                                    data={{
+                                                        artist: item?.artist,
+                                                        role: item?.artistRole,
+                                                    }}
+                                                />
+                                            )
+                                        )}
+                                        {(!trackContributors ||
+                                            trackContributors?.length <= 0) && (
+                                            <p className="text-red-500">
+                                                {messages('common.required')}
+                                            </p>
                                         )}
                                     </div>
 

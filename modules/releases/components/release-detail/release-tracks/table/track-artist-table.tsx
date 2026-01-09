@@ -3,15 +3,10 @@ import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { SIZE_ICON } from '@/constants/common';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
-import { useActive } from '@/hooks/use-active';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
-import { ReleaseArtist } from '@/modules/release-artist/types';
 import { TrackData } from '@/modules/releases/types';
 import { useDeleteTrackArtist } from '@/modules/track-artist/hooks/use-delete-track-artist';
-import { useUpdateTrackArtist } from '@/modules/track-artist/hooks/use-update-track-artist';
 import { TrackArtistData } from '@/modules/track-artist/types';
-import { UpdateTrackArtistPayload } from '@/modules/track-artist/types/payload';
-import { UpdateVariables } from '@/types/api';
 import { Avatar } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { Trash } from 'lucide-react';
@@ -26,7 +21,7 @@ type Props = AppTableProps<TrackArtistData> & {
 
 export default function TrackArtistTable({ trackData, ...props }: Props) {
     // hooks
-    const { active, deActive, isActive } = useActive();
+    // const { active, deActive, isActive } = useActive();
     const messages = useTranslations();
     const releaseAction = useReleaseActionStore((s) => s.action);
     const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
@@ -42,7 +37,7 @@ export default function TrackArtistTable({ trackData, ...props }: Props) {
 
     // apis
     const { deleteTrackArtist } = useDeleteTrackArtist();
-    const { updateTrackArtist } = useUpdateTrackArtist();
+    // const { updateTrackArtist } = useUpdateTrackArtist();
 
     const handleRemoveTrackArtist = () => {
         const variable = {
@@ -57,25 +52,25 @@ export default function TrackArtistTable({ trackData, ...props }: Props) {
         deleteTrackArtist(variable);
     };
 
-    const handleUpdateTrackArtist = (
-        id: string,
-        payload: UpdateTrackArtistPayload
-    ) => {
-        const variables: UpdateVariables<
-            ReleaseArtist['id'],
-            UpdateTrackArtistPayload
-        > = {
-            id,
-            payload: {
-                ...payload,
-            },
-            onSuccess: () => {
-                deActive();
-            },
-            onError: () => deActive(),
-        };
-        updateTrackArtist(variables);
-    };
+    // const handleUpdateTrackArtist = (
+    //     id: string,
+    //     payload: UpdateTrackArtistPayload
+    // ) => {
+    //     const variables: UpdateVariables<
+    //         ReleaseArtist['id'],
+    //         UpdateTrackArtistPayload
+    //     > = {
+    //         id,
+    //         payload: {
+    //             ...payload,
+    //         },
+    //         onSuccess: () => {
+    //             deActive();
+    //         },
+    //         onError: () => deActive(),
+    //     };
+    //     updateTrackArtist(variables);
+    // };
 
     const columns: ColumnType<TrackArtistData>[] = [
         {

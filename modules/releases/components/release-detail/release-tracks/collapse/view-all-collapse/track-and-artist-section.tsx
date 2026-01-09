@@ -1,6 +1,5 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
-import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { TrackData } from '@/modules/tracks/types';
@@ -23,7 +22,7 @@ export default function TrackAndArtistSection({
 }: Props) {
     // hook - state
     const messages = useTranslations();
-    const openModal = useModalStore((state) => state.openModal);
+    // const openModal = useModalStore((state) => state.openModal);
     const releaseAction = useReleaseActionStore((s) => s.action);
 
     const form = Form.useFormInstance();

@@ -163,6 +163,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                                     <Tag
                                         key={`${record.id}-${trackArtist.id}`}
                                         closeIcon
+                                        onClick={() => {}}
                                         onClose={(e) => {
                                             e.preventDefault();
                                             openModal(

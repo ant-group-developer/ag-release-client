@@ -67,7 +67,7 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
                 },
             });
         }
-    }, [trackData, form]);
+    }, [trackData?.id, form]);
 
     // focus and scroll into field
     useEffect(() => {

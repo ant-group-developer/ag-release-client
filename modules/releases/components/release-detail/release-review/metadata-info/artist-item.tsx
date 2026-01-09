@@ -20,10 +20,10 @@ export default function ArtistItem({ data }: ArtistItemProps) {
                 {firstLetter}
             </Avatar>
             <div className="flex-1">
-                <p className="text-sm">
+                <div className="flex justify-between text-sm">
                     <span className="font-semibold">{artistName}</span>{' '}
                     {role && <span>{role?.name}</span>}
-                </p>
+                </div>
             </div>
         </div>
     );

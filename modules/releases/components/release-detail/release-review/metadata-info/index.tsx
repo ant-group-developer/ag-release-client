@@ -1,4 +1,5 @@
 import { ReleaseArtist } from '@/modules/release-artist/types';
+import { ReleaseContributor } from '@/modules/release-contributor/types';
 import type { ReleaseFormStoreData } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
@@ -85,7 +86,7 @@ export default function MetadataInfo({}: Props) {
     };
 
     return (
-        <div className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
             {/* <p className="font-semibold">MetaData</p> */}
             {/* <div className="my-1 rounded-lg bg-main p-4 dark:bg-zinc-900">
                 <p className="text-base font-medium">
@@ -93,87 +94,80 @@ export default function MetadataInfo({}: Props) {
                 </p>
             </div> */}
 
-            <div className="grid grid-cols-2 gap-4">
-                <MetadataInfoItem label={messages('release.name')}>
-                    {renderField('title', true)}
-                </MetadataInfoItem>
-                <MetadataInfoItem label={messages('release.version')}>
-                    {renderField('version')}
-                </MetadataInfoItem>
-            </div>
+            <MetadataInfoItem label={messages('release.name')}>
+                {renderField('title', true)}
+            </MetadataInfoItem>
+            <MetadataInfoItem label={messages('release.version')}>
+                {renderField('version')}
+            </MetadataInfoItem>
 
-            <div>
-                <MetadataInfoItem label={messages('common.artist')}>
-                    {releaseData?.releaseArtists?.map(
-                        (releaseArtist: ReleaseArtist, index: number) => (
-                            <ArtistItem
-                                key={releaseArtist.id}
-                                data={{
-                                    artist: releaseArtist?.artist,
-                                    // role: releaseArtist?.artistRole,
-                                }}
-                            />
-                        )
-                    )}
-                </MetadataInfoItem>
-            </div>
+            <MetadataInfoItem label={messages('artist.artists')}>
+                {releaseData?.releaseArtists?.map(
+                    (releaseArtist: ReleaseArtist, index: number) => (
+                        <ArtistItem
+                            key={releaseArtist.id}
+                            data={{
+                                artist: releaseArtist?.artist,
+                                // role: releaseArtist?.artistRole,
+                            }}
+                        />
+                    )
+                )}
+            </MetadataInfoItem>
+            <MetadataInfoItem label={messages('common.contributors')}>
+                {releaseData?.releaseContributors?.map(
+                    (item: ReleaseContributor, index: number) => (
+                        <ArtistItem
+                            key={item.id}
+                            data={{
+                                artist: item?.artist,
+                                role: item?.artistRole,
+                            }}
+                        />
+                    )
+                )}
+            </MetadataInfoItem>
 
-            <div className="grid grid-cols-2 gap-4">
-                <MetadataInfoItem label={messages('genres.primary')}>
-                    {renderField('primaryGenreId', true)}
-                </MetadataInfoItem>
-                <MetadataInfoItem label={messages('common.subGenres')}>
-                    {renderField('subGenreId')}
-                </MetadataInfoItem>
-            </div>
+            <MetadataInfoItem label={messages('genres.primary')}>
+                {renderField('primaryGenreId', true)}
+            </MetadataInfoItem>
+            <MetadataInfoItem label={messages('common.subGenres')}>
+                {renderField('subGenreId')}
+            </MetadataInfoItem>
 
-            <div>
-                <MetadataInfoItem
-                    label={`${messages('common.language')} metadata`}
-                >
-                    {renderField('metadataLanguageId', true)}
-                </MetadataInfoItem>
-            </div>
+            <MetadataInfoItem label={`${messages('common.language')} metadata`}>
+                {renderField('metadataLanguageId', true)}
+            </MetadataInfoItem>
 
-            <div className="grid grid-cols-2 gap-4">
-                <MetadataInfoItem label={'Label'}>
-                    {renderField('labelId')}
-                </MetadataInfoItem>
+            <MetadataInfoItem label={'Label'}>
+                {renderField('labelId')}
+            </MetadataInfoItem>
 
-                <MetadataInfoItem label={'UPC'}>
-                    {renderField('upc')}
-                </MetadataInfoItem>
-            </div>
+            <MetadataInfoItem label={'UPC'}>
+                {renderField('upc')}
+            </MetadataInfoItem>
 
-            <div>
-                <MetadataInfoItem label={'ID catalog'}>
-                    {renderField('catalogId')}
-                </MetadataInfoItem>
-            </div>
+            <MetadataInfoItem label={'ID catalog'}>
+                {renderField('catalogId')}
+            </MetadataInfoItem>
 
-            <div className="grid grid-cols-2 gap-4">
-                <MetadataInfoItem label={messages('release.releaseDate')}>
-                    {renderField('releaseDate', true)}
-                </MetadataInfoItem>
-                <MetadataInfoItem label={messages('release.releaseTime')}>
-                    {renderField('releaseTime', true)}
-                </MetadataInfoItem>
-            </div>
+            <MetadataInfoItem label={messages('release.releaseDate')}>
+                {renderField('releaseDate', true)}
+            </MetadataInfoItem>
+            <MetadataInfoItem label={messages('release.releaseTime')}>
+                {renderField('releaseTime', true)}
+            </MetadataInfoItem>
 
-            <div>
-                <MetadataInfoItem label={messages('release.type')}>
-                    {renderField('type', true)}
-                </MetadataInfoItem>
-            </div>
+            <MetadataInfoItem label={messages('release.type')}>
+                {renderField('type', true)}
+            </MetadataInfoItem>
 
-            <div className="grid grid-cols-2 gap-4">
-                <MetadataInfoItem label={`© ${messages('common.copyRight')}`}>
-                    {renderField('cLineOwner', true)}
-                </MetadataInfoItem>
-                <MetadataInfoItem label={`℗ ${messages('common.copyRight')}`}>
-                    {renderField('pLineOwner', true)}
-                </MetadataInfoItem>
-            </div>
+            <MetadataInfoItem label={`© ${messages('common.copyRight')}`}>
+                {renderField('cLineOwner', true)}
+            </MetadataInfoItem>
+            <MetadataInfoItem label={`℗ ${messages('common.copyRight')}`}>
+                {renderField('pLineOwner', true)}
+            </MetadataInfoItem>
         </div>
     );
 }

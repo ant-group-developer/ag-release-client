@@ -329,7 +329,8 @@
     },
     "delete": {
         "confirmTitle": "Xác nhận xoá",
-        "confirmMessage": "Bạn có chắc muốn xoá {value}?"
+        "confirmMessage": "Bạn có chắc muốn xoá {value}?",
+        "confirmMessageValue": "Bạn có chắc muốn xoá <b>{value}</b> ?"
     },
     "cancel": {
         "confirmTitle": "Xác nhận huỷ",
@@ -963,7 +964,10 @@
                 "update": "Cập nhật nghệ sĩ thành công",
                 "delete": "Xoá nghệ sĩ thành công"
             },
-            "note": "Chỉnh sửa nghệ sĩ sẽ làm ngắt đồng bộ với nghệ sĩ phát hành"
+            "note": "Chỉnh sửa nghệ sĩ sẽ làm ngắt đồng bộ với nghệ sĩ phát hành",
+            "error": {
+                "uniqueConstraint": "Nghệ sĩ này đã tồn tại trong track."
+            }
         }
     },
 

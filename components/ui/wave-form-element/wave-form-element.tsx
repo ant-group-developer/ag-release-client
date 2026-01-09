@@ -2,14 +2,15 @@ import { SIZE_ICON_BIG } from '@/constants/common';
 import { convertSecondsToTime } from '@/helpers/common';
 import { Button, Col, Row } from 'antd';
 import { CirclePause, CirclePlay } from 'lucide-react';
-import WaveElement from './wave-element';
+import dynamic from 'next/dynamic';
+// import WaveElement from './wave-element';
 
 // import Waveform from 'react-audio-waveform';
 
 // @ts-ignore
-// const Waveform = dynamic<any>(() => import('react-audio-waveform'), {
-//     ssr: false,
-// });
+const WaveElement = dynamic<any>(() => import('react-audio-waveform'), {
+    ssr: false,
+});
 
 interface WaveformElementProps {
     peakData?: number[];

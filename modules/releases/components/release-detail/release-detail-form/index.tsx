@@ -92,6 +92,7 @@ export default function ReleaseDetailForm() {
         }
     };
     const handleFormError = (errors: any) => {};
+
     const debouncedUpdate = useCallback(
         debounce(async (data: any, fieldName?: string) => {
             if (fieldName) {

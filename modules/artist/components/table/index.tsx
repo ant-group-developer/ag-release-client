@@ -49,7 +49,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
                 ),
         },
         {
-            title: messages('artist.name'),
+            title: messages('common.name'),
             key: 'name',
             dataIndex: 'name',
             ellipsis: true,

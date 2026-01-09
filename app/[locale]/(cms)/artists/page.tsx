@@ -79,7 +79,7 @@ export default function Artists({}: Props) {
     return (
         <AppPageWrapper>
             <PageContainer
-                title={messages('artist.label')}
+                title={messages('artist.artists')}
                 extra={
                     <>
                         {hasPermission(PERMISSION.ARTIST.CREATE) && (
@@ -141,7 +141,7 @@ export default function Artists({}: Props) {
 
                 {(typeModal === TYPE_MODAL_ARTIST.CREATE ||
                     typeModal === TYPE_MODAL_ARTIST.UPDATE) && (
-                    <ArtistFormModal onCancel={closeModal} />
+                    <ArtistFormModal open onCancel={closeModal} />
                 )}
 
                 {typeModal === TYPE_MODAL_ARTIST.DELETE && (

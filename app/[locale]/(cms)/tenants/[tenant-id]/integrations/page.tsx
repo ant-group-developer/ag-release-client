@@ -133,14 +133,16 @@ function TenantDeals({}: Props) {
             key: 'action',
             dataIndex: '',
             width: 50,
-            render: (_, record) => (
-                <ActionButton
-                    showUpdate
-                    onShowUpdate={() =>
-                        openModal(TYPE_MODAL_DSP.UPDATE, record)
-                    }
-                />
-            ),
+            render: (_, record) => {
+                return (
+                    <ActionButton
+                        showUpdate
+                        onShowUpdate={() =>
+                            openModal(TYPE_MODAL_DSP.UPDATE, record)
+                        }
+                    />
+                );
+            },
         },
     ];
 
@@ -172,6 +174,7 @@ function TenantDeals({}: Props) {
                 isSelected: Boolean(data),
             };
         });
+
         setDataSource(newDataSource);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [JSON.stringify(dspData.items), JSON.stringify(dataTenantDsp)]);

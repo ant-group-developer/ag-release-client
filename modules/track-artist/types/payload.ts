@@ -1,5 +1,4 @@
 export interface CreateTrackArtistPayload {
-    // artistRoleId: string; on removing
     artistId: string;
     trackId: string;
 }

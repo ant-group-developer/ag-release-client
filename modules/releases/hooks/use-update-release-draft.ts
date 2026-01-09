@@ -72,7 +72,7 @@ export const useUpdateReleaseDraft = () => {
     };
 
     const onError = (
-        data: AxiosResponse<DetailResponse<ReleasesData>>,
+        error: any,
         {
             onError,
             id,
@@ -88,7 +88,7 @@ export const useUpdateReleaseDraft = () => {
         }
 
         onError?.();
-        handleError(data);
+        handleError(error);
     };
     const mutation = useMutation({
         mutationFn: ({

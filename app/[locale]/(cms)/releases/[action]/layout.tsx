@@ -2,7 +2,6 @@
 import DetailSkeleton from '@/components/ui/skeleton/detail-skeleton';
 import { APP_ROUTES } from '@/enums/routes';
 import { cn } from '@/helpers/common';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
@@ -10,14 +9,13 @@ import { Link } from '@/i18n/routing';
 import AppError from '@/modules/auth/components/error';
 import ReleaseDetailHeader from '@/modules/releases/components/release-detail/header';
 import RightSidebar from '@/modules/releases/components/release-detail/right-sidebar';
-import { RELEASES_TABS, TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
+import { RELEASES_TABS } from '@/modules/releases/enums';
 import {
     ReleaseFormStoreData,
     useReleaseFormStore,
 } from '@/modules/releases/hooks/release-form-store';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
-import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
-import { Breadcrumb, Button, Tabs, TabsProps, theme } from 'antd';
+import { Breadcrumb, Tabs, TabsProps, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname } from 'next/navigation';
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
@@ -31,14 +29,14 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     // const formValues = useReleaseFormStore((state) => state.formValues);
     const pathname = usePathname();
-    const openModal = useModalStore((state) => state.openModal);
+    // const openModal = useModalStore((state) => state.openModal);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const resetFormValues = useReleaseFormStore(
         (state) => state.resetFormValues
     );
     const { token } = theme.useToken();
     const { getReleaseTabRoute } = useGetReleaseDetailRoute();
-    const releaseAction = useReleaseActionStore((s) => s.action);
+    // const releaseAction = useReleaseActionStore((s) => s.action);
 
     // state
     const [activeTab, setActiveTab] = useState<string>(
@@ -51,7 +49,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const isCreateReleasePage = params['action'] === 'create';
     const isDisableTab = releaseId == '';
     const isDetailPage = pathname.includes(`/${RELEASES_TABS.CORE_DETAIL}`);
-    const isTracksPage = pathname.includes(`/${RELEASES_TABS.TRACKS}`);
+    // const isTracksPage = pathname.includes(`/${RELEASES_TABS.TRACKS}`);
     const isCoreDetailPage = pathname.includes(`/${RELEASES_TABS.CORE_DETAIL}`);
     const coreDetailTabsNavigate = isCreateReleasePage
         ? '/releases/create'
@@ -146,27 +144,28 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         isLoading: isReleaseDataLoading,
         error,
     } = useGetDetailRelease(releaseId);
-    const { tracksData, isLoading: isTracksLoading } = useGetListTracks({
-        releaseId: releaseData?.id || '',
-        fieldOrder: 'order',
-    });
+    // const { tracksData, isLoading: isTracksLoading } = useGetListTracks({
+    //     releaseId: releaseData?.id || '',
+    //     fieldOrder: 'order',
+    // });
 
     // render
-    const isShowAddTrack =
-        tracksData?.items?.length < releaseData?.albumFormat?.maxTrackCount &&
-        releaseAction == RELEASE_DETAIL_ACTION.EDIT;
-    const extraButton = (
-        <div className="flex justify-end gap-2">
-            {isTracksPage && isShowAddTrack && (
-                <Button
-                    onClick={() => openModal(TYPE_MODAL_RELEASE.ADD_TRACK)}
-                    type="primary"
-                >
-                    {messages('track.add')}
-                </Button>
-            )}
-        </div>
-    );
+    // const isShowAddTrack =
+    //     tracksData?.items?.length < releaseData?.albumFormat?.maxTrackCount &&
+    //     releaseAction == RELEASE_DETAIL_ACTION.EDIT;
+
+    // const extraButton = (
+    //     <div className="flex justify-end gap-2">
+    //         {isTracksPage && isShowAddTrack && (
+    //             <Button
+    //                 onClick={() => openModal(TYPE_MODAL_RELEASE.ADD_TRACK)}
+    //                 type="primary"
+    //             >
+    //                 {messages('track.add')}
+    //             </Button>
+    //         )}
+    //     </div>
+    // );
 
     useEffect(() => {
         const getActiveTab = () => {
@@ -267,7 +266,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                                 }}
                                 items={items}
                                 activeKey={activeTab}
-                                tabBarExtraContent={extraButton}
+                                // tabBarExtraContent={extraButton}
                             />
                         </div>
                     </div>

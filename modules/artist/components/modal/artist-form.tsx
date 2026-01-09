@@ -146,12 +146,18 @@ export default function ArtistFormModal({ ...props }: Props) {
 
     return (
         <AppModal
-            width={600}
             {...props}
             title={titleModal}
             onOk={form.submit}
             loading={isActive}
-            className="custom-scroll-artist-modal !top-6"
+            className="!top-6 !w-[50vw]"
+            styles={{
+                body: {
+                    height: '80vh',
+                    overflowY: 'auto',
+                    paddingRight: '8px',
+                },
+            }}
             okButtonProps={{
                 disabled: isOnLoadingData,
             }}
@@ -268,7 +274,7 @@ export default function ArtistFormModal({ ...props }: Props) {
 
                     <Form.List name={'artistProfiles'}>
                         {(fields, { add, remove }) => (
-                            <div className="max-h-[350px] overflow-y-auto">
+                            <div className="overflow-y-auto">
                                 <Divider />
                                 <p className="mb-2 font-semibold">
                                     {' '}
@@ -390,7 +396,6 @@ export default function ArtistFormModal({ ...props }: Props) {
                                         </AppFormItem>
                                         <AppFormItem
                                             {...restField}
-                                            className="!mb-8 border-b !pb-8"
                                             name={[name, 'dspId']}
                                             label={messages('common.platforms')}
                                             required

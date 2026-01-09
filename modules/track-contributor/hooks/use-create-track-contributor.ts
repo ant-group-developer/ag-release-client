@@ -16,9 +16,7 @@ export const useCreateTrackContributor = () => {
         { onSuccess }: CreateVariables<CreateTrackContributorPayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: trackQueryKeys.list({
-                pageSize: 999,
-            }),
+            queryKey: trackQueryKeys.list(),
         });
         queryClient.invalidateQueries({
             queryKey: trackQueryKeys.detail(data?.data?.data?.trackId),
