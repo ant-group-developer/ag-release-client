@@ -119,7 +119,9 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
                         }}
                     >
                         {record?.artistProfiles?.map((item) => (
-                            <Avatar key={item.id} src={item?.dsp?.picture} />
+                            <a key={item.id} href={item?.url} target="_blank">
+                                <Avatar src={item?.dsp?.picture} />
+                            </a>
                         ))}
                     </Avatar.Group>
                 </div>

@@ -16,7 +16,7 @@ import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { uploadApi } from '@/modules/upload/apis';
 import { ENTITY_TYPE_PICTURE } from '@/modules/upload/types/data';
 import { CreateVariables, UpdateVariables } from '@/types/api';
-import { Button, Divider, Form, Input, Spin } from 'antd';
+import { Button, Card, Divider, Form, Input, Spin } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -280,140 +280,161 @@ export default function ArtistFormModal({ ...props }: Props) {
                                     {' '}
                                     {messages('dsp.profileList')}{' '}
                                 </p>
-                                {fields.map(({ key, name, ...restField }) => (
-                                    <div key={key} className="pr-8">
-                                        <div className="relative">
-                                            <AppFormItem
-                                                {...restField}
-                                                className="flex-1"
-                                                name={[name, 'url']}
-                                                label={'Url'}
-                                                required
-                                                rules={[
-                                                    {
-                                                        required: true,
-                                                        message:
-                                                            messages(
-                                                                'validation.input'
-                                                            ),
+                                <div className="space-y-4">
+                                    {fields.map(
+                                        ({ key, name, ...restField }) => (
+                                            <Card
+                                                key={key}
+                                                styles={{
+                                                    body: {
+                                                        paddingRight: '38px',
                                                     },
-                                                    {
-                                                        max: MAX_NAME_LENGTH,
-                                                        message: messages(
-                                                            'validation.stringMax',
+                                                }}
+                                            >
+                                                <div className="relative">
+                                                    <AppFormItem
+                                                        {...restField}
+                                                        className="flex-1"
+                                                        name={[name, 'url']}
+                                                        label={'Url'}
+                                                        required
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                                message:
+                                                                    messages(
+                                                                        'validation.input'
+                                                                    ),
+                                                            },
                                                             {
                                                                 max: MAX_NAME_LENGTH,
-                                                                field: 'URL',
-                                                            }
-                                                        ),
-                                                    },
-                                                ]}
-                                            >
-                                                <Input
-                                                    allowClear
-                                                    onChange={(e) => {
-                                                        const url =
-                                                            e.target.value.toLowerCase();
-                                                        const matched =
-                                                            dspData?.items.find(
-                                                                (dsp) =>
-                                                                    dsp.formatLinks?.some(
-                                                                        (
-                                                                            link: string
-                                                                        ) =>
-                                                                            url.includes(
-                                                                                link.toLowerCase()
+                                                                message:
+                                                                    messages(
+                                                                        'validation.stringMax',
+                                                                        {
+                                                                            max: MAX_NAME_LENGTH,
+                                                                            field: 'URL',
+                                                                        }
+                                                                    ),
+                                                            },
+                                                        ]}
+                                                    >
+                                                        <Input
+                                                            allowClear
+                                                            onChange={(e) => {
+                                                                const url =
+                                                                    e.target.value.toLowerCase();
+                                                                const matched =
+                                                                    dspData?.items.find(
+                                                                        (dsp) =>
+                                                                            dsp.formatLinks?.some(
+                                                                                (
+                                                                                    link: string
+                                                                                ) =>
+                                                                                    url.includes(
+                                                                                        link.toLowerCase()
+                                                                                    )
                                                                             )
-                                                                    )
-                                                            );
-                                                        if (matched) {
-                                                            const current =
+                                                                    );
+                                                                if (matched) {
+                                                                    const current =
+                                                                        form.getFieldValue(
+                                                                            'artistProfiles'
+                                                                        ) || [];
+                                                                    current[
+                                                                        name
+                                                                    ] = {
+                                                                        ...(current[
+                                                                            name
+                                                                        ] ||
+                                                                            {}),
+                                                                        dspId: matched.id,
+                                                                    };
+                                                                    form.setFieldsValue(
+                                                                        {
+                                                                            artistProfiles:
+                                                                                current,
+                                                                        }
+                                                                    );
+                                                                }
+                                                            }}
+                                                        />
+                                                    </AppFormItem>
+                                                    <IconButton
+                                                        onClick={() => {
+                                                            const currentProfiles =
                                                                 form.getFieldValue(
                                                                     'artistProfiles'
                                                                 ) || [];
-                                                            current[name] = {
-                                                                ...(current[
-                                                                    name
-                                                                ] || {}),
-                                                                dspId: matched.id,
-                                                            };
-                                                            form.setFieldsValue(
-                                                                {
-                                                                    artistProfiles:
-                                                                        current,
-                                                                }
-                                                            );
-                                                        }
-                                                    }}
-                                                />
-                                            </AppFormItem>
-                                            <IconButton
-                                                onClick={() => {
-                                                    const currentProfiles =
-                                                        form.getFieldValue(
-                                                            'artistProfiles'
-                                                        ) || [];
 
-                                                    remove(name);
-                                                }}
-                                                className="absolute right-[-32px] top-0 mb-1"
-                                                disabled={isActive}
-                                            >
-                                                <Trash
-                                                    size={SIZE_ICON}
-                                                    className="text-red-500"
-                                                />
-                                            </IconButton>
-                                        </div>
-                                        <AppFormItem
-                                            {...restField}
-                                            name={[name, 'name']}
-                                            label={messages('channel.name')}
-                                            required
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message:
-                                                        messages(
-                                                            'validation.input'
-                                                        ),
-                                                },
-                                                {
-                                                    max: MAX_NAME_LENGTH,
-                                                    message: messages(
-                                                        'validation.stringMax',
+                                                            remove(name);
+                                                        }}
+                                                        className="absolute right-[-34px] top-0 mb-1"
+                                                        disabled={isActive}
+                                                    >
+                                                        <Trash
+                                                            size={SIZE_ICON}
+                                                            className="text-red-500"
+                                                        />
+                                                    </IconButton>
+                                                </div>
+                                                <AppFormItem
+                                                    {...restField}
+                                                    name={[name, 'name']}
+                                                    label={messages(
+                                                        'channel.name'
+                                                    )}
+                                                    required
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message:
+                                                                messages(
+                                                                    'validation.input'
+                                                                ),
+                                                        },
                                                         {
                                                             max: MAX_NAME_LENGTH,
-                                                            field: messages(
-                                                                'channel.name'
+                                                            message: messages(
+                                                                'validation.stringMax',
+                                                                {
+                                                                    max: MAX_NAME_LENGTH,
+                                                                    field: messages(
+                                                                        'channel.name'
+                                                                    ),
+                                                                }
                                                             ),
-                                                        }
-                                                    ),
-                                                },
-                                            ]}
-                                        >
-                                            <Input allowClear />
-                                        </AppFormItem>
-                                        <AppFormItem
-                                            {...restField}
-                                            name={[name, 'dspId']}
-                                            label={messages('common.platforms')}
-                                            required
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message:
-                                                        messages(
-                                                            'validation.input'
-                                                        ),
-                                                },
-                                            ]}
-                                        >
-                                            <PlatformSelect allowClear />
-                                        </AppFormItem>
-                                    </div>
-                                ))}
-                                <div className="mb-4">
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Input allowClear />
+                                                </AppFormItem>
+                                                <AppFormItem
+                                                    {...restField}
+                                                    name={[name, 'dspId']}
+                                                    label={messages(
+                                                        'common.platforms'
+                                                    )}
+                                                    required
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message:
+                                                                messages(
+                                                                    'validation.input'
+                                                                ),
+                                                        },
+                                                    ]}
+                                                >
+                                                    <PlatformSelect
+                                                        allowClear
+                                                    />
+                                                </AppFormItem>
+                                            </Card>
+                                        )
+                                    )}
+                                </div>
+                                <div className="my-4">
                                     <Button
                                         className="w-full"
                                         type="dashed"
