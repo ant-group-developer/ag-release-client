@@ -59,7 +59,7 @@ export default function TenantPage({}: Props) {
     return (
         <AppPageWrapper>
             <PageContainer
-                title={messages('tenant.label')}
+                title={messages('tenant.workspaces')}
                 extra={
                     <div>
                         {isTypeWhiteLabel && (

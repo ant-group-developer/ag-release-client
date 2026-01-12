@@ -7,6 +7,7 @@ export const useReleaseValidate = (id: ReleasesData['id']) => {
     const { data, ...res } = useQuery({
         queryKey: releasesQueryKeys.validate(id),
         queryFn: () => releasesApi.validate(id),
+        placeholderData: (prev) => prev,
     });
 
     return {

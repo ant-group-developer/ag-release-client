@@ -1335,6 +1335,7 @@
 
     "tenant": {
         "label": "Workspace",
+        "workspaces": "workspaces",
         "name": "Tên workspace",
         "logo": "Logo",
         "icon": {

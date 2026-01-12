@@ -1,5 +1,6 @@
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
+import { convertSecondsToHoursMinutes } from '@/helpers/common';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
 import type { TrackData } from '@/modules/releases/types';
@@ -78,6 +79,20 @@ export default function TracksInfo({}: Props) {
             case 'trackTypeId':
                 return track.trackType?.name || track.trackTypeId || '';
 
+            case 'preview':
+                return track?.audioFile?.preview
+                    ? convertSecondsToHoursMinutes(
+                          Number(track?.audioFile?.preview)
+                      )
+                    : '';
+
+            case 'sampleLength':
+                return track?.audioFile?.sampleLength
+                    ? convertSecondsToHoursMinutes(
+                          Number(track?.audioFile?.sampleLength)
+                      )
+                    : '';
+
             default: {
                 const value = track[field];
                 if (typeof value === 'boolean') {
@@ -107,7 +122,7 @@ export default function TracksInfo({}: Props) {
                         {label}{' '}
                         {isRequired && <span className="text-red-500">*</span>}
                     </p>
-                    {value === '' ? (
+                    {!value ? (
                         <p>
                             {isRequired ? (
                                 <p className="text-red-500">
@@ -146,10 +161,6 @@ export default function TracksInfo({}: Props) {
                 {tracksData?.items?.map((track: TrackData, index: number) => {
                     const trackArtists = track?.trackArtists;
                     const trackContributors = track?.trackContributors;
-                    console.log(
-                        '🚀 ~ TracksInfo ~ trackContributors:',
-                        trackContributors
-                    );
                     const errorCount = releaseValidateData?.reduce(
                         (pre, current) => {
                             if (current?.trackId === track.id) {
@@ -324,7 +335,11 @@ export default function TracksInfo({}: Props) {
                                         'trackSensitiveId',
                                         true
                                     )}
-
+                                    {renderField(
+                                        index,
+                                        messages('trackType.label'),
+                                        'trackTypeId'
+                                    )}
                                     {renderField(
                                         index,
                                         messages('formFields.pLineOwner'),
@@ -339,8 +354,17 @@ export default function TracksInfo({}: Props) {
                                     )}
                                     {renderField(
                                         index,
-                                        messages('trackType.label'),
-                                        'trackTypeId'
+                                        messages('formFields.preview'),
+                                        'preview',
+                                        true
+                                    )}
+                                    {renderField(
+                                        index,
+                                        messages(
+                                            'formFields.tracks.sampleLength'
+                                        ),
+                                        'sampleLength',
+                                        true
                                     )}
                                 </div>
                             </Collapse.Panel>

@@ -1332,6 +1332,7 @@
 
     "tenant": {
         "label": "Workspace",
+        "workspaces": "workspaces",
         "name": "Workspace name",
         "logo": "Logo",
         "icon": {

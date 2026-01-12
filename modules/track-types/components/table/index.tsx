@@ -6,7 +6,6 @@ import useModalStore from '@/hooks/use-modal';
 import { Switch } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
-import { toast } from 'react-toastify';
 import { TYPE_MODAL_TRACK_TYPE } from '../../enums';
 import { useUpdateTrackType } from '../../hooks/use-update-track-type';
 import { TrackTypeData, TrackTypeDataFilter } from '../../types';
@@ -91,21 +90,12 @@ export const TrackTypeTable = ({ dataFilter, ...props }: Props) => {
             render: (value, record) => (
                 <Switch
                     checked={record?.isDefault}
-                    onChange={(e) => {
-                        const id = toast.loading('Please wait...');
+                    onChange={(e) =>
                         updateTrackType({
                             id: record?.id,
                             payload: { isDefault: e },
-                            onSuccess(e) {
-                                toast.update(id, {
-                                    render: 'All is good',
-                                    type: 'success',
-                                    isLoading: false,
-                                    autoClose: 2000,
-                                });
-                            },
-                        });
-                    }}
+                        })
+                    }
                 />
             ),
         },

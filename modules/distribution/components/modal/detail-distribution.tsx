@@ -1,13 +1,15 @@
 import ActionButton from '@/components/ui/button/action-button';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import AppTable from '@/components/ui/table/normal-table';
+import { FALLBACK_IMAGE } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { ReleasesData } from '@/modules/releases/types';
+import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
+import { Image } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
 import { distributionData } from '../../constants';
 
 type Props = Omit<AppModalProps, 'children'> & {};
@@ -17,9 +19,9 @@ export default function DetailDistributionModal({ ...props }: Props) {
     const dataEdit = useModalStore<ReleasesData>((state) => {
         return state.dataEdit;
     });
-    // const { linkReadFile, isFetching } = useGetLinkReadFile(
-    //     dataEdit?.coverArtThumbnails?.['160x160'] as string
-    // );
+    const { linkReadFile } = useGetLinkReadFile(
+        dataEdit?.coverArtThumbnails?.['300x300'] as string
+    );
 
     const closeModal = useModalStore((state) => state.closeModal);
 
@@ -96,23 +98,29 @@ export default function DetailDistributionModal({ ...props }: Props) {
                 <div className="flex items-center gap-4 rounded-lg bg-zinc-100 p-4">
                     <div className="">
                         <Image
-                            src={''}
+                            src={linkReadFile ?? FALLBACK_IMAGE}
                             alt="thumbnail"
                             width={120}
                             height={120}
                             className="rounded-lg"
+                            preview={{
+                                maskClassName: 'rounded-lg',
+                            }}
                         />
                     </div>
                     <div>
                         <p className="text-2xl font-bold">{dataEdit?.title}</p>
                         <p className="text-sm text-gray-500">
-                            {/* {dataEdit?.artist} */} artist
+                            {dataEdit?.releaseArtists
+                                ?.map((item) => item?.artist?.name)
+                                ?.join(' & ')}
                         </p>
                     </div>
                 </div>
 
                 <div className="max-h-[380px] overflow-y-auto">
                     <AppTable
+                        sticky
                         size="large"
                         columns={columns}
                         dataSource={distributionData}

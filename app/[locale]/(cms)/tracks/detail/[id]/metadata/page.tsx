@@ -120,6 +120,11 @@ export default function TrackMetadata({}: Props) {
                             {trackData?.trackSensitive?.name}
                         </MetadataInfoItem>
                         <MetadataInfoItem
+                            label={messages('track.recordingCountry')}
+                        >
+                            {trackData?.trackLanguage?.recordingCountry?.name}
+                        </MetadataInfoItem>
+                        <MetadataInfoItem
                             label={messages('formFields.tracks.preview')}
                         >
                             {convertSecondsToHoursMinutes(
@@ -128,14 +133,17 @@ export default function TrackMetadata({}: Props) {
                         </MetadataInfoItem>
 
                         <MetadataInfoItem
-                            label={messages('track.recordingCountry')}
+                            label={messages('formFields.tracks.sampleLength')}
                         >
-                            {trackData?.trackLanguage?.recordingCountry?.name}
+                            {convertSecondsToHoursMinutes(
+                                Number(trackData?.sampleLength)
+                            )}
                         </MetadataInfoItem>
+
                         <MetadataInfoItem label={'ISRC'}>
                             {trackData?.isrc}
                         </MetadataInfoItem>
-                        <div className="col-span-2">
+                        <div className="">
                             <MetadataInfoItem
                                 label={messages('formFields.tracks.lyrics')}
                             >
