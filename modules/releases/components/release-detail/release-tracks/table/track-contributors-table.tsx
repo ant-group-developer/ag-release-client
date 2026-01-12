@@ -106,7 +106,7 @@ export default function TrackContributorsTable({ trackData, ...props }: Props) {
                 return (
                     <div className="max-w-44">
                         <RoleArtistSelect
-                            disabled={isActive}
+                            disabled={isActive || isReadMode}
                             className="w-full"
                             defaultValue={record?.artistRole?.id}
                             onChange={() => {

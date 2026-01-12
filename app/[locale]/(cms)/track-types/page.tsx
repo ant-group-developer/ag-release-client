@@ -1,5 +1,5 @@
 'use client';
-import AppContainer from '@/components/app-container';
+import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -20,6 +20,7 @@ import {
     TrackTypeDataFilter,
 } from '@/modules/track-types/types';
 import { DeleteVariables } from '@/types/api';
+import { PageContainer } from '@ant-design/pro-components';
 import { useTranslations } from 'next-intl';
 
 type Props = {};
@@ -70,54 +71,61 @@ export default function TrackTypes({}: Props) {
     };
 
     return (
-        <AppContainer
-            title={messages('trackType.label')}
-            description={messages('trackType.description')}
-        >
-            <TrackTypeHeader dataFilter={dataFilter} onSearch={onSearch} />
-            <TrackTypeTable
-                sticky
-                dataSource={trackTypesData.items}
-                pagination={{
-                    pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                    current: trackTypesData.metadata.currentPage,
-                    total: trackTypesData.metadata.totalItems,
-                }}
-                loading={isLoading}
-                dataFilter={dataFilter}
-                onChange={onChangeSort}
-            />
-            <AppPagination
-                align="end"
-                current={trackTypesData?.metadata?.currentPage}
-                pageSize={dataFilter.pageSize}
-                total={trackTypesData.metadata.totalItems}
-                onChange={onChangePage}
-                showTotalText
-                showSizeChanger
-                showQuickJumper
-                pageSizeOptions={PAGE_SIZE_OPTIONS}
-                hideOnSinglePage
-            />
-
-            {(typeModal === TYPE_MODAL_TRACK_TYPE.CREATE ||
-                typeModal === TYPE_MODAL_TRACK_TYPE.UPDATE) && (
-                <TrackTypeFormModal />
-            )}
-
-            {typeModal === TYPE_MODAL_TRACK_TYPE.DELETE && (
-                <AppConfirm
-                    open
-                    onCancel={closeModal}
-                    onOk={() => {
-                        handleDeleteTrackType();
+        <AppPageWrapper>
+            <PageContainer
+                title={messages('trackType.label')}
+                content={messages('trackType.description')}
+            >
+                <TrackTypeTable
+                    title={() => (
+                        <TrackTypeHeader
+                            dataFilter={dataFilter}
+                            onSearch={onSearch}
+                        />
+                    )}
+                    sticky
+                    dataSource={trackTypesData.items}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: trackTypesData.metadata.currentPage,
+                        total: trackTypesData.metadata.totalItems,
                     }}
-                    modalTitle={messages('delete.confirmTitle')}
-                    paragraph={messages('delete.confirmMessage', {
-                        value: dataEdit?.name,
-                    })}
+                    loading={isLoading}
+                    dataFilter={dataFilter}
+                    onChange={onChangeSort}
                 />
-            )}
-        </AppContainer>
+                <AppPagination
+                    align="end"
+                    current={trackTypesData?.metadata?.currentPage}
+                    pageSize={dataFilter.pageSize}
+                    total={trackTypesData.metadata.totalItems}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
+                    hideOnSinglePage
+                />
+
+                {(typeModal === TYPE_MODAL_TRACK_TYPE.CREATE ||
+                    typeModal === TYPE_MODAL_TRACK_TYPE.UPDATE) && (
+                    <TrackTypeFormModal />
+                )}
+
+                {typeModal === TYPE_MODAL_TRACK_TYPE.DELETE && (
+                    <AppConfirm
+                        open
+                        onCancel={closeModal}
+                        onOk={() => {
+                            handleDeleteTrackType();
+                        }}
+                        modalTitle={messages('delete.confirmTitle')}
+                        paragraph={messages('delete.confirmMessage', {
+                            value: dataEdit?.name,
+                        })}
+                    />
+                )}
+            </PageContainer>
+        </AppPageWrapper>
     );
 }

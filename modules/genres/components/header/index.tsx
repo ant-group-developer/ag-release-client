@@ -13,7 +13,7 @@ export default function GenresHeader({ dataFilter, onSearch }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     return (
-        <AppHeader className="app-header p-4">
+        <AppHeader className="app-header p-2">
             <AppHeaderGroup>
                 <div>
                     <AppSearch

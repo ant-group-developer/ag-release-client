@@ -6,6 +6,7 @@ import { flattenData } from '@/helpers/common';
 import { redirect, routing } from '@/i18n/routing';
 import { adminRoutes } from '@/layouts/cms-layout/routes';
 import { getCurrentTenant } from '@/modules/auth/api';
+import { getSettingPublicServer } from '@/modules/setting/apis';
 import AntdProvider from '@/providers/antd';
 import type { Metadata } from 'next';
 import { pathname } from 'next-extra/pathname';
@@ -49,8 +50,11 @@ export async function generateMetadata({
     const now = await getNow({ locale });
     const timeZone = await getTimeZone({ locale });
     const route = await pathname();
+    const settingPublic = await getSettingPublicServer();
     const settingData = await getCurrentTenant(cookies()?.toString?.());
     // const settingData = null as any;
+
+    const settingPublicWebsiteData = settingPublic?.data?.website;
 
     const getTitle = () => {
         const flattenRoutes = flattenData(adminRoutes, {});
@@ -62,9 +66,15 @@ export async function generateMetadata({
     const title = getTitle();
 
     const appTitle = title
-        ? `${settingData?.name ?? defaultConfig.APP_SHORT_NAME} | ${title}`
-        : (settingData?.name ?? defaultConfig.APP_SHORT_NAME);
-    const appDescription = settingData?.title || defaultConfig.APP_DESCRIPTION;
+        ? `${settingData?.name || settingPublicWebsiteData?.name || defaultConfig.APP_SHORT_NAME} | ${title}`
+        : settingData?.name ||
+          settingPublicWebsiteData?.name ||
+          defaultConfig.APP_SHORT_NAME;
+
+    const appDescription =
+        settingData?.title ||
+        settingPublicWebsiteData?.description ||
+        defaultConfig.APP_DESCRIPTION;
     const appUrl =
         (settingData?.domain && `https://${settingData.domain}`) ||
         defaultConfig.WEBSITE_URL ||
@@ -72,7 +82,10 @@ export async function generateMetadata({
     const appImage = defaultConfig.APP_IMAGE;
     const appKeyword = defaultConfig.APP_KEYWORDS;
     const appIcon =
-        settingData?.icon || settingData?.logo || defaultConfig.APP_LOGO;
+        settingData?.icon ||
+        settingData?.logo ||
+        settingPublicWebsiteData?.logo ||
+        defaultConfig.APP_LOGO;
 
     return {
         metadataBase: new URL(appUrl),

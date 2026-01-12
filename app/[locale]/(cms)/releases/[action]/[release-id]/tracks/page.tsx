@@ -29,7 +29,7 @@ import { TableRowSelection } from 'antd/es/table/interface';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import { Key, useState } from 'react';
-import TrackActions from './track-actions';
+import TrackActions from '../../../../../../../modules/releases/components/release-detail/release-tracks/track-actions';
 
 export default function Tracks() {
     // hooks - state

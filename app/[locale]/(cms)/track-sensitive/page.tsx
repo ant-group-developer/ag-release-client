@@ -1,5 +1,5 @@
 'use client';
-import AppContainer from '@/components/app-container';
+import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -19,6 +19,7 @@ import {
     TrackSensitiveFilter,
 } from '@/modules/track-sensitive/types';
 import { DeleteVariables } from '@/types/api';
+import { PageContainer } from '@ant-design/pro-components';
 import { useTranslations } from 'next-intl';
 
 type Props = {};
@@ -68,49 +69,56 @@ export default function TrackSensitive({}: Props) {
     };
 
     return (
-        <AppContainer title={messages('trackSensitive.label')}>
-            <TrackSensitiveHeader dataFilter={dataFilter} onSearch={onSearch} />
-            <TrackSensitiveTable
-                sticky
-                dataSource={trackSensitiveData?.items}
-                pagination={{
-                    pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                    current: trackSensitiveData.metadata.currentPage,
-                    total: trackSensitiveData.metadata.totalItems,
-                }}
-                loading={isFetching}
-                dataFilter={dataFilter}
-                onChange={onChangeSort}
-            />
-
-            {(typeModal === TYPE_MODAL_TRACK_SENSITIVE.CREATE ||
-                typeModal === TYPE_MODAL_TRACK_SENSITIVE.EDIT) && (
-                <TrackSensitiveFormModal onCancel={closeModal} />
-            )}
-
-            {typeModal === TYPE_MODAL_TRACK_SENSITIVE.DELETE && (
-                <AppConfirm
-                    open
-                    onOk={() => handleDeleteSensitiveContent()}
-                    onCancel={closeModal}
-                    modalTitle={`${messages('common.delete')} ${messages('trackSensitive.label').toLowerCase()}`}
-                    paragraph={messages('delete.confirmMessage', {
-                        value: dataEdit?.name,
-                    })}
+        <AppPageWrapper>
+            <PageContainer title={messages('trackSensitive.label')}>
+                <TrackSensitiveTable
+                    title={() => (
+                        <TrackSensitiveHeader
+                            dataFilter={dataFilter}
+                            onSearch={onSearch}
+                        />
+                    )}
+                    sticky
+                    dataSource={trackSensitiveData?.items}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: trackSensitiveData.metadata.currentPage,
+                        total: trackSensitiveData.metadata.totalItems,
+                    }}
+                    loading={isFetching}
+                    dataFilter={dataFilter}
+                    onChange={onChangeSort}
                 />
-            )}
 
-            <AppPagination
-                align="end"
-                current={trackSensitiveData?.metadata?.currentPage}
-                pageSize={dataFilter.pageSize}
-                total={trackSensitiveData.metadata?.totalItems}
-                onChange={onChangePage}
-                showTotalText
-                showSizeChanger
-                showQuickJumper
-                pageSizeOptions={PAGE_SIZE_OPTIONS}
-            />
-        </AppContainer>
+                {(typeModal === TYPE_MODAL_TRACK_SENSITIVE.CREATE ||
+                    typeModal === TYPE_MODAL_TRACK_SENSITIVE.EDIT) && (
+                    <TrackSensitiveFormModal onCancel={closeModal} />
+                )}
+
+                {typeModal === TYPE_MODAL_TRACK_SENSITIVE.DELETE && (
+                    <AppConfirm
+                        open
+                        onOk={() => handleDeleteSensitiveContent()}
+                        onCancel={closeModal}
+                        modalTitle={`${messages('common.delete')} ${messages('trackSensitive.label').toLowerCase()}`}
+                        paragraph={messages('delete.confirmMessage', {
+                            value: dataEdit?.name,
+                        })}
+                    />
+                )}
+
+                <AppPagination
+                    align="end"
+                    current={trackSensitiveData?.metadata?.currentPage}
+                    pageSize={dataFilter.pageSize}
+                    total={trackSensitiveData.metadata?.totalItems}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
+                />
+            </PageContainer>
+        </AppPageWrapper>
     );
 }

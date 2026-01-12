@@ -1,7 +1,7 @@
 'use client';
 
 // import { useThemeMode } from '@/hooks/use-theme-mode';
-import { ToastContainer } from 'react-toastify';
+import { Slide, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function AppToast() {
@@ -9,6 +9,7 @@ export default function AppToast() {
 
     return (
         <ToastContainer
+            transition={Slide}
             pauseOnFocusLoss={false}
             position="top-center"
             newestOnTop

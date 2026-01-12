@@ -21,3 +21,21 @@ export const settingApis = {
         );
     },
 };
+
+export async function getSettingPublicServer() {
+    const API_BASE = (process.env.API_URL ?? '').replace(/\/+$/, '');
+    const url = `${API_BASE}/app-config/public`;
+    
+    const res = await fetch(url, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        cache: 'no-store',
+    });
+    
+    if (!res.ok) {
+        throw new Error('Failed to fetch public settings');
+    }
+    
+    return res.json();
+}
+

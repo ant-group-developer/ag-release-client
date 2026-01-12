@@ -52,9 +52,8 @@ export default function Currencies({}: Props) {
     };
 
     return (
-        <AppContainer title={messages('currencies.label')}>
+        <AppContainer title={messages('currencies.currencies')}>
             <CurrenciesHeader dataFilter={dataFilter} onSearch={onSearch} />
-
             <CurrenciesTable
                 sticky
                 dataSource={currenciesData.items}

@@ -1,5 +1,5 @@
 'use client';
-import AppContainer from '@/components/app-container';
+import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -15,6 +15,7 @@ import { useDeleteLanguage } from '@/modules/languages/hooks/use-delete-language
 import { useGetListLanguage } from '@/modules/languages/hooks/use-get-list-language';
 import { LanguageDataFilter, LanguagesData } from '@/modules/languages/types';
 import { DeleteVariables } from '@/types/api';
+import { PageContainer } from '@ant-design/pro-components';
 import { useTranslations } from 'next-intl';
 
 type Props = {};
@@ -63,48 +64,55 @@ export default function Languages({}: Props) {
     };
 
     return (
-        <AppContainer title={messages('language.label')}>
-            <LanguagesHeader dataFilter={dataFilter} onSearch={onSearch} />
-            <LanguagesTable
-                sticky
-                dataSource={languagesData?.items}
-                loading={isFetching}
-                pagination={{
-                    pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
-                    current: languagesData.metadata.currentPage,
-                    total: languagesData.metadata.totalItems,
-                }}
-                dataFilter={dataFilter}
-                onChange={onChangeSort}
-            />
-            <AppPagination
-                align="end"
-                current={languagesData?.metadata?.currentPage}
-                pageSize={dataFilter.pageSize}
-                total={languagesData?.metadata?.totalItems}
-                onChange={onChangePage}
-                showTotalText
-                showSizeChanger
-                showQuickJumper
-                pageSizeOptions={PAGE_SIZE_OPTIONS}
-            />
-
-            {typeModal === TYPE_MODAL_LANGUAGES.DELETE && (
-                <AppConfirm
-                    open
-                    onCancel={closeModal}
-                    onOk={() => handleDeleteLanguage()}
-                    modalTitle={messages('delete.confirmTitle')}
-                    paragraph={messages('delete.confirmMessage', {
-                        value: dataEdit?.name,
-                    })}
+        <AppPageWrapper>
+            <PageContainer title={messages('language.label')}>
+                <LanguagesTable
+                    title={() => (
+                        <LanguagesHeader
+                            dataFilter={dataFilter}
+                            onSearch={onSearch}
+                        />
+                    )}
+                    sticky
+                    dataSource={languagesData?.items}
+                    loading={isFetching}
+                    pagination={{
+                        pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
+                        current: languagesData.metadata.currentPage,
+                        total: languagesData.metadata.totalItems,
+                    }}
+                    dataFilter={dataFilter}
+                    onChange={onChangeSort}
                 />
-            )}
+                <AppPagination
+                    align="end"
+                    current={languagesData?.metadata?.currentPage}
+                    pageSize={dataFilter.pageSize}
+                    total={languagesData?.metadata?.totalItems}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
+                />
 
-            {(typeModal === TYPE_MODAL_LANGUAGES.CREATE ||
-                typeModal === TYPE_MODAL_LANGUAGES.UPDATE) && (
-                <LanguageFormModal />
-            )}
-        </AppContainer>
+                {typeModal === TYPE_MODAL_LANGUAGES.DELETE && (
+                    <AppConfirm
+                        open
+                        onCancel={closeModal}
+                        onOk={() => handleDeleteLanguage()}
+                        modalTitle={messages('delete.confirmTitle')}
+                        paragraph={messages('delete.confirmMessage', {
+                            value: dataEdit?.name,
+                        })}
+                    />
+                )}
+
+                {(typeModal === TYPE_MODAL_LANGUAGES.CREATE ||
+                    typeModal === TYPE_MODAL_LANGUAGES.UPDATE) && (
+                    <LanguageFormModal />
+                )}
+            </PageContainer>
+        </AppPageWrapper>
     );
 }

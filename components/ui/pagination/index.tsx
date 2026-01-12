@@ -1,7 +1,7 @@
 import { LOCALE } from '@/enums/common';
 import { formattedNumber } from '@/helpers/common';
 import { cn } from '@/helpers/tailwind';
-import { Pagination, PaginationProps } from 'antd';
+import { Pagination, PaginationProps, theme } from 'antd';
 import { useLocale, useTranslations } from 'next-intl';
 
 type AppPaginationProps = {
@@ -15,7 +15,7 @@ function AppPagination({
 }: AppPaginationProps) {
     const locale = useLocale() as LOCALE;
     const messages = useTranslations();
-
+    const { token } = theme.useToken();
     const showTotal = (total: number, range: [number, number]) => {
         if (props.showTotal) return props.showTotal(total, range);
         if (!showTotalText) return undefined;
@@ -39,12 +39,15 @@ function AppPagination({
         <Pagination
             showSizeChanger={false}
             className={cn(
-                '!px-5 !py-3 text-center',
+                'rounded-b-lg !px-5 !py-3 text-center',
                 {
                     'text-right': showTotalText,
                 },
                 className
             )}
+            style={{
+                backgroundColor: token.colorBgContainer,
+            }}
             {...props}
             showTotal={showTotal}
             align="end"

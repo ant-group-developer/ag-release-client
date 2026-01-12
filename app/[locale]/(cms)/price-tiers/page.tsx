@@ -1,5 +1,5 @@
 'use client';
-import AppContainer from '@/components/app-container';
+import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -19,6 +19,7 @@ import {
     PriceTiersData,
     PriceTiersDataFilter,
 } from '@/modules/price_tiers/types';
+import { PageContainer } from '@ant-design/pro-components';
 
 import { useTranslations } from 'next-intl';
 
@@ -58,57 +59,63 @@ export default function PriceTiers({}: Props) {
     };
 
     return (
-        <AppContainer title={messages('price.label')}>
-            <PriceTiersHeader dataFilter={dataFilter} onSearch={onSearch} />
-
-            <PriceTiersTable
-                sticky
-                dataSource={priceTiersData.items}
-                pagination={{
-                    pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                    current: priceTiersData.metadata.currentPage,
-                    total: priceTiersData.metadata.totalItems,
-                }}
-                loading={isLoading}
-                dataFilter={dataFilter}
-                onChange={onChangeSort}
-            />
-
-            <AppPagination
-                align="end"
-                current={priceTiersData?.metadata?.currentPage}
-                pageSize={dataFilter.pageSize}
-                total={priceTiersData.metadata?.totalItems}
-                onChange={onChangePage}
-                showTotalText
-                showSizeChanger
-                showQuickJumper
-                pageSizeOptions={PAGE_SIZE_OPTIONS}
-            />
-
-            {(typeModal === TYPE_MODAL_PRICE_TIERS.CREATE ||
-                typeModal === TYPE_MODAL_PRICE_TIERS.UPDATE) && (
-                <PriceTiersFormModal />
-            )}
-
-            {typeModal === TYPE_MODAL_PRICE_TIERS.DELETE && (
-                <AppConfirm
-                    open
-                    modalTitle={messages('action.delete.title', {
-                        label: `${messages('price.label').toLowerCase()} "${dataEdit?.amount}"`,
-                    })}
-                    paragraph={messages('action.delete.alert', {
-                        label: `${messages('price.label').toLowerCase()}  "${dataEdit?.amount}"`,
-                    })}
-                    onCancel={closeModal}
-                    onOk={() =>
-                        deletePriceTiers({
-                            id: dataEdit?.id,
-                            onSuccess: () => closeModal(),
-                        })
-                    }
+        <AppPageWrapper>
+            <PageContainer title={messages('price.label')}>
+                <PriceTiersTable
+                    title={() => (
+                        <PriceTiersHeader
+                            dataFilter={dataFilter}
+                            onSearch={onSearch}
+                        />
+                    )}
+                    sticky
+                    dataSource={priceTiersData.items}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: priceTiersData.metadata.currentPage,
+                        total: priceTiersData.metadata.totalItems,
+                    }}
+                    loading={isLoading}
+                    dataFilter={dataFilter}
+                    onChange={onChangeSort}
                 />
-            )}
-        </AppContainer>
+
+                <AppPagination
+                    align="end"
+                    current={priceTiersData?.metadata?.currentPage}
+                    pageSize={dataFilter.pageSize}
+                    total={priceTiersData.metadata?.totalItems}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
+                />
+
+                {(typeModal === TYPE_MODAL_PRICE_TIERS.CREATE ||
+                    typeModal === TYPE_MODAL_PRICE_TIERS.UPDATE) && (
+                    <PriceTiersFormModal />
+                )}
+
+                {typeModal === TYPE_MODAL_PRICE_TIERS.DELETE && (
+                    <AppConfirm
+                        open
+                        modalTitle={messages('action.delete.title', {
+                            label: `${messages('price.label').toLowerCase()} "${dataEdit?.amount}"`,
+                        })}
+                        paragraph={messages('action.delete.alert', {
+                            label: `${messages('price.label').toLowerCase()}  "${dataEdit?.amount}"`,
+                        })}
+                        onCancel={closeModal}
+                        onOk={() =>
+                            deletePriceTiers({
+                                id: dataEdit?.id,
+                                onSuccess: () => closeModal(),
+                            })
+                        }
+                    />
+                )}
+            </PageContainer>
+        </AppPageWrapper>
     );
 }

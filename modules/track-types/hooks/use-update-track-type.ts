@@ -1,4 +1,3 @@
-import { showNotification } from '@/helpers/messages-helper';
 import { useApiNotify } from '@/hooks/use-api-notify';
 import { UpdateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -26,7 +25,7 @@ export const useUpdateTrackType = () => {
         const responseMessages = messages(data?.data?.messageCode);
 
         onSuccess?.();
-        showNotification('success', responseMessages);
+        // showNotification('success', responseMessages);
     };
 
     const onError = (
