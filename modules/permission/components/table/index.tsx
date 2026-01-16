@@ -130,9 +130,6 @@ export const PermissionTable = ({ dataFilter, ...props }: Props) => {
                 backgroundColor: token.colorBgContainer,
                 ...props?.style,
             }}
-            toolbar={{
-                className: 'px-4',
-            }}
             tableAlertRender={({ selectedRowKeys }) => (
                 <div className="flex items-center gap-2 font-semibold">
                     <div className="space-x-1">

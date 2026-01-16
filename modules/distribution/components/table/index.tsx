@@ -242,9 +242,6 @@ export default function DistributionTable({
                     releaseId: { show: false },
                 },
             }}
-            toolbar={{
-                className: 'px-4',
-            }}
             tableAlertRender={({
                 selectedRowKeys,
                 selectedRows,

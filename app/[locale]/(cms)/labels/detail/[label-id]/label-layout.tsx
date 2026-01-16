@@ -18,9 +18,9 @@ export default function LabelDetailLayout({ children }: PropsWithChildren) {
     // Hooks - state
     const messages = useTranslations();
     const headerLayoutRef = useRef<HTMLDivElement>(null);
-    const [isScroll, setIsScrolled] = useState(false);
     const { setHeaderLayoutHeight } = useLabelContext();
     const { token } = theme.useToken();
+    const [isScrolled, setIsScrolled] = useState(false);
 
     // Router - params
     const params = useParams();
@@ -73,13 +73,18 @@ export default function LabelDetailLayout({ children }: PropsWithChildren) {
     const tabKey = pathname.split('/').pop();
     // const isOverviewPage = tabKey == LABEL_DETAIL_TABS.OVERVIEW;
 
+    const handleOnScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        if (currentTab?.key == LABEL_DETAIL_TABS.OVERVIEW) return setIsScrolled(false);
+        setIsScrolled(e.currentTarget.scrollTop > 50);
+    };
+
     useEffect(() => {
         if (headerLayoutRef.current && labelData) {
             const height =
                 headerLayoutRef.current.getBoundingClientRect().height;
             setHeaderLayoutHeight(height);
         }
-    }, [labelData.id, isScroll]);
+    }, [labelData.id]);
 
     if (error) {
         return <AppError error={error} />;
@@ -92,11 +97,8 @@ export default function LabelDetailLayout({ children }: PropsWithChildren) {
     return (
         <div
             className="h-full min-h-[calc(100vh-64px)] overflow-auto"
-            onScroll={(e) => {
-                const el = e.currentTarget;
-                setIsScrolled(el.scrollTop > 20);
-            }}
             style={{ backgroundColor: token.colorBgLayout }}
+            onScroll={handleOnScroll}
         >
             <PageContainer
                 title={false}
@@ -111,7 +113,7 @@ export default function LabelDetailLayout({ children }: PropsWithChildren) {
                 >
                     <AppHeaderPage
                         imageSrc={labelData?.picture as string}
-                        isScrolled={isScroll}
+                        isScrolled={isScrolled}
                     >
                         <ItemHeaderPage
                             name={messages('label.label')}

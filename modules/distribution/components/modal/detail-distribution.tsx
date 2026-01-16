@@ -7,9 +7,9 @@ import { formattedDate } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { ReleasesData } from '@/modules/releases/types';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
-import { Image } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 import { distributionData } from '../../constants';
 
 type Props = Omit<AppModalProps, 'children'> & {};
@@ -103,9 +103,9 @@ export default function DetailDistributionModal({ ...props }: Props) {
                             width={120}
                             height={120}
                             className="rounded-lg"
-                            preview={{
-                                maskClassName: 'rounded-lg',
-                            }}
+                            // preview={{
+                            //     maskClassName: 'rounded-lg',
+                            // }}
                         />
                     </div>
                     <div>

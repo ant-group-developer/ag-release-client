@@ -26,7 +26,7 @@ interface RightSidebarProps {}
 export default function RightSidebar({ ...props }: RightSidebarProps) {
     // hook - state
     const params = useParams();
-    // const defaultOpenValidate = params['action'] == 'create';
+    const isCreateReleasePage = params['action'] == 'create';
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
     const { releaseValidateData } = useReleaseValidate(
@@ -102,6 +102,8 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
     };
 
     useEffect(() => {
+        if (isCreateReleasePage) return setIsSidebarOpen(false);
+
         if (validateLength > 0) {
             setIsSidebarOpen(true);
         } else {
@@ -130,12 +132,14 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                 >
                     {isSidebarOpen ? (
                         <>
-                            <h3 className={cn(
-                                "flex-1 font-semibold text-red-500 text-nowrap transition-all duration-200",
-                                isSidebarOpen 
-                                    ? "opacity-100 w-auto" 
-                                    : "opacity-0 w-0 overflow-hidden"
-                            )}>
+                            <h3
+                                className={cn(
+                                    'flex-1 text-nowrap font-semibold text-red-500 transition-all duration-200',
+                                    isSidebarOpen
+                                        ? 'w-auto opacity-100'
+                                        : 'w-0 overflow-hidden opacity-0'
+                                )}
+                            >
                                 {`${messages('validation.error')} (${errorCount})`}
                             </h3>
                             {
@@ -170,13 +174,16 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                                 </h4>
                             </div>
                         )}
-                        <div className="mb-4 ">
+                        <div className="mb-4">
                             {isSidebarOpen && (
-                                <ul className={cn("flex flex-col gap-1 space-y-2 transition-opacity duration-200",
-                                    isSidebarOpen
-                                    ? 'opacity-100 delay-100'
-                                    : 'opacity-0 pointer-events-none' 
-                                )}>
+                                <ul
+                                    className={cn(
+                                        'flex flex-col gap-1 space-y-2 transition-opacity duration-200',
+                                        isSidebarOpen
+                                            ? 'opacity-100 delay-100'
+                                            : 'pointer-events-none opacity-0'
+                                    )}
+                                >
                                     {releaseValidateData?.length > 0 &&
                                         releaseValidateData?.map(
                                             (err, index) => {
@@ -232,8 +239,6 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                                 </ul>
                             )}
                         </div>
-
-                      
                     </div>
                 </ScrollArea>
                 {/* </div> */}

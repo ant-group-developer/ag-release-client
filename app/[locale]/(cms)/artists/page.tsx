@@ -118,9 +118,6 @@ export default function Artists({}: Props) {
                             handleRefresh();
                         },
                     }}
-                    toolbar={{
-                        className: 'px-4',
-                    }}
                 />
 
                 <AppPagination

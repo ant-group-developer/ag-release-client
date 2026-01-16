@@ -106,7 +106,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             dataIndex: 'index',
             key: 'index',
             align: 'center',
-            width: 40,
+            width: 50,
             render: (_, __, index) =>
                 getIndex(
                     props.pagination.pageSize,

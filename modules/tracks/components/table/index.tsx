@@ -310,9 +310,6 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
             pagination={false}
             columns={column}
             rowClassName={'group'}
-            toolbar={{
-                className: 'px-4',
-            }}
         />
     );
 }

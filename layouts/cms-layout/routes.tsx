@@ -8,6 +8,7 @@ import {
     BellElectric,
     BookA,
     Box,
+    Building2,
     ChartNoAxesCombined,
     ChevronsUp,
     CircleAlert,
@@ -361,6 +362,15 @@ export const adminRoutes: RouteNode[] = [
                 title: 'Tenant',
                 href: APP_ROUTES.TENANT,
                 icon: Layers,
+                required: OWNER_OR_ADMIN_TENANT_REQ,
+            },
+            {
+                id: 'aggregator',
+                type: 'link',
+                label: 'aggregator.label',
+                title: 'Aggregator',
+                href: APP_ROUTES.AGGREGATOR,
+                icon: Building2,
                 required: OWNER_OR_ADMIN_TENANT_REQ,
             },
             {

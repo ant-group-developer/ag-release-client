@@ -64,6 +64,9 @@
         }
     },
     "common": {
+        "path": "Path",
+        "username": "Username",
+        "password": "Password",
         "users": "Users",
         "errors": "Errors",
         "contributors": "Contributors",
@@ -518,7 +521,8 @@
         "numberMin": "{field} must be at least {min}.",
         "numberMax": "{field} must not exceed {max}.",
         "invalidType": "{field} must be a valid value.",
-        "noUnderscore": "{field} must not contain underscores (_)"
+        "noUnderscore": "{field} must not contain underscores (_)",
+        "email": "Invalid email address."
     },
     "form": {
         "searchPlaceholder": "Search"
@@ -1753,5 +1757,15 @@
     },
     "legal": {
         "allRightsReserved": "All rights reserved."
+    },
+    "aggregator": {
+        "label": "Aggregator",
+        "aggregators": "Aggregators",
+        "list": "List aggregator",
+        "systemDefault": "System default",
+        "action": {
+            "create": "Create aggregator",
+            "update": "Update aggregator"
+        }
     }
 }

@@ -1,10 +1,9 @@
 'use client';
+import { ScrollArea } from '@/components/ui/scroll/scroll-area';
 import DetailSkeleton from '@/components/ui/skeleton/detail-skeleton';
 import { APP_ROUTES } from '@/enums/routes';
 import { cn } from '@/helpers/common';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
-import useModalStore from '@/hooks/use-modal';
-import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { Link } from '@/i18n/routing';
 import AppError from '@/modules/auth/components/error';
 import ReleaseDetailHeader from '@/modules/releases/components/release-detail/header';
@@ -18,7 +17,7 @@ import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-rel
 import { Breadcrumb, Tabs, TabsProps, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname } from 'next/navigation';
-import { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 
 type Props = {};
 
@@ -30,7 +29,6 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     // const formValues = useReleaseFormStore((state) => state.formValues);
     const pathname = usePathname();
     // const openModal = useModalStore((state) => state.openModal);
-    const scrollContainerRef = useRef<HTMLDivElement>(null);
     const resetFormValues = useReleaseFormStore(
         (state) => state.resetFormValues
     );
@@ -199,26 +197,19 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     }, [releaseId, releaseData?.id]);
 
     useEffect(() => {
+        if (isCreateReleasePage) return setIsScrolled(false);
         // Chỉ theo dõi scroll khi ở trang core-detail, các trang khác mặc định isScrolled = true
         if (!isCoreDetailPage) {
             setIsScrolled(true);
             return;
         }
-        const el = document.getElementById('layout-scroll');
-
-        // Lắng nghe scroll để set isScrolled chỉ khi ở trang core-detail
-        const handleScroll = () => {
-            setIsScrolled(el!.scrollTop > 0);
-        };
-        if (el) {
-            el.addEventListener('scroll', handleScroll);
-        }
-        return () => {
-            if (el) {
-                el.removeEventListener('scroll', handleScroll);
-            }
-        };
     }, [isCoreDetailPage]);
+
+    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        if (isCoreDetailPage) {
+            setIsScrolled(e.currentTarget.scrollTop > 0);
+        }
+    };
 
     const currentItem = items.find((item) => item.key === activeTab);
     const breadcrumbItems = [
@@ -238,41 +229,45 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         return <AppError error={error} />;
     }
 
+    if (isReleaseDataLoading || !releaseData) {
+        return (
+            <div className="w-[100vw] px-8">
+                <DetailSkeleton />
+            </div>
+        );
+    }
+
     return (
         <div
             className="flex h-full overflow-x-clip"
             style={{ backgroundColor: token.colorBgLayout }}
-            ref={scrollContainerRef}
         >
-            {isReleaseDataLoading || !releaseData ? (
-                <div className="w-[100vw] px-8">
-                    <DetailSkeleton />
-                </div>
-            ) : (
-                <div className="mx-auto flex min-w-0 flex-1 flex-col px-8">
-                    <Breadcrumb items={breadcrumbItems} className="!py-4" />
-                    <div
-                        className="sticky top-0 z-10 mb-4 rounded-lg p-4"
-                        style={{
-                            backgroundColor: token.colorBgContainer,
-                        }}
-                    >
-                        <ReleaseDetailHeader isScrolled={isScrolled} />
-                        <div>
-                            <Tabs
-                                className="tab-release-detail !pt-0"
-                                style={{
-                                    backgroundColor: token.colorBgContainer,
-                                }}
-                                items={items}
-                                activeKey={activeTab}
-                                // tabBarExtraContent={extraButton}
-                            />
-                        </div>
+            <ScrollArea
+                onScroll={handleScroll}
+                className="mx-auto flex min-w-0 flex-1 flex-col overflow-y-auto px-8"
+            >
+                <Breadcrumb items={breadcrumbItems} className="!py-4" />
+                <div
+                    className="sticky top-0 z-10 mb-4 rounded-lg p-4"
+                    style={{
+                        backgroundColor: token.colorBgContainer,
+                    }}
+                >
+                    <ReleaseDetailHeader isScrolled={isScrolled} />
+                    <div>
+                        <Tabs
+                            className="tab-release-detail !pt-0"
+                            style={{
+                                backgroundColor: token.colorBgContainer,
+                            }}
+                            items={items}
+                            activeKey={activeTab}
+                            // tabBarExtraContent={extraButton}
+                        />
                     </div>
-                    <div>{children}</div>
                 </div>
-            )}
+                <div>{children}</div>
+            </ScrollArea>
             <RightSidebar />
         </div>
     );

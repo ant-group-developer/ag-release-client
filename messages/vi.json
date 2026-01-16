@@ -64,6 +64,9 @@
         }
     },
     "common": {
+        "path": "Đường dẫn",
+        "username": "Tên người dùng",
+        "password": "Mật khẩu",
         "users": "Người dùng",
         "errors": "Lỗi",
         "contributors": "Người đóng góp",
@@ -518,7 +521,8 @@
         "numberMin": "{field} phải từ {min} trở lên.",
         "numberMax": "{field} không được lớn hơn {max}.",
         "invalidType": "{field} không hợp lệ.",
-        "noUnderscore": "{field} Không được có ký tự (_)"
+        "noUnderscore": "{field} Không được có ký tự (_)",
+        "email": "Email không hợp lệ."
     },
     "form": {
         "searchPlaceholder": "Tìm kiếm"
@@ -1759,5 +1763,15 @@
     },
     "legal": {
         "allRightsReserved": "Đã đăng ký bản quyền."
+    },
+    "aggregator": {
+        "label": "Đơn vị tổng hợp",
+        "aggregators": "Đơn vị tổng hợp",
+        "list": "Danh sách đơn vị tổng hợp",
+        "systemDefault": "Cổng mặc định",
+        "action": {
+            "create": "Tạo đơn vị tổng hợp",
+            "update": "Cập nhật đơn vị tổng hợp"
+        }
     }
 }

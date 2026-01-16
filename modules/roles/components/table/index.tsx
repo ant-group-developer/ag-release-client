@@ -225,9 +225,7 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
                 backgroundColor: token.colorBgContainer,
                 ...props?.style,
             }}
-            toolbar={{
-                className: 'px-4',
-            }}
+         
             tableAlertRender={({
                 selectedRowKeys,
                 selectedRows,

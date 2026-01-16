@@ -188,9 +188,6 @@ export const DspTable = ({ ...props }: Props) => {
                 backgroundColor: token.colorBgContainer,
                 ...props?.style,
             }}
-            toolbar={{
-                className: 'px-4',
-            }}
         />
     );
 };
