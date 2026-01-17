@@ -1767,5 +1767,19 @@
             "create": "Create aggregator",
             "update": "Update aggregator"
         }
+    },
+
+    "tenantIntegration": {
+        "message": {
+            "success": {
+                "create": "Create integration successfully",
+                "update": "Update integration successfully",
+                "delete": "Delete integration successfully"
+            },
+            "error": {
+                "notFound": "Tenant integration not found",
+                "dspExisted": "DSP is already enabled for this tenant"
+            }
+        }
     }
 }

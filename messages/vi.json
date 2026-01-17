@@ -1773,5 +1773,19 @@
             "create": "Tạo đơn vị tổng hợp",
             "update": "Cập nhật đơn vị tổng hợp"
         }
+    },
+
+    "tenantIntegration": {
+        "message": {
+            "success": {
+                "create": "Tạo tích hợp thành công",
+                "update": "Cập nhật tích hợp thành công",
+                "delete": "Xóa tích hợp thành công"
+            },
+            "error": {
+                "notFound": "Không tìm thấy tích hợp của tenant",
+                "dspExisted": "DSP đã được kích hoạt cho tenant này"
+            }
+        }
     }
 }

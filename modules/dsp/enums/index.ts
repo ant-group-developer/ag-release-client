@@ -5,7 +5,8 @@ export enum TYPE_MODAL_DSP {
 }
 
 export enum DSP_DEAL {
-    ANT_MUSIC = 'ant_music',
-    MERLIN = 'merlin',
-    DIRECT = 'direct',
+    ANT = 'ANT', // ANT Music
+    MERLIN = 'MERLIN', // Merlin
+    CI = 'CI', // CI (Content/Custom Integration)
+    DIRECT = 'DIRECT', // Thoả thuận trực tiếp
 }
