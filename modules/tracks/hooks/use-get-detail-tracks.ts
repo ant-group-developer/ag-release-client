@@ -11,6 +11,7 @@ export const useGetDetailTrack = (id: TrackData['id']) => {
         queryKey: trackQueryKeys.detail(id),
         queryFn: () => trackApi.getDetailTrack(id),
         enabled: !!id,
+        refetchOnWindowFocus: false,
     });
 
     const defaultData: TrackData = {

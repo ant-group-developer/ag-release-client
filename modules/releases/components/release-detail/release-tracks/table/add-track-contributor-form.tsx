@@ -73,7 +73,7 @@ export default function AddTrackContributorForm({ trackData }: Props) {
                         placeholder={messages('artist.select')}
                         // disabledArtistIds={disabledArtistIds}
                         allowClear
-                        disabled={isReadMode}
+                        disabled={isReadMode || isActive}
                     />
                 </AppFormItem>
 
@@ -95,7 +95,7 @@ export default function AddTrackContributorForm({ trackData }: Props) {
                         // disabledRoleIds={disabledRoleIds}
                         placement="topLeft"
                         allowClear
-                        disabled={isReadMode}
+                        disabled={isReadMode || isActive}
                     />
                 </AppFormItem>
 

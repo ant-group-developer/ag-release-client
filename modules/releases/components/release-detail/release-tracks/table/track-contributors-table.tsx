@@ -6,12 +6,12 @@ import { SIZE_ICON } from '@/constants/common';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useActive } from '@/hooks/use-active';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
-import { ReleaseArtist } from '@/modules/release-artist/types';
+import { ReleaseContributor } from '@/modules/release-contributor/types';
 import { TrackData } from '@/modules/releases/types';
-import { useDeleteTrackArtist } from '@/modules/track-artist/hooks/use-delete-track-artist';
-import { useUpdateTrackArtist } from '@/modules/track-artist/hooks/use-update-track-artist';
-import { UpdateTrackArtistPayload } from '@/modules/track-artist/types/payload';
+import { useDeleteTrackContributor } from '@/modules/track-contributor/hooks/use-delete-track-contributor';
+import { useUpdateTrackContributor } from '@/modules/track-contributor/hooks/use-update-track-contributor';
 import { TrackContributorData } from '@/modules/track-contributor/types';
+import { UpdateTrackContributorPayload } from '@/modules/track-contributor/types/payload';
 import { UpdateVariables } from '@/types/api';
 import { Avatar } from 'antd';
 import { ColumnType } from 'antd/es/table';
@@ -33,38 +33,39 @@ export default function TrackContributorsTable({ trackData, ...props }: Props) {
     const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
 
     // state
-    const [deleteArtist, setDeleteArtist] = useState<{
+    const [deleteContributor, setDeleteContributor] = useState<{
         isOpen: boolean;
-        trackArtistData?: TrackContributorData;
+        trackContributorData?: TrackContributorData;
     }>({
         isOpen: false,
-        trackArtistData: undefined,
+        trackContributorData: undefined,
     });
 
     // apis
-    const { deleteTrackArtist } = useDeleteTrackArtist();
-    const { updateTrackArtist } = useUpdateTrackArtist();
+    const { deleteTrackContributor } = useDeleteTrackContributor();
+    const { updateTrackContributor } = useUpdateTrackContributor();
 
-    const handleRemoveTrackArtist = () => {
+    const handleRemoveTrackContributor = () => {
         const variable = {
             trackId: trackData?.id,
-            id: deleteArtist?.trackArtistData?.id as string,
+            id: deleteContributor?.trackContributorData?.id as string,
             onSuccess: () =>
-                setDeleteArtist({
+                setDeleteContributor({
                     isOpen: false,
-                    trackArtistData: undefined,
+                    trackContributorData: undefined,
                 }),
         };
-        deleteTrackArtist(variable);
+        deleteTrackContributor(variable);
     };
 
-    const handleUpdateTrackArtist = (
+    const handleUpdateTrackContributor = (
         id: string,
-        payload: UpdateTrackArtistPayload
+        payload: UpdateTrackContributorPayload
     ) => {
+        active();
         const variables: UpdateVariables<
-            ReleaseArtist['id'],
-            UpdateTrackArtistPayload
+            ReleaseContributor['id'],
+            UpdateTrackContributorPayload
         > = {
             id,
             payload: {
@@ -75,7 +76,7 @@ export default function TrackContributorsTable({ trackData, ...props }: Props) {
             },
             onError: () => deActive(),
         };
-        updateTrackArtist(variables);
+        updateTrackContributor(variables);
     };
 
     const columns: ColumnType<TrackContributorData>[] = [
@@ -105,12 +106,13 @@ export default function TrackContributorsTable({ trackData, ...props }: Props) {
                 return (
                     <div className="max-w-44">
                         <RoleArtistSelect
+                            disabled={isActive || isReadMode}
                             className="w-full"
                             defaultValue={record?.artistRole?.id}
                             onChange={() => {
-                                // handleUpdateTrackArtist(record?.id, {
-                                //     artistRoleId: record?.artistRole?.id,
-                                // });
+                                handleUpdateTrackContributor(record?.id, {
+                                    artistRoleId: record?.artistRole?.id,
+                                });
                             }}
                         />
                     </div>
@@ -163,11 +165,11 @@ export default function TrackContributorsTable({ trackData, ...props }: Props) {
                 return (
                     <div onClick={(e) => e.preventDefault()}>
                         <IconButton
-                            disabled={isReadMode}
+                            disabled={isReadMode || isActive}
                             onClick={() => {
-                                setDeleteArtist({
+                                setDeleteContributor({
                                     isOpen: true,
-                                    trackArtistData: record,
+                                    trackContributorData: record,
                                 });
                             }}
                         >
@@ -208,18 +210,19 @@ export default function TrackContributorsTable({ trackData, ...props }: Props) {
                 </div>
 
                 <AppConfirm
-                    open={deleteArtist.isOpen}
+                    open={deleteContributor.isOpen}
                     modalTitle={messages('delete.confirmTitle')}
                     paragraph={messages('delete.confirmMessage', {
-                        value: deleteArtist?.trackArtistData?.artist?.name,
+                        value: deleteContributor?.trackContributorData?.artist
+                            ?.name,
                     })}
                     onCancel={() =>
-                        setDeleteArtist({
+                        setDeleteContributor({
                             isOpen: false,
-                            trackArtistData: undefined,
+                            trackContributorData: undefined,
                         })
                     }
-                    onOk={() => handleRemoveTrackArtist()}
+                    onOk={() => handleRemoveTrackContributor()}
                 />
             </div>
         </div>

@@ -8,6 +8,7 @@ import {
     BellElectric,
     BookA,
     Box,
+    Building2,
     ChartNoAxesCombined,
     ChevronsUp,
     CircleAlert,
@@ -364,6 +365,15 @@ export const adminRoutes: RouteNode[] = [
                 required: OWNER_OR_ADMIN_TENANT_REQ,
             },
             {
+                id: 'aggregator',
+                type: 'link',
+                label: 'aggregator.label',
+                title: 'Aggregator',
+                href: APP_ROUTES.AGGREGATOR,
+                icon: Building2,
+                required: OWNER_OR_ADMIN_TENANT_REQ,
+            },
+            {
                 id: 'tenantDetail',
                 type: 'link',
                 label: 'tenant.label',
@@ -411,7 +421,7 @@ export const adminRoutes: RouteNode[] = [
                     {
                         id: 'currencies',
                         type: 'link',
-                        label: 'currencies.label',
+                        label: 'currencies.currencies',
                         title: 'Currencies',
                         href: APP_ROUTES.CURRENCIES,
                         icon: Banknote,
@@ -429,7 +439,7 @@ export const adminRoutes: RouteNode[] = [
                     {
                         id: 'policy',
                         type: 'link',
-                        label: 'policy.label',
+                        label: 'policy.policies',
                         title: 'Policy',
                         href: APP_ROUTES.ACTIONS,
                         icon: BookA,

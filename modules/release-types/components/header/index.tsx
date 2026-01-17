@@ -3,6 +3,7 @@ import CreateButton from '@/components/ui/button/create-button';
 import AppSearch from '@/components/ui/input/search';
 import { UseFilterProps } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_RELEASE_TYPE } from '../../enums';
 import { ReleaseTypesDataFilter } from '../../types';
@@ -15,8 +16,14 @@ type Props = Pick<
 export default function ReleaseTypeHeader({ dataFilter, onSearch }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
+    const { token } = theme.useToken();
     return (
-        <AppHeader className="app-header p-4">
+        <AppHeader
+            className="app-header p-2"
+            style={{
+                backgroundColor: token.colorBgContainer,
+            }}
+        >
             <AppHeaderGroup>
                 <div>
                     <AppSearch

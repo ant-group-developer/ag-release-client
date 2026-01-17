@@ -1,5 +1,5 @@
 'use client';
-import AppContainer from '@/components/app-container';
+import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -15,7 +15,7 @@ import { useDeleteTimezone } from '@/modules/timezone/hooks/use-delete-timezone'
 import { useGetListTimezones } from '@/modules/timezone/hooks/use-get-list-timezones';
 import { TimezoneData } from '@/modules/timezone/types';
 import { DeleteVariables } from '@/types/api';
-import { useWindowSize } from '@uidotdev/usehooks';
+import { PageContainer } from '@ant-design/pro-components';
 import { useTranslations } from 'next-intl';
 
 type Props = {};
@@ -31,7 +31,7 @@ export default function Timezone({}: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit);
-    const { height, width } = useWindowSize();
+    // const { height, width } = useWindowSize();
 
     // apis
     const { deleteTimezone } = useDeleteTimezone();
@@ -65,47 +65,54 @@ export default function Timezone({}: Props) {
     };
 
     return (
-        <AppContainer title={messages('timezone.label')}>
-            <TimezoneHeader dataFilter={dataFilter} onSearch={onSearch} />
-            <TimezoneTable
-                sticky
-                dataSource={timezonesData?.items}
-                loading={isFetching}
-                pagination={{
-                    pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
-                    current: timezonesData.metadata.currentPage,
-                    total: timezonesData.metadata.totalItems,
-                }}
-                dataFilter={dataFilter}
-                onChange={onChangeSort}
-            />
-            <AppPagination
-                className="border-b"
-                align="end"
-                current={timezonesData?.metadata?.currentPage}
-                pageSize={dataFilter.pageSize}
-                total={timezonesData?.metadata?.totalItems}
-                onChange={onChangePage}
-                showTotalText
-                showSizeChanger
-                showQuickJumper
-                pageSizeOptions={PAGE_SIZE_OPTIONS}
-            />
-            {typeModal === TYPE_MODAL_TIMEZONE.DELETE && (
-                <AppConfirm
-                    open
-                    onCancel={closeModal}
-                    onOk={() => handleDeleteTimezone()}
-                    modalTitle={messages('delete.confirmTitle')}
-                    paragraph={messages('delete.confirmMessage', {
-                        value: dataEdit?.name,
-                    })}
+        <AppPageWrapper>
+            <PageContainer title={messages('timezone.label')}>
+                <TimezoneTable
+                    title={() => (
+                        <TimezoneHeader
+                            dataFilter={dataFilter}
+                            onSearch={onSearch}
+                        />
+                    )}
+                    sticky
+                    dataSource={timezonesData?.items}
+                    loading={isFetching}
+                    pagination={{
+                        pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
+                        current: timezonesData.metadata.currentPage,
+                        total: timezonesData.metadata.totalItems,
+                    }}
+                    dataFilter={dataFilter}
+                    onChange={onChangeSort}
                 />
-            )}
-            {(typeModal === TYPE_MODAL_TIMEZONE.CREATE ||
-                typeModal === TYPE_MODAL_TIMEZONE.UPDATE) && (
-                <TimezoneFormModal />
-            )}
-        </AppContainer>
+                <AppPagination
+                    className="border-b"
+                    align="end"
+                    current={timezonesData?.metadata?.currentPage}
+                    pageSize={dataFilter.pageSize}
+                    total={timezonesData?.metadata?.totalItems}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
+                />
+                {typeModal === TYPE_MODAL_TIMEZONE.DELETE && (
+                    <AppConfirm
+                        open
+                        onCancel={closeModal}
+                        onOk={() => handleDeleteTimezone()}
+                        modalTitle={messages('delete.confirmTitle')}
+                        paragraph={messages('delete.confirmMessage', {
+                            value: dataEdit?.name,
+                        })}
+                    />
+                )}
+                {(typeModal === TYPE_MODAL_TIMEZONE.CREATE ||
+                    typeModal === TYPE_MODAL_TIMEZONE.UPDATE) && (
+                    <TimezoneFormModal />
+                )}
+            </PageContainer>
+        </AppPageWrapper>
     );
 }

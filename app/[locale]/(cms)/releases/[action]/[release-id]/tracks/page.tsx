@@ -9,25 +9,33 @@ import DropUploadTracks from '@/modules/releases/components/drop-track-upload';
 import AddNewTrackModal from '@/modules/releases/components/release-detail/release-tracks/modal/add-new-track';
 import TrackDetailModal from '@/modules/releases/components/release-detail/release-tracks/modal/track-detail';
 import ReleaseTracksTable from '@/modules/releases/components/release-detail/release-tracks/table';
-import { TYPE_MODAL_RELEASE, TYPE_MODAL_TRACK } from '@/modules/releases/enums';
+import {
+    RELEASES_TABS,
+    TYPE_MODAL_RELEASE,
+    TYPE_MODAL_TRACK,
+} from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import TrackArtistModal from '@/modules/track-artist/components/modal/track-artist-modal';
+import { useDeleteTrackArtist } from '@/modules/track-artist/hooks/use-delete-track-artist';
+import { TrackArtistData } from '@/modules/track-artist/types';
 import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
 import { useBulkDeleteTracks } from '@/modules/tracks/hooks/use-bulk-delete-tracks';
 import { useDeleteTrack } from '@/modules/tracks/hooks/use-delete-track';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { TrackData, TrackDataFilter } from '@/modules/tracks/types';
 import { DeleteVariables } from '@/types/api';
-import { ConfigProvider, Empty, theme } from 'antd';
+import { Button, ConfigProvider, Empty, theme } from 'antd';
 import { TableRowSelection } from 'antd/es/table/interface';
 import { useTranslations } from 'next-intl';
+import { usePathname } from 'next/navigation';
 import { Key, useState } from 'react';
-import TrackActions from './track-actions';
+import TrackActions from '../../../../../../../modules/releases/components/release-detail/release-tracks/track-actions';
 
 export default function Tracks() {
     // hooks - state
     const messages = useTranslations();
     const [selectedRow, setSelectedRow] = useState<Key[]>([]);
+    const pathname = usePathname();
 
     const formValues = useReleaseFormStore((state) => state.formValues);
     // const setFormValues = useReleaseFormStore((state) => state.setFormValues);
@@ -35,14 +43,16 @@ export default function Tracks() {
     const dataEdit = useModalStore((state) => state.dataEdit);
     const closeModal = useModalStore((state) => state.closeModal);
     // const openModal = useModalStore((state) => state.openModal);
+    const openModal = useModalStore((state) => state.openModal);
 
     // const { action } = useGetReleaseDetailRoute();
     const releaseAction = useReleaseActionStore((state) => state.action);
     const { deleteTracks } = useBulkDeleteTracks();
+    const { deleteTrackArtist } = useDeleteTrackArtist();
 
     const isReleaseReadAction = releaseAction === RELEASE_DETAIL_ACTION.READ;
 
-    const { dataFilter, onChangePage } = useFilter<TrackDataFilter>({
+    const { dataFilter } = useFilter<TrackDataFilter>({
         releaseId: formValues?.id as string,
         fieldOrder: 'order',
         pageSize: 999,
@@ -75,6 +85,14 @@ export default function Tracks() {
             },
         });
     };
+    const handleRemoveTrackArtist = () => {
+        const trackArtistData = dataEdit as TrackArtistData;
+        const variable = {
+            id: trackArtistData?.id as string,
+        };
+
+        deleteTrackArtist(variable);
+    };
 
     // const
     const rowSelection: TableRowSelection<TrackData> = {
@@ -90,10 +108,24 @@ export default function Tracks() {
             colorTextDisabled: token?.colorText,
         },
     };
+    const isTracksPage = pathname.includes(`/${RELEASES_TABS.TRACKS}`);
+    const isShowAddTrack = releaseAction == RELEASE_DETAIL_ACTION.EDIT;
 
     return (
         <ConfigProvider theme={customTheme}>
             <div className="pb-4">
+                <div className="mb-2 flex justify-end">
+                    {isTracksPage && isShowAddTrack && (
+                        <Button
+                            onClick={() =>
+                                openModal(TYPE_MODAL_RELEASE.ADD_TRACK)
+                            }
+                            type="primary"
+                        >
+                            {messages('track.add')}
+                        </Button>
+                    )}
+                </div>
                 <TrackActions selectedRowKeys={selectedRow} />
                 <ReleaseTracksTable
                     className="!p-0"
@@ -151,6 +183,19 @@ export default function Tracks() {
                         })}
                         onCancel={closeModal}
                         onOk={() => handleRemoveTrack()}
+                    />
+                )}
+
+                {typeModal === TYPE_MODAL_TRACK_ARTIST.DELETE && (
+                    <AppConfirm
+                        open
+                        modalTitle={messages('delete.confirmTitle')}
+                        paragraph={messages.rich('delete.confirmMessageValue', {
+                            value: dataEdit?.artist?.name,
+                            b: (chuck) => <strong>{chuck}</strong>,
+                        })}
+                        onCancel={closeModal}
+                        onOk={() => handleRemoveTrackArtist()}
                     />
                 )}
             </div>

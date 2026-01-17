@@ -1,5 +1,5 @@
 'use client';
-import AppContainer from '@/components/app-container';
+import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -16,6 +16,7 @@ import { useDeleteCountry } from '@/modules/countries/hooks/use-delete-country';
 import { useGetListCountries } from '@/modules/countries/hooks/use-get-list-countries';
 import { CountriesData, CountriesDataFilter } from '@/modules/countries/types';
 import { DeleteVariables } from '@/types/api';
+import { PageContainer } from '@ant-design/pro-components';
 import { useTranslations } from 'next-intl';
 
 export default function Countries({}: {}) {
@@ -61,51 +62,58 @@ export default function Countries({}: {}) {
     };
 
     return (
-        <AppContainer title={messages('country.label')}>
-            <CountriesHeader dataFilter={dataFilter} onSearch={onSearch} />
-            <CountriesTable
-                sticky
-                dataSource={countriesData.items ?? fakeCountriesData}
-                loading={isFetching}
-                pagination={{
-                    pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                    current: countriesData.metadata.currentPage,
-                    total: countriesData.metadata.totalItems,
-                }}
-                dataFilter={dataFilter}
-                onChange={onChangeSort}
-            />
-            <AppPagination
-                align="end"
-                current={dataFilter.page}
-                pageSize={dataFilter.pageSize}
-                total={
-                    countriesData?.metadata?.totalItems ??
-                    fakeCountriesData.length
-                }
-                onChange={onChangePage}
-                showTotalText
-                showSizeChanger
-                showQuickJumper
-                pageSizeOptions={PAGE_SIZE_OPTIONS}
-            />
-
-            {(typeModal === TYPE_MODAL_COUNTRIES.CREATE ||
-                typeModal === TYPE_MODAL_COUNTRIES.UPDATE) && (
-                <CountriesFormModal />
-            )}
-
-            {typeModal === TYPE_MODAL_COUNTRIES.DELETE && (
-                <AppConfirm
-                    open
-                    onCancel={closeModal}
-                    onOk={() => {
-                        handleDeleteCountry();
+        <AppPageWrapper>
+            <PageContainer title={messages('country.label')}>
+                <CountriesTable
+                    title={() => (
+                        <CountriesHeader
+                            dataFilter={dataFilter}
+                            onSearch={onSearch}
+                        />
+                    )}
+                    sticky
+                    dataSource={countriesData.items ?? fakeCountriesData}
+                    loading={isFetching}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: countriesData.metadata.currentPage,
+                        total: countriesData.metadata.totalItems,
                     }}
-                    modalTitle={`${messages('delete.confirmTitle')}`}
-                    paragraph={`${messages('delete.confirmMessage', { value: dataEdit?.name })}`}
+                    dataFilter={dataFilter}
+                    onChange={onChangeSort}
                 />
-            )}
-        </AppContainer>
+                <AppPagination
+                    align="end"
+                    current={dataFilter.page}
+                    pageSize={dataFilter.pageSize}
+                    total={
+                        countriesData?.metadata?.totalItems ??
+                        fakeCountriesData.length
+                    }
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
+                />
+
+                {(typeModal === TYPE_MODAL_COUNTRIES.CREATE ||
+                    typeModal === TYPE_MODAL_COUNTRIES.UPDATE) && (
+                    <CountriesFormModal />
+                )}
+
+                {typeModal === TYPE_MODAL_COUNTRIES.DELETE && (
+                    <AppConfirm
+                        open
+                        onCancel={closeModal}
+                        onOk={() => {
+                            handleDeleteCountry();
+                        }}
+                        modalTitle={`${messages('delete.confirmTitle')}`}
+                        paragraph={`${messages('delete.confirmMessage', { value: dataEdit?.name })}`}
+                    />
+                )}
+            </PageContainer>
+        </AppPageWrapper>
     );
 }

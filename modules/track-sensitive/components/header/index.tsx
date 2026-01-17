@@ -22,7 +22,7 @@ export default function TrackSensitiveHeader({ dataFilter, onSearch }: Props) {
     const { hasPermission } = usePermission();
 
     return (
-        <AppHeader className="app-header p-4">
+        <AppHeader className="app-header p-2">
             <AppHeaderGroup>
                 <div>
                     <AppSearch

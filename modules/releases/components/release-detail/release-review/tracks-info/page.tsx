@@ -1,9 +1,11 @@
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
+import { convertSecondsToHoursMinutes } from '@/helpers/common';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
 import type { TrackData } from '@/modules/releases/types';
 import { TrackArtistData } from '@/modules/track-artist/types';
+import { TrackContributorData } from '@/modules/track-contributor/types';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { Collapse } from 'antd';
 import { CircleCheck, OctagonAlert } from 'lucide-react';
@@ -77,6 +79,20 @@ export default function TracksInfo({}: Props) {
             case 'trackTypeId':
                 return track.trackType?.name || track.trackTypeId || '';
 
+            case 'preview':
+                return track?.audioFile?.preview
+                    ? convertSecondsToHoursMinutes(
+                          Number(track?.audioFile?.preview)
+                      )
+                    : '';
+
+            case 'sampleLength':
+                return track?.audioFile?.sampleLength
+                    ? convertSecondsToHoursMinutes(
+                          Number(track?.audioFile?.sampleLength)
+                      )
+                    : '';
+
             default: {
                 const value = track[field];
                 if (typeof value === 'boolean') {
@@ -106,7 +122,7 @@ export default function TracksInfo({}: Props) {
                         {label}{' '}
                         {isRequired && <span className="text-red-500">*</span>}
                     </p>
-                    {value === '' ? (
+                    {!value ? (
                         <p>
                             {isRequired ? (
                                 <p className="text-red-500">
@@ -143,6 +159,8 @@ export default function TracksInfo({}: Props) {
 
             <div className="flex flex-col gap-2">
                 {tracksData?.items?.map((track: TrackData, index: number) => {
+                    const trackArtists = track?.trackArtists;
+                    const trackContributors = track?.trackContributors;
                     const errorCount = releaseValidateData?.reduce(
                         (pre, current) => {
                             if (current?.trackId === track.id) {
@@ -202,8 +220,15 @@ export default function TracksInfo({}: Props) {
                                         messages('formFields.tracks.version'),
                                         'version'
                                     )}
-                                    <div className="col-span-2 rounded-lg bg-white px-4 py-2">
-                                        {track?.trackArtists?.map(
+
+                                    <div className="rounded-lg bg-white px-4 py-2">
+                                        <p className="font-medium">
+                                            {messages('artist.artists')}{' '}
+                                            <span className="text-red-500">
+                                                *
+                                            </span>
+                                        </p>
+                                        {trackArtists?.map(
                                             (
                                                 trackArtist: TrackArtistData,
                                                 index: number
@@ -216,6 +241,41 @@ export default function TracksInfo({}: Props) {
                                                     }}
                                                 />
                                             )
+                                        )}
+                                        {(!trackArtists ||
+                                            trackArtists?.length <= 0) && (
+                                            <p className="text-red-500">
+                                                {messages('common.required')}
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    <div className="rounded-lg bg-white px-4 py-2">
+                                        <p className="font-medium">
+                                            {messages('common.contributors')}{' '}
+                                            <span className="text-red-500">
+                                                *
+                                            </span>
+                                        </p>
+                                        {trackContributors?.map(
+                                            (
+                                                item: TrackContributorData,
+                                                index: number
+                                            ) => (
+                                                <ArtistItem
+                                                    key={item.id}
+                                                    data={{
+                                                        artist: item?.artist,
+                                                        role: item?.artistRole,
+                                                    }}
+                                                />
+                                            )
+                                        )}
+                                        {(!trackContributors ||
+                                            trackContributors?.length <= 0) && (
+                                            <p className="text-red-500">
+                                                {messages('common.required')}
+                                            </p>
                                         )}
                                     </div>
 
@@ -275,7 +335,11 @@ export default function TracksInfo({}: Props) {
                                         'trackSensitiveId',
                                         true
                                     )}
-
+                                    {renderField(
+                                        index,
+                                        messages('trackType.label'),
+                                        'trackTypeId'
+                                    )}
                                     {renderField(
                                         index,
                                         messages('formFields.pLineOwner'),
@@ -290,8 +354,17 @@ export default function TracksInfo({}: Props) {
                                     )}
                                     {renderField(
                                         index,
-                                        messages('trackType.label'),
-                                        'trackTypeId'
+                                        messages('formFields.preview'),
+                                        'preview',
+                                        true
+                                    )}
+                                    {renderField(
+                                        index,
+                                        messages(
+                                            'formFields.tracks.sampleLength'
+                                        ),
+                                        'sampleLength',
+                                        true
                                     )}
                                 </div>
                             </Collapse.Panel>

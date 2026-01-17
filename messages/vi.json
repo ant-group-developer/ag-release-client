@@ -64,6 +64,9 @@
         }
     },
     "common": {
+        "path": "Đường dẫn",
+        "username": "Tên người dùng",
+        "password": "Mật khẩu",
         "users": "Người dùng",
         "errors": "Lỗi",
         "contributors": "Người đóng góp",
@@ -329,7 +332,8 @@
     },
     "delete": {
         "confirmTitle": "Xác nhận xoá",
-        "confirmMessage": "Bạn có chắc muốn xoá {value}?"
+        "confirmMessage": "Bạn có chắc muốn xoá {value}?",
+        "confirmMessageValue": "Bạn có chắc muốn xoá <b>{value}</b> ?"
     },
     "cancel": {
         "confirmTitle": "Xác nhận huỷ",
@@ -517,7 +521,8 @@
         "numberMin": "{field} phải từ {min} trở lên.",
         "numberMax": "{field} không được lớn hơn {max}.",
         "invalidType": "{field} không hợp lệ.",
-        "noUnderscore": "{field} Không được có ký tự (_)"
+        "noUnderscore": "{field} Không được có ký tự (_)",
+        "email": "Email không hợp lệ."
     },
     "form": {
         "searchPlaceholder": "Tìm kiếm"
@@ -963,7 +968,10 @@
                 "update": "Cập nhật nghệ sĩ thành công",
                 "delete": "Xoá nghệ sĩ thành công"
             },
-            "note": "Chỉnh sửa nghệ sĩ sẽ làm ngắt đồng bộ với nghệ sĩ phát hành"
+            "note": "Chỉnh sửa nghệ sĩ sẽ làm ngắt đồng bộ với nghệ sĩ phát hành",
+            "error": {
+                "uniqueConstraint": "Nghệ sĩ này đã tồn tại trong track."
+            }
         }
     },
 
@@ -1331,6 +1339,7 @@
 
     "tenant": {
         "label": "Workspace",
+        "workspaces": "workspaces",
         "name": "Tên workspace",
         "logo": "Logo",
         "icon": {
@@ -1510,6 +1519,7 @@
     },
 
     "policy": {
+        "policies": "Chính sách",
         "label": "Chính sách",
         "name": "Tên chính sách",
         "action": {
@@ -1518,6 +1528,7 @@
     },
 
     "currencies": {
+        "currencies": "Tiền tệ",
         "label": "Tiền tệ",
         "name": "Tên tiền tệ",
         "code": "Mã tiền tệ",
@@ -1752,5 +1763,29 @@
     },
     "legal": {
         "allRightsReserved": "Đã đăng ký bản quyền."
+    },
+    "aggregator": {
+        "label": "Đơn vị tổng hợp",
+        "aggregators": "Đơn vị tổng hợp",
+        "list": "Danh sách đơn vị tổng hợp",
+        "systemDefault": "Cổng mặc định",
+        "action": {
+            "create": "Tạo đơn vị tổng hợp",
+            "update": "Cập nhật đơn vị tổng hợp"
+        }
+    },
+
+    "tenantIntegration": {
+        "message": {
+            "success": {
+                "create": "Tạo tích hợp thành công",
+                "update": "Cập nhật tích hợp thành công",
+                "delete": "Xóa tích hợp thành công"
+            },
+            "error": {
+                "notFound": "Không tìm thấy tích hợp của tenant",
+                "dspExisted": "DSP đã được kích hoạt cho tenant này"
+            }
+        }
     }
 }

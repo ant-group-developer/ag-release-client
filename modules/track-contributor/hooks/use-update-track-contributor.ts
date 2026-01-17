@@ -1,21 +1,20 @@
 import { useApiNotify } from '@/hooks/use-api-notify';
 import { releasesQueryKeys } from '@/modules/releases/constants/query-keys';
-import { trackArtistApi } from '@/modules/track-artist/apis';
-import { TrackArtistData } from '@/modules/track-artist/types';
-import { UpdateTrackArtistPayload } from '@/modules/track-artist/types/payload';
 import { trackQueryKeys } from '@/modules/tracks/constants/query-keys';
 import { CreateVariables, UpdateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useTranslations } from 'next-intl';
+import { trackContributorApi } from '../apis';
+import { TrackContributorData } from '../types';
+import { UpdateTrackContributorPayload } from '../types/payload';
 
-export const useUpdateTrackArtist = () => {
-    const messages = useTranslations();
+export const useUpdateTrackContributor = () => {
+    // const messages = useTranslations();
     const queryClient = useQueryClient();
     const { handleError } = useApiNotify();
 
     const onSuccess = (
         data: any,
-        { onSuccess }: CreateVariables<UpdateTrackArtistPayload>
+        { onSuccess }: CreateVariables<UpdateTrackContributorPayload>
     ) => {
         queryClient.invalidateQueries({
             queryKey: trackQueryKeys.list({
@@ -37,7 +36,7 @@ export const useUpdateTrackArtist = () => {
 
     const onError = (
         data: any,
-        { onError }: CreateVariables<UpdateTrackArtistPayload>
+        { onError }: CreateVariables<UpdateTrackContributorPayload>
     ) => {
         onError?.();
         handleError(data);
@@ -46,23 +45,25 @@ export const useUpdateTrackArtist = () => {
         mutationFn: ({
             id,
             payload,
-        }: UpdateVariables<TrackArtistData['id'], UpdateTrackArtistPayload>) =>
-            trackArtistApi.updateTrackArtist(id, payload),
+        }: UpdateVariables<
+            TrackContributorData['id'],
+            UpdateTrackContributorPayload
+        >) => trackContributorApi.update(id, payload),
         onSuccess,
         onError,
     });
 
-    const updateTrackArtist = (
+    const updateTrackContributor = (
         variables: UpdateVariables<
-            TrackArtistData['id'],
-            UpdateTrackArtistPayload
+            TrackContributorData['id'],
+            UpdateTrackContributorPayload
         >
     ) => {
         mutation.mutate(variables);
     };
 
     return {
-        updateTrackArtist,
+        updateTrackContributor,
         ...mutation,
     };
 };

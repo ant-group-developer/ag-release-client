@@ -64,6 +64,9 @@
         }
     },
     "common": {
+        "path": "Path",
+        "username": "Username",
+        "password": "Password",
         "users": "Users",
         "errors": "Errors",
         "contributors": "Contributors",
@@ -331,7 +334,8 @@
     },
     "delete": {
         "confirmTitle": "Confirm delete",
-        "confirmMessage": "Are you sure you want to delete {value}?"
+        "confirmMessage": "Are you sure you want to delete {value}?",
+        "confirmMessageValue": "Are you sure you want to delete <b>{value}</b> ?"
     },
     "cancel": {
         "confirmTitle": "Confirm cancel",
@@ -517,7 +521,8 @@
         "numberMin": "{field} must be at least {min}.",
         "numberMax": "{field} must not exceed {max}.",
         "invalidType": "{field} must be a valid value.",
-        "noUnderscore": "{field} must not contain underscores (_)"
+        "noUnderscore": "{field} must not contain underscores (_)",
+        "email": "Invalid email address."
     },
     "form": {
         "searchPlaceholder": "Search"
@@ -962,7 +967,10 @@
                 "update": "Update artist successfully",
                 "delete": "Delete artist successfully"
             },
-            "note": "Editing the artist will interrupt synchronization with the release artist"
+            "note": "Editing the artist will interrupt synchronization with the release artist",
+            "error": {
+                "uniqueConstraint": "The artist already exists in the track."
+            }
         }
     },
 
@@ -1328,6 +1336,7 @@
 
     "tenant": {
         "label": "Workspace",
+        "workspaces": "workspaces",
         "name": "Workspace name",
         "logo": "Logo",
         "icon": {
@@ -1507,6 +1516,7 @@
     },
 
     "policy": {
+        "policies": "Policies",
         "label": "Policy",
         "name": "Policy name",
         "action": {
@@ -1515,6 +1525,7 @@
     },
 
     "currencies": {
+        "currencies": "Currencies",
         "label": "Currency",
         "name": "Currency name",
         "code": "Currency code",
@@ -1746,5 +1757,29 @@
     },
     "legal": {
         "allRightsReserved": "All rights reserved."
+    },
+    "aggregator": {
+        "label": "Aggregator",
+        "aggregators": "Aggregators",
+        "list": "List aggregator",
+        "systemDefault": "System default",
+        "action": {
+            "create": "Create aggregator",
+            "update": "Update aggregator"
+        }
+    },
+
+    "tenantIntegration": {
+        "message": {
+            "success": {
+                "create": "Create integration successfully",
+                "update": "Update integration successfully",
+                "delete": "Delete integration successfully"
+            },
+            "error": {
+                "notFound": "Tenant integration not found",
+                "dspExisted": "DSP is already enabled for this tenant"
+            }
+        }
     }
 }

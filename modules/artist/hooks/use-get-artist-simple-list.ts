@@ -22,6 +22,7 @@ export const useGetArtistSimpleList = (
         },
         enabled: options?.enabled ?? true,
         initialPageParam: 1,
+        placeholderData: (prev) => prev,
     });
 
     const artistsData =

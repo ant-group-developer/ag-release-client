@@ -1,5 +1,5 @@
 'use client';
-import AppContainer from '@/components/app-container';
+import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -17,6 +17,7 @@ import { useGetListGenres } from '@/modules/genres/hooks/use-get-list-genres';
 // import { fakeGenresData } from '@/modules/genres/constants';
 import { GenresData, GenresDataFilter } from '@/modules/genres/types';
 import { DeleteVariables } from '@/types/api';
+import { PageContainer } from '@ant-design/pro-components';
 import { useTranslations } from 'next-intl';
 
 export default function Genres() {
@@ -67,46 +68,55 @@ export default function Genres() {
     };
 
     return (
-        <AppContainer title={messages('common.genres')}>
-            <GenresHeader dataFilter={dataFilter} onSearch={onSearch} />
-            <GenresTable
-                sticky
-                dataSource={genresData.items}
-                loading={isFetching}
-                pagination={{
-                    pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                    current: genresData.metadata.currentPage,
-                    total: genresData.metadata.totalItems,
-                }}
-                dataFilter={dataFilter}
-                onChange={onChangeSort}
-            />
-            <AppPagination
-                align="end"
-                current={genresData.metadata?.currentPage}
-                pageSize={dataFilter?.pageSize}
-                total={genresData.metadata?.totalItems}
-                onChange={onChangePage}
-                showTotalText
-                showSizeChanger
-                showQuickJumper
-                pageSizeOptions={PAGE_SIZE_OPTIONS}
-            />
-
-            {typeModal === TYPE_MODAL_GENRES.DELETE && (
-                <AppConfirm
-                    open
-                    modalTitle={messages('delete.confirmTitle')}
-                    paragraph={messages('delete.confirmMessage', {
-                        value: dataEdit?.name,
-                    })}
-                    onCancel={closeModal}
-                    onOk={() => handleDeleteGenre()}
+        <AppPageWrapper>
+            <PageContainer title={messages('genre.genres')}>
+                <GenresTable
+                    title={() => (
+                        <GenresHeader
+                            dataFilter={dataFilter}
+                            onSearch={onSearch}
+                        />
+                    )}
+                    sticky
+                    dataSource={genresData.items}
+                    loading={isFetching}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: genresData.metadata.currentPage,
+                        total: genresData.metadata.totalItems,
+                    }}
+                    dataFilter={dataFilter}
+                    onChange={onChangeSort}
                 />
-            )}
+                <AppPagination
+                    align="end"
+                    current={genresData.metadata?.currentPage}
+                    pageSize={dataFilter?.pageSize}
+                    total={genresData.metadata?.totalItems}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
+                />
 
-            {(typeModal === TYPE_MODAL_GENRES.CREATE ||
-                typeModal === TYPE_MODAL_GENRES.UPDATE) && <GenresFormModal />}
-        </AppContainer>
+                {typeModal === TYPE_MODAL_GENRES.DELETE && (
+                    <AppConfirm
+                        open
+                        modalTitle={messages('delete.confirmTitle')}
+                        paragraph={messages('delete.confirmMessage', {
+                            value: dataEdit?.name,
+                        })}
+                        onCancel={closeModal}
+                        onOk={() => handleDeleteGenre()}
+                    />
+                )}
+
+                {(typeModal === TYPE_MODAL_GENRES.CREATE ||
+                    typeModal === TYPE_MODAL_GENRES.UPDATE) && (
+                    <GenresFormModal />
+                )}
+            </PageContainer>
+        </AppPageWrapper>
     );
 }

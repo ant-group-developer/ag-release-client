@@ -8,7 +8,7 @@ type Props = Omit<SelectProps, 'options'> & {
 };
 
 export default function TenantSelect({ fallBack, ...props }: Props) {
-    const { tenantSimpleData } = useGetListSimpleTenant();
+    const { tenantSimpleData, isFetching } = useGetListSimpleTenant();
     const locale = useLocale();
 
     const options = tenantSimpleData.map((item) => ({
@@ -33,6 +33,7 @@ export default function TenantSelect({ fallBack, ...props }: Props) {
         <Select
             {...props}
             showSearch
+            loading={isFetching || props?.loading}
             filterOption={(input, option) =>
                 toNonAccentVietnamese(option?.name ?? '')
                     .toLowerCase()

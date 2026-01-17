@@ -44,7 +44,7 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
 
     const breadcrumbItems = [
         {
-            title: messages('tenant.label'),
+            title: messages('tenant.workspaces'),
             href: APP_ROUTES.TENANT,
         },
         {

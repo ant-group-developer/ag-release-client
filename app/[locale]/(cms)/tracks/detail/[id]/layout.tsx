@@ -22,7 +22,6 @@ import { PropsWithChildren, useState } from 'react';
 export default function TrackDetail({ children }: PropsWithChildren) {
     // hooks - state
     const messages = useTranslations();
-    const [isScroll, setIsScrolled] = useState(false);
     // const [activeTab, setActiveTab] = useState<string>(TRACK_TABS.METADATA);
     const { token } = theme.useToken();
 
@@ -110,6 +109,7 @@ export default function TrackDetail({ children }: PropsWithChildren) {
         },
     ];
 
+ 
     if (error) {
         return <AppError error={error} />;
     }
@@ -121,10 +121,6 @@ export default function TrackDetail({ children }: PropsWithChildren) {
     return (
         <div
             className="h-full min-h-[calc(100vh-64px)] overflow-auto"
-            onScroll={(e) => {
-                const el = e.currentTarget;
-                setIsScrolled(el.scrollTop > 0);
-            }}
             style={{ backgroundColor: token.colorBgLayout }}
         >
             <PageContainer
@@ -147,7 +143,7 @@ export default function TrackDetail({ children }: PropsWithChildren) {
                         <AppHeaderPage
                             imageSrc={linkReadFile}
                             imageLoading={imageFetching}
-                            isScrolled={isScroll}
+                            isScrolled={false}
                             options={renderDownloadTrack()}
                         >
                             <ItemHeaderPage

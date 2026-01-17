@@ -74,7 +74,7 @@ export default function AddTrackArtistForm({ trackData }: Props) {
                         placeholder={messages('artist.select')}
                         // disabledArtistIds={disabledArtistIds}
                         allowClear
-                        disabled={isReadMode}
+                        disabled={isReadMode || isActive}
                     />
                 </AppFormItem>
 

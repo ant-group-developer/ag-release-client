@@ -1,5 +1,5 @@
 'use client';
-import AppContainer from '@/components/app-container';
+import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -18,6 +18,7 @@ import {
     ReleaseTypesDataFilter,
 } from '@/modules/release-types/types';
 import { DeleteVariables } from '@/types/api';
+import { PageContainer } from '@ant-design/pro-components';
 import { useTranslations } from 'next-intl';
 
 type Props = {};
@@ -64,50 +65,57 @@ export default function ReleaseType({}: Props) {
     };
 
     return (
-        <AppContainer title={messages('releaseType.label')}>
-            <ReleaseTypeHeader dataFilter={dataFilter} onSearch={onSearch} />
-            <ReleaseTypeTable
-                sticky
-                dataSource={releaseTypesData.items}
-                pagination={{
-                    pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                    current: releaseTypesData.metadata.currentPage,
-                    total: releaseTypesData.metadata.totalItems,
-                }}
-                loading={isFetching}
-                dataFilter={dataFilter}
-                onChange={onChangeSort}
-            />
-            <AppPagination
-                align="end"
-                current={releaseTypesData?.metadata?.currentPage}
-                pageSize={dataFilter.pageSize}
-                total={releaseTypesData.metadata.totalItems}
-                onChange={onChangePage}
-                showTotalText
-                showSizeChanger
-                showQuickJumper
-                pageSizeOptions={PAGE_SIZE_OPTIONS}
-            />
-
-            {(typeModal === TYPE_MODAL_RELEASE_TYPE.CREATE ||
-                typeModal === TYPE_MODAL_RELEASE_TYPE.UPDATE) && (
-                <ReleaseTypeFormModal />
-            )}
-
-            {typeModal === TYPE_MODAL_RELEASE_TYPE.DELETE && (
-                <AppConfirm
-                    open
-                    onCancel={closeModal}
-                    onOk={() => {
-                        handleDeleteReleaseType();
+        <AppPageWrapper>
+            <PageContainer title={messages('releaseType.label')}>
+                <ReleaseTypeTable
+                    title={() => (
+                        <ReleaseTypeHeader
+                            dataFilter={dataFilter}
+                            onSearch={onSearch}
+                        />
+                    )}
+                    sticky
+                    dataSource={releaseTypesData.items}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: releaseTypesData.metadata.currentPage,
+                        total: releaseTypesData.metadata.totalItems,
                     }}
-                    modalTitle={messages('delete.confirmTitle')}
-                    paragraph={messages('delete.confirmMessage', {
-                        value: dataEdit?.name,
-                    })}
+                    loading={isFetching}
+                    dataFilter={dataFilter}
+                    onChange={onChangeSort}
                 />
-            )}
-        </AppContainer>
+                <AppPagination
+                    align="end"
+                    current={releaseTypesData?.metadata?.currentPage}
+                    pageSize={dataFilter.pageSize}
+                    total={releaseTypesData.metadata.totalItems}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
+                />
+
+                {(typeModal === TYPE_MODAL_RELEASE_TYPE.CREATE ||
+                    typeModal === TYPE_MODAL_RELEASE_TYPE.UPDATE) && (
+                    <ReleaseTypeFormModal />
+                )}
+
+                {typeModal === TYPE_MODAL_RELEASE_TYPE.DELETE && (
+                    <AppConfirm
+                        open
+                        onCancel={closeModal}
+                        onOk={() => {
+                            handleDeleteReleaseType();
+                        }}
+                        modalTitle={messages('delete.confirmTitle')}
+                        paragraph={messages('delete.confirmMessage', {
+                            value: dataEdit?.name,
+                        })}
+                    />
+                )}
+            </PageContainer>
+        </AppPageWrapper>
     );
 }

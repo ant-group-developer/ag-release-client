@@ -9,7 +9,7 @@ import {
 export const trackContributorApi = {
     create: (payload: CreateTrackContributorPayload) => {
         return axiosInstance.post<DetailResponse<TrackContributorData>>(
-            '/track-contributor',
+            '/track-contributors',
             payload
         );
     },
@@ -19,12 +19,12 @@ export const trackContributorApi = {
         payload: UpdateTrackContributorPayload
     ) => {
         return axiosInstance.put<DetailResponse<TrackContributorData>>(
-            `/track-contributor/${id}`,
+            `/track-contributors/${id}`,
             payload
         );
     },
 
     delete: (id: TrackContributorData['id']) => {
-        return axiosInstance.delete(`/track-contributor/${id}`);
+        return axiosInstance.delete(`/track-contributors/${id}`);
     },
 };

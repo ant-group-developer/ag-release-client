@@ -21,6 +21,7 @@ import GenreSection from '../collapse/view-all-collapse/genre-section';
 import LanguageSection from '../collapse/view-all-collapse/language-section';
 import OtherSection from '../collapse/view-all-collapse/other-section';
 import TrackAndArtistSection from '../collapse/view-all-collapse/track-and-artist-section';
+import TrackContributorsSection from '../collapse/view-all-collapse/track-contributors-section';
 import ViewAll from '../form/view-all';
 
 type Props = {} & Omit<AppModalProps, 'children'>;
@@ -52,7 +53,7 @@ export default function TrackDetailModal({ ...props }: Props) {
                 payload: data,
             };
             updateTrackDraft(variables);
-        }, 800),
+        }, 500),
         [trackId]
     );
 
@@ -70,12 +71,18 @@ export default function TrackDetailModal({ ...props }: Props) {
                 //     trackData={trackData}
                 //     index={index}
                 // />
-                <div className="max-h-[80vh] overflow-y-auto">
+                <div className="max-h-[80vh] space-y-4 overflow-y-auto">
                     <TrackAndArtistSection
                         trackData={trackData}
                         debouncedUpdateTrackDraft={(data) =>
                             debouncedUpdate(trackId, data)
                         }
+                        index={index}
+                    />
+
+                    <TrackContributorsSection
+                        trackData={trackData}
+                        debouncedUpdateTrackDraft={updateTrackDraft}
                         index={index}
                     />
                 </div>

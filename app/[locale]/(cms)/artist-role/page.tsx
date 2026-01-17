@@ -1,5 +1,5 @@
 'use client';
-import AppContainer from '@/components/app-container';
+import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 
@@ -19,6 +19,7 @@ import {
     ArtistRoleDataFilter,
 } from '@/modules/artist-role/types';
 import { DeleteVariables } from '@/types/api';
+import { PageContainer } from '@ant-design/pro-components';
 import { useTranslations } from 'next-intl';
 
 type Props = {};
@@ -60,50 +61,57 @@ export default function ArtistRole({}: Props) {
     };
 
     return (
-        <AppContainer title={messages('artist.role')}>
-            <ArtistRoleHeader dataFilter={dataFilter} onSearch={onSearch} />
-            <ArtistRoleTable
-                sticky
-                dataSource={artistsRolesData.items}
-                pagination={{
-                    pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                    current: artistsRolesData.metadata.currentPage,
-                    total: artistsRolesData.metadata.totalItems,
-                }}
-                loading={isFetching}
-                dataFilter={dataFilter}
-                onChange={onChangeSort}
-            />
-            <AppPagination
-                align="end"
-                current={artistsRolesData?.metadata?.currentPage}
-                pageSize={dataFilter.pageSize}
-                total={artistsRolesData.metadata.totalItems}
-                onChange={onChangePage}
-                showTotalText
-                showSizeChanger
-                showQuickJumper
-                pageSizeOptions={PAGE_SIZE_OPTIONS}
-            />
-
-            {(typeModal === TYPE_MODAL_ARTIST_ROLE.CREATE ||
-                typeModal === TYPE_MODAL_ARTIST_ROLE.UPDATE) && (
-                <ArtistRoleFormModal />
-            )}
-
-            {typeModal === TYPE_MODAL_ARTIST_ROLE.DELETE && (
-                <AppConfirm
-                    open
-                    onCancel={closeModal}
-                    onOk={() => {
-                        handleDeleteArtistRole();
+        <AppPageWrapper>
+            <PageContainer title={messages('artist.role')}>
+                <ArtistRoleTable
+                    title={() => (
+                        <ArtistRoleHeader
+                            dataFilter={dataFilter}
+                            onSearch={onSearch}
+                        />
+                    )}
+                    sticky
+                    dataSource={artistsRolesData.items}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: artistsRolesData.metadata.currentPage,
+                        total: artistsRolesData.metadata.totalItems,
                     }}
-                    modalTitle={messages('delete.confirmTitle')}
-                    paragraph={messages('delete.confirmMessage', {
-                        value: dataEdit?.name,
-                    })}
+                    loading={isFetching}
+                    dataFilter={dataFilter}
+                    onChange={onChangeSort}
                 />
-            )}
-        </AppContainer>
+                <AppPagination
+                    align="end"
+                    current={artistsRolesData?.metadata?.currentPage}
+                    pageSize={dataFilter.pageSize}
+                    total={artistsRolesData.metadata.totalItems}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
+                />
+
+                {(typeModal === TYPE_MODAL_ARTIST_ROLE.CREATE ||
+                    typeModal === TYPE_MODAL_ARTIST_ROLE.UPDATE) && (
+                    <ArtistRoleFormModal />
+                )}
+
+                {typeModal === TYPE_MODAL_ARTIST_ROLE.DELETE && (
+                    <AppConfirm
+                        open
+                        onCancel={closeModal}
+                        onOk={() => {
+                            handleDeleteArtistRole();
+                        }}
+                        modalTitle={messages('delete.confirmTitle')}
+                        paragraph={messages('delete.confirmMessage', {
+                            value: dataEdit?.name,
+                        })}
+                    />
+                )}
+            </PageContainer>
+        </AppPageWrapper>
     );
 }

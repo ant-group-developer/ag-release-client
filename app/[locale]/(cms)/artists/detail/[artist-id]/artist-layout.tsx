@@ -16,7 +16,8 @@ import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 export default function ArtistDetailLayout({ children }: PropsWithChildren) {
     // hooks - state
     const { token } = theme.useToken();
-    const [isScroll, setIsScrolled] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+
     const messages = useTranslations();
     // const scrollContainerRef = useRef<HTMLDivElement>(null);
     const headerLayoutRef = useRef<HTMLDivElement>(null);
@@ -81,13 +82,10 @@ export default function ArtistDetailLayout({ children }: PropsWithChildren) {
         },
     ];
 
-    useEffect(() => {
-        if (headerLayoutRef.current && artistData) {
-            const height =
-                headerLayoutRef.current.getBoundingClientRect().height;
-            setHeaderLayoutHeight(height);
-        }
-    }, [artistData.id, isScroll]);
+    const handleOnScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        if (currentTab?.key == ARTIST_DETAIL_TABS.OVERVIEW) return setIsScrolled(false);
+            setIsScrolled(e.currentTarget.scrollTop > 50);
+    };
 
     if (isLoading || !artistData) {
         return <DetailSkeleton />;
@@ -95,14 +93,11 @@ export default function ArtistDetailLayout({ children }: PropsWithChildren) {
 
     return (
         <div
-            className="h-full overflow-auto"
+            className="h-full w-full min-w-0 overflow-auto"
             style={{
                 background: token.colorBgLayout,
             }}
-            onScroll={(e) => {
-                const el = e.currentTarget;
-                setIsScrolled(el.scrollTop > 20);
-            }}
+            onScroll={handleOnScroll}
         >
             <PageContainer
                 title={false}
@@ -118,15 +113,10 @@ export default function ArtistDetailLayout({ children }: PropsWithChildren) {
                     style={{
                         background: token.colorBgContainer,
                     }}
-                    onScroll={(e) => {
-                        const scrollTop =
-                            (e.target as HTMLDivElement).scrollTop || 0;
-                        setIsScrolled(scrollTop > 0);
-                    }}
                 >
                     <AppHeaderPage
                         imageSrc={artistData?.picture as string}
-                        isScrolled={isScroll}
+                        isScrolled={isScrolled}
                     >
                         <ItemHeaderPage
                             name={messages('artist.name')}
