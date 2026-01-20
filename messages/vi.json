@@ -64,6 +64,8 @@
         }
     },
     "common": {
+        "deal": "Thoả thuận",
+        "deals": "Thoả thuận",
         "path": "Đường dẫn",
         "username": "Tên người dùng",
         "password": "Mật khẩu",
@@ -1787,5 +1789,10 @@
                 "dspExisted": "DSP đã được kích hoạt cho tenant này"
             }
         }
+    },
+
+    "dealType": {
+        "label": "Loại thỏa thuận",
+        "requiredConnection": "Yêu cầu kết nối"
     }
 }

@@ -142,28 +142,6 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         isLoading: isReleaseDataLoading,
         error,
     } = useGetDetailRelease(releaseId);
-    // const { tracksData, isLoading: isTracksLoading } = useGetListTracks({
-    //     releaseId: releaseData?.id || '',
-    //     fieldOrder: 'order',
-    // });
-
-    // render
-    // const isShowAddTrack =
-    //     tracksData?.items?.length < releaseData?.albumFormat?.maxTrackCount &&
-    //     releaseAction == RELEASE_DETAIL_ACTION.EDIT;
-
-    // const extraButton = (
-    //     <div className="flex justify-end gap-2">
-    //         {isTracksPage && isShowAddTrack && (
-    //             <Button
-    //                 onClick={() => openModal(TYPE_MODAL_RELEASE.ADD_TRACK)}
-    //                 type="primary"
-    //             >
-    //                 {messages('track.add')}
-    //             </Button>
-    //         )}
-    //     </div>
-    // );
 
     useEffect(() => {
         const getActiveTab = () => {
@@ -231,7 +209,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
 
     if (isReleaseDataLoading || !releaseData) {
         return (
-            <div className="w-[100vw] px-8">
+            <div className="w-full">
                 <DetailSkeleton />
             </div>
         );

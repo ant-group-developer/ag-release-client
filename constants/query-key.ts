@@ -347,4 +347,16 @@ export const QUERY_KEY = {
         UPDATE: 'UPDATE_INTEGRATION',
         GET_DETAIL: 'GET_DETAIL_INTEGRATION',
     },
+    DEAL_TYPE: {
+        KEY: 'DEAL_TYPE',
+        GET_LIST: 'GET_LIST_DEAL_TYPE',
+        UPDATE: 'UPDATE_DEAL_TYPE',
+        GET_DETAIL: 'GET_DETAIL_DEAL_TYPE',
+    },
+    DSP_DEAL: {
+        KEY: 'DSP_DEAL',
+        GET_LIST: 'GET_LIST_DSP_DEAL',
+        UPDATE: 'UPDATE_DSP_DEAL',
+        GET_DETAIL: 'GET_DETAIL_DSP_DEAL',
+    },
 };

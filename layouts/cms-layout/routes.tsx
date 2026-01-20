@@ -34,6 +34,7 @@ import {
     MicVocal,
     Music,
     Newspaper,
+    ScrollText,
     Settings,
     Speaker,
     SquareActivity,
@@ -409,6 +410,15 @@ export const adminRoutes: RouteNode[] = [
                 icon: LayoutList,
                 required: SYS_ADMIN_REQ,
                 children: [
+                    {
+                        id: 'deal-type',
+                        type: 'link',
+                        label: 'dealType.label',
+                        title: 'Deal Type',
+                        href: APP_ROUTES.DEAL_TYPE,
+                        icon: ScrollText,
+                        required: SYS_ADMIN_REQ,
+                    },
                     {
                         id: 'genres',
                         type: 'link',

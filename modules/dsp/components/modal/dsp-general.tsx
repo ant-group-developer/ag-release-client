@@ -1,0 +1,145 @@
+import AppFormItem from '@/components/ui/antd-form/form-Item';
+import ImageListUpload from '@/components/ui/input/image-list-upload';
+import { ACCEPT_IMAGE, MAX_NAME_LENGTH } from '@/constants/validate';
+import { FormInstance, Input, Switch } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
+import { useTranslations } from 'next-intl';
+
+type Props = {
+    form: FormInstance<any>;
+    isActive: boolean;
+};
+
+export default function DspGeneral({ form, isActive }: Props) {
+    const messages = useTranslations();
+
+    return (
+        <>
+            <AppFormItem
+                name="pictureFile"
+                label={messages('common.image')}
+                // required
+                // rules={[
+                //     {
+                //         required: true,
+                //         message: messages('validation.input'),
+                //     },
+                // ]}
+            >
+                <ImageListUpload
+                    maxCount={1}
+                    accept={ACCEPT_IMAGE}
+                    maxSizeMB={3}
+                    description={
+                        <ul className="space-y-1 text-xs">
+                            <li className="flex-1 text-sm text-gray-500">
+                                {messages(
+                                    'image.validation.supportImageFormat',
+                                    {
+                                        value: 'PNG, JPG, WEBP, SVG, ICON',
+                                    }
+                                )}
+                            </li>
+                            <li className="flex-1 text-sm text-gray-500">
+                                {messages('image.validation.mustBeLessThanMB', {
+                                    value: '3',
+                                })}
+                            </li>
+                        </ul>
+                    }
+                    disabled={isActive}
+                />
+            </AppFormItem>
+            <AppFormItem
+                name="name"
+                label={messages('dsp.name')}
+                required
+                rules={[
+                    {
+                        required: true,
+                        message: messages('validation.input'),
+                    },
+                    {
+                        max: MAX_NAME_LENGTH,
+                        message: messages('validation.stringMax', {
+                            max: MAX_NAME_LENGTH,
+                            field: messages('dsp.name'),
+                        }),
+                    },
+                    {
+                        validator: (_, value) => {
+                            if (value && value.includes('_')) {
+                                return Promise.reject(
+                                    messages('validation.noUnderscore', {
+                                        field: messages('dsp.name'),
+                                    })
+                                );
+                            }
+                            return Promise.resolve();
+                        },
+                    },
+                ]}
+            >
+                <Input allowClear />
+            </AppFormItem>
+            <AppFormItem
+                name="link"
+                label={'Format links'}
+                tooltip={messages('dsp.oneLinkPerLine')}
+                required
+                rules={[
+                    {
+                        required: true,
+                        message: messages('validation.input'),
+                    },
+                    {
+                        max: 200,
+                        message: messages('validation.stringMax', {
+                            max: 200,
+                            field: 'Format links',
+                        }),
+                    },
+                ]}
+            >
+                <TextArea
+                    allowClear
+                    autoSize={{
+                        maxRows: 7,
+                        minRows: 3,
+                    }}
+                />
+            </AppFormItem>
+            <AppFormItem
+                name="isActive"
+                valuePropName="checked"
+                label={
+                    <div className="text-wrap pb-2">
+                        {messages('status.active')}
+                    </div>
+                }
+                required
+                rules={[
+                    {
+                        required: true,
+                        message: messages('validation.input'),
+                    },
+                ]}
+            >
+                <Switch />
+            </AppFormItem>
+            <AppFormItem
+                className="!mb-1"
+                name="enablePolicy"
+                valuePropName="checked"
+                label={
+                    <div className="text-wrap pb-2">
+                        {messages('status.active')}{' '}
+                        {messages('common.policies').toLowerCase()}
+                    </div>
+                }
+            >
+                <Switch />
+            </AppFormItem>
+        </>
+    );
+}

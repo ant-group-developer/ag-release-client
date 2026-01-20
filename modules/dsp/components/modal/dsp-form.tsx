@@ -1,11 +1,5 @@
 import AppForm from '@/components/ui/antd-form/form';
-import AppFormItem from '@/components/ui/antd-form/form-Item';
-import IconButton from '@/components/ui/button/icon-button';
-import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
-import ActionsSelect from '@/components/ui/select/actions-select';
-import { SIZE_ICON } from '@/constants/common';
-import { ACCEPT_IMAGE, MAX_NAME_LENGTH } from '@/constants/validate';
 import { getAvatarUrl } from '@/helpers/avatar-tailwind';
 import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
@@ -13,16 +7,17 @@ import useModalStore from '@/hooks/use-modal';
 import { uploadApi } from '@/modules/upload/apis';
 import { ENTITY_TYPE_PICTURE } from '@/modules/upload/types/data';
 import { CreateVariables, UpdateVariables } from '@/types/api';
-import { Button, Divider, Form, Input, Radio, Spin, Switch } from 'antd';
-import TextArea from 'antd/es/input/TextArea';
-import { Trash } from 'lucide-react';
+import { Form, Spin, Tabs, TabsProps } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useCreateDsp } from '../../hooks/use-create-dsp';
 import { useGetDetailDsp } from '../../hooks/use-get-detail-dsp';
 import { useUpdateDsp } from '../../hooks/use-update-dsp';
 import { DspData } from '../../types';
 import { CreateDspPayload, UpdateDspPayload } from '../../types/payload';
+import DspDeals from './dsp-deals';
+import DspGeneral from './dsp-general';
+import DspPolicies from './dsp-policies';
 
 type DspFormValues = Omit<DspData, 'id' | 'createdAt' | 'updatedAt'> & {
     pictureFile?: any;
@@ -120,24 +115,42 @@ export default function DspFormModal({ ...props }: Props) {
             : handleCreateDsp(payloadValues);
     };
 
-    const handleDefaultChange = useCallback(
-        (changedIndex: number, isChecked: boolean) => {
-            if (!isChecked) return;
+    // const handleDefaultChange = useCallback(
+    //     (changedIndex: number, isChecked: boolean) => {
+    //         if (!isChecked) return;
 
-            const currentActions = form.getFieldValue('dspActions') || [];
-            const updatedActions = currentActions.map(
-                (action: any, index: number) => ({
-                    ...action,
-                    isDefault: index === changedIndex,
-                })
-            );
+    //         const currentActions = form.getFieldValue('dspActions') || [];
+    //         const updatedActions = currentActions.map(
+    //             (action: any, index: number) => ({
+    //                 ...action,
+    //                 isDefault: index === changedIndex,
+    //             })
+    //         );
 
-            form.setFieldsValue({
-                dspActions: updatedActions,
-            });
+    //         form.setFieldsValue({
+    //             dspActions: updatedActions,
+    //         });
+    //     },
+    //     [form]
+    // );
+
+    const dspTabs: TabsProps['items'] = [
+        {
+            key: 'general',
+            label: messages('common.general'),
+            children: <DspGeneral form={form} isActive={isActive} />,
         },
-        [form]
-    );
+        {
+            key: 'Policies',
+            label: messages('policy.policies'),
+            children: <DspPolicies form={form} isActive={isActive} />,
+        },
+        {
+            key: 'Deals',
+            label: messages('common.deals'),
+            children: <DspDeals form={form} isActive={isActive} />,
+        },
+    ];
 
     useEffect(() => {
         const initialData = {
@@ -187,224 +200,7 @@ export default function DspFormModal({ ...props }: Props) {
                         enablePolicy: true,
                     }}
                 >
-                    <AppFormItem
-                        name="pictureFile"
-                        label={messages('common.image')}
-                        // required
-                        // rules={[
-                        //     {
-                        //         required: true,
-                        //         message: messages('validation.input'),
-                        //     },
-                        // ]}
-                    >
-                        <ImageListUpload
-                            maxCount={1}
-                            accept={ACCEPT_IMAGE}
-                            maxSizeMB={3}
-                            description={
-                                <ul className="space-y-1 text-xs">
-                                    <li className="flex-1 text-sm text-gray-500">
-                                        {messages(
-                                            'image.validation.supportImageFormat',
-                                            {
-                                                value: 'PNG, JPG, WEBP, SVG, ICON',
-                                            }
-                                        )}
-                                    </li>
-                                    <li className="flex-1 text-sm text-gray-500">
-                                        {messages(
-                                            'image.validation.mustBeLessThanMB',
-                                            {
-                                                value: '3',
-                                            }
-                                        )}
-                                    </li>
-                                </ul>
-                            }
-                            disabled={isActive}
-                        />
-                    </AppFormItem>
-                    <AppFormItem
-                        name="name"
-                        label={messages('dsp.name')}
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.input'),
-                            },
-                            {
-                                max: MAX_NAME_LENGTH,
-                                message: messages('validation.stringMax', {
-                                    max: MAX_NAME_LENGTH,
-                                    field: messages('dsp.name'),
-                                }),
-                            },
-                            {
-                                validator: (_, value) => {
-                                    if (value && value.includes('_')) {
-                                        return Promise.reject(
-                                            messages(
-                                                'validation.noUnderscore',
-                                                {
-                                                    field: messages('dsp.name'),
-                                                }
-                                            )
-                                        );
-                                    }
-                                    return Promise.resolve();
-                                },
-                            },
-                        ]}
-                    >
-                        <Input allowClear />
-                    </AppFormItem>
-
-                    <AppFormItem
-                        name="link"
-                        label={'Format links'}
-                        tooltip={messages('dsp.oneLinkPerLine')}
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.input'),
-                            },
-                            {
-                                max: 200,
-                                message: messages('validation.stringMax', {
-                                    max: 200,
-                                    field: 'Format links',
-                                }),
-                            },
-                        ]}
-                    >
-                        <TextArea
-                            allowClear
-                            autoSize={{
-                                maxRows: 7,
-                                minRows: 3,
-                            }}
-                        />
-                    </AppFormItem>
-
-                    <AppFormItem
-                        name="isActive"
-                        valuePropName="checked"
-                        label={
-                            <div className="text-wrap pb-2">
-                                {messages('status.active')}
-                            </div>
-                        }
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.input'),
-                            },
-                        ]}
-                    >
-                        <Switch />
-                    </AppFormItem>
-
-                    <AppFormItem
-                        className="!mb-1"
-                        name="enablePolicy"
-                        valuePropName="checked"
-                        label={
-                            <div className="text-wrap pb-2">
-                                {messages('status.active')}{' '}
-                                {messages('common.policies').toLowerCase()}
-                            </div>
-                        }
-                    >
-                        <Switch />
-                    </AppFormItem>
-
-                    <Form.List name="dspActions">
-                        {(fields, { add, remove }) => (
-                            <div className="max-h-[300px] overflow-auto">
-                                <Divider />
-
-                                <p className="mb-2 font-semibold">
-                                    {messages('common.policies')}
-                                </p>
-
-                                {fields.map(({ key, name, ...restField }) => (
-                                    <div key={key}>
-                                        <div className="relative flex items-center gap-x-4">
-                                            <div className="w-3/6">
-                                                <AppFormItem
-                                                    {...restField}
-                                                    name={[name, 'actionId']}
-                                                    required
-                                                >
-                                                    <ActionsSelect allowClear />
-                                                </AppFormItem>
-                                                <IconButton
-                                                    onClick={() => {
-                                                        const currentProfiles =
-                                                            form.getFieldValue(
-                                                                'dspActions'
-                                                            ) || [];
-                                                        remove(name);
-                                                    }}
-                                                    className="absolute right-0 top-0"
-                                                    disabled={isActive}
-                                                >
-                                                    <Trash
-                                                        size={SIZE_ICON}
-                                                        className="text-red-500"
-                                                    />
-                                                </IconButton>
-                                            </div>
-                                            <AppFormItem
-                                                {...restField}
-                                                name={[name, 'isDefault']}
-                                            >
-                                                <Radio
-                                                    defaultChecked={false}
-                                                    checked={form.getFieldValue(
-                                                        [
-                                                            'dspActions',
-                                                            name,
-                                                            'isDefault',
-                                                        ]
-                                                    )}
-                                                    onChange={(e) =>
-                                                        handleDefaultChange(
-                                                            name,
-                                                            e.target.checked
-                                                        )
-                                                    }
-                                                >
-                                                    {messages(
-                                                        'common.setIsDefault'
-                                                    )}
-                                                </Radio>
-                                            </AppFormItem>
-                                        </div>
-                                    </div>
-                                ))}
-                                <div className="mb-4">
-                                    <Button
-                                        className="w-full"
-                                        type="dashed"
-                                        onClick={() =>
-                                            add({
-                                                actionId: undefined,
-                                                isDefault: false,
-                                            })
-                                        }
-                                    >
-                                        + {messages('action.create.button')}{' '}
-                                        {` ${messages('policy.label').toLowerCase()}`}
-                                    </Button>
-                                </div>
-                            </div>
-                        )}
-                    </Form.List>
+                    <Tabs items={dspTabs}></Tabs>
                 </AppForm>
             </Spin>
         </AppModal>

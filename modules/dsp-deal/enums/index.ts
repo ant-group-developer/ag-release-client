@@ -1,0 +1,4 @@
+export enum DSP_DEAL_VISIBILITY {
+    PUBLIC = 'PUBLIC',
+    ADMIN_ONLY = 'ADMIN_ONLY',
+}
