@@ -9,6 +9,7 @@ import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { useCheckPermission } from '@/modules/auth/hooks/use-permission';
 import AudioPlayer from '@/modules/releases/components/release-detail/release-tracks/audio-player';
 import { Layout } from 'antd';
+import { useSession } from 'next-auth/react';
 import { ReactNode, useEffect } from 'react';
 import Content from './content';
 import Header from './header';
@@ -30,6 +31,8 @@ export default function CMSLayout({ children }: Props) {
     const { permission, isLoading } = useAuth();
     const { checkCanAccessCurrentRoute } = useCheckPermission();
     const canAccessCurrentRoute = checkCanAccessCurrentRoute();
+
+    const { data: sessionData } = useSession();
 
     const setPermission = usePermissionStore((state) => state.setPermission);
 
@@ -76,7 +79,7 @@ export default function CMSLayout({ children }: Props) {
                             <Content>{getChildren()}</Content>
                             <AppLoader
                                 className="bg-white"
-                                loading={isLoading}
+                                loading={isLoading || !!sessionData?.error}
                             />
                             <AudioPlayer />
                         </div>

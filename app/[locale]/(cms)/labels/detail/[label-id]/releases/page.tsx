@@ -3,9 +3,9 @@ import AppContent from '@/components/ant-music/app-content';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { LAYOUT_TABLE } from '@/enums/common';
+import { useElementHeightById } from '@/hooks/use-element-height-by-id';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
-import { useLabelContext } from '@/modules/labels/hooks/use-label-context';
 import ReleasesHeaderV2 from '@/modules/releases/components/header/index-v2';
 import ReleasesTable from '@/modules/releases/components/table';
 import ReleasesGridTable from '@/modules/releases/components/table/grid-table';
@@ -21,7 +21,7 @@ export default function Releases({}: Props) {
 
     const params = useParams();
     const labelId = params['label-id'];
-    const { headerLayoutHeight } = useLabelContext();
+    const headerLayoutHeight = useElementHeightById('label-header');
     const {
         dataFilter,
         onSearch,
@@ -70,7 +70,7 @@ export default function Releases({}: Props) {
                     style={{
                         backgroundColor: token.colorBgContainer,
                     }}
-                    sticky={{ offsetHeader: headerLayoutHeight - 50 }}
+                    sticky={{ offsetHeader: headerLayoutHeight }}
                     dataSource={releasesData?.items}
                     onChangeFilter={onChangeFilter}
                     loading={isFetching}

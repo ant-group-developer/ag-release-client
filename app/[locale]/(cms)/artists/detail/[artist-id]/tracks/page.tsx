@@ -3,9 +3,9 @@ import AppContent from '@/components/ant-music/app-content';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { LAYOUT_TABLE } from '@/enums/common';
+import { useElementHeightById } from '@/hooks/use-element-height-by-id';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
-import { useArtistContext } from '@/modules/artist/hooks/use-artist-context';
 import TrackHeaderV2 from '@/modules/tracks/components/header/index-v2';
 import TracksTable from '@/modules/tracks/components/table';
 import TracksGridTable from '@/modules/tracks/components/table/grid-table';
@@ -22,7 +22,8 @@ export default function Tracks({}: Props) {
     const params = useParams();
     const { layoutTable } = useTableLayoutToggle();
     const artistId = params['artist-id'] as string;
-    const { headerLayoutHeight } = useArtistContext();
+    const headerLayoutHeight = useElementHeightById('artist-header');
+
     const {
         dataFilter,
         onSearch,
@@ -66,7 +67,7 @@ export default function Tracks({}: Props) {
 
             {layoutTable === LAYOUT_TABLE.LIST && (
                 <TracksTable
-                    sticky={{ offsetHeader: headerLayoutHeight - 50 }}
+                    sticky={{ offsetHeader: headerLayoutHeight }}
                     dataSource={tracksData?.items}
                     loading={isFetching}
                     pagination={{
