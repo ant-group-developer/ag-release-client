@@ -3,22 +3,21 @@ import AppContent from '@/components/ant-music/app-content';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { LAYOUT_TABLE } from '@/enums/common';
+import { useElementHeightById } from '@/hooks/use-element-height-by-id';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
-import { useLabelContext } from '@/modules/labels/hooks/use-label-context';
 import { ReleasesDataFilter } from '@/modules/releases/types';
 import TrackHeaderV2 from '@/modules/tracks/components/header/index-v2';
 import TracksTable from '@/modules/tracks/components/table';
 import TracksGridTable from '@/modules/tracks/components/table/grid-table';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
-import { useWindowSize } from '@uidotdev/usehooks';
 import { theme } from 'antd';
 type Props = {};
 
 export default function Tracks({}: Props) {
     // Hook - state
     const { token } = theme.useToken();
-    const { headerLayoutHeight } = useLabelContext();
+    const headerLayoutHeight = useElementHeightById('label-header');
     const {
         dataFilter,
         onSearch,
@@ -31,7 +30,7 @@ export default function Tracks({}: Props) {
         pageSize: 21,
     });
     const { layoutTable } = useTableLayoutToggle();
-    const { height, width } = useWindowSize();
+    // const { height, width } = useWindowSize();
 
     // Apis
     const { tracksData, isFetching, dataUpdatedAt, refetch } =
@@ -62,7 +61,7 @@ export default function Tracks({}: Props) {
 
             {layoutTable === LAYOUT_TABLE.LIST && (
                 <TracksTable
-                    sticky={{ offsetHeader: headerLayoutHeight - 50 }}
+                    sticky={{ offsetHeader: headerLayoutHeight }}
                     dataSource={tracksData?.items}
                     loading={isFetching}
                     pagination={{

@@ -2,11 +2,11 @@
 import MetadataInfo from '@/modules/releases/components/release-detail/release-review/metadata-info';
 import ReviewProgress from '@/modules/releases/components/release-detail/release-review/review-progress';
 import TracksInfo from '@/modules/releases/components/release-detail/release-review/tracks-info/page';
-import { Tabs, theme } from 'antd';
+import { Tabs } from 'antd';
 import { useTranslations } from 'next-intl';
 
 export default function Review() {
-    const { token } = theme.useToken();
+    // const { token } = theme.useToken();
     const messages = useTranslations();
     const tabItems = [
         {

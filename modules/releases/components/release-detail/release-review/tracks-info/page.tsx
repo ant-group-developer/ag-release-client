@@ -7,7 +7,7 @@ import type { TrackData } from '@/modules/releases/types';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { TrackContributorData } from '@/modules/track-contributor/types';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
-import { Collapse } from 'antd';
+import { Collapse, Skeleton } from 'antd';
 import { CircleCheck, OctagonAlert } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
@@ -20,7 +20,7 @@ export default function TracksInfo({}: Props) {
     const params = useParams();
     const releaseId = params['release-id'];
     const formValue = useReleaseFormStore((state) => state.formValues);
-    const { tracksData } = useGetListTracks({
+    const { tracksData, isFetching: isTracksFetching } = useGetListTracks({
         releaseId: formValue?.id,
         fieldOrder: 'order',
     });
@@ -116,7 +116,7 @@ export default function TracksInfo({}: Props) {
         const track = tracksData?.items[trackIndex];
         const value = getFieldValue(track, field);
         return (
-            <div className="rounded-lg bg-white px-4 py-2">
+            <div className="rounded-lg border px-4 py-2">
                 <div>
                     <p className="font-medium">
                         {label}{' '}
@@ -147,6 +147,17 @@ export default function TracksInfo({}: Props) {
         );
     };
 
+    if (isTracksFetching) {
+        return (
+            <div className="w-full space-y-4">
+                <Skeleton.Node active className="!block !h-12 !w-full" />
+                <Skeleton.Node active className="!block !h-12 !w-full" />
+                <Skeleton.Node active className="!block !h-12 !w-full" />
+                <Skeleton.Node active className="!block !h-12 !w-full" />
+            </div>
+        );
+    }
+
     return (
         <div className="space-y-2">
             {/* <p className="font-semibold"> {messages('track.label')} </p> */}
@@ -157,7 +168,7 @@ export default function TracksInfo({}: Props) {
                 </p>
             </div> */}
 
-            <div className="flex flex-col gap-2">
+            <div className="m-auto flex w-full flex-col gap-2">
                 {tracksData?.items?.map((track: TrackData, index: number) => {
                     const trackArtists = track?.trackArtists;
                     const trackContributors = track?.trackContributors;
@@ -172,12 +183,7 @@ export default function TracksInfo({}: Props) {
                     );
 
                     return (
-                        <Collapse
-                            key={String(index + 1)}
-                            className="release-review-collapse !border-none !bg-main !py-2 dark:!bg-zinc-900"
-                            size="small"
-                            bordered={false}
-                        >
+                        <Collapse key={String(index + 1)}>
                             <Collapse.Panel
                                 header={
                                     <div className="flex justify-between">
@@ -208,7 +214,7 @@ export default function TracksInfo({}: Props) {
                                 }
                                 key={String(index + 1)}
                             >
-                                <div className="grid grid-cols-2 gap-4 px-4">
+                                <div className="m-auto grid max-w-5xl grid-cols-2 gap-4 px-4">
                                     {renderField(
                                         index,
                                         messages('track.name'),
@@ -221,7 +227,7 @@ export default function TracksInfo({}: Props) {
                                         'version'
                                     )}
 
-                                    <div className="rounded-lg bg-white px-4 py-2">
+                                    <div className="rounded-lg border bg-white px-4 py-2">
                                         <p className="font-medium">
                                             {messages('artist.artists')}{' '}
                                             <span className="text-red-500">
@@ -250,7 +256,7 @@ export default function TracksInfo({}: Props) {
                                         )}
                                     </div>
 
-                                    <div className="rounded-lg bg-white px-4 py-2">
+                                    <div className="rounded-lg border bg-white px-4 py-2">
                                         <p className="font-medium">
                                             {messages('common.contributors')}{' '}
                                             <span className="text-red-500">

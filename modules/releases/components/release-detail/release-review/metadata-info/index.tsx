@@ -86,7 +86,7 @@ export default function MetadataInfo({}: Props) {
     };
 
     return (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="m-auto grid w-full max-w-5xl grid-cols-2 gap-4">
             {/* <p className="font-semibold">MetaData</p> */}
             {/* <div className="my-1 rounded-lg bg-main p-4 dark:bg-zinc-900">
                 <p className="text-base font-medium">
@@ -97,11 +97,15 @@ export default function MetadataInfo({}: Props) {
             <MetadataInfoItem label={messages('release.name')}>
                 {renderField('title', true)}
             </MetadataInfoItem>
+
             <MetadataInfoItem label={messages('release.version')}>
                 {renderField('version')}
             </MetadataInfoItem>
 
-            <MetadataInfoItem label={messages('artist.artists')}>
+            <MetadataInfoItem
+                className="col-span-2"
+                label={messages('artist.artists')}
+            >
                 {releaseData?.releaseArtists?.map(
                     (releaseArtist: ReleaseArtist, index: number) => (
                         <ArtistItem
@@ -114,7 +118,10 @@ export default function MetadataInfo({}: Props) {
                     )
                 )}
             </MetadataInfoItem>
-            <MetadataInfoItem label={messages('common.contributors')}>
+            <MetadataInfoItem
+                className="col-span-2"
+                label={messages('common.contributors')}
+            >
                 {releaseData?.releaseContributors?.map(
                     (item: ReleaseContributor, index: number) => (
                         <ArtistItem
@@ -135,10 +142,6 @@ export default function MetadataInfo({}: Props) {
                 {renderField('subGenreId')}
             </MetadataInfoItem>
 
-            <MetadataInfoItem label={`${messages('common.language')} metadata`}>
-                {renderField('metadataLanguageId', true)}
-            </MetadataInfoItem>
-
             <MetadataInfoItem label={'Label'}>
                 {renderField('labelId')}
             </MetadataInfoItem>
@@ -151,13 +154,6 @@ export default function MetadataInfo({}: Props) {
                 {renderField('catalogId')}
             </MetadataInfoItem>
 
-            <MetadataInfoItem label={messages('release.releaseDate')}>
-                {renderField('releaseDate', true)}
-            </MetadataInfoItem>
-            <MetadataInfoItem label={messages('release.releaseTime')}>
-                {renderField('releaseTime', true)}
-            </MetadataInfoItem>
-
             <MetadataInfoItem label={messages('release.type')}>
                 {renderField('type', true)}
             </MetadataInfoItem>
@@ -165,8 +161,13 @@ export default function MetadataInfo({}: Props) {
             <MetadataInfoItem label={`© ${messages('common.copyRight')}`}>
                 {renderField('cLineOwner', true)}
             </MetadataInfoItem>
+
             <MetadataInfoItem label={`℗ ${messages('common.copyRight')}`}>
                 {renderField('pLineOwner', true)}
+            </MetadataInfoItem>
+
+            <MetadataInfoItem label={`${messages('common.language')} metadata`}>
+                {renderField('metadataLanguageId', true)}
             </MetadataInfoItem>
         </div>
     );

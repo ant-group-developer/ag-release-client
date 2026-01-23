@@ -14,7 +14,7 @@ import {
     Upload,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { MouseEventHandler } from 'react';
+import { MouseEventHandler, ReactNode } from 'react';
 import IconButton from './icon-button';
 
 export interface ActionButtonProps {
@@ -38,6 +38,8 @@ export interface ActionButtonProps {
     onShowDetail?: MouseEventHandler<HTMLElement>;
     onShowUpdate?: MouseEventHandler<HTMLElement>;
     onShowDelete?: MouseEventHandler<HTMLElement>;
+
+    extraItems?: ActionType[];
 }
 
 enum ACTION_BUTTON {
@@ -52,6 +54,14 @@ enum ACTION_BUTTON {
     SHOW_ADD_TRANSLATE = 'showAddTranslate',
     SHOW_TRANSLATIONS = 'showTranslations',
 }
+
+type ActionType = {
+    key: string;
+    show: boolean;
+    label: ReactNode;
+    danger?: boolean;
+    dividerBefore?: boolean;
+};
 
 export default function ActionButton({
     showDelete,
@@ -74,117 +84,105 @@ export default function ActionButton({
     onShowUpdate,
     onShowDelete,
     onShowUpload,
+
+    extraItems = [],
 }: ActionButtonProps) {
     const messages = useTranslations();
-    const items: MenuProps['items'] = [];
-    if (showDownload) {
-        items.push({
+
+    const actions: ActionType[] = [
+        {
             key: ACTION_BUTTON.DOWNLOAD,
+            show: !!showDownload,
             label: (
                 <div className="flex items-center gap-2">
                     <Download size={SIZE_ICON_SMALL} />
                     {messages('common.download')}
                 </div>
             ),
-        });
-    }
-    if (showComment) {
-        items.push({
+        },
+        {
             key: ACTION_BUTTON.COMMENT,
+            show: !!showComment,
             label: (
                 <div className="flex items-center gap-2">
-                    <MessageCircleMore size={SIZE_ICON_SMALL} />{' '}
+                    <MessageCircleMore size={SIZE_ICON_SMALL} />
                     {messages('common.comment')}
                 </div>
             ),
-        });
-    }
-
-    if (showDetail) {
-        items.push({
+        },
+        {
             key: ACTION_BUTTON.DETAIL,
+            show: !!showDetail,
             label: (
                 <div className="flex items-center gap-2">
                     <Eye size={SIZE_ICON_SMALL} />
                     {messages('common.detail')}
                 </div>
             ),
-        });
-    }
-    if (showAddTranslate) {
-        items.push({
+        },
+        {
             key: ACTION_BUTTON.SHOW_ADD_TRANSLATE,
+            show: !!showAddTranslate,
             label: (
                 <div className="flex items-center gap-2">
                     <Languages size={SIZE_ICON_SMALL} />
                     {messages('common.addTranslate')}
                 </div>
             ),
-        });
-    }
-    if (showTranslation) {
-        items.push({
+        },
+        {
             key: ACTION_BUTTON.SHOW_TRANSLATIONS,
+            show: !!showTranslation,
             label: (
                 <div className="flex items-center gap-2">
                     <Globe size={SIZE_ICON_SMALL} />
                     {messages('common.translation')}
                 </div>
             ),
-        });
-    }
-    if (showUpdate) {
-        items.push({
+        },
+        {
             key: ACTION_BUTTON.UPDATE,
+            show: !!showUpdate,
             label: (
                 <div className="flex items-center gap-2">
                     <Pencil size={SIZE_ICON_SMALL} />
                     {messages('common.update')}
                 </div>
             ),
-        });
-    }
-    if (showUpload) {
-        items.push({
+        },
+        {
             key: ACTION_BUTTON.UPLOAD,
+            show: !!showUpload,
             label: (
                 <div className="flex items-center gap-2">
                     <Upload size={SIZE_ICON_SMALL} />
                     {messages('common.upload')}
                 </div>
             ),
-        });
-    }
-    if (showCancel) {
-        items.push({
+        },
+        {
             key: ACTION_BUTTON.CANCEL,
+            show: !!showCancel,
             label: (
                 <div className="flex items-center gap-2 text-red-500">
                     <CircleX size={SIZE_ICON_SMALL} />
                     <span>{messages('common.cancel')}</span>
                 </div>
             ),
-        });
-    }
-
-    if (showContinue) {
-        items.push({
+        },
+        {
             key: ACTION_BUTTON.CONTINUE,
+            show: !!showContinue,
             label: (
                 <div className="flex items-center gap-2">
                     <CirclePlay size={SIZE_ICON_SMALL} />
                     <span>{messages('status.active')}</span>
                 </div>
             ),
-        });
-    }
-
-    if (showDelete) {
-        items.push({
-            type: 'divider',
-        });
-        items.push({
+        },
+        {
             key: ACTION_BUTTON.DELETE,
+            show: !!showDelete,
             danger: true,
             label: (
                 <div className="flex items-center gap-2">
@@ -192,8 +190,24 @@ export default function ActionButton({
                     <span>{messages('common.delete')}</span>
                 </div>
             ),
-        });
-    }
+            dividerBefore: true,
+        },
+    ];
+
+    const allItems = [...extraItems, ...actions];
+
+    const items: MenuProps['items'] = [];
+
+    allItems?.forEach((item) => {
+        if (item?.show) {
+            if (item.dividerBefore && items.length > 0) {
+                items.push({ type: 'divider' });
+            }
+            items.push({
+                ...item,
+            });
+        }
+    });
 
     // Xử lý sự kiện click cho từng menu item
     const handleMenuClick = ({ key }: { key: string }) => {

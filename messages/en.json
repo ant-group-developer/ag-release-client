@@ -64,6 +64,8 @@
         }
     },
     "common": {
+        "deal": "Deal",
+        "deals": "Deals",
         "path": "Path",
         "username": "Username",
         "password": "Password",
@@ -1150,6 +1152,7 @@
             "recordingCountryId": "Recording country"
         },
         "upc": "UPC",
+        "selectedCountries": "Region",
         "trackSensitiveId": "Sensitive content",
         "recordingCountryId": "Recording country",
         "trackArtists": "track artist",
@@ -1781,5 +1784,10 @@
                 "dspExisted": "DSP is already enabled for this tenant"
             }
         }
+    },
+
+    "dealType": {
+        "label": "Deal type",
+        "requiredConnection": "Required connection"
     }
 }

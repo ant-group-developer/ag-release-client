@@ -18,6 +18,9 @@ function expMsFromJwt(accessToken?: string): number {
 async function maybeRefresh(token: any) {
     const expMs = token.accessTokenExp ?? expMsFromJwt(token.accessToken);
     const now = Date.now();
+
+    if (token.error) return token;
+
     if (now <= expMs - REFRESH_SKEW_MS) return token;
 
     try {
@@ -29,10 +32,16 @@ async function maybeRefresh(token: any) {
         token.accessToken = data.accessToken;
         token.refreshToken = data.refreshToken ?? token.refreshToken; // keep old if API doesn't rotate
         token.accessTokenExp = expMsFromJwt(token.accessToken);
+        token.refreshTokenExp = expMsFromJwt(
+            data.refreshToken ?? token.refreshToken
+        );
         token.error = undefined;
     } catch (error: any) {
         console.log('callbacks refresh error:', error?.message || error);
         token.error = REFRESH_FAILED_MESSAGE;
+        // quan trọng: clear để middleware/session coi như logout
+        token.accessToken = undefined;
+        token.accessTokenExp = 0;
     }
 
     return token;
@@ -83,7 +92,7 @@ export const authOptions: NextAuthOptions = {
     ],
 
     // 2) Sử dụng JSON Web Tokens cho session
-    session: { strategy: 'jwt' },
+    session: { strategy: 'jwt', maxAge: 7 * 24 * 60 * 60 },
 
     // 3) Callback để lưu token vào JWT và session
     callbacks: {
@@ -98,6 +107,9 @@ export const authOptions: NextAuthOptions = {
                 // Lưu exp (ms) để tránh decode nhiều lần
                 // @ts-ignore
                 token.accessTokenExp = expMsFromJwt((user as any).accessToken);
+                token.refreshTokenExp = expMsFromJwt(
+                    (user as any).refreshToken
+                );
                 token.error = undefined;
                 return token;
             }
@@ -125,6 +137,9 @@ export const authOptions: NextAuthOptions = {
                         switched.refreshToken ?? (token as any).refreshToken;
                     // @ts-ignore
                     token.accessTokenExp = expMsFromJwt(switched.accessToken);
+                    token.refreshTokenExp = expMsFromJwt(
+                        switched.refreshToken ?? (token as any).refreshToken
+                    );
 
                     token.error = undefined;
                 } catch (error: any) {
@@ -147,7 +162,8 @@ export const authOptions: NextAuthOptions = {
 
         // Truyền accessToken/tenantId vào session trả về cho client
         async session({ session, token }) {
-            const { accessToken, error, tenantId } = token as any;
+            const { accessToken, error, tenantId, refreshTokenExp } =
+                token as any;
 
             const accessTokenData = getDataFromToken(accessToken);
             if (accessTokenData) {

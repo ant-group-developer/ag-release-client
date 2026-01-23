@@ -64,6 +64,8 @@
         }
     },
     "common": {
+        "deal": "Thoả thuận",
+        "deals": "Thoả thuận",
         "path": "Đường dẫn",
         "username": "Tên người dùng",
         "password": "Mật khẩu",
@@ -752,7 +754,7 @@
     },
 
     "release": {
-        "contributors": "Người tham gia bản phát hành",
+        "contributors": "Người đóng góp",
         "list": "Danh sách phát hành",
         "releases": "Phát hành",
         "count": "Số lượng bản phát hành",
@@ -1152,6 +1154,7 @@
             "metadataLanguageCountryId": "Ngôn ngữ quốc gia",
             "recordingCountryId": "Quốc gia ghi âm"
         },
+        "selectedCountries": "Khu vực",
         "upc": "UPC",
         "trackSensitiveId": "Nội dung nhạy cảm",
         "recordingCountryId": "Quốc gia ghi âm",
@@ -1787,5 +1790,10 @@
                 "dspExisted": "DSP đã được kích hoạt cho tenant này"
             }
         }
+    },
+
+    "dealType": {
+        "label": "Loại thỏa thuận",
+        "requiredConnection": "Yêu cầu kết nối"
     }
 }

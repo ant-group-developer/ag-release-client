@@ -1,5 +1,6 @@
 'use client';
 
+import { APP_ROUTES } from '@/enums/routes';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { useSearchParams } from 'next/navigation';
@@ -15,7 +16,7 @@ export const useGetReleaseDetailRoute = () => {
     ) => {
         const tempAction = action ?? currentAction;
 
-        return `/releases/detail/${releaseId}/${tab}${tempAction ? `?action=${tempAction}` : ''}`;
+        return `/${APP_ROUTES.RELEASES}/detail/${releaseId}/${tab}${tempAction ? `?action=${tempAction}` : ''}`;
     };
 
     return {

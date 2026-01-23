@@ -7,6 +7,13 @@ import { getToken } from './modules/auth/utils';
 
 const nextIntl = createNextIntlMiddleware(routing);
 
+// function formatTime(ms: number, timezone = 'Asia/Ho_Chi_Minh') {
+//     return new Date(ms).toLocaleString('vi-VN', {
+//         timeZone: timezone,
+//         hour12: false,
+//     });
+// }
+
 export async function middleware(req: NextRequest) {
     const { pathname } = req.nextUrl;
     const response = NextResponse.next();
@@ -46,6 +53,8 @@ export async function middleware(req: NextRequest) {
     if (isPublicRoutes) {
         return nextIntl(req);
     }
+
+    // console.log(formatTime((token as any)?.accessTokenExp));
 
     if (!token && !isAuthRoutes) {
         const url = req.nextUrl.clone();
