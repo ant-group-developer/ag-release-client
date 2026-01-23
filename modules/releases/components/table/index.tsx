@@ -255,13 +255,6 @@ export default function ReleasesTable({
             render: (_, record) => (
                 <div onClick={(e) => e.stopPropagation()}>
                     <ActionButton
-                        extraItems={[
-                            {
-                                key: 'update-2',
-                                label: <div> 123 </div>,
-                                show: hasPermission(PERMISSION.RELEASE.UPDATE),
-                            },
-                        ]}
                         showUpdate={hasPermission(PERMISSION.RELEASE.UPDATE)}
                         showDetail
                         showDelete={isSystemTenant}
