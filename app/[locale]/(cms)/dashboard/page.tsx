@@ -81,7 +81,7 @@ function Dashboard({}: Props) {
                     onChangeFilter={onChangeFilter}
                 /> */}
 
-                <div className="flex flex-col gap-4 overflow-auto">
+                <div className="flex flex-col gap-4 overflow-auto px-2">
                     <StatsOverview
                         issuesData={countIssuesData}
                         overviewData={countOverviewData}

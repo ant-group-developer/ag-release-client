@@ -14,10 +14,7 @@ export default function MetadataInfoItem({
     style,
 }: MetadataInfoItemProps) {
     return (
-        <div
-            className={`rounded-lg bg-[#f5f5f5] p-4 dark:bg-zinc-900 ${className}`}
-            style={style}
-        >
+        <div className={`rounded-lg border p-4 ${className}`} style={style}>
             <p className="font-semibold">{label}</p>
             <div className="flex flex-col">{children ? children : '_'}</div>
         </div>

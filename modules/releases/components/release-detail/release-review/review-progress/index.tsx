@@ -18,6 +18,7 @@ export default function ReviewProgress({}: Props) {
                         style={{
                             backgroundColor: token.colorBgContainer,
                         }}
+                        className="!border-none"
                         label={messages('release.releaseDate')}
                     >
                         <p className="pt-1">
@@ -32,6 +33,7 @@ export default function ReviewProgress({}: Props) {
                         style={{
                             backgroundColor: token.colorBgContainer,
                         }}
+                        className="!border-none"
                         label={messages('release.releaseTime')}
                     >
                         <p className="pt-1">
@@ -46,6 +48,7 @@ export default function ReviewProgress({}: Props) {
                         style={{
                             backgroundColor: token.colorBgContainer,
                         }}
+                        className="!border-none"
                         label={messages('timezone.label')}
                     >
                         <p className="pt-1">

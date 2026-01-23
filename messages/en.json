@@ -1152,6 +1152,7 @@
             "recordingCountryId": "Recording country"
         },
         "upc": "UPC",
+        "selectedCountries": "Region",
         "trackSensitiveId": "Sensitive content",
         "recordingCountryId": "Recording country",
         "trackArtists": "track artist",
