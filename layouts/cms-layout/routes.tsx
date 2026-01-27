@@ -34,7 +34,6 @@ import {
     MicVocal,
     Music,
     Newspaper,
-    ScrollText,
     Settings,
     Speaker,
     SquareActivity,
@@ -372,7 +371,7 @@ export const adminRoutes: RouteNode[] = [
                 title: 'Aggregator',
                 href: APP_ROUTES.AGGREGATOR,
                 icon: Building2,
-                required: OWNER_OR_ADMIN_TENANT_REQ,
+                required: SYS_ADMIN_REQ,
             },
             {
                 id: 'tenantDetail',
@@ -410,15 +409,16 @@ export const adminRoutes: RouteNode[] = [
                 icon: LayoutList,
                 required: SYS_ADMIN_REQ,
                 children: [
-                    {
-                        id: 'deal-type',
-                        type: 'link',
-                        label: 'dealType.label',
-                        title: 'Deal Type',
-                        href: APP_ROUTES.DEAL_TYPE,
-                        icon: ScrollText,
-                        required: SYS_ADMIN_REQ,
-                    },
+                    // {
+                    //     id: 'deal-type',
+                    //     type: 'link',
+                    //     label: 'dealType.label',
+                    //     title: 'Deal Type',
+                    //     href: APP_ROUTES.DEAL_TYPE,
+                    //     icon: ScrollText,
+                    //     required: SYS_ADMIN_REQ,
+                    //     hidden: true,
+                    // },
                     {
                         id: 'genres',
                         type: 'link',

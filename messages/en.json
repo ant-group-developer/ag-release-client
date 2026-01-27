@@ -1769,6 +1769,16 @@
         "action": {
             "create": "Create aggregator",
             "update": "Update aggregator"
+        },
+        "message": {
+            "success": {
+                "create": "Integration created successfully",
+                "update": "Integration updated successfully",
+                "delete": "Integration deleted successfully"
+            },
+            "error": {
+                "notFound": "Tenant integration not found"
+            }
         }
     },
 

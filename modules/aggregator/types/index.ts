@@ -8,18 +8,11 @@ export interface AggregatorData extends CommonAttribute {
     code: string;
     name: string;
     contactEmail: string;
-    distributionChannels: DistributionChannel[];
-}
-
-export interface AggregatorDataFilter extends CommonParams {}
-
-export interface DistributionChannel {
-    tenantId: string;
-    dspId: string;
-    protocol: string;
-    isSystemDefault: boolean;
     isActive: boolean;
-    credentials: Credentials;
+    isSystemDefault: boolean;
+    distributionChannel: {
+        credentials: Credentials;
+    };
 }
 
 export interface Credentials {
@@ -29,3 +22,5 @@ export interface Credentials {
     password: string;
     path: string;
 }
+
+export interface AggregatorDataFilter extends CommonParams {}

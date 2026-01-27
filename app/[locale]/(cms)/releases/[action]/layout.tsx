@@ -1,5 +1,4 @@
 'use client';
-import { ScrollArea } from '@/components/ui/scroll/scroll-area';
 import DetailSkeleton from '@/components/ui/skeleton/detail-skeleton';
 import { APP_ROUTES } from '@/enums/routes';
 import { cn } from '@/helpers/common';
@@ -220,12 +219,13 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             className="flex h-full overflow-x-clip"
             style={{ backgroundColor: token.colorBgLayout }}
         >
-            <ScrollArea
+            <div
                 onScroll={handleScroll}
-                className="mx-auto flex min-w-0 flex-1 flex-col overflow-y-auto px-8"
+                className="thin-scrollbar mx-auto flex min-w-0 flex-1 flex-col overflow-y-auto px-8"
             >
                 <Breadcrumb items={breadcrumbItems} className="!py-4" />
                 <div
+                    id="release-header"
                     className="sticky top-0 z-10 mb-4 rounded-lg p-4"
                     style={{
                         backgroundColor: token.colorBgContainer,
@@ -245,7 +245,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     </div>
                 </div>
                 <div>{children}</div>
-            </ScrollArea>
+            </div>
             <RightSidebar />
         </div>
     );

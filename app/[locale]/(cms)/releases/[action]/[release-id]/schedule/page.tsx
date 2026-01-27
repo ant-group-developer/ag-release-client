@@ -1,5 +1,6 @@
 'use client';
 import { PAGE_SIZE } from '@/constants/page-size';
+import { useElementHeightById } from '@/hooks/use-element-height-by-id';
 import { useFilter } from '@/hooks/use-filter';
 import ReleaseSchedulingForm from '@/modules/releases/components/release-detail/release-scheduling/form';
 import ReleaseSchedulingTable from '@/modules/releases/components/release-detail/release-scheduling/table';
@@ -10,6 +11,7 @@ import { ConfigProvider, theme } from 'antd';
 
 export default function Schedule() {
     const formValues = useReleaseFormStore((state) => state.formValues);
+    const headerHeight = useElementHeightById('release-header');
 
     const { dataFilter, onChangePage } = useFilter<TrackDataFilter>({
         releaseId: formValues?.id as string,
@@ -34,6 +36,7 @@ export default function Schedule() {
                 <ReleaseSchedulingForm />
 
                 <ReleaseSchedulingTable
+                    sticky={{ offsetHeader: headerHeight }}
                     dataSource={tracksData?.items}
                     loading={isFetching}
                     pagination={{
