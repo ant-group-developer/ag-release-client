@@ -178,7 +178,7 @@ export default function DspFormModal({ ...props }: Props) {
 
     return (
         <AppModal
-            width={700}
+            width={'40vw'}
             {...props}
             title={`${isUpdate ? messages('common.update') : messages('common.create')} DSP`}
             open
@@ -193,7 +193,7 @@ export default function DspFormModal({ ...props }: Props) {
                     form={form}
                     onFinish={onFinish}
                     showSubmit={false}
-                    layout="vertical"
+                    layout="horizontal"
                     disabled={isActive}
                     initialValues={{
                         isActive: false,

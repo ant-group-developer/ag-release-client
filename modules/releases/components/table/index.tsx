@@ -22,6 +22,7 @@ import { ProColumns } from '@ant-design/pro-components';
 import { Tag, theme } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
 import { useTranslations } from 'next-intl';
+import nProgress from 'nprogress';
 import {
     RELEASES_COLUMNS_DISPLAY,
     RELEASES_TABS,
@@ -262,6 +263,7 @@ export default function ReleasesTable({
                             openModal(TYPE_MODAL_RELEASE.DELETE, record)
                         }
                         onShowDetail={() => {
+                            nProgress.start();
                             router.push(
                                 getReleaseDetailTabRoute(
                                     record?.id,
@@ -271,6 +273,7 @@ export default function ReleasesTable({
                             );
                         }}
                         onShowUpdate={() => {
+                            nProgress.start();
                             router.push(
                                 getReleaseDetailTabRoute(
                                     record?.id,

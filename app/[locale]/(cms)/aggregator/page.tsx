@@ -2,18 +2,21 @@
 
 import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import CreateButton from '@/components/ui/button/create-button';
+import AppSearch from '@/components/ui/input/search';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import AggregatorForm from '@/modules/aggregator/components/form/aggregator-form';
-import AggregatorHeader from '@/modules/aggregator/components/header';
 import AggregatorTable from '@/modules/aggregator/components/table/aggregator-table';
 import { TYPE_MODAL_AGGREGATOR } from '@/modules/aggregator/enums';
 import { useDeleteAggregator } from '@/modules/aggregator/hooks/use-delete';
 import { useGetListAggregator } from '@/modules/aggregator/hooks/use-get-list';
-import { AggregatorData } from '@/modules/aggregator/types';
+import {
+    AggregatorData,
+    AggregatorDataFilter,
+} from '@/modules/aggregator/types';
 import { DeleteVariables } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { theme } from 'antd';
@@ -24,8 +27,8 @@ type Props = {};
 export default function Aggregator({}: Props) {
     // hooks
     const messages = useTranslations();
-    const { dataFilter, onChangeFilter, removeFilter, onChangePage } =
-        useFilter({
+    const { dataFilter, onChangeFilter, removeFilter, onChangePage, onSearch } =
+        useFilter<AggregatorDataFilter>({
             pageSize: PAGE_SIZE,
         });
     const { token } = theme.useToken();
@@ -64,18 +67,25 @@ export default function Aggregator({}: Props) {
                     />
                 }
             >
-                <AggregatorHeader
+                {/* <AggregatorHeader
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
                     removeFilter={removeFilter}
-                />
+                /> */}
                 <AggregatorTable
+                    headerTitle={
+                        <AppSearch
+                            className="max-w-52"
+                            onChange={onSearch}
+                            defaultValue={dataFilter?.keyword}
+                        />
+                    }
                     sticky
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
                     pagination={{
                         current: aggregatorsData?.metadata?.currentPage,
-                        pageSize: dataFilter?.pageSize,
+                        pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
                     }}
                     dataSource={aggregatorsData?.items}
                     options={{

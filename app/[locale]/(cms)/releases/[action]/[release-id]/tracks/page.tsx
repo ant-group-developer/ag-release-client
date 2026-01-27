@@ -2,6 +2,7 @@
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import { PAGE_SIZE } from '@/constants/page-size';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { useElementHeightById } from '@/hooks/use-element-height-by-id';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
@@ -36,6 +37,7 @@ export default function Tracks() {
     const messages = useTranslations();
     const [selectedRow, setSelectedRow] = useState<Key[]>([]);
     const pathname = usePathname();
+    const headerHeight = useElementHeightById('release-header');
 
     const formValues = useReleaseFormStore((state) => state.formValues);
     // const setFormValues = useReleaseFormStore((state) => state.setFormValues);
@@ -131,8 +133,7 @@ export default function Tracks() {
                     className="!p-0"
                     dataSource={tracksData?.items}
                     rowSelection={rowSelection}
-                    // scroll={{ x: 1280 }}
-                    // sticky={{ offsetHeader: 174 }}
+                    sticky={{ offsetHeader: headerHeight }}
                     loading={isFetching}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,

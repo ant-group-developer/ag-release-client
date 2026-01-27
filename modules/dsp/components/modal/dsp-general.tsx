@@ -85,7 +85,7 @@ export default function DspGeneral({ form, isActive }: Props) {
             <AppFormItem
                 name="link"
                 label={'Format links'}
-                tooltip={messages('dsp.oneLinkPerLine')}
+                tooltipInfo={messages('dsp.oneLinkPerLine')}
                 required
                 rules={[
                     {

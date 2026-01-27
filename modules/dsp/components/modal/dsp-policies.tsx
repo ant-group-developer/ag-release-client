@@ -26,42 +26,41 @@ export default function DspPolicies({ form, isActive }: Props) {
         <>
             <Form.List name="dspActions">
                 {(fields, { add, remove }) => (
-                    <div className="max-h-[70vh] overflow-auto">
+                    <div className="max-h-[70vh] space-y-2 overflow-auto">
                         {/* <p className="mb-2 font-semibold">
                             {messages('common.policies')}
                         </p> */}
 
                         {fields.map(({ key, name, ...restField }) => (
                             <div key={key}>
-                                <div className="relative flex items-center gap-x-4">
-                                    <div className="w-3/6">
-                                        <AppFormItem
-                                            {...restField}
-                                            name={[name, 'actionId']}
-                                            required
-                                        >
-                                            <ActionsSelect allowClear />
-                                        </AppFormItem>
-                                        <IconButton
-                                            onClick={() => {
-                                                // const currentProfiles =
-                                                //     form.getFieldValue(
-                                                //         'dspActions'
-                                                //     ) || [];
-                                                remove(name);
-                                            }}
-                                            className="absolute right-0 top-0"
-                                            disabled={isActive}
-                                        >
-                                            <Trash
-                                                size={SIZE_ICON}
-                                                className="text-red-500"
-                                            />
-                                        </IconButton>
-                                    </div>
+                                <div className="relative grid grid-cols-2 gap-4">
+                                    <AppFormItem
+                                        {...restField}
+                                        name={[name, 'actionId']}
+                                        required
+                                    >
+                                        <ActionsSelect allowClear />
+                                    </AppFormItem>
+                                    <IconButton
+                                        onClick={() => {
+                                            // const currentProfiles =
+                                            //     form.getFieldValue(
+                                            //         'dspActions'
+                                            //     ) || [];
+                                            remove(name);
+                                        }}
+                                        className="absolute right-0 top-0"
+                                        disabled={isActive}
+                                    >
+                                        <Trash
+                                            size={SIZE_ICON}
+                                            className="text-red-500"
+                                        />
+                                    </IconButton>
                                     <AppFormItem
                                         {...restField}
                                         name={[name, 'isDefault']}
+                                        className="w-full"
                                     >
                                         <Radio
                                             defaultChecked={false}

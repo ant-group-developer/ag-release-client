@@ -4,6 +4,7 @@ import { getIndex } from '@/helpers/common';
 import { OnChangeFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { ProColumns } from '@ant-design/pro-components';
+import { Switch } from 'antd';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_AGGREGATOR } from '../../enums';
 import { AggregatorData, AggregatorDataFilter } from '../../types';
@@ -57,6 +58,28 @@ export default function AggregatorTable({
             render: (value, record) => value,
         },
         {
+            title: messages('status.active'),
+            key: 'isActive',
+            dataIndex: 'isActive',
+            ellipsis: true,
+            align: 'center',
+            width: 150,
+            render: (value, record) => {
+                return <Switch checked={record?.isActive} />;
+            },
+        },
+        {
+            title: messages('aggregator.systemDefault'),
+            key: 'isSystemDefault',
+            dataIndex: 'isSystemDefault',
+            ellipsis: true,
+            align: 'center',
+            width: 150,
+            render: (value, record) => {
+                return <Switch checked={record?.isSystemDefault} />;
+            },
+        },
+        {
             title: messages('common.email'),
             key: 'contactEmail',
             dataIndex: 'contactEmail',
@@ -85,7 +108,7 @@ export default function AggregatorTable({
     return (
         <AppProTable
             {...props}
-            headerTitle={messages('aggregator.list')}
+            // headerTitle={messages('aggregator.list')}
             columns={columns}
             pagination={false}
         />

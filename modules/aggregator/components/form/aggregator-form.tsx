@@ -5,7 +5,7 @@ import { MAX_NAME_LENGTH } from '@/constants/validate';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
-import { Form, Input, Spin } from 'antd';
+import { Divider, Form, Input, InputNumber, Spin, Switch } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { TYPE_MODAL_AGGREGATOR } from '../../enums';
@@ -17,12 +17,6 @@ import {
     CreateAggregatorPayload,
     UpdateAggregatorPayload,
 } from '../../types/payloads';
-import DistributionChannels from './distribution-channels-list';
-
-type AggregatorValues = Pick<
-    AggregatorData,
-    'code' | 'name' | 'contactEmail' | 'distributionChannels'
->;
 
 type Props = Omit<AppModalProps, 'children'> & {};
 
@@ -45,7 +39,21 @@ export default function AggregatorForm({ ...props }: Props) {
             ? messages('aggregator.action.create')
             : messages('aggregator.action.update');
 
-    const handleCreate = (values: AggregatorValues) => {
+    // const
+    const commonValidate = [
+        {
+            required: true,
+            message: messages('validation.input'),
+        },
+        {
+            max: MAX_NAME_LENGTH,
+            message: messages('validation.max', {
+                number: MAX_NAME_LENGTH,
+            }),
+        },
+    ];
+
+    const handleCreate = (values: any) => {
         active();
         const variables: CreateVariables<CreateAggregatorPayload> = {
             payload: values,
@@ -60,7 +68,7 @@ export default function AggregatorForm({ ...props }: Props) {
         createAggregator(variables);
     };
 
-    const handleUpdate = (values: AggregatorValues) => {
+    const handleUpdate = (values: any) => {
         active();
         const variables: UpdateVariables<
             AggregatorData['id'],
@@ -78,7 +86,7 @@ export default function AggregatorForm({ ...props }: Props) {
         updateAggregator(variables);
     };
 
-    const onFinish = (values: AggregatorValues) => {
+    const onFinish = (values: any) => {
         return isUpdateForm ? handleUpdate(values) : handleCreate(values);
     };
 
@@ -94,8 +102,7 @@ export default function AggregatorForm({ ...props }: Props) {
             title={modalTitle}
             onOk={form.submit}
             loading={isActive}
-            width={'50vw'}
-            className="!top-4"
+            width={'40vw'}
             styles={{
                 body: {
                     maxHeight: '80vh',
@@ -109,33 +116,17 @@ export default function AggregatorForm({ ...props }: Props) {
                     form={form}
                     onFinish={onFinish}
                     showSubmit={false}
-                    layout="vertical"
+                    layout="horizontal"
                     disabled={isActive}
+                    initialValues={{
+                        isActive: false,
+                        isSystemDefault: false,
+                    }}
                 >
-                    <AppFormItem
-                        name="name"
-                        label={messages('common.name')}
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.input'),
-                            },
-                            {
-                                max: 200,
-                                message: messages('validation.stringMax', {
-                                    max: 200,
-                                    field: messages('common.name'),
-                                }),
-                            },
-                        ]}
-                    >
-                        <Input allowClear />
-                    </AppFormItem>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="">
                         <AppFormItem
-                            name="code"
-                            label={messages('common.code')}
+                            name="name"
+                            label={messages('common.name')}
                             required
                             rules={[
                                 {
@@ -143,13 +134,21 @@ export default function AggregatorForm({ ...props }: Props) {
                                     message: messages('validation.input'),
                                 },
                                 {
-                                    max: MAX_NAME_LENGTH,
+                                    max: 200,
                                     message: messages('validation.stringMax', {
-                                        max: MAX_NAME_LENGTH,
-                                        field: messages('common.code'),
+                                        max: 200,
+                                        field: messages('common.name'),
                                     }),
                                 },
                             ]}
+                        >
+                            <Input allowClear />
+                        </AppFormItem>
+                        <AppFormItem
+                            name="code"
+                            label={messages('common.code')}
+                            required
+                            rules={commonValidate}
                         >
                             <Input allowClear />
                         </AppFormItem>
@@ -177,9 +176,92 @@ export default function AggregatorForm({ ...props }: Props) {
                         >
                             <Input allowClear />
                         </AppFormItem>
-                    </div>
+                        <AppFormItem
+                            name="isSystemDefault"
+                            label={messages('aggregator.systemDefault')}
+                            valuePropName="checked"
+                        >
+                            <Switch />
+                        </AppFormItem>
+                        <AppFormItem
+                            name="isActive"
+                            label={messages('common.status')}
+                            valuePropName="checked"
+                        >
+                            <Switch />
+                        </AppFormItem>
 
-                    <DistributionChannels />
+                        <Divider />
+
+                        <AppFormItem
+                            name={[
+                                'distributionChannel',
+                                'credentials',
+                                'host',
+                            ]}
+                            label="Host"
+                            required
+                            rules={commonValidate}
+                        >
+                            <Input allowClear />
+                        </AppFormItem>
+
+                        <AppFormItem
+                            name={[
+                                'distributionChannel',
+                                'credentials',
+                                'port',
+                            ]}
+                            label="Port"
+                            required
+                            rules={[
+                                {
+                                    required: true,
+                                    message: messages('validation.input'),
+                                },
+                            ]}
+                        >
+                            <InputNumber className="!w-full" />
+                        </AppFormItem>
+
+                        <AppFormItem
+                            name={[
+                                'distributionChannel',
+                                'credentials',
+                                'username',
+                            ]}
+                            label={messages('common.username')}
+                            required
+                            rules={commonValidate}
+                        >
+                            <Input allowClear />
+                        </AppFormItem>
+
+                        <AppFormItem
+                            name={[
+                                'distributionChannel',
+                                'credentials',
+                                'password',
+                            ]}
+                            label={messages('common.password')}
+                        >
+                            <Input.Password />
+                        </AppFormItem>
+
+                        <AppFormItem
+                            name={[
+                                'distributionChannel',
+                                'credentials',
+                                'path',
+                            ]}
+                            label={messages('common.path')}
+                            required
+                            className="col-span-2"
+                            rules={commonValidate}
+                        >
+                            <Input allowClear placeholder="/upload" />
+                        </AppFormItem>
+                    </div>
                 </AppForm>
             </Spin>
         </AppModal>
