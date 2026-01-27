@@ -10,6 +10,12 @@ export interface AggregatorData extends CommonAttribute {
     contactEmail: string;
     isActive: boolean;
     isSystemDefault: boolean;
+    distributionChannel: {
+        credentials: Credentials;
+    };
+}
+
+export interface Credentials {
     host: string;
     port: number;
     username: string;

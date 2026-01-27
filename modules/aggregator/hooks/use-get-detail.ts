@@ -26,7 +26,17 @@ export const useGetDetailAggregator = (id: AggregatorData['id']) => {
         id: '',
         createdAt: '',
         updatedAt: null,
-        distributionChannels: [],
+        isActive: false,
+        isSystemDefault: false,
+        distributionChannel: {
+            credentials: {
+                host: '',
+                port: 0,
+                username: '',
+                password: '',
+                path: '',
+            },
+        },
     };
 
     return {
