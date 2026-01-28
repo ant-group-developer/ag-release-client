@@ -9,6 +9,7 @@ export interface RolesData extends CommonAttribute {
     code: string | null;
     note: string | null;
     rolePermissions: RolePermission[];
+    isActive: boolean;
 }
 
 export interface RolePermission {
@@ -20,4 +21,5 @@ export interface RolePermission {
 export interface RolesDataDataFilter extends CommonParams {
     startDateCreated?: string;
     endDateCreated?: string;
+    isActive?: boolean;
 }
