@@ -15,5 +15,5 @@ export interface PermissionSimpleData
 export interface PermissionDataDataFilter extends CommonParams {
     startDateCreated?: string;
     endDateCreated?: string;
-    isActive?: boolean;
+    isActive?: 'true' | 'false';
 }
