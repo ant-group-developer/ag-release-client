@@ -2,6 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import AppTable from '@/components/ui/table/normal-table';
 import { defaultConfig } from '@/constants/env';
 import { removeEmptyChildren } from '@/helpers/array';
+import { flattenData } from '@/helpers/common';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { useGetSettingPublic } from '@/modules/setting/hooks/use-get-setting-public';
 import { Avatar, Modal, Space, Tag, Typography } from 'antd';
@@ -25,7 +26,6 @@ interface TenantTableRecord extends TenantData {
 function TenantSwitch({}: Props) {
     const messages = useTranslations();
     const { data, isLoading } = useTenantActive();
-    console.log(data);
     const {
         profile: { tenantId },
     } = useAuth();
@@ -34,90 +34,7 @@ function TenantSwitch({}: Props) {
     const { settingData: dataConfig } = useGetSettingPublic();
     const website = dataConfig?.website;
 
-    const defaultData = {
-        name: website?.name || defaultConfig.APP_SHORT_NAME,
-        logo: website?.logo || defaultConfig.APP_LOGO,
-        icon: website?.logo || defaultConfig.APP_ICON,
-    };
-
-    const [loading, setLoading] = useState(false);
-    const [modalOpen, setModalOpen] = useState(false);
-
-    const [value, setValue] = useState<TenantData['id']>(tenantId);
-    const currentData =
-        data.items.find((item) => item.id === value) || defaultData;
-
-    const onSwitchTenant = (tenantId: string) => {
-        setLoading(true);
-        update({ tenantId })
-            .then(() => {
-                window.location.reload();
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    };
-
-    useEffect(() => {
-        setValue(tenantId);
-    }, [tenantId]);
-
-    const columns: ColumnsType<TenantTableRecord> = [
-        {
-            title: messages('tenant.name'),
-            dataIndex: 'name',
-            key: 'name',
-            width: 150,
-            render: (name: string, record) => (
-                <Space className="flex items-center gap-2">
-                    <Avatar
-                        src={getTenantAvatar({
-                            logo: record.logo,
-                            icon: record.icon,
-                            name: record.name,
-                        })}
-                        size={36}
-                        shape="square"
-                    />
-                    <Typography.Text>{name}</Typography.Text>
-                </Space>
-            ),
-        },
-        {
-            title: messages('tenant.owner'),
-            dataIndex: 'ownerEmail',
-            key: 'ownerEmail',
-            width: 150,
-            render: (cell, record) => {
-                const ownerEmail = getTenantOwnerEmail(record.tenantUser);
-                return ownerEmail;
-            },
-        },
-        {
-            title: messages('tenant.type.title'),
-            dataIndex: 'type',
-            key: 'type',
-            width: 80,
-            render: (cell, record) =>
-                record.isSystem ? (
-                    <Tag color="red">{messages('system.label')}</Tag>
-                ) : (
-                    record.type && <TenantTag type={record.type} />
-                ),
-        },
-    ];
-
-    if (isLoading) {
-        return (
-            <div className="flex h-fit items-center gap-2">
-                <Skeleton className="size-10 rounded-full" />
-                <Skeleton className="h-8 w-40" />
-            </div>
-        );
-    }
-
     const dataSource: TenantTableRecord[] = [...data.items];
-
     if (isAdmin) {
         dataSource.unshift({
             id: SYSTEM_TENANT_ID,
@@ -137,6 +54,115 @@ function TenantSwitch({}: Props) {
         });
     }
 
+    const defaultData = {
+        name: website?.name || defaultConfig.APP_SHORT_NAME,
+        logo: website?.logo || defaultConfig.APP_LOGO,
+        icon: website?.logo || defaultConfig.APP_ICON,
+    };
+
+    const [loading, setLoading] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
+
+    const [value, setValue] = useState<TenantData['id']>(tenantId);
+    const currentData =
+        flattenData(dataSource, {}).find((item) => item.id === value) ||
+        defaultData;
+
+    const onSwitchTenant = (tenantId: string) => {
+        setLoading(true);
+        update({ tenantId })
+            .then(() => {
+                window.location.reload();
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
+
+    useEffect(() => {
+        setValue(tenantId);
+    }, [tenantId]);
+
+    const columns: ColumnsType<TenantTableRecord> = [
+        {
+            dataIndex: '',
+            title: '',
+            width: 20,
+            render: () => null,
+        },
+        {
+            title: messages('tenant.name'),
+            dataIndex: 'name',
+            key: 'name',
+            width: 200,
+            ellipsis: true,
+            render: (name: string, record) => (
+                <Space
+                    size={'small'}
+                    style={{
+                        marginLeft: record.parent ? 30 : 0,
+                        width: '100%',
+                        overflow: 'hidden',
+                    }}
+                >
+                    <Avatar
+                        src={getTenantAvatar({
+                            logo: record.logo,
+                            icon: record.icon,
+                            name: record.name,
+                        })}
+                        size={30}
+                        shape="square"
+                    />
+                    <Typography.Text
+                        ellipsis={{ tooltip: name }}
+                        style={{ maxWidth: '100%' }}
+                    >
+                        {name}
+                    </Typography.Text>
+                </Space>
+            ),
+        },
+        {
+            title: messages('tenant.owner'),
+            dataIndex: 'ownerEmail',
+            key: 'ownerEmail',
+            width: 200,
+            render: (cell, record) => {
+                const ownerEmail = getTenantOwnerEmail(record.tenantUser);
+                return (
+                    <Typography.Text
+                        ellipsis={{ tooltip: ownerEmail }}
+                        style={{ maxWidth: '100%' }}
+                    >
+                        {ownerEmail}
+                    </Typography.Text>
+                );
+            },
+        },
+        {
+            title: messages('tenant.type.title'),
+            dataIndex: 'type',
+            key: 'type',
+            width: 100,
+            render: (cell, record) =>
+                record.isSystem ? (
+                    <Tag color="red">{messages('system.label')}</Tag>
+                ) : (
+                    record.type && <TenantTag type={record.type} />
+                ),
+        },
+    ];
+
+    if (isLoading) {
+        return (
+            <div className="flex h-fit items-center gap-2">
+                <Skeleton className="size-10 rounded-full" />
+                <Skeleton className="h-8 w-40" />
+            </div>
+        );
+    }
+
     return (
         <div>
             <div
@@ -149,12 +175,12 @@ function TenantSwitch({}: Props) {
                         icon: currentData?.icon,
                         name: currentData?.name,
                     })}
-                    size={45}
+                    size={40}
                     shape="square"
                 />
-                <h2 className="flex-1 text-2xl font-bold">
+                <Typography.Title level={4} style={{ margin: 0 }}>
                     {currentData?.name}
-                </h2>
+                </Typography.Title>
             </div>
 
             <Modal
@@ -162,7 +188,7 @@ function TenantSwitch({}: Props) {
                 open={modalOpen}
                 onCancel={() => setModalOpen(false)}
                 footer={null}
-                width={1000}
+                width={800}
             >
                 <AppTable
                     dataSource={removeEmptyChildren(dataSource)}
@@ -181,7 +207,7 @@ function TenantSwitch({}: Props) {
                         selectedRowKeys: [value],
                         onChange: (keys) => onSwitchTenant(keys[0] as string),
                     }}
-                    scroll={{ y: 500, x: 'max-content' }}
+                    scroll={{ y: 500, x: 600 }}
                 />
             </Modal>
         </div>
