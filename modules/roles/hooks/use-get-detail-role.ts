@@ -20,6 +20,7 @@ export const useGetDetailRole = (id: RolesData['id']) => {
         note: '',
         code: '',
         rolePermissions: [],
+        isActive: false,
     };
 
     return {
