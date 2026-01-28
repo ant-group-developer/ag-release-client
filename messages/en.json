@@ -431,6 +431,7 @@
         "select": "Select asset"
     },
     "setting": {
+        "settings": "Settings",
         "label": "Setting",
         "telegramSupportLink": "Telegram support link",
         "assignee": "Setting Assignee",
@@ -1783,18 +1784,23 @@
         "aggregators": "Aggregators",
         "list": "List aggregator",
         "systemDefault": "System default",
+        "ddexName": "DDex name",
         "action": {
             "create": "Create aggregator",
             "update": "Update aggregator"
         },
         "message": {
             "success": {
-                "create": "Integration created successfully",
-                "update": "Integration updated successfully",
-                "delete": "Integration deleted successfully"
+                "create": "Created successfully",
+                "update": "Updated successfully",
+                "delete": "Deleted successfully"
             },
             "error": {
-                "notFound": "Tenant integration not found"
+                "defaultNotFound": "Default aggregator not found",
+                "notFound": "Aggregator not found",
+                "codeExisted": "Aggregator code already existed",
+                "nameExisted": "Aggregator name already existed",
+                "defaultActiveError": "Cannot deactivate an active default aggregator"
             }
         }
     },
@@ -1816,5 +1822,21 @@
     "dealType": {
         "label": "Deal type",
         "requiredConnection": "Required connection"
+    },
+
+    "dspRoutingConfig": {
+        "message": {
+            "success": {
+                "create": "Update success",
+                "update": "Update success",
+                "delete": "Delete success"
+            },
+            "error": {
+                "notFound": "Dsp routing config not found",
+                "aggregatorIdRequired": "aggregatorId is required",
+                "aggregatorNotFound": "Aggregator not found",
+                "sftpConfigNotFound": "Sftp config not found"
+            }
+        }
     }
 }

@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { dspApi } from '../apis';
 import { dspQueryKeys } from '../constants/query-keys';
-import { DSP_DEAL } from '../enums';
 import { DspData, DspRoutingConfig } from '../types';
 
 export const useGetDspRoutingConfig = (id: DspData['id']) => {
@@ -13,7 +12,7 @@ export const useGetDspRoutingConfig = (id: DspData['id']) => {
 
     const defaultData: DspRoutingConfig = {
         dspId: '',
-        mode: DSP_DEAL.AGGREGATOR,
+        mode: null,
         sftpConfig: {
             metadata: {
                 host: '',

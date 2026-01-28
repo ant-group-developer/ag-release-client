@@ -8,9 +8,12 @@ export interface AggregatorData extends CommonAttribute {
     code: string;
     name: string;
     contactEmail: string;
+    ddexId: string;
+    ddexName: string;
     isActive: boolean;
-    isSystemDefault: boolean;
+    isDefault: boolean;
     sftpConfig: {
+        id: string;
         metadata: Credentials;
     };
 }

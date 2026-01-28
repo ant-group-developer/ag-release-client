@@ -431,6 +431,7 @@
         "select": "Chọn kho nội dung"
     },
     "setting": {
+        "settings": "Cài đặt",
         "label": "Cài đặt",
         "telegramSupportLink": "Telegram hỗ trợ",
         "assignee": "Cài đặt người thực hiện",
@@ -1785,11 +1786,13 @@
     "legal": {
         "allRightsReserved": "Đã đăng ký bản quyền."
     },
+
     "aggregator": {
         "label": "Đơn vị tổng hợp",
         "aggregators": "Đơn vị tổng hợp",
         "list": "Danh sách đơn vị tổng hợp",
         "systemDefault": "Cổng mặc định",
+        "ddexName": "Tên ddex",
         "action": {
             "create": "Tạo đơn vị tổng hợp",
             "update": "Cập nhật đơn vị tổng hợp"
@@ -1801,7 +1804,11 @@
                 "delete": "Xóa tích hợp thành công"
             },
             "error": {
-                "notFound": "Không tìm thấy tích hợp của tenant"
+                "defaultNotFound": "Không tìm thấy aggregator mặc định",
+                "notFound": "Không tìm thấy Aggregator",
+                "codeExisted": "Mã Aggregator đã tồn tại",
+                "nameExisted": "Tên Aggregator đã tồn tại",
+                "defaultActiveError": "Aggregator mặc định đang hoạt động"
             }
         }
     },
@@ -1823,5 +1830,21 @@
     "dealType": {
         "label": "Loại thỏa thuận",
         "requiredConnection": "Yêu cầu kết nối"
+    },
+
+    "dspRoutingConfig": {
+        "message": {
+            "success": {
+                "create": "Cập nhật thành công",
+                "update": "Cập nhật thành công",
+                "delete": "Xóa thành công"
+            },
+            "error": {
+                "notFound": "Không tìm thấy cấu hình phân phối DSP",
+                "aggregatorIdRequired": "Cần có aggregatorId",
+                "aggregatorNotFound": "Không tìm thấy Aggregator",
+                "sftpConfigNotFound": "Không tìm thấy cấu hình SFTP"
+            }
+        }
     }
 }

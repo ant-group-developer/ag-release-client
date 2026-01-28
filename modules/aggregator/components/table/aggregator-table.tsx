@@ -4,9 +4,10 @@ import { getIndex } from '@/helpers/common';
 import { OnChangeFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { ProColumns } from '@ant-design/pro-components';
-import { Typography } from 'antd';
+import { Switch, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_AGGREGATOR } from '../../enums';
+import { useUpdateAggregator } from '../../hooks/use-update';
 import { AggregatorData, AggregatorDataFilter } from '../../types';
 
 type Props = Omit<AppProTableProps<AggregatorData>, 'columns'> & {
@@ -25,7 +26,7 @@ export default function AggregatorTable({
 }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
-    // const { updateAggregator } = useUpdateAggregator();
+    const { updateAggregator } = useUpdateAggregator();
 
     const columns: ProColumns<AggregatorData>[] = [
         {
@@ -47,13 +48,14 @@ export default function AggregatorTable({
             dataIndex: 'name',
             ellipsis: true,
             align: 'left',
+            width: 300,
             render: (value, record) => value,
         },
         {
             title: messages('common.code'),
             key: 'code',
             dataIndex: 'code',
-            width: 250,
+            width: 200,
             ellipsis: true,
             align: 'left',
             render: (value, record) => value,
@@ -62,7 +64,7 @@ export default function AggregatorTable({
             title: 'Host',
             key: 'host',
             dataIndex: 'host',
-            width: 300,
+            width: 200,
             ellipsis: true,
             align: 'left',
             render: (value, record) => (
@@ -73,47 +75,61 @@ export default function AggregatorTable({
             title: 'Port',
             key: 'port',
             dataIndex: 'port',
-            width: 300,
+            width: 200,
             ellipsis: true,
             align: 'left',
             render: (value, record) => (
-                <Typography>{record?.sftpConfig?.metadata?.port}</Typography>
+                <Typography.Text>
+                    {record?.sftpConfig?.metadata?.port}
+                </Typography.Text>
             ),
         },
-        // {
-        //     title: messages('status.active'),
-        //     key: 'isActive',
-        //     dataIndex: 'isActive',
-        //     ellipsis: true,
-        //     align: 'center',
-        //     width: 150,
-        //     render: (value, record) => {
-        //         return (
-        //             <Switch
-        //                 checked={record?.isActive}
-        //                 onChange={(e) =>
-        //                     updateAggregator({
-        //                         id: record?.id,
-        //                         payload: {
-        //                             isActive: e,
-        //                         },
-        //                     })
-        //                 }
-        //             />
-        //         );
-        //     },
-        // },
-        // {
-        //     title: messages('aggregator.systemDefault'),
-        //     key: 'isSystemDefault',
-        //     dataIndex: 'isSystemDefault',
-        //     ellipsis: true,
-        //     align: 'center',
-        //     width: 150,
-        //     render: (value, record) => {
-        //         return <Switch checked={record?.isSystemDefault} />;
-        //     },
-        // },
+        {
+            title: messages('status.active'),
+            key: 'isActive',
+            dataIndex: 'isActive',
+            ellipsis: true,
+            align: 'center',
+            width: 150,
+            render: (value, record) => {
+                return (
+                    <Switch
+                        checked={record?.isActive}
+                        onChange={(e) =>
+                            updateAggregator({
+                                id: record?.id,
+                                payload: {
+                                    isActive: e,
+                                },
+                            })
+                        }
+                    />
+                );
+            },
+        },
+        {
+            title: messages('aggregator.systemDefault'),
+            key: 'isDefault',
+            dataIndex: 'isDefault',
+            ellipsis: true,
+            align: 'center',
+            width: 150,
+            render: (value, record) => {
+                return (
+                    <Switch
+                        checked={record?.isDefault}
+                        onChange={(e) =>
+                            updateAggregator({
+                                id: record?.id,
+                                payload: {
+                                    isDefault: e,
+                                },
+                            })
+                        }
+                    />
+                );
+            },
+        },
         // {
         //     title: messages('common.email'),
         //     key: 'contactEmail',

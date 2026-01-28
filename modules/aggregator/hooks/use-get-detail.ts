@@ -27,8 +27,9 @@ export const useGetDetailAggregator = (id: AggregatorData['id']) => {
         createdAt: '',
         updatedAt: null,
         isActive: false,
-        isSystemDefault: false,
+        isDefault: false,
         sftpConfig: {
+            id: '',
             metadata: {
                 host: '',
                 port: 0,
@@ -37,6 +38,8 @@ export const useGetDetailAggregator = (id: AggregatorData['id']) => {
                 path: '',
             },
         },
+        ddexId: '',
+        ddexName: '',
     };
 
     return {

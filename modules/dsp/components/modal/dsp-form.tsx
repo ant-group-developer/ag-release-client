@@ -9,7 +9,7 @@ import { ENTITY_TYPE_PICTURE } from '@/modules/upload/types/data';
 import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form, Spin, Tabs, TabsProps } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useCreateDsp } from '../../hooks/use-create-dsp';
 import { useGetDetailDsp } from '../../hooks/use-get-detail-dsp';
 import { useUpdateDsp } from '../../hooks/use-update-dsp';
@@ -36,6 +36,7 @@ export default function DspFormModal({ ...props }: Props) {
     const { updateDsp } = useUpdateDsp();
     const { dspData, isLoading: isLoadingDsp } = useGetDetailDsp(dataEdit?.id);
     const isOnLoadingData = isLoadingDsp && !!dataEdit?.id;
+    const [activeTab, setActiveTab] = useState<string>('');
 
     const handleCreateDsp = (values: DspFormValues) => {
         const variables: CreateVariables<CreateDspPayload> = {
@@ -148,7 +149,7 @@ export default function DspFormModal({ ...props }: Props) {
         {
             key: 'Deals',
             label: messages('common.deals'),
-            children: <DspDeals dspId={dspData?.id} isActive={isActive} />,
+            children: <DspDeals dspId={dspData?.id} />,
         },
     ];
 
@@ -187,20 +188,25 @@ export default function DspFormModal({ ...props }: Props) {
             onOk={form.submit}
             loading={isActive}
             className="!top-8"
+            footer={false}
         >
             <Spin spinning={isOnLoadingData}>
                 <AppForm
                     form={form}
                     onFinish={onFinish}
-                    showSubmit={false}
                     layout="horizontal"
                     disabled={isActive}
                     initialValues={{
                         isActive: false,
                         enablePolicy: true,
                     }}
+                    submitProps={{
+                        loading: isActive,
+                        className: 'mt-4',
+                    }}
+                    showSubmit={activeTab !== 'Deals'}
                 >
-                    <Tabs items={dspTabs}></Tabs>
+                    <Tabs items={dspTabs} onChange={setActiveTab}></Tabs>
                 </AppForm>
             </Spin>
         </AppModal>

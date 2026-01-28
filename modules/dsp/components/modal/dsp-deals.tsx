@@ -2,10 +2,12 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppRadio from '@/components/ui/radio/app-radio';
 import { SIZE_ICON_BIG } from '@/constants/common';
+import { useActive } from '@/hooks/use-active';
 import { useGetListAggregator } from '@/modules/aggregator/hooks/use-get-list';
+import { CreateVariables } from '@/types/api';
 import { CheckCard } from '@ant-design/pro-components';
 import {
-    Avatar,
+    Button,
     Divider,
     Empty,
     Form,
@@ -15,33 +17,58 @@ import {
     Spin,
 } from 'antd';
 import { useWatch } from 'antd/es/form/Form';
-import { Building2, Settings, UserCog } from 'lucide-react';
+import { LayoutList, UserCog } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { DSP_DEAL } from '../../enums';
 import { useGetDspRoutingConfig } from '../../hooks/use-get-dsp-routing-config';
+import { useUpdateDspRoutingConfig } from '../../hooks/use-update-dsp-routing-config';
+import { UpdateDspRoutingConfig } from '../../types/payload';
 
 type Props = {
-    isActive: boolean;
     dspId: string;
 };
 
-export default function DspDeals({ isActive, dspId }: Props) {
+export default function DspDeals({ dspId }: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
     const watchDeal = useWatch('mode', form);
+    const { isActive, deActive, active } = useActive();
 
-    const { dspRoutingConfig } = useGetDspRoutingConfig(dspId);
-    console.log('🚀 ~ DspDeals ~ dspRoutingConfig:', dspRoutingConfig);
+    const { dspRoutingConfig, isFetching: dspRoutingFetching } =
+        useGetDspRoutingConfig(dspId);
     const { aggregatorsData, isFetching } = useGetListAggregator({});
+    const { updateDspRoutingConfig } = useUpdateDspRoutingConfig();
+
+    const onFinish = (values: any) => {
+        active();
+        const variables: CreateVariables<UpdateDspRoutingConfig> = {
+            payload: {
+                dspId,
+                ...values,
+            },
+            onSuccess(e) {
+                deActive();
+            },
+            onError(e) {
+                deActive();
+            },
+        };
+        updateDspRoutingConfig(variables);
+    };
 
     useEffect(() => {
         form?.setFieldsValue(dspRoutingConfig);
     }, [dspRoutingConfig]);
 
     return (
-        <Spin spinning={isFetching}>
-            <AppForm showSubmit={false}>
+        <Spin spinning={isFetching || dspRoutingFetching}>
+            <AppForm
+                form={form}
+                disabled={isActive}
+                onFinish={onFinish}
+                showSubmit={false}
+            >
                 <AppFormItem
                     layout="vertical"
                     wrapperCol={{ span: 24 }}
@@ -60,7 +87,7 @@ export default function DspDeals({ isActive, dspId }: Props) {
                         size="small"
                         className="!grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-2"
                     >
-                        <CheckCard
+                        {/* <CheckCard
                             className="!m-0 !w-full"
                             avatar={<Settings size={SIZE_ICON_BIG} />}
                             title={
@@ -69,7 +96,7 @@ export default function DspDeals({ isActive, dspId }: Props) {
                                 </span>
                             }
                             value={DSP_DEAL.SYSTEM_DEFAULT}
-                        />
+                        /> */}
                         <CheckCard
                             className="!m-0 !w-full"
                             avatar={<UserCog size={SIZE_ICON_BIG} />}
@@ -82,7 +109,7 @@ export default function DspDeals({ isActive, dspId }: Props) {
                         />
                         <CheckCard
                             className="!m-0 !w-full"
-                            avatar={<Building2 size={SIZE_ICON_BIG} />}
+                            avatar={<LayoutList size={SIZE_ICON_BIG} />}
                             title={
                                 <span>
                                     {messages('aggregator.aggregators')}
@@ -90,18 +117,6 @@ export default function DspDeals({ isActive, dspId }: Props) {
                             }
                             value={DSP_DEAL.AGGREGATOR}
                         />
-
-                        {/* {aggregatorsData?.items?.map((item) => {
-                            return (
-                                <CheckCard
-                                    key={item?.id}
-                                    className="!m-0 !w-full"
-                                    // avatar={<Settings size={SIZE_ICON_BIG} />}
-                                    title={<span>{item?.name}</span>}
-                                    value={item?.id}
-                                />
-                            );
-                        })} */}
                     </CheckCard.Group>
                 </AppFormItem>
 
@@ -109,30 +124,33 @@ export default function DspDeals({ isActive, dspId }: Props) {
 
                 {watchDeal == DSP_DEAL.AGGREGATOR && (
                     <div>
-                        <Radio.Group className="!grid grid-cols-2 gap-2">
-                            {aggregatorsData?.items?.map((item) => {
-                                return (
-                                    <AppRadio
-                                        key={item?.id}
-                                        // avatar="/icon/spotify.png"
-                                        // description="Your connection credentials will be entered by your Account Manager. Please make sure that you have filled out."
-                                        className="!h-full !w-full"
-                                        onClick={() => {
-                                            console.log('clicked');
-                                        }}
-                                        value={item?.id}
-                                    >
-                                        <Avatar
-                                            size={'default'}
-                                            src="/icon/spotify.png"
-                                        />
-                                        <span className="ml-1">
-                                            {item?.name}
-                                        </span>
-                                    </AppRadio>
-                                );
-                            })}
-                        </Radio.Group>
+                        <AppFormItem
+                            name="aggregatorId"
+                            layout="vertical"
+                            wrapperCol={{ span: 24 }}
+                        >
+                            <Radio.Group className="!grid grid-cols-2 gap-2">
+                                {aggregatorsData?.items?.map((item) => {
+                                    return (
+                                        <AppRadio
+                                            key={item?.id}
+                                            // avatar="/icon/spotify.png"
+                                            // description="Your connection credentials will be entered by your Account Manager. Please make sure that you have filled out."
+                                            className="!h-full !w-full"
+                                            value={item?.id}
+                                        >
+                                            {/* <Avatar
+                                                size={'default'}
+                                                src="/icon/spotify.png"
+                                            /> */}
+                                            <span className="ml-1">
+                                                {item?.name}
+                                            </span>
+                                        </AppRadio>
+                                    );
+                                })}
+                            </Radio.Group>
+                        </AppFormItem>
                         {aggregatorsData?.items?.length <= 0 && <Empty />}
                     </div>
                 )}
@@ -197,6 +215,16 @@ export default function DspDeals({ isActive, dspId }: Props) {
                     </>
                 )}
             </AppForm>
+
+            <div className="flex justify-end">
+                <Button
+                    loading={isActive}
+                    type="primary"
+                    onClick={(e) => form?.submit()}
+                >
+                    {messages('common.submit')}
+                </Button>
+            </div>
         </Spin>
     );
 }
