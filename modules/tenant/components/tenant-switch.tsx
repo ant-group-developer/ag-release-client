@@ -1,13 +1,16 @@
 import { Skeleton } from '@/components/ui/skeleton';
+import AppTable from '@/components/ui/table/normal-table';
 import { defaultConfig } from '@/constants/env';
+import { removeEmptyChildren } from '@/helpers/array';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { useGetSettingPublic } from '@/modules/setting/hooks/use-get-setting-public';
-import { CheckCard } from '@ant-design/pro-components';
-import { Avatar, Popover, Spin, Tag } from 'antd';
+import { Avatar, Modal, Space, Tag, Typography } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { SYSTEM_TENANT_ID } from '../constants';
+import { TENANT_TYPE } from '../enums';
 import { useTenantActive } from '../hooks/use-get-tenant';
 import { TenantData } from '../types/data';
 import { getTenantAvatar, getTenantOwnerEmail } from '../utils';
@@ -15,9 +18,14 @@ import TenantTag from './tenant-tag';
 
 type Props = {};
 
+interface TenantTableRecord extends TenantData {
+    isSystem?: boolean;
+}
+
 function TenantSwitch({}: Props) {
     const messages = useTranslations();
     const { data, isLoading } = useTenantActive();
+    console.log(data);
     const {
         profile: { tenantId },
     } = useAuth();
@@ -33,6 +41,7 @@ function TenantSwitch({}: Props) {
     };
 
     const [loading, setLoading] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
 
     const [value, setValue] = useState<TenantData['id']>(tenantId);
     const currentData =
@@ -53,6 +62,51 @@ function TenantSwitch({}: Props) {
         setValue(tenantId);
     }, [tenantId]);
 
+    const columns: ColumnsType<TenantTableRecord> = [
+        {
+            title: messages('tenant.name'),
+            dataIndex: 'name',
+            key: 'name',
+            width: 150,
+            render: (name: string, record) => (
+                <Space className="flex items-center gap-2">
+                    <Avatar
+                        src={getTenantAvatar({
+                            logo: record.logo,
+                            icon: record.icon,
+                            name: record.name,
+                        })}
+                        size={36}
+                        shape="square"
+                    />
+                    <Typography.Text>{name}</Typography.Text>
+                </Space>
+            ),
+        },
+        {
+            title: messages('tenant.owner'),
+            dataIndex: 'ownerEmail',
+            key: 'ownerEmail',
+            width: 150,
+            render: (cell, record) => {
+                const ownerEmail = getTenantOwnerEmail(record.tenantUser);
+                return ownerEmail;
+            },
+        },
+        {
+            title: messages('tenant.type.title'),
+            dataIndex: 'type',
+            key: 'type',
+            width: 80,
+            render: (cell, record) =>
+                record.isSystem ? (
+                    <Tag color="red">{messages('system.label')}</Tag>
+                ) : (
+                    record.type && <TenantTag type={record.type} />
+                ),
+        },
+    ];
+
     if (isLoading) {
         return (
             <div className="flex h-fit items-center gap-2">
@@ -62,125 +116,74 @@ function TenantSwitch({}: Props) {
         );
     }
 
+    const dataSource: TenantTableRecord[] = [...data.items];
+
+    if (isAdmin) {
+        dataSource.unshift({
+            id: SYSTEM_TENANT_ID,
+            name: website?.name || defaultConfig.APP_SHORT_NAME,
+            logo: website?.logo ?? undefined,
+            icon: website?.logo ?? undefined,
+            title: null,
+            type: TENANT_TYPE.WHITE_LABEL,
+            parent: null,
+            tenantUser: [],
+            isSystem: true,
+            email: '',
+            isActive: false,
+            children: [],
+            tenantUserCount: 0,
+            maxLabels: 0,
+        });
+    }
+
     return (
         <div>
-            <Popover
-                placement="bottomRight"
-                trigger={['click']}
-                content={
-                    <Spin spinning={loading}>
-                        <div className="max-h-[30rem] overflow-auto px-1">
-                            <CheckCard.Group
-                                style={{
-                                    display: 'grid',
-                                }}
-                                onChange={(id) => {
-                                    if (typeof id === 'string') {
-                                        onSwitchTenant(id);
-                                    }
-                                }}
-                                value={value}
-                            >
-                                {isAdmin && (
-                                    <CheckCard
-                                        key={SYSTEM_TENANT_ID}
-                                        value={SYSTEM_TENANT_ID}
-                                        avatar={getTenantAvatar({
-                                            logo: website?.logo,
-                                            icon: website?.logo,
-                                            name: website?.name,
-                                        })}
-                                        title={
-                                            <p className="flex items-center gap-2">
-                                                <span className="font-semibold">
-                                                    {website?.name}
-                                                </span>
-                                                <Tag color="red">
-                                                    {messages('system.label')}
-                                                </Tag>
-                                            </p>
-                                        }
-                                        style={{
-                                            marginInlineEnd: 0,
-                                            marginBlockEnd: 8,
-                                        }}
-                                    />
-                                )}
-                                {data.items.map((item) => (
-                                    <CheckCard
-                                        key={item.id}
-                                        value={item.id}
-                                        avatar={getTenantAvatar({
-                                            logo: item.logo,
-                                            icon: item.icon,
-                                            name: item.name,
-                                        })}
-                                        title={
-                                            <p className="flex items-center gap-2">
-                                                <span className="font-semibold">
-                                                    {item.name}
-                                                </span>
-                                                <TenantTag type={item.type} />
-                                            </p>
-                                        }
-                                        description={
-                                            <div className="space-y-0.5 truncate text-xs">
-                                                <p>
-                                                    {messages('tenant.owner')}:{' '}
-                                                    {getTenantOwnerEmail(
-                                                        item.tenantUser
-                                                    )}
-                                                </p>
-                                                {item.parent && (
-                                                    <p>
-                                                        {messages(
-                                                            'tenant.manager'
-                                                        )}
-                                                        :{' '}
-                                                        <span className="font-semibold">
-                                                            {item.parent.name}
-                                                        </span>
-                                                    </p>
-                                                )}
-                                            </div>
-                                        }
-                                        style={{
-                                            marginInlineEnd: 0,
-                                            marginBlockEnd: 8,
-                                        }}
-                                    />
-                                ))}
-                            </CheckCard.Group>
-                        </div>
-                    </Spin>
-                }
+            <div
+                className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                onClick={() => setModalOpen(true)}
             >
-                <div className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800">
-                    <Avatar
-                        src={getTenantAvatar({
-                            logo: currentData?.logo,
-                            icon: currentData?.icon,
-                            name: currentData?.name,
-                        })}
-                        size={45}
-                        shape="square"
-                    />
-                    {/* <Image
-                        src={getTenantAvatar({
-                            logo: currentData?.logo,
-                            icon: currentData?.icon,
-                            name: currentData?.name,
-                        })}
-                        width={45}
-                        height={45}
-                        alt={currentData?.name}
-                        className="rounded-lg"
-                    /> */}
-                    <h2 className="flex-1 text-2xl font-bold">
-                        {currentData?.name}
-                    </h2>
-                </div>
-            </Popover>
+                <Avatar
+                    src={getTenantAvatar({
+                        logo: currentData?.logo,
+                        icon: currentData?.icon,
+                        name: currentData?.name,
+                    })}
+                    size={45}
+                    shape="square"
+                />
+                <h2 className="flex-1 text-2xl font-bold">
+                    {currentData?.name}
+                </h2>
+            </div>
+
+            <Modal
+                title={messages('tenant.selectTitle')}
+                open={modalOpen}
+                onCancel={() => setModalOpen(false)}
+                footer={null}
+                width={1000}
+            >
+                <AppTable
+                    dataSource={removeEmptyChildren(dataSource)}
+                    columns={columns}
+                    loading={loading}
+                    pagination={false}
+                    rowClassName={(record) =>
+                        record.id === value ? 'bg-blue-50 dark:bg-blue-950' : ''
+                    }
+                    onRow={(record) => ({
+                        onClick: () => onSwitchTenant(record.id),
+                        className: 'cursor-pointer',
+                    })}
+                    rowSelection={{
+                        type: 'radio',
+                        selectedRowKeys: [value],
+                        onChange: (keys) => onSwitchTenant(keys[0] as string),
+                    }}
+                    scroll={{ y: 500, x: 'max-content' }}
+                />
+            </Modal>
         </div>
     );
 }

@@ -1340,6 +1340,7 @@
 
     "tenant": {
         "label": "Workspace",
+        "selectTitle": "Select Workspace",
         "workspaces": "workspaces",
         "name": "Workspace name",
         "logo": "Logo",
