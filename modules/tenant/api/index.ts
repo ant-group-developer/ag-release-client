@@ -3,7 +3,6 @@ import { DetailResponse, PaginationResponse } from '@/types/api';
 import {
     CreateTenantPayload,
     DataFilterTenant,
-    TenantActiveData,
     TenantData,
     TenantDetail,
     TenantDspData,
@@ -25,7 +24,7 @@ export const tenantApi = {
     },
 
     getActive() {
-        return axiosInstance.get<PaginationResponse<TenantActiveData>>(
+        return axiosInstance.get<PaginationResponse<TenantData>>(
             `/tenants/active`
         );
     },
