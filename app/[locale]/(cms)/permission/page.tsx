@@ -21,7 +21,7 @@ import {
     PermissionDataDataFilter,
 } from '@/modules/permission/types';
 import { PageContainer } from '@ant-design/pro-components';
-import { theme } from 'antd';
+import { Select, Space, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { Key, useState } from 'react';
 
@@ -58,6 +58,7 @@ export default function Permission({}: Props) {
         useFilter<PermissionDataDataFilter>({
             page: 1,
             pageSize: PAGE_SIZE,
+            isActive: 'true',
         });
     const { permissionData, isFetching, refetch } =
         useGetListPermission(dataFilter);
@@ -103,11 +104,31 @@ export default function Permission({}: Props) {
                 </div>
                 <PermissionTable
                     headerTitle={
-                        <AppSearch
-                            className="max-w-52"
-                            onChange={onSearch}
-                            defaultValue={dataFilter.keyword}
-                        />
+                        <Space>
+                            <AppSearch
+                                className="max-w-52"
+                                onChange={onSearch}
+                                defaultValue={dataFilter.keyword}
+                            />
+                            <Select
+                                style={{ width: 150 }}
+                                options={[
+                                    {
+                                        label: messages('status.active'),
+                                        value: 'true',
+                                    },
+                                    {
+                                        label: messages('status.block'),
+                                        value: 'false',
+                                    },
+                                ]}
+                                value={dataFilter.isActive}
+                                placeholder={messages('common.status')}
+                                onChange={(value) =>
+                                    onChangeFilter({ isActive: value })
+                                }
+                            />
+                        </Space>
                     }
                     sticky
                     dataSource={permissionData.items}
