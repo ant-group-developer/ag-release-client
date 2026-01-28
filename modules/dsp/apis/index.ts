@@ -1,6 +1,6 @@
 import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
-import { DspData, DspDataFilter } from '../types';
+import { DspData, DspDataFilter, DspRoutingConfig } from '../types';
 import {
     CreateDspPayload,
     DeleteDspAction,
@@ -44,6 +44,12 @@ export const dspApi = {
     getListDspByEnablePolicy: () => {
         return axiosInstance.get<DetailResponse<DspData[]>>(
             '/dsps/enable-policy'
+        );
+    },
+
+    getDspRoutingConfig: (id: DspData['id']) => {
+        return axiosInstance.get<DetailResponse<DspRoutingConfig>>(
+            `/distribution3/dsp-routing-configs/by-dsp/${id}`
         );
     },
 };

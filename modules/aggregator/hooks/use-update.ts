@@ -36,6 +36,7 @@ export const useUpdateAggregator = () => {
     };
 
     const mutation = useMutation({
+        mutationKey: aggregatorQueryKeys.update(),
         mutationFn: ({
             id,
             payload,

@@ -190,6 +190,7 @@ export const QUERY_KEY = {
         GET_LIST: 'GET_LIST_DSP',
         GET_DETAIL: 'GET_DETAIL_DSP',
         UPDATE: 'UPDATE_DSP',
+        GET_DETAIL_ROUTING_CONFIG: 'GET_DETAIL_DSP',
     },
     DSP_ACTION: {
         KEY: 'DPS_ACTION',

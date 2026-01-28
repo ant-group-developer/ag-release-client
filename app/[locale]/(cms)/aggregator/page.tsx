@@ -7,9 +7,11 @@ import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
+import { useLoadingStatus } from '@/hooks/use-loading-status';
 import useModalStore from '@/hooks/use-modal';
 import AggregatorForm from '@/modules/aggregator/components/form/aggregator-form';
 import AggregatorTable from '@/modules/aggregator/components/table/aggregator-table';
+import { aggregatorQueryKeys } from '@/modules/aggregator/constants/query-keys';
 import { TYPE_MODAL_AGGREGATOR } from '@/modules/aggregator/enums';
 import { useDeleteAggregator } from '@/modules/aggregator/hooks/use-delete';
 import { useGetListAggregator } from '@/modules/aggregator/hooks/use-get-list';
@@ -36,6 +38,10 @@ export default function Aggregator({}: Props) {
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore<AggregatorData>((state) => state.dataEdit);
     const openModal = useModalStore((state) => state.openModal);
+    const { isLoading } = useLoadingStatus({
+        queryKeys: [aggregatorQueryKeys.lists()],
+        mutationKeys: [aggregatorQueryKeys.all],
+    });
 
     // apis
     const {
@@ -91,7 +97,7 @@ export default function Aggregator({}: Props) {
                     options={{
                         reload: () => aggregatorsRefetch(),
                     }}
-                    loading={isFetching}
+                    loading={isLoading}
                 />
                 <AppPagination
                     className="rounded-b-md"

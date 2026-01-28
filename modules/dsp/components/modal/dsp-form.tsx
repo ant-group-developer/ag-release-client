@@ -148,7 +148,7 @@ export default function DspFormModal({ ...props }: Props) {
         {
             key: 'Deals',
             label: messages('common.deals'),
-            children: <DspDeals form={form} isActive={isActive} />,
+            children: <DspDeals dspId={dspData?.id} isActive={isActive} />,
         },
     ];
 

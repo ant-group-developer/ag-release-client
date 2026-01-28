@@ -28,8 +28,8 @@ export const useGetDetailAggregator = (id: AggregatorData['id']) => {
         updatedAt: null,
         isActive: false,
         isSystemDefault: false,
-        distributionChannel: {
-            credentials: {
+        sftpConfig: {
+            metadata: {
                 host: '',
                 port: 0,
                 username: '',
