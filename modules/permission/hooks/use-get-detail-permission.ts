@@ -18,6 +18,7 @@ export const useGetDetailPermission = (id: PermissionData['id']) => {
         createdAt: '',
         updatedAt: null,
         note: '',
+        isActive: true,
     };
 
     return {

@@ -81,6 +81,7 @@
         "quantity": "Quantity",
         "tracks": "Tracks",
         "clearFilter": "Clear filter",
+        "clearAll": "Clear all",
         "reset": "Reset",
         "translation": "Translation",
         "translations": "Translations",
@@ -1460,6 +1461,20 @@
     "permission": {
         "label": "Permission",
         "name": "Permission name",
+        "isActive": "Status",
+        "create": {
+            "manual": "Manual",
+            "import": "Import from Excel"
+        },
+        "import": {
+            "downloadTemplate": "Download template",
+            "dragAndDrop": "Drag and drop Excel file here",
+            "hint": "Supports .xlsx, .xls files",
+            "success": "Successfully parsed {count} permissions",
+            "noData": "No valid data found in file",
+            "error": "Failed to parse Excel file",
+            "invalidRows": "{count} rows have missing required fields (name or code)"
+        },
         "message": {
             "success": {
                 "create": "Add permission successfully",
@@ -1481,6 +1496,7 @@
     "roles": {
         "label": "Role",
         "name": "Role name",
+        "isActive": "Status",
         "message": {
             "success": {
                 "create": "Add role successfully",

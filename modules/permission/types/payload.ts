@@ -4,6 +4,8 @@ import { Key } from 'react';
 export interface CreatePermissionPayload {
     name: string;
     code: string;
+    isActive?: boolean;
+    note?: string;
 }
 
 export interface UpdatePermissionPayload

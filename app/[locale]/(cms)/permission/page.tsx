@@ -9,7 +9,8 @@ import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import PermissionFormModal from '@/modules/permission/components/modal/permission-form';
+import PermissionCreateModal from '@/modules/permission/components/modal/permission-create-modal';
+import PermissionUpdateModal from '@/modules/permission/components/modal/permission-update-modal';
 import { PermissionTable } from '@/modules/permission/components/table';
 import { TYPE_MODAL_PERMISSION } from '@/modules/permission/enums';
 import { useBulkDeletePermission } from '@/modules/permission/hooks/use-bulk-delete-permission';
@@ -142,9 +143,12 @@ export default function Permission({}: Props) {
                     pageSizeOptions={PAGE_SIZE_OPTIONS}
                 />
 
-                {(typeModal === TYPE_MODAL_PERMISSION.CREATE ||
-                    typeModal === TYPE_MODAL_PERMISSION.UPDATE) && (
-                    <PermissionFormModal />
+                {typeModal === TYPE_MODAL_PERMISSION.CREATE && (
+                    <PermissionCreateModal />
+                )}
+
+                {typeModal === TYPE_MODAL_PERMISSION.UPDATE && (
+                    <PermissionUpdateModal />
                 )}
 
                 {typeModal === TYPE_MODAL_PERMISSION.DELETE && (

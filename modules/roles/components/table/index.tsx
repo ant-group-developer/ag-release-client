@@ -5,10 +5,11 @@ import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { ProColumns } from '@ant-design/pro-components';
-import { Badge, Button, Empty, theme } from 'antd';
+import { Badge, Button, Empty, Switch, theme } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_ROLES } from '../../enums';
+import { useUpdateRole } from '../../hooks/use-update-role';
 import { RolePermission, RolesData, RolesDataDataFilter } from '../../types';
 
 type Props = Omit<AppProTableProps<RolesData>, 'columns'> & {
@@ -23,6 +24,7 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const { token } = theme.useToken();
+    const { updateRole } = useUpdateRole();
 
     const column: ProColumns<RolesData>[] = [
         {
@@ -44,7 +46,7 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
             align: 'left',
             width: 150,
             ellipsis: true,
-            render: (value, record) => (
+            render: (_, record) => (
                 <CopyText
                     text={record?.name}
                     className="flex items-center gap-2"
@@ -61,7 +63,7 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
             align: 'left',
             width: 150,
             ellipsis: true,
-            render: (value, record) => <CopyText text={record?.code ?? ''} />,
+            render: (_, record) => <CopyText text={record?.code ?? ''} />,
         },
         {
             title: messages('common.note'),
@@ -70,12 +72,32 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
             align: 'left',
             width: 300,
             ellipsis: true,
-            render: (value, record) => (
+            render: (_, record) => (
                 <CopyText text={record?.note ?? ''}>
                     <span className="line-clamp-3 truncate whitespace-pre-line">
                         {record?.note}
                     </span>
                 </CopyText>
+            ),
+        },
+        {
+            title: messages('roles.isActive'),
+            key: 'isActive',
+            dataIndex: 'isActive',
+            align: 'center',
+            width: 100,
+            render: (_, record) => (
+                <div onClick={(e) => e.stopPropagation()}>
+                    <Switch
+                        checked={record.isActive}
+                        onChange={(checked) =>
+                            updateRole({
+                                id: record.id,
+                                payload: { isActive: checked },
+                            })
+                        }
+                    />
+                </div>
             ),
         },
 
@@ -91,7 +113,7 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
                 dataFilter.fieldOrder,
                 'createdAt'
             ),
-            render: (value, record) => (
+            render: (_, record) => (
                 <span className="truncate text-wrap">
                     {formattedDate(record?.createdAt)}
                 </span>
@@ -109,7 +131,7 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
                 dataFilter.fieldOrder,
                 'updatedAt'
             ),
-            render: (value, record) => (
+            render: (_, record) => (
                 <span className="truncate text-wrap">
                     {formattedDate(record?.updatedAt)}
                 </span>
@@ -193,18 +215,14 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
             ];
 
             return (
-                <div>
-                    <AppTable
-                        className="ml-24 rounded-lg border p-2"
-                        columns={childColumns}
-                        dataSource={rows}
-                        pagination={{
-                            pageSize: 5,
-                            showSizeChanger: false,
-                            size: 'default',
-                        }}
-                    />
-                </div>
+                <AppTable
+                    className="ml-24 rounded-lg border p-2"
+                    columns={childColumns}
+                    dataSource={rows}
+                    scroll={{
+                        y: 300,
+                    }}
+                />
             );
         },
 
@@ -225,7 +243,6 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
                 backgroundColor: token.colorBgContainer,
                 ...props?.style,
             }}
-         
             tableAlertRender={({
                 selectedRowKeys,
                 selectedRows,
