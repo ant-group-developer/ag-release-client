@@ -22,7 +22,7 @@ export interface DspDataFilter extends CommonParams {
 
 export interface DspRoutingConfig extends CommonAttribute {
     dspId: DspData['id'];
-    mode: DSP_DEAL;
+    mode: DSP_DEAL | null;
     aggregatorId?: string;
     sftpConfig?: {
         metadata: Credentials;

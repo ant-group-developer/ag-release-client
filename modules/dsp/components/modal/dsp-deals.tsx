@@ -35,7 +35,8 @@ export default function DspDeals({ dspId }: Props) {
     const watchDeal = useWatch('mode', form);
     const { isActive, deActive, active } = useActive();
 
-    const { dspRoutingConfig } = useGetDspRoutingConfig(dspId);
+    const { dspRoutingConfig, isFetching: dspRoutingFetching } =
+        useGetDspRoutingConfig(dspId);
     const { aggregatorsData, isFetching } = useGetListAggregator({});
     const { updateDspRoutingConfig } = useUpdateDspRoutingConfig();
 
@@ -61,7 +62,7 @@ export default function DspDeals({ dspId }: Props) {
     }, [dspRoutingConfig]);
 
     return (
-        <Spin spinning={isFetching}>
+        <Spin spinning={isFetching || dspRoutingFetching}>
             <AppForm
                 form={form}
                 disabled={isActive}
@@ -136,9 +137,6 @@ export default function DspDeals({ dspId }: Props) {
                                             // avatar="/icon/spotify.png"
                                             // description="Your connection credentials will be entered by your Account Manager. Please make sure that you have filled out."
                                             className="!h-full !w-full"
-                                            onClick={() => {
-                                                console.log('clicked');
-                                            }}
                                             value={item?.id}
                                         >
                                             {/* <Avatar
