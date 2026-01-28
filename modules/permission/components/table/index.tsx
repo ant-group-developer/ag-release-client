@@ -4,9 +4,10 @@ import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { ProColumns } from '@ant-design/pro-components';
-import { Button, theme } from 'antd';
+import { Button, Switch, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_PERMISSION } from '../../enums';
+import { useUpdatePermission } from '../../hooks/use-update-permission';
 import { PermissionData, PermissionDataDataFilter } from '../../types';
 
 type Props = Omit<AppProTableProps<PermissionData>, 'columns'> & {
@@ -21,6 +22,7 @@ export const PermissionTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const { token } = theme.useToken();
+    const { updatePermission } = useUpdatePermission();
     const column: ProColumns<PermissionData>[] = [
         {
             title: messages('common.iNo'),
@@ -40,7 +42,7 @@ export const PermissionTable = ({ dataFilter, ...props }: Props) => {
             dataIndex: 'name',
             align: 'left',
             width: 200,
-            render: (value, record) => <CopyText text={record?.name} />,
+            render: (_, record) => <CopyText text={record?.name} />,
         },
         {
             title: messages('common.code'),
@@ -48,7 +50,7 @@ export const PermissionTable = ({ dataFilter, ...props }: Props) => {
             dataIndex: 'code',
             align: 'left',
             width: 200,
-            render: (value, record) => <CopyText text={record?.code} />,
+            render: (_, record) => <CopyText text={record?.code} />,
         },
         {
             title: messages('common.note'),
@@ -56,7 +58,7 @@ export const PermissionTable = ({ dataFilter, ...props }: Props) => {
             dataIndex: 'note',
             align: 'left',
             width: 300,
-            render: (value, record) => (
+            render: (_, record) => (
                 <CopyText text={record?.note}>
                     <span className="line-clamp-3 truncate whitespace-pre-line">
                         {record?.note}
@@ -65,18 +67,38 @@ export const PermissionTable = ({ dataFilter, ...props }: Props) => {
             ),
         },
         {
+            title: messages('permission.isActive'),
+            key: 'isActive',
+            dataIndex: 'isActive',
+            align: 'center',
+            width: 100,
+            render: (_, record) => (
+                <div onClick={(e) => e.stopPropagation()}>
+                    <Switch
+                        checked={record.isActive}
+                        onChange={(checked) =>
+                            updatePermission({
+                                id: record.id,
+                                payload: { isActive: checked },
+                            })
+                        }
+                    />
+                </div>
+            ),
+        },
+        {
             title: messages('common.createdAt'),
             key: 'createdAt',
             dataIndex: 'createdAt',
             align: 'center',
-            width: 100,
+            width: 120,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
                 'createdAt'
             ),
-            render: (value, record) => (
+            render: (_, record) => (
                 <span className="truncate text-wrap">
                     {formattedDate(record?.createdAt)}
                 </span>
@@ -87,14 +109,14 @@ export const PermissionTable = ({ dataFilter, ...props }: Props) => {
             key: 'updatedAt',
             dataIndex: 'updatedAt',
             align: 'center',
-            width: 100,
+            width: 120,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
                 'updatedAt'
             ),
-            render: (value, record) => (
+            render: (_, record) => (
                 <span className="truncate text-wrap">
                     {formattedDate(record?.updatedAt)}
                 </span>
@@ -122,6 +144,7 @@ export const PermissionTable = ({ dataFilter, ...props }: Props) => {
     return (
         <AppProTable
             {...props}
+            defaultSize="small"
             pagination={false}
             columns={column}
             rowClassName={'group cursor-pointer'}

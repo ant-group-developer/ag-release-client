@@ -81,6 +81,7 @@
         "quantity": "Số lượng",
         "tracks": "Bài hát",
         "clearFilter": "Xoá bộ lọc",
+        "clearAll": "Xoá tất cả",
         "reset": "Đặt lại",
         "translation": "Bản dịch",
         "translations": "Bản dịch",
@@ -1463,6 +1464,20 @@
     "permission": {
         "label": "Quyền",
         "name": "Tên quyền",
+        "isActive": "Trạng thái",
+        "create": {
+            "manual": "Thủ công",
+            "import": "Nhập từ Excel"
+        },
+        "import": {
+            "downloadTemplate": "Tải template",
+            "dragAndDrop": "Kéo thả file Excel vào đây",
+            "hint": "Hỗ trợ file .xlsx, .xls",
+            "success": "Đã phân tích {count} quyền thành công",
+            "noData": "Không tìm thấy dữ liệu hợp lệ trong file",
+            "error": "Lỗi khi phân tích file Excel",
+            "invalidRows": "{count} dòng thiếu các trường bắt buộc (tên hoặc mã)"
+        },
         "message": {
             "success": {
                 "create": "Thêm quyền thành công",
@@ -1484,6 +1499,7 @@
     "roles": {
         "label": "Vai trò",
         "name": "Tên vai trò",
+        "isActive": "Trạng thái",
         "message": {
             "success": {
                 "create": "Thêm vai trò thành công",

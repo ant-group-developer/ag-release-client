@@ -6,6 +6,7 @@ export interface CreateRolePayload {
     color: string;
     description: string;
     permissionIds: string[];
+    isActive?: boolean;
 }
 
 export interface UpdateRolesPayload extends Partial<CreateRolePayload> {}

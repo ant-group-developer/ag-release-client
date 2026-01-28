@@ -6,7 +6,7 @@ import { MAX_NAME_LENGTH, MAX_NOTE_LENGTH } from '@/constants/validate';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
-import { Form, Input } from 'antd';
+import { Form, Input, Switch } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { useTranslations } from 'next-intl';
 import { Key, useEffect, useState } from 'react';
@@ -125,7 +125,7 @@ export default function RolesFormModal({ ...props }: Props) {
             onCancel={closeModal}
             onOk={form.submit}
             loading={isActive}
-            className="!top-10"
+            className="!top-5"
         >
             <AppForm
                 form={form}
@@ -208,6 +208,14 @@ export default function RolesFormModal({ ...props }: Props) {
                         }}
                         showCount
                     />
+                </AppFormItem>
+                <AppFormItem
+                    name="isActive"
+                    label={messages('roles.isActive')}
+                    valuePropName="checked"
+                    initialValue={true}
+                >
+                    <Switch />
                 </AppFormItem>
                 <div className="mt-8">
                     <PermissionTableItemForm

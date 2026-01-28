@@ -15,7 +15,7 @@ export default function PermissionTableItemForm({ ...props }: Props) {
     });
     const [pagination, setPagination] = useState({
         current: 1,
-        pageSize: 10,
+        pageSize: 20,
     });
 
     const messages = useTranslations();
@@ -69,6 +69,7 @@ export default function PermissionTableItemForm({ ...props }: Props) {
             columns={column}
             scroll={{
                 x: 'max-content',
+                y: 'calc(100vh - 500px)',
             }}
             pagination={{
                 pageSize: pagination?.pageSize,
@@ -80,6 +81,7 @@ export default function PermissionTableItemForm({ ...props }: Props) {
                     });
                 },
                 showSizeChanger: false,
+                hideOnSinglePage: true,
             }}
         />
     );

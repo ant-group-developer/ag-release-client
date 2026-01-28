@@ -6,6 +6,7 @@ export interface PermissionData extends CommonAttribute {
     name: string;
     code: string;
     note: string;
+    isActive: boolean;
 }
 
 export interface PermissionSimpleData
@@ -14,4 +15,5 @@ export interface PermissionSimpleData
 export interface PermissionDataDataFilter extends CommonParams {
     startDateCreated?: string;
     endDateCreated?: string;
+    isActive?: boolean;
 }
