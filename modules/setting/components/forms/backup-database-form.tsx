@@ -143,7 +143,7 @@ export default function BackupDatabaseForm({}: Props) {
                 <div className="flex justify-between py-2 font-semibold">
                     <span>Backup database logs</span>
                 </div>
-                <div>
+                <div className="rounded-lg border">
                     <BackupDatabaseHeader
                         dataFilter={dataFilter}
                         onSearch={onSearch}
@@ -163,7 +163,6 @@ export default function BackupDatabaseForm({}: Props) {
                         dataFilter={dataFilter}
                     />
                     <AppPagination
-                        className="border-b"
                         align="end"
                         current={dataFilter?.page}
                         pageSize={dataFilter.pageSize}

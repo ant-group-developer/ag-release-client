@@ -431,6 +431,7 @@
         "select": "Select asset"
     },
     "setting": {
+        "settings": "Settings",
         "label": "Setting",
         "telegramSupportLink": "Telegram support link",
         "assignee": "Setting Assignee",

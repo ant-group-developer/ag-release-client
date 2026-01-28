@@ -431,6 +431,7 @@
         "select": "Chọn kho nội dung"
     },
     "setting": {
+        "settings": "Cài đặt",
         "label": "Cài đặt",
         "telegramSupportLink": "Telegram hỗ trợ",
         "assignee": "Cài đặt người thực hiện",

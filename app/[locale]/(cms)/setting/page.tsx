@@ -10,6 +10,7 @@ import { settingQueryKeys } from '@/modules/setting/constants/query-keys';
 import { SETTING_TABS } from '@/modules/setting/enums';
 import { PageContainer } from '@ant-design/pro-components';
 import { Spin, Tabs, TabsProps } from 'antd';
+import { useTranslations } from 'next-intl';
 
 type Props = {};
 
@@ -19,6 +20,7 @@ export default function SettingPage({}: Props) {
         mutationKeys: [settingQueryKeys.updates()],
     });
     // const { token } = theme.useToken();
+    const messages = useTranslations();
 
     const tabItems: TabsProps['items'] = [
         {
@@ -49,11 +51,15 @@ export default function SettingPage({}: Props) {
     ];
 
     return (
-        <PageContainer>
-            <div className="mt-8 min-h-[60vh] rounded-lg bg-white">
+        <PageContainer title={messages('setting.settings')}>
+            <div className="rounded-lg bg-white">
                 <Spin spinning={isFetching}>
-                    <div className="m-auto max-w-4xl">
-                        <Tabs items={tabItems} />
+                    <div className="m-auto">
+                        <Tabs
+                            items={tabItems}
+                            tabPosition="left"
+                            className="!p-6"
+                        />
                     </div>
                 </Spin>
             </div>
