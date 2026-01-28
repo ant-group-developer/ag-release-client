@@ -141,7 +141,7 @@ export default function IntegrationModalForm({ ...props }: Props) {
                                     (item) => item?.agreementType == type
                                 );
 
-                            if (type === DSP_DEAL.ANT) {
+                            if (type === 'ant') {
                                 return (
                                     <Alert
                                         className="!rounded-lg"
@@ -152,7 +152,7 @@ export default function IntegrationModalForm({ ...props }: Props) {
                                     />
                                 );
                             }
-                            if (type === DSP_DEAL.MERLIN) {
+                            if (type === 'merlin') {
                                 return (
                                     <Alert
                                         className="!rounded-lg"
