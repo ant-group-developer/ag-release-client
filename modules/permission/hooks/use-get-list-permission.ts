@@ -7,7 +7,7 @@ import { PermissionDataDataFilter } from '../types';
 export const useGetListPermission = (params: PermissionDataDataFilter) => {
     const { data, ...res } = useQuery({
         queryKey: permissionQueryKeys.list(params),
-        queryFn: () => permissionApis.getList({ isActive: true, ...params }),
+        queryFn: () => permissionApis.getList({ isActive: 'true', ...params }),
         placeholderData: (prev) => prev,
     });
 

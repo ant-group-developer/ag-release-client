@@ -7,7 +7,7 @@ import { RolesDataDataFilter } from '../types';
 export const useGetListRoles = (params: RolesDataDataFilter) => {
     const { data, ...res } = useQuery({
         queryKey: rolesQueryKeys.list(params),
-        queryFn: () => rolesApis.getList({ isActive: true, ...params }),
+        queryFn: () => rolesApis.getList({ isActive: 'true', ...params }),
         placeholderData: (prev) => prev,
     });
 
