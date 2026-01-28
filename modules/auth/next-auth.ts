@@ -32,16 +32,11 @@ async function maybeRefresh(token: any) {
         token.accessToken = data.accessToken;
         token.refreshToken = data.refreshToken ?? token.refreshToken; // keep old if API doesn't rotate
         token.accessTokenExp = expMsFromJwt(token.accessToken);
-        token.refreshTokenExp = expMsFromJwt(
-            data.refreshToken ?? token.refreshToken
-        );
+
         token.error = undefined;
     } catch (error: any) {
         console.log('callbacks refresh error:', error?.message || error);
         token.error = REFRESH_FAILED_MESSAGE;
-        // quan trọng: clear để middleware/session coi như logout
-        token.accessToken = undefined;
-        token.accessTokenExp = 0;
     }
 
     return token;
@@ -107,9 +102,7 @@ export const authOptions: NextAuthOptions = {
                 // Lưu exp (ms) để tránh decode nhiều lần
                 // @ts-ignore
                 token.accessTokenExp = expMsFromJwt((user as any).accessToken);
-                token.refreshTokenExp = expMsFromJwt(
-                    (user as any).refreshToken
-                );
+
                 token.error = undefined;
                 return token;
             }
@@ -137,9 +130,6 @@ export const authOptions: NextAuthOptions = {
                         switched.refreshToken ?? (token as any).refreshToken;
                     // @ts-ignore
                     token.accessTokenExp = expMsFromJwt(switched.accessToken);
-                    token.refreshTokenExp = expMsFromJwt(
-                        switched.refreshToken ?? (token as any).refreshToken
-                    );
 
                     token.error = undefined;
                 } catch (error: any) {

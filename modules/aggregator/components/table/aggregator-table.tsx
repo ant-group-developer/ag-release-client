@@ -4,7 +4,7 @@ import { getIndex } from '@/helpers/common';
 import { OnChangeFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { ProColumns } from '@ant-design/pro-components';
-import { Switch } from 'antd';
+import { Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_AGGREGATOR } from '../../enums';
 import { AggregatorData, AggregatorDataFilter } from '../../types';
@@ -25,6 +25,7 @@ export default function AggregatorTable({
 }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
+    // const { updateAggregator } = useUpdateAggregator();
 
     const columns: ProColumns<AggregatorData>[] = [
         {
@@ -58,35 +59,69 @@ export default function AggregatorTable({
             render: (value, record) => value,
         },
         {
-            title: messages('status.active'),
-            key: 'isActive',
-            dataIndex: 'isActive',
-            ellipsis: true,
-            align: 'center',
-            width: 150,
-            render: (value, record) => {
-                return <Switch checked={record?.isActive} />;
-            },
-        },
-        {
-            title: messages('aggregator.systemDefault'),
-            key: 'isSystemDefault',
-            dataIndex: 'isSystemDefault',
-            ellipsis: true,
-            align: 'center',
-            width: 150,
-            render: (value, record) => {
-                return <Switch checked={record?.isSystemDefault} />;
-            },
-        },
-        {
-            title: messages('common.email'),
-            key: 'contactEmail',
-            dataIndex: 'contactEmail',
+            title: 'Host',
+            key: 'host',
+            dataIndex: 'host',
+            width: 300,
             ellipsis: true,
             align: 'left',
-            render: (value, record) => value,
+            render: (value, record) => (
+                <Typography>{record?.sftpConfig?.metadata?.host}</Typography>
+            ),
         },
+        {
+            title: 'Port',
+            key: 'port',
+            dataIndex: 'port',
+            width: 300,
+            ellipsis: true,
+            align: 'left',
+            render: (value, record) => (
+                <Typography>{record?.sftpConfig?.metadata?.port}</Typography>
+            ),
+        },
+        // {
+        //     title: messages('status.active'),
+        //     key: 'isActive',
+        //     dataIndex: 'isActive',
+        //     ellipsis: true,
+        //     align: 'center',
+        //     width: 150,
+        //     render: (value, record) => {
+        //         return (
+        //             <Switch
+        //                 checked={record?.isActive}
+        //                 onChange={(e) =>
+        //                     updateAggregator({
+        //                         id: record?.id,
+        //                         payload: {
+        //                             isActive: e,
+        //                         },
+        //                     })
+        //                 }
+        //             />
+        //         );
+        //     },
+        // },
+        // {
+        //     title: messages('aggregator.systemDefault'),
+        //     key: 'isSystemDefault',
+        //     dataIndex: 'isSystemDefault',
+        //     ellipsis: true,
+        //     align: 'center',
+        //     width: 150,
+        //     render: (value, record) => {
+        //         return <Switch checked={record?.isSystemDefault} />;
+        //     },
+        // },
+        // {
+        //     title: messages('common.email'),
+        //     key: 'contactEmail',
+        //     dataIndex: 'contactEmail',
+        //     ellipsis: true,
+        //     align: 'left',
+        //     render: (value, record) => value,
+        // },
         {
             align: 'center',
             width: 100,

@@ -10,8 +10,8 @@ export interface AggregatorData extends CommonAttribute {
     contactEmail: string;
     isActive: boolean;
     isSystemDefault: boolean;
-    distributionChannel: {
-        credentials: Credentials;
+    sftpConfig: {
+        metadata: Credentials;
     };
 }
 

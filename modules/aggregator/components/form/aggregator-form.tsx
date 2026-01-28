@@ -5,7 +5,7 @@ import { MAX_NAME_LENGTH } from '@/constants/validate';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
-import { Divider, Form, Input, InputNumber, Spin, Switch } from 'antd';
+import { Divider, Form, Input, InputNumber, Spin } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { TYPE_MODAL_AGGREGATOR } from '../../enums';
@@ -152,7 +152,7 @@ export default function AggregatorForm({ ...props }: Props) {
                         >
                             <Input allowClear />
                         </AppFormItem>
-                        <AppFormItem
+                        {/* <AppFormItem
                             name="contactEmail"
                             label={messages('common.email')}
                             required
@@ -175,8 +175,8 @@ export default function AggregatorForm({ ...props }: Props) {
                             ]}
                         >
                             <Input allowClear />
-                        </AppFormItem>
-                        <AppFormItem
+                        </AppFormItem> */}
+                        {/* <AppFormItem
                             name="isSystemDefault"
                             label={messages('aggregator.systemDefault')}
                             valuePropName="checked"
@@ -189,16 +189,12 @@ export default function AggregatorForm({ ...props }: Props) {
                             valuePropName="checked"
                         >
                             <Switch />
-                        </AppFormItem>
+                        </AppFormItem> */}
 
                         <Divider />
 
                         <AppFormItem
-                            name={[
-                                'distributionChannel',
-                                'credentials',
-                                'host',
-                            ]}
+                            name={['sftpConfig', 'metadata', 'host']}
                             label="Host"
                             required
                             rules={commonValidate}
@@ -207,11 +203,7 @@ export default function AggregatorForm({ ...props }: Props) {
                         </AppFormItem>
 
                         <AppFormItem
-                            name={[
-                                'distributionChannel',
-                                'credentials',
-                                'port',
-                            ]}
+                            name={['sftpConfig', 'metadata', 'port']}
                             label="Port"
                             required
                             rules={[
@@ -225,11 +217,7 @@ export default function AggregatorForm({ ...props }: Props) {
                         </AppFormItem>
 
                         <AppFormItem
-                            name={[
-                                'distributionChannel',
-                                'credentials',
-                                'username',
-                            ]}
+                            name={['sftpConfig', 'metadata', 'username']}
                             label={messages('common.username')}
                             required
                             rules={commonValidate}
@@ -238,17 +226,13 @@ export default function AggregatorForm({ ...props }: Props) {
                         </AppFormItem>
 
                         <AppFormItem
-                            name={[
-                                'distributionChannel',
-                                'credentials',
-                                'password',
-                            ]}
+                            name={['sftpConfig', 'metadata', 'password']}
                             label={messages('common.password')}
                         >
                             <Input.Password />
                         </AppFormItem>
 
-                        <AppFormItem
+                        {/* <AppFormItem
                             name={[
                                 'distributionChannel',
                                 'credentials',
@@ -260,7 +244,7 @@ export default function AggregatorForm({ ...props }: Props) {
                             rules={commonValidate}
                         >
                             <Input allowClear placeholder="/upload" />
-                        </AppFormItem>
+                        </AppFormItem> */}
                     </div>
                 </AppForm>
             </Spin>

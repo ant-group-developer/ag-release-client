@@ -12,4 +12,6 @@ export const dspQueryKeys = {
     details: () => [...dspQueryKeys.all, QUERY_KEY.DSP.GET_DETAIL] as const,
     detail: (id: string) => [...dspQueryKeys.details(), id] as const,
     updates: () => [...dspQueryKeys.all, QUERY_KEY.DSP.UPDATE] as const,
+    detailRoutingConfig: (id: string) =>
+        [QUERY_KEY.DSP.GET_DETAIL_ROUTING_CONFIG, id] as const,
 };

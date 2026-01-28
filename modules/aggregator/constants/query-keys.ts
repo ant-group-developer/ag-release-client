@@ -14,4 +14,5 @@ export const aggregatorQueryKeys = {
         QUERY_KEY.AGGREGATOR.GET_DETAIL,
     ],
     detail: (id: string) => [...aggregatorQueryKeys.details(), id],
+    update: () => [...aggregatorQueryKeys.all, QUERY_KEY.AGGREGATOR.UPDATE],
 };

@@ -1664,17 +1664,18 @@
     "issueCategory": {
         "label": "Danh mục vấn đề"
     },
+
     "tenantIssue": {
         "label": "Vấn đề tenant",
         "message": {
             "success": {
-                "create": "Tạo vấn đề tenant thành công",
-                "update": "Cập nhật vấn đề tenant thành công",
-                "delete": "Xóa vấn đề tenant thành công"
+                "create": "Tạo vấn đề thành công",
+                "update": "Cập nhật vấn đề thành công",
+                "delete": "Xóa vấn đề thành công"
             },
             "error": {
-                "notFound": "Không tìm thấy vấn đề tenant",
-                "duplicate": "Tenant này đã có vấn đề đang hoạt động",
+                "notFound": "Không tìm thấy vấn đề",
+                "duplicate": "Vấn đề này đã tồn tại",
                 "tenantNotFound": "Không tìm thấy tenant",
                 "issueNotFound": "Không tìm thấy vấn đề"
             }
