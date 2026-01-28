@@ -24,7 +24,7 @@ export interface DspRoutingConfig extends CommonAttribute {
     dspId: DspData['id'];
     mode: DSP_DEAL;
     aggregatorId?: string;
-    sftpConfig: {
+    sftpConfig?: {
         metadata: Credentials;
     };
 }

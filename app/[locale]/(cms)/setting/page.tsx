@@ -9,7 +9,7 @@ import WebsiteForm from '@/modules/setting/components/forms/website-form';
 import { settingQueryKeys } from '@/modules/setting/constants/query-keys';
 import { SETTING_TABS } from '@/modules/setting/enums';
 import { PageContainer } from '@ant-design/pro-components';
-import { Spin, Tabs, TabsProps, theme } from 'antd';
+import { Spin, Tabs, TabsProps } from 'antd';
 
 type Props = {};
 
@@ -18,36 +18,7 @@ export default function SettingPage({}: Props) {
         queryKeys: [settingQueryKeys.details()],
         mutationKeys: [settingQueryKeys.updates()],
     });
-    const { token } = theme.useToken();
-    // const editorRef = useRef<any>(null);
-    // const [count, setCount] = useState(0);
-    // const [form] = Form.useForm();
-
-    // const updateMutation = useUpdateAppConfig();
-
-    // const handleEditorDidMount: OnMount = (editor, monaco) => {
-    //     editorRef.current = editor;
-    //     setCount((prev) => prev + 1);
-    // };
-
-    // const { data } = useAppConfig();
-
-    // const onFinish = ({ data }: any) => {
-    //     try {
-    //         updateMutation.mutate({ data: JSON.parse(data) });
-    //     } catch (error: any) {
-    //         showNotification('error', error.message);
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     form.setFieldValue('data', JSON.stringify(data?.data || {}));
-    //     setCount((prev) => prev + 1);
-    // }, [form, editorRef, data]);
-
-    // useEffect(() => {
-    //     editorRef.current?.getAction('editor.action.formatDocument')?.run();
-    // }, [count]);
+    // const { token } = theme.useToken();
 
     const tabItems: TabsProps['items'] = [
         {
@@ -78,46 +49,14 @@ export default function SettingPage({}: Props) {
     ];
 
     return (
-        <div>
-            {/* <AppForm
-                    layout="vertical"
-                    onFinish={onFinish}
-                    form={form}
-                    submitProps={{
-                        loading: updateMutation.isPending,
-                    }}
-                >
-                    <AppFormItem
-                        name={'data'}
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.input'),
-                            },
-                        ]}
-                    >
-                        <Editor
-                            height="700px"
-                            language="json"
-                            theme="vs-dark"
-                            onMount={handleEditorDidMount}
-                            options={{
-                                cursorStyle: 'line',
-                                formatOnPaste: true,
-                                formatOnType: true,
-                            }}
-                        />
-                    </AppFormItem>
-                </AppForm> */}
-            <PageContainer>
-                <div className="mt-8 min-h-[60vh] rounded-lg bg-white">
-                    <Spin spinning={isFetching}>
-                        <div className="m-auto max-w-4xl">
-                            <Tabs items={tabItems} />
-                        </div>
-                    </Spin>
-                </div>
-            </PageContainer>
-        </div>
+        <PageContainer>
+            <div className="mt-8 min-h-[60vh] rounded-lg bg-white">
+                <Spin spinning={isFetching}>
+                    <div className="m-auto max-w-4xl">
+                        <Tabs items={tabItems} />
+                    </div>
+                </Spin>
+            </div>
+        </PageContainer>
     );
 }

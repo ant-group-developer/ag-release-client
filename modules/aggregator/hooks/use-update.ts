@@ -15,10 +15,14 @@ export const useUpdateAggregator = () => {
         data: any,
         {
             onSuccess,
+            id,
         }: UpdateVariables<AggregatorData['id'], UpdateAggregatorPayload>
     ) => {
         queryClient.invalidateQueries({
             queryKey: aggregatorQueryKeys.lists(),
+        });
+        queryClient.invalidateQueries({
+            queryKey: aggregatorQueryKeys.detail(id),
         });
 
         handleSuccess(data?.data);

@@ -5,7 +5,7 @@ import { MAX_NAME_LENGTH } from '@/constants/validate';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
-import { Divider, Form, Input, InputNumber, Spin } from 'antd';
+import { Divider, Form, Input, InputNumber, Spin, Switch } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { TYPE_MODAL_AGGREGATOR } from '../../enums';
@@ -75,7 +75,13 @@ export default function AggregatorForm({ ...props }: Props) {
             UpdateAggregatorPayload
         > = {
             id: dataEdit?.id,
-            payload: values,
+            payload: {
+                ...values,
+                sftpConfig: {
+                    ...values?.sftpConfig,
+                    id: aggregatorData?.sftpConfig?.id,
+                },
+            },
             onSuccess: () => {
                 deActive();
             },
@@ -120,7 +126,7 @@ export default function AggregatorForm({ ...props }: Props) {
                     disabled={isActive}
                     initialValues={{
                         isActive: false,
-                        isSystemDefault: false,
+                        isDefault: false,
                     }}
                 >
                     <div className="">
@@ -152,32 +158,9 @@ export default function AggregatorForm({ ...props }: Props) {
                         >
                             <Input allowClear />
                         </AppFormItem>
-                        {/* <AppFormItem
-                            name="contactEmail"
-                            label={messages('common.email')}
-                            required
-                            rules={[
-                                {
-                                    required: true,
-                                    message: messages('validation.input'),
-                                },
-                                {
-                                    type: 'email',
-                                    message: messages('validation.email'),
-                                },
-                                {
-                                    max: MAX_NAME_LENGTH,
-                                    message: messages('validation.stringMax', {
-                                        max: MAX_NAME_LENGTH,
-                                        field: messages('common.email'),
-                                    }),
-                                },
-                            ]}
-                        >
-                            <Input allowClear />
-                        </AppFormItem> */}
-                        {/* <AppFormItem
-                            name="isSystemDefault"
+
+                        <AppFormItem
+                            name="isDefault"
                             label={messages('aggregator.systemDefault')}
                             valuePropName="checked"
                         >
@@ -189,7 +172,39 @@ export default function AggregatorForm({ ...props }: Props) {
                             valuePropName="checked"
                         >
                             <Switch />
-                        </AppFormItem> */}
+                        </AppFormItem>
+
+                        <AppFormItem
+                            name="ddexId"
+                            label={'DDexId'}
+                            rules={[
+                                {
+                                    max: MAX_NAME_LENGTH,
+                                    message: messages('validation.stringMax', {
+                                        max: MAX_NAME_LENGTH,
+                                        field: 'DDexId',
+                                    }),
+                                },
+                            ]}
+                        >
+                            <Input allowClear />
+                        </AppFormItem>
+
+                        <AppFormItem
+                            name="ddexName"
+                            label={messages('aggregator.ddexName')}
+                            rules={[
+                                {
+                                    max: MAX_NAME_LENGTH,
+                                    message: messages('validation.stringMax', {
+                                        max: MAX_NAME_LENGTH,
+                                        field: messages('aggregator.ddexName'),
+                                    }),
+                                },
+                            ]}
+                        >
+                            <Input allowClear />
+                        </AppFormItem>
 
                         <Divider />
 

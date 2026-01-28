@@ -110,6 +110,37 @@ export default function DspGeneral({ form, isActive }: Props) {
                 />
             </AppFormItem>
             <AppFormItem
+                name="ddexId"
+                label={'DDexId'}
+                rules={[
+                    {
+                        max: MAX_NAME_LENGTH,
+                        message: messages('validation.stringMax', {
+                            max: MAX_NAME_LENGTH,
+                            field: 'DDexId',
+                        }),
+                    },
+                ]}
+            >
+                <Input allowClear />
+            </AppFormItem>
+
+            <AppFormItem
+                name="ddexName"
+                label={messages('aggregator.ddexName')}
+                rules={[
+                    {
+                        max: MAX_NAME_LENGTH,
+                        message: messages('validation.stringMax', {
+                            max: MAX_NAME_LENGTH,
+                            field: messages('aggregator.ddexName'),
+                        }),
+                    },
+                ]}
+            >
+                <Input allowClear />
+            </AppFormItem>
+            <AppFormItem
                 name="isActive"
                 valuePropName="checked"
                 label={
