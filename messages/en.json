@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "privateKey": "Private key",
         "deal": "Deal",
         "deals": "Deals",
         "path": "Path",

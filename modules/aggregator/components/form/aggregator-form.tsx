@@ -6,6 +6,7 @@ import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Divider, Form, Input, InputNumber, Spin, Switch } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { TYPE_MODAL_AGGREGATOR } from '../../enums';
@@ -247,19 +248,12 @@ export default function AggregatorForm({ ...props }: Props) {
                             <Input.Password />
                         </AppFormItem>
 
-                        {/* <AppFormItem
-                            name={[
-                                'distributionChannel',
-                                'credentials',
-                                'path',
-                            ]}
-                            label={messages('common.path')}
-                            required
-                            className="col-span-2"
-                            rules={commonValidate}
+                        <AppFormItem
+                            name={['sftpConfig', 'metadata', 'privateKey']}
+                            label={messages('common.privateKey')}
                         >
-                            <Input allowClear placeholder="/upload" />
-                        </AppFormItem> */}
+                            <TextArea />
+                        </AppFormItem>
                     </div>
                 </AppForm>
             </Spin>

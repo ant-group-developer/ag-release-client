@@ -71,6 +71,7 @@ export default function CMSLayout({ children }: Props) {
                             onClose: toggleActive,
                         }}
                     />
+
                     <Layout>
                         <div
                         // id='layout-scroll'

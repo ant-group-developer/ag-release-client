@@ -25,6 +25,7 @@ import { useTranslations } from 'next-intl';
 import nProgress from 'nprogress';
 import {
     RELEASES_COLUMNS_DISPLAY,
+    RELEASES_STATUS,
     RELEASES_TABS,
     TYPE_MODAL_RELEASE,
 } from '../../enums';
@@ -253,38 +254,46 @@ export default function ReleasesTable({
             align: 'center',
             width: 50,
             fixed: 'right',
-            render: (_, record) => (
-                <div onClick={(e) => e.stopPropagation()}>
-                    <ActionButton
-                        showUpdate={hasPermission(PERMISSION.RELEASE.UPDATE)}
-                        showDetail
-                        showDelete={isSystemTenant}
-                        onShowDelete={() =>
-                            openModal(TYPE_MODAL_RELEASE.DELETE, record)
-                        }
-                        onShowDetail={() => {
-                            nProgress.start();
-                            router.push(
-                                getReleaseDetailTabRoute(
-                                    record?.id,
-                                    RELEASES_TABS.CORE_DETAIL,
-                                    RELEASE_DETAIL_ACTION.READ
-                                )
-                            );
-                        }}
-                        onShowUpdate={() => {
-                            nProgress.start();
-                            router.push(
-                                getReleaseDetailTabRoute(
-                                    record?.id,
-                                    RELEASES_TABS.CORE_DETAIL,
-                                    RELEASE_DETAIL_ACTION.EDIT
-                                )
-                            );
-                        }}
-                    />
-                </div>
-            ),
+            render: (_, record) => {
+                const status = record?.status;
+                return (
+                    <div onClick={(e) => e.stopPropagation()}>
+                        <ActionButton
+                            showUpdate={hasPermission(
+                                PERMISSION.RELEASE.UPDATE
+                            )}
+                            showDetail
+                            showDelete={
+                                isSystemTenant &&
+                                status === RELEASES_STATUS.DRAFT
+                            }
+                            onShowDelete={() =>
+                                openModal(TYPE_MODAL_RELEASE.DELETE, record)
+                            }
+                            onShowDetail={() => {
+                                nProgress.start();
+                                router.push(
+                                    getReleaseDetailTabRoute(
+                                        record?.id,
+                                        RELEASES_TABS.CORE_DETAIL,
+                                        RELEASE_DETAIL_ACTION.READ
+                                    )
+                                );
+                            }}
+                            onShowUpdate={() => {
+                                nProgress.start();
+                                router.push(
+                                    getReleaseDetailTabRoute(
+                                        record?.id,
+                                        RELEASES_TABS.CORE_DETAIL,
+                                        RELEASE_DETAIL_ACTION.EDIT
+                                    )
+                                );
+                            }}
+                        />
+                    </div>
+                );
+            },
         },
     ];
 

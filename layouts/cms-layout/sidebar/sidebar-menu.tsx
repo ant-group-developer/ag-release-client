@@ -166,6 +166,7 @@ function SidebarMenu(props: MenuProps) {
     return (
         <Menu
             defaultOpenKeys={openKeys}
+            // triggerSubMenuAction="click"
             {...props}
             className={cn('!border-none', props.className)}
             items={items}
