@@ -82,7 +82,7 @@ export default function TenantHeaderV2({
                     ]}
                     mode="multiple"
                     fieldProps={{
-                        maxTagCount: 2,
+                        maxTagCount: 'responsive',
                     }}
                 />
             </AppFilter>

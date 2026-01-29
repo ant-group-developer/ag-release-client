@@ -99,7 +99,7 @@ export default function UserHeaderV2({
                     }))}
                     mode="multiple"
                     fieldProps={{
-                        maxTagCount: 2,
+                        maxTagCount: 'responsive',
                     }}
                 />
 
@@ -121,7 +121,7 @@ export default function UserHeaderV2({
                     ]}
                     mode="multiple"
                     fieldProps={{
-                        maxTagCount: 2,
+                        maxTagCount: 'responsive',
                     }}
                 />
 
@@ -143,7 +143,7 @@ export default function UserHeaderV2({
                     ]}
                     mode="multiple"
                     fieldProps={{
-                        maxTagCount: 2,
+                        maxTagCount: 'responsive',
                     }}
                 /> */}
             </AppFilter>

@@ -101,7 +101,7 @@ export default function RevenueHeaderV2({
                         dropdownMatchSelectWidth={false}
                         placeholder={messages('placeholder.selectArtist')}
                         mode="multiple"
-                        maxTagCount={2}
+                        maxTagCount={'responsive'}
                     />
                 </ProForm.Item>
 
@@ -113,7 +113,7 @@ export default function RevenueHeaderV2({
                         placeholder={messages('placeholder.selectRelease')}
                         allowClear
                         mode="multiple"
-                        maxTagCount={2}
+                        maxTagCount={'responsive'}
                     />
                 </ProForm.Item>
 
@@ -122,7 +122,7 @@ export default function RevenueHeaderV2({
                         placeholder={messages('placeholder.selectTrack')}
                         allowClear
                         mode="multiple"
-                        maxTagCount={2}
+                        maxTagCount={'responsive'}
                     />
                 </ProForm.Item>
 
@@ -131,7 +131,7 @@ export default function RevenueHeaderV2({
                         placeholder={messages('placeholder.selectLabel')}
                         allowClear
                         mode="multiple"
-                        maxTagCount={2}
+                        maxTagCount={'responsive'}
                     />
                 </ProForm.Item>
 
