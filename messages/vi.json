@@ -1269,6 +1269,8 @@
         "add": "Thêm nền tảng",
         "oneLinkPerLine": "Mỗi link một dòng",
         "profileList": "Danh sách hồ sơ",
+        "fullNameOfDdexParty": "Tên DDex party",
+        "ddexPartyId": "DDex party Id",
         "message": {
             "success": {
                 "create": "Thêm nền tảng thành công",

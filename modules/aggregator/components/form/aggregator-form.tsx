@@ -176,7 +176,7 @@ export default function AggregatorForm({ ...props }: Props) {
 
                         <AppFormItem
                             name="ddexId"
-                            label={'DDexId'}
+                            label={messages('dsp.ddexPartyId')}
                             rules={[
                                 {
                                     max: MAX_NAME_LENGTH,
@@ -192,7 +192,7 @@ export default function AggregatorForm({ ...props }: Props) {
 
                         <AppFormItem
                             name="ddexName"
-                            label={messages('aggregator.ddexName')}
+                            label={messages('dsp.fullNameOfDDexParty')}
                             rules={[
                                 {
                                     max: MAX_NAME_LENGTH,

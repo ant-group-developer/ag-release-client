@@ -1266,6 +1266,8 @@
         "add": "Add platform",
         "oneLinkPerLine": "One link per line",
         "profileList": "Profile list",
+        "fullNameOfDDexParty": "Full name of DDex party",
+        "ddexPartyId": "DDex party Id",
         "message": {
             "success": {
                 "create": "Create platform successfully",

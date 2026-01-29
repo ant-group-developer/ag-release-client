@@ -103,7 +103,7 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
         },
         {
             title: messages('common.policy'),
-            colSpan: dspData?.length,
+            colSpan: dspData?.length <= 1 ? 0 : dspData?.length,
             align: 'center',
             children: dspData?.map((item: DspData) => {
                 return {
