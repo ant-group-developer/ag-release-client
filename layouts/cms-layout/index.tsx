@@ -14,6 +14,7 @@ import { ReactNode, useEffect } from 'react';
 import Content from './content';
 import Header from './header';
 import Sidebar from './sidebar';
+import SecondSidebar from './sidebar/second-side-bar';
 
 type Props = {
     children: ReactNode;
@@ -65,6 +66,15 @@ export default function CMSLayout({ children }: Props) {
                 <Layout>
                     <Sidebar
                         collapsed={isActive}
+                        onBreakpoint={changeActive}
+                        trigger={null}
+                        drawerProps={{
+                            onClose: toggleActive,
+                        }}
+                    />
+
+                    <SecondSidebar
+                        collapsed={!isActive}
                         onBreakpoint={changeActive}
                         trigger={null}
                         drawerProps={{
