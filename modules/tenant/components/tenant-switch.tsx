@@ -100,7 +100,7 @@ function TenantSwitch({}: Props) {
                 <Space
                     size={'small'}
                     style={{
-                        marginLeft: record.parent ? 30 : 0,
+                        marginLeft: record.parent ? 38 : 0,
                         width: '100%',
                         overflow: 'hidden',
                     }}
