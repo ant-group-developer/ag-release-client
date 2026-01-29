@@ -113,7 +113,7 @@ export default function Permission({}: Props) {
                     dataSource={permissionData.items}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: permissionData.metadata.currentPage,
+                        current: permissionData.metadata.page,
                         total: permissionData.metadata.totalItems,
                     }}
                     loading={isFetching}
@@ -133,7 +133,7 @@ export default function Permission({}: Props) {
                     style={{
                         backgroundColor: token?.colorBgContainer,
                     }}
-                    current={permissionData?.metadata?.currentPage}
+                    current={permissionData?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={permissionData.metadata?.totalItems}
                     onChange={onChangePage}

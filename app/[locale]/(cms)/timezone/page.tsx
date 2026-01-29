@@ -79,7 +79,7 @@ export default function Timezone({}: Props) {
                     loading={isFetching}
                     pagination={{
                         pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
-                        current: timezonesData.metadata.currentPage,
+                        current: timezonesData.metadata.page,
                         total: timezonesData.metadata.totalItems,
                     }}
                     dataFilter={dataFilter}
@@ -88,7 +88,7 @@ export default function Timezone({}: Props) {
                 <AppPagination
                     className="border-b"
                     align="end"
-                    current={timezonesData?.metadata?.currentPage}
+                    current={timezonesData?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={timezonesData?.metadata?.totalItems}
                     onChange={onChangePage}

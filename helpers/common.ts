@@ -78,10 +78,10 @@ export function formattedDate(
 
 export function getIndex(
     pageSize: number | undefined = 0,
-    currentPage: number | undefined = 1,
+    page: number | undefined = 1,
     index: number
 ) {
-    return pageSize * (currentPage - 1) + index + 1;
+    return pageSize * (page - 1) + index + 1;
 }
 
 export function cn(...inputs: ClassValue[]) {

@@ -55,7 +55,7 @@ export const defaultData: ListResponse = {
 export const DEFAULT_DATA_PAGINATION: PaginationResponse['data'] = {
     items: [],
     metadata: {
-        currentPage: 0,
+        page: 0,
         limit: 0,
         totalItems: 0,
         totalPages: 0,

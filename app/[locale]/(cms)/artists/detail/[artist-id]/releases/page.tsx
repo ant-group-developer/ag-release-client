@@ -76,7 +76,7 @@ export default function Releases({}: Props) {
                     loading={isFetching}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: releasesData.metadata.currentPage,
+                        current: releasesData.metadata.page,
                     }}
                     dataFilter={dataFilter}
                     options={{
@@ -97,7 +97,7 @@ export default function Releases({}: Props) {
                 style={{
                     background: token.colorBgContainer,
                 }}
-                current={releasesData.metadata.currentPage}
+                current={releasesData.metadata.page}
                 pageSize={dataFilter.pageSize}
                 total={releasesData.metadata.totalItems}
                 onChange={onChangePage}

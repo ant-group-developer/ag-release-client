@@ -107,7 +107,7 @@ export default function Issues({}: Props) {
                     dataSource={issueData?.items}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: issueData.metadata.currentPage,
+                        current: issueData.metadata.page,
                         total: issueData.metadata.totalItems,
                     }}
                     loading={isFetching}
@@ -126,7 +126,7 @@ export default function Issues({}: Props) {
                     style={{
                         backgroundColor: token.colorBgContainer,
                     }}
-                    current={issueData?.metadata?.currentPage}
+                    current={issueData?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={issueData.metadata?.totalItems}
                     onChange={onChangePage}

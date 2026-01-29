@@ -82,7 +82,7 @@ export default function Genres() {
                     loading={isFetching}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: genresData.metadata.currentPage,
+                        current: genresData.metadata.page,
                         total: genresData.metadata.totalItems,
                     }}
                     dataFilter={dataFilter}
@@ -90,7 +90,7 @@ export default function Genres() {
                 />
                 <AppPagination
                     align="end"
-                    current={genresData.metadata?.currentPage}
+                    current={genresData.metadata?.page}
                     pageSize={dataFilter?.pageSize}
                     total={genresData.metadata?.totalItems}
                     onChange={onChangePage}

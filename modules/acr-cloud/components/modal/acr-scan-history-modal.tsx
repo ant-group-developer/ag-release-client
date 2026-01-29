@@ -76,13 +76,13 @@ export default function AcrCloudScanHistoryModal({ ...props }: Props) {
                         dataFilter={dataFilter}
                         pagination={{
                             pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                            current: scanStatusData.metadata.currentPage,
+                            current: scanStatusData.metadata.page,
                         }}
                         scroll={{ x: SCREEN.MD, y: 600 }}
                     />
                     <AppPagination
                         align="end"
-                        current={scanStatusData?.metadata?.currentPage}
+                        current={scanStatusData?.metadata?.page}
                         pageSize={dataFilter.pageSize}
                         total={scanStatusData?.metadata.totalItems}
                         onChange={onChangePage}

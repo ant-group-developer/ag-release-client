@@ -83,7 +83,7 @@ export default function Revenue({}: Props) {
                     dataSource={revenueData.items}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: revenueData.metadata.currentPage,
+                        current: revenueData.metadata.page,
                     }}
                     loading={isTrackDataLoading}
                     onChange={onChangeSort}
@@ -97,7 +97,7 @@ export default function Revenue({}: Props) {
                         backgroundColor: token.colorBgContainer,
                     }}
                     align="end"
-                    current={revenueData?.metadata?.currentPage}
+                    current={revenueData?.metadata?.page}
                     pageSize={dataFilter?.pageSize}
                     total={revenueData?.metadata?.totalItems}
                     onChange={onChangePage}

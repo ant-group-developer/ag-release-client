@@ -137,7 +137,7 @@ export default function Tracks() {
                     loading={isFetching}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: tracksData.metadata.currentPage,
+                        current: tracksData.metadata.page,
                         total: tracksData.metadata.totalItems,
                     }}
                     locale={{

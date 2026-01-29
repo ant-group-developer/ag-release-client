@@ -1,6 +1,7 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import { ACCEPT_IMAGE, MAX_NAME_LENGTH } from '@/constants/validate';
+import { useFormRules } from '@/hooks/useFormRules';
 import { FormInstance, Input, Switch } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { useTranslations } from 'next-intl';
@@ -12,6 +13,8 @@ type Props = {
 
 export default function DspGeneral({ form, isActive }: Props) {
     const messages = useTranslations();
+
+    const formRules = useFormRules();
 
     return (
         <>
@@ -55,17 +58,8 @@ export default function DspGeneral({ form, isActive }: Props) {
                 label={messages('dsp.name')}
                 required
                 rules={[
-                    {
-                        required: true,
-                        message: messages('validation.input'),
-                    },
-                    {
-                        max: MAX_NAME_LENGTH,
-                        message: messages('validation.stringMax', {
-                            max: MAX_NAME_LENGTH,
-                            field: messages('dsp.name'),
-                        }),
-                    },
+                    formRules.required(),
+                    formRules.stringMax(MAX_NAME_LENGTH, messages('dsp.name')),
                     {
                         validator: (_, value) => {
                             if (value && value.includes('_')) {

@@ -99,7 +99,7 @@ export default function Roles({}: Props) {
                     dataSource={rolesData.items}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: rolesData.metadata.currentPage,
+                        current: rolesData.metadata.page,
                         total: rolesData.metadata.totalItems,
                     }}
                     loading={isFetching}
@@ -126,7 +126,7 @@ export default function Roles({}: Props) {
                     style={{
                         backgroundColor: token?.colorBgContainer,
                     }}
-                    current={rolesData?.metadata?.currentPage}
+                    current={rolesData?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={rolesData.metadata?.totalItems}
                     onChange={onChangePage}

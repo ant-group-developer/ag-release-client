@@ -100,7 +100,7 @@ export default function Labels({}: Props) {
                     dataSource={labelsData?.items}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: labelsData.metadata.currentPage,
+                        current: labelsData.metadata.page,
                         total: labelsData.metadata.totalItems,
                     }}
                     loading={isFetching}
@@ -143,7 +143,7 @@ export default function Labels({}: Props) {
                     style={{
                         backgroundColor: token?.colorBgContainer,
                     }}
-                    current={labelsData?.metadata?.currentPage}
+                    current={labelsData?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={labelsData.metadata?.totalItems}
                     onChange={onChangePage}

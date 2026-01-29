@@ -147,7 +147,7 @@ export default function Releases({}: Props) {
                         onChangeFilter={onChangeFilter}
                         pagination={{
                             pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                            current: releasesData.metadata.currentPage,
+                            current: releasesData.metadata.page,
                         }}
                         onChange={onChangeSort}
                         dataFilter={dataFilter}
@@ -170,7 +170,7 @@ export default function Releases({}: Props) {
                     className="rounded-b-md"
                     style={{ backgroundColor: token.colorBgContainer }}
                     align="end"
-                    current={releasesData?.metadata?.currentPage}
+                    current={releasesData?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={releasesData?.metadata.totalItems}
                     onChange={onChangePage}

@@ -152,7 +152,7 @@ export default function Releases({}: Props) {
                         onChangeFilter={onChangeFilter}
                         pagination={{
                             pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
-                            current: releasesData?.metadata?.currentPage,
+                            current: releasesData?.metadata?.page,
                         }}
                         dataFilter={dataFilter}
                     />
@@ -168,7 +168,7 @@ export default function Releases({}: Props) {
 
             <AppPagination
                 align="end"
-                current={releasesData?.metadata?.currentPage}
+                current={releasesData?.metadata?.page}
                 pageSize={dataFilter.pageSize}
                 total={releasesData?.metadata.totalItems}
                 onChange={onChangePage}

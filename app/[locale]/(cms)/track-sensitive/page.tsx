@@ -82,7 +82,7 @@ export default function TrackSensitive({}: Props) {
                     dataSource={trackSensitiveData?.items}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: trackSensitiveData.metadata.currentPage,
+                        current: trackSensitiveData.metadata.page,
                         total: trackSensitiveData.metadata.totalItems,
                     }}
                     loading={isFetching}
@@ -109,7 +109,7 @@ export default function TrackSensitive({}: Props) {
 
                 <AppPagination
                     align="end"
-                    current={trackSensitiveData?.metadata?.currentPage}
+                    current={trackSensitiveData?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={trackSensitiveData.metadata?.totalItems}
                     onChange={onChangePage}

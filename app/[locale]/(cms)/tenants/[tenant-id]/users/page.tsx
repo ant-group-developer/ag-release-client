@@ -88,7 +88,7 @@ export default function UserPage({}: Props) {
                     // scroll={{ y: getScrollYHeight(height, width, 40, 47) }}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: data.metadata.currentPage,
+                        current: data.metadata.page,
                         total: data.metadata.totalItems,
                     }}
                     // loading={isFetching || isPending}
@@ -99,7 +99,7 @@ export default function UserPage({}: Props) {
 
             <AppPagination
                 align="end"
-                current={data?.metadata?.currentPage}
+                current={data?.metadata?.page}
                 pageSize={dataFilter.pageSize}
                 total={data.metadata?.totalItems}
                 onChange={onChangePage}

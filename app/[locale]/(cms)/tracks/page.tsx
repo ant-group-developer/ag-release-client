@@ -118,7 +118,7 @@ export default function Tracks({}: Props) {
                         dataSource={tracksData.items}
                         pagination={{
                             pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                            current: tracksData.metadata.currentPage,
+                            current: tracksData.metadata.page,
                         }}
                         loading={isTrackDataLoading}
                         rowSelection={rowSelection}
@@ -143,7 +143,7 @@ export default function Tracks({}: Props) {
                     className="rounded-b-md"
                     style={{ backgroundColor: token.colorBgContainer }}
                     align="end"
-                    current={tracksData?.metadata?.currentPage}
+                    current={tracksData?.metadata?.page}
                     pageSize={dataFilter?.pageSize}
                     total={tracksData?.metadata?.totalItems}
                     onChange={onChangePage}

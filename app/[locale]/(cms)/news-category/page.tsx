@@ -80,7 +80,7 @@ export default function NewsCategory({}: Props) {
                     dataSource={newsCategoryData?.items}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: newsCategoryData.metadata.currentPage,
+                        current: newsCategoryData.metadata.page,
                         total: newsCategoryData.metadata.totalItems,
                     }}
                     loading={isFetching}
@@ -115,7 +115,7 @@ export default function NewsCategory({}: Props) {
                     style={{
                         backgroundColor: token.colorBgContainer,
                     }}
-                    current={newsCategoryData?.metadata?.currentPage}
+                    current={newsCategoryData?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={newsCategoryData.metadata?.totalItems}
                     onChange={onChangePage}

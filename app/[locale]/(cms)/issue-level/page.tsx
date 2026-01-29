@@ -96,7 +96,7 @@ export default function IssueLevel({}: Props) {
                     dataSource={issueLevelData?.items}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: issueLevelData.metadata.currentPage,
+                        current: issueLevelData.metadata.page,
                         total: issueLevelData.metadata.totalItems,
                     }}
                     loading={isFetching}
@@ -109,7 +109,7 @@ export default function IssueLevel({}: Props) {
                     dataSource={issueLevelData?.items}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: issueLevelData.metadata.currentPage,
+                        current: issueLevelData.metadata.page,
                         total: issueLevelData.metadata.totalItems,
                     }}
                     loading={isFetching}
@@ -144,7 +144,7 @@ export default function IssueLevel({}: Props) {
                     style={{
                         backgroundColor: token.colorBgContainer,
                     }}
-                    current={issueLevelData?.metadata?.currentPage}
+                    current={issueLevelData?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={issueLevelData.metadata?.totalItems}
                     onChange={onChangePage}

@@ -66,7 +66,7 @@ export default function Tracks({}: Props) {
                     loading={isFetching}
                     pagination={{
                         pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
-                        current: tracksData?.metadata?.currentPage,
+                        current: tracksData?.metadata?.page,
                     }}
                     dataFilter={dataFilter}
                     options={{
@@ -88,7 +88,7 @@ export default function Tracks({}: Props) {
                 className="rounded-b-lg"
                 style={{ background: token.colorBgContainer }}
                 align="end"
-                current={tracksData?.metadata?.currentPage}
+                current={tracksData?.metadata?.page}
                 pageSize={dataFilter.pageSize}
                 total={tracksData?.metadata?.totalItems}
                 onChange={onChangePage}

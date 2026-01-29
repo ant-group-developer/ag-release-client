@@ -100,7 +100,7 @@ export default function Artists({}: Props) {
                     dataSource={artistsData?.items}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: artistsData.metadata.currentPage,
+                        current: artistsData.metadata.page,
                         total: artistsData.metadata.totalItems,
                     }}
                     loading={isFetching}
@@ -126,7 +126,7 @@ export default function Artists({}: Props) {
                     style={{
                         backgroundColor: token?.colorBgContainer,
                     }}
-                    current={artistsData?.metadata?.currentPage}
+                    current={artistsData?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={artistsData?.metadata?.totalItems}
                     onChange={onChangePage}

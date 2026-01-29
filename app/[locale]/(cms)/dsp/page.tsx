@@ -40,8 +40,7 @@ export default function Dsp() {
     const { isSystemTenant } = useAuth();
 
     // apis
-    const { dspData, isFetching, refetch, lastUpdatedAt } =
-        useGetListDsp(dataFilter);
+    const { dspData, isFetching, refetch } = useGetListDsp(dataFilter);
     const { deleteDsp } = useDeleteDsp();
 
     // func
@@ -82,7 +81,7 @@ export default function Dsp() {
                     dataSource={dspData?.items}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: dspData.metadata.currentPage,
+                        current: dspData.metadata.page,
                         total: dspData.metadata.totalItems,
                     }}
                     loading={isLoading}
@@ -105,7 +104,7 @@ export default function Dsp() {
                     style={{
                         backgroundColor: token?.colorBgContainer,
                     }}
-                    current={dspData.metadata.currentPage}
+                    current={dspData.metadata.page}
                     pageSize={dataFilter.pageSize}
                     total={dspData.metadata.totalItems}
                     onChange={onChangePage}

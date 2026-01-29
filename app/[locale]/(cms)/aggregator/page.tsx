@@ -90,7 +90,7 @@ export default function Aggregator({}: Props) {
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
                     pagination={{
-                        current: aggregatorsData?.metadata?.currentPage,
+                        current: aggregatorsData?.metadata?.page,
                         pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
                     }}
                     dataSource={aggregatorsData?.items}
@@ -103,7 +103,7 @@ export default function Aggregator({}: Props) {
                     className="rounded-b-md"
                     style={{ backgroundColor: token.colorBgContainer }}
                     align="end"
-                    current={aggregatorsData?.metadata?.currentPage}
+                    current={aggregatorsData?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={aggregatorsData?.metadata.totalItems}
                     onChange={onChangePage}

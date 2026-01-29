@@ -93,7 +93,7 @@ export default function DealTypePage({}: Props) {
                     dataSource={dealTypeData?.items}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: dealTypeData.metadata.currentPage,
+                        current: dealTypeData.metadata.page,
                         total: dealTypeData.metadata.totalItems,
                     }}
                     loading={isFetching}
@@ -112,7 +112,7 @@ export default function DealTypePage({}: Props) {
                     style={{
                         backgroundColor: token.colorBgContainer,
                     }}
-                    current={dealTypeData?.metadata?.currentPage}
+                    current={dealTypeData?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={dealTypeData.metadata?.totalItems}
                     onChange={onChangePage}

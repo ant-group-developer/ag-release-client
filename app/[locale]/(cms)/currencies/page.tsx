@@ -59,7 +59,7 @@ export default function Currencies({}: Props) {
                 dataSource={currenciesData.items}
                 pagination={{
                     pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                    current: currenciesData.metadata.currentPage,
+                    current: currenciesData.metadata.page,
                     total: currenciesData.metadata.totalItems,
                 }}
                 loading={isFetching}
@@ -69,7 +69,7 @@ export default function Currencies({}: Props) {
 
             <AppPagination
                 align="end"
-                current={currenciesData?.metadata?.currentPage}
+                current={currenciesData?.metadata?.page}
                 pageSize={dataFilter.pageSize}
                 total={currenciesData.metadata?.totalItems}
                 onChange={onChangePage}

@@ -85,7 +85,7 @@ export default function TrackOriginTypes({}: Props) {
                     dataSource={trackOriginTypesData.items}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: trackOriginTypesData.metadata.currentPage,
+                        current: trackOriginTypesData.metadata.page,
                         total: trackOriginTypesData.metadata.totalItems,
                     }}
                     loading={isLoading}
@@ -94,7 +94,7 @@ export default function TrackOriginTypes({}: Props) {
                 />
                 <AppPagination
                     align="end"
-                    current={trackOriginTypesData?.metadata?.currentPage}
+                    current={trackOriginTypesData?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={trackOriginTypesData.metadata.totalItems}
                     onChange={onChangePage}
