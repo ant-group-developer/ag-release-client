@@ -3,16 +3,51 @@ import { useSideBarMenuItems } from '@/hooks/use-sidebar-menu-items';
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
 
-function SidebarMenu(props: MenuProps) {
+type MenuItem = Required<MenuProps>['items'][number];
+
+type Props = MenuProps & {
+    toggleCollapsed?: () => void;
+};
+
+function SidebarMenu({ toggleCollapsed, ...props }: Props) {
     const { items, openKeys, bestActiveLink } = useSideBarMenuItems();
-    console.log("🚀 ~ SidebarMenu ~ openKeys:", openKeys)
+
+    function pickLevel1AndChildren(items: MenuItem[] = []): MenuItem[] {
+        return items.map((item) => {
+            if (!item || typeof item !== 'object') return item;
+
+            // Không có children thì giữ nguyên
+            // @ts-ignore
+            if (!item.children) return item;
+
+            // Chỉ giữ children cấp 2, bỏ sâu hơn
+            return {
+                ...(item as any),
+                children: (item as any).children.map((child: MenuItem) => {
+                    if (!child || typeof child !== 'object') return child;
+
+                    // bỏ children của cấp 2
+                    const { children: _removed, ...rest } = child as any;
+                    return rest as MenuItem;
+                }),
+            };
+        });
+    }
+
+    const items2Level = pickLevel1AndChildren(items);
+
     return (
         <Menu
+            onClick={(e) => {
+                if (e.key === 'general') {
+                    toggleCollapsed?.();
+                }
+            }}
             defaultOpenKeys={openKeys}
             // triggerSubMenuAction="click"
             {...props}
             className={cn('!border-none', props.className)}
-            items={items}
+            items={items2Level}
             selectedKeys={bestActiveLink ? [bestActiveLink.href] : []}
         />
     );
