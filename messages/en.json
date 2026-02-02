@@ -1840,5 +1840,15 @@
                 "sftpConfigNotFound": "Sftp config not found"
             }
         }
+    },
+
+    "connection": {
+        "success": "Connection successful",
+        "failure": "Connection failed",
+        "test": "Test connection"
+    },
+
+    "sftp": {
+        "requiredSftpInfo": "Please enter all required SFTP information"
     }
 }

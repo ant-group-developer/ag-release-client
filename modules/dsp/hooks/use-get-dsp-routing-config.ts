@@ -14,6 +14,7 @@ export const useGetDspRoutingConfig = (id: DspData['id']) => {
         dspId: '',
         mode: null,
         sftpConfig: {
+            id: '',
             metadata: {
                 host: '',
                 port: 0,

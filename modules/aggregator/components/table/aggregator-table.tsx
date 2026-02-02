@@ -115,8 +115,10 @@ export default function AggregatorTable({
             align: 'center',
             width: 150,
             render: (value, record) => {
+                const isDefault = record?.isDefault;
                 return (
                     <Switch
+                        disabled={isDefault}
                         checked={record?.isDefault}
                         onChange={(e) =>
                             updateAggregator({

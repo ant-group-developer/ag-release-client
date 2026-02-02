@@ -50,13 +50,13 @@ export const dspApi = {
 
     getDspRoutingConfig: (id: DspData['id']) => {
         return axiosInstance.get<DetailResponse<DspRoutingConfig>>(
-            `/distribution3/dsp-routing-configs/by-dsp/${id}`
+            `/distribution/dsp-routing-configs/by-dsp/${id}`
         );
     },
 
     updateDspRoutingConfig: (payload: UpdateDspRoutingConfig) => {
         return axiosInstance.post<DetailResponse<DspRoutingConfig>>(
-            `/distribution3/dsp-routing-configs`,
+            `/distribution/dsp-routing-configs`,
             payload
         );
     },

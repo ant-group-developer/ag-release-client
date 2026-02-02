@@ -9,28 +9,28 @@ import {
 export const aggregatorApis = {
     getList: (params: AggregatorDataFilter) => {
         return axiosInstance.get<PaginationResponse<AggregatorData>>(
-            '/distribution3/aggregators',
+            '/distribution/aggregators',
             { params }
         );
     },
     getDetail: (id: string) => {
         return axiosInstance.get<DetailResponse<AggregatorData>>(
-            `/distribution3/aggregators/${id}`
+            `/distribution/aggregators/${id}`
         );
     },
     create: (payload: CreateAggregatorPayload) => {
         return axiosInstance.post<DetailResponse<AggregatorData>>(
-            `/distribution3/aggregators`,
+            `/distribution/aggregators`,
             payload
         );
     },
     update: (id: string, payload: UpdateAggregatorPayload) => {
         return axiosInstance.put<DetailResponse<AggregatorData>>(
-            `/distribution3/aggregators/${id}`,
+            `/distribution/aggregators/${id}`,
             payload
         );
     },
     delete: (id: string) => {
-        return axiosInstance.delete(`/distribution3/aggregators/${id}`);
+        return axiosInstance.delete(`/distribution/aggregators/${id}`);
     },
 };

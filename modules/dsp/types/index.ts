@@ -1,4 +1,4 @@
-import { Credentials } from '@/modules/aggregator/types';
+import { SftpMetadata } from '@/modules/aggregator/types';
 import { DspActionData } from '@/modules/dsp-action/types';
 import { CommonAttribute, CommonParams } from '@/types/api';
 import { DSP_DEAL } from '../enums';
@@ -25,6 +25,7 @@ export interface DspRoutingConfig extends CommonAttribute {
     mode: DSP_DEAL | null;
     aggregatorId?: string;
     sftpConfig?: {
-        metadata: Credentials;
+        id: string;
+        metadata: SftpMetadata;
     };
 }

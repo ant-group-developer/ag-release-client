@@ -1848,5 +1848,15 @@
                 "sftpConfigNotFound": "Không tìm thấy cấu hình SFTP"
             }
         }
+    },
+
+    "connection": {
+        "success": "Kết nối thành công",
+        "failure": "Kết nối thất bại",
+        "test": "Kiểm tra kết nối"
+    },
+
+    "sftp": {
+        "requiredSftpInfo": "Vui lòng nhập đủ thông tin SFTP"
     }
 }
