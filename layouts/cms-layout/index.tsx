@@ -14,6 +14,7 @@ import { ReactNode, useEffect } from 'react';
 import Content from './content';
 import Header from './header';
 import Sidebar from './sidebar';
+import SecondSidebar from './sidebar/second-side-bar';
 
 type Props = {
     children: ReactNode;
@@ -27,6 +28,12 @@ export default function CMSLayout({ children }: Props) {
             ? false
             : localStorage.getItem(LOCAL_STORAGE_KEY.OPEN_SIDE_BAR) === 'true'
     );
+
+    const {
+        isActive: isActiveSecondMenu,
+        toggleActive: toggleActiveSecondMenu,
+        changeActive: changeActiveSecondMenu,
+    } = useActive(true);
 
     const { permission, isLoading } = useAuth();
     const { checkCanAccessCurrentRoute } = useCheckPermission();
@@ -61,7 +68,13 @@ export default function CMSLayout({ children }: Props) {
         // <SocketProvider accessToken={accessToken}>
         <div className="mx-auto max-w-[150rem] overflow-x-hidden border-x border-l-0">
             <Layout>
-                <Header collapsed={isActive} toggleCollapsed={toggleActive} />
+                <Header
+                    collapsed={isActive}
+                    toggleCollapsed={() => {
+                        toggleActive();
+                        toggleActiveSecondMenu();
+                    }}
+                />
                 <Layout>
                     <Sidebar
                         collapsed={isActive}
@@ -70,6 +83,18 @@ export default function CMSLayout({ children }: Props) {
                         drawerProps={{
                             onClose: toggleActive,
                         }}
+                        toggleCollapsed={toggleActive}
+                        toggleSecondMenu={toggleActiveSecondMenu}
+                    />
+
+                    <SecondSidebar
+                        collapsed={isActiveSecondMenu}
+                        onBreakpoint={changeActiveSecondMenu}
+                        trigger={null}
+                        drawerProps={{
+                            onClose: toggleActiveSecondMenu,
+                        }}
+                        toggleCollapsed={toggleActiveSecondMenu}
                     />
 
                     <Layout>
