@@ -100,7 +100,7 @@ export default function TenantTiers({}: Props) {
                     dataSource={tenantTiersData?.items}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: tenantTiersData.metadata.currentPage,
+                        current: tenantTiersData.metadata.page,
                         total: tenantTiersData.metadata.totalItems,
                     }}
                     loading={isFetching}
@@ -119,7 +119,7 @@ export default function TenantTiers({}: Props) {
                     style={{
                         backgroundColor: token.colorBgContainer,
                     }}
-                    current={tenantTiersData?.metadata?.currentPage}
+                    current={tenantTiersData?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={tenantTiersData.metadata?.totalItems}
                     onChange={onChangePage}

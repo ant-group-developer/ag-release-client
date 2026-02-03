@@ -112,7 +112,7 @@ export default function UserPage({}: Props) {
                     dataSource={data.items}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: data.metadata.currentPage,
+                        current: data.metadata.page,
                         total: data.metadata.totalItems,
                     }}
                     loading={isFetching || isPending}
@@ -125,7 +125,7 @@ export default function UserPage({}: Props) {
                     style={{
                         backgroundColor: token.colorBgContainer,
                     }}
-                    current={data?.metadata?.currentPage}
+                    current={data?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={data.metadata?.totalItems}
                     onChange={onChangePage}

@@ -1,6 +1,7 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import { ACCEPT_IMAGE, MAX_NAME_LENGTH } from '@/constants/validate';
+import { useCommonFormRules } from '@/hooks/useCommonFormRules';
 import { FormInstance, Input, Switch } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { useTranslations } from 'next-intl';
@@ -12,6 +13,8 @@ type Props = {
 
 export default function DspGeneral({ form, isActive }: Props) {
     const messages = useTranslations();
+
+    const formRules = useCommonFormRules();
 
     return (
         <>
@@ -55,17 +58,8 @@ export default function DspGeneral({ form, isActive }: Props) {
                 label={messages('dsp.name')}
                 required
                 rules={[
-                    {
-                        required: true,
-                        message: messages('validation.input'),
-                    },
-                    {
-                        max: MAX_NAME_LENGTH,
-                        message: messages('validation.stringMax', {
-                            max: MAX_NAME_LENGTH,
-                            field: messages('dsp.name'),
-                        }),
-                    },
+                    formRules.required(),
+                    formRules.stringMax({ field: messages('dsp.name') }),
                     {
                         validator: (_, value) => {
                             if (value && value.includes('_')) {
@@ -88,17 +82,8 @@ export default function DspGeneral({ form, isActive }: Props) {
                 tooltipInfo={messages('dsp.oneLinkPerLine')}
                 required
                 rules={[
-                    {
-                        required: true,
-                        message: messages('validation.input'),
-                    },
-                    {
-                        max: 200,
-                        message: messages('validation.stringMax', {
-                            max: 200,
-                            field: 'Format links',
-                        }),
-                    },
+                    formRules.required(),
+                    formRules.stringMax({ field: 'Format links' }),
                 ]}
             >
                 <TextArea
@@ -111,7 +96,7 @@ export default function DspGeneral({ form, isActive }: Props) {
             </AppFormItem>
             <AppFormItem
                 name="ddexId"
-                label={'DDexId'}
+                label={messages('dsp.ddexPartyId')}
                 rules={[
                     {
                         max: MAX_NAME_LENGTH,
@@ -127,7 +112,7 @@ export default function DspGeneral({ form, isActive }: Props) {
 
             <AppFormItem
                 name="ddexName"
-                label={messages('aggregator.ddexName')}
+                label={messages('dsp.fullNameOfDDexParty')}
                 rules={[
                     {
                         max: MAX_NAME_LENGTH,

@@ -87,7 +87,7 @@ export default function TrackTypes({}: Props) {
                     dataSource={trackTypesData.items}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: trackTypesData.metadata.currentPage,
+                        current: trackTypesData.metadata.page,
                         total: trackTypesData.metadata.totalItems,
                     }}
                     loading={isLoading}
@@ -96,7 +96,7 @@ export default function TrackTypes({}: Props) {
                 />
                 <AppPagination
                     align="end"
-                    current={trackTypesData?.metadata?.currentPage}
+                    current={trackTypesData?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={trackTypesData.metadata.totalItems}
                     onChange={onChangePage}

@@ -72,7 +72,7 @@ function TenantDeals({}: Props) {
                 dataSource={integrationsData?.items}
                 dataFilter={dataFilter}
                 pagination={{
-                    current: integrationsData?.metadata?.currentPage,
+                    current: integrationsData?.metadata?.page,
                     pageSize: dataFilter?.pageSize,
                 }}
                 loading={isLoading}
@@ -84,7 +84,7 @@ function TenantDeals({}: Props) {
                 className="rounded-b-md"
                 style={{ backgroundColor: token.colorBgContainer }}
                 align="end"
-                current={integrationsData?.metadata?.currentPage}
+                current={integrationsData?.metadata?.page}
                 pageSize={dataFilter.pageSize}
                 total={integrationsData?.metadata.totalItems}
                 onChange={onChangePage}

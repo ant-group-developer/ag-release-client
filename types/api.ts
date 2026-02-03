@@ -5,7 +5,7 @@ export interface PaginationResponse<T = any> {
     data: {
         items: T[];
         metadata: {
-            currentPage: number;
+            page: number;
             limit: number;
             totalItems: number;
             totalPages: number;

@@ -99,7 +99,7 @@ export default function Distribution({}: Props) {
                     onChangeFilter={onChangeFilter}
                     pagination={{
                         pageSize: dataFilter.pageSize,
-                        current: releasesData.metadata.currentPage,
+                        current: releasesData.metadata.page,
                         total: releasesData.metadata.totalItems,
                     }}
                     loading={isFetching}
@@ -119,7 +119,7 @@ export default function Distribution({}: Props) {
                 <AppPagination
                     align="end"
                     className="rounded-b-md bg-white"
-                    current={releasesData.metadata.currentPage}
+                    current={releasesData.metadata.page}
                     pageSize={dataFilter.pageSize}
                     total={releasesData.metadata.totalItems}
                     onChange={onChangePage}

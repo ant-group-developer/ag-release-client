@@ -31,7 +31,7 @@ type MergedTrackItem = {
 export default function AcrCloudScanDetailModal({ data, ...props }: Props) {
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [page, setpage] = useState(1);
 
     const { scanStatusData, isFetching } = useGetDetailScanStatus(
         data?.id as string
@@ -74,7 +74,7 @@ export default function AcrCloudScanDetailModal({ data, ...props }: Props) {
             key: 'iNo',
             width: 20,
             align: 'center',
-            render: (_, __, index) => getIndex(PAGE_SIZE, currentPage, index),
+            render: (_, __, index) => getIndex(PAGE_SIZE, page, index),
         },
         {
             title: messages('track.label'),
@@ -156,7 +156,7 @@ export default function AcrCloudScanDetailModal({ data, ...props }: Props) {
                         scroll={{ x: 'max-content', y: 470 }}
                         pagination={{
                             pageSize: PAGE_SIZE,
-                            current: currentPage,
+                            current: page,
                             total: scanStatusData?.trackNeedScanIds?.length,
                             size: 'default',
                             pageSizeOptions: PAGE_SIZE_OPTIONS,
@@ -169,7 +169,7 @@ export default function AcrCloudScanDetailModal({ data, ...props }: Props) {
                                 </span>
                             ),
                             onChange: (page) => {
-                                setCurrentPage(page);
+                                setpage(page);
                             },
                             hideOnSinglePage: true,
                         }}

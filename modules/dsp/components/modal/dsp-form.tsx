@@ -116,25 +116,6 @@ export default function DspFormModal({ ...props }: Props) {
             : handleCreateDsp(payloadValues);
     };
 
-    // const handleDefaultChange = useCallback(
-    //     (changedIndex: number, isChecked: boolean) => {
-    //         if (!isChecked) return;
-
-    //         const currentActions = form.getFieldValue('dspActions') || [];
-    //         const updatedActions = currentActions.map(
-    //             (action: any, index: number) => ({
-    //                 ...action,
-    //                 isDefault: index === changedIndex,
-    //             })
-    //         );
-
-    //         form.setFieldsValue({
-    //             dspActions: updatedActions,
-    //         });
-    //     },
-    //     [form]
-    // );
-
     const dspTabs: TabsProps['items'] = [
         {
             key: 'general',

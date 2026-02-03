@@ -78,7 +78,7 @@ export default function Languages({}: Props) {
                     loading={isFetching}
                     pagination={{
                         pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
-                        current: languagesData.metadata.currentPage,
+                        current: languagesData.metadata.page,
                         total: languagesData.metadata.totalItems,
                     }}
                     dataFilter={dataFilter}
@@ -86,7 +86,7 @@ export default function Languages({}: Props) {
                 />
                 <AppPagination
                     align="end"
-                    current={languagesData?.metadata?.currentPage}
+                    current={languagesData?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={languagesData?.metadata?.totalItems}
                     onChange={onChangePage}

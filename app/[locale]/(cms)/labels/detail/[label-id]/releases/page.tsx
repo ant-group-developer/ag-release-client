@@ -6,7 +6,7 @@ import { LAYOUT_TABLE } from '@/enums/common';
 import { useElementHeightById } from '@/hooks/use-element-height-by-id';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
-import ReleasesHeaderV2 from '@/modules/releases/components/header/index-v2';
+import ReleasesHeaderV2 from '@/modules/releases/components/header';
 import ReleasesTable from '@/modules/releases/components/table';
 import ReleasesGridTable from '@/modules/releases/components/table/grid-table';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
@@ -76,7 +76,7 @@ export default function Releases({}: Props) {
                     loading={isFetching}
                     pagination={{
                         pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
-                        current: releasesData?.metadata?.currentPage,
+                        current: releasesData?.metadata?.page,
                     }}
                     dataFilter={dataFilter}
                     options={{
@@ -95,7 +95,7 @@ export default function Releases({}: Props) {
                 className="rounded-b-lg"
                 style={{ background: token.colorBgContainer }}
                 align="end"
-                current={releasesData.metadata.currentPage}
+                current={releasesData.metadata.page}
                 pageSize={dataFilter.pageSize}
                 total={releasesData?.metadata.totalItems}
                 onChange={onChangePage}

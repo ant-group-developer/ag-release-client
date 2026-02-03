@@ -72,7 +72,7 @@ export default function PriceTiers({}: Props) {
                     dataSource={priceTiersData.items}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: priceTiersData.metadata.currentPage,
+                        current: priceTiersData.metadata.page,
                         total: priceTiersData.metadata.totalItems,
                     }}
                     loading={isLoading}
@@ -82,7 +82,7 @@ export default function PriceTiers({}: Props) {
 
                 <AppPagination
                     align="end"
-                    current={priceTiersData?.metadata?.currentPage}
+                    current={priceTiersData?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={priceTiersData.metadata?.totalItems}
                     onChange={onChangePage}

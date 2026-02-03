@@ -112,7 +112,7 @@ export default function News({}: Props) {
                             dataSource={newsData?.items}
                             pagination={{
                                 pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                                current: newsData.metadata.currentPage,
+                                current: newsData.metadata.page,
                                 total: newsData.metadata.totalItems,
                             }}
                             loading={isFetching}
@@ -130,7 +130,7 @@ export default function News({}: Props) {
                     loading={isFetching}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: newsData.metadata.currentPage,
+                        current: newsData.metadata.page,
                         total: newsData.metadata.totalItems,
                     }}
                     onChange={onChangeSort}
@@ -187,7 +187,7 @@ export default function News({}: Props) {
                 <AppPagination
                     className="bg-white"
                     align="end"
-                    current={newsData?.metadata?.currentPage}
+                    current={newsData?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={newsData.metadata?.totalItems}
                     onChange={onChangePage}

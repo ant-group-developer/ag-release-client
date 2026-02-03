@@ -134,7 +134,7 @@ export default function TenantIssue({}: Props) {
                     dataSource={tenantIssueData?.items}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: tenantIssueData.metadata.currentPage,
+                        current: tenantIssueData.metadata.page,
                         total: tenantIssueData.metadata.totalItems,
                     }}
                     loading={isLoading}
@@ -153,7 +153,7 @@ export default function TenantIssue({}: Props) {
                     }}
                     className="rounded-b-lg"
                     align="end"
-                    current={tenantIssueData?.metadata?.currentPage}
+                    current={tenantIssueData?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={tenantIssueData.metadata?.totalItems}
                     onChange={onChangePage}

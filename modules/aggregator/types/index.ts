@@ -14,16 +14,16 @@ export interface AggregatorData extends CommonAttribute {
     isDefault: boolean;
     sftpConfig: {
         id: string;
-        metadata: Credentials;
+        metadata: SftpMetadata;
     };
 }
 
-export interface Credentials {
+export interface SftpMetadata {
     host: string;
     port: number;
     username: string;
     password: string;
-    path: string;
+    path?: string;
 }
 
 export interface AggregatorDataFilter extends CommonParams {}

@@ -76,7 +76,7 @@ export default function Countries({}: {}) {
                     loading={isFetching}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: countriesData.metadata.currentPage,
+                        current: countriesData.metadata.page,
                         total: countriesData.metadata.totalItems,
                     }}
                     dataFilter={dataFilter}

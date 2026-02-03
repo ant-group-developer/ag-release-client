@@ -1,9 +1,14 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
-import AppRadio from '@/components/ui/radio/app-radio';
-import { SIZE_ICON_BIG } from '@/constants/common';
+import { SIZE_ICON, SIZE_ICON_BIG } from '@/constants/common';
+import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import { useGetListAggregator } from '@/modules/aggregator/hooks/use-get-list';
+import {
+    useTestConnection,
+    useTestConnectionById,
+} from '@/modules/sftp-config/hooks/use-test-connection';
+import { TestSftpConnectionPayload } from '@/modules/sftp-config/types/payload';
 import { CreateVariables } from '@/types/api';
 import { CheckCard } from '@ant-design/pro-components';
 import {
@@ -13,11 +18,13 @@ import {
     Form,
     Input,
     InputNumber,
-    Radio,
+    Select,
+    SelectProps,
     Spin,
 } from 'antd';
 import { useWatch } from 'antd/es/form/Form';
-import { LayoutList, UserCog } from 'lucide-react';
+import TextArea from 'antd/es/input/TextArea';
+import { LayoutList, Play, UserCog } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { DSP_DEAL } from '../../enums';
@@ -34,27 +41,114 @@ export default function DspDeals({ dspId }: Props) {
     const [form] = Form.useForm();
     const watchDeal = useWatch('mode', form);
     const { isActive, deActive, active } = useActive();
+    const {
+        active: connectionActive,
+        isActive: isConnectionActive,
+        deActive: deActiveConnection,
+    } = useActive();
 
     const { dspRoutingConfig, isFetching: dspRoutingFetching } =
         useGetDspRoutingConfig(dspId);
     const { aggregatorsData, isFetching } = useGetListAggregator({});
     const { updateDspRoutingConfig } = useUpdateDspRoutingConfig();
+    const { testConnection } = useTestConnection();
+    const { testConnectionById } = useTestConnectionById();
+
+    const aggregatorOptions: SelectProps['options'] =
+        aggregatorsData?.items?.map((item) => ({
+            label: item?.name,
+            value: item?.id,
+        }));
 
     const onFinish = (values: any) => {
         active();
-        const variables: CreateVariables<UpdateDspRoutingConfig> = {
-            payload: {
-                dspId,
+        const sftpConfig = values.sftpConfig;
+        try {
+            const payload = {
                 ...values,
-            },
-            onSuccess(e) {
-                deActive();
-            },
-            onError(e) {
-                deActive();
-            },
-        };
-        updateDspRoutingConfig(variables);
+                dspId,
+            };
+
+            // Chỉ thêm sftpConfig nếu nó tồn tại
+            if (sftpConfig) {
+                const metadata = { ...sftpConfig?.metadata };
+
+                // Xóa key nếu không có giá trị
+                if (!metadata?.password) {
+                    delete metadata.password;
+                }
+                if (!metadata?.privateKey) {
+                    delete metadata.privateKey;
+                }
+
+                payload.sftpConfig = {
+                    ...sftpConfig,
+                    metadata,
+                };
+            }
+            const variables: CreateVariables<UpdateDspRoutingConfig> = {
+                payload,
+                onSuccess(e) {
+                    deActive();
+                },
+                onError(e) {
+                    deActive();
+                },
+            };
+            updateDspRoutingConfig(variables);
+        } catch (error) {
+            console.log('Update DSP error:', error);
+            deActive();
+        }
+    };
+
+    const handleShowNotiTestConnection = (status: boolean) => {
+        if (status) {
+            showNotification('success', messages('connection.success'));
+        } else {
+            showNotification('error', messages('connection.failure'));
+        }
+    };
+
+    const handleTestConnection = () => {
+        connectionActive();
+        try {
+            const { sftpConfig } = form.getFieldsValue();
+            const { host, port, username, password } = sftpConfig.metadata;
+
+            if (!host || !port || !username || !password) {
+                showNotification('error', messages('sftp.requiredSftpInfo'));
+                deActiveConnection();
+                return;
+            }
+
+            const payload = {
+                ...sftpConfig.metadata,
+            };
+
+            if (!payload?.password) {
+                delete payload.password;
+            }
+            if (!payload?.privateKey) {
+                delete payload.privateKey;
+            }
+
+            const variables: CreateVariables<TestSftpConnectionPayload> = {
+                payload,
+                onSuccess(e) {
+                    deActiveConnection();
+                    handleShowNotiTestConnection(e.status);
+                },
+                onError(e) {
+                    console.log('Test connection sftp', e);
+                    deActiveConnection();
+                },
+            };
+            testConnection(variables);
+        } catch (error) {
+            console.log('Test connection: ', error);
+            deActiveConnection();
+        }
     };
 
     useEffect(() => {
@@ -129,27 +223,23 @@ export default function DspDeals({ dspId }: Props) {
                             layout="vertical"
                             wrapperCol={{ span: 24 }}
                         >
-                            <Radio.Group className="!grid grid-cols-2 gap-2">
+                            {/* <Radio.Group className="flex flex-col gap-2">
                                 {aggregatorsData?.items?.map((item) => {
                                     return (
-                                        <AppRadio
+                                        <Radio
                                             key={item?.id}
-                                            // avatar="/icon/spotify.png"
-                                            // description="Your connection credentials will be entered by your Account Manager. Please make sure that you have filled out."
                                             className="!h-full !w-full"
                                             value={item?.id}
                                         >
-                                            {/* <Avatar
-                                                size={'default'}
-                                                src="/icon/spotify.png"
-                                            /> */}
+                                           
                                             <span className="ml-1">
                                                 {item?.name}
                                             </span>
-                                        </AppRadio>
+                                        </Radio>
                                     );
                                 })}
-                            </Radio.Group>
+                            </Radio.Group> */}
+                            <Select options={aggregatorOptions} />
                         </AppFormItem>
                         {aggregatorsData?.items?.length <= 0 && <Empty />}
                     </div>
@@ -182,10 +272,15 @@ export default function DspDeals({ dspId }: Props) {
                             ]}
                         >
                             <InputNumber
-                                min={0}
                                 placeholder="Enter 21 unless you received other instructions"
                                 style={{ width: '100%' }}
                             />
+                        </AppFormItem>
+                        <AppFormItem
+                            label="path"
+                            name={['sftpConfig', 'metadata', 'path']}
+                        >
+                            <Input />
                         </AppFormItem>
                         <AppFormItem
                             label="Username"
@@ -212,11 +307,35 @@ export default function DspDeals({ dspId }: Props) {
                                 placeholder="Enter password"
                             />
                         </AppFormItem>
+
+                        <AppFormItem
+                            label={messages('common.privateKey')}
+                            name={['sftpConfig', 'metadata', 'privateKey']}
+                        >
+                            <TextArea />
+                        </AppFormItem>
                     </>
                 )}
             </AppForm>
 
-            <div className="flex justify-end">
+            <div className="flex justify-end gap-2">
+                {watchDeal == DSP_DEAL.DIRECT && (
+                    <Button
+                        onClick={(e) => {
+                            handleTestConnection();
+                        }}
+                        icon={
+                            <div>
+                                <Play size={SIZE_ICON} />
+                            </div>
+                        }
+                        loading={isConnectionActive}
+                        type="default"
+                        htmlType="button"
+                    >
+                        {messages('connection.test')}
+                    </Button>
+                )}
                 <Button
                     loading={isActive}
                     type="primary"

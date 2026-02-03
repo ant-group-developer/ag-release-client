@@ -96,7 +96,7 @@ export default function TrackHeaderV2({
                     )}
                     mode="multiple"
                     fieldProps={{
-                        maxTagCount: 2,
+                        maxTagCount: 'responsive',
                     }}
                     placeholder={messages('placeholder.filterBy', {
                         value: messages('common.scan').toLowerCase(),
@@ -112,7 +112,7 @@ export default function TrackHeaderV2({
                             value: messages('artist.artists').toLowerCase(),
                         })}
                         mode="multiple"
-                        maxTagCount={2}
+                        maxTagCount={'responsive'}
                     />
                 </ProForm.Item>
 

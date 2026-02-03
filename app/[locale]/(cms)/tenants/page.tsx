@@ -99,7 +99,7 @@ export default function TenantPage({}: Props) {
                     }}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: data.metadata.currentPage,
+                        current: data.metadata.page,
                         total: data.metadata.totalItems,
                     }}
                     loading={isFetching}
@@ -110,7 +110,7 @@ export default function TenantPage({}: Props) {
                 {/* <AppPagination
                     className="border-b "
                     align="end"
-                    current={data?.metadata?.currentPage}
+                    current={data?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={data.metadata?.totalItems}
                     onChange={onChangePage}

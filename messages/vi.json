@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "privateKey": "Khoá riêng tư",
         "deal": "Thoả thuận",
         "deals": "Thoả thuận",
         "path": "Đường dẫn",
@@ -1269,6 +1270,8 @@
         "add": "Thêm nền tảng",
         "oneLinkPerLine": "Mỗi link một dòng",
         "profileList": "Danh sách hồ sơ",
+        "fullNameOfDdexParty": "Tên DDex party",
+        "ddexPartyId": "DDex party Id",
         "message": {
             "success": {
                 "create": "Thêm nền tảng thành công",
@@ -1846,5 +1849,15 @@
                 "sftpConfigNotFound": "Không tìm thấy cấu hình SFTP"
             }
         }
+    },
+
+    "connection": {
+        "success": "Kết nối thành công",
+        "failure": "Kết nối thất bại",
+        "test": "Kiểm tra kết nối"
+    },
+
+    "sftp": {
+        "requiredSftpInfo": "Vui lòng nhập đủ thông tin SFTP"
     }
 }

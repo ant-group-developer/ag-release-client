@@ -41,14 +41,14 @@ export default function Schedule() {
                     loading={isFetching}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: tracksData.metadata.currentPage,
+                        current: tracksData.metadata.page,
                         total: tracksData.metadata.totalItems,
                     }}
                 />
                 {/* <AppPagination
                     className="!mt-0 rounded-b-[8px] bg-white"
                     align="end"
-                    current={tracksData?.metadata?.currentPage}
+                    current={tracksData?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={tracksData.metadata?.totalItems}
                     onChange={onChangePage}

@@ -9,7 +9,7 @@ import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import { LoadingType, useLoading } from '@/hooks/use-loading';
 import useModalStore from '@/hooks/use-modal';
-import ReleasesHeaderV2 from '@/modules/releases/components/header/index-v2';
+import ReleasesHeaderV2 from '@/modules/releases/components/header';
 import ReleasesTable from '@/modules/releases/components/table';
 import ReleasesGridTable from '@/modules/releases/components/table/grid-table';
 import { defaultVisibleColumnsReleases } from '@/modules/releases/constants';
@@ -147,7 +147,7 @@ export default function Releases({}: Props) {
                         onChangeFilter={onChangeFilter}
                         pagination={{
                             pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                            current: releasesData.metadata.currentPage,
+                            current: releasesData.metadata.page,
                         }}
                         onChange={onChangeSort}
                         dataFilter={dataFilter}
@@ -170,7 +170,7 @@ export default function Releases({}: Props) {
                     className="rounded-b-md"
                     style={{ backgroundColor: token.colorBgContainer }}
                     align="end"
-                    current={releasesData?.metadata?.currentPage}
+                    current={releasesData?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={releasesData?.metadata.totalItems}
                     onChange={onChangePage}

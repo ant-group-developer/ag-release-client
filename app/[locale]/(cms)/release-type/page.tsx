@@ -78,7 +78,7 @@ export default function ReleaseType({}: Props) {
                     dataSource={releaseTypesData.items}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: releaseTypesData.metadata.currentPage,
+                        current: releaseTypesData.metadata.page,
                         total: releaseTypesData.metadata.totalItems,
                     }}
                     loading={isFetching}
@@ -87,7 +87,7 @@ export default function ReleaseType({}: Props) {
                 />
                 <AppPagination
                     align="end"
-                    current={releaseTypesData?.metadata?.currentPage}
+                    current={releaseTypesData?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={releaseTypesData.metadata.totalItems}
                     onChange={onChangePage}

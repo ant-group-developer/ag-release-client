@@ -17,8 +17,8 @@ export const useGetArtistSimpleList = (
             const pagination = lastPage?.data?.data?.metadata;
             if (!pagination) return undefined;
 
-            const { currentPage, totalPages } = pagination;
-            return currentPage < totalPages ? currentPage + 1 : undefined;
+            const { page, totalPages } = pagination;
+            return page < totalPages ? page + 1 : undefined;
         },
         enabled: options?.enabled ?? true,
         initialPageParam: 1,

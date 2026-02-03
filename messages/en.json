@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "privateKey": "Private key",
         "deal": "Deal",
         "deals": "Deals",
         "path": "Path",
@@ -1266,6 +1267,8 @@
         "add": "Add platform",
         "oneLinkPerLine": "One link per line",
         "profileList": "Profile list",
+        "fullNameOfDDexParty": "Full name of DDex party",
+        "ddexPartyId": "DDex party Id",
         "message": {
             "success": {
                 "create": "Create platform successfully",
@@ -1838,5 +1841,15 @@
                 "sftpConfigNotFound": "Sftp config not found"
             }
         }
+    },
+
+    "connection": {
+        "success": "Connection successful",
+        "failure": "Connection failed",
+        "test": "Test connection"
+    },
+
+    "sftp": {
+        "requiredSftpInfo": "Please enter all required SFTP information"
     }
 }

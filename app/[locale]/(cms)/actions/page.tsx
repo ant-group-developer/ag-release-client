@@ -63,7 +63,7 @@ export default function Actions({}: Props) {
                     dataSource={actionsData.items}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: actionsData.metadata.currentPage,
+                        current: actionsData.metadata.page,
                         total: actionsData.metadata.totalItems,
                     }}
                     loading={isFetching}
@@ -73,7 +73,7 @@ export default function Actions({}: Props) {
 
                 <AppPagination
                     align="end"
-                    current={actionsData?.metadata?.currentPage}
+                    current={actionsData?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={actionsData.metadata?.totalItems}
                     onChange={onChangePage}

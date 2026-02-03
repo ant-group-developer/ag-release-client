@@ -74,7 +74,7 @@ export default function ArtistRole({}: Props) {
                     dataSource={artistsRolesData.items}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: artistsRolesData.metadata.currentPage,
+                        current: artistsRolesData.metadata.page,
                         total: artistsRolesData.metadata.totalItems,
                     }}
                     loading={isFetching}
@@ -83,7 +83,7 @@ export default function ArtistRole({}: Props) {
                 />
                 <AppPagination
                     align="end"
-                    current={artistsRolesData?.metadata?.currentPage}
+                    current={artistsRolesData?.metadata?.page}
                     pageSize={dataFilter.pageSize}
                     total={artistsRolesData.metadata.totalItems}
                     onChange={onChangePage}
