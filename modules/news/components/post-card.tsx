@@ -1,3 +1,4 @@
+import { FALLBACK_IMAGE_HORIZONTAL } from '@/constants/common';
 import { Card } from 'antd';
 import { CardProps } from 'antd/lib';
 import Image from 'next/image';
