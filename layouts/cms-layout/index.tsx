@@ -33,11 +33,7 @@ export default function CMSLayout({ children }: Props) {
         isActive: isActiveSecondMenu,
         toggleActive: toggleActiveSecondMenu,
         changeActive: changeActiveSecondMenu,
-    } = useActive(
-        typeof window === 'undefined'
-            ? false
-            : localStorage.getItem(LOCAL_STORAGE_KEY.OPEN_SIDE_BAR) === 'true'
-    );
+    } = useActive(true);
 
     const { permission, isLoading } = useAuth();
     const { checkCanAccessCurrentRoute } = useCheckPermission();

@@ -114,10 +114,37 @@ export default function DspDeals({ dspId }: Props) {
         connectionActive();
         try {
             const { sftpConfig } = form.getFieldsValue();
-            const { host, port, username, password } = sftpConfig.metadata;
+            const { host, port, username, password, privateKey } =
+                sftpConfig.metadata;
 
-            if (!host || !port || !username || !password) {
-                showNotification('error', messages('sftp.requiredSftpInfo'));
+            if (password || privateKey) {
+                form.setFields([
+                    {
+                        name: ['sftpConfig', 'metadata', 'password'],
+                        errors: [],
+                    },
+                    {
+                        name: ['sftpConfig', 'metadata', 'privateKey'],
+                        errors: [],
+                    },
+                ]);
+            }
+
+            if (!password && !privateKey) {
+                form.setFields([
+                    {
+                        name: ['sftpConfig', 'metadata', 'password'],
+                        errors: [messages('sftp.requiredPasswordOrPrivateKey')],
+                    },
+                ]);
+
+                form.setFields([
+                    {
+                        name: ['sftpConfig', 'metadata', 'privateKey'],
+                        errors: [messages('sftp.requiredPasswordOrPrivateKey')],
+                    },
+                ]);
+
                 deActiveConnection();
                 return;
             }

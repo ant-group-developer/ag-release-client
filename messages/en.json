@@ -1849,6 +1849,7 @@
     },
 
     "sftp": {
-        "requiredSftpInfo": "Please enter all required SFTP information"
+        "requiredSftpInfo": "Please enter all required SFTP information",
+        "requiredPasswordOrPrivateKey": "Please enter password or private key"
     }
 }
