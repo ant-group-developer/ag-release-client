@@ -7,9 +7,10 @@ export interface CustomEditorProps {
     // eslint-disable-next-line no-unused-vars
     onChange?: (value: string) => void;
     value?: string;
+    disabled?: boolean;
 }
 
-const CustomEditor = ({ onChange, value }: CustomEditorProps) => {
+const CustomEditor = ({ disabled, onChange, value }: CustomEditorProps) => {
     return (
         <CKEditor
             config={{
@@ -33,6 +34,7 @@ const CustomEditor = ({ onChange, value }: CustomEditorProps) => {
                 onChange?.(editor.getData());
             }}
             data={value}
+            disabled={disabled}
         />
     );
 };

@@ -5,110 +5,20 @@ import {
     ORIENTATION,
     UPLOAD_TYPE,
 } from '@/enums/common';
-import { RELEASES_STATUS } from '@/modules/releases/enums';
-import { GENRES } from '@/modules/tracks/enums';
 import { presetPalettes } from '@ant-design/colors';
 import { DatePickerProps, GetProp, UploadProps } from 'antd';
 import clsx, { ClassValue } from 'clsx';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import MediaInfoFactory from 'mediainfo.js';
 import { parseBlob } from 'music-metadata';
 import { twMerge } from 'tailwind-merge';
+import { getIntlCodeByReleaseStatus } from './intl';
 dayjs.extend(utc);
 /**
  * Extracts media metadata from a file in the browser (Client-Side)
  * @param file - The File object from an `<input type="file">`
  * @returns Promise with metadata
  */
-
-export const getMediaInfoVideo = async (
-    file: File
-): Promise<{
-    duration: number;
-    resolution?: string;
-    width: number;
-    height: number;
-    frameRate: number;
-    encoding: string;
-    orientation: ORIENTATION;
-}> => {
-    return new Promise((resolve, reject) => {
-        MediaInfoFactory({
-            format: 'object',
-            locateFile: () => '/MediaInfoModule.wasm', // Serve from public folder
-        }).then((mediainfo) => {
-            mediainfo
-                .analyzeData(
-                    () => file.size,
-                    (chunkSize, offset) =>
-                        new Promise((res) => {
-                            const reader = new FileReader();
-                            reader.onload = (e) =>
-                                res(
-                                    new Uint8Array(
-                                        e.target?.result as ArrayBuffer
-                                    )
-                                );
-                            reader.readAsArrayBuffer(
-                                file.slice(offset, offset + chunkSize)
-                            );
-                        })
-                )
-                .then((result) => {
-                    if (
-                        !result.media ||
-                        !result.media.track ||
-                        result.media.track.length === 0
-                    ) {
-                        reject(new Error('No media data found'));
-                        return;
-                    }
-
-                    const videoTrack = result.media.track.find(
-                        (t) => t['@type'] === 'Video'
-                    );
-
-                    if (!videoTrack) {
-                        reject(new Error('No video stream found'));
-                        return;
-                    }
-
-                    // Ensure width and height are defined
-                    const width = videoTrack.Width ?? 0;
-                    const height = videoTrack.Height ?? 0;
-
-                    // Ensure numeric values are properly parsed
-                    const duration = videoTrack.Duration
-                        ? parseFloat(String(videoTrack.Duration.toFixed(1)))
-                        : 0;
-
-                    const frameRate = videoTrack.FrameRate
-                        ? parseFloat(String(videoTrack.FrameRate))
-                        : 0;
-
-                    resolve({
-                        duration,
-                        width: width,
-                        height: height,
-                        frameRate,
-                        encoding: videoTrack.Format ?? 'unknown',
-                        orientation:
-                            width > height
-                                ? ORIENTATION.HORIZONTAL
-                                : ORIENTATION.VERTICAL,
-                        // orientation:
-                        //     width > height
-                        //         ? 'horizontal'
-                        //         : width < height
-                        //           ? 'vertical'
-                        //           : 'unknown',
-                    });
-                })
-                .catch((err) => reject(err));
-        });
-    });
-};
 
 export const getImageDimensions = (
     file: File
@@ -168,10 +78,10 @@ export function formattedDate(
 
 export function getIndex(
     pageSize: number | undefined = 0,
-    currentPage: number | undefined = 1,
+    page: number | undefined = 1,
     index: number
 ) {
-    return pageSize * (currentPage - 1) + index + 1;
+    return pageSize * (page - 1) + index + 1;
 }
 
 export function cn(...inputs: ClassValue[]) {
@@ -237,8 +147,20 @@ export const convertSecondsToTime = (duration = 0) => {
     return `${minutes}:${seconds}`;
 };
 
+export const convertMsToMinSec = (ms: number | undefined): string => {
+    if (!Number.isFinite(ms) || !ms) return '00:00';
+    const totalSeconds = Math.max(0, Math.round(ms / 1000));
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+};
+
 export const getFileName = (file: File) => {
     return file.name.split('.').slice(0, -1).join('.');
+};
+
+export const getFileExtension = (file: File) => {
+    return file.name.split('.').pop();
 };
 
 export const getFileDuration = async (file: File) => {
@@ -405,12 +327,9 @@ export function formatDatesToUTC(
 ): [string, string] {
     // const startDateFormatted = dayjs(startDate).startOf('day').toISOString();
     // const endDateFormatted = dayjs(endDate).endOf('day').toISOString();
-    const startDateFormatted = dayjs(startDate)
-        .startOf('day')
-        .format(DATE_FORMAT.YEAR_MONTH_DAY_TIME);
-    const endDateFormatted = dayjs(endDate)
-        .endOf('day')
-        .format(DATE_FORMAT.YEAR_MONTH_DAY_TIME);
+    const startDateFormatted = dayjs(startDate).startOf('day').toISOString();
+    // .format(DATE_FORMAT.YEAR_MONTH_DAY_TIME);
+    const endDateFormatted = dayjs(endDate).endOf('day').toISOString();
     // .format(DATE_FORMAT.YEAR_MONTH_DAY_TIME);
     return [startDateFormatted, endDateFormatted];
 }
@@ -525,75 +444,25 @@ export const getTitleChipDisplay = (
 
 export const convertSecondsToHoursMinutes = (seconds: number) => {
     if (isNaN(Number(seconds)) || seconds < 0) {
-        return '00:00';
+        return '00:00:00';
     }
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = Math.floor(seconds % 60);
+    const pad = (num: number) => num.toString().padStart(2, '0');
+    return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+};
 
+export const convertSecondsToHHMMSS = (seconds: number) => {
+    if (isNaN(Number(seconds)) || seconds < 0) {
+        return '00:00:00';
+    }
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
     const secs = Math.floor(seconds % 60);
 
     const pad = (num: number) => num.toString().padStart(2, '0');
-
-    if (hrs > 0) {
-        // Format: HH:mm:ss
-        return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
-    } else if (mins > 0) {
-        // Format: mm:ss
-        return `${pad(mins)}:${pad(secs)}`;
-    } else {
-        // Format: 00:ss
-        return `00:${pad(secs)}`;
-    }
-};
-
-type ReleaseStatusMessageKey =
-    | 'common.processing'
-    | 'common.issues'
-    | 'common.neverDistributed'
-    | 'common.distributed'
-    | 'common.takenDown'
-    | 'common.draft';
-export const getIntlCodeByReleaseStatus = (
-    value: string
-): ReleaseStatusMessageKey => {
-    const releaseStatusToMessageMap: Record<string, ReleaseStatusMessageKey> = {
-        [RELEASES_STATUS.PROCESSING]: 'common.processing',
-        [RELEASES_STATUS.ISSUES]: 'common.issues',
-        [RELEASES_STATUS.NEVER_DISTRIBUTED]: 'common.neverDistributed',
-        [RELEASES_STATUS.DISTRIBUTED]: 'common.distributed',
-        [RELEASES_STATUS.TAKEN_DOWN]: 'common.takenDown',
-        [RELEASES_STATUS.DRAFT]: 'common.draft',
-    };
-    return releaseStatusToMessageMap[value] || 'common.processing';
-};
-
-type GenresMessageKey =
-    | 'genres.pop'
-    | 'genres.rock'
-    | 'genres.jazz'
-    | 'genres.country'
-    | 'genres.hipHop'
-    | 'genres.rB'
-    | 'genres.electronic'
-    | 'genres.reggae'
-    | 'genres.rap'
-    | 'genres.blues'
-    | 'genres.classical';
-export const getIntlCodeByGenres = (value: string): GenresMessageKey => {
-    const genresToMessageMap: Record<string, GenresMessageKey> = {
-        [GENRES.POP]: 'genres.pop',
-        [GENRES.ROCK]: 'genres.rock',
-        [GENRES.JAZZ]: 'genres.jazz',
-        [GENRES.COUNTRY]: 'genres.country',
-        [GENRES.HIP_HOP]: 'genres.hipHop',
-        [GENRES.R_B]: 'genres.rB',
-        [GENRES.ELECTRONIC]: 'genres.electronic',
-        [GENRES.REGGAE]: 'genres.reggae',
-        [GENRES.BLUES]: 'genres.blues',
-        [GENRES.CLASSICAL]: 'genres.classical',
-        [GENRES.RAP]: 'genres.rap',
-    };
-    return genresToMessageMap[value] || 'common.pop';
+    return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
 };
 
 export function parsePeakData(data = '') {
@@ -695,7 +564,6 @@ export const timeStringToSeconds = (time: string) => {
     return result;
 };
 
-
 export function getLanguageLabel(code: string) {
     const languageMap: Record<string, string> = {
         vi: 'Tiếng Việt',
@@ -703,3 +571,38 @@ export function getLanguageLabel(code: string) {
     };
     return languageMap[code] || code;
 }
+
+// Chuyển số giây sang chuỗi HH:mm
+export const secondsToHHmm = (seconds: number) => {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+};
+
+// Chuyển chuỗi HH:mm sang số giây
+export const hhmmToSeconds = (hhmm: string) => {
+    if (!hhmm) return 0;
+    const [h, m] = hhmm.split(':').map(Number);
+    return h * 3600 + m * 60;
+};
+
+export function getRandomInt(min: number, max: number) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+export const formatCurrency = (price: number, currency?: string) => {
+    if (!currency || currency.length !== 3) {
+        return price.toString();
+    }
+
+    try {
+        return new Intl.NumberFormat(undefined, {
+            style: 'currency',
+            currency,
+        }).format(price);
+    } catch {
+        return price.toString();
+    }
+};

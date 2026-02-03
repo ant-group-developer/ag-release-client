@@ -5,7 +5,7 @@ export enum TYPE_MODAL_LABEL {
 }
 
 export enum LABEL_DETAIL_TABS {
-    OVERVIEW = 'OVERVIEW',
-    RELEASES = 'RELEASES',
-    TRACKS = 'TRACKS',
+    OVERVIEW = 'overview',
+    RELEASES = 'releases',
+    TRACKS = 'tracks',
 }

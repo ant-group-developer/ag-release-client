@@ -39,21 +39,23 @@ export default function ShowColumnOptionDropdown({
             alwaysVisible: true,
         },
         {
-            key: TRACKS_COLUMNS_DISPLAY.TRACK_ID,
-            label: messages('tracks.id'),
-            alwaysVisible: true,
+            key: TRACKS_COLUMNS_DISPLAY.ID,
+            label: messages('track.id'),
         },
         {
             key: TRACKS_COLUMNS_DISPLAY.TITLE,
-            label: messages('tracks.name'),
+            label: messages('track.name'),
         },
         {
             key: TRACKS_COLUMNS_DISPLAY.GENRES,
             label: messages('common.type'),
         },
-
         {
-            key: TRACKS_COLUMNS_DISPLAY.ARTIST,
+            key: TRACKS_COLUMNS_DISPLAY.VERSION,
+            label: messages('release.version'),
+        },
+        {
+            key: TRACKS_COLUMNS_DISPLAY.TRACK_ARTIST,
             label: messages('common.artist'),
         },
         {
@@ -61,16 +63,20 @@ export default function ShowColumnOptionDropdown({
             label: 'ISRC',
         },
         {
-            key: TRACKS_COLUMNS_DISPLAY.DURATION,
-            label: messages('common.duration'),
+            key: TRACKS_COLUMNS_DISPLAY.ACR_CLOUD,
+            label: 'ACRCloud',
         },
         {
-            key: TRACKS_COLUMNS_DISPLAY.RELEASE_DATE,
-            label: messages('common.dateRelease'),
+            key: TRACKS_COLUMNS_DISPLAY.RELEASE_TITLE,
+            label: messages('release.label'),
         },
         {
-            key: TRACKS_COLUMNS_DISPLAY.CREATION_DATE,
-            label: messages('common.dateCreated'),
+            key: TRACKS_COLUMNS_DISPLAY.LABEL_NAME,
+            label: messages('label.label'),
+        },
+        {
+            key: TRACKS_COLUMNS_DISPLAY.CREATED_AT,
+            label: messages('common.createdAt'),
         },
         {
             key: TRACKS_COLUMNS_DISPLAY.ACTIONS,
@@ -167,7 +173,7 @@ export default function ShowColumnOptionDropdown({
                     >
                         <div className="p-2">
                             <div className="mb-2">
-                                <b> Cột hiển thị </b>
+                                <b> {messages('common.columnsDisplay')} </b>
                             </div>
                             <div className="flex flex-col gap-2">
                                 {/* Checkbox "Tất cả" */}

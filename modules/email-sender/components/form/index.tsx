@@ -10,7 +10,7 @@ type Props = {};
 export default function EmailSenderForm({}: Props) {
     const messages = useTranslations();
     return (
-        <div className="p-4">
+        <div>
             <AppForm layout="vertical" submitText={messages('common.send')}>
                 <AppFormItem
                     name="title"

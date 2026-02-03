@@ -20,6 +20,7 @@ export default function CustomTooltip({
                   display: 'flex',
                   alignItems: 'center',
                   minHeight: '20px',
+                  whiteSpace: 'pre-line',
               }
             : {};
 
@@ -27,10 +28,24 @@ export default function CustomTooltip({
         <Tooltip
             {...props}
             className={cn(className)}
-            overlayClassName={cn(props?.overlayClassName, {
-                '!text-xs': size === 'small',
-            })}
-            overlayInnerStyle={{ ...smallOverlayInnerStyle }}
+            classNames={{
+                root: cn(props?.overlayClassName, {
+                    '!text-xs': size === 'small',
+                }),
+            }}
+            // overlayClassName={cn(props?.overlayClassName, {
+            //     '!text-xs': size === 'small',
+            // })}
+            // overlayInnerStyle={{
+            //     ...smallOverlayInnerStyle,
+            //     ...props.overlayInnerStyle,
+            // }}
+            styles={{
+                body: {
+                    ...smallOverlayInnerStyle,
+                    ...props.styles?.body,
+                },
+            }}
         />
     );
 }

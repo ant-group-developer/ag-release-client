@@ -1,57 +1,29 @@
 'use client';
+import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import AppPagination from '@/components/ui/pagination';
-import { SCREEN, SESSION_STORAGE_KEY } from '@/enums/common';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { fakeReleasesData } from '@/modules/dashboard/constants/mockData';
-import DistributionHeader from '@/modules/distribution/components/header';
-import DistributionStatus from '@/modules/distribution/components/header-action/distribution-status';
+import { useTableScrollY } from '@/hooks/use-table-scroll-y';
+
+import DistributionHeaderV2 from '@/modules/distribution/components/header/index-v2';
 import DetailDistributionModal from '@/modules/distribution/components/modal/detail-distribution';
 import DistributionTable from '@/modules/distribution/components/table';
-import { defaultVisibleColumnsDistribution } from '@/modules/distribution/constants';
-import {
-    DISTRIBUTION_COLUMNS_DISPLAY,
-    DISTRIBUTION_STATUS,
-    TYPE_MODAL_DISTRIBUTION,
-} from '@/modules/distribution/enum';
+import { TYPE_MODAL_DISTRIBUTION } from '@/modules/distribution/enum';
 import { DistributionDataFilter } from '@/modules/distribution/types';
-import { useWindowSize } from '@uidotdev/usehooks';
-import { Button } from 'antd';
-import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
+import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
+import { ReleasesDataFilter } from '@/modules/releases/types';
+import { PageContainer } from '@ant-design/pro-components';
+import { useTranslations } from 'next-intl';
+import { Key, useState } from 'react';
 type Props = {};
 
 export default function Distribution({}: Props) {
-    const [visibleColumns, setVisibleColumns] = useState<
-        DISTRIBUTION_COLUMNS_DISPLAY[]
-    >(() => {
-        if (typeof window !== 'undefined') {
-            const stored = sessionStorage.getItem(
-                SESSION_STORAGE_KEY.VISIBLE_COLUMNS_DISTRIBUTION
-            );
-            if (!stored) return defaultVisibleColumnsDistribution;
-            const { value, timestamp } = JSON.parse(stored) as {
-                value: DISTRIBUTION_COLUMNS_DISPLAY[];
-                timestamp: string;
-            };
+    // hooks - state
+    const [selectedRow, setSelectedRow] = useState<Key[]>([]);
+    const scrollY = useTableScrollY();
+    const messages = useTranslations();
 
-            if (dayjs().diff(dayjs(timestamp), 'day') >= 10) {
-                sessionStorage.removeItem(
-                    SESSION_STORAGE_KEY.VISIBLE_COLUMNS_DISTRIBUTION
-                );
-                return defaultVisibleColumnsDistribution;
-            }
-
-            return value;
-        }
-        return defaultVisibleColumnsDistribution;
-    });
-
-    const handleChangeVisibleColumns = (
-        columns: DISTRIBUTION_COLUMNS_DISPLAY[]
-    ) => {
-        setVisibleColumns(columns);
-    };
     const {
         dataFilter,
         onChangeFilter,
@@ -60,90 +32,103 @@ export default function Distribution({}: Props) {
         onChangePage,
     } = useFilter<DistributionDataFilter>({
         page: 1,
-        pageSize: 21,
+        pageSize: PAGE_SIZE,
     });
-
-    const { height, width } = useWindowSize();
-    const isSmallDevice = Number(width) <= SCREEN.MD;
     const typeModal = useModalStore((state) => state.typeModal);
 
-    const scrollY = () => {
-        if (isSmallDevice) return undefined;
-        if (!height) return undefined;
-        const minHeight = 300;
-        const header = 64;
-        const pageHeader = 49;
-        const pageFilter = 49;
-        const pagination = 58;
-        const headerTable = 39;
-        const headerFooterHeight =
-            header + pageHeader + pageFilter + pagination + headerTable;
-        const value = height - headerFooterHeight;
-        if (value > minHeight) return value;
-        return minHeight;
-    };
-    const handleRefresh = () => {};
+    // apis
+    const { releasesData, isFetching, dataUpdatedAt, refetch } =
+        useGetListReleases(dataFilter as ReleasesDataFilter);
 
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            sessionStorage.setItem(
-                SESSION_STORAGE_KEY.VISIBLE_COLUMNS_DISTRIBUTION,
-                JSON.stringify({
-                    value: visibleColumns,
-                    timestamp: dayjs().toISOString(),
-                })
-            );
-        }
-    }, [visibleColumns]);
+    // func
+    const handleRefresh = () => {
+        refetch();
+    };
+    const handleSelectedRow = (selectedRowKeys: Key[]) => {
+        setSelectedRow(selectedRowKeys);
+    };
+
+    const rowSelection = {
+        selectedRowKeys: selectedRow,
+        onChange: handleSelectedRow,
+        columnWidth: 30,
+    };
+
     return (
-        <div className="flex h-full flex-col justify-between">
-            <div className="flex-1">
-                <div className="flex justify-between border-b">
+        <AppPageWrapper>
+            <PageContainer title={messages('distribution.label')}>
+                {/* <div className="flex justify-between border-b">
                     <DistributionStatus
                         onChangeFilter={onChangeFilter}
                         value={dataFilter.status ?? DISTRIBUTION_STATUS.ALL}
                     />
                     <div className="flex items-center gap-4 px-4 font-medium">
                         <Button className="" type="primary">
-                            <span>Phân phối hàng loạt</span>
+                            <span>
+                                {messages('distribution.batchDistribution')}
+                            </span>
                         </Button>
                         <Button danger>
-                            <span>Gỡ xuống hàng loạt</span>
+                            <span>
+                                {messages('distribution.batchTakeDown')}
+                            </span>
                         </Button>
                     </div>
-                </div>
-                <DistributionHeader
+                </div> */}
+
+                <DistributionHeaderV2
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
                     canClearFilter={canClearFilter}
                     removeFilter={removeFilter}
                     handleRefresh={handleRefresh}
-                    handleChangeVisibleColumns={handleChangeVisibleColumns}
-                    visibleColumn={visibleColumns}
+                    dataUpdatedAt={dataUpdatedAt}
                 />
+
+                {/* <DistributionHeader
+                    dataFilter={dataFilter}
+                    onChangeFilter={onChangeFilter}
+                    canClearFilter={canClearFilter}
+                    removeFilter={removeFilter}
+                    handleRefresh={handleRefresh}
+                /> */}
                 <DistributionTable
-                    visibleColumns={visibleColumns}
-                    dataSource={fakeReleasesData}
-                    scroll={{ x: SCREEN.XXL, y: scrollY() }}
+                    sticky
+                    dataSource={releasesData?.items}
+                    dataFilter={dataFilter}
+                    onChangeFilter={onChangeFilter}
+                    pagination={{
+                        pageSize: dataFilter.pageSize,
+                        current: releasesData.metadata.page,
+                        total: releasesData.metadata.totalItems,
+                    }}
+                    loading={isFetching}
+                    rowSelection={rowSelection}
+                    options={{
+                        fullScreen: true,
+                        reload: () => {
+                            handleRefresh();
+                        },
+                    }}
                 />
-            </div>
 
-            {typeModal === TYPE_MODAL_DISTRIBUTION.DETAIL && (
-                <DetailDistributionModal open />
-            )}
+                {typeModal === TYPE_MODAL_DISTRIBUTION.DETAIL && (
+                    <DetailDistributionModal open />
+                )}
 
-            <AppPagination
-                className="border-b border-t"
-                align="end"
-                current={dataFilter.page}
-                pageSize={dataFilter.pageSize}
-                total={fakeReleasesData.length}
-                onChange={onChangePage}
-                showTotalText
-                showSizeChanger
-                showQuickJumper
-                pageSizeOptions={[21, 28, 35]}
-            />
-        </div>
+                <AppPagination
+                    align="end"
+                    className="rounded-b-md bg-white"
+                    current={releasesData.metadata.page}
+                    pageSize={dataFilter.pageSize}
+                    total={releasesData.metadata.totalItems}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
+                />
+            </PageContainer>
+        </AppPageWrapper>
     );
 }

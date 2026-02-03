@@ -7,18 +7,34 @@ export interface IconButtonProps
         HTMLButtonElement
     > {
     hidden?: boolean;
+    shape?: 'circle' | 'square';
+    variant?: 'filled' | 'borderless' | 'outlined';
 }
 
 const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
-    ({ hidden, className, children, ...props }, ref) => {
+    (
+        {
+            hidden,
+            className,
+            children,
+            shape = 'square',
+            variant = 'borderless',
+            ...props
+        },
+        ref
+    ) => {
         return (
             <button
                 ref={ref}
                 {...props}
                 className={cn(
-                    'inline-grid aspect-square w-8 flex-none place-content-center rounded-full text-base hover:bg-gray-300/70',
+                    'inline-grid aspect-square min-w-8 flex-none cursor-pointer place-content-center p-1.5 text-base hover:bg-gray-200',
                     {
                         '!hidden': hidden,
+                        'rounded-full': shape === 'circle',
+                        'rounded-lg': shape === 'square',
+                        'bg-gray-200/70': variant === 'filled',
+                        'border border-gray-300': variant === 'outlined',
                     },
                     className
                 )}

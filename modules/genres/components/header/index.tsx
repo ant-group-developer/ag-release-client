@@ -1,44 +1,33 @@
 import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
 import CreateButton from '@/components/ui/button/create-button';
-import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
+import AppSearch from '@/components/ui/input/search';
+import { UseFilterProps } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_GENRES } from '../../enums';
 import { GenresDataFilter } from '../../types';
-import GenresSuperFilter from './genres-super-filter';
 
-type Props = {
-    dataFilter: GenresDataFilter;
-    onChangeFilter: OnChangeFilter<GenresDataFilter>;
-    canClearFilter: boolean;
-    removeFilter: RemoveFilter;
-    handleRefresh: () => void;
-};
+type Props = Pick<UseFilterProps<GenresDataFilter>, 'dataFilter' | 'onSearch'>;
 
-export default function GenresHeader({
-    dataFilter,
-    onChangeFilter,
-    canClearFilter,
-    removeFilter,
-    handleRefresh,
-}: Props) {
+export default function GenresHeader({ dataFilter, onSearch }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     return (
-        <AppHeader className="px-4 py-1">
+        <AppHeader className="app-header p-2">
             <AppHeaderGroup>
-                <GenresSuperFilter
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                />
+                <div>
+                    <AppSearch
+                        className="max-w-52"
+                        onChange={onSearch}
+                        defaultValue={dataFilter.keyword}
+                    />
+                </div>
             </AppHeaderGroup>
             <AppHeaderGroup position="end" className="flex-1">
                 <div className="flex items-center gap-2">
                     <CreateButton
                         canCreate={true}
-                        text="Thêm thể loại"
+                        text={messages('genres.add')}
                         onClick={() => openModal(TYPE_MODAL_GENRES.CREATE)}
                     />
                 </div>

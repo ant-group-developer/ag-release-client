@@ -1,12 +1,13 @@
+export const dynamic = 'force-dynamic';
 import GoogleAnalytics from '@/components/google-analytics';
-import ThemeProvider from '@/components/theme-provider';
 import { defaultConfig } from '@/constants/env';
 import { DEFAULT_ROUTE } from '@/enums/routes';
 import { flattenData } from '@/helpers/common';
 import { redirect, routing } from '@/i18n/routing';
 import { adminRoutes } from '@/layouts/cms-layout/routes';
+import { getCurrentTenant } from '@/modules/auth/api';
+import { getSettingPublicServer } from '@/modules/setting/apis';
 import AntdProvider from '@/providers/antd';
-import '@/styles/globals.css';
 import type { Metadata } from 'next';
 import { pathname } from 'next-extra/pathname';
 import { NextIntlClientProvider } from 'next-intl';
@@ -18,23 +19,15 @@ import {
     getTimeZone,
 } from 'next-intl/server';
 import { Inter, Open_Sans } from 'next/font/google';
-import localFont from 'next/font/local';
 import { cookies } from 'next/headers';
-import NextTopLoader from 'nextjs-toploader';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { PropsWithChildren } from 'react';
-import { ToastContainer } from 'react-toastify';
 
 const openSans = Open_Sans({
     subsets: ['latin'],
     weight: ['400', '500', '600', '700', '800'],
     variable: '--font-open-sans',
     display: 'swap',
-});
-
-const boston = localFont({
-    src: '../fonts/boston.otf',
-    variable: '--font-boston',
 });
 
 const inter = Inter({
@@ -49,30 +42,6 @@ interface RootLayoutProps extends PropsWithChildren {
     params: Promise<{ locale: string }>;
 }
 
-async function fetchSiteSettings() {
-    const cookieStore = await cookies();
-    const accessToken = cookieStore.get('at')?.value;
-
-    try {
-        const baseUrl = process.env.API_URL;
-        const response = await fetch(`${baseUrl}/config/public-config`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error(`Error fetching settings: ${response.status}`);
-        }
-
-        return await response.json();
-    } catch (error) {
-        console.error('Failed to fetch site settings:', error);
-        return { data: null };
-    }
-}
-
 export async function generateMetadata({
     params,
 }: Omit<RootLayoutProps, 'children'>): Promise<Metadata> {
@@ -81,17 +50,11 @@ export async function generateMetadata({
     const now = await getNow({ locale });
     const timeZone = await getTimeZone({ locale });
     const route = await pathname();
-    // const { data } = await useGetSettingPublic();
-    // let settingData;
-    // try {
-    //     const response = await settingApi.getSettingPublic();
-    //     settingData = response?.data?.data;
-    // } catch (error) {
-    //     console.error('Failed to fetch settings:', error);
-    // }
+    const settingPublic = await getSettingPublicServer();
+    const settingData = await getCurrentTenant(cookies()?.toString?.());
+    // const settingData = null as any;
 
-    const settingsResponse = await fetchSiteSettings();
-    const settingData = settingsResponse.data;
+    const settingPublicWebsiteData = settingPublic?.data?.website ?? null;
 
     const getTitle = () => {
         const flattenRoutes = flattenData(adminRoutes, {});
@@ -103,12 +66,26 @@ export async function generateMetadata({
     const title = getTitle();
 
     const appTitle = title
-        ? `${settingData?.website ?? defaultConfig.APP_SHORT_NAME} | ${title}`
-        : (settingData?.website ?? defaultConfig.APP_SHORT_NAME);
-    const appDescription = defaultConfig.APP_DESCRIPTION;
-    const appUrl = defaultConfig.WEBSITE_URL;
+        ? `${settingData?.name || settingPublicWebsiteData?.name || defaultConfig.APP_SHORT_NAME} | ${title}`
+        : settingData?.name ||
+          settingPublicWebsiteData?.name ||
+          defaultConfig.APP_SHORT_NAME;
+
+    const appDescription =
+        settingData?.title ||
+        settingPublicWebsiteData?.description ||
+        defaultConfig.APP_DESCRIPTION;
+    const appUrl =
+        (settingData?.domain && `https://${settingData.domain}`) ||
+        defaultConfig.WEBSITE_URL ||
+        '';
     const appImage = defaultConfig.APP_IMAGE;
     const appKeyword = defaultConfig.APP_KEYWORDS;
+    const appIcon =
+        settingData?.icon ||
+        settingData?.logo ||
+        settingPublicWebsiteData?.logo ||
+        defaultConfig.APP_LOGO;
 
     return {
         metadataBase: new URL(appUrl),
@@ -124,7 +101,7 @@ export async function generateMetadata({
             currentYear: formatter.dateTime(now, { year: 'numeric' }),
             timeZone: timeZone || 'N/A',
         },
-        icons: '/logo.png',
+        icons: appIcon,
         twitter: {
             card: 'summary_large_image',
             site: appUrl,
@@ -149,24 +126,18 @@ export default async function RootLayout({
     const messages = await getMessages({ locale });
 
     return (
-        <html lang={locale} suppressHydrationWarning>
-            <body
-                className={`${boston.variable} ${openSans.variable} ${openSans.className} ${inter.variable} ${inter.className} text-sm antialiased`}
-            >
+        // <html lang={locale}>
+        //     <body
+        //         className={`${openSans.variable} ${openSans.className} ${inter.variable} ${inter.className} text-sm antialiased`}
+        //     >
+        <NextIntlClientProvider locale={locale} messages={messages}>
+            {/* <ThemeProvider /> */}
+            <AntdProvider>
+                <NuqsAdapter>{children}</NuqsAdapter>
                 <GoogleAnalytics />
-                <NextIntlClientProvider locale={locale} messages={messages}>
-                    <ThemeProvider />
-                    <AntdProvider>
-                        <NuqsAdapter>{children}</NuqsAdapter>
-                    </AntdProvider>
-                </NextIntlClientProvider>
-                <ToastContainer
-                    pauseOnFocusLoss={false}
-                    position="top-center"
-                />
-                {/* <ProgressBar /> */}
-                <NextTopLoader showSpinner={false} />
-            </body>
-        </html>
+            </AntdProvider>
+        </NextIntlClientProvider>
+        //     </body>
+        // </html>
     );
 }

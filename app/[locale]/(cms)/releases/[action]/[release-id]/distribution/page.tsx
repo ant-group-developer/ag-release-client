@@ -1,57 +1,24 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
-import { SESSION_STORAGE_KEY } from '@/enums/common';
+import { PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
-import {
-    defaultVisibleColumnsDistribution,
-    distributionData,
-} from '@/modules/distribution/constants';
-import {
-    DISTRIBUTION_COLUMNS_DISPLAY,
-    DISTRIBUTION_STATUS,
-} from '@/modules/distribution/enum';
+import { distributionData } from '@/modules/distribution/constants';
+import { DISTRIBUTION_STATUS } from '@/modules/distribution/enum';
 import { DistributionDataFilter } from '@/modules/distribution/types';
-import DistributionHeader from '@/modules/release-detail/release-distribution/components/header';
-import DistributionStatus from '@/modules/release-detail/release-distribution/components/header-action/distribution-status';
-import DistributionTable from '@/modules/release-detail/release-distribution/components/table';
+import DistributionStatus from '@/modules/releases/components/release-detail/release-distribution/components/header-action/distribution-status';
+import DistributionTable from '@/modules/releases/components/release-detail/release-distribution/components/table';
 import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
-import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
-import { Button } from 'antd';
-import dayjs from 'dayjs';
-import { useTranslations } from 'next-intl';
+import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { Button, theme } from 'antd';
 import { Key, useState } from 'react';
 type Props = {};
 
 export default function Distribution({}: Props) {
-    const messages = useTranslations();
+    // const messages = useTranslations();
     const [selectedRow, setSelectedRow] = useState<Key[]>([]);
-    const [visibleColumns, setVisibleColumns] = useState<
-        DISTRIBUTION_COLUMNS_DISPLAY[]
-    >(() => {
-        if (typeof window !== 'undefined') {
-            const stored = sessionStorage.getItem(
-                SESSION_STORAGE_KEY.VISIBLE_COLUMNS_DISTRIBUTION
-            );
-            if (!stored) return defaultVisibleColumnsDistribution;
-            const { value, timestamp } = JSON.parse(stored) as {
-                value: DISTRIBUTION_COLUMNS_DISPLAY[];
-                timestamp: string;
-            };
-
-            if (dayjs().diff(dayjs(timestamp), 'day') >= 10) {
-                sessionStorage.removeItem(
-                    SESSION_STORAGE_KEY.VISIBLE_COLUMNS_DISTRIBUTION
-                );
-                return defaultVisibleColumnsDistribution;
-            }
-
-            return value;
-        }
-        return defaultVisibleColumnsDistribution;
-    });
 
     const openModal = useModalStore((state) => state.openModal);
 
@@ -64,11 +31,6 @@ export default function Distribution({}: Props) {
         onChange: handleSelectedRow,
     };
 
-    const handleChangeVisibleColumns = (
-        columns: DISTRIBUTION_COLUMNS_DISPLAY[]
-    ) => {
-        setVisibleColumns(columns);
-    };
     const {
         dataFilter,
         onChangeFilter,
@@ -82,209 +44,31 @@ export default function Distribution({}: Props) {
 
     // const { height, width } = useWindowSize();
     // const isSmallDevice = Number(width) <= SCREEN.MD;
+    const { token } = theme.useToken();
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const formValues = useReleaseFormStore((state) => state.formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
-    const validationErrors = useReleaseFormStore(
-        (state) => state.validationErrors
-    );
-    const errorsLength = validationErrors?.length;
+
     const releaseId = formValues?.id || '';
     const router = useRouter();
-
-    // const scrollY = () => {
-    //     if (isSmallDevice) return undefined;
-    //     if (!height) return undefined;
-    //     const minHeight = 300;
-    //     const header = 64;
-    //     const pageHeader = 204;
-    //     const pageAction = 49;
-    //     const pageFilter = 49;
-    //     const pagination = 58;
-    //     const headerTable = 39;
-    //     const headerFooterHeight =
-    //         header +
-    //         pageHeader +
-    //         pageFilter +
-    //         pagination +
-    //         headerTable +
-    //         pageAction;
-    //     const value = height - headerFooterHeight;
-    //     if (value > minHeight) return value;
-    //     return minHeight;
-    // };
-
-    const handleRefresh = () => {};
-
-    // const facebookOptions = [
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>Claim Ad Earnings</span>
-    //                 <IconInfoTooltip title=" Quét tất cả video/câu chuyện sử dụng nhạc của bạn và bật kiếm tiền (nhận tiền bản quyền)" />
-    //             </p>
-    //         ),
-    //         value: 'Claim Ad Earnings',
-    //     },
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>Block</span>
-    //                 <IconInfoTooltip title="Quét tất cả video/câu chuyện sử dụng nhạc của bạn và chặn chúng." />
-    //             </p>
-    //         ),
-    //         value: 'Block',
-    //     },
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>Monitor</span>
-    //                 <IconInfoTooltip title="Quét tất cả video/câu chuyện sử dụng nhạc của bạn nhưng không bật kiếm tiền. Chỉ thu thập dữ liệu phân tích." />
-    //             </p>
-    //         ),
-    //         value: 'Monitor',
-    //     },
-    // ];
-
-    // const tiktokOptions = [
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>NoTiktokScanning</span>
-    //                 <IconInfoTooltip title="Không quét TikTok để tìm các video chứa nhạc của bạn vì bản thu này không đáp ứng đầy đủ các yêu cầu (xem Thuộc tính bản nhạc). Lưu ý rằng nhạc của bạn vẫn sẽ có sẵn để người dùng TikTok thêm vào video của họ." />
-    //             </p>
-    //         ),
-    //         value: 'NoTiktokScanning',
-    //     },
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>Block</span>
-    //                 <IconInfoTooltip title="Quét tất cả video/câu chuyện sử dụng nhạc của bạn và chặn chúng." />
-    //             </p>
-    //         ),
-    //         value: 'Block',
-    //     },
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>Monetize</span>
-    //                 <IconInfoTooltip title="Quét tất cả các video sử dụng nhạc của bạn và bật kiếm tiền cho chúng (nhận tiền bản quyền)." />
-    //             </p>
-    //         ),
-    //         value: 'Monitor',
-    //     },
-    // ];
-
-    // const youtubeOptions = [
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>Monetize in all countries</span>
-    //                 <IconInfoTooltip title="Quét tất cả các video sử dụng nhạc của bạn và bật kiếm tiền cho chúng (nhận tiền bản quyền)." />
-    //             </p>
-    //         ),
-    //         value: 'Monetize in all',
-    //     },
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>Track in all countries</span>
-    //                 <IconInfoTooltip title="Quét tất cả các video sử dụng nhạc của bạn nhưng không bật kiếm tiền. Chỉ thu thập dữ liệu phân tích về chúng." />
-    //             </p>
-    //         ),
-    //         value: 'rack in all countries',
-    //     },
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>Block in all countries</span>
-    //                 <IconInfoTooltip title="Quét tất cả các video sử dụng nhạc của bạn và chặn chúng." />
-    //             </p>
-    //         ),
-    //         value: 'Block in all countries',
-    //     },
-    // ];
-
-    // const amazonOptions = [
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>$0.6</span>
-    //                 <span>Back</span>
-    //             </p>
-    //         ),
-    //         value: 0.6,
-    //     },
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>$0.8</span>
-    //                 <span>Mid</span>
-    //             </p>
-    //         ),
-    //         value: 0.8,
-    //     },
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>$1.2</span>
-    //                 <span>Front</span>
-    //             </p>
-    //         ),
-    //         value: 1.2,
-    //     },
-    // ];
-
-    // const appleMusicOptions = [
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>$0.6</span>
-    //                 <span>Back</span>
-    //             </p>
-    //         ),
-    //         value: 0.6,
-    //     },
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>$0.8</span>
-    //                 <span>Mid</span>
-    //             </p>
-    //         ),
-    //         value: 0.8,
-    //     },
-    //     {
-    //         label: (
-    //             <p className="flex items-center justify-between">
-    //                 <span>$1.2</span>
-    //                 <span>Front</span>
-    //             </p>
-    //         ),
-    //         value: 1.2,
-    //     },
-    // ];
-
-    const dataTable = distributionData.filter((item) => {
-        return selectedRow.includes(item.id);
-    });
 
     const handleDistribution = () => {
         setFormValues({
             ...formValues,
-            platforms: selectedRow as string[],
+            // platforms: selectedRow as string[],
         });
         closeModal();
         router.push(`/releases/detail/${releaseId}/review`);
-        console.log(formValues);
     };
 
     return (
-        <div className="flex h-full flex-col justify-between">
-            <div className="">
-                <div className="flex justify-between border-b">
+        <div className="flex h-full flex-col justify-between pb-4">
+            <div className="space-y-4">
+                <div
+                    className="flex justify-between rounded-lg p-2"
+                    style={{ backgroundColor: token.colorBgContainer }}
+                >
                     <DistributionStatus
                         onChangeFilter={onChangeFilter}
                         value={dataFilter.status ?? DISTRIBUTION_STATUS.ALL}
@@ -299,7 +83,7 @@ export default function Distribution({}: Props) {
                                 }}
                                 className=""
                                 type="primary"
-                                disabled={errorsLength > 0}
+                                // disabled={errorsLength > 0}
                             >
                                 <span>
                                     Phân phối {selectedRow.length}/
@@ -313,7 +97,7 @@ export default function Distribution({}: Props) {
                                     );
                                 }}
                                 danger
-                                disabled={errorsLength > 0}
+                                // disabled={errorsLength > 0}
                             >
                                 <span>
                                     Gỡ xuống {selectedRow.length}/
@@ -324,7 +108,7 @@ export default function Distribution({}: Props) {
                     )}
                 </div>
 
-                <DistributionHeader
+                {/* <DistributionHeader
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
                     canClearFilter={canClearFilter}
@@ -332,7 +116,7 @@ export default function Distribution({}: Props) {
                     handleRefresh={handleRefresh}
                     handleChangeVisibleColumns={handleChangeVisibleColumns}
                     visibleColumn={visibleColumns}
-                />
+                /> */}
 
                 <DistributionTable
                     dataSource={distributionData}
@@ -364,7 +148,8 @@ export default function Distribution({}: Props) {
             )}
 
             <AppPagination
-                className="border-t"
+                className="rounded-b-lg"
+                style={{ backgroundColor: token.colorBgContainer }}
                 align="end"
                 current={dataFilter.page}
                 pageSize={dataFilter.pageSize}
@@ -373,7 +158,7 @@ export default function Distribution({}: Props) {
                 showTotalText
                 showSizeChanger
                 showQuickJumper
-                pageSizeOptions={[21, 28, 35]}
+                pageSizeOptions={PAGE_SIZE_OPTIONS}
             />
         </div>
     );

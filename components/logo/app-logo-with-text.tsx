@@ -14,10 +14,10 @@ type Props = {
 function AppLogoWithText({ className, wrapperClassName, size = 70 }: Props) {
     // const { data } = useGetSettingPublic();
     // const companyName = data?.website || defaultConfig.APP_SHORT_NAME;
-    // const companyLogo = data?.logoUrl || '/logo.png';
+    // const companyLogo = data?.logoUrl || defaultConfig.APP_LOGO;
 
     const companyName = defaultConfig.APP_SHORT_NAME;
-    const companyLogo = '/logo.png';
+    const companyLogo = defaultConfig.APP_LOGO;
 
     return (
         <Link
@@ -34,7 +34,7 @@ function AppLogoWithText({ className, wrapperClassName, size = 70 }: Props) {
             />
             <h2
                 className={cn(
-                    'logo-font text-4xl uppercase text-[#3f4254] hover:text-[#1677ff] dark:text-[#fff]',
+                    'lett text-3xl font-extrabold tracking-wide text-[#3f4254] hover:text-[#1677ff] dark:text-[#fff]',
                     className
                 )}
             >

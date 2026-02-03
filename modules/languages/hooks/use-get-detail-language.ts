@@ -5,7 +5,7 @@ import { LanguagesData } from '../types';
 
 export const useGetDetailLanguage = (id: LanguagesData['id']) => {
     const { data, ...res } = useQuery({
-        queryKey: [languageQueryKeys.getDetail, id],
+        queryKey: languageQueryKeys.detail(id),
         queryFn: () => languageApi.getDetail(id),
     });
 

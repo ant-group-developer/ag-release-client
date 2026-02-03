@@ -1,56 +1,56 @@
 'use client';
-import { LOCALE } from '@/enums/common';
+import DetailSkeleton from '@/components/ui/skeleton/detail-skeleton';
+import { APP_ROUTES } from '@/enums/routes';
 import { cn } from '@/helpers/common';
-import { getReleaseDetailTabRoute } from '@/helpers/link';
-import { showNotification } from '@/helpers/messages-helper';
-import useModalStore from '@/hooks/use-modal';
-import { Link, useRouter } from '@/i18n/routing';
-import ReleaseDetailHeader from '@/modules/release-detail/header';
-import RightSidebar from '@/modules/release-detail/right-sidebar';
+import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
+import { Link } from '@/i18n/routing';
+import AppError from '@/modules/auth/components/error';
+import ReleaseDetailHeader from '@/modules/releases/components/release-detail/header';
+import RightSidebar from '@/modules/releases/components/release-detail/right-sidebar';
+import { RELEASES_TABS } from '@/modules/releases/enums';
 import {
-    RELEASES_TABS,
-    RELEASES_TYPE,
-    TYPE_MODAL_RELEASE,
-} from '@/modules/releases/enums';
-import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
-import { ReleaseFormValuesData } from '@/modules/releases/types';
-import { GENRES } from '@/modules/tracks/enums';
-import { Button, Tabs, TabsProps } from 'antd';
+    ReleaseFormStoreData,
+    useReleaseFormStore,
+} from '@/modules/releases/hooks/release-form-store';
+import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
+import { Breadcrumb, Tabs, TabsProps, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname } from 'next/navigation';
-import { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 
 type Props = {};
 
 export default function ReleaseDetail({ children }: PropsWithChildren) {
+    // hooks
     const messages = useTranslations();
-    const router = useRouter();
     const params = useParams();
-    const releaseId = params['release-id'] ? `/${params['release-id']}` : '';
-    const isCreateReleasePage = params['action'] === 'create';
-    const isDisableTab = releaseId == '';
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
-    const formValues = useReleaseFormStore((state) => state.formValues);
-    const validationErrors = useReleaseFormStore(
-        (state) => state.validationErrors
-    );
+    // const formValues = useReleaseFormStore((state) => state.formValues);
+    const pathname = usePathname();
+    // const openModal = useModalStore((state) => state.openModal);
     const resetFormValues = useReleaseFormStore(
         (state) => state.resetFormValues
     );
-    const pathname = usePathname();
-    const openModal = useModalStore((state) => state.openModal);
+    const { token } = theme.useToken();
+    const { getReleaseTabRoute } = useGetReleaseDetailRoute();
+    // const releaseAction = useReleaseActionStore((s) => s.action);
+
+    // state
     const [activeTab, setActiveTab] = useState<string>(
         RELEASES_TABS.CORE_DETAIL
     );
+    const [isScrolled, setIsScrolled] = useState(false);
 
-    const isDetailPage = pathname.includes('/core-detail');
-    const [isScrolledOnDetailPage, setIsScrolledOnDetailPage] = useState(false);
-    const childrenRef = useRef<HTMLDivElement>(null);
-
+    // const
+    const releaseId = params['release-id'] ? `${params['release-id']}` : '';
+    const isCreateReleasePage = params['action'] === 'create';
+    const isDisableTab = releaseId == '';
+    const isDetailPage = pathname.includes(`/${RELEASES_TABS.CORE_DETAIL}`);
+    // const isTracksPage = pathname.includes(`/${RELEASES_TABS.TRACKS}`);
+    const isCoreDetailPage = pathname.includes(`/${RELEASES_TABS.CORE_DETAIL}`);
     const coreDetailTabsNavigate = isCreateReleasePage
         ? '/releases/create'
-        : getReleaseDetailTabRoute('R100000001', RELEASES_TABS.CORE_DETAIL);
-
+        : getReleaseTabRoute(releaseId, RELEASES_TABS.CORE_DETAIL);
     const items: TabsProps['items'] = [
         {
             key: RELEASES_TABS.CORE_DETAIL,
@@ -75,17 +75,14 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             label: (
                 <Link
                     className={cn(
-                        !isDisableTab || isCreateReleasePage
+                        isDisableTab || isCreateReleasePage
                             ? 'pointer-events-none'
                             : ''
                     )}
-                    href={getReleaseDetailTabRoute(
-                        'R100000001',
-                        RELEASES_TABS.TRACKS
-                    )}
+                    href={getReleaseTabRoute(releaseId, RELEASES_TABS.TRACKS)}
                 >
                     <span className="font-medium">
-                        {messages('tracks.label')}
+                        {messages('common.tracks')}
                     </span>
                 </Link>
             ),
@@ -96,13 +93,10 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             label: (
                 <Link
                     className={cn(isDisableTab ? 'pointer-events-none' : '')}
-                    href={getReleaseDetailTabRoute(
-                        'R100000001',
-                        RELEASES_TABS.SCHEDULE
-                    )}
+                    href={getReleaseTabRoute(releaseId, RELEASES_TABS.SCHEDULE)}
                 >
                     <span className="font-medium">
-                        {messages('releases.scheduling.label')}
+                        {messages('release.scheduling.label')}
                     </span>
                 </Link>
             ),
@@ -113,8 +107,8 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             label: (
                 <Link
                     className={cn(isDisableTab ? 'pointer-events-none' : '')}
-                    href={getReleaseDetailTabRoute(
-                        'R100000001',
+                    href={getReleaseTabRoute(
+                        releaseId,
                         RELEASES_TABS.DISTRIBUTION
                     )}
                 >
@@ -130,53 +124,23 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             label: (
                 <Link
                     className={cn(isDisableTab ? 'pointer-events-none' : '')}
-                    href={getReleaseDetailTabRoute(
-                        'R100000001',
-                        RELEASES_TABS.REVIEW
-                    )}
+                    href={getReleaseTabRoute(releaseId, RELEASES_TABS.REVIEW)}
                 >
-                    <span className="font-medium">Review</span>
+                    <span className="font-medium">
+                        {messages('common.overview')}
+                    </span>
                 </Link>
             ),
             disabled: isDisableTab,
         },
     ];
 
-    const handleTabChange = (key: string) => {
-        router.push(getReleaseDetailTabRoute(releaseId, key as RELEASES_TABS));
-    };
-
-    const handleSubmit = async () => {
-        try {
-            router.push(`/releases/detail/341239532/core-detail`);
-            showNotification('success', 'Thông tin đã được lưu thành công');
-        } catch (error) {
-            console.error('Lỗi khi xác thực form:', error);
-        }
-    };
-
-    const isTracksPage = pathname.includes('/tracks');
-
-    const buttonSave = (
-        <div className="flex justify-end gap-2">
-            {isTracksPage && (
-                <Button
-                    onClick={() => openModal(TYPE_MODAL_RELEASE.ADD_TRACK)}
-                    type="primary"
-                >
-                    {messages('tracks.add')}
-                </Button>
-            )}
-
-            {isDetailPage && (
-                <Button type="primary" onClick={handleSubmit}>
-                    {messages('common.saveInfo')}
-                </Button>
-            )}
-        </div>
-    );
-
-    const headerIsScrolled = isDetailPage ? isScrolledOnDetailPage : true;
+    // apis
+    const {
+        releaseData,
+        isLoading: isReleaseDataLoading,
+        error,
+    } = useGetDetailRelease(releaseId);
 
     useEffect(() => {
         const getActiveTab = () => {
@@ -191,121 +155,98 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             return map[tabKey ?? ''] || RELEASES_TABS.CORE_DETAIL;
         };
         setActiveTab(getActiveTab());
-
-        // Set initial scroll state if it's a detail page and already scrolled
-        if (isDetailPage) {
-            if (childrenRef.current && childrenRef.current.scrollTop > 10) {
-                setIsScrolledOnDetailPage(true);
-            } else {
-                setIsScrolledOnDetailPage(false);
-            }
-        }
     }, [pathname, isDetailPage]);
 
     useEffect(() => {
-        const handleScroll = () => {
-            if (!childrenRef.current || !isDetailPage) return;
-            if (
-                childrenRef.current.scrollHeight >
-                childrenRef.current.clientHeight
-            ) {
-                const newIsScrolled = childrenRef.current.scrollTop > 0;
-                if (newIsScrolled !== isScrolledOnDetailPage) {
-                    setIsScrolledOnDetailPage(newIsScrolled);
-                }
-            }
-        };
-
-        const currentRef = childrenRef.current;
-        if (currentRef && isDetailPage) {
-            currentRef.addEventListener('scroll', handleScroll);
-        }
-        return () => {
-            if (currentRef) {
-                currentRef.removeEventListener('scroll', handleScroll);
-            }
-        };
-    }, [isScrolledOnDetailPage, isDetailPage]);
-
-    const initialData: ReleaseFormValuesData = {
-        id: 'R100000001',
-        releaseType: RELEASES_TYPE.ALBUM,
-        nameRelease: 'Album Mới 2024',
-        isMoreThan4Artists: false,
-        artists: [
-            {
-                id: 'Sơn Tùng MTP',
-                name: 'Sơn Tùng MTP',
-                role: 'Main Artist',
-            },
-        ],
-        genres: GENRES.HIP_HOP,
-        subGenres: GENRES.HIP_HOP,
-        label: 'ANT-MUSIC',
-        upc: '123456789012',
-        catalogId: 'CAT-2024-001',
-        cLine: {
-            year: '2026',
-            name: 'AMG',
-        },
-        pLine: {
-            year: '2026',
-            name: 'AMG',
-        },
-        thumbnail: {
-            fileList: [
-                {
-                    uid: '-1',
-                    name: 'album-cover.jpg',
-                    status: 'done',
-                    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-                    thumbUrl:
-                        'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-                },
-            ],
-        },
-        version: '',
-        metaDataLanguage: LOCALE.VI,
-        tracks: [],
-        releaseDate: '',
-        timezone: '',
-        territoryType: undefined,
-        platforms: [],
-        artistsApplyAllTracks: [],
-    };
-
-    useEffect(() => {
-        if (!releaseId) {
+        if (!releaseId || releaseId === '' || isCreateReleasePage) {
             resetFormValues();
+            return;
         }
 
-        const releaseAlreadyHasValue = formValues?.id;
-        if (releaseId && !releaseAlreadyHasValue) {
+        // ReleaseData from api into Release zustand global state
+        const initialData: ReleaseFormStoreData = {
+            ...releaseData,
+        };
+
+        if (releaseId && releaseData?.id) {
             setFormValues(initialData);
         }
-    }, [releaseId]);
+    }, [releaseId, releaseData?.id]);
+
+    useEffect(() => {
+        if (isCreateReleasePage) return setIsScrolled(false);
+        // Chỉ theo dõi scroll khi ở trang core-detail, các trang khác mặc định isScrolled = true
+        if (!isCoreDetailPage) {
+            setIsScrolled(true);
+            return;
+        }
+    }, [isCoreDetailPage]);
+
+    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        if (isCoreDetailPage) {
+            setIsScrolled(e.currentTarget.scrollTop > 0);
+        }
+    };
+
+    const currentItem = items.find((item) => item.key === activeTab);
+    const breadcrumbItems = [
+        {
+            title: messages('release.releases'),
+            href: APP_ROUTES.RELEASES,
+        },
+        {
+            title: releaseData?.title || messages('common.create'),
+        },
+        {
+            title: currentItem?.label,
+        },
+    ];
+
+    if (error) {
+        return <AppError error={error} />;
+    }
+
+    if (isReleaseDataLoading || !releaseData) {
+        return (
+            <div className="w-full">
+                <DetailSkeleton />
+            </div>
+        );
+    }
 
     return (
-        <div className="flex h-full overflow-hidden">
+        <div
+            className="flex h-full overflow-x-clip"
+            style={{ backgroundColor: token.colorBgLayout }}
+        >
             <div
-                ref={childrenRef}
-                className="flex h-full flex-1 flex-col overflow-y-auto"
+                onScroll={handleScroll}
+                className="thin-scrollbar mx-auto flex min-w-0 flex-1 flex-col overflow-y-auto px-8"
             >
-                <div className="sticky top-0 z-10 bg-white">
-                    <ReleaseDetailHeader isScrolled={headerIsScrolled} />
-                    <div className="px-4">
+                <Breadcrumb items={breadcrumbItems} className="!py-4" />
+                <div
+                    id="release-header"
+                    className="sticky top-0 z-10 mb-4 rounded-lg p-4"
+                    style={{
+                        backgroundColor: token.colorBgContainer,
+                    }}
+                >
+                    <ReleaseDetailHeader isScrolled={isScrolled} />
+                    <div>
                         <Tabs
                             className="tab-release-detail !pt-0"
+                            style={{
+                                backgroundColor: token.colorBgContainer,
+                            }}
                             items={items}
                             activeKey={activeTab}
-                            onChange={handleTabChange}
-                            tabBarExtraContent={buttonSave}
+                            // tabBarExtraContent={extraButton}
                         />
                     </div>
                 </div>
-                <div className="flex-1">{children}</div>
+                <div>{children}</div>
             </div>
-            <RightSidebar errors={validationErrors} />
+            <RightSidebar />
         </div>
     );
 }

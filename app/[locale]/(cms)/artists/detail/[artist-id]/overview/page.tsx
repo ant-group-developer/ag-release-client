@@ -1,33 +1,70 @@
 'use client';
 
-import AppContainer from '@/components/ant-music/app-container';
+import { SIZE_ICON } from '@/constants/common';
 import ArtistProfileCard from '@/modules/artist/components/artist-detail/overview/card/artist-profile';
 import RevenueAnalysisCard from '@/modules/artist/components/artist-detail/overview/card/revenue-analysis';
+import StatItem from '@/modules/artist/components/artist-detail/overview/card/stat-item';
 import StreamsAnalysisCard from '@/modules/artist/components/artist-detail/overview/card/streams-analysis';
-import TopOfReleaseCard from '@/modules/artist/components/artist-detail/overview/card/top-of-release';
-import TopOfTrackCard from '@/modules/artist/components/artist-detail/overview/card/top-of-track';
-import ArtistDetailHeader from '@/modules/artist/components/artist-detail/overview/header';
-import ListRelease from '@/modules/dashboard/components/list-release';
-import { fakeReleasesData } from '@/modules/dashboard/constants/mockData';
+import { useGetDetailArtist } from '@/modules/artist/hooks/use-get-detail-artist';
+import { theme } from 'antd';
+import { DiscAlbum, Music4, User } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
 
 type Props = {};
 
 export default function Overview({}: Props) {
+    const messages = useTranslations();
+    const params = useParams();
+    const artistId = params['artist-id'];
+    const { artistData } = useGetDetailArtist(artistId as string);
+    const { token } = theme.useToken();
+    const statStyles = {
+        backgroundColor: token.colorBgContainer,
+    };
+
     return (
-        <AppContainer>
-            <ArtistDetailHeader />
+        <div className="space-y-4 py-4">
             <div className="grid grid-cols-3 gap-4">
-                <TopOfReleaseCard />
-                <TopOfTrackCard />
-                <ArtistProfileCard />
+                <StatItem
+                    iconBgColor="bg-green-50"
+                    title={messages('release.count')}
+                    value={artistData?.releaseCount}
+                    icon={
+                        <DiscAlbum
+                            size={SIZE_ICON}
+                            className="text-green-500"
+                        />
+                    }
+                    style={statStyles}
+                />
+
+                <StatItem
+                    iconBgColor="bg-blue-50"
+                    title={messages('track.count')}
+                    value={artistData?.trackCount}
+                    icon={<Music4 size={SIZE_ICON} className="text-blue-500" />}
+                    style={statStyles}
+                />
+
+                <StatItem
+                    iconBgColor="bg-purple-50"
+                    title={messages('artist.profiles')}
+                    value={artistData?.artistProfiles?.length}
+                    icon={<User size={SIZE_ICON} className="text-purple-500" />}
+                    style={statStyles}
+                />
             </div>
-            <div className="mt-4 grid grid-cols-2 gap-4">
+
+            <ArtistProfileCard artistData={artistData} />
+
+            <div className="grid grid-cols-2 gap-4">
                 <StreamsAnalysisCard />
                 <RevenueAnalysisCard />
             </div>
-            <div>
-                <ListRelease data={fakeReleasesData.slice(0, 7)} />
-            </div>
-        </AppContainer>
+            {/* <div> */}
+            {/* <ListRelease data={fakeReleasesData.slice(0, 7)} /> */}
+            {/* </div> */}
+        </div>
     );
 }

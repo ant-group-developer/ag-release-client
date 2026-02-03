@@ -1,13 +1,16 @@
 import DateCreatedDialog from '@/components/filter-dialog/date-create-dialog';
-import SearchDialog from '@/components/shared/search-dialog';
+import DateUpdateDialog from '@/components/filter-dialog/date-update-dialog';
+import SearchDialog from '@/components/filter-dialog/search-dialog';
 import IconButton from '@/components/ui/button/icon-button';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { TYPE_FILTER } from '@/enums/common';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
 import { ListFilter, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
+import { useGetListArtist } from '../../hooks/use-get-list-artists';
 import { ArtistDataFilter } from '../../types';
 import ArtistsHeaderDropdown from '../dropdown/artists-header-dropdown';
 
@@ -32,6 +35,10 @@ export default function ArtistsSuperFilter({
     const handleChangeTypeFilter = (value?: TYPE_FILTER) => {
         setTypeFilter(value);
     };
+
+    const { artistsData } = useGetListArtist({
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
+    });
 
     useEffect(() => {
         const handleOutSideClick = (event: any) => {
@@ -69,7 +76,9 @@ export default function ArtistsSuperFilter({
                 className="h-10 px-2 text-2xl"
                 onClick={() => setTypeFilter(TYPE_FILTER.DROPDOWN)}
             >
-                <ListFilter />
+                <CustomTooltip title={messages('common.filter')}>
+                    <ListFilter />
+                </CustomTooltip>
             </button>
 
             <div className="flex flex-1 flex-wrap items-center gap-1">
@@ -81,10 +90,26 @@ export default function ArtistsSuperFilter({
                     onChangeFilter={onChangeFilter}
                 />
 
+                {/* <SearchArtistIdDialog
+                    title={messages('artist.id')}
+                    open={typeFilter === TYPE_FILTER.ID}
+                    handleChangeTypeFilter={handleChangeTypeFilter}
+                    dataFilter={dataFilter}
+                    onChangeFilter={onChangeFilter}
+                /> */}
+
                 <DateCreatedDialog
                     open={typeFilter === TYPE_FILTER.DATE_CREATED}
                     handleChangeTypeFilter={handleChangeTypeFilter}
-                    title={messages('common.dateCreated')}
+                    title={messages('common.createdAt')}
+                    dataFilter={dataFilter}
+                    onChangeFilter={onChangeFilter}
+                />
+
+                <DateUpdateDialog
+                    open={typeFilter === TYPE_FILTER.DATE_UPDATED}
+                    handleChangeTypeFilter={handleChangeTypeFilter}
+                    title={messages('common.updatedAt')}
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
                 />

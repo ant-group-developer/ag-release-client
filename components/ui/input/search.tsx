@@ -6,8 +6,8 @@ import { ChangeEventHandler } from 'react';
 
 export type OnSearchType = ChangeEventHandler<HTMLInputElement>;
 
-type Props = {
-    onChange?: OnSearchType;
+export type AppSearchProps = {
+    onChange?: ChangeEventHandler<HTMLInputElement>;
     wrapperClassName?: string;
     delay?: number;
     onSearch?: (value: string) => void;
@@ -16,10 +16,10 @@ type Props = {
 export default function AppSearch({
     onChange = () => {},
     wrapperClassName,
-    delay = 300,
+    delay = 800,
     onSearch,
     ...props
-}: Props) {
+}: AppSearchProps) {
     const messages = useTranslations();
 
     const debounceSearchChange = _.debounce(onChange, delay);

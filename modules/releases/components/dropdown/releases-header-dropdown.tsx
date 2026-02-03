@@ -38,17 +38,21 @@ export default function ReleasesHeaderDropdown({
 
     const dropdownItems = [
         {
-            label: messages('common.dateCreated'),
-            value: TYPE_FILTER.DATE_CREATED,
-            visible: !dataFilter.startDateCreated && !dataFilter.endDateCreated,
-            onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_CREATED),
+            label: messages('artist.label'),
+            value: TYPE_FILTER.ARTIST_ID,
+            visible: !dataFilter.artistId,
+            onClick: () => handleChangeTypeFilter(TYPE_FILTER.ARTIST_ID),
         },
         {
-            label: messages('common.dateRelease'),
-            value: TYPE_FILTER.DATE_RELEASE,
-            visible: !dataFilter.startDateRelease && !dataFilter.endDateRelease,
-            onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_RELEASE),
+            label: messages('artist.variousArtists'),
+            value: TYPE_FILTER.IS_VARIOUS_ARTIST,
+            visible: !dataFilter.isVariousArtist,
+            onClick: () => {
+                onChangeFilter({ isVariousArtist: 'true' });
+                handleChangeTypeFilter(TYPE_FILTER.IS_VARIOUS_ARTIST);
+            },
         },
+
         {
             label: messages('common.search'),
             value: TYPE_FILTER.KEYWORD,
@@ -57,9 +61,9 @@ export default function ReleasesHeaderDropdown({
         },
         {
             label: messages('common.type'),
-            value: TYPE_FILTER.TYPE,
-            visible: !dataFilter.type,
-            onClick: () => handleChangeTypeFilter(TYPE_FILTER.TYPE),
+            value: TYPE_FILTER.ALBUM_FORMAT_ID,
+            visible: !dataFilter.albumFormatId,
+            onClick: () => handleChangeTypeFilter(TYPE_FILTER.ALBUM_FORMAT_ID),
         },
         {
             label: messages('common.status'),
@@ -72,6 +76,18 @@ export default function ReleasesHeaderDropdown({
             value: TYPE_FILTER.GENRES,
             visible: !dataFilter.genres,
             onClick: () => handleChangeTypeFilter(TYPE_FILTER.GENRES),
+        },
+        {
+            label: messages('common.createdAt'),
+            value: TYPE_FILTER.DATE_CREATED,
+            visible: !dataFilter.startDateCreated && !dataFilter.endDateCreated,
+            onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_CREATED),
+        },
+        {
+            label: messages('common.dateRelease'),
+            value: TYPE_FILTER.DATE_RELEASE,
+            visible: !dataFilter.startDateRelease && !dataFilter.endDateRelease,
+            onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_RELEASE),
         },
     ];
 
@@ -101,7 +117,7 @@ export default function ReleasesHeaderDropdown({
                     </DropdownItem>
                 )}
                 {options.map((item, index) => (
-                    <DropdownItem key={index} onClick={item.onClick}>
+                    <DropdownItem key={item.value} onClick={item.onClick}>
                         {item.label}
                     </DropdownItem>
                 ))}

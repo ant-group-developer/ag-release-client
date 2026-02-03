@@ -44,10 +44,16 @@ export default function DspHeaderDropdown({
             onClick: () => handleChangeTypeFilter(TYPE_FILTER.KEYWORD),
         },
         {
-            label: messages('common.dateCreated'),
+            label: messages('common.createdAt'),
             value: TYPE_FILTER.DATE_CREATED,
-            visible: !dataFilter.dateCreated,
+            visible: !dataFilter.startCreatedAt,
             onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_CREATED),
+        },
+        {
+            label: messages('common.updatedAt'),
+            value: TYPE_FILTER.DATE_UPDATED,
+            visible: !dataFilter.startUpdatedAt,
+            onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_UPDATED),
         },
     ];
 
@@ -77,7 +83,7 @@ export default function DspHeaderDropdown({
                     </DropdownItem>
                 )}
                 {options.map((item, index) => (
-                    <DropdownItem key={index} onClick={item.onClick}>
+                    <DropdownItem key={item.value} onClick={item.onClick}>
                         {item.label}
                     </DropdownItem>
                 ))}

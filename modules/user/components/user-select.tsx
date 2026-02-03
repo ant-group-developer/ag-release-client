@@ -1,29 +1,29 @@
+import { ORDER } from '@/enums/common';
 import { cn } from '@/helpers/common';
 import { toNonAccentVietnamese } from '@/helpers/string';
-import { Select, SelectProps } from 'antd';
+import { Select, SelectProps, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
+import { USER_ORDER_BY } from '../enums';
 import { useUserList } from '../hooks/use-get-user';
 
 type Props = {
     getEmail?: boolean;
     externalOnChange?: SelectProps['onChange'];
-    fallback?: string;
 } & SelectProps;
 
 function UserSelect({
     getEmail,
     className,
     externalOnChange,
-    fallback,
     ...props
 }: Props) {
     const messages = useTranslations();
-    const defaultUserList = {
-        page: 1,
-        pageSize: 999,
-    };
 
-    const { data: dataUser } = useUserList(defaultUserList);
+    const { data: dataUser } = useUserList({
+        fieldOrder: USER_ORDER_BY.EMAIL,
+        orderBy: ORDER.ASC,
+        pageSize: 999,
+    });
 
     const options = dataUser.items
         // .toSorted((a, b) => a.department.name.localeCompare(b.department.name))
@@ -38,32 +38,16 @@ function UserSelect({
 
             return {
                 value: getEmail ? email : userId,
-                label: (
-                    <p className="flex flex-col">
-                        <span className="truncate">{name}</span>
-                        <span className="truncate text-gray-400">{email}</span>
-                    </p>
-                ),
+                label: email,
                 string: name + ' ' + email,
-                // string: email,
                 email,
                 name,
-                title: name,
             };
         });
 
     const handleChange: SelectProps['onChange'] = (value, option) => {
         props.onChange?.(value, option);
         externalOnChange?.(value, option);
-    };
-
-    const labelRender = (props: any) => {
-        const { value, title } = props;
-
-        if (value) {
-            return title || fallback || value;
-        }
-        return undefined;
     };
 
     return (
@@ -79,7 +63,14 @@ function UserSelect({
                     .includes(toNonAccentVietnamese(input).toLowerCase())
             }
             options={options}
-            labelRender={labelRender}
+            optionRender={({ data }) => (
+                <div>
+                    <p className="truncate">{data.name}</p>
+                    <Typography.Text type="secondary">
+                        {data.email}
+                    </Typography.Text>
+                </div>
+            )}
         />
     );
 }

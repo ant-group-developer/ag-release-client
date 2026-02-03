@@ -1,64 +1,117 @@
 'use client';
+import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
+import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
+
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { ORDER } from '@/enums/common';
+import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import ArtistRoleHeader from '@/modules/artist-role/components/header';
 import ArtistRoleFormModal from '@/modules/artist-role/components/modal/artist-role-form';
 import { ArtistRoleTable } from '@/modules/artist-role/components/table';
-import { fakeArtistRoleData } from '@/modules/artist-role/constants';
 import { TYPE_MODAL_ARTIST_ROLE } from '@/modules/artist-role/enums';
-import { ArtistRoleDataFilter } from '@/modules/artist-role/types';
+import { useDeleteArtistRole } from '@/modules/artist-role/hooks/use-delete-artist-role';
+import { useGetListArtistRole } from '@/modules/artist-role/hooks/use-get-list-artist-role';
+import {
+    ArtistRoleData,
+    ArtistRoleDataFilter,
+} from '@/modules/artist-role/types';
+import { DeleteVariables } from '@/types/api';
+import { PageContainer } from '@ant-design/pro-components';
+import { useTranslations } from 'next-intl';
 
 type Props = {};
 
 export default function ArtistRole({}: Props) {
-    const {
-        dataFilter,
-        onChangeFilter,
-        onChangePage,
-        canClearFilter,
-        removeFilter,
-    } = useFilter<ArtistRoleDataFilter>({
-        page: 1,
-        pageSize: 10,
-        createdAt: '',
-    });
+    // hooks - state
+    const messages = useTranslations();
+    const { dataFilter, onChangeFilter, onChangePage, onSearch } =
+        useFilter<ArtistRoleDataFilter>({
+            page: 1,
+            pageSize: PAGE_SIZE,
+        });
     const typeModal = useModalStore((state) => state.typeModal);
+    const dataEdit = useModalStore<ArtistRoleData>((state) => state.dataEdit);
+    const closeModal = useModalStore((state) => state.closeModal);
+    const { artistsRolesData, isFetching, refetch, dataUpdatedAt } =
+        useGetListArtistRole(dataFilter);
+    const { deleteArtistRole } = useDeleteArtistRole();
 
-    const handleRefresh = () => {};
+    // func
+    const handleDeleteArtistRole = () => {
+        const variables: DeleteVariables<ArtistRoleData['id']> = {
+            id: dataEdit?.id,
+            onSuccess: () => closeModal(),
+        };
+
+        deleteArtistRole(variables);
+    };
+    const onChangeSort = (pagination: any, filters: any, sort: any) => {
+        const orderBy = setSortOrder(sort, ORDER.ASC);
+        const fieldOrder = sort.field;
+        onChangeFilter(
+            {
+                orderBy,
+                fieldOrder,
+            },
+            false
+        );
+    };
 
     return (
-        <div className="flex h-full flex-col justify-between overflow-hidden">
-            <div className="flex-1">
-                <ArtistRoleHeader
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
-                />
+        <AppPageWrapper>
+            <PageContainer title={messages('artist.role')}>
                 <ArtistRoleTable
-                    dataSource={fakeArtistRoleData}
-                    scroll={{ x: 600, y: 400 }}
+                    title={() => (
+                        <ArtistRoleHeader
+                            dataFilter={dataFilter}
+                            onSearch={onSearch}
+                        />
+                    )}
+                    sticky
+                    dataSource={artistsRolesData.items}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: artistsRolesData.metadata.page,
+                        total: artistsRolesData.metadata.totalItems,
+                    }}
+                    loading={isFetching}
+                    dataFilter={dataFilter}
+                    onChange={onChangeSort}
                 />
-            </div>
-            <AppPagination
-                className="border-b border-t"
-                align="end"
-                current={dataFilter.page}
-                pageSize={dataFilter.pageSize}
-                total={fakeArtistRoleData.length}
-                onChange={onChangePage}
-                showTotalText
-                showSizeChanger
-                showQuickJumper
-                pageSizeOptions={[21, 28, 32]}
-            />
+                <AppPagination
+                    align="end"
+                    current={artistsRolesData?.metadata?.page}
+                    pageSize={dataFilter.pageSize}
+                    total={artistsRolesData.metadata.totalItems}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
+                />
 
-            {(typeModal === TYPE_MODAL_ARTIST_ROLE.CREATE ||
-                typeModal === TYPE_MODAL_ARTIST_ROLE.UPDATE) && (
-                <ArtistRoleFormModal />
-            )}
-        </div>
+                {(typeModal === TYPE_MODAL_ARTIST_ROLE.CREATE ||
+                    typeModal === TYPE_MODAL_ARTIST_ROLE.UPDATE) && (
+                    <ArtistRoleFormModal />
+                )}
+
+                {typeModal === TYPE_MODAL_ARTIST_ROLE.DELETE && (
+                    <AppConfirm
+                        open
+                        onCancel={closeModal}
+                        onOk={() => {
+                            handleDeleteArtistRole();
+                        }}
+                        modalTitle={messages('delete.confirmTitle')}
+                        paragraph={messages('delete.confirmMessage', {
+                            value: dataEdit?.name,
+                        })}
+                    />
+                )}
+            </PageContainer>
+        </AppPageWrapper>
     );
 }

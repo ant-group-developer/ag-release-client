@@ -1,68 +1,101 @@
-import createMiddleware from 'next-intl/middleware';
+import createNextIntlMiddleware from 'next-intl/middleware';
+import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
-import { COOKIES_KEY } from './constants/common';
-import { defaultConfig } from './constants/env';
-import { APP_ROUTES, DEFAULT_ROUTE } from './enums/routes';
-import { routing } from './i18n/routing';
+import { APP_ROUTES, AUTH_ROUTES, PUBLIC_ROUTES } from './enums/routes';
+import { defaultLocale, routing } from './i18n/routing';
+import { getToken } from './modules/auth/utils';
 
-const PUBLIC_FILE = /\.(.*)$/;
-const LOGIN_URL = defaultConfig.LOGIN_URL;
-const REDIRECT_URI = defaultConfig.REDIRECT_URI;
-const CLIENT = defaultConfig.CLIENT;
+const nextIntl = createNextIntlMiddleware(routing);
 
-export default createMiddleware(routing);
+// function formatTime(ms: number, timezone = 'Asia/Ho_Chi_Minh') {
+//     return new Date(ms).toLocaleString('vi-VN', {
+//         timeZone: timezone,
+//         hour12: false,
+//     });
+// }
 
 export async function middleware(req: NextRequest) {
+    const { pathname } = req.nextUrl;
+    const response = NextResponse.next();
+    if (pathname.startsWith('/api') && !pathname.startsWith('/api/v1')) {
+        return NextResponse.next();
+    }
+
+    // 1. Bypass for Next.js internals and your auth callback
     if (
-        req.nextUrl.pathname.startsWith('/_next') ||
-        PUBLIC_FILE.test(req.nextUrl.pathname)
+        pathname.startsWith('/_next') ||
+        pathname.startsWith('/favicon.ico') ||
+        pathname.startsWith('/api/auth')
     ) {
-        return;
+        // skip directly to next-intl (or just return next())
+        return nextIntl(req);
     }
 
-    if (/^\/api/.test(req.nextUrl.pathname)) {
-        // if sending a request to /api/...
-        const newResponse = NextResponse.next(); // prepare a new response
+    // 2. Do your session check + redirects
+    const token = await getToken(req);
+    // console.log('🚀 ~ middleware ~ token:', token?.accessToken);
+    const locale = cookies().get('NEXT_LOCALE')?.value || defaultLocale;
 
-        // modify your response if needed
-        const bearerToken = req.cookies.get(COOKIES_KEY.TOKEN)?.value;
-        newResponse.headers.set('Authorization', 'Bearer ' + bearerToken);
-        // ...
+    const normalizePath = (path: string) => path.replace(/\/+$/, '');
+    const normalizedPathname = normalizePath(pathname);
 
-        return newResponse; // return the modified response
+    const isPublicRoutes = PUBLIC_ROUTES.some(
+        (item) =>
+            normalizedPathname === normalizePath(`/${locale}${item}`) ||
+            normalizedPathname === normalizePath(`${item}`)
+    );
+    const isAuthRoutes = AUTH_ROUTES.some(
+        (item) =>
+            normalizedPathname === normalizePath(`/${locale}${item}`) ||
+            normalizedPathname === normalizePath(`${item}`)
+    );
+
+    if (isPublicRoutes) {
+        return nextIntl(req);
     }
 
-    const cookieToken = req.cookies.get(COOKIES_KEY.TOKEN)?.value;
-    // const cookieLocale =
-    //     req.cookies.get(COOKIES_KEY.LOCALE)?.value ?? DEFAULT_LOCALE;
+    // console.log(formatTime((token as any)?.accessTokenExp));
 
-    if (cookieToken && APP_ROUTES.LOGIN === req.nextUrl.pathname) {
+    if (!token && !isAuthRoutes) {
         const url = req.nextUrl.clone();
-        url.pathname = DEFAULT_ROUTE;
+        url.pathname = `/${locale}${APP_ROUTES.SIGN_IN}`;
         return NextResponse.redirect(url);
     }
 
-    // if (!cookieToken && !PUBLIC_ROUTES.includes(req.nextUrl.pathname as any)) {
-    //     return NextResponse.redirect(
-    //         `${LOGIN_URL}?client=${CLIENT}&redirect_uri=${REDIRECT_URI}`
-    //     );
-    // return NextResponse.redirect(
-    //     `${LOGIN_URL}/${cookieLocale}?client=${CLIENT}&redirect_uri=${REDIRECT_URI}`
-    // );
-    // }
+    if (token && isAuthRoutes) {
+        const url = req.nextUrl.clone();
+        url.pathname = `/${locale}${APP_ROUTES.DASHBOARD}`;
+        return NextResponse.redirect(url);
+    }
 
-    // if (cookieLocale && req.nextUrl.locale !== cookieLocale) {
-    //     const newURL = `/${cookieLocale}${req.nextUrl.pathname}${req.nextUrl.search}`;
-    //     return NextResponse.redirect(new URL(newURL, req.url));
-    // }
+    // 3. Proxy Authorization header for your /api/v1 calls
+    if (pathname.startsWith('/api/v1') && token?.accessToken) {
+        const res = NextResponse.next();
+        res.headers.set('Authorization', `Bearer ${token.accessToken}`);
+        // *don’t* call nextIntl here—this is an API route
+        return res;
+    }
+
+    if (req.nextUrl.pathname.startsWith('/api/v1')) {
+        const accessToken = token?.accessToken;
+        if (accessToken) {
+            response.headers.set('Authorization', 'Bearer ' + accessToken);
+        }
+    }
+
+    if (pathname.startsWith('/api/proxy')) {
+        return NextResponse.next();
+    }
+
+    // 4. Finally, hand off to next-intl
+    return nextIntl(req);
 }
 
 export const config = {
     matcher: [
-        // Skip all paths that should not be internationalized
-        '/((?!_next|.*\\..*).*)',
-
-        // Necessary for base path to work
-        '/',
+        // all “page” routes except Next.js internals, trpc, vercel, static files…
+        '/((?!trpc|_next|_vercel|.*\\..*).*)',
+        // …plus JUST /api/v1 and its sub-paths
+        '/api/v1/:path*',
     ],
 };

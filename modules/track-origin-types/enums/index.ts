@@ -1,0 +1,5 @@
+export enum TYPE_MODAL_TRACK_ORIGIN_TYPE {
+    CREATE = 'CREATE',
+    UPDATE = 'UPDATE',
+    DELETE = 'DELETE',
+}

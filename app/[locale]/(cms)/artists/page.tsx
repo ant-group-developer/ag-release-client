@@ -1,95 +1,158 @@
 'use client';
+import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
+import CreateButton from '@/components/ui/button/create-button';
+import AppSearch from '@/components/ui/input/search';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
-import { SCREEN } from '@/enums/common';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { ORDER } from '@/enums/common';
+import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import ArtistsHeader from '@/modules/artist/components/header';
+import { usePermission } from '@/hooks/use-permission';
 import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
 import { ArtistsTable } from '@/modules/artist/components/table';
-import { fakeArtistData } from '@/modules/artist/constants';
 import { TYPE_MODAL_ARTIST } from '@/modules/artist/enum';
-import { ArtistDataFilter } from '@/modules/artist/types';
+import { useDeleteArtist } from '@/modules/artist/hooks/use-delete-artist';
+import { useGetListArtist } from '@/modules/artist/hooks/use-get-list-artists';
+import { ArtistData, ArtistDataFilter } from '@/modules/artist/types';
+import { PERMISSION } from '@/modules/auth/constants/permission';
+import { DeleteVariables } from '@/types/api';
+import { PageContainer } from '@ant-design/pro-components';
+import { theme } from 'antd';
 
-import { fakeLabelData } from '@/modules/labels/constants';
-import { useWindowSize } from '@uidotdev/usehooks';
 import { useTranslations } from 'next-intl';
 
 type Props = {};
 
 export default function Artists({}: Props) {
+    // hooks - state
+    const openModal = useModalStore((state) => state.openModal);
+    const { hasPermission } = usePermission();
     const messages = useTranslations();
+    const { token } = theme.useToken();
     const {
         dataFilter,
         onChangeFilter,
         onChangePage,
         canClearFilter,
         removeFilter,
+        onSearch,
     } = useFilter<ArtistDataFilter>({
         page: 1,
-        pageSize: 21,
+        pageSize: PAGE_SIZE,
     });
-
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
+    const dataEdit = useModalStore<ArtistData>((state) => state.dataEdit);
 
-    const handleRefresh = () => {};
+    // api
+    const { deleteArtist } = useDeleteArtist();
+    const { artistsData, isFetching, lastUpdatedAt, refetch } =
+        useGetListArtist(dataFilter);
 
-    const { height, width } = useWindowSize();
-
-    const isSmallDevice = Number(width) <= SCREEN.MD;
-
-    const scrollY = () => {
-        if (isSmallDevice) return undefined;
-        if (!height) return undefined;
-        const minHeight = 300;
-        // const headerFooterHeight = 216;
-        const headerFooterHeight = 210;
-        const value = height - headerFooterHeight;
-        if (value > minHeight) return value;
-        return minHeight;
+    // func
+    const handleRefresh = () => {
+        refetch();
+    };
+    const handleDeleteArtist = () => {
+        const variables: DeleteVariables<ArtistData['id']> = {
+            id: dataEdit?.id,
+            onSuccess: () => {
+                closeModal();
+            },
+        };
+        deleteArtist(variables);
+    };
+    const onChangeSort = (pagination: any, filters: any, sort: any) => {
+        const orderBy = setSortOrder(sort, ORDER.ASC);
+        const fieldOrder = sort.field;
+        onChangeFilter(
+            {
+                orderBy,
+                fieldOrder,
+            },
+            false
+        );
     };
 
     return (
-        <div className="flex h-full flex-col justify-between overflow-hidden">
-            <div className="flex-1">
-                <ArtistsHeader
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
-                />
+        <AppPageWrapper>
+            <PageContainer
+                title={messages('artist.artists')}
+                extra={
+                    <>
+                        {hasPermission(PERMISSION.ARTIST.CREATE) && (
+                            <CreateButton
+                                canCreate={true}
+                                text={messages('artist.create')}
+                                onClick={() =>
+                                    openModal(TYPE_MODAL_ARTIST.CREATE)
+                                }
+                            />
+                        )}
+                    </>
+                }
+            >
+                {/* <ArtistsHeader dataFilter={dataFilter} onSearch={onSearch} /> */}
                 <ArtistsTable
-                    dataSource={fakeArtistData}
-                    scroll={{ x: SCREEN.XXL, y: scrollY() }}
+                    sticky
+                    dataSource={artistsData?.items}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: artistsData.metadata.page,
+                        total: artistsData.metadata.totalItems,
+                    }}
+                    loading={isFetching}
+                    onChange={onChangeSort}
+                    dataFilter={dataFilter}
+                    headerTitle={
+                        <AppSearch
+                            className="max-w-52"
+                            onChange={onSearch}
+                            defaultValue={dataFilter.keyword}
+                        />
+                    }
+                    options={{
+                        reload: () => {
+                            handleRefresh();
+                        },
+                    }}
                 />
-            </div>
 
-            {(typeModal === TYPE_MODAL_ARTIST.CREATE ||
-                typeModal === TYPE_MODAL_ARTIST.UPDATE) && <ArtistFormModal />}
-
-            {typeModal === TYPE_MODAL_ARTIST.DELETE && (
-                <AppConfirm
-                    open
-                    onCancel={closeModal}
-                    modalTitle={`${messages('artist.delete')} `}
-                    paragraph="Bạn có chắc chắn muốn xóa nghệ sĩ này không?"
+                <AppPagination
+                    align="end"
+                    className="rounded-b-lg"
+                    style={{
+                        backgroundColor: token?.colorBgContainer,
+                    }}
+                    current={artistsData?.metadata?.page}
+                    pageSize={dataFilter.pageSize}
+                    total={artistsData?.metadata?.totalItems}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
                 />
-            )}
 
-            <AppPagination
-                className="border-b border-t"
-                align="end"
-                current={dataFilter.page}
-                pageSize={dataFilter.pageSize}
-                total={fakeLabelData.length}
-                onChange={onChangePage}
-                showTotalText
-                showSizeChanger
-                showQuickJumper
-                pageSizeOptions={[21, 28, 32]}
-            />
-        </div>
+                {(typeModal === TYPE_MODAL_ARTIST.CREATE ||
+                    typeModal === TYPE_MODAL_ARTIST.UPDATE) && (
+                    <ArtistFormModal open onCancel={closeModal} />
+                )}
+
+                {typeModal === TYPE_MODAL_ARTIST.DELETE && (
+                    <AppConfirm
+                        open
+                        onOk={() => handleDeleteArtist()}
+                        onCancel={closeModal}
+                        modalTitle={`${messages('artist.delete')} `}
+                        paragraph={messages('delete.confirmMessage', {
+                            value: dataEdit?.name,
+                        })}
+                    />
+                )}
+            </PageContainer>
+        </AppPageWrapper>
     );
 }

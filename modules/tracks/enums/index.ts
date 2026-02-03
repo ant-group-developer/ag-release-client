@@ -1,15 +1,24 @@
 export enum TRACKS_COLUMNS_DISPLAY {
     I_NO = 'iNo',
     THUMBNAIL = 'thumbnail',
-    TRACK_ID = 'trackId',
+    ID = 'id',
     TITLE = 'title',
     GENRES = 'genres',
-    ARTIST = 'artist',
+    TRACK_ARTIST = 'trackArtists',
     ISRC = 'isrc',
     DURATION = 'duration',
-    RELEASE_DATE = 'releaseDate',
-    CREATION_DATE = 'creationDate',
+    VERSION = 'version',
     ACTIONS = 'actions',
+    ACR_CLOUD = 'acrCloud',
+    CREATED_AT = 'createdAt',
+    RELEASE_TITLE = 'releaseTitle',
+    LABEL_NAME = 'labelName',
+}
+
+export enum TYPE_MODAL_TRACK_ARTIST {
+    ADD = 'add',
+    UPDATE = 'update',
+    DELETE = 'delete',
 }
 
 export enum GENRES {
@@ -24,4 +33,16 @@ export enum GENRES {
     REGGAE = 'reggae',
     BLUES = 'blues',
     R_B = 'r&b',
+}
+
+export enum TRACK_TABS {
+    METADATA = 'metadata',
+    AUDIO_FILE = 'audio-file',
+}
+
+export enum SCAN_COPYRIGHT_STATUS {
+    UN_SCANNED = 'un_scanned',
+    FINISHED = 'finished',
+    WARNING = 'warning',
+    REJECTED = 'rejected',
 }

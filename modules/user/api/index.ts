@@ -1,39 +1,72 @@
-import axiosAccount from '@/api/axios-account';
-import axiosAuth from '@/api/axios-auth';
+import axiosInstance from '@/api/axios-auth';
+import { DetailResponse, PaginationResponse } from '@/types/api';
 import {
-    CommonDataSidebar,
-    DetailResponse,
-    ListResponse,
-    PaginationResponse,
-} from '@/types/api';
-import {
+    BulkUpdateTenantUserPayload,
+    CreateUserPayload,
     DataFilterUser,
+    InviteUserPayload,
     UpdateUserPayload,
+    UpdateUserRolePayload,
     UserData,
-    UserDetailData,
+    UserDetail,
+    UserPermissionData,
+    UserRoleData,
 } from '../types/data';
 
 export const userApi = {
     getList(params: DataFilterUser) {
-        return axiosAuth.get<PaginationResponse<UserData>>('user', {
+        return axiosInstance.get<PaginationResponse<UserData>>('/users', {
             params,
         });
     },
 
-    getDetail(id: string) {
-        return axiosAuth.get<DetailResponse<UserDetailData>>(`user/${id}`);
+    getUserRole(id: string) {
+        return axiosInstance.get<DetailResponse<UserRoleData[]>>(
+            `/user-role/${id}/role`
+        );
     },
 
-    update(payload: UpdateUserPayload) {
-        return axiosAccount.patch<DetailResponse<UserDetailData>>(
-            'v1/users/me',
+    getUserPermission(id: string) {
+        return axiosInstance.get<DetailResponse<UserPermissionData[]>>(
+            `/user-role/${id}/permission`
+        );
+    },
+
+    getDetail(id: string) {
+        return axiosInstance.get<DetailResponse<UserDetail>>(`/users/${id}`);
+    },
+
+    create(payload: CreateUserPayload) {
+        return axiosInstance.post<DetailResponse<UserDetail>>(
+            `/users`,
             payload
         );
     },
 
-    getCreatorUserList: () => {
-        return axiosAuth.get<ListResponse<CommonDataSidebar>>(
-            'sidebar/list-user-creator'
+    invite(payload: InviteUserPayload) {
+        return axiosInstance.post(`/users/invite`, payload);
+    },
+
+    updateRole(payload: UpdateUserRolePayload) {
+        return axiosInstance.post(`/user-role`, payload);
+    },
+
+    update(id: string, payload: UpdateUserPayload) {
+        return axiosInstance.put<DetailResponse<UserDetail>>(
+            `/users/${id}`,
+            payload
         );
+    },
+
+    syncData() {
+        return axiosInstance.post(`/users/sync-data`);
+    },
+
+    bulkUpdateTenantUser(payload: BulkUpdateTenantUserPayload) {
+        return axiosInstance.post(`/users/bulk-update-tenant-user`, payload);
+    },
+
+    remove(id: string) {
+        return axiosInstance.delete<DetailResponse<UserDetail>>(`/users/${id}`);
     },
 };

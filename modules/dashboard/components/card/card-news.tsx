@@ -6,12 +6,15 @@ import { formattedDate } from '@/helpers/common';
 import { NewsData } from '@/modules/news/types';
 import { Card, CardProps } from 'antd';
 import Meta from 'antd/es/card/Meta';
+import { useLocale, useTranslations } from 'next-intl';
 
 type Props = CardProps & {
     data: NewsData;
 };
 
 export default function CardNews({ data, ...props }: Props) {
+    const messages = useTranslations();
+    const locale = useLocale();
     return (
         <Card
             {...props}
@@ -22,7 +25,7 @@ export default function CardNews({ data, ...props }: Props) {
                         fallbackSrc={FALLBACK_IMAGE}
                         className="h-full w-full cursor-pointer overflow-hidden object-cover duration-300 hover:scale-110"
                         alt="example"
-                        src={data.image}
+                        src={data?.thumbnail}
                         width={350}
                         height={200}
                     />
@@ -33,14 +36,17 @@ export default function CardNews({ data, ...props }: Props) {
             <Meta
                 title={
                     <CustomTooltip title="Meet Revelator at Music Biz 2025: Breaking Borders & Building Global Strategies">
-                        <span className="cursor-pointer">{data.title}</span>
+                        <span className="cursor-pointer">{data?.title}</span>
                     </CustomTooltip>
                 }
                 description={
                     <div className="flex flex-col gap-1">
                         <p>
-                            {formattedDate(data.date, DATE_FORMAT.DATE_ONLY)} |
-                            30 lượt xem
+                            {formattedDate(
+                                data.createdAt,
+                                DATE_FORMAT.DATE_ONLY
+                            )}{' '}
+                            {/* | 30 {messages('common.views')} */}
                         </p>
                     </div>
                 }

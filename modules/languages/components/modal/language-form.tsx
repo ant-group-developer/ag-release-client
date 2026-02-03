@@ -1,6 +1,8 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
+import { MAX_NAME_LENGTH } from '@/constants/validate';
+import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form, Input } from 'antd';
@@ -24,6 +26,7 @@ export default function LanguageFormModal({ ...props }: Props) {
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as LanguagesData);
     const isUpdateForm = !!dataEdit?.id;
+    const { active, deActive, isActive } = useActive();
 
     const { createLanguage, isPending: isCreatePending } = useCreateLanguage();
     const { updateLanguage, isPending: isUpdatePending } = useUpdateLanguage();
@@ -33,6 +36,10 @@ export default function LanguageFormModal({ ...props }: Props) {
             payload: values,
             onSuccess: () => {
                 form.resetFields();
+                deActive();
+            },
+            onError: () => {
+                deActive();
             },
         };
         createLanguage(variables);
@@ -45,14 +52,29 @@ export default function LanguageFormModal({ ...props }: Props) {
         > = {
             id: dataEdit?.id,
             payload: values,
+            onSuccess: () => {
+                deActive();
+            },
+            onError: () => {
+                deActive();
+            },
         };
         updateLanguage(variables);
     };
 
     const onfinish = (values: LanguageFormValues) => {
-        return isUpdateForm
-            ? handleUpdateLanguage(values)
-            : handleCreateLanguage(values);
+        active();
+        try {
+            return isUpdateForm
+                ? handleUpdateLanguage(values)
+                : handleCreateLanguage(values);
+        } catch (error) {
+            deActive();
+        }
+    };
+
+    const modalTitle = () => {
+        return `${isUpdateForm ? messages('common.update') : messages('common.create')} ${messages('language.label').toLocaleLowerCase()}`;
     };
 
     useEffect(() => {
@@ -66,7 +88,7 @@ export default function LanguageFormModal({ ...props }: Props) {
         <AppModal
             width={500}
             {...props}
-            title={messages('common.create') + ' ' + messages('language.label')}
+            title={modalTitle()}
             open
             onCancel={closeModal}
             onOk={form.submit}
@@ -77,6 +99,7 @@ export default function LanguageFormModal({ ...props }: Props) {
                 showSubmit={false}
                 onFinish={onfinish}
                 layout="vertical"
+                disabled={isActive}
             >
                 <AppFormItem
                     name="name"
@@ -88,9 +111,10 @@ export default function LanguageFormModal({ ...props }: Props) {
                             message: messages('validation.input'),
                         },
                         {
-                            max: 100,
-                            message: messages('validation.max', {
-                                number: 100,
+                            max: MAX_NAME_LENGTH,
+                            message: messages('validation.stringMax', {
+                                max: MAX_NAME_LENGTH,
+                                field: messages('language.name'),
                             }),
                         },
                     ]}
@@ -104,7 +128,7 @@ export default function LanguageFormModal({ ...props }: Props) {
                     rules={[
                         {
                             required: true,
-                            message: messages('common.error'),
+                            message: messages('validation.input'),
                         },
                         {
                             max: 10,

@@ -1,0 +1,5 @@
+export enum TYPE_MODAL_ISSUES {
+    CREATE = 'CREATE_ISSUES',
+    EDIT = 'EDIT_ISSUES',
+    DELETE = 'DELETE_ISSUES',
+}

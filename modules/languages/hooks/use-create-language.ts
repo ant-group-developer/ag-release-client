@@ -1,4 +1,5 @@
 import { showNotification } from '@/helpers/messages-helper';
+import { useApiNotify } from '@/hooks/use-api-notify';
 import { CreateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
@@ -9,16 +10,17 @@ import { CreateLanguagePayload } from '../types/payload';
 export const useCreateLanguage = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
+    const { handleError } = useApiNotify();
 
     const onSuccess = (
         data: any,
         { onSuccess }: CreateVariables<CreateLanguagePayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [languageQueryKeys.getList],
+            queryKey: languageQueryKeys.lists(),
         });
 
-        const responseMessages = messages(data?.data?.message);
+        const responseMessages = messages(data?.data?.messageCode);
 
         onSuccess?.();
         showNotification('success', responseMessages);
@@ -28,10 +30,8 @@ export const useCreateLanguage = () => {
         data: any,
         { onError }: CreateVariables<CreateLanguagePayload>
     ) => {
-        const responseMessages = messages(data?.response?.data?.message);
-
         onError?.();
-        showNotification('error', responseMessages);
+        handleError(data);
     };
 
     const mutation = useMutation({

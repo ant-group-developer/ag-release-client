@@ -1,89 +1,89 @@
 import ActionButton from '@/components/ui/button/action-button';
-import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { APP_ROUTES } from '@/enums/routes';
+import { DATE_FORMAT } from '@/enums/common';
 import {
     convertSecondsToHoursMinutes,
     formattedDate,
-    getIntlCodeByReleaseStatus,
+    getIndex,
+    getSortOrder,
 } from '@/helpers/common';
+import {
+    getReleaseDetailTabRoute,
+    RELEASE_DETAIL_ACTION,
+} from '@/helpers/link';
+import { OnChangeFilter } from '@/hooks/use-filter';
+import useModalStore from '@/hooks/use-modal';
+import { usePermission } from '@/hooks/use-permission';
 import { useRouter } from '@/i18n/routing';
-import { ColumnType } from 'antd/es/table';
+import { PERMISSION } from '@/modules/auth/constants/permission';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
+import { ProColumns } from '@ant-design/pro-components';
+import { Tag, theme } from 'antd';
+import Paragraph from 'antd/es/typography/Paragraph';
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
-import { RELEASES_COLUMNS_DISPLAY } from '../../enums';
-import { ReleasesData } from '../../types';
+import nProgress from 'nprogress';
+import {
+    RELEASES_COLUMNS_DISPLAY,
+    RELEASES_STATUS,
+    RELEASES_TABS,
+    TYPE_MODAL_RELEASE,
+} from '../../enums';
+import { ReleasesData, ReleasesDataFilter } from '../../types';
+import ReleaseStatusTag from '../tag/release-status-tag';
+import ReleaseTitleColumn from './title-column';
 
-type Props = Omit<AppTableProps<ReleasesData>, 'columns'> & {
-    visibleColumns: RELEASES_COLUMNS_DISPLAY[];
+type Props = Omit<AppProTableProps<ReleasesData>, 'columns'> & {
+    dataFilter: ReleasesDataFilter;
+    onChangeFilter: OnChangeFilter<ReleasesDataFilter>;
+    pagination: {
+        pageSize: number;
+        current: number;
+    };
 };
 
-export default function ReleasesTable({ visibleColumns, ...props }: Props) {
+export default function ReleasesTable({
+    onChangeFilter,
+    dataFilter,
+    ...props
+}: Props) {
     const messages = useTranslations();
     const router = useRouter();
-    const column: ColumnType<ReleasesData>[] = [
+    const openModal = useModalStore((state) => state.openModal);
+    const { token } = theme.useToken();
+    const { isSystemTenant } = useAuth();
+    const { hasPermission } = usePermission();
+
+    const column: ProColumns<ReleasesData>[] = [
         {
             title: messages('common.iNo'),
             key: 'iNo',
             width: 50,
             align: 'center',
-            render: (_, __, index) => index + 1,
-        },
-        {
-            // title: messages('common.thumbnail'),
-            key: 'thumbnail',
-            dataIndex: 'thumbnail',
-            align: 'center',
-            width: 100,
             fixed: 'left',
-            render: (value, record) => (
-                <div
-                    className="flex items-center justify-center"
-                    onClick={() =>
-                        router.push(
-                            `${APP_ROUTES.RELEASES}/detail/${record.releaseId}/core-detail`
-                        )
-                    }
-                >
-                    <Image
-                        src={value}
-                        alt="thumbnail"
-                        width={200}
-                        height={200}
-                        className="h-12 w-12 cursor-pointer rounded-lg object-cover"
-                    />
-                </div>
-            ),
+            render: (_, __, index) =>
+                getIndex(
+                    props?.pagination?.pageSize,
+                    props?.pagination?.current,
+                    index
+                ),
         },
         {
-            title: messages('releases.name'),
+            title: messages('common.title'),
             key: 'title',
             dataIndex: 'title',
             ellipsis: true,
             align: 'left',
-            width: 200,
+            width: 320,
             fixed: 'left',
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
-                </CustomTooltip>
-            ),
-        },
-        {
-            title: messages('common.artist'),
-            key: 'artist',
-            dataIndex: 'artist',
-            align: 'left',
-            ellipsis: true,
-            width: 200,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
-                        {' '}
-                        {value}{' '}
-                    </span>
-                </CustomTooltip>
-            ),
+            render: (value, record) => {
+                return (
+                    <ReleaseTitleColumn
+                        record={record}
+                        onChangeFilter={onChangeFilter}
+                    />
+                );
+            },
         },
         {
             title: 'Label',
@@ -92,40 +92,36 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             align: 'left',
             width: 200,
             ellipsis: true,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
-                        {value}
+            render: (value, record) => (
+                <CustomTooltip
+                    title={messages('filter.filterByValue', {
+                        value: record?.label?.name,
+                    })}
+                >
+                    <span
+                        onClick={() =>
+                            onChangeFilter({
+                                labelId: record?.labelId,
+                            })
+                        }
+                        className="cursor-pointer truncate hover:underline"
+                    >
+                        {record?.label?.name}
                     </span>
                 </CustomTooltip>
             ),
         },
         {
-            title: messages('releases.id'),
-            key: 'releaseId',
-            dataIndex: 'releaseId',
-            align: 'center',
-            fixed: 'left',
-            width: 120,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
-                </CustomTooltip>
-            ),
-        },
-
-        {
-            title: messages('releases.type'),
+            title: messages('release.type'),
             key: 'type',
             dataIndex: 'type',
-            align: 'center',
-            width: 120,
-            render: (value) => {
+            align: 'left',
+            width: 130,
+            render: (_, record) => {
                 return (
-                    <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
-                        {' '}
-                        {value}{' '}
-                    </span>
+                    <Tag className="cursor-pointer truncate">
+                        {record?.albumFormat?.name}
+                    </Tag>
                 );
             },
         },
@@ -133,69 +129,123 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             title: 'UPC',
             key: 'upc',
             dataIndex: 'UPC',
-            align: 'center',
-            width: 120,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
-                </CustomTooltip>
+            align: 'left',
+            width: 150,
+            render: (value, record) => (
+                <Paragraph className="!mb-0" copyable={!!record?.upc}>
+                    {record?.upc}
+                </Paragraph>
             ),
         },
         {
             title: messages('common.status'),
             key: 'status',
             dataIndex: 'status',
-            align: 'center',
+            align: 'left',
             width: 120,
-            render: (value) => (
-                <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
-                    {messages(getIntlCodeByReleaseStatus(value))}
-                </span>
+            render: (value, record) => {
+                return <ReleaseStatusTag status={record?.status} />;
+            },
+        },
+        {
+            title: messages('release.trackCount'),
+            key: 'tracks_count',
+            dataIndex: 'tracks_count',
+            align: 'left',
+            width: 120,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'tracks_count'
+            ),
+            render: (value, record) => (
+                <span className="truncate"> {record?.tracksCount} </span>
             ),
         },
         {
-            title: messages('releases.trackCount'),
-            key: 'trackCount',
-            dataIndex: 'trackCount',
-            align: 'center',
+            title: messages('release.duration'),
+            key: 'total_duration',
+            dataIndex: 'total_duration',
+            align: 'left',
             width: 100,
-            render: (value) => <span className="truncate"> {value} </span>,
-        },
-        {
-            title: messages('releases.duration'),
-            key: 'duration',
-            dataIndex: 'duration',
-            align: 'center',
-            width: 100,
-            render: (value) => {
-                const duration = convertSecondsToHoursMinutes(Number(value));
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                RELEASES_COLUMNS_DISPLAY.DURATION
+            ),
+            render: (value, record) => {
+                const duration = convertSecondsToHoursMinutes(
+                    Number(record?.totalDuration)
+                );
 
                 return <span className="truncate">{duration}</span>;
             },
         },
         {
-            title: messages('releases.releaseDate'),
+            title: messages('release.releaseDate'),
             key: 'releaseDate',
             dataIndex: 'releaseDate',
-            align: 'center',
+            align: 'left',
             width: 130,
-            render: (value) => (
+            // sorter: true,
+            // sortOrder: getSortOrder(
+            //     dataFilter.orderBy,
+            //     dataFilter.fieldOrder,
+            //     'releaseDate'
+            // ),
+            render: (value, record) => (
                 <span className="truncate text-wrap">
                     {' '}
-                    {formattedDate(value)}{' '}
+                    {formattedDate(
+                        record?.releaseDate,
+                        DATE_FORMAT.DATE_MINUTE
+                    )}{' '}
                 </span>
             ),
         },
         {
-            title: messages('common.dateCreated'),
-            key: 'creationDate',
-            dataIndex: 'creationDate',
-            align: 'center',
+            title: messages('common.createdAt'),
+            key: 'createdAt',
+            dataIndex: 'createdAt',
+            align: 'left',
             width: 130,
-            render: (value) => (
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'createdAt'
+            ),
+            render: (value, record) => (
                 <span className="truncate text-wrap">
                     {' '}
-                    {formattedDate(value)}{' '}
+                    {formattedDate(
+                        record?.createdAt,
+                        DATE_FORMAT.DATE_MINUTE
+                    )}{' '}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.updatedAt'),
+            key: 'updatedAt',
+            dataIndex: 'updatedAt',
+            align: 'left',
+            width: 130,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'updatedAt'
+            ),
+            render: (value, record) => (
+                <span className="truncate text-wrap">
+                    {' '}
+                    {formattedDate(
+                        record?.updatedAt,
+                        DATE_FORMAT.DATE_MINUTE
+                    )}{' '}
                 </span>
             ),
         },
@@ -204,23 +254,85 @@ export default function ReleasesTable({ visibleColumns, ...props }: Props) {
             align: 'center',
             width: 50,
             fixed: 'right',
-            render: () => <ActionButton showUpdate showDetail showDelete />,
+            render: (_, record) => {
+                const status = record?.status;
+                return (
+                    <div onClick={(e) => e.stopPropagation()}>
+                        <ActionButton
+                            showUpdate={hasPermission(
+                                PERMISSION.RELEASE.UPDATE
+                            )}
+                            showDetail
+                            showDelete={
+                                isSystemTenant &&
+                                status === RELEASES_STATUS.DRAFT
+                            }
+                            onShowDelete={() =>
+                                openModal(TYPE_MODAL_RELEASE.DELETE, record)
+                            }
+                            onShowDetail={() => {
+                                nProgress.start();
+                                router.push(
+                                    getReleaseDetailTabRoute(
+                                        record?.id,
+                                        RELEASES_TABS.CORE_DETAIL,
+                                        RELEASE_DETAIL_ACTION.READ
+                                    )
+                                );
+                            }}
+                            onShowUpdate={() => {
+                                nProgress.start();
+                                router.push(
+                                    getReleaseDetailTabRoute(
+                                        record?.id,
+                                        RELEASES_TABS.CORE_DETAIL,
+                                        RELEASE_DETAIL_ACTION.EDIT
+                                    )
+                                );
+                            }}
+                        />
+                    </div>
+                );
+            },
         },
     ];
 
-    const newColumns = column.map((column) => ({
-        ...column,
-        hidden: !visibleColumns?.includes(
-            column.key as RELEASES_COLUMNS_DISPLAY
-        ),
-    }));
+    if (isSystemTenant) {
+        column.splice(4, 0, {
+            title: messages('tenant.label'),
+            key: 'tenant',
+            dataIndex: 'tenant',
+            width: 180,
+            render: (_, record) => {
+                return record.tenant?.name;
+            },
+        });
+    }
 
     return (
-        <AppTable
+        // <div className="rounded-lg bg-white px-6 pt-2">
+        <AppProTable
+            headerTitle={messages('release.list')}
             {...props}
             pagination={false}
-            columns={newColumns}
+            columns={column}
             rowClassName={'group'}
+            className={`rounded-t-lg ${props?.className}`}
+            style={{
+                backgroundColor: token.colorBgContainer,
+                ...props?.style,
+            }}
+            columnsState={{
+                persistenceKey: 'releases-table-columns',
+                persistenceType: 'sessionStorage',
+                defaultValue: {
+                    tenant: { show: false },
+                    tracks_count: { show: false },
+                    total_duration: { show: false },
+                    updatedAt: { show: false },
+                },
+            }}
         />
+        // </div>
     );
 }

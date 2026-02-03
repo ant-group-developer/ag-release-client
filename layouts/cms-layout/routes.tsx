@@ -1,188 +1,542 @@
 import { APP_ROUTES } from '@/enums/routes';
 import { PERMISSION } from '@/modules/auth/constants/permission';
+import { SYSTEM_TENANT_ID } from '@/modules/tenant/constants';
+import { TENANT_TYPE, TENANT_USER_TYPE } from '@/modules/tenant/enums';
+import { USER_TYPE } from '@/modules/user/enums';
 import {
+    Banknote,
+    BellElectric,
+    BookA,
     Box,
+    Building2,
+    ChartNoAxesCombined,
+    ChevronsUp,
+    CircleAlert,
+    CircleDollarSign,
+    ClipboardList,
+    Clock,
     Contact,
     DiscAlbum,
     Earth,
+    FileMusic,
+    FileVolume,
+    Flag,
     Globe,
     House,
+    Layers,
+    LayoutList,
     Library,
+    LibraryBig,
+    ListOrdered,
     LockKeyhole,
     LucideProps,
     Mail,
     MicVocal,
     Music,
+    Newspaper,
+    Settings,
+    Speaker,
     SquareActivity,
-    StickyNote,
-    Upload,
+    SquareUser,
     User,
+    User2,
 } from 'lucide-react';
-import { ForwardRefExoticComponent, RefAttributes } from 'react';
+import type { ForwardRefExoticComponent, RefAttributes } from 'react';
 
-export type AdminRoutesChildType = {
+/**
+ * Requirements guard for routes
+ */
+export type RouteRequired =
+    | { userType: USER_TYPE[]; tenantId: string[] }
+    | { tenantType: TENANT_TYPE[] }
+    | { tenantUserType: TENANT_USER_TYPE[] }
+    | { permission: string[] };
+
+/** Reusable icon type */
+export type IconComponent = ForwardRefExoticComponent<
+    Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>
+>;
+
+/**
+ * Recursive route node model that supports unlimited depth.
+ * `group` may have an optional `href` (clickable group), or only `children`.
+ * `link` must have `href`.
+ */
+type BaseNode = {
     id: string;
-    label: any;
-    href: APP_ROUTES | string;
-    icon: ForwardRefExoticComponent<
-        Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>
-    >;
-    title: string;
-    permission: string;
+    label: string; // i18n key
+    title?: string;
+    icon?: IconComponent;
+    required?: RouteRequired;
     hidden?: boolean;
     external?: boolean;
 };
 
-export type AdminRoutesType = {
-    id: string;
-    label: any;
-    children: AdminRoutesChildType[];
+export type RouteLinkNode = BaseNode & {
+    type: 'link';
+    href: APP_ROUTES | string;
 };
 
-export const adminRoutes: AdminRoutesType[] = [
+export type RouteGroupNode = BaseNode & {
+    type: 'group';
+    children: RouteNode[];
+    href?: APP_ROUTES | string; // optional: clickable group label
+};
+
+export type RouteNode = RouteLinkNode | RouteGroupNode;
+
+/** DRY helpers for repeated requirements */
+const SYS_ADMIN_REQ: RouteRequired = {
+    userType: [USER_TYPE.ADMIN],
+    tenantId: [SYSTEM_TENANT_ID],
+};
+
+const OWNER_OR_ADMIN_TENANT_REQ: RouteRequired = {
+    tenantUserType: [TENANT_USER_TYPE.OWNER, TENANT_USER_TYPE.ADMIN],
+};
+
+/**
+ * Top-level admin routes (all entries here are groups by convention).
+ * You can nest `group` inside `group` as deeply as you like.
+ */
+export const adminRoutes: RouteNode[] = [
     {
         id: 'management',
+        type: 'group',
         label: 'common.management',
         children: [
-            // {
-            //     id: 'release-detail',
-            //     label: 'releases.create',
-            //     href: APP_ROUTES.CREATE_RELEASE,
-            //     icon: Plus,
-            //     title: 'release-detail',
-            //     permission: PERMISSION.RELEASE.CREATE,
-            // },
             {
                 id: 'dashboard',
+                type: 'link',
                 label: 'dashboard.label',
+                title: 'Dashboard',
                 href: APP_ROUTES.DASHBOARD,
                 icon: House,
-                title: 'dashboard',
-                permission: PERMISSION.STATISTIC.READ,
+                required: { permission: [PERMISSION.DASHBOARD.READ] },
             },
             {
-                id: 'releases',
-                label: 'releases.label',
+                id: 'analytics',
+                type: 'link',
+                label: 'analytics.label',
+                title: 'Analytics',
+                href: APP_ROUTES.ANALYTICS,
+                icon: ChartNoAxesCombined,
+            },
+            {
+                id: 'analytics',
+                type: 'link',
+                label: 'analytics.label',
+                title: 'Analytic Detail',
+                hidden: true,
+                href: APP_ROUTES.ANALYTIC_DETAIL,
+                icon: ChartNoAxesCombined,
+            },
+            {
+                id: 'release',
+                type: 'link',
+                label: 'release.label',
+                title: 'Releases',
                 href: APP_ROUTES.RELEASES,
                 icon: DiscAlbum,
-                title: 'releases',
-                permission: PERMISSION.RELEASE.READ,
+                required: { permission: [PERMISSION.RELEASE.READ] },
             },
             {
-                id: 'tracks',
-                label: 'tracks.label',
+                id: 'releaseDetail',
+                type: 'link',
+                label: 'release.label',
+                title: 'Release Detail',
+                href: APP_ROUTES.RELEASES_DETAIL,
+                hidden: true,
+                icon: DiscAlbum,
+                required: {
+                    permission: [
+                        PERMISSION.RELEASE.READ,
+                        PERMISSION.RELEASE.CREATE,
+                    ],
+                },
+            },
+            {
+                id: 'track',
+                type: 'link',
+                label: 'track.label',
+                title: 'Tracks',
                 href: APP_ROUTES.TRACKS,
                 icon: Music,
-                title: 'tracks',
-                permission: PERMISSION.TRACK.READ,
+                required: { permission: [PERMISSION.TRACK.READ] },
+            },
+            {
+                id: 'trackDetail',
+                type: 'link',
+                label: 'release.label',
+                title: 'Track Detail',
+                href: APP_ROUTES.TRACK_DETAIL,
+                hidden: true,
+                icon: Music,
+                required: { permission: [PERMISSION.TRACK.READ] },
             },
             {
                 id: 'distribution',
+                type: 'link',
                 label: 'distribution.label',
+                title: 'Distribution',
                 href: APP_ROUTES.DISTRIBUTION,
                 icon: Box,
-                title: 'distribution',
-                permission: PERMISSION.DISTRIBUTION.READ,
+                required: {
+                    permission: [PERMISSION.RELEASE.UPDATE],
+                },
+            },
+            {
+                id: 'revenue',
+                type: 'link',
+                label: 'common.revenue',
+                title: 'Revenue',
+                href: APP_ROUTES.REVENUE,
+                icon: ClipboardList,
             },
         ],
     },
     {
-        id: 'general',
-        label: 'common.general',
+        id: 'category',
+        type: 'group',
+        label: 'common.categories',
         children: [
             {
-                id: 'labels',
-                label: 'labels.label',
-                href: APP_ROUTES.LABELS,
-                icon: MicVocal,
-                title: 'labels',
-                permission: PERMISSION.LABEL.READ,
-            },
-            {
                 id: 'artists',
+                type: 'link',
                 label: 'artist.label',
+                title: 'Artists',
                 href: APP_ROUTES.ARTISTS,
                 icon: User,
-                title: 'artists',
-                permission: PERMISSION.ARTIST.READ,
+                required: { permission: [PERMISSION.ARTIST.READ] },
             },
             {
-                id: 'artist-role',
-                label: 'artist.role',
-                href: APP_ROUTES.ARTIST_ROLE,
-                icon: Contact,
-                title: 'artist-role',
-                permission: PERMISSION.DISTRIBUTION.READ,
+                id: 'artistDetail',
+                type: 'link',
+                label: 'artist.label',
+                title: 'Artist Detail',
+                href: APP_ROUTES.ARTIST_DETAIL,
+                hidden: true,
+                icon: User,
+                required: { permission: [PERMISSION.ARTIST.READ] },
             },
             {
-                id: 'languages',
-                label: 'common.language',
-                href: APP_ROUTES.LANGUAGES,
-                icon: Globe,
-                title: 'languages',
-                permission: PERMISSION.DISTRIBUTION.READ,
+                id: 'labels',
+                type: 'link',
+                label: 'label.label',
+                title: 'Labels',
+                href: APP_ROUTES.LABELS,
+                icon: MicVocal,
+                required: { permission: [PERMISSION.LABEL.READ] },
             },
             {
-                id: 'countries',
-                label: 'country.label',
-                href: APP_ROUTES.COUNTRIES,
-                icon: Earth,
-                title: 'countries',
-                permission: PERMISSION.DISTRIBUTION.READ,
-            },
-            {
-                id: 'genres',
-                label: 'common.genres',
-                href: APP_ROUTES.GENRES,
-                icon: Library,
-                title: 'genres',
-                permission: PERMISSION.DISTRIBUTION.READ,
+                id: 'labelDetail', // fixed duplicate id
+                type: 'link',
+                label: 'labels.label',
+                title: 'Label Detail',
+                href: APP_ROUTES.LABEL_DETAIL,
+                hidden: true,
+                icon: MicVocal,
+                required: { permission: [PERMISSION.LABEL.READ] },
             },
             {
                 id: 'dsp',
-                label: 'DSP',
+                type: 'link',
+                label: 'dsp.label',
+                title: 'DSP',
                 href: APP_ROUTES.DSP,
                 icon: SquareActivity,
-                title: 'dsp',
-                permission: PERMISSION.DISTRIBUTION.READ,
+                required: { permission: [PERMISSION.DSP.READ] },
+            },
+        ],
+    },
+    {
+        id: 'issues',
+        type: 'group',
+        label: 'issueCategory.label',
+        children: [
+            {
+                id: 'tenant-issue',
+                type: 'link',
+                label: 'tenantIssue.label',
+                title: 'Partner issue',
+                href: APP_ROUTES.TENANT_ISSUE,
+                icon: Flag,
             },
             {
-                id: 'email-sender',
-                label: 'Email Sender',
-                href: APP_ROUTES.EMAIL_SENDER,
-                icon: Mail,
-                title: 'email-sender',
-                permission: PERMISSION.DISTRIBUTION.READ,
+                id: 'tenant-tier',
+                type: 'link',
+                label: 'tenantTier.label',
+                title: 'Partner tier',
+                href: APP_ROUTES.TENANT_TIERS,
+                icon: ChevronsUp,
+            },
+            {
+                id: 'issues',
+                type: 'link',
+                label: 'common.issues',
+                title: 'Issues',
+                href: APP_ROUTES.ISSUES,
+                icon: CircleAlert,
+            },
+            {
+                id: 'issue-level',
+                type: 'link',
+                label: 'issueLevel.label',
+                title: 'Issue level',
+                href: APP_ROUTES.ISSUE_LEVEL,
+                icon: ListOrdered,
+            },
+        ],
+    },
+    {
+        id: 'news',
+        type: 'group',
+        label: 'news.label',
+        children: [
+            {
+                id: 'newsCategory',
+                type: 'link',
+                label: 'newsCategory.label',
+                title: 'News category',
+                href: APP_ROUTES.NEWS_CATEGORY,
+                icon: LibraryBig,
+                required: SYS_ADMIN_REQ,
+            },
+            {
+                id: 'newsPost',
+                type: 'link',
+                label: 'newsPost.label',
+                title: 'News post',
+                href: APP_ROUTES.NEWS,
+                icon: Newspaper,
+                required: SYS_ADMIN_REQ,
+            },
+            {
+                id: 'newsPost',
+                type: 'link',
+                label: 'newsPost.label',
+                title: 'News post',
+                hidden: true,
+                href: APP_ROUTES.NEWS_DETAIL,
+                icon: Newspaper,
+                required: SYS_ADMIN_REQ,
             },
         ],
     },
     {
         id: 'system',
+        type: 'group',
         label: 'common.system',
         children: [
             {
+                id: 'ping',
+                type: 'link',
+                label: 'Ping',
+                title: 'Ping',
+                href: APP_ROUTES.PING,
+                icon: LockKeyhole,
+                hidden: true,
+            },
+            {
                 id: 'permission',
-                label: 'user.permission',
+                type: 'link',
+                label: 'permission.label',
+                title: 'Permission',
                 href: APP_ROUTES.PERMISSION,
                 icon: LockKeyhole,
-                title: 'Permission',
-                permission: PERMISSION.PERMISSION.UPDATE,
+                required: SYS_ADMIN_REQ,
             },
             {
-                id: 'log',
-                label: 'log.label',
-                href: APP_ROUTES.LOG,
-                icon: StickyNote,
-                title: 'Log',
-                permission: PERMISSION.LOG.READ,
+                id: 'roles',
+                type: 'link',
+                label: 'roles.label',
+                title: 'Roles',
+                href: APP_ROUTES.ROLES,
+                icon: SquareUser,
+                required: SYS_ADMIN_REQ,
             },
             {
-                id: 'upload',
-                label: 'common.upload',
-                href: APP_ROUTES.UPLOAD,
-                icon: Upload,
-                title: 'Upload',
-                permission: PERMISSION.LOG.READ,
+                id: 'user',
+                type: 'link',
+                label: 'user.label',
+                title: 'Users',
+                href: APP_ROUTES.USER,
+                icon: User2,
+                required: OWNER_OR_ADMIN_TENANT_REQ,
+            },
+            {
+                id: 'tenant',
+                type: 'link',
+                label: 'tenant.label',
+                title: 'Workspace',
+                href: APP_ROUTES.TENANT,
+                icon: Layers,
+                required: OWNER_OR_ADMIN_TENANT_REQ,
+            },
+            {
+                id: 'aggregator',
+                type: 'link',
+                label: 'aggregator.label',
+                title: 'Aggregator',
+                href: APP_ROUTES.AGGREGATOR,
+                icon: Building2,
+                required: SYS_ADMIN_REQ,
+            },
+            {
+                id: 'tenantDetail',
+                type: 'link',
+                label: 'tenant.label',
+                title: 'Workspace Detail',
+                href: APP_ROUTES.TENANT_DETAIL,
+                hidden: true,
+                icon: Layers,
+                required: OWNER_OR_ADMIN_TENANT_REQ,
+            },
+            {
+                id: 'email-sender',
+                type: 'link',
+                label: 'emailSender.label',
+                title: 'Email Sender',
+                href: APP_ROUTES.EMAIL_SENDER,
+                icon: Mail,
+                required: SYS_ADMIN_REQ,
+            },
+            {
+                id: 'setting',
+                type: 'link',
+                label: 'setting.label',
+                title: 'Setting',
+                href: APP_ROUTES.SETTING,
+                icon: Settings,
+                required: SYS_ADMIN_REQ,
+            },
+            {
+                id: 'general',
+                type: 'group',
+                label: 'common.general',
+                title: 'General',
+                icon: LayoutList,
+                required: SYS_ADMIN_REQ,
+                children: [
+                    // {
+                    //     id: 'deal-type',
+                    //     type: 'link',
+                    //     label: 'dealType.label',
+                    //     title: 'Deal Type',
+                    //     href: APP_ROUTES.DEAL_TYPE,
+                    //     icon: ScrollText,
+                    //     required: SYS_ADMIN_REQ,
+                    //     hidden: true,
+                    // },
+                    {
+                        id: 'genres',
+                        type: 'link',
+                        label: 'common.genres',
+                        title: 'Genres',
+                        href: APP_ROUTES.GENRES,
+                        icon: Library,
+                        required: SYS_ADMIN_REQ,
+                    },
+                    {
+                        id: 'currencies',
+                        type: 'link',
+                        label: 'currencies.currencies',
+                        title: 'Currencies',
+                        href: APP_ROUTES.CURRENCIES,
+                        icon: Banknote,
+                        required: SYS_ADMIN_REQ,
+                    },
+                    {
+                        id: 'priceTiers',
+                        type: 'link',
+                        label: 'price.label',
+                        title: 'Price Tiers',
+                        href: APP_ROUTES.PRICE_TIERS,
+                        icon: CircleDollarSign,
+                        required: SYS_ADMIN_REQ,
+                    },
+                    {
+                        id: 'policy',
+                        type: 'link',
+                        label: 'policy.policies',
+                        title: 'Policy',
+                        href: APP_ROUTES.ACTIONS,
+                        icon: BookA,
+                        required: SYS_ADMIN_REQ,
+                    },
+                    {
+                        id: 'release-type',
+                        type: 'link',
+                        label: 'releaseType.label',
+                        title: 'Release Type',
+                        href: APP_ROUTES.RELEASE_TYPE,
+                        icon: BellElectric,
+                        required: SYS_ADMIN_REQ,
+                    },
+                    {
+                        id: 'artist-role',
+                        type: 'link',
+                        label: 'artist.role',
+                        title: 'Artist Role',
+                        href: APP_ROUTES.ARTIST_ROLE,
+                        icon: Contact,
+                        required: SYS_ADMIN_REQ,
+                    },
+                    {
+                        id: 'track-types',
+                        type: 'link',
+                        label: 'trackType.label',
+                        title: 'Track Type',
+                        href: APP_ROUTES.TRACK_TYPE,
+                        icon: Speaker,
+                        required: SYS_ADMIN_REQ,
+                    },
+                    {
+                        id: 'track-origin-types',
+                        type: 'link',
+                        label: 'trackOriginType.label',
+                        title: 'Track Origin',
+                        href: APP_ROUTES.TRACK_ORIGIN_TYPE,
+                        icon: FileMusic,
+                        required: SYS_ADMIN_REQ,
+                    },
+                    {
+                        id: 'track-sensitive',
+                        type: 'link',
+                        label: 'trackSensitive.label',
+                        title: 'Track sensitive',
+                        href: APP_ROUTES.TRACK_SENSITIVE,
+                        icon: FileVolume,
+                        required: SYS_ADMIN_REQ,
+                    },
+                    {
+                        id: 'languages',
+                        type: 'link',
+                        label: 'common.language',
+                        title: 'Languages',
+                        href: APP_ROUTES.LANGUAGES,
+                        icon: Globe,
+                        required: SYS_ADMIN_REQ,
+                    },
+                    {
+                        id: 'countries',
+                        type: 'link',
+                        label: 'country.label',
+                        title: 'Countries',
+                        href: APP_ROUTES.COUNTRIES,
+                        icon: Earth,
+                        required: SYS_ADMIN_REQ,
+                    },
+                    {
+                        id: 'timezone',
+                        type: 'link',
+                        label: 'timezone.label',
+                        title: 'Timezone',
+                        href: APP_ROUTES.TIMEZONE,
+                        icon: Clock,
+                        required: SYS_ADMIN_REQ,
+                    },
+                ],
             },
         ],
     },

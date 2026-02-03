@@ -1,24 +1,24 @@
-import axiosAuth from '@/api/axios-auth';
+import axiosInstance from '@/api/axios-auth';
 import axiosUpload from '@/api/axios-upload';
-import { DetailResponse, GetUrlUploadParams } from '@/types/api';
+import { DetailResponse, UploadPayload } from '@/types/api';
 import { GOOGLE_ROOT_FOLDER_DRIVE_ID } from '../constants/folder';
 import { FileData, UploadResponse, UploadResponseV2 } from '../types/data';
 
 export const uploadApi = {
-    uploadFile: async ({ infoFile, file }: GetUrlUploadParams) => {
+    uploadFile: async ({ infoFile, file }: UploadPayload) => {
         try {
-            const response = await axiosAuth.post(
-                '/file/get-upload-url',
-                infoFile
-            );
+            const response = await axiosInstance.post<
+                DetailResponse<{ urlPublic: string; urlUpload: string }>
+            >('/bucket/gcs/public/upload/presigned-url', infoFile);
             if (response.status !== 201) {
                 throw new Error(
                     'Failed to get upload URL. Please try again later.'
                 );
             }
-            const { submitKey, url } = response?.data?.data;
 
-            const uploadResponse = await fetch(url, {
+            const { urlPublic, urlUpload } = response.data.data;
+
+            const uploadResponse = await fetch(urlUpload, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': infoFile.contentType,
@@ -31,22 +31,22 @@ export const uploadApi = {
                     'Failed to upload file. Please try again later.'
                 );
             }
-            return submitKey;
+            return urlPublic;
         } catch (error) {
             throw error;
         }
     },
 
     // uploadFileSubmit: async (params: SubmitUploadParams) => {
-    //     return axiosAuth.post('/file/submit-upload', params);
+    //     return axiosInstance.post('/file/submit-upload', params);
     // },
 
     getDownloadLink: (fileId: string) => {
-        return axiosAuth.get(`/file/get-download-url/${fileId}`);
+        return axiosInstance.get(`/file/get-download-url/${fileId}`);
     },
 
     getFile: (fileId: string) => {
-        return axiosAuth.get<DetailResponse<FileData>>(
+        return axiosInstance.get<DetailResponse<FileData>>(
             `/file/get-read-url/${fileId}`
         );
     },

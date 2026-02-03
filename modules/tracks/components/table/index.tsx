@@ -1,173 +1,314 @@
-import ActionButton from '@/components/ui/button/action-button';
-import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import CopyText from '@/components/ui/copy-text/copy-text';
+import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
+import { getTrackDetailRoute } from '@/helpers/link';
+import useModalStore from '@/hooks/use-modal';
+import { Link, useRouter } from '@/i18n/routing';
+import TrackActionButton from '@/modules/releases/components/release-detail/release-tracks/button/track-action';
+import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import {
-    convertSecondsToHoursMinutes,
-    formattedDate,
-    getIntlCodeByGenres,
-} from '@/helpers/common';
-import { TRACKS_COLUMNS_DISPLAY } from '@/modules/tracks/enums';
-import { ColumnType } from 'antd/es/table';
+    SCAN_COPYRIGHT_STATUS,
+    TRACK_TABS,
+    TRACKS_COLUMNS_DISPLAY,
+} from '@/modules/tracks/enums';
+import { bucketApi } from '@/modules/upload/apis/bucket-api';
+import { ProColumns } from '@ant-design/pro-components';
+import { Button, theme } from 'antd';
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
-import { TrackData } from '../../types';
+import { useParams } from 'next/navigation';
+import { TrackData, TrackDataFilter } from '../../types';
+import TagScanCopyright from '../tags/tag-scan-coppyright';
+import TrackCoverArt from './trackCoverArt';
 
-type Props = Omit<AppTableProps<TrackData>, 'columns'> & {
-    visibleColumns: TRACKS_COLUMNS_DISPLAY[];
+type Props = Omit<AppProTableProps<TrackData>, 'columns'> & {
+    dataFilter: TrackDataFilter;
+    pagination: {
+        pageSize: number;
+        current: number;
+    };
 };
 
-export default function TracksTable({ visibleColumns, ...props }: Props) {
+export default function TracksTable({ dataFilter, ...props }: Props) {
     const messages = useTranslations();
-    const column: ColumnType<TrackData>[] = [
+    const openModal = useModalStore((state) => state.openModal);
+    const router = useRouter();
+    const params = useParams();
+    const { token } = theme.useToken();
+    const column: ProColumns<TrackData>[] = [
         {
             title: messages('common.iNo'),
             key: 'iNo',
-            width: 50,
+            width: 30,
             align: 'center',
-            render: (_, __, index) => index + 1,
-        },
-        {
-            // title: messages('common.thumbnail'),
-            key: 'thumbnail',
-            dataIndex: 'thumbnail',
-            align: 'center',
-            width: 60,
             fixed: 'left',
-            render: (value) => (
-                <div className="flex items-center justify-center">
-                    <Image
-                        src={value}
-                        alt="thumbnail"
-                        width={200}
-                        height={200}
-                        className="h-12 w-12 cursor-pointer rounded-lg object-cover"
-                    />
-                </div>
-            ),
+            render: (_, __, index) =>
+                getIndex(
+                    props?.pagination?.pageSize,
+                    props?.pagination?.current,
+                    index
+                ),
         },
         {
-            title: messages('tracks.name'),
+            title: messages('track.name'),
             key: 'title',
             dataIndex: 'title',
             ellipsis: true,
             align: 'left',
             fixed: 'left',
-            width: 200,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
+            width: 150,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'title'
+            ),
+            render: (_, record) => {
+                const trackArtist = record?.trackArtists ?? [];
+                const trackName = trackArtist
+                    ?.map((item) => item?.artist?.name)
+                    ?.join(' & ');
+                return (
+                    <div className="flex items-center gap-4">
+                        <TrackCoverArt trackData={record} />
+                        <div className="truncate">
+                            <CustomTooltip
+                                title={messages('common.viewDetail')}
+                            >
+                                <Link
+                                    href={getTrackDetailRoute(
+                                        record?.id,
+                                        TRACK_TABS.METADATA
+                                    )}
+                                    className="block truncate hover:cursor-pointer hover:text-blue-500 hover:underline"
+                                >
+                                    {record?.title}
+                                </Link>
+                            </CustomTooltip>
+                            <span className="truncate text-gray-500">
+                                {trackName}
+                            </span>
+                        </div>
+                    </div>
+                );
+            },
+        },
+        {
+            title: messages('release.version'),
+            key: 'version',
+            dataIndex: 'version',
+            align: 'left',
+            width: 50,
+            render: (value, record) => {
+                return <span className="truncate"> {record.version} </span>;
+            },
+        },
+        {
+            title: messages('track.id'),
+            key: 'id',
+            dataIndex: 'id',
+            align: 'left',
+            width: 60,
+            render: (value, record) => (
+                <CopyText text={record?.id}>
                     <span className="truncate"> {value} </span>
-                </CustomTooltip>
+                </CopyText>
             ),
         },
         {
-            title: messages('common.artist'),
-            key: 'artist',
-            dataIndex: 'artist',
+            title: messages('release.label'),
+            key: TRACKS_COLUMNS_DISPLAY.RELEASE_TITLE,
+            dataIndex: 'releaseTitle',
             align: 'left',
+            width: 80,
             ellipsis: true,
-            width: 200,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
-                        {' '}
-                        {value}{' '}
-                    </span>
-                </CustomTooltip>
+            render: (_, record) => (
+                <CopyText text={record?.release?.title}>
+                    <span className="truncate"> {record?.release?.title} </span>
+                </CopyText>
             ),
         },
         {
-            title: messages('tracks.id'),
-            key: 'trackId',
-            dataIndex: 'trackId',
+            title: messages('label.label'),
+            key: TRACKS_COLUMNS_DISPLAY.LABEL_NAME,
+            dataIndex: 'labelName',
             align: 'left',
-            width: 100,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
-                </CustomTooltip>
+            width: 80,
+            ellipsis: true,
+            render: (_, record) => (
+                <CopyText text={record?.release?.label?.name}>
+                    <span className="truncate">
+                        {' '}
+                        {record?.release?.label?.name}{' '}
+                    </span>
+                </CopyText>
             ),
         },
+        // {
+        //     title: messages('common.artist'),
+        //     key: 'trackArtists',
+        //     dataIndex: 'trackArtists',
+        //     align: 'left',
+        //     ellipsis: true,
+        //     width: 100,
+        //     render: (value, record) => {
+        //         const trackArtist = record?.trackArtists ?? [];
+        //         const mainArtist = trackArtist?.find(
+        //             (item: TrackArtistData) =>
+        //                 item.artistRole?.code == MAIN_ARTIST_ROLE
+        //         );
+        //         return (
+        //             // <CustomTooltip size="small" title={value}>
+        //             <span className="truncate">
+        //                 {mainArtist && mainArtist?.artist?.name}
+        //             </span>
+        //             // </CustomTooltip>
+        //         );
+        //     },
+        // },
         {
             title: 'ISRC',
             key: 'isrc',
             dataIndex: 'isrc',
             align: 'left',
-            width: 200,
-            render: (value) => (
-                <CustomTooltip size="small" title={value}>
-                    <span className="truncate"> {value} </span>
-                </CustomTooltip>
+            width: 80,
+            render: (_, record) => (
+                <CopyText text={record?.isrc as string}>
+                    <span className="truncate"> {record?.isrc} </span>
+                </CopyText>
             ),
         },
-
         {
-            title: messages('common.type'),
-            key: 'genres',
-            dataIndex: 'genres',
+            title: 'ACRCloud',
+            key: 'acrCloud',
+            dataIndex: 'acrCloud',
             align: 'left',
-            width: 120,
-            render: (value) => {
-                const genresName = messages(getIntlCodeByGenres(value));
-                return <span className="truncate"> {genresName} </span>;
+            width: 80,
+            render: (value, record) => {
+                const isUnScanned =
+                    record?.scanCopyrightStatus ==
+                    SCAN_COPYRIGHT_STATUS.UN_SCANNED;
+                return (
+                    <div>
+                        <TagScanCopyright
+                            className="!border-0 hover:cursor-pointer hover:opacity-70"
+                            onClick={() => {
+                                if (isUnScanned) {
+                                    return openModal(
+                                        TYPE_MODAL_TRACK.ACR_CLOUD_SCAN,
+                                        record
+                                    );
+                                }
+                                openModal(
+                                    TYPE_MODAL_TRACK.ACR_CLOUD_SCAN_RESULT,
+                                    record
+                                );
+                            }}
+                            status={record?.scanCopyrightStatus}
+                        />
+                    </div>
+                );
             },
         },
-
         {
-            title: messages('releases.duration'),
-            key: 'duration',
-            dataIndex: 'duration',
-            align: 'center',
-            width: 100,
-            render: (value) => {
-                const duration = convertSecondsToHoursMinutes(Number(value));
-                return <span className="truncate">{duration}</span>;
-            },
-        },
-        {
-            title: messages('releases.releaseDate'),
-            key: 'releaseDate',
-            dataIndex: 'releaseDate',
-            align: 'center',
-            width: 100,
-            render: (value) => (
-                <span className="truncate text-wrap">
-                    {' '}
-                    {formattedDate(value)}{' '}
-                </span>
+            title: messages('common.createdAt'),
+            key: 'createdAt',
+            dataIndex: 'createdAt',
+            align: 'left',
+            width: 80,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'createdAt'
             ),
-        },
-        {
-            title: messages('common.dateCreated'),
-            key: 'creationDate',
-            dataIndex: 'creationDate',
-            align: 'center',
-            width: 100,
-            render: (value) => (
+            render: (value, record) => (
                 <span className="truncate text-wrap">
                     {' '}
-                    {formattedDate(value)}{' '}
+                    {formattedDate(record?.createdAt)}{' '}
                 </span>
             ),
         },
         {
             key: 'actions',
             align: 'center',
-            width: 50,
+            width: 30,
             fixed: 'right',
-            render: () => <ActionButton showUpdate showDetail showDelete />,
+            render: (_, record) => {
+                const isUnScanned =
+                    record?.scanCopyrightStatus ==
+                    SCAN_COPYRIGHT_STATUS.UN_SCANNED;
+                return (
+                    <TrackActionButton
+                        showDownload
+                        showDetail
+                        showScan
+                        showScanResult={!isUnScanned}
+                        onShowScanResult={() =>
+                            openModal(
+                                TYPE_MODAL_TRACK.ACR_CLOUD_SCAN_RESULT,
+                                record
+                            )
+                        }
+                        onShowScan={() =>
+                            openModal(TYPE_MODAL_TRACK.ACR_CLOUD_SCAN, record)
+                        }
+                        onShowDetail={() => {
+                            router.push(
+                                getTrackDetailRoute(
+                                    record?.id,
+                                    TRACK_TABS.METADATA
+                                )
+                            );
+                        }}
+                        onShowDownload={async () => {
+                            const response =
+                                await bucketApi.getLinkDownloadFile(
+                                    record?.audioFile?.fileId as string
+                                );
+                            window.open(response?.data?.data);
+                        }}
+                    />
+                );
+            },
         },
     ];
 
-    const newColumns = column.map((column) => ({
-        ...column,
-        hidden: !visibleColumns?.includes(column.key as TRACKS_COLUMNS_DISPLAY),
-    }));
-
     return (
-        <AppTable
+        <AppProTable
+            headerTitle={messages('track.list')}
+            tableAlertRender={({
+                selectedRowKeys,
+                selectedRows,
+                onCleanSelected,
+            }) => (
+                <div className="flex items-center gap-2 font-semibold">
+                    <div className="space-x-1">
+                        <span>{selectedRowKeys.length}</span>
+                        <span>{messages('common.selected')}</span>
+                    </div>
+                    <Button
+                        type="primary"
+                        onClick={() =>
+                            openModal(TYPE_MODAL_TRACK.ACR_CLOUD_SCAN)
+                        }
+                    >
+                        {messages('track.scan')}
+                    </Button>
+                </div>
+            )}
+            columnsState={{
+                persistenceKey: 'tracks-table-columns',
+                persistenceType: 'sessionStorage',
+            }}
             {...props}
+            className={`rounded-t-lg ${props?.className}`}
+            style={{
+                backgroundColor: token.colorBgContainer,
+                ...props?.style,
+            }}
             pagination={false}
-            columns={newColumns}
+            columns={column}
             rowClassName={'group'}
         />
     );

@@ -1,9 +1,12 @@
 import SeeMoreButton from '@/components/ui/button/see-more-button';
 import FlatList from '@/components/ui/flat-list';
 import AppGrid from '@/components/ui/grid/app-grid';
+import { APP_ROUTES } from '@/enums/routes';
+import { Link } from '@/i18n/routing';
 import { ReleasesData } from '@/modules/releases/types';
+import { Empty, theme } from 'antd';
 import { useTranslations } from 'next-intl';
-import CardRelease from '../card/card-album';
+import CardRelease from '../card/card-release';
 
 type Props = {
     data: ReleasesData[];
@@ -11,30 +14,39 @@ type Props = {
 
 export default function ListRelease({ data }: Props) {
     const messages = useTranslations();
+    const { token } = theme.useToken();
+    const releaseLength = data?.length;
 
     return (
-        <div className="mt-8">
-            <div className="flex items-center justify-between pb-2">
+        <div className="mt-8 space-y-4">
+            <div className="flex items-center justify-between">
                 <p className="text-lg font-bold">
-                    {messages('releases.lastedRelease')}
+                    {messages('release.latestReleases')}
                 </p>
 
-                <div>
-                    <SeeMoreButton />
-                </div>
+                <Link href={APP_ROUTES.RELEASES}>
+                    <SeeMoreButton type="default" />
+                </Link>
             </div>
-            <AppGrid className="overflow-hidden">
-                {/* {fakeReleasesData.slice(0, 14).map((item, index) => (
-                    <CardAlbu key={index} album={item} />
-                ))} */}
+
+            <AppGrid className="">
                 <FlatList
                     data={data}
-                    renderItem={({ item }) => <CardRelease album={item} />}
+                    renderItem={({ item }) => <CardRelease data={item} />}
                     keyExtractor={(item) => item.id.toString()}
                     loading={false}
                     className="contents"
                 />
             </AppGrid>
+
+            {releaseLength <= 0 && (
+                <Empty
+                    className="!mx-0 rounded-lg py-6"
+                    style={{
+                        backgroundColor: token.colorBgContainer,
+                    }}
+                />
+            )}
         </div>
     );
 }

@@ -1,7 +1,18 @@
 import { QUERY_KEY } from '@/constants/query-key';
+import { CountriesDataFilter } from '../types';
 
 export const countriesQueryKeys = {
     all: [QUERY_KEY.COUNTRIES.KEY],
-    getList: [QUERY_KEY.COUNTRIES.KEY, QUERY_KEY.COUNTRIES.GET_LIST],
-    getDetail: [QUERY_KEY.COUNTRIES.KEY, QUERY_KEY.COUNTRIES.GET_DETAIL],
+    lists: () => [...countriesQueryKeys.all, QUERY_KEY.COUNTRIES.GET_LIST],
+    listsSimple: () => [
+        ...countriesQueryKeys.all,
+        QUERY_KEY.COUNTRIES.GET_LIST_SIMPLE,
+    ],
+
+    list: (params?: CountriesDataFilter) =>
+        params
+            ? [...countriesQueryKeys.lists(), params]
+            : countriesQueryKeys.lists(),
+    details: () => [...countriesQueryKeys.all, QUERY_KEY.COUNTRIES.GET_DETAIL],
+    detail: (id: string) => [...countriesQueryKeys.details(), id],
 };

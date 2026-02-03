@@ -1,7 +1,10 @@
 'use client';
+import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
-import { SCREEN } from '@/enums/common';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { ORDER } from '@/enums/common';
+import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import LanguagesHeader from '@/modules/languages/components/header';
@@ -12,29 +15,29 @@ import { useDeleteLanguage } from '@/modules/languages/hooks/use-delete-language
 import { useGetListLanguage } from '@/modules/languages/hooks/use-get-list-language';
 import { LanguageDataFilter, LanguagesData } from '@/modules/languages/types';
 import { DeleteVariables } from '@/types/api';
-import { useWindowSize } from '@uidotdev/usehooks';
+import { PageContainer } from '@ant-design/pro-components';
 import { useTranslations } from 'next-intl';
 
 type Props = {};
 
 export default function Languages({}: Props) {
+    // hooks - state
     const messages = useTranslations();
-    const {
-        dataFilter,
-        onChangeFilter,
-        onChangePage,
-        canClearFilter,
-        removeFilter,
-    } = useFilter<LanguageDataFilter>({
-        page: 1,
-        pageSize: 21,
-    });
+    const { dataFilter, onChangeFilter, onChangePage, onSearch } =
+        useFilter<LanguageDataFilter>({
+            page: 1,
+            pageSize: PAGE_SIZE,
+        });
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
-    const dataEdit = useModalStore((state) => state.dataEdit);
+    const dataEdit = useModalStore<LanguagesData>((state) => state.dataEdit);
 
+    // apis
     const { deleteLanguage } = useDeleteLanguage();
+    const { languagesData, isFetching, refetch, lastUpdatedAt } =
+        useGetListLanguage(dataFilter);
 
+    // func
     const handleDeleteLanguage = () => {
         const variables: DeleteVariables<LanguagesData['id']> = {
             id: dataEdit?.id,
@@ -45,78 +48,71 @@ export default function Languages({}: Props) {
 
         deleteLanguage(variables);
     };
-
-    const { height, width } = useWindowSize();
-    const isSmallDevice = Number(width) <= SCREEN.MD;
-    const scrollY = () => {
-        if (isSmallDevice) return undefined;
-        if (!height) return undefined;
-        const minHeight = 300;
-        const appHeaderHeight = 65;
-        const pageHeaderHeight = 53;
-        const tableHeaderHeight = 39;
-        const paginationHeight = 55;
-        const value =
-            height -
-            appHeaderHeight -
-            pageHeaderHeight -
-            tableHeaderHeight -
-            paginationHeight;
-
-        return value > minHeight ? value : minHeight;
+    const handleRefresh = () => {
+        refetch();
+    };
+    const onChangeSort = (pagination: any, filters: any, sort: any) => {
+        const orderBy = setSortOrder(sort, ORDER.ASC);
+        const fieldOrder = sort.field;
+        onChangeFilter(
+            {
+                orderBy,
+                fieldOrder,
+            },
+            false
+        );
     };
 
-    const modalTitle = `${messages('delete.confirmTitle')}`;
-    const modalParagraph = `${messages('delete.confirmMessage', { value: dataEdit?.name })}`;
-
-    const handleRefresh = () => {};
-
-    const { languagesData, isLoading } = useGetListLanguage(dataFilter);
-    console.log('🚀 ~ Languages ~ languagesData:', languagesData);
-
     return (
-        <div className="flex h-full flex-col justify-between overflow-hidden">
-            <div className="flex-1">
-                <LanguagesHeader
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
-                />
+        <AppPageWrapper>
+            <PageContainer title={messages('language.label')}>
                 <LanguagesTable
+                    title={() => (
+                        <LanguagesHeader
+                            dataFilter={dataFilter}
+                            onSearch={onSearch}
+                        />
+                    )}
+                    sticky
                     dataSource={languagesData?.items}
-                    scroll={{ x: SCREEN.MD, y: scrollY() }}
-                    loading={isLoading}
+                    loading={isFetching}
+                    pagination={{
+                        pageSize: dataFilter?.pageSize ?? PAGE_SIZE,
+                        current: languagesData.metadata.page,
+                        total: languagesData.metadata.totalItems,
+                    }}
+                    dataFilter={dataFilter}
+                    onChange={onChangeSort}
                 />
-            </div>
-            <AppPagination
-                className="border-b border-t"
-                align="end"
-                current={dataFilter.page}
-                pageSize={dataFilter.pageSize}
-                total={languagesData?.metadata?.totalItems}
-                onChange={onChangePage}
-                showTotalText
-                showSizeChanger
-                showQuickJumper
-                pageSizeOptions={[21, 28, 32]}
-            />
-
-            {typeModal === TYPE_MODAL_LANGUAGES.DELETE && (
-                <AppConfirm
-                    open
-                    onCancel={closeModal}
-                    onOk={() => handleDeleteLanguage()}
-                    modalTitle={modalTitle}
-                    paragraph={modalParagraph}
+                <AppPagination
+                    align="end"
+                    current={languagesData?.metadata?.page}
+                    pageSize={dataFilter.pageSize}
+                    total={languagesData?.metadata?.totalItems}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
                 />
-            )}
 
-            {(typeModal === TYPE_MODAL_LANGUAGES.CREATE ||
-                typeModal === TYPE_MODAL_LANGUAGES.UPDATE) && (
-                <LanguageFormModal />
-            )}
-        </div>
+                {typeModal === TYPE_MODAL_LANGUAGES.DELETE && (
+                    <AppConfirm
+                        open
+                        onCancel={closeModal}
+                        onOk={() => handleDeleteLanguage()}
+                        modalTitle={messages('delete.confirmTitle')}
+                        paragraph={messages('delete.confirmMessage', {
+                            value: dataEdit?.name,
+                        })}
+                    />
+                )}
+
+                {(typeModal === TYPE_MODAL_LANGUAGES.CREATE ||
+                    typeModal === TYPE_MODAL_LANGUAGES.UPDATE) && (
+                    <LanguageFormModal />
+                )}
+            </PageContainer>
+        </AppPageWrapper>
     );
 }

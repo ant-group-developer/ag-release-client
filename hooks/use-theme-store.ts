@@ -5,6 +5,8 @@ type ThemeStore = {
     theme: THEME;
     toggleTheme: (newTheme?: THEME) => void;
     setTheme: (theme: THEME) => void;
+    primaryColor: string;
+    setPrimaryColor: (color: string | undefined) => void;
 };
 
 export const useThemeStore = create<ThemeStore>((set) => {
@@ -13,9 +15,20 @@ export const useThemeStore = create<ThemeStore>((set) => {
             ? (localStorage.getItem(LOCAL_STORAGE_KEY.THEME) as THEME) ||
               THEME.SYSTEM
             : THEME.SYSTEM;
-
+    const savedColor =
+        typeof window !== 'undefined'
+            ? localStorage.getItem(LOCAL_STORAGE_KEY.PRIMARY_COLOR) || '#1677ff'
+            : '#1677ff';
     return {
         theme: savedTheme,
+        primaryColor: savedColor,
+        setPrimaryColor: (color) => {
+            if (!color) return;
+            if (typeof window !== 'undefined') {
+                localStorage.setItem(LOCAL_STORAGE_KEY.PRIMARY_COLOR, color);
+            }
+            set({ primaryColor: color });
+        },
         toggleTheme: (newTheme?: THEME) => {
             set((state) => {
                 let themeToSet: THEME;

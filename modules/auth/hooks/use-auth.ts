@@ -1,75 +1,71 @@
-import { defaultConfig } from '@/constants/env';
-import { useRouter } from '@/i18n/routing';
+import { getAvatarUrl } from '@/helpers/avatar-tailwind';
+import { TENANT_TYPE, TENANT_USER_TYPE } from '@/modules/tenant/enums';
 import { userQueryKeys } from '@/modules/user/constants';
-import { ACCOUNT_TYPE } from '@/modules/user/enums';
+import { USER_TYPE } from '@/modules/user/enums';
+import {
+    checkCanAccessTenantAll,
+    checkIsSystemAdmin,
+    checkIsSystemTenant,
+    checkIsTenantOwner,
+    checkIsTenantOwnerOrAdmin,
+} from '@/modules/user/utils/role';
 import { useQuery } from '@tanstack/react-query';
+import { signOut } from 'next-auth/react';
 import { authApi } from '../api';
-import { UserInfoData } from '../types/common';
+import { UserInfoData } from '../types/auth';
 
 export const defaultProfile: UserInfoData = {
-    telegramId: null,
-    telegramNotificationEnabled: false,
-    dateCreated: new Date(),
-    dateUpdated: new Date(),
     id: '',
-    name: '',
-    email: '',
-    avatar: null,
-    phoneNumber: null,
-    dateOfBirth: null,
-    isActive: true,
-    emailVerified: true,
-    accountType: ACCOUNT_TYPE.USER,
-    permanentResidence: null,
-    currentAddress: null,
-    taxNumber: null,
-    passportNo: null,
-    passportPlaceOfIssue: null,
-    idNumber: null,
-    idPlaceOfIssue: null,
-    idDateOfIssue: null,
-    contractSignedDate: null,
-    contractNumber: null,
-    groupId: null,
-    group: null,
+    name: 'N/A',
+    email: 'N/A',
+    avatar: getAvatarUrl('unknown'),
     permission: [],
+    isActive: false,
+    type: USER_TYPE.USER,
+    tenantId: '',
+    tenantType: TENANT_TYPE.LABEL,
+    tenantUserType: TENANT_USER_TYPE.MEMBER,
 };
 
 export const useAuth = () => {
-    const router = useRouter();
-
-    const { data, error, refetch, isLoading } = useQuery({
-        queryKey: userQueryKeys.getInfo,
+    const { data, ...rest } = useQuery({
+        queryKey: userQueryKeys.info(),
         queryFn: () => authApi.getInfo(),
-        // refetchOnWindowFocus: true,
+        refetchOnWindowFocus: true,
     });
 
     const profile = data?.data?.data ?? defaultProfile;
 
-    const isAdmin = profile.accountType === ACCOUNT_TYPE.ADMIN;
-    const isUser = profile.accountType === ACCOUNT_TYPE.USER;
+    const isAdmin = checkIsSystemAdmin(profile.type);
+    const isUser = !isAdmin;
+    const isTenantOwner = checkIsTenantOwner(profile.tenantUserType);
+    const isTenantOwnerOrAdmin = checkIsTenantOwnerOrAdmin(
+        profile.tenantUserType
+    );
+    const canAccessTenantAll = checkCanAccessTenantAll(
+        profile.type,
+        profile.tenantUserType
+    );
+    const isSystemTenant = checkIsSystemTenant(profile.tenantId) && isAdmin;
 
     const isAuthenticated = Boolean(profile.id);
 
     function logout() {
-        const redirectUri = `${defaultConfig.REDIRECT_URI}/api/auth/sign-out`;
-        const client = defaultConfig.CLIENT;
-        const login = defaultConfig.LOGIN_URL;
-
-        const url = `${login}/api/auth/sign-out?redirect_uri=${redirectUri}&client=${client}`;
-
-        router.push(url);
+        signOut();
     }
 
     return {
-        permission: profile.permission,
+        ...rest,
+        permission: profile.permission || [],
         profile,
-        error,
         isAuthenticated,
-        isLoading,
         isAdmin,
         isUser,
+        isTenantOwner,
+        isTenantOwnerOrAdmin,
+        canAccessTenantAll,
+        isSystemTenant,
+        isNotSystemTenant: !isSystemTenant,
         logout,
-        refreshProfile: refetch,
     };
 };

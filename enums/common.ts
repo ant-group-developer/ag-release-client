@@ -68,7 +68,8 @@ export enum DATE_FORMAT {
     MYSQL_TYPE_DATE = 'YYYY-MM-DD',
     REPORT = 'MMMM DD, YYYY',
     DATE_MONTH = 'DD/MM',
-    HOUR_MINUTE = 'HH:mm:ss',
+    HOUR_MINUTE_SECOND = 'HH:mm:ss',
+    HOUR_MINUTE = 'HH:mm',
     YEAR_MONTH_DAY_TIME = 'YYYY-MM-DD HH:mm:ss',
 }
 
@@ -99,14 +100,29 @@ export enum TYPE_NOTIFICATION {
 
 export enum TYPE_FILTER {
     KEYWORD = 'keyword',
+    KEYWORDS = 'keywords',
     IS_ACTIVE = 'is_active',
     CREATOR = 'creator',
     STATUS = 'status',
     TYPE = 'type',
     DROPDOWN = 'dropdown',
     DATE_CREATED = 'dateCreated',
+    DATE_UPDATED = 'dateUpdated',
     DATE_RELEASE = 'dateRelease',
     GENRES = 'genres',
+    ARTIST_ID = 'artistId',
+    DSP_ID = 'dspId',
+    TENANT_ID = 'tenantId',
+    ID = 'ID',
+    WORKSPACE = 'tenantIds',
+    RELEASE_ID = 'releaseId',
+    TRACK_ID = 'trackId',
+    LABEL_ID = 'labelId',
+    IS_SCANNED = 'isScanned',
+    ALBUM_FORMAT_ID = 'albumFormatId',
+    IS_VARIOUS_ARTIST = 'isVariousArtist',
+    SCAN_COPYRIGHT_STATUS = 'scanCopyRightStatus',
+    NEWS_CATEGORY = 'newsCategory',
 }
 
 export enum UPLOAD_TYPE {
@@ -126,6 +142,7 @@ export enum LOCAL_STORAGE_KEY {
     OPEN_SIDE_BAR = 'open_side_bar',
     LAYOUT_TABLE = 'layout_table',
     THEME = 'theme',
+    PRIMARY_COLOR = 'primary_color',
 }
 
 export enum SESSION_STORAGE_KEY {
@@ -156,4 +173,25 @@ export enum ORIENTATION {
 
 export enum TYPE_MODAL {
     SEARCH = 'SEARCH',
+}
+
+export enum TYPE_UPLOAD_BUCKET {
+    JSON = 'peak_audio',
+    TRACK = 'track_audio',
+    RELEASE_COVER_ART = 'release_cover_art',
+}
+
+export enum DISTRIBUTE_TYPES {
+    DISTRIBUTE_ONLY_IN = 'distribute_only_in',
+    DISTRIBUTE_EVERY_WHERE_EXCEPT = 'distribute_everywhere_except',
+}
+
+export enum WEEK_DAY {
+    MONDAY = 'MONDAY',
+    TUESDAY = 'TUESDAY',
+    WEDNESDAY = 'WEDNESDAY',
+    THURSDAY = 'THURSDAY',
+    FRIDAY = 'FRIDAY',
+    SATURDAY = 'SATURDAY',
+    SUNDAY = 'SUNDAY',
 }

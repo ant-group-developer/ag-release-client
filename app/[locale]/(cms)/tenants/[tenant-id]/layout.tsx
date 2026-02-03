@@ -1,0 +1,175 @@
+'use client';
+
+import { APP_ROUTES } from '@/enums/routes';
+import { getAvatarPlaceholder } from '@/helpers/common';
+import { useLoadingStatus } from '@/hooks/use-loading-status';
+import { Link, usePathname } from '@/i18n/routing';
+import AppError from '@/modules/auth/components/error';
+import { tenantQueryKeys } from '@/modules/tenant/constants';
+import { TENANT_TABS } from '@/modules/tenant/enums';
+import { useTenantDetail } from '@/modules/tenant/hooks/use-get-tenant';
+import {
+    getTenantDetailRoute,
+    getTenantOwnerEmail,
+} from '@/modules/tenant/utils';
+import {
+    Avatar,
+    Breadcrumb,
+    ConfigProvider,
+    Spin,
+    Tabs,
+    TabsProps,
+    theme,
+    Typography,
+} from 'antd';
+import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
+import { PropsWithChildren } from 'react';
+
+function TenantDetailLayout({ children }: PropsWithChildren) {
+    const messages = useTranslations();
+    const { token } = theme.useToken();
+
+    const pathname = usePathname();
+    const tabKey = pathname.split('/').pop();
+
+    const value = useParams();
+    const tenantId = value['tenant-id'] as string;
+    const { dataTenant, error } = useTenantDetail(tenantId);
+
+    const { isLoading } = useLoadingStatus({
+        queryKeys: [tenantQueryKeys.detail(tenantId)],
+        mutationKeys: [tenantQueryKeys.all],
+    });
+
+    const breadcrumbItems = [
+        {
+            title: messages('tenant.workspaces'),
+            href: APP_ROUTES.TENANT,
+        },
+        {
+            title: dataTenant?.name,
+        },
+    ];
+
+    const items: TabsProps['items'] = [
+        {
+            key: TENANT_TABS.INFO,
+            label: (
+                <Link
+                    href={getTenantDetailRoute(tenantId, TENANT_TABS.INFO)}
+                    className=""
+                >
+                    {messages('common.coreInfo')}
+                </Link>
+            ),
+        },
+        {
+            key: TENANT_TABS.USER,
+            label: (
+                <Link href={getTenantDetailRoute(tenantId, TENANT_TABS.USER)}>
+                    {messages('common.users')}
+                </Link>
+            ),
+        },
+        {
+            key: TENANT_TABS.RELEASE,
+            label: (
+                <Link
+                    href={getTenantDetailRoute(tenantId, TENANT_TABS.RELEASE)}
+                >
+                    {messages('release.releases')}
+                </Link>
+            ),
+        },
+        {
+            key: TENANT_TABS.TRACK,
+            label: (
+                <Link href={getTenantDetailRoute(tenantId, TENANT_TABS.TRACK)}>
+                    {messages('common.tracks')}
+                </Link>
+            ),
+        },
+        {
+            key: TENANT_TABS.INTEGRATION,
+            label: (
+                <Link
+                    href={getTenantDetailRoute(
+                        tenantId,
+                        TENANT_TABS.INTEGRATION
+                    )}
+                >
+                    {messages('integration.label')}
+                </Link>
+            ),
+        },
+    ];
+
+    if (error) {
+        return <AppError error={error} />;
+    }
+
+    return (
+        <Spin spinning={isLoading}>
+            <div className="space-y-4 px-8 py-4">
+                <Breadcrumb items={breadcrumbItems} className="" />
+
+                <div
+                    className="sticky top-0 z-10 mt-4 rounded-lg p-4"
+                    style={{
+                        background: token.colorBgContainer,
+                    }}
+                >
+                    {/* <Link
+                        href={APP_ROUTES.TENANT}
+                        className="flex w-fit items-center gap-1 py-2 hover:underline"
+                    >
+                        <ArrowLeft size={SIZE_ICON_SMALL} />
+                        {messages('tenant.back')}
+                    </Link> */}
+                    <div className="mb-5 mt-3 flex gap-5">
+                        <Avatar
+                            src={dataTenant.logo || dataTenant.icon}
+                            size={64}
+                            shape="square"
+                        >
+                            {getAvatarPlaceholder(dataTenant.name)}
+                        </Avatar>
+                        <div className="h-full">
+                            <h1 className="text-3xl font-bold">
+                                {dataTenant.name}
+                            </h1>
+
+                            <Typography.Text type="secondary">
+                                {messages('tenant.owner')}:{' '}
+                                {getTenantOwnerEmail(dataTenant.tenantUser)}
+                            </Typography.Text>
+                        </div>
+                    </div>
+
+                    <ConfigProvider
+                        theme={{
+                            components: {
+                                Tabs: {
+                                    horizontalMargin: '0 0 0 0',
+                                },
+                            },
+                        }}
+                    >
+                        <Tabs items={items} activeKey={tabKey} />
+                    </ConfigProvider>
+                </div>
+                <div
+                    // style={{
+                    //     backgroundColor: token.colorBgContainer,
+                    // }}
+                    className="rounded-lg"
+                >
+                    {children}
+                </div>
+            </div>
+        </Spin>
+    );
+}
+
+export default TenantDetailLayout;

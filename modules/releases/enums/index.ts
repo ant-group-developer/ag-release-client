@@ -10,6 +10,16 @@ export enum TYPE_MODAL_RELEASE {
     DELETE = 'DELETE_RELEASE',
     DETAIL = 'DETAIL_RELEASE',
     ADD_TRACK = 'ADD_TRACK_RELEASE',
+    DETAIL_TRACK_RELEASE = 'DETAIL_TRACK_RELEASE',
+}
+
+export enum TYPE_MODAL_TRACK {
+    ADD = 'ADD',
+    DELETE = 'DELETE',
+    BULK_DELETE = 'BULK_DELETE',
+    ACR_CLOUD_SCAN = 'ACR_CLOUD_SCAN',
+    ACR_CLOUD_SCAN_HISTORY = 'ACR_CLOUD_SCAN_HISTORY',
+    ACR_CLOUD_SCAN_RESULT = 'ACR_CLOUD_SCAN_RESULT',
 }
 
 export enum TYPE_MODAL_RELEASE_ARTIST_LIST {
@@ -56,9 +66,16 @@ export enum RELEASES_COLUMNS_DISPLAY {
     PUBLISHER = 'publisher',
     UPC = 'upc',
     STATUS = 'status',
-    TRACK_COUNT = 'trackCount',
-    DURATION = 'duration',
+    TRACK_COUNT = 'tracks_count',
+    DURATION = 'total_duration',
+    TENANT = 'tenant',
     RELEASE_DATE = 'releaseDate',
-    CREATION_DATE = 'creationDate',
     ACTIONS = 'actions',
+    CREATED_AT = 'createdAt',
+    UPDATED_AT = 'updatedAt',
+}
+
+export enum RELEASE_TIME_MODE {
+    GLOBAL_MIDNIGHT = 'global_midnight',
+    SPECIFIC_TIMEZONE = 'specific_timezone',
 }

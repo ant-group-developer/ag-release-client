@@ -1,94 +1,158 @@
 'use client';
+import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
+import CreateButton from '@/components/ui/button/create-button';
+import AppSearch from '@/components/ui/input/search';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
-import { SCREEN } from '@/enums/common';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { ORDER } from '@/enums/common';
+import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { usePermission } from '@/hooks/use-permission';
+import { PERMISSION } from '@/modules/auth/constants/permission';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 
-import LabelsHeader from '@/modules/labels/components/header';
 import LabelFormModal from '@/modules/labels/components/modal/label-form';
 import { LabelsTable } from '@/modules/labels/components/table';
-import { fakeLabelData } from '@/modules/labels/constants';
 import { TYPE_MODAL_LABEL } from '@/modules/labels/enum';
-import { LabelDataFilter } from '@/modules/labels/types';
-import { useWindowSize } from '@uidotdev/usehooks';
+import { useDeleteLabel } from '@/modules/labels/hooks/use-delete-label';
+import { useGetListLabels } from '@/modules/labels/hooks/use-get-list-labels';
+import { LabelData, LabelDataFilter } from '@/modules/labels/types';
+import { DeleteVariables } from '@/types/api';
+import { PageContainer } from '@ant-design/pro-components';
+import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
 
 type Props = {};
 
 export default function Labels({}: Props) {
+    // hooks - state
     const messages = useTranslations();
-    const {
-        dataFilter,
-        onChangeFilter,
-        onChangePage,
-        canClearFilter,
-        removeFilter,
-    } = useFilter<LabelDataFilter>({
-        page: 1,
-        pageSize: 21,
-    });
-
+    const { token } = theme.useToken();
+    const { dataFilter, onChangeFilter, onChangePage, onSearch } =
+        useFilter<LabelDataFilter>({
+            page: 1,
+            pageSize: PAGE_SIZE,
+        });
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
+    const dataEdit = useModalStore<LabelData>((state) => state.dataEdit);
+    const openModal = useModalStore((state) => state.openModal);
+    const { isNotSystemTenant } = useAuth();
+    const { hasPermission } = usePermission();
 
-    const handleRefresh = () => {};
+    // apis
+    const { labelsData, isFetching, lastUpdatedAt, refetch } =
+        useGetListLabels(dataFilter);
+    const { deleteLabel } = useDeleteLabel();
 
-    const { height, width } = useWindowSize();
-
-    const isSmallDevice = Number(width) <= SCREEN.MD;
-
-    const scrollY = () => {
-        if (isSmallDevice) return undefined;
-        if (!height) return undefined;
-        const minHeight = 300;
-        // const headerFooterHeight = 216;
-        const headerFooterHeight = 210;
-        const value = height - headerFooterHeight;
-        if (value > minHeight) return value;
-        return minHeight;
+    // func
+    const handleRefresh = () => {
+        refetch();
+    };
+    const handleDeleteLabel = () => {
+        const variables: DeleteVariables<LabelData['id']> = {
+            id: dataEdit?.id,
+            onSuccess: () => {
+                closeModal();
+            },
+        };
+        deleteLabel(variables);
+    };
+    const onChangeSort = (pagination: any, filters: any, sort: any) => {
+        const orderBy = setSortOrder(sort, ORDER.ASC);
+        const fieldOrder = sort.field;
+        onChangeFilter(
+            {
+                orderBy,
+                fieldOrder,
+            },
+            false
+        );
     };
 
     return (
-        <div className="flex h-full flex-col justify-between overflow-hidden">
-            <div className="flex-1">
-                <LabelsHeader
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
-                />
+        <AppPageWrapper>
+            <PageContainer
+                title={messages('label.label')}
+                style={{
+                    backgroundColor: token.colorBgLayout,
+                }}
+                extra={
+                    <div className="flex items-center gap-2">
+                        {isNotSystemTenant &&
+                            hasPermission(PERMISSION.LABEL.CREATE) && (
+                                <CreateButton
+                                    canCreate={true}
+                                    text={messages('label.create')}
+                                    onClick={() =>
+                                        openModal(TYPE_MODAL_LABEL.CREATE)
+                                    }
+                                />
+                            )}
+                    </div>
+                }
+            >
+                {/* <LabelsHeader dataFilter={dataFilter} onSearch={onSearch} /> */}
                 <LabelsTable
-                    dataSource={fakeLabelData}
-                    scroll={{ x: SCREEN.XXL, y: scrollY() }}
+                    sticky
+                    dataSource={labelsData?.items}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: labelsData.metadata.page,
+                        total: labelsData.metadata.totalItems,
+                    }}
+                    loading={isFetching}
+                    dataFilter={dataFilter}
+                    onChange={onChangeSort}
+                    headerTitle={
+                        <AppSearch
+                            className="max-w-52"
+                            onChange={onSearch}
+                            defaultValue={dataFilter.keyword}
+                        />
+                    }
+                    options={{
+                        reload: () => {
+                            handleRefresh();
+                        },
+                    }}
                 />
-            </div>
 
-            {(typeModal === TYPE_MODAL_LABEL.CREATE ||
-                typeModal === TYPE_MODAL_LABEL.EDIT) && <LabelFormModal />}
+                {(typeModal === TYPE_MODAL_LABEL.CREATE ||
+                    typeModal === TYPE_MODAL_LABEL.EDIT) && (
+                    <LabelFormModal onCancel={closeModal} />
+                )}
 
-            {typeModal === TYPE_MODAL_LABEL.DELETE && (
-                <AppConfirm
-                    open
-                    onCancel={closeModal}
-                    modalTitle={`${messages('common.delete')} label`}
-                    paragraph="Bạn có chắc chắn muốn xóa label này không?"
+                {typeModal === TYPE_MODAL_LABEL.DELETE && (
+                    <AppConfirm
+                        open
+                        onOk={() => handleDeleteLabel()}
+                        onCancel={closeModal}
+                        modalTitle={`${messages('common.delete')} label`}
+                        paragraph={messages('delete.confirmMessage', {
+                            value: dataEdit?.name,
+                        })}
+                    />
+                )}
+
+                <AppPagination
+                    align="end"
+                    className="rounded-b-lg"
+                    style={{
+                        backgroundColor: token?.colorBgContainer,
+                    }}
+                    current={labelsData?.metadata?.page}
+                    pageSize={dataFilter.pageSize}
+                    total={labelsData.metadata?.totalItems}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
                 />
-            )}
-
-            <AppPagination
-                className="border-b border-t"
-                align="end"
-                current={dataFilter.page}
-                pageSize={dataFilter.pageSize}
-                total={fakeLabelData.length}
-                onChange={onChangePage}
-                showTotalText
-                showSizeChanger
-                showQuickJumper
-                pageSizeOptions={[21, 28, 32]}
-            />
-        </div>
+            </PageContainer>
+        </AppPageWrapper>
     );
 }

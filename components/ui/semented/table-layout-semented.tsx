@@ -50,7 +50,7 @@ export default function TableLayoutSegmented({ value, ...props }: Props) {
             className="min-w-[110px]"
         >
             <CustomTooltip
-                placement="bottomLeft"
+                // placement="bottomLeft"
                 title={messages('common.listLayout')}
             >
                 <Radio.Button value={LAYOUT_TABLE.LIST}>
@@ -58,7 +58,7 @@ export default function TableLayoutSegmented({ value, ...props }: Props) {
                 </Radio.Button>
             </CustomTooltip>
             <CustomTooltip
-                placement="bottomLeft"
+                // placement="bottomLeft"
                 title={messages('common.gridLayout')}
             >
                 <Radio.Button value={LAYOUT_TABLE.GRID}>

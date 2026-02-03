@@ -1,19 +1,64 @@
-import axiosAccount from '@/api/axios-account';
+import axiosInstance from '@/api/axios-auth';
+import { TenantDetail } from '@/modules/tenant/types/data';
 import { DetailResponse } from '@/types/api';
-import { LoginPayload, LoginResponse, UserInfoData } from '../types/common';
+import axios, { AxiosInstance } from 'axios';
+import {
+    GetTokenResponse,
+    RefreshDto,
+    SigninDto,
+    SwitchTenantDto,
+    UserInfoData,
+} from '../types/auth';
+
+const axiosAuth: AxiosInstance = axios.create({
+    baseURL: process.env.API_URL + '/auth',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
 
 export const authApi = {
-    login(payload: LoginPayload) {
-        return axiosAccount.post<LoginResponse>(`/auth/login`, payload);
-    },
+    signin: (payload: SigninDto) =>
+        axiosAuth.post<DetailResponse<GetTokenResponse>>(`/login`, payload),
 
-    refreshToken(refresh_token: string) {
-        return axiosAccount.post<LoginResponse>('/auth/refresh-token', {
-            refresh_token,
-        });
+    refreshToken: (payload: RefreshDto) =>
+        axiosAuth.post<DetailResponse<GetTokenResponse>>(`/refresh`, payload),
+
+    switchTenant: (token: string, payload: SwitchTenantDto) => {
+        axiosAuth.defaults.headers['Authorization'] = `Bearer ${token}`;
+        return axiosAuth.post<DetailResponse<GetTokenResponse>>(
+            `/switch-tenant`,
+            payload
+        );
     },
 
     getInfo() {
-        return axiosAccount.get<DetailResponse<UserInfoData>>('/auth/me');
+        return axiosInstance.get<DetailResponse<UserInfoData>>('/auth/me');
+    },
+
+    getTenant() {
+        return axiosInstance.get<DetailResponse<TenantDetail>>('/auth/tenant');
     },
 };
+
+export async function getCurrentTenant(
+    cookie: string
+): Promise<TenantDetail | null> {
+    try {
+        const res = await fetch(
+            process.env.NEXTAUTH_URL + '/api/proxy/auth/tenant',
+            {
+                headers: { cookie },
+                cache: 'no-store', // tenant can change per-request
+            }
+        );
+        // const text = await res.text();
+        // console.log('Backend error body:', text);
+        if (!res.ok) return null;
+        const json = await res.json();
+        return (json?.data ?? json) as TenantDetail;
+    } catch (error) {
+        console.log('error:', error);
+        return null;
+    }
+}

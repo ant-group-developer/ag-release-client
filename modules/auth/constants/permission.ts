@@ -1,55 +1,34 @@
 export const PERMISSION = {
-    STATISTIC: {
-        READ: 'task.management.statistic.read',
-    },
-    ACCOUNT: {
-        READ: 'cms.account.read',
-    },
-    LOG: {
-        READ: 'task.system.log.read',
-    },
-    SETTING: {
-        READ: 'task.system.setting.read',
-        UPDATE: 'task.system.setting.update',
-    },
-    PERMISSION: {
-        UPDATE: 'task.system.grant-permission.update',
-    },
-    USER: {
-        READ: 'task.user.read',
-        CREATE: 'task.user.create',
-        UPDATE: 'task.user.update',
-        DELETE: 'task.user.delete',
-    },
-    PROFILE: {
-        UPDATE: 'task.profile.update',
-    },
-    RELEASE: {
-        READ: 'task.releases.read',
-        CREATE: 'task.releases.create',
-        UPDATE: 'task.releases.update',
-        DELETE: 'task.releases.delete',
-    },
-    TRACK: {
-        READ: 'task.tracks.read',
-        CREATE: 'task.tracks.create',
-        UPDATE: 'task.tracks.update',
-        DELETE: 'task.tracks.delete',
-    },
-    LABEL: {
-        READ: 'task.labels.read',
-        CREATE: 'task.labels.create',
-        UPDATE: 'task.labels.update',
-        DELETE: 'task.labels.delete',
+    DASHBOARD: {
+        READ: 'dashboard.read',
     },
     ARTIST: {
-        READ: 'task.artists.read',
-        CREATE: 'task.artists.create',
-        UPDATE: 'task.artists.update',
-        DELETE: 'task.artists.delete',
+        CREATE: 'artist.create',
+        READ: 'artist.read',
+        UPDATE: 'artist.update',
     },
-    DISTRIBUTION: {
-        READ: 'task.distribution.read',
-        UPDATE: 'task.distribution.update',
+    DSP: {
+        CONFIGURE_INTEGRATION: 'dsp.configure_integration',
+        READ: 'dsp.read',
     },
-};
+    LABEL: {
+        CREATE: 'label.create',
+        READ: 'label.read',
+        UPDATE: 'label.update',
+    },
+    RELEASE: {
+        REVIEW: 'release.review',
+        CREATE: 'release.create',
+        READ: 'release.read',
+        TAKE_DOWN: 'release.take_down',
+        UPDATE: 'release.update',
+    },
+    TRACK: {
+        READ: 'track.read',
+    },
+    WORKSPACE: {
+        CREATE: 'workspace.create',
+        READ: 'workspace.read',
+        UPDATE: 'workspace.update',
+    },
+} as const;

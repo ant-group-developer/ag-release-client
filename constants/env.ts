@@ -1,6 +1,6 @@
 export const defaultConfig = {
     API_URL: process.env.API_URL ?? '',
-    WEBSITE_URL: process.env.REDIRECT_URI ?? '',
+    WEBSITE_URL: process.env.WEBSITE_URL ?? '',
     TELEGRAM: process.env.TELEGRAM ?? '',
     WHATSAPP: process.env.WHATSAPP ?? '',
     EMAIL: process.env.EMAIL ?? '',
@@ -20,4 +20,6 @@ export const defaultConfig = {
     CLIENT: process.env.CLIENT ?? '',
     API_UPLOAD: process.env.API_UPLOAD ?? '',
     APP_UPLOAD_X_API_KEY: process.env.APP_UPLOAD_X_API_KEY ?? '',
+    APP_LOGO: '/logo.png',
+    APP_ICON: '/logo.png',
 };

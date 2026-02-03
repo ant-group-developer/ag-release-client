@@ -157,3 +157,42 @@ export const getNameByLocale = (
     if (!nameEn || !nameVi) return nameEn || nameVi;
     return locale === LOCALE.VI ? nameVi : nameEn;
 };
+
+export const getCodeFormatted = (code: string) => {
+    return code
+        .trim()
+        .split(' ')
+        .map((i) => i.toUpperCase())
+        .join('_');
+};
+
+// Không dùng nữa
+// export function genFolderBucket({
+//     uploadPurpose,
+//     releaseId,
+//     fileName,
+// }: {
+//     uploadPurpose: TYPE_UPLOAD_BUCKET;
+//     releaseId: string;
+//     fileName?: string;
+// }) {
+//     const datePrefix = dayjs().utc().format('YYYY_MM_DD');
+
+//     let subFolder = '';
+//     switch (uploadPurpose) {
+//         case TYPE_UPLOAD_BUCKET.TRACK:
+//         case TYPE_UPLOAD_BUCKET.JSON:
+//             subFolder = 'tracks';
+//             break;
+//         case TYPE_UPLOAD_BUCKET.RELEASE_COVER_ART:
+//             subFolder = 'release_cover_art';
+//             break;
+//         default:
+//             subFolder = 'unknown';
+//             break;
+//     }
+
+//     const trackSegment = fileName ? `/${fileName}` : '';
+
+//     return `${datePrefix}/releases/${releaseId}/${subFolder}${trackSegment}`;
+// }

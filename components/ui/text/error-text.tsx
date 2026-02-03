@@ -4,6 +4,7 @@ type Props = {
 };
 
 export default function ErrorText({ isError, message }: Props) {
-    if (!isError || !message) return null;
-    return <p className="text-red-500">{message}</p>;
+    return (
+        <p className="absolute left-0 top-full mb-1 text-red-500">{message}</p>
+    );
 }

@@ -1,14 +1,18 @@
+import { ORDER } from '@/enums/common';
+import { ENTITY_TYPE_PICTURE } from '@/modules/upload/types/data';
+
 export interface PaginationResponse<T = any> {
     data: {
         items: T[];
         metadata: {
-            currentPage: number;
+            page: number;
             limit: number;
             totalItems: number;
             totalPages: number;
         };
     };
     message: string;
+    messagesCode?: string;
     statusCode: number;
 }
 
@@ -22,6 +26,7 @@ export interface ListResponse<T = any> {
 export interface DetailResponse<T> {
     statusCode?: number;
     message?: string;
+    messagesCode?: string;
     data: T;
 }
 
@@ -52,19 +57,27 @@ export interface UUIDCommonAttribute {
 }
 
 export interface CommonAttributeCreator extends CommonAttribute {
-    userCreatorId: string;
-    userCreator: {
+    creatorId: string;
+    creator: {
         id: string;
-        name: string;
+        email: string;
+    };
+    modifierId: string;
+    modifier: {
+        id: string;
         email: string;
     };
 }
 
 export interface UUIDCommonAttributeCreator extends UUIDCommonAttribute {
-    userCreatorId: string;
-    userCreator: {
+    creatorId: string;
+    creator: {
         id: string;
-        name: string;
+        email: string;
+    };
+    modifierId: string;
+    modifier: {
+        id: string;
         email: string;
     };
 }
@@ -78,7 +91,12 @@ export interface CommonParams {
     page?: number;
     pageSize?: number;
     keyword?: string;
-    // language: LOCALE;
+    fieldOrder?: string;
+    orderBy?: ORDER;
+    startCreatedAt?: string;
+    endCreatedAt?: string;
+    startUpdatedAt?: string;
+    endUpdatedAt?: string;
 }
 
 export interface CreateFile {
@@ -90,14 +108,12 @@ export interface CreateFile {
     googleDriveFileId?: string;
 }
 
-export interface GetUrlUploadParams {
+export interface UploadPayload {
     infoFile: {
-        contentType: string;
-        extension: string;
-        fileSizeInByte: number;
+        entityType: ENTITY_TYPE_PICTURE;
         fileName: string;
-        type?: string;
-        typeKey?: string;
+        contentType: string;
+        fileSize: number;
     };
     file: File;
 }

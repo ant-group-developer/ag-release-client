@@ -1,33 +1,48 @@
-import useModalStore from '@/hooks/use-modal';
-import { Select, SelectProps } from 'antd';
-import { useTranslations } from 'next-intl';
+import { toNonAccentVietnamese } from '@/helpers/string';
+import { useGetListSimpleCountries } from '@/modules/countries/hooks/use-get-list-simple-countries';
+import { Select, SelectProps, Typography } from 'antd';
 
-type Props = SelectProps & {};
+type Props = Omit<SelectProps, 'option'> & {
+    fallBack?: string;
+};
 
-export default function CountrySelect({ ...props }: Props) {
-    const messages = useTranslations();
-    const openModal = useModalStore((state) => state.openModal);
-    const fakeCountry: SelectProps['options'] = [
-        {
-            id: 1,
-            value: 'Việt Nam',
-            label: 'Việt Nam',
-        },
-        {
-            id: 2,
-            value: 'United State',
-            label: 'United State',
-        },
-        {
-            id: 3,
-            value: 'France',
-            label: 'France',
-        },
-        {
-            id: 4,
-            value: 'Thailand',
-            label: 'Thailand',
-        },
-    ];
-    return <Select {...props} options={fakeCountry} />;
+export default function CountrySelect({ fallBack, ...props }: Props) {
+    const { countriesData } = useGetListSimpleCountries();
+
+    const options = countriesData.map((item) => {
+        return {
+            id: item.id,
+            value: item.id,
+            label: (
+                <div className="space-x-1">
+                    <Typography.Text className="!text-xs">
+                        {item?.iso2}
+                    </Typography.Text>
+                    <Typography.Text>{item?.name}</Typography.Text>
+                </div>
+            ),
+            name: item?.name,
+        };
+    });
+
+    const labelRender = (props: any) => {
+        const { value, label } = props;
+        if (value) {
+            return fallBack || label;
+        }
+    };
+
+    return (
+        <Select
+            {...props}
+            showSearch
+            filterOption={(input, option) =>
+                toNonAccentVietnamese(option?.name ?? '')
+                    .toLowerCase()
+                    .includes(toNonAccentVietnamese(input).toLowerCase())
+            }
+            options={options}
+            labelRender={labelRender}
+        />
+    );
 }

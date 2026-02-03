@@ -1,70 +1,192 @@
-import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
-import Refresh from '@/components/refresh';
-import TableLayoutSegmented from '@/components/ui/semented/table-layout-semented';
-import { DATE_FORMAT, LAYOUT_TABLE } from '@/enums/common';
-import { formattedDate } from '@/helpers/common';
+import AppFilter from '@/components/ui/antd-form/app-filter';
+import DateRangePicker from '@/components/ui/input/date-range-picker';
+import ArtistSelect from '@/components/ui/select/artist-select';
+import GenresSelect from '@/components/ui/select/genres-select';
+import LabelSelect from '@/components/ui/select/label-select';
+import { arrayFromString, getDateRange } from '@/helpers/array';
+import { getIntlCodeByReleaseStatus } from '@/helpers/intl';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
-import { useTableLayoutToggle } from '@/hooks/use-layout-table';
-import { RELEASES_COLUMNS_DISPLAY } from '../../enums';
+import { useGetListSimpleReleaseTypes } from '@/modules/release-types/hooks/use-get-list-simple-release-types';
+import {
+    ProForm,
+    ProFormSelect,
+    ProFormText,
+} from '@ant-design/pro-components';
+import { useTranslations } from 'next-intl';
+import { useEffect } from 'react';
+import { RELEASES_COLUMNS_DISPLAY, RELEASES_STATUS } from '../../enums';
 import { ReleasesDataFilter } from '../../types';
-import ShowColumnOptionDropdown from '../dropdown/show-column-option-dropdown';
-import ReleasesSuperFilter from './releases-super-filter';
 
 type Props = {
     dataFilter: ReleasesDataFilter;
     onChangeFilter: OnChangeFilter<ReleasesDataFilter>;
     canClearFilter: boolean;
+    dataUpdatedAt: number | null;
     removeFilter: RemoveFilter;
     handleRefresh: () => void;
-    visibleColumn: RELEASES_COLUMNS_DISPLAY[];
-    handleChangeVisibleColumns: (columns: RELEASES_COLUMNS_DISPLAY[]) => void;
+    visibleColumn?: RELEASES_COLUMNS_DISPLAY[];
+    handleChangeVisibleColumns?: (columns: RELEASES_COLUMNS_DISPLAY[]) => void;
 };
 
-export default function ReleasesHeader({
+export default function ReleasesHeaderV2({
     dataFilter,
     onChangeFilter,
     canClearFilter,
+    dataUpdatedAt,
     removeFilter,
     handleRefresh,
     visibleColumn,
     handleChangeVisibleColumns,
 }: Props) {
-    const { layoutTable, toggleLayoutTable } = useTableLayoutToggle();
+    // const { layoutTable, toggleLayoutTable } = useTableLayoutToggle();
+    const [form] = ProForm.useForm();
+    const messages = useTranslations();
+    const { releaseTypesData } = useGetListSimpleReleaseTypes();
+    const releaseStatus = Object.values(RELEASES_STATUS).map((item) => ({
+        label: messages(getIntlCodeByReleaseStatus(item)),
+        value: item,
+    }));
+
+    const initialValue = {
+        ...dataFilter,
+        albumFormatId: arrayFromString(dataFilter?.albumFormatId),
+        artistId: arrayFromString(dataFilter?.artistId),
+        status: arrayFromString(dataFilter?.status),
+        genres: arrayFromString(dataFilter?.genres),
+        dateCreated: getDateRange(
+            dataFilter?.startCreatedAt,
+            dataFilter?.endCreatedAt
+        ),
+        dateUpdated: getDateRange(
+            dataFilter?.startUpdatedAt,
+            dataFilter?.endUpdatedAt
+        ),
+    };
+
+    const handleSubmit = (values: any) => {
+        const { dateCreated, dateUpdated, ...res } = values;
+        const startCreatedAt = dateCreated?.[0] ? dateCreated[0] : null;
+        const endCreatedAt = dateCreated?.[1] ? dateCreated[1] : null;
+
+        const startUpdatedAt = dateUpdated?.[0] ?? null;
+        const endUpdatedAt = dateUpdated?.[1] ?? null;
+        onChangeFilter({
+            ...res,
+            startCreatedAt,
+            endCreatedAt,
+            startUpdatedAt,
+            endUpdatedAt,
+        });
+    };
+
+    const handleReset = (values: any) => {
+        removeFilter();
+        form.setFieldsValue({});
+    };
+
+    useEffect(() => {
+        form.setFieldsValue(initialValue);
+    }, [JSON.stringify(dataFilter)]);
+
     return (
-        <AppHeader className="px-4 py-1">
-            <AppHeaderGroup>
-                <ReleasesSuperFilter
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
+        <div className="app-header mb-4">
+            <AppFilter
+                form={form}
+                onFinish={handleSubmit}
+                onReset={handleReset}
+            >
+                <ProFormText
+                    name="keyword"
+                    label={messages('common.search')}
+                    placeholder={messages('placeholder.filterBy', {
+                        value: messages('common.keyword').toLowerCase(),
+                    })}
                 />
-            </AppHeaderGroup>
+                <ProFormSelect
+                    name="albumFormatId"
+                    label={messages('releaseType.label')}
+                    placeholder={messages('placeholder.filterBy', {
+                        value: messages('releaseType.label').toLowerCase(),
+                    })}
+                    options={releaseTypesData?.map((item) => ({
+                        value: item?.id,
+                        label: item?.name,
+                    }))}
+                    mode="multiple"
+                    fieldProps={{
+                        maxTagCount: 'responsive',
+                    }}
+                />
 
-            <AppHeaderGroup position="end" className="flex-1">
-                <div className="flex items-center gap-2">
-                    <Refresh
-                        handleRefresh={handleRefresh}
-                        lastTimeUpdated={formattedDate(
-                            new Date(),
-                            DATE_FORMAT.HOUR_MINUTE
-                        )}
+                <ProForm.Item name="labelId" label={messages('label.label')}>
+                    <LabelSelect
+                        placeholder={messages('placeholder.filterBy', {
+                            value: messages('label.label').toLowerCase(),
+                        })}
+                        allowClear
+                        mode="multiple"
+                        maxTagCount={'responsive'}
                     />
+                </ProForm.Item>
 
-                    {layoutTable === LAYOUT_TABLE.LIST && (
-                        <ShowColumnOptionDropdown
-                            visibleColumns={visibleColumn}
-                            handleSetVisibleColumns={handleChangeVisibleColumns}
-                        />
-                    )}
-
-                    <TableLayoutSegmented
-                        className="!mr-2"
-                        value={layoutTable}
-                        onChange={toggleLayoutTable}
+                <ProForm.Item name="artistId" label={messages('artist.label')}>
+                    <ArtistSelect
+                        showCreate={false}
+                        allowClear
+                        dropdownMatchSelectWidth={false}
+                        placeholder={messages('placeholder.filterBy', {
+                            value: messages('artist.label').toLowerCase(),
+                        })}
+                        mode="multiple"
+                        maxTagCount={'responsive'}
                     />
-                </div>
-            </AppHeaderGroup>
-        </AppHeader>
+                </ProForm.Item>
+
+                <ProFormSelect
+                    name="status"
+                    label={messages('common.status')}
+                    placeholder={messages('placeholder.filterBy', {
+                        value: messages('status.label').toLowerCase(),
+                    })}
+                    options={releaseStatus}
+                    mode="multiple"
+                    fieldProps={{
+                        maxTagCount: 'responsive',
+                    }}
+                />
+
+                <ProForm.Item name="genres" label={messages('genre.label')}>
+                    <GenresSelect
+                        allowClear
+                        placeholder={messages('placeholder.filterBy', {
+                            value: messages('genre.label').toLowerCase(),
+                        })}
+                        mode="multiple"
+                        maxTagCount={'responsive'}
+                    />
+                </ProForm.Item>
+
+                <ProForm.Item
+                    name="dateCreated"
+                    label={messages('common.dateCreated')}
+                >
+                    <DateRangePicker
+                        className="w-full"
+                        allowClear
+                        placement="topLeft"
+                    />
+                </ProForm.Item>
+                <ProForm.Item
+                    name="dateUpdated"
+                    label={messages('common.dateUpdated')}
+                >
+                    <DateRangePicker
+                        allowClear
+                        className="w-full"
+                        placement="topLeft"
+                    />
+                </ProForm.Item>
+            </AppFilter>
+        </div>
     );
 }

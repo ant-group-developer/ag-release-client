@@ -7,36 +7,20 @@ declare global {
     interface IntlMessages extends Messages {}
 }
 
-declare module 'mediainfo.js' {
-    /**
-     * Kết quả trả về từ analyzeData().
-     * Mỗi track trong mảng track có thể là "General", "Video", "Audio"...
-     */
-    export interface MediaInfoResult {
-        media?: {
-            track?: Array<Record<string, any>>;
+declare module 'next-auth' {
+    interface Session {
+        user: {
+            id: string;
+            tenantId: string;
         };
+        error?: string;
     }
+}
 
-    export interface MediaInfoInstance {
-        /**
-         * analyzeData đọc file theo chunk.
-         * - getSize: hàm trả về kích thước file (byte)
-         * - readChunk: hàm đọc một phần (chunk) của file => trả về Uint8Array
-         */
-        analyzeData(
-            getSize: () => number,
-            readChunk: (
-                chunkSize: number,
-                offset: number
-            ) => Promise<Uint8Array> | Uint8Array
-        ): Promise<MediaInfoResult>;
+declare module 'next-auth/jwt' {
+    interface JWT {
+        accessToken: string;
+        refreshToken: string;
+        error?: string;
     }
-
-    /**
-     * Khởi tạo MediaInfo (WebAssembly)
-     */
-    export default function MediaInfo(
-        options?: Record<string, any>
-    ): Promise<MediaInfoInstance>;
 }

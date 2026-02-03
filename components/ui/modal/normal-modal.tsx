@@ -1,12 +1,18 @@
-import { Modal, ModalProps } from 'antd';
+import { Modal, ModalProps, Spin } from 'antd';
 import { ReactNode } from 'react';
 
 export type AppModalProps = {
     children?: ReactNode;
     loading?: boolean;
+    spinning?: boolean;
 } & ModalProps;
 
-function AppModal({ loading, children, ...props }: AppModalProps) {
+function AppModal({
+    loading,
+    children,
+    spinning = false,
+    ...props
+}: AppModalProps) {
     return (
         <Modal
             confirmLoading={loading}
@@ -16,7 +22,7 @@ function AppModal({ loading, children, ...props }: AppModalProps) {
             // maskClosable={false}
             {...props}
         >
-            {children}
+            <Spin spinning={spinning}>{children}</Spin>
         </Modal>
     );
 }

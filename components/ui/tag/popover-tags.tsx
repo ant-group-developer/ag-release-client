@@ -1,23 +1,34 @@
-import { Popover, Tag } from 'antd';
+import { Popover, Tag, TagProps, Typography } from 'antd';
 
-type Props = {
+type Props = TagProps & {
     tags?: string[];
+    maxVisibleTags?: number;
 };
 
-export default function PopoverTags({ tags, ...props }: Props) {
+export default function PopoverTags({
+    tags,
+    maxVisibleTags = 1,
+    ...props
+}: Props) {
     if (!tags) {
         return null;
     }
 
+    const visibleTags = tags.slice(0, maxVisibleTags);
+    const hiddenTags = tags.slice(maxVisibleTags);
+
     const restTags = () => {
         return (
             <div className="flex items-center justify-center gap-1">
-                {tags.map((item, index) => {
-                    if (index === 0) return null;
+                {hiddenTags.map((item, index) => {
                     return (
-                        <Tag key={index} className="!mr-0">
-                            {' '}
-                            {item}{' '}
+                        <Tag key={item} className="!mr-0">
+                            <Typography.Text
+                                ellipsis={{ tooltip: true }}
+                                style={{ maxWidth: 200 }}
+                            >
+                                {item}
+                            </Typography.Text>
                         </Tag>
                     );
                 })}
@@ -26,11 +37,20 @@ export default function PopoverTags({ tags, ...props }: Props) {
     };
 
     return (
-        <div>
-            <Tag className="!mr-1"> {tags[0]} </Tag>
-            {tags.length > 1 && (
+        <div className="flex flex-wrap gap-1">
+            {visibleTags.map((tag, index) => (
+                <Tag key={tag} className="!mr-0">
+                    <Typography.Text
+                        ellipsis={{ tooltip: true }}
+                        style={{ maxWidth: 200 }}
+                    >
+                        {tag}
+                    </Typography.Text>
+                </Tag>
+            ))}
+            {hiddenTags.length > 0 && (
                 <Popover content={restTags()}>
-                    <Tag> +{tags.length - 1} </Tag>
+                    <Tag> +{hiddenTags.length} </Tag>
                 </Popover>
             )}
         </div>

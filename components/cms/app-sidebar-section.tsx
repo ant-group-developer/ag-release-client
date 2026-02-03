@@ -1,6 +1,6 @@
 import { cn } from '@/helpers/common';
 import { useActive } from '@/hooks/use-active';
-import { useLoading, UseLoadingType } from '@/hooks/use-loading';
+import { LoadingType, useLoading } from '@/hooks/use-loading';
 import { Checkbox } from 'antd';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import IconButton from '../ui/button/icon-button';
@@ -20,7 +20,7 @@ interface Props {
 function AppSidebarSection({ title, data, value, onChange }: Props) {
     const { isActive, toggleActive } = useActive(true);
 
-    const loading = useLoading(UseLoadingType.Fetching);
+    const loading = useLoading(LoadingType.Fetching);
 
     if (data.length === 0) return null;
 

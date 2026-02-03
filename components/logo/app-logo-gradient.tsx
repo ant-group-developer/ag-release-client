@@ -13,7 +13,7 @@ type Props = {
 
 function AppLogoGradient({ className, wrapperClassName, size = 70 }: Props) {
     const companyName = defaultConfig.APP_SHORT_NAME;
-    const companyLogo = '/logo.png';
+    const companyLogo = defaultConfig.APP_LOGO;
 
     return (
         <Link

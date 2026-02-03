@@ -1,0 +1,6 @@
+export enum TYPE_MODAL_ROLES {
+    CREATE = 'CREATE',
+    UPDATE = 'UPDATE',
+    DELETE = 'DELETE',
+    BULK_DELETE = 'BULK_DELETE',
+}

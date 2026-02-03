@@ -1,0 +1,35 @@
+import { Card } from 'antd';
+import { CardProps } from 'antd/lib';
+import Image from 'next/image';
+import { NewsData } from '../types';
+import { FALLBACK_IMAGE_HORIZONTAL } from '@/constants/common';
+
+type Props = CardProps & {
+    data: NewsData;
+};
+const { Meta } = Card;
+export default function PostCard({ data }: Props) {
+    return (
+        <Card
+            hoverable
+            bordered={false}
+            cover={
+                <Image
+                    draggable={false}
+                    alt="example"
+                    src={data?.thumbnail ?? FALLBACK_IMAGE_HORIZONTAL}
+                    width={400}
+                    height={250}
+                    className="aspect-video"
+                />
+            }
+        >
+            <Meta
+                title={data?.title}
+                description={
+                    <p className="line-clamp-2 h-11">{data?.description}</p>
+                }
+            />
+        </Card>
+    );
+}

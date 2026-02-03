@@ -76,11 +76,11 @@ function LogTable({ ...props }: Props) {
         },
         {
             title: 'User ID',
-            dataIndex: 'userCreatorId',
+            dataIndex: 'creatorId',
             width: 130,
             ellipsis: true,
             onCell: (data) => ({
-                onClick: () => copy(data.userCreatorId ?? ''),
+                onClick: () => copy(data.creatorId ?? ''),
                 className: 'cursor-copy',
             }),
             render: (cell) => (
@@ -151,7 +151,7 @@ function LogTable({ ...props }: Props) {
             },
         },
         {
-            title: messages('common.dateCreated'),
+            title: messages('common.createdAt'),
             dataIndex: 'dateCreated',
             align: 'center',
             width: 150,

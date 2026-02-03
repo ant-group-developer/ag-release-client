@@ -1,32 +1,54 @@
-import { Select, SelectProps } from 'antd';
+import { toNonAccentVietnamese } from '@/helpers/string';
+import { useGetListSimpleTimezones } from '@/modules/timezone/hooks/use-get-list-simple-timezones';
+import { Select, SelectProps, Typography } from 'antd';
+import { useTranslations } from 'next-intl';
 
-const timezoneOptions = [
-    { label: 'Asia/Ho_Chi_Minh (GMT+7)', value: 'Asia/Ho_Chi_Minh' },
-    { label: 'America/New_York (GMT-4)', value: 'America/New_York' },
-    { label: 'Europe/London (GMT+1)', value: 'Europe/London' },
-    { label: 'Asia/Tokyo (GMT+9)', value: 'Asia/Tokyo' },
-    { label: 'Australia/Sydney (GMT+10)', value: 'Australia/Sydney' },
-];
-
-interface TimezoneSelectProps extends SelectProps {}
+interface TimezoneSelectProps extends SelectProps {
+    fallBack?: string;
+}
 
 export default function TimezoneSelect({
-    placeholder = 'Select timezone',
+    fallBack,
     ...props
 }: TimezoneSelectProps) {
+    const messages = useTranslations();
+    const { timezonesData } = useGetListSimpleTimezones();
+
+    const options = timezonesData.map((item) => ({
+        id: item.id,
+        value: item.id,
+        name: item.name,
+        label: (
+            <div className="space-x-1">
+                <Typography.Text className="!text-xs">
+                    {item?.utc}
+                </Typography.Text>
+                <Typography.Text>{item?.name}</Typography.Text>
+            </div>
+        ),
+    }));
+
+    const labelRender = (props: any) => {
+        const { value, label } = props;
+        if (value) {
+            return fallBack || label;
+        }
+    };
+
     return (
         <Select
+            placeholder={messages('timezone.placeholder.selectTimezone')}
             {...props}
             showSearch
-            placeholder={placeholder}
-            optionFilterProp="label"
-            options={timezoneOptions}
             filterOption={(input, option) =>
-                (option?.label ?? '')
+                toNonAccentVietnamese(option?.name ?? '')
                     .toLowerCase()
-                    .includes(input.toLowerCase())
+                    .includes(toNonAccentVietnamese(input).toLowerCase())
             }
+            optionFilterProp="name"
+            options={options}
             allowClear
+            labelRender={labelRender}
         />
     );
 }

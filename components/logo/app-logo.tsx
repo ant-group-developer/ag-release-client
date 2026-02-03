@@ -10,7 +10,7 @@ export type AppLogoProps = {
 
 function AppLogo({ height = 50, width = 50 }: AppLogoProps) {
     const companyName = defaultConfig.APP_SHORT_NAME;
-    const companyLogo = '/logo.png';
+    const companyLogo = defaultConfig.APP_LOGO;
 
     return (
         <Link href={HOME_ROUTE}>

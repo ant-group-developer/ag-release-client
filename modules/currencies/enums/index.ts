@@ -1,0 +1,5 @@
+export enum TYPE_MODAL_CURRENCIES {
+    CREATE = 'CREATE',
+    UPDATE = 'UPDATE',
+    DELETE = 'DELETE',
+}

@@ -3,13 +3,14 @@ import { LOCALE, THEME } from '@/enums/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { getAvatarPlaceholder } from '@/helpers/common';
 import { useLocale } from '@/hooks/use-locale';
-import { useThemeStore } from '@/hooks/use-theme-store';
+import { useThemeMode } from '@/hooks/use-theme-mode';
 import { useRouter } from '@/i18n/routing';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
-import { Avatar, Dropdown } from 'antd';
+import { theme as antdTheme, Avatar, Dropdown } from 'antd';
 import { ItemType } from 'antd/es/menu/interface';
-import { Check, LogOut } from 'lucide-react';
+import { LogOut, MonitorCog, Moon, Sun } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 
 type Props = {};
 
@@ -18,13 +19,30 @@ function AppAvatar({}: Props) {
     const messages = useTranslations();
     const router = useRouter();
     const avatarPlaceholder = getAvatarPlaceholder(profile?.name);
-    const { theme, setTheme } = useThemeStore();
+    const { themeMode, setThemeMode } = useThemeMode();
     const { locale, switchLocale } = useLocale();
 
-    const currentLocale = locale === LOCALE.VI ? 'Việt Nam' : 'English';
+    const { token } = antdTheme.useToken();
 
-    const themeIntl =
-        theme === 'dark' ? messages('common.dark') : messages('common.light');
+    const currentLocale =
+        locale === LOCALE.VI
+            ? messages('language.vietnamese')
+            : messages('language.english');
+
+    let themeIntl = '';
+    switch (themeMode) {
+        case 'light':
+            themeIntl = messages('common.light');
+            break;
+        case 'dark':
+            themeIntl = messages('common.dark');
+            break;
+        case 'system':
+            themeIntl = messages('common.system');
+            break;
+        default:
+            break;
+    }
 
     const items: ItemType[] = [
         {
@@ -35,12 +53,13 @@ function AppAvatar({}: Props) {
                 >
                     <Avatar
                         size={40}
-                        className="!bg-primary flex-none cursor-pointer"
+                        className="flex-none cursor-pointer"
+                        src={profile.avatar}
                     >
                         {avatarPlaceholder}
                     </Avatar>
                     <div className="ml-3 truncate">
-                        <p className="truncate font-bold">{profile.name}</p>
+                        <p className="truncate font-semibold">{profile.name}</p>
                         <p className="truncate text-sm">{profile?.email}</p>
                     </div>
                 </div>
@@ -48,9 +67,17 @@ function AppAvatar({}: Props) {
             key: '1',
         },
         {
+            type: 'divider',
+        },
+        {
             label: (
-                <div className="flex w-[250px] items-center justify-between pl-2 text-sm">
-                    <span className="font-bold">
+                <div
+                    className="flex w-[250px] items-center justify-between pl-2 text-sm"
+                    style={{
+                        color: token.colorText,
+                    }}
+                >
+                    <span className="font-semibold">
                         {messages('common.displayMode')}
                     </span>
                     <span> {themeIntl} </span>
@@ -59,43 +86,39 @@ function AppAvatar({}: Props) {
             key: '2',
             children: [
                 {
-                    label: (
-                        <p className="flex w-[250px] items-center justify-between">
-                            <span>{messages('common.light')}</span>
-                            {theme == THEME.LIGHT && <Check size={SIZE_ICON} />}
-                        </p>
-                    ),
-                    key: '2.1',
-                    onClick: () => setTheme(THEME.LIGHT),
+                    type: 'group',
+                    label: messages('common.settingNote'),
+                    key: '2.0',
                 },
                 {
-                    label: (
-                        <p className="flex w-[250px] items-center justify-between">
-                            {messages('common.dark')}
-                            {theme === THEME.DARK && <Check size={SIZE_ICON} />}
-                        </p>
-                    ),
-                    key: '2.2',
-                    onClick: () => setTheme(THEME.DARK),
+                    label: messages('common.light'),
+                    key: THEME.LIGHT,
+                    icon: <Sun size={SIZE_ICON} />,
+                    onClick: () => setThemeMode(THEME.LIGHT),
                 },
                 {
-                    label: (
-                        <p className="flex w-[250px] items-center justify-between">
-                            {messages('common.system')}
-                            {theme == THEME.SYSTEM && (
-                                <Check size={SIZE_ICON} />
-                            )}
-                        </p>
-                    ),
-                    key: '2.3',
-                    onClick: () => setTheme(THEME.SYSTEM),
+                    label: messages('common.dark'),
+                    key: THEME.DARK,
+                    icon: <Moon size={SIZE_ICON} />,
+                    onClick: () => setThemeMode(THEME.DARK),
+                },
+                {
+                    label: messages('common.system'),
+                    key: THEME.SYSTEM,
+                    icon: <MonitorCog size={SIZE_ICON} />,
+                    onClick: () => setThemeMode(THEME.SYSTEM),
                 },
             ],
         },
         {
             label: (
-                <div className="flex items-center justify-between gap-2 pl-2 text-sm">
-                    <span className="font-bold">
+                <div
+                    className="flex items-center justify-between gap-2 pl-2 text-sm"
+                    style={{
+                        color: token.colorText,
+                    }}
+                >
+                    <span className="font-semibold">
                         {messages('language.label')}
                     </span>
                     <span>{currentLocale}</span>
@@ -104,23 +127,44 @@ function AppAvatar({}: Props) {
             key: '3',
             children: [
                 {
+                    type: 'group',
+                    label: <p>{messages('common.settingNote')}</p>,
+                    key: '3.0',
+                },
+                {
                     label: (
-                        <p className="flex w-[250px] items-center justify-between">
-                            {messages('language.vietnamese')}
-                            {locale === LOCALE.VI && <Check size={SIZE_ICON} />}
+                        <p className="flex min-w-[250px] items-center justify-between">
+                            <div className="flex items-center gap-1">
+                                <Image
+                                    height={15}
+                                    width={30}
+                                    src={'/languages/vi.svg'}
+                                    alt={LOCALE.VI}
+                                />
+                                {messages('language.vietnamese')}
+                            </div>
+                            {/* {locale === LOCALE.VI && <Check size={SIZE_ICON} />} */}
                         </p>
                     ),
-                    key: '3.1',
+                    key: LOCALE.VI,
                     onClick: () => switchLocale(LOCALE.VI),
                 },
                 {
                     label: (
-                        <p className="flex w-[250px] items-center justify-between">
-                            {messages('language.english')}
-                            {locale === LOCALE.EN && <Check size={SIZE_ICON} />}
+                        <p className="flex min-w-[250px] items-center justify-between">
+                            <div className="flex items-center gap-1">
+                                <Image
+                                    height={15}
+                                    width={30}
+                                    src={'/languages/en.svg'}
+                                    alt={LOCALE.EN}
+                                />
+                                {messages('language.english')}
+                            </div>
+                            {/* {locale === LOCALE.EN && <Check size={SIZE_ICON} />} */}
                         </p>
                     ),
-                    key: '3.2',
+                    key: LOCALE.EN,
                     onClick: () => switchLocale(LOCALE.EN),
                 },
             ],
@@ -130,23 +174,22 @@ function AppAvatar({}: Props) {
         },
         {
             label: (
-                <div className="flex items-center gap-2 pl-2 text-base text-red-600">
-                    <LogOut />
+                <div className="flex items-center gap-2 pl-2">
+                    <LogOut size={14} />
                     {messages('userProfile.logout')}
                 </div>
             ),
             key: '4',
+            onClick: () => logout(),
         },
     ];
 
-    function onClick({ key }: { key: string }) {
-        if (key === '4') {
-            logout();
-        }
-    }
     return (
-        <Dropdown trigger={['click']} menu={{ items, onClick }}>
-            <Avatar size={40} className="cursor-pointer !bg-blue-500">
+        <Dropdown
+            trigger={['click']}
+            menu={{ items, selectedKeys: [themeMode, locale] }}
+        >
+            <Avatar size={40} className="cursor-pointer" src={profile.avatar}>
                 {avatarPlaceholder}
             </Avatar>
         </Dropdown>

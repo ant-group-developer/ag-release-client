@@ -1,5 +1,6 @@
 import DateCreatedDialog from '@/components/filter-dialog/date-create-dialog';
-import SearchDialog from '@/components/shared/search-dialog';
+import DateUpdateDialog from '@/components/filter-dialog/date-update-dialog';
+import SearchDialog from '@/components/filter-dialog/search-dialog';
 import IconButton from '@/components/ui/button/icon-button';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
@@ -67,7 +68,9 @@ export default function GenresSuperFilter({
                 className="h-10 px-2 text-2xl"
                 onClick={() => setTypeFilter(TYPE_FILTER.DROPDOWN)}
             >
-                <ListFilter />
+                <CustomTooltip title={messages('common.filter')}>
+                    <ListFilter />
+                </CustomTooltip>
             </button>
 
             <div className="flex flex-1 flex-wrap items-center gap-1">
@@ -82,17 +85,27 @@ export default function GenresSuperFilter({
                 <DateCreatedDialog
                     open={typeFilter === TYPE_FILTER.DATE_CREATED}
                     handleChangeTypeFilter={handleChangeTypeFilter}
-                    title={messages('common.dateCreated')}
+                    title={messages('common.createdAt')}
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
                 />
 
-                <GenresHeaderDropdown
-                    open={typeFilter === TYPE_FILTER.DROPDOWN}
+                <DateUpdateDialog
+                    open={typeFilter === TYPE_FILTER.DATE_UPDATED}
+                    handleChangeTypeFilter={handleChangeTypeFilter}
+                    title={messages('common.updatedAt')}
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
-                    handleChangeTypeFilter={handleChangeTypeFilter}
                 />
+
+                <div className="grow">
+                    <GenresHeaderDropdown
+                        open={typeFilter === TYPE_FILTER.DROPDOWN}
+                        dataFilter={dataFilter}
+                        onChangeFilter={onChangeFilter}
+                        handleChangeTypeFilter={handleChangeTypeFilter}
+                    />
+                </div>
             </div>
             {canClearFilter && (
                 <div className="flex items-center">

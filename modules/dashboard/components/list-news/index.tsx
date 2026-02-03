@@ -1,58 +1,72 @@
 import SeeMoreButton from '@/components/ui/button/see-more-button';
-import { NewsData } from '@/modules/news/types';
-import CardNews from '../card/card-news';
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
+import { APP_ROUTES } from '@/enums/routes';
+import PostCard from '@/modules/news/components/post-card';
+import { useGetListNewsPublic } from '@/modules/news/hooks/use-get-list-public';
+import { Empty, Skeleton, theme } from 'antd';
+import { useTranslations } from 'next-intl';
+import Link from 'next/link';
+import 'swiper/css'; // style cơ bản
+import 'swiper/css/pagination'; // nếu dùng pagination
+import { Navigation, Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 type Props = {};
 
 export default function ListNews({}: Props) {
-    const listNews: NewsData[] = [
-        {
-            id: 1,
-            title: 'Meet Revelator at Music Biz 2025: Breaking Borders & Building Global Strategies',
-            description: '',
-            image: 'https://cms.revelator.com/assets/c0ec4b68-0f55-4e10-aee1-ed6eedb2ffb8',
-            date: 'May 6, 2025',
-        },
-        {
-            id: 2,
-            title: 'Stay Ahead: DSP & UGC Platforms Updates April 2025',
-            description: '',
-            image: 'https://cms.revelator.com/assets/e3dea3e8-0a57-4e41-b9ee-23f6d326ee4a',
-            date: 'May 6, 2025',
-        },
-        {
-            id: 3,
-            title: 'Music on WhatsApp Status and Channels',
-            description: '',
-            image: 'https://cms.revelator.com/assets/7c61ccd7-5332-40d3-a78e-0cfae4766676',
-            date: 'May 6, 2025',
-        },
-        {
-            id: 4,
-            title: 'Meet Chordal: Now in the Revelator Pro Marketplace',
-            description: '',
-            image: 'https://cms.revelator.com/assets/3c43b946-82e8-43fa-8fc0-dc923cba0302',
-            date: 'May 6, 2025',
-        },
-        {
-            id: 5,
-            title: 'Meet Chordal: Now in the Revelator Pro Marketplace',
-            description: '',
-            image: 'https://cms.revelator.com/assets/3c43b946-82e8-43fa-8fc0-dc923cba0302',
-            date: 'May 6, 2025',
-        },
-    ];
+    const messages = useTranslations();
+    const { newsData, isFetching } = useGetListNewsPublic({
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
+    });
+    const { token } = theme.useToken();
+    const newsDataLength = newsData?.metadata?.totalItems;
 
     return (
-        <div className="mt-8">
-            <div className="flex items-center justify-between pb-2">
-                <p className="text-lg font-bold">{'Tin tức sản phẩm mới'}</p>
-                <SeeMoreButton />
+        <div className="my-8 space-y-4">
+            <div className="flex items-center justify-between">
+                <p className="text-lg font-bold">
+                    {messages('dashboard.latestNews')}
+                </p>
+                <Link href={APP_ROUTES.NEWS}>
+                    <SeeMoreButton type="default" />
+                </Link>
             </div>
-            <div className="grid grid-cols-5 gap-5">
-                {listNews.map((item, index) => (
-                    <CardNews key={index} data={item} />
-                ))}
-            </div>
+
+            {isFetching && (
+                <div className="flex gap-4">
+                    <Skeleton.Node active className="min-h-64 !w-full" />
+                    <Skeleton.Node active className="min-h-64 !w-full" />
+                    <Skeleton.Node active className="min-h-64 !w-full" />
+                    <Skeleton.Node active className="min-h-64 !w-full" />
+                    <Skeleton.Node active className="min-h-64 !w-full" />
+                </div>
+            )}
+
+            {!isFetching && (
+                <Swiper
+                    modules={[Pagination, Navigation]}
+                    spaceBetween={20}
+                    slidesPerView={5}
+                    // navigation
+                    pagination={{ clickable: true }}
+                >
+                    {newsData?.items?.map((item, index) => (
+                        <SwiperSlide className="pb-8" key={index}>
+                            <Link href={`${APP_ROUTES.NEWS}/${item?.slug}`}>
+                                <PostCard data={item} />
+                            </Link>
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
+            )}
+
+            {newsDataLength <= 0 && (
+                <Empty
+                    className="!mx-0 rounded-lg py-6"
+                    style={{
+                        backgroundColor: token.colorBgContainer,
+                    }}
+                />
+            )}
         </div>
     );
 }

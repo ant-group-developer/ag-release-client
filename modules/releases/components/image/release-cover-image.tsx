@@ -1,0 +1,64 @@
+import ImageFallback from '@/components/ui/image/image-fallback';
+import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
+import { useIntersectionObserver } from '@uidotdev/usehooks';
+import { Skeleton } from 'antd';
+import { useEffect, useState } from 'react';
+import { ReleasesData } from '../../types';
+
+type Props = {
+    data: ReleasesData;
+};
+
+export default function ReleaseCoverImage({ data }: Props) {
+    const [isLoading, setIsLoading] = useState(true);
+    const imgFileId =
+        data?.coverArtThumbnails?.['75x75'] ??
+        data?.coverArtThumbnails?.original;
+
+    const [ref, entry] = useIntersectionObserver({
+        root: null,
+        rootMargin: '0px',
+        threshold: 0,
+    });
+
+    const { linkReadFile } = useGetLinkReadFile(imgFileId as string, {
+        enabled: !!entry?.isIntersecting,
+    });
+
+    useEffect(() => {
+        if (imgFileId && linkReadFile) {
+            setIsLoading(false);
+        }
+        if (!imgFileId) {
+            const timeout = setTimeout(() => setIsLoading(false), 1000);
+            return () => clearTimeout(timeout);
+        }
+    }, [imgFileId, linkReadFile, isLoading]);
+
+    if (isLoading) {
+        return (
+            <div ref={ref}>
+                <Skeleton.Node
+                    active
+                    className="aspect-square !h-10 !w-10 !rounded-lg"
+                />
+            </div>
+        );
+    }
+
+    return (
+        <div ref={ref}>
+            {/* Image */}
+
+            <ImageFallback
+                src={linkReadFile}
+                alt="cover"
+                width={40}
+                height={40}
+                className={`aspect-square rounded-lg object-cover transition-opacity duration-300`}
+                onLoad={() => setIsLoading(false)}
+                onError={() => setIsLoading(false)}
+            />
+        </div>
+    );
+}

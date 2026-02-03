@@ -1,26 +1,63 @@
 'use client';
-import ReleaseSchedulingForm from '@/modules/release-detail/release-scheduling/form';
-import ReleaseSchedulingTable from '@/modules/release-detail/release-scheduling/table';
-import { useReleaseFormStore } from '@/modules/releases/hooks/releaseFormStore';
+import { PAGE_SIZE } from '@/constants/page-size';
+import { useElementHeightById } from '@/hooks/use-element-height-by-id';
+import { useFilter } from '@/hooks/use-filter';
+import ReleaseSchedulingForm from '@/modules/releases/components/release-detail/release-scheduling/form';
+import ReleaseSchedulingTable from '@/modules/releases/components/release-detail/release-scheduling/table';
+import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useGetListTracksWithPolicies } from '@/modules/tracks/hooks/use-get-list-tracks-with-policies';
+import { TrackDataFilter } from '@/modules/tracks/types';
+import { ConfigProvider, theme } from 'antd';
 
 export default function Schedule() {
     const formValues = useReleaseFormStore((state) => state.formValues);
+    const headerHeight = useElementHeightById('release-header');
 
-    const trackData = formValues?.tracks?.map((track) => {
-        return {
-            key: track.id,
-            track: track.title,
-            priceCode: '0.99',
-            tikTokPolicy: 'Allowed',
-            facebookPolicy: 'Monetized',
-            youtubePolicy: 'Standard License',
-        };
+    const { dataFilter, onChangePage } = useFilter<TrackDataFilter>({
+        releaseId: formValues?.id as string,
+        fieldOrder: 'order',
+        pageSize: 30,
     });
 
+    const { tracksData, isFetching } = useGetListTracksWithPolicies(dataFilter);
+
+    const { token } = theme.useToken();
+    // const { isDark } = useThemeMode();
+    const customTheme = {
+        token: {
+            // colorBgContainerDisabled: isDark ? '#2a2a2a' : '#fff',
+            colorTextDisabled: token?.colorText,
+        },
+    };
+
     return (
-        <div>
-            <ReleaseSchedulingForm />
-            <ReleaseSchedulingTable dataSource={trackData} />
-        </div>
+        <ConfigProvider theme={customTheme}>
+            <div className="w-full space-y-4 pb-4">
+                <ReleaseSchedulingForm />
+
+                <ReleaseSchedulingTable
+                    sticky={{ offsetHeader: headerHeight }}
+                    dataSource={tracksData?.items}
+                    loading={isFetching}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: tracksData.metadata.page,
+                        total: tracksData.metadata.totalItems,
+                    }}
+                />
+                {/* <AppPagination
+                    className="!mt-0 rounded-b-[8px] bg-white"
+                    align="end"
+                    current={tracksData?.metadata?.page}
+                    pageSize={dataFilter.pageSize}
+                    total={tracksData.metadata?.totalItems}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
+                /> */}
+            </div>
+        </ConfigProvider>
     );
 }

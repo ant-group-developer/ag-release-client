@@ -5,11 +5,11 @@ type Props = InputProps & {};
 export default function InputNumber({ ...props }: Props) {
     return (
         <Input
+            allowClear
             {...props}
             type="text"
             inputMode="numeric"
             pattern="[0-9]*"
-            allowClear
             onKeyPress={(e) => {
                 if (!/[0-9]/.test(e.key)) {
                     e.preventDefault();

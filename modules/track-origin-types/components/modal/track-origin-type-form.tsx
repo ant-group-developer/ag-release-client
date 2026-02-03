@@ -1,0 +1,160 @@
+import AppForm from '@/components/ui/antd-form/form';
+import AppFormItem from '@/components/ui/antd-form/form-Item';
+import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
+import { MAX_NAME_LENGTH } from '@/constants/validate';
+import { getCodeFormatted } from '@/helpers/string';
+import { useActive } from '@/hooks/use-active';
+import useModalStore from '@/hooks/use-modal';
+import { CreateVariables, UpdateVariables } from '@/types/api';
+import { Form, Input, Switch } from 'antd';
+import { useTranslations } from 'next-intl';
+import { useEffect } from 'react';
+import { useCreateTrackOriginType } from '../../hooks/use-create-track-origin-type';
+import { useUpdateTrackOriginType } from '../../hooks/use-update-track-origin-type';
+import { TrackOriginTypeData } from '../../types';
+import {
+    CreateTrackOriginTypePayload,
+    UpdateTrackOriginTypePayload,
+} from '../../types/payload';
+
+type Props = Omit<AppModalProps, 'children'> & {};
+
+export default function TrackOriginTypeFormModal({ ...props }: Props) {
+    const messages = useTranslations();
+    const [form] = Form.useForm();
+    const { active, deActive, isActive } = useActive();
+    const closeModal = useModalStore((state) => state.closeModal);
+    const dataEdit = useModalStore(
+        (state) => state.dataEdit as TrackOriginTypeData
+    );
+    const isUpdateForm = dataEdit?.id;
+
+    const { createTrackOriginType } = useCreateTrackOriginType();
+    const { updateTrackOriginType } = useUpdateTrackOriginType();
+
+    const handleCreateTrackOriginType = (values: any) => {
+        const variables: CreateVariables<CreateTrackOriginTypePayload> = {
+            payload: values,
+            onSuccess: () => {
+                form.resetFields();
+                deActive();
+            },
+            onError: () => {
+                deActive();
+            },
+        };
+        createTrackOriginType(variables);
+    };
+
+    const handleUpdateTrackOriginType = (values: any) => {
+        const variables: UpdateVariables<
+            TrackOriginTypeData['id'],
+            UpdateTrackOriginTypePayload
+        > = {
+            id: dataEdit?.id,
+            payload: values,
+            onSuccess: () => {
+                deActive();
+            },
+            onError: () => {
+                deActive();
+            },
+        };
+
+        updateTrackOriginType(variables);
+    };
+
+    const onFinish = (values: any) => {
+        active();
+        return isUpdateForm
+            ? handleUpdateTrackOriginType(values)
+            : handleCreateTrackOriginType(values);
+    };
+
+    useEffect(() => {
+        const initialData = {
+            ...dataEdit,
+            isDefault: dataEdit?.isDefault ?? false,
+        };
+        form.setFieldsValue(initialData);
+    }, [dataEdit]);
+
+    function renderTitle() {
+        return `${dataEdit?.id ? messages('common.update') : messages('common.create')} `;
+    }
+
+    const titleModal = renderTitle();
+
+    return (
+        <AppModal
+            width={500}
+            {...props}
+            title={titleModal}
+            open
+            onCancel={closeModal}
+            onOk={form.submit}
+            loading={isActive}
+        >
+            <AppForm
+                form={form}
+                onFinish={onFinish}
+                showSubmit={false}
+                layout="vertical"
+                disabled={isActive}
+            >
+                <AppFormItem
+                    name="name"
+                    label={messages('trackOriginType.label')}
+                    required
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.input'),
+                        },
+                        {
+                            max: MAX_NAME_LENGTH,
+                            message: messages('validation.stringMax', {
+                                max: MAX_NAME_LENGTH,
+                                field: messages('trackOriginType.label'),
+                            }),
+                        },
+                    ]}
+                >
+                    <Input
+                        allowClear
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            form.setFieldValue('code', getCodeFormatted(value));
+                        }}
+                    />
+                </AppFormItem>
+                <AppFormItem
+                    name="code"
+                    label={messages('common.code')}
+                    required
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.input'),
+                        },
+                        {
+                            max: 50,
+                            message: messages('validation.max', {
+                                number: 50,
+                            }),
+                        },
+                    ]}
+                >
+                    <Input allowClear />
+                </AppFormItem>
+                <AppFormItem
+                    name="isDefault"
+                    label={messages('common.setIsDefault')}
+                    valuePropName="checked"
+                >
+                    <Switch />
+                </AppFormItem>
+            </AppForm>
+        </AppModal>
+    );
+}

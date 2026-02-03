@@ -7,4 +7,6 @@ export interface DistributionDataFilter extends CommonParams {
     status?: DISTRIBUTION_STATUS;
     startDate?: string;
     endDate?: string;
+    albumFormatId?: string;
+    genres?: string;
 }

@@ -1,0 +1,362 @@
+import AppForm from '@/components/ui/antd-form/form';
+import AppFormItem from '@/components/ui/antd-form/form-Item';
+import ImageListUpload from '@/components/ui/input/image-list-upload';
+import AppConfirm from '@/components/ui/modal/confirm-modal';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { ACCEPT_IMAGE } from '@/constants/validate';
+import { TYPE_UPLOAD_BUCKET } from '@/enums/common';
+import { APP_ROUTES } from '@/enums/routes';
+import { formattedDate } from '@/helpers/common';
+import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { showNotification } from '@/helpers/messages-helper';
+import { cn } from '@/helpers/tailwind';
+import useModalStore from '@/hooks/use-modal';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
+import { useRouter } from '@/i18n/routing';
+import { TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
+import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
+import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
+import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
+import { ReleasesData } from '@/modules/releases/types';
+import { UpdateReleaseDraftPayload } from '@/modules/releases/types/payload';
+import { bucketApi } from '@/modules/upload/apis/bucket-api';
+import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
+import { CreateBucketFile } from '@/modules/upload/types/data';
+import { DeleteVariables, UpdateVariables } from '@/types/api';
+import { Form, Segmented, theme } from 'antd';
+import { SegmentedOptions } from 'antd/es/segmented';
+import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import DownloadMenu from './download-menu';
+import OptionsMenu from './options-menu';
+import ReleaseInfo from './release-info';
+type Props = {
+    isScrolled: boolean;
+};
+
+export default function ReleaseDetailHeader({ isScrolled }: Props) {
+    // hooks - state
+    const typeModal = useModalStore((state) => state.typeModal);
+    const closeModal = useModalStore((state) => state.closeModal);
+
+    const messages = useTranslations();
+    const [form] = Form.useForm();
+    const formValues = useReleaseFormStore((state) => state.formValues);
+    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
+    const params = useParams();
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
+    const { token } = theme.useToken();
+    const router = useRouter();
+    const releaseAction = useReleaseActionStore((state) => state.action);
+    const setReleaseAction = useReleaseActionStore((state) => state.setAction);
+
+    // apis
+    const { updateReleaseDraft, isPending: isUpdatingRelease } =
+        useUpdateReleaseDraft();
+    const coverArtFileId = formValues?.coverArtThumbnails?.original ?? '';
+    const { linkReadFile, isFetching: isCoverArtLoading } =
+        useGetLinkReadFile(coverArtFileId);
+    const { releaseData } = useGetDetailRelease(formValues?.id as string);
+    const { deleteRelease } = useDeleteRelease();
+
+    // const
+    const isCreateReleasePage = params['action'] === 'create';
+
+    const segmentedOptions: SegmentedOptions = [
+        {
+            label: messages('common.watch'),
+            value: RELEASE_DETAIL_ACTION.READ,
+        },
+        {
+            label: messages('common.edit'),
+            value: RELEASE_DETAIL_ACTION.EDIT,
+        },
+    ];
+    const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
+    // const statusItems: StepsProps['items'] = [
+    //     {
+    //         title: messages('common.draft'),
+    //         icon: <NotebookText />,
+    //     },
+    //     {
+    //         title: messages('common.processing'),
+    //         icon: <FileSearch />,
+    //     },
+    //     {
+    //         title: messages('issue.label'),
+    //         icon: <CircleAlert />,
+    //     },
+    //     {
+    //         title: messages('common.distributed'),
+    //         icon: <Box />,
+    //     },
+    //     {
+    //         title: messages('common.takenDown'),
+    //         icon: <PackageX />,
+    //     },
+    // ];
+
+    // func
+
+    const handleImageUpload = async (info: any) => {
+        setIsUploading(true);
+        const file = info.fileList[0];
+        if (!file) {
+            return;
+        }
+        const fileOriginal = file.originFileObj;
+        // const fileNameWithoutExtension =
+        //     fileOriginal.name.lastIndexOf('.') !== -1
+        //         ? fileOriginal.name.substring(
+        //               0,
+        //               fileOriginal.name.lastIndexOf('.')
+        //           )
+        //         : fileOriginal.name;
+
+        if (fileOriginal.name.length > 80) {
+            setIsUploading(false);
+            form.setFieldsValue({
+                thumbnail: undefined,
+            });
+            return showNotification(
+                'error',
+                messages('validation.max', { number: 80 })
+            );
+        }
+
+        const payload: CreateBucketFile = {
+            folderBucket: {
+                releaseId: formValues.id ?? '',
+                uploadPurpose: TYPE_UPLOAD_BUCKET.RELEASE_COVER_ART,
+            },
+            file: {
+                fileName: fileOriginal.name,
+                contentType: fileOriginal.type,
+                extension: fileOriginal.name.split('.').pop(),
+                fileSize: fileOriginal.size,
+            },
+        };
+
+        const fileId = await bucketApi.createBucket(fileOriginal, payload);
+        if (fileId) {
+            await bucketApi.submit({ ids: [fileId] });
+        }
+        const variables: UpdateVariables<
+            ReleasesData['id'],
+            UpdateReleaseDraftPayload
+        > = {
+            id: formValues.id as string,
+            payload: {
+                releaseCoverArt: {
+                    fileId,
+                },
+            },
+            onSuccess: (data: ReleasesData) => {
+                setIsUploading(false);
+                // setFormValues({ coverArtThumbnails: data?.coverArtThumbnails });
+            },
+            onError: () => {
+                setIsUploading(false);
+            },
+        };
+
+        updateReleaseDraft(variables);
+    };
+    const handleRemoveImage = () => {
+        setIsConfirmOpen(true);
+        return false;
+    };
+    const handleConfirmRemove = async () => {
+        const variables: UpdateVariables<
+            ReleasesData['id'],
+            UpdateReleaseDraftPayload
+        > = {
+            id: formValues.id as string,
+            payload: {
+                releaseCoverArt: null,
+            },
+            onSuccess: () => {
+                setIsConfirmOpen(false);
+                setFormValues({
+                    coverArtThumbnails: {
+                        '75x75': null,
+                        '100x100': null,
+                        '160x160': null,
+                        '300x300': null,
+                        '900x900': null,
+                        original: null,
+                    },
+                });
+                form.setFieldsValue({
+                    thumbnail: undefined,
+                });
+            },
+            onError: () => {
+                setIsConfirmOpen(false);
+            },
+        };
+        updateReleaseDraft(variables);
+    };
+    const handleChangeAction = (value: RELEASE_DETAIL_ACTION) => {
+        // const params = new URLSearchParams(searchParams.toString());
+        // params.set('action', value);
+        // router.push(`${pathname}?${params.toString()}`);
+        setReleaseAction(value);
+    };
+    const handleDeleteRelease = () => {
+        const variables: DeleteVariables<ReleasesData['id']> = {
+            id: releaseData?.id,
+            onSuccess: () => {
+                closeModal();
+                router.push(APP_ROUTES.RELEASES);
+            },
+        };
+        deleteRelease(variables);
+    };
+
+    useEffect(() => {
+        form.setFieldsValue({
+            thumbnail:
+                formValues.coverArtThumbnails?.['160x160'] && linkReadFile
+                    ? {
+                          fileList: [
+                              {
+                                  uid: formValues.coverArtThumbnails['160x160'],
+                                  url: linkReadFile,
+                                  name: formValues.title,
+                              },
+                          ],
+                      }
+                    : undefined,
+        });
+    }, [formValues, form, linkReadFile]);
+
+    return (
+        <div
+            style={{
+                backgroundColor: token.colorBgContainer,
+            }}
+        >
+            {/* {!isScrolled && (
+                <div className="flex justify-center pb-2">
+                    <div className="w-3/6">
+                        <Steps size="small" items={statusItems} />
+                    </div>
+                </div>
+            )} */}
+            <AppForm
+                form={form}
+                // onFinish={handleFinish}
+                layout="vertical"
+                showSubmit={false}
+            >
+                <div className="flex justify-between gap-4">
+                    <div className="flex w-3/4 items-start gap-4">
+                        <CustomTooltip
+                            title={
+                                <>
+                                    <div>
+                                        {messages('release.coverArt.required')}
+                                    </div>
+                                    <div>
+                                        - {messages('release.coverArt.size')}
+                                    </div>
+                                    <div>
+                                        -{' '}
+                                        {messages(
+                                            'image.validation.mustBeLessThanMB',
+                                            { value: 10 }
+                                        )}
+                                    </div>
+                                </>
+                            }
+                            placement="right"
+                            styles={{
+                                body: {
+                                    minWidth: '300px',
+                                },
+                            }}
+                        >
+                            <AppFormItem name="thumbnail">
+                                <ImageListUpload
+                                    id="releaseCoverArts"
+                                    loading={isUploading || isCoverArtLoading}
+                                    disabled={isCreateReleasePage || isReadMode}
+                                    className={cn(
+                                        'release-detail-header-upload !aspect-square !size-28 !rounded-lg !border-0 !p-0 transition-all duration-300',
+                                        {
+                                            '!size-16 transition-all duration-300':
+                                                isScrolled,
+                                        }
+                                    )}
+                                    accept={ACCEPT_IMAGE}
+                                    maxCount={1}
+                                    minWidth={1400}
+                                    maxSizeMB={10}
+                                    placeholder={messages('common.uploadImage')}
+                                    onChange={handleImageUpload}
+                                    onRemove={handleRemoveImage}
+                                />
+                            </AppFormItem>
+                        </CustomTooltip>
+
+                        {/* release info */}
+                        <ReleaseInfo isScrolled={isScrolled} />
+                    </div>
+                    {!isCreateReleasePage && (
+                        <div className="flex flex-col justify-between gap-2">
+                            <div className="space-y-2">
+                                <p className="text-nowrap text-xs text-gray-500">
+                                    {messages('common.lastEdit')}:{' '}
+                                    {releaseData?.modifier?.name} |{' '}
+                                    {formattedDate(releaseData?.updatedAt)}
+                                </p>
+                                <div className="flex justify-end">
+                                    <Segmented
+                                        value={releaseAction}
+                                        options={segmentedOptions}
+                                        onChange={(val) =>
+                                            handleChangeAction(
+                                                val as RELEASE_DETAIL_ACTION
+                                            )
+                                        }
+                                    />
+                                </div>
+                            </div>
+                            {!isScrolled && (
+                                <div className="flex justify-end">
+                                    <DownloadMenu />
+                                    <OptionsMenu />
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            </AppForm>
+            <AppConfirm
+                open={isConfirmOpen}
+                modalTitle={messages('delete.confirmTitle')}
+                paragraph={messages('delete.confirmMessage', {
+                    value: messages('common.image').toLowerCase(),
+                })}
+                onCancel={() => setIsConfirmOpen(false)}
+                onOk={handleConfirmRemove}
+            />
+
+            {typeModal === TYPE_MODAL_RELEASE.DELETE && (
+                <AppConfirm
+                    open
+                    onOk={() => handleDeleteRelease()}
+                    onCancel={closeModal}
+                    modalTitle={`${messages('common.delete')} ${messages('release.label').toLowerCase()}`}
+                    paragraph={messages('delete.confirmMessage', {
+                        value: releaseData?.title,
+                    })}
+                />
+            )}
+        </div>
+    );
+}

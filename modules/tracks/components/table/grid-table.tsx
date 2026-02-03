@@ -1,35 +1,30 @@
 import FlatList from '@/components/ui/flat-list';
 import AppGrid from '@/components/ui/grid/app-grid';
-import { SCREEN } from '@/enums/common';
-import { useWindowSize } from '@uidotdev/usehooks';
 import { Spin } from 'antd';
 import { TrackData } from '../../types';
 import GridCardTracks from './grid-card';
 
 type Props = {
     data: TrackData[];
-    loading: boolean;
+    loading?: boolean;
+    scroll?: {
+        x?: number;
+        y?: number;
+    };
 };
 
-export default function TracksGridTable({ data, loading }: Props) {
-    const { height, width } = useWindowSize();
-    const isSmallDevice = Number(width) <= SCREEN.MD;
-
-    const scrollY = () => {
-        if (isSmallDevice) return undefined;
-        if (!height) return undefined;
-        const minHeight = 300;
-        const headerFooterHeight = 170;
-        const value = height - headerFooterHeight;
-        if (value > minHeight) return value;
-        return minHeight;
-    };
+export default function TracksGridTable({
+    scroll,
+    data,
+    loading = false,
+}: Props) {
     return (
         <Spin spinning={loading} delay={200}>
             <AppGrid
                 className="px-4 py-4"
                 style={{
-                    maxHeight: scrollY(),
+                    maxHeight: scroll?.y,
+                    maxWidth: scroll?.x,
                     overflowY: 'auto',
                 }}
             >
@@ -37,7 +32,7 @@ export default function TracksGridTable({ data, loading }: Props) {
                     data={data}
                     renderItem={({ item }) => <GridCardTracks data={item} />}
                     keyExtractor={(item) => item.id.toString()}
-                    loading={loading}
+                    // loading={loading}
                     className="contents"
                 />
             </AppGrid>

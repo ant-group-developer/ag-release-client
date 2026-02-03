@@ -10,33 +10,146 @@
         "loginByOtherAccount": "Sign in with another account"
     },
     "auth": {
-        "login": "Login",
-        "signUp": "Signup",
-        "forgotPassword": "Forgot password",
-        "dontHaveAccount": "Don't have account?",
-        "alreadyHaveAccount": "Already have account?",
-        "confirmEmail": "Confirm your email",
-        "confirmEmailDescription": "We sent a confirmation email to the email you registered with. Check your spam folder if you do not receive any email.",
-        "goToLogin": "Login",
-        "resendConfirmationEmail": "Resend confirmation email",
-        "linkHasExpired": "The link has expired",
-        "reEnterEmail": "Please re-enter your email",
-        "emailConfirmationSuccessful": "Email confirmation successful",
-        "yourAccountIsBeingApprovedByAdmin": "Your account is being approved by Admin",
+        "signIn": {
+            "title": "Welcome back",
+            "description": "Please enter your details to sigin in",
+            "submit": "Sign in"
+        },
+        "dontHaveAccount": "Don't have an account?",
+        "alreadyHaveAccount": "Already have an account?",
+        "register": {
+            "title": "Join us today",
+            "description": "Create a free account and get started",
+            "submit": "Register"
+        },
+        "signOut": "Sign out",
+        "forgotPassword": {
+            "title": "Forgot your password?",
+            "description": "Enter your email and we'll send you a link to reset your password",
+            "submit": "Send password reset link",
+            "back": "Back to sign in"
+        },
+        "notFound": {
+            "title": "Page not found",
+            "description": "The page you’re looking for doesn’t exist, may have been moved, or the URL is incorrect."
+        },
+        "forbidden": {
+            "title": "Access Denied",
+            "description": "You do not have permission to access this resource. Please contact the Admin for more details."
+        },
         "forbiddenTitle": "You do not have access",
-        "forbiddenDescription": "Please contact the Admin for more details"
-    },
-    "action": {
-        "name": "Name",
-        "delete": "Delete",
-        "update": "Update",
-        "create": "Create",
-        "view": "View",
-        "edit": "Edit",
-        "cancel": "cancel",
-        "quickActions": "Quick actions"
+        "forbiddenDescription": "Please contact the Admin for more details",
+        "message": {
+            "error": {
+                "invalidCredentials": "Invalid email or password.",
+                "unauthorized": "Authentication required.",
+                "invalidToken": "Invalid or missing access token.",
+                "invalidTokenType": "Invalid token type.",
+                "tokenExpired": "Access token has expired.",
+                "sessionExpired": "Session has expired. Please sign in again.",
+                "forbidden": "You do not have permission to access this resource.",
+                "insufficientPermissions": "Insufficient permissions.",
+                "systemAdminOnly": "Only system administrators can access this resource.",
+                "tenantWhiteLabelOnly": "Only tenant type white label can access this resource.",
+                "tenantOwnerOnly": "Only tenant owners can access this resource.",
+                "tenantOwnerOrAdminOnly": "Only tenant owners or tenant admins can access this resource.",
+                "tenantIdRequired": "Tenant identifier is required.",
+                "tenantAccessDenied": "You do not belong to this workspace.",
+                "tenantMismatch": "Requested workspace does not match your session.",
+                "userInactive": "Your account is inactive.",
+                "accountLocked": "Your account is locked.",
+                "mfaRequired": "Multi-factor authentication required.",
+                "mfaInvalid": "Invalid verification code."
+            }
+        }
     },
     "common": {
+        "privateKey": "Private key",
+        "deal": "Deal",
+        "deals": "Deals",
+        "path": "Path",
+        "username": "Username",
+        "password": "Password",
+        "users": "Users",
+        "errors": "Errors",
+        "contributors": "Contributors",
+        "add": "Add",
+        "information": "Information",
+        "statistics": "Statistics",
+        "list": "List",
+        "pieChart": "Pie chart",
+        "barChart": "Bar chart",
+        "quantity": "Quantity",
+        "tracks": "Tracks",
+        "clearFilter": "Clear filter",
+        "clearAll": "Clear all",
+        "reset": "Reset",
+        "translation": "Translation",
+        "translations": "Translations",
+        "addTranslate": "Add translate",
+        "public": "Public",
+        "private": "Private",
+        "date": "Date",
+        "dateScan": "Date scan",
+        "timeRange": "Time range",
+        "scanResult": "Scan result",
+        "scanHistory": "Scan history",
+        "dateAffect": "Date affect",
+        "startDateAffect": "Start date affect",
+        "endDateAffect": "End date affect",
+        "score": "Score",
+        "minScore": "Min score",
+        "maxScore": "Max score",
+        "distribute": "Distribute",
+        "preparingDownload": "Preparing download",
+        "preparingDownloadDesc": "Process can take a few seconds, please wait",
+        "assets": "Assets",
+        "streams": "Streams",
+        "success": "Success",
+        "compare": "Compare",
+        "isSongCreatedByAi": "Is a song created by AI",
+        "policies": "Policies",
+        "backupNow": "Backup now",
+        "name": "Name",
+        "setIsDefault": "Set is default",
+        "reScan": "Re-scan",
+        "accuracy": "Accuracy",
+        "result": "Result",
+        "history": "History",
+        "scan": "Scan",
+        "notScanned": "Not scanned",
+        "scanned": "Scanned",
+        "lastEdit": "Last edit",
+        "watch": "Watch",
+        "edit": "Edit",
+        "settingNote": "Settings apply only to this browser",
+        "value": "Value",
+        "viewDetail": "View detail",
+        "systemCategories": "System Categories",
+        "category": "Category",
+        "categories": "Categories",
+        "variousArtists": "Various artists",
+        "activities": "Activities",
+        "revenue": "Revenue",
+        "partners": "Partners",
+        "views": "Views",
+        "fileName": "File name",
+        "viewAll": "View all",
+        "legalNotices": "Legal notices",
+        "notAvailable": "Not available",
+        "region": "Region",
+        "specification": "Specification",
+        "missingInformation": "Missing information",
+        "ready": "Ready",
+        "year": "Year",
+        "general": "General",
+        "somethingWentWrong": "Something went wrong",
+        "biography": "Biography",
+        "nationality": "Nationality",
+        "currencyName": "Currency name",
+        "currencySymbol": "Currency symbol",
+        "currency": "Currency",
+        "phoneNumberCode": "Phone number code",
         "capital": "Capital",
         "numericCode": "Numeric code",
         "title": "Title",
@@ -59,6 +172,7 @@
         "subGenres": "Sub genres",
         "subArtist": "Sub artist",
         "releaseDate": "Release date",
+        "releaseTime": "Release time",
         "duration": "Duration",
         "draft": "Draft",
         "processing": "Processing",
@@ -69,7 +183,7 @@
         "minutes": "minutes",
         "hours": "hours",
         "dateRelease": "Date release",
-        "genres": "Song genre",
+        "genres": "Genre",
         "track": "Track",
         "artist": "Artist",
         "release": "Release",
@@ -102,7 +216,7 @@
         "notification": "Notification",
         "columnsDisplay": "Columns display",
         "all": "All",
-        "cancel": "cancel",
+        "cancel": "Cancel",
         "used": "Used",
         "notUsed": "Not used",
         "use": "Use status",
@@ -127,8 +241,8 @@
         "custom": "Custom",
         "filterByMonth": "Filter by month",
         "filterByYear": "Filter by year",
-        "toDate": "to date",
-        "fromDate": "from date",
+        "toDate": "To date",
+        "fromDate": "From date",
         "unknown": "Unknown",
         "horizontal": "Horizontal",
         "vertical": "Vertical",
@@ -151,9 +265,11 @@
         "upload": "Upload",
         "uploadImage": "Upload image",
         "dateCreated": "Date created",
+        "createdAt": "Created at",
+        "updatedAt": "Updated at",
         "dateUpdated": "Date updated",
         "removeFilter": "Remove filter",
-        "filter": "Filter",
+        "filter": "Filters",
         "submit": "Submit",
         "content": "Content",
         "management": "Management",
@@ -162,7 +278,7 @@
         "previous": "Previous",
         "next": "Next",
         "of": "of",
-        "userCreator": "Creator",
+        "creator": "Creator",
         "yes": "Yes",
         "no": "No",
         "other": "Other",
@@ -183,7 +299,21 @@
         "language": "Country language",
         "name": "Country name",
         "delete": "Delete country",
-        "add": "Add new country"
+        "add": "Add new country",
+        "message": {
+            "success": {
+                "create": "Add new country successfully",
+                "update": "Update country successfully",
+                "delete": "Delete successfully"
+            },
+            "error": {
+                "notFound": "Cannot found country",
+                "cannotDeleteBecauseLinkedReleaseMetadataLanguages": "Cannot delete this country because it is linked to release metadata languages",
+                "cannotDeleteBecauseLinkedTrackMetadataLanguages": "Cannot delete this country because it is linked to track metadata languages",
+                "cannotDeleteBecauseLinkedTrackRecordings": "Cannot delete this country because it is linked to track recordings",
+                "duplicateCodeLanguage": "This country code already exists"
+            }
+        }
     },
     "filter": {
         "keyword": "Keyword",
@@ -208,7 +338,8 @@
     },
     "delete": {
         "confirmTitle": "Confirm delete",
-        "confirmMessage": "Are you sure you want to delete?"
+        "confirmMessage": "Are you sure you want to delete {value}?",
+        "confirmMessageValue": "Are you sure you want to delete <b>{value}</b> ?"
     },
     "cancel": {
         "confirmTitle": "Confirm cancel",
@@ -271,7 +402,9 @@
     },
 
     "dashboard": {
-        "label": "Dashboard"
+        "label": "Dashboard",
+        "latestNews": "Latest news",
+        "goTo": "Go to Dashboard"
     },
     "review": {
         "message": {
@@ -284,7 +417,12 @@
 
     "image": {
         "label": "Image",
-        "dimensions": "Dimensions"
+        "dimensions": "Dimensions",
+        "validation": {
+            "mustBeLessThanMB": "Image must be less than {value} MB",
+            "supportImageFormat": "Support image formats {value}",
+            "mustBeMinWidth": "image minimum of {value}px wide"
+        }
     },
     "document": {
         "label": "Document"
@@ -294,12 +432,28 @@
         "select": "Select asset"
     },
     "setting": {
+        "settings": "Settings",
         "label": "Setting",
         "telegramSupportLink": "Telegram support link",
         "assignee": "Setting Assignee",
         "reviewer": "Setting Reviewer",
         "rate": "Setting Rate",
-        "quickSetting": "Quick setting"
+        "quickSetting": "Quick setting",
+        "executeCycle": "Execute cycle",
+        "backupNotification": "Backup notification",
+        "notifyOnSuccess": "Notify on success",
+        "notifyOnFailed": "Notify on failed",
+        "databaseBackupStorage": "Database backup storage",
+        "backupFileName": "Backup file name",
+        "executeMessages": {
+            "daily": "Everyday {at} execute once",
+            "nDays": "Every {days} days {at} execute once",
+            "hourly": "Executed every {minute} minute of the hour",
+            "nHours": "Starting at 00:00 every day, every {hour} hour, every {minute} minute",
+            "nMinutes": "Starting at minute 0 of each hour and executed every {minutes} minutes",
+            "weekly": "{hours}:{minutes} of {dayOfWeek} once a week",
+            "monthly": "Executed once a month on {days} of {hours}:{minutes}"
+        }
     },
     "log": {
         "label": "Log"
@@ -309,19 +463,43 @@
         "label": "Language",
         "name": "Language name",
         "code": "Code language",
-        "vietnamese": "Tiếng Việt",
-        "select": "Select language"
+        "vietnamese": "Vietnamese",
+        "select": "Select language",
+        "add": "Add language",
+        "original": "Original language",
+        "message": {
+            "success": {
+                "create": "Add new language successfully",
+                "update": "Update language successfully",
+                "delete": "Delete language successfully"
+            },
+            "error": {
+                "duplicateCodeLanguage": "This language code already exists",
+                "duplicateNameLanguage": "This language name already exists",
+                "cannotDeleteBecauseLinkedReleaseLocalizes": "Cannot delete this language because it is linked to release localizes",
+                "cannotDeleteBecauseLinkedReleaseAudioLanguages": "Cannot delete this language because it is linked to release audio languages",
+                "cannotDeleteBecauseLinkedReleaseMetadataLanguages": "Cannot delete this language because it is linked to release metadata languages",
+                "cannotDeleteBecauseLinkedTrackAudioLanguages": "Cannot delete this language because it is linked to track audio languages",
+                "cannotDeleteBecauseLinkedTrackMetadataLanguages": "Cannot delete this language because it is linked to track metadata languages",
+                "cannotDeleteBecauseLinkedTrackLocalizes": "Cannot delete this language because it is linked to track localizes"
+            }
+        }
     },
     "channel": {
         "code": "Channel code",
-        "lable": "Channel"
+        "label": "Channel",
+        "name": "Channel name"
     },
     "system": {
-        "label": "System"
+        "label": "System",
+        "internalServerError": {
+            "title": "Oops, something went wrong",
+            "description": "An unexpected error has occurred. Please try again later."
+        }
     },
     "validation": {
-        "error": "Validation error",
-        "noError": "No validation error",
+        "error": "Validation errors",
+        "noError": "No validation errors",
         "emailFormat": "Please enter a valid email!",
         "select": "Please select information!",
         "radio": "Please choose information!",
@@ -329,30 +507,44 @@
         "file": "File is required!",
         "url": "Please enter a valid link format!",
         "passwordMisMatch": "Password mis match!",
-        "passwordFormat": "Password must contain 1 uppercase character and at least 6 character",
+        "passwordFormat": "Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, and one number.",
         "unique": "Data must not be duplicated",
         "mustBeNumber": "Must be number",
         "min": "Must be min {number} characters",
         "minValid": "Must be min {number} valid characters",
         "max": "Must be less than {number} characters",
-        "numberMin": "Must be greater than {number} ",
-        "numberMax": "Must be less than {number}",
         "image": "Please select a image file",
         "video": "Please select a video file",
         "phoneNumber": "Phone number must be 10 digits",
         "inputPhoneNumber": "Enter phone number",
         "selectUsedStatus": "Select used status",
         "minWithValid": "Must be min at least {number} valid characters",
-        "onlyTheFollowingFormatsAreAccepted": "Only the following formats are accepted: {accept}"
+        "onlyTheFollowingFormatsAreAccepted": "Only the following formats are accepted: {accept}",
+        "required": "Please enter your {field}.",
+        "stringMin": "{field} must have at least {min} characters.",
+        "stringMax": "{field} can have up to {max} characters only.",
+        "numberMin": "{field} must be at least {min}.",
+        "numberMax": "{field} must not exceed {max}.",
+        "invalidType": "{field} must be a valid value.",
+        "noUnderscore": "{field} must not contain underscores (_)",
+        "email": "Invalid email address."
     },
     "form": {
         "searchPlaceholder": "Search"
     },
     "placeholder": {
+        "select": "Select {value}",
+        "selectRelease": "Select release",
+        "selectTrack": "Select track",
+        "selectDsp": "Select dsp",
         "dragAndDropAudio": "Drag and drop audio file here!",
+        "dragAndDropFile": "Drag and drop file here!",
         "selectArtist": "Select artist",
         "selectRegion": "Select region",
-        "supportFormats": "Support formats: {accept}"
+        "selectLabel": "Select label",
+        "supportFormats": "Support formats: {accept}",
+        "searchBy": "Search by {value}",
+        "filterBy": "Filter by {value}"
     },
     "status": {
         "label": "Status",
@@ -443,6 +635,7 @@
         "label": "User",
         "admin": "Admin",
         "user": "User",
+        "email": "Email",
         "manager": "Manager",
         "permission": "Permission",
         "firstName": "First name",
@@ -456,7 +649,7 @@
         "idPlaceOfIssue": "Place of issue",
         "idDateOfIssue": "Date of issue",
         "emailVerified": "Email verified",
-        "accountType": "Account type",
+        "type": "Account type",
         "permanentResidence": "Permanent residence",
         "passportNo": "Passport No.",
         "passportPlaceOfIssue": "Passport place of issue",
@@ -470,7 +663,59 @@
         "name": "Name",
         "topUserCreatedOrder": "Top user created order",
         "topUserCompletedProduct": "Top user completed product",
-        "clickHereToGetTelegramId": "Click here to get Telegram ID"
+        "clickHereToGetTelegramId": "Click here to get Telegram ID",
+        "telegramId": "Telegram ID",
+        "syncData": "Sync data from Auth0",
+        "loginsCount": "Logins count",
+        "lastLogin": "Last login",
+        "lastActive": "Last active",
+        "lastIp": "Last IP",
+        "password": "Password",
+        "personalInfo": "Personal info",
+        "changePassword": "Change password",
+        "search": {
+            "keyword": "Search by name, email",
+            "id": "Search by ID"
+        },
+        "role": {
+            "system": {
+                "label": "System role"
+            },
+            "tenant": {
+                "label": "Workspace role"
+            }
+        },
+        "grantPermission": {
+            "label": "Grant permisson"
+        },
+        "update": {
+            "tenant": {
+                "changeOwnerHint": "To change the owner, go to the <element>Workspace</element> section",
+                "conflictError": "Tenant must be unique"
+            }
+        },
+        "message": {
+            "success": {
+                "invite": "Invitation sent successfully"
+            },
+            "error": {
+                "notFound": "Email address not exists",
+                "email": {
+                    "conflict": "Email address already exists"
+                },
+                "tenant": {
+                    "conflict": "User already belongs to this Workspace",
+                    "forbidden": "User does not have permission to access this Workspace",
+                    "notFound": "User does not belong to any Workspace",
+                    "delete": {
+                        "declineDeleteSystemAdmin": "Cannot delete System Admin role",
+                        "declineDeleteTenantOwner": "Cannot delete Workspace Owner role",
+                        "declineDeleteTenantAdmin": "Cannot delete Workspace Admin role"
+                    }
+                },
+                "blocked": "User has been blocked"
+            }
+        }
     },
     "file": {
         "duration": "Duration",
@@ -506,7 +751,8 @@
 
     "select": {
         "date": "Select date",
-        "approver": "Select approver"
+        "approver": "Select approver",
+        "option": "Please select options"
     },
 
     "theme": {
@@ -515,15 +761,21 @@
         "system": "System"
     },
 
-    "releases": {
+    "release": {
+        "contributors": "Release contributors",
+        "list": "Release list",
+        "releases": "Releases",
+        "count": "Releases count",
+        "configuration": "Release configuration",
         "otherMetadata": "Other metadata",
         "label": "Release",
         "create": "Create release",
-        "lastedRelease": "Lasted release",
+        "latestReleases": "Latest releases",
         "name": "Release name",
         "id": "Release ID",
         "type": "Release type",
         "releaseDate": "Release date",
+        "releaseTime": "Release time",
         "duration": "Duration",
         "trackCount": "Track count",
         "publisher": "Publisher release",
@@ -531,6 +783,7 @@
         "labelName": "Label name",
         "version": "Version",
         "role": "Role",
+        "back": "Back to releases list",
         "isMoreThan4Artists": "Is more than 4 artists",
         "select": {
             "artist": "Select artist",
@@ -549,14 +802,79 @@
             "selectPublishType": "Select publish type",
             "selectRole": "Select role",
             "selectMusician": "Select musician",
-            "selectLanguageMetadata": "Select language metadata"
+            "selectLanguageMetadata": "Select language metadata",
+            "enterTitleAndReleaseType": "Enter release name, label and release type to continue"
+        },
+
+        "validation": {
+            "mustHaveMainArtist": "Release must have a main artist"
         },
 
         "scheduling": {
-            "label": "Scheduling"
+            "label": "Scheduling",
+            "atMidnightInEveryCountry": "At midnight in every country around the world",
+            "atSpecificTime": "At a specific time in a specific time zone",
+            "goLiveTime": "What time would you like it to go live"
+        },
+
+        "coverArt": {
+            "label": "Cover art",
+            "required": "Required cover art",
+            "size": "Perfectly Square image from 1400x1400 pixels to 4000x4000 pixels"
+        },
+        "message": {
+            "success": {
+                "create": "Create release successfully",
+                "update": "Update release successfully",
+                "delete": "Delete release successfully"
+            }
         }
     },
-    "tracks": {
+
+    "releaseArtist": {
+        "label": "Release artists",
+        "message": {
+            "success": {
+                "create": "Create release artist successfully",
+                "update": "Update release artist successfully",
+                "delete": "Delete release artist successfully"
+            },
+            "error": {
+                "uniqueConstraint": "The artist already exists in the release."
+            }
+        }
+    },
+
+    "releaseContributor": {
+        "message": {
+            "error": {
+                "uniqueConstraint": "This contributor with the specified role already exists in the release."
+            }
+        }
+    },
+
+    "releaseType": {
+        "label": "Release type"
+    },
+
+    "albumFormat": {
+        "message": {
+            "success": {
+                "create": "Create release type successfully",
+                "update": "Update release type successfully",
+                "delete": "Delete release type successfully"
+            },
+            "error": {
+                "duplicateNameAlbumFormat": "This type already exists",
+                "duplicateCodeAlbumFormat": "This code already exist",
+                "notFound": "Cannot found this type",
+                "cannotDeleteBecauseLinkedReleases": "Cannot delete because this type linked release"
+            }
+        }
+    },
+
+    "track": {
+        "list": "Track list",
         "number": "Track number",
         "add": "Add track",
         "label": "Track",
@@ -565,6 +883,58 @@
         "name": "Track name",
         "id": "Track ID",
         "count": "Track count",
+        "language": "Track language",
+        "recordingCountry": "Recording country",
+        "audioSpecification": "Audio specification",
+        "addAllArtistFromRelease": "Add all artist from release",
+        "minTrack": "Min track",
+        "maxTrack": "Max track",
+        "back": "Back to track list",
+        "skipScannedTracks": "Skip already scanned tracks",
+        "rageDuplicate": "Rage duplicate",
+        "rageDuplicateInSongDetected": "Range duplicate in song detected",
+        "scan": "Scan tracks",
+        "noResultMatches": "No matching results",
+        "totalTrackNeedScan": "Total tracks need scan",
+        "numberOfTracksScanned": "Number of tracks scanned",
+        "scanDate": "Date scan",
+        "autoScan": "Auto scan",
+        "scoreWarning": "Score warning",
+        "autoScanTime": "Auto scan time",
+        "releaseStatusAutoScan": "Release status auto scan",
+        "chunkDuration": "Chunk duration",
+        "sampleLength": {
+            "label": "Sample length",
+            "tooltip": "Defines the duration of the audio sample that listeners can preview"
+        },
+        "preview": {
+            "label": "Preview start",
+            "tooltip": "Specifies the point in the track where the preview begins"
+        },
+        "status": {
+            "scanning": "Scanning",
+            "running": "Running",
+            "pending": "Pending",
+            "finished": "Finished",
+            "failed": "Failed",
+            "cancel": "Canceled",
+            "unknown": "Unknown"
+        },
+        "action": {
+            "deleteTracks": "Delete tracks"
+        },
+        "original": {
+            "label": "Original Work",
+            "tooltip": "Original work is the piece that was created first, not any cover or remix."
+        },
+        "cover": {
+            "label": "Cover Version",
+            "tooltip": "A cover version is a new performance of a previously released song, which may change the arrangement, lyrics, or both."
+        },
+        "remix": {
+            "label": "Remix Version",
+            "tooltip": "A remix is a version of a song produced by altering the original recording—often changing instrumentation, tempo, or adding new elements."
+        },
         "placeholder": {
             "selectArtist": "Select artist",
             "selectSubArtist": "Select sub artist",
@@ -573,9 +943,100 @@
             "selectLanguage": "Select language",
             "selectLabel": "Select label",
             "selectSensitiveContent": "Select content"
+        },
+        "validation": {
+            "previewMustBeLessThanDuration": "Preview duration must be less than track duration",
+            "sampleLengthMustBeLessThanDuration": "Sample length must be less than track duration",
+            "trackUpload": "{type} can upload a maximum of {maxCount} track",
+            "trackFileName": "File name cannot over {number} characters"
+        },
+        "acrCloud": {
+            "compareResult": "Select results to compare"
+        },
+        "message": {
+            "success": {
+                "create": "Create track successfully",
+                "update": "Update track successfully",
+                "delete": "Delete track successfully"
+            },
+            "error": {
+                "releaseNotFound": "Cannot found this release"
+            }
         }
     },
+
+    "trackArtist": {
+        "message": {
+            "success": {
+                "create": "Add artist successfully",
+                "update": "Update artist successfully",
+                "delete": "Delete artist successfully"
+            },
+            "note": "Editing the artist will interrupt synchronization with the release artist",
+            "error": {
+                "uniqueConstraint": "The artist already exists in the track."
+            }
+        }
+    },
+
+    "trackType": {
+        "label": "Track type",
+        "description": "Designates the track as a musical or non-musical work.",
+        "message": {
+            "success": {
+                "create": "Add track type successfully",
+                "update": "Update track type successfully",
+                "delete": "Delete track type successfully"
+            },
+            "error": {
+                "duplicateNameTrackType": "This track type is already exists",
+                "duplicateCodeTrackType": "This code track type is already exists",
+                "cannotDeleteBecauseLinkedTracks": "Cannot delete this track type because it is linked to tracks"
+            }
+        }
+    },
+
+    "trackOriginType": {
+        "label": "Track original",
+        "value": "Value",
+        "message": {
+            "success": {
+                "create": "Add track original successfully",
+                "update": "Update track original successfully",
+                "delete": "Delete track original successfully"
+            },
+            "error": {
+                "duplicateNameTrackOriginType": "This track origin is already exists",
+                "cannotDeleteBecauseLinkedTracks": "Cannot delete this track origin because it is linked to tracks",
+                "duplicateCodeTrackOriginType": "This track origin code already exists"
+            }
+        }
+    },
+
+    "trackSensitive": {
+        "label": "Sensitive Content",
+        "explicitContentEdited": "Explicit content (edited)",
+        "notExplicit": "Not explicit",
+        "noAdviceAvailable": "No advice available",
+        "parentalAdvisory": "Parental advisory",
+        "name": "Name sensitive content",
+        "message": {
+            "success": {
+                "create": "Sensitive content added successfully",
+                "update": "Sensitive content updated successfully",
+                "delete": "Sensitive content deleted successfully"
+            },
+            "error": {
+                "notFound": "Sensitive content not found",
+                "duplicateCode": "This sensitive content code already exists",
+                "duplicateName": "This sensitive content name already exists",
+                "cannotDeleteRelationWithTrack": "Cannot delete because it is using in track"
+            }
+        }
+    },
+
     "genres": {
+        "name": "Genre name",
         "pop": "Pop",
         "rock": "Rock",
         "jazz": "Jazz",
@@ -586,9 +1047,31 @@
         "reggae": "Reggae",
         "rap": "Rap",
         "classical": "Classical",
-        "blues": "Blues"
+        "blues": "Blues",
+        "add": "Add new genre",
+        "primary": "Primary genre"
+    },
+    "genre": {
+        "label": "Genre",
+        "genres": "Genres",
+        "message": {
+            "success": {
+                "create": "Create new genre successfully",
+                "delete": "Delete genre successfully",
+                "update": "Update genre successfully"
+            },
+            "error": {
+                "duplicateNameGenre": "This genres already exist",
+                "duplicateCodeGenre": "This code genre already exist",
+                "cannotDeleteBecauseLinkedPrimaryReleases": "Cannot delete this genre because it is linked to primary releases",
+                "cannotDeleteBecauseLinkedSubReleases": "Cannot delete this genre because it is linked to sub releases",
+                "cannotDeleteBecauseLinkedPrimaryTracks": "Cannot delete this genre because it is linked to primary tracks",
+                "cannotDeleteBecauseLinkedSubTracks": "Cannot delete this genre because it is linked to sub tracks"
+            }
+        }
     },
     "artist": {
+        "artists": "Artists",
         "label": "Artist",
         "create": "Create artist",
         "name": "Artist name",
@@ -601,34 +1084,95 @@
         "profiles": "Artist profiles",
         "variousArtists": "Various artists",
         "descriptionVariantArtists": "Display name will be 'Various artists'",
-        "role": "Artist role"
+        "role": "Artist role",
+        "canLinkArtistProfile": "Can link artist profile",
+        "back": "Back to artist list",
+        "visitProfile": "Visit profile",
+        "message": {
+            "success": {
+                "create": "Add new artist successfully",
+                "update": "Update artist successfully",
+                "delete": "Delete artist successfully"
+            },
+            "error": {
+                "duplicateNameArtist": "This artist already exist",
+                "cannotDeleteBecauseLinkedReleases": "Cannot delete this artist because it is linked to releases",
+                "cannotDeleteBecauseLinkedTracks": "Cannot delete this artist because it is linked to tracks"
+            }
+        }
     },
 
     "role": {
+        "roles": "Roles",
         "add": "Add role artist",
         "update": "Update role",
         "name": "Role name"
     },
 
-    "labels": {
+    "label": {
+        "labels": "Labels",
         "label": "Label",
         "create": "Create label",
         "name": "Label name",
-        "id": "Label ID"
+        "id": "Label ID",
+        "back": "Back to label list",
+        "message": {
+            "success": {
+                "create": "Create label successfully",
+                "delete": "Delete label successfully",
+                "update": "Update label successfully"
+            },
+            "error": {
+                "duplicateNameLabel": "This Label already exist",
+                "cannotDeleteBecauseLinkedReleases": "Cannot delete this label because it is linked to releases"
+            }
+        }
     },
+
     "distribution": {
         "label": "Distribution",
         "create": "Create distribution",
         "name": "Distribution name",
-        "id": "Distribution ID"
+        "id": "Distribution ID",
+        "batchDistribution": "Batch distribution",
+        "batchTakeDown": "Batch takedown"
     },
 
     "formFields": {
+        "audioFile": {
+            "preview": "Preview audio"
+        },
+        "trackLanguage": {
+            "audioLanguageId": "Audio language",
+            "metadataLanguageId": "Metadata language",
+            "metadataLanguageCountryId": "Country language",
+            "recordingCountryId": "Recording country"
+        },
+        "releaseLanguage": {
+            "audioLanguageId": "Audio language",
+            "metadataLanguageId": "Metadata language",
+            "metadataLanguageCountryId": "Metadata country language",
+            "recordingCountryId": "Recording country"
+        },
+        "upc": "UPC",
+        "selectedCountries": "Region",
+        "trackSensitiveId": "Sensitive content",
+        "recordingCountryId": "Recording country",
+        "trackArtists": "track artist",
+        "distributionType": "Release type",
+        "releaseCoverArts": "Release image",
+        "audioLanguageId": "Audio language",
+        "labelId": "Label",
+        "metadataLanguageCountryId": "Metadata country language",
+        "title": "Release name",
+        "metadataLanguageId": "Metadata language",
         "artists": "Artists",
         "releaseDate": "Release date",
         "territoryType": "Territory type",
-        "cLineYear": "C line year",
-        "pLineYear": "P line year",
+        "cLineYear": "© Year",
+        "pLineYear": "℗ Year",
+        "cLine": "Product copyright",
+        "pLine": "Sound recording copyright",
         "nameRelease": "Release name",
         "version": "Version",
         "timezone": "Timezone",
@@ -636,8 +1180,32 @@
         "genres": "Genres",
         "subGenres": "Sub genres",
         "metaDataLanguage": "Metadata language",
+        "primaryGenreId": "Primary genre",
+        "releaseArtists": "Release artist",
+        "pLineOwner": "℗ Copyright",
+        "cLineOwner": "© Copyright",
+        "releaseTime": "Release time",
+        "releaseTimezoneId": "Timezone",
+        "releaseTerritory": {
+            "selectedCountries": "Countries distribute",
+            "distributionType": "Options distribute"
+        },
+        "trackOriginTypeId": "Track origin type",
+        "trackTypeId": "Track type",
+        "preview": "Track preview",
         "tracks": {
-            "pLine": "Recoding copyright",
+            "maxCountTrack": "Total of tracks greater than {number}",
+            "minCountTrack": "Total of tracks less than {number}",
+            "trackOriginTypeId": "Track origin type",
+            "audioLanguageId": "Audio language",
+            "metadataLanguageId": "Metadata language",
+            "metadataLanguageCountryId": "country Language",
+            "trackLanguage": "Ngôn ngữ bài hát",
+            "recordingCountryId": "Recording country",
+            "preview": "Preview track",
+            "sampleLength": "Sample length",
+            "primaryGenreId": "Primary genre",
+            "pLineOwner": "Recoding copyright",
             "previewTrack": "Preview track",
             "trackOrigin": "Track origin",
             "track": "Track",
@@ -673,6 +1241,9 @@
             "countryRecording": "Country recording",
             "recordingType": "Recording type",
             "isSensitiveContent": "Is sensitive content"
+        },
+        "coverArtThumbnails": {
+            "original": "Release image"
         }
     },
 
@@ -680,6 +1251,605 @@
         "label": "Distribute",
         "create": "Create distribute",
         "name": "Distribute name",
-        "id": "Distribute ID"
+        "id": "Distribute ID",
+        "onlyIn": "Distribute only in",
+        "everyWhereExcept": "Distribute everywhere except",
+        "wordWide": "Distribute worldwide"
+    },
+
+    "emailSender": {
+        "label": "Email sender"
+    },
+
+    "dsp": {
+        "label": "DSP",
+        "name": "Platform name",
+        "add": "Add platform",
+        "oneLinkPerLine": "One link per line",
+        "profileList": "Profile list",
+        "fullNameOfDDexParty": "Full name of DDex party",
+        "ddexPartyId": "DDex party Id",
+        "message": {
+            "success": {
+                "create": "Create platform successfully",
+                "update": "Update platform successfully",
+                "delete": "Delete platform successfully"
+            },
+            "error": {
+                "duplicateNameDsp": "This platform already exist",
+                "cannotDeleteBecauseLinkedOrganizations": "Cannot delete this platform because it is linked to organizations",
+                "cannotDeleteBecauseLinkedReleases": "Cannot delete this platform because it is linked to releases"
+            }
+        }
+    },
+
+    "artistRole": {
+        "message": {
+            "success": {
+                "create": "Add new role successfully",
+                "delete": "Delete role successfully",
+                "update": "Update role successfully"
+            },
+            "error": {
+                "duplicateNameArtistRole": "This role already exist",
+                "duplicateCodeArtistRole": "This role code already exist",
+                "cannotDeleteBecauseLinkedReleases": "Cannot delete this role because it is linked to releases",
+                "cannotDeleteBecauseLinkedTracks": "Cannot delete this role because it is linked to tracks"
+            }
+        }
+    },
+
+    "timezone": {
+        "label": "Timezone",
+        "create": "Create timezone",
+        "name": "Timezone name",
+        "utc": "UTC",
+        "zone": "Timezone",
+        "add": "Add timezone",
+        "message": {
+            "success": {
+                "create": "Add new timezone successfully",
+                "update": "Update timezone successfully",
+                "delete": "Delete timezone successfully"
+            },
+            "error": {
+                "duplicateNameTimezone": "This timezone already exists",
+                "cannotDeleteBecauseLinkedReleases": "Cannot delete this timezone because it is linked to releases"
+            }
+        },
+        "placeholder": {
+            "selectTimezone": "Select timezone"
+        }
+    },
+
+    "tooltipForm": {
+        "releaseTitle": "Do not include version information like Remix or Uncut in the main Title field. Use the Version field instead.",
+        "version": "A particular iteration of the product that will be delivered to stores and displayed alongside the title. Example: 'Live' , 'Deluxe Version'. If multiple versions of an album exist, use this field to indicate the correct version.",
+        "releaseType": "Indicates the size of the release package (i.e. Single, EP, Album).",
+        "label": "This field determines the label under which your release will be created.",
+        "eanUpcCode": "The Universal Product Code (UPC), is a 12 or 13 character long numeric code typically used to identify one or more master recordings in certain media type.",
+        "catalogId": "Unique code used to identify the label's product. This field is optional and serves as an identifier on your label's side, used, for example, in month-end reports.",
+        "primaryGenre": "A conventional category that groups together pieces of music sharing a set of conventions or traditions. This will determine where a product will chart and how it will be sorted with similar music.",
+        "subGenre": "A more niche category that helps differentiate a piece of music according to its region, style, or sound, carrying its own set of characteristics that clearly distinguish and set it apart within the larger genre.",
+        "metadataLanguage": "The language of the product's metadata.",
+        "variousArtistsCompilation": "If this release contains 5 or more artists, select this box to designate it as Various Artists.",
+        "cLineYear": "The first year this version was released anywhere in the world.",
+        "cLineOwner": "C Line owner identifies the entity which legally owns the copyrights to the release's associated creations such as cover art, liner notes and metadata.",
+        "pLineYear": "The year the sound recording was first released anywhere in the world.",
+        "pLineOwner": "P Line owner identifies the individual/entity which legally owns the sound recording.",
+        "languageTrack": "The main language of the song in this release. For example: Vietnamese, English, etc.",
+        "countryLanguage": "The official language of the country related to this release. For example: Vietnam, United States, etc.",
+        "isMoreThan4Artists": "Select 'Yes' if this release has 5 or more artists to display as 'Various artists'."
+    },
+
+    "tenant": {
+        "label": "Workspace",
+        "selectTitle": "Select Workspace",
+        "workspaces": "workspaces",
+        "name": "Workspace name",
+        "logo": "Logo",
+        "icon": {
+            "label": "Favicon",
+            "tooltip1": "Upload a small square image (16x16 pixels or 32x32 pixels) that will serve as your website's favicon.",
+            "tooltip2": "This icon will appear in browser tabs, bookmarks, and history.",
+            "tooltip3": "We recommend using an SVG, ICO, or PNG file."
+        },
+        "title": "Title",
+        "domain": "Domain",
+        "primaryColor": "Primary color",
+        "owner": "Owner",
+        "type": {
+            "title": "Workspace type",
+            "titleShort": "Type",
+            "whiteLabel": {
+                "label": "White label"
+            },
+            "label": {
+                "label": "Label"
+            }
+        },
+        "userType": {
+            "label": "Role",
+            "owner": {
+                "label": "Owner",
+                "tooltip": "The owner of the workspace. This user has full control over the workspace and its settings."
+            },
+            "admin": {
+                "label": "Admin",
+                "tooltip": "Admins can manage users, settings, and configurations within the workspace."
+            },
+            "member": {
+                "label": "Member",
+                "tooltip": "Users can access and use the workspace but have limited permissions compared to admins."
+            }
+        },
+        "search": {
+            "keyword": "Search by name, email"
+        },
+        "email": {
+            "tooltip": "This email will be used to send notifications"
+        },
+        "parent": {
+            "placeholder": "Select parent workspace",
+            "label": "Parent workspace"
+        },
+        "back": "Back to workspaces",
+        "member": "Member",
+        "manager": "Manager",
+        "labels": {
+            "max": {
+                "label": "Maximum labels can create"
+            }
+        },
+        "message": {
+            "error": {
+                "notFound": "No workspace was found with the provided information",
+                "blocked": "This workspace has been blocked"
+            }
+        }
+    },
+
+    "integration": {
+        "label": "Integrations",
+        "deal": {
+            "label": "Deal",
+            "title": "What type of deal will you be using for this DSP?",
+            "direct": {
+                "label": "Direct Deal",
+                "alert": ""
+            },
+            "merlin": {
+                "label": "Merlin",
+                "alert": "Your connection credentials will be entered by your Account Manager. Please make sure that you have filled out and sent them the \"Client Distribution Deals\" worksheet."
+            },
+            "antmusic": {
+                "label": "ANT Music",
+                "alert": "No connection credentials needed."
+            }
+        }
+    },
+
+    "action": {
+        "create": {
+            "button": "Create",
+            "title": "Create {label}",
+            "success": "{label} created successfully"
+        },
+        "invite": {
+            "button": "Invite",
+            "title": "Invite {label}",
+            "success": "{label} invited successfully"
+        },
+        "update": {
+            "button": "Update",
+            "title": "Update {label}",
+            "success": "{label} updated successfully"
+        },
+        "duplicate": {
+            "button": "Duplicate"
+        },
+        "delete": {
+            "button": "Delete",
+            "title": "Delete {label}",
+            "alert": "Are you sure you want to delete {label}? This action cannot be undone.",
+            "success": "{label} deleted successfully"
+        },
+        "back": {
+            "button": "Go back"
+        },
+        "copy": {
+            "success": "Copied to clipboard"
+        },
+        "quickActions": "Quick actions"
+    },
+
+    "permission": {
+        "label": "Permission",
+        "name": "Permission name",
+        "isActive": "Status",
+        "create": {
+            "manual": "Manual",
+            "import": "Import from Excel"
+        },
+        "import": {
+            "downloadTemplate": "Download template",
+            "dragAndDrop": "Drag and drop Excel file here",
+            "hint": "Supports .xlsx, .xls files",
+            "success": "Successfully parsed {count} permissions",
+            "noData": "No valid data found in file",
+            "error": "Failed to parse Excel file",
+            "invalidRows": "{count} rows have missing required fields (name or code)"
+        },
+        "message": {
+            "success": {
+                "create": "Add permission successfully",
+                "update": "Update permission successfully",
+                "delete": "Delete permission successfully"
+            },
+            "error": {
+                "duplicateNamePermission": "This permission already exists",
+                "duplicateCodePermission": "This permission code already exists",
+                "cannotDeleteBecauseLinkedRolePermissions": "Cannot delete permission because it is already used in a role",
+                "cannotDeleteBecauseLinkedUsers": "Cannot delete permission because it is already used in a user"
+            }
+        },
+        "action": {
+            "delete": "Delete permission"
+        }
+    },
+
+    "roles": {
+        "label": "Role",
+        "name": "Role name",
+        "isActive": "Status",
+        "message": {
+            "success": {
+                "create": "Add role successfully",
+                "update": "Update role successfully",
+                "delete": "Delete role successfully"
+            },
+            "error": {
+                "duplicateNameRole": "This role already exists",
+                "duplicateCodeRole": "This role code already exists",
+                "cannotDeleteBecauseLinkedPermissions": "Cannot delete role because it is already used in a permission"
+            }
+        },
+        "action": {
+            "delete": "Delete role"
+        }
+    },
+
+    "actions": {
+        "label": "Actions",
+        "name": "Action name",
+        "message": {
+            "success": {
+                "create": "Action created successfully",
+                "update": "Action updated successfully",
+                "delete": "Action deleted successfully"
+            },
+            "error": {
+                "duplicateNameAction": "This action already exists",
+                "duplicateCodeAction": "This action code already exists",
+                "cannotDeleteBecauseLinkedDspActions": "Cannot delete this action because it is linked to a DSP"
+            }
+        },
+        "action": {
+            "delete": "Delete action"
+        }
+    },
+
+    "policy": {
+        "policies": "Policies",
+        "label": "Policy",
+        "name": "Policy name",
+        "action": {
+            "delete": "Delete policy"
+        }
+    },
+
+    "currencies": {
+        "currencies": "Currencies",
+        "label": "Currency",
+        "name": "Currency name",
+        "code": "Currency code",
+        "message": {
+            "success": {
+                "create": "Currency added successfully",
+                "update": "Currency updated successfully",
+                "delete": "Currency deleted successfully"
+            },
+            "error": {}
+        },
+        "action": {
+            "delete": "Delete currency"
+        }
+    },
+    "currency": {
+        "message": {
+            "success": {
+                "create": "Currency added successfully",
+                "update": "Currency updated successfully",
+                "delete": "Currency deleted successfully"
+            },
+            "error": {
+                "cannotDeleteBecauseLinkedPriceTiers": "Cannot delete currency because it is already used",
+                "uniqueConstraint": "This currency already exists"
+            }
+        }
+    },
+
+    "price": {
+        "label": "Price",
+        "name": "Price name",
+        "code": "Price code",
+        "action": {
+            "delete": "Delete price"
+        }
+    },
+
+    "priceTier": {
+        "canDeactivateOnlyWhenNotDefault": "You can only deactivate when it is not the default value",
+        "message": {
+            "success": {
+                "create": "Price added successfully",
+                "update": "Price updated successfully",
+                "delete": "Price deleted successfully"
+            },
+            "error": {
+                "cannotDeleteBecauseLinkedTracks": "Cannot delete this price because it is linked to tracks",
+                "currencyNotFound": "Currency not found"
+            }
+        }
+    },
+
+    "weekDays": {
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
+    },
+
+    "scanStatus": {
+        "unScanned": "UnScanned",
+        "finished": "No violations",
+        "warning": "Warning",
+        "rejected": "Rejected"
+    },
+
+    "backupLog": {
+        "success": {
+            "startedPleaseWait": "Backup has started, please wait..."
+        }
+    },
+
+    "analytics": {
+        "label": "Analytics",
+        "name": "Analytics name",
+        "action": {
+            "delete": "Delete analytics"
+        }
+    },
+
+    "issue": {
+        "label": "Issue",
+        "name": "Name issue",
+        "numberOfDaysAffect": "Number of day affect",
+        "message": {
+            "success": {
+                "create": "Create success",
+                "update": "Update success",
+                "delete": "Delete success"
+            },
+            "error": {
+                "notFound": "Not found",
+                "duplicateNameVi": "Duplicate Vietnamese name",
+                "duplicateNameEn": "Duplicate English name",
+                "duplicateCode": "Duplicate code",
+                "issueLevelNotFound": "Issue level not found"
+            }
+        }
+    },
+
+    "issueLevel": {
+        "label": "Issue level",
+        "name": "Name issue level",
+        "severityRank": "Severity rank",
+        "message": {
+            "success": {
+                "create": "Create issue level successfully",
+                "update": "Update issue level successfully",
+                "delete": "Delete issue level successfully",
+                "updateOrder": "Update order successfully"
+            },
+            "error": {
+                "notFound": "This issue level was not found",
+                "duplicateNameVi": "Vietnamese name already exists",
+                "duplicateNameEn": "English name already exists",
+                "duplicateCode": "Issue level code already exists",
+                "cannotDeleteBecauseLinkedIssues": "Cannot delete this issue level because it is linked to issues"
+            }
+        }
+    },
+
+    "issueCategory": {
+        "label": "Issue category"
+    },
+
+    "tenantIssue": {
+        "label": "Tenant issue",
+        "message": {
+            "success": {
+                "create": "Create success",
+                "update": "Update success",
+                "delete": "Delete success"
+            },
+            "error": {
+                "notFound": "Tenant issue not found",
+                "duplicate": "This tenant already has this issue active",
+                "tenantNotFound": "Tenant not found",
+                "issueNotFound": "Issue not found"
+            }
+        }
+    },
+
+    "tenantTier": {
+        "label": "Tenant tier",
+        "name": "Tenant tier name",
+        "message": {
+            "success": {
+                "create": "Create success",
+                "update": "Update success",
+                "delete": "Delete success"
+            },
+            "error": {
+                "notFound": "Not found",
+                "duplicateNameVi": "Duplicate Vietnamese name",
+                "duplicateNameEn": "Duplicate English name",
+                "duplicateCode": "Duplicate code"
+            }
+        }
+    },
+
+    "newsCategory": {
+        "label": "News category",
+        "name": "Category name",
+        "message": {
+            "success": {
+                "create": "News category created successfully",
+                "update": "News category updated successfully",
+                "delete": "News category deleted successfully",
+                "bulkUpdateOrder": "Change the position successfully"
+            },
+            "error": {
+                "notFound": "News category not found",
+                "duplicateNameVi": "Vietnamese name is duplicated",
+                "duplicateNameEn": "English name is duplicated",
+                "duplicateCode": "Code is duplicated"
+            }
+        }
+    },
+
+    "news": {
+        "label": "News",
+        "name": "News title",
+        "addTranslate": "Add translate",
+        "updateTranslate": "Update translate"
+    },
+
+    "newsPost": {
+        "label": "News post",
+        "latest": "Latest news",
+        "related": "Related news",
+        "list": "Post list",
+        "message": {
+            "success": {
+                "create": "News created successfully",
+                "update": "News updated successfully",
+                "delete": "News deleted successfully",
+                "bulkUpdateOrder": "Reordering successful"
+            },
+            "error": {
+                "notFound": "News not found",
+                "duplicateNameVi": "Vietnamese title is duplicated",
+                "duplicateNameEn": "English title is duplicated",
+                "duplicateCode": "Code is duplicated"
+            }
+        }
+    },
+
+    "newsPostTranslation": {
+        "label": "News post translation",
+        "message": {
+            "success": {
+                "create": "Create translation successfully",
+                "update": "Update translation successfully",
+                "delete": "Delete translation successfully"
+            },
+            "error": {
+                "notFound": "Translation not found",
+                "postNotFound": "News post not found",
+                "languageNotFound": "Language not found",
+                "cannotDeleteDefault": "Cannot delete default translation",
+                "uniqueConstraint": "Translation for this news post and language already exists",
+                "mustHaveOneDefault": "At least one translation must be set as default"
+            }
+        }
+    },
+    "legal": {
+        "allRightsReserved": "All rights reserved."
+    },
+    "aggregator": {
+        "label": "Aggregator",
+        "aggregators": "Aggregators",
+        "list": "List aggregator",
+        "systemDefault": "System default",
+        "ddexName": "DDex name",
+        "action": {
+            "create": "Create aggregator",
+            "update": "Update aggregator"
+        },
+        "message": {
+            "success": {
+                "create": "Created successfully",
+                "update": "Updated successfully",
+                "delete": "Deleted successfully"
+            },
+            "error": {
+                "defaultNotFound": "Default aggregator not found",
+                "notFound": "Aggregator not found",
+                "codeExisted": "Aggregator code already existed",
+                "nameExisted": "Aggregator name already existed",
+                "defaultActiveError": "Cannot deactivate an active default aggregator"
+            }
+        }
+    },
+
+    "tenantIntegration": {
+        "message": {
+            "success": {
+                "create": "Create integration successfully",
+                "update": "Update integration successfully",
+                "delete": "Delete integration successfully"
+            },
+            "error": {
+                "notFound": "Tenant integration not found",
+                "dspExisted": "DSP is already enabled for this tenant"
+            }
+        }
+    },
+
+    "dealType": {
+        "label": "Deal type",
+        "requiredConnection": "Required connection"
+    },
+
+    "dspRoutingConfig": {
+        "message": {
+            "success": {
+                "create": "Update success",
+                "update": "Update success",
+                "delete": "Delete success"
+            },
+            "error": {
+                "notFound": "Dsp routing config not found",
+                "aggregatorIdRequired": "aggregatorId is required",
+                "aggregatorNotFound": "Aggregator not found",
+                "sftpConfigNotFound": "Sftp config not found"
+            }
+        }
+    },
+
+    "connection": {
+        "success": "Connection successful",
+        "failure": "Connection failed",
+        "test": "Test connection"
+    },
+
+    "sftp": {
+        "requiredSftpInfo": "Please enter all required SFTP information"
     }
 }

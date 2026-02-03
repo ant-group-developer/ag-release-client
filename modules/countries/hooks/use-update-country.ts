@@ -1,4 +1,5 @@
 import { showNotification } from '@/helpers/messages-helper';
+import { useApiNotify } from '@/hooks/use-api-notify';
 import { UpdateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
@@ -10,7 +11,7 @@ import { UpdateCountryPayload } from '../types/payload';
 export const useUpdateCountry = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
-
+    const { handleError } = useApiNotify();
     const onSuccess = (
         data: any,
         {
@@ -18,9 +19,9 @@ export const useUpdateCountry = () => {
         }: UpdateVariables<CountriesData['id'], UpdateCountryPayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: [countriesQueryKeys.getList],
+            queryKey: countriesQueryKeys.lists(),
         });
-        const responseMessages = messages(data?.data?.message);
+        const responseMessages = messages(data?.data?.messageCode);
         showNotification('success', responseMessages);
         onSuccess?.();
     };
@@ -29,8 +30,8 @@ export const useUpdateCountry = () => {
         data: any,
         { onError }: UpdateVariables<CountriesData['id'], UpdateCountryPayload>
     ) => {
-        const responseMessages = messages(data?.response.data.messages);
-        showNotification('error', responseMessages);
+        const responseMessages = messages(data?.response.data.messageCode);
+        handleError(data);
         onError?.();
     };
 

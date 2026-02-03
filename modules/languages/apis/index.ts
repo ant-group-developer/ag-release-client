@@ -1,22 +1,37 @@
-import axiosAuth from '@/api/axios-auth';
+import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
-import { LanguageDataFilter, LanguagesData } from '../types';
+import {
+    LanguageDataFilter,
+    LanguagesData,
+    LanguagesSimpleData,
+} from '../types';
 import { CreateLanguagePayload, UpdateLanguagePayload } from '../types/payload';
 
 export const languageApi = {
     getList: (params: LanguageDataFilter) => {
-        return axiosAuth.get<PaginationResponse<LanguagesData>>('/language', {
-            params,
-        });
+        return axiosInstance.get<PaginationResponse<LanguagesData>>(
+            '/languages',
+            {
+                params,
+            }
+        );
+    },
+
+    getListSimple: () => {
+        return axiosInstance.get<DetailResponse<LanguagesSimpleData[]>>(
+            '/languages/simple'
+        );
     },
 
     getDetail: (id: LanguagesData['id']) => {
-        return axiosAuth.get<DetailResponse<LanguagesData>>(`/language/${id}`);
+        return axiosInstance.get<DetailResponse<LanguagesData>>(
+            `/languages/${id}`
+        );
     },
 
     createLanguage: (payload: CreateLanguagePayload) => {
-        return axiosAuth.post<DetailResponse<LanguagesData>>(
-            '/language',
+        return axiosInstance.post<DetailResponse<LanguagesData>>(
+            '/languages',
             payload
         );
     },
@@ -25,10 +40,10 @@ export const languageApi = {
         id: LanguagesData['id'],
         payload: UpdateLanguagePayload
     ) => {
-        return axiosAuth.patch(`/language/${id}`, payload);
+        return axiosInstance.put(`/languages/${id}`, payload);
     },
 
     deleteLanguage: (id: LanguagesData['id']) => {
-        return axiosAuth.delete(`/language/${id}`);
+        return axiosInstance.delete(`/languages/${id}`);
     },
 };

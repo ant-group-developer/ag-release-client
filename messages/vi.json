@@ -10,33 +10,145 @@
         "loginByOtherAccount": "Đăng nhập bằng tài khoản khác"
     },
     "auth": {
-        "login": "Đăng nhập",
-        "dontHaveAccount": "Bạn chưa có tài khoản?",
+        "signIn": {
+            "title": "Chào mừng trở lại",
+            "description": "Vui lòng nhập thông tin đăng nhập",
+            "submit": "Đăng nhập"
+        },
+        "dontHaveAccount": "Chưa có tài khoản?",
         "alreadyHaveAccount": "Đã có tài khoản?",
-        "signUp": "Đăng ký",
-        "forgotPassword": "Quên mật khẩu",
-        "confirmEmail": "Xác nhận địa chỉ email",
-        "confirmEmailDescription": "Chúng tôi đã gửi một email xác nhận đến email bạn đăng ký. Kiểm tra thư mục spam nếu bạn không nhận được email nào.",
-        "goToLogin": "Đến trang đăng nhập",
-        "resendConfirmationEmail": "Gửi lại email xác thực",
-        "linkHasExpired": "Liên kết đã hết hạn",
-        "reEnterEmail": "Vui lòng nhập lại email",
-        "emailConfirmationSuccessful": "Xác nhận email thành công",
-        "yourAccountIsBeingApprovedByAdmin": "Tài khoản của bạn đang được Admin phê duyệt",
-        "forbiddenTitle": "Bạn không có quyền truy cập",
-        "forbiddenDescription": "Vui lòng liên hệ Admin để biết thêm chi tiết"
-    },
-    "action": {
-        "name": "Hành động",
-        "delete": "Xóa",
-        "update": "Cập nhật",
-        "create": "Thêm mới",
-        "view": "Xem",
-        "edit": "Sửa",
-        "cancel": "Hủy",
-        "quickActions": "Hành động nhanh"
+        "register": {
+            "title": " Tham gia ngay hôm nay",
+            "description": "Tạo tài khoản miễn phí và bắt đầu sử dụng",
+            "submit": "Đăng ký"
+        },
+        "signOut": "Đăng xuất",
+        "forgotPassword": {
+            "title": "Quên mật khẩu?",
+            "description": "Nhập email của bạn và chúng tôi sẽ gửi liên kết đặt lại mật khẩu",
+            "submit": "Gửi liên kết đặt lại mật khẩu",
+            "back": "Trở về trang đăng nhập"
+        },
+        "notFound": {
+            "title": "Không tìm thấy trang",
+            "description": "Trang bạn đang tìm không tồn tại, có thể đã được di chuyển hoặc URL không chính xác."
+        },
+        "forbidden": {
+            "title": "Truy cập bị từ chối",
+            "description": "Bạn không có quyền truy cập tài nguyên này. Liên hệ Admin để biết thêm chi tiết."
+        },
+        "forbiddenTitle": "You do not have access",
+        "forbiddenDescription": "Please contact the Admin for more details",
+        "message": {
+            "error": {
+                "invalidCredentials": "Email hoặc mật khẩu không đúng.",
+                "unauthorized": "Yêu cầu xác thực.",
+                "invalidToken": "Token truy cập không hợp lệ hoặc bị thiếu.",
+                "invalidTokenType": "Loại token không hợp lệ.",
+                "tokenExpired": "Token truy cập đã hết hạn.",
+                "sessionExpired": "Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.",
+                "forbidden": "Bạn không có quyền truy cập tài nguyên này.",
+                "insufficientPermissions": "Quyền hạn không đủ.",
+                "systemAdminOnly": "Chỉ quản trị viên hệ thống mới có thể truy cập tài nguyên này.",
+                "tenantWhiteLabelOnly": "Chỉ loại tenant white label mới có thể truy cập tài nguyên này.",
+                "tenantOwnerOnly": "Chỉ chủ sở hữu workspace mới có thể truy cập tài nguyên này.",
+                "tenantOwnerOrAdminOnly": "Chỉ chủ sở hữu hoặc quản trị viên workspace mới có thể truy cập tài nguyên này.",
+                "tenantIdRequired": "Yêu cầu cung cấp mã định danh workspace.",
+                "tenantAccessDenied": "Bạn không thuộc workspace này.",
+                "tenantMismatch": "Workspace được yêu cầu không khớp với phiên làm việc của bạn.",
+                "userInactive": "Tài khoản của bạn đang không hoạt động.",
+                "accountLocked": "Tài khoản của bạn đã bị khóa.",
+                "mfaRequired": "Yêu cầu xác thực đa yếu tố.",
+                "mfaInvalid": "Mã xác minh không hợp lệ."
+            }
+        }
     },
     "common": {
+        "privateKey": "Khoá riêng tư",
+        "deal": "Thoả thuận",
+        "deals": "Thoả thuận",
+        "path": "Đường dẫn",
+        "username": "Tên người dùng",
+        "password": "Mật khẩu",
+        "users": "Người dùng",
+        "errors": "Lỗi",
+        "contributors": "Người đóng góp",
+        "add": "Thêm",
+        "information": "Thông tin",
+        "statistics": "Phân tích",
+        "list": "Danh sách",
+        "pieChart": "Biểu đồ tròn",
+        "barChart": "Biểu đồ cột",
+        "quantity": "Số lượng",
+        "tracks": "Bài hát",
+        "clearFilter": "Xoá bộ lọc",
+        "clearAll": "Xoá tất cả",
+        "reset": "Đặt lại",
+        "translation": "Bản dịch",
+        "translations": "Bản dịch",
+        "addTranslate": "Thêm bản dịch",
+        "public": "Công khai",
+        "private": "Riêng tư",
+        "date": "Ngày",
+        "dateScan": "Ngày quét",
+        "timeRange": "Khoảng thời gian",
+        "scanResult": "Kết quả quét",
+        "scanHistory": "Lịch sử quét",
+        "dateAffect": "Ngày ảnh hưởng",
+        "startDateAffect": "Ngày bắt đầu ảnh hưởng",
+        "endDateAffect": "Ngày kết thúc ảnh hưởng",
+        "score": "Điểm",
+        "minScore": "Điểm tối thiểu",
+        "maxScore": "Điểm tối đa",
+        "distribute": "Phân phối",
+        "preparingDownload": "Đang chuẩn bị tải xuống",
+        "preparingDownloadDesc": "Quá trình có thể mất vài giây, vui lòng chờ",
+        "assets": "Tài sản",
+        "streams": "Lượt phát",
+        "success": "Thành công",
+        "compare": "So sánh",
+        "isSongCreatedByAi": "Bài hát được tạo bởi AI",
+        "policies": "Chính sách",
+        "backupNow": "Sao lưu ngay",
+        "name": "Tên",
+        "setIsDefault": "Đặt làm mặc định",
+        "reScan": "Quét lại",
+        "accuracy": "Độ chính xác",
+        "result": "Kết quả",
+        "history": "Lịch sử",
+        "scan": "Quét",
+        "notScanned": "Chưa quét",
+        "scanned": "Đã quét",
+        "lastEdit": "Lần chỉnh sửa cuối",
+        "watch": "Xem",
+        "edit": "Sửa",
+        "settingNote": "Tùy chọn cài đặt chỉ áp dụng cho trình duyệt này",
+        "value": "Giá trị",
+        "viewDetail": "Xem chi tiết",
+        "systemCategories": "Danh mục hệ thống",
+        "category": "Danh mục",
+        "categories": "Danh mục",
+        "variousArtists": "Nhiều nghệ sĩ",
+        "activities": "Hoạt động",
+        "revenue": "Doanh thu",
+        "partners": "Đối tác",
+        "views": "Lượt xem",
+        "fileName": "Tên file",
+        "viewAll": "Xem tất cả",
+        "legalNotices": "Thông báo pháp lý",
+        "notAvailable": "Chưa có thông tin",
+        "region": "Khu vực",
+        "specification": "Thông số kỹ thuật",
+        "missingInformation": "Thiếu thông tin",
+        "ready": "Sẵn sàng",
+        "year": "Năm",
+        "somethingWentWrong": "Đã xảy ra lỗi",
+        "biography": "Tiểu sử",
+        "nationality": "Quốc tịch",
+        "currencyName": "Tên tiền tệ",
+        "currencySymbol": "Ký hiệu tiền tệ",
+        "currency": "Tiền tệ",
+        "phoneNumberCode": "Mã điện thoại",
         "capital": "Thủ đô",
         "numericCode": "Mã số",
         "title": "Tiêu đề",
@@ -59,6 +171,7 @@
         "subGenres": "Thể loại phụ",
         "subArtist": "Nghệ sĩ phụ",
         "releaseDate": "Ngày phát hành",
+        "releaseTime": "Giờ phát hành",
         "duration": "Thời lượng",
         "draft": "Bản nháp",
         "processing": "Đang xử lý",
@@ -151,7 +264,9 @@
         "upload": "Tải lên",
         "uploadImage": "Tải ảnh lên",
         "dateCreated": "Ngày tạo",
+        "createdAt": "Ngày tạo",
         "dateUpdated": "Ngày cập nhật",
+        "updatedAt": "Ngày cập nhật",
         "removeFilter": "Xoá bộ lọc",
         "filter": "Bộ lọc",
         "submit": "Đồng ý",
@@ -162,7 +277,7 @@
         "previous": "Trước",
         "next": "Tiếp",
         "of": "trong số",
-        "userCreator": "Người tạo",
+        "creator": "Người tạo",
         "yes": "Có",
         "no": "Không",
         "other": "Khác",
@@ -183,7 +298,20 @@
         "language": "Ngôn ngữ quốc gia",
         "name": "Tên quốc gia",
         "delete": "Xoá quốc gia",
-        "add": "Thêm quốc gia"
+        "add": "Thêm quốc gia",
+        "message": {
+            "success": {
+                "create": "Thêm quốc gia thành công",
+                "update": "Cập nhật quốc gia thành công",
+                "delete": "Xoá quốc gia thành công"
+            },
+            "error": {
+                "notFound": "Không tìm thấy quốc gia",
+                "cannotDeleteBecauseLinkedReleaseMetadataLanguages": "Không thể xóa quốc gia này vì đang được liên kết với metadata phát hành.",
+                "cannotDeleteBecauseLinkedTrackMetadataLanguages": "Không thể xóa quốc gia này vì đang được liên kết với metadata bài hát.",
+                "cannotDeleteBecauseLinkedTrackRecordings": "Không thể xóa quốc gia này vì đang được liên kết với bài hát ghi âm."
+            }
+        }
     },
     "filter": {
         "keyword": "Từ khoá",
@@ -208,7 +336,8 @@
     },
     "delete": {
         "confirmTitle": "Xác nhận xoá",
-        "confirmMessage": "Bạn có chắc muốn xoá {value} ?"
+        "confirmMessage": "Bạn có chắc muốn xoá {value}?",
+        "confirmMessageValue": "Bạn có chắc muốn xoá <b>{value}</b> ?"
     },
     "cancel": {
         "confirmTitle": "Xác nhận huỷ",
@@ -282,11 +411,18 @@
     },
 
     "dashboard": {
-        "label": "Tổng quan"
+        "label": "Tổng quan",
+        "latestNews": "Tin tức mới nhất",
+        "goTo": "Đi đến trang Tổng quan"
     },
     "image": {
         "label": "Hình ảnh",
-        "dimensions": "Kích thước"
+        "dimensions": "Kích thước",
+        "validation": {
+            "mustBeLessThanMB": "Ảnh phải nhỏ hơn {value} MB",
+            "supportImageFormat": "Hỗ trợ ảnh định dạng {value}",
+            "mustBeMinWidth": "Ảnh phải có chiều rộng tối thiểu {value}px"
+        }
     },
     "document": {
         "label": "Tài liệu"
@@ -296,30 +432,70 @@
         "select": "Chọn kho nội dung"
     },
     "setting": {
+        "settings": "Cài đặt",
         "label": "Cài đặt",
         "telegramSupportLink": "Telegram hỗ trợ",
         "assignee": "Cài đặt người thực hiện",
         "reviewer": "Cài đặt người duyệt",
         "rate": "Cài đặt điểm",
-        "quickSetting": "Cài đặt nhanh"
+        "quickSetting": "Cài đặt nhanh",
+        "executeCycle": "Chu kỳ thực thi",
+        "backupNotification": "Thông báo sao lưu",
+        "notifyOnSuccess": "Thông báo khi thành công",
+        "notifyOnFailed": "Thông báo khi thất bại",
+        "databaseBackupStorage": "Nơi lưu database backup",
+        "backupFileName": "Tên file sao lưu",
+        "executeMessages": {
+            "daily": "Mỗi ngày vào giờ {at} thực thi một lần",
+            "nDays": "Cứ mỗi {days} ngày {at} thực thi một lần",
+            "hourly": "Thực thi vào phút thứ {minute} của mỗi giờ",
+            "nHours": "Bắt đầu lúc 00:00 hằng ngày, cứ mỗi {hour}:{minute} phút thực thi một lần",
+            "nMinutes": "Bắt đầu từ phút 0 của mỗi giờ và thực thi cứ mỗi {minutes} phút",
+            "weekly": "{hours}:{minutes} giờ vào thứ {dayOfWeek}, thực thi mỗi tuần một lần",
+            "monthly": "Thực thi mỗi tháng một lần vào ngày {days} lúc {hours}:{minutes} giờ"
+        }
     },
     "log": {
         "label": "Log"
     },
     "language": {
+        "original": "Ngôn ngữ gốc",
         "english": "English",
         "label": "Ngôn ngữ",
         "name": "Tên ngôn ngữ",
         "code": "Mã ngôn ngữ",
         "vietnamese": "Tiếng Việt",
-        "select": "Chọn ngôn ngữ"
+        "select": "Chọn ngôn ngữ",
+        "add": "Thêm ngôn ngữ",
+        "message": {
+            "success": {
+                "create": "Thêm mới ngôn ngữ thành công",
+                "update": "cập nhật ngôn ngữ thành công",
+                "delete": "Xoá ngôn ngữ thành công"
+            },
+            "error": {
+                "duplicateCodeLanguage": "Mã ngôn ngữ đã tồn tại",
+                "duplicateNameLanguage": "Tên ngôn ngữ đã tồn tại",
+                "cannotDeleteBecauseLinkedReleaseLocalizes": "Không thể xóa ngôn ngữ này vì đang được liên kết với bản phát hành.",
+                "cannotDeleteBecauseLinkedReleaseAudioLanguages": "Không thể xóa ngôn ngữ này vì đang được liên kết trong âm thanh phát hành.",
+                "cannotDeleteBecauseLinkedReleaseMetadataLanguages": "Không thể xóa ngôn ngữ này vì đang được liên kết với metadata phát hành.",
+                "cannotDeleteBecauseLinkedTrackAudioLanguages": "Không thể xóa ngôn ngữ này vì đang được liên kết trong âm thanh bài hát.",
+                "cannotDeleteBecauseLinkedTrackMetadataLanguages": "Không thể xóa ngôn ngữ này vì đang được liên kết với metadata bài hát.",
+                "cannotDeleteBecauseLinkedTrackLocalizes": "Không thể xóa ngôn ngữ này vì đang được liên kết với bản địa hoá bài hát."
+            }
+        }
     },
     "channel": {
         "code": "Mã kênh",
-        "lable": "Kênh"
+        "lable": "Kênh",
+        "name": "Tên kênh"
     },
     "system": {
-        "label": "Hệ thống"
+        "label": "Hệ thống",
+        "internalServerError": {
+            "title": "Rất tiếc, hệ thống gặp sự cố",
+            "description": "Chúng tôi đang khắc phục ngay. Bạn vui lòng quay lại sau ít phút"
+        }
     },
     "validation": {
         "error": "Lỗi xác thực",
@@ -331,30 +507,40 @@
         "file": "Vui lòng chọn file!",
         "url": "Đường dẫn không hợp lệ!",
         "passwordMisMatch": "Mật khẩu không khớp!",
-        "passwordFormat": "Mật khẩu bao gồm chữ cái viết hoa và có ít nhất 6 kí tự",
+        "passwordFormat": "Mật khẩu phải có ít nhất 8 kí tự, bao gồm ít nhất 1 chữ thường, 1 chữ hoa và 1 số",
         "unique": "Dữ liệu không được trùng nhau",
         "mustBeNumber": "Phải là chữ số",
         "min": "Tối thiểu {number} ký tự",
         "minValid": "Tối thiểu {number} ký tự hợp lệ",
         "minWithValid": "Tối thiểu {number} ký tự hợp lệ",
         "max": "Tối đa {number} ký tự",
-        "numberMin": "Tối thiểu {number}",
-        "numberMax": "Tối đa {number}",
         "image": "Xin vui lòng chọn ảnh hợp lệ",
         "video": "Xin vui lòng chọn video hợp lệ",
         "phoneNumber": "Số điện thoại phải gồm đúng 10 số",
         "inputPhoneNumber": "Nhập số điện thoại",
         "selectUsedStatus": "Chọn trạng thái sử dụng",
-        "onlyTheFollowingFormatsAreAccepted": "Chỉ chấp nhận các định dạng: {accept}"
+        "onlyTheFollowingFormatsAreAccepted": "Chỉ chấp nhận các định dạng: {accept}",
+        "required": "Vui lòng nhập {field}.",
+        "stringMin": "{field} cần ít nhất {min} ký tự.",
+        "stringMax": "{field} chỉ được tối đa {max} ký tự.",
+        "numberMin": "{field} phải từ {min} trở lên.",
+        "numberMax": "{field} không được lớn hơn {max}.",
+        "invalidType": "{field} không hợp lệ.",
+        "noUnderscore": "{field} Không được có ký tự (_)",
+        "email": "Email không hợp lệ."
     },
     "form": {
         "searchPlaceholder": "Tìm kiếm"
     },
     "placeholder": {
         "dragAndDropAudio": "Kéo thả tệp âm thanh vào đây!",
+        "dragAndDropFile": "Kéo thả tệp vào đây!",
         "selectArtist": "Chọn nghệ sĩ",
         "selectRegion": "Chọn khu vực",
-        "supportFormats": "Định dạng hỗ trợ: {accept}"
+        "supportFormats": "Định dạng hỗ trợ: {accept}",
+        "searchBy": "Tìm kiếm theo {value}",
+        "filterBy": "Lọc theo {value}",
+        "selectLabel": "Chọn hãng phát hành"
     },
     "status": {
         "label": "Trạng thái",
@@ -444,6 +630,7 @@
         "label": "Người dùng",
         "admin": "Admin",
         "user": "Người dùng",
+        "email": "Email",
         "manager": "Quản lý",
         "permission": "Phân quyền",
         "firstName": "Họ",
@@ -457,7 +644,7 @@
         "idPlaceOfIssue": "Nơi cấp",
         "idDateOfIssue": "Ngày cấp",
         "emailVerified": "Đã xác nhận email",
-        "accountType": "Loại tài khoản",
+        "type": "Loại tài khoản",
         "permanentResidence": "Địa chỉ thường trú",
         "passportNo": "Số hộ chiếu",
         "passportPlaceOfIssue": "Nơi cấp hộ chiếu",
@@ -471,7 +658,59 @@
         "name": "Tên",
         "topUserCreatedOrder": "Top người tạo nhiều đơn hàng nhất",
         "topUserCompletedProduct": "Top người hoàn thành nhiều sản phẩm nhất",
-        "clickHereToGetTelegramId": "Nhấn vào đây để lấy ID telegram"
+        "clickHereToGetTelegramId": "Nhấn vào đây để lấy ID telegram",
+        "telegramId": "Telegram ID",
+        "syncData": "Đồng bộ dữ liệu từ Auth0",
+        "loginsCount": "Số lần đăng nhập",
+        "lastLogin": "Lần đăng nhập cuối",
+        "lastActive": "Lần hoạt động cuối",
+        "lastIp": "IP cuối",
+        "password": "Mật khẩu",
+        "personalInfo": "Thông tin cá nhân",
+        "changePassword": "Đổi mật khẩu",
+        "search": {
+            "keyword": "Tìm kiếm theo tên, email",
+            "id": "Tìm kiếm theo ID"
+        },
+        "role": {
+            "system": {
+                "label": "Role trong hệ thống"
+            },
+            "tenant": {
+                "label": "Role trong workspace"
+            }
+        },
+        "grantPermission": {
+            "label": "Phân quyền"
+        },
+        "update": {
+            "tenant": {
+                "changeOwnerHint": "Nếu muốn thay đổi người sở hữu, hãy vào mục <element>Workspace</element>",
+                "conflictError": "Các Workspace không được trùng nhau"
+            }
+        },
+        "message": {
+            "success": {
+                "invite": "Đã gửi lời mời thành công"
+            },
+            "error": {
+                "notFound": "Tài khoản này không tồn tại",
+                "email": {
+                    "conflict": "Địa chỉ email đã tồn tại"
+                },
+                "tenant": {
+                    "confilict": "Người dùng đã thuộc về Workspace này",
+                    "forbidden": "Người dùng không có quyền truy cập Workspace này",
+                    "notFound": "Người dùng không thuộc về bất cứ Workspace nào",
+                    "delete": {
+                        "declineDeleteSystemAdmin": "Không thể xoá quyền Admin hệ thống",
+                        "declineDeleteTenantOWner": "Không thể xoá quyền chủ sở hữu Workspace",
+                        "declineDeleteTenantAdmin": "Không thể xoá quyền Admin Workspace"
+                    }
+                },
+                "blocked": "Người dùng đã bị chặn"
+            }
+        }
     },
     "file": {
         "duration": "Thời lượng",
@@ -507,7 +746,8 @@
 
     "select": {
         "date": "Chọn ngày",
-        "approver": "Chọn người duyệt"
+        "approver": "Chọn người duyệt",
+        "option": "Vui lòng chọn"
     },
 
     "theme": {
@@ -516,15 +756,21 @@
         "system": "Hệ thống"
     },
 
-    "releases": {
+    "release": {
+        "contributors": "Người đóng góp",
+        "list": "Danh sách phát hành",
+        "releases": "Phát hành",
+        "count": "Số lượng bản phát hành",
+        "configuration": "Thiết lập phát hành",
         "otherMetadata": "Các metadata khác",
         "label": "Phát hành",
         "create": "Tạo phát hành ",
-        "lastedRelease": "Phát hành gần đây",
+        "latestReleases": "Phát hành gần đây",
         "name": "Tên phát hành",
         "id": "Mã phát hành",
         "type": "Loại phát hành",
         "releaseDate": "Ngày phát hành",
+        "releaseTime": "Thời gian phát hành",
         "duration": "Thời lượng",
         "trackCount": "Số bài hát",
         "publisher": "Hãng phát hành",
@@ -533,15 +779,21 @@
         "labelName": "Tên label",
         "version": "Phiên bản",
         "role": "Vai trò",
+        "back": "Trở lại danh sách phát hành",
         "isMoreThan4Artists": "Có nhiều hơn 4 nghệ sĩ hay không",
         "cLineYearDescription": "Năm đầu tiên xuất bản phiên bản này ở bất kỳ nơi nào trên thế giới.",
         "pLineYearDescription": "Năm bản ghi âm đầu tiên được phát hành trên toàn thế giới.",
+
         "select": {
             "artist": "Chọn nghệ sĩ",
             "subArtist": "Chọn nghệ sĩ phụ"
         },
 
         "placeholder": {
+            "select": "Chọn {value}",
+            "selectRelease": "Chọn phát hành",
+            "selectTrack": "Chọn bài hát",
+            "selectDsp": "Chọn nền tảng",
             "selectArtist": "Chọn nghệ sĩ",
             "selectSubArtist": "Chọn nghệ sĩ phụ",
             "selectGenres": "Chọn thể loại",
@@ -551,14 +803,79 @@
             "selectPublishType": "Chọn loại xuất bản",
             "selectRole": "Chọn vai trò",
             "selectMusician": "Chọn nhạc sĩ",
-            "selectLanguageMetadata": "Chọn ngôn ngữ metadata"
+            "selectLanguageMetadata": "Chọn ngôn ngữ metadata",
+            "enterTitleAndReleaseType": "Nhập tên phát hành, label và loại phát hành để tiếp tục"
+        },
+
+        "validation": {
+            "mustHaveMainArtist": "Vui lòng thêm nghệ sĩ chính (Main Artist)"
         },
 
         "scheduling": {
-            "label": "Lên lịch"
+            "label": "Lên lịch",
+            "atMidnightInEveryCountry": "Vào lúc nửa đêm ở mọi quốc gia trên thế giới",
+            "atSpecificTime": "Vào một thời điểm cụ thể trong một múi giờ cụ thể",
+            "goLiveTime": "Bạn muốn phát hành thời điểm nào?"
+        },
+
+        "coverArt": {
+            "label": "Ảnh bìa",
+            "required": "Yêu cầu ảnh bìa",
+            "size": "Ảnh phải vuông, từ 1400x1400 pixel đến 4000x4000x pixel"
+        },
+        "message": {
+            "success": {
+                "create": "Thêm mới phát hành thành công",
+                "update": "Cập nhật phát hành thành công",
+                "delete": "Xoá phát hành thành công"
+            }
         }
     },
-    "tracks": {
+
+    "releaseArtist": {
+        "label": "Nghệ sĩ phát hành",
+        "message": {
+            "success": {
+                "create": "Thêm mới nghệ sĩ phát hành thành công",
+                "update": "Cập nhật nghệ sĩ phát hành thành công",
+                "delete": "Xoá nghệ sĩ phát hành thành công"
+            },
+            "error": {
+                "uniqueConstraint": "Nghệ sĩ này đã tồn tại trong bản phát hành."
+            }
+        }
+    },
+
+    "releaseContributor": {
+        "message": {
+            "error": {
+                "uniqueConstraint": "Người đóng góp với vai trò này đã tồn tại trong bản phát hành."
+            }
+        }
+    },
+
+    "releaseType": {
+        "label": "Loại phát hành"
+    },
+
+    "albumFormat": {
+        "message": {
+            "success": {
+                "create": "Thêm mới loại phát hành thành công",
+                "update": "Cập nhật loại phát hành thành công",
+                "delete": "Xoá loại phát hành thành công"
+            },
+            "error": {
+                "duplicateNameAlbumFormat": "Thể loại này đã tồn tại",
+                "duplicateCodeAlbumFormat": "Mã thể loại này đã tồn tại",
+                "notFound": "Không thể tìm thấy thể loại này",
+                "cannotDeleteBecauseLinkedReleases": "Không thể xoá thể loại này vì đã liên kết với bản phát hành"
+            }
+        }
+    },
+
+    "track": {
+        "list": "Danh sách bài hát",
         "number": "Bài hát số",
         "add": "Thêm bài hát",
         "label": "Bài hát",
@@ -567,6 +884,58 @@
         "name": "Tên bài hát",
         "id": "Mã bài hát",
         "count": "Số lượng bài hát",
+        "language": "Ngôn ngữ bài hát",
+        "recordingCountry": "Quốc gia ghi âm",
+        "audioSpecification": "Thông số kỹ thuật âm thanh",
+        "addAllArtistFromRelease": "Thêm tất cả nghệ sĩ từ phát hành",
+        "minTrack": "Tối thiểu bài hát",
+        "maxTrack": "Tối đa bài hát",
+        "back": "Trở lại danh sách bài hát",
+        "skipScannedTracks": "Bỏ qua các bài đã quét",
+        "rageDuplicate": "Khoảng trùng lặp",
+        "rageDuplicateInSongDetected": "Khoảng trùng lặp trong bài được phát hiện",
+        "scan": "Quét nhạc",
+        "noResultMatches": "Không có kết quả trùng khớp",
+        "totalTrackNeedScan": "Tổng các bài hát cần quét",
+        "numberOfTracksScanned": "Các bài hát đã quét",
+        "scanDate": "Ngày quét",
+        "autoScan": "Tự động quét",
+        "scoreWarning": "Điểm cảnh báo",
+        "autoScanTime": "Giờ tự động quét",
+        "releaseStatusAutoScan": "Trạng thái tự động quét",
+        "chunkDuration": "Thời lượng đoạn",
+        "sampleLength": {
+            "label": "Độ dài mẫu",
+            "tooltip": "Xác định độ dài đoạn nhạc mẫu mà khán giả được nghe thử"
+        },
+        "preview": {
+            "label": "Điểm bắt đầu preview",
+            "tooltip": "Xác định thời điểm trong bài hát mà đoạn nghe thử bắt đầu"
+        },
+        "status": {
+            "scanning": "Đang quét",
+            "running": "Đang chạy",
+            "pending": "Chờ xử lý",
+            "finished": "Hoàn thành",
+            "failed": "Thất bại",
+            "cancel": "Đã hủy",
+            "unknown": "Không xác định"
+        },
+        "action": {
+            "deleteTracks": "Xoá bài hát"
+        },
+        "original": {
+            "label": "Tác phẩm gốc",
+            "tooltip": "Tác phẩm gốc là tác phẩm được tạo ra đầu tiên, không phải bất kỳ bản cover hoặc remix nào."
+        },
+        "cover": {
+            "label": "Bản cover",
+            "tooltip": "Bản cover là bản nhạc được cover lại từ tác phẩm gốc, có thể có sự thay đổi về âm nhạc, lời bài hát, hoặc cả hai."
+        },
+        "remix": {
+            "label": "Bản remix",
+            "tooltip": "Bản remix là bản nhạc được tạo ra từ tác phẩm gốc, có thể có sự thay đổi về âm nhạc, lời bài hát, hoặc cả hai."
+        },
         "placeholder": {
             "selectArtist": "Chọn nghệ sĩ",
             "selectSubArtist": "Chọn nghệ sĩ phụ",
@@ -575,9 +944,100 @@
             "selectLanguage": "Chọn ngôn ngữ",
             "selectLabel": "Chọn hãng phát hành",
             "selectSensitiveContent": "Lựa chọn nội dung"
+        },
+        "validation": {
+            "previewMustBeLessThanDuration": "Thời gian xem trước phải nhỏ hơn thời gian bài hát",
+            "sampleLengthMustBeLessThanDuration": "Thời lượng đoạn mẫu phải nhỏ hơn thời gian bài hát",
+            "trackUpload": "{type} chỉ tải lên tối đa được {maxCount} bài",
+            "trackFileName": "Tên File không được vượt quá {number} ký tự"
+        },
+        "acrCloud": {
+            "compareResult": "Chọn kết quả muốn so sánh"
+        },
+        "message": {
+            "success": {
+                "create": "Thêm mới bài hát thành công",
+                "update": "Cập nhật bài hát thành công",
+                "delete": "Xoá bài hát thành công"
+            },
+            "error": {
+                "releaseNotFound": "Không tìm thấy bản phát hành"
+            }
         }
     },
+
+    "trackArtist": {
+        "message": {
+            "success": {
+                "create": "Thêm mới nghệ sĩ thành công",
+                "update": "Cập nhật nghệ sĩ thành công",
+                "delete": "Xoá nghệ sĩ thành công"
+            },
+            "note": "Chỉnh sửa nghệ sĩ sẽ làm ngắt đồng bộ với nghệ sĩ phát hành",
+            "error": {
+                "uniqueConstraint": "Nghệ sĩ này đã tồn tại trong track."
+            }
+        }
+    },
+
+    "trackType": {
+        "label": "Thể loại bài hát",
+        "description": "Designates the track as a musical or non-musical work.",
+        "message": {
+            "success": {
+                "create": "Thêm thể loại thành công",
+                "update": "Cập nhật thể loại thành công",
+                "delete": "Xoá thể loại thành công"
+            },
+            "error": {
+                "duplicateNameTrackType": "Thể loại bài hát này đã tồn tại",
+                "duplicateCodeTrackType": "Mã thể loại bài hát này đã tồn tại",
+                "cannotDeleteBecauseLinkedTracks": "Không thể xóa thể loại này vì đang được liên kết với bài hát."
+            }
+        }
+    },
+
+    "trackOriginType": {
+        "label": "Nguồn gốc bài hát",
+        "value": "Giá trị",
+        "message": {
+            "success": {
+                "create": "Thêm mới nguồn gốc bài hát thành công",
+                "update": "Cập nhật nguồn gốc bài hát thành công",
+                "delete": "Xoá nguồn gốc bài hát thành công"
+            },
+            "error": {
+                "duplicateCodeTrackOriginType": "Mã nguồn gốc bài hát này đã tồn tại",
+                "duplicateNameTrackOriginType": "Nguồn gốc bài hát này đã tồn tại",
+                "cannotDeleteBecauseLinkedTracks": "Không thể xóa nguồn gốc bài hát này vì đang được liên kết với bài hát."
+            }
+        }
+    },
+
+    "trackSensitive": {
+        "label": "Nội dung nhạy cảm",
+        "name": "Tên nội dung nhạy cảm",
+        "explicitContentEdited": "Nội dung nhạy cảm đã được chỉnh sửa",
+        "notExplicit": "Không có nội dung nhạy cảm",
+        "noAdviceAvailable": "Không có khuyến nghị nào",
+        "parentalAdvisory": "Cảnh báo của phụ huynh",
+        "message": {
+            "success": {
+                "create": "Thêm mới nội dung nhạy cảm thành công",
+                "update": "Cập nhật nội dung nhạy cảm thành công",
+                "delete": "Xoá nội dung nhạy cảm thành công"
+            },
+            "error": {
+                "notFound": "Không tìm thấy nội dung nhạy cảm này",
+                "duplicateCode": "Mã nội dung nhạy cảm này đã tồn tại",
+                "duplicateName": "Tên nội dung nhạy cảm này đã tồn tại",
+                "cannotDeleteRelationWithTrack": "Cannot delete because it is already used in a track"
+            }
+        }
+    },
+
     "genres": {
+        "name": "Tên thể loại",
         "pop": "Pop",
         "rock": "Rock",
         "jazz": "Jazz",
@@ -588,9 +1048,33 @@
         "reggae": "Reggae",
         "rap": "Rap",
         "classical": "Cổ điển",
-        "blues": "Blues"
+        "blues": "Blues",
+        "add": "Thêm thể loại",
+        "primary": "Thể loại chính"
     },
+
+    "genre": {
+        "genres": "Thể loại",
+        "label": "Thể loại",
+        "message": {
+            "success": {
+                "create": "Thêm mới thể loại nhạc thành công",
+                "delete": "Xoá thể loại nhạc thành công",
+                "update": "Cập nhật thể loại nhạc thành công"
+            },
+            "error": {
+                "duplicateNameGenre": "Thể loại nhạc này đã tồn tại",
+                "duplicateCodeeGenre": "Mã thể loại nhạc này đã tồn tại",
+                "cannotDeleteBecauseLinkedReleases": "Không thể xóa thể loại này vì đang được liên kết với phát hành.",
+                "cannotDeleteBecauseLinkedSubReleases": "Không thể xóa thể loại này vì đang được liên kết với phát hành phụ.",
+                "cannotDeleteBecauseLinkedPrimaryTracks": "Không thể xóa thể loại này vì đang được liên kết với bài hát chính.",
+                "cannotDeleteBecauseLinkedSubTracks": "Không thể xóa thể loại này vì đang được liên kết với bài hát phụ."
+            }
+        }
+    },
+
     "artist": {
+        "artists": "Nghệ sĩ",
         "label": "Nghệ sĩ",
         "create": "Tạo nghệ sĩ",
         "name": "Tên nghệ sĩ",
@@ -603,34 +1087,93 @@
         "profiles": "Hồ sơ nghệ sĩ",
         "variousArtists": "Nhiều nghệ sĩ",
         "descriptionVariantArtists": "Tên hiển thị sẽ là 'Nhiều nghệ sĩ'",
-        "role": "Vai trò nghệ sĩ"
+        "role": "Vai trò nghệ sĩ",
+        "canLinkArtistProfile": "Có thể liên kết hồ sơ nghệ sĩ",
+        "back": "Trở lại danh sách nghệ sĩ",
+        "visitProfile": "Xem hồ sơ",
+        "message": {
+            "success": {
+                "create": "Thêm mới nghệ sĩ thành công",
+                "update": "Cập nhật nghệ sĩ thành công",
+                "delete": "xoá nghệ sĩ thành công"
+            },
+            "error": {
+                "duplicateNameArtist": "Nghệ sĩ này đã tồn tại",
+                "cannotDeleteBecauseLinkedReleases": "Không thể xóa nghệ sĩ này vì đang được liên kết với phát hành.",
+                "cannotDeleteBecauseLinkedTracks": "Không thể xóa nghệ sĩ này vì đang được liên kết với bản nhạc."
+            }
+        }
     },
 
     "role": {
+        "roles": "Vai trò",
         "add": "Thêm vai trò",
         "update": "Cập nhật vai trò",
         "name": "Tên vai trò"
     },
 
-    "labels": {
+    "label": {
+        "labels": "Labels",
         "label": "Label",
         "create": "Tạo label",
         "name": "Tên label",
-        "id": "Mã label"
+        "id": "Mã label",
+        "back": "Trở lại danh sách Label",
+        "message": {
+            "success": {
+                "create": "Thêm mới label thành công",
+                "delete": "Xoá label thành công",
+                "update": "Cập nhật label thành công"
+            },
+            "error": {
+                "duplicateNameLabel": "Label này đã tồn tại",
+                "cannotDeleteBecauseLinkedReleases": "Không thể xóa vì đang liên kết với phát hành"
+            }
+        }
     },
+
     "distribution": {
         "label": "Phân phối",
         "create": "Tạo phân phối",
         "name": "Tên phân phối",
-        "id": "Mã phân phối"
+        "id": "Mã phân phối",
+        "batchDistribution": "Phân phối hàng loạt",
+        "batchTakeDown": "Gỡ xuống hàng loạt"
     },
 
     "formFields": {
+        "audioFile": {
+            "preview": "Đoạn nghe trước"
+        },
+        "trackLanguage": {
+            "audioLanguageId": "Ngôn ngữ bài hát",
+            "metadataLanguageId": "Ngôn ngữ metadata",
+            "metadataLanguageCountryId": "Ngôn ngữ quốc gia",
+            "recordingCountryId": "Quốc gia ghi âm"
+        },
+        "releaseLanguage": {
+            "audioLanguageId": "Ngôn ngữ âm thanh",
+            "metadataLanguageId": "Ngôn ngữ metadata",
+            "metadataLanguageCountryId": "Ngôn ngữ quốc gia",
+            "recordingCountryId": "Quốc gia ghi âm"
+        },
+        "selectedCountries": "Khu vực",
+        "upc": "UPC",
+        "trackSensitiveId": "Nội dung nhạy cảm",
+        "recordingCountryId": "Quốc gia ghi âm",
+        "trackArtists": "Nghệ sĩ bài hát",
+        "distributionType": "Loại phát hành",
+        "releaseCoverArts": "Ảnh phát hành",
+        "audioLanguageId": "Ngôn ngữ bài hát",
+        "labelId": "Label",
+        "metadataLanguageCountryId": "Ngôn ngữ metadata quốc gia",
+        "title": "Tên phát hành",
+        "metadataLanguageId": "Ngôn ngữ metadata",
         "artists": "Nghệ sĩ",
         "releaseDate": "Ngày phát hành",
         "territoryType": "Khu vực",
-        "cLineYear": "C line year",
-        "pLineYear": "P line year",
+        "cLineYear": "© Năm bản quyền tác phẩm",
+        "pLineYear": "℗ Năm bản quyền ghi âm",
         "nameRelease": "Tên phát hành",
         "timezone": "Múi giờ",
         "releaseType": "Thể loại phát hành",
@@ -639,8 +1182,36 @@
         "metaDataLanguage": "Ngôn ngữ metadata",
         "cLine": "Bản quyền tác phẩm",
         "pLine": "Bản quyền ghi âm",
+        "version": "Phiên bản",
+        "primaryGenreId": "Thể loại chính",
+        "releaseTime": "Giờ phát hành",
+        "releaseTimezoneId": "Múi giờ",
+        "releaseArtists": "Nghệ sĩ phát hành",
+        "pLineOwner": "℗ Bản quyền ghi âm",
+        "cLineOwner": "© Bản quyền tác phẩm",
+        "releaseTerritory": {
+            "selectedCountries": "Quốc gia phân phối",
+            "distributionType": "Tuỳ chọn vòng phân phối"
+        },
+        "trackOriginTypeId": "Nguồn gốc bài hát",
+        "trackTypeId": "Thể loại bài hát",
+        "preview": "Đoạn nghe trước",
         "tracks": {
-            "pLine": "Bản quyền ghi âm",
+            "maxCountTrack": "Số lượng bài hát vượt quá {number}",
+            "minCountTrack": "Số lượng bài hát nhỏ quá {number}",
+            "sensitiveContent": "Nội dung nhạy cảm",
+            "audioLanguageId": "Ngôn ngữ âm thanh",
+            "metadataLanguageId": "Ngôn ngữ metadata",
+            "metadataLanguageCountryId": "Ngôn ngữ quốc gia",
+            "trackLanguage": "Ngôn ngữ bài hát",
+            "recordingCountryId": "Quốc gia thu âm",
+            "preview": "Đoạn nghe trước",
+            "originTypeId": "Nguồn gốc bài hát",
+            "trackArtists": "Nghệ sĩ bài hát",
+            "trackTypeId": "Thể loại bài hát",
+            "primaryGenreId": "Thể loại chính",
+            "pLineOwner": "Bản quyền ghi âm",
+            "sampleLength": "Độ dài đoạn nghe mẫu",
             "previewTrack": "Đoạn nghe trước",
             "trackOrigin": "Nguồn gốc bài hát",
             "trackName": "Tên bài hát",
@@ -664,17 +1235,18 @@
             "isrc": "ISRC",
             "mainArtist": "Nghệ sĩ chính",
             "originalSource": "Nguồn gốc",
-            "languageTrack": "Ngôn ngữ bài hát",
-            "genresTrack": "Thể loại bài hát",
-            "subGenresTrack": "Thể loại phụ bài hát",
-            "sensitiveContent": "Nội dung nhạy cảm",
-            "countryLanguage": "Ngôn ngữ quốc gia",
+            "languageTrack": "Ngôn ngữ chính của bài hát trong phát hành này. Ví dụ: tiếng Việt, tiếng Anh, v.v.",
+            "countryLanguage": "Ngôn ngữ chính thức của quốc gia liên quan đến phát hành này. Ví dụ: Việt Nam, Hoa Kỳ, v.v.",
             "metadataLanguage": "Ngôn ngữ metadata",
             "lyrics": "Lời bài hát",
             "source": "Nguồn gốc",
             "countryRecording": "Quốc gia ghi âm",
             "recordingType": "Loại ghi âm",
-            "isSensitiveContent": "Nội dung nhạy cảm"
+            "isSensitiveContent": "Nội dung nhạy cảm",
+            "trackOriginTypeId": "Nguồn gốc bài hát"
+        },
+        "coverArtThumbnails": {
+            "original": "Ảnh phát hành"
         }
     },
 
@@ -682,6 +1254,610 @@
         "label": "Phân phối",
         "create": "Tạo phân phối",
         "name": "Tên phân phối",
-        "id": "Mã phân phối"
+        "id": "Mã phân phối",
+        "onlyIn": "Chỉ phân phối trong",
+        "everyWhereExcept": "Phân phối khắp nơi ngoại trừ",
+        "wordWide": "Phân phối khắp thế giới"
+    },
+
+    "emailSender": {
+        "label": "Email sender"
+    },
+
+    "dsp": {
+        "label": "DSP",
+        "name": "Tên nền tảng",
+        "add": "Thêm nền tảng",
+        "oneLinkPerLine": "Mỗi link một dòng",
+        "profileList": "Danh sách hồ sơ",
+        "fullNameOfDdexParty": "Tên DDex party",
+        "ddexPartyId": "DDex party Id",
+        "message": {
+            "success": {
+                "create": "Thêm nền tảng thành công",
+                "update": "Cập nhật nền tảng thành công",
+                "delete": "Xoá nền tảng thành công"
+            },
+            "error": {
+                "duplicateNameDsp": "Nền tảng này đã tồn tại",
+                "cannotDeleteBecauseLinkedOrganizations": "Không thể xóa nền tảng này vì đang được liên kết với tổ chức.",
+                "cannotDeleteBecauseLinkedReleases": "Không thể xóa nền tảng này vì đang được liên kết với phát hành."
+            }
+        }
+    },
+
+    "artistRole": {
+        "message": {
+            "success": {
+                "create": "Thêm vai trò mới thành công",
+                "delete": "Xoá vài trò thành công",
+                "update": "Cập nhật vài trò thành công"
+            },
+            "error": {
+                "duplicateNameArtistRole": "Vài trò này đã tồn tại",
+                "duplicateCodeArtistRole": "Mã vai trò này đã tồn tại",
+                "cannotDeleteBecauseLinkedReleases": "Không thể xóa vai trò nghệ sĩ này vì đang được liên kết với phát hành.",
+                "cannotDeleteBecauseLinkedTracks": "Không thể xóa vai trò nghệ sĩ này vì đang được liên kết với bản nhạc."
+            }
+        }
+    },
+
+    "timezone": {
+        "label": "Múi giờ",
+        "create": "Tạo múi giờ",
+        "name": "Tên múi giờ",
+        "utc": "UTC",
+        "zone": "Múi giờ",
+        "add": "Thêm múi giờ",
+        "message": {
+            "success": {
+                "create": "Thêm mới múi giờ thành công",
+                "update": "Cập nhật múi giờ thành công",
+                "delete": "Xoá múi giờ thành công"
+            },
+            "error": {
+                "duplicateNameTimezone": "Múi giờ này đã tồn tại",
+                "cannotDeleteBecauseLinkedReleases": "Không thể xóa múi giờ này vì đang được liên kết với phát hành."
+            }
+        },
+        "placeholder": {
+            "selectTimezone": "Chọn múi giờ"
+        }
+    },
+
+    "tooltipForm": {
+        "releaseTitle": "Không bao gồm thông tin phiên bản như Remix hoặc Uncut trong trường Tiêu đề chính. Hãy sử dụng trường Phiên bản thay thế.",
+        "version": "Một phiên bản cụ thể của sản phẩm sẽ được cung cấp cho các cửa hàng và hiển thị cùng với tiêu đề. Ví dụ: 'Live', 'Phiên bản Deluxe'. Nếu có nhiều phiên bản của album, sử dụng trường này để chỉ định phiên bản đúng.",
+        "releaseType": "Chỉ ra kích thước của gói phát hành (ví dụ: Single, EP, Album).",
+        "label": "Trường này xác định nhãn mà theo đó sản phẩm của bạn sẽ được tạo ra.",
+        "eanUpcCode": "Mã Sản phẩm Phổ biến (UPC) là mã số dài 12 hoặc 13 ký tự, thường được sử dụng để nhận diện một hoặc nhiều bản thu âm chính trong một số loại phương tiện.",
+        "catalogId": "Mã duy nhất dùng để nhận diện sản phẩm của nhãn. Trường này là tùy chọn và dùng làm mã nhận diện từ phía nhãn, ví dụ, trong các báo cáo cuối tháng.",
+        "primaryGenre": "Một thể loại thông dụng để nhóm các tác phẩm âm nhạc có chung một tập hợp các quy tắc hoặc truyền thống. Điều này sẽ xác định nơi sản phẩm sẽ được xếp hạng và cách nó sẽ được sắp xếp với âm nhạc tương tự.",
+        "subGenre": "Một thể loại chi tiết hơn giúp phân biệt một tác phẩm âm nhạc theo khu vực, phong cách hoặc âm thanh của nó, mang theo một bộ đặc điểm riêng biệt và dễ dàng phân biệt trong thể loại lớn hơn.",
+        "metadataLanguage": "Ngôn ngữ của metadata sản phẩm.",
+        "variousArtistsCompilation": "Nếu sản phẩm này có 5 hoặc nhiều hơn các nghệ sĩ, hãy chọn hộp này để xác định nó là một tuyển tập của nhiều nghệ sĩ.",
+        "cLineYear": "Năm phát hành đầu tiên của sản phẩm này (với hình ảnh bìa và dàn dựng này) trên toàn thế giới.",
+        "cLineOwner": "Chủ sở hữu C Line xác định thực thể sở hữu bản quyền hợp pháp đối với các sáng tạo liên quan đến sản phẩm này như bìa album, chú thích và metadata.",
+        "pLineYear": "Năm bản thu âm được phát hành lần đầu tiên trên toàn thế giới.",
+        "pLineOwner": "Chủ sở hữu P Line xác định cá nhân/thực thể sở hữu bản thu âm hợp pháp.",
+        "languageTrack": "Ngôn ngữ chính của bài hát trong phát hành này. Ví dụ: tiếng Việt, tiếng Anh, v.v.",
+        "countryLanguage": "Ngôn ngữ chính thức của quốc gia liên quan đến phát hành này. Ví dụ: Việt Nam, Hoa Kỳ, v.v.",
+        "isMoreThan4Artists": "Chọn 'Có' nếu phát hành này có từ 5 nghệ sĩ trở lên để hiển thị là 'Nhiều nghệ sĩ'."
+    },
+
+    "tenant": {
+        "label": "Workspace",
+        "selectTitle": "Chọn Workspace",
+        "workspaces": "workspaces",
+        "name": "Tên workspace",
+        "logo": "Logo",
+        "icon": {
+            "label": "Favicon",
+            "tooltip1": "Tải lên một hình ảnh vuông nhỏ (16×16 pixel hoặc 32×32 pixel) để làm favicon cho trang web của bạn.",
+            "tooltip2": "Biểu tượng này sẽ xuất hiện trên tab trình duyệt, trong mục dấu trang và lịch sử duyệt web.",
+            "tooltip3": "Chúng tôi khuyến nghị sử dụng tệp SVG, ICO hoặc PNG."
+        },
+        "title": "Tiêu đề",
+        "domain": "Tên miền",
+        "primaryColor": "Màu chủ đạo",
+        "owner": "Người sở hữu",
+        "type": {
+            "title": "Loại workspace",
+            "titleShort": "Loại",
+            "whiteLabel": {
+                "label": "White label"
+            },
+            "label": {
+                "label": "Label"
+            }
+        },
+        "userType": {
+            "label": "Vai trò",
+            "owner": {
+                "label": "Người sở hữu",
+                "tooltip": "Người dùng có quyền sở hữu và quản lý toàn bộ workspace này"
+            },
+            "admin": {
+                "label": "Quản trị viên",
+                "tooltip": "Người dùng có quyền quản trị đầy đủ trong workspace này."
+            },
+            "member": {
+                "label": "Thành viên",
+                "tooltip": "Người dùng có quyền truy cập theo các quyền được cấp."
+            }
+        },
+        "search": {
+            "keyword": "Tìm kiếm theo tên, email"
+        },
+        "email": {
+            "tooltip": "Email này sẽ được sử dụng để gửi thông báo"
+        },
+        "parent": {
+            "placeholder": "Chọn workspace cha",
+            "label": "Tenant cha"
+        },
+        "back": "Trở lại workspace",
+        "member": "Thành viên",
+        "manager": "Quản lý",
+        "labels": {
+            "max": {
+                "label": "Số label có thể tạo"
+            }
+        },
+        "message": {
+            "error": {
+                "notFound": "Không tìm thấy Workspace nào với thông tin đã cung cấp",
+                "blocked": "Workspace này đã bị chặn"
+            }
+        }
+    },
+
+    "integration": {
+        "label": "Tích hợp",
+        "deal": {
+            "label": "Thoả thuận",
+            "title": "Bạn sẽ sử dụng loại thỏa thuận nào cho DSP này?",
+            "direct": {
+                "label": "Thoả thuận trực tiếp",
+                "alert": ""
+            },
+            "merlin": {
+                "label": "Merlin",
+                "alert": "Thông tin xác thực kết nối sẽ được nhập bằng Tài khoản Quản lý. Vui lòng đảm bảo rằng bạn đã điền và gửi cho họ bảng tính \"Client Distribution Deals\"."
+            },
+            "antmusic": {
+                "label": "ANT Music",
+                "alert": "Không cần thông tin xác thực kết nối."
+            }
+        }
+    },
+
+    "action": {
+        "create": {
+            "button": "Thêm mới",
+            "title": "Thêm {label}",
+            "success": "Thêm {label} thành công"
+        },
+        "invite": {
+            "button": "Mời",
+            "title": "Mời {label}",
+            "success": "Mời {label} thành công"
+        },
+        "update": {
+            "button": "Cập nhật",
+            "title": "Cập nhật {label}",
+            "success": "Cập nhật {label} thành công"
+        },
+        "duplicate": {
+            "button": "Nhân bản"
+        },
+        "delete": {
+            "button": "Xoá",
+            "title": "Xoá {label}",
+            "alert": "Bạn có chắc muốn xóa {label}? Hành động này không thể hoàn tác.",
+            "success": "Xoá {label} thành công"
+        },
+        "back": {
+            "button": "Quay lại"
+        },
+        "copy": {
+            "success": "Đã sao chép vào bộ nhớ tạm"
+        },
+        "quickActions": "Hành động nhanh"
+    },
+
+    "permission": {
+        "label": "Quyền",
+        "name": "Tên quyền",
+        "isActive": "Trạng thái",
+        "create": {
+            "manual": "Thủ công",
+            "import": "Nhập từ Excel"
+        },
+        "import": {
+            "downloadTemplate": "Tải template",
+            "dragAndDrop": "Kéo thả file Excel vào đây",
+            "hint": "Hỗ trợ file .xlsx, .xls",
+            "success": "Đã phân tích {count} quyền thành công",
+            "noData": "Không tìm thấy dữ liệu hợp lệ trong file",
+            "error": "Lỗi khi phân tích file Excel",
+            "invalidRows": "{count} dòng thiếu các trường bắt buộc (tên hoặc mã)"
+        },
+        "message": {
+            "success": {
+                "create": "Thêm quyền thành công",
+                "update": "Cập nhật quyền thành công",
+                "delete": "Xoá quyền thành công"
+            },
+            "error": {
+                "duplicateNamePermission": "Quyền này đã tồn tại",
+                "duplicateCodePermission": "Mã quyền này đã tồn tại",
+                "cannotDeleteBecauseLinkedRolePermissions": "Không thể xoá quyền này vì đã sử dụng trong Role",
+                "cannotDeleteBecauseLinkedUsers": "Không thể xoá quyền này vì đã được sử dụng bởi người dùng"
+            }
+        },
+        "action": {
+            "delete": "Xoá quyền"
+        }
+    },
+
+    "roles": {
+        "label": "Vai trò",
+        "name": "Tên vai trò",
+        "isActive": "Trạng thái",
+        "message": {
+            "success": {
+                "create": "Thêm vai trò thành công",
+                "update": "Cập nhật vai trò thành công",
+                "delete": "Xoá vai trò thành công"
+            },
+            "error": {
+                "duplicateNameRole": "Vai trò này đã tồn tại",
+                "duplicateCodeRole": "Mã vai trò này đã tồn tại",
+                "cannotDeleteBecauseLinkedPermissions": "Không thể xoá vai trò vì đã được sử dụng tại một quyền"
+            }
+        },
+        "action": {
+            "delete": "Xoá vai trò"
+        }
+    },
+
+    "actions": {
+        "label": "Hành động",
+        "name": "Tên hành động",
+        "message": {
+            "success": {
+                "create": "Thêm hành động thành công",
+                "update": "Cập nhật hành động thành công",
+                "delete": "Xoá hành động thành công"
+            },
+            "error": {
+                "duplicateNameAction": "Hành động này đã tồn tại",
+                "duplicateCodeAction": "Mã hành động này đã tồn tại",
+                "cannotDeleteBecauseLinkedDspActions": "Không thể xoá hành động vì đã được sử dụng tại một DSP"
+            }
+        },
+        "action": {
+            "delete": "Xoá hành động"
+        }
+    },
+
+    "policy": {
+        "policies": "Chính sách",
+        "label": "Chính sách",
+        "name": "Tên chính sách",
+        "action": {
+            "delete": "Xoá chính sách"
+        }
+    },
+
+    "currencies": {
+        "currencies": "Tiền tệ",
+        "label": "Tiền tệ",
+        "name": "Tên tiền tệ",
+        "code": "Mã tiền tệ",
+        "message": {
+            "success": {
+                "create": "Thêm tiền tệ thành công",
+                "update": "Cập nhật tiền tệ thành công",
+                "delete": "Xoá tiền tệ thành công"
+            },
+            "error": {
+                "duplicateNameCurrency": "Tên tiền tệ này đã tồn tại",
+                "duplicateCodeCurrency": "Mã tiền tệ này đã tồn tại",
+                "cannotDeleteBecauseLinkedRecord": "Không thể xoá tiền tệ vì đã được sử dụng"
+            }
+        },
+        "action": {
+            "delete": "Xoá tiền tệ"
+        }
+    },
+    "currency": {
+        "message": {
+            "success": {
+                "create": "Thêm tiền tệ thành công",
+                "update": "Cập nhật tiền tệ thành công",
+                "delete": "Xoá tiền tệ thành công"
+            },
+            "error": {
+                "cannotDeleteBecauseLinkedPriceTiers": "Không thể xoá tiền tệ vì đã được sử dụng",
+                "uniqueConstraint": "Tiền tệ này đã tồn tại"
+            }
+        }
+    },
+
+    "price": {
+        "label": "Giá",
+        "name": "Tên giá",
+        "code": "Mã giá",
+        "action": {
+            "delete": "Xoá giá"
+        }
+    },
+
+    "priceTier": {
+        "canDeactivateOnlyWhenNotDefault": "Chỉ khi không là 'giá trị mặc định' thì mới được tắt kích hoạt",
+        "message": {
+            "success": {
+                "create": "Thêm giá thành công",
+                "update": "Cập nhật giá thành công",
+                "delete": "Xoá giá thành công"
+            },
+            "error": {
+                "cannotDeleteBecauseLinkedTracks": "Không thể xoá giá này vì đã được sử dụng trong các bài nhạc",
+                "currencyNotFound": "Không tìm thấy tiền tệ"
+            }
+        }
+    },
+
+    "weekDays": {
+        "monday": "Thứ Hai",
+        "tuesday": "Thứ Ba",
+        "wednesday": "Thứ Tư",
+        "thursday": "Thứ Năm",
+        "friday": "Thứ Sáu",
+        "saturday": "Thứ Bảy",
+        "sunday": "Chủ Nhật"
+    },
+
+    "scanStatus": {
+        "unScanned": "Chưa được quét",
+        "finished": "Không có vi phạm",
+        "warning": "Cảnh báo",
+        "rejected": "Từ chối"
+    },
+
+    "backupLog": {
+        "success": {
+            "startedPleaseWait": "Đang sao lưu, xin vui lòng đợi..."
+        }
+    },
+
+    "analytics": {
+        "label": "Phân tích",
+        "name": "Tên phân tích",
+        "action": {
+            "delete": "Xoá phân tích"
+        }
+    },
+
+    "issue": {
+        "label": "Vấn đề",
+        "name": "Tên vấn đề",
+        "numberOfDaysAffect": "Số ngày ảnh hưởng",
+        "message": {
+            "success": {
+                "create": "Tạo vấn đề thành công",
+                "update": "Cập nhật vấn đề thành công",
+                "delete": "Xóa vấn đề thành công"
+            },
+            "error": {
+                "notFound": "Không tìm thấy vấn đề",
+                "duplicateNameVi": "Tên tiếng Việt bị trùng",
+                "duplicateNameEn": "Tên tiếng Anh bị trùng",
+                "duplicateCode": "Mã bị trùng",
+                "issueLevelNotFound": "Không tìm thấy cấp độ vấn đề"
+            }
+        }
+    },
+
+    "issueLevel": {
+        "label": "Mức độ vấn đề",
+        "name": "Tên mức độ vấn đề",
+        "severityRank": "Thứ hạng nghiêm trọng",
+        "message": {
+            "success": {
+                "create": "Thêm mới mức độ vấn đề thành công",
+                "update": "Cập nhật mức độ vấn đề thành công",
+                "delete": "Xóa mức độ vấn đề thành công",
+                "updateOrder": "Cập nhật thứ tự thành công"
+            },
+            "error": {
+                "notFound": "Không tìm thấy mức độ vấn đề này",
+                "duplicateNameVi": "Tên tiếng Việt đã tồn tại",
+                "duplicateNameEn": "Tên tiếng Anh đã tồn tại",
+                "duplicateCode": "Mã mức độ vấn đề đã tồn tại",
+                "cannotDeleteBecauseLinkedIssues": "Không thể xóa mức độ vấn đề này vì đã được liên kết với các vấn đề khác"
+            }
+        }
+    },
+
+    "issueCategory": {
+        "label": "Danh mục vấn đề"
+    },
+
+    "tenantIssue": {
+        "label": "Vấn đề tenant",
+        "message": {
+            "success": {
+                "create": "Tạo vấn đề thành công",
+                "update": "Cập nhật vấn đề thành công",
+                "delete": "Xóa vấn đề thành công"
+            },
+            "error": {
+                "notFound": "Không tìm thấy vấn đề",
+                "duplicate": "Vấn đề này đã tồn tại",
+                "tenantNotFound": "Không tìm thấy tenant",
+                "issueNotFound": "Không tìm thấy vấn đề"
+            }
+        }
+    },
+
+    "tenantTier": {
+        "label": "Xếp hạng tenant",
+        "name": "Tên tenant",
+        "message": {
+            "success": {
+                "create": "Tạo tenant thành công",
+                "update": "Cập nhật tenant thành công",
+                "delete": "Xóa tenant thành công"
+            },
+            "error": {
+                "notFound": "Không tìm thấy tenant",
+                "duplicateNameVi": "Tên tiếng Việt bị trùng",
+                "duplicateNameEn": "Tên tiếng Anh bị trùng",
+                "duplicateCode": "Mã bị trùng"
+            }
+        }
+    },
+
+    "newsCategory": {
+        "label": "Danh mục tin tức",
+        "name": "Tên danh mục",
+        "message": {
+            "success": {
+                "create": "Tạo danh mục tin tức thành công",
+                "update": "Cập nhật danh mục tin tức thành công",
+                "delete": "Xóa danh mục tin tức thành công",
+                "bulkUpdateOrder": "Thay đổi vị trí thành công"
+            },
+            "error": {
+                "notFound": "Không tìm thấy danh mục tin tức",
+                "duplicateNameVi": "Tên tiếng Việt bị trùng",
+                "duplicateNameEn": "Tên tiếng Anh bị trùng",
+                "duplicateCode": "Mã bị trùng"
+            }
+        }
+    },
+
+    "news": {
+        "label": "Tin tức",
+        "name": "Tiêu đề tin tức",
+        "addTranslate": "Thêm bản dịch",
+        "updateTranslate": "Cập nhật bản dịch"
+    },
+
+    "newsPost": {
+        "label": "Tin tức mới",
+        "latest": "Tin mới nhất",
+        "related": "Tin tức liên quan",
+        "list": "Danh sách bài viết",
+        "message": {
+            "success": {
+                "create": "Tạo tin tức thành công",
+                "update": "Cập nhật tin tức thành công",
+                "delete": "Xóa tin tức thành công",
+                "bulkUpdateOrder": "Thay đổi vị trí thành công"
+            },
+            "error": {
+                "notFound": "Không tìm thấy tin tức",
+                "duplicateNameVi": "Tiêu đề tiếng Việt bị trùng",
+                "duplicateNameEn": "Tiêu đề tiếng Anh bị trùng",
+                "duplicateCode": "Mã bị trùng"
+            }
+        }
+    },
+
+    "newsPostTranslation": {
+        "label": "Bản dịch tin tức",
+        "message": {
+            "success": {
+                "create": "Tạo bản dịch thành công",
+                "update": "Cập nhật bản dịch thành công",
+                "delete": "Xóa bản dịch thành công"
+            },
+            "error": {
+                "notFound": "Không tìm thấy bản dịch",
+                "postNotFound": "Không tìm thấy tin tức gốc",
+                "languageNotFound": "Không tìm thấy ngôn ngữ",
+                "cannotDeleteDefault": "Không thể xóa bản dịch mặc định",
+                "uniqueConstraint": "Bản dịch cho tin tức này và ngôn ngữ này đã tồn tại",
+                "mustHaveOneDefault": "Phải có ít nhất một bản dịch được đặt làm mặc định"
+            }
+        }
+    },
+    "legal": {
+        "allRightsReserved": "Đã đăng ký bản quyền."
+    },
+
+    "aggregator": {
+        "label": "Đơn vị tổng hợp",
+        "aggregators": "Đơn vị tổng hợp",
+        "list": "Danh sách đơn vị tổng hợp",
+        "systemDefault": "Cổng mặc định",
+        "ddexName": "Tên ddex",
+        "action": {
+            "create": "Tạo đơn vị tổng hợp",
+            "update": "Cập nhật đơn vị tổng hợp"
+        },
+        "message": {
+            "success": {
+                "create": "Tạo tích hợp thành công",
+                "update": "Cập nhật tích hợp thành công",
+                "delete": "Xóa tích hợp thành công"
+            },
+            "error": {
+                "defaultNotFound": "Không tìm thấy aggregator mặc định",
+                "notFound": "Không tìm thấy Aggregator",
+                "codeExisted": "Mã Aggregator đã tồn tại",
+                "nameExisted": "Tên Aggregator đã tồn tại",
+                "defaultActiveError": "Aggregator mặc định đang hoạt động"
+            }
+        }
+    },
+
+    "tenantIntegration": {
+        "message": {
+            "success": {
+                "create": "Tạo tích hợp thành công",
+                "update": "Cập nhật tích hợp thành công",
+                "delete": "Xóa tích hợp thành công"
+            },
+            "error": {
+                "notFound": "Không tìm thấy tích hợp của tenant",
+                "dspExisted": "DSP đã được kích hoạt cho tenant này"
+            }
+        }
+    },
+
+    "dealType": {
+        "label": "Loại thỏa thuận",
+        "requiredConnection": "Yêu cầu kết nối"
+    },
+
+    "dspRoutingConfig": {
+        "message": {
+            "success": {
+                "create": "Cập nhật thành công",
+                "update": "Cập nhật thành công",
+                "delete": "Xóa thành công"
+            },
+            "error": {
+                "notFound": "Không tìm thấy cấu hình phân phối DSP",
+                "aggregatorIdRequired": "Cần có aggregatorId",
+                "aggregatorNotFound": "Không tìm thấy Aggregator",
+                "sftpConfigNotFound": "Không tìm thấy cấu hình SFTP"
+            }
+        }
+    },
+
+    "connection": {
+        "success": "Kết nối thành công",
+        "failure": "Kết nối thất bại",
+        "test": "Kiểm tra kết nối"
+    },
+
+    "sftp": {
+        "requiredSftpInfo": "Vui lòng nhập đủ thông tin SFTP"
     }
 }

@@ -2,6 +2,8 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import InputNumber from '@/components/ui/input/input-number';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
+import { MAX_NAME_LENGTH } from '@/constants/validate';
+import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form, Input } from 'antd';
@@ -30,6 +32,7 @@ export default function CountriesFormModal({ ...props }: Props) {
     const isFormUpdate = dataEdit?.id;
     const { createCountry, isPending: createPending } = useCreateCountry();
     const { updateCountry, isPending: updatePending } = useUpdateCountry();
+    const { active, deActive, isActive } = useActive();
 
     const handleCreate = (values: CountriesFormValues) => {
         const variables: CreateVariables<CreateCountryPayload> = {
@@ -39,6 +42,10 @@ export default function CountriesFormModal({ ...props }: Props) {
             },
             onSuccess: () => {
                 form.resetFields();
+                deActive();
+            },
+            onError: () => {
+                deActive();
             },
         };
         createCountry(variables);
@@ -51,12 +58,23 @@ export default function CountriesFormModal({ ...props }: Props) {
         > = {
             id: dataEdit?.id,
             payload: values,
+            onSuccess: () => {
+                deActive();
+            },
+            onError: () => {
+                deActive();
+            },
         };
         updateCountry(variables);
     };
 
     const onFinish = (values: CountriesFormValues) => {
-        return isFormUpdate ? handleUpdate(values) : handleCreate(values);
+        active();
+        try {
+            return isFormUpdate ? handleUpdate(values) : handleCreate(values);
+        } catch (error) {
+            deActive();
+        }
     };
 
     function renderTitle() {
@@ -88,6 +106,7 @@ export default function CountriesFormModal({ ...props }: Props) {
                 showSubmit={false}
                 onFinish={onFinish}
                 layout="vertical"
+                disabled={isActive}
             >
                 <AppFormItem
                     name="name"
@@ -99,9 +118,10 @@ export default function CountriesFormModal({ ...props }: Props) {
                             message: messages('validation.input'),
                         },
                         {
-                            max: 100,
-                            message: messages('validation.max', {
-                                number: 100,
+                            max: MAX_NAME_LENGTH,
+                            message: messages('validation.stringMax', {
+                                max: MAX_NAME_LENGTH,
+                                field: messages('country.name'),
                             }),
                         },
                     ]}
@@ -148,7 +168,7 @@ export default function CountriesFormModal({ ...props }: Props) {
                 </AppFormItem>
                 <AppFormItem
                     name="numericCode"
-                    label="Mã số"
+                    label={messages('common.numericCode')}
                     required
                     rules={[
                         {
@@ -171,7 +191,7 @@ export default function CountriesFormModal({ ...props }: Props) {
                 </AppFormItem>
                 <AppFormItem
                     name="phoneCode"
-                    label="Mã điện thoại"
+                    label={messages('common.phoneNumberCode')}
                     required
                     rules={[
                         {
@@ -190,7 +210,7 @@ export default function CountriesFormModal({ ...props }: Props) {
                 </AppFormItem>
                 <AppFormItem
                     name="capital"
-                    label="Thủ đô"
+                    label={messages('common.capital')}
                     required
                     rules={[
                         {
@@ -209,7 +229,7 @@ export default function CountriesFormModal({ ...props }: Props) {
                 </AppFormItem>
                 <AppFormItem
                     name="currency"
-                    label="Tiền tệ"
+                    label={messages('common.currency')}
                     required
                     rules={[
                         {
@@ -228,7 +248,7 @@ export default function CountriesFormModal({ ...props }: Props) {
                 </AppFormItem>
                 <AppFormItem
                     name="currencyName"
-                    label="Tên tiền tệ"
+                    label={messages('common.currencyName')}
                     required
                     rules={[
                         {
@@ -247,7 +267,7 @@ export default function CountriesFormModal({ ...props }: Props) {
                 </AppFormItem>
                 <AppFormItem
                     name="currencySymbol"
-                    label="Ký hiệu tiền tệ"
+                    label={messages('common.currencySymbol')}
                     required
                     rules={[
                         {
@@ -266,10 +286,13 @@ export default function CountriesFormModal({ ...props }: Props) {
                 </AppFormItem>
                 <AppFormItem
                     name="nationality"
-                    label="Quốc tịch"
+                    label={messages('common.nationality')}
                     required
                     rules={[
-                        { required: true, message: 'Vui lòng nhập quốc tịch' },
+                        {
+                            required: true,
+                            message: messages('validation.input'),
+                        },
                         {
                             max: 30,
                             message: messages('validation.max', {
