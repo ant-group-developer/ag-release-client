@@ -10,7 +10,7 @@ import { useCheckPermission } from '@/modules/auth/hooks/use-permission';
 import AudioPlayer from '@/modules/releases/components/release-detail/release-tracks/audio-player';
 import { Layout } from 'antd';
 import { useSession } from 'next-auth/react';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect } from 'react';
 import Content from './content';
 import Header from './header';
 import Sidebar from './sidebar';
@@ -29,7 +29,15 @@ export default function CMSLayout({ children }: Props) {
             : localStorage.getItem(LOCAL_STORAGE_KEY.OPEN_SIDE_BAR) === 'true'
     );
 
-    const [secondMenu, setSecondMenu] = useState(false);
+    const {
+        isActive: isActiveSecondMenu,
+        toggleActive: toggleActiveSecondMenu,
+        changeActive: changeActiveSecondMenu,
+    } = useActive(
+        typeof window === 'undefined'
+            ? false
+            : localStorage.getItem(LOCAL_STORAGE_KEY.OPEN_SIDE_BAR) === 'true'
+    );
 
     const { permission, isLoading } = useAuth();
     const { checkCanAccessCurrentRoute } = useCheckPermission();
@@ -64,7 +72,13 @@ export default function CMSLayout({ children }: Props) {
         // <SocketProvider accessToken={accessToken}>
         <div className="mx-auto max-w-[150rem] overflow-x-hidden border-x border-l-0">
             <Layout>
-                <Header collapsed={isActive} toggleCollapsed={toggleActive} />
+                <Header
+                    collapsed={isActive}
+                    toggleCollapsed={() => {
+                        toggleActive();
+                        toggleActiveSecondMenu();
+                    }}
+                />
                 <Layout>
                     <Sidebar
                         collapsed={isActive}
@@ -77,11 +91,11 @@ export default function CMSLayout({ children }: Props) {
                     />
 
                     <SecondSidebar
-                        collapsed={!isActive}
-                        onBreakpoint={changeActive}
+                        collapsed={isActiveSecondMenu}
+                        onBreakpoint={changeActiveSecondMenu}
                         trigger={null}
                         drawerProps={{
-                            onClose: toggleActive,
+                            onClose: toggleActiveSecondMenu,
                         }}
                     />
 

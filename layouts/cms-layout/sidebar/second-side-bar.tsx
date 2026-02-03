@@ -1,10 +1,12 @@
 'use client';
 
+import { SIZE_ICON } from '@/constants/common';
 import { useSideBarMenuItems } from '@/hooks/use-sidebar-menu-items';
 import TenantSwitch from '@/modules/tenant/components/tenant-switch';
 import type { DrawerProps, MenuProps, SiderProps } from 'antd';
-import { Drawer, Layout, Menu } from 'antd';
+import { Button, Drawer, Layout, Menu, Typography } from 'antd';
 import { useResponsive } from 'antd-style';
+import { ChevronLeft } from 'lucide-react';
 import { Scrollbars } from 'react-custom-scrollbars';
 
 type Props = {
@@ -57,6 +59,17 @@ function SecondSidebar({ collapsed, drawerProps, ...props }: Props) {
                 <div className="h-[calc(100vh-5rem)]">
                     {/* @ts-ignore */}
                     <Scrollbars autoHide>
+                        <div className="flex items-center justify-between border-b p-2">
+                            <Typography>General</Typography>
+                            <Button
+                                type="text"
+                                icon={
+                                    <div>
+                                        <ChevronLeft size={SIZE_ICON} />
+                                    </div>
+                                }
+                            />
+                        </div>
                         <Menu mode="inline" items={generalChildren} />
                     </Scrollbars>
                 </div>

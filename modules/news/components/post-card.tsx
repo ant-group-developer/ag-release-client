@@ -1,3 +1,4 @@
+import { FALLBACK_IMAGE_HORIZONTAL } from '@/constants/common';
 import { Card } from 'antd';
 import { CardProps } from 'antd/lib';
 import Image from 'next/image';
@@ -16,7 +17,7 @@ export default function PostCard({ data }: Props) {
                 <Image
                     draggable={false}
                     alt="example"
-                    src={data?.thumbnail}
+                    src={data?.thumbnail ?? FALLBACK_IMAGE_HORIZONTAL}
                     width={400}
                     height={250}
                     className="aspect-video"
