@@ -2,14 +2,16 @@ import { cn } from '@/helpers/tailwind';
 import { useSideBarMenuItems } from '@/hooks/use-sidebar-menu-items';
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
+import { ROUTES_ID } from '../routes';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
 type Props = MenuProps & {
     toggleCollapsed?: () => void;
+    toggleSecondMenu?: () => void;
 };
 
-function SidebarMenu({ toggleCollapsed, ...props }: Props) {
+function SidebarMenu({ toggleCollapsed, toggleSecondMenu, ...props }: Props) {
     const { items, openKeys, bestActiveLink } = useSideBarMenuItems();
 
     function pickLevel1AndChildren(items: MenuItem[] = []): MenuItem[] {
@@ -39,8 +41,8 @@ function SidebarMenu({ toggleCollapsed, ...props }: Props) {
     return (
         <Menu
             onClick={(e) => {
-                if (e.key === 'general') {
-                    toggleCollapsed?.();
+                if (e.key === ROUTES_ID.GENERAL) {
+                    toggleSecondMenu?.();
                 }
             }}
             defaultOpenKeys={openKeys}

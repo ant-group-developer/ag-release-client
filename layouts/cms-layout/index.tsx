@@ -88,6 +88,7 @@ export default function CMSLayout({ children }: Props) {
                             onClose: toggleActive,
                         }}
                         toggleCollapsed={toggleActive}
+                        toggleSecondMenu={toggleActiveSecondMenu}
                     />
 
                     <SecondSidebar
@@ -97,6 +98,7 @@ export default function CMSLayout({ children }: Props) {
                         drawerProps={{
                             onClose: toggleActiveSecondMenu,
                         }}
+                        toggleCollapsed={toggleActiveSecondMenu}
                     />
 
                     <Layout>

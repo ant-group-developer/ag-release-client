@@ -9,11 +9,18 @@ import SidebarMenu from './sidebar-menu';
 type Props = {
     drawerProps?: DrawerProps;
     toggleCollapsed?: () => void;
+    toggleSecondMenu?: () => void;
 } & SiderProps;
 
 const { Sider } = Layout;
 
-function Sidebar({ collapsed, drawerProps, toggleCollapsed, ...props }: Props) {
+function Sidebar({
+    collapsed,
+    drawerProps,
+    toggleCollapsed,
+    toggleSecondMenu,
+    ...props
+}: Props) {
     const responsive = useResponsive();
 
     if (responsive.desktop) {
@@ -31,7 +38,10 @@ function Sidebar({ collapsed, drawerProps, toggleCollapsed, ...props }: Props) {
                 <div className="h-[calc(100vh-5rem)]">
                     {/* @ts-ignore */}
                     <Scrollbars autoHide>
-                        <SidebarMenu toggleCollapsed={toggleCollapsed} />
+                        <SidebarMenu
+                            toggleCollapsed={toggleCollapsed}
+                            toggleSecondMenu={toggleSecondMenu}
+                        />
                     </Scrollbars>
                 </div>
             </Sider>

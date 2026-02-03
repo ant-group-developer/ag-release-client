@@ -8,6 +8,7 @@ import {
 } from '@/layouts/cms-layout/routes';
 import { useCheckPermission } from '@/modules/auth/hooks/use-permission';
 import type { MenuProps } from 'antd';
+import { MenuItemGroupType } from 'antd/es/menu/interface';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 
@@ -159,8 +160,10 @@ export function useSideBarMenuItems() {
     const items = useMemo(() => {
         const raw = toMenuItems(tree, 0);
         // keep only top-level groups that still have visible children
-        // @ts-ignore
-        return raw.filter((g) => (g?.children?.length ?? 0) > 0);
+        return raw.filter(
+            (g): g is MenuItemGroupType =>
+                g?.type === 'group' && (g.children?.length ?? 0) > 0
+        );
     }, [tree]);
 
     return {

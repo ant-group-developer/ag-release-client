@@ -3,46 +3,38 @@
 import { SIZE_ICON } from '@/constants/common';
 import { useSideBarMenuItems } from '@/hooks/use-sidebar-menu-items';
 import TenantSwitch from '@/modules/tenant/components/tenant-switch';
-import type { DrawerProps, MenuProps, SiderProps } from 'antd';
+import type { DrawerProps, SiderProps } from 'antd';
 import { Button, Drawer, Layout, Menu, Typography } from 'antd';
 import { useResponsive } from 'antd-style';
+import { MenuItemGroupType, MenuItemType } from 'antd/es/menu/interface';
 import { ChevronLeft } from 'lucide-react';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { ROUTES_ID } from '../routes';
 
 type Props = {
     drawerProps?: DrawerProps;
+    toggleCollapsed?: () => void;
 } & SiderProps;
 
 const { Sider } = Layout;
 
-type Item = Required<MenuProps>['items'][number];
-
-// item có children (submenu / group)
-const hasChildren = (
-    item: Item | null | undefined
-): item is Exclude<Item, null | undefined> & { children: Item[] } => {
-    return (
-        !!item &&
-        typeof item === 'object' &&
-        'children' in item &&
-        Array.isArray((item as any).children)
-    );
-};
-
-function SecondSidebar({ collapsed, drawerProps, ...props }: Props) {
+function SecondSidebar({
+    collapsed,
+    drawerProps,
+    toggleCollapsed,
+    ...props
+}: Props) {
     const responsive = useResponsive();
 
     const { items } = useSideBarMenuItems();
 
-    const systemGroup = items.find((i) => i?.key === 'system');
+    const systemGroup = items?.find((i) => i?.key === ROUTES_ID.SYSTEM);
 
-    const generalItem = hasChildren(systemGroup)
-        ? systemGroup.children.find((c) => c?.key === 'general')
-        : undefined;
-
-    const generalChildren = hasChildren(generalItem)
-        ? generalItem.children
-        : [];
+    const generalItem = systemGroup?.children?.find(
+        (item): item is MenuItemGroupType<MenuItemType> =>
+            !!item && item.key === ROUTES_ID.GENERAL
+    );
+    const generalChildren = generalItem?.children ?? [];
 
     if (responsive.desktop) {
         return (
@@ -60,8 +52,11 @@ function SecondSidebar({ collapsed, drawerProps, ...props }: Props) {
                     {/* @ts-ignore */}
                     <Scrollbars autoHide>
                         <div className="flex items-center justify-between border-b p-2">
-                            <Typography>General</Typography>
+                            <Typography>
+                                {!collapsed && generalItem?.label}
+                            </Typography>
                             <Button
+                                onClick={() => toggleCollapsed?.()}
                                 type="text"
                                 icon={
                                     <div>
