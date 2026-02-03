@@ -1,4 +1,4 @@
-import { Credentials } from '@/modules/aggregator/types';
+import { SftpMetadata } from '@/modules/aggregator/types';
 import { DspData } from '@/modules/dsp/types';
 import { TenantData } from '@/modules/tenant/types/data';
 import { CommonAttribute, CommonParams } from '@/types/api';
@@ -20,7 +20,7 @@ export interface IntegrationConnection extends CommonAttribute {
     requiresCredentials: boolean;
     agreementType: string;
     protocol: string;
-    credentials: Credentials;
+    credentials: SftpMetadata;
 }
 
 export interface IntegrationDataFilter extends CommonParams {}

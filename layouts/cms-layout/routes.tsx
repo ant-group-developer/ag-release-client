@@ -329,6 +329,15 @@ export const adminRoutes: RouteNode[] = [
         label: 'common.system',
         children: [
             {
+                id: 'ping',
+                type: 'link',
+                label: 'Ping',
+                title: 'Ping',
+                href: APP_ROUTES.PING,
+                icon: LockKeyhole,
+                hidden: true,
+            },
+            {
                 id: 'permission',
                 type: 'link',
                 label: 'permission.label',

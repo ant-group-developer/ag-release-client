@@ -53,6 +53,7 @@ export enum APP_ROUTES {
     NEWS_DETAIL = '/news/*',
     AGGREGATOR = '/aggregator',
     DEAL_TYPE = '/deal-type',
+    PING = '/ping',
 }
 
 export const AUTH_ROUTES: string[] = [APP_ROUTES.SIGN_IN];
