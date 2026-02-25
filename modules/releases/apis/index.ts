@@ -53,6 +53,12 @@ export const releasesApi = {
         );
     },
 
+    testUpload: (id: ReleasesData['id']) => {
+        return axiosInstance.post<DetailResponse<ReleasesData>>(
+            `/releases/${id}/create-and-upload-metadata-spotify`
+        );
+    },
+
     deleteRelease: (id: ReleasesData['id']) => {
         return axiosInstance.delete(`/releases/draft/${id}`);
     },

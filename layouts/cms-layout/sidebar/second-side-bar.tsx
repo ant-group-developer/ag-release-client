@@ -2,7 +2,6 @@
 
 import { SIZE_ICON } from '@/constants/common';
 import { useSideBarMenuItems } from '@/hooks/use-sidebar-menu-items';
-import TenantSwitch from '@/modules/tenant/components/tenant-switch';
 import type { DrawerProps, SiderProps } from 'antd';
 import { Button, Drawer, Layout, Menu, Typography } from 'antd';
 import { useResponsive } from 'antd-style';
@@ -26,7 +25,7 @@ function SecondSidebar({
 }: Props) {
     const responsive = useResponsive();
 
-    const { items } = useSideBarMenuItems();
+    const { items, bestActiveLink } = useSideBarMenuItems();
 
     const systemGroup = items?.find((i) => i?.key === ROUTES_ID.SYSTEM);
 
@@ -65,7 +64,13 @@ function SecondSidebar({
                                 }
                             />
                         </div>
-                        <Menu mode="inline" items={generalChildren} />
+                        <Menu
+                            mode="inline"
+                            items={generalChildren}
+                            selectedKeys={
+                                bestActiveLink ? [bestActiveLink.href] : []
+                            }
+                        />
                     </Scrollbars>
                 </div>
             </Sider>
@@ -78,9 +83,13 @@ function SecondSidebar({
             open={collapsed}
             placement="left"
             {...drawerProps}
-            title={<TenantSwitch />}
+            // title={<TenantSwitch />}
         >
-            <Menu mode="inline" items={generalChildren} />
+            <Menu
+                mode="inline"
+                items={generalChildren}
+                selectedKeys={bestActiveLink ? [bestActiveLink.href] : []}
+            />
         </Drawer>
     );
 }
