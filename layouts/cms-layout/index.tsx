@@ -72,7 +72,7 @@ export default function CMSLayout({ children }: Props) {
                     collapsed={isActive}
                     toggleCollapsed={() => {
                         toggleActive();
-                        toggleActiveSecondMenu();
+                        // toggleActiveSecondMenu();
                     }}
                 />
                 <Layout>
@@ -93,6 +93,7 @@ export default function CMSLayout({ children }: Props) {
                         trigger={null}
                         drawerProps={{
                             onClose: toggleActiveSecondMenu,
+                            zIndex: 1001,
                         }}
                         toggleCollapsed={toggleActiveSecondMenu}
                     />

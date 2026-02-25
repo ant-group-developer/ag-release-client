@@ -29,6 +29,7 @@ import {
     RELEASES_TABS,
     TYPE_MODAL_RELEASE,
 } from '../../enums';
+import { useTestUpload } from '../../hooks/use-test-upload';
 import { ReleasesData, ReleasesDataFilter } from '../../types';
 import ReleaseStatusTag from '../tag/release-status-tag';
 import ReleaseTitleColumn from './title-column';
@@ -53,6 +54,7 @@ export default function ReleasesTable({
     const { token } = theme.useToken();
     const { isSystemTenant } = useAuth();
     const { hasPermission } = usePermission();
+    const { testUpload } = useTestUpload();
 
     const column: ProColumns<ReleasesData>[] = [
         {
@@ -290,6 +292,24 @@ export default function ReleasesTable({
                                     )
                                 );
                             }}
+                            extraItems={[
+                                {
+                                    label: (
+                                        <p
+                                            onClick={() => {
+                                                testUpload({
+                                                    id: record?.id,
+                                                    payload: {},
+                                                });
+                                            }}
+                                        >
+                                            Test
+                                        </p>
+                                    ),
+                                    key: 'test',
+                                    show: true,
+                                },
+                            ]}
                         />
                     </div>
                 );

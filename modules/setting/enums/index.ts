@@ -4,6 +4,7 @@ export enum SETTING_TABS {
     TELEGRAM = 'telegram',
     ACR_CLOUD = 'acrCloud',
     GENERAL = 'general',
+    GENERATOR = 'generator',
 }
 
 export enum STATUS_BACKUP {

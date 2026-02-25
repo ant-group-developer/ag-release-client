@@ -56,7 +56,7 @@ function Sidebar({
             {...drawerProps}
             title={<TenantSwitch />}
         >
-            <SidebarMenu mode="inline" />
+            <SidebarMenu mode="inline" toggleSecondMenu={toggleSecondMenu} />
         </Drawer>
     );
 }
