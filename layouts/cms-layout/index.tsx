@@ -89,7 +89,7 @@ export default function CMSLayout({ children }: Props) {
 
                     <SecondSidebar
                         collapsed={isActiveSecondMenu}
-                        onBreakpoint={changeActiveSecondMenu}
+                        // onBreakpoint={changeActiveSecondMenu}
                         trigger={null}
                         drawerProps={{
                             onClose: toggleActiveSecondMenu,

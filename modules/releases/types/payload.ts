@@ -1,3 +1,4 @@
+import { CommonFunction } from '@/types/api';
 import { ReleasesData } from '.';
 
 export interface CreateReleaseDraftPayload {
@@ -11,4 +12,8 @@ export interface UpdateReleaseDraftPayload extends Partial<ReleasesData> {
     releaseCoverArt?: {
         fileId: string;
     } | null;
+}
+
+export interface GenerateUpc extends CommonFunction {
+    releaseId: string;
 }

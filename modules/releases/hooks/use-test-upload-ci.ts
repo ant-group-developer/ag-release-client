@@ -6,7 +6,7 @@ import { releasesApi } from '../apis';
 import { ReleasesData } from '../types';
 import { UpdateReleaseDraftPayload } from '../types/payload';
 
-export const useTestUpload = () => {
+export const useTestUploadCi = () => {
     // const messages = useTranslations();
     const { handleError } = useApiNotify();
 
@@ -36,11 +36,11 @@ export const useTestUpload = () => {
             id,
             payload,
         }: UpdateVariables<ReleasesData['id'], UpdateReleaseDraftPayload>) =>
-            releasesApi.testUpload(id),
+            releasesApi.testUploadCi(id),
         onSuccess,
         onError,
     });
-    const testUpload = (
+    const testUploadCi = (
         variables: UpdateVariables<
             ReleasesData['id'],
             UpdateReleaseDraftPayload
@@ -50,7 +50,7 @@ export const useTestUpload = () => {
     };
 
     return {
-        testUpload,
+        testUploadCi,
         ...mutation,
     };
 };

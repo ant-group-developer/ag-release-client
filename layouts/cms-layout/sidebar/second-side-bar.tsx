@@ -80,7 +80,7 @@ function SecondSidebar({
     return (
         <Drawer
             width={330}
-            open={collapsed}
+            open={!collapsed}
             placement="left"
             {...drawerProps}
             // title={<TenantSwitch />}

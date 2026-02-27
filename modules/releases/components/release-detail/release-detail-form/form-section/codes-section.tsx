@@ -1,7 +1,8 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
-import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
+import { useGenerateUpc } from '@/modules/releases/hooks/use-generate-upc';
 import { ReleaseDetailSchema } from '@/modules/releases/schemas';
+import { BarcodeOutlined } from '@ant-design/icons';
 import { Input } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
@@ -19,7 +20,8 @@ export default function CodesSection({ isReadMode, debouncedUpdate }: Props) {
         formState: { errors },
         watch,
     } = useFormContext<ReleaseDetailSchema>();
-    const { action } = useGetReleaseDetailRoute();
+    // const { action } = useGetReleaseDetailRoute();
+    const { generateUpc } = useGenerateUpc();
 
     // router - params
     const params = useParams();
@@ -28,6 +30,18 @@ export default function CodesSection({ isReadMode, debouncedUpdate }: Props) {
     //     [action]
     // );
     const isCreateReleasePage = params['action'] === 'create';
+
+    const handleGenerateUPC = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        generateUpc({
+            releaseId: params['release-id'] as string,
+            onSuccess: (data) => {
+                console.log('🚀 ~ handleGenerateUPC ~ data:', data);
+            },
+            onError: () => {},
+        });
+    };
 
     return (
         <CollapseItem
@@ -78,6 +92,26 @@ export default function CodesSection({ isReadMode, debouncedUpdate }: Props) {
                                                 disabled={
                                                     isCreateReleasePage ||
                                                     isReadMode
+                                                }
+                                                suffix={
+                                                    !(
+                                                        isCreateReleasePage ||
+                                                        isReadMode
+                                                    ) &&
+                                                    !field.value && (
+                                                        <span
+                                                            onClick={
+                                                                handleGenerateUPC
+                                                            }
+                                                        >
+                                                            <BarcodeOutlined className="mr-1" />
+                                                            <span className="cursor-pointer hover:underline">
+                                                                {messages(
+                                                                    'common.generate'
+                                                                )}
+                                                            </span>
+                                                        </span>
+                                                    )
                                                 }
                                             />
                                         )}

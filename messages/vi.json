@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "generate": "Tạo",
         "privateKey": "Khoá riêng tư",
         "deal": "Thoả thuận",
         "deals": "Thoả thuận",
