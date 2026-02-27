@@ -27,3 +27,7 @@ export interface UpdateTrackPolicy extends CommonFunction {
 export interface DeleteTracksPayload extends CommonFunction {
     ids: Key[];
 }
+
+export interface GenerateIsrc extends CommonFunction {
+    trackId: string;
+}

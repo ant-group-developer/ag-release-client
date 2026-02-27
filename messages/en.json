@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "generate": "Generate",
         "privateKey": "Private key",
         "deal": "Deal",
         "deals": "Deals",

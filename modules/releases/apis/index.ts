@@ -53,9 +53,15 @@ export const releasesApi = {
         );
     },
 
-    testUpload: (id: ReleasesData['id']) => {
+    testUploadSpotify: (id: ReleasesData['id']) => {
         return axiosInstance.post<DetailResponse<ReleasesData>>(
             `/releases/${id}/create-and-upload-metadata-spotify`
+        );
+    },
+
+    testUploadCi: (id: ReleasesData['id']) => {
+        return axiosInstance.post<DetailResponse<ReleasesData>>(
+            `/releases/${id}/create-and-upload-metadata-ci`
         );
     },
 
@@ -99,5 +105,11 @@ export const releasesApi = {
         return axiosInstance.get(`/releases/${id}/download/txt-metadata`, {
             responseType: 'blob',
         });
+    },
+
+    generateUpc: (id: ReleasesData['id']) => {
+        return axiosInstance.post<DetailResponse<ReleasesData>>(
+            `/releases/${id}/gen-upc`
+        );
     },
 };

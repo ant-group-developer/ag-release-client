@@ -18,13 +18,14 @@ import { TRACK_TABS, TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
 import { useUpdateTrackOrder } from '@/modules/tracks/hooks/use-update-track-order';
 import { TrackData } from '@/modules/tracks/types';
+
 import {
     UpdateTrackOrderPayload,
     UpdateTrackPayload,
 } from '@/modules/tracks/types/payload';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { UpdateVariables } from '@/types/api';
-import { Input, Tag } from 'antd';
+import { Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { debounce } from 'lodash';
 import { SquarePen } from 'lucide-react';
@@ -32,6 +33,7 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useMemo } from 'react';
 import TrackActionButton from '../button/track-action';
 import { TrackWaveform } from '../track-wave-form';
+import { EditableIsrc } from './track-edit-isrc';
 import { EditableTitle } from './track-edit-title';
 
 type Props = {
@@ -200,19 +202,17 @@ export default function ReleaseTracksTable({ ...props }: Props) {
         },
         {
             title: 'ISRC',
-            dataIndex: 'ISRC',
+            dataIndex: 'isrc',
             key: 'ISRC',
             align: 'left',
-            width: 150,
+            width: 170,
             ellipsis: true,
             render: (value, record) => {
                 return (
-                    <Input
-                        variant="filled"
-                        disabled={isReadMode}
-                        size="small"
-                        defaultValue={record?.isrc ?? ''}
-                        onCopy={(e) => {}}
+                    <EditableIsrc
+                        record={record}
+                        isReadMode={isReadMode}
+                        onUpdate={debouncedUpdate}
                     />
                 );
             },

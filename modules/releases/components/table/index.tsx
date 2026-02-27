@@ -1,6 +1,7 @@
 import ActionButton from '@/components/ui/button/action-button';
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { SIZE_ICON } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
 import {
     convertSecondsToHoursMinutes,
@@ -18,9 +19,11 @@ import { usePermission } from '@/hooks/use-permission';
 import { useRouter } from '@/i18n/routing';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
+import { SpotifyOutlined } from '@ant-design/icons';
 import { ProColumns } from '@ant-design/pro-components';
-import { Tag, theme } from 'antd';
+import { Space, Tag, theme } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
+import { SquareActivity } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import nProgress from 'nprogress';
 import {
@@ -29,7 +32,8 @@ import {
     RELEASES_TABS,
     TYPE_MODAL_RELEASE,
 } from '../../enums';
-import { useTestUpload } from '../../hooks/use-test-upload';
+import { useTestUploadCi } from '../../hooks/use-test-upload-ci';
+import { useTestUploadSpotify } from '../../hooks/use-test-upload-spotify';
 import { ReleasesData, ReleasesDataFilter } from '../../types';
 import ReleaseStatusTag from '../tag/release-status-tag';
 import ReleaseTitleColumn from './title-column';
@@ -54,7 +58,8 @@ export default function ReleasesTable({
     const { token } = theme.useToken();
     const { isSystemTenant } = useAuth();
     const { hasPermission } = usePermission();
-    const { testUpload } = useTestUpload();
+    const { testUploadSpotify } = useTestUploadSpotify();
+    const { testUploadCi } = useTestUploadCi();
 
     const column: ProColumns<ReleasesData>[] = [
         {
@@ -295,18 +300,36 @@ export default function ReleasesTable({
                             extraItems={[
                                 {
                                     label: (
-                                        <p
+                                        <Space
                                             onClick={() => {
-                                                testUpload({
+                                                testUploadSpotify({
                                                     id: record?.id,
                                                     payload: {},
                                                 });
                                             }}
                                         >
-                                            Test
-                                        </p>
+                                            <SpotifyOutlined />
+                                            <span>Test Spotify</span>
+                                        </Space>
                                     ),
-                                    key: 'test',
+                                    key: 'testSpotify',
+                                    show: true,
+                                },
+                                {
+                                    label: (
+                                        <Space
+                                            onClick={() => {
+                                                testUploadCi({
+                                                    id: record?.id,
+                                                    payload: {},
+                                                });
+                                            }}
+                                        >
+                                            <SquareActivity size={SIZE_ICON} />
+                                            <span>Test CI</span>
+                                        </Space>
+                                    ),
+                                    key: 'testCi',
                                     show: true,
                                 },
                             ]}
