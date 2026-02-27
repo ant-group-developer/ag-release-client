@@ -1,7 +1,8 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
-import { MAX_NAME_LENGTH } from '@/constants/validate';
 import { useActive } from '@/hooks/use-active';
+import PrefixIsrcSelect from '@/modules/prefix-isrc/components/prefix-isrc-select';
+import PrefixUpcSelect from '@/modules/prefix-upc/components/prefix-isrc-select';
 import { Form, Input } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
@@ -55,20 +56,69 @@ export default function GeneratorForm({}: Props) {
                 submitProps={{ loading: isActive }}
             >
                 <AppFormItem
-                    name="chatId"
-                    label="123"
+                    name="prefixUpcDefaultId"
+                    label={'Prefix UPC'}
                     required
                     rules={[
                         {
                             required: true,
                             message: messages('validation.input'),
                         },
+                    ]}
+                >
+                    <PrefixUpcSelect />
+                </AppFormItem>
+
+                <AppFormItem
+                    name="prefixIsrcDefaultId"
+                    label={'Prefix ISRC'}
+                    required
+                    rules={[
                         {
-                            max: MAX_NAME_LENGTH,
-                            message: messages('validation.stringMax', {
-                                max: MAX_NAME_LENGTH,
-                                field: 'Chat ID',
-                            }),
+                            required: true,
+                            message: messages('validation.input'),
+                        },
+                    ]}
+                >
+                    <PrefixIsrcSelect />
+                </AppFormItem>
+
+                <AppFormItem
+                    name="API_KEY_GRPC_ISRC_UPC"
+                    label={'API Key'}
+                    required
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.input'),
+                        },
+                    ]}
+                >
+                    <Input />
+                </AppFormItem>
+
+                <AppFormItem
+                    name="DDEX_PARTY_ID_SENDER"
+                    label={'DDEX party Id'}
+                    required
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.input'),
+                        },
+                    ]}
+                >
+                    <Input />
+                </AppFormItem>
+
+                <AppFormItem
+                    name="DDEX_PARTY_NAME_SENDER"
+                    label={'DDEX party name'}
+                    required
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.input'),
                         },
                     ]}
                 >
