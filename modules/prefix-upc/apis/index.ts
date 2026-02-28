@@ -4,7 +4,7 @@ import { PrefixUpcData, PrefixUpcDataFilter } from '../types';
 
 export const prefixUpcApis = {
     getList: (params: PrefixUpcDataFilter) => {
-        return axiosAuth.get<PaginationResponse<PrefixUpcData>>('prefix-upc', {
+        return axiosAuth.get<PaginationResponse<PrefixUpcData>>('/upc/prefix', {
             params,
         });
     },

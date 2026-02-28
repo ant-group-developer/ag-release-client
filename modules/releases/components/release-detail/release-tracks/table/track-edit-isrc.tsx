@@ -1,8 +1,6 @@
 'use client';
-import { useGenerateIsrc } from '@/modules/tracks/hooks/use-generate-isrc';
 import { TrackData } from '@/modules/tracks/types';
 import { UpdateTrackPayload } from '@/modules/tracks/types/payload';
-import { BarcodeOutlined } from '@ant-design/icons';
 import { Input } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
@@ -18,7 +16,6 @@ export const EditableIsrc = ({
 }) => {
     const [localIsrc, setLocalIsrc] = useState(record.isrc ?? '');
     const messages = useTranslations();
-    const { generateIsrc } = useGenerateIsrc();
 
     useEffect(() => {
         setLocalIsrc(record.isrc ?? '');
@@ -36,26 +33,6 @@ export const EditableIsrc = ({
                 setLocalIsrc(next);
                 onUpdate(record.id, { isrc: next });
             }}
-            suffix={
-                !localIsrc && (
-                    <span onClick={() => {}}>
-                        <BarcodeOutlined className="mr-1" />
-                        <span
-                            className="cursor-pointer hover:underline"
-                            onClick={() => {
-                                generateIsrc({
-                                    trackId: record?.id,
-                                    onSuccess(e) {
-                                        console.log(e);
-                                    },
-                                });
-                            }}
-                        >
-                            {messages('common.generate')}
-                        </span>
-                    </span>
-                )
-            }
         />
     );
 };

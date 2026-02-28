@@ -7,9 +7,17 @@ export interface SettingData {
     telegram: TelegramConfig;
     acrCloud: ACRCloudConfig;
     general: GeneralConfig;
+    generator: GeneratorConfig;
 }
 
 export interface SettingDataFilter extends CommonParams {}
+
+export interface GeneratorConfig {
+    prefixUpcDefaultId: string;
+    prefixIsrcDefaultId: string;
+    DDEX_PARTY_ID_SENDER: string;
+    DDEX_PARTY_NAME_SENDER: string;
+}
 
 // Website config
 export interface WebsiteConfig {

@@ -18,13 +18,13 @@ export default function GeneratorForm({}: Props) {
     const { settingData } = useGetSetting();
     const { updateSetting } = useUpdateSetting();
     const { active, deActive, isActive } = useActive();
-    const telegramConfigData = settingData?.telegram;
+    const generatorConfigData = settingData?.generator;
 
     const onFinish = (values: any) => {
         try {
             active();
             const payload: UpdateSettingPayload = {
-                telegram: {
+                generator: {
                     ...values,
                 },
             };
@@ -44,9 +44,9 @@ export default function GeneratorForm({}: Props) {
 
     useEffect(() => {
         form.setFieldsValue({
-            ...telegramConfigData,
+            ...generatorConfigData,
         });
-    }, [form, telegramConfigData]);
+    }, [form, generatorConfigData]);
     return (
         <div>
             <AppForm
