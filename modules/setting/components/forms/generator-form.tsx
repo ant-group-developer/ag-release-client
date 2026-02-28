@@ -15,10 +15,10 @@ type Props = {};
 export default function GeneratorForm({}: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
-    const { settingData } = useGetSetting();
+    const { settingConfig } = useGetSetting();
     const { updateSetting } = useUpdateSetting();
     const { active, deActive, isActive } = useActive();
-    const generatorConfigData = settingData?.generator;
+    const generatorConfigData = settingConfig?.generator;
 
     const onFinish = (values: any) => {
         try {

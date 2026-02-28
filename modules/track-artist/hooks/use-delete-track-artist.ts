@@ -35,7 +35,7 @@ export const useDeleteTrackArtist = () => {
         { onError }: DeleteVariables<TrackArtistData['id']>
     ) => {
         onError?.();
-        handleError(data);
+        // handleError(data);
     };
     const mutation = useMutation({
         mutationFn: ({ id }: DeleteVariables<TrackArtistData['id']>) =>

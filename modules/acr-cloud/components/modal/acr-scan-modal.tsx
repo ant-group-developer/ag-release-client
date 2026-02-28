@@ -27,8 +27,8 @@ export default function AcrCloudScanModal({
     const [form] = Form.useForm();
     const { scanTracks, isPending: isPendingScan } = useScanTracks();
     const dataEdit = useModalStore<TrackData>((state) => state.dataEdit);
-    const { settingData } = useGetSettingPublic();
-    const acrConfig = settingData?.acrCloud;
+    const { settingConfig } = useGetSettingPublic();
+    const acrConfig = settingConfig?.acrCloud;
 
     const handleSubmit = (values: any) => {
         const { date, track, ...rest } = values;

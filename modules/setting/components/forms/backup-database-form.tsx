@@ -23,8 +23,8 @@ type Props = {};
 
 export default function BackupDatabaseForm({}: Props) {
     const messages = useTranslations();
-    const { settingData } = useGetSetting();
-    const backupDatabase = settingData?.backupDatabase;
+    const { settingConfig } = useGetSetting();
+    const backupDatabase = settingConfig?.backupDatabase;
     const [form] = Form.useForm();
     const [cronValue, setCronValue] = useState(backupDatabase?.cronValue);
     const { updateSetting } = useUpdateSetting();

@@ -222,7 +222,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             dataIndex: 'status',
             key: 'status',
             align: 'center',
-            width: 100,
+            width: 120,
             render: (value, record, index) => {
                 const isTrackError = releaseValidateData.some((error) => {
                     const parts = error.field.split('.');
@@ -234,7 +234,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                         {/* <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline"> */}
                         {/* {messages('common.draft')} */}
                         {isTrackError
-                            ? messages('common.error')
+                            ? messages('common.incomplete')
                             : messages('common.ready')}
                         {/* </span> */}
                     </Tag>

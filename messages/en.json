@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "incomplete": "Incomplete",
         "generate": "Generate",
         "privateKey": "Private key",
         "deal": "Deal",

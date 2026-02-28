@@ -2,12 +2,35 @@ import { RELEASES_STATUS } from '@/modules/releases/enums';
 import { CommonParams } from '@/types/api';
 
 export interface SettingData {
-    website: WebsiteConfig;
-    backupDatabase: BackupDatabaseConfig;
-    telegram: TelegramConfig;
-    acrCloud: ACRCloudConfig;
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    config: SettingConfig;
+}
+
+export interface SettingConfig {
+    auth0: Auth0Config;
+    track: TrackConfig;
     general: GeneralConfig;
+    website: WebsiteConfig;
+    acrCloud: ACRCloudConfig;
+    telegram: TelegramConfig;
     generator: GeneratorConfig;
+    backupDatabase: BackupDatabaseConfig;
+}
+
+export interface Auth0Config {
+    domain: string;
+    audience: string;
+    clientId: string;
+    clientSecret: string;
+    timeSyncData: string;
+    connectionName: string;
+}
+
+export interface TrackConfig {
+    preview: number;
+    sampleLength: number;
 }
 
 export interface SettingDataFilter extends CommonParams {}

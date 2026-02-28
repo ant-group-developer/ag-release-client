@@ -47,3 +47,33 @@ export const notificationError = (id: Id, message?: string) => {
         autoClose: 2000,
     });
 };
+
+export const toastPromise = <T>(
+    promise: Promise<T>,
+    messages: (key: any) => any,
+    options?: {
+        pending?: string;
+        success?: string;
+        error?: string;
+    }
+) => {
+    return toast.promise(promise, {
+        pending: options?.pending ?? messages('common.processing'),
+        success: {
+            render: ({ data }: any) => {
+                const code = options?.success
+                    ? options.success
+                    : data?.data?.messageCode;
+                return messages(code);
+            },
+        },
+        error: {
+            render: ({ data }: any) => {
+                const code = options?.error
+                    ? options.error
+                    : data?.response?.data?.messageCode;
+                return messages(code);
+            },
+        },
+    });
+};

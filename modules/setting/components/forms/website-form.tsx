@@ -22,10 +22,10 @@ type Props = {};
 export default function WebsiteForm({}: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
-    const { settingData } = useGetSetting();
+    const { settingConfig } = useGetSetting();
     const { updateSetting } = useUpdateSetting();
     const { active, deActive, isActive } = useActive();
-    const websiteData = settingData?.website;
+    const websiteData = settingConfig?.website;
 
     const onFinish = async (values: any) => {
         try {
