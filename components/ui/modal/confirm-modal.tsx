@@ -20,8 +20,8 @@ const AppConfirm = ({
     const loading = useLoading(LoadingType.Mutating);
     return (
         <AppModal
-            {...props}
             loading={loading}
+            {...props}
             open={open}
             onOk={onOk}
             onCancel={onCancel}

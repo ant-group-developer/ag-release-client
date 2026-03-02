@@ -31,7 +31,7 @@ function TenantSwitch({}: Props) {
     } = useAuth();
     const { update } = useSession();
     const { isAdmin } = useAuth();
-    const { settingData: dataConfig } = useGetSettingPublic();
+    const { settingConfig: dataConfig } = useGetSettingPublic();
     const website = dataConfig?.website;
 
     const dataSource: TenantTableRecord[] = [...data.items];

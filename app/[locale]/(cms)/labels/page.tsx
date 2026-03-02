@@ -122,7 +122,7 @@ export default function Labels({}: Props) {
 
                 {(typeModal === TYPE_MODAL_LABEL.CREATE ||
                     typeModal === TYPE_MODAL_LABEL.EDIT) && (
-                    <LabelFormModal onCancel={closeModal} />
+                    <LabelFormModal open onCancel={closeModal} />
                 )}
 
                 {typeModal === TYPE_MODAL_LABEL.DELETE && (

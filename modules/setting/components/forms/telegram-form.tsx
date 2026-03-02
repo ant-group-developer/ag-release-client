@@ -14,10 +14,10 @@ type Props = {};
 export default function TelegramForm({}: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
-    const { settingData } = useGetSetting();
+    const { settingConfig } = useGetSetting();
     const { updateSetting } = useUpdateSetting();
     const { active, deActive, isActive } = useActive();
-    const telegramConfigData = settingData?.telegram;
+    const telegramConfigData = settingConfig?.telegram;
 
     const onFinish = (values: any) => {
         try {
