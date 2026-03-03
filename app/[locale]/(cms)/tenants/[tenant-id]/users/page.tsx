@@ -83,7 +83,7 @@ export default function UserPage({}: Props) {
                 />
 
                 <UserTable
-                    sticky={{ offsetHeader: 170 }}
+                    sticky={{ offsetHeader: 130 }}
                     dataSource={data.items}
                     // scroll={{ y: getScrollYHeight(height, width, 40, 47) }}
                     pagination={{

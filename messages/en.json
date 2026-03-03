@@ -1347,7 +1347,7 @@
     "tenant": {
         "label": "Workspace",
         "selectTitle": "Select Workspace",
-        "workspaces": "workspaces",
+        "workspaces": "Workspaces",
         "name": "Workspace name",
         "logo": "Logo",
         "icon": {
@@ -1682,7 +1682,7 @@
     },
 
     "tenantIssue": {
-        "label": "Tenant issue",
+        "label": "Workspace issue",
         "message": {
             "success": {
                 "create": "Create success",
@@ -1690,17 +1690,17 @@
                 "delete": "Delete success"
             },
             "error": {
-                "notFound": "Tenant issue not found",
-                "duplicate": "This tenant already has this issue active",
-                "tenantNotFound": "Tenant not found",
+                "notFound": "Workspace issue not found",
+                "duplicate": "This workspace already has this issue active",
+                "tenantNotFound": "Workspace not found",
                 "issueNotFound": "Issue not found"
             }
         }
     },
 
     "tenantTier": {
-        "label": "Tenant tier",
-        "name": "Tenant tier name",
+        "label": "Workspace tier",
+        "name": "Workspace tier name",
         "message": {
             "success": {
                 "create": "Create success",
@@ -1818,8 +1818,8 @@
                 "delete": "Delete integration successfully"
             },
             "error": {
-                "notFound": "Tenant integration not found",
-                "dspExisted": "DSP is already enabled for this tenant"
+                "notFound": "Workspace integration not found",
+                "dspExisted": "DSP is already enabled for this workspace"
             }
         }
     },
