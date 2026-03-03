@@ -1350,7 +1350,7 @@
     "tenant": {
         "label": "Workspace",
         "selectTitle": "Chọn Workspace",
-        "workspaces": "workspaces",
+        "workspaces": "Workspace",
         "name": "Tên workspace",
         "logo": "Logo",
         "icon": {
@@ -1396,7 +1396,7 @@
         },
         "parent": {
             "placeholder": "Chọn workspace cha",
-            "label": "Tenant cha"
+            "label": "Workspace cha"
         },
         "back": "Trở lại workspace",
         "member": "Thành viên",
@@ -1689,7 +1689,7 @@
     },
 
     "tenantIssue": {
-        "label": "Vấn đề tenant",
+        "label": "Vấn đề workspace",
         "message": {
             "success": {
                 "create": "Tạo vấn đề thành công",
@@ -1699,23 +1699,23 @@
             "error": {
                 "notFound": "Không tìm thấy vấn đề",
                 "duplicate": "Vấn đề này đã tồn tại",
-                "tenantNotFound": "Không tìm thấy tenant",
+                "tenantNotFound": "Không tìm thấy workspace",
                 "issueNotFound": "Không tìm thấy vấn đề"
             }
         }
     },
 
     "tenantTier": {
-        "label": "Xếp hạng tenant",
-        "name": "Tên tenant",
+        "label": "Xếp hạng workspace",
+        "name": "Tên workspace",
         "message": {
             "success": {
-                "create": "Tạo tenant thành công",
-                "update": "Cập nhật tenant thành công",
-                "delete": "Xóa tenant thành công"
+                "create": "Tạo workspace thành công",
+                "update": "Cập nhật workspace thành công",
+                "delete": "Xóa workspace thành công"
             },
             "error": {
-                "notFound": "Không tìm thấy tenant",
+                "notFound": "Không tìm thấy workspace",
                 "duplicateNameVi": "Tên tiếng Việt bị trùng",
                 "duplicateNameEn": "Tên tiếng Anh bị trùng",
                 "duplicateCode": "Mã bị trùng"
@@ -1826,8 +1826,8 @@
                 "delete": "Xóa tích hợp thành công"
             },
             "error": {
-                "notFound": "Không tìm thấy tích hợp của tenant",
-                "dspExisted": "DSP đã được kích hoạt cho tenant này"
+                "notFound": "Không tìm thấy tích hợp của workspace",
+                "dspExisted": "DSP đã được kích hoạt cho workspace này"
             }
         }
     },
