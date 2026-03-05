@@ -90,13 +90,43 @@ export const DspTable = ({ ...props }: Props) => {
             key: 'code',
             dataIndex: 'code',
             align: 'left',
-            width: 200,
+            width: 150,
             render: (value, record) => (
                 <CopyText
                     tooltipProps={{ placement: 'right' }}
                     text={record?.code}
                 >
                     <p className="truncate">{record?.code}</p>
+                </CopyText>
+            ),
+        },
+        {
+            title: messages('dsp.ddexPartyId'),
+            key: 'ddexId',
+            dataIndex: 'ddexId',
+            align: 'left',
+            width: 150,
+            render: (value, record) => (
+                <CopyText
+                    tooltipProps={{ placement: 'right' }}
+                    text={record?.ddexId}
+                >
+                    <p className="truncate">{record?.ddexId}</p>
+                </CopyText>
+            ),
+        },
+        {
+            title: messages('dsp.fullNameOfDDexParty'),
+            key: 'ddexName',
+            dataIndex: 'ddexName',
+            align: 'left',
+            width: 200,
+            render: (value, record) => (
+                <CopyText
+                    tooltipProps={{ placement: 'right' }}
+                    text={record?.ddexName}
+                >
+                    <p className="truncate">{record?.ddexName}</p>
                 </CopyText>
             ),
         },
@@ -120,7 +150,7 @@ export const DspTable = ({ ...props }: Props) => {
             key: 'enablePolicy',
             dataIndex: 'enablePolicy',
             align: 'center',
-            width: 100,
+            width: 150,
             render: (value, record) => (
                 <Switch
                     value={record?.enablePolicy}
@@ -138,7 +168,7 @@ export const DspTable = ({ ...props }: Props) => {
             key: 'createdAt',
             dataIndex: 'createdAt',
             align: 'center',
-            width: 200,
+            width: 150,
             render: (value, record) => (
                 <span className="truncate text-wrap">
                     {formattedDate(record.createdAt)}
@@ -150,7 +180,7 @@ export const DspTable = ({ ...props }: Props) => {
             key: 'updatedAt',
             dataIndex: 'updatedAt',
             align: 'center',
-            width: 200,
+            width: 150,
             render: (value, record) => (
                 <span className="truncate text-wrap">
                     {formattedDate(record.updatedAt)}

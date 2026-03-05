@@ -66,7 +66,7 @@ export default function CMSLayout({ children }: Props) {
 
     return (
         // <SocketProvider accessToken={accessToken}>
-        <div className="mx-auto max-w-[150rem] overflow-x-hidden border-x border-l-0">
+        <div className="mx-auto max-w-[150rem] overflow-x-hidden border-x !border-r-0 border-l-0">
             <Layout>
                 <Header
                     collapsed={isActive}

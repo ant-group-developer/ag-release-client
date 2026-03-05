@@ -214,7 +214,7 @@ export default function TracksInfo({}: Props) {
                                 }
                                 key={String(index + 1)}
                             >
-                                <div className="m-auto grid max-w-5xl grid-cols-2 gap-4 px-4">
+                                <div className="m-auto grid grid-cols-2 gap-4 px-4">
                                     {renderField(
                                         index,
                                         messages('track.name'),

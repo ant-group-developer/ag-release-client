@@ -123,7 +123,7 @@ export default function ReleaseSchedulingForm({}: Props) {
         >
             <FormProvider {...formMethods}>
                 <form className="flex flex-col gap-4">
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="grid grid-cols-2 gap-6 gap-x-12">
                         <div className="col-span-2">
                             <FormItem
                                 className="w-2/6"
@@ -187,7 +187,6 @@ export default function ReleaseSchedulingForm({}: Props) {
                                         <Radio.Group
                                             {...field}
                                             id="releaseTimeMode"
-                                            className="space-y-3"
                                             onChange={(e) => {
                                                 field.onChange(e.target.value);
                                                 debouncedUpdate({
@@ -365,7 +364,7 @@ export default function ReleaseSchedulingForm({}: Props) {
                                 <>
                                     <FormItem
                                         name="releaseTerritory.distributionType"
-                                        label={''}
+                                        label={' '}
                                         ErrorMessage={
                                             errors.releaseTerritory
                                                 ?.distributionType?.message
