@@ -1052,7 +1052,8 @@
         "classical": "Cổ điển",
         "blues": "Blues",
         "add": "Thêm thể loại",
-        "primary": "Thể loại chính"
+        "primary": "Thể loại chính",
+        "label": "Thể loại"
     },
 
     "genre": {

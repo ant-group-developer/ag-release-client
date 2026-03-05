@@ -79,6 +79,7 @@ export default function ReleaseDetailForm() {
     const handleNext = async () => {
         active();
         const valid = await trigger();
+        console.log(errors);
         if (valid) {
             router.push(
                 getReleaseTabRoute(

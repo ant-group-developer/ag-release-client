@@ -1,5 +1,6 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
+import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE } from '@/constants/page-size';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { toastPromise } from '@/helpers/messages-helper';
@@ -28,6 +29,7 @@ import { TrackData, TrackDataFilter } from '@/modules/tracks/types';
 import { DeleteVariables } from '@/types/api';
 import { Button, ConfigProvider, Empty, Modal, theme } from 'antd';
 import { TableRowSelection } from 'antd/es/table/interface';
+import { Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import { Key, useState } from 'react';
@@ -119,6 +121,11 @@ export default function Tracks() {
                 <div className="mb-2 flex justify-end">
                     {isTracksPage && isShowAddTrack && (
                         <Button
+                            icon={
+                                <div>
+                                    <Music size={SIZE_ICON} />
+                                </div>
+                            }
                             onClick={() =>
                                 openModal(TYPE_MODAL_RELEASE.ADD_TRACK)
                             }

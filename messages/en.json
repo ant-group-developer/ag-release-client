@@ -1051,7 +1051,8 @@
         "classical": "Classical",
         "blues": "Blues",
         "add": "Add new genre",
-        "primary": "Primary genre"
+        "primary": "Primary genre",
+        "label": "Genres"
     },
     "genre": {
         "label": "Genre",
@@ -1161,7 +1162,7 @@
         "trackSensitiveId": "Sensitive content",
         "recordingCountryId": "Recording country",
         "trackArtists": "track artist",
-        "distributionType": "Release type",
+        "distributionType": "Distribution type",
         "releaseCoverArts": "Release image",
         "audioLanguageId": "Audio language",
         "labelId": "Label",
@@ -1269,8 +1270,8 @@
         "add": "Add platform",
         "oneLinkPerLine": "One link per line",
         "profileList": "Profile list",
-        "fullNameOfDDexParty": "Full name of DDex party",
-        "ddexPartyId": "DDex party Id",
+        "fullNameOfDDexParty": "Full Name of DDEX Party",
+        "ddexPartyId": "DDex Party ID",
         "message": {
             "success": {
                 "create": "Create platform successfully",
