@@ -16,6 +16,7 @@ import {
     Avatar,
     Breadcrumb,
     ConfigProvider,
+    Space,
     Spin,
     Tabs,
     TabsProps,
@@ -120,32 +121,24 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
                         background: token.colorBgContainer,
                     }}
                 >
-                    {/* <Link
-                        href={APP_ROUTES.TENANT}
-                        className="flex w-fit items-center gap-1 py-2 hover:underline"
-                    >
-                        <ArrowLeft size={SIZE_ICON_SMALL} />
-                        {messages('tenant.back')}
-                    </Link> */}
-                    <div className="mb-5 mt-3 flex gap-5">
+                    <Space>
                         <Avatar
                             src={dataTenant.logo || dataTenant.icon}
-                            size={64}
+                            size={50}
                             shape="square"
                         >
                             {getAvatarPlaceholder(dataTenant.name)}
                         </Avatar>
-                        <div className="h-full">
-                            <h1 className="text-3xl font-bold">
+                        <div>
+                            <Typography.Title level={3} style={{ margin: 0 }}>
                                 {dataTenant.name}
-                            </h1>
-
+                            </Typography.Title>
                             <Typography.Text type="secondary">
                                 {messages('tenant.owner')}:{' '}
                                 {getTenantOwnerEmail(dataTenant.tenantUser)}
                             </Typography.Text>
                         </div>
-                    </div>
+                    </Space>
 
                     <ConfigProvider
                         theme={{

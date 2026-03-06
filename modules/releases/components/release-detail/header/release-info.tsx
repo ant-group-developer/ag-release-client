@@ -2,6 +2,13 @@ import { DATE_FORMAT } from '@/enums/common';
 import { cn, formattedDate } from '@/helpers/common';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
+import {
+    BarcodeOutlined,
+    CalendarOutlined,
+    CustomerServiceOutlined,
+    TagOutlined,
+    UserOutlined,
+} from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 
 type Props = {
@@ -38,6 +45,7 @@ export default function ReleaseInfo({ isScrolled }: Props) {
         >
             <div>
                 <span className="align-middle">
+                    <CustomerServiceOutlined className="mr-1" />
                     {messages('release.name')}:{' '}
                 </span>
                 <span className="inline-block max-w-[500px] text-wrap align-top font-semibold">
@@ -48,21 +56,30 @@ export default function ReleaseInfo({ isScrolled }: Props) {
                 </span>
             </div>
             <div>
-                <span>{messages('release.type')}: </span>
+                <span>
+                    <TagOutlined className="mr-1" />
+                    {messages('release.type')}:{' '}
+                </span>
                 <span className="font-semibold">
                     {releaseData.albumFormat?.name}
                 </span>
             </div>
             {releaseData.labelId && (
                 <div>
-                    <span>Label: </span>
+                    <span>
+                        <TagOutlined className="mr-1" />
+                        Label:{' '}
+                    </span>
                     <span className="font-semibold">
                         {releaseData?.label?.name}
                     </span>
                 </div>
             )}
             <div>
-                <span>{messages('artist.label')}: </span>
+                <span>
+                    <UserOutlined className="mr-1" />
+                    {messages('artist.label')}:{' '}
+                </span>
                 <span className="font-semibold">{renderArtistName()}</span>
             </div>
             {/* <div >
@@ -72,7 +89,10 @@ export default function ReleaseInfo({ isScrolled }: Props) {
                                     </span>
                                 </div> */}
             <div>
-                <span>{messages('common.releaseDate')}: </span>
+                <span>
+                    <CalendarOutlined className="mr-1" />
+                    {messages('common.releaseDate')}:{' '}
+                </span>
                 <span className="font-semibold">
                     {formattedDate(
                         releaseData.releaseDate,
@@ -83,7 +103,10 @@ export default function ReleaseInfo({ isScrolled }: Props) {
 
             {releaseData.upc && (
                 <div>
-                    <span>UPC: </span>
+                    <span>
+                        <BarcodeOutlined className="mr-1" />
+                        UPC:{' '}
+                    </span>
                     <span className="font-semibold">{releaseData.upc}</span>
                 </div>
             )}

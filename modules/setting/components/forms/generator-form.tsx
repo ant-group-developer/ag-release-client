@@ -15,16 +15,16 @@ type Props = {};
 export default function GeneratorForm({}: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
-    const { settingData } = useGetSetting();
+    const { settingConfig } = useGetSetting();
     const { updateSetting } = useUpdateSetting();
     const { active, deActive, isActive } = useActive();
-    const telegramConfigData = settingData?.telegram;
+    const generatorConfigData = settingConfig?.generator;
 
     const onFinish = (values: any) => {
         try {
             active();
             const payload: UpdateSettingPayload = {
-                telegram: {
+                generator: {
                     ...values,
                 },
             };
@@ -44,9 +44,9 @@ export default function GeneratorForm({}: Props) {
 
     useEffect(() => {
         form.setFieldsValue({
-            ...telegramConfigData,
+            ...generatorConfigData,
         });
-    }, [form, telegramConfigData]);
+    }, [form, generatorConfigData]);
     return (
         <div>
             <AppForm
@@ -99,7 +99,7 @@ export default function GeneratorForm({}: Props) {
 
                 <AppFormItem
                     name="DDEX_PARTY_ID_SENDER"
-                    label={'DDEX party Id'}
+                    label={messages('dsp.ddexPartyId')}
                     required
                     rules={[
                         {
@@ -113,7 +113,7 @@ export default function GeneratorForm({}: Props) {
 
                 <AppFormItem
                     name="DDEX_PARTY_NAME_SENDER"
-                    label={'DDEX party name'}
+                    label={messages('dsp.fullNameOfDDexParty')}
                     required
                     rules={[
                         {

@@ -1,5 +1,6 @@
 'use client';
 import DetailSkeleton from '@/components/ui/skeleton/detail-skeleton';
+import { SIZE_ICON } from '@/constants/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { cn } from '@/helpers/common';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
@@ -14,9 +15,10 @@ import {
 } from '@/modules/releases/hooks/release-form-store';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { Breadcrumb, Tabs, TabsProps, theme } from 'antd';
+import { Box, Calendar, Eye, Info, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname } from 'next/navigation';
-import { PropsWithChildren, useEffect, useState } from 'react';
+import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 
 type Props = {};
 
@@ -40,6 +42,8 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         RELEASES_TABS.CORE_DETAIL
     );
     const [isScrolled, setIsScrolled] = useState(false);
+    const scrollLockRef = useRef(false);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     // const
     const releaseId = params['release-id'] ? `${params['release-id']}` : '';
@@ -63,11 +67,15 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     )}
                     href={coreDetailTabsNavigate}
                 >
-                    <span className="font-medium">
-                        {messages('common.coreInfo')}
-                    </span>
+                    <div className="flex items-center gap-1">
+                        <Info size={SIZE_ICON} />
+                        <span className="font-medium">
+                            {messages('common.coreInfo')}
+                        </span>
+                    </div>
                 </Link>
             ),
+
             disabled: isDisableTab,
         },
         {
@@ -81,9 +89,12 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     )}
                     href={getReleaseTabRoute(releaseId, RELEASES_TABS.TRACKS)}
                 >
-                    <span className="font-medium">
-                        {messages('common.tracks')}
-                    </span>
+                    <div className="flex items-center gap-1">
+                        <Music size={SIZE_ICON} />
+                        <span className="font-medium">
+                            {messages('common.tracks')}
+                        </span>
+                    </div>
                 </Link>
             ),
             disabled: isDisableTab,
@@ -95,9 +106,12 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     className={cn(isDisableTab ? 'pointer-events-none' : '')}
                     href={getReleaseTabRoute(releaseId, RELEASES_TABS.SCHEDULE)}
                 >
-                    <span className="font-medium">
-                        {messages('release.scheduling.label')}
-                    </span>
+                    <div className="flex items-center gap-1">
+                        <Calendar size={SIZE_ICON} />
+                        <span className="font-medium">
+                            {messages('release.scheduling.label')}
+                        </span>
+                    </div>
                 </Link>
             ),
             disabled: isDisableTab,
@@ -112,9 +126,12 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                         RELEASES_TABS.DISTRIBUTION
                     )}
                 >
-                    <span className="font-medium">
-                        {messages('distribute.label')}
-                    </span>
+                    <div className="flex items-center gap-1">
+                        <Box size={SIZE_ICON} />
+                        <span className="font-medium">
+                            {messages('distribute.label')}
+                        </span>
+                    </div>
                 </Link>
             ),
             disabled: isDisableTab,
@@ -126,9 +143,12 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     className={cn(isDisableTab ? 'pointer-events-none' : '')}
                     href={getReleaseTabRoute(releaseId, RELEASES_TABS.REVIEW)}
                 >
-                    <span className="font-medium">
-                        {messages('common.overview')}
-                    </span>
+                    <div className="flex items-center gap-1">
+                        <Eye size={SIZE_ICON} />
+                        <span className="font-medium">
+                            {messages('common.overview')}
+                        </span>
+                    </div>
                 </Link>
             ),
             disabled: isDisableTab,
@@ -183,8 +203,12 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     }, [isCoreDetailPage]);
 
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-        if (isCoreDetailPage) {
-            setIsScrolled(e.currentTarget.scrollTop > 0);
+        if (!isCoreDetailPage) return;
+        const scrollTop = e.currentTarget.scrollTop;
+        if (!isScrolled && scrollTop > 100) {
+            setIsScrolled(true);
+        } else if (isScrolled && scrollTop <= 10) {
+            setIsScrolled(false);
         }
     };
 

@@ -202,48 +202,47 @@ export const releaseSchema = (messages: any) =>
 export type ReleaseSchema = z.infer<ReturnType<typeof releaseSchema>>;
 
 export const releaseDetailSchema = (messages: any) =>
-    releaseSchema(messages)
-        .pick({
-            upc: true,
-            primaryGenreId: true,
-            subGenreId: true,
-            releaseLanguage: true,
-            labelId: true,
-            catalogId: true,
-            title: true,
-            version: true,
-            releaseArtists: true,
-            albumFormatId: true,
-            // coverArtThumbnails: true,
-            pLineOwner: true,
-            pLineYear: true,
-            cLineYear: true,
-            cLineOwner: true,
-            isVariousArtist: true,
-        })
-        .superRefine((data, ctx) => {
-            // Validate releaseArtists chỉ khi isVariousArtist là false
-            if (!data.isVariousArtist) {
-                if (
-                    !Array.isArray(data.releaseArtists) ||
-                    data.releaseArtists.length < 1
-                ) {
-                    ctx.addIssue({
-                        path: ['releaseArtists'],
-                        code: z.ZodIssueCode.custom,
-                        message: messages('validation.input'),
-                    });
-                } else if (data.releaseArtists.length <= 0) {
-                    ctx.addIssue({
-                        path: ['releaseArtists'],
-                        code: z.ZodIssueCode.custom,
-                        message: messages(
-                            'release.validation.mustHaveMainArtist'
-                        ),
-                    });
-                }
-            }
-        });
+    releaseSchema(messages).pick({
+        upc: true,
+        primaryGenreId: true,
+        subGenreId: true,
+        releaseLanguage: true,
+        labelId: true,
+        catalogId: true,
+        title: true,
+        version: true,
+        releaseArtists: true,
+        albumFormatId: true,
+        // coverArtThumbnails: true,
+        pLineOwner: true,
+        pLineYear: true,
+        cLineYear: true,
+        cLineOwner: true,
+        isVariousArtist: true,
+    });
+// .superRefine((data, ctx) => {
+// Validate releaseArtists chỉ khi isVariousArtist là false
+//     if (!data.isVariousArtist) {
+//         if (
+//             !Array.isArray(data.releaseArtists) ||
+//             data.releaseArtists.length < 1
+//         ) {
+//             ctx.addIssue({
+//                 path: ['releaseArtists'],
+//                 code: z.ZodIssueCode.custom,
+//                 message: messages('validation.input'),
+//             });
+//         } else if (data.releaseArtists.length <= 0) {
+//             ctx.addIssue({
+//                 path: ['releaseArtists'],
+//                 code: z.ZodIssueCode.custom,
+//                 message: messages(
+//                     'release.validation.mustHaveMainArtist'
+//                 ),
+//             });
+//         }
+//     }
+// });
 
 export type ReleaseDetailSchema = z.infer<
     ReturnType<typeof releaseDetailSchema>

@@ -5,7 +5,7 @@ import type { PrefixIsrcData, PrefixIsrcDataFilter } from '../types';
 export const prefixIsrcApis = {
     getList: (params: PrefixIsrcDataFilter) => {
         return axiosAuth.get<PaginationResponse<PrefixIsrcData>>(
-            'prefix-isrc',
+            '/isrc/prefix',
             { params }
         );
     },

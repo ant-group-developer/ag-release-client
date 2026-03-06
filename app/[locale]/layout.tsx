@@ -54,7 +54,8 @@ export async function generateMetadata({
     const settingData = await getCurrentTenant(cookies()?.toString?.());
     // const settingData = null as any;
 
-    const settingPublicWebsiteData = settingPublic?.data?.website ?? null;
+    const settingPublicWebsiteData =
+        settingPublic?.data?.config?.website ?? null;
 
     const getTitle = () => {
         const flattenRoutes = flattenData(adminRoutes, {});

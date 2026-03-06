@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "incomplete": "Incomplete",
         "generate": "Generate",
         "privateKey": "Private key",
         "deal": "Deal",
@@ -1050,7 +1051,8 @@
         "classical": "Classical",
         "blues": "Blues",
         "add": "Add new genre",
-        "primary": "Primary genre"
+        "primary": "Primary genre",
+        "label": "Genres"
     },
     "genre": {
         "label": "Genre",
@@ -1160,7 +1162,7 @@
         "trackSensitiveId": "Sensitive content",
         "recordingCountryId": "Recording country",
         "trackArtists": "track artist",
-        "distributionType": "Release type",
+        "distributionType": "Distribution type",
         "releaseCoverArts": "Release image",
         "audioLanguageId": "Audio language",
         "labelId": "Label",
@@ -1268,8 +1270,8 @@
         "add": "Add platform",
         "oneLinkPerLine": "One link per line",
         "profileList": "Profile list",
-        "fullNameOfDDexParty": "Full name of DDex party",
-        "ddexPartyId": "DDex party Id",
+        "fullNameOfDDexParty": "Full Name of DDEX Party",
+        "ddexPartyId": "DDex Party ID",
         "message": {
             "success": {
                 "create": "Create platform successfully",
@@ -1346,7 +1348,7 @@
     "tenant": {
         "label": "Workspace",
         "selectTitle": "Select Workspace",
-        "workspaces": "workspaces",
+        "workspaces": "Workspaces",
         "name": "Workspace name",
         "logo": "Logo",
         "icon": {
@@ -1681,7 +1683,7 @@
     },
 
     "tenantIssue": {
-        "label": "Tenant issue",
+        "label": "Workspace issue",
         "message": {
             "success": {
                 "create": "Create success",
@@ -1689,17 +1691,17 @@
                 "delete": "Delete success"
             },
             "error": {
-                "notFound": "Tenant issue not found",
-                "duplicate": "This tenant already has this issue active",
-                "tenantNotFound": "Tenant not found",
+                "notFound": "Workspace issue not found",
+                "duplicate": "This workspace already has this issue active",
+                "tenantNotFound": "Workspace not found",
                 "issueNotFound": "Issue not found"
             }
         }
     },
 
     "tenantTier": {
-        "label": "Tenant tier",
-        "name": "Tenant tier name",
+        "label": "Workspace tier",
+        "name": "Workspace tier name",
         "message": {
             "success": {
                 "create": "Create success",
@@ -1817,8 +1819,8 @@
                 "delete": "Delete integration successfully"
             },
             "error": {
-                "notFound": "Tenant integration not found",
-                "dspExisted": "DSP is already enabled for this tenant"
+                "notFound": "Workspace integration not found",
+                "dspExisted": "DSP is already enabled for this workspace"
             }
         }
     },

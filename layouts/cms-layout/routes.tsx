@@ -111,6 +111,15 @@ export const adminRoutes: RouteNode[] = [
         label: 'common.management',
         children: [
             {
+                id: 'bulk-upload-demo',
+                type: 'link',
+                label: 'Bulk Upload Demo',
+                title: 'Bulk Upload Demo',
+                href: '/bulk-upload-demo',
+                icon: House,
+                required: { permission: [PERMISSION.DASHBOARD.READ] },
+            },
+            {
                 id: 'dashboard',
                 type: 'link',
                 label: 'dashboard.label',
@@ -436,7 +445,7 @@ export const adminRoutes: RouteNode[] = [
                     {
                         id: 'genres',
                         type: 'link',
-                        label: 'common.genres',
+                        label: 'genres.label',
                         title: 'Genres',
                         href: APP_ROUTES.GENRES,
                         icon: Library,

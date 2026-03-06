@@ -5,18 +5,18 @@ import { UpdateSettingPayload } from '../types/payload';
 
 export const settingApis = {
     getSetting: () => {
-        return axiosInstance.get<DetailResponse<SettingData>>('/app-config');
+        return axiosInstance.get<DetailResponse<SettingData>>('/app-config/v2');
     },
 
     getSettingPublic: () => {
         return axiosInstance.get<DetailResponse<SettingData>>(
-            '/app-config/public'
+            '/app-config/v2/public'
         );
     },
 
     updateSetting: (payload: UpdateSettingPayload) => {
         return axiosInstance.put<DetailResponse<SettingData>>(
-            '/app-config',
+            '/app-config/v2',
             payload
         );
     },

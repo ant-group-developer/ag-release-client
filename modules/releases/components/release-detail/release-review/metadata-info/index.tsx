@@ -86,7 +86,7 @@ export default function MetadataInfo({}: Props) {
     };
 
     return (
-        <div className="m-auto grid w-full max-w-5xl grid-cols-2 gap-4">
+        <div className="m-auto grid w-full grid-cols-2 gap-4">
             {/* <p className="font-semibold">MetaData</p> */}
             {/* <div className="my-1 rounded-lg bg-main p-4 dark:bg-zinc-900">
                 <p className="text-base font-medium">

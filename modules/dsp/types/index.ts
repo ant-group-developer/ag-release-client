@@ -13,6 +13,8 @@ export interface DspData extends CommonAttribute {
     formatLinks: string[];
     dspActions: DspActionData[];
     code: string;
+    ddexId?: string;
+    ddexName?: string;
 }
 
 export interface DspDataFilter extends CommonParams {
