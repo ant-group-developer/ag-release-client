@@ -759,6 +759,10 @@
     },
 
     "release": {
+        "importTemplate": "Tải lên mẫu",
+        "uploadTemplateSuccess": "Tải lên mẫu thành công",
+        "uploadTemplateError": "Tải lên mẫu thất bại",
+        "downloadTemplate": "Tải mẫu",
         "contributors": "Người đóng góp",
         "list": "Danh sách phát hành",
         "releases": "Phát hành",

@@ -9,9 +9,15 @@ type MenuItem = Required<MenuProps>['items'][number];
 type Props = MenuProps & {
     toggleCollapsed?: () => void;
     toggleSecondMenu?: () => void;
+    setCollapsedSecondMenu?: (value: boolean) => void;
 };
 
-function SidebarMenu({ toggleCollapsed, toggleSecondMenu, ...props }: Props) {
+function SidebarMenu({
+    toggleCollapsed,
+    toggleSecondMenu,
+    setCollapsedSecondMenu,
+    ...props
+}: Props) {
     const { items, openKeys, bestActiveLink } = useSideBarMenuItems();
 
     function pickLevel1AndChildren(items: MenuItem[] = []): MenuItem[] {
@@ -38,7 +44,7 @@ function SidebarMenu({ toggleCollapsed, toggleSecondMenu, ...props }: Props) {
                             ...rest,
                             label: (
                                 <span className="">
-                                    <span className="mr-4">
+                                    <span className="mr-24">
                                         {(child as any).label}
                                     </span>
 
@@ -61,6 +67,8 @@ function SidebarMenu({ toggleCollapsed, toggleSecondMenu, ...props }: Props) {
             onClick={(e) => {
                 if (e.key === ROUTES_ID.GENERAL) {
                     toggleSecondMenu?.();
+                } else {
+                    setCollapsedSecondMenu?.(true);
                 }
             }}
             defaultOpenKeys={openKeys}

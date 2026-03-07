@@ -10,6 +10,7 @@ type Props = {
     drawerProps?: DrawerProps;
     toggleCollapsed?: () => void;
     toggleSecondMenu?: () => void;
+    setCollapsedSecondMenu?: (value: boolean) => void;
 } & SiderProps;
 
 const { Sider } = Layout;
@@ -19,6 +20,7 @@ function Sidebar({
     drawerProps,
     toggleCollapsed,
     toggleSecondMenu,
+    setCollapsedSecondMenu,
     ...props
 }: Props) {
     const responsive = useResponsive();
@@ -41,6 +43,7 @@ function Sidebar({
                         <SidebarMenu
                             toggleCollapsed={toggleCollapsed}
                             toggleSecondMenu={toggleSecondMenu}
+                            setCollapsedSecondMenu={setCollapsedSecondMenu}
                         />
                     </Scrollbars>
                 </div>
