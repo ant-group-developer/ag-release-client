@@ -5,7 +5,7 @@ import CurrenciesSelect from '@/components/ui/select/currencies-select';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
-import { Form, InputNumber, Switch } from 'antd';
+import { Form, Input, InputNumber, Switch } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { TYPE_MODAL_PRICE_TIERS } from '../../enums';
@@ -131,6 +131,20 @@ export default function PriceTiersFormModal({ ...props }: Props) {
                     </AppFormItem>
 
                     <AppFormItem
+                        name="code"
+                        label={messages('common.code')}
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <Input />
+                    </AppFormItem>
+
+                    <AppFormItem
                         name="currencyId"
                         label={messages('currencies.label')}
                         required
@@ -148,7 +162,6 @@ export default function PriceTiersFormModal({ ...props }: Props) {
                         valuePropName="checked"
                         name="isDefault"
                         label={messages('common.setIsDefault')}
-                        required
                     >
                         <Switch
                             defaultChecked={false}
@@ -164,7 +177,6 @@ export default function PriceTiersFormModal({ ...props }: Props) {
                         valuePropName="checked"
                         name="isActive"
                         label={messages('status.active')}
-                        required
                     >
                         <Switch
                             defaultChecked={true}

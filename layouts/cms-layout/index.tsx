@@ -85,6 +85,7 @@ export default function CMSLayout({ children }: Props) {
                         }}
                         toggleCollapsed={toggleActive}
                         toggleSecondMenu={toggleActiveSecondMenu}
+                        setCollapsedSecondMenu={changeActiveSecondMenu}
                     />
 
                     <SecondSidebar

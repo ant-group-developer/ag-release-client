@@ -764,6 +764,10 @@
     },
 
     "release": {
+        "uploadTemplateSuccess": "Upload template successfully",
+        "uploadTemplateError": "Upload template failed",
+        "importTemplate": "Import template",
+        "downloadTemplate": "Download template",
         "contributors": "Release contributors",
         "list": "Release list",
         "releases": "Releases",

@@ -3,7 +3,7 @@
 import { SIZE_ICON } from '@/constants/common';
 import { useSideBarMenuItems } from '@/hooks/use-sidebar-menu-items';
 import type { DrawerProps, SiderProps } from 'antd';
-import { Button, Drawer, Layout, Menu, Typography } from 'antd';
+import { Button, Drawer, Layout, Menu, theme, Typography } from 'antd';
 import { useResponsive } from 'antd-style';
 import { MenuItemGroupType, MenuItemType } from 'antd/es/menu/interface';
 import { ChevronLeft } from 'lucide-react';
@@ -26,6 +26,8 @@ function SecondSidebar({
     const responsive = useResponsive();
 
     const { items, bestActiveLink } = useSideBarMenuItems();
+
+    const { token } = theme.useToken();
 
     const systemGroup = items?.find((i) => i?.key === ROUTES_ID.SYSTEM);
 
@@ -51,7 +53,11 @@ function SecondSidebar({
                     {/* @ts-ignore */}
                     <Scrollbars autoHide>
                         <div className="flex items-center justify-between border-b p-2">
-                            <Typography>
+                            <Typography
+                                style={{
+                                    color: token?.colorTextDescription,
+                                }}
+                            >
                                 {!collapsed && generalItem?.label}
                             </Typography>
                             <Button
@@ -59,7 +65,12 @@ function SecondSidebar({
                                 type="text"
                                 icon={
                                     <div>
-                                        <ChevronLeft size={SIZE_ICON} />
+                                        <ChevronLeft
+                                            size={SIZE_ICON}
+                                            style={{
+                                                color: token?.colorTextDescription,
+                                            }}
+                                        />
                                     </div>
                                 }
                             />

@@ -179,6 +179,7 @@ export enum TYPE_UPLOAD_BUCKET {
     JSON = 'peak_audio',
     TRACK = 'track_audio',
     RELEASE_COVER_ART = 'release_cover_art',
+    RELEASE_TEMPLATE = 'release_template_file',
 }
 
 export enum DISTRIBUTE_TYPES {

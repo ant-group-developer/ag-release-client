@@ -445,7 +445,7 @@ export const adminRoutes: RouteNode[] = [
                     {
                         id: 'genres',
                         type: 'link',
-                        label: 'genres.label',
+                        label: 'genre.label',
                         title: 'Genres',
                         href: APP_ROUTES.GENRES,
                         icon: Library,
@@ -454,7 +454,7 @@ export const adminRoutes: RouteNode[] = [
                     {
                         id: 'currencies',
                         type: 'link',
-                        label: 'currencies.currencies',
+                        label: 'currencies.label',
                         title: 'Currencies',
                         href: APP_ROUTES.CURRENCIES,
                         icon: Banknote,
@@ -472,7 +472,7 @@ export const adminRoutes: RouteNode[] = [
                     {
                         id: 'policy',
                         type: 'link',
-                        label: 'policy.policies',
+                        label: 'policy.label',
                         title: 'Policy',
                         href: APP_ROUTES.ACTIONS,
                         icon: BookA,
