@@ -551,8 +551,8 @@
     "status": {
         "label": "Status",
         "active": "Active",
+        "inActive": "Inactive",
         "on": "On",
-
         "off": "Off",
         "block": "Blocked",
         "select": "Select status",
@@ -1588,6 +1588,7 @@
 
     "price": {
         "label": "Price",
+        "prices": "Prices",
         "name": "Price name",
         "code": "Price code",
         "action": {

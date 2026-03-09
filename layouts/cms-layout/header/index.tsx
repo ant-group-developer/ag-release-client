@@ -2,20 +2,13 @@ import CreateButton from '@/components/ui/button/create-button';
 import IconButton from '@/components/ui/button/icon-button';
 import { SIZE_ICON_BIG } from '@/constants/common';
 import { toastPromise } from '@/helpers/messages-helper';
-import useModalStore from '@/hooks/use-modal';
 import { usePermission } from '@/hooks/use-permission';
 import { useRouter } from '@/i18n/routing';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
-import { TemplateUploadModal } from '@/modules/releases/components/template-upload-modal';
-import { TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
 import { useDownloadTemplate } from '@/modules/releases/hooks/use-download-template';
 import TenantSwitch from '@/modules/tenant/components/tenant-switch';
-import {
-    DownloadOutlined,
-    EllipsisOutlined,
-    UploadOutlined,
-} from '@ant-design/icons';
+import { DownloadOutlined, EllipsisOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Layout, MenuProps, Space } from 'antd';
 import { Menu } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -32,14 +25,10 @@ const { Header: AntdHeader } = Layout;
 
 function Header({ collapsed, toggleCollapsed }: Props) {
     const messages = useTranslations();
-    const { isNotSystemTenant, isAdmin } = useAuth();
+    const { isNotSystemTenant } = useAuth();
     const { hasPermission } = usePermission();
     const router = useRouter();
-    const openModal = useModalStore((state) => state.openModal);
-    const typeModal = useModalStore((state) => state.typeModal);
-    const closeModal = useModalStore((state) => state.closeModal);
-    const { mutateAsync: downloadTemplate, isPending: isDownloading } =
-        useDownloadTemplate();
+    const { mutateAsync: downloadTemplate } = useDownloadTemplate();
 
     const handleDownloadTemplate = () => {
         const promise = downloadTemplate();
@@ -47,18 +36,6 @@ function Header({ collapsed, toggleCollapsed }: Props) {
     };
 
     const dropdownOptions: MenuProps['items'] = [
-        ...(isAdmin
-            ? [
-                  {
-                      label: messages('release.importTemplate'),
-                      key: 'upload-template',
-                      icon: <UploadOutlined />,
-                      onClick: () => {
-                          openModal(TYPE_MODAL_RELEASE.UPLOAD_TEMPLATE);
-                      },
-                  },
-              ]
-            : []),
         {
             label: messages('release.downloadTemplate'),
             key: 'download-template',
@@ -91,10 +68,6 @@ function Header({ collapsed, toggleCollapsed }: Props) {
 
                 {typeModal === TYPE_MODAL.SEARCH && <AppSearchModal />}
             </div> */}
-
-            {typeModal === TYPE_MODAL_RELEASE.UPLOAD_TEMPLATE && (
-                <TemplateUploadModal open onClose={closeModal} />
-            )}
 
             <div className="flex flex-1 items-center justify-end gap-2">
                 {isNotSystemTenant &&

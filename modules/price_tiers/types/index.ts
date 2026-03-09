@@ -12,4 +12,6 @@ export interface PriceTiersData extends CommonAttribute {
     currency: CurrenciesData;
 }
 
-export interface PriceTiersDataFilter extends CommonParams {}
+export interface PriceTiersDataFilter extends CommonParams {
+    isActive?: boolean;
+}

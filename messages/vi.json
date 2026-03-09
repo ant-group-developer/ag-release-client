@@ -547,6 +547,7 @@
     "status": {
         "label": "Trạng thái",
         "active": "Kích hoạt",
+        "inActive": "Không kích hoạt",
         "on": "Bật",
         "off": "Tắt",
         "block": "Khoá",
@@ -1595,6 +1596,7 @@
 
     "price": {
         "label": "Giá",
+        "prices": "Giá",
         "name": "Tên giá",
         "code": "Mã giá",
         "action": {

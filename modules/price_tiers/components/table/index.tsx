@@ -122,28 +122,32 @@ export const PriceTiersTable = ({ dataFilter, ...props }: Props) => {
             align: 'center',
             width: 100,
             ellipsis: true,
-            render: (value, record) => (
-                <CustomTooltip
-                    title={
-                        record.isDefault
-                            ? messages(
-                                  'priceTier.canDeactivateOnlyWhenNotDefault'
-                              )
-                            : ''
-                    }
-                >
-                    <Switch
-                        disabled={record?.isDefault}
-                        defaultChecked={record?.isActive}
-                        onChange={(value) =>
-                            updatePriceTiers({
-                                id: record?.id,
-                                payload: { isActive: value },
-                            })
+            render: (value, record) => {
+                return (
+                    <CustomTooltip
+                        title={
+                            record.isDefault
+                                ? messages(
+                                      'priceTier.canDeactivateOnlyWhenNotDefault'
+                                  )
+                                : ''
                         }
-                    />
-                </CustomTooltip>
-            ),
+                    >
+                        <Switch
+                            disabled={record?.isDefault}
+                            // defaultChecked={record?.isActive}
+                            checked={record?.isActive}
+                            value={record?.isActive}
+                            onChange={(value) =>
+                                updatePriceTiers({
+                                    id: record?.id,
+                                    payload: { isActive: value },
+                                })
+                            }
+                        />
+                    </CustomTooltip>
+                );
+            },
         },
         {
             title: messages('common.createdAt'),
