@@ -183,7 +183,7 @@ export default function ReleaseContributorsTable({
     ];
     return (
         <div className="space-y-2">
-            <div className="overflow-hidden rounded-lg border">
+            <div className="overflow-hidden rounded-lg border dark:border-zinc-700">
                 <AppTable
                     {...props}
                     columns={columns}

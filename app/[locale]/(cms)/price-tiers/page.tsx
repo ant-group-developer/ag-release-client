@@ -60,12 +60,13 @@ export default function PriceTiers({}: Props) {
 
     return (
         <AppPageWrapper>
-            <PageContainer title={messages('price.label')}>
+            <PageContainer title={messages('price.prices')}>
                 <PriceTiersTable
                     title={() => (
                         <PriceTiersHeader
                             dataFilter={dataFilter}
                             onSearch={onSearch}
+                            onChangeFilter={onChangeFilter}
                         />
                     )}
                     sticky
