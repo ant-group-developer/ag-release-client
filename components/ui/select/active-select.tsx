@@ -14,7 +14,7 @@ export default function ActiveSelect({ ...props }: ActiveSelectProps) {
         },
         {
             value: ACTIVE_TYPE.OFF,
-            label: messages('status.block'),
+            label: messages('status.inActive'),
         },
     ];
     return (

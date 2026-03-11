@@ -1,4 +1,4 @@
-import { CommonAttribute, DetailResponse } from '@/types/api';
+import { CommonAttribute, CommonFunction, DetailResponse } from '@/types/api';
 
 export type UploadResponse = {
     success: boolean;
@@ -54,9 +54,9 @@ export interface FileBucket extends CommonAttribute {
     urlRead: string;
 }
 
-export interface CreateBucketFile {
+export interface CreateBucketFile extends CommonFunction {
     folderBucket: {
-        releaseId: string;
+        releaseId?: string;
         uploadPurpose: string;
         trackFileName?: string;
     };

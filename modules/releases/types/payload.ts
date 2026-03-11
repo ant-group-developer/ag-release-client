@@ -1,3 +1,4 @@
+import { CreateBucketFile } from '@/modules/upload/types/data';
 import { CommonFunction } from '@/types/api';
 import { ReleasesData } from '.';
 
@@ -16,4 +17,9 @@ export interface UpdateReleaseDraftPayload extends Partial<ReleasesData> {
 
 export interface GenerateUpc extends CommonFunction {
     releaseId: string;
+}
+
+export interface UploadTemplate extends CommonFunction {
+    createBucketFile: CreateBucketFile;
+    file: File;
 }

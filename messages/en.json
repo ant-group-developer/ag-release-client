@@ -551,8 +551,8 @@
     "status": {
         "label": "Status",
         "active": "Active",
+        "inActive": "Inactive",
         "on": "On",
-
         "off": "Off",
         "block": "Blocked",
         "select": "Select status",
@@ -764,6 +764,10 @@
     },
 
     "release": {
+        "uploadTemplateSuccess": "Upload template successfully",
+        "uploadTemplateError": "Upload template failed",
+        "importTemplate": "Import template",
+        "downloadTemplate": "Download template",
         "contributors": "Release contributors",
         "list": "Release list",
         "releases": "Releases",
@@ -1584,6 +1588,7 @@
 
     "price": {
         "label": "Price",
+        "prices": "Prices",
         "name": "Price name",
         "code": "Price code",
         "action": {

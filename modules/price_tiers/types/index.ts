@@ -2,6 +2,7 @@ import { CurrenciesData } from '@/modules/currencies/types';
 import { CommonAttribute, CommonParams } from '@/types/api';
 
 export interface PriceTiersData extends CommonAttribute {
+    code: string;
     currencyId: string;
     isDefault: boolean;
     isActive: boolean;
@@ -11,4 +12,6 @@ export interface PriceTiersData extends CommonAttribute {
     currency: CurrenciesData;
 }
 
-export interface PriceTiersDataFilter extends CommonParams {}
+export interface PriceTiersDataFilter extends CommonParams {
+    isActive?: boolean;
+}

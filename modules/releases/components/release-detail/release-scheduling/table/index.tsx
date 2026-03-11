@@ -78,7 +78,18 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
             ),
         },
         {
-            title: messages('common.price'),
+            title: (
+                <div className="flex flex-col items-center gap-1">
+                    <span>{messages('common.price')}</span>
+                    <div className="w-full">
+                        <PriceTiersSelect
+                            disabled={!isCanEdit}
+                            className="w-full"
+                            allowClear
+                        />
+                    </div>
+                </div>
+            ),
             dataIndex: 'priceCode',
             key: 'priceCode',
             width: 175,
@@ -107,7 +118,16 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
             align: 'center',
             children: dspData?.map((item: DspData) => {
                 return {
-                    title: item.name,
+                    title: (
+                        <div className="flex flex-col items-center gap-1">
+                            <div>{item?.name}</div>
+                            <PriceTiersSelect
+                                disabled={!isCanEdit}
+                                className="w-full"
+                                allowClear
+                            />
+                        </div>
+                    ),
                     dataIndex: `dsp_${item.id}`,
                     key: item.id,
                     align: 'left' as const,

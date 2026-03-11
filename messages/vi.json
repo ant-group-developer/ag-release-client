@@ -547,6 +547,7 @@
     "status": {
         "label": "Trạng thái",
         "active": "Kích hoạt",
+        "inActive": "Không kích hoạt",
         "on": "Bật",
         "off": "Tắt",
         "block": "Khoá",
@@ -759,6 +760,10 @@
     },
 
     "release": {
+        "importTemplate": "Tải lên mẫu",
+        "uploadTemplateSuccess": "Tải lên mẫu thành công",
+        "uploadTemplateError": "Tải lên mẫu thất bại",
+        "downloadTemplate": "Tải mẫu",
         "contributors": "Người đóng góp",
         "list": "Danh sách phát hành",
         "releases": "Phát hành",
@@ -1591,6 +1596,7 @@
 
     "price": {
         "label": "Giá",
+        "prices": "Giá",
         "name": "Tên giá",
         "code": "Mã giá",
         "action": {

@@ -1,4 +1,5 @@
 import axiosInstance from '@/api/axios-auth';
+import { CreateBucketFile } from '@/modules/upload/types/data';
 import { DetailResponse, PaginationResponse } from '@/types/api';
 import {
     ReleasesData,
@@ -111,5 +112,39 @@ export const releasesApi = {
         return axiosInstance.post<DetailResponse<ReleasesData>>(
             `/releases/${id}/gen-upc`
         );
+    },
+
+    downloadTemplate: () => {
+        return axiosInstance.get<DetailResponse<string>>(
+            '/bucket/gcs/private/download-template'
+        );
+    },
+
+    createBucket: async (file: File, payload: CreateBucketFile) => {
+        const response = await axiosInstance.post(
+            '/bucket/gcs/private/template',
+            payload
+        );
+        if (response.status !== 201) {
+            throw new Error(
+                'Failed to get upload URL. Please try again later.'
+            );
+        }
+
+        const { fileId, urlUpload } = response.data.data;
+
+        const uploadResponse = await fetch(urlUpload, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': payload.file.contentType,
+            },
+            body: file,
+        });
+
+        if (!uploadResponse.ok) {
+            throw new Error('Failed to upload file. Please try again later.');
+        }
+
+        return fileId;
     },
 };

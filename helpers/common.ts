@@ -343,7 +343,7 @@ export const isValidUrl = (urlString: string) => {
     }
 };
 
-export const ExportFileExcel = (
+export const exportFileExcel = (
     excelBlob: Blob | undefined,
     defaultNameDownload?: string
 ) => {
