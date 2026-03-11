@@ -1270,7 +1270,13 @@
         "id": "Mã phân phối",
         "onlyIn": "Chỉ phân phối trong",
         "everyWhereExcept": "Phân phối khắp nơi ngoại trừ",
-        "wordWide": "Phân phối khắp thế giới"
+        "wordWide": "Phân phối khắp thế giới",
+        "confirmDistribute": "Bạn có chắc chắn muốn phát hành trên nền tảng này không?"
+    },
+
+    "takeDown": {
+        "label": "Gỡ khỏi nền tảng",
+        "confirmTakeDown": "Bạn có chắc chắn muốn gỡ khỏi nền tảng này không?"
     },
 
     "emailSender": {

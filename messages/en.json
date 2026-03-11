@@ -1266,7 +1266,13 @@
         "id": "Distribute ID",
         "onlyIn": "Distribute only in",
         "everyWhereExcept": "Distribute everywhere except",
-        "wordWide": "Distribute worldwide"
+        "wordWide": "Distribute worldwide",
+        "confirmDistribute": "Are you sure you want to distribute on this platform?"
+    },
+
+    "takeDown": {
+        "label": "Take down from platform",
+        "confirmTakeDown": "Are you sure you want to take down from this platform?"
     },
 
     "emailSender": {

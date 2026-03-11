@@ -49,7 +49,7 @@ export default function Distribution({}: Props) {
     //     pageSize: PAGE_SIZE,
     // });
 
-    const { releaseDsp, isLoading } = useGetListReleaseDsp(
+    const { releaseDsp, isLoading: isLoadingReleaseDsp } = useGetListReleaseDsp(
         formValues?.id ?? ''
     );
     const { distributeRelease } = useDistributeRelease();
@@ -148,6 +148,7 @@ export default function Distribution({}: Props) {
                             total: dataSource?.length,
                             onChange: (page) => setCurrentPage(page),
                         }}
+                        loading={isLoadingReleaseDsp}
                     />
                 </div>
             </div>
@@ -158,8 +159,8 @@ export default function Distribution({}: Props) {
                     open
                     onOk={handleDistribution}
                     onCancel={closeModal}
-                    modalTitle="Phát hành"
-                    paragraph="Bạn có chắc chắn muốn phát hành trên nền tảng này không?"
+                    modalTitle={messages('distribute.label')}
+                    paragraph={messages('distribute.confirmDistribute')}
                 />
             )}
 
@@ -168,8 +169,8 @@ export default function Distribution({}: Props) {
                     open
                     onOk={closeModal}
                     onCancel={closeModal}
-                    modalTitle="Gỡ khỏi nền tảng"
-                    paragraph="Bạn có chắc chắn muốn gỡ khỏi nền tảng này không?"
+                    modalTitle={messages('takeDown.label')}
+                    paragraph={messages('takeDown.confirmTakeDown')}
                 />
             )}
         </div>
