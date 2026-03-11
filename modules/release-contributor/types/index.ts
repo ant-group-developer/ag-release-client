@@ -8,7 +8,7 @@ export interface ReleaseContributor extends CommonAttribute {
     artistId: string;
     releaseId: string;
     artist?: ArtistData;
-    addArtistToTracks: boolean;
+    addContributorToTracks: boolean;
 }
 
 export interface ReleaseContributorDataFilter extends CommonParams {}

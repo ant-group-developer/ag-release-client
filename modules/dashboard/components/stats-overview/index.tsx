@@ -51,47 +51,13 @@ export default function StatsOverview({
     return (
         <div>
             <div className="grid grid-cols-4 gap-4">
-                {/* <AppCard
-                    icon={<DiscAlbum size={SIZE_ICON} />}
-                    title={messages('release.label')}
-                    className="bg-white"
-                >
-                    <div className="flex items-center justify-between gap-2 px-4 py-2">
-                        <Typography.Text className="!text-lg font-semibold">
-                            {formattedNumber(23412312)}
-                        </Typography.Text>
-                        <Tag color="green" bordered={false}>
-                            <div className="flex gap-1">
-                                <span>15%</span>
-                                <TrendingUp size={SIZE_ICON} />
-                            </div>
-                        </Tag>
-                    </div>
-                </AppCard> */}
                 {overviewCount?.map((item) => {
                     return (
                         <div
                             key={item.label}
-                            className="rounded-lg border p-4"
+                            className="rounded-lg border p-4 dark:border-zinc-700"
                             style={{ backgroundColor: token.colorBgContainer }}
                         >
-                            {/* <Statistic
-                                title={
-                                    <div className="flex items-center gap-2">
-                                        {item.icon}
-                                        <span>{item?.label}</span>
-                                    </div>
-                                }
-                                valueRender={() => {
-                                    return (
-                                        <div className="flex items-center justify-between gap-2 py-2">
-                                            <span>
-                                                {formattedNumber(item?.count)}
-                                            </span>
-                                        </div>
-                                    );
-                                }}
-                            /> */}
                             <div className="flex items-center gap-3">
                                 <div
                                     className={`rounded-full p-3 ${item.color}`}

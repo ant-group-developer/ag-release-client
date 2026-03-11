@@ -28,6 +28,7 @@ export const EditableTitle = ({
                 size="small"
                 value={localTitle}
                 disabled={isReadMode}
+                allowClear
                 onChange={(e) => {
                     const value = e.target.value;
                     setLocalTitle(value);

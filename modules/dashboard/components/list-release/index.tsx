@@ -4,6 +4,7 @@ import AppGrid from '@/components/ui/grid/app-grid';
 import { APP_ROUTES } from '@/enums/routes';
 import { Link } from '@/i18n/routing';
 import { ReleasesData } from '@/modules/releases/types';
+import { RightOutlined } from '@ant-design/icons';
 import { Empty, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import CardRelease from '../card/card-release';
@@ -25,7 +26,7 @@ export default function ListRelease({ data }: Props) {
                 </p>
 
                 <Link href={APP_ROUTES.RELEASES}>
-                    <SeeMoreButton type="default" />
+                    <SeeMoreButton type="default" icon={<RightOutlined />} />
                 </Link>
             </div>
 

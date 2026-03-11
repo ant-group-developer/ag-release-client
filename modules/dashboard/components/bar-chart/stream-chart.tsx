@@ -36,7 +36,7 @@ export default function StreamChart({ color = '#90D5FF', className }: Props) {
 
     return (
         <Card
-            className="flex h-full flex-col justify-between bg-white"
+            className="flex h-full flex-col justify-between"
             title={'Stream by DSP'}
             styles={{ body: { padding: 0, height: '100%' } }}
         >
@@ -61,6 +61,7 @@ export default function StreamChart({ color = '#90D5FF', className }: Props) {
                             tick={{ fontSize: 12 }}
                         />
                         <Tooltip
+                            cursor={{ fill: token.colorFillSecondary }}
                             content={({ active, payload }) => {
                                 if (active && payload && payload.length) {
                                     const { name, value } = payload[0].payload;

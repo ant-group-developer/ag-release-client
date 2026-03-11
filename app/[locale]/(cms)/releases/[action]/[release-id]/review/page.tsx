@@ -2,11 +2,11 @@
 import MetadataInfo from '@/modules/releases/components/release-detail/release-review/metadata-info';
 import ReviewProgress from '@/modules/releases/components/release-detail/release-review/review-progress';
 import TracksInfo from '@/modules/releases/components/release-detail/release-review/tracks-info/page';
-import { Tabs } from 'antd';
+import { Tabs, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 
 export default function Review() {
-    // const { token } = theme.useToken();
+    const { token } = theme.useToken();
     const messages = useTranslations();
     const tabItems = [
         {
@@ -25,7 +25,12 @@ export default function Review() {
         <div className="mb-4 flex flex-col gap-4">
             <ReviewProgress />
 
-            <div className="rounded-lg bg-white">
+            <div
+                className="rounded-lg"
+                style={{
+                    backgroundColor: token?.colorBgContainer,
+                }}
+            >
                 <Tabs items={tabItems} className="!px-4 !pb-4" />
             </div>
 
