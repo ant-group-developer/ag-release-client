@@ -1,13 +1,9 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
-import AppPagination from '@/components/ui/pagination';
-import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { toastPromise } from '@/helpers/messages-helper';
-import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { DISTRIBUTION_STATUS } from '@/modules/distribution/enum';
 import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribute';
-import { DistributionDataFilter } from '@/modules/distribution/types';
 import { DistributeRelease } from '@/modules/distribution/types/payload';
 import { useGetListReleaseDsp } from '@/modules/release-dsp/hooks/use-get-list-release-dsp';
 import { ReleaseDspData } from '@/modules/release-dsp/types';
@@ -17,13 +13,16 @@ import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { Button, theme } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 type Props = {};
 
 export default function Distribution({}: Props) {
     // const messages = useTranslations();
     const [selectedRow, setSelectedRow] = useState<ReleaseDspData[]>([]);
+    const [currentPage, setCurrentPage] = useState(1);
     const formValues = useReleaseFormStore((state) => state.formValues);
+    const [releaseDspStatus, setReleaseDspStatus] =
+        useState<DISTRIBUTION_STATUS>(DISTRIBUTION_STATUS.ALL);
 
     const openModal = useModalStore((state) => state.openModal);
 
@@ -39,16 +38,16 @@ export default function Distribution({}: Props) {
         onChange: handleSelectedRow,
     };
 
-    const {
-        dataFilter,
-        onChangeFilter,
-        canClearFilter,
-        removeFilter,
-        onChangePage,
-    } = useFilter<DistributionDataFilter>({
-        page: 1,
-        pageSize: PAGE_SIZE,
-    });
+    // const {
+    //     dataFilter,
+    //     onChangeFilter,
+    //     canClearFilter,
+    //     removeFilter,
+    //     onChangePage,
+    // } = useFilter<DistributionDataFilter>({
+    //     page: 1,
+    //     pageSize: PAGE_SIZE,
+    // });
 
     const { releaseDsp, isLoading } = useGetListReleaseDsp(
         formValues?.id ?? ''
@@ -72,6 +71,17 @@ export default function Distribution({}: Props) {
         toastPromise(promise, messages);
     };
 
+    const dataSource = useMemo(() => {
+        if (releaseDspStatus === DISTRIBUTION_STATUS.ALL) {
+            return releaseDsp;
+        }
+        return releaseDsp?.filter((item) => {
+            const status = item.status as any;
+            if (status === DISTRIBUTION_STATUS.ALL) return true;
+            return status == releaseDspStatus;
+        });
+    }, [releaseDsp, releaseDspStatus]);
+
     return (
         <div className="flex h-full flex-col justify-between pb-4">
             <div className="space-y-4">
@@ -80,9 +90,10 @@ export default function Distribution({}: Props) {
                     style={{ backgroundColor: token.colorBgContainer }}
                 >
                     <DistributionStatus
-                        onChangeFilter={onChangeFilter}
-                        value={dataFilter.status ?? DISTRIBUTION_STATUS.ALL}
+                        setReleaseDspStatus={setReleaseDspStatus}
+                        value={releaseDspStatus}
                     />
+
                     {selectedRow.length > 0 && (
                         <div className="flex items-center gap-4 px-4 font-medium">
                             <Button
@@ -118,17 +129,27 @@ export default function Distribution({}: Props) {
                     )}
                 </div>
 
-                <DistributionTable
-                    dataSource={releaseDsp}
-                    scroll={{ x: 'max-content' }}
-                    rowSelection={rowSelection}
-                    size="large"
-                    rowKey={(record) => record.dsp?.id}
-                    pagination={{
-                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: 1,
+                <div
+                    className="rounded-lg"
+                    style={{
+                        backgroundColor: token.colorBgContainer,
                     }}
-                />
+                >
+                    <DistributionTable
+                        dataSource={dataSource}
+                        scroll={{ x: 'max-content' }}
+                        rowSelection={rowSelection}
+                        size="large"
+                        rowKey={(record) => record.dsp?.id}
+                        currentPage={currentPage}
+                        pagination={{
+                            current: currentPage,
+                            pageSize: 10,
+                            total: dataSource?.length,
+                            onChange: (page) => setCurrentPage(page),
+                        }}
+                    />
+                </div>
             </div>
 
             {typeModal === TYPE_MODAL_RELEASE_DISTRIBUTION.DISTRIBUTION && (
@@ -151,20 +172,6 @@ export default function Distribution({}: Props) {
                     paragraph="Bạn có chắc chắn muốn gỡ khỏi nền tảng này không?"
                 />
             )}
-
-            <AppPagination
-                className="rounded-b-lg"
-                style={{ backgroundColor: token.colorBgContainer }}
-                align="end"
-                current={dataFilter.page}
-                pageSize={dataFilter.pageSize}
-                total={releaseDsp?.length}
-                onChange={onChangePage}
-                showTotalText
-                showSizeChanger
-                showQuickJumper
-                pageSizeOptions={PAGE_SIZE_OPTIONS}
-            />
         </div>
     );
 }

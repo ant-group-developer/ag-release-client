@@ -11,9 +11,18 @@ import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import DistributionActionButton from '../button/distribution-action';
 
-type Props = Omit<AppTableProps<ReleaseDspData>, 'columns'> & {};
+type Props = Omit<AppTableProps<ReleaseDspData>, 'columns'> & {
+    currentPage?: number;
+};
 
-export default function DistributionTable({ ...props }: Props) {
+export default function DistributionTable({
+    currentPage = 1,
+    ...props
+}: Props) {
+    const pageSize =
+        typeof props.pagination === 'object'
+            ? (props.pagination?.pageSize ?? 10)
+            : 10;
     const messages = useTranslations();
     const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
@@ -23,7 +32,7 @@ export default function DistributionTable({ ...props }: Props) {
             key: 'iNo',
             width: 80,
             align: 'center',
-            render: (_, __, index) => (index = index + 1),
+            render: (_, __, index) => (currentPage - 1) * pageSize + index + 1,
         },
         {
             title: messages('distribution.digitalServiceProviders'),
@@ -61,7 +70,7 @@ export default function DistributionTable({ ...props }: Props) {
             ),
         },
         {
-            title: messages('distribution.lastDelivered'),
+            title: 'Last Delivered',
             key: 'createdAt',
             dataIndex: 'createdAt',
             align: 'center',
@@ -107,7 +116,6 @@ export default function DistributionTable({ ...props }: Props) {
     return (
         <AppTable
             {...props}
-            pagination={false}
             columns={column}
             rowClassName={'group cursor-pointer'}
         />
