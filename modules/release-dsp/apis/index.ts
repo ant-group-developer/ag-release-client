@@ -1,12 +1,16 @@
 import axiosInstance from '@/api/axios-auth';
 import { ReleasesData } from '@/modules/releases/types';
-import { ListResponse } from '@/types/api';
-import { ReleaseDspData } from '../types';
+import { PaginationResponse } from '@/types/api';
+import { ReleaseDspData, ReleaseDspDataFilter } from '../types';
 
 export const releaseDspApis = {
-    getListDspDistribute: (id: ReleasesData['id']) => {
-        return axiosInstance.get<ListResponse<ReleaseDspData>>(
-            `/releases/${id}/dsp/delivery`
+    getListDspDistribute: (
+        id: ReleasesData['id'],
+        params?: ReleaseDspDataFilter
+    ) => {
+        return axiosInstance.get<PaginationResponse<ReleaseDspData>>(
+            `/releases/${id}/dsp/delivery`,
+            { params }
         );
     },
 };

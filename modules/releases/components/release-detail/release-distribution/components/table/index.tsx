@@ -1,22 +1,27 @@
-import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import { FALLBACK_IMAGE } from '@/constants/common';
-import { formattedDate } from '@/helpers/common';
+import { formattedDate, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
-import { ReleaseDspData } from '@/modules/release-dsp/types';
+import {
+    ReleaseDspData,
+    ReleaseDspDataFilter,
+} from '@/modules/release-dsp/types';
 import ReleaseStatusTag from '@/modules/releases/components/tag/release-status-tag';
 import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
-import { ColumnType } from 'antd/es/table';
+import { ProColumns } from '@ant-design/pro-components';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import DistributionActionButton from '../button/distribution-action';
 
-type Props = Omit<AppTableProps<ReleaseDspData>, 'columns'> & {
+type Props = Omit<AppProTableProps<ReleaseDspData>, 'columns'> & {
     currentPage?: number;
+    dataFilter?: ReleaseDspDataFilter;
 };
 
 export default function DistributionTable({
     currentPage = 1,
+    dataFilter,
     ...props
 }: Props) {
     const pageSize =
@@ -26,7 +31,7 @@ export default function DistributionTable({
     const messages = useTranslations();
     const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
-    const column: ColumnType<ReleaseDspData>[] = [
+    const column: ProColumns<ReleaseDspData>[] = [
         {
             title: messages('common.iNo'),
             key: 'iNo',
@@ -39,6 +44,7 @@ export default function DistributionTable({
             dataIndex: 'dsp',
             key: 'dsp',
             width: 250,
+
             render: (value, record) => {
                 return (
                     <div className="flex items-center gap-2">
@@ -58,10 +64,16 @@ export default function DistributionTable({
         },
         {
             title: messages('distribution.lastEnqueue'),
-            key: 'releaseDate',
-            dataIndex: 'releaseDate',
-            align: 'center',
+            key: 'lastEnqueuedAt',
+            dataIndex: 'lastEnqueuedAt',
+            align: 'left',
             width: 250,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter?.orderBy,
+                dataFilter?.fieldOrder,
+                'lastEnqueuedAt'
+            ),
             render: (value, record) => (
                 <span className="truncate text-wrap">
                     {' '}
@@ -71,10 +83,16 @@ export default function DistributionTable({
         },
         {
             title: 'Last Delivered',
-            key: 'createdAt',
-            dataIndex: 'createdAt',
-            align: 'center',
+            key: 'lastDeliveredAt',
+            dataIndex: 'lastDeliveredAt',
+            align: 'left',
             width: 250,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter?.orderBy,
+                dataFilter?.fieldOrder,
+                'lastDeliveredAt'
+            ),
             render: (value, record) => (
                 <span className="truncate text-wrap">
                     {' '}
@@ -87,9 +105,11 @@ export default function DistributionTable({
             title: messages('common.status'),
             key: 'status',
             dataIndex: 'status',
-            align: 'center',
+            align: 'left',
             width: 250,
-            render: (value, record) => <ReleaseStatusTag status={value} />,
+            render: (value, record) => (
+                <ReleaseStatusTag status={record?.status} />
+            ),
         },
 
         {
@@ -114,8 +134,9 @@ export default function DistributionTable({
     ];
 
     return (
-        <AppTable
+        <AppProTable
             {...props}
+            pagination={false}
             columns={column}
             rowClassName={'group cursor-pointer'}
         />
