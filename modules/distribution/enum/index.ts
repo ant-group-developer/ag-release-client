@@ -20,7 +20,7 @@ export enum DISTRIBUTION_STATUS {
     ISSUE = 'issue',
     DISTRIBUTED = 'distributed',
     TAKE_DOWN = 'takeDown',
-    NEVER_DISTRIBUTED = 'neverDistributed',
+    NEVER_DISTRIBUTED = 'never_distributed',
 }
 
 export enum TYPE_MODAL_DISTRIBUTION {

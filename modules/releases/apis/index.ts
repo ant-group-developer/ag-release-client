@@ -115,9 +115,9 @@ export const releasesApi = {
     },
 
     downloadTemplate: () => {
-        return axiosInstance.get<DetailResponse<string>>(
-            '/bucket/gcs/private/download-template'
-        );
+        return axiosInstance.get('/excel/download-template', {
+            responseType: 'blob',
+        });
     },
 
     createBucket: async (file: File, payload: CreateBucketFile) => {

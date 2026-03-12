@@ -27,7 +27,7 @@ export default function ReleaseStatusTag({ status, ...props }: Props) {
             color = 'green';
             break;
         case RELEASES_STATUS.NEVER_DISTRIBUTED:
-            color = 'magenta';
+            color = 'default';
             break;
         default:
             break;

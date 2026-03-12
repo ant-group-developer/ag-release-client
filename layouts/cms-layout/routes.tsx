@@ -118,6 +118,7 @@ export const adminRoutes: RouteNode[] = [
                 href: '/bulk-upload-demo',
                 icon: House,
                 required: { permission: [PERMISSION.DASHBOARD.READ] },
+                hidden: true,
             },
             {
                 id: 'dashboard',

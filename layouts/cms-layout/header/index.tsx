@@ -32,7 +32,10 @@ function Header({ collapsed, toggleCollapsed }: Props) {
 
     const handleDownloadTemplate = () => {
         const promise = downloadTemplate();
-        toastPromise(promise, messages);
+        toastPromise(promise, messages, {
+            success: messages('common.success'),
+            error: messages('common.error'),
+        });
     };
 
     const dropdownOptions: MenuProps['items'] = [

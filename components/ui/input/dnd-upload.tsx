@@ -1,6 +1,6 @@
 import type { UploadProps } from 'antd';
-import { Upload, UploadFile } from 'antd';
-import { UploadIcon } from 'lucide-react';
+import { theme, Upload, UploadFile } from 'antd';
+import { CloudUpload } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ReactNode } from 'react';
 
@@ -21,6 +21,7 @@ const DndUpload = ({
 }: DndUploadProps) => {
     const fileList: UploadFile[] = value?.fileList || [];
     const message = useTranslations();
+    const { token } = theme.useToken();
 
     const uploadProps: UploadProps = {
         ...props,
@@ -32,8 +33,8 @@ const DndUpload = ({
 
     return (
         <Dragger {...uploadProps}>
-            <p className="mx-auto mb-3 grid aspect-square w-14 place-content-center rounded-full bg-gray-200 text-2xl">
-                <UploadIcon />
+            <p className="mx-auto grid aspect-square w-14 place-content-center text-2xl">
+                <CloudUpload size={30} color={token.colorPrimary} />
             </p>
             <p className="ant-upload-text">
                 {placeholder ?? message('placeholder.dragAndDropFile')}

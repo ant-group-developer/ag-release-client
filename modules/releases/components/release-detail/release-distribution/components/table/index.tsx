@@ -1,61 +1,71 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import { FALLBACK_IMAGE } from '@/constants/common';
 import { formattedDate } from '@/helpers/common';
-import { getIntlCodeByReleaseStatus } from '@/helpers/intl';
 import useModalStore from '@/hooks/use-modal';
 import { useRouter } from '@/i18n/routing';
+import { ReleaseDspData } from '@/modules/release-dsp/types';
+import ReleaseStatusTag from '@/modules/releases/components/tag/release-status-tag';
 import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
-import { Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import DistributionActionButton from '../button/distribution-action';
 
-type Props = Omit<AppTableProps<any>, 'columns'> & {};
+type Props = Omit<AppTableProps<ReleaseDspData>, 'columns'> & {
+    currentPage?: number;
+};
 
-export default function DistributionTable({ ...props }: Props) {
+export default function DistributionTable({
+    currentPage = 1,
+    ...props
+}: Props) {
+    const pageSize =
+        typeof props.pagination === 'object'
+            ? (props.pagination?.pageSize ?? 10)
+            : 10;
     const messages = useTranslations();
     const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
-    const column: ColumnType<any>[] = [
+    const column: ColumnType<ReleaseDspData>[] = [
         {
             title: messages('common.iNo'),
             key: 'iNo',
             width: 80,
             align: 'center',
-            render: (_, __, index) => index + 1,
+            render: (_, __, index) => (currentPage - 1) * pageSize + index + 1,
         },
         {
-            title: 'Platform',
-            dataIndex: 'platform',
-            key: 'platform',
+            title: messages('distribution.digitalServiceProviders'),
+            dataIndex: 'dsp',
+            key: 'dsp',
             width: 250,
             render: (value, record) => {
                 return (
                     <div className="flex items-center gap-2">
                         <div>
                             <Image
-                                src={record?.thumbnail}
+                                src={record?.dsp?.picture ?? FALLBACK_IMAGE}
                                 alt="thumbnail"
                                 width={32}
                                 height={32}
                                 className="rounded-full"
                             />
                         </div>
-                        <span className="font-bold">{value}</span>
+                        <span className="font-bold">{record?.dsp?.name}</span>
                     </div>
                 );
             },
         },
         {
-            title: 'Last Enqueue',
+            title: messages('distribution.lastEnqueue'),
             key: 'releaseDate',
             dataIndex: 'releaseDate',
             align: 'center',
             width: 250,
-            render: (value) => (
+            render: (value, record) => (
                 <span className="truncate text-wrap">
                     {' '}
-                    {formattedDate(value)}{' '}
+                    {formattedDate(record?.lastEnqueuedAt)}{' '}
                 </span>
             ),
         },
@@ -65,10 +75,10 @@ export default function DistributionTable({ ...props }: Props) {
             dataIndex: 'createdAt',
             align: 'center',
             width: 250,
-            render: (value) => (
+            render: (value, record) => (
                 <span className="truncate text-wrap">
                     {' '}
-                    {formattedDate(value)}{' '}
+                    {formattedDate(record?.lastDeliveredAt)}{' '}
                 </span>
             ),
         },
@@ -79,14 +89,7 @@ export default function DistributionTable({ ...props }: Props) {
             dataIndex: 'status',
             align: 'center',
             width: 250,
-            render: (value) => (
-                // <span className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
-                //     {messages(getIntlCodeByReleaseStatus(value))}
-                // </span>
-                <Tag color="blue">
-                    {messages(getIntlCodeByReleaseStatus(value))}
-                </Tag>
-            ),
+            render: (value, record) => <ReleaseStatusTag status={value} />,
         },
 
         {
@@ -113,7 +116,6 @@ export default function DistributionTable({ ...props }: Props) {
     return (
         <AppTable
             {...props}
-            pagination={false}
             columns={column}
             rowClassName={'group cursor-pointer'}
         />

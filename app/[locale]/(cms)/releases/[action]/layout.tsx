@@ -15,7 +15,7 @@ import {
 } from '@/modules/releases/hooks/release-form-store';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { Breadcrumb, Tabs, TabsProps, theme } from 'antd';
-import { Box, Calendar, Eye, Info, Music } from 'lucide-react';
+import { BookHeadphones, Box, Calendar, Eye, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname } from 'next/navigation';
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
@@ -68,7 +68,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     href={coreDetailTabsNavigate}
                 >
                     <div className="flex items-center gap-1">
-                        <Info size={SIZE_ICON} />
+                        <BookHeadphones size={SIZE_ICON} />
                         <span className="font-medium">
                             {messages('common.coreInfo')}
                         </span>

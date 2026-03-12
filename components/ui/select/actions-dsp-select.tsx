@@ -26,7 +26,9 @@ export default function ActionsDspSelect({
         label: (
             <p className="flex items-center justify-between gap-1">
                 <span>{item?.action?.name}</span>
-                <IconInfoTooltip title={item?.action?.note} />
+                {item?.action?.note && (
+                    <IconInfoTooltip title={item?.action?.note} />
+                )}
             </p>
         ),
     }));
