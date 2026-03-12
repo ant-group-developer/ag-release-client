@@ -1,28 +1,38 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
+import AppPagination from '@/components/ui/pagination';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { ORDER } from '@/enums/common';
+import { setSortOrder } from '@/helpers/common';
 import { toastPromise } from '@/helpers/messages-helper';
+import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { DISTRIBUTION_STATUS } from '@/modules/distribution/enum';
 import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribute';
 import { DistributeRelease } from '@/modules/distribution/types/payload';
+import { releaseDspQueryKey } from '@/modules/release-dsp/constants/query-keys';
 import { useGetListReleaseDsp } from '@/modules/release-dsp/hooks/use-get-list-release-dsp';
-import { ReleaseDspData } from '@/modules/release-dsp/types';
+import {
+    ReleaseDspData,
+    ReleaseDspDataFilter,
+} from '@/modules/release-dsp/types';
 import DistributionStatus from '@/modules/releases/components/release-detail/release-distribution/components/header-action/distribution-status';
 import DistributionTable from '@/modules/releases/components/release-detail/release-distribution/components/table';
 import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button, theme } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 type Props = {};
 
 export default function Distribution({}: Props) {
     // const messages = useTranslations();
     const [selectedRow, setSelectedRow] = useState<ReleaseDspData[]>([]);
-    const [currentPage, setCurrentPage] = useState(1);
     const formValues = useReleaseFormStore((state) => state.formValues);
-    const [releaseDspStatus, setReleaseDspStatus] =
-        useState<DISTRIBUTION_STATUS>(DISTRIBUTION_STATUS.ALL);
+    const [releaseDspStatus, setReleaseDspStatus] = useState<
+        DISTRIBUTION_STATUS | undefined
+    >();
 
     const openModal = useModalStore((state) => state.openModal);
 
@@ -38,20 +48,26 @@ export default function Distribution({}: Props) {
         onChange: handleSelectedRow,
     };
 
-    // const {
-    //     dataFilter,
-    //     onChangeFilter,
-    //     canClearFilter,
-    //     removeFilter,
-    //     onChangePage,
-    // } = useFilter<DistributionDataFilter>({
-    //     page: 1,
-    //     pageSize: PAGE_SIZE,
-    // });
+    const {
+        dataFilter,
+        onChangeFilter,
+        canClearFilter,
+        removeFilter,
+        onChangePage,
+    } = useFilter<ReleaseDspDataFilter>({
+        page: 1,
+        pageSize: PAGE_SIZE,
+        status:
+            releaseDspStatus === DISTRIBUTION_STATUS.ALL
+                ? undefined
+                : releaseDspStatus,
+    });
 
-    const { releaseDsp, isLoading: isLoadingReleaseDsp } = useGetListReleaseDsp(
-        formValues?.id ?? ''
-    );
+    const {
+        releaseDsp,
+        isFetching: isLoadingReleaseDsp,
+        refetch: refetchReleaseDsp,
+    } = useGetListReleaseDsp(formValues?.id ?? '', dataFilter);
     const { distributeRelease } = useDistributeRelease();
 
     const { token } = theme.useToken();
@@ -59,6 +75,7 @@ export default function Distribution({}: Props) {
     const closeModal = useModalStore((state) => state.closeModal);
 
     const messages = useTranslations();
+    const queryClient = useQueryClient();
 
     const handleDistribution = () => {
         closeModal();
@@ -66,21 +83,31 @@ export default function Distribution({}: Props) {
         const variables: DistributeRelease = {
             id: formValues?.id ?? '',
             code: dspCode ?? [],
+            onSuccess(e) {
+                queryClient.invalidateQueries({
+                    queryKey: releaseDspQueryKey.detail(
+                        formValues?.id ?? '',
+                        dataFilter
+                    ),
+                });
+                setSelectedRow([]);
+            },
         };
         const promise = distributeRelease(variables);
         toastPromise(promise, messages);
     };
 
-    const dataSource = useMemo(() => {
-        if (releaseDspStatus === DISTRIBUTION_STATUS.ALL) {
-            return releaseDsp;
-        }
-        return releaseDsp?.filter((item) => {
-            const status = item.status as any;
-            if (status === DISTRIBUTION_STATUS.ALL) return true;
-            return status == releaseDspStatus;
-        });
-    }, [releaseDsp, releaseDspStatus]);
+    const onChangeSort = (pagination: any, filters: any, sort: any) => {
+        const orderBy = setSortOrder(sort, ORDER.ASC);
+        const fieldOrder = sort.field;
+        onChangeFilter(
+            {
+                orderBy,
+                fieldOrder,
+            },
+            false
+        );
+    };
 
     return (
         <div className="flex h-full flex-col justify-between pb-4">
@@ -90,7 +117,9 @@ export default function Distribution({}: Props) {
                     style={{ backgroundColor: token.colorBgContainer }}
                 >
                     <DistributionStatus
-                        setReleaseDspStatus={setReleaseDspStatus}
+                        onChangeStatus={(status) => {
+                            setReleaseDspStatus(status);
+                        }}
                         value={releaseDspStatus}
                     />
 
@@ -108,7 +137,8 @@ export default function Distribution({}: Props) {
                             >
                                 <span>
                                     {messages('common.distribute')}{' '}
-                                    {selectedRow.length}/{releaseDsp?.length}
+                                    {selectedRow.length}/
+                                    {releaseDsp?.metadata?.totalItems}
                                 </span>
                             </Button>
                             <Button
@@ -122,7 +152,8 @@ export default function Distribution({}: Props) {
                             >
                                 <span>
                                     {messages('common.takeDown')}{' '}
-                                    {selectedRow.length}/{releaseDsp?.length}
+                                    {selectedRow.length}/
+                                    {releaseDsp?.metadata?.totalItems}
                                 </span>
                             </Button>
                         </div>
@@ -136,22 +167,38 @@ export default function Distribution({}: Props) {
                     }}
                 >
                     <DistributionTable
-                        dataSource={dataSource}
+                        options={{
+                            reload: () => refetchReleaseDsp(),
+                        }}
+                        dataSource={releaseDsp?.items}
                         scroll={{ x: 'max-content' }}
                         rowSelection={rowSelection}
                         size="large"
                         rowKey={(record) => record.dsp?.id}
-                        currentPage={currentPage}
                         pagination={{
-                            current: currentPage,
-                            pageSize: 10,
-                            total: dataSource?.length,
-                            onChange: (page) => setCurrentPage(page),
+                            pageSize: dataFilter?.pageSize,
+                            total: releaseDsp?.metadata?.totalItems,
                         }}
                         loading={isLoadingReleaseDsp}
+                        onChange={onChangeSort}
+                        dataFilter={dataFilter}
                     />
                 </div>
             </div>
+
+            <AppPagination
+                className="rounded-b-lg"
+                style={{ backgroundColor: token.colorBgContainer }}
+                align="end"
+                current={dataFilter.page}
+                pageSize={dataFilter.pageSize}
+                total={releaseDsp?.metadata?.totalItems}
+                onChange={onChangePage}
+                showTotalText
+                showSizeChanger
+                showQuickJumper
+                pageSizeOptions={PAGE_SIZE_OPTIONS}
+            />
 
             {typeModal === TYPE_MODAL_RELEASE_DISTRIBUTION.DISTRIBUTION && (
                 // <DistributionReleaseModal platformIds={selectedRow} />

@@ -1,4 +1,3 @@
-import { releaseDspQueryKey } from '@/modules/release-dsp/constants/query-keys';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { distributeApis } from '../apis';
 import { DistributeRelease } from '../types/payload';
@@ -8,10 +7,11 @@ export const useDistributeRelease = () => {
     const mutation = useMutation({
         mutationFn: (data: DistributeRelease) =>
             distributeApis.distributeRelease(data.id, data.code),
-        onSuccess: (data) => {
-            queryClient.invalidateQueries({
-                queryKey: releaseDspQueryKey.detail(data.data?.data?.id ?? ''),
-            });
+        onSuccess: (data, { onSuccess }) => {
+            onSuccess?.(data);
+        },
+        onError: (error, { onError }) => {
+            onError?.(error);
         },
     });
 

@@ -5,19 +5,16 @@ import { DISTRIBUTION_STATUS } from '@/modules/distribution/enum';
 import { useTranslations } from 'next-intl';
 
 type Props = {
-    setReleaseDspStatus: (value: DISTRIBUTION_STATUS) => void;
+    onChangeStatus: (status: DISTRIBUTION_STATUS) => void;
     value: DISTRIBUTION_STATUS | undefined;
 };
 
-export default function DistributionStatus({
-    setReleaseDspStatus,
-    value,
-}: Props) {
+export default function DistributionStatus({ onChangeStatus, value }: Props) {
     const messages = useTranslations();
     const { token } = theme.useToken();
 
     const handleChangeStatus = (status: DISTRIBUTION_STATUS) => {
-        setReleaseDspStatus(status);
+        onChangeStatus(status);
     };
 
     return (
