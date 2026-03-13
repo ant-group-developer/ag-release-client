@@ -1,7 +1,7 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
-import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { toastPromise } from '@/helpers/messages-helper';
@@ -9,6 +9,7 @@ import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { DISTRIBUTION_STATUS } from '@/modules/distribution/enum';
 import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribute';
+import { useReleaseDistribute } from '@/modules/distribution/hooks/use-release-distribute';
 import { DistributeRelease } from '@/modules/distribution/types/payload';
 import { releaseDspQueryKey } from '@/modules/release-dsp/constants/query-keys';
 import { useGetListReleaseDsp } from '@/modules/release-dsp/hooks/use-get-list-release-dsp';
@@ -21,20 +22,26 @@ import DistributionTable from '@/modules/releases/components/release-detail/rele
 import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useQueryClient } from '@tanstack/react-query';
-import { Button, theme } from 'antd';
+import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 type Props = {};
 
 export default function Distribution({}: Props) {
     // const messages = useTranslations();
-    const [selectedRow, setSelectedRow] = useState<ReleaseDspData[]>([]);
+    const selectedRow = useReleaseDistribute((state) => state.selectedRows);
+    const setSelectedRow = useReleaseDistribute(
+        (state) => state.setSelectedRows
+    );
     const formValues = useReleaseFormStore((state) => state.formValues);
     const [releaseDspStatus, setReleaseDspStatus] = useState<
         DISTRIBUTION_STATUS | undefined
     >();
 
     const openModal = useModalStore((state) => state.openModal);
+    const dataEdit = useModalStore((state) => state.dataEdit);
+    const typeModal = useModalStore((state) => state.typeModal);
+    const closeModal = useModalStore((state) => state.closeModal);
 
     const handleSelectedRow = (
         _selectedRowKeys: React.Key[],
@@ -56,7 +63,7 @@ export default function Distribution({}: Props) {
         onChangePage,
     } = useFilter<ReleaseDspDataFilter>({
         page: 1,
-        pageSize: PAGE_SIZE,
+        pageSize: 999,
         status:
             releaseDspStatus === DISTRIBUTION_STATUS.ALL
                 ? undefined
@@ -71,15 +78,18 @@ export default function Distribution({}: Props) {
     const { distributeRelease } = useDistributeRelease();
 
     const { token } = theme.useToken();
-    const typeModal = useModalStore((state) => state.typeModal);
-    const closeModal = useModalStore((state) => state.closeModal);
 
     const messages = useTranslations();
     const queryClient = useQueryClient();
 
     const handleDistribution = () => {
         closeModal();
-        const dspCode = selectedRow.map((row) => row.dsp.code);
+        let dspCode;
+        if (!typeModal) {
+            dspCode = selectedRow.map((row) => row.dsp.code);
+        } else {
+            dspCode = [dataEdit?.dsp?.code];
+        }
         const variables: DistributeRelease = {
             id: formValues?.id ?? '',
             code: dspCode ?? [],
@@ -109,6 +119,12 @@ export default function Distribution({}: Props) {
         );
     };
 
+    useEffect(() => {
+        if (releaseDsp?.items?.length) {
+            setSelectedRow(releaseDsp.items);
+        }
+    }, [releaseDsp, setSelectedRow]);
+
     return (
         <div className="flex h-full flex-col justify-between pb-4">
             <div className="space-y-4">
@@ -122,42 +138,6 @@ export default function Distribution({}: Props) {
                         }}
                         value={releaseDspStatus}
                     />
-
-                    {selectedRow.length > 0 && (
-                        <div className="flex items-center gap-4 px-4 font-medium">
-                            <Button
-                                onClick={() => {
-                                    openModal(
-                                        TYPE_MODAL_RELEASE_DISTRIBUTION.DISTRIBUTION
-                                    );
-                                }}
-                                className=""
-                                type="primary"
-                                // disabled={errorsLength > 0}
-                            >
-                                <span>
-                                    {messages('common.distribute')}{' '}
-                                    {selectedRow.length}/
-                                    {releaseDsp?.metadata?.totalItems}
-                                </span>
-                            </Button>
-                            <Button
-                                onClick={() => {
-                                    openModal(
-                                        TYPE_MODAL_RELEASE_DISTRIBUTION.TAKE_DOWN
-                                    );
-                                }}
-                                danger
-                                // disabled={errorsLength > 0}
-                            >
-                                <span>
-                                    {messages('common.takeDown')}{' '}
-                                    {selectedRow.length}/
-                                    {releaseDsp?.metadata?.totalItems}
-                                </span>
-                            </Button>
-                        </div>
-                    )}
                 </div>
 
                 <div
@@ -167,9 +147,7 @@ export default function Distribution({}: Props) {
                     }}
                 >
                     <DistributionTable
-                        options={{
-                            reload: () => refetchReleaseDsp(),
-                        }}
+                        options={false}
                         dataSource={releaseDsp?.items}
                         scroll={{ x: 'max-content' }}
                         rowSelection={rowSelection}

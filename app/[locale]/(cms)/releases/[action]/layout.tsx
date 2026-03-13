@@ -193,17 +193,16 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         }
     }, [releaseId, releaseData?.id]);
 
-    useEffect(() => {
-        if (isCreateReleasePage) return setIsScrolled(false);
-        // Chỉ theo dõi scroll khi ở trang core-detail, các trang khác mặc định isScrolled = true
-        if (!isCoreDetailPage) {
-            setIsScrolled(true);
-            return;
-        }
-    }, [isCoreDetailPage]);
+    // useEffect(() => {
+    //     if (isCreateReleasePage) return setIsScrolled(false);
+    //     // Chỉ theo dõi scroll khi ở trang core-detail, các trang khác mặc định isScrolled = true
+    //     if (!isCoreDetailPage) {
+    //         setIsScrolled(true);
+    //         return;
+    //     }
+    // }, [isCoreDetailPage]);
 
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-        if (!isCoreDetailPage) return;
         const scrollTop = e.currentTarget.scrollTop;
         if (!isScrolled && scrollTop > 100) {
             setIsScrolled(true);

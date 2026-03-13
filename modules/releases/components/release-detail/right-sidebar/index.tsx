@@ -49,28 +49,43 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
     const getFieldLabel = (field: string, page: string) => {
         if (!field) return;
 
+        if (field === 'releaseTerritory') {
+            return messages('formFields.territoryType' as any);
+        }
+
+        const safeMessage = (key: string) => {
+            try {
+                return messages(key as any);
+            } catch {
+                return field;
+            }
+        };
+
         switch (page) {
             case RELEASES_TABS.CORE_DETAIL:
                 // return `${messages('common.coreInfo')}: ${messages(`formFields.${field}` as any)}`;
-                return `${messages(`formFields.${field}` as any)}`;
+                return `${safeMessage(`formFields.${field}`)}`;
 
             case RELEASES_TABS.TRACKS:
                 const parts = field.split('.');
                 if (parts.length >= 3) {
                     const trackIndex = Number(parts[1]) + 1;
                     const fieldName = parts.slice(2).join('.');
-                    return `${messages('track.number')} ${trackIndex}: ${messages(`formFields.${fieldName}` as any) || field}`;
-                } else if (field == 'maxTrackCount' || 'maxTrackCount') {
+                    return `${messages('track.number')} ${trackIndex}: ${safeMessage(`formFields.${fieldName}`) || field}`;
+                } else if (
+                    field === 'maxTrackCount' ||
+                    field === 'minTrackCount'
+                ) {
                     return messages('track.label');
                 }
                 break;
 
             case RELEASES_TABS.SCHEDULE:
                 // return `${messages('release.scheduling.label')}: ${messages(`formFields.${field}` as any)}`;
-                return `${messages(`formFields.${field}` as any)}`;
+                return `${safeMessage(`formFields.${field}`)}`;
 
             default:
-                return messages(`formFields.${field}` as any);
+                return safeMessage(`formFields.${field}`);
         }
     };
     const getErrorMessages = (error: ReleaseValidate) => {

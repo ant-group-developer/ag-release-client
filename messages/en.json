@@ -835,6 +835,11 @@
                 "update": "Update release successfully",
                 "delete": "Delete release successfully"
             }
+        },
+        "action": {
+            "submit": "Submit release",
+            "edit": "Edit release",
+            "completeTheTask": "Complete the task"
         }
     },
 
