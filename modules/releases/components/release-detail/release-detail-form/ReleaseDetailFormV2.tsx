@@ -16,7 +16,7 @@ import { ReleasesData } from '@/modules/releases/types';
 import { UpdateReleaseDraftPayload } from '@/modules/releases/types/payload';
 import { UpdateVariables } from '@/types/api';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, ConfigProvider, Form, theme } from 'antd';
+import { Button, Form, theme } from 'antd';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
@@ -57,11 +57,6 @@ export default function ReleaseDetailFormV2() {
 
     // Const
     const isReadMode = releaseAction !== RELEASE_DETAIL_ACTION.EDIT;
-    const customTheme = {
-        token: {
-            colorTextDisabled: token?.colorText,
-        },
-    };
 
     // Form
     const formMethods = useForm<ReleaseDetailSchema>({
@@ -155,82 +150,80 @@ export default function ReleaseDetailFormV2() {
     }, [trigger, hash]);
 
     return (
-        <ConfigProvider theme={customTheme}>
-            <FormProvider {...formMethods}>
-                <Form
-                    layout="horizontal"
-                    onFinish={handleSubmit(handleNext, handleFormError)}
-                    labelCol={{ span: 8 }}
-                    wrapperCol={{ span: 16 }}
-                    labelAlign="left"
-                    variant={isReadMode ? 'underlined' : 'outlined'}
+        <FormProvider {...formMethods}>
+            <Form
+                layout="horizontal"
+                onFinish={handleSubmit(handleNext, handleFormError)}
+                labelCol={{ span: 8 }}
+                wrapperCol={{ span: 16 }}
+                labelAlign="left"
+                variant={isReadMode ? 'underlined' : 'outlined'}
+            >
+                {/* Single white container for all sections */}
+                <div
+                    className="flex flex-col gap-12 rounded-lg p-6 shadow-sm"
+                    style={{ backgroundColor: token.colorBgContainer }}
                 >
-                    {/* Single white container for all sections */}
-                    <div
-                        className="flex flex-col gap-12 rounded-lg p-6 shadow-sm"
-                        style={{ backgroundColor: token.colorBgContainer }}
-                    >
-                        <ReleaseConfigurationSectionV2
-                            debouncedUpdate={debouncedUpdate}
-                            isReadMode={isReadMode}
-                            isCreateReleasePage={isCreateReleasePage}
-                        />
+                    <ReleaseConfigurationSectionV2
+                        debouncedUpdate={debouncedUpdate}
+                        isReadMode={isReadMode}
+                        isCreateReleasePage={isCreateReleasePage}
+                    />
 
-                        <CodesSectionV2
-                            debouncedUpdate={debouncedUpdate}
-                            isReadMode={isReadMode}
-                            isCreateReleasePage={isCreateReleasePage}
-                        />
+                    <CodesSectionV2
+                        debouncedUpdate={debouncedUpdate}
+                        isReadMode={isReadMode}
+                        isCreateReleasePage={isCreateReleasePage}
+                    />
 
-                        <GenreLanguageSectionV2
-                            debouncedUpdate={debouncedUpdate}
-                            isReadMode={isReadMode}
-                            isCreateReleasePage={isCreateReleasePage}
-                        />
+                    <GenreLanguageSectionV2
+                        debouncedUpdate={debouncedUpdate}
+                        isReadMode={isReadMode}
+                        isCreateReleasePage={isCreateReleasePage}
+                    />
 
-                        <LegalNoticesSectionV2
-                            debouncedUpdate={debouncedUpdate}
-                            isReadMode={isReadMode}
-                            isCreateReleasePage={isCreateReleasePage}
-                        />
-                    </div>
+                    <LegalNoticesSectionV2
+                        debouncedUpdate={debouncedUpdate}
+                        isReadMode={isReadMode}
+                        isCreateReleasePage={isCreateReleasePage}
+                    />
+                </div>
 
-                    <div
-                        className="mt-6 rounded-lg p-6 shadow-sm"
-                        style={{ backgroundColor: token.colorBgContainer }}
-                    >
-                        <ReleaseArtistSectionV2
-                            debouncedUpdate={debouncedUpdate}
-                            isReadMode={isReadMode}
-                            isCreateReleasePage={isCreateReleasePage}
-                            releaseArtist={releaseArtist}
-                        />
-                    </div>
+                <div
+                    className="mt-6 rounded-lg p-6 shadow-sm"
+                    style={{ backgroundColor: token.colorBgContainer }}
+                >
+                    <ReleaseArtistSectionV2
+                        debouncedUpdate={debouncedUpdate}
+                        isReadMode={isReadMode}
+                        isCreateReleasePage={isCreateReleasePage}
+                        releaseArtist={releaseArtist}
+                    />
+                </div>
 
-                    <div
-                        className="mt-6 rounded-lg p-6 shadow-sm"
-                        style={{ backgroundColor: token.colorBgContainer }}
-                    >
-                        <ReleaseContributorsSectionV2
-                            isReadMode={isReadMode}
-                            releaseContributor={releaseContributor}
-                        />
-                    </div>
+                <div
+                    className="mt-6 rounded-lg p-6 shadow-sm"
+                    style={{ backgroundColor: token.colorBgContainer }}
+                >
+                    <ReleaseContributorsSectionV2
+                        isReadMode={isReadMode}
+                        releaseContributor={releaseContributor}
+                    />
+                </div>
 
-                    <div className="my-4 flex w-full justify-end">
-                        {!isCreateReleasePage && (
-                            <Button
-                                htmlType="submit"
-                                disabled={isReadMode}
-                                type="primary"
-                                loading={isActive}
-                            >
-                                {messages('common.continue')}
-                            </Button>
-                        )}
-                    </div>
-                </Form>
-            </FormProvider>
-        </ConfigProvider>
+                <div className="my-4 flex w-full justify-end">
+                    {!isCreateReleasePage && (
+                        <Button
+                            htmlType="submit"
+                            disabled={isReadMode}
+                            type="primary"
+                            loading={isActive}
+                        >
+                            {messages('common.continue')}
+                        </Button>
+                    )}
+                </div>
+            </Form>
+        </FormProvider>
     );
 }

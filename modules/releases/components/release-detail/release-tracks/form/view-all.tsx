@@ -2,8 +2,8 @@ import AppForm from '@/components/ui/antd-form/form';
 import { DATE_FORMAT } from '@/enums/common';
 import { convertSecondsToHoursMinutes } from '@/helpers/common';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
-import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { TrackData } from '@/modules/tracks/types';
 import { Form } from 'antd';
 import dayjs from 'dayjs';
@@ -23,7 +23,7 @@ type Props = {
 
 export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
     // const messages = useTranslations();
-    const { action } = useGetReleaseDetailRoute();
+    const action = useReleaseActionStore((state) => state.action);
     const isReadMode = action === RELEASE_DETAIL_ACTION.READ;
     const [form] = Form.useForm();
     const {
@@ -92,6 +92,7 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
             form={form}
             layout="vertical"
             showSubmit={false}
+            variant={isReadMode ? 'underlined' : 'outlined'}
         >
             <div className="flex h-[80vh] flex-col gap-4 overflow-y-auto pr-1">
                 <TrackAndArtistSection
