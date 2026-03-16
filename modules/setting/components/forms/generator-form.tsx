@@ -58,13 +58,13 @@ export default function GeneratorForm({}: Props) {
                 <AppFormItem
                     name="prefixUpcDefaultId"
                     label={'Prefix UPC'}
-                    required
-                    rules={[
-                        {
-                            required: true,
-                            message: messages('validation.input'),
-                        },
-                    ]}
+                    // required
+                    // rules={[
+                    //     {
+                    //         required: true,
+                    //         message: messages('validation.input'),
+                    //     },
+                    // ]}
                 >
                     <PrefixUpcSelect />
                 </AppFormItem>
@@ -72,13 +72,13 @@ export default function GeneratorForm({}: Props) {
                 <AppFormItem
                     name="prefixIsrcDefaultId"
                     label={'Prefix ISRC'}
-                    required
-                    rules={[
-                        {
-                            required: true,
-                            message: messages('validation.input'),
-                        },
-                    ]}
+                    // required
+                    // rules={[
+                    //     {
+                    //         required: true,
+                    //         message: messages('validation.input'),
+                    //     },
+                    // ]}
                 >
                     <PrefixIsrcSelect />
                 </AppFormItem>
@@ -86,13 +86,13 @@ export default function GeneratorForm({}: Props) {
                 <AppFormItem
                     name="API_KEY_GRPC_ISRC_UPC"
                     label={'API Key'}
-                    required
-                    rules={[
-                        {
-                            required: true,
-                            message: messages('validation.input'),
-                        },
-                    ]}
+                    // required
+                    // rules={[
+                    //     {
+                    //         required: true,
+                    //         message: messages('validation.input'),
+                    //     },
+                    // ]}
                 >
                     <Input />
                 </AppFormItem>
@@ -100,13 +100,13 @@ export default function GeneratorForm({}: Props) {
                 <AppFormItem
                     name="DDEX_PARTY_ID_SENDER"
                     label={messages('dsp.ddexPartyId')}
-                    required
-                    rules={[
-                        {
-                            required: true,
-                            message: messages('validation.input'),
-                        },
-                    ]}
+                    // required
+                    // rules={[
+                    //     {
+                    //         required: true,
+                    //         message: messages('validation.input'),
+                    //     },
+                    // ]}
                 >
                     <Input />
                 </AppFormItem>
@@ -114,13 +114,13 @@ export default function GeneratorForm({}: Props) {
                 <AppFormItem
                     name="DDEX_PARTY_NAME_SENDER"
                     label={messages('dsp.fullNameOfDDexParty')}
-                    required
-                    rules={[
-                        {
-                            required: true,
-                            message: messages('validation.input'),
-                        },
-                    ]}
+                    // required
+                    // rules={[
+                    //     {
+                    //         required: true,
+                    //         message: messages('validation.input'),
+                    //     },
+                    // ]}
                 >
                     <Input />
                 </AppFormItem>
