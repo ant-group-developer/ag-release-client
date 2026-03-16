@@ -1,6 +1,7 @@
 import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
 import CreateButton from '@/components/ui/button/create-button';
 import AppSearch from '@/components/ui/input/search';
+import ActiveSelect from '@/components/ui/select/active-select';
 import { UseFilterProps } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { useTranslations } from 'next-intl';
@@ -9,22 +10,34 @@ import { PriceTiersDataFilter } from '../../types';
 
 type Props = Pick<
     UseFilterProps<PriceTiersDataFilter>,
-    'dataFilter' | 'onSearch'
+    'dataFilter' | 'onSearch' | 'onChangeFilter'
 >;
 
-export default function PriceTiersHeader({ dataFilter, onSearch }: Props) {
+export default function PriceTiersHeader({
+    dataFilter,
+    onSearch,
+    onChangeFilter,
+}: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     return (
         <AppHeader className="app-header p-2">
             <AppHeaderGroup>
-                <div>
-                    <AppSearch
-                        className="max-w-52"
-                        onChange={onSearch}
-                        defaultValue={dataFilter.keyword}
-                    />
-                </div>
+                <AppSearch
+                    wrapperClassName="max-w-52"
+                    onChange={onSearch}
+                    defaultValue={dataFilter.keyword}
+                />
+
+                <ActiveSelect
+                    className="max-w-52"
+                    onChange={(value) => {
+                        onChangeFilter({
+                            isActive: value,
+                        });
+                    }}
+                    defaultValue={dataFilter.isActive}
+                />
             </AppHeaderGroup>
             <AppHeaderGroup position="end" className="flex-1">
                 <div className="flex items-center gap-2">

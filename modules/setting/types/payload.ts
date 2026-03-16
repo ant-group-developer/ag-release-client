@@ -1,7 +1,7 @@
 import { CommonFunction } from '@/types/api';
-import { SettingData } from '.';
+import { SettingConfig } from '.';
 
-export interface UpdateSettingPayload extends Partial<SettingData> {}
+export type UpdateSettingPayload = Partial<SettingConfig>;
 
 export interface UpdateSetting extends CommonFunction {
     payload: UpdateSettingPayload;

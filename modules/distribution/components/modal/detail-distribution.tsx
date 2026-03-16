@@ -10,7 +10,6 @@ import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-fil
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { distributionData } from '../../constants';
 
 type Props = Omit<AppModalProps, 'children'> & {};
 
@@ -92,7 +91,7 @@ export default function DetailDistributionModal({ ...props }: Props) {
             onCancel={() => closeModal()}
             footer={false}
             width={1000}
-            title="Nền tảng phát hành"
+            title={messages('distribution.platform')}
         >
             <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-4 rounded-lg bg-zinc-100 p-4">
@@ -123,7 +122,7 @@ export default function DetailDistributionModal({ ...props }: Props) {
                         sticky
                         size="large"
                         columns={columns}
-                        dataSource={distributionData}
+                        dataSource={[]}
                         scroll={{
                             x: 'max-content',
                         }}

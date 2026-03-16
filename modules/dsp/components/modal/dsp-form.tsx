@@ -10,6 +10,7 @@ import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form, Spin, Tabs, TabsProps } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
+import { TYPE_MODAL_DSP } from '../../enums';
 import { useCreateDsp } from '../../hooks/use-create-dsp';
 import { useGetDetailDsp } from '../../hooks/use-get-detail-dsp';
 import { useUpdateDsp } from '../../hooks/use-update-dsp';
@@ -30,8 +31,10 @@ export default function DspFormModal({ ...props }: Props) {
     const { active, isActive, deActive } = useActive();
     const [form] = Form.useForm();
     const closeModal = useModalStore((state) => state.closeModal);
-    const dataEdit = useModalStore((state) => state.dataEdit as DspData);
+    const dataEdit = useModalStore<DspData>((state) => state.dataEdit);
+    const typeModal = useModalStore((state) => state.typeModal);
     const isUpdate = !!dataEdit?.id;
+    const isCreateForm = typeModal === TYPE_MODAL_DSP.CREATE;
     const { createDsp } = useCreateDsp();
     const { updateDsp } = useUpdateDsp();
     const { dspData, isLoading: isLoadingDsp } = useGetDetailDsp(dataEdit?.id);
@@ -131,6 +134,7 @@ export default function DspFormModal({ ...props }: Props) {
             key: 'Deals',
             label: messages('common.deals'),
             children: <DspDeals dspId={dspData?.id} />,
+            disabled: isCreateForm,
         },
     ];
 

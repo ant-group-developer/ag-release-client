@@ -1,5 +1,4 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
-import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { ReleaseDetailSchema } from '@/modules/releases/schemas';
 import { Input } from 'antd';
@@ -19,7 +18,7 @@ export default function CodesSection({ isReadMode, debouncedUpdate }: Props) {
         formState: { errors },
         watch,
     } = useFormContext<ReleaseDetailSchema>();
-    const { action } = useGetReleaseDetailRoute();
+    // const { action } = useGetReleaseDetailRoute();
 
     // router - params
     const params = useParams();

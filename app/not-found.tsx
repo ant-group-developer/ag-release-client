@@ -8,7 +8,7 @@ export default function NotFoundPage() {
         <div className="flex min-h-screen flex-col items-center justify-center">
             <div>
                 <Image
-                    src={'/image/404.jpg'}
+                    src={'/auth/404.jpg'}
                     alt="404"
                     width={500}
                     height={300}

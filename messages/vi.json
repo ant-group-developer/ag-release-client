@@ -64,6 +64,8 @@
         }
     },
     "common": {
+        "incomplete": "Chưa hoàn thành",
+        "generate": "Tạo",
         "privateKey": "Khoá riêng tư",
         "deal": "Thoả thuận",
         "deals": "Thoả thuận",
@@ -413,7 +415,8 @@
     "dashboard": {
         "label": "Tổng quan",
         "latestNews": "Tin tức mới nhất",
-        "goTo": "Đi đến trang Tổng quan"
+        "goTo": "Đi đến trang Tổng quan",
+        "viewAllUpdates": "Xem tất cả tin tức"
     },
     "image": {
         "label": "Hình ảnh",
@@ -545,6 +548,7 @@
     "status": {
         "label": "Trạng thái",
         "active": "Kích hoạt",
+        "inActive": "Không kích hoạt",
         "on": "Bật",
         "off": "Tắt",
         "block": "Khoá",
@@ -757,6 +761,10 @@
     },
 
     "release": {
+        "importTemplate": "Tải lên mẫu",
+        "uploadTemplateSuccess": "Tải lên mẫu thành công",
+        "uploadTemplateError": "Tải lên mẫu thất bại",
+        "downloadTemplate": "Tải mẫu",
         "contributors": "Người đóng góp",
         "list": "Danh sách phát hành",
         "releases": "Phát hành",
@@ -1050,7 +1058,8 @@
         "classical": "Cổ điển",
         "blues": "Blues",
         "add": "Thêm thể loại",
-        "primary": "Thể loại chính"
+        "primary": "Thể loại chính",
+        "label": "Thể loại"
     },
 
     "genre": {
@@ -1138,7 +1147,11 @@
         "name": "Tên phân phối",
         "id": "Mã phân phối",
         "batchDistribution": "Phân phối hàng loạt",
-        "batchTakeDown": "Gỡ xuống hàng loạt"
+        "batchTakeDown": "Gỡ xuống hàng loạt",
+        "platform": "Nền tảng phát hành",
+        "digitalServiceProviders": "Nền tảng phát hành",
+        "lastEnqueue": "Lần xếp hàng cuối",
+        "lastDelivered": "Lần gửi cuối"
     },
 
     "formFields": {
@@ -1257,7 +1270,13 @@
         "id": "Mã phân phối",
         "onlyIn": "Chỉ phân phối trong",
         "everyWhereExcept": "Phân phối khắp nơi ngoại trừ",
-        "wordWide": "Phân phối khắp thế giới"
+        "wordWide": "Phân phối khắp thế giới",
+        "confirmDistribute": "Bạn có chắc chắn muốn phát hành trên nền tảng này không?"
+    },
+
+    "takeDown": {
+        "label": "Gỡ khỏi nền tảng",
+        "confirmTakeDown": "Bạn có chắc chắn muốn gỡ khỏi nền tảng này không?"
     },
 
     "emailSender": {
@@ -1348,7 +1367,7 @@
     "tenant": {
         "label": "Workspace",
         "selectTitle": "Chọn Workspace",
-        "workspaces": "workspaces",
+        "workspaces": "Workspace",
         "name": "Tên workspace",
         "logo": "Logo",
         "icon": {
@@ -1394,7 +1413,7 @@
         },
         "parent": {
             "placeholder": "Chọn workspace cha",
-            "label": "Tenant cha"
+            "label": "Workspace cha"
         },
         "back": "Trở lại workspace",
         "member": "Thành viên",
@@ -1588,6 +1607,7 @@
 
     "price": {
         "label": "Giá",
+        "prices": "Giá",
         "name": "Tên giá",
         "code": "Mã giá",
         "action": {
@@ -1687,7 +1707,7 @@
     },
 
     "tenantIssue": {
-        "label": "Vấn đề tenant",
+        "label": "Vấn đề workspace",
         "message": {
             "success": {
                 "create": "Tạo vấn đề thành công",
@@ -1697,23 +1717,23 @@
             "error": {
                 "notFound": "Không tìm thấy vấn đề",
                 "duplicate": "Vấn đề này đã tồn tại",
-                "tenantNotFound": "Không tìm thấy tenant",
+                "tenantNotFound": "Không tìm thấy workspace",
                 "issueNotFound": "Không tìm thấy vấn đề"
             }
         }
     },
 
     "tenantTier": {
-        "label": "Xếp hạng tenant",
-        "name": "Tên tenant",
+        "label": "Xếp hạng workspace",
+        "name": "Tên workspace",
         "message": {
             "success": {
-                "create": "Tạo tenant thành công",
-                "update": "Cập nhật tenant thành công",
-                "delete": "Xóa tenant thành công"
+                "create": "Tạo workspace thành công",
+                "update": "Cập nhật workspace thành công",
+                "delete": "Xóa workspace thành công"
             },
             "error": {
-                "notFound": "Không tìm thấy tenant",
+                "notFound": "Không tìm thấy workspace",
                 "duplicateNameVi": "Tên tiếng Việt bị trùng",
                 "duplicateNameEn": "Tên tiếng Anh bị trùng",
                 "duplicateCode": "Mã bị trùng"
@@ -1824,8 +1844,8 @@
                 "delete": "Xóa tích hợp thành công"
             },
             "error": {
-                "notFound": "Không tìm thấy tích hợp của tenant",
-                "dspExisted": "DSP đã được kích hoạt cho tenant này"
+                "notFound": "Không tìm thấy tích hợp của workspace",
+                "dspExisted": "DSP đã được kích hoạt cho workspace này"
             }
         }
     },
@@ -1858,6 +1878,7 @@
     },
 
     "sftp": {
-        "requiredSftpInfo": "Vui lòng nhập đủ thông tin SFTP"
+        "requiredSftpInfo": "Vui lòng nhập đủ thông tin SFTP",
+        "requiredPasswordOrPrivateKey": "Vui lòng nhập mật khẩu hoặc khoá riêng tư"
     }
 }

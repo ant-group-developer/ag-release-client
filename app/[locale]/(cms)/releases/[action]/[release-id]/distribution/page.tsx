@@ -2,32 +2,56 @@
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { ORDER } from '@/enums/common';
+import { setSortOrder } from '@/helpers/common';
+import { toastPromise } from '@/helpers/messages-helper';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { useRouter } from '@/i18n/routing';
-import { distributionData } from '@/modules/distribution/constants';
 import { DISTRIBUTION_STATUS } from '@/modules/distribution/enum';
-import { DistributionDataFilter } from '@/modules/distribution/types';
+import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribute';
+import { useReleaseDistribute } from '@/modules/distribution/hooks/use-release-distribute';
+import { DistributeRelease } from '@/modules/distribution/types/payload';
+import { releaseDspQueryKey } from '@/modules/release-dsp/constants/query-keys';
+import { useGetListReleaseDsp } from '@/modules/release-dsp/hooks/use-get-list-release-dsp';
+import {
+    ReleaseDspData,
+    ReleaseDspDataFilter,
+} from '@/modules/release-dsp/types';
 import DistributionStatus from '@/modules/releases/components/release-detail/release-distribution/components/header-action/distribution-status';
 import DistributionTable from '@/modules/releases/components/release-detail/release-distribution/components/table';
 import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
-import { Button, theme } from 'antd';
-import { Key, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { theme } from 'antd';
+import { useTranslations } from 'next-intl';
+import { useEffect, useState } from 'react';
 type Props = {};
 
 export default function Distribution({}: Props) {
     // const messages = useTranslations();
-    const [selectedRow, setSelectedRow] = useState<Key[]>([]);
+    const selectedRow = useReleaseDistribute((state) => state.selectedRows);
+    const setSelectedRow = useReleaseDistribute(
+        (state) => state.setSelectedRows
+    );
+    const formValues = useReleaseFormStore((state) => state.formValues);
+    const [releaseDspStatus, setReleaseDspStatus] = useState<
+        DISTRIBUTION_STATUS | undefined
+    >();
 
     const openModal = useModalStore((state) => state.openModal);
+    const dataEdit = useModalStore((state) => state.dataEdit);
+    const typeModal = useModalStore((state) => state.typeModal);
+    const closeModal = useModalStore((state) => state.closeModal);
 
-    const handleSelectedRow = (selectedRowKeys: Key[]) => {
-        setSelectedRow(selectedRowKeys);
+    const handleSelectedRow = (
+        _selectedRowKeys: React.Key[],
+        selectedRows: ReleaseDspData[]
+    ) => {
+        setSelectedRow(selectedRows);
     };
 
     const rowSelection = {
-        selectedRow,
+        selectedRowKeys: selectedRow.map((row) => row.dsp?.id),
         onChange: handleSelectedRow,
     };
 
@@ -37,30 +61,69 @@ export default function Distribution({}: Props) {
         canClearFilter,
         removeFilter,
         onChangePage,
-    } = useFilter<DistributionDataFilter>({
+    } = useFilter<ReleaseDspDataFilter>({
         page: 1,
-        pageSize: 21,
+        pageSize: 999,
+        status:
+            releaseDspStatus === DISTRIBUTION_STATUS.ALL
+                ? undefined
+                : releaseDspStatus,
     });
 
-    // const { height, width } = useWindowSize();
-    // const isSmallDevice = Number(width) <= SCREEN.MD;
-    const { token } = theme.useToken();
-    const typeModal = useModalStore((state) => state.typeModal);
-    const closeModal = useModalStore((state) => state.closeModal);
-    const formValues = useReleaseFormStore((state) => state.formValues);
-    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
+    const {
+        releaseDsp,
+        isFetching: isLoadingReleaseDsp,
+        refetch: refetchReleaseDsp,
+    } = useGetListReleaseDsp(formValues?.id ?? '', dataFilter);
+    const { distributeRelease } = useDistributeRelease();
 
-    const releaseId = formValues?.id || '';
-    const router = useRouter();
+    const { token } = theme.useToken();
+
+    const messages = useTranslations();
+    const queryClient = useQueryClient();
 
     const handleDistribution = () => {
-        setFormValues({
-            ...formValues,
-            // platforms: selectedRow as string[],
-        });
         closeModal();
-        router.push(`/releases/detail/${releaseId}/review`);
+        let dspCode;
+        if (!typeModal) {
+            dspCode = selectedRow.map((row) => row.dsp.code);
+        } else {
+            dspCode = [dataEdit?.dsp?.code];
+        }
+        const variables: DistributeRelease = {
+            id: formValues?.id ?? '',
+            code: dspCode ?? [],
+            onSuccess(e) {
+                queryClient.invalidateQueries({
+                    queryKey: releaseDspQueryKey.detail(
+                        formValues?.id ?? '',
+                        dataFilter
+                    ),
+                });
+                setSelectedRow([]);
+            },
+        };
+        const promise = distributeRelease(variables);
+        toastPromise(promise, messages);
     };
+
+    const onChangeSort = (pagination: any, filters: any, sort: any) => {
+        const orderBy = setSortOrder(sort, ORDER.ASC);
+        const fieldOrder = sort.field;
+        onChangeFilter(
+            {
+                orderBy,
+                fieldOrder,
+            },
+            false
+        );
+    };
+
+    useEffect(() => {
+        if (releaseDsp?.items?.length) {
+            setSelectedRow(releaseDsp.items);
+        }
+    }, [releaseDsp, setSelectedRow]);
 
     return (
         <div className="flex h-full flex-col justify-between pb-4">
@@ -70,61 +133,50 @@ export default function Distribution({}: Props) {
                     style={{ backgroundColor: token.colorBgContainer }}
                 >
                     <DistributionStatus
-                        onChangeFilter={onChangeFilter}
-                        value={dataFilter.status ?? DISTRIBUTION_STATUS.ALL}
+                        onChangeStatus={(status) => {
+                            setReleaseDspStatus(status);
+                        }}
+                        value={releaseDspStatus}
                     />
-                    {selectedRow.length > 0 && (
-                        <div className="flex items-center gap-4 px-4 font-medium">
-                            <Button
-                                onClick={() => {
-                                    openModal(
-                                        TYPE_MODAL_RELEASE_DISTRIBUTION.DISTRIBUTION
-                                    );
-                                }}
-                                className=""
-                                type="primary"
-                                // disabled={errorsLength > 0}
-                            >
-                                <span>
-                                    Phân phối {selectedRow.length}/
-                                    {distributionData.length}
-                                </span>
-                            </Button>
-                            <Button
-                                onClick={() => {
-                                    openModal(
-                                        TYPE_MODAL_RELEASE_DISTRIBUTION.TAKE_DOWN
-                                    );
-                                }}
-                                danger
-                                // disabled={errorsLength > 0}
-                            >
-                                <span>
-                                    Gỡ xuống {selectedRow.length}/
-                                    {distributionData.length}
-                                </span>
-                            </Button>
-                        </div>
-                    )}
                 </div>
 
-                {/* <DistributionHeader
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
-                    handleChangeVisibleColumns={handleChangeVisibleColumns}
-                    visibleColumn={visibleColumns}
-                /> */}
-
-                <DistributionTable
-                    dataSource={distributionData}
-                    scroll={{ x: 'max-content' }}
-                    rowSelection={rowSelection}
-                    size="large"
-                />
+                <div
+                    className="rounded-lg"
+                    style={{
+                        backgroundColor: token.colorBgContainer,
+                    }}
+                >
+                    <DistributionTable
+                        options={false}
+                        dataSource={releaseDsp?.items}
+                        scroll={{ x: 'max-content' }}
+                        rowSelection={rowSelection}
+                        size="large"
+                        rowKey={(record) => record.dsp?.id}
+                        pagination={{
+                            pageSize: dataFilter?.pageSize,
+                            total: releaseDsp?.metadata?.totalItems,
+                        }}
+                        loading={isLoadingReleaseDsp}
+                        onChange={onChangeSort}
+                        dataFilter={dataFilter}
+                    />
+                </div>
             </div>
+
+            <AppPagination
+                className="rounded-b-lg"
+                style={{ backgroundColor: token.colorBgContainer }}
+                align="end"
+                current={dataFilter.page}
+                pageSize={dataFilter.pageSize}
+                total={releaseDsp?.metadata?.totalItems}
+                onChange={onChangePage}
+                showTotalText
+                showSizeChanger
+                showQuickJumper
+                pageSizeOptions={PAGE_SIZE_OPTIONS}
+            />
 
             {typeModal === TYPE_MODAL_RELEASE_DISTRIBUTION.DISTRIBUTION && (
                 // <DistributionReleaseModal platformIds={selectedRow} />
@@ -132,8 +184,8 @@ export default function Distribution({}: Props) {
                     open
                     onOk={handleDistribution}
                     onCancel={closeModal}
-                    modalTitle="Phát hành"
-                    paragraph="Bạn có chắc chắn muốn phát hành trên nền tảng này không?"
+                    modalTitle={messages('distribute.label')}
+                    paragraph={messages('distribute.confirmDistribute')}
                 />
             )}
 
@@ -142,24 +194,10 @@ export default function Distribution({}: Props) {
                     open
                     onOk={closeModal}
                     onCancel={closeModal}
-                    modalTitle="Gỡ khỏi nền tảng"
-                    paragraph="Bạn có chắc chắn muốn gỡ khỏi nền tảng này không?"
+                    modalTitle={messages('takeDown.label')}
+                    paragraph={messages('takeDown.confirmTakeDown')}
                 />
             )}
-
-            <AppPagination
-                className="rounded-b-lg"
-                style={{ backgroundColor: token.colorBgContainer }}
-                align="end"
-                current={dataFilter.page}
-                pageSize={dataFilter.pageSize}
-                total={distributionData.length}
-                onChange={onChangePage}
-                showTotalText
-                showSizeChanger
-                showQuickJumper
-                pageSizeOptions={PAGE_SIZE_OPTIONS}
-            />
         </div>
     );
 }

@@ -1,7 +1,9 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
+import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE } from '@/constants/page-size';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { toastPromise } from '@/helpers/messages-helper';
 import { useElementHeightById } from '@/hooks/use-element-height-by-id';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
@@ -25,8 +27,9 @@ import { useDeleteTrack } from '@/modules/tracks/hooks/use-delete-track';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { TrackData, TrackDataFilter } from '@/modules/tracks/types';
 import { DeleteVariables } from '@/types/api';
-import { Button, ConfigProvider, Empty, theme } from 'antd';
+import { Button, ConfigProvider, Empty, Modal, theme } from 'antd';
 import { TableRowSelection } from 'antd/es/table/interface';
+import { Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import { Key, useState } from 'react';
@@ -69,13 +72,12 @@ export default function Tracks() {
         setSelectedRow(selectedRowKeys);
     };
     const handleRemoveTrack = () => {
+        closeModal();
         const variables: DeleteVariables<TrackData['id']> = {
             id: dataEdit.id,
-            onSuccess: () => {
-                closeModal();
-            },
         };
-        deleteTrack(variables);
+        const promise = deleteTrack(variables);
+        return toastPromise(promise, messages);
     };
 
     const handleBulkDeleteTracks = () => {
@@ -119,6 +121,11 @@ export default function Tracks() {
                 <div className="mb-2 flex justify-end">
                     {isTracksPage && isShowAddTrack && (
                         <Button
+                            icon={
+                                <div>
+                                    <Music size={SIZE_ICON} />
+                                </div>
+                            }
                             onClick={() =>
                                 openModal(TYPE_MODAL_RELEASE.ADD_TRACK)
                             }
@@ -176,15 +183,16 @@ export default function Tracks() {
                 )}
 
                 {typeModal === TYPE_MODAL_TRACK.DELETE && (
-                    <AppConfirm
+                    <Modal
                         open
-                        modalTitle={messages('delete.confirmTitle')}
-                        paragraph={messages('delete.confirmMessage', {
-                            value: dataEdit?.title,
-                        })}
+                        title={messages('delete.confirmTitle')}
                         onCancel={closeModal}
                         onOk={() => handleRemoveTrack()}
-                    />
+                    >
+                        {messages('delete.confirmMessage', {
+                            value: dataEdit?.title,
+                        })}
+                    </Modal>
                 )}
 
                 {typeModal === TYPE_MODAL_TRACK_ARTIST.DELETE && (

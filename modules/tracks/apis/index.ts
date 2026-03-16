@@ -73,4 +73,10 @@ export const trackApi = {
     bulkDeleteTrackDraft: (ids: Key[]) => {
         return axiosInstance.post(`/tracks/draft/bulk-delete`, { ids });
     },
+
+    generateIsrc: (id: TrackData['id']) => {
+        return axiosInstance.post<DetailResponse<TrackData>>(
+            `/tracks/${id}/gen-isrc`
+        );
+    },
 };

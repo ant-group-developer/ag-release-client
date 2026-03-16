@@ -12,11 +12,33 @@ export default function PriceTiersSelect({ fallBack, ...props }: Props) {
     const { priceTiersData } = useGetListPriceTiers({
         pageSize: PAGE_SIZE_EXTRA_LARGE,
     });
-    const labelRender = (props: any) => {
-        const { value, label } = props;
-        if (value) {
-            return fallBack || label;
-        }
+
+    const options = priceTiersData.items.map((item) => ({
+        id: item.id,
+        value: item.id,
+        code: item?.code,
+        label: (
+            <div className="flex items-center gap-1">
+                <span>
+                    {formatCurrency(item?.amount, item?.currency?.code)}
+                </span>
+                <span
+                    style={{
+                        fontWeight: 500,
+                    }}
+                >
+                    {item?.code}
+                </span>
+            </div>
+        ),
+    }));
+
+    const labelRender = ({ value }: any) => {
+        if (!value) return null;
+        if (fallBack) return fallBack;
+
+        const selected = options.find((opt) => opt.value === value);
+        return selected?.label ?? value;
     };
 
     return (
@@ -24,15 +46,11 @@ export default function PriceTiersSelect({ fallBack, ...props }: Props) {
             {...props}
             showSearch
             filterOption={(input, option) =>
-                toNonAccentVietnamese(option?.label ?? '')
+                toNonAccentVietnamese(option?.code ?? '')
                     .toLowerCase()
                     .includes(toNonAccentVietnamese(input).toLowerCase())
             }
-            options={priceTiersData.items.map((item) => ({
-                id: item.id,
-                value: item.id,
-                label: formatCurrency(item?.amount, item?.currency?.code),
-            }))}
+            options={options}
             labelRender={labelRender}
         />
     );

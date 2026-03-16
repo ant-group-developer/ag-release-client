@@ -64,6 +64,8 @@
         }
     },
     "common": {
+        "incomplete": "Incomplete",
+        "generate": "Generate",
         "privateKey": "Private key",
         "deal": "Deal",
         "deals": "Deals",
@@ -404,7 +406,8 @@
     "dashboard": {
         "label": "Dashboard",
         "latestNews": "Latest news",
-        "goTo": "Go to Dashboard"
+        "goTo": "Go to Dashboard",
+        "viewAllUpdates": "View all updates"
     },
     "review": {
         "message": {
@@ -549,8 +552,8 @@
     "status": {
         "label": "Status",
         "active": "Active",
+        "inActive": "Inactive",
         "on": "On",
-
         "off": "Off",
         "block": "Blocked",
         "select": "Select status",
@@ -762,6 +765,10 @@
     },
 
     "release": {
+        "uploadTemplateSuccess": "Upload template successfully",
+        "uploadTemplateError": "Upload template failed",
+        "importTemplate": "Import template",
+        "downloadTemplate": "Download template",
         "contributors": "Release contributors",
         "list": "Release list",
         "releases": "Releases",
@@ -828,6 +835,11 @@
                 "update": "Update release successfully",
                 "delete": "Delete release successfully"
             }
+        },
+        "action": {
+            "submit": "Submit release",
+            "edit": "Edit release",
+            "completeTheTask": "Complete the task"
         }
     },
 
@@ -1049,7 +1061,8 @@
         "classical": "Classical",
         "blues": "Blues",
         "add": "Add new genre",
-        "primary": "Primary genre"
+        "primary": "Primary genre",
+        "label": "Genres"
     },
     "genre": {
         "label": "Genre",
@@ -1135,7 +1148,11 @@
         "name": "Distribution name",
         "id": "Distribution ID",
         "batchDistribution": "Batch distribution",
-        "batchTakeDown": "Batch takedown"
+        "batchTakeDown": "Batch takedown",
+        "platform": "Platform",
+        "digitalServiceProviders": "Digital service providers",
+        "lastEnqueue": "Last Enqueue",
+        "lastDelivered": "Last Delivered"
     },
 
     "formFields": {
@@ -1159,7 +1176,7 @@
         "trackSensitiveId": "Sensitive content",
         "recordingCountryId": "Recording country",
         "trackArtists": "track artist",
-        "distributionType": "Release type",
+        "distributionType": "Distribution type",
         "releaseCoverArts": "Release image",
         "audioLanguageId": "Audio language",
         "labelId": "Label",
@@ -1254,7 +1271,13 @@
         "id": "Distribute ID",
         "onlyIn": "Distribute only in",
         "everyWhereExcept": "Distribute everywhere except",
-        "wordWide": "Distribute worldwide"
+        "wordWide": "Distribute worldwide",
+        "confirmDistribute": "Are you sure you want to distribute on this platform?"
+    },
+
+    "takeDown": {
+        "label": "Take down from platform",
+        "confirmTakeDown": "Are you sure you want to take down from this platform?"
     },
 
     "emailSender": {
@@ -1267,8 +1290,8 @@
         "add": "Add platform",
         "oneLinkPerLine": "One link per line",
         "profileList": "Profile list",
-        "fullNameOfDDexParty": "Full name of DDex party",
-        "ddexPartyId": "DDex party Id",
+        "fullNameOfDDexParty": "Full Name of DDEX Party",
+        "ddexPartyId": "DDex Party ID",
         "message": {
             "success": {
                 "create": "Create platform successfully",
@@ -1345,7 +1368,7 @@
     "tenant": {
         "label": "Workspace",
         "selectTitle": "Select Workspace",
-        "workspaces": "workspaces",
+        "workspaces": "Workspaces",
         "name": "Workspace name",
         "logo": "Logo",
         "icon": {
@@ -1581,6 +1604,7 @@
 
     "price": {
         "label": "Price",
+        "prices": "Prices",
         "name": "Price name",
         "code": "Price code",
         "action": {
@@ -1680,7 +1704,7 @@
     },
 
     "tenantIssue": {
-        "label": "Tenant issue",
+        "label": "Workspace issue",
         "message": {
             "success": {
                 "create": "Create success",
@@ -1688,17 +1712,17 @@
                 "delete": "Delete success"
             },
             "error": {
-                "notFound": "Tenant issue not found",
-                "duplicate": "This tenant already has this issue active",
-                "tenantNotFound": "Tenant not found",
+                "notFound": "Workspace issue not found",
+                "duplicate": "This workspace already has this issue active",
+                "tenantNotFound": "Workspace not found",
                 "issueNotFound": "Issue not found"
             }
         }
     },
 
     "tenantTier": {
-        "label": "Tenant tier",
-        "name": "Tenant tier name",
+        "label": "Workspace tier",
+        "name": "Workspace tier name",
         "message": {
             "success": {
                 "create": "Create success",
@@ -1816,8 +1840,8 @@
                 "delete": "Delete integration successfully"
             },
             "error": {
-                "notFound": "Tenant integration not found",
-                "dspExisted": "DSP is already enabled for this tenant"
+                "notFound": "Workspace integration not found",
+                "dspExisted": "DSP is already enabled for this workspace"
             }
         }
     },
@@ -1850,6 +1874,7 @@
     },
 
     "sftp": {
-        "requiredSftpInfo": "Please enter all required SFTP information"
+        "requiredSftpInfo": "Please enter all required SFTP information",
+        "requiredPasswordOrPrivateKey": "Please enter password or private key"
     }
 }

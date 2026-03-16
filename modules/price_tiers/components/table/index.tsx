@@ -1,4 +1,5 @@
 import ActionButton from '@/components/ui/button/action-button';
+import CopyText from '@/components/ui/copy-text/copy-text';
 import CurrenciesSelect from '@/components/ui/select/currencies-select';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
@@ -47,7 +48,7 @@ export const PriceTiersTable = ({ dataFilter, ...props }: Props) => {
             key: 'amount',
             dataIndex: 'amount',
             align: 'left',
-            width: 100,
+            width: 150,
             ellipsis: true,
             render: (value, record) => (
                 <span className="flex items-center gap-1">
@@ -59,11 +60,24 @@ export const PriceTiersTable = ({ dataFilter, ...props }: Props) => {
             ),
         },
         {
+            title: messages('common.code'),
+            key: 'code',
+            dataIndex: 'code',
+            align: 'left',
+            width: 150,
+            ellipsis: true,
+            render: (value, record) => (
+                <CopyText text={record?.code}>
+                    <span className="truncate">{record?.code}</span>
+                </CopyText>
+            ),
+        },
+        {
             title: messages('currencies.label'),
             key: 'currencyId',
             dataIndex: 'currencyId',
             align: 'left',
-            width: 200,
+            width: 130,
             ellipsis: true,
             render: (value, record) => (
                 <div>
@@ -108,28 +122,32 @@ export const PriceTiersTable = ({ dataFilter, ...props }: Props) => {
             align: 'center',
             width: 100,
             ellipsis: true,
-            render: (value, record) => (
-                <CustomTooltip
-                    title={
-                        record.isDefault
-                            ? messages(
-                                  'priceTier.canDeactivateOnlyWhenNotDefault'
-                              )
-                            : ''
-                    }
-                >
-                    <Switch
-                        disabled={record?.isDefault}
-                        defaultChecked={record?.isActive}
-                        onChange={(value) =>
-                            updatePriceTiers({
-                                id: record?.id,
-                                payload: { isActive: value },
-                            })
+            render: (value, record) => {
+                return (
+                    <CustomTooltip
+                        title={
+                            record.isDefault
+                                ? messages(
+                                      'priceTier.canDeactivateOnlyWhenNotDefault'
+                                  )
+                                : ''
                         }
-                    />
-                </CustomTooltip>
-            ),
+                    >
+                        <Switch
+                            disabled={record?.isDefault}
+                            // defaultChecked={record?.isActive}
+                            checked={record?.isActive}
+                            value={record?.isActive}
+                            onChange={(value) =>
+                                updatePriceTiers({
+                                    id: record?.id,
+                                    payload: { isActive: value },
+                                })
+                            }
+                        />
+                    </CustomTooltip>
+                );
+            },
         },
         {
             title: messages('common.createdAt'),

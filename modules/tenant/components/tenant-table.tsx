@@ -2,12 +2,11 @@ import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import {
     formattedNumber,
     getAvatarPlaceholder,
-    getIndex,
     getSortOrder,
 } from '@/helpers/common';
 import { Link } from '@/i18n/routing';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
-import { Avatar, Switch, theme, Tooltip } from 'antd';
+import { Avatar, Space, Switch, theme, Tooltip } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { TENANT_ORDER_BY, TENANT_TABS } from '../enums';
@@ -43,23 +42,29 @@ function TenantTable({ dataFilter, ...props }: Props) {
     };
 
     const columns: ColumnsType<TenantData> = [
+        // {
+        //     dataIndex: '',
+        //     title: messages('common.iNo'),
+        //     align: 'center',
+        //     width: 80,
+        //     fixed: 'left',
+        //     render: (text, record, index) =>
+        //         getIndex(
+        //             props.pagination.pageSize,
+        //             props.pagination.current,
+        //             index
+        //         ),
+        // },
         {
             dataIndex: '',
-            title: messages('common.iNo'),
-            align: 'center',
-            width: 80,
-            fixed: 'left',
-            render: (text, record, index) =>
-                getIndex(
-                    props.pagination.pageSize,
-                    props.pagination.current,
-                    index
-                ),
+            title: '',
+            width: 20,
+            render: () => null,
         },
         {
             title: messages('tenant.label'),
             dataIndex: TENANT_ORDER_BY.NAME,
-            width: 250,
+            width: 300,
             ellipsis: true,
             sorter: true,
             fixed: 'left',
@@ -71,11 +76,17 @@ function TenantTable({ dataFilter, ...props }: Props) {
             render: (cell, record) => {
                 const ownerEmail = getTenantOwnerEmail(record.tenantUser);
                 return (
-                    <div className="flex items-center gap-2">
+                    <Space
+                        size={'small'}
+                        style={{
+                            marginLeft: record.parent ? 50 : 0,
+                            width: '100%',
+                            overflow: 'hidden',
+                        }}
+                    >
                         <Avatar
                             src={record.logo}
                             alt={cell}
-                            className="flex-none"
                             size={40}
                             shape="square"
                         >
@@ -104,14 +115,14 @@ function TenantTable({ dataFilter, ...props }: Props) {
                                 {messages('tenant.owner')}: {ownerEmail}
                             </p>
                         </div>
-                    </div>
+                    </Space>
                 );
             },
         },
         {
             title: messages('tenant.title'),
             dataIndex: 'title',
-            width: 250,
+            width: 200,
             ellipsis: true,
         },
         {

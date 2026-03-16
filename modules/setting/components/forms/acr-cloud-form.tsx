@@ -19,10 +19,10 @@ type Props = {};
 export default function ACRCloudForm({}: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
-    const { settingData } = useGetSetting();
+    const { settingConfig } = useGetSetting();
     const { updateSetting } = useUpdateSetting();
     const { active, deActive, isActive } = useActive();
-    const acrCloudConfigData = settingData?.acrCloud;
+    const acrCloudConfigData = settingConfig?.acrCloud;
 
     const onFinish = (values: any) => {
         try {

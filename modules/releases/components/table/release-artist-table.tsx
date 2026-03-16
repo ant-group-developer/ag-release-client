@@ -70,11 +70,11 @@ export default function ReleaseArtistTable({
         },
         {
             title: messages('common.name'),
-            width: 300,
+            width: 250,
             render: (_, record, index) => {
                 const artist = record?.artist;
                 return (
-                    <div className="flex gap-2">
+                    <div className="flex items-center gap-2">
                         <Avatar src={artist?.picture}>{artist?.name[0]}</Avatar>
                         <span>{artist?.name}</span>
                     </div>
@@ -83,7 +83,7 @@ export default function ReleaseArtistTable({
         },
         {
             title: messages('artist.addToTracks'),
-            width: 130,
+            width: 100,
             render: (_, record, index) => {
                 return (
                     <Switch
@@ -133,14 +133,13 @@ export default function ReleaseArtistTable({
                 return <span>{artist?.country?.name}</span>;
             },
         },
-
         {
             title: messages('artist.profiles'),
             width: 150,
             render: (_, record, index) => {
                 return (
                     <div className="space-x-2">
-                        {/* <Avatar
+                        <Avatar
                             size={28}
                             src="/icon/apple-music.svg"
                             className="hover:cursor-pointer hover:opacity-40"
@@ -152,7 +151,7 @@ export default function ReleaseArtistTable({
                                     'noopener'
                                 );
                             }}
-                        /> */}
+                        />
                     </div>
                 );
             },
@@ -186,7 +185,7 @@ export default function ReleaseArtistTable({
     ];
     return (
         <div className="space-y-2">
-            <div className="overflow-hidden rounded-lg border">
+            <div className="overflow-hidden rounded-lg border dark:border-zinc-700">
                 <AppTable
                     {...props}
                     columns={columns}

@@ -1,4 +1,3 @@
-import { showNotification } from '@/helpers/messages-helper';
 import { useApiNotify } from '@/hooks/use-api-notify';
 import { releasesQueryKeys } from '@/modules/releases/constants/query-keys';
 import { trackQueryKeys } from '@/modules/tracks/constants/query-keys';
@@ -24,10 +23,10 @@ export const useDeleteTrack = () => {
             queryKey: releasesQueryKeys.validations(),
         });
 
-        const responseMessages = messages(data?.data?.messageCode);
+        // const responseMessages = messages(data?.data?.messageCode);
 
         onSuccess?.();
-        showNotification('success', responseMessages);
+        // showNotification('success', responseMessages);
     };
 
     const onError = (
@@ -45,7 +44,7 @@ export const useDeleteTrack = () => {
     });
 
     const deleteTrack = (variables: DeleteVariables<TrackData['id']>) => {
-        return mutation.mutate(variables);
+        return mutation.mutateAsync(variables);
     };
 
     return {

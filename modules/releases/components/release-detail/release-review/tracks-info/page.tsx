@@ -214,7 +214,7 @@ export default function TracksInfo({}: Props) {
                                 }
                                 key={String(index + 1)}
                             >
-                                <div className="m-auto grid max-w-5xl grid-cols-2 gap-4 px-4">
+                                <div className="m-auto grid grid-cols-2 gap-4 px-4">
                                     {renderField(
                                         index,
                                         messages('track.name'),
@@ -227,7 +227,7 @@ export default function TracksInfo({}: Props) {
                                         'version'
                                     )}
 
-                                    <div className="rounded-lg border bg-white px-4 py-2">
+                                    <div className="rounded-lg border px-4 py-2">
                                         <p className="font-medium">
                                             {messages('artist.artists')}{' '}
                                             <span className="text-red-500">
@@ -256,7 +256,7 @@ export default function TracksInfo({}: Props) {
                                         )}
                                     </div>
 
-                                    <div className="rounded-lg border bg-white px-4 py-2">
+                                    <div className="rounded-lg border px-4 py-2">
                                         <p className="font-medium">
                                             {messages('common.contributors')}{' '}
                                             <span className="text-red-500">

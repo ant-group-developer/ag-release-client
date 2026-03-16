@@ -1,8 +1,8 @@
+import { FALLBACK_IMAGE_HORIZONTAL } from '@/constants/common';
 import { Card } from 'antd';
 import { CardProps } from 'antd/lib';
 import Image from 'next/image';
 import { NewsData } from '../types';
-import { FALLBACK_IMAGE_HORIZONTAL } from '@/constants/common';
 
 type Props = CardProps & {
     data: NewsData;

@@ -2,7 +2,7 @@
 
 import SubmitButton from '@/components/ui/button/submit-button';
 import { useActive } from '@/hooks/use-active';
-import TenantForm from '@/modules/tenant/components/tenant-create/tenant-form';
+import TenantFormV2 from '@/modules/tenant/components/tenant-create/tenant-form-v2';
 import { useTenantDetail } from '@/modules/tenant/hooks/use-get-tenant';
 import { useUpdateTenant } from '@/modules/tenant/hooks/use-update-tenant';
 import { UpdateTenant, UpdateTenantPayload } from '@/modules/tenant/types/data';
@@ -130,21 +130,34 @@ function DetailTenantPage({}: Props) {
 
     return (
         <div
-            style={{
-                backgroundColor: token?.colorBgContainer,
-            }}
-            className="rounded-lg p-4"
+            style={
+                {
+                    // backgroundColor: token?.colorBgContainer,
+                }
+            }
+            // className="rounded-lg p-4"
         >
-            <TenantForm
-                layout="vertical"
-                wrapperClassName="grid grid-cols-1 gap-5 lg:grid-cols-2"
+            <TenantFormV2
+                layout="horizontal"
                 form={form}
                 submitProps={{ loading: isActive }}
                 excludeIds={[tenantId]}
                 showSubmit={false}
                 tenantId={tenantId}
+                labelCol={{
+                    xs: 9,
+                    md: 8,
+                    lg: 7,
+                    xxl: 4,
+                }}
+                wrapperCol={{
+                    xs: 15,
+                    md: 16,
+                    lg: 17,
+                    xxl: 20,
+                }}
             />
-            <div className="text-right">
+            <div className="mt-2 text-right">
                 <SubmitButton onClick={onFinish} loading={isActive} />
             </div>
         </div>

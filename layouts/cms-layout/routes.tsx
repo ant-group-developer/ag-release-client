@@ -95,6 +95,11 @@ const OWNER_OR_ADMIN_TENANT_REQ: RouteRequired = {
     tenantUserType: [TENANT_USER_TYPE.OWNER, TENANT_USER_TYPE.ADMIN],
 };
 
+export enum ROUTES_ID {
+    SYSTEM = 'system',
+    GENERAL = 'general',
+}
+
 /**
  * Top-level admin routes (all entries here are groups by convention).
  * You can nest `group` inside `group` as deeply as you like.
@@ -105,6 +110,16 @@ export const adminRoutes: RouteNode[] = [
         type: 'group',
         label: 'common.management',
         children: [
+            {
+                id: 'bulk-upload-demo',
+                type: 'link',
+                label: 'Bulk Upload Demo',
+                title: 'Bulk Upload Demo',
+                href: '/bulk-upload-demo',
+                icon: House,
+                required: { permission: [PERMISSION.DASHBOARD.READ] },
+                hidden: true,
+            },
             {
                 id: 'dashboard',
                 type: 'link',
@@ -324,7 +339,7 @@ export const adminRoutes: RouteNode[] = [
         ],
     },
     {
-        id: 'system',
+        id: ROUTES_ID.SYSTEM,
         type: 'group',
         label: 'common.system',
         children: [
@@ -411,7 +426,7 @@ export const adminRoutes: RouteNode[] = [
                 required: SYS_ADMIN_REQ,
             },
             {
-                id: 'general',
+                id: ROUTES_ID.GENERAL,
                 type: 'group',
                 label: 'common.general',
                 title: 'General',
@@ -431,7 +446,7 @@ export const adminRoutes: RouteNode[] = [
                     {
                         id: 'genres',
                         type: 'link',
-                        label: 'common.genres',
+                        label: 'genre.label',
                         title: 'Genres',
                         href: APP_ROUTES.GENRES,
                         icon: Library,
@@ -440,7 +455,7 @@ export const adminRoutes: RouteNode[] = [
                     {
                         id: 'currencies',
                         type: 'link',
-                        label: 'currencies.currencies',
+                        label: 'currencies.label',
                         title: 'Currencies',
                         href: APP_ROUTES.CURRENCIES,
                         icon: Banknote,
@@ -458,7 +473,7 @@ export const adminRoutes: RouteNode[] = [
                     {
                         id: 'policy',
                         type: 'link',
-                        label: 'policy.policies',
+                        label: 'policy.label',
                         title: 'Policy',
                         href: APP_ROUTES.ACTIONS,
                         icon: BookA,
