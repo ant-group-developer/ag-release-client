@@ -23,7 +23,7 @@ export const getThemeConfig = (
     return {
         token: {
             ...tokens,
-            // colorPrimary: primaryColor,
+            controlHeight: 36,
         },
         components,
     };

@@ -54,6 +54,7 @@ export default function AddArtistForm({ disabled = false }: Props) {
             layout="vertical"
             showSubmit={false}
             disabled={disabled || isActive}
+            variant={disabled ? 'underlined' : 'outlined'}
         >
             <div className="grid grid-cols-5 gap-4">
                 <AppFormItem

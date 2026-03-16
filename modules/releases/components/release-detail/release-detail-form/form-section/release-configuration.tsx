@@ -6,7 +6,6 @@ import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
 import { useGetListSimpleReleaseTypes } from '@/modules/release-types/hooks/use-get-list-simple-release-types';
 import { ReleaseTypesData } from '@/modules/release-types/types';
-import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
 import { ReleaseDetailSchema } from '@/modules/releases/schemas';
@@ -82,227 +81,181 @@ export default function ReleaseConfigurationSection({
     };
 
     return (
-        <CollapseItem
-            defaultActiveKey={['release-configuration']}
-            items={[
-                {
-                    key: 'release-configuration',
-                    label: (
-                        <span className="text-base font-semibold">
-                            {messages('release.configuration')}
-                        </span>
-                    ),
-                    children: (
-                        <div>
-                            <div className="grid grid-cols-3 items-center gap-4">
-                                <div className="col-span-3">
-                                    <FormItem
-                                        name="title"
-                                        label={messages('release.name')}
-                                        required
-                                        ErrorMessage={errors?.title?.message}
-                                        tooltipInfor={messages(
-                                            'tooltipForm.releaseTitle'
-                                        )}
-                                    >
-                                        <Controller
-                                            control={control}
-                                            name="title"
-                                            render={({
-                                                field: { ref, ...field },
-                                            }) => (
-                                                <Input
-                                                    id="title"
-                                                    {...field}
-                                                    value={field.value ?? ''}
-                                                    onBlur={(e) => {
-                                                        const value =
-                                                            e.target.value;
-                                                        field.onChange(value);
-                                                        debouncedUpdate(
-                                                            {
-                                                                title: value,
-                                                            },
-                                                            'title'
-                                                        );
-                                                    }}
-                                                    allowClear
-                                                    disabled={
-                                                        isOnCreatingDraft ||
-                                                        isReadMode
-                                                    }
-                                                    status={
-                                                        errors.title
-                                                            ? 'error'
-                                                            : undefined
-                                                    }
-                                                />
-                                            )}
-                                        />
-                                    </FormItem>
-                                </div>
-                                <div className="col-span-1">
-                                    <FormItem
-                                        name="version"
-                                        label={messages('release.version')}
-                                        ErrorMessage={errors.version?.message}
-                                        tooltipInfor={messages(
-                                            'tooltipForm.version'
-                                        )}
-                                    >
-                                        <Controller
-                                            control={control}
-                                            name="version"
-                                            render={({
-                                                field: { ref, ...field },
-                                            }) => (
-                                                <Input
-                                                    id="version"
-                                                    {...field}
-                                                    value={field.value ?? ''}
-                                                    onBlur={(e) => {
-                                                        const value =
-                                                            e.target.value;
-                                                        field.onChange(value);
-                                                        debouncedUpdate(
-                                                            { version: value },
-                                                            'version'
-                                                        );
-                                                    }}
-                                                    allowClear
-                                                    disabled={
-                                                        isOnCreatingDraft ||
-                                                        isReadMode
-                                                    }
-                                                    status={
-                                                        errors.version
-                                                            ? 'error'
-                                                            : undefined
-                                                    }
-                                                />
-                                            )}
-                                        />
-                                    </FormItem>
-                                </div>
-                                <div className="col-span-1">
-                                    <FormItem
-                                        name="labelId"
-                                        label="Label"
-                                        required
-                                        ErrorMessage={errors.labelId?.message}
-                                        tooltipInfor={messages(
-                                            'tooltipForm.label'
-                                        )}
-                                    >
-                                        <Controller
-                                            control={control}
-                                            name="labelId"
-                                            render={({
-                                                field: { ref, ...field },
-                                            }) => (
-                                                <LabelSelect
-                                                    className="w-full"
-                                                    showSearch
-                                                    id="labelId"
-                                                    {...field}
-                                                    onChange={(e) => {
-                                                        field.onChange(e);
-                                                        debouncedUpdate({
-                                                            labelId: e,
-                                                        });
-                                                    }}
-                                                    status={
-                                                        errors.labelId
-                                                            ? 'error'
-                                                            : undefined
-                                                    }
-                                                    disabled={
-                                                        isOnCreatingDraft ||
-                                                        isReadMode
-                                                    }
-                                                />
-                                            )}
-                                        />
-                                    </FormItem>
-                                </div>
-                                <div className="col-span-1">
-                                    <FormItem
-                                        name="albumFormatId"
-                                        label={messages('release.type')}
-                                        required
-                                        ErrorMessage={
-                                            errors.albumFormatId?.message
+        <div className="flex flex-col gap-4 rounded-lg bg-white p-4">
+            <span className="text-base font-semibold">
+                {messages('release.configuration')}
+            </span>
+            <div>
+                <div className="grid grid-cols-2 items-center gap-4">
+                    <div className="col-span-1">
+                        <FormItem
+                            name="title"
+                            label={messages('release.name')}
+                            required
+                            ErrorMessage={errors?.title?.message}
+                            tooltipInfor={messages('tooltipForm.releaseTitle')}
+                        >
+                            <Controller
+                                control={control}
+                                name="title"
+                                render={({ field: { ref, ...field } }) => (
+                                    <Input
+                                        id="title"
+                                        {...field}
+                                        value={field.value ?? ''}
+                                        onBlur={(e) => {
+                                            const value = e.target.value;
+                                            field.onChange(value);
+                                            debouncedUpdate(
+                                                {
+                                                    title: value,
+                                                },
+                                                'title'
+                                            );
+                                        }}
+                                        allowClear
+                                        disabled={
+                                            isOnCreatingDraft || isReadMode
                                         }
-                                        tooltipInfor={messages(
-                                            'tooltipForm.releaseType'
-                                        )}
+                                        status={
+                                            errors.title ? 'error' : undefined
+                                        }
+                                    />
+                                )}
+                            />
+                        </FormItem>
+                    </div>
+                    <div className="col-span-1">
+                        <FormItem
+                            name="version"
+                            label={messages('release.version')}
+                            ErrorMessage={errors.version?.message}
+                            tooltipInfor={messages('tooltipForm.version')}
+                        >
+                            <Controller
+                                control={control}
+                                name="version"
+                                render={({ field: { ref, ...field } }) => (
+                                    <Input
+                                        id="version"
+                                        {...field}
+                                        value={field.value ?? ''}
+                                        onBlur={(e) => {
+                                            const value = e.target.value;
+                                            field.onChange(value);
+                                            debouncedUpdate(
+                                                { version: value },
+                                                'version'
+                                            );
+                                        }}
+                                        allowClear
+                                        disabled={
+                                            isOnCreatingDraft || isReadMode
+                                        }
+                                        status={
+                                            errors.version ? 'error' : undefined
+                                        }
+                                    />
+                                )}
+                            />
+                        </FormItem>
+                    </div>
+                    <div className="col-span-1">
+                        <FormItem
+                            name="labelId"
+                            label="Label"
+                            required
+                            ErrorMessage={errors.labelId?.message}
+                            tooltipInfor={messages('tooltipForm.label')}
+                        >
+                            <Controller
+                                control={control}
+                                name="labelId"
+                                render={({ field: { ref, ...field } }) => (
+                                    <LabelSelect
+                                        className="w-full"
+                                        showSearch
+                                        id="labelId"
+                                        {...field}
+                                        onChange={(e) => {
+                                            field.onChange(e);
+                                            debouncedUpdate({
+                                                labelId: e,
+                                            });
+                                        }}
+                                        status={
+                                            errors.labelId ? 'error' : undefined
+                                        }
+                                        disabled={
+                                            isOnCreatingDraft || isReadMode
+                                        }
+                                    />
+                                )}
+                            />
+                        </FormItem>
+                    </div>
+                    <div className="col-span-1">
+                        <FormItem
+                            name="albumFormatId"
+                            label={messages('release.type')}
+                            required
+                            ErrorMessage={errors.albumFormatId?.message}
+                            tooltipInfor={messages('tooltipForm.releaseType')}
+                        >
+                            <Controller
+                                control={control}
+                                name="albumFormatId"
+                                render={({ field: { ref, ...field } }) => (
+                                    <Radio.Group
+                                        {...field}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            field.onChange(value);
+                                            debouncedUpdate({
+                                                albumFormatId: value,
+                                            });
+                                        }}
+                                        disabled={
+                                            isOnCreatingDraft || isReadMode
+                                        }
                                     >
-                                        <Controller
-                                            control={control}
-                                            name="albumFormatId"
-                                            render={({
-                                                field: { ref, ...field },
-                                            }) => (
-                                                <Radio.Group
-                                                    {...field}
-                                                    onChange={(e) => {
-                                                        const value =
-                                                            e.target.value;
-                                                        field.onChange(value);
-                                                        debouncedUpdate({
-                                                            albumFormatId:
-                                                                value,
-                                                        });
-                                                    }}
-                                                    disabled={
-                                                        isOnCreatingDraft ||
-                                                        isReadMode
-                                                    }
+                                        {releaseTypesData?.map(
+                                            (type: ReleaseTypesData) => (
+                                                <Radio
+                                                    key={type.id}
+                                                    value={type.id}
                                                 >
-                                                    {releaseTypesData?.map(
-                                                        (
-                                                            type: ReleaseTypesData
-                                                        ) => (
-                                                            <Radio
-                                                                key={type.id}
-                                                                value={type.id}
-                                                            >
-                                                                {type?.name}
-                                                            </Radio>
-                                                        )
-                                                    )}
-                                                </Radio.Group>
-                                            )}
-                                        />
-                                    </FormItem>
-                                </div>
-                            </div>
-                            {isCreateReleasePage && (
-                                <>
-                                    <div className="col-span-3 flex w-full justify-end">
-                                        <Button
-                                            type="primary"
-                                            onClick={() =>
-                                                handleCreateReleaseDraft()
-                                            }
-                                            disabled={!isEnableCreateDraftBtn}
-                                            loading={isOnCreatingDraft}
-                                        >
-                                            {messages('common.continue')}
-                                        </Button>
-                                    </div>
-                                    <div className="flex justify-end py-2 text-sm italic text-zinc-500">
-                                        *
-                                        {messages(
-                                            'release.placeholder.enterTitleAndReleaseType'
+                                                    {type?.name}
+                                                </Radio>
+                                            )
                                         )}
-                                    </div>
-                                </>
+                                    </Radio.Group>
+                                )}
+                            />
+                        </FormItem>
+                    </div>
+                </div>
+                {isCreateReleasePage && (
+                    <>
+                        <div className="col-span-3 flex w-full justify-end">
+                            <Button
+                                type="primary"
+                                onClick={() => handleCreateReleaseDraft()}
+                                disabled={!isEnableCreateDraftBtn}
+                                loading={isOnCreatingDraft}
+                            >
+                                {messages('common.continue')}
+                            </Button>
+                        </div>
+                        <div className="flex justify-end py-2 text-sm italic text-zinc-500">
+                            *
+                            {messages(
+                                'release.placeholder.enterTitleAndReleaseType'
                             )}
                         </div>
-                    ),
-                },
-            ]}
-        />
+                    </>
+                )}
+            </div>
+        </div>
     );
 }

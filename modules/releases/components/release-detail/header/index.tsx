@@ -46,7 +46,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { RELEASES_STATUS } from '../../../enums';
 import DownloadMenu from './download-menu';
 import OptionsMenu from './options-menu';
-import ReleaseInfo from './release-info';
+import ReleaseInfoV2 from './release-info-v2';
 type Props = {
     isScrolled: boolean;
 };
@@ -404,7 +404,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                         </CustomTooltip>
 
                         {/* release info */}
-                        <ReleaseInfo isScrolled={isScrolled} />
+                        <ReleaseInfoV2 isScrolled={isScrolled} />
                     </div>
 
                     {!isCreateReleasePage && (

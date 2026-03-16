@@ -1,5 +1,4 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
-import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { ReleaseDetailSchema } from '@/modules/releases/schemas';
@@ -39,80 +38,63 @@ export default function ReleaseArtistSection({
     // func
 
     return (
-        <CollapseItem
-            defaultActiveKey={['Release Artists']}
-            items={[
-                {
-                    key: 'Release Artists',
-                    label: (
-                        <span className="text-base font-semibold">
-                            {' '}
-                            {messages('releaseArtist.label')}{' '}
-                        </span>
-                    ),
-                    children: (
-                        <div className="grid grid-cols-3 items-center gap-4">
-                            <div className="col-span-3">
-                                <FormItem
-                                    name="isVariousArtist"
-                                    label={messages(
-                                        'release.isMoreThan4Artists'
-                                    )}
-                                    required
-                                    ErrorMessage={''}
-                                    tooltipInfor={messages(
-                                        'tooltipForm.isMoreThan4Artists'
-                                    )}
-                                >
-                                    <Controller
-                                        control={control}
-                                        name="isVariousArtist"
-                                        render={({
-                                            field: { ref, ...field },
-                                        }) => (
-                                            <div className="pt-1">
-                                                <Radio.Group
-                                                    {...field}
-                                                    onChange={(e) => {
-                                                        const value =
-                                                            e.target.value;
-                                                        field.onChange(value);
-                                                        debouncedUpdate({
-                                                            isVariousArtist:
-                                                                value,
-                                                        });
-                                                    }}
-                                                    disabled={
-                                                        isCreateReleasePage ||
-                                                        isReadMode
-                                                    }
-                                                >
-                                                    <Radio value={false}>
-                                                        {messages('common.no')}
-                                                    </Radio>
-                                                    <Radio value={true}>
-                                                        {messages('common.yes')}{' '}
-                                                        {` (${messages('artist.descriptionVariantArtists')})`}
-                                                    </Radio>
-                                                </Radio.Group>
-                                            </div>
-                                        )}
-                                    />
-                                </FormItem>
-                            </div>
-
-                            {!isVariousArtist && (
-                                <div className="col-span-4" id="releaseArtists">
-                                    <ReleaseArtistTable
-                                        dataSource={releaseArtist}
-                                        disabled={isReadMode}
-                                    />
+        <div className="flex flex-col gap-4 rounded-lg bg-white p-4">
+            <span className="text-base font-semibold">
+                {' '}
+                {messages('releaseArtist.label')}{' '}
+            </span>
+            <div className="grid grid-cols-3 items-center gap-4">
+                <div className="col-span-3">
+                    <FormItem
+                        name="isVariousArtist"
+                        label={messages('release.isMoreThan4Artists')}
+                        required
+                        ErrorMessage={''}
+                        tooltipInfor={messages(
+                            'tooltipForm.isMoreThan4Artists'
+                        )}
+                    >
+                        <Controller
+                            control={control}
+                            name="isVariousArtist"
+                            render={({ field: { ref, ...field } }) => (
+                                <div className="pt-1">
+                                    <Radio.Group
+                                        {...field}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            field.onChange(value);
+                                            debouncedUpdate({
+                                                isVariousArtist: value,
+                                            });
+                                        }}
+                                        disabled={
+                                            isCreateReleasePage || isReadMode
+                                        }
+                                    >
+                                        <Radio value={false}>
+                                            {messages('common.no')}
+                                        </Radio>
+                                        <Radio value={true}>
+                                            {messages('common.yes')}{' '}
+                                            {` (${messages('artist.descriptionVariantArtists')})`}
+                                        </Radio>
+                                    </Radio.Group>
                                 </div>
                             )}
-                        </div>
-                    ),
-                },
-            ]}
-        />
+                        />
+                    </FormItem>
+                </div>
+
+                {!isVariousArtist && (
+                    <div className="col-span-4" id="releaseArtists">
+                        <ReleaseArtistTable
+                            dataSource={releaseArtist}
+                            disabled={isReadMode}
+                        />
+                    </div>
+                )}
+            </div>
+        </div>
     );
 }
