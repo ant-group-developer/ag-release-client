@@ -7,7 +7,7 @@ import { ReleaseDspData, ReleaseDspDataFilter } from '../types';
 
 export const useGetListReleaseDsp = (
     id: string,
-    params: ReleaseDspDataFilter
+    params?: ReleaseDspDataFilter
 ) => {
     const { data, ...rest } = useQuery({
         queryKey: releaseDspQueryKey.detail(id, params),

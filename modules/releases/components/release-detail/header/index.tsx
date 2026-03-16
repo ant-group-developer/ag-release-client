@@ -120,29 +120,6 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     ];
     const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
 
-    const statusItems: StepsProps['items'] = [
-        {
-            title: messages('common.draft'),
-            icon: <NotebookText size={SIZE_ICON} />,
-        },
-        {
-            title: messages('common.processing'),
-            icon: <FileSearch size={SIZE_ICON} />,
-        },
-        {
-            title: messages('issue.label'),
-            icon: <CircleAlert size={SIZE_ICON} />,
-        },
-        {
-            title: messages('common.distributed'),
-            icon: <Box size={SIZE_ICON} />,
-        },
-        {
-            title: messages('common.takenDown'),
-            icon: <PackageX size={SIZE_ICON} />,
-        },
-    ];
-
     const { currentStep, stepStatus } = useMemo(() => {
         const status = formValues?.status;
         switch (status) {
@@ -162,6 +139,34 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         }
     }, [formValues?.status]);
     const validateLength = releaseValidateData && releaseValidateData?.length;
+
+    const statusItems: StepsProps['items'] = [
+        {
+            title: messages('common.draft'),
+            icon: <NotebookText size={SIZE_ICON} />,
+            status: currentStep === 0 ? 'process' : 'wait',
+        },
+        {
+            title: messages('common.processing'),
+            icon: <FileSearch size={SIZE_ICON} />,
+            status: currentStep === 1 ? 'process' : 'wait',
+        },
+        {
+            title: messages('issue.label'),
+            icon: <CircleAlert size={SIZE_ICON} />,
+            status: currentStep === 2 ? 'process' : 'wait',
+        },
+        {
+            title: messages('common.distributed'),
+            icon: <Box size={SIZE_ICON} />,
+            status: currentStep === 3 ? 'process' : 'wait',
+        },
+        {
+            title: messages('common.takenDown'),
+            icon: <PackageX size={SIZE_ICON} />,
+            status: currentStep === 4 ? 'process' : 'wait',
+        },
+    ];
 
     // func
 
@@ -336,14 +341,16 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                 />
 
                 <div>
-                    <Button
-                        loading={isDistributingRelease}
-                        onClick={handleDistribution}
-                        type="primary"
-                        disabled={validateLength > 0}
-                    >
-                        {messages('release.action.submit')}
-                    </Button>
+                    {!isCreateReleasePage && (
+                        <Button
+                            loading={isDistributingRelease}
+                            onClick={handleDistribution}
+                            type="primary"
+                            disabled={validateLength > 0}
+                        >
+                            {messages('release.action.submit')}
+                        </Button>
+                    )}
                 </div>
             </div>
 

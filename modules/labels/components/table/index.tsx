@@ -14,6 +14,7 @@ import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { ProColumns } from '@ant-design/pro-components';
 import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
+import nProgress from 'nprogress';
 import { LABEL_DETAIL_TABS, TYPE_MODAL_LABEL } from '../../enum';
 import { LabelData, LabelDataFilter } from '../../types';
 
@@ -190,44 +191,6 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
                 return record.tenant?.name;
             },
         },
-        // {
-        //     title: messages('common.createdAt'),
-        //     key: 'createdAt',
-        //     dataIndex: 'createdAt',
-        //     align: 'center',
-        //     width: 70,
-        //     render: (value) => (
-        //         <span className="truncate text-wrap">
-        //             {' '}
-        //             {formattedDate(value)}{' '}
-        //         </span>
-        //     ),
-        //     sorter: true,
-        //     sortOrder: getSortOrder(
-        //         dataFilter.orderBy,
-        //         dataFilter.fieldOrder,
-        //         'createdAt'
-        //     ),
-        // },
-        // {
-        //     title: messages('common.updatedAt'),
-        //     key: 'updatedAt',
-        //     dataIndex: 'updatedAt',
-        //     align: 'center',
-        //     width: 70,
-        //     sorter: true,
-        //     sortOrder: getSortOrder(
-        //         dataFilter.orderBy,
-        //         dataFilter.fieldOrder,
-        //         'updatedAt'
-        //     ),
-        //     render: (value) => (
-        //         <span className="truncate text-wrap">
-        //             {' '}
-        //             {formattedDate(value)}{' '}
-        //         </span>
-        //     ),
-        // },
         {
             key: 'actions',
             align: 'center',
@@ -237,6 +200,15 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
                     showUpdate={hasPermission(PERMISSION.LABEL.UPDATE)}
                     showDetail
                     showDelete={isSystemTenant}
+                    onShowDetail={() => {
+                        nProgress.start();
+                        router.push(
+                            getLabelDetailRoute(
+                                record?.id,
+                                LABEL_DETAIL_TABS.OVERVIEW
+                            )
+                        );
+                    }}
                     onShowUpdate={() => {
                         openModal(TYPE_MODAL_LABEL.EDIT, record);
                     }}
