@@ -1,4 +1,3 @@
-import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { ReleaseDetailSchema } from '@/modules/releases/schemas';
@@ -39,26 +38,16 @@ export default function ReleaseContributorsSection({
     // func
 
     return (
-        <CollapseItem
-            defaultActiveKey={['Release Contributors']}
-            items={[
-                {
-                    key: 'Release Contributors',
-                    label: (
-                        <span className="text-base font-semibold">
-                            {messages('release.contributors')}
-                        </span>
-                    ),
-                    children: (
-                        <div className="" id="releaseContributors">
-                            <ReleaseContributorsTable
-                                dataSource={releaseContributor}
-                                disabled={isReadMode}
-                            />
-                        </div>
-                    ),
-                },
-            ]}
-        />
+        <div className="flex flex-col gap-4 rounded-lg bg-white p-4">
+            <span className="text-base font-semibold">
+                {messages('release.contributors')}
+            </span>
+            <div className="" id="releaseContributors">
+                <ReleaseContributorsTable
+                    dataSource={releaseContributor}
+                    disabled={isReadMode}
+                />
+            </div>
+        </div>
     );
 }

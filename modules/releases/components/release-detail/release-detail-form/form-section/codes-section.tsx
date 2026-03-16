@@ -1,7 +1,5 @@
-import FormItem from '@/components/ui/react-hook-form/form-item';
-import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { ReleaseDetailSchema } from '@/modules/releases/schemas';
-import { Input } from 'antd';
+import { Form, Input } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -29,106 +27,74 @@ export default function CodesSection({ isReadMode, debouncedUpdate }: Props) {
     const isCreateReleasePage = params['action'] === 'create';
 
     return (
-        <CollapseItem
-            defaultActiveKey={['codes']}
-            items={[
-                {
-                    key: 'codes',
-                    label: (
-                        <span className="text-base font-semibold">
-                            {messages('common.code')}
-                        </span>
-                    ),
-                    children: (
-                        <div className="grid grid-cols-3 items-center gap-4">
-                            <div className="col-span-1">
-                                <FormItem
-                                    name="upc"
-                                    label="UPC/EAN/JAN"
-                                    ErrorMessage={errors.upc?.message}
-                                    tooltipInfor={messages(
-                                        'tooltipForm.eanUpcCode'
-                                    )}
-                                >
-                                    <Controller
-                                        control={control}
-                                        name="upc"
-                                        render={({
-                                            field: { ref, ...field },
-                                        }) => (
-                                            <Input
-                                                id="upc"
-                                                {...field}
-                                                value={field.value ?? ''}
-                                                onBlur={(e) => {
-                                                    const value =
-                                                        e.target.value;
-                                                    field.onChange(value);
-                                                    debouncedUpdate({
-                                                        upc: value,
-                                                    });
-                                                }}
-                                                allowClear
-                                                status={
-                                                    errors.upc
-                                                        ? 'error'
-                                                        : undefined
-                                                }
-                                                disabled={
-                                                    isCreateReleasePage ||
-                                                    isReadMode
-                                                }
-                                            />
-                                        )}
-                                    />
-                                </FormItem>
-                            </div>
-                            <div className="col-span-1">
-                                <FormItem
-                                    name="catalogId"
-                                    label="ID Catalog"
-                                    ErrorMessage={errors.catalogId?.message}
-                                    tooltipInfor={messages(
-                                        'tooltipForm.catalogId'
-                                    )}
-                                >
-                                    <Controller
-                                        control={control}
-                                        name="catalogId"
-                                        render={({
-                                            field: { ref, ...field },
-                                        }) => (
-                                            <Input
-                                                id="catalogId"
-                                                {...field}
-                                                value={field.value ?? ''}
-                                                onBlur={(e) => {
-                                                    const value =
-                                                        e.target.value;
-                                                    field.onChange(value);
-                                                    debouncedUpdate({
-                                                        catalogId: value,
-                                                    });
-                                                }}
-                                                allowClear
-                                                status={
-                                                    errors.catalogId
-                                                        ? 'error'
-                                                        : undefined
-                                                }
-                                                disabled={
-                                                    isCreateReleasePage ||
-                                                    isReadMode
-                                                }
-                                            />
-                                        )}
-                                    />
-                                </FormItem>
-                            </div>
-                        </div>
-                    ),
-                },
-            ]}
-        />
+        <div className="flex flex-col gap-4 rounded-lg bg-white p-4">
+            <span className="text-base font-semibold">
+                {messages('common.code')}
+            </span>
+            <div className="grid grid-cols-3 items-center gap-4">
+                <div className="col-span-1">
+                    <Form.Item
+                        label="UPC/EAN/JAN"
+                        validateStatus={errors.upc ? 'error' : ''}
+                        help={errors.upc?.message as string}
+                        tooltip={messages('tooltipForm.eanUpcCode')}
+                    >
+                        <Controller
+                            control={control}
+                            name="upc"
+                            render={({ field: { ref, ...field } }) => (
+                                <Input
+                                    id="upc"
+                                    {...field}
+                                    value={field.value ?? ''}
+                                    onBlur={(e) => {
+                                        const value = e.target.value;
+                                        field.onChange(value);
+                                        debouncedUpdate({
+                                            upc: value,
+                                        });
+                                    }}
+                                    allowClear
+                                    status={errors.upc ? 'error' : undefined}
+                                    disabled={isCreateReleasePage || isReadMode}
+                                />
+                            )}
+                        />
+                    </Form.Item>
+                </div>
+                <div className="col-span-1">
+                    <Form.Item
+                        label="ID Catalog"
+                        validateStatus={errors.catalogId ? 'error' : ''}
+                        help={errors.catalogId?.message as string}
+                        tooltip={messages('tooltipForm.catalogId')}
+                    >
+                        <Controller
+                            control={control}
+                            name="catalogId"
+                            render={({ field: { ref, ...field } }) => (
+                                <Input
+                                    id="catalogId"
+                                    {...field}
+                                    value={field.value ?? ''}
+                                    onBlur={(e) => {
+                                        const value = e.target.value;
+                                        field.onChange(value);
+                                        debouncedUpdate({
+                                            catalogId: value,
+                                        });
+                                    }}
+                                    allowClear
+                                    status={
+                                        errors.catalogId ? 'error' : undefined
+                                    }
+                                    disabled={isCreateReleasePage || isReadMode}
+                                />
+                            )}
+                        />
+                    </Form.Item>
+                </div>
+            </div>
+        </div>
     );
 }

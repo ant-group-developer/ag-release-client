@@ -47,7 +47,7 @@ export default function ReleaseInfo({ isScrolled }: Props) {
                     <CustomerServiceOutlined className="mr-1" />
                     {messages('release.name')}:{' '}
                 </span>
-                <span className="inline-block max-w-[500px] text-wrap align-top font-semibold">
+                <span className="inline-block max-w-[500px] text-wrap align-top">
                     {releaseData.title}{' '}
                     {releaseData.version &&
                         releaseData.title &&
@@ -59,9 +59,7 @@ export default function ReleaseInfo({ isScrolled }: Props) {
                     <TagOutlined className="mr-1" />
                     {messages('release.type')}:{' '}
                 </span>
-                <span className="font-semibold">
-                    {releaseData.albumFormat?.name}
-                </span>
+                <span>{releaseData.albumFormat?.name}</span>
             </div>
             {releaseData.labelId && (
                 <div>
@@ -69,9 +67,7 @@ export default function ReleaseInfo({ isScrolled }: Props) {
                         <TagOutlined className="mr-1" />
                         Label:{' '}
                     </span>
-                    <span className="font-semibold">
-                        {releaseData?.label?.name}
-                    </span>
+                    <span>{releaseData?.label?.name}</span>
                 </div>
             )}
             <div>
@@ -79,7 +75,7 @@ export default function ReleaseInfo({ isScrolled }: Props) {
                     <UserOutlined className="mr-1" />
                     {messages('artist.label')}:{' '}
                 </span>
-                <span className="font-semibold">{renderArtistName()}</span>
+                <span>{renderArtistName()}</span>
             </div>
             {/* <div >
                                     <span>{messages('common.genres')}: </span>
@@ -92,7 +88,7 @@ export default function ReleaseInfo({ isScrolled }: Props) {
                     <CalendarOutlined className="mr-1" />
                     {messages('common.releaseDate')}:{' '}
                 </span>
-                <span className="font-semibold">
+                <span>
                     {formattedDate(
                         releaseData.releaseDate,
                         DATE_FORMAT.DATE_ONLY
@@ -106,7 +102,7 @@ export default function ReleaseInfo({ isScrolled }: Props) {
                         <BarcodeOutlined className="mr-1" />
                         UPC:{' '}
                     </span>
-                    <span className="font-semibold">{releaseData.upc}</span>
+                    <span>{releaseData.upc}</span>
                 </div>
             )}
         </div>

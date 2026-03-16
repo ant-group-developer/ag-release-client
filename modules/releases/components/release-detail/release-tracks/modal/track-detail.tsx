@@ -223,6 +223,7 @@ export default function TrackDetailModal({ ...props }: Props) {
                 disabled={isReadMode}
                 layout="vertical"
                 showSubmit={false}
+                variant={isReadMode ? 'underlined' : 'outlined'}
             >
                 <Tabs
                     className="rounded"

@@ -1,5 +1,5 @@
 import { cn } from '@/helpers/tailwind';
-import { Form, FormItemProps } from 'antd';
+import { Form, FormItemProps, Typography } from 'antd';
 import { ReactNode } from 'react';
 import IconInfoTooltip from '../tooltip/icon-info-tooltip';
 
@@ -18,8 +18,15 @@ function AppFormItem({
 }: AppFormItemProps) {
     const customLabel = label ? (
         <div className="flex items-center gap-1">
-            <span className="flex gap-1 font-semibold">
-                {label}
+            <span className="flex gap-1">
+                <Typography.Text
+                    style={{
+                        color: '#65696e',
+                    }}
+                    type="secondary"
+                >
+                    {label}
+                </Typography.Text>
                 {required && <span style={{ color: 'red' }}> *</span>}
             </span>
             {tooltipInfo && <IconInfoTooltip title={tooltipInfo} />}
@@ -31,6 +38,7 @@ function AppFormItem({
     return (
         <Form.Item
             {...props}
+            colon={false}
             className={cn('app-form-item !mb-3', className)}
             label={customLabel}
             required={false}

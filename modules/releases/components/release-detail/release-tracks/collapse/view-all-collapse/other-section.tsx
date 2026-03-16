@@ -51,7 +51,10 @@ export default function OtherSection({
     ];
 
     return (
-        <ConfigProvider componentDisabled={isReadMode}>
+        <ConfigProvider
+            componentDisabled={isReadMode}
+            form={{ variant: isReadMode ? 'underlined' : 'outlined' }}
+        >
             <CollapseItem
                 defaultActiveKey={['other']}
                 items={[
