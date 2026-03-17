@@ -11,6 +11,7 @@ import {
     ExclamationCircleOutlined,
     FileExcelOutlined,
     LoadingOutlined,
+    RocketOutlined,
     SyncOutlined,
 } from '@ant-design/icons';
 import {
@@ -64,6 +65,16 @@ const STATUS_CONFIG: Record<
         icon: <CheckCircleOutlined />,
         label: 'Uploaded',
     },
+    creating: {
+        color: 'geekblue',
+        icon: <RocketOutlined />,
+        label: 'Creating',
+    },
+    completed: {
+        color: 'success',
+        icon: <CheckCircleOutlined />,
+        label: 'Completed',
+    },
     failed: {
         color: 'error',
         icon: <ExclamationCircleOutlined />,
@@ -80,6 +91,19 @@ type Props = {
 
 function BatchImportTable({ ...props }: Props) {
     const columns: ColumnsType<BatchImportLogData> = [
+        {
+            title: 'Tenant',
+            dataIndex: 'tenantCode',
+            width: 120,
+            render: (value: string | null) =>
+                value ? (
+                    <Tag color="blue">{value}</Tag>
+                ) : (
+                    <Text type="secondary" style={{ fontSize: 12 }}>
+                        —
+                    </Text>
+                ),
+        },
         {
             title: 'Batch ID',
             dataIndex: 'batchId',
