@@ -53,6 +53,7 @@ export default function AddTrackContributorForm({ trackData }: Props) {
             layout="vertical"
             showSubmit={false}
             disabled={isActive}
+            variant={isReadMode ? 'underlined' : 'outlined'}
         >
             <div className="grid grid-cols-4 gap-4">
                 <AppFormItem

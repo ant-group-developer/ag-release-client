@@ -2,7 +2,7 @@ import { cn } from '@/helpers/common';
 import { useQueryParams } from '@/hooks/use-query-params';
 import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
 import { useGetArtistSimpleList } from '@/modules/artist/hooks/use-get-artist-simple-list';
-import { ArtistDataSimple } from '@/modules/artist/types';
+import { ArtistDataSimple, ArtistProfileData } from '@/modules/artist/types';
 import { Avatar, Button, Empty, Select, SelectProps, Spin } from 'antd';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
@@ -60,21 +60,24 @@ export default function ArtistSelect({
         [setSearchKeyword]
     );
 
-    const options = artistsData?.map((item: ArtistDataSimple, idx) => ({
-        key: `${item.id}_${idx}`,
-        id: item.id,
-        value: item.id,
-        label: (
-            <div className="flex items-center gap-1">
-                <span className="truncate">
-                    <CustomTooltip title={item.name}>{item.name}</CustomTooltip>
-                </span>
-                {/* <div className="flex gap-1">
+    const options = artistsData?.map((item: ArtistDataSimple, idx) => {
+        return {
+            key: `${item.id}_${idx}`,
+            id: item.id,
+            value: item.id,
+            label: (
+                <div className="flex items-center gap-1">
+                    <span className="truncate">
+                        <CustomTooltip title={item.name}>
+                            {item.name}
+                        </CustomTooltip>
+                    </span>
+                    {/* <div className="flex gap-1">
                     <span>{item?.country?.name}</span>
                     {item?.country?.name ? '|' : ''}
                     <span>{item?.genre?.name}</span>
                 </div> */}
-                {/* <div className="flex justify-end gap-1">
+                    {/* <div className="flex justify-end gap-1">
                     <Avatar
                         size={26}
                         src="/icon/spotify.png"
@@ -102,11 +105,12 @@ export default function ArtistSelect({
                         }}
                     />
                 </div> */}
-            </div>
-        ),
-        disabled: disabledArtistIds?.includes(item.id) ?? false,
-        artistData: item,
-    }));
+                </div>
+            ),
+            disabled: disabledArtistIds?.includes(item.id) ?? false,
+            artistData: item,
+        };
+    });
 
     const optionRender = (oriOption: any) => {
         const item = oriOption.data.artistData as ArtistDataSimple;
@@ -132,32 +136,26 @@ export default function ArtistSelect({
                     </div>
                 </div>
                 <div className="mr-2 flex justify-end gap-1">
-                    <Avatar
-                        size={26}
-                        src="/icon/spotify.png"
-                        className="hover:opacity-40"
-                        onClick={(e) => {
-                            e?.stopPropagation();
-                            window.open(
-                                'https://open.spotify.com/',
-                                '_blank',
-                                'noopener'
-                            );
-                        }}
-                    />
-                    <Avatar
-                        size={26}
-                        src="/icon/apple-music.svg"
-                        className="hover:opacity-40"
-                        onClick={(e) => {
-                            e?.stopPropagation();
-                            window.open(
-                                'https://open.spotify.com/',
-                                '_blank',
-                                'noopener'
-                            );
-                        }}
-                    />
+                    <Avatar.Group maxCount={2}>
+                        {item?.artistProfiles?.map(
+                            (profile: ArtistProfileData) => (
+                                <Avatar
+                                    key={profile.id}
+                                    size={26}
+                                    src={profile.dsp?.picture ?? ''}
+                                    className="hover:opacity-80"
+                                    onClick={(e) => {
+                                        e?.stopPropagation();
+                                        window.open(
+                                            profile.url,
+                                            '_blank',
+                                            'noopener'
+                                        );
+                                    }}
+                                />
+                            )
+                        )}
+                    </Avatar.Group>
                 </div>
             </div>
         );

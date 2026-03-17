@@ -141,7 +141,7 @@ export default function Tracks() {
                     dataSource={tracksData?.items}
                     rowSelection={rowSelection}
                     sticky={{ offsetHeader: headerHeight }}
-                    loading={isFetching}
+                    loading={isLoading}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
                         current: tracksData.metadata.page,
@@ -161,7 +161,7 @@ export default function Tracks() {
                 )}
 
                 {typeModal === TYPE_MODAL_RELEASE.DETAIL_TRACK_RELEASE && (
-                    <TrackDetailModal />
+                    <TrackDetailModal tracks={tracksData?.items} />
                 )}
 
                 {typeModal === TYPE_MODAL_TRACK_ARTIST.ADD && (

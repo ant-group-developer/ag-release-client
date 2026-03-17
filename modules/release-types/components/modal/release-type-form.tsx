@@ -6,7 +6,7 @@ import { getCodeFormatted } from '@/helpers/string';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
-import { Form, Input, InputNumber } from 'antd';
+import { Form, Input } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { useCreateReleaseType } from '../../hooks/use-create-release-type';
@@ -144,7 +144,7 @@ export default function ReleaseTypeFormModal({ ...props }: Props) {
                 >
                     <Input allowClear />
                 </AppFormItem>
-                <AppFormItem
+                {/* <AppFormItem
                     name="minTrackCount"
                     label={messages('track.minTrack')}
                     required
@@ -169,7 +169,7 @@ export default function ReleaseTypeFormModal({ ...props }: Props) {
                     ]}
                 >
                     <InputNumber className="!w-full" />
-                </AppFormItem>
+                </AppFormItem> */}
             </AppForm>
         </AppModal>
     );

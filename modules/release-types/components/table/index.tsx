@@ -74,44 +74,44 @@ export const ReleaseTypeTable = ({ dataFilter, ...props }: Props) => {
                 </CopyText>
             ),
         },
-        {
-            title: messages('track.minTrack'),
-            key: 'minTrackCount',
-            dataIndex: 'minTrackCount',
-            ellipsis: true,
-            align: 'left',
-            width: 150,
-            sorter: true,
-            sortOrder: getSortOrder(
-                dataFilter.orderBy,
-                dataFilter.fieldOrder,
-                'minTrackCount'
-            ),
-            render: (value) => (
-                // <CopyText tooltipProps={{ placement: 'right' }} text={value}>
-                <p className="truncate">{value}</p>
-                // </CopyText>
-            ),
-        },
-        {
-            title: messages('track.maxTrack'),
-            key: 'maxTrackCount',
-            dataIndex: 'maxTrackCount',
-            ellipsis: true,
-            align: 'left',
-            width: 150,
-            sorter: true,
-            sortOrder: getSortOrder(
-                dataFilter.orderBy,
-                dataFilter.fieldOrder,
-                'maxTrackCount'
-            ),
-            render: (value) => (
-                // <CopyText tooltipProps={{ placement: 'right' }} text={value}>
-                <p className="truncate">{value}</p>
-                // </CopyText>
-            ),
-        },
+        // {
+        //     title: messages('track.minTrack'),
+        //     key: 'minTrackCount',
+        //     dataIndex: 'minTrackCount',
+        //     ellipsis: true,
+        //     align: 'left',
+        //     width: 150,
+        //     sorter: true,
+        //     sortOrder: getSortOrder(
+        //         dataFilter.orderBy,
+        //         dataFilter.fieldOrder,
+        //         'minTrackCount'
+        //     ),
+        //     render: (value) => (
+        //         // <CopyText tooltipProps={{ placement: 'right' }} text={value}>
+        //         <p className="truncate">{value}</p>
+        //         // </CopyText>
+        //     ),
+        // },
+        // {
+        //     title: messages('track.maxTrack'),
+        //     key: 'maxTrackCount',
+        //     dataIndex: 'maxTrackCount',
+        //     ellipsis: true,
+        //     align: 'left',
+        //     width: 150,
+        //     sorter: true,
+        //     sortOrder: getSortOrder(
+        //         dataFilter.orderBy,
+        //         dataFilter.fieldOrder,
+        //         'maxTrackCount'
+        //     ),
+        //     render: (value) => (
+        //         // <CopyText tooltipProps={{ placement: 'right' }} text={value}>
+        //         <p className="truncate">{value}</p>
+        //         // </CopyText>
+        //     ),
+        // },
         {
             title: messages('common.createdAt'),
             key: 'createdAt',

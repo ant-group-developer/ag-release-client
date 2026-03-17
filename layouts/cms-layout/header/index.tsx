@@ -32,7 +32,10 @@ function Header({ collapsed, toggleCollapsed }: Props) {
 
     const handleDownloadTemplate = () => {
         const promise = downloadTemplate();
-        toastPromise(promise, messages);
+        toastPromise(promise, messages, {
+            success: messages('common.success'),
+            error: messages('common.error'),
+        });
     };
 
     const dropdownOptions: MenuProps['items'] = [
@@ -49,7 +52,7 @@ function Header({ collapsed, toggleCollapsed }: Props) {
     return (
         <AntdHeader
             id="layout-header"
-            className="flex items-center justify-between border-b !bg-white !pl-2 !pr-5 shadow-md dark:border-b-zinc-800 dark:!bg-bg-dark"
+            className="flex !h-16 items-center justify-between border-b !bg-white !pl-2 !pr-5 shadow-md dark:border-b-zinc-800 dark:!bg-bg-dark"
         >
             <div className="flex flex-1 items-center gap-5">
                 <IconButton onClick={toggleCollapsed}>

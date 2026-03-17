@@ -15,7 +15,7 @@ import {
 } from '@/modules/releases/hooks/release-form-store';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { Breadcrumb, Tabs, TabsProps, theme } from 'antd';
-import { Box, Calendar, Eye, Info, Music } from 'lucide-react';
+import { BookHeadphones, Box, Calendar, Eye, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname } from 'next/navigation';
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
@@ -51,7 +51,6 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const isDisableTab = releaseId == '';
     const isDetailPage = pathname.includes(`/${RELEASES_TABS.CORE_DETAIL}`);
     // const isTracksPage = pathname.includes(`/${RELEASES_TABS.TRACKS}`);
-    const isCoreDetailPage = pathname.includes(`/${RELEASES_TABS.CORE_DETAIL}`);
     const coreDetailTabsNavigate = isCreateReleasePage
         ? '/releases/create'
         : getReleaseTabRoute(releaseId, RELEASES_TABS.CORE_DETAIL);
@@ -68,10 +67,8 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                     href={coreDetailTabsNavigate}
                 >
                     <div className="flex items-center gap-1">
-                        <Info size={SIZE_ICON} />
-                        <span className="font-medium">
-                            {messages('common.coreInfo')}
-                        </span>
+                        <BookHeadphones size={SIZE_ICON} />
+                        <span>{messages('common.coreInfo')}</span>
                     </div>
                 </Link>
             ),
@@ -91,9 +88,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                 >
                     <div className="flex items-center gap-1">
                         <Music size={SIZE_ICON} />
-                        <span className="font-medium">
-                            {messages('common.tracks')}
-                        </span>
+                        <span>{messages('common.tracks')}</span>
                     </div>
                 </Link>
             ),
@@ -108,9 +103,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                 >
                     <div className="flex items-center gap-1">
                         <Calendar size={SIZE_ICON} />
-                        <span className="font-medium">
-                            {messages('release.scheduling.label')}
-                        </span>
+                        <span>{messages('release.scheduling.label')}</span>
                     </div>
                 </Link>
             ),
@@ -128,9 +121,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                 >
                     <div className="flex items-center gap-1">
                         <Box size={SIZE_ICON} />
-                        <span className="font-medium">
-                            {messages('distribute.label')}
-                        </span>
+                        <span>{messages('distribute.label')}</span>
                     </div>
                 </Link>
             ),
@@ -145,9 +136,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                 >
                     <div className="flex items-center gap-1">
                         <Eye size={SIZE_ICON} />
-                        <span className="font-medium">
-                            {messages('common.overview')}
-                        </span>
+                        <span>{messages('common.overview')}</span>
                     </div>
                 </Link>
             ),
@@ -193,17 +182,16 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         }
     }, [releaseId, releaseData?.id]);
 
-    useEffect(() => {
-        if (isCreateReleasePage) return setIsScrolled(false);
-        // Chỉ theo dõi scroll khi ở trang core-detail, các trang khác mặc định isScrolled = true
-        if (!isCoreDetailPage) {
-            setIsScrolled(true);
-            return;
-        }
-    }, [isCoreDetailPage]);
+    // useEffect(() => {
+    //     if (isCreateReleasePage) return setIsScrolled(false);
+    //     // Chỉ theo dõi scroll khi ở trang core-detail, các trang khác mặc định isScrolled = true
+    //     if (!isCoreDetailPage) {
+    //         setIsScrolled(true);
+    //         return;
+    //     }
+    // }, [isCoreDetailPage]);
 
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-        if (!isCoreDetailPage) return;
         const scrollTop = e.currentTarget.scrollTop;
         if (!isScrolled && scrollTop > 100) {
             setIsScrolled(true);

@@ -54,6 +54,7 @@ export default function AddTrackArtistForm({ trackData }: Props) {
             layout="vertical"
             showSubmit={false}
             disabled={isActive}
+            variant={isReadMode ? 'underlined' : 'outlined'}
         >
             <div className="grid grid-cols-2 gap-4">
                 <AppFormItem

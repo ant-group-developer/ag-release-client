@@ -118,6 +118,7 @@ export const adminRoutes: RouteNode[] = [
                 href: '/bulk-upload-demo',
                 icon: House,
                 required: { permission: [PERMISSION.DASHBOARD.READ] },
+                hidden: true,
             },
             {
                 id: 'dashboard',
@@ -413,6 +414,15 @@ export const adminRoutes: RouteNode[] = [
                 title: 'Email Sender',
                 href: APP_ROUTES.EMAIL_SENDER,
                 icon: Mail,
+                required: SYS_ADMIN_REQ,
+            },
+            {
+                id: 'batch-import',
+                type: 'link',
+                label: 'Batch Import',
+                title: 'Batch Import',
+                href: APP_ROUTES.BATCH_IMPORT,
+                icon: ClipboardList,
                 required: SYS_ADMIN_REQ,
             },
             {

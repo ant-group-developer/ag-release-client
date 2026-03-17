@@ -406,7 +406,8 @@
     "dashboard": {
         "label": "Dashboard",
         "latestNews": "Latest news",
-        "goTo": "Go to Dashboard"
+        "goTo": "Go to Dashboard",
+        "viewAllUpdates": "View all updates"
     },
     "review": {
         "message": {
@@ -834,6 +835,11 @@
                 "update": "Update release successfully",
                 "delete": "Delete release successfully"
             }
+        },
+        "action": {
+            "submit": "Submit release",
+            "edit": "Edit release",
+            "completeTheTask": "Complete the task"
         }
     },
 
@@ -1142,7 +1148,11 @@
         "name": "Distribution name",
         "id": "Distribution ID",
         "batchDistribution": "Batch distribution",
-        "batchTakeDown": "Batch takedown"
+        "batchTakeDown": "Batch takedown",
+        "platform": "Platform",
+        "digitalServiceProviders": "Digital service providers",
+        "lastEnqueue": "Last Enqueue",
+        "lastDelivered": "Last Delivered"
     },
 
     "formFields": {
@@ -1261,7 +1271,13 @@
         "id": "Distribute ID",
         "onlyIn": "Distribute only in",
         "everyWhereExcept": "Distribute everywhere except",
-        "wordWide": "Distribute worldwide"
+        "wordWide": "Distribute worldwide",
+        "confirmDistribute": "Are you sure you want to distribute on this platform?"
+    },
+
+    "takeDown": {
+        "label": "Take down from platform",
+        "confirmTakeDown": "Are you sure you want to take down from this platform?"
     },
 
     "emailSender": {

@@ -3,6 +3,7 @@ import AppConfirm from '@/components/ui/modal/confirm-modal';
 import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { SIZE_ICON } from '@/constants/common';
+import { ArtistProfileData } from '@/modules/artist/types';
 import { useDeleteReleaseContributor } from '@/modules/release-contributor/hooks/use-delete-release-contributor';
 import { useUpdateReleaseContributor } from '@/modules/release-contributor/hooks/use-update-release-contributor';
 import { ReleaseContributor } from '@/modules/release-contributor/types';
@@ -71,11 +72,11 @@ export default function ReleaseContributorsTable({
         },
         {
             title: messages('common.name'),
-            width: 300,
+            width: 250,
             render: (_, record, index) => {
                 const artist = record?.artist;
                 return (
-                    <div className="flex gap-2">
+                    <div className="flex items-center gap-2">
                         <Avatar src={artist?.picture}>{artist?.name[0]}</Avatar>
                         <span>{artist?.name}</span>
                     </div>
@@ -84,7 +85,7 @@ export default function ReleaseContributorsTable({
         },
         {
             title: messages('artist.addToTracks'),
-            width: 180,
+            width: 120,
             render: (_, record, index) => {
                 return (
                     <Switch
@@ -94,7 +95,7 @@ export default function ReleaseContributorsTable({
                                 addContributorToTracks: e,
                             })
                         }
-                        defaultValue={record?.addArtistToTracks}
+                        defaultValue={record?.addContributorToTracks}
                     />
                 );
             },
@@ -141,20 +142,25 @@ export default function ReleaseContributorsTable({
             width: 150,
             render: (_, record, index) => {
                 return (
-                    <div className="space-x-2">
-                        {/* <Avatar
-                            size={28}
-                            src="/icon/apple-music.svg"
-                            className="hover:cursor-pointer hover:opacity-40"
-                            onClick={(e) => {
-                                e?.stopPropagation();
-                                window.open(
-                                    'https://open.spotify.com/',
-                                    '_blank',
-                                    'noopener'
-                                );
-                            }}
-                        /> */}
+                    <div className="space-x-1">
+                        {record?.artist?.artistProfiles?.map(
+                            (profile: ArtistProfileData) => (
+                                <Avatar
+                                    key={profile.id}
+                                    size={26}
+                                    src={profile.dsp?.picture ?? ''}
+                                    className="cursor-pointer hover:opacity-80"
+                                    onClick={(e) => {
+                                        e?.stopPropagation();
+                                        window.open(
+                                            profile.url,
+                                            '_blank',
+                                            'noopener'
+                                        );
+                                    }}
+                                />
+                            )
+                        )}
                     </div>
                 );
             },

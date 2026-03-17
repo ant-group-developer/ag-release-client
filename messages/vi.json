@@ -415,7 +415,8 @@
     "dashboard": {
         "label": "Tổng quan",
         "latestNews": "Tin tức mới nhất",
-        "goTo": "Đi đến trang Tổng quan"
+        "goTo": "Đi đến trang Tổng quan",
+        "viewAllUpdates": "Xem tất cả tin tức"
     },
     "image": {
         "label": "Hình ảnh",
@@ -1146,7 +1147,11 @@
         "name": "Tên phân phối",
         "id": "Mã phân phối",
         "batchDistribution": "Phân phối hàng loạt",
-        "batchTakeDown": "Gỡ xuống hàng loạt"
+        "batchTakeDown": "Gỡ xuống hàng loạt",
+        "platform": "Nền tảng phát hành",
+        "digitalServiceProviders": "Nền tảng phát hành",
+        "lastEnqueue": "Lần xếp hàng cuối",
+        "lastDelivered": "Lần gửi cuối"
     },
 
     "formFields": {
@@ -1265,7 +1270,13 @@
         "id": "Mã phân phối",
         "onlyIn": "Chỉ phân phối trong",
         "everyWhereExcept": "Phân phối khắp nơi ngoại trừ",
-        "wordWide": "Phân phối khắp thế giới"
+        "wordWide": "Phân phối khắp thế giới",
+        "confirmDistribute": "Bạn có chắc chắn muốn phát hành trên nền tảng này không?"
+    },
+
+    "takeDown": {
+        "label": "Gỡ khỏi nền tảng",
+        "confirmTakeDown": "Bạn có chắc chắn muốn gỡ khỏi nền tảng này không?"
     },
 
     "emailSender": {

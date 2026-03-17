@@ -1,22 +1,20 @@
 import { Badge, Segmented, theme } from 'antd';
 
 import { getIntlCodeByDistributionStatus } from '@/helpers/intl';
-import { OnChangeFilter } from '@/hooks/use-filter';
 import { DISTRIBUTION_STATUS } from '@/modules/distribution/enum';
-import { DistributionDataFilter } from '@/modules/distribution/types';
 import { useTranslations } from 'next-intl';
 
 type Props = {
-    onChangeFilter: OnChangeFilter<DistributionDataFilter>;
+    onChangeStatus: (status: DISTRIBUTION_STATUS) => void;
     value: DISTRIBUTION_STATUS | undefined;
 };
 
-export default function DistributionStatus({ onChangeFilter, value }: Props) {
+export default function DistributionStatus({ onChangeStatus, value }: Props) {
     const messages = useTranslations();
     const { token } = theme.useToken();
 
     const handleChangeStatus = (status: DISTRIBUTION_STATUS) => {
-        onChangeFilter({ status });
+        onChangeStatus(status);
     };
 
     return (

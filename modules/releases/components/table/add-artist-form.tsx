@@ -54,6 +54,7 @@ export default function AddArtistForm({ disabled = false }: Props) {
             layout="vertical"
             showSubmit={false}
             disabled={disabled || isActive}
+            variant={disabled ? 'underlined' : 'outlined'}
         >
             <div className="grid grid-cols-5 gap-4">
                 <AppFormItem
@@ -111,6 +112,7 @@ export default function AddArtistForm({ disabled = false }: Props) {
 
                 <div className="mt-4 flex items-center justify-end space-x-2">
                     <Button
+                        id="releaseArtists"
                         disabled={disabled || isActive || isCreateReleasePage}
                         loading={isActive}
                         onClick={() => form.submit()}

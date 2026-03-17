@@ -1,7 +1,6 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
-import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { ReleaseDetailSchema } from '@/modules/releases/schemas';
 import { Input, Select } from 'antd';
 import dayjs from 'dayjs';
@@ -78,225 +77,178 @@ export default function LegalNoticesSection({
     const copyRightYears = copyRightYearList();
 
     return (
-        <CollapseItem
-            defaultActiveKey={['Legal Notices']}
-            items={[
-                {
-                    key: 'Legal Notices',
-                    label: (
-                        <span className="text-base font-semibold">
-                            {messages('common.legalNotices')}
-                        </span>
-                    ),
-                    children: (
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            {/* C-Line Year */}
-                            <FormItem
-                                name="cLineYear"
-                                label={messages('formFields.cLineYear')}
-                                required
-                                ErrorMessage={errors.cLineYear?.message}
-                                tooltipInfor={messages('tooltipForm.cLineYear')}
-                            >
-                                <Controller
-                                    control={control}
-                                    name="cLineYear"
-                                    render={({ field: { ref, ...field } }) => {
-                                        return (
-                                            <Select
-                                                id="cLineYear"
-                                                {...field}
-                                                value={field.value}
-                                                className="w-full"
-                                                disabled={
-                                                    isCreateReleasePage ||
-                                                    isReadMode
-                                                }
-                                                onChange={(newYear) => {
-                                                    field.onChange(
-                                                        Number(newYear)
-                                                    );
-                                                    debouncedUpdate(
-                                                        {
-                                                            cLineYear:
-                                                                Number(newYear),
-                                                        },
-                                                        'cLineYear'
-                                                    );
-                                                }}
-                                                options={copyRightYears}
-                                                status={
-                                                    errors.cLineYear
-                                                        ? 'error'
-                                                        : undefined
-                                                }
-                                            />
+        <div className="flex flex-col gap-4 rounded-lg bg-white p-4">
+            <span className="text-base font-semibold">
+                {messages('common.legalNotices')}
+            </span>
+            <div className="grid grid-cols-4 items-center gap-4">
+                {/* C-Line Year */}
+                <FormItem
+                    name="cLineYear"
+                    label={messages('formFields.cLineYear')}
+                    required
+                    ErrorMessage={errors.cLineYear?.message}
+                    tooltipInfor={messages('tooltipForm.cLineYear')}
+                >
+                    <Controller
+                        control={control}
+                        name="cLineYear"
+                        render={({ field: { ref, ...field } }) => {
+                            return (
+                                <Select
+                                    id="cLineYear"
+                                    {...field}
+                                    value={field.value}
+                                    className="w-full"
+                                    disabled={isCreateReleasePage || isReadMode}
+                                    onChange={(newYear) => {
+                                        field.onChange(Number(newYear));
+                                        debouncedUpdate(
+                                            {
+                                                cLineYear: Number(newYear),
+                                            },
+                                            'cLineYear'
                                         );
                                     }}
+                                    options={copyRightYears}
+                                    status={
+                                        errors.cLineYear ? 'error' : undefined
+                                    }
                                 />
-                            </FormItem>
-                            {/* C-Line Owner */}
-                            <FormItem
-                                name="cLineOwner"
-                                label={messages('formFields.cLineOwner')}
-                                required
-                                ErrorMessage={errors.cLineOwner?.message}
-                                tooltipInfor={messages(
-                                    'tooltipForm.cLineOwner'
-                                )}
-                            >
-                                <Controller
-                                    control={control}
-                                    name="cLineOwner"
-                                    render={({ field: { ref, ...field } }) => {
-                                        return (
-                                            <Input
-                                                id="cLineOwner"
-                                                {...field}
-                                                value={field.value ?? ''}
-                                                disabled={
-                                                    isCreateReleasePage ||
-                                                    isReadMode
-                                                }
-                                                allowClear
-                                                onBlur={(e) => {
-                                                    const value =
-                                                        e.target.value;
-                                                    field.onChange(value);
-                                                    debouncedUpdate(
-                                                        { cLineOwner: value },
-                                                        'cLineOwner'
-                                                    );
-                                                }}
-                                                status={
-                                                    errors.cLineOwner
-                                                        ? 'error'
-                                                        : undefined
-                                                }
-                                            />
+                            );
+                        }}
+                    />
+                </FormItem>
+                {/* C-Line Owner */}
+                <FormItem
+                    name="cLineOwner"
+                    label={messages('formFields.cLineOwner')}
+                    required
+                    ErrorMessage={errors.cLineOwner?.message}
+                    tooltipInfor={messages('tooltipForm.cLineOwner')}
+                >
+                    <Controller
+                        control={control}
+                        name="cLineOwner"
+                        render={({ field: { ref, ...field } }) => {
+                            return (
+                                <Input
+                                    id="cLineOwner"
+                                    {...field}
+                                    value={field.value ?? ''}
+                                    disabled={isCreateReleasePage || isReadMode}
+                                    allowClear
+                                    onBlur={(e) => {
+                                        const value = e.target.value;
+                                        field.onChange(value);
+                                        debouncedUpdate(
+                                            { cLineOwner: value },
+                                            'cLineOwner'
                                         );
                                     }}
+                                    status={
+                                        errors.cLineOwner ? 'error' : undefined
+                                    }
                                 />
-                            </FormItem>
-                            {/* P-Line Year */}
-                            <FormItem
-                                name="pLineYear"
-                                label={messages('formFields.pLineYear')}
-                                required
-                                ErrorMessage={errors.pLineYear?.message}
-                                tooltipInfor={messages('tooltipForm.pLineYear')}
-                            >
-                                <Controller
-                                    control={control}
-                                    name="pLineYear"
-                                    render={({ field: { ref, ...field } }) => {
-                                        return (
-                                            <Select
-                                                id="pLineYear"
-                                                {...field}
-                                                value={field.value}
-                                                className="w-full"
-                                                disabled={
-                                                    isCreateReleasePage ||
-                                                    isReadMode
-                                                }
-                                                onChange={(newYear) => {
-                                                    field.onChange(
-                                                        Number(newYear)
-                                                    );
-                                                    debouncedUpdate(
-                                                        {
-                                                            pLineYear:
-                                                                Number(newYear),
-                                                        },
-                                                        'pLineYear'
-                                                    );
-                                                }}
-                                                options={copyRightYears}
-                                                status={
-                                                    errors?.pLineYear
-                                                        ? 'error'
-                                                        : undefined
-                                                }
-                                            />
+                            );
+                        }}
+                    />
+                </FormItem>
+                {/* P-Line Year */}
+                <FormItem
+                    name="pLineYear"
+                    label={messages('formFields.pLineYear')}
+                    required
+                    ErrorMessage={errors.pLineYear?.message}
+                    tooltipInfor={messages('tooltipForm.pLineYear')}
+                >
+                    <Controller
+                        control={control}
+                        name="pLineYear"
+                        render={({ field: { ref, ...field } }) => {
+                            return (
+                                <Select
+                                    id="pLineYear"
+                                    {...field}
+                                    value={field.value}
+                                    className="w-full"
+                                    disabled={isCreateReleasePage || isReadMode}
+                                    onChange={(newYear) => {
+                                        field.onChange(Number(newYear));
+                                        debouncedUpdate(
+                                            {
+                                                pLineYear: Number(newYear),
+                                            },
+                                            'pLineYear'
                                         );
                                     }}
+                                    options={copyRightYears}
+                                    status={
+                                        errors?.pLineYear ? 'error' : undefined
+                                    }
                                 />
-                            </FormItem>
-                            {/* P-Line Owner */}
-                            <FormItem
-                                name="pLineOwner"
-                                label={messages('formFields.pLineOwner')}
-                                required
-                                ErrorMessage={errors.pLineOwner?.message}
-                                tooltipInfor={messages(
-                                    'tooltipForm.pLineOwner'
-                                )}
-                            >
-                                <Controller
-                                    control={control}
-                                    name="pLineOwner"
-                                    render={({ field: { ref, ...field } }) => {
-                                        return (
-                                            <Input
-                                                {...field}
-                                                id="pLineOwner"
-                                                value={field.value ?? ''}
-                                                disabled={
-                                                    isCreateReleasePage ||
-                                                    isReadMode
-                                                }
-                                                allowClear
-                                                onBlur={(e) => {
-                                                    const newOwner =
-                                                        e.target.value;
-                                                    field.onChange(newOwner);
-                                                    debouncedUpdate(
-                                                        {
-                                                            pLineOwner:
-                                                                newOwner,
-                                                        },
-                                                        'pLineOwner'
-                                                    );
-                                                }}
-                                                status={
-                                                    errors.pLineOwner
-                                                        ? 'error'
-                                                        : undefined
-                                                }
-                                            />
+                            );
+                        }}
+                    />
+                </FormItem>
+                {/* P-Line Owner */}
+                <FormItem
+                    name="pLineOwner"
+                    label={messages('formFields.pLineOwner')}
+                    required
+                    ErrorMessage={errors.pLineOwner?.message}
+                    tooltipInfor={messages('tooltipForm.pLineOwner')}
+                >
+                    <Controller
+                        control={control}
+                        name="pLineOwner"
+                        render={({ field: { ref, ...field } }) => {
+                            return (
+                                <Input
+                                    {...field}
+                                    id="pLineOwner"
+                                    value={field.value ?? ''}
+                                    disabled={isCreateReleasePage || isReadMode}
+                                    allowClear
+                                    onBlur={(e) => {
+                                        const newOwner = e.target.value;
+                                        field.onChange(newOwner);
+                                        debouncedUpdate(
+                                            {
+                                                pLineOwner: newOwner,
+                                            },
+                                            'pLineOwner'
                                         );
                                     }}
+                                    status={
+                                        errors.pLineOwner ? 'error' : undefined
+                                    }
                                 />
-                            </FormItem>
-                            {(showCLine || showPLine) && (
-                                <>
-                                    <div className="col-span-2">
-                                        {showCLine && (
-                                            <span>
-                                                © {cLineYear} {cLineOwner}.{' '}
-                                                {messages(
-                                                    'legal.allRightsReserved'
-                                                )}
-                                            </span>
-                                        )}
-                                    </div>
-                                    <div className="col-span-2">
-                                        {showPLine && (
-                                            <span>
-                                                ℗ {pLineYear} {pLineOwner}.{' '}
-                                                {messages(
-                                                    'legal.allRightsReserved'
-                                                )}
-                                            </span>
-                                        )}
-                                    </div>
-                                </>
+                            );
+                        }}
+                    />
+                </FormItem>
+                {(showCLine || showPLine) && (
+                    <>
+                        <div className="col-span-2">
+                            {showCLine && (
+                                <span>
+                                    © {cLineYear} {cLineOwner}.{' '}
+                                    {messages('legal.allRightsReserved')}
+                                </span>
                             )}
                         </div>
-                    ),
-                },
-            ]}
-        />
+                        <div className="col-span-2">
+                            {showPLine && (
+                                <span>
+                                    ℗ {pLineYear} {pLineOwner}.{' '}
+                                    {messages('legal.allRightsReserved')}
+                                </span>
+                            )}
+                        </div>
+                    </>
+                )}
+            </div>
+        </div>
     );
 }

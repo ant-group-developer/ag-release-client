@@ -92,7 +92,7 @@ export default function TrackContributorsTable({ trackData, ...props }: Props) {
             render: (_, record, index) => {
                 const artist = record?.artist;
                 return (
-                    <div className="flex gap-2">
+                    <div className="flex items-center gap-2">
                         <Avatar src={artist?.picture}>{artist?.name[0]}</Avatar>
                         <span>{artist?.name}</span>
                     </div>
@@ -140,20 +140,23 @@ export default function TrackContributorsTable({ trackData, ...props }: Props) {
             width: 150,
             render: (_, record, index) => {
                 return (
-                    <div className="space-x-2">
-                        {/* <Avatar
-                            size={28}
-                            src="/icon/apple-music.svg"
-                            className="hover:cursor-pointer hover:opacity-40"
-                            onClick={(e) => {
-                                e?.stopPropagation();
-                                window.open(
-                                    'https://open.spotify.com/',
-                                    '_blank',
-                                    'noopener'
-                                );
-                            }}
-                        /> */}
+                    <div className="space-x-1">
+                        {record?.artist?.artistProfiles?.map((profile) => (
+                            <Avatar
+                                size={'small'}
+                                key={profile.id}
+                                src={profile.dsp?.picture}
+                                className="hover:cursor-pointer hover:opacity-40"
+                                onClick={(e) => {
+                                    e?.stopPropagation();
+                                    window.open(
+                                        profile.url,
+                                        '_blank',
+                                        'noopener'
+                                    );
+                                }}
+                            />
+                        ))}
                     </div>
                 );
             },
@@ -182,7 +185,7 @@ export default function TrackContributorsTable({ trackData, ...props }: Props) {
     ];
     return (
         <div className="space-y-2">
-            <div className="overflow-hidden rounded-lg border">
+            <div className="overflow-hidden rounded-lg border dark:border-zinc-700">
                 <AppTable
                     {...props}
                     columns={columns}

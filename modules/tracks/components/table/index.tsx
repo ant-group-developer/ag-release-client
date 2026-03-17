@@ -17,6 +17,7 @@ import { ProColumns } from '@ant-design/pro-components';
 import { Button, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
+import nProgress from 'nprogress';
 import { TrackData, TrackDataFilter } from '../../types';
 import TagScanCopyright from '../tags/tag-scan-coppyright';
 import TrackCoverArt from './trackCoverArt';
@@ -144,28 +145,6 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
                 </CopyText>
             ),
         },
-        // {
-        //     title: messages('common.artist'),
-        //     key: 'trackArtists',
-        //     dataIndex: 'trackArtists',
-        //     align: 'left',
-        //     ellipsis: true,
-        //     width: 100,
-        //     render: (value, record) => {
-        //         const trackArtist = record?.trackArtists ?? [];
-        //         const mainArtist = trackArtist?.find(
-        //             (item: TrackArtistData) =>
-        //                 item.artistRole?.code == MAIN_ARTIST_ROLE
-        //         );
-        //         return (
-        //             // <CustomTooltip size="small" title={value}>
-        //             <span className="truncate">
-        //                 {mainArtist && mainArtist?.artist?.name}
-        //             </span>
-        //             // </CustomTooltip>
-        //         );
-        //     },
-        // },
         {
             title: 'ISRC',
             key: 'isrc',
@@ -217,7 +196,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
             align: 'left',
             width: 80,
             sorter: true,
-            sortOrder: getSortOrder(
+            defaultSortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
                 'createdAt'
@@ -254,6 +233,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
                             openModal(TYPE_MODAL_TRACK.ACR_CLOUD_SCAN, record)
                         }
                         onShowDetail={() => {
+                            nProgress.start();
                             router.push(
                                 getTrackDetailRoute(
                                     record?.id,

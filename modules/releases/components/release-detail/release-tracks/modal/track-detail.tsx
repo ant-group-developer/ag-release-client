@@ -1,6 +1,6 @@
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import useModalStore from '@/hooks/use-modal';
-import { Form, Tabs, theme } from 'antd';
+import { Form, Menu, Tabs, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 
 import AppForm from '@/components/ui/antd-form/form';
@@ -15,7 +15,7 @@ import { UpdateTrackPayload } from '@/modules/tracks/types/payload';
 import { UpdateVariables } from '@/types/api';
 import dayjs from 'dayjs';
 import { debounce } from 'lodash';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import AudioSpecSection from '../collapse/view-all-collapse/audio-spec-section';
 import GenreSection from '../collapse/view-all-collapse/genre-section';
 import LanguageSection from '../collapse/view-all-collapse/language-section';
@@ -24,9 +24,11 @@ import TrackAndArtistSection from '../collapse/view-all-collapse/track-and-artis
 import TrackContributorsSection from '../collapse/view-all-collapse/track-contributors-section';
 import ViewAll from '../form/view-all';
 
-type Props = {} & Omit<AppModalProps, 'children'>;
+type Props = {
+    tracks?: TrackData[];
+} & Omit<AppModalProps, 'children'>;
 
-export default function TrackDetailModal({ ...props }: Props) {
+export default function TrackDetailModal({ tracks, ...props }: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
     // const typeModal = useModalStore((state) => state.typeModal);
@@ -37,14 +39,17 @@ export default function TrackDetailModal({ ...props }: Props) {
         index: number;
     }>((state) => state.dataEdit);
     // const { isActive, active, deActive } = useActive();
+    const [selectedTrackId, setSelectedTrackId] = useState(trackId);
+    const selectedIndex =
+        tracks?.findIndex((t) => t.id === selectedTrackId) ?? index;
     const { updateTrackDraft } = useUpdateTrackDraft();
-    const { trackData, isLoading } = useGetDetailTrack(trackId);
+    const { trackData, isLoading } = useGetDetailTrack(selectedTrackId);
     const releaseAction = useReleaseActionStore((s) => s.action);
     const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
 
     const debouncedUpdate = useCallback(
         debounce((id, data) => {
-            if (!trackId) return;
+            if (!selectedTrackId) return;
             const variables: UpdateVariables<
                 TrackData['id'],
                 UpdateTrackPayload
@@ -54,71 +59,62 @@ export default function TrackDetailModal({ ...props }: Props) {
             };
             updateTrackDraft(variables);
         }, 500),
-        [trackId]
+        [selectedTrackId]
     );
 
     const items = [
         {
-            key: `${trackId}-track-form`,
+            key: `${selectedTrackId}-track-form`,
             label: (
                 <span className="font-medium">
                     {messages('track.label')} & {messages('artist.label')}
                 </span>
             ),
             children: (
-                // <TracksForm
-                //     key={`${trackId}-${trackData.title}-track-form-content`}
-                //     trackData={trackData}
-                //     index={index}
-                // />
                 <div className="max-h-[80vh] space-y-4 overflow-y-auto">
                     <TrackAndArtistSection
                         trackData={trackData}
                         debouncedUpdateTrackDraft={(data) =>
-                            debouncedUpdate(trackId, data)
+                            debouncedUpdate(selectedTrackId, data)
                         }
-                        index={index}
+                        index={selectedIndex}
                     />
 
                     <TrackContributorsSection
                         trackData={trackData}
                         debouncedUpdateTrackDraft={updateTrackDraft}
-                        index={index}
+                        index={selectedIndex}
                     />
                 </div>
             ),
         },
         {
-            key: `${trackId}-metadata-form`,
+            key: `${selectedTrackId}-metadata-form`,
             label: (
                 <span className="font-medium">
                     {messages('release.otherMetadata')}
                 </span>
             ),
             children: (
-                // <OtherMetadataForm
-                //     key={`${trackId}-metadata-form-content`}
-                //     trackData={trackData}
-                // />
                 <div className="max-h-[80vh] space-y-4 overflow-y-auto">
                     <GenreSection
-                        index={index}
+                        index={selectedIndex}
                         debouncedUpdateTrackDraft={(data) =>
-                            debouncedUpdate(trackId, data)
+                            debouncedUpdate(selectedTrackId, data)
                         }
                         trackData={trackData}
                     />
                     <LanguageSection
-                        index={index}
+                        index={selectedIndex}
                         debouncedUpdateTrackDraft={(data) =>
-                            debouncedUpdate(trackId, data)
+                            debouncedUpdate(selectedTrackId, data)
                         }
                         trackData={trackData}
                     />
                     <OtherSection
-                        index={index}
+                        index={selectedIndex}
                         debouncedUpdateTrackDraft={(data) =>
-                            debouncedUpdate(trackId, data)
+                            debouncedUpdate(selectedTrackId, data)
                         }
                         trackData={trackData}
                     />
@@ -126,28 +122,24 @@ export default function TrackDetailModal({ ...props }: Props) {
             ),
         },
         {
-            key: `${trackId}-audio-specs`,
+            key: `${selectedTrackId}-audio-specs`,
             label: (
                 <span className="font-medium">
                     {messages('common.specification')}
                 </span>
             ),
             children: (
-                // <AudioSpecifications
-                //     key={`${trackId}-audio-specs-content`}
-                //     trackData={trackData}
-                // />
                 <AudioSpecSection
-                    index={index}
+                    index={selectedIndex}
                     debouncedUpdateTrackDraft={(data) =>
-                        debouncedUpdate(trackId, data)
+                        debouncedUpdate(selectedTrackId, data)
                     }
                     trackData={trackData}
                 />
             ),
         },
         {
-            key: `${trackId}-view-all`,
+            key: `${selectedTrackId}-view-all`,
             label: (
                 <span className="font-medium">
                     {messages('common.viewAll')}
@@ -155,10 +147,12 @@ export default function TrackDetailModal({ ...props }: Props) {
             ),
             children: (
                 <ViewAll
-                    key={`${trackId}-view-all`}
+                    key={`${selectedTrackId}-view-all`}
                     trackData={trackData}
-                    updateTrackDraft={(data) => debouncedUpdate(trackId, data)}
-                    index={index}
+                    updateTrackDraft={(data) =>
+                        debouncedUpdate(selectedTrackId, data)
+                    }
+                    index={selectedIndex}
                 />
             ),
         },
@@ -208,7 +202,7 @@ export default function TrackDetailModal({ ...props }: Props) {
                 form.resetFields();
             }}
             footer={null}
-            width={'60vw'}
+            width={'75vw'}
             style={{
                 top: '1rem',
             }}
@@ -218,18 +212,69 @@ export default function TrackDetailModal({ ...props }: Props) {
                 header: { backgroundColor: token?.colorBgLayout },
             }}
         >
-            <AppForm
-                form={form}
-                disabled={isReadMode}
-                layout="vertical"
-                showSubmit={false}
-            >
-                <Tabs
-                    className="rounded"
-                    items={items}
-                    defaultActiveKey={`${trackId}-view-all`}
-                />
-            </AppForm>
+            <div className="flex gap-4 overflow-x-hidden">
+                {/* Track list sidebar */}
+                {tracks && tracks.length > 0 && (
+                    <div
+                        className="flex w-[240px] shrink-0 flex-col border-r pt-3"
+                        style={{
+                            maxHeight: '80vh',
+                            borderColor: token?.colorBorderSecondary,
+                        }}
+                    >
+                        <div className="mb-2 px-3">
+                            <p
+                                className="text-[10px] font-bold uppercase tracking-wider"
+                                style={{ color: token?.colorTextDescription }}
+                            >
+                                {messages('common.tracks')} ({tracks.length})
+                            </p>
+                        </div>
+
+                        <Menu
+                            mode="inline"
+                            selectedKeys={[selectedTrackId as string]}
+                            onClick={({ key }: { key: string }) => {
+                                setSelectedTrackId(key);
+                                form.resetFields();
+                            }}
+                            className="flex-1 !bg-transparent"
+                            style={{
+                                borderInlineEnd: 'none',
+                                overflowY: 'auto',
+                            }}
+                            items={tracks.map((track, i) => ({
+                                key: track.id,
+                                label: (
+                                    <div className="flex items-center gap-2 overflow-hidden">
+                                        <span className="truncate font-medium">
+                                            {track.title || 'Untitled'}
+                                        </span>
+                                    </div>
+                                ),
+                            }))}
+                            inlineIndent={12}
+                        />
+                    </div>
+                )}
+
+                {/* Main content */}
+                <div className="min-w-0 flex-1">
+                    <AppForm
+                        form={form}
+                        disabled={isReadMode}
+                        layout="vertical"
+                        showSubmit={false}
+                        variant={isReadMode ? 'underlined' : 'outlined'}
+                    >
+                        <Tabs
+                            className="rounded"
+                            items={items}
+                            defaultActiveKey={`${selectedTrackId}-view-all`}
+                        />
+                    </AppForm>
+                </div>
+            </div>
         </AppModal>
     );
 }

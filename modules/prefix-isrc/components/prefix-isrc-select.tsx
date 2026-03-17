@@ -8,7 +8,7 @@ type Props = SelectProps & {
 };
 
 export default function PrefixIsrcSelect({ fallBack, ...props }: Props) {
-    const { prefixIsrcData } = useGetListPrefixIsrc({
+    const { prefixIsrcData, isFetching } = useGetListPrefixIsrc({
         pageSize: 999,
     });
 
@@ -29,6 +29,7 @@ export default function PrefixIsrcSelect({ fallBack, ...props }: Props) {
     return (
         <Select
             labelRender={labelRender}
+            loading={isFetching}
             {...props}
             showSearch
             filterOption={(input, option) =>

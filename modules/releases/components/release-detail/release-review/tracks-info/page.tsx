@@ -227,7 +227,7 @@ export default function TracksInfo({}: Props) {
                                         'version'
                                     )}
 
-                                    <div className="rounded-lg border bg-white px-4 py-2">
+                                    <div className="rounded-lg border px-4 py-2">
                                         <p className="font-medium">
                                             {messages('artist.artists')}{' '}
                                             <span className="text-red-500">
@@ -256,7 +256,7 @@ export default function TracksInfo({}: Props) {
                                         )}
                                     </div>
 
-                                    <div className="rounded-lg border bg-white px-4 py-2">
+                                    <div className="rounded-lg border px-4 py-2">
                                         <p className="font-medium">
                                             {messages('common.contributors')}{' '}
                                             <span className="text-red-500">

@@ -9,13 +9,17 @@ import { TYPE_UPLOAD_BUCKET } from '@/enums/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedDate } from '@/helpers/common';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
-import { showNotification } from '@/helpers/messages-helper';
+import { showNotification, toastPromise } from '@/helpers/messages-helper';
 import { cn } from '@/helpers/tailwind';
 import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
+import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribute';
+import { useReleaseDistribute } from '@/modules/distribution/hooks/use-release-distribute';
+import { DistributeRelease } from '@/modules/distribution/types/payload';
 import { TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
 import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
@@ -26,7 +30,8 @@ import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-fil
 import { CreateBucketFile } from '@/modules/upload/types/data';
 import { DeleteVariables, UpdateVariables } from '@/types/api';
 import { EditOutlined, EyeOutlined } from '@ant-design/icons';
-import { Form, Segmented, Steps, type StepsProps, theme } from 'antd';
+import { useQueryClient } from '@tanstack/react-query';
+import { Button, Form, Segmented, Steps, type StepsProps, theme } from 'antd';
 import { SegmentedOptions } from 'antd/es/segmented';
 import {
     Box,
@@ -41,7 +46,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { RELEASES_STATUS } from '../../../enums';
 import DownloadMenu from './download-menu';
 import OptionsMenu from './options-menu';
-import ReleaseInfo from './release-info';
+import ReleaseInfoV2 from './release-info-v2';
 type Props = {
     isScrolled: boolean;
 };
@@ -50,6 +55,8 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     // hooks - state
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
+    const queryClient = useQueryClient();
+    const selectedRows = useReleaseDistribute((state) => state.selectedRows);
 
     const messages = useTranslations();
     const [form] = Form.useForm();
@@ -71,6 +78,11 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         useGetLinkReadFile(coverArtFileId);
     const { releaseData } = useGetDetailRelease(formValues?.id as string);
     const { deleteRelease } = useDeleteRelease();
+    const { releaseValidateData } = useReleaseValidate(
+        formValues?.id as string
+    );
+    const { distributeRelease, isPending: isDistributingRelease } =
+        useDistributeRelease();
 
     // const
     const isCreateReleasePage = params['action'] === 'create';
@@ -108,29 +120,6 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     ];
     const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
 
-    const statusItems: StepsProps['items'] = [
-        {
-            title: messages('common.draft'),
-            icon: <NotebookText size={SIZE_ICON} />,
-        },
-        {
-            title: messages('common.processing'),
-            icon: <FileSearch size={SIZE_ICON} />,
-        },
-        {
-            title: messages('issue.label'),
-            icon: <CircleAlert size={SIZE_ICON} />,
-        },
-        {
-            title: messages('common.distributed'),
-            icon: <Box size={SIZE_ICON} />,
-        },
-        {
-            title: messages('common.takenDown'),
-            icon: <PackageX size={SIZE_ICON} />,
-        },
-    ];
-
     const { currentStep, stepStatus } = useMemo(() => {
         const status = formValues?.status;
         switch (status) {
@@ -149,6 +138,35 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                 return { currentStep: 0, stepStatus: 'process' as const };
         }
     }, [formValues?.status]);
+    const validateLength = releaseValidateData && releaseValidateData?.length;
+
+    const statusItems: StepsProps['items'] = [
+        {
+            title: messages('common.draft'),
+            icon: <NotebookText size={SIZE_ICON} />,
+            status: currentStep === 0 ? 'process' : 'wait',
+        },
+        {
+            title: messages('common.processing'),
+            icon: <FileSearch size={SIZE_ICON} />,
+            status: currentStep === 1 ? 'process' : 'wait',
+        },
+        {
+            title: messages('issue.label'),
+            icon: <CircleAlert size={SIZE_ICON} />,
+            status: currentStep === 2 ? 'process' : 'wait',
+        },
+        {
+            title: messages('common.distributed'),
+            icon: <Box size={SIZE_ICON} />,
+            status: currentStep === 3 ? 'process' : 'wait',
+        },
+        {
+            title: messages('common.takenDown'),
+            icon: <PackageX size={SIZE_ICON} />,
+            status: currentStep === 4 ? 'process' : 'wait',
+        },
+    ];
 
     // func
 
@@ -267,6 +285,17 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         };
         deleteRelease(variables);
     };
+    const handleDistribution = () => {
+        closeModal();
+        const dspCode = selectedRows.map((row) => row.dsp.code);
+
+        const variables: DistributeRelease = {
+            id: formValues?.id ?? '',
+            code: dspCode,
+        };
+        const promise = distributeRelease(variables);
+        toastPromise(promise, messages);
+    };
 
     useEffect(() => {
         form.setFieldsValue({
@@ -291,25 +320,40 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                 backgroundColor: token.colorBgContainer,
             }}
         >
-            {!isCreateReleasePage && (
-                <div
-                    className="overflow-hidden px-6 transition-all duration-300"
-                    style={{
-                        maxHeight: isScrolled ? 0 : 100,
-                        opacity: isScrolled ? 0 : 1,
-                        paddingTop: isScrolled ? 0 : 8,
-                        paddingBottom: isScrolled ? 0 : 24,
-                    }}
-                >
-                    <Steps
-                        size="small"
-                        current={currentStep}
-                        status={stepStatus}
-                        labelPlacement="vertical"
-                        items={statusItems}
-                    />
+            <div
+                className="flex justify-between overflow-hidden px-6 transition-all duration-300"
+                style={{
+                    maxHeight: isScrolled ? 0 : 100,
+                    opacity: isScrolled ? 0 : 1,
+                    paddingLeft: 0,
+                    paddingRight: 0,
+                    paddingTop: isScrolled ? 0 : 8,
+                    paddingBottom: isScrolled ? 0 : 24,
+                }}
+            >
+                <Steps
+                    className="!w-4/6 !px-0"
+                    size="small"
+                    current={currentStep}
+                    status={stepStatus}
+                    labelPlacement="vertical"
+                    items={statusItems}
+                />
+
+                <div>
+                    {!isCreateReleasePage && (
+                        <Button
+                            loading={isDistributingRelease}
+                            onClick={handleDistribution}
+                            type="primary"
+                            disabled={validateLength > 0}
+                        >
+                            {messages('release.action.submit')}
+                        </Button>
+                    )}
                 </div>
-            )}
+            </div>
+
             <AppForm
                 form={form}
                 // onFinish={handleFinish}
@@ -367,7 +411,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                         </CustomTooltip>
 
                         {/* release info */}
-                        <ReleaseInfo isScrolled={isScrolled} />
+                        <ReleaseInfoV2 isScrolled={isScrolled} />
                     </div>
 
                     {!isCreateReleasePage && (

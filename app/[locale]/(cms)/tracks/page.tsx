@@ -42,6 +42,8 @@ export default function Tracks({}: Props) {
     } = useFilter<ReleasesDataFilter>({
         page: 1,
         pageSize: PAGE_SIZE,
+        orderBy: ORDER.DESC,
+        fieldOrder: 'createdAt',
     });
     const {
         tracksData,
