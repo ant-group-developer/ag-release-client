@@ -147,6 +147,7 @@ export default function BackupDatabaseForm({}: Props) {
                     <BackupDatabaseHeader
                         dataFilter={dataFilter}
                         onSearch={onSearch}
+                        handleRefresh={refetch}
                     />
                     <BackupDatabaseLogTable
                         pagination={{

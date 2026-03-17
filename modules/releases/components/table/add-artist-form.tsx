@@ -112,6 +112,7 @@ export default function AddArtistForm({ disabled = false }: Props) {
 
                 <div className="mt-4 flex items-center justify-end space-x-2">
                     <Button
+                        id="releaseArtists"
                         disabled={disabled || isActive || isCreateReleasePage}
                         loading={isActive}
                         onClick={() => form.submit()}

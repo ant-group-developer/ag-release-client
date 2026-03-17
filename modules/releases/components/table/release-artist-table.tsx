@@ -2,6 +2,7 @@ import IconButton from '@/components/ui/button/icon-button';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { SIZE_ICON } from '@/constants/common';
+import { ArtistProfileData } from '@/modules/artist/types';
 import { useDeleteReleaseArtist } from '@/modules/release-artist/hooks/use-delete-release-artist';
 import { useUpdateReleaseArtist } from '@/modules/release-artist/hooks/use-update-release-artist';
 import { ReleaseArtist } from '@/modules/release-artist/types';
@@ -135,23 +136,28 @@ export default function ReleaseArtistTable({
         },
         {
             title: messages('artist.profiles'),
-            width: 150,
+            width: 100,
             render: (_, record, index) => {
                 return (
-                    <div className="space-x-2">
-                        <Avatar
-                            size={28}
-                            src="/icon/apple-music.svg"
-                            className="hover:cursor-pointer hover:opacity-40"
-                            onClick={(e) => {
-                                e?.stopPropagation();
-                                window.open(
-                                    'https://open.spotify.com/',
-                                    '_blank',
-                                    'noopener'
-                                );
-                            }}
-                        />
+                    <div className="space-x-1">
+                        {record?.artist?.artistProfiles?.map(
+                            (profile: ArtistProfileData) => (
+                                <Avatar
+                                    key={profile.id}
+                                    size={26}
+                                    src={profile.dsp?.picture ?? ''}
+                                    className="cursor-pointer hover:opacity-80"
+                                    onClick={(e) => {
+                                        e?.stopPropagation();
+                                        window.open(
+                                            profile.url,
+                                            '_blank',
+                                            'noopener'
+                                        );
+                                    }}
+                                />
+                            )
+                        )}
                     </div>
                 );
             },

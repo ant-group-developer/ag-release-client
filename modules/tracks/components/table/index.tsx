@@ -196,7 +196,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
             align: 'left',
             width: 80,
             sorter: true,
-            sortOrder: getSortOrder(
+            defaultSortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
                 'createdAt'

@@ -346,7 +346,10 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                             loading={isDistributingRelease}
                             onClick={handleDistribution}
                             type="primary"
-                            disabled={validateLength > 0}
+                            disabled={
+                                validateLength > 0 ||
+                                releaseData?.status !== RELEASES_STATUS.DRAFT
+                            }
                         >
                             {messages('release.action.submit')}
                         </Button>

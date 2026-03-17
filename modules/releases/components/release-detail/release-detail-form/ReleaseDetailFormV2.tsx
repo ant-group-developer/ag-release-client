@@ -42,9 +42,10 @@ export default function ReleaseDetailFormV2() {
 
     // Zustand store - state
     const formValues = useReleaseFormStore((state) => state.formValues);
+    const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const { getReleaseTabRoute } = useGetReleaseDetailRoute();
     const releaseAction = useReleaseActionStore((s) => s?.action);
-    const setReleaseAction = useReleaseActionStore((state) => state.setAction);
+    // const setReleaseAction = useReleaseActionStore((state) => state.setAction);
 
     // Apis
     const { releaseData } = useGetDetailRelease(formValues?.id as string);
@@ -114,7 +115,7 @@ export default function ReleaseDetailFormV2() {
                 id: formValues.id ?? '',
                 payload: data,
                 onSuccess: (data: ReleasesData) => {
-                    // setFormValues(data);
+                    setFormValues(data);
                 },
             };
             updateReleaseDraft(variables);
@@ -157,7 +158,11 @@ export default function ReleaseDetailFormV2() {
                 labelCol={{ span: 8 }}
                 wrapperCol={{ span: 16 }}
                 labelAlign="left"
-                variant={isReadMode ? 'underlined' : 'outlined'}
+                variant={
+                    isReadMode && !isCreateReleasePage
+                        ? 'underlined'
+                        : 'outlined'
+                }
             >
                 {/* Single white container for all sections */}
                 <div

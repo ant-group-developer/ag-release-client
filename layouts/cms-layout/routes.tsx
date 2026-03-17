@@ -417,6 +417,15 @@ export const adminRoutes: RouteNode[] = [
                 required: SYS_ADMIN_REQ,
             },
             {
+                id: 'batch-import',
+                type: 'link',
+                label: 'Batch Import',
+                title: 'Batch Import',
+                href: APP_ROUTES.BATCH_IMPORT,
+                icon: ClipboardList,
+                required: SYS_ADMIN_REQ,
+            },
+            {
                 id: 'setting',
                 type: 'link',
                 label: 'setting.label',

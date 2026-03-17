@@ -161,7 +161,10 @@ export default function OtherSection({
                                 {/* Recording Country */}
                                 <AppFormItem
                                     label={messages('track.recordingCountry')}
-                                    name="trackLanguageRecordingCountryId"
+                                    name={[
+                                        'trackLanguage',
+                                        'recordingCountryId',
+                                    ]}
                                     required
                                     rules={[
                                         {

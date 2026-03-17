@@ -370,7 +370,8 @@
             "createProductSuccessfully": "Create product successfully",
             "updateProductSuccessfully": "Update product successfully",
             "deleteProductSuccessfully": "Delete product successfully",
-            "areYouSureRemoveAssignee": "Are you sure you want to remove assignee ?"
+            "areYouSureRemoveAssignee": "Are you sure you want to remove assignee ?",
+            "orderProductNotFound": "Product not found"
         },
         "detailProduct": "Detail Product",
         "uploadProduct": "Upload Product",
@@ -414,6 +415,7 @@
             "createReviewSuccessfully": "Create review successfully",
             "updateReviewSuccessfully": "Update review successfully",
             "deleteReviewSuccessfully": "Delete review successfully",
+            "createReviewFailed": "Create review failed",
             "notAuthorizedToRate": "Not authorized to rate"
         }
     },
@@ -539,7 +541,7 @@
         "select": "Select {value}",
         "selectRelease": "Select release",
         "selectTrack": "Select track",
-        "selectDsp": "Select dsp",
+        "selectDsp": "Select DSP",
         "dragAndDropAudio": "Drag and drop audio file here!",
         "dragAndDropFile": "Drag and drop file here!",
         "selectArtist": "Select artist",
@@ -787,6 +789,7 @@
         "trackCount": "Track count",
         "publisher": "Publisher release",
         "createArtist": "Create artist",
+        "createLabel": "Create label",
         "labelName": "Label name",
         "version": "Version",
         "role": "Role",
@@ -810,6 +813,10 @@
             "selectRole": "Select role",
             "selectMusician": "Select musician",
             "selectLanguageMetadata": "Select language metadata",
+            "select": "Select {value}",
+            "selectDsp": "Select DSP",
+            "selectRelease": "Select release",
+            "selectTrack": "Select track",
             "enterTitleAndReleaseType": "Enter release name, label and release type to continue"
         },
 
@@ -1076,6 +1083,7 @@
             "error": {
                 "duplicateNameGenre": "This genres already exist",
                 "duplicateCodeGenre": "This code genre already exist",
+                "cannotDeleteBecauseLinkedReleases": "Cannot delete this genre because it is linked to releases",
                 "cannotDeleteBecauseLinkedPrimaryReleases": "Cannot delete this genre because it is linked to primary releases",
                 "cannotDeleteBecauseLinkedSubReleases": "Cannot delete this genre because it is linked to sub releases",
                 "cannotDeleteBecauseLinkedPrimaryTracks": "Cannot delete this genre because it is linked to primary tracks",
@@ -1213,6 +1221,9 @@
         "tracks": {
             "maxCountTrack": "Total of tracks greater than {number}",
             "minCountTrack": "Total of tracks less than {number}",
+            "originTypeId": "Track origin",
+            "trackArtists": "Track artists",
+            "trackTypeId": "Track type",
             "trackOriginTypeId": "Track origin type",
             "audioLanguageId": "Audio language",
             "metadataLanguageId": "Metadata language",
@@ -1582,7 +1593,11 @@
                 "update": "Currency updated successfully",
                 "delete": "Currency deleted successfully"
             },
-            "error": {}
+            "error": {
+                "cannotDeleteBecauseLinkedRecord": "Cannot delete currency because it is in use",
+                "duplicateCodeCurrency": "This currency code already exists",
+                "duplicateNameCurrency": "This currency name already exists"
+            }
         },
         "action": {
             "delete": "Delete currency"
