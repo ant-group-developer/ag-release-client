@@ -27,7 +27,6 @@ import {
     Typography,
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import copy from 'copy-to-clipboard';
 import { BatchImportLogData } from '../types/data';
 
 const { Text } = Typography;
@@ -285,25 +284,20 @@ function BatchImportTable({ ...props }: Props) {
                                             size="small"
                                             dataSource={storageKeys}
                                             renderItem={(key) => (
-                                                <List.Item
-                                                    style={{
-                                                        padding: '4px 0',
-                                                        cursor: 'pointer',
-                                                    }}
-                                                    onClick={() => copy(key)}
-                                                >
-                                                    <Tooltip title="Click to copy">
-                                                        <Text
-                                                            code
-                                                            style={{
-                                                                fontSize: 11,
-                                                                wordBreak:
-                                                                    'break-all',
-                                                            }}
-                                                        >
-                                                            {key}
-                                                        </Text>
-                                                    </Tooltip>
+                                                <List.Item>
+                                                    <Text
+                                                        code
+                                                        style={{
+                                                            wordBreak:
+                                                                'break-all',
+                                                        }}
+                                                        copyable={{
+                                                            tooltips: false,
+                                                        }}
+                                                        ellipsis
+                                                    >
+                                                        {key}
+                                                    </Text>
                                                 </List.Item>
                                             )}
                                         />
