@@ -4,6 +4,7 @@ export enum APP_ROUTES {
     NOT_FOUND = '/404',
     SERVER_ERROR = '/500',
     LOG = '/log',
+    BATCH_IMPORT = '/batch-import',
     UPLOAD = '/upload',
     PERMISSION = '/permission',
     USER = '/users',
