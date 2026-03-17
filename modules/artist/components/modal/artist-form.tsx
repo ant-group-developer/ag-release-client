@@ -153,7 +153,7 @@ export default function ArtistFormModal({ ...props }: Props) {
             className="!top-6 !w-[50vw]"
             styles={{
                 body: {
-                    height: '80vh',
+                    maxHeight: '80vh',
                     overflowY: 'auto',
                     paddingRight: '8px',
                 },

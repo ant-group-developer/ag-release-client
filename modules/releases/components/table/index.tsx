@@ -68,12 +68,17 @@ export default function ReleasesTable({
             width: 50,
             align: 'center',
             fixed: 'left',
-            render: (_, __, index) =>
-                getIndex(
-                    props?.pagination?.pageSize,
-                    props?.pagination?.current,
-                    index
-                ),
+            render: (_, __, index) => {
+                return (
+                    <div data-stop-row-click="true">
+                        {getIndex(
+                            props?.pagination?.pageSize,
+                            props?.pagination?.current,
+                            index
+                        )}
+                    </div>
+                );
+            },
         },
         {
             title: messages('common.title'),
@@ -106,6 +111,7 @@ export default function ReleasesTable({
                     })}
                 >
                     <span
+                        data-stop-row-click="true"
                         onClick={() =>
                             onChangeFilter({
                                 labelId: record?.labelId,
@@ -139,7 +145,11 @@ export default function ReleasesTable({
             align: 'left',
             width: 150,
             render: (value, record) => (
-                <Paragraph className="!mb-0" copyable={!!record?.upc}>
+                <Paragraph
+                    data-stop-row-click="true"
+                    className="!mb-0"
+                    copyable={!!record?.upc}
+                >
                     {record?.upc}
                 </Paragraph>
             ),
@@ -375,6 +385,21 @@ export default function ReleasesTable({
                     updatedAt: { show: false },
                 },
             }}
+            onRow={(record) => ({
+                onClick: (e) => {
+                    const target = e.target as HTMLElement;
+                    if (target.closest('[data-stop-row-click="true"]')) return;
+
+                    nProgress.start();
+                    router.push(
+                        getReleaseDetailTabRoute(
+                            record?.id,
+                            RELEASES_TABS.CORE_DETAIL,
+                            RELEASE_DETAIL_ACTION.READ
+                        )
+                    );
+                },
+            })}
         />
         // </div>
     );

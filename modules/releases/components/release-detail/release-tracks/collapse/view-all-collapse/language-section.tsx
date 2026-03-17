@@ -40,7 +40,10 @@ export default function LanguageSection({
     };
 
     return (
-        <ConfigProvider componentDisabled={isReadMode}>
+        <ConfigProvider
+            componentDisabled={isReadMode}
+            form={{ variant: isReadMode ? 'underlined' : 'outlined' }}
+        >
             <CollapseItem
                 defaultActiveKey={['language']}
                 items={[
