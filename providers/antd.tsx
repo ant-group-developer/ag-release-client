@@ -1,14 +1,26 @@
 'use client';
 import { LOCALE } from '@/enums/common';
+import { setAntdStaticInstances } from '@/helpers/antd-static';
 import { useThemeMode } from '@/hooks/use-theme-mode';
 import { getThemeConfig } from '@/theme/theme-config';
-import { ConfigProvider, ThemeConfig } from 'antd';
+import { App, ConfigProvider, ThemeConfig } from 'antd';
 import enUS from 'antd/locale/en_US';
 import viVN from 'antd/locale/vi_VN';
 import { useLocale } from 'next-intl';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useEffect } from 'react';
 
 interface Props extends PropsWithChildren {}
+
+/** Bridge component to capture Ant Design's static instances */
+function AntdStaticBridge() {
+    const { message, notification, modal } = App.useApp();
+
+    useEffect(() => {
+        setAntdStaticInstances(message, notification, modal);
+    }, [message, notification, modal]);
+
+    return null;
+}
 
 function AntdProvider({ children }: Props) {
     const locale = useLocale();
@@ -30,7 +42,10 @@ function AntdProvider({ children }: Props) {
             theme={antdThemeConfig}
             locale={locale === LOCALE.VI ? viVN : enUS}
         >
-            {children}
+            <App>
+                <AntdStaticBridge />
+                {children}
+            </App>
         </ConfigProvider>
     );
 }

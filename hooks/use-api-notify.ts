@@ -1,6 +1,6 @@
+import { message } from '@/helpers/antd-static';
 import { AxiosError } from 'axios';
 import { useTranslations } from 'next-intl';
-import { toast } from 'react-toastify';
 
 interface ApiErrorResponse {
     message: string | string[];
@@ -35,25 +35,28 @@ export function useApiNotify() {
             messageList.push('An unknown error occurred');
         }
 
-        messageList.forEach((message) => {
-            toast.error(messages(message as any), {
-                toastId: message,
+        messageList.forEach((msg) => {
+            message.error({
+                content: messages(msg as any),
+                key: msg,
             });
         });
     };
 
     const handleSuccess = (res: any) => {
-        const message = res.messageCode || res.message;
+        const msg = res.messageCode || res.message;
 
-        if (!message) return;
+        if (!msg) return;
 
-        if (messages.has(message as any)) {
-            toast.success(messages(message as any), {
-                toastId: message,
+        if (messages.has(msg as any)) {
+            message.success({
+                content: messages(msg as any),
+                key: msg,
             });
         } else {
-            toast.success(message, {
-                toastId: message,
+            message.success({
+                content: msg,
+                key: msg,
             });
         }
     };

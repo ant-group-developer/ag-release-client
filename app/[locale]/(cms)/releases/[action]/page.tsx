@@ -1,5 +1,5 @@
 'use client';
-import ReleaseDetailForm from '@/modules/releases/components/release-detail/release-detail-form';
+import ReleaseDetailFormV2 from '@/modules/releases/components/release-detail/release-detail-form/ReleaseDetailFormV2';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useEffect } from 'react';
 
@@ -12,9 +12,5 @@ export default function CoreDetailCreate() {
         resetFormValues();
     }, []);
 
-    return (
-        <div>
-            <ReleaseDetailForm />
-        </div>
-    );
+    return <ReleaseDetailFormV2 />;
 }

@@ -30,12 +30,20 @@ export default function ReleaseInfoV2({ isScrolled }: Props) {
         .join(' & ');
 
     const renderArtistName = () => {
+        let content = '';
         if (isVariousArtist) {
-            return messages('artist.variousArtists');
+            content = messages('artist.variousArtists');
         } else if (artistName) {
-            return `${artistName}`;
+            content = artistName;
         }
-        return '';
+
+        if (!content) return '';
+
+        return (
+            <span className="inline-block text-wrap align-top leading-normal">
+                {content}
+            </span>
+        );
     };
 
     const items: DescriptionsProps['items'] = [
@@ -121,8 +129,8 @@ export default function ReleaseInfoV2({ isScrolled }: Props) {
     return (
         <div
             className={cn('overflow-hidden transition-all duration-300', {
-                'max-h-16': isScrolled,
-                'max-h-28': !isScrolled,
+                'max-h-20': isScrolled,
+                'max-h-40': !isScrolled,
             })}
         >
             <Descriptions
