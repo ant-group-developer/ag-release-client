@@ -43,7 +43,10 @@ export default function GenreSection({
     };
 
     return (
-        <ConfigProvider componentDisabled={isReadMode}>
+        <ConfigProvider
+            componentDisabled={isReadMode}
+            form={{ variant: isReadMode ? 'underlined' : 'outlined' }}
+        >
             <CollapseItem
                 defaultActiveKey={['genre']}
                 items={[

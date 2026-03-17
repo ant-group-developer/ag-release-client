@@ -8,7 +8,7 @@ type Props = SelectProps & {
 };
 
 export default function PrefixUpcSelect({ fallBack, ...props }: Props) {
-    const { prefixUpcData } = useGetListPrefixUpc({
+    const { prefixUpcData, isFetching } = useGetListPrefixUpc({
         pageSize: 999,
     });
 
@@ -29,6 +29,7 @@ export default function PrefixUpcSelect({ fallBack, ...props }: Props) {
     return (
         <Select
             labelRender={labelRender}
+            loading={isFetching}
             {...props}
             showSearch
             filterOption={(input, option) =>

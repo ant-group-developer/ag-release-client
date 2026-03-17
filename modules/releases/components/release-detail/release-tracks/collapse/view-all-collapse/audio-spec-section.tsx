@@ -167,7 +167,10 @@ export default function AudioSpecSection({
     };
 
     return (
-        <ConfigProvider componentDisabled={isReadMode}>
+        <ConfigProvider
+            componentDisabled={isReadMode}
+            form={{ variant: isReadMode ? 'underlined' : 'outlined' }}
+        >
             <CollapseItem
                 defaultActiveKey={['audio-specs']}
                 items={[

@@ -24,7 +24,7 @@ import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store
 import { useQueryClient } from '@tanstack/react-query';
 import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 type Props = {};
 
 export default function Distribution({}: Props) {
@@ -118,12 +118,6 @@ export default function Distribution({}: Props) {
             false
         );
     };
-
-    useEffect(() => {
-        if (releaseDsp?.items?.length) {
-            setSelectedRow(releaseDsp.items);
-        }
-    }, [releaseDsp, setSelectedRow]);
 
     return (
         <div className="flex h-full flex-col justify-between pb-4">

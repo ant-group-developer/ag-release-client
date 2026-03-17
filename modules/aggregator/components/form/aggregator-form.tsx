@@ -146,11 +146,11 @@ export default function AggregatorForm({ ...props }: Props) {
                     ...sftpConfig.metadata,
                 };
 
-                if (payload?.password == null) {
+                if (!payload?.password) {
                     delete payload.password;
                 }
 
-                if (payload?.privateKey == null) {
+                if (!payload?.privateKey) {
                     delete payload.privateKey;
                 }
 
@@ -216,6 +216,7 @@ export default function AggregatorForm({ ...props }: Props) {
             onOk={form.submit}
             loading={isActive}
             width={'40vw'}
+            className="!top-12"
             styles={{
                 body: {
                     maxHeight: '80vh',

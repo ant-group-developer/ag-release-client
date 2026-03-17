@@ -69,9 +69,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                 >
                     <div className="flex items-center gap-1">
                         <BookHeadphones size={SIZE_ICON} />
-                        <span className="font-medium">
-                            {messages('common.coreInfo')}
-                        </span>
+                        <span>{messages('common.coreInfo')}</span>
                     </div>
                 </Link>
             ),
@@ -91,9 +89,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                 >
                     <div className="flex items-center gap-1">
                         <Music size={SIZE_ICON} />
-                        <span className="font-medium">
-                            {messages('common.tracks')}
-                        </span>
+                        <span>{messages('common.tracks')}</span>
                     </div>
                 </Link>
             ),
@@ -108,9 +104,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                 >
                     <div className="flex items-center gap-1">
                         <Calendar size={SIZE_ICON} />
-                        <span className="font-medium">
-                            {messages('release.scheduling.label')}
-                        </span>
+                        <span>{messages('release.scheduling.label')}</span>
                     </div>
                 </Link>
             ),
@@ -128,9 +122,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                 >
                     <div className="flex items-center gap-1">
                         <Box size={SIZE_ICON} />
-                        <span className="font-medium">
-                            {messages('distribute.label')}
-                        </span>
+                        <span>{messages('distribute.label')}</span>
                     </div>
                 </Link>
             ),
@@ -145,9 +137,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                 >
                     <div className="flex items-center gap-1">
                         <Eye size={SIZE_ICON} />
-                        <span className="font-medium">
-                            {messages('common.overview')}
-                        </span>
+                        <span>{messages('common.overview')}</span>
                     </div>
                 </Link>
             ),
