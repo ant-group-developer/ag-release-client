@@ -3,7 +3,7 @@ import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
-import { LAYOUT_TABLE, ORDER, SESSION_STORAGE_KEY } from '@/enums/common';
+import { LAYOUT_TABLE, ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
@@ -12,7 +12,7 @@ import useModalStore from '@/hooks/use-modal';
 import ReleasesHeaderV2 from '@/modules/releases/components/header';
 import ReleasesTable from '@/modules/releases/components/table';
 import ReleasesGridTable from '@/modules/releases/components/table/grid-table';
-import { defaultVisibleColumnsReleases } from '@/modules/releases/constants';
+
 import {
     RELEASES_COLUMNS_DISPLAY,
     TYPE_MODAL_RELEASE,
@@ -23,38 +23,11 @@ import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
 import { DeleteVariables } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { theme } from 'antd';
-import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
 
 type Props = {};
 
 export default function Releases({}: Props) {
-    // hooks - state
-    const [visibleColumns, setVisibleColumns] = useState<
-        RELEASES_COLUMNS_DISPLAY[]
-    >(() => {
-        if (typeof window !== 'undefined') {
-            const stored = sessionStorage.getItem(
-                SESSION_STORAGE_KEY.VISIBLE_COLUMNS_RELEASES
-            );
-            if (!stored) return defaultVisibleColumnsReleases;
-            const { value, timestamp } = JSON.parse(stored) as {
-                value: RELEASES_COLUMNS_DISPLAY[];
-                timestamp: string;
-            };
-
-            if (dayjs().diff(dayjs(timestamp), 'day') >= 10) {
-                sessionStorage.removeItem(
-                    SESSION_STORAGE_KEY.VISIBLE_COLUMNS_RELEASES
-                );
-                return defaultVisibleColumnsReleases;
-            }
-
-            return value;
-        }
-        return defaultVisibleColumnsReleases;
-    });
     const {
         dataFilter,
         onSearch,
@@ -86,11 +59,6 @@ export default function Releases({}: Props) {
     const { deleteRelease } = useDeleteRelease();
 
     // func
-    const handleChangeVisibleColumns = (
-        columns: RELEASES_COLUMNS_DISPLAY[]
-    ) => {
-        setVisibleColumns(columns);
-    };
     const handleRefresh = () => {
         refetch();
     };
@@ -115,18 +83,6 @@ export default function Releases({}: Props) {
         );
     };
 
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            sessionStorage.setItem(
-                SESSION_STORAGE_KEY.VISIBLE_COLUMNS_RELEASES,
-                JSON.stringify({
-                    value: visibleColumns,
-                    timestamp: dayjs().toISOString(),
-                })
-            );
-        }
-    }, [visibleColumns]);
-
     return (
         <AppPageWrapper>
             <PageContainer title={messages('release.releases')}>
@@ -136,8 +92,6 @@ export default function Releases({}: Props) {
                     canClearFilter={canClearFilter}
                     removeFilter={removeFilter}
                     handleRefresh={handleRefresh}
-                    handleChangeVisibleColumns={handleChangeVisibleColumns}
-                    visibleColumn={visibleColumns}
                     dataUpdatedAt={dataUpdatedAt}
                 />
 

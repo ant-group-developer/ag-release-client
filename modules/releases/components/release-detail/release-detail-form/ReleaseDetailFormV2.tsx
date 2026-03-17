@@ -158,7 +158,11 @@ export default function ReleaseDetailFormV2() {
                 labelCol={{ span: 8 }}
                 wrapperCol={{ span: 16 }}
                 labelAlign="left"
-                variant={isReadMode ? 'underlined' : 'outlined'}
+                variant={
+                    isReadMode && !isCreateReleasePage
+                        ? 'underlined'
+                        : 'outlined'
+                }
             >
                 {/* Single white container for all sections */}
                 <div

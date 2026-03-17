@@ -139,8 +139,6 @@ export default function Releases({}: Props) {
                     canClearFilter={canClearFilter}
                     removeFilter={removeFilter}
                     handleRefresh={handleRefresh}
-                    handleChangeVisibleColumns={handleChangeVisibleColumns}
-                    visibleColumn={visibleColumns}
                     dataUpdatedAt={dataUpdatedAt}
                 />
 

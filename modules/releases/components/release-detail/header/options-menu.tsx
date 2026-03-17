@@ -22,12 +22,12 @@ export default function OptionsMenu({}: Props) {
     const releaseId = params['release-id'];
     const { active, isActive, deActive } = useActive();
     const items: MenuProps['items'] = [
-        {
-            key: OPTIONS_MENU.DISTRIBUTE,
-            label: (
-                <p className="!min-w-20"> {messages('common.distribute')}</p>
-            ),
-        },
+        // {
+        //     key: OPTIONS_MENU.DISTRIBUTE,
+        //     label: (
+        //         <p className="!min-w-20"> {messages('common.distribute')}</p>
+        //     ),
+        // },
         {
             key: OPTIONS_MENU.DELETE,
             danger: true,

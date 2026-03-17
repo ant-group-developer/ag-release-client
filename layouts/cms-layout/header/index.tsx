@@ -1,8 +1,10 @@
 import CreateButton from '@/components/ui/button/create-button';
 import IconButton from '@/components/ui/button/icon-button';
 import { SIZE_ICON_BIG } from '@/constants/common';
+import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { toastPromise } from '@/helpers/messages-helper';
 import { usePermission } from '@/hooks/use-permission';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
@@ -29,6 +31,7 @@ function Header({ collapsed, toggleCollapsed }: Props) {
     const { hasPermission } = usePermission();
     const router = useRouter();
     const { mutateAsync: downloadTemplate } = useDownloadTemplate();
+    const setReleaseAction = useReleaseActionStore((state) => state.setAction);
 
     const handleDownloadTemplate = () => {
         const promise = downloadTemplate();
@@ -82,6 +85,9 @@ function Header({ collapsed, toggleCollapsed }: Props) {
                                 text={messages('release.create')}
                                 onClick={() => {
                                     nProgress.start();
+                                    setReleaseAction(
+                                        RELEASE_DETAIL_ACTION.READ
+                                    );
                                     router.push('/releases/create');
                                 }}
                             />

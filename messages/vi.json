@@ -144,6 +144,7 @@
         "missingInformation": "Thiếu thông tin",
         "ready": "Sẵn sàng",
         "year": "Năm",
+        "general": "Chung",
         "somethingWentWrong": "Đã xảy ra lỗi",
         "biography": "Tiểu sử",
         "nationality": "Quốc tịch",
@@ -205,7 +206,7 @@
         "icon": "Biểu tượng",
         "listLayout": "Bố cục dạng danh sách",
         "gridLayout": "Bố cục dạng lưới",
-        "general": "Danh mục chung",
+        "generalMenu": "Menu chung",
         "mp3": "Mp3",
         "color": "Màu sắc",
         "guide": "Hướng dẫn",
@@ -311,7 +312,8 @@
                 "notFound": "Không tìm thấy quốc gia",
                 "cannotDeleteBecauseLinkedReleaseMetadataLanguages": "Không thể xóa quốc gia này vì đang được liên kết với metadata phát hành.",
                 "cannotDeleteBecauseLinkedTrackMetadataLanguages": "Không thể xóa quốc gia này vì đang được liên kết với metadata bài hát.",
-                "cannotDeleteBecauseLinkedTrackRecordings": "Không thể xóa quốc gia này vì đang được liên kết với bài hát ghi âm."
+                "cannotDeleteBecauseLinkedTrackRecordings": "Không thể xóa quốc gia này vì đang được liên kết với bài hát ghi âm.",
+                "duplicateCodeLanguage": "Mã quốc gia này đã tồn tại"
             }
         }
     },
@@ -490,7 +492,7 @@
     },
     "channel": {
         "code": "Mã kênh",
-        "lable": "Kênh",
+        "label": "Kênh",
         "name": "Tên kênh"
     },
     "system": {
@@ -536,6 +538,10 @@
         "searchPlaceholder": "Tìm kiếm"
     },
     "placeholder": {
+        "select": "Chọn {value}",
+        "selectRelease": "Chọn phát hành",
+        "selectTrack": "Chọn bài hát",
+        "selectDsp": "Chọn nền tảng",
         "dragAndDropAudio": "Kéo thả tệp âm thanh vào đây!",
         "dragAndDropFile": "Kéo thả tệp vào đây!",
         "selectArtist": "Chọn nghệ sĩ",
@@ -703,12 +709,12 @@
                     "conflict": "Địa chỉ email đã tồn tại"
                 },
                 "tenant": {
-                    "confilict": "Người dùng đã thuộc về Workspace này",
+                    "conflict": "Người dùng đã thuộc về Workspace này",
                     "forbidden": "Người dùng không có quyền truy cập Workspace này",
                     "notFound": "Người dùng không thuộc về bất cứ Workspace nào",
                     "delete": {
                         "declineDeleteSystemAdmin": "Không thể xoá quyền Admin hệ thống",
-                        "declineDeleteTenantOWner": "Không thể xoá quyền chủ sở hữu Workspace",
+                        "declineDeleteTenantOwner": "Không thể xoá quyền chủ sở hữu Workspace",
                         "declineDeleteTenantAdmin": "Không thể xoá quyền Admin Workspace"
                     }
                 },
@@ -837,6 +843,12 @@
                 "update": "Cập nhật phát hành thành công",
                 "delete": "Xoá phát hành thành công"
             }
+        },
+
+        "action": {
+            "submit": "Gửi phát hành",
+            "edit": "Chỉnh sửa phát hành",
+            "completeTheTask": "Hoàn thành công việc"
         }
     },
 
@@ -1073,7 +1085,8 @@
             },
             "error": {
                 "duplicateNameGenre": "Thể loại nhạc này đã tồn tại",
-                "duplicateCodeeGenre": "Mã thể loại nhạc này đã tồn tại",
+                "duplicateCodeGenre": "Mã thể loại nhạc này đã tồn tại",
+                "cannotDeleteBecauseLinkedPrimaryReleases": "Không thể xóa thể loại này vì đang được liên kết với bản phát hành chính.",
                 "cannotDeleteBecauseLinkedReleases": "Không thể xóa thể loại này vì đang được liên kết với phát hành.",
                 "cannotDeleteBecauseLinkedSubReleases": "Không thể xóa thể loại này vì đang được liên kết với phát hành phụ.",
                 "cannotDeleteBecauseLinkedPrimaryTracks": "Không thể xóa thể loại này vì đang được liên kết với bài hát chính.",
@@ -1222,6 +1235,8 @@
             "originTypeId": "Nguồn gốc bài hát",
             "trackArtists": "Nghệ sĩ bài hát",
             "trackTypeId": "Thể loại bài hát",
+            "genresTrack": "Thể loại bài hát",
+            "subGenresTrack": "Thể loại phụ bài hát",
             "primaryGenreId": "Thể loại chính",
             "pLineOwner": "Bản quyền ghi âm",
             "sampleLength": "Độ dài đoạn nghe mẫu",
@@ -1235,6 +1250,7 @@
             "isMoreThan4Artists": "Có nhiều hơn 4 nghệ sĩ hay không",
             "artists": "Nghệ sĩ",
             "subArtists": "Nghệ sĩ phụ",
+            "tracks": "Bài hát",
             "genres": "Thể loại",
             "subGenres": "Thể loại phụ",
             "language": "Ngôn ngữ",
@@ -1289,7 +1305,7 @@
         "add": "Thêm nền tảng",
         "oneLinkPerLine": "Mỗi link một dòng",
         "profileList": "Danh sách hồ sơ",
-        "fullNameOfDdexParty": "Tên DDex party",
+        "fullNameOfDDexParty": "Tên DDex party",
         "ddexPartyId": "DDex party Id",
         "message": {
             "success": {
