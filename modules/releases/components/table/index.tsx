@@ -52,7 +52,6 @@ export default function ReleasesTable({
     dataFilter,
     ...props
 }: Props) {
-    console.log('🚀 ~ ReleasesTable ~ dataFilter:', dataFilter);
     const messages = useTranslations();
     const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);

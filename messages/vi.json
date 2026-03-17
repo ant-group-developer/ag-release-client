@@ -837,6 +837,12 @@
                 "update": "Cập nhật phát hành thành công",
                 "delete": "Xoá phát hành thành công"
             }
+        },
+
+        "action": {
+            "submit": "Gửi phát hành",
+            "edit": "Chỉnh sửa phát hành",
+            "completeTheTask": "Hoàn thành công việc"
         }
     },
 

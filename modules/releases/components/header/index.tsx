@@ -14,7 +14,7 @@ import {
 } from '@ant-design/pro-components';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
-import { RELEASES_COLUMNS_DISPLAY, RELEASES_STATUS } from '../../enums';
+import { RELEASES_STATUS } from '../../enums';
 import { ReleasesDataFilter } from '../../types';
 
 type Props = {
@@ -24,8 +24,6 @@ type Props = {
     dataUpdatedAt: number | null;
     removeFilter: RemoveFilter;
     handleRefresh: () => void;
-    visibleColumn?: RELEASES_COLUMNS_DISPLAY[];
-    handleChangeVisibleColumns?: (columns: RELEASES_COLUMNS_DISPLAY[]) => void;
 };
 
 export default function ReleasesHeaderV2({
@@ -35,8 +33,6 @@ export default function ReleasesHeaderV2({
     dataUpdatedAt,
     removeFilter,
     handleRefresh,
-    visibleColumn,
-    handleChangeVisibleColumns,
 }: Props) {
     // const { layoutTable, toggleLayoutTable } = useTableLayoutToggle();
     const [form] = ProForm.useForm();
