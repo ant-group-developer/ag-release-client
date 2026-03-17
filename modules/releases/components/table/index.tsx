@@ -52,6 +52,7 @@ export default function ReleasesTable({
     dataFilter,
     ...props
 }: Props) {
+    console.log('🚀 ~ ReleasesTable ~ dataFilter:', dataFilter);
     const messages = useTranslations();
     const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
@@ -229,10 +230,10 @@ export default function ReleasesTable({
             align: 'left',
             width: 130,
             sorter: true,
-            sortOrder: getSortOrder(
+            defaultSortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'createdAt'
+                RELEASES_COLUMNS_DISPLAY.CREATED_AT
             ),
             render: (value, record) => (
                 <span className="truncate text-wrap">

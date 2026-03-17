@@ -65,6 +65,8 @@ export default function Releases({}: Props) {
     } = useFilter<ReleasesDataFilter>({
         page: 1,
         pageSize: PAGE_SIZE,
+        orderBy: ORDER.DESC,
+        fieldOrder: RELEASES_COLUMNS_DISPLAY.CREATED_AT,
     });
     const { layoutTable } = useTableLayoutToggle();
     const messages = useTranslations();

@@ -63,7 +63,7 @@ export default function ReleaseArtistSectionV2({
                 </AppFormItem>
 
                 {!isVariousArtist && (
-                    <div className="mt-4" id="releaseArtists">
+                    <div className="mt-4">
                         <ReleaseArtistTable
                             dataSource={releaseArtist}
                             disabled={isReadMode}

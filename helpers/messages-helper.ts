@@ -1,50 +1,54 @@
-import { Id, ToastOptions, TypeOptions, toast } from 'react-toastify';
+import { message } from '@/helpers/antd-static';
+
+type TypeOptions = 'success' | 'error' | 'info' | 'warning';
 
 export const showNotification = (
     type: TypeOptions,
-    message: string,
-    toastOptions?: ToastOptions
+    content: string,
+    options?: { duration?: number; key?: string }
 ) => {
-    const options: ToastOptions = {
-        autoClose: 3000,
-        ...toastOptions,
-        type,
-    };
+    const duration = (options?.duration ?? 3000) / 1000;
+    const key = options?.key ?? content ?? 'Something went wrong, try again';
 
-    toast(message, {
-        ...options,
-        toastId: message ?? 'Some thing went wrong, try again',
+    message[type]({
+        content,
+        duration,
+        key,
     });
 };
 
-export const hideNotification = (toastId: ToastOptions['toastId']) => {
-    toast.dismiss(toastId);
+export const hideNotification = (key: string) => {
+    message.destroy(key);
 };
 
-export const isToastActive = (toastId: ToastOptions['toastId']) => {
-    if (toastId === undefined) return false;
-    return toast.isActive(toastId);
+export const isToastActive = (_key?: string) => {
+    // Ant Design message does not support checking active state
+    return false;
 };
 
-export const showNotificationLoading = (message?: string) => {
-    return toast.loading(message ?? 'Loading, please wait a few seconds');
+export const showNotificationLoading = (content?: string) => {
+    const key = content ?? 'loading';
+    message.loading({
+        content: content ?? 'Loading, please wait a few seconds',
+        duration: 0, // persist until manually closed
+        key,
+    });
+    return key;
 };
 
-export const notificationSuccess = (id: Id, message?: string) => {
-    return toast.update(id, {
-        render: message ?? 'Completed',
-        type: 'success',
-        isLoading: false,
-        autoClose: 2000,
+export const notificationSuccess = (key: string, content?: string) => {
+    message.success({
+        content: content ?? 'Completed',
+        duration: 2,
+        key,
     });
 };
 
-export const notificationError = (id: Id, message?: string) => {
-    return toast.update(id, {
-        render: message ?? 'Failure',
-        type: 'error',
-        isLoading: false,
-        autoClose: 2000,
+export const notificationError = (key: string, content?: string) => {
+    message.error({
+        content: content ?? 'Failure',
+        duration: 2,
+        key,
     });
 };
 
@@ -57,23 +61,35 @@ export const toastPromise = <T>(
         error?: string;
     }
 ) => {
-    return toast.promise(promise, {
-        pending: options?.pending ?? messages('common.processing'),
-        success: {
-            render: ({ data }: any) => {
-                const code = options?.success
-                    ? options.success
-                    : data?.data?.messageCode;
-                return messages(code);
-            },
-        },
-        error: {
-            render: ({ data }: any) => {
-                const code = options?.error
-                    ? options.error
-                    : data?.response?.data?.messageCode;
-                return messages(code);
-            },
-        },
+    const key = 'promise-' + Date.now();
+
+    message.loading({
+        content: options?.pending ?? messages('common.processing'),
+        key,
+        duration: 0,
     });
+
+    return promise
+        .then((data: any) => {
+            const code = options?.success
+                ? options.success
+                : data?.data?.messageCode;
+            message.success({
+                content: messages(code),
+                key,
+                duration: 2,
+            });
+            return data;
+        })
+        .catch((error: any) => {
+            const code = options?.error
+                ? options.error
+                : error?.response?.data?.messageCode;
+            message.error({
+                content: messages(code),
+                key,
+                duration: 2,
+            });
+            throw error;
+        });
 };

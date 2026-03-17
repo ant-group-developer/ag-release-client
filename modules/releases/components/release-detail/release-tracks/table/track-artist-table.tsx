@@ -92,25 +92,7 @@ export default function TrackArtistTable({ trackData, ...props }: Props) {
                 );
             },
         },
-        // {
-        //     title: messages('common.role'),
-        //     width: 100,
-        //     render: (_, record, index) => {
-        //         return (
-        //             <div className="max-w-44">
-        //                 <RoleArtistSelect
-        //                     className="w-full"
-        //                     defaultValue={record?.artistRole?.id}
-        //                     onChange={() => {
-        //                         handleUpdateTrackArtist(record?.id, {
-        //                             artistRoleId: record?.artistRole?.id,
-        //                         });
-        //                     }}
-        //                 />
-        //             </div>
-        //         );
-        //     },
-        // },
+
         {
             title: messages('country.label'),
             width: 150,
@@ -129,23 +111,26 @@ export default function TrackArtistTable({ trackData, ...props }: Props) {
         },
         {
             title: messages('artist.profiles'),
-            width: 200,
+            width: 150,
             render: (_, record, index) => {
                 return (
-                    <div className="space-x-2">
-                        {/* <Avatar
-                            size={28}
-                            src="/icon/apple-music.svg"
-                            className="hover:cursor-pointer hover:opacity-40"
-                            onClick={(e) => {
-                                e?.stopPropagation();
-                                window.open(
-                                    'https://open.spotify.com/',
-                                    '_blank',
-                                    'noopener'
-                                );
-                            }}
-                        /> */}
+                    <div className="space-x-1">
+                        {record?.artist?.artistProfiles?.map((profile) => (
+                            <Avatar
+                                size={'small'}
+                                key={profile.id}
+                                src={profile.dsp?.picture}
+                                className="hover:cursor-pointer hover:opacity-40"
+                                onClick={(e) => {
+                                    e?.stopPropagation();
+                                    window.open(
+                                        profile.url,
+                                        '_blank',
+                                        'noopener'
+                                    );
+                                }}
+                            />
+                        ))}
                     </div>
                 );
             },
