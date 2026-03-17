@@ -110,16 +110,7 @@ function BatchImportTable({ ...props }: Props) {
             width: 200,
             ellipsis: true,
             render: (value: string) => (
-                <Text
-                    style={{
-                        fontFamily: 'monospace',
-                        fontSize: 12,
-                        cursor: 'pointer',
-                    }}
-                    copyable={{ tooltips: false }}
-                >
-                    {value}
-                </Text>
+                <Text copyable={{ tooltips: false }}>{value}</Text>
             ),
         },
         {
@@ -127,9 +118,7 @@ function BatchImportTable({ ...props }: Props) {
             dataIndex: 'releaseFolder',
             width: 160,
             render: (value: string) => (
-                <Text copyable={{ tooltips: false }} style={{ fontSize: 13 }}>
-                    {value}
-                </Text>
+                <Text copyable={{ tooltips: false }}>{value}</Text>
             ),
         },
         {
