@@ -375,6 +375,7 @@ export default function ReleaseSchedulingForm({}: Props) {
                                             name="releaseTerritory.distributionType"
                                             render={({ field }) => (
                                                 <Radio.Group
+                                                    id="distributionType"
                                                     {...field}
                                                     onChange={(e) => {
                                                         field.onChange(
