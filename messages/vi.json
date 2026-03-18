@@ -767,6 +767,9 @@
     },
 
     "release": {
+        "audioLanguage": "Ngôn ngữ âm thanh",
+        "metadataLanguageCountry": "Ngôn ngữ metadata quốc gia",
+        "metadataLanguage": "Ngôn ngữ metadata",
         "importTemplate": "Tải lên mẫu",
         "uploadTemplateSuccess": "Tải lên mẫu thành công",
         "uploadTemplateError": "Tải lên mẫu thất bại",

@@ -1,6 +1,5 @@
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
-import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { TrackData } from '@/modules/tracks/types';
 import { ConfigProvider, Form, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -47,27 +46,17 @@ export default function TrackContributorsSection({
             componentDisabled={isReadMode}
             form={{ variant: isReadMode ? 'underlined' : 'outlined' }}
         >
-            <CollapseItem
-                defaultActiveKey={['track-and-artist']}
-                items={[
-                    {
-                        key: 'track-and-artist',
-                        label: (
-                            <span className="text-base font-semibold">
-                                {messages('common.contributors')}
-                            </span>
-                        ),
-                        children: (
-                            <div id={`tracks.${index}.trackContributors`}>
-                                <TrackContributorsTable
-                                    dataSource={trackData?.trackContributors}
-                                    trackData={trackData}
-                                />
-                            </div>
-                        ),
-                    },
-                ]}
-            />
+            <div className="space-y-4">
+                <p className="text-base font-semibold">
+                    {messages('common.contributors')}
+                </p>
+                <div id={`tracks.${index}.trackContributors`}>
+                    <TrackContributorsTable
+                        dataSource={trackData?.trackContributors}
+                        trackData={trackData}
+                    />
+                </div>
+            </div>
         </ConfigProvider>
     );
 }

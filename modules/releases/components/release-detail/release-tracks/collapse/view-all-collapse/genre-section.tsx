@@ -5,7 +5,6 @@ import GenresSelect from '@/components/ui/select/genres-select';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
-import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { TrackData } from '@/modules/tracks/types';
 import { ConfigProvider, Form, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -47,78 +46,67 @@ export default function GenreSection({
             componentDisabled={isReadMode}
             form={{ variant: isReadMode ? 'underlined' : 'outlined' }}
         >
-            <CollapseItem
-                defaultActiveKey={['genre']}
-                items={[
-                    {
-                        key: 'genre',
-                        label: (
-                            <span className="text-base font-semibold">
-                                {messages('genre.label')}
-                            </span>
-                        ),
-                        children: (
-                            <div className="grid grid-cols-2 gap-4">
-                                {/* Primary Genre */}
-                                <AppFormItem
-                                    label={messages('genres.primary')}
-                                    name="primaryGenreId"
-                                    required
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message:
-                                                messages('validation.input'),
-                                        },
-                                    ]}
-                                >
-                                    <GenresSelect
-                                        id={`tracks.${index}.primaryGenreId`}
-                                        className="w-full"
-                                        showSearch
-                                        allowClear
-                                        disabled={isReadMode}
-                                        onChange={(value) => {
-                                            updateTrackDraft(
-                                                { primaryGenreId: value },
-                                                'primaryGenreId'
-                                            );
-                                        }}
-                                    />
-                                </AppFormItem>
+            <div className="space-y-4">
+                <p className="text-base font-semibold">
+                    {messages('genre.label')}
+                </p>
+                <div className="grid grid-cols-2 gap-4">
+                    {/* Primary Genre */}
+                    <AppFormItem
+                        label={messages('genres.primary')}
+                        name="primaryGenreId"
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <GenresSelect
+                            id={`tracks.${index}.primaryGenreId`}
+                            className="w-full"
+                            showSearch
+                            allowClear
+                            disabled={isReadMode}
+                            onChange={(value) => {
+                                updateTrackDraft(
+                                    { primaryGenreId: value },
+                                    'primaryGenreId'
+                                );
+                            }}
+                        />
+                    </AppFormItem>
 
-                                {/* Sub Genre */}
-                                <AppFormItem
-                                    label={messages('common.subGenres')}
-                                    name="subGenreId"
-                                    // required
-                                    // rules={[
-                                    //     {
-                                    //         required: true,
-                                    //         message:
-                                    //             messages('validation.input'),
-                                    //     },
-                                    // ]}
-                                >
-                                    <GenresSelect
-                                        id={`tracks.${index}.subGenreId`}
-                                        className="w-full"
-                                        showSearch
-                                        allowClear
-                                        disabled={isReadMode}
-                                        onChange={(value) => {
-                                            updateTrackDraft(
-                                                { subGenreId: value },
-                                                'subGenreId'
-                                            );
-                                        }}
-                                    />
-                                </AppFormItem>
-                            </div>
-                        ),
-                    },
-                ]}
-            />
+                    {/* Sub Genre */}
+                    <AppFormItem
+                        label={messages('common.subGenres')}
+                        name="subGenreId"
+                        // required
+                        // rules={[
+                        //     {
+                        //         required: true,
+                        //         message:
+                        //             messages('validation.input'),
+                        //     },
+                        // ]}
+                    >
+                        <GenresSelect
+                            id={`tracks.${index}.subGenreId`}
+                            className="w-full"
+                            showSearch
+                            allowClear
+                            disabled={isReadMode}
+                            onChange={(value) => {
+                                updateTrackDraft(
+                                    { subGenreId: value },
+                                    'subGenreId'
+                                );
+                            }}
+                        />
+                    </AppFormItem>
+                </div>
+            </div>
         </ConfigProvider>
     );
 }

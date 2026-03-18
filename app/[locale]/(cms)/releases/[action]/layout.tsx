@@ -193,7 +193,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
 
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
         const scrollTop = e.currentTarget.scrollTop;
-        if (!isScrolled && scrollTop > 100) {
+        if (!isScrolled && scrollTop > 150) {
             setIsScrolled(true);
         } else if (isScrolled && scrollTop <= 10) {
             setIsScrolled(false);

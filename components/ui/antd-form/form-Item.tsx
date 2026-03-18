@@ -18,7 +18,7 @@ function AppFormItem({
 }: AppFormItemProps) {
     const customLabel = label ? (
         <div className="flex items-center gap-1">
-            <span className="flex gap-1">
+            <span className="flex gap-1 font-normal">
                 <Typography.Text
                     style={{
                         color: '#65696e',

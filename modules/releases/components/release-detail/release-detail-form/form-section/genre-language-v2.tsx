@@ -90,7 +90,7 @@ export default function GenreLanguageSectionV2({
                 </AppFormItem>
 
                 <AppFormItem
-                    label={`${messages('common.language')} metadata`}
+                    label={`${messages('release.metadataLanguage')}`}
                     required
                     validateStatus={
                         errors.releaseLanguage?.metadataLanguageId
@@ -131,7 +131,7 @@ export default function GenreLanguageSectionV2({
                 </AppFormItem>
 
                 <AppFormItem
-                    label={`${messages('track.language')}`}
+                    label={`${messages('release.audioLanguage')}`}
                     required
                     validateStatus={
                         errors.releaseLanguage?.audioLanguageId ? 'error' : ''
