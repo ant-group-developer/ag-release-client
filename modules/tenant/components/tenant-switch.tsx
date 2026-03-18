@@ -51,6 +51,7 @@ function TenantSwitch({}: Props) {
             children: [],
             tenantUserCount: 0,
             maxLabels: 0,
+            code: '',
         });
     }
 
