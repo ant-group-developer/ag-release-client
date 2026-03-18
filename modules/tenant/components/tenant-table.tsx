@@ -126,6 +126,12 @@ function TenantTable({ dataFilter, ...props }: Props) {
             ellipsis: true,
         },
         {
+            title: messages('tenant.code'),
+            dataIndex: 'code',
+            width: 120,
+            ellipsis: true,
+        },
+        {
             title: messages('tenant.type.titleShort'),
             dataIndex: 'type',
             align: 'center',
