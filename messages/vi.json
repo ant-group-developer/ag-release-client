@@ -898,6 +898,7 @@
     },
 
     "track": {
+        "parentalAdvisoryNotice": "Cảnh báo nội dung",
         "list": "Danh sách bài hát",
         "number": "Bài hát số",
         "add": "Thêm bài hát",

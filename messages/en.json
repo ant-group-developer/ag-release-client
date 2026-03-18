@@ -896,6 +896,7 @@
     },
 
     "track": {
+        "parentalAdvisoryNotice": "Parental advisory notice",
         "list": "Track list",
         "number": "Track number",
         "add": "Add track",

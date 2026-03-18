@@ -121,7 +121,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
 
     const { currentStep, stepStatus } = useMemo(() => {
-        const status = formValues?.status;
+        const status = releaseData?.status;
         switch (status) {
             case RELEASES_STATUS.DRAFT:
             case RELEASES_STATUS.NEVER_DISTRIBUTED:
@@ -137,7 +137,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
             default:
                 return { currentStep: 0, stepStatus: 'process' as const };
         }
-    }, [formValues?.status]);
+    }, [releaseData?.status]);
     const validateLength = releaseValidateData && releaseValidateData?.length;
 
     const statusItems: StepsProps['items'] = [

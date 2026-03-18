@@ -50,7 +50,7 @@ export default function LanguageSection({
                 <div className="grid grid-cols-2 gap-4">
                     {/* Country Language */}
                     <AppFormItem
-                        label={messages('country.language')}
+                        label={messages('release.metadataLanguageCountry')}
                         name={['trackLanguage', 'metadataLanguageCountryId']}
                         required
                         rules={[
@@ -95,7 +95,7 @@ export default function LanguageSection({
 
                     {/* Audio Language */}
                     <AppFormItem
-                        label={messages('track.language')}
+                        label={messages('release.audioLanguage')}
                         name={['trackLanguage', 'audioLanguageId']}
                         required
                         rules={[
@@ -141,7 +141,7 @@ export default function LanguageSection({
 
                     {/* Metadata Language */}
                     <AppFormItem
-                        label={`${messages('language.label')} metadata`}
+                        label={messages('release.metadataLanguage')}
                         name={['trackLanguage', 'metadataLanguageId']}
                         required
                         rules={[
