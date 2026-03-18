@@ -27,6 +27,7 @@ export interface TenantDetail extends CommonAttributeCreator {
     icon: string | null;
     title: string | null;
     name: string;
+    code: string | null;
     domain: string | null;
     primaryColor: string | null;
     email: string;
@@ -51,6 +52,7 @@ export type TenantData = Pick<
     | 'icon'
     | 'title'
     | 'name'
+    | 'code'
     | 'email'
     | 'isActive'
     | 'type'
@@ -66,6 +68,7 @@ export interface UpdateTenantPayload {
     icon?: string;
     title?: string;
     name?: string;
+    code?: string;
     domain?: string;
     email?: string;
     primaryColor?: string;

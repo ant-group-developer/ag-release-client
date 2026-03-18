@@ -1381,6 +1381,7 @@
         "selectTitle": "Select Workspace",
         "workspaces": "Workspaces",
         "name": "Workspace name",
+        "code": "Code",
         "logo": "Logo",
         "icon": {
             "label": "Favicon",
