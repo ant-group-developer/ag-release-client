@@ -9,13 +9,13 @@ type Props = Omit<SelectProps, 'options'> & {
 };
 
 enum SENSITIVE_CONTENT_CODE {
-    EXPLICIT_CONTENT_EDITED = 'EXPLICIT_CONTENT_EDITED',
-    NO_ADVICE_AVAILABLE = 'NO_ADVICE_AVAILABLE',
-    NOT_EXPLICIT = 'NOT_EXPLICIT_(CLEAN)',
-    PARENTAL_ADVISORY = 'PARENTAL_ADVISORY',
+    EXPLICIT_CONTENT_EDITED = 'ExplicitContentEdited',
+    NO_ADVICE_AVAILABLE = 'NoAdviceAvailable',
+    NOT_EXPLICIT = 'NotExplicit',
+    PARENTAL_ADVISORY = 'ParentalAdvisory',
 }
 
-export const getIntlSensitiveContent = (value: string) => {
+export const getIntlSensitiveContent = (value: string, fallBack?: string) => {
     switch (value) {
         case SENSITIVE_CONTENT_CODE.EXPLICIT_CONTENT_EDITED:
             return 'trackSensitive.explicitContentEdited';
@@ -26,7 +26,7 @@ export const getIntlSensitiveContent = (value: string) => {
         case SENSITIVE_CONTENT_CODE.PARENTAL_ADVISORY:
             return 'trackSensitive.parentalAdvisory';
         default:
-            break;
+            return fallBack;
     }
 };
 
@@ -35,24 +35,28 @@ export default function SensitiveContentSelect({ fallBack, ...props }: Props) {
     const { trackSensitiveData } = useGetListTrackSensitive({
         pageSize: PAGE_SIZE_EXTRA_LARGE,
     });
-    const options = trackSensitiveData?.items?.map((item) => ({
-        key: item?.id,
-        label: (
-            <div className="flex items-center gap-1">
-                {messages(getIntlSensitiveContent(item?.code) as any)}
-                {item?.icon && (
-                    <Image
-                        width={18}
-                        height={18}
-                        alt=""
-                        src={item?.icon}
-                        className="rounded-md"
-                    />
-                )}
-            </div>
-        ),
-        value: item?.id,
-    }));
+    const options = trackSensitiveData?.items?.map((item) => {
+        return {
+            key: item?.id,
+            label: (
+                <div className="flex items-center gap-1">
+                    {messages(
+                        getIntlSensitiveContent(item?.code, item?.name) as any
+                    )}
+                    {item?.icon && (
+                        <Image
+                            width={18}
+                            height={18}
+                            alt=""
+                            src={item?.icon}
+                            className="rounded-md"
+                        />
+                    )}
+                </div>
+            ),
+            value: item?.id,
+        };
+    });
 
     const labelRender = (props: any) => {
         const { label, value } = props;
