@@ -81,6 +81,11 @@ const STATUS_CONFIG: Record<
         icon: <ExclamationCircleOutlined />,
         label: 'Failed',
     },
+    skipped: {
+        color: 'warning',
+        icon: <ExclamationCircleOutlined />,
+        label: 'Skipped',
+    },
 };
 
 type Props = {
