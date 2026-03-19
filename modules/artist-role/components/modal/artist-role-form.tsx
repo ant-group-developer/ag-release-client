@@ -2,6 +2,7 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import { MAX_NAME_LENGTH } from '@/constants/validate';
+import { getCodeFormatted } from '@/helpers/string';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
@@ -30,18 +31,6 @@ export default function ArtistRoleFormModal({ ...props }: Props) {
         useCreateArtistRole();
     const { updateArtistRole, isPending: isUpdateArtistRole } =
         useUpdateArtistRole();
-
-    const getCodeFormatted = (value: string) => {
-        return value
-            .trim()
-            .split(' ')
-            .filter(Boolean)
-            .map(
-                (word) =>
-                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-            )
-            .join('');
-    };
 
     const handleCreateArtistRole = (values: any) => {
         const variables: CreateVariables<CreateArtistRolePayload> = {

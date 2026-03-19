@@ -8,7 +8,10 @@ import {
     useTestConnection,
     useTestConnectionById,
 } from '@/modules/sftp-config/hooks/use-test-connection';
-import { TestSftpConnectionPayload } from '@/modules/sftp-config/types/payload';
+import {
+    TestSftpConnectionByIdPayload,
+    TestSftpConnectionPayload,
+} from '@/modules/sftp-config/types/payload';
 import { CreateVariables } from '@/types/api';
 import { CheckCard } from '@ant-design/pro-components';
 import {
@@ -95,6 +98,7 @@ export default function DspDeals({ dspId }: Props) {
                     deActive();
                 },
             };
+
             updateDspRoutingConfig(variables);
         } catch (error) {
             console.log('Update DSP error:', error);
@@ -117,6 +121,10 @@ export default function DspDeals({ dspId }: Props) {
             const { host, port, username, password, privateKey } =
                 sftpConfig.metadata;
 
+            console.log(
+                '🚀 ~ handleTestConnection ~ dspRoutingConfig?.sftpConfig?.id:',
+                dspRoutingConfig?.sftpConfig?.id
+            );
             if (password || privateKey) {
                 form.setFields([
                     {
@@ -130,7 +138,7 @@ export default function DspDeals({ dspId }: Props) {
                 ]);
             }
 
-            if (!password && !privateKey) {
+            if (!password && !privateKey && !dspRoutingConfig?.sftpConfig?.id) {
                 form.setFields([
                     {
                         name: ['sftpConfig', 'metadata', 'password'],
@@ -171,7 +179,26 @@ export default function DspDeals({ dspId }: Props) {
                     deActiveConnection();
                 },
             };
-            testConnection(variables);
+            if (dspRoutingConfig?.sftpConfig?.id && !password && !privateKey) {
+                const variables: CreateVariables<TestSftpConnectionByIdPayload> =
+                    {
+                        payload: {
+                            id: dspRoutingConfig?.sftpConfig?.id,
+                            ...payload,
+                        },
+                        onSuccess(e) {
+                            deActiveConnection();
+                            handleShowNotiTestConnection(e.status);
+                        },
+                        onError(e) {
+                            console.log('Test connection sftp', e);
+                            deActiveConnection();
+                        },
+                    };
+                return testConnectionById(variables);
+            } else {
+                testConnection(variables);
+            }
         } catch (error) {
             console.log('Test connection: ', error);
             deActiveConnection();

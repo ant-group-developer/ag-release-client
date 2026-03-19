@@ -139,6 +139,7 @@ export const TrackTypeTable = ({ dataFilter, ...props }: Props) => {
             key: 'actions',
             align: 'center',
             width: 100,
+            fixed: 'right',
             render: (_, record) => (
                 <ActionButton
                     showDelete

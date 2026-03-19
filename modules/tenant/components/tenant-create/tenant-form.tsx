@@ -43,7 +43,32 @@ function TenantForm({ excludeIds, wrapperClassName, ...props }: Props) {
                     ]}
                     name="name"
                 >
-                    <Input placeholder={messages('tenant.name')} />
+                    <Input
+                        placeholder={messages('tenant.name')}
+                        onChange={(e) => {
+                            const slug = e.target.value
+                                .toLowerCase()
+                                .replace(/[^a-z0-9]+/g, '-')
+                                .replace(/-+/g, '-')
+                                .replace(/^-|-$/g, '');
+                            props.form?.setFieldValue('code', slug);
+                        }}
+                    />
+                </AppForm.Item>
+
+                <AppForm.Item
+                    label={messages('tenant.code')}
+                    rules={[
+                        {
+                            max: 50,
+                            pattern: /^[a-z0-9-]+$/,
+                            message: 'Only lowercase letters, numbers, and hyphens',
+                        },
+                    ]}
+                    name="code"
+                    tooltip="Slug code used as SFTP watch folder name (e.g. ant-music)"
+                >
+                    <Input placeholder="ant-music" />
                 </AppForm.Item>
 
                 <AppForm.Item
