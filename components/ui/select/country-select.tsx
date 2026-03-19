@@ -1,6 +1,6 @@
 import { toNonAccentVietnamese } from '@/helpers/string';
 import { useGetListSimpleCountries } from '@/modules/countries/hooks/use-get-list-simple-countries';
-import { Select, SelectProps, Typography } from 'antd';
+import { Select, SelectProps } from 'antd';
 
 type Props = Omit<SelectProps, 'option'> & {
     fallBack?: string;
@@ -15,10 +15,8 @@ export default function CountrySelect({ fallBack, ...props }: Props) {
             value: item.id,
             label: (
                 <div className="space-x-1">
-                    <Typography.Text className="!text-xs">
-                        {item?.iso2}
-                    </Typography.Text>
-                    <Typography.Text>{item?.name}</Typography.Text>
+                    <span className="!text-xs">{item?.iso2}</span>
+                    <span>{item?.name}</span>
                 </div>
             ),
             name: item?.name,

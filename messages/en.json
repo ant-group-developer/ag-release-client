@@ -787,6 +787,7 @@
         "id": "Release ID",
         "type": "Release type",
         "releaseDate": "Release date",
+        "releaseOriginalDate": "Original Release Date",
         "releaseTime": "Release time",
         "duration": "Duration",
         "trackCount": "Track count",
@@ -1168,6 +1169,7 @@
     },
 
     "formFields": {
+        "releaseOriginalDate": "Original Release Date",
         "audioFile": {
             "preview": "Preview audio"
         },

@@ -31,7 +31,9 @@ type ArtistFormValues = Omit<ArtistData, 'id' | 'createdAt' | 'updatedAt'> & {
     pictureFile?: any;
 };
 
-type Props = Omit<AppModalProps, 'children'> & {};
+type Props = Omit<AppModalProps, 'children'> & {
+    onSuccess?: () => void;
+};
 
 export default function ArtistFormModal({ ...props }: Props) {
     const messages = useTranslations();
@@ -57,6 +59,7 @@ export default function ArtistFormModal({ ...props }: Props) {
             onSuccess: () => {
                 deActive();
                 form.resetFields();
+                props.onSuccess?.();
             },
             onError: () => {
                 deActive();
@@ -74,6 +77,7 @@ export default function ArtistFormModal({ ...props }: Props) {
             payload: values,
             onSuccess: () => {
                 deActive();
+                props.onSuccess?.();
             },
             onError: () => {
                 deActive();

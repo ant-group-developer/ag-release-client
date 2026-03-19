@@ -93,7 +93,7 @@ export default function AudioPlayer() {
             onProgress={onProgress}
             onEnded={onEnded}
             onError={onError}
-            progressInterval={1000} // Cập nhật progress mỗi giây
+            progressInterval={500} // Cập nhật progress mỗi 500ms
             config={{
                 file: {
                     forceAudio: true,

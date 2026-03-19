@@ -18,7 +18,7 @@ import { Breadcrumb, Tabs, TabsProps, theme } from 'antd';
 import { BookHeadphones, Box, Calendar, Eye, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname } from 'next/navigation';
-import { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 
 type Props = {};
 
@@ -42,8 +42,6 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         RELEASES_TABS.CORE_DETAIL
     );
     const [isScrolled, setIsScrolled] = useState(false);
-    const scrollLockRef = useRef(false);
-    const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     // const
     const releaseId = params['release-id'] ? `${params['release-id']}` : '';
@@ -172,7 +170,6 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             return;
         }
 
-        // ReleaseData from api into Release zustand global state
         const initialData: ReleaseFormStoreData = {
             ...releaseData,
         };
@@ -181,15 +178,6 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             setFormValues(initialData);
         }
     }, [releaseId, releaseData?.id]);
-
-    // useEffect(() => {
-    //     if (isCreateReleasePage) return setIsScrolled(false);
-    //     // Chỉ theo dõi scroll khi ở trang core-detail, các trang khác mặc định isScrolled = true
-    //     if (!isCoreDetailPage) {
-    //         setIsScrolled(true);
-    //         return;
-    //     }
-    // }, [isCoreDetailPage]);
 
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
         const scrollTop = e.currentTarget.scrollTop;

@@ -34,6 +34,7 @@ const initialValue: ReleaseFormStoreData = {
     createdAt: '',
     updatedAt: null,
     releaseDate: '',
+    releaseOriginalDate: '',
     releaseTime: '',
     releaseTimezoneId: null,
     tracks: [],

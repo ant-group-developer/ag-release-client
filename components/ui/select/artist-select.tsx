@@ -72,39 +72,6 @@ export default function ArtistSelect({
                             {item.name}
                         </CustomTooltip>
                     </span>
-                    {/* <div className="flex gap-1">
-                    <span>{item?.country?.name}</span>
-                    {item?.country?.name ? '|' : ''}
-                    <span>{item?.genre?.name}</span>
-                </div> */}
-                    {/* <div className="flex justify-end gap-1">
-                    <Avatar
-                        size={26}
-                        src="/icon/spotify.png"
-                        className="hover:opacity-40"
-                        onClick={(e) => {
-                            e?.stopPropagation();
-                            window.open(
-                                'https://open.spotify.com/',
-                                '_blank',
-                                'noopener'
-                            );
-                        }}
-                    />
-                    <Avatar
-                        size={26}
-                        src="/icon/apple-music.svg"
-                        className="hover:opacity-40"
-                        onClick={(e) => {
-                            e?.stopPropagation();
-                            window.open(
-                                'https://open.spotify.com/',
-                                '_blank',
-                                'noopener'
-                            );
-                        }}
-                    />
-                </div> */}
                 </div>
             ),
             disabled: disabledArtistIds?.includes(item.id) ?? false,
@@ -232,6 +199,7 @@ export default function ArtistSelect({
             <ArtistFormModal
                 open={openCreate}
                 onCancel={() => setOpenCreate(false)}
+                onSuccess={() => setOpenCreate(false)}
             />
         </>
     );

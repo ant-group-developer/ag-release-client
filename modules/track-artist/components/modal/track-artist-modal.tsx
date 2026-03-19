@@ -124,6 +124,7 @@ export default function TrackArtistModal({
                     <ArtistFormModal
                         open
                         onCancel={() => setShowCreateArtist(false)}
+                        onSuccess={() => setShowCreateArtist(false)}
                     />
                 )}
 

@@ -206,10 +206,12 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                                                     err.field,
                                                     err.page
                                                 );
+
                                                 return (
                                                     <Link
                                                         key={index}
                                                         href={`${getReleaseTabRoute(formValues?.id as string, err.page as RELEASES_TABS)}#${err.field}${err?.trackId ? `.${err.trackId}` : ''}`}
+                                                        scroll={false}
                                                         onClick={() => {
                                                             handleClickError(
                                                                 err

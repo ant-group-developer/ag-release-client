@@ -787,6 +787,7 @@
         "id": "Mã phát hành",
         "type": "Loại phát hành",
         "releaseDate": "Ngày phát hành",
+        "releaseOriginalDate": "Ngày phát hành gốc",
         "releaseTime": "Thời gian phát hành",
         "duration": "Thời lượng",
         "trackCount": "Số bài hát",
@@ -1172,6 +1173,7 @@
     },
 
     "formFields": {
+        "releaseOriginalDate": "Ngày phát hành gốc",
         "audioFile": {
             "preview": "Đoạn nghe trước"
         },

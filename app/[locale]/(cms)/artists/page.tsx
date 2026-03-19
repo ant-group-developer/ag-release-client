@@ -138,7 +138,11 @@ export default function Artists({}: Props) {
 
                 {(typeModal === TYPE_MODAL_ARTIST.CREATE ||
                     typeModal === TYPE_MODAL_ARTIST.UPDATE) && (
-                    <ArtistFormModal open onCancel={closeModal} />
+                    <ArtistFormModal
+                        open
+                        onCancel={closeModal}
+                        onSuccess={closeModal}
+                    />
                 )}
 
                 {typeModal === TYPE_MODAL_ARTIST.DELETE && (

@@ -50,6 +50,7 @@ export interface ReleasesData extends CommonAttribute {
     isVariousArtist: boolean;
     releaseLanguage?: ReleaseLanguage;
     releaseDate: string;
+    releaseOriginalDate: string;
     releaseTime: string;
     releaseTimezoneId: string | null;
     releaseTerritory: ReleaseTerritory;

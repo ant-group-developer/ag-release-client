@@ -149,6 +149,12 @@ export const releaseSchema = (messages: any) =>
             .refine((val) => val !== null && val !== '', {
                 message: messages('validation.input'),
             }),
+        releaseOriginalDate: z
+            .string()
+            .nullable()
+            .refine((val) => val !== null && val !== '', {
+                message: messages('validation.input'),
+            }),
 
         releaseTime: z
             .string()

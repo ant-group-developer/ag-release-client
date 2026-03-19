@@ -320,42 +320,44 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                 backgroundColor: token.colorBgContainer,
             }}
         >
-            <div
-                className="flex justify-between overflow-hidden px-6 transition-all duration-300"
-                style={{
-                    maxHeight: isScrolled ? 0 : 100,
-                    opacity: isScrolled ? 0 : 1,
-                    paddingLeft: 0,
-                    paddingRight: 0,
-                    paddingTop: isScrolled ? 0 : 8,
-                    paddingBottom: isScrolled ? 0 : 24,
-                }}
-            >
-                <Steps
-                    className="!w-4/6 !px-0"
-                    size="small"
-                    current={currentStep}
-                    status={stepStatus}
-                    labelPlacement="vertical"
-                    items={statusItems}
-                />
+            {!isCreateReleasePage && (
+                <div
+                    className="flex justify-between overflow-hidden px-6 transition-all duration-300"
+                    style={{
+                        maxHeight: isScrolled ? 0 : 100,
+                        opacity: isScrolled ? 0 : 1,
+                        paddingLeft: 0,
+                        paddingRight: 0,
+                        paddingTop: isScrolled ? 0 : 8,
+                        paddingBottom: isScrolled ? 0 : 24,
+                    }}
+                >
+                    <Steps
+                        className="!w-4/6 !px-0"
+                        size="small"
+                        current={currentStep}
+                        status={stepStatus}
+                        labelPlacement="vertical"
+                        items={statusItems}
+                    />
 
-                <div>
-                    {!isCreateReleasePage && (
-                        <Button
-                            loading={isDistributingRelease}
-                            onClick={handleDistribution}
-                            type="primary"
-                            // disabled={
-                            //     validateLength > 0 ||
-                            //     releaseData?.status !== RELEASES_STATUS.DRAFT
-                            // }
-                        >
-                            {messages('release.action.submit')}
-                        </Button>
-                    )}
+                    <div>
+                        {!isCreateReleasePage && (
+                            <Button
+                                loading={isDistributingRelease}
+                                onClick={handleDistribution}
+                                type="primary"
+                                // disabled={
+                                //     validateLength > 0 ||
+                                //     releaseData?.status !== RELEASES_STATUS.DRAFT
+                                // }
+                            >
+                                {messages('release.action.submit')}
+                            </Button>
+                        )}
+                    </div>
                 </div>
-            </div>
+            )}
 
             <AppForm
                 form={form}
