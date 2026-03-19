@@ -75,6 +75,7 @@ export const usePlaySongStore = create<PlaySongState>((set, get) => ({
 
     onSeek: ({ second, url, songId }) => {
         const state = get();
+        console.log('🚀 ~ const:', state);
         state.songTimeMap.set(songId, second);
         set((state) => ({
             ...state,
@@ -85,8 +86,9 @@ export const usePlaySongStore = create<PlaySongState>((set, get) => ({
             currentTimePlaying: second,
         }));
         get().reactPlayerRef?.seekTo(second, 'seconds');
-        setTimeout(() => {
-            set((prev) => ({ ...prev, isSeeking: false }));
-        }, 300);
+        console.log(
+            "🚀 ~ get().reactPlayerRef?.seekTo(second, 'seconds'):",
+            get().reactPlayerRef?.seekTo(second, 'seconds')
+        );
     },
 }));
