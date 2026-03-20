@@ -6,7 +6,6 @@ import SensitiveContentSelect from '@/components/ui/select/isSensitiveContent-se
 import OriginalTypeSelect from '@/components/ui/select/original-type-select';
 import TrackTypesSelect from '@/components/ui/select/track-types-select';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
-import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { TrackData } from '@/modules/tracks/types';
 import { ConfigProvider, Form, Input, Radio, Select } from 'antd';
@@ -26,7 +25,6 @@ export default function OtherSection({
     trackData,
 }: Props) {
     const messages = useTranslations();
-    const { action } = useGetReleaseDetailRoute();
     const form = Form.useFormInstance();
     const releaseAction = useReleaseActionStore((s) => s.action);
     const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;

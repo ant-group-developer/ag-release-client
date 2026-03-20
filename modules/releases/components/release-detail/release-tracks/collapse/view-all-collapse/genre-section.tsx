@@ -3,7 +3,6 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import GenresSelect from '@/components/ui/select/genres-select';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
-import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { TrackData } from '@/modules/tracks/types';
 import { ConfigProvider, Form, Typography } from 'antd';
@@ -24,7 +23,6 @@ export default function GenreSection({
 }: Props) {
     // hooks
     const messages = useTranslations();
-    const { action } = useGetReleaseDetailRoute();
     const form = Form.useFormInstance();
     const releaseAction = useReleaseActionStore((s) => s.action);
     const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;

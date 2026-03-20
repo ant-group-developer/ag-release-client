@@ -12,7 +12,6 @@ export default function AudioPlayer() {
     const { url, isPlaying, setReactPlayerRef, songId, currentTimePlaying } =
         usePlaySongStore();
     const playerRef = useRef<ReactPlayer>(null);
-    console.log('🚀 ~ AudioPlayer ~ playerRef:', playerRef);
 
     // Bước 1: Cung cấp các phương thức điều khiển player cho store
     useEffect(() => {
