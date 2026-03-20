@@ -112,52 +112,57 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
                 );
             },
         },
-        {
-            title: messages('common.policy'),
-            colSpan: dspData?.length <= 1 ? 0 : dspData?.length,
-            align: 'center',
-            children: dspData?.map((item: DspData) => {
-                return {
-                    title: (
-                        <div className="flex flex-col items-center gap-1">
-                            <div>{item?.name}</div>
-                            <PriceTiersSelect
-                                disabled={!isCanEdit}
-                                className="w-full"
-                                allowClear
-                            />
-                        </div>
-                    ),
-                    dataIndex: `dsp_${item.id}`,
-                    key: item.id,
-                    align: 'left' as const,
-                    width: 150,
-                    render: (value: string, record: TrackData) => {
-                        const trackPolicy = record.trackPolicies?.find(
-                            (p) => p.dspId === item?.id
-                        );
+        ...(dspData && dspData.length > 0
+            ? [
+                  {
+                      title: messages('common.policy'),
+                      colSpan: dspData?.length <= 1 ? 0 : dspData?.length,
+                      align: 'center' as const,
+                      children: dspData?.map((item: DspData) => {
+                          return {
+                              title: (
+                                  <div className="flex flex-col items-center gap-1">
+                                      <div>{item?.name}</div>
+                                      <PriceTiersSelect
+                                          disabled={!isCanEdit}
+                                          className="w-full"
+                                          allowClear
+                                      />
+                                  </div>
+                              ),
+                              dataIndex: `dsp_${item.id}`,
+                              key: item.id,
+                              align: 'left' as const,
+                              width: 150,
+                              render: (value: string, record: TrackData) => {
+                                  const trackPolicy =
+                                      record.trackPolicies?.find(
+                                          (p) => p.dspId === item?.id
+                                      );
 
-                        return (
-                            <ActionsDspSelect
-                                dspId={item?.id}
-                                defaultValue={trackPolicy?.action?.id}
-                                disabled={!isCanEdit}
-                                className="w-full"
-                                onChange={(value) =>
-                                    updateTrackPolicy({
-                                        id: record.id,
-                                        actionId: value,
-                                        trackPolicyId:
-                                            trackPolicy?.id as string,
-                                    })
-                                }
-                                actions={item?.dspActions}
-                            />
-                        );
-                    },
-                };
-            }),
-        },
+                                  return (
+                                      <ActionsDspSelect
+                                          dspId={item?.id}
+                                          defaultValue={trackPolicy?.action?.id}
+                                          disabled={!isCanEdit}
+                                          className="w-full"
+                                          onChange={(value) =>
+                                              updateTrackPolicy({
+                                                  id: record.id,
+                                                  actionId: value,
+                                                  trackPolicyId:
+                                                      trackPolicy?.id as string,
+                                              })
+                                          }
+                                          actions={item?.dspActions}
+                                      />
+                                  );
+                              },
+                          };
+                      }),
+                  },
+              ]
+            : []),
     ];
 
     return (

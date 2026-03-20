@@ -9,7 +9,7 @@ import { TYPE_UPLOAD_BUCKET } from '@/enums/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedDate } from '@/helpers/common';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
-import { showNotification } from '@/helpers/messages-helper';
+import { showNotification, toastPromise } from '@/helpers/messages-helper';
 import { cn } from '@/helpers/tailwind';
 import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
@@ -293,7 +293,8 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
             id: formValues?.id ?? '',
             code: dspCode,
         };
-        distributeRelease(variables);
+        const promise = distributeRelease(variables);
+        toastPromise(promise, messages);
     };
 
     useEffect(() => {

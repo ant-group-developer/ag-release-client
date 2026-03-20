@@ -20,11 +20,11 @@ export const useDistributeRelease = () => {
             queryClient.invalidateQueries({
                 queryKey: releasesQueryKeys.detail(id),
             });
-            handleSuccess(data?.data);
+            // handleSuccess(data?.data);
         },
         onError: (error, { onError }) => {
             onError?.(error);
-            handleError(error);
+            // handleError(error);
         },
     });
 

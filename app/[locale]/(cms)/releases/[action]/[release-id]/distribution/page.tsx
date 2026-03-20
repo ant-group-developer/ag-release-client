@@ -104,7 +104,9 @@ export default function Distribution({}: Props) {
             },
         };
         const promise = distributeRelease(variables);
-        toastPromise(promise, messages);
+        toastPromise(promise, messages, {
+            pending: messages('common.loading'),
+        });
     };
 
     const onChangeSort = (pagination: any, filters: any, sort: any) => {

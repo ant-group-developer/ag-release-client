@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "loading": "Đang tải",
         "incomplete": "Chưa hoàn thành",
         "generate": "Tạo",
         "privateKey": "Khoá riêng tư",
