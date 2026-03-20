@@ -7,7 +7,6 @@ import {
     timeStringToSeconds,
 } from '@/helpers/common';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
-import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { TrackData } from '@/modules/tracks/types';
 import { ConfigProvider, Form, Input, TimePicker } from 'antd';
@@ -28,7 +27,6 @@ export default function AudioSpecSection({
 }: Props) {
     const messages = useTranslations();
     const form = Form.useFormInstance();
-    const { action } = useGetReleaseDetailRoute();
     const releaseAction = useReleaseActionStore((s) => s.action);
     const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
 

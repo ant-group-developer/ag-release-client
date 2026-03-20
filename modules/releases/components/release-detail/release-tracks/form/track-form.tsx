@@ -1,8 +1,8 @@
 import { LabelForm } from '@/components/ui/label/labelForm';
 import ErrorText from '@/components/ui/text/error-text';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
-import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
@@ -42,8 +42,8 @@ export default function TracksForm({ trackData, index }: Props) {
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const formValues = useReleaseFormStore((state) => state.formValues);
     const openModal = useModalStore((state) => state.openModal);
-    const { action } = useGetReleaseDetailRoute();
-    const isReadMode = action === RELEASE_DETAIL_ACTION.READ;
+    const releaseAction = useReleaseActionStore((s) => s.action);
+    const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
 
     const formMethods = useForm<TrackAndArtistSchema>({
         defaultValues: {
