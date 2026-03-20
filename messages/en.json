@@ -971,6 +971,7 @@
         "validation": {
             "previewMustBeLessThanDuration": "Preview duration must be less than track duration",
             "sampleLengthMustBeLessThanDuration": "Sample length must be less than track duration",
+            "sampleExceedsDuration": "Sum of Sample length & Hook can't be longer than audio length",
             "trackUpload": "{type} can upload a maximum of {maxCount} track",
             "trackFileName": "File name cannot over {number} characters"
         },
@@ -1898,5 +1899,13 @@
     "sftp": {
         "requiredSftpInfo": "Please enter all required SFTP information",
         "requiredPasswordOrPrivateKey": "Please enter password or private key"
+    },
+
+    "batchImport": {
+        "label": "Batch import"
+    },
+
+    "releaseLog": {
+        "label": "Release log"
     }
 }

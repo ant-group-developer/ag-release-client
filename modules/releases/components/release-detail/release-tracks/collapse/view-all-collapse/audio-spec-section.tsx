@@ -115,10 +115,32 @@ export default function AudioSpecSection({
                     ? timeStringToSeconds(durationRaw)
                     : durationRaw;
 
-            if (durationSeconds != null && previewSeconds >= durationSeconds) {
-                return Promise.reject(
-                    messages('track.validation.previewMustBeLessThanDuration')
-                );
+            if (durationSeconds != null) {
+                if (previewSeconds >= durationSeconds) {
+                    return Promise.reject(
+                        messages(
+                            'track.validation.previewMustBeLessThanDuration'
+                        )
+                    );
+                }
+
+                const sampleLengthValue = form.getFieldValue([
+                    'audioFile',
+                    'sampleLength',
+                ]);
+                const sampleLengthSeconds = dayjs.isDayjs(sampleLengthValue)
+                    ? timeStringToSeconds(
+                          sampleLengthValue.format(
+                              DATE_FORMAT.HOUR_MINUTE_SECOND
+                          )
+                      )
+                    : 0;
+
+                if (previewSeconds + sampleLengthSeconds > durationSeconds) {
+                    return Promise.reject(
+                        messages('track.validation.sampleExceedsDuration')
+                    );
+                }
             }
 
             return Promise.resolve();
@@ -148,15 +170,20 @@ export default function AudioSpecSection({
                   )
                 : 0;
 
-            if (
-                durationSeconds != null &&
-                sampleSeconds > durationSeconds - previewSeconds
-            ) {
-                return Promise.reject(
-                    messages(
-                        'track.validation.sampleLengthMustBeLessThanDuration'
-                    )
-                );
+            if (durationSeconds != null) {
+                if (sampleSeconds > durationSeconds) {
+                    return Promise.reject(
+                        messages(
+                            'track.validation.sampleLengthMustBeLessThanDuration'
+                        )
+                    );
+                }
+
+                if (sampleSeconds + previewSeconds > durationSeconds) {
+                    return Promise.reject(
+                        messages('track.validation.sampleExceedsDuration')
+                    );
+                }
             }
 
             return Promise.resolve();
@@ -214,7 +241,7 @@ export default function AudioSpecSection({
                         required
                         rules={[
                             {
-                                validator: validatePreview(messages, form),
+                                validator: validateSampleLength(messages, form),
                             },
                         ]}
                     >
@@ -235,7 +262,7 @@ export default function AudioSpecSection({
                         required
                         rules={[
                             {
-                                validator: validateSampleLength(messages, form),
+                                validator: validatePreview(messages, form),
                             },
                         ]}
                     >

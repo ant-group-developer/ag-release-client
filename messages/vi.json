@@ -973,6 +973,7 @@
         "validation": {
             "previewMustBeLessThanDuration": "Thời gian xem trước phải nhỏ hơn thời gian bài hát",
             "sampleLengthMustBeLessThanDuration": "Thời lượng đoạn mẫu phải nhỏ hơn thời gian bài hát",
+            "sampleExceedsDuration": "Tổng Độ dài mẫu & Hook không được dài hơn thời gian bài hát",
             "trackUpload": "{type} chỉ tải lên tối đa được {maxCount} bài",
             "trackFileName": "Tên File không được vượt quá {number} ký tự"
         },
@@ -1903,5 +1904,13 @@
     "sftp": {
         "requiredSftpInfo": "Vui lòng nhập đủ thông tin SFTP",
         "requiredPasswordOrPrivateKey": "Vui lòng nhập mật khẩu hoặc khoá riêng tư"
+    },
+
+    "batchImport": {
+        "label": "Nhập hàng loạt"
+    },
+
+    "releaseLog": {
+        "label": "Nhật ký phát hành"
     }
 }
