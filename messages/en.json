@@ -767,6 +767,9 @@
     },
 
     "release": {
+        "audioLanguage": "Audio language",
+        "metadataLanguageCountry": "Metadata language country",
+        "metadataLanguage": "Metadata language",
         "uploadTemplateSuccess": "Upload template successfully",
         "uploadTemplateError": "Upload template failed",
         "importTemplate": "Import template",
@@ -784,6 +787,7 @@
         "id": "Release ID",
         "type": "Release type",
         "releaseDate": "Release date",
+        "releaseOriginalDate": "Original Release Date",
         "releaseTime": "Release time",
         "duration": "Duration",
         "trackCount": "Track count",
@@ -893,6 +897,7 @@
     },
 
     "track": {
+        "parentalAdvisoryNotice": "Parental advisory notice",
         "list": "Track list",
         "number": "Track number",
         "add": "Add track",
@@ -1164,6 +1169,7 @@
     },
 
     "formFields": {
+        "releaseOriginalDate": "Original Release Date",
         "audioFile": {
             "preview": "Preview audio"
         },
@@ -1194,8 +1200,8 @@
         "artists": "Artists",
         "releaseDate": "Release date",
         "territoryType": "Territory type",
-        "cLineYear": "© Year",
-        "pLineYear": "℗ Year",
+        "cLineYear": "© Line Year",
+        "pLineYear": "℗ Line Year",
         "cLine": "Product copyright",
         "pLine": "Sound recording copyright",
         "nameRelease": "Release name",
@@ -1207,8 +1213,8 @@
         "metaDataLanguage": "Metadata language",
         "primaryGenreId": "Primary genre",
         "releaseArtists": "Release artist",
-        "pLineOwner": "℗ Copyright",
-        "cLineOwner": "© Copyright",
+        "pLineOwner": "℗ Line owner",
+        "cLineOwner": "© Line owner",
         "releaseTime": "Release time",
         "releaseTimezoneId": "Timezone",
         "releaseTerritory": {

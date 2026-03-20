@@ -10,7 +10,7 @@ export const useGetListTracksWithPolicies = (params: TrackDataFilter) => {
         queryKey: trackQueryKeys.listTracksPolicies(params),
         queryFn: () => trackApi.getTracksWithPolicies(params),
         placeholderData: (prev) => prev,
-        enabled: params.hasOwnProperty('releaseId') ? !!params.releaseId : true,
+        // enabled: params.hasOwnProperty('releaseId') ? !!params.releaseId : true,
     });
 
     const tracksData =

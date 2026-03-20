@@ -122,7 +122,7 @@ export const releasesApi = {
 
     createBucket: async (file: File, payload: CreateBucketFile) => {
         const response = await axiosInstance.post(
-            '/bucket/gcs/private/template',
+            '/bucket2/private/template',
             payload
         );
         if (response.status !== 201) {

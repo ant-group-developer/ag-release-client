@@ -767,6 +767,9 @@
     },
 
     "release": {
+        "audioLanguage": "Ngôn ngữ âm thanh",
+        "metadataLanguageCountry": "Ngôn ngữ metadata quốc gia",
+        "metadataLanguage": "Ngôn ngữ metadata",
         "importTemplate": "Tải lên mẫu",
         "uploadTemplateSuccess": "Tải lên mẫu thành công",
         "uploadTemplateError": "Tải lên mẫu thất bại",
@@ -784,6 +787,7 @@
         "id": "Mã phát hành",
         "type": "Loại phát hành",
         "releaseDate": "Ngày phát hành",
+        "releaseOriginalDate": "Ngày phát hành gốc",
         "releaseTime": "Thời gian phát hành",
         "duration": "Thời lượng",
         "trackCount": "Số bài hát",
@@ -895,6 +899,7 @@
     },
 
     "track": {
+        "parentalAdvisoryNotice": "Cảnh báo nội dung",
         "list": "Danh sách bài hát",
         "number": "Bài hát số",
         "add": "Thêm bài hát",
@@ -1168,6 +1173,7 @@
     },
 
     "formFields": {
+        "releaseOriginalDate": "Ngày phát hành gốc",
         "audioFile": {
             "preview": "Đoạn nghe trước"
         },

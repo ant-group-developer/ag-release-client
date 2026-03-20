@@ -26,6 +26,7 @@ interface PlaySongState extends CurrentSong {
     setReactPlayerRef: (ref: any) => void;
     reactPlayerRef: any;
     songTimeMap: Map<string, number>;
+    isSeeking: boolean;
 }
 
 const defaultValue = {
@@ -34,6 +35,7 @@ const defaultValue = {
     url: '',
     isPlaying: false,
     currentTimePlaying: 0,
+    isSeeking: false,
 };
 
 export const usePlaySongStore = create<PlaySongState>((set, get) => ({
@@ -41,6 +43,7 @@ export const usePlaySongStore = create<PlaySongState>((set, get) => ({
     reactPlayerRef: null,
     songTimeMap: new Map(),
     setReactPlayerRef: (ref) => set({ reactPlayerRef: ref }),
+
     onPlay: ({ url, songId }) => {
         const state = get();
         const savedTime = state.songTimeMap.get(songId) || 0;
@@ -53,6 +56,7 @@ export const usePlaySongStore = create<PlaySongState>((set, get) => ({
             currentTimePlaying: savedTime,
         }));
     },
+
     onStop: (close) => {
         const state = get();
         if (close) {
@@ -68,18 +72,23 @@ export const usePlaySongStore = create<PlaySongState>((set, get) => ({
             }));
         }
     },
-    onSeek: ({ second, url, songId }) => {
-        get().reactPlayerRef?.seekTo(second, 'seconds');
-        // Lưu thời gian mới khi seek
-        const state = get();
-        state.songTimeMap.set(songId, second);
 
+    onSeek: ({ second, url, songId }) => {
+        const state = get();
+        console.log('🚀 ~ const:', state);
+        state.songTimeMap.set(songId, second);
         set((state) => ({
             ...state,
             isPlaying: true,
+            isSeeking: true,
             url: url ?? state.url,
             songId: songId ?? state.songId,
             currentTimePlaying: second,
         }));
+        get().reactPlayerRef?.seekTo(second, 'seconds');
+        console.log(
+            "🚀 ~ get().reactPlayerRef?.seekTo(second, 'seconds'):",
+            get().reactPlayerRef?.seekTo(second, 'seconds')
+        );
     },
 }));

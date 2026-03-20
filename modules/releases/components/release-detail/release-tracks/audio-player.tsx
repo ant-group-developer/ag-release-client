@@ -2,17 +2,17 @@ import { usePlaySongStore } from '@/hooks/use-play-song-store';
 import { useEffect, useRef } from 'react';
 // import ReactPlayer from 'react-player';
 
-import dynamic from 'next/dynamic';
 import ReactPlayer from 'react-player';
 
-const ReactPlayerNoSSR = dynamic(() => import('react-player'), {
-    ssr: false,
-});
+// const ReactPlayerNoSSR = dynamic(() => import('react-player'), {
+//     ssr: false,
+// });
 
 export default function AudioPlayer() {
     const { url, isPlaying, setReactPlayerRef, songId, currentTimePlaying } =
         usePlaySongStore();
     const playerRef = useRef<ReactPlayer>(null);
+    console.log('🚀 ~ AudioPlayer ~ playerRef:', playerRef);
 
     // Bước 1: Cung cấp các phương thức điều khiển player cho store
     useEffect(() => {
@@ -83,7 +83,7 @@ export default function AudioPlayer() {
     };
 
     return (
-        <ReactPlayerNoSSR
+        <ReactPlayer
             ref={playerRef}
             url={url}
             playing={isPlaying}
@@ -93,7 +93,7 @@ export default function AudioPlayer() {
             onProgress={onProgress}
             onEnded={onEnded}
             onError={onError}
-            progressInterval={1000} // Cập nhật progress mỗi giây
+            progressInterval={500} // Cập nhật progress mỗi 500ms
             config={{
                 file: {
                     forceAudio: true,
