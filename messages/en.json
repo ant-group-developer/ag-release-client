@@ -64,6 +64,8 @@
         }
     },
     "common": {
+        "exportTemplate": "Export template",
+        "loading": "Loading",
         "incomplete": "Incomplete",
         "generate": "Generate",
         "privateKey": "Private key",
@@ -787,7 +789,7 @@
         "id": "Release ID",
         "type": "Release type",
         "releaseDate": "Release date",
-        "releaseOriginalDate": "Original Release Date",
+        "releaseOriginalDate": "Original release date",
         "releaseTime": "Release time",
         "duration": "Duration",
         "trackCount": "Track count",
@@ -971,6 +973,7 @@
         "validation": {
             "previewMustBeLessThanDuration": "Preview duration must be less than track duration",
             "sampleLengthMustBeLessThanDuration": "Sample length must be less than track duration",
+            "sampleExceedsDuration": "Sum of Sample length & Hook can't be longer than audio length",
             "trackUpload": "{type} can upload a maximum of {maxCount} track",
             "trackFileName": "File name cannot over {number} characters"
         },
@@ -1898,5 +1901,13 @@
     "sftp": {
         "requiredSftpInfo": "Please enter all required SFTP information",
         "requiredPasswordOrPrivateKey": "Please enter password or private key"
+    },
+
+    "batchImport": {
+        "label": "Batch import"
+    },
+
+    "releaseLog": {
+        "label": "Release log"
     }
 }

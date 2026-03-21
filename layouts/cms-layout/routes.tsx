@@ -34,6 +34,7 @@ import {
     MicVocal,
     Music,
     Newspaper,
+    ScrollText,
     Settings,
     Speaker,
     SquareActivity,
@@ -135,6 +136,14 @@ export const adminRoutes: RouteNode[] = [
                 label: 'analytics.label',
                 title: 'Analytics',
                 href: APP_ROUTES.ANALYTICS,
+                icon: ChartNoAxesCombined,
+            },
+            {
+                id: 'analytics2',
+                type: 'link',
+                label: 'Analytics 2',
+                title: 'Analytics 2',
+                href: APP_ROUTES.ANALYTICS2,
                 icon: ChartNoAxesCombined,
             },
             {
@@ -419,10 +428,19 @@ export const adminRoutes: RouteNode[] = [
             {
                 id: 'batch-import',
                 type: 'link',
-                label: 'Batch Import',
+                label: 'batchImport.label',
                 title: 'Batch Import',
                 href: APP_ROUTES.BATCH_IMPORT,
                 icon: ClipboardList,
+                required: SYS_ADMIN_REQ,
+            },
+            {
+                id: 'release-log',
+                type: 'link',
+                label: 'releaseLog.label',
+                title: 'Release Log',
+                href: APP_ROUTES.RELEASE_LOG,
+                icon: ScrollText,
                 required: SYS_ADMIN_REQ,
             },
             {

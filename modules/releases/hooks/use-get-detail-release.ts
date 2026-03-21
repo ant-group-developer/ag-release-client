@@ -82,6 +82,7 @@ export const useGetDetailRelease = (id: ReleasesData['id']) => {
         },
         releaseTimeMode: RELEASE_TIME_MODE.GLOBAL_MIDNIGHT,
         releaseOriginalDate: '',
+        logs: '',
     };
 
     return {

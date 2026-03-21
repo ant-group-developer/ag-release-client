@@ -147,4 +147,10 @@ export const releasesApi = {
 
         return fileId;
     },
+
+    exportTemplateCi: () => {
+        return axiosInstance.get('/releases/file-export-list-release-ci', {
+            responseType: 'blob',
+        });
+    },
 };

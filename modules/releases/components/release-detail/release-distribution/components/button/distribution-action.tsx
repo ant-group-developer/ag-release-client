@@ -31,7 +31,7 @@ export default function DistributionActionButton({
             label: (
                 <div className="flex items-center gap-2">
                     <Box size={SIZE_ICON_SMALL} />{' '}
-                    {messages('distribution.label')}
+                    {messages('distribute.label')}
                 </div>
             ),
         });

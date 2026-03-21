@@ -59,6 +59,7 @@ export interface ReleasesData extends CommonAttribute {
     totalDuration: number;
     tenant?: Pick<TenantData, 'id' | 'name'>;
     releaseTimeMode: RELEASE_TIME_MODE;
+    logs: string;
 }
 
 export interface ReleasesDataSimple
