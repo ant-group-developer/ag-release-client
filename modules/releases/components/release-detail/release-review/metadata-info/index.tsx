@@ -23,6 +23,7 @@ export default function MetadataInfo({}: Props) {
             case 'upc':
             case 'catalogId':
             case 'releaseDate':
+            case 'releaseOriginalDate':
             case 'releaseTime':
                 return value;
 
@@ -156,6 +157,10 @@ export default function MetadataInfo({}: Props) {
 
             <MetadataInfoItem label={messages('release.type')}>
                 {renderField('type', true)}
+            </MetadataInfoItem>
+
+            <MetadataInfoItem label={messages('release.releaseOriginalDate')}>
+                {renderField('releaseOriginalDate')}
             </MetadataInfoItem>
 
             <MetadataInfoItem label={`© ${messages('common.copyRight')}`}>

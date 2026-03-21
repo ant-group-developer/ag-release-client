@@ -17,13 +17,16 @@ import {
     RELEASES_COLUMNS_DISPLAY,
     TYPE_MODAL_RELEASE,
 } from '@/modules/releases/enums';
+import { useExportTemplateCi } from '@/modules/releases/hooks/export-template-ci';
 import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
 import { DeleteVariables } from '@/types/api';
+import { DownloadOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { theme } from 'antd';
+import { Button, Space, TableProps, theme } from 'antd';
 import { useTranslations } from 'next-intl';
+import { Key, useState } from 'react';
 
 type Props = {};
 
@@ -48,6 +51,7 @@ export default function Releases({}: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as ReleasesData);
     const { token } = theme.useToken();
+    const [selectedRows, setSelectedRows] = useState<Key[]>([]);
 
     // apis
     const {
@@ -57,6 +61,8 @@ export default function Releases({}: Props) {
         dataUpdatedAt,
     } = useGetListReleases(dataFilter);
     const { deleteRelease } = useDeleteRelease();
+    const { handleDownloadTemplate, isFetching: isExportTemplateCiLoading } =
+        useExportTemplateCi();
 
     // func
     const handleRefresh = () => {
@@ -81,6 +87,13 @@ export default function Releases({}: Props) {
             },
             false
         );
+    };
+
+    const rowSelection: TableProps<ReleasesData>['rowSelection'] = {
+        selectedRowKeys: selectedRows,
+        onChange: (selectedRowKeys: Key[]) => {
+            setSelectedRows(selectedRowKeys);
+        },
     };
 
     return (
@@ -111,6 +124,29 @@ export default function Releases({}: Props) {
                             reload: () => {
                                 handleRefresh();
                             },
+                        }}
+                        rowSelection={rowSelection}
+                        tableAlertRender={({
+                            selectedRowKeys,
+                            selectedRows,
+                            onCleanSelected,
+                        }) => {
+                            console.log(selectedRowKeys, selectedRows);
+                            return (
+                                <Space size={24}>
+                                    <Button
+                                        type="primary"
+                                        icon={<DownloadOutlined />}
+                                        onClick={() => {
+                                            handleDownloadTemplate();
+                                            onCleanSelected();
+                                        }}
+                                        loading={isExportTemplateCiLoading}
+                                    >
+                                        {messages('common.exportTemplate')}
+                                    </Button>
+                                </Space>
+                            );
                         }}
                     />
                 )}

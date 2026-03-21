@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "exportTemplate": "Export template",
         "loading": "Loading",
         "incomplete": "Incomplete",
         "generate": "Generate",
@@ -788,7 +789,7 @@
         "id": "Release ID",
         "type": "Release type",
         "releaseDate": "Release date",
-        "releaseOriginalDate": "Original Release Date",
+        "releaseOriginalDate": "Original release date",
         "releaseTime": "Release time",
         "duration": "Duration",
         "trackCount": "Track count",

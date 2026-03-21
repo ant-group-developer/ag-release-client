@@ -139,6 +139,14 @@ export const adminRoutes: RouteNode[] = [
                 icon: ChartNoAxesCombined,
             },
             {
+                id: 'analytics2',
+                type: 'link',
+                label: 'Analytics 2',
+                title: 'Analytics 2',
+                href: APP_ROUTES.ANALYTICS2,
+                icon: ChartNoAxesCombined,
+            },
+            {
                 id: 'analytics',
                 type: 'link',
                 label: 'analytics.label',

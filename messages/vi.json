@@ -65,6 +65,7 @@
     },
     "common": {
         "loading": "Đang tải",
+        "exportTemplate": "Xuất mẫu",
         "incomplete": "Chưa hoàn thành",
         "generate": "Tạo",
         "privateKey": "Khoá riêng tư",

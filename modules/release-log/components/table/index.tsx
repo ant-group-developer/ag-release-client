@@ -48,7 +48,6 @@ export default function ReleaseLogTable({
             key: 'iNo',
             width: 50,
             align: 'center',
-            fixed: 'left',
             render: (_, __, index) => {
                 return (
                     <div data-stop-row-click="true">
@@ -68,7 +67,6 @@ export default function ReleaseLogTable({
             ellipsis: true,
             align: 'left',
             width: 320,
-            fixed: 'left',
             render: (value, record) => {
                 return (
                     <ReleaseTitleColumn
@@ -145,16 +143,7 @@ export default function ReleaseLogTable({
                 return <ReleaseStatusTag status={record?.status} />;
             },
         },
-        {
-            title: messages('releaseLog.label'),
-            key: 'logs',
-            dataIndex: 'logs',
-            align: 'left',
-            width: 300,
-            render: (value, record) => {
-                return <p style={{ whiteSpace: 'pre-wrap' }}>{record?.logs}</p>;
-            },
-        },
+
         {
             title: messages('release.releaseDate'),
             key: 'releaseDate',
@@ -210,6 +199,18 @@ export default function ReleaseLogTable({
             {...props}
             pagination={false}
             columns={column}
+            expandable={{
+                columnWidth: 40,
+                expandRowByClick: true,
+                expandedRowRender: (record) => (
+                    <div style={{ padding: '8px 24px', background: '#fafafa' }}>
+                        <p className="m-0" style={{ whiteSpace: 'pre-wrap' }}>
+                            {record.logs || 'No logs found'}
+                        </p>
+                    </div>
+                ),
+                rowExpandable: (record) => true,
+            }}
             rowClassName={'group'}
             className={`rounded-t-lg ${props?.className}`}
             style={{

@@ -25,7 +25,7 @@ export const settingApis = {
 export async function getSettingPublicServer() {
     try {
         const API_BASE = (process.env.API_URL ?? '').replace(/\/+$/, '');
-        const url = `${API_BASE}/app-config/public`;
+        const url = `${API_BASE}/app-config/v2/public`;
 
         const res = await fetch(url, {
             method: 'GET',

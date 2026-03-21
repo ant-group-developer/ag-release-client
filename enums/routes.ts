@@ -45,6 +45,7 @@ export enum APP_ROUTES {
     CURRENCIES = '/currencies',
     PRICE_TIERS = '/price-tiers',
     ANALYTICS = '/analytics',
+    ANALYTICS2 = '/analytics2',
     ANALYTIC_DETAIL = '/analytics/*',
     ISSUE_LEVEL = '/issue-level',
     ISSUES = '/issues',
