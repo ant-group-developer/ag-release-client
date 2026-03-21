@@ -1,26 +1,26 @@
 export const METRICS_DATA = [
     {
-        title: 'TikTok videos',
+        title: 'Spotify videos',
         value: '8.66K',
         change: '+3.2%',
         isPositive: true,
-        icon: 'tiktok', // We can use an icon name or color here
+        icon: 'Spotify', // We can use an icon name or color here
         color: '#000000',
     },
     {
-        title: 'TikTok video views',
+        title: 'Spotify video views',
         value: '7.58M',
         change: '+11.20%',
         isPositive: true,
-        icon: 'tiktok',
+        icon: 'Spotify',
         color: '#000000',
     },
     {
-        title: 'TikTok likes',
+        title: 'Spotify likes',
         value: '353.34K',
         change: '-3.2%',
         isPositive: false,
-        icon: 'tiktok',
+        icon: 'Spotify',
         color: '#000000',
     },
     {

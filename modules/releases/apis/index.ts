@@ -9,6 +9,7 @@ import {
 } from '../types';
 import {
     CreateReleaseDraftPayload,
+    ExportTemplateCi,
     UpdateReleaseDraftPayload,
 } from '../types/payload';
 
@@ -148,9 +149,16 @@ export const releasesApi = {
         return fileId;
     },
 
-    exportTemplateCi: () => {
-        return axiosInstance.get('/releases/file-export-list-release-ci', {
-            responseType: 'blob',
-        });
+    exportTemplateCi: ({ ids, dspCodeCi }: ExportTemplateCi) => {
+        return axiosInstance.post(
+            '/releases/file-export-release-ci',
+            {
+                ids,
+                dspCodeCi,
+            },
+            {
+                responseType: 'blob',
+            }
+        );
     },
 };

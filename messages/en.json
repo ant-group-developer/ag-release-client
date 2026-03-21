@@ -769,6 +769,7 @@
     },
 
     "release": {
+        "exportCiTemplate": "Export CI template",
         "audioLanguage": "Audio language",
         "metadataLanguageCountry": "Metadata language country",
         "metadataLanguage": "Metadata language",
@@ -1307,6 +1308,7 @@
     "dsp": {
         "label": "DSP",
         "name": "Platform name",
+        "codeCi": "CI Code",
         "add": "Add platform",
         "oneLinkPerLine": "One link per line",
         "profileList": "Profile list",

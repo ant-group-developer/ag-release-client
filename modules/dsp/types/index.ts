@@ -13,6 +13,7 @@ export interface DspData extends CommonAttribute {
     formatLinks: string[];
     dspActions: DspActionData[];
     code: string;
+    codeCi?: string;
     ddexId?: string;
     ddexName?: string;
 }
