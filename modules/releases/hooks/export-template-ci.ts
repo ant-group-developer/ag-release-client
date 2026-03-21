@@ -1,20 +1,28 @@
 import { exportFileExcel } from '@/helpers/common';
-import { useQuery } from '@tanstack/react-query';
+import { toastPromise } from '@/helpers/messages-helper';
+import { useMutation } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import { releasesApi } from '../apis';
+import { ExportTemplateCi } from '../types/payload';
 
 export const useExportTemplateCi = () => {
-    const { data, ...rest } = useQuery({
-        queryKey: ['export-template-ci'],
-        queryFn: () => releasesApi.exportTemplateCi(),
+    const messages = useTranslations();
+    const mutation = useMutation({
+        mutationFn: (variables: ExportTemplateCi) =>
+            releasesApi.exportTemplateCi(variables),
+        onSuccess: (data) => {
+            const blob = new Blob([data?.data], {
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            });
+            return exportFileExcel(blob, 'CI-export.xlsx');
+        },
     });
 
-    const handleDownloadTemplate = () => {
-        if (!data?.data) return;
-        const blob = new Blob([data?.data], {
-            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    const exportTemplateCi = (variables: ExportTemplateCi) => {
+        return toastPromise(mutation.mutateAsync(variables), messages, {
+            success: messages('common.success'),
         });
-        return exportFileExcel(blob, 'CI-export.xlsx');
     };
 
-    return { data, ...rest, handleDownloadTemplate };
+    return { ...mutation, exportTemplateCi };
 };

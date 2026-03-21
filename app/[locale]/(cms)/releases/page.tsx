@@ -9,6 +9,8 @@ import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import { LoadingType, useLoading } from '@/hooks/use-loading';
 import useModalStore from '@/hooks/use-modal';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
+import ExportTemplateModal from '@/modules/releases/components/export-template-modal';
 import ReleasesHeaderV2 from '@/modules/releases/components/header';
 import ReleasesTable from '@/modules/releases/components/table';
 import ReleasesGridTable from '@/modules/releases/components/table/grid-table';
@@ -47,11 +49,13 @@ export default function Releases({}: Props) {
     const { layoutTable } = useTableLayoutToggle();
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
+    const openModal = useModalStore((state) => state.openModal);
     const isLoading = useLoading(LoadingType.Fetching);
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as ReleasesData);
     const { token } = theme.useToken();
     const [selectedRows, setSelectedRows] = useState<Key[]>([]);
+    const { isAdmin } = useAuth();
 
     // apis
     const {
@@ -61,7 +65,7 @@ export default function Releases({}: Props) {
         dataUpdatedAt,
     } = useGetListReleases(dataFilter);
     const { deleteRelease } = useDeleteRelease();
-    const { handleDownloadTemplate, isFetching: isExportTemplateCiLoading } =
+    const { exportTemplateCi, isPending: isExportTemplateCiLoading } =
         useExportTemplateCi();
 
     // func
@@ -94,6 +98,9 @@ export default function Releases({}: Props) {
         onChange: (selectedRowKeys: Key[]) => {
             setSelectedRows(selectedRowKeys);
         },
+        getCheckboxProps: (record: ReleasesData) => ({
+            disabled: !isAdmin,
+        }),
     };
 
     return (
@@ -131,19 +138,20 @@ export default function Releases({}: Props) {
                             selectedRows,
                             onCleanSelected,
                         }) => {
-                            console.log(selectedRowKeys, selectedRows);
                             return (
                                 <Space size={24}>
                                     <Button
                                         type="primary"
                                         icon={<DownloadOutlined />}
-                                        onClick={() => {
-                                            handleDownloadTemplate();
-                                            onCleanSelected();
-                                        }}
+                                        onClick={() =>
+                                            openModal(
+                                                TYPE_MODAL_RELEASE.EXPORT_TEMPLATE,
+                                                selectedRowKeys
+                                            )
+                                        }
                                         loading={isExportTemplateCiLoading}
                                     >
-                                        {messages('common.exportTemplate')}
+                                        {messages('release.exportCiTemplate')}
                                     </Button>
                                 </Space>
                             );
@@ -182,6 +190,10 @@ export default function Releases({}: Props) {
                             value: dataEdit?.title,
                         })}
                     />
+                )}
+
+                {typeModal === TYPE_MODAL_RELEASE.EXPORT_TEMPLATE && (
+                    <ExportTemplateModal />
                 )}
             </PageContainer>
         </AppPageWrapper>

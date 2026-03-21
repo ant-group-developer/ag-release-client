@@ -101,6 +101,21 @@ export const DspTable = ({ ...props }: Props) => {
             ),
         },
         {
+            title: messages('dsp.codeCi'),
+            key: 'codeCi',
+            dataIndex: 'codeCi',
+            align: 'left',
+            width: 150,
+            render: (value, record) => (
+                <CopyText
+                    tooltipProps={{ placement: 'right' }}
+                    text={record?.codeCi}
+                >
+                    <p className="truncate text-nowrap">{record?.codeCi}</p>
+                </CopyText>
+            ),
+        },
+        {
             title: messages('dsp.ddexPartyId'),
             key: 'ddexId',
             dataIndex: 'ddexId',

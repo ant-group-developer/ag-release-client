@@ -769,6 +769,7 @@
     },
 
     "release": {
+        "exportCiTemplate": "Xuất mẫu CI",
         "audioLanguage": "Ngôn ngữ âm thanh",
         "metadataLanguageCountry": "Ngôn ngữ metadata quốc gia",
         "metadataLanguage": "Ngôn ngữ metadata",
@@ -1311,6 +1312,7 @@
     "dsp": {
         "label": "DSP",
         "name": "Tên nền tảng",
+        "codeCi": "Mã CI",
         "add": "Thêm nền tảng",
         "oneLinkPerLine": "Mỗi link một dòng",
         "profileList": "Danh sách hồ sơ",
