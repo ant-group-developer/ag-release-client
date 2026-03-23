@@ -17,4 +17,7 @@ export interface ReleaseLogData extends CommonAttribute {
 export interface ReleaseLogFilter extends CommonParams {
     releaseId?: string;
     status?: string;
+    startCreatedAt?: string;
+    endCreatedAt?: string;
+    dspIds?: string;
 }
