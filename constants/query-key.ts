@@ -379,4 +379,9 @@ export const QUERY_KEY = {
         GET_DETAIL_PREFIX_UPC: 'GET_DETAIL_PREFIX_UPC',
         GET_LIST_PREFIX_UPC: 'GET_LIST_PREFIX_UPC',
     },
+
+    RELEASE_LOG: {
+        KEY: 'RELEASE_LOG',
+        GET_LIST: 'GET_LIST_RELEASE_LOG',
+    },
 };

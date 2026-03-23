@@ -1,27 +1,19 @@
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
-import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import { OnChangeFilter } from '@/hooks/use-filter';
-import useModalStore from '@/hooks/use-modal';
-import { usePermission } from '@/hooks/use-permission';
-import { useRouter } from '@/i18n/routing';
-import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { ProColumns } from '@ant-design/pro-components';
-import { Tag, theme } from 'antd';
-import Paragraph from 'antd/es/typography/Paragraph';
+import { Avatar, Select, Space, Tag, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 
 import AppSearch from '@/components/ui/input/search';
-import ReleaseTitleColumn from '@/modules/releases/components/table/title-column';
-import ReleaseStatusTag from '@/modules/releases/components/tag/release-status-tag';
-import { useTestUploadCi } from '@/modules/releases/hooks/use-test-upload-ci';
-import { useTestUploadSpotify } from '@/modules/releases/hooks/use-test-upload-spotify';
-import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
+import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
+import { RELEASE_LOG_STATUS } from '../../enums';
+import { ReleaseLogData, ReleaseLogFilter } from '../../types';
 
-type Props = Omit<AppProTableProps<ReleasesData>, 'columns'> & {
-    dataFilter: ReleasesDataFilter;
-    onChangeFilter: OnChangeFilter<ReleasesDataFilter>;
+type Props = Omit<AppProTableProps<ReleaseLogData>, 'columns'> & {
+    dataFilter: ReleaseLogFilter;
+    onChangeFilter: OnChangeFilter<ReleaseLogFilter>;
     pagination: {
         pageSize: number;
         current: number;
@@ -34,15 +26,15 @@ export default function ReleaseLogTable({
     ...props
 }: Props) {
     const messages = useTranslations();
-    const router = useRouter();
-    const openModal = useModalStore((state) => state.openModal);
-    const { token } = theme.useToken();
-    const { isSystemTenant } = useAuth();
-    const { hasPermission } = usePermission();
-    const { testUploadSpotify } = useTestUploadSpotify();
-    const { testUploadCi } = useTestUploadCi();
 
-    const column: ProColumns<ReleasesData>[] = [
+    const { token } = theme.useToken();
+
+    const releaseStatus = Object.values(RELEASE_LOG_STATUS).map((item) => ({
+        label: <span className="capitalize">{item.toLowerCase()}</span>,
+        value: item,
+    }));
+
+    const column: ProColumns<ReleaseLogData>[] = [
         {
             title: messages('common.iNo'),
             key: 'iNo',
@@ -66,73 +58,35 @@ export default function ReleaseLogTable({
             dataIndex: 'title',
             ellipsis: true,
             align: 'left',
-            width: 320,
+            width: 200,
             render: (value, record) => {
                 return (
-                    <ReleaseTitleColumn
-                        record={record}
-                        onChangeFilter={onChangeFilter}
-                    />
+                    <div className="flex items-center gap-2">
+                        <div className="h-10 min-w-10">
+                            <ReleaseCoverImage data={record?.release} />
+                        </div>
+                        <span>{record?.release?.title}</span>
+                    </div>
                 );
             },
         },
         {
-            title: 'Label',
-            key: 'publisher',
-            dataIndex: 'publisher',
-            align: 'left',
-            width: 80,
-            ellipsis: true,
-            render: (value, record) => (
-                <CustomTooltip
-                    title={messages('filter.filterByValue', {
-                        value: record?.label?.name,
-                    })}
-                >
-                    <span
-                        data-stop-row-click="true"
-                        onClick={() =>
-                            onChangeFilter({
-                                labelId: record?.labelId,
-                            })
-                        }
-                        className="cursor-pointer truncate hover:underline"
-                    >
-                        {record?.label?.name}
-                    </span>
-                </CustomTooltip>
-            ),
-        },
-        {
-            title: messages('release.type'),
-            key: 'type',
-            dataIndex: 'type',
-            align: 'left',
-            width: 100,
-            render: (_, record) => {
-                return (
-                    <Tag className="cursor-pointer truncate">
-                        {record?.albumFormat?.name}
-                    </Tag>
-                );
-            },
-        },
-        {
-            title: 'UPC',
-            key: 'upc',
-            dataIndex: 'UPC',
+            title: messages('dsp.label'),
+            key: 'dsp',
+            dataIndex: 'dsp',
             align: 'left',
             width: 120,
-            render: (value, record) => (
-                <Paragraph
-                    data-stop-row-click="true"
-                    className="!mb-0"
-                    copyable={!!record?.upc}
-                >
-                    {record?.upc}
-                </Paragraph>
-            ),
+            render: (value, record) => {
+                if (!record?.dsp) return '-';
+                return (
+                    <div className="flex items-center gap-2">
+                        <Avatar size={'small'} src={record?.dsp?.picture} />
+                        <span>{record?.dsp?.name}</span>
+                    </div>
+                );
+            },
         },
+
         {
             title: messages('common.status'),
             key: 'status',
@@ -140,46 +94,49 @@ export default function ReleaseLogTable({
             align: 'left',
             width: 120,
             render: (value, record) => {
-                return <ReleaseStatusTag status={record?.status} />;
+                const color =
+                    record?.status === RELEASE_LOG_STATUS.FAILED
+                        ? 'error'
+                        : record?.status === RELEASE_LOG_STATUS.SUCCESS
+                          ? 'success'
+                          : 'processing';
+                return (
+                    <Tag className="capitalize" color={color}>
+                        {record?.status?.toLowerCase()}
+                    </Tag>
+                );
             },
         },
-
         {
-            title: messages('release.releaseDate'),
-            key: 'releaseDate',
-            dataIndex: 'releaseDate',
+            title: messages('releaseLog.label'),
+            key: 'releaseLog',
+            dataIndex: 'releaseLog',
             align: 'left',
-            width: 130,
-            render: (value, record) => (
-                <span className="truncate text-wrap">
-                    {' '}
-                    {formattedDate(
-                        record?.releaseDate,
-                        DATE_FORMAT.DATE_MINUTE
-                    )}{' '}
-                </span>
-            ),
+            width: 300,
+            render: (value, record) => {
+                if (!record?.logs) return '-';
+                return (
+                    <span className="truncate whitespace-pre-wrap text-wrap">
+                        {record?.logs}
+                    </span>
+                );
+            },
         },
-
         {
-            title: messages('common.updatedAt'),
-            key: 'updatedAt',
-            dataIndex: 'updatedAt',
+            title: messages('common.createdAt'),
+            key: 'log.createdAt',
+            dataIndex: 'log.createdAt',
             align: 'left',
             width: 130,
             sorter: true,
             defaultSortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'updatedAt'
+                'log.createdAt'
             ),
             render: (value, record) => (
                 <span className="truncate text-wrap">
-                    {' '}
-                    {formattedDate(
-                        record?.updatedAt,
-                        DATE_FORMAT.DATE_MINUTE
-                    )}{' '}
+                    {formattedDate(record?.createdAt, DATE_FORMAT.DATE_MINUTE)}
                 </span>
             ),
         },
@@ -188,29 +145,41 @@ export default function ReleaseLogTable({
     return (
         <AppProTable
             headerTitle={
-                <AppSearch
-                    placeholder={messages('common.search')}
-                    onSearch={(value) => onChangeFilter({ keyword: value })}
-                    defaultValue={dataFilter.keyword}
-                    allowClear
-                    style={{ width: 250 }}
-                />
+                <Space>
+                    <AppSearch
+                        placeholder={messages('common.search')}
+                        onSearch={(value) => onChangeFilter({ keyword: value })}
+                        defaultValue={dataFilter.keyword}
+                        allowClear
+                        style={{ width: 250 }}
+                    />
+                    <Select
+                        options={releaseStatus}
+                        placeholder={messages('placeholder.filterBy', {
+                            value: messages('common.status').toLowerCase(),
+                        })}
+                        onChange={(value) => onChangeFilter({ status: value })}
+                        defaultValue={dataFilter?.status}
+                        allowClear
+                        style={{ minWidth: 150 }}
+                    />
+                </Space>
             }
             {...props}
             pagination={false}
             columns={column}
-            expandable={{
-                columnWidth: 40,
-                expandRowByClick: true,
-                expandedRowRender: (record) => (
-                    <div style={{ padding: '8px 24px', background: '#fafafa' }}>
-                        <p className="m-0" style={{ whiteSpace: 'pre-wrap' }}>
-                            {record.logs || 'No logs found'}
-                        </p>
-                    </div>
-                ),
-                rowExpandable: (record) => true,
-            }}
+            // expandable={{
+            //     columnWidth: 40,
+            //     expandRowByClick: true,
+            //     expandedRowRender: (record) => (
+            //         <div style={{ padding: '8px 24px', background: '#fafafa' }}>
+            //             <p className="m-0" style={{ whiteSpace: 'pre-wrap' }}>
+            //                 {record.logs || 'No logs found'}
+            //             </p>
+            //         </div>
+            //     ),
+            //     rowExpandable: (record) => !!record.logs,
+            // }}
             rowClassName={'group'}
             className={`rounded-t-lg ${props?.className}`}
             style={{
