@@ -6,6 +6,7 @@ import { CommonParams } from '@/types/api';
 export interface ReleaseDspData {
     dsp: DspData;
     status: RELEASES_STATUS;
+    isSelected: boolean;
     lastEnqueuedAt: string | null;
     lastDeliveredAt: string | null;
 }

@@ -24,7 +24,7 @@ import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store
 import { useQueryClient } from '@tanstack/react-query';
 import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 type Props = {};
 
 export default function Distribution({}: Props) {
@@ -75,6 +75,13 @@ export default function Distribution({}: Props) {
         isFetching: isLoadingReleaseDsp,
         refetch: refetchReleaseDsp,
     } = useGetListReleaseDsp(formValues?.id ?? '', dataFilter);
+
+    useEffect(() => {
+        setSelectedRow(
+            releaseDsp?.items?.filter((item) => item.isSelected) ?? []
+        );
+    }, [releaseDsp, setSelectedRow]);
+
     const { distributeRelease } = useDistributeRelease();
 
     const { token } = theme.useToken();

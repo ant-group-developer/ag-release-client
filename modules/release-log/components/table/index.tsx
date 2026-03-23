@@ -1,27 +1,22 @@
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
-import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import { OnChangeFilter } from '@/hooks/use-filter';
-import useModalStore from '@/hooks/use-modal';
-import { usePermission } from '@/hooks/use-permission';
-import { useRouter } from '@/i18n/routing';
-import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { ProColumns } from '@ant-design/pro-components';
-import { Tag, theme } from 'antd';
-import Paragraph from 'antd/es/typography/Paragraph';
+import { Avatar, Card, Select, Space, Tag, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 
 import AppSearch from '@/components/ui/input/search';
-import ReleaseTitleColumn from '@/modules/releases/components/table/title-column';
+import JsonViewer from '@/components/ui/json-viewer';
+import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import ReleaseStatusTag from '@/modules/releases/components/tag/release-status-tag';
-import { useTestUploadCi } from '@/modules/releases/hooks/use-test-upload-ci';
-import { useTestUploadSpotify } from '@/modules/releases/hooks/use-test-upload-spotify';
-import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
+import { CaretDownOutlined, CaretRightOutlined } from '@ant-design/icons';
+import { RELEASE_LOG_STATUS } from '../../enums';
+import { ReleaseLogData, ReleaseLogFilter } from '../../types';
 
-type Props = Omit<AppProTableProps<ReleasesData>, 'columns'> & {
-    dataFilter: ReleasesDataFilter;
-    onChangeFilter: OnChangeFilter<ReleasesDataFilter>;
+type Props = Omit<AppProTableProps<ReleaseLogData>, 'columns'> & {
+    dataFilter: ReleaseLogFilter;
+    onChangeFilter: OnChangeFilter<ReleaseLogFilter>;
     pagination: {
         pageSize: number;
         current: number;
@@ -34,15 +29,15 @@ export default function ReleaseLogTable({
     ...props
 }: Props) {
     const messages = useTranslations();
-    const router = useRouter();
-    const openModal = useModalStore((state) => state.openModal);
-    const { token } = theme.useToken();
-    const { isSystemTenant } = useAuth();
-    const { hasPermission } = usePermission();
-    const { testUploadSpotify } = useTestUploadSpotify();
-    const { testUploadCi } = useTestUploadCi();
 
-    const column: ProColumns<ReleasesData>[] = [
+    const { token } = theme.useToken();
+
+    const releaseStatus = Object.values(RELEASE_LOG_STATUS).map((item) => ({
+        label: <span className="capitalize">{item.toLowerCase()}</span>,
+        value: item,
+    }));
+
+    const column: ProColumns<ReleaseLogData>[] = [
         {
             title: messages('common.iNo'),
             key: 'iNo',
@@ -66,120 +61,106 @@ export default function ReleaseLogTable({
             dataIndex: 'title',
             ellipsis: true,
             align: 'left',
-            width: 320,
+            width: 200,
             render: (value, record) => {
                 return (
-                    <ReleaseTitleColumn
-                        record={record}
-                        onChangeFilter={onChangeFilter}
-                    />
+                    <div className="flex items-center gap-2">
+                        <div className="h-10 min-w-10">
+                            <ReleaseCoverImage data={record?.release} />
+                        </div>
+                        <span>{record?.release?.title}</span>
+                    </div>
                 );
             },
         },
         {
-            title: 'Label',
-            key: 'publisher',
-            dataIndex: 'publisher',
-            align: 'left',
-            width: 80,
-            ellipsis: true,
-            render: (value, record) => (
-                <CustomTooltip
-                    title={messages('filter.filterByValue', {
-                        value: record?.label?.name,
-                    })}
-                >
-                    <span
-                        data-stop-row-click="true"
-                        onClick={() =>
-                            onChangeFilter({
-                                labelId: record?.labelId,
-                            })
-                        }
-                        className="cursor-pointer truncate hover:underline"
-                    >
-                        {record?.label?.name}
-                    </span>
-                </CustomTooltip>
-            ),
-        },
-        {
-            title: messages('release.type'),
-            key: 'type',
-            dataIndex: 'type',
-            align: 'left',
-            width: 100,
-            render: (_, record) => {
-                return (
-                    <Tag className="cursor-pointer truncate">
-                        {record?.albumFormat?.name}
-                    </Tag>
-                );
-            },
-        },
-        {
-            title: 'UPC',
-            key: 'upc',
-            dataIndex: 'UPC',
+            title: messages('dsp.label'),
+            key: 'dsp',
+            dataIndex: 'dsp',
             align: 'left',
             width: 120,
-            render: (value, record) => (
-                <Paragraph
-                    data-stop-row-click="true"
-                    className="!mb-0"
-                    copyable={!!record?.upc}
-                >
-                    {record?.upc}
-                </Paragraph>
-            ),
+            render: (value, record) => {
+                if (!record?.dsp) return '-';
+                return (
+                    <div className="flex items-center gap-2">
+                        <Avatar size={'small'} src={record?.dsp?.picture} />
+                        <span>{record?.dsp?.name}</span>
+                    </div>
+                );
+            },
         },
         {
-            title: messages('common.status'),
+            title: messages('releaseLog.statusRelease'),
+            key: 'releaseStatus',
+            dataIndex: 'releaseStatus',
+            align: 'left',
+            width: 120,
+            render: (value, record) => {
+                return <ReleaseStatusTag status={record?.release?.status} />;
+            },
+        },
+        {
+            title: messages('releaseLog.statusLog'),
             key: 'status',
             dataIndex: 'status',
             align: 'left',
             width: 120,
             render: (value, record) => {
-                return <ReleaseStatusTag status={record?.status} />;
+                const color =
+                    record?.status === RELEASE_LOG_STATUS.FAILED
+                        ? 'error'
+                        : record?.status === RELEASE_LOG_STATUS.SUCCESS
+                          ? 'success'
+                          : 'processing';
+                return (
+                    <Tag className="capitalize" color={color}>
+                        {record?.status?.toLowerCase()}
+                    </Tag>
+                );
             },
         },
-
         {
-            title: messages('release.releaseDate'),
-            key: 'releaseDate',
-            dataIndex: 'releaseDate',
+            title: messages('common.step'),
+            key: 'step',
+            dataIndex: 'step',
             align: 'left',
-            width: 130,
-            render: (value, record) => (
-                <span className="truncate text-wrap">
-                    {' '}
-                    {formattedDate(
-                        record?.releaseDate,
-                        DATE_FORMAT.DATE_MINUTE
-                    )}{' '}
-                </span>
-            ),
+            width: 150,
+            render: (value, record) => {
+                return <span>{record?.step}</span>;
+            },
         },
-
         {
-            title: messages('common.updatedAt'),
-            key: 'updatedAt',
-            dataIndex: 'updatedAt',
+            title: messages('releaseLog.label'),
+            key: 'releaseLog',
+            dataIndex: 'releaseLog',
+            align: 'left',
+            width: 300,
+            render: (value, record) => {
+                if (!record?.logs) return '-';
+                return (
+                    <span className="truncate whitespace-pre-wrap text-wrap">
+                        {typeof record.logs === 'string'
+                            ? record.logs
+                            : JSON.stringify(record.logs)}
+                    </span>
+                );
+            },
+        },
+        {
+            title: messages('common.createdAt'),
+            key: 'log.createdAt',
+            dataIndex: 'log.createdAt',
             align: 'left',
             width: 130,
             sorter: true,
             defaultSortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'updatedAt'
+                'log.createdAt'
             ),
             render: (value, record) => (
                 <span className="truncate text-wrap">
-                    {' '}
-                    {formattedDate(
-                        record?.updatedAt,
-                        DATE_FORMAT.DATE_MINUTE
-                    )}{' '}
+                    {formattedDate(record?.createdAt, DATE_FORMAT.DATE_MINUTE)}
                 </span>
             ),
         },
@@ -188,30 +169,103 @@ export default function ReleaseLogTable({
     return (
         <AppProTable
             headerTitle={
-                <AppSearch
-                    placeholder={messages('common.search')}
-                    onSearch={(value) => onChangeFilter({ keyword: value })}
-                    defaultValue={dataFilter.keyword}
-                    allowClear
-                    style={{ width: 250 }}
-                />
+                <Space>
+                    <AppSearch
+                        placeholder={messages('common.search')}
+                        onSearch={(value) => onChangeFilter({ keyword: value })}
+                        defaultValue={dataFilter.keyword}
+                        allowClear
+                        style={{ width: 250 }}
+                    />
+                    <Select
+                        options={releaseStatus}
+                        placeholder={messages('placeholder.filterBy', {
+                            value: messages(
+                                'releaseLog.statusLog'
+                            ).toLowerCase(),
+                        })}
+                        onChange={(value) => onChangeFilter({ status: value })}
+                        defaultValue={dataFilter?.status}
+                        allowClear
+                        style={{ minWidth: 150 }}
+                    />
+                </Space>
             }
             {...props}
             pagination={false}
             columns={column}
             expandable={{
-                columnWidth: 40,
+                columnWidth: 20,
                 expandRowByClick: true,
-                expandedRowRender: (record) => (
-                    <div style={{ padding: '8px 24px', background: '#fafafa' }}>
-                        <p className="m-0" style={{ whiteSpace: 'pre-wrap' }}>
-                            {record.logs || 'No logs found'}
-                        </p>
-                    </div>
-                ),
-                rowExpandable: (record) => true,
+                expandIcon: ({ expanded, onExpand, record }) =>
+                    record.content ? (
+                        <div
+                            onClick={(e) => {
+                                onExpand(record, e);
+                                e.stopPropagation();
+                            }}
+                            className="flex cursor-pointer items-center justify-center p-1 text-slate-400 hover:text-slate-600"
+                        >
+                            {expanded ? (
+                                <CaretDownOutlined className="text-[12px]" />
+                            ) : (
+                                <CaretRightOutlined className="text-[12px]" />
+                            )}
+                        </div>
+                    ) : null,
+                expandedRowRender: (record) => {
+                    let jsonContent = null;
+                    if (
+                        typeof record.content === 'object' &&
+                        record.content !== null
+                    ) {
+                        jsonContent = record.content;
+                    } else if (typeof record.content === 'string') {
+                        try {
+                            jsonContent = JSON.parse(record.content);
+                        } catch (e) {
+                            // Not a JSON string
+                        }
+                    }
+
+                    return (
+                        <div
+                            style={{
+                                padding: '8px 24px',
+                                background: '#fafafa',
+                            }}
+                        >
+                            {jsonContent ? (
+                                <Card
+                                    size="small"
+                                    styles={{
+                                        body: {
+                                            maxHeight: 500,
+                                            overflow: 'auto',
+                                        },
+                                    }}
+                                >
+                                    <JsonViewer
+                                        src={jsonContent}
+                                        style={{ maxHeight: 'unset' }}
+                                    />
+                                </Card>
+                            ) : (
+                                <p
+                                    className="m-0"
+                                    style={{ whiteSpace: 'pre-wrap' }}
+                                >
+                                    {typeof record.content === 'string'
+                                        ? record.content
+                                        : JSON.stringify(record.content)}
+                                </p>
+                            )}
+                        </div>
+                    );
+                },
+                rowExpandable: (record) => !!record.content,
             }}
-            rowClassName={'group'}
+            rowClassName={'group hover:cursor-pointer'}
             className={`rounded-t-lg ${props?.className}`}
             style={{
                 backgroundColor: token.colorBgContainer,
