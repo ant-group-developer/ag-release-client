@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl';
 
 import AppSearch from '@/components/ui/input/search';
 import JsonViewer from '@/components/ui/json-viewer';
+import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import ReleaseStatusTag from '@/modules/releases/components/tag/release-status-tag';
 import { CaretDownOutlined, CaretRightOutlined } from '@ant-design/icons';
 import { RELEASE_LOG_STATUS } from '../../enums';
@@ -64,9 +65,9 @@ export default function ReleaseLogTable({
             render: (value, record) => {
                 return (
                     <div className="flex items-center gap-2">
-                        {/* <div className="h-10 min-w-10">
+                        <div className="h-10 min-w-10">
                             <ReleaseCoverImage data={record?.release} />
-                        </div> */}
+                        </div>
                         <span>{record?.release?.title}</span>
                     </div>
                 );
@@ -179,7 +180,9 @@ export default function ReleaseLogTable({
                     <Select
                         options={releaseStatus}
                         placeholder={messages('placeholder.filterBy', {
-                            value: messages('common.status').toLowerCase(),
+                            value: messages(
+                                'releaseLog.statusLog'
+                            ).toLowerCase(),
                         })}
                         onChange={(value) => onChangeFilter({ status: value })}
                         defaultValue={dataFilter?.status}
