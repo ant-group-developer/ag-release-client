@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "step": "Step",
         "exportTemplate": "Export template",
         "loading": "Loading",
         "incomplete": "Incomplete",
@@ -1910,6 +1911,8 @@
     },
 
     "releaseLog": {
-        "label": "Release log"
+        "label": "Release logs",
+        "statusRelease": "Release status",
+        "statusLog": "Log status"
     }
 }

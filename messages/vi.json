@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "step": "Bước",
         "loading": "Đang tải",
         "exportTemplate": "Xuất mẫu",
         "incomplete": "Chưa hoàn thành",
@@ -1915,6 +1916,8 @@
     },
 
     "releaseLog": {
-        "label": "Nhật ký phát hành"
+        "label": "Nhật ký phát hành",
+        "statusRelease": "Trạng thái phát hành",
+        "statusLog": "Trạng thái nhật ký"
     }
 }

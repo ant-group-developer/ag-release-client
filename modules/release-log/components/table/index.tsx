@@ -3,11 +3,13 @@ import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import { OnChangeFilter } from '@/hooks/use-filter';
 import { ProColumns } from '@ant-design/pro-components';
-import { Avatar, Select, Space, Tag, theme } from 'antd';
+import { Avatar, Card, Select, Space, Tag, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 
 import AppSearch from '@/components/ui/input/search';
-import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
+import JsonViewer from '@/components/ui/json-viewer';
+import ReleaseStatusTag from '@/modules/releases/components/tag/release-status-tag';
+import { CaretDownOutlined, CaretRightOutlined } from '@ant-design/icons';
 import { RELEASE_LOG_STATUS } from '../../enums';
 import { ReleaseLogData, ReleaseLogFilter } from '../../types';
 
@@ -62,9 +64,9 @@ export default function ReleaseLogTable({
             render: (value, record) => {
                 return (
                     <div className="flex items-center gap-2">
-                        <div className="h-10 min-w-10">
+                        {/* <div className="h-10 min-w-10">
                             <ReleaseCoverImage data={record?.release} />
-                        </div>
+                        </div> */}
                         <span>{record?.release?.title}</span>
                     </div>
                 );
@@ -86,9 +88,18 @@ export default function ReleaseLogTable({
                 );
             },
         },
-
         {
-            title: messages('common.status'),
+            title: messages('releaseLog.statusRelease'),
+            key: 'releaseStatus',
+            dataIndex: 'releaseStatus',
+            align: 'left',
+            width: 120,
+            render: (value, record) => {
+                return <ReleaseStatusTag status={record?.release?.status} />;
+            },
+        },
+        {
+            title: messages('releaseLog.statusLog'),
             key: 'status',
             dataIndex: 'status',
             align: 'left',
@@ -108,6 +119,16 @@ export default function ReleaseLogTable({
             },
         },
         {
+            title: messages('common.step'),
+            key: 'step',
+            dataIndex: 'step',
+            align: 'left',
+            width: 150,
+            render: (value, record) => {
+                return <span>{record?.step}</span>;
+            },
+        },
+        {
             title: messages('releaseLog.label'),
             key: 'releaseLog',
             dataIndex: 'releaseLog',
@@ -117,7 +138,9 @@ export default function ReleaseLogTable({
                 if (!record?.logs) return '-';
                 return (
                     <span className="truncate whitespace-pre-wrap text-wrap">
-                        {record?.logs}
+                        {typeof record.logs === 'string'
+                            ? record.logs
+                            : JSON.stringify(record.logs)}
                     </span>
                 );
             },
@@ -168,19 +191,78 @@ export default function ReleaseLogTable({
             {...props}
             pagination={false}
             columns={column}
-            // expandable={{
-            //     columnWidth: 40,
-            //     expandRowByClick: true,
-            //     expandedRowRender: (record) => (
-            //         <div style={{ padding: '8px 24px', background: '#fafafa' }}>
-            //             <p className="m-0" style={{ whiteSpace: 'pre-wrap' }}>
-            //                 {record.logs || 'No logs found'}
-            //             </p>
-            //         </div>
-            //     ),
-            //     rowExpandable: (record) => !!record.logs,
-            // }}
-            rowClassName={'group'}
+            expandable={{
+                columnWidth: 20,
+                expandRowByClick: true,
+                expandIcon: ({ expanded, onExpand, record }) =>
+                    record.content ? (
+                        <div
+                            onClick={(e) => {
+                                onExpand(record, e);
+                                e.stopPropagation();
+                            }}
+                            className="flex cursor-pointer items-center justify-center p-1 text-slate-400 hover:text-slate-600"
+                        >
+                            {expanded ? (
+                                <CaretDownOutlined className="text-[12px]" />
+                            ) : (
+                                <CaretRightOutlined className="text-[12px]" />
+                            )}
+                        </div>
+                    ) : null,
+                expandedRowRender: (record) => {
+                    let jsonContent = null;
+                    if (
+                        typeof record.content === 'object' &&
+                        record.content !== null
+                    ) {
+                        jsonContent = record.content;
+                    } else if (typeof record.content === 'string') {
+                        try {
+                            jsonContent = JSON.parse(record.content);
+                        } catch (e) {
+                            // Not a JSON string
+                        }
+                    }
+
+                    return (
+                        <div
+                            style={{
+                                padding: '8px 24px',
+                                background: '#fafafa',
+                            }}
+                        >
+                            {jsonContent ? (
+                                <Card
+                                    size="small"
+                                    styles={{
+                                        body: {
+                                            maxHeight: 500,
+                                            overflow: 'auto',
+                                        },
+                                    }}
+                                >
+                                    <JsonViewer
+                                        src={jsonContent}
+                                        style={{ maxHeight: 'unset' }}
+                                    />
+                                </Card>
+                            ) : (
+                                <p
+                                    className="m-0"
+                                    style={{ whiteSpace: 'pre-wrap' }}
+                                >
+                                    {typeof record.content === 'string'
+                                        ? record.content
+                                        : JSON.stringify(record.content)}
+                                </p>
+                            )}
+                        </div>
+                    );
+                },
+                rowExpandable: (record) => !!record.content,
+            }}
+            rowClassName={'group hover:cursor-pointer'}
             className={`rounded-t-lg ${props?.className}`}
             style={{
                 backgroundColor: token.colorBgContainer,
