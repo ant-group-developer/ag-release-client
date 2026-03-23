@@ -3,10 +3,9 @@ import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import { OnChangeFilter } from '@/hooks/use-filter';
 import { ProColumns } from '@ant-design/pro-components';
-import { Avatar, Card, Select, Space, Tag, theme } from 'antd';
+import { Avatar, Card, Tag, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 
-import AppSearch from '@/components/ui/input/search';
 import JsonViewer from '@/components/ui/json-viewer';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import ReleaseStatusTag from '@/modules/releases/components/tag/release-status-tag';
@@ -31,11 +30,6 @@ export default function ReleaseLogTable({
     const messages = useTranslations();
 
     const { token } = theme.useToken();
-
-    const releaseStatus = Object.values(RELEASE_LOG_STATUS).map((item) => ({
-        label: <span className="capitalize">{item.toLowerCase()}</span>,
-        value: item,
-    }));
 
     const column: ProColumns<ReleaseLogData>[] = [
         {
@@ -168,29 +162,6 @@ export default function ReleaseLogTable({
 
     return (
         <AppProTable
-            headerTitle={
-                <Space>
-                    <AppSearch
-                        placeholder={messages('common.search')}
-                        onSearch={(value) => onChangeFilter({ keyword: value })}
-                        defaultValue={dataFilter.keyword}
-                        allowClear
-                        style={{ width: 250 }}
-                    />
-                    <Select
-                        options={releaseStatus}
-                        placeholder={messages('placeholder.filterBy', {
-                            value: messages(
-                                'releaseLog.statusLog'
-                            ).toLowerCase(),
-                        })}
-                        onChange={(value) => onChangeFilter({ status: value })}
-                        defaultValue={dataFilter?.status}
-                        allowClear
-                        style={{ minWidth: 150 }}
-                    />
-                </Space>
-            }
             {...props}
             pagination={false}
             columns={column}

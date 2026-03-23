@@ -6,6 +6,7 @@ import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import ReleaseLogTable from '@/modules/release-log/components/table';
+import ReleaseLogTableFilter from '@/modules/release-log/components/table/release-log-table-filter';
 import { useGetListReleaseLog } from '@/modules/release-log/hooks/use-get-list';
 import { ReleaseLogFilter } from '@/modules/release-log/types';
 import { PageContainer } from '@ant-design/pro-components';
@@ -59,6 +60,12 @@ export default function ReleaseLog({}: Props) {
         <AppPageWrapper>
             <PageContainer title={messages('releaseLog.label')}>
                 <ReleaseLogTable
+                    headerTitle={
+                        <ReleaseLogTableFilter
+                            dataFilter={dataFilter}
+                            onChangeFilter={onChangeFilter}
+                        />
+                    }
                     sticky
                     dataSource={releaseLogData?.items}
                     loading={isReleaseDataLoading}
