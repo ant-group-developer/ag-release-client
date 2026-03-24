@@ -180,6 +180,7 @@ export enum TYPE_UPLOAD_BUCKET {
     TRACK = 'track_audio',
     RELEASE_COVER_ART = 'release_cover_art',
     RELEASE_TEMPLATE = 'release_template_file',
+    CI_TEMPLATE = 'template_export_ci',
 }
 
 export enum DISTRIBUTE_TYPES {

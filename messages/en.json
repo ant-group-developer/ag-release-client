@@ -461,6 +461,9 @@
             "nMinutes": "Starting at minute 0 of each hour and executed every {minutes} minutes",
             "weekly": "{hours}:{minutes} of {dayOfWeek} once a week",
             "monthly": "Executed once a month on {days} of {hours}:{minutes}"
+        },
+        "ciTemplate": {
+            "currentFile": "Current CI Template file"
         }
     },
     "log": {

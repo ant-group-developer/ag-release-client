@@ -65,21 +65,26 @@ export default function LegalNoticesSectionV2({
                         render={({ field }) => (
                             <Select
                                 id="cLineYear"
-                                {...field}
+                                // {...field}
                                 value={field.value}
                                 className="w-full"
                                 disabled={isCreateReleasePage || isReadMode}
                                 onChange={(newYear) => {
-                                    field.onChange(Number(newYear));
+                                    const value =
+                                        newYear != null
+                                            ? Number(newYear)
+                                            : undefined;
+                                    field.onChange(value);
                                     debouncedUpdate(
                                         {
-                                            cLineYear: Number(newYear),
+                                            cLineYear: value,
                                         },
                                         'cLineYear'
                                     );
                                 }}
                                 options={copyRightYears}
                                 status={errors.cLineYear ? 'error' : undefined}
+                                allowClear
                             />
                         )}
                     />
@@ -98,12 +103,12 @@ export default function LegalNoticesSectionV2({
                         render={({ field }) => (
                             <Input
                                 id="cLineOwner"
-                                {...field}
+                                // {...field}
                                 value={field.value ?? ''}
                                 disabled={isCreateReleasePage || isReadMode}
                                 allowClear
-                                onBlur={(e) => {
-                                    const value = e.target.value;
+                                onChange={(e) => {
+                                    const value = e.target.value || null;
                                     field.onChange(value);
                                     debouncedUpdate(
                                         { cLineOwner: value },
@@ -138,21 +143,26 @@ export default function LegalNoticesSectionV2({
                         render={({ field }) => (
                             <Select
                                 id="pLineYear"
-                                {...field}
+                                // {...field}
                                 value={field.value}
                                 className="w-full"
                                 disabled={isCreateReleasePage || isReadMode}
                                 onChange={(newYear) => {
-                                    field.onChange(Number(newYear));
+                                    const value =
+                                        newYear != null
+                                            ? Number(newYear)
+                                            : undefined;
+                                    field.onChange(value);
                                     debouncedUpdate(
                                         {
-                                            pLineYear: Number(newYear),
+                                            pLineYear: value,
                                         },
                                         'pLineYear'
                                     );
                                 }}
                                 options={copyRightYears}
                                 status={errors?.pLineYear ? 'error' : undefined}
+                                allowClear
                             />
                         )}
                     />
@@ -170,20 +180,28 @@ export default function LegalNoticesSectionV2({
                         name="pLineOwner"
                         render={({ field }) => (
                             <Input
-                                {...field}
+                                // {...field}
                                 id="pLineOwner"
                                 value={field.value ?? ''}
                                 disabled={isCreateReleasePage || isReadMode}
                                 allowClear
-                                onBlur={(e) => {
-                                    const newOwner = e.target.value;
+                                onChange={(e) => {
+                                    const newOwner = e.target.value || null;
                                     field.onChange(newOwner);
                                     debouncedUpdate(
                                         { pLineOwner: newOwner },
                                         'pLineOwner'
                                     );
                                 }}
-                                status={errors.pLineOwner ? 'error' : undefined}
+                                // onBlur={(e) => {
+                                //     const newOwner = e.target.value;
+                                //     debouncedUpdate(
+                                //         { pLineOwner: newOwner },
+                                //         'pLineOwner'
+                                //     );
+                                //     field.onChange(newOwner);
+                                // }}
+                                // status={errors.pLineOwner ? 'error' : undefined}
                             />
                         )}
                     />

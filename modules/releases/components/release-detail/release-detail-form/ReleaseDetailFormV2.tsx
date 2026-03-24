@@ -73,6 +73,7 @@ export default function ReleaseDetailFormV2() {
         watch,
         formState: { errors },
         reset,
+        setValue,
         clearErrors,
     } = formMethods;
 
@@ -115,13 +116,20 @@ export default function ReleaseDetailFormV2() {
             > = {
                 id: formValues.id ?? '',
                 payload: data,
-                onSuccess: (data: ReleasesData) => {
-                    setFormValues(data);
+                onSuccess: (responseData: ReleasesData) => {
+                    setFormValues(responseData);
+                    // not reset the entire form
+                    Object.keys(data).forEach((key) => {
+                        const value = (responseData as any)[key];
+                        if (value !== undefined) {
+                            setValue(key as keyof ReleaseDetailSchema, value);
+                        }
+                    });
                 },
             };
             updateReleaseDraft(variables);
         }, 500),
-        [formValues.id, trigger, updateReleaseDraft]
+        [formValues.id, trigger, updateReleaseDraft, setValue]
     );
 
     useEffect(() => {
@@ -133,7 +141,8 @@ export default function ReleaseDetailFormV2() {
             };
             reset(initialFormValue);
         }
-    }, [isCreateReleasePage, releaseId, formValues, reset]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isCreateReleasePage, releaseId]);
 
     useEffect(() => {
         const handleTriggerField = async () => {
