@@ -1177,7 +1177,7 @@
     },
 
     "formFields": {
-        "releaseOriginalDate": "Original Release Date",
+        "releaseOriginalDate": "Original release date",
         "audioFile": {
             "preview": "Preview audio"
         },
