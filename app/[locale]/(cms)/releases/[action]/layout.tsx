@@ -173,7 +173,6 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         const initialData: ReleaseFormStoreData = {
             ...releaseData,
         };
-
         if (releaseId && releaseData?.id) {
             setFormValues(initialData);
         }

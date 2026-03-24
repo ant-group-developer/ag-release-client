@@ -22,6 +22,8 @@ export interface SettingConfig {
 
 export interface OtherConfig {
     fileCiTemplateId?: string;
+
+    excelDataStartRow?: number | null;
 }
 
 export interface Auth0Config {

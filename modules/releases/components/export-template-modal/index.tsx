@@ -6,6 +6,7 @@ import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { useExportTemplateCi } from '@/modules/releases/hooks/export-template-ci';
 import { Button, Form, Select } from 'antd';
 import { useTranslations } from 'next-intl';
+import { useEffect } from 'react';
 
 const ExportTemplateModal = () => {
     const messages = useTranslations();
@@ -16,12 +17,21 @@ const ExportTemplateModal = () => {
 
     const { dspData, isFetching: isFetchingDsp } = useGetListDsp({
         pageSize: 999,
+        aggregatorCode: 'CI',
     });
 
     const options = dspData?.items?.map((item) => ({
         label: item.name,
         value: item.codeCi,
     }));
+
+    useEffect(() => {
+        if (dspData?.items && dspData.items.length > 0) {
+            form.setFieldsValue({
+                dspIds: dspData.items.map((item) => item.codeCi),
+            });
+        }
+    }, [dspData, form]);
 
     const onFinish = (values: { dspIds: string[] }) => {
         if (!dataEdit || dataEdit.length === 0) return;

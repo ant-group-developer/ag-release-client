@@ -11,6 +11,7 @@ import { formattedDate } from '@/helpers/common';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { showNotification, toastPromise } from '@/helpers/messages-helper';
 import { cn } from '@/helpers/tailwind';
+import { useHash } from '@/hooks/use-hash';
 import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
@@ -314,6 +315,11 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         });
     }, [formValues, form, linkReadFile]);
 
+    const hash = useHash();
+    const hasCoverArtError = useMemo(() => {
+        return hash === '#releaseCoverArts';
+    }, [hash]);
+
     return (
         <div
             style={{
@@ -392,13 +398,30 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                 },
                             }}
                         >
-                            <AppFormItem name="thumbnail">
+                            <AppFormItem
+                                name="thumbnail"
+                                help={null}
+                                validateStatus={
+                                    hasCoverArtError ? 'error' : undefined
+                                }
+                            >
                                 <ImageListUpload
                                     id="releaseCoverArts"
                                     loading={isUploading || isCoverArtLoading}
                                     disabled={isCreateReleasePage || isReadMode}
+                                    style={{
+                                        borderColor: hasCoverArtError
+                                            ? token.colorError
+                                            : undefined,
+                                        borderStyle: hasCoverArtError
+                                            ? 'solid'
+                                            : undefined,
+                                        borderWidth: hasCoverArtError
+                                            ? 1
+                                            : undefined,
+                                    }}
                                     className={cn(
-                                        'release-detail-header-upload !aspect-square !size-28 !rounded-lg !border-0 !p-0 transition-all duration-300',
+                                        'release-detail-header-upload !aspect-square !size-28 !rounded-lg !p-0 transition-all duration-300',
                                         {
                                             '!size-16 transition-all duration-300':
                                                 isScrolled,

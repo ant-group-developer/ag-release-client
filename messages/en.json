@@ -463,7 +463,8 @@
             "monthly": "Executed once a month on {days} of {hours}:{minutes}"
         },
         "ciTemplate": {
-            "currentFile": "Current CI Template file"
+            "currentFile": "Current CI Template file",
+            "excelDataStartRow": "Excel data start row"
         }
     },
     "log": {

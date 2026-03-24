@@ -463,7 +463,8 @@
             "monthly": "Thực thi mỗi tháng một lần vào ngày {days} lúc {hours}:{minutes} giờ"
         },
         "ciTemplate": {
-            "currentFile": "File CI Template hiện tại"
+            "currentFile": "File CI Template hiện tại",
+            "excelDataStartRow": "Dòng bắt đầu dữ liệu Excel"
         }
     },
     "log": {
