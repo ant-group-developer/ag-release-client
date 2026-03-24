@@ -269,7 +269,7 @@ export default function TrackDetailModal({ tracks, ...props }: Props) {
                         variant={isReadMode ? 'underlined' : 'outlined'}
                     >
                         <Tabs
-                            className="rounded p-4 pt-1"
+                            className="rounded p-4 !px-4 pt-1"
                             style={{
                                 backgroundColor: token.colorBgContainer,
                             }}

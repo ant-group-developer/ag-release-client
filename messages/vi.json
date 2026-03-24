@@ -461,6 +461,9 @@
             "nMinutes": "Bắt đầu từ phút 0 của mỗi giờ và thực thi cứ mỗi {minutes} phút",
             "weekly": "{hours}:{minutes} giờ vào thứ {dayOfWeek}, thực thi mỗi tuần một lần",
             "monthly": "Thực thi mỗi tháng một lần vào ngày {days} lúc {hours}:{minutes} giờ"
+        },
+        "ciTemplate": {
+            "currentFile": "File CI Template hiện tại"
         }
     },
     "log": {

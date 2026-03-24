@@ -4,6 +4,7 @@ import { useFilter } from '@/hooks/use-filter';
 import { useLoadingStatus } from '@/hooks/use-loading-status';
 import AcrCloudForm from '@/modules/setting/components/forms/acr-cloud-form';
 import BackupDatabaseForm from '@/modules/setting/components/forms/backup-database-form';
+import CiTemplateForm from '@/modules/setting/components/forms/ci-template-form';
 import GeneralForm from '@/modules/setting/components/forms/general-form';
 import GeneratorForm from '@/modules/setting/components/forms/generator-form';
 import TelegramForm from '@/modules/setting/components/forms/telegram-form';
@@ -64,6 +65,11 @@ export default function SettingPage({}: Props) {
             key: SETTING_TABS.GENERATOR,
             label: 'Generator',
             children: <GeneratorForm />,
+        },
+        {
+            key: SETTING_TABS.CI_TEMPLATE,
+            label: 'CI Template',
+            children: <CiTemplateForm />,
         },
     ];
 

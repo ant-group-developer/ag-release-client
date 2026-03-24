@@ -1,6 +1,6 @@
+import { showNotification } from '@/helpers/messages-helper';
 import { AxiosError } from 'axios';
 import { useTranslations } from 'next-intl';
-import { toast } from 'react-toastify';
 
 interface ApiErrorResponse {
     message: string | string[];
@@ -36,7 +36,7 @@ export function useApiNotify() {
         }
 
         messageList.forEach((message) => {
-            toast.error(messages(message as any), {
+            showNotification('error', messages(message as any), {
                 toastId: message,
             });
         });
@@ -48,11 +48,11 @@ export function useApiNotify() {
         if (!message) return;
 
         if (messages.has(message as any)) {
-            toast.success(messages(message as any), {
+            showNotification('success', messages(message as any), {
                 toastId: message,
             });
         } else {
-            toast.success(message, {
+            showNotification('success', message, {
                 toastId: message,
             });
         }

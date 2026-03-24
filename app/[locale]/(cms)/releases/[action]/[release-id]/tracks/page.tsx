@@ -12,6 +12,7 @@ import DropUploadTracks from '@/modules/releases/components/drop-track-upload';
 import AddNewTrackModal from '@/modules/releases/components/release-detail/release-tracks/modal/add-new-track';
 import TrackDetailModal from '@/modules/releases/components/release-detail/release-tracks/modal/track-detail';
 import ReleaseTracksTable from '@/modules/releases/components/release-detail/release-tracks/table';
+import TrackActions from '@/modules/releases/components/release-detail/release-tracks/track-actions';
 import {
     RELEASES_TABS,
     TYPE_MODAL_RELEASE,
@@ -33,7 +34,6 @@ import { Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import { Key, useState } from 'react';
-import TrackActions from '../../../../../../../modules/releases/components/release-detail/release-tracks/track-actions';
 
 export default function Tracks() {
     // hooks - state

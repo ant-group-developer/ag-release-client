@@ -17,6 +17,11 @@ export interface SettingConfig {
     telegram: TelegramConfig;
     generator: GeneratorConfig;
     backupDatabase: BackupDatabaseConfig;
+    other?: OtherConfig;
+}
+
+export interface OtherConfig {
+    fileCiTemplateId?: string;
 }
 
 export interface Auth0Config {
