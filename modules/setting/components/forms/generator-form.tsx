@@ -98,7 +98,7 @@ export default function GeneratorForm({}: Props) {
                 </AppFormItem>
 
                 <AppFormItem
-                    name="DDEX_PARTY_ID_SENDER"
+                    name="DDEX_PARTY_ID_AMG"
                     label={messages('dsp.ddexPartyId')}
                     // required
                     // rules={[
@@ -112,7 +112,7 @@ export default function GeneratorForm({}: Props) {
                 </AppFormItem>
 
                 <AppFormItem
-                    name="DDEX_PARTY_NAME_SENDER"
+                    name="DDEX_PARTY_NAME_AMG"
                     label={messages('dsp.fullNameOfDDexParty')}
                     // required
                     // rules={[

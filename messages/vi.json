@@ -421,7 +421,9 @@
         "label": "Tổng quan",
         "latestNews": "Tin tức mới nhất",
         "goTo": "Đi đến trang Tổng quan",
-        "viewAllUpdates": "Xem tất cả tin tức"
+        "viewAllUpdates": "Xem tất cả tin tức",
+        "stream_by_dsp": "Lượt phát theo DSP",
+        "stream_distribution_subtitle": "Phân bổ lượt phát theo nền tảng năm {year}"
     },
     "image": {
         "label": "Hình ảnh",

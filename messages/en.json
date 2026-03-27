@@ -411,7 +411,9 @@
         "label": "Dashboard",
         "latestNews": "Latest news",
         "goTo": "Go to Dashboard",
-        "viewAllUpdates": "View all updates"
+        "viewAllUpdates": "View all updates",
+        "stream_by_dsp": "Stream by DSP",
+        "stream_distribution_subtitle": "Streams distribution by platform in {year}"
     },
     "review": {
         "message": {
