@@ -411,7 +411,9 @@
         "label": "Dashboard",
         "latestNews": "Latest news",
         "goTo": "Go to Dashboard",
-        "viewAllUpdates": "View all updates"
+        "viewAllUpdates": "View all updates",
+        "stream_by_dsp": "Stream by DSP",
+        "stream_distribution_subtitle": "Streams distribution by platform in {year}"
     },
     "review": {
         "message": {
@@ -463,7 +465,8 @@
             "monthly": "Executed once a month on {days} of {hours}:{minutes}"
         },
         "ciTemplate": {
-            "currentFile": "Current CI Template file"
+            "currentFile": "Current CI Template file",
+            "excelDataStartRow": "Excel data start row"
         }
     },
     "log": {

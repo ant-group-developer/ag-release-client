@@ -22,6 +22,8 @@ export interface SettingConfig {
 
 export interface OtherConfig {
     fileCiTemplateId?: string;
+
+    excelDataStartRow?: number | null;
 }
 
 export interface Auth0Config {
@@ -43,8 +45,8 @@ export interface SettingDataFilter extends CommonParams {}
 export interface GeneratorConfig {
     prefixUpcDefaultId: string;
     prefixIsrcDefaultId: string;
-    DDEX_PARTY_ID_SENDER: string;
-    DDEX_PARTY_NAME_SENDER: string;
+    DDEX_PARTY_ID_AMG: string;
+    DDEX_PARTY_NAME_AMG: string;
 }
 
 // Website config

@@ -12,6 +12,7 @@ export const useGetListReleaseDsp = (
     const { data, ...rest } = useQuery({
         queryKey: releaseDspQueryKey.detail(id, params),
         queryFn: () => releaseDspApis.getListDspDistribute(id, params),
+        enabled: !!id,
     });
 
     return {

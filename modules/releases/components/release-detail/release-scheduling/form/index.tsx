@@ -81,6 +81,7 @@ export default function ReleaseSchedulingForm({}: Props) {
         setValue,
         reset,
         clearErrors,
+        setError,
     } = formMethods;
 
     const releaseTimeMode = useWatch({ control, name: 'releaseTimeMode' });

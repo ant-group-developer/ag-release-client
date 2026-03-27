@@ -26,7 +26,7 @@ export default function ListRelease({ data }: Props) {
                 </p>
 
                 <Link href={APP_ROUTES.RELEASES}>
-                    <SeeMoreButton type="default" icon={<RightOutlined />} />
+                    <SeeMoreButton type="link" icon={<RightOutlined />} />
                 </Link>
             </div>
 

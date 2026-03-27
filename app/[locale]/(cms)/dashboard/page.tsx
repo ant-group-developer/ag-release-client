@@ -10,7 +10,6 @@ import ListTop from '@/modules/dashboard/components/list-top';
 import MapChart from '@/modules/dashboard/components/map-chart';
 import StatsOverview from '@/modules/dashboard/components/stats-overview';
 import NewUpdatesCard from '@/modules/dashboard/components/stats-overview/updated-news-card';
-import IssueTable from '@/modules/dashboard/components/table/issue-table';
 import {
     useGetCountCountries,
     useGetCountIssues,
@@ -19,7 +18,7 @@ import {
 import { DashboardDataFilter } from '@/modules/dashboard/types';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card, theme } from 'antd';
+import { theme } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -81,7 +80,7 @@ function Dashboard({}: Props) {
                     onChangeFilter={onChangeFilter}
                 /> */}
 
-                <div className="flex flex-col gap-4 overflow-auto px-2">
+                <div className="flex flex-col gap-4 overflow-auto">
                     <StatsOverview
                         issuesData={countIssuesData}
                         overviewData={countOverviewData}
@@ -89,44 +88,22 @@ function Dashboard({}: Props) {
                         isOverviewLoading={isOverviewLoading}
                     />
 
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-3">
-                        {/* <StatCard
-                            className="bg-white"
-                            title={messages('common.issues')}
-                            data={countIssuesData?.map((item) => ({
-                                label: item?.nameEn,
-                                count: Number(item?.total),
-                            }))}
-                            loading={isIssuesLoading}
-                        /> */}
-                        <Card
-                            title={messages('common.issues')}
-                            styles={{ body: { padding: 0, paddingTop: 1 } }}
-                        >
-                            <div>
-                                <IssueTable
-                                    className="h-full"
-                                    dataSource={countIssuesData}
-                                    scroll={{ x: 'max-content', y: 300 }}
-                                />
-                            </div>
-                        </Card>
-                        <NewUpdatesCard />
-                        <MapChart data={countCountriesData} />
-                    </div>
-
                     {/* <DspChart /> */}
-                    <div className="grid grid-cols-3 gap-4">
-                        <ListTop />
-                        <div className="col-span-2">
-                            <StreamChart />
-                        </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <MapChart data={countCountriesData} />
+
+                        <NewUpdatesCard />
                     </div>
 
-                    <ListRelease data={releasesData.items.slice(0, 7)} />
-
-                    <ListNews />
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                        <StreamChart />
+                        <ListTop />
+                    </div>
                 </div>
+
+                <ListRelease data={releasesData.items.slice(0, 7)} />
+
+                <ListNews />
             </PageContainer>
         </div>
     );

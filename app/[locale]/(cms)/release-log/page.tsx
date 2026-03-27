@@ -80,7 +80,10 @@ export default function ReleaseLog({}: Props) {
                         reload: () => {
                             handleRefresh();
                         },
+                        setting: false,
+                        density: false,
                     }}
+                    size="small"
                 />
 
                 <AppPagination

@@ -123,11 +123,11 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
                               title: (
                                   <div className="flex flex-col items-center gap-1">
                                       <div>{item?.name}</div>
-                                      <PriceTiersSelect
+                                      {/* <PriceTiersSelect
                                           disabled={!isCanEdit}
                                           className="w-full"
                                           allowClear
-                                      />
+                                      /> */}
                                   </div>
                               ),
                               dataIndex: `dsp_${item.id}`,

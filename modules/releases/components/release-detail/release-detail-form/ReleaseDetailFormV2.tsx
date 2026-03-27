@@ -41,7 +41,9 @@ export default function ReleaseDetailFormV2() {
     const hash = useHash();
 
     // Zustand store - state
-    const formValues = useReleaseFormStore((state) => state.formValues);
+    const formValues = useReleaseFormStore((state) => {
+        return state.formValues;
+    });
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const { getReleaseTabRoute } = useGetReleaseDetailRoute();
     const releaseAction = useReleaseActionStore((s) => s?.action);
@@ -141,8 +143,7 @@ export default function ReleaseDetailFormV2() {
             };
             reset(initialFormValue);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isCreateReleasePage, releaseId]);
+    }, [isCreateReleasePage, releaseId, releaseData?.id]);
 
     useEffect(() => {
         const handleTriggerField = async () => {

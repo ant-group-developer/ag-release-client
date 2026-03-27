@@ -5,7 +5,7 @@ import { TYPE_UPLOAD_BUCKET } from '@/enums/common';
 import { useActive } from '@/hooks/use-active';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { DownloadOutlined, FileOutlined } from '@ant-design/icons';
-import { Button, Form, Typography } from 'antd';
+import { Button, Form, InputNumber, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { useGetSetting } from '../../hooks/use-get-setting';
@@ -42,34 +42,44 @@ export default function CiTemplateForm({}: Props) {
         }
     }, [existingFileId]);
 
+    useEffect(() => {
+        if (settingConfig?.other) {
+            form.setFieldsValue({
+                excelDataStartRow: settingConfig.other.excelDataStartRow,
+            });
+        }
+    }, [settingConfig, form]);
+
     const onFinish = async (values: any) => {
         try {
             active();
             const file: File | undefined =
                 values.ciTemplate?.fileList?.[0]?.originFileObj;
 
-            if (!file) {
-                deActive();
-                return;
+            let fileId = existingFileId;
+
+            if (file) {
+                fileId = await bucketApi.createBucket(file, {
+                    folderBucket: {
+                        uploadPurpose: TYPE_UPLOAD_BUCKET.CI_TEMPLATE,
+                    },
+                    file: {
+                        fileName: file.name,
+                        contentType: file.type || 'application/octet-stream',
+                        extension: file.name.split('.').pop() || '',
+                        fileSize: file.size,
+                    },
+                });
+
+                if (fileId) {
+                    await bucketApi.submit({ ids: [fileId] });
+                }
             }
-
-            const fileId = await bucketApi.createBucket(file, {
-                folderBucket: {
-                    uploadPurpose: TYPE_UPLOAD_BUCKET.CI_TEMPLATE,
-                },
-                file: {
-                    fileName: file.name,
-                    contentType: file.type || 'application/octet-stream',
-                    extension: file.name.split('.').pop() || '',
-                    fileSize: file.size,
-                },
-            });
-
-            await bucketApi.submit({ ids: [fileId] });
 
             const payload: UpdateSettingPayload = {
                 other: {
                     fileCiTemplateId: fileId,
+                    excelDataStartRow: values.excelDataStartRow,
                 },
             };
 
@@ -165,9 +175,10 @@ export default function CiTemplateForm({}: Props) {
                 <AppFormItem
                     name="ciTemplate"
                     label="CI Template"
+                    required
                     rules={[
                         {
-                            required: !existingFileId,
+                            required: true,
                             message: messages('validation.input'),
                         },
                     ]}
@@ -179,6 +190,13 @@ export default function CiTemplateForm({}: Props) {
                         beforeUpload={() => false}
                         disabled={isActive}
                     />
+                </AppFormItem>
+
+                <AppFormItem
+                    name="excelDataStartRow"
+                    label={messages('setting.ciTemplate.excelDataStartRow')}
+                >
+                    <InputNumber min={1} disabled={isActive} />
                 </AppFormItem>
             </AppForm>
         </div>

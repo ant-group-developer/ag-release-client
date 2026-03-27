@@ -21,6 +21,7 @@ export interface DspData extends CommonAttribute {
 export interface DspDataFilter extends CommonParams {
     keyword?: string;
     dateCreated?: string;
+    aggregatorCode?: string;
 }
 
 export interface DspRoutingConfig extends CommonAttribute {
