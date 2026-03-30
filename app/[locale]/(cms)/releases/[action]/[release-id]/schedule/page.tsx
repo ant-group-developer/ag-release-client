@@ -31,7 +31,7 @@ export default function Schedule() {
 
     return (
         <ConfigProvider theme={customTheme}>
-            <div className="w-full space-y-4 pb-4">
+            <div className="w-full space-y-4 pb-10">
                 <ReleaseSchedulingForm />
 
                 <ReleaseSchedulingTable
@@ -43,6 +43,7 @@ export default function Schedule() {
                         current: tracksData.metadata.page,
                         total: tracksData.metadata.totalItems,
                     }}
+                    className="rounded-lg"
                 />
                 {/* <AppPagination
                     className="!mt-0 rounded-b-[8px] bg-white"

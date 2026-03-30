@@ -1,7 +1,6 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
-import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { TrackData } from '@/modules/tracks/types';
 import { ConfigProvider, Form, Input, Switch, Typography } from 'antd';
 import { useWatch } from 'antd/es/form/Form';
@@ -50,107 +49,84 @@ export default function TrackAndArtistSection({
             componentDisabled={isReadMode}
             form={{ variant: isReadMode ? 'underlined' : 'outlined' }}
         >
-            <CollapseItem
-                defaultActiveKey={['track-and-artist']}
-                items={[
-                    {
-                        key: 'track-and-artist',
-                        label: (
-                            <span className="text-base font-semibold">
-                                {messages('track.label')} &{' '}
-                                {messages('artist.artists')}
-                            </span>
-                        ),
-                        children: (
-                            <div>
-                                <div className="grid grid-cols-4 items-center gap-4">
-                                    <div className="col-span-2">
-                                        <AppFormItem
-                                            label={messages('track.name')}
-                                            required
-                                            name="title"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message:
-                                                        messages(
-                                                            'validation.input'
-                                                        ),
-                                                },
-                                            ]}
-                                        >
-                                            <Input
-                                                id={`tracks.${index}.title`}
-                                                allowClear
-                                                onBlur={(e) => {
-                                                    const value =
-                                                        e.target.value;
-                                                    updateTrackDraft(
-                                                        {
-                                                            title: value,
-                                                        },
-                                                        'title'
-                                                    );
-                                                }}
-                                            />
-                                        </AppFormItem>
-                                    </div>
-                                    <div className="col-span-2">
-                                        <AppFormItem
-                                            label={messages('release.version')}
-                                            name="version"
-                                        >
-                                            <Input
-                                                id={`tracks.${index}.version`}
-                                                allowClear
-                                                onBlur={(e) => {
-                                                    const value =
-                                                        e.target.value;
-                                                    updateTrackDraft(
-                                                        {
-                                                            version: value,
-                                                        },
-                                                        'version'
-                                                    );
-                                                }}
-                                            />
-                                        </AppFormItem>
-                                    </div>
-                                    <div className="col-span-4 space-y-4">
-                                        <AppFormItem
-                                            label={`${messages('track.addAllArtistFromRelease')} ?`}
-                                            name="copyArtistsFromRelease"
-                                            className="!mb-0"
-                                        >
-                                            <Switch
-                                                onChange={(e) => {
-                                                    debouncedUpdateTrackDraft({
-                                                        copyArtistsFromRelease:
-                                                            e,
-                                                    });
-                                                }}
-                                            />
-                                        </AppFormItem>
+            <div className="space-y-4">
+                <p className="text-base font-semibold">
+                    {messages('track.label')} & {messages('artist.artists')}
+                </p>
+                <div className="grid grid-cols-4 items-center gap-4">
+                    <div className="col-span-2">
+                        <AppFormItem
+                            label={messages('track.name')}
+                            required
+                            name="title"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: messages('validation.input'),
+                                },
+                            ]}
+                        >
+                            <Input
+                                id={`tracks.${index}.title`}
+                                allowClear
+                                onBlur={(e) => {
+                                    const value = e.target.value;
+                                    updateTrackDraft(
+                                        {
+                                            title: value,
+                                        },
+                                        'title'
+                                    );
+                                }}
+                            />
+                        </AppFormItem>
+                    </div>
+                    <div className="col-span-2">
+                        <AppFormItem
+                            label={messages('release.version')}
+                            name="version"
+                        >
+                            <Input
+                                id={`tracks.${index}.version`}
+                                allowClear
+                                onBlur={(e) => {
+                                    const value = e.target.value;
+                                    updateTrackDraft(
+                                        {
+                                            version: value,
+                                        },
+                                        'version'
+                                    );
+                                }}
+                            />
+                        </AppFormItem>
+                    </div>
+                    <div className="col-span-4 space-y-4">
+                        <AppFormItem
+                            label={`${messages('track.addAllArtistFromRelease')} ?`}
+                            name="copyArtistsFromRelease"
+                            className="!mb-0"
+                        >
+                            <Switch
+                                onChange={(e) => {
+                                    debouncedUpdateTrackDraft({
+                                        copyArtistsFromRelease: e,
+                                    });
+                                }}
+                            />
+                        </AppFormItem>
 
-                                        {!isAddArtistsFromRelease && (
-                                            <div
-                                                id={`tracks.${index}.trackArtists`}
-                                            >
-                                                <TrackArtistTable
-                                                    dataSource={
-                                                        trackData?.trackArtists
-                                                    }
-                                                    trackData={trackData}
-                                                />
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
+                        {!isAddArtistsFromRelease && (
+                            <div id={`tracks.${index}.trackArtists`}>
+                                <TrackArtistTable
+                                    dataSource={trackData?.trackArtists}
+                                    trackData={trackData}
+                                />
                             </div>
-                        ),
-                    },
-                ]}
-            />
+                        )}
+                    </div>
+                </div>
+            </div>
         </ConfigProvider>
     );
 }

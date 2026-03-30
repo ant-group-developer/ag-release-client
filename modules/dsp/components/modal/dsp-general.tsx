@@ -77,6 +77,13 @@ export default function DspGeneral({ form, isActive }: Props) {
                 <Input allowClear />
             </AppFormItem>
             <AppFormItem
+                name="codeCi"
+                label={messages('dsp.codeCi')}
+                rules={[formRules.stringMax({ field: messages('dsp.codeCi') })]}
+            >
+                <Input allowClear />
+            </AppFormItem>
+            <AppFormItem
                 name="link"
                 label={'Format links'}
                 tooltipInfo={messages('dsp.oneLinkPerLine')}

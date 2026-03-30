@@ -5,7 +5,7 @@ import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { TrackData } from '@/modules/tracks/types';
-import { Form } from 'antd';
+import { Form, theme } from 'antd';
 import dayjs from 'dayjs';
 import { useEffect } from 'react';
 import AudioSpecSection from '../collapse/view-all-collapse/audio-spec-section';
@@ -35,6 +35,7 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
         index: number;
         focusField: string;
     }>((state) => state.dataEdit);
+    const { token } = theme.useToken();
 
     useEffect(() => {
         if (trackData?.id) {
@@ -94,12 +95,18 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
             showSubmit={false}
             variant={isReadMode ? 'underlined' : 'outlined'}
         >
-            <div className="flex h-[80vh] flex-col gap-4 overflow-y-auto pr-1">
+            <div
+                className="flex h-[80vh] flex-col gap-12 overflow-y-auto rounded-lg px-2 py-2 pr-1"
+                style={{
+                    backgroundColor: token.colorBgContainer,
+                }}
+            >
                 <TrackAndArtistSection
                     trackData={trackData}
                     debouncedUpdateTrackDraft={updateTrackDraft}
                     index={index}
                 />
+
                 <TrackContributorsSection
                     trackData={trackData}
                     debouncedUpdateTrackDraft={updateTrackDraft}

@@ -4,6 +4,7 @@ import TimezoneSelect from '@/components/ui/select/timezone-select';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { DATE_FORMAT, DISTRIBUTE_TYPES } from '@/enums/common';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { useHash } from '@/hooks/use-hash';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { RELEASE_TIME_MODE } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
@@ -24,6 +25,7 @@ import { z } from 'zod';
 const releaseSchedulingSchema = (messages: any) =>
     releaseSchema(messages).pick({
         releaseDate: true,
+        releaseOriginalDate: true,
         releaseTime: true,
         releaseTimezoneId: true,
         releaseTerritory: true,
@@ -43,6 +45,7 @@ export default function ReleaseSchedulingForm({}: Props) {
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const { updateReleaseDraft } = useUpdateReleaseDraft();
     const action = useReleaseActionStore((s) => s.action);
+    const hash = useHash();
 
     const isReadMode = useMemo(
         () => action !== RELEASE_DETAIL_ACTION.EDIT,
@@ -52,11 +55,12 @@ export default function ReleaseSchedulingForm({}: Props) {
     const formMethods = useForm<ReleaseSchedulingSchema>({
         defaultValues: {
             releaseDate: formValues?.releaseDate,
+            releaseOriginalDate: formValues?.releaseOriginalDate,
             releaseTime: formValues?.releaseTime,
             releaseTimezoneId: formValues?.releaseTimezoneId,
             releaseTerritory: {
                 distributeWorldwide:
-                    formValues?.releaseTerritory?.distributeWorldwide ?? true,
+                    formValues?.releaseTerritory?.distributeWorldwide,
                 distributionType:
                     formValues?.releaseTerritory?.distributionType,
                 selectedCountries:
@@ -75,6 +79,9 @@ export default function ReleaseSchedulingForm({}: Props) {
         watch,
         trigger,
         setValue,
+        reset,
+        clearErrors,
+        setError,
     } = formMethods;
 
     const releaseTimeMode = useWatch({ control, name: 'releaseTimeMode' });
@@ -100,11 +107,40 @@ export default function ReleaseSchedulingForm({}: Props) {
     );
 
     useEffect(() => {
-        const handleTriggerField = () => {
-            const hash = window.location.hash;
-            if (hash) {
-                const field = hash.replace('#', '');
-                trigger(field as any);
+        if (!formValues.id) return;
+        const initialFormValue: ReleaseSchedulingSchema = {
+            releaseDate: formValues?.releaseDate || '',
+            releaseOriginalDate: formValues?.releaseOriginalDate || '',
+            releaseTime: formValues?.releaseTime || '',
+            releaseTimezoneId: formValues?.releaseTimezoneId || null,
+            releaseTerritory: {
+                distributeWorldwide:
+                    formValues?.releaseTerritory?.distributeWorldwide ?? true,
+                distributionType:
+                    formValues?.releaseTerritory?.distributionType || '',
+                selectedCountries:
+                    formValues?.releaseTerritory?.selectedCountries || [],
+            },
+            releaseTimeMode:
+                formValues?.releaseTimeMode ||
+                RELEASE_TIME_MODE.GLOBAL_MIDNIGHT,
+        };
+        reset(initialFormValue, {
+            keepErrors: true,
+        });
+    }, [formValues, reset]);
+
+    useEffect(() => {
+        const handleTriggerField = async () => {
+            const hashValue = window.location.hash;
+            if (hashValue) {
+                const field = hashValue.replace('#', '');
+                const el = document.getElementById(field);
+                if (el) {
+                    el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                }
+                clearErrors();
+                await trigger(field as any);
             }
         };
         window.addEventListener('hashchange', handleTriggerField);
@@ -114,7 +150,7 @@ export default function ReleaseSchedulingForm({}: Props) {
         return () => {
             window.removeEventListener('hashchange', handleTriggerField);
         };
-    }, []);
+    }, [trigger, hash, clearErrors]);
 
     return (
         <div
@@ -124,53 +160,90 @@ export default function ReleaseSchedulingForm({}: Props) {
             <FormProvider {...formMethods}>
                 <form className="flex flex-col gap-4">
                     <div className="grid grid-cols-2 gap-6 gap-x-12">
-                        <div className="col-span-2">
-                            <FormItem
-                                className="w-2/6"
+                        <FormItem
+                            name="releaseDate"
+                            label={messages('release.releaseDate')}
+                            required
+                            ErrorMessage={errors.releaseDate?.message}
+                        >
+                            <Controller
+                                control={control}
                                 name="releaseDate"
-                                label={messages('release.releaseDate')}
-                                required
-                                ErrorMessage={errors.releaseDate?.message}
-                            >
-                                <Controller
-                                    control={control}
-                                    name="releaseDate"
-                                    render={({ field }) => {
-                                        return (
-                                            <DatePicker
-                                                id="releaseDate"
-                                                className="w-full"
-                                                format={DATE_FORMAT.DATE_ONLY}
-                                                disabledDate={(date) =>
-                                                    date &&
-                                                    date <
-                                                        dayjs().startOf('day')
-                                                }
-                                                value={
-                                                    field.value
-                                                        ? dayjs(field.value)
-                                                        : null
-                                                }
-                                                onChange={(date) => {
-                                                    field.onChange(
-                                                        date.toISOString()
-                                                    );
-                                                    debouncedUpdate({
-                                                        releaseDate: date,
-                                                    });
-                                                }}
-                                                status={
-                                                    errors.releaseDate
-                                                        ? 'error'
-                                                        : undefined
-                                                }
-                                                disabled={isReadMode}
-                                            />
-                                        );
-                                    }}
-                                />
-                            </FormItem>
-                        </div>
+                                render={({ field }) => {
+                                    return (
+                                        <DatePicker
+                                            id="releaseDate"
+                                            className="w-full"
+                                            format={DATE_FORMAT.DATE_ONLY}
+                                            disabledDate={(date) =>
+                                                date &&
+                                                date < dayjs().startOf('day')
+                                            }
+                                            value={
+                                                field.value
+                                                    ? dayjs(field.value)
+                                                    : null
+                                            }
+                                            onChange={(date) => {
+                                                field.onChange(
+                                                    date.toISOString()
+                                                );
+                                                debouncedUpdate({
+                                                    releaseDate: date,
+                                                });
+                                            }}
+                                            status={
+                                                errors.releaseDate
+                                                    ? 'error'
+                                                    : undefined
+                                            }
+                                            disabled={isReadMode}
+                                        />
+                                    );
+                                }}
+                            />
+                        </FormItem>
+
+                        <FormItem
+                            name="releaseOriginalDate"
+                            label={messages('release.releaseOriginalDate')}
+                            required
+                            ErrorMessage={errors.releaseOriginalDate?.message}
+                        >
+                            <Controller
+                                control={control}
+                                name="releaseOriginalDate"
+                                render={({ field }) => {
+                                    return (
+                                        <DatePicker
+                                            id="releaseOriginalDate"
+                                            className="w-full"
+                                            format={DATE_FORMAT.DATE_ONLY}
+                                            value={
+                                                field.value
+                                                    ? dayjs(field.value)
+                                                    : null
+                                            }
+                                            onChange={(date) => {
+                                                field.onChange(
+                                                    date.toISOString()
+                                                );
+                                                debouncedUpdate({
+                                                    releaseOriginalDate: date,
+                                                });
+                                            }}
+                                            status={
+                                                errors.releaseOriginalDate
+                                                    ? 'error'
+                                                    : undefined
+                                            }
+                                            disabled={isReadMode}
+                                        />
+                                    );
+                                }}
+                            />
+                        </FormItem>
+
                         <div className="space-y-2">
                             <FormItem
                                 name="releaseTimeMode"
@@ -178,7 +251,7 @@ export default function ReleaseSchedulingForm({}: Props) {
                                     'release.scheduling.goLiveTime'
                                 )}
                                 required
-                                ErrorMessage={errors.releaseTimezoneId?.message}
+                                ErrorMessage={errors.releaseTimeMode?.message}
                             >
                                 <Controller
                                     control={control}

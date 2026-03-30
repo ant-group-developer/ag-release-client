@@ -110,31 +110,21 @@ export const releaseSchema = (messages: any) =>
             .string()
             .max(200, messages('validation.max', { number: 200 }))
             .nullable()
-            .refine((val) => val !== null && val !== '', {
+            .refine((val) => val !== '', {
                 message: messages('validation.input'),
             }),
         cLineOwner: z
             .string()
             .max(200, messages('validation.max', { number: 200 }))
             .nullable()
-            .refine((val) => val !== null && val !== '', {
+            .refine((val) => val !== '', {
                 message: messages('validation.input'),
             }),
-        pLineYear: z.union([z.number(), z.null()]).superRefine((val, ctx) => {
-            if (val === null) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: messages('validation.input'),
-                });
-            }
+        pLineYear: z.any().refine((val) => val !== null, {
+            message: messages('validation.input'),
         }),
-        cLineYear: z.union([z.number(), z.null()]).superRefine((val, ctx) => {
-            if (val === null) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: messages('validation.input'),
-                });
-            }
+        cLineYear: z.any().refine((val) => val !== null, {
+            message: messages('validation.input'),
         }),
         isVariousArtist: z.boolean(),
         releaseTimeMode: z
@@ -144,6 +134,12 @@ export const releaseSchema = (messages: any) =>
                 message: messages('validation.input'),
             }),
         releaseDate: z
+            .string()
+            .nullable()
+            .refine((val) => val !== null && val !== '', {
+                message: messages('validation.input'),
+            }),
+        releaseOriginalDate: z
             .string()
             .nullable()
             .refine((val) => val !== null && val !== '', {

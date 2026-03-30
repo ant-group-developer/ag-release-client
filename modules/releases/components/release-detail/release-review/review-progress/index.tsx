@@ -5,7 +5,7 @@ import MetadataInfoItem from '../metadata-info/metadata-info-item';
 
 type Props = {};
 
-export default function ReviewProgress({}: Props) {
+export default function ReviewInfor({}: Props) {
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
     const { token } = theme.useToken();

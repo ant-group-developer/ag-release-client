@@ -9,6 +9,8 @@ import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import { LoadingType, useLoading } from '@/hooks/use-loading';
 import useModalStore from '@/hooks/use-modal';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
+import ExportTemplateModal from '@/modules/releases/components/export-template-modal';
 import ReleasesHeaderV2 from '@/modules/releases/components/header';
 import ReleasesTable from '@/modules/releases/components/table';
 import ReleasesGridTable from '@/modules/releases/components/table/grid-table';
@@ -17,13 +19,16 @@ import {
     RELEASES_COLUMNS_DISPLAY,
     TYPE_MODAL_RELEASE,
 } from '@/modules/releases/enums';
+import { useExportTemplateCi } from '@/modules/releases/hooks/export-template-ci';
 import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
 import { DeleteVariables } from '@/types/api';
+import { DownloadOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { theme } from 'antd';
+import { Button, Space, TableProps, theme } from 'antd';
 import { useTranslations } from 'next-intl';
+import { Key, useState } from 'react';
 
 type Props = {};
 
@@ -44,10 +49,13 @@ export default function Releases({}: Props) {
     const { layoutTable } = useTableLayoutToggle();
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
+    const openModal = useModalStore((state) => state.openModal);
     const isLoading = useLoading(LoadingType.Fetching);
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as ReleasesData);
     const { token } = theme.useToken();
+    const [selectedRows, setSelectedRows] = useState<Key[]>([]);
+    const { isAdmin } = useAuth();
 
     // apis
     const {
@@ -57,6 +65,8 @@ export default function Releases({}: Props) {
         dataUpdatedAt,
     } = useGetListReleases(dataFilter);
     const { deleteRelease } = useDeleteRelease();
+    const { exportTemplateCi, isPending: isExportTemplateCiLoading } =
+        useExportTemplateCi();
 
     // func
     const handleRefresh = () => {
@@ -81,6 +91,16 @@ export default function Releases({}: Props) {
             },
             false
         );
+    };
+
+    const rowSelection: TableProps<ReleasesData>['rowSelection'] = {
+        selectedRowKeys: selectedRows,
+        onChange: (selectedRowKeys: Key[]) => {
+            setSelectedRows(selectedRowKeys);
+        },
+        getCheckboxProps: (record: ReleasesData) => ({
+            disabled: !isAdmin,
+        }),
     };
 
     return (
@@ -111,6 +131,30 @@ export default function Releases({}: Props) {
                             reload: () => {
                                 handleRefresh();
                             },
+                        }}
+                        rowSelection={rowSelection}
+                        tableAlertRender={({
+                            selectedRowKeys,
+                            selectedRows,
+                            onCleanSelected,
+                        }) => {
+                            return (
+                                <Space size={24}>
+                                    <Button
+                                        type="primary"
+                                        icon={<DownloadOutlined />}
+                                        onClick={() =>
+                                            openModal(
+                                                TYPE_MODAL_RELEASE.EXPORT_TEMPLATE,
+                                                selectedRowKeys
+                                            )
+                                        }
+                                        loading={isExportTemplateCiLoading}
+                                    >
+                                        {messages('release.exportCiTemplate')}
+                                    </Button>
+                                </Space>
+                            );
                         }}
                     />
                 )}
@@ -146,6 +190,10 @@ export default function Releases({}: Props) {
                             value: dataEdit?.title,
                         })}
                     />
+                )}
+
+                {typeModal === TYPE_MODAL_RELEASE.EXPORT_TEMPLATE && (
+                    <ExportTemplateModal />
                 )}
             </PageContainer>
         </AppPageWrapper>

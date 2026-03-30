@@ -64,6 +64,9 @@
         }
     },
     "common": {
+        "step": "Bước",
+        "loading": "Đang tải",
+        "exportTemplate": "Xuất mẫu",
         "incomplete": "Chưa hoàn thành",
         "generate": "Tạo",
         "privateKey": "Khoá riêng tư",
@@ -418,7 +421,9 @@
         "label": "Tổng quan",
         "latestNews": "Tin tức mới nhất",
         "goTo": "Đi đến trang Tổng quan",
-        "viewAllUpdates": "Xem tất cả tin tức"
+        "viewAllUpdates": "Xem tất cả tin tức",
+        "stream_by_dsp": "Lượt phát theo DSP",
+        "stream_distribution_subtitle": "Phân bổ lượt phát theo nền tảng năm {year}"
     },
     "image": {
         "label": "Hình ảnh",
@@ -458,6 +463,10 @@
             "nMinutes": "Bắt đầu từ phút 0 của mỗi giờ và thực thi cứ mỗi {minutes} phút",
             "weekly": "{hours}:{minutes} giờ vào thứ {dayOfWeek}, thực thi mỗi tuần một lần",
             "monthly": "Thực thi mỗi tháng một lần vào ngày {days} lúc {hours}:{minutes} giờ"
+        },
+        "ciTemplate": {
+            "currentFile": "File CI Template hiện tại",
+            "excelDataStartRow": "Dòng bắt đầu dữ liệu Excel"
         }
     },
     "log": {
@@ -767,6 +776,10 @@
     },
 
     "release": {
+        "exportCiTemplate": "Xuất mẫu CI",
+        "audioLanguage": "Ngôn ngữ âm thanh",
+        "metadataLanguageCountry": "Ngôn ngữ metadata quốc gia",
+        "metadataLanguage": "Ngôn ngữ metadata",
         "importTemplate": "Tải lên mẫu",
         "uploadTemplateSuccess": "Tải lên mẫu thành công",
         "uploadTemplateError": "Tải lên mẫu thất bại",
@@ -784,6 +797,7 @@
         "id": "Mã phát hành",
         "type": "Loại phát hành",
         "releaseDate": "Ngày phát hành",
+        "releaseOriginalDate": "Ngày phát hành gốc",
         "releaseTime": "Thời gian phát hành",
         "duration": "Thời lượng",
         "trackCount": "Số bài hát",
@@ -895,6 +909,7 @@
     },
 
     "track": {
+        "parentalAdvisoryNotice": "Cảnh báo nội dung",
         "list": "Danh sách bài hát",
         "number": "Bài hát số",
         "add": "Thêm bài hát",
@@ -968,6 +983,7 @@
         "validation": {
             "previewMustBeLessThanDuration": "Thời gian xem trước phải nhỏ hơn thời gian bài hát",
             "sampleLengthMustBeLessThanDuration": "Thời lượng đoạn mẫu phải nhỏ hơn thời gian bài hát",
+            "sampleExceedsDuration": "Tổng Độ dài mẫu & Hook không được dài hơn thời gian bài hát",
             "trackUpload": "{type} chỉ tải lên tối đa được {maxCount} bài",
             "trackFileName": "Tên File không được vượt quá {number} ký tự"
         },
@@ -1168,6 +1184,7 @@
     },
 
     "formFields": {
+        "releaseOriginalDate": "Ngày phát hành gốc",
         "audioFile": {
             "preview": "Đoạn nghe trước"
         },
@@ -1302,6 +1319,7 @@
     "dsp": {
         "label": "DSP",
         "name": "Tên nền tảng",
+        "codeCi": "Mã CI",
         "add": "Thêm nền tảng",
         "oneLinkPerLine": "Mỗi link một dòng",
         "profileList": "Danh sách hồ sơ",
@@ -1897,5 +1915,15 @@
     "sftp": {
         "requiredSftpInfo": "Vui lòng nhập đủ thông tin SFTP",
         "requiredPasswordOrPrivateKey": "Vui lòng nhập mật khẩu hoặc khoá riêng tư"
+    },
+
+    "batchImport": {
+        "label": "Nhập hàng loạt"
+    },
+
+    "releaseLog": {
+        "label": "Nhật ký phát hành",
+        "statusRelease": "Trạng thái phát hành",
+        "statusLog": "Trạng thái nhật ký"
     }
 }

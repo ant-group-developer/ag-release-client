@@ -45,6 +45,7 @@ export enum APP_ROUTES {
     CURRENCIES = '/currencies',
     PRICE_TIERS = '/price-tiers',
     ANALYTICS = '/analytics',
+    ANALYTICS2 = '/analytics2',
     ANALYTIC_DETAIL = '/analytics/*',
     ISSUE_LEVEL = '/issue-level',
     ISSUES = '/issues',
@@ -55,6 +56,7 @@ export enum APP_ROUTES {
     AGGREGATOR = '/aggregator',
     DEAL_TYPE = '/deal-type',
     PING = '/ping',
+    RELEASE_LOG = '/release-log',
 }
 
 export const AUTH_ROUTES: string[] = [APP_ROUTES.SIGN_IN];

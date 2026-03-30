@@ -1,6 +1,6 @@
 'use client';
 import MetadataInfo from '@/modules/releases/components/release-detail/release-review/metadata-info';
-import ReviewProgress from '@/modules/releases/components/release-detail/release-review/review-progress';
+import ReviewInfor from '@/modules/releases/components/release-detail/release-review/review-progress';
 import TracksInfo from '@/modules/releases/components/release-detail/release-review/tracks-info/page';
 import { Tabs, theme } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -23,7 +23,7 @@ export default function Review() {
 
     return (
         <div className="mb-4 flex flex-col gap-4">
-            <ReviewProgress />
+            <ReviewInfor />
 
             <div
                 className="rounded-lg"

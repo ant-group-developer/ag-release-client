@@ -9,6 +9,7 @@ import {
 } from '../types';
 import {
     CreateReleaseDraftPayload,
+    ExportTemplateCi,
     UpdateReleaseDraftPayload,
 } from '../types/payload';
 
@@ -122,7 +123,7 @@ export const releasesApi = {
 
     createBucket: async (file: File, payload: CreateBucketFile) => {
         const response = await axiosInstance.post(
-            '/bucket/gcs/private/template',
+            '/bucket2/private/template',
             payload
         );
         if (response.status !== 201) {
@@ -146,5 +147,18 @@ export const releasesApi = {
         }
 
         return fileId;
+    },
+
+    exportTemplateCi: ({ ids, dspCodeCi }: ExportTemplateCi) => {
+        return axiosInstance.post(
+            '/releases/file-export-release-ci',
+            {
+                ids,
+                dspCodeCi,
+            },
+            {
+                responseType: 'blob',
+            }
+        );
     },
 };

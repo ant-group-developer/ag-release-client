@@ -23,3 +23,8 @@ export interface UploadTemplate extends CommonFunction {
     createBucketFile: CreateBucketFile;
     file: File;
 }
+
+export interface ExportTemplateCi extends CommonFunction {
+    ids: string[];
+    dspCodeCi: string[];
+}

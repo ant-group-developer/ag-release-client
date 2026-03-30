@@ -4,9 +4,7 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import CountrySelect from '@/components/ui/select/country-select';
 import LanguageSelect from '@/components/ui/select/language-select';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
-import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
-import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { TrackData } from '@/modules/tracks/types';
 import { ConfigProvider, Form } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -24,7 +22,6 @@ export default function LanguageSection({
 }: Props) {
     const messages = useTranslations();
     const form = Form.useFormInstance();
-    const { action } = useGetReleaseDetailRoute();
     const releaseAction = useReleaseActionStore((s) => s.action);
     const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
 
@@ -44,160 +41,139 @@ export default function LanguageSection({
             componentDisabled={isReadMode}
             form={{ variant: isReadMode ? 'underlined' : 'outlined' }}
         >
-            <CollapseItem
-                defaultActiveKey={['language']}
-                items={[
-                    {
-                        key: 'language',
-                        label: (
-                            <span className="text-base font-semibold">
-                                {messages('language.label')}
-                            </span>
-                        ),
-                        children: (
-                            <div className="grid grid-cols-2 gap-4">
-                                {/* Country Language */}
-                                <AppFormItem
-                                    label={messages('country.language')}
-                                    name={[
+            <div className="space-y-4">
+                <p className="text-base font-semibold">
+                    {messages('language.label')}
+                </p>
+                <div className="grid grid-cols-2 gap-4">
+                    {/* Country Language */}
+                    <AppFormItem
+                        label={messages('release.metadataLanguageCountry')}
+                        name={['trackLanguage', 'metadataLanguageCountryId']}
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <CountrySelect
+                            id={`tracks.${index}.trackLanguage.metadataLanguageCountryId`}
+                            className="w-full"
+                            showSearch
+                            allowClear
+                            disabled={isReadMode}
+                            // fallback={
+                            //     trackData?.trackLanguage
+                            //         ?.metadataLanguageCountry?.name
+                            // }
+                            onChange={(value) => {
+                                form.setFieldValue(
+                                    [
+                                        'tracks',
+                                        index,
                                         'trackLanguage',
                                         'metadataLanguageCountryId',
-                                    ]}
-                                    required
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message:
-                                                messages('validation.input'),
+                                    ],
+                                    value
+                                );
+                                updateTrackDraft(
+                                    {
+                                        trackLanguage: {
+                                            ...trackData.trackLanguage,
+                                            metadataLanguageCountryId: value,
                                         },
-                                    ]}
-                                >
-                                    <CountrySelect
-                                        id={`tracks.${index}.trackLanguage.metadataLanguageCountryId`}
-                                        className="w-full"
-                                        showSearch
-                                        allowClear
-                                        disabled={isReadMode}
-                                        // fallback={
-                                        //     trackData?.trackLanguage
-                                        //         ?.metadataLanguageCountry?.name
-                                        // }
-                                        onChange={(value) => {
-                                            form.setFieldValue(
-                                                [
-                                                    'tracks',
-                                                    index,
-                                                    'trackLanguage',
-                                                    'metadataLanguageCountryId',
-                                                ],
-                                                value
-                                            );
-                                            updateTrackDraft(
-                                                {
-                                                    trackLanguage: {
-                                                        ...trackData.trackLanguage,
-                                                        metadataLanguageCountryId:
-                                                            value,
-                                                    },
-                                                },
-                                                'trackLanguage.metadataLanguageCountryId'
-                                            );
-                                        }}
-                                    />
-                                </AppFormItem>
+                                    },
+                                    'trackLanguage.metadataLanguageCountryId'
+                                );
+                            }}
+                        />
+                    </AppFormItem>
 
-                                {/* Audio Language */}
-                                <AppFormItem
-                                    label={messages('track.language')}
-                                    name={['trackLanguage', 'audioLanguageId']}
-                                    required
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message:
-                                                messages('validation.input'),
-                                        },
-                                    ]}
-                                >
-                                    <LanguageSelect
-                                        id={`tracks.${index}.trackLanguage.audioLanguageId`}
-                                        className="w-full"
-                                        showSearch
-                                        allowClear
-                                        disabled={isReadMode}
-                                        // fallback={
-                                        //     trackData?.trackLanguage?.audioLanguage
-                                        //         ?.name
-                                        // }
+                    {/* Audio Language */}
+                    <AppFormItem
+                        label={messages('release.audioLanguage')}
+                        name={['trackLanguage', 'audioLanguageId']}
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <LanguageSelect
+                            id={`tracks.${index}.trackLanguage.audioLanguageId`}
+                            className="w-full"
+                            showSearch
+                            allowClear
+                            disabled={isReadMode}
+                            // fallback={
+                            //     trackData?.trackLanguage?.audioLanguage
+                            //         ?.name
+                            // }
 
-                                        onChange={(value) => {
-                                            form.setFieldValue(
-                                                [
-                                                    'tracks',
-                                                    index,
-                                                    'trackLanguage',
-                                                    'audioLanguageId',
-                                                ],
-                                                value
-                                            );
-                                            updateTrackDraft(
-                                                {
-                                                    trackLanguage: {
-                                                        ...trackData.trackLanguage,
-                                                        audioLanguageId: value,
-                                                    },
-                                                },
-                                                'trackLanguage.audioLanguageId'
-                                            );
-                                        }}
-                                    />
-                                </AppFormItem>
-
-                                {/* Metadata Language */}
-                                <AppFormItem
-                                    label={`${messages('language.label')} metadata`}
-                                    name={[
+                            onChange={(value) => {
+                                form.setFieldValue(
+                                    [
+                                        'tracks',
+                                        index,
                                         'trackLanguage',
-                                        'metadataLanguageId',
-                                    ]}
-                                    required
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message:
-                                                messages('validation.input'),
+                                        'audioLanguageId',
+                                    ],
+                                    value
+                                );
+                                updateTrackDraft(
+                                    {
+                                        trackLanguage: {
+                                            ...trackData.trackLanguage,
+                                            audioLanguageId: value,
                                         },
-                                    ]}
-                                >
-                                    <LanguageSelect
-                                        id={`tracks.${index}.trackLanguage.metadataLanguageId`}
-                                        className="w-full"
-                                        showSearch
-                                        allowClear
-                                        disabled={isReadMode}
-                                        // fallback={
-                                        //     trackData?.trackLanguage
-                                        //         ?.metadataLanguage?.name
-                                        // }
-                                        onChange={(value) => {
-                                            updateTrackDraft(
-                                                {
-                                                    trackLanguage: {
-                                                        ...trackData.trackLanguage,
-                                                        metadataLanguageId:
-                                                            value,
-                                                    },
-                                                },
-                                                'trackLanguage.metadataLanguageId'
-                                            );
-                                        }}
-                                    />
-                                </AppFormItem>
-                            </div>
-                        ),
-                    },
-                ]}
-            />
+                                    },
+                                    'trackLanguage.audioLanguageId'
+                                );
+                            }}
+                        />
+                    </AppFormItem>
+
+                    {/* Metadata Language */}
+                    <AppFormItem
+                        label={messages('release.metadataLanguage')}
+                        name={['trackLanguage', 'metadataLanguageId']}
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <LanguageSelect
+                            id={`tracks.${index}.trackLanguage.metadataLanguageId`}
+                            className="w-full"
+                            showSearch
+                            allowClear
+                            disabled={isReadMode}
+                            // fallback={
+                            //     trackData?.trackLanguage
+                            //         ?.metadataLanguage?.name
+                            // }
+                            onChange={(value) => {
+                                updateTrackDraft(
+                                    {
+                                        trackLanguage: {
+                                            ...trackData.trackLanguage,
+                                            metadataLanguageId: value,
+                                        },
+                                    },
+                                    'trackLanguage.metadataLanguageId'
+                                );
+                            }}
+                        />
+                    </AppFormItem>
+                </div>
+            </div>
         </ConfigProvider>
     );
 }

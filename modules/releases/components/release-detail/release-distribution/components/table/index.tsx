@@ -8,9 +8,11 @@ import {
     ReleaseDspDataFilter,
 } from '@/modules/release-dsp/types';
 import ReleaseStatusTag from '@/modules/releases/components/tag/release-status-tag';
+import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
 import { ProColumns } from '@ant-design/pro-components';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
+import DistributionActionButton from '../button/distribution-action';
 
 type Props = Omit<AppProTableProps<ReleaseDspData>, 'columns'> & {
     currentPage?: number;
@@ -110,25 +112,25 @@ export default function DistributionTable({
             ),
         },
 
-        // {
-        //     key: 'actions',
-        //     align: 'center',
-        //     fixed: 'right',
-        //     width: 100,
-        //     render: (value, record) => (
-        //         <DistributionActionButton
-        //             showDistribute
-        //             showDelete
-        //             onShowDistribute={() => {
-        //                 openModal(
-        //                     TYPE_MODAL_RELEASE_DISTRIBUTION.DISTRIBUTION,
-        //                     record
-        //                 );
-        //             }}
-        //             onShowDelete={() => {}}
-        //         />
-        //     ),
-        // },
+        {
+            key: 'actions',
+            align: 'center',
+            fixed: 'right',
+            width: 100,
+            render: (value, record) => (
+                <DistributionActionButton
+                    showDistribute
+                    // showDelete
+                    onShowDistribute={() => {
+                        openModal(
+                            TYPE_MODAL_RELEASE_DISTRIBUTION.DISTRIBUTION,
+                            record
+                        );
+                    }}
+                    // onShowDelete={() => {}}
+                />
+            ),
+        },
     ];
 
     return (

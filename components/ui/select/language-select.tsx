@@ -1,6 +1,6 @@
 import { toNonAccentVietnamese } from '@/helpers/string';
 import { useGetListSimpleLanguage } from '@/modules/languages/hooks/use-get-list-simple-language';
-import { Select, SelectProps, Typography } from 'antd';
+import { Select, SelectProps } from 'antd';
 
 type Props = Omit<SelectProps, 'options'> & {
     fallBack?: string;
@@ -14,10 +14,8 @@ export default function LanguageSelect({ fallBack, ...props }: Props) {
             value: item.id,
             label: (
                 <div className="space-x-1">
-                    <Typography.Text className="!text-xs">
-                        {item?.code}
-                    </Typography.Text>
-                    <Typography.Text>{item?.name}</Typography.Text>
+                    <span className="!text-xs">{item?.code}</span>
+                    <span>{item?.name}</span>
                 </div>
             ),
             name: item?.name,

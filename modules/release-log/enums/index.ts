@@ -1,0 +1,5 @@
+export enum RELEASE_LOG_STATUS {
+    PENDING = 'PENDING',
+    SUCCESS = 'SUCCESS',
+    FAILED = 'FAILED',
+}

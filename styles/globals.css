@@ -1,8 +1,7 @@
+@import './ckeditor.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import './ckeditor.css';
 
 @layer components {
     .bg-background-primary {

@@ -26,7 +26,7 @@ export default function WaveElement({
     togglePlayback = () => {},
     handleSeeking = (value: any) => {},
     color = '#c7c7c9',
-    progressColor = '009AEE',
+    progressColor = '#009AEE',
 }: WaveformElementProps) {
     if (peakData.length === 0) {
         return null;

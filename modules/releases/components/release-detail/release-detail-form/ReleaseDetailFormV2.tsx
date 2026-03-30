@@ -16,7 +16,7 @@ import { ReleasesData } from '@/modules/releases/types';
 import { UpdateReleaseDraftPayload } from '@/modules/releases/types/payload';
 import { UpdateVariables } from '@/types/api';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Form, theme } from 'antd';
+import { Button, ConfigProvider, Form, theme } from 'antd';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
@@ -41,7 +41,9 @@ export default function ReleaseDetailFormV2() {
     const hash = useHash();
 
     // Zustand store - state
-    const formValues = useReleaseFormStore((state) => state.formValues);
+    const formValues = useReleaseFormStore((state) => {
+        return state.formValues;
+    });
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const { getReleaseTabRoute } = useGetReleaseDetailRoute();
     const releaseAction = useReleaseActionStore((s) => s?.action);
@@ -73,6 +75,8 @@ export default function ReleaseDetailFormV2() {
         watch,
         formState: { errors },
         reset,
+        setValue,
+        clearErrors,
     } = formMethods;
 
     // Variables for sections
@@ -114,13 +118,20 @@ export default function ReleaseDetailFormV2() {
             > = {
                 id: formValues.id ?? '',
                 payload: data,
-                onSuccess: (data: ReleasesData) => {
-                    setFormValues(data);
+                onSuccess: (responseData: ReleasesData) => {
+                    setFormValues(responseData);
+                    // not reset the entire form
+                    Object.keys(data).forEach((key) => {
+                        const value = (responseData as any)[key];
+                        if (value !== undefined) {
+                            setValue(key as keyof ReleaseDetailSchema, value);
+                        }
+                    });
                 },
             };
             updateReleaseDraft(variables);
         }, 500),
-        [formValues.id, trigger, updateReleaseDraft]
+        [formValues.id, trigger, updateReleaseDraft, setValue]
     );
 
     useEffect(() => {
@@ -130,11 +141,9 @@ export default function ReleaseDetailFormV2() {
             const initialFormValue: ReleaseDetailSchema = {
                 ...(formValues as ReleaseDetailSchema),
             };
-            reset(initialFormValue, {
-                keepErrors: true,
-            });
+            reset(initialFormValue);
         }
-    }, [isCreateReleasePage, releaseId, formValues, reset]);
+    }, [isCreateReleasePage, releaseId, releaseData?.id]);
 
     useEffect(() => {
         const handleTriggerField = async () => {
@@ -145,90 +154,104 @@ export default function ReleaseDetailFormV2() {
             if (el) {
                 el.scrollIntoView({ block: 'center', behavior: 'smooth' });
             }
+            clearErrors();
             await trigger(field as keyof ReleaseDetailSchema);
         };
         handleTriggerField();
-    }, [trigger, hash]);
+        window.addEventListener('hashchange', handleTriggerField);
+        return () => {
+            window.removeEventListener('hashchange', handleTriggerField);
+        };
+    }, [trigger, hash, clearErrors]);
 
     return (
         <FormProvider {...formMethods}>
-            <Form
-                layout="horizontal"
-                onFinish={handleSubmit(handleNext, handleFormError)}
-                labelCol={{ span: 8 }}
-                wrapperCol={{ span: 16 }}
-                labelAlign="left"
-                variant={
-                    isReadMode && !isCreateReleasePage
-                        ? 'underlined'
-                        : 'outlined'
-                }
+            <ConfigProvider
+                theme={{
+                    token: {
+                        colorTextDisabled: token.colorText,
+                    },
+                }}
             >
-                {/* Single white container for all sections */}
-                <div
-                    className="flex flex-col gap-12 rounded-lg p-6 shadow-sm"
-                    style={{ backgroundColor: token.colorBgContainer }}
+                <Form
+                    className="form-read-only-primary"
+                    layout="horizontal"
+                    onFinish={handleSubmit(handleNext, handleFormError)}
+                    labelCol={{ span: 8 }}
+                    wrapperCol={{ span: 16 }}
+                    labelAlign="left"
+                    variant={
+                        isReadMode && !isCreateReleasePage
+                            ? 'underlined'
+                            : 'outlined'
+                    }
                 >
-                    <ReleaseConfigurationSectionV2
-                        debouncedUpdate={debouncedUpdate}
-                        isReadMode={isReadMode}
-                        isCreateReleasePage={isCreateReleasePage}
-                    />
+                    {/* Single white container for all sections */}
+                    <div
+                        className="flex flex-col gap-12 rounded-lg p-6 shadow-sm"
+                        style={{ backgroundColor: token.colorBgContainer }}
+                    >
+                        <ReleaseConfigurationSectionV2
+                            debouncedUpdate={debouncedUpdate}
+                            isReadMode={isReadMode}
+                            isCreateReleasePage={isCreateReleasePage}
+                        />
 
-                    <CodesSectionV2
-                        debouncedUpdate={debouncedUpdate}
-                        isReadMode={isReadMode}
-                        isCreateReleasePage={isCreateReleasePage}
-                    />
+                        <CodesSectionV2
+                            debouncedUpdate={debouncedUpdate}
+                            isReadMode={isReadMode}
+                            isCreateReleasePage={isCreateReleasePage}
+                        />
 
-                    <GenreLanguageSectionV2
-                        debouncedUpdate={debouncedUpdate}
-                        isReadMode={isReadMode}
-                        isCreateReleasePage={isCreateReleasePage}
-                    />
+                        <GenreLanguageSectionV2
+                            debouncedUpdate={debouncedUpdate}
+                            isReadMode={isReadMode}
+                            isCreateReleasePage={isCreateReleasePage}
+                        />
 
-                    <LegalNoticesSectionV2
-                        debouncedUpdate={debouncedUpdate}
-                        isReadMode={isReadMode}
-                        isCreateReleasePage={isCreateReleasePage}
-                    />
-                </div>
+                        <LegalNoticesSectionV2
+                            debouncedUpdate={debouncedUpdate}
+                            isReadMode={isReadMode}
+                            isCreateReleasePage={isCreateReleasePage}
+                        />
+                    </div>
 
-                <div
-                    className="mt-6 rounded-lg p-6 shadow-sm"
-                    style={{ backgroundColor: token.colorBgContainer }}
-                >
-                    <ReleaseArtistSectionV2
-                        debouncedUpdate={debouncedUpdate}
-                        isReadMode={isReadMode}
-                        isCreateReleasePage={isCreateReleasePage}
-                        releaseArtist={releaseArtist}
-                    />
-                </div>
+                    <div
+                        className="mt-6 rounded-lg p-6 shadow-sm"
+                        style={{ backgroundColor: token.colorBgContainer }}
+                    >
+                        <ReleaseArtistSectionV2
+                            debouncedUpdate={debouncedUpdate}
+                            isReadMode={isReadMode}
+                            isCreateReleasePage={isCreateReleasePage}
+                            releaseArtist={releaseArtist}
+                        />
+                    </div>
 
-                <div
-                    className="mt-6 rounded-lg p-6 shadow-sm"
-                    style={{ backgroundColor: token.colorBgContainer }}
-                >
-                    <ReleaseContributorsSectionV2
-                        isReadMode={isReadMode}
-                        releaseContributor={releaseContributor}
-                    />
-                </div>
+                    <div
+                        className="mt-6 rounded-lg p-6 shadow-sm"
+                        style={{ backgroundColor: token.colorBgContainer }}
+                    >
+                        <ReleaseContributorsSectionV2
+                            isReadMode={isReadMode}
+                            releaseContributor={releaseContributor}
+                        />
+                    </div>
 
-                <div className="my-4 flex w-full justify-end">
-                    {!isCreateReleasePage && (
-                        <Button
-                            htmlType="submit"
-                            disabled={isReadMode}
-                            type="primary"
-                            loading={isActive}
-                        >
-                            {messages('common.continue')}
-                        </Button>
-                    )}
-                </div>
-            </Form>
+                    <div className="my-4 flex w-full justify-end">
+                        {!isCreateReleasePage && (
+                            <Button
+                                htmlType="submit"
+                                disabled={isReadMode}
+                                type="primary"
+                                loading={isActive}
+                            >
+                                {messages('common.continue')}
+                            </Button>
+                        )}
+                    </div>
+                </Form>
+            </ConfigProvider>
         </FormProvider>
     );
 }

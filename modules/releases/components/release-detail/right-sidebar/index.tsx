@@ -11,7 +11,7 @@ import { RELEASES_TABS, TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
 import { ReleaseValidate } from '@/modules/releases/types';
-import { Alert, theme } from 'antd';
+import { Alert, Grid, theme } from 'antd';
 import {
     AlertCircle,
     AlertTriangle,
@@ -37,6 +37,8 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
     const validateLength = releaseValidateData && releaseValidateData?.length;
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const { getReleaseTabRoute } = useGetReleaseDetailRoute();
+    const { useBreakpoint } = Grid;
+    const screens = useBreakpoint();
     const { token } = theme.useToken();
 
     // router
@@ -117,14 +119,17 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
     };
 
     useEffect(() => {
-        if (isCreateReleasePage) return setIsSidebarOpen(false);
+        if (isCreateReleasePage || !screens.lg) {
+            setIsSidebarOpen(false);
+            return;
+        }
 
         if (validateLength > 0) {
             setIsSidebarOpen(true);
         } else {
             setIsSidebarOpen(false);
         }
-    }, [validateLength]);
+    }, [validateLength, isCreateReleasePage, screens.lg]);
 
     return (
         <div
@@ -206,10 +211,12 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                                                     err.field,
                                                     err.page
                                                 );
+
                                                 return (
                                                     <Link
                                                         key={index}
                                                         href={`${getReleaseTabRoute(formValues?.id as string, err.page as RELEASES_TABS)}#${err.field}${err?.trackId ? `.${err.trackId}` : ''}`}
+                                                        scroll={false}
                                                         onClick={() => {
                                                             handleClickError(
                                                                 err

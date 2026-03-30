@@ -6,6 +6,7 @@ export interface CreateDspPayload {
     picture?: string | null;
     isActive: boolean;
     enablePolicy: boolean;
+    codeCi?: string;
 }
 
 export interface UpdateDspPayload extends Partial<CreateDspPayload> {}

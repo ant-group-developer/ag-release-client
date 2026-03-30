@@ -9,7 +9,7 @@ export const uploadApi = {
         try {
             const response = await axiosInstance.post<
                 DetailResponse<{ urlPublic: string; urlUpload: string }>
-            >('/bucket/gcs/public/upload/presigned-url', infoFile);
+            >('/bucket2/public/upload/presigned-url', infoFile);
             if (response.status !== 201) {
                 throw new Error(
                     'Failed to get upload URL. Please try again later.'

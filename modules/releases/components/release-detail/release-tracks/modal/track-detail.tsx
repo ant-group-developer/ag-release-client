@@ -211,6 +211,7 @@ export default function TrackDetailModal({ tracks, ...props }: Props) {
                 content: { backgroundColor: token?.colorBgLayout },
                 header: { backgroundColor: token?.colorBgLayout },
             }}
+            className="h-[80vh]"
         >
             <div className="flex gap-4 overflow-x-hidden">
                 {/* Track list sidebar */}
@@ -268,7 +269,10 @@ export default function TrackDetailModal({ tracks, ...props }: Props) {
                         variant={isReadMode ? 'underlined' : 'outlined'}
                     >
                         <Tabs
-                            className="rounded"
+                            className="rounded p-4 !px-4 pt-1"
+                            style={{
+                                backgroundColor: token.colorBgContainer,
+                            }}
                             items={items}
                             defaultActiveKey={`${selectedTrackId}-view-all`}
                         />

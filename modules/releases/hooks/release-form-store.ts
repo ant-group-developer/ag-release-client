@@ -1,5 +1,4 @@
 import { USER_TYPE } from '@/modules/user/enums';
-import { ZodIssue } from 'zod';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { RELEASE_TIME_MODE, RELEASES_STATUS } from '../enums';
@@ -11,8 +10,6 @@ interface ReleaseFormState {
     formValues: Partial<ReleaseFormStoreData>;
     setFormValues: (values: Partial<ReleaseFormStoreData>) => void;
     resetFormValues: () => void;
-    validationErrors: ZodIssue[];
-    setValidationErrors: (errors: ZodIssue[]) => void;
 }
 
 const initialValue: ReleaseFormStoreData = {
@@ -34,6 +31,7 @@ const initialValue: ReleaseFormStoreData = {
     createdAt: '',
     updatedAt: null,
     releaseDate: '',
+    releaseOriginalDate: '',
     releaseTime: '',
     releaseTimezoneId: null,
     tracks: [],
@@ -130,6 +128,7 @@ const initialValue: ReleaseFormStoreData = {
         tenantUser: [],
     },
     releaseTimeMode: RELEASE_TIME_MODE.GLOBAL_MIDNIGHT,
+    logs: '',
 };
 
 export const useReleaseFormStore = create<ReleaseFormState>()(
@@ -141,8 +140,6 @@ export const useReleaseFormStore = create<ReleaseFormState>()(
                     formValues: { ...state.formValues, ...values },
                 })),
             resetFormValues: () => set({ formValues: initialValue }),
-            validationErrors: [], // isOnRemoving
-            setValidationErrors: (errors) => set({ validationErrors: errors }),
         }),
         {
             name: 'release-form-storage',

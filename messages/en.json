@@ -64,6 +64,9 @@
         }
     },
     "common": {
+        "step": "Step",
+        "exportTemplate": "Export template",
+        "loading": "Loading",
         "incomplete": "Incomplete",
         "generate": "Generate",
         "privateKey": "Private key",
@@ -408,7 +411,9 @@
         "label": "Dashboard",
         "latestNews": "Latest news",
         "goTo": "Go to Dashboard",
-        "viewAllUpdates": "View all updates"
+        "viewAllUpdates": "View all updates",
+        "stream_by_dsp": "Stream by DSP",
+        "stream_distribution_subtitle": "Streams distribution by platform in {year}"
     },
     "review": {
         "message": {
@@ -458,6 +463,10 @@
             "nMinutes": "Starting at minute 0 of each hour and executed every {minutes} minutes",
             "weekly": "{hours}:{minutes} of {dayOfWeek} once a week",
             "monthly": "Executed once a month on {days} of {hours}:{minutes}"
+        },
+        "ciTemplate": {
+            "currentFile": "Current CI Template file",
+            "excelDataStartRow": "Excel data start row"
         }
     },
     "log": {
@@ -767,6 +776,10 @@
     },
 
     "release": {
+        "exportCiTemplate": "Export CI template",
+        "audioLanguage": "Audio language",
+        "metadataLanguageCountry": "Metadata language country",
+        "metadataLanguage": "Metadata language",
         "uploadTemplateSuccess": "Upload template successfully",
         "uploadTemplateError": "Upload template failed",
         "importTemplate": "Import template",
@@ -784,6 +797,7 @@
         "id": "Release ID",
         "type": "Release type",
         "releaseDate": "Release date",
+        "releaseOriginalDate": "Original release date",
         "releaseTime": "Release time",
         "duration": "Duration",
         "trackCount": "Track count",
@@ -893,6 +907,7 @@
     },
 
     "track": {
+        "parentalAdvisoryNotice": "Parental advisory notice",
         "list": "Track list",
         "number": "Track number",
         "add": "Add track",
@@ -966,6 +981,7 @@
         "validation": {
             "previewMustBeLessThanDuration": "Preview duration must be less than track duration",
             "sampleLengthMustBeLessThanDuration": "Sample length must be less than track duration",
+            "sampleExceedsDuration": "Sum of Sample length & Hook can't be longer than audio length",
             "trackUpload": "{type} can upload a maximum of {maxCount} track",
             "trackFileName": "File name cannot over {number} characters"
         },
@@ -1164,6 +1180,7 @@
     },
 
     "formFields": {
+        "releaseOriginalDate": "Original release date",
         "audioFile": {
             "preview": "Preview audio"
         },
@@ -1194,8 +1211,8 @@
         "artists": "Artists",
         "releaseDate": "Release date",
         "territoryType": "Territory type",
-        "cLineYear": "© Year",
-        "pLineYear": "℗ Year",
+        "cLineYear": "© Line Year",
+        "pLineYear": "℗ Line Year",
         "cLine": "Product copyright",
         "pLine": "Sound recording copyright",
         "nameRelease": "Release name",
@@ -1207,8 +1224,8 @@
         "metaDataLanguage": "Metadata language",
         "primaryGenreId": "Primary genre",
         "releaseArtists": "Release artist",
-        "pLineOwner": "℗ Copyright",
-        "cLineOwner": "© Copyright",
+        "pLineOwner": "℗ Line owner",
+        "cLineOwner": "© Line owner",
         "releaseTime": "Release time",
         "releaseTimezoneId": "Timezone",
         "releaseTerritory": {
@@ -1298,6 +1315,7 @@
     "dsp": {
         "label": "DSP",
         "name": "Platform name",
+        "codeCi": "CI Code",
         "add": "Add platform",
         "oneLinkPerLine": "One link per line",
         "profileList": "Profile list",
@@ -1892,5 +1910,15 @@
     "sftp": {
         "requiredSftpInfo": "Please enter all required SFTP information",
         "requiredPasswordOrPrivateKey": "Please enter password or private key"
+    },
+
+    "batchImport": {
+        "label": "Batch import"
+    },
+
+    "releaseLog": {
+        "label": "Release logs",
+        "statusRelease": "Release status",
+        "statusLog": "Log status"
     }
 }

@@ -13,6 +13,7 @@ export interface DspData extends CommonAttribute {
     formatLinks: string[];
     dspActions: DspActionData[];
     code: string;
+    codeCi?: string;
     ddexId?: string;
     ddexName?: string;
 }
@@ -20,6 +21,7 @@ export interface DspData extends CommonAttribute {
 export interface DspDataFilter extends CommonParams {
     keyword?: string;
     dateCreated?: string;
+    aggregatorCode?: string;
 }
 
 export interface DspRoutingConfig extends CommonAttribute {
