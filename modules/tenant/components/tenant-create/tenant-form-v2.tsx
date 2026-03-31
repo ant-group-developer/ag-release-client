@@ -1,11 +1,18 @@
 import AppForm, { AppFormProps } from '@/components/ui/antd-form/form';
 import AppColorPicker from '@/components/ui/colorPicker/app-color-picker';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
-import InputNumber from '@/components/ui/input/input-number';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import UserSelect from '@/modules/user/components/user-select';
-import { Form, Input, Space, Switch, theme, Typography } from 'antd';
+import {
+    Form,
+    Input,
+    InputNumber,
+    Space,
+    Switch,
+    theme,
+    Typography,
+} from 'antd';
 import { useTranslations } from 'next-intl';
 import { TENANT_TYPE } from '../../enums';
 import { TenantData } from '../../types/data';
@@ -80,15 +87,14 @@ function TenantFormV2({ excludeIds, wrapperClassName, ...props }: Props) {
                                             {
                                                 max: 50,
                                                 pattern: /^[a-z0-9-]+$/,
-                                                message: 'Only lowercase letters, numbers, and hyphens',
+                                                message:
+                                                    'Only lowercase letters, numbers, and hyphens',
                                             },
                                         ]}
                                         name="code"
                                         tooltip="Slug code used as SFTP watch folder name (e.g. ant-music)"
                                     >
-                                        <Input
-                                            placeholder="ant-music"
-                                        />
+                                        <Input placeholder="ant-music" />
                                     </AppForm.Item>
 
                                     <AppForm.Item
@@ -225,8 +231,8 @@ function TenantFormV2({ excludeIds, wrapperClassName, ...props }: Props) {
                                             placeholder={messages(
                                                 'tenant.labels.max.label'
                                             )}
-                                            allowClear={false}
                                             disabled={!isAdmin}
+                                            style={{ width: '100%' }}
                                         />
                                     </AppForm.Item>
 

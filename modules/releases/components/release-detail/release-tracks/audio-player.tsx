@@ -1,5 +1,5 @@
 import { usePlaySongStore } from '@/hooks/use-play-song-store';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 // import ReactPlayer from 'react-player';
 
 import ReactPlayer from 'react-player';
@@ -32,7 +32,7 @@ export default function AudioPlayer() {
         return () => {
             setReactPlayerRef(null);
         };
-    }, [setReactPlayerRef, playerRef.current]);
+    }, [setReactPlayerRef]);
 
     // Bước 2: Xử lý việc thiết lập thời gian khi phát
     useEffect(() => {
@@ -80,6 +80,14 @@ export default function AudioPlayer() {
             }));
         }
     };
+
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) return null;
 
     return (
         <ReactPlayer

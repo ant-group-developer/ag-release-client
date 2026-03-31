@@ -172,7 +172,7 @@ export default function GenreLanguageSectionV2({
 
                 <AppFormItem
                     label={
-                        <span className="inline-block whitespace-normal leading-normal">
+                        <span className="block whitespace-normal leading-normal">
                             {messages('release.metadataLanguageCountry')}
                         </span>
                     }

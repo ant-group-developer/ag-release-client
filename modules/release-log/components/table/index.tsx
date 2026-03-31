@@ -131,11 +131,16 @@ export default function ReleaseLogTable({
             width: 300,
             render: (value, record) => {
                 if (!record?.logs) return '-';
+                const logText =
+                    typeof record.logs === 'string'
+                        ? record.logs
+                        : JSON.stringify(record.logs);
                 return (
-                    <span className="truncate whitespace-pre-wrap text-wrap">
-                        {typeof record.logs === 'string'
-                            ? record.logs
-                            : JSON.stringify(record.logs)}
+                    <span
+                        className="line-clamp-6 whitespace-pre-wrap text-wrap"
+                        title={logText}
+                    >
+                        {logText}
                     </span>
                 );
             },

@@ -38,7 +38,7 @@ const AppForm: AppFormComponent = ({
             autoComplete="off"
             {...formLayout}
             requiredMark={(label, info) => (
-                <div className="font-medium">
+                <div className="text-[#65696e]">
                     {label}{' '}
                     {info.required && <span className="text-red-500">*</span>}
                 </div>

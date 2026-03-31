@@ -31,6 +31,7 @@ export const DspTable = ({ ...props }: Props) => {
             key: 'iNo',
             width: 50,
             align: 'center',
+            fixed: 'left',
             render: (_, __, index) =>
                 getIndex(
                     props.pagination.pageSize,
@@ -64,12 +65,13 @@ export const DspTable = ({ ...props }: Props) => {
             ellipsis: true,
             align: 'left',
             width: 300,
+            fixed: 'left',
             render: (value, record) => (
                 <div className="flex items-center gap-4">
                     <div className="flex-shrink-0">
                         <ImageFallback
                             fallbackSrc={FALLBACK_IMAGE}
-                            src={record?.picture ?? ''}
+                            src={record?.picture ?? FALLBACK_IMAGE}
                             alt="genre"
                             width={40}
                             height={40}
@@ -105,7 +107,7 @@ export const DspTable = ({ ...props }: Props) => {
             key: 'codeCi',
             dataIndex: 'codeCi',
             align: 'left',
-            width: 150,
+            width: 100,
             render: (value, record) => (
                 <CopyText
                     tooltipProps={{ placement: 'right' }}
@@ -120,7 +122,7 @@ export const DspTable = ({ ...props }: Props) => {
             key: 'ddexId',
             dataIndex: 'ddexId',
             align: 'left',
-            width: 150,
+            width: 200,
             render: (value, record) => (
                 <CopyText
                     tooltipProps={{ placement: 'right' }}
@@ -207,6 +209,7 @@ export const DspTable = ({ ...props }: Props) => {
             key: 'action',
             dataIndex: '',
             width: 50,
+            fixed: 'right',
             render: (_, record) => (
                 <ActionButton
                     showDelete
