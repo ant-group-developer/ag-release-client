@@ -138,6 +138,7 @@ export default function TrackArtistTable({ trackData, ...props }: Props) {
         {
             width: 50,
             align: 'center',
+            fixed: 'right',
             render: (_, record, index) => {
                 return (
                     <div onClick={(e) => e.preventDefault()}>

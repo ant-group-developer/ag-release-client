@@ -82,7 +82,7 @@ export default function TopStreamsTable({ titleHeader, ...props }: Props) {
                 {...props}
                 pagination={false}
                 columns={columns}
-                scroll={{ x: 'max-content' }}
+                scroll={{ x: 'max-content', y: 330 }}
             />
         </div>
     );

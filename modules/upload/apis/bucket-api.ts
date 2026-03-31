@@ -21,16 +21,16 @@ export const bucketApi = {
 
         const { fileId, urlUpload } = response.data.data;
 
-        const uploadResponse = await fetch(urlUpload, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': payload.file.contentType,
-            },
-            body: file,
-        });
-
-        if (!uploadResponse.ok) {
-            throw new Error('Failed to upload file. Please try again later.');
+        try {
+            await fetch(urlUpload, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': payload.file.contentType,
+                },
+                body: file,
+            });
+        } catch (error) {
+            console.log('Upload error:', error);
         }
 
         return fileId;

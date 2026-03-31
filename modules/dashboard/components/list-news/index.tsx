@@ -30,9 +30,11 @@ export default function ListNews({}: Props) {
                 <p className="text-lg font-bold">
                     {messages('dashboard.latestNews')}
                 </p>
-                <Link href={APP_ROUTES.NEWS}>
-                    <SeeMoreButton type="default" icon={<RightOutlined />} />
-                </Link>
+                {newsDataLength >= 7 && (
+                    <Link href={APP_ROUTES.NEWS}>
+                        <SeeMoreButton type="link" icon={<RightOutlined />} />
+                    </Link>
+                )}
             </div>
 
             {isFetching && (
