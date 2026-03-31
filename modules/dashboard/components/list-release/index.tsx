@@ -25,9 +25,11 @@ export default function ListRelease({ data }: Props) {
                     {messages('release.latestReleases')}
                 </p>
 
-                <Link href={APP_ROUTES.RELEASES}>
-                    <SeeMoreButton type="link" icon={<RightOutlined />} />
-                </Link>
+                {releaseLength >= 7 && (
+                    <Link href={APP_ROUTES.RELEASES}>
+                        <SeeMoreButton type="link" icon={<RightOutlined />} />
+                    </Link>
+                )}
             </div>
 
             <AppGrid className="">

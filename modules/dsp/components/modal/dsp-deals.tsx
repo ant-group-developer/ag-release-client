@@ -331,7 +331,7 @@ export default function DspDeals({ dspId }: Props) {
                             />
                         </AppFormItem>
                         <AppFormItem
-                            label="path"
+                            label="Path"
                             name={['sftpConfig', 'metadata', 'path']}
                         >
                             <Input />

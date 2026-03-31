@@ -66,6 +66,7 @@ export default function ListTop({ className }: Props) {
                             { id: 2, name: 'Quiet Storm', total: 812005 },
                             { id: 7, name: 'Starlight Echo', total: 750200 },
                             { id: 9, name: 'Electric Dreams', total: 680300 },
+                            { id: 2, name: 'Quiet Storm', total: 812005 },
                         ]}
                     />
                 );
@@ -77,7 +78,7 @@ export default function ListTop({ className }: Props) {
             className={`overflow-hidden rounded-lg border-0 shadow-sm ${className}`}
             styles={{
                 header: { borderBottom: 0, paddingBottom: 0, paddingTop: 24 },
-                body: { padding: '0 24px 24px 24px' },
+                body: { padding: '0 24px' },
             }}
             title={
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -86,18 +87,11 @@ export default function ListTop({ className }: Props) {
                         options={tabOptions}
                         value={activeTab}
                         onChange={(value) => setActiveTab(value as string)}
-                        className="rounded-full bg-gray-100 p-1 [&_.ant-segmented-item-selected]:rounded-full [&_.ant-segmented-item-selected]:text-purple-600 [&_.ant-segmented-item-selected]:shadow-none [&_.ant-segmented-thumb]:rounded-full"
                     />
                 </div>
             }
         >
             <div className="mt-6">{renderTable()}</div>
-
-            <div className="mt-8 flex justify-center">
-                <button className="text-sm font-bold text-purple-600 transition-colors hover:text-purple-700">
-                    View All {activeTab}s
-                </button>
-            </div>
         </Card>
     );
 }

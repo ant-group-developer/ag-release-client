@@ -110,14 +110,14 @@ export const releaseSchema = (messages: any) =>
             .string()
             .max(200, messages('validation.max', { number: 200 }))
             .nullable()
-            .refine((val) => val !== '', {
+            .refine((val) => val !== '' && val !== null, {
                 message: messages('validation.input'),
             }),
         cLineOwner: z
             .string()
             .max(200, messages('validation.max', { number: 200 }))
             .nullable()
-            .refine((val) => val !== '', {
+            .refine((val) => val !== '' && val !== null, {
                 message: messages('validation.input'),
             }),
         pLineYear: z.any().refine((val) => val !== null, {

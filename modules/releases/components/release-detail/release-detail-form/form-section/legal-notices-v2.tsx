@@ -17,6 +17,7 @@ export default function LegalNoticesSectionV2({
     isCreateReleasePage,
 }: Props) {
     const {
+        getValues,
         control,
         formState: { errors },
         watch,
@@ -106,7 +107,6 @@ export default function LegalNoticesSectionV2({
                                 // {...field}
                                 value={field.value ?? ''}
                                 disabled={isCreateReleasePage || isReadMode}
-                                allowClear
                                 onChange={(e) => {
                                     const value = e.target.value || null;
                                     field.onChange(value);
@@ -184,7 +184,6 @@ export default function LegalNoticesSectionV2({
                                 id="pLineOwner"
                                 value={field.value ?? ''}
                                 disabled={isCreateReleasePage || isReadMode}
-                                allowClear
                                 onChange={(e) => {
                                     const newOwner = e.target.value || null;
                                     field.onChange(newOwner);
