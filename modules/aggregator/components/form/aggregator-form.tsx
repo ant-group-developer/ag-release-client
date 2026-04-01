@@ -216,10 +216,9 @@ export default function AggregatorForm({ ...props }: Props) {
             onOk={form.submit}
             loading={isActive}
             width={'40vw'}
-            className="!top-12"
+            className="!top-8"
             styles={{
                 body: {
-                    maxHeight: '80vh',
                     overflowY: 'auto',
                     paddingRight: '4px',
                 },
@@ -304,6 +303,14 @@ export default function AggregatorForm({ ...props }: Props) {
                         </AppFormItem>
 
                         <AppFormItem
+                            name="createsDoneFolder"
+                            label={messages('aggregator.createsDoneFolder')}
+                            valuePropName="checked"
+                        >
+                            <Switch />
+                        </AppFormItem>
+
+                        <AppFormItem
                             name="ddexId"
                             label={messages('dsp.ddexPartyId')}
                             rules={[
@@ -363,6 +370,13 @@ export default function AggregatorForm({ ...props }: Props) {
                         <AppFormItem
                             name={['sftpConfig', 'metadata', 'path']}
                             label="Path"
+                        >
+                            <Input />
+                        </AppFormItem>
+
+                        <AppFormItem
+                            name={['sftpConfig', 'metadata', 'ernVersion']}
+                            label={messages('aggregator.ernVersion')}
                         >
                             <Input />
                         </AppFormItem>

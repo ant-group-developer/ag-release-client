@@ -12,6 +12,7 @@ export interface AggregatorData extends CommonAttribute {
     ddexName: string;
     isActive: boolean;
     isDefault: boolean;
+    createsDoneFolder: boolean;
     sftpConfig: {
         id: string;
         metadata: SftpMetadata;
@@ -24,6 +25,7 @@ export interface SftpMetadata {
     username: string;
     password: string;
     path?: string;
+    ernVersion?: string;
 }
 
 export interface AggregatorDataFilter extends CommonParams {}
