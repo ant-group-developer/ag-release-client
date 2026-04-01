@@ -16,7 +16,7 @@ export interface AggregatorData extends CommonAttribute {
     createsDoneFolder: boolean;
     sftpConfig: {
         id: string;
-        ernVersion: ERN_VERSION;
+        ernVersion?: ERN_VERSION;
         metadata: SftpMetadata;
     };
 }
