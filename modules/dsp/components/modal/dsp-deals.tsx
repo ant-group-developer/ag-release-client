@@ -3,6 +3,7 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import { SIZE_ICON, SIZE_ICON_BIG } from '@/constants/common';
 import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
+import ErnVersionSelect from '@/modules/aggregator/components/select/ern-version-select';
 import { useGetListAggregator } from '@/modules/aggregator/hooks/use-get-list';
 import {
     useTestConnection,
@@ -336,7 +337,7 @@ export default function DspDeals({ dspId }: Props) {
                             name={['sftpConfig', 'ernVersion']}
                             label={messages('aggregator.ernVersion')}
                         >
-                            <Input />
+                            <ErnVersionSelect />
                         </AppFormItem>
                         <AppFormItem
                             label="Username"
