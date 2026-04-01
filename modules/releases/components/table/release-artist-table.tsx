@@ -197,23 +197,25 @@ export default function ReleaseArtistTable({
                     columns={columns}
                     scroll={{ x: 'max-content' }}
                 />
-                <div className="px-4 py-2">
-                    <AddArtistForm disabled={disabled} />
-                    <AppConfirm
-                        open={releaseArtistModal?.isOpen}
-                        modalTitle={messages('delete.confirmTitle')}
-                        paragraph={messages('delete.confirmMessage', {
-                            value: releaseArtistModal?.data?.artist?.name,
-                        })}
-                        onCancel={() => {
-                            setReleaseArtistModal({
-                                isOpen: false,
-                                data: undefined,
-                            });
-                        }}
-                        onOk={() => handleRemoveArtistList()}
-                    />
-                </div>
+                {!disabled && (
+                    <div className="px-4 py-2">
+                        <AddArtistForm disabled={disabled} />
+                        <AppConfirm
+                            open={releaseArtistModal?.isOpen}
+                            modalTitle={messages('delete.confirmTitle')}
+                            paragraph={messages('delete.confirmMessage', {
+                                value: releaseArtistModal?.data?.artist?.name,
+                            })}
+                            onCancel={() => {
+                                setReleaseArtistModal({
+                                    isOpen: false,
+                                    data: undefined,
+                                });
+                            }}
+                            onOk={() => handleRemoveArtistList()}
+                        />
+                    </div>
+                )}
             </div>
         </div>
     );

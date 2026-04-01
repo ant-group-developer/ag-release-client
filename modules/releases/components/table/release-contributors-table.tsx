@@ -195,23 +195,26 @@ export default function ReleaseContributorsTable({
                     columns={columns}
                     scroll={{ x: 'max-content' }}
                 />
-                <div className="px-4 py-2">
-                    <AddArtistContributorForm disabled={disabled} />
-                    <AppConfirm
-                        open={releaseContributorModal?.isOpen}
-                        modalTitle={messages('delete.confirmTitle')}
-                        paragraph={messages('delete.confirmMessage', {
-                            value: releaseContributorModal?.data?.artist?.name,
-                        })}
-                        onCancel={() => {
-                            setReleaseContributorModal({
-                                isOpen: false,
-                                data: undefined,
-                            });
-                        }}
-                        onOk={() => handleRemoveArtistContributor()}
-                    />
-                </div>
+                {!disabled && (
+                    <div className="px-4 py-2">
+                        <AddArtistContributorForm disabled={disabled} />
+                        <AppConfirm
+                            open={releaseContributorModal?.isOpen}
+                            modalTitle={messages('delete.confirmTitle')}
+                            paragraph={messages('delete.confirmMessage', {
+                                value: releaseContributorModal?.data?.artist
+                                    ?.name,
+                            })}
+                            onCancel={() => {
+                                setReleaseContributorModal({
+                                    isOpen: false,
+                                    data: undefined,
+                                });
+                            }}
+                            onOk={() => handleRemoveArtistContributor()}
+                        />
+                    </div>
+                )}
             </div>
         </div>
     );
