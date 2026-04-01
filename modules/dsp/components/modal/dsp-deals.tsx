@@ -121,10 +121,6 @@ export default function DspDeals({ dspId }: Props) {
             const { host, port, username, password, privateKey } =
                 sftpConfig.metadata;
 
-            console.log(
-                '🚀 ~ handleTestConnection ~ dspRoutingConfig?.sftpConfig?.id:',
-                dspRoutingConfig?.sftpConfig?.id
-            );
             if (password || privateKey) {
                 form.setFields([
                     {
@@ -333,6 +329,12 @@ export default function DspDeals({ dspId }: Props) {
                         <AppFormItem
                             label="Path"
                             name={['sftpConfig', 'metadata', 'path']}
+                        >
+                            <Input />
+                        </AppFormItem>
+                        <AppFormItem
+                            name={['sftpConfig', 'metadata', 'ernVersion']}
+                            label={messages('aggregator.ernVersion')}
                         >
                             <Input />
                         </AppFormItem>
