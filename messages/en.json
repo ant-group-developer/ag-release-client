@@ -1641,6 +1641,10 @@
         "prices": "Prices",
         "name": "Price name",
         "code": "Price code",
+        "ciCode": "CI Code",
+        "type": "Type",
+        "album": "Album",
+        "track": "Track",
         "action": {
             "delete": "Delete price"
         }
@@ -1845,7 +1849,9 @@
         "aggregators": "Aggregators",
         "list": "List aggregator",
         "systemDefault": "System default",
+        "createsDoneFolder": "Create done folder",
         "ddexName": "DDex name",
+        "ernVersion": "ERN version",
         "action": {
             "create": "Create aggregator",
             "update": "Update aggregator"

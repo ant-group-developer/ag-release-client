@@ -1645,6 +1645,10 @@
         "prices": "Giá",
         "name": "Tên giá",
         "code": "Mã giá",
+        "ciCode": "Mã CI",
+        "type": "Loại",
+        "album": "Album",
+        "track": "Track",
         "action": {
             "delete": "Xoá giá"
         }
@@ -1850,7 +1854,9 @@
         "aggregators": "Đơn vị tổng hợp",
         "list": "Danh sách đơn vị tổng hợp",
         "systemDefault": "Cổng mặc định",
+        "createsDoneFolder": "Tạo thư mục done",
         "ddexName": "Tên ddex",
+        "ernVersion": "Phiên bản ERN",
         "action": {
             "create": "Tạo đơn vị tổng hợp",
             "update": "Cập nhật đơn vị tổng hợp"

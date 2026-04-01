@@ -3,6 +3,7 @@ import { DetailResponse, PaginationResponse } from '@/types/api';
 import { PriceTiersData, PriceTiersDataFilter } from '../types';
 import {
     CreatePriceTiersPayload,
+    UpdatePriceTiersOrderPayload,
     UpdatePriceTiersPayload,
 } from '../types/payload';
 
@@ -41,5 +42,12 @@ export const priceTiersApis = {
 
     deletePriceTiers: (id: PriceTiersData['id']) => {
         return axiosInstance.delete(`/price-tiers/${id}`);
+    },
+
+    bulkUpdatePriceTiers: (payload: UpdatePriceTiersOrderPayload) => {
+        return axiosInstance.put<DetailResponse<PriceTiersData>>(
+            '/price-tiers/bulk',
+            payload
+        );
     },
 };

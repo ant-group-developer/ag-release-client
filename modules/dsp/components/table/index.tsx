@@ -64,7 +64,7 @@ export const DspTable = ({ ...props }: Props) => {
             dataIndex: 'name',
             ellipsis: true,
             align: 'left',
-            width: 300,
+            width: 250,
             fixed: 'left',
             render: (value, record) => (
                 <div className="flex items-center gap-4">
