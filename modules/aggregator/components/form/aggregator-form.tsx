@@ -375,7 +375,7 @@ export default function AggregatorForm({ ...props }: Props) {
                         </AppFormItem>
 
                         <AppFormItem
-                            name={['sftpConfig', 'metadata', 'ernVersion']}
+                            name={['sftpConfig', 'ernVersion']}
                             label={messages('aggregator.ernVersion')}
                         >
                             <Input />

@@ -95,6 +95,10 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
                         defaultValue={record?.priceTier?.id}
                         className="w-full"
                         variant="borderless"
+                        params={{
+                            isActive: true,
+                            type: formValues?.albumFormat?.code,
+                        }}
                         onChange={(value) =>
                             updateTrackDraft({
                                 id: record?.id,
