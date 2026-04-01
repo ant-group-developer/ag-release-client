@@ -10,7 +10,7 @@ import { useLoadingStatus } from '@/hooks/use-loading-status';
 import useModalStore from '@/hooks/use-modal';
 import PriceTiersHeader from '@/modules/price_tiers/components/header';
 import PriceTiersFormModal from '@/modules/price_tiers/components/modal/price-tiers-form';
-import { PriceTiersTable } from '@/modules/price_tiers/components/table';
+import PriceTiersTable from '@/modules/price_tiers/components/table';
 import { priceTiersQueryKeys } from '@/modules/price_tiers/constants/query-keys';
 import { TYPE_MODAL_PRICE_TIERS } from '@/modules/price_tiers/enums';
 import { useDeletePriceTiers } from '@/modules/price_tiers/hooks/use-delete-price-tiers';

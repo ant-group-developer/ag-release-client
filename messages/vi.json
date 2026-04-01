@@ -1645,6 +1645,10 @@
         "prices": "Giá",
         "name": "Tên giá",
         "code": "Mã giá",
+        "ciCode": "Mã CI",
+        "type": "Loại",
+        "album": "Album",
+        "track": "Track",
         "action": {
             "delete": "Xoá giá"
         }

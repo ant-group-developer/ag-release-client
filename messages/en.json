@@ -1641,6 +1641,10 @@
         "prices": "Prices",
         "name": "Price name",
         "code": "Price code",
+        "ciCode": "CI Code",
+        "type": "Type",
+        "album": "Album",
+        "track": "Track",
         "action": {
             "delete": "Delete price"
         }

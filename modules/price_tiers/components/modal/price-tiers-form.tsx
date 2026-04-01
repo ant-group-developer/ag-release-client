@@ -16,6 +16,7 @@ import {
     CreatePriceTiersPayload,
     UpdatePriceTiersPayload,
 } from '../../types/payload';
+import PriceTierTypeSelect from '../select/price-tier-type-select';
 
 type Props = Omit<AppModalProps, 'children'> & {};
 
@@ -142,6 +143,34 @@ export default function PriceTiersFormModal({ ...props }: Props) {
                         ]}
                     >
                         <Input />
+                    </AppFormItem>
+
+                    <AppFormItem
+                        name="ciCode"
+                        label={messages('price.ciCode')}
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <Input />
+                    </AppFormItem>
+
+                    <AppFormItem
+                        name="type"
+                        label={messages('price.type')}
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <PriceTierTypeSelect className="w-full" />
                     </AppFormItem>
 
                     <AppFormItem
