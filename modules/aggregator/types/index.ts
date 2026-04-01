@@ -1,5 +1,6 @@
 import { UserDetail } from '@/modules/user/types/data';
 import { CommonAttribute, CommonParams } from '@/types/api';
+import { ERN_VERSION } from '../enums';
 
 export interface AggregatorData extends CommonAttribute {
     creatorId: string;
@@ -15,6 +16,7 @@ export interface AggregatorData extends CommonAttribute {
     createsDoneFolder: boolean;
     sftpConfig: {
         id: string;
+        ernVersion: ERN_VERSION;
         metadata: SftpMetadata;
     };
 }
@@ -25,7 +27,6 @@ export interface SftpMetadata {
     username: string;
     password: string;
     path?: string;
-    ernVersion?: string;
 }
 
 export interface AggregatorDataFilter extends CommonParams {}

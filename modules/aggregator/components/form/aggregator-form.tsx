@@ -28,6 +28,7 @@ import {
     CreateAggregatorPayload,
     UpdateAggregatorPayload,
 } from '../../types/payloads';
+import ErnVersionSelect from '../select/ern-version-select';
 
 type Props = Omit<AppModalProps, 'children'> & {};
 
@@ -375,10 +376,10 @@ export default function AggregatorForm({ ...props }: Props) {
                         </AppFormItem>
 
                         <AppFormItem
-                            name={['sftpConfig', 'metadata', 'ernVersion']}
+                            name={['sftpConfig', 'ernVersion']}
                             label={messages('aggregator.ernVersion')}
                         >
-                            <Input />
+                            <ErnVersionSelect />
                         </AppFormItem>
 
                         <AppFormItem

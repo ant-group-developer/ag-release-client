@@ -17,4 +17,5 @@ export interface PriceTiersData extends CommonAttribute {
 
 export interface PriceTiersDataFilter extends CommonParams {
     isActive?: boolean;
+    type?: string;
 }
