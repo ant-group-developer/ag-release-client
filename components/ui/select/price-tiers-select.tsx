@@ -1,16 +1,26 @@
 import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
+import { ORDER } from '@/enums/common';
 import { formatCurrency } from '@/helpers/common';
 import { toNonAccentVietnamese } from '@/helpers/string';
 import { useGetListPriceTiers } from '@/modules/price_tiers/hooks/use-get-list-tiers';
+import { PriceTiersDataFilter } from '@/modules/price_tiers/types';
 import { Select, SelectProps, Typography } from 'antd';
 
 type Props = Omit<SelectProps, 'options'> & {
     fallBack?: string;
+    params?: PriceTiersDataFilter;
 };
 
-export default function PriceTiersSelect({ fallBack, ...props }: Props) {
+export default function PriceTiersSelect({
+    fallBack,
+    params,
+    ...props
+}: Props) {
     const { priceTiersData } = useGetListPriceTiers({
         pageSize: PAGE_SIZE_EXTRA_LARGE,
+        orderBy: ORDER.ASC,
+        fieldOrder: 'order',
+        ...params,
     });
 
     const options = priceTiersData.items.map((item) => ({

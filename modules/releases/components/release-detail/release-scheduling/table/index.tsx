@@ -8,6 +8,7 @@ import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { Link } from '@/i18n/routing';
 import { useGetListEnablePolicyDsp } from '@/modules/dsp/hooks/use-get-list-enable-policy-dsp';
 import { DspData } from '@/modules/dsp/types';
+import { PRICE_TIER_TYPE } from '@/modules/price_tiers/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { TrackData } from '@/modules/releases/types';
 import { TRACK_TABS } from '@/modules/tracks/enums';
@@ -95,6 +96,10 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
                         defaultValue={record?.priceTier?.id}
                         className="w-full"
                         variant="borderless"
+                        params={{
+                            isActive: true,
+                            type: PRICE_TIER_TYPE.TRACK,
+                        }}
                         onChange={(value) =>
                             updateTrackDraft({
                                 id: record?.id,
@@ -188,6 +193,10 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
                             className="w-full"
                             variant="borderless"
                             allowClear
+                            params={{
+                                isActive: true,
+                                type: PRICE_TIER_TYPE.ALBUM,
+                            }}
                         />
                     </Table.Summary.Cell>
 
