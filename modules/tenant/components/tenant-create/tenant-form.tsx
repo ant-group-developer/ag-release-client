@@ -62,7 +62,8 @@ function TenantForm({ excludeIds, wrapperClassName, ...props }: Props) {
                         {
                             max: 50,
                             pattern: /^[a-z0-9-]+$/,
-                            message: 'Only lowercase letters, numbers, and hyphens',
+                            message:
+                                'Only lowercase letters, numbers, and hyphens',
                         },
                     ]}
                     name="code"
@@ -160,6 +161,12 @@ function TenantForm({ excludeIds, wrapperClassName, ...props }: Props) {
                             max: 2000,
                             min: 0,
                             type: 'number',
+                            transform: (value) =>
+                                value !== null &&
+                                value !== undefined &&
+                                value !== ''
+                                    ? Number(value)
+                                    : value,
                         },
                         {
                             required: true,
