@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "link": "Link",
         "step": "Step",
         "exportTemplate": "Export template",
         "loading": "Loading",

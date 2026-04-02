@@ -39,7 +39,7 @@ const ReleaseLogTableFilter = ({ dataFilter, onChangeFilter }: Props) => {
                 onChange={(value) => onChangeFilter({ status: value })}
                 defaultValue={dataFilter?.status}
                 allowClear
-                style={{ minWidth: 150 }}
+                style={{ minWidth: 200 }}
             />
             <DspSelect
                 placeholder={messages('placeholder.filterBy', {
@@ -52,7 +52,7 @@ const ReleaseLogTableFilter = ({ dataFilter, onChangeFilter }: Props) => {
                 defaultValue={dataFilter?.dspIds?.split(',')}
                 allowClear
                 maxTagCount={2}
-                style={{ minWidth: 150 }}
+                style={{ minWidth: 200 }}
             />
             <DateRangePicker
                 value={
@@ -69,7 +69,7 @@ const ReleaseLogTableFilter = ({ dataFilter, onChangeFilter }: Props) => {
                         endCreatedAt: end,
                     })
                 }
-                style={{ width: 250 }}
+                style={{ width: 200 }}
             />
         </Space>
     );
