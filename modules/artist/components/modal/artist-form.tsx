@@ -300,7 +300,9 @@ export default function ArtistFormModal({ ...props }: Props) {
                                                         {...restField}
                                                         className="flex-1"
                                                         name={[name, 'url']}
-                                                        label={'Url'}
+                                                        label={messages(
+                                                            'common.link'
+                                                        )}
                                                         required
                                                         rules={[
                                                             {

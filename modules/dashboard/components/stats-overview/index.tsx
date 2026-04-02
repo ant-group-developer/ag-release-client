@@ -147,16 +147,16 @@ export default function StatsOverview({
                             <div
                                 className={`rounded-xl p-2.5 ${item.bgColor} ${item.color}`}
                             >
-                                <Icon size={18} />
+                                <Icon size={24} />
                             </div>
                             <div
-                                className={`text-[10px] font-semibold ${item.trendColor}`}
+                                className={`text-[14px] font-semibold ${item.trendColor}`}
                             >
                                 {item.trend.includes('+') ? (
                                     <span className="flex items-center gap-1">
                                         <svg
-                                            width="10"
-                                            height="10"
+                                            width="14"
+                                            height="14"
                                             viewBox="0 0 24 24"
                                             fill="none"
                                             stroke="currentColor"
@@ -175,7 +175,7 @@ export default function StatsOverview({
                             </div>
                         </div>
 
-                        <div className="mb-1 text-[10px] font-bold uppercase tracking-[0.1em] text-gray-400 dark:text-zinc-500">
+                        <div className="mb-1 text-[12px] font-bold uppercase tracking-[0.1em] text-gray-400 dark:text-zinc-500">
                             {item?.label}
                         </div>
 

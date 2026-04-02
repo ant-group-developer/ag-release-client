@@ -53,16 +53,17 @@ export default function ReleaseLogTable({
             title: messages('common.title'),
             key: 'title',
             dataIndex: 'title',
-            ellipsis: true,
             align: 'left',
             width: 200,
             render: (value, record) => {
                 return (
                     <div className="flex items-center gap-2">
-                        <div className="h-10 min-w-10">
+                        <div className="h-10 w-10 flex-shrink-0">
                             <ReleaseCoverImage data={record?.release} />
                         </div>
-                        <span>{record?.release?.title}</span>
+                        <span className="truncate break-words">
+                            {record?.release?.title}
+                        </span>
                     </div>
                 );
             },
@@ -76,9 +77,15 @@ export default function ReleaseLogTable({
             render: (value, record) => {
                 if (!record?.dsp) return '-';
                 return (
-                    <div className="flex items-center gap-2">
-                        <Avatar size={'small'} src={record?.dsp?.picture} />
-                        <span>{record?.dsp?.name}</span>
+                    <div className="flex min-w-0 items-center gap-2">
+                        <Avatar
+                            className="flex-shrink-0"
+                            size={'small'}
+                            src={record?.dsp?.picture}
+                        />
+                        <span title={record?.dsp?.name} className="truncate">
+                            {record?.dsp?.name}
+                        </span>
                     </div>
                 );
             },

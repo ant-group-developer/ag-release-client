@@ -39,7 +39,7 @@ export default function Labels({}: Props) {
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore<LabelData>((state) => state.dataEdit);
     const openModal = useModalStore((state) => state.openModal);
-    const { isNotSystemTenant } = useAuth();
+    const { isSystemTenant } = useAuth();
     const { hasPermission } = usePermission();
 
     // apis
@@ -81,7 +81,7 @@ export default function Labels({}: Props) {
                 }}
                 extra={
                     <div className="flex items-center gap-2">
-                        {isNotSystemTenant &&
+                        {isSystemTenant &&
                             hasPermission(PERMISSION.LABEL.CREATE) && (
                                 <CreateButton
                                     canCreate={true}
