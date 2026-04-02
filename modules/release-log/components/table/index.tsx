@@ -8,7 +8,6 @@ import { useTranslations } from 'next-intl';
 
 import JsonViewer from '@/components/ui/json-viewer';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
-import ReleaseStatusTag from '@/modules/releases/components/tag/release-status-tag';
 import { CaretDownOutlined, CaretRightOutlined } from '@ant-design/icons';
 import { RELEASE_LOG_STATUS } from '../../enums';
 import { ReleaseLogData, ReleaseLogFilter } from '../../types';
@@ -90,16 +89,16 @@ export default function ReleaseLogTable({
                 );
             },
         },
-        {
-            title: messages('releaseLog.statusRelease'),
-            key: 'releaseStatus',
-            dataIndex: 'releaseStatus',
-            align: 'left',
-            width: 120,
-            render: (value, record) => {
-                return <ReleaseStatusTag status={record?.release?.status} />;
-            },
-        },
+        // {
+        //     title: messages('releaseLog.statusRelease'),
+        //     key: 'releaseStatus',
+        //     dataIndex: 'releaseStatus',
+        //     align: 'left',
+        //     width: 120,
+        //     render: (value, record) => {
+        //         return <ReleaseStatusTag status={record?.release?.status} />;
+        //     },
+        // },
         {
             title: messages('releaseLog.statusLog'),
             key: 'status',
