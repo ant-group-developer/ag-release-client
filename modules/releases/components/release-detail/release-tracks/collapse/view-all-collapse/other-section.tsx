@@ -8,7 +8,7 @@ import TrackTypesSelect from '@/components/ui/select/track-types-select';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { TrackData } from '@/modules/tracks/types';
-import { ConfigProvider, Form, Input, Radio, Select } from 'antd';
+import { ConfigProvider, DatePicker, Form, Input, Radio } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
@@ -40,12 +40,10 @@ export default function OtherSection({
         debouncedUpdateTrackDraft(data);
     };
 
-    const currentYear = dayjs().year();
-    const copyRightYearOptions = [
-        { label: (currentYear - 1).toString(), value: currentYear - 1 },
-        { label: currentYear.toString(), value: currentYear },
-        { label: (currentYear + 1).toString(), value: currentYear + 1 },
-    ];
+    const maxYear = dayjs().year() + 1;
+    const disabledYear = (current: dayjs.Dayjs) => {
+        return current && current.year() > maxYear;
+    };
 
     return (
         <ConfigProvider
@@ -225,15 +223,22 @@ export default function OtherSection({
                                 message: messages('validation.input'),
                             },
                         ]}
+                        getValueFromEvent={(date: dayjs.Dayjs | null) =>
+                            date ? date.year() : undefined
+                        }
+                        getValueProps={(value: number | undefined) => ({
+                            value: value ? dayjs().year(value) : null,
+                        })}
                     >
-                        <Select
+                        <DatePicker
                             id={`tracks.${index}.pLineYear`}
+                            picker="year"
                             className="w-full"
-                            options={copyRightYearOptions}
                             disabled={isReadMode}
-                            showSearch
+                            disabledDate={disabledYear}
                             allowClear
-                            onChange={(value) => {
+                            onChange={(date) => {
+                                const value = date ? date.year() : undefined;
                                 updateTrackDraft(
                                     { pLineYear: value },
                                     'pLineYear'

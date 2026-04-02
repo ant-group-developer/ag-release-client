@@ -1,6 +1,6 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import { ReleaseDetailSchema } from '@/modules/releases/schemas';
-import { Input, Select } from 'antd';
+import { DatePicker, Input } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -31,21 +31,10 @@ export default function LegalNoticesSectionV2({
     const showCLine = !!cLineYear && !!cLineOwner;
     const showPLine = !!pLineYear && !!pLineOwner;
 
-    const copyRightYearList = () => {
-        const currentYear = dayjs().year();
-        return [
-            {
-                label: (currentYear - 1).toString(),
-                value: Number(currentYear - 1),
-            },
-            { label: currentYear.toString(), value: Number(currentYear) },
-            {
-                label: (currentYear + 1).toString(),
-                value: Number(currentYear + 1),
-            },
-        ];
+    const maxYear = dayjs().year() + 1;
+    const disabledYear = (current: dayjs.Dayjs) => {
+        return current && current.year() > maxYear;
     };
-    const copyRightYears = copyRightYearList();
 
     return (
         <div id="legal-notices" className="flex flex-col gap-6">
@@ -64,17 +53,20 @@ export default function LegalNoticesSectionV2({
                         control={control}
                         name="cLineYear"
                         render={({ field }) => (
-                            <Select
+                            <DatePicker
                                 id="cLineYear"
-                                // {...field}
-                                value={field.value}
+                                picker="year"
+                                value={
+                                    field.value
+                                        ? dayjs().year(field.value)
+                                        : null
+                                }
                                 className="w-full"
                                 disabled={isCreateReleasePage || isReadMode}
-                                onChange={(newYear) => {
-                                    const value =
-                                        newYear != null
-                                            ? Number(newYear)
-                                            : undefined;
+                                onChange={(date) => {
+                                    const value = date
+                                        ? date.year()
+                                        : undefined;
                                     field.onChange(value);
                                     debouncedUpdate(
                                         {
@@ -83,7 +75,7 @@ export default function LegalNoticesSectionV2({
                                         'cLineYear'
                                     );
                                 }}
-                                options={copyRightYears}
+                                disabledDate={disabledYear}
                                 status={errors.cLineYear ? 'error' : undefined}
                                 allowClear
                             />
@@ -141,17 +133,20 @@ export default function LegalNoticesSectionV2({
                         control={control}
                         name="pLineYear"
                         render={({ field }) => (
-                            <Select
+                            <DatePicker
                                 id="pLineYear"
-                                // {...field}
-                                value={field.value}
+                                picker="year"
+                                value={
+                                    field.value
+                                        ? dayjs().year(field.value)
+                                        : null
+                                }
                                 className="w-full"
                                 disabled={isCreateReleasePage || isReadMode}
-                                onChange={(newYear) => {
-                                    const value =
-                                        newYear != null
-                                            ? Number(newYear)
-                                            : undefined;
+                                onChange={(date) => {
+                                    const value = date
+                                        ? date.year()
+                                        : undefined;
                                     field.onChange(value);
                                     debouncedUpdate(
                                         {
@@ -160,7 +155,7 @@ export default function LegalNoticesSectionV2({
                                         'pLineYear'
                                     );
                                 }}
-                                options={copyRightYears}
+                                disabledDate={disabledYear}
                                 status={errors?.pLineYear ? 'error' : undefined}
                                 allowClear
                             />

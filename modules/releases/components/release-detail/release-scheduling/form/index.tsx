@@ -175,10 +175,6 @@ export default function ReleaseSchedulingForm({}: Props) {
                                             id="releaseDate"
                                             className="w-full"
                                             format={DATE_FORMAT.DATE_ONLY}
-                                            disabledDate={(date) =>
-                                                date &&
-                                                date < dayjs().startOf('day')
-                                            }
                                             value={
                                                 field.value
                                                     ? dayjs(field.value)

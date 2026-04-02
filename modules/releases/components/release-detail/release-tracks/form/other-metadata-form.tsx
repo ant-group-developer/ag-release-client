@@ -14,7 +14,7 @@ import { TrackData } from '@/modules/tracks/types';
 import { UpdateTrackPayload } from '@/modules/tracks/types/payload';
 import { UpdateVariables } from '@/types/api';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ConfigProvider, Input, Radio, Select } from 'antd';
+import { ConfigProvider, DatePicker, Input, Radio } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import dayjs from 'dayjs';
 import { debounce } from 'lodash';
@@ -497,47 +497,38 @@ export default function OtherMetadataForm({ trackData }: Props) {
                             name="pLineYear"
                             control={control}
                             render={({ field }) => {
-                                const currentYear = Number(dayjs().year());
-                                const copyRightYearList = () => {
-                                    const yearList = [
-                                        {
-                                            label: (currentYear - 1).toString(),
-                                            value: currentYear - 1,
-                                        },
-                                        {
-                                            label: currentYear.toString(),
-                                            value: currentYear,
-                                        },
-                                        {
-                                            label: (currentYear + 1).toString(),
-                                            value: currentYear + 1,
-                                        },
-                                    ];
-                                    return yearList;
-                                };
-
+                                const maxYear = dayjs().year() + 1;
                                 return (
-                                    <Select
+                                    <DatePicker
+                                        id="pLineYear"
+                                        picker="year"
+                                        value={
+                                            field.value
+                                                ? dayjs().year(field.value)
+                                                : null
+                                        }
                                         className="w-full"
-                                        showSearch
-                                        {...field}
-                                        value={field.value}
-                                        onChange={(newYear) => {
-                                            const yearNumber = Number(newYear);
-                                            field.onChange(yearNumber);
+                                        onChange={(date) => {
+                                            const value = date
+                                                ? date.year()
+                                                : undefined;
+                                            field.onChange(value);
                                             debouncedUpdateTrackDraft(
                                                 {
-                                                    pLineYear: yearNumber,
+                                                    pLineYear: value,
                                                 },
                                                 'pLineYear'
                                             );
                                         }}
-                                        options={copyRightYearList()}
+                                        disabledDate={(current) =>
+                                            current && current.year() > maxYear
+                                        }
                                         status={
                                             errors.pLineYear
                                                 ? 'error'
                                                 : undefined
                                         }
+                                        allowClear
                                     />
                                 );
                             }}
