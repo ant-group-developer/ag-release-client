@@ -216,6 +216,12 @@ function TenantFormV2({ excludeIds, wrapperClassName, ...props }: Props) {
                                                 max: 2000,
                                                 min: 0,
                                                 type: 'number',
+                                                transform: (value) =>
+                                                    value !== null &&
+                                                    value !== undefined &&
+                                                    value !== ''
+                                                        ? Number(value)
+                                                        : value,
                                             },
                                             {
                                                 required: true,
