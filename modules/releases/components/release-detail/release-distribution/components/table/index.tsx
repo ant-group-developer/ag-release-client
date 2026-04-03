@@ -12,6 +12,7 @@ import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
 import { ProColumns } from '@ant-design/pro-components';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
+import { useParams } from 'next/navigation';
 import DistributionActionButton from '../button/distribution-action';
 
 type Props = Omit<AppProTableProps<ReleaseDspData>, 'columns'> & {
@@ -29,8 +30,8 @@ export default function DistributionTable({
             ? (props.pagination?.pageSize ?? 10)
             : 10;
     const messages = useTranslations();
-    const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
+
     const column: ProColumns<ReleaseDspData>[] = [
         {
             title: messages('common.iNo'),
@@ -123,6 +124,7 @@ export default function DistributionTable({
             render: (value, record) => (
                 <DistributionActionButton
                     showDistribute
+                    showViewXml
                     // showDelete
                     onShowDistribute={() => {
                         openModal(

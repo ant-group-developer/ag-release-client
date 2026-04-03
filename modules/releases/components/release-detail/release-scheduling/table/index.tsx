@@ -10,12 +10,15 @@ import { useGetListEnablePolicyDsp } from '@/modules/dsp/hooks/use-get-list-enab
 import { DspData } from '@/modules/dsp/types';
 import { PRICE_TIER_TYPE } from '@/modules/price_tiers/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
+import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
 import { TrackData } from '@/modules/releases/types';
 import { TRACK_TABS } from '@/modules/tracks/enums';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
 import { useUpdateTrackPolicy } from '@/modules/tracks/hooks/use-update-track-policy';
 import { Table, TableColumnsType, theme } from 'antd';
 import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
 
 type Props = Omit<AppTableProps<TrackData>, 'columns'> & {
     pagination: {
@@ -28,16 +31,16 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
     const messages = useTranslations();
 
     const { updateTrackDraft } = useUpdateTrackDraft();
-
     const { updateTrackPolicy } = useUpdateTrackPolicy();
-
+    const { updateReleaseDraft } = useUpdateReleaseDraft();
     const { dspData } = useGetListEnablePolicyDsp();
-
     const action = useReleaseActionStore((s) => s.action);
-
     const formValues = useReleaseFormStore((state) => state.formValues);
 
+    const params = useParams();
+    const releaseId = params['release-id'] as string;
     const { token } = theme.useToken();
+    const { releaseData } = useGetDetailRelease(releaseId);
 
     const isCanEdit = action === RELEASE_DETAIL_ACTION.EDIT;
 
@@ -195,8 +198,16 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
                             allowClear
                             params={{
                                 isActive: true,
-                                type: PRICE_TIER_TYPE.ALBUM,
                             }}
+                            onChange={(value) =>
+                                updateReleaseDraft({
+                                    id: releaseId as string,
+                                    payload: {
+                                        priceTierId: value,
+                                    },
+                                })
+                            }
+                            value={releaseData?.priceTierId}
                         />
                     </Table.Summary.Cell>
 

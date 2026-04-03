@@ -46,7 +46,6 @@ import { useParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { RELEASES_STATUS } from '../../../enums';
 import DownloadMenu from './download-menu';
-import OptionsMenu from './options-menu';
 import ReleaseInfoV2 from './release-info-v2';
 type Props = {
     isScrolled: boolean;
@@ -139,7 +138,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                 return { currentStep: 0, stepStatus: 'process' as const };
         }
     }, [releaseData?.status]);
-    const validateLength = releaseValidateData && releaseValidateData?.length;
+    // const validateLength = releaseValidateData && releaseValidateData?.length;
 
     const statusItems: StepsProps['items'] = [
         {
@@ -465,7 +464,6 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                             {!isScrolled && (
                                 <div className="flex justify-end">
                                     <DownloadMenu />
-                                    <OptionsMenu />
                                 </div>
                             )}
                         </div>

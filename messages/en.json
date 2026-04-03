@@ -64,6 +64,8 @@
         }
     },
     "common": {
+        "viewXml": "View XML",
+        "regionCode": "Region Code",
         "link": "Link",
         "step": "Step",
         "exportTemplate": "Export template",
@@ -1201,8 +1203,8 @@
             "metadataLanguageCountryId": "Metadata country language",
             "recordingCountryId": "Recording country"
         },
-        "releaseContributors": "Contributors",
-        "trackContributors": "Contributors",
+        "releaseContributors": "Contributors must include composer and mixer",
+        "trackContributors": "Contributors must include composer and mixer",
         "upc": "UPC",
         "selectedCountries": "Region",
         "trackSensitiveId": "Sensitive content",

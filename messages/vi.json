@@ -64,6 +64,8 @@
         }
     },
     "common": {
+        "viewXml": "Xem XML",
+        "regionCode": "Mã vùng",
         "link": "Đường dẫn",
         "step": "Bước",
         "loading": "Đang tải",
@@ -1202,8 +1204,8 @@
             "metadataLanguageCountryId": "Ngôn ngữ quốc gia",
             "recordingCountryId": "Quốc gia ghi âm"
         },
-        "releaseContributors": "Người đóng góp",
-        "trackContributors": "Người đóng góp bài hát",
+        "releaseContributors": "Người đóng góp phải bao gồm composer và mixer",
+        "trackContributors": "Người đóng góp phải bao gồm composer và mixer",
         "selectedCountries": "Khu vực",
         "upc": "UPC",
         "trackSensitiveId": "Nội dung nhạy cảm",

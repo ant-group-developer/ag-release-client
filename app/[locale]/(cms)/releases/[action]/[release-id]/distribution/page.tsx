@@ -55,10 +55,9 @@ export default function Distribution({}: Props) {
     } = useFilter<ReleaseDspDataFilter>({
         page: 1,
         pageSize: 999,
-        status:
-            releaseDspStatus ?? RELEASE_DSP_DELIVERY_STATUS.NEVER_DISTRIBUTED,
+        status: releaseDspStatus,
         orderBy: ORDER.DESC,
-        fieldOrder: 'releaseDspDelivery.lastEnqueuedAt',
+        fieldOrder: 'dsp.name',
     });
 
     const {
@@ -159,6 +158,10 @@ export default function Distribution({}: Props) {
         };
     }, [debouncedBulkUpdate]);
 
+    useEffect(() => {
+        setReleaseDspStatus(dataFilter.status as RELEASE_DSP_DELIVERY_STATUS);
+    }, [dataFilter.status]);
+
     return (
         <div className="flex h-full flex-col justify-between pb-4">
             <div className="space-y-4">
@@ -169,6 +172,7 @@ export default function Distribution({}: Props) {
                     <DistributionStatus
                         onChangeStatus={(status) => {
                             setReleaseDspStatus(status);
+                            onChangeFilter({ status });
                         }}
                         value={releaseDspStatus}
                     />

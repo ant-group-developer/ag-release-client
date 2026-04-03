@@ -3,17 +3,15 @@ import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
-import { LAYOUT_TABLE, ORDER } from '@/enums/common';
+import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
-import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import { LoadingType, useLoading } from '@/hooks/use-loading';
 import useModalStore from '@/hooks/use-modal';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import ExportTemplateModal from '@/modules/releases/components/export-template-modal';
 import ReleasesHeaderV2 from '@/modules/releases/components/header';
 import ReleasesTable from '@/modules/releases/components/table';
-import ReleasesGridTable from '@/modules/releases/components/table/grid-table';
 
 import {
     RELEASES_COLUMNS_DISPLAY,
@@ -46,7 +44,6 @@ export default function Releases({}: Props) {
         orderBy: ORDER.DESC,
         fieldOrder: RELEASES_COLUMNS_DISPLAY.CREATED_AT,
     });
-    const { layoutTable } = useTableLayoutToggle();
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
     const openModal = useModalStore((state) => state.openModal);
@@ -115,56 +112,43 @@ export default function Releases({}: Props) {
                     dataUpdatedAt={dataUpdatedAt}
                 />
 
-                {layoutTable === LAYOUT_TABLE.LIST && (
-                    <ReleasesTable
-                        sticky
-                        dataSource={releasesData?.items}
-                        loading={isReleaseDataLoading}
-                        onChangeFilter={onChangeFilter}
-                        pagination={{
-                            pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                            current: releasesData.metadata.page,
-                        }}
-                        onChange={onChangeSort}
-                        dataFilter={dataFilter}
-                        options={{
-                            reload: () => {
-                                handleRefresh();
-                            },
-                        }}
-                        rowSelection={rowSelection}
-                        tableAlertRender={({
-                            selectedRowKeys,
-                            selectedRows,
-                            onCleanSelected,
-                        }) => {
-                            return (
-                                <Space size={24}>
-                                    <Button
-                                        type="primary"
-                                        icon={<DownloadOutlined />}
-                                        onClick={() =>
-                                            openModal(
-                                                TYPE_MODAL_RELEASE.EXPORT_TEMPLATE,
-                                                selectedRowKeys
-                                            )
-                                        }
-                                        loading={isExportTemplateCiLoading}
-                                    >
-                                        {messages('release.exportCiTemplate')}
-                                    </Button>
-                                </Space>
-                            );
-                        }}
-                    />
-                )}
-
-                {layoutTable === LAYOUT_TABLE.GRID && (
-                    <ReleasesGridTable
-                        data={releasesData?.items}
-                        loading={isReleaseDataLoading}
-                    />
-                )}
+                <ReleasesTable
+                    sticky
+                    dataSource={releasesData?.items}
+                    loading={isReleaseDataLoading}
+                    onChangeFilter={onChangeFilter}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: releasesData.metadata.page,
+                    }}
+                    onChange={onChangeSort}
+                    dataFilter={dataFilter}
+                    options={{
+                        reload: () => {
+                            handleRefresh();
+                        },
+                    }}
+                    rowSelection={rowSelection}
+                    tableAlertRender={({ selectedRowKeys }) => {
+                        return (
+                            <Space size={24}>
+                                <Button
+                                    type="primary"
+                                    icon={<DownloadOutlined />}
+                                    onClick={() =>
+                                        openModal(
+                                            TYPE_MODAL_RELEASE.EXPORT_TEMPLATE,
+                                            selectedRowKeys
+                                        )
+                                    }
+                                    loading={isExportTemplateCiLoading}
+                                >
+                                    {messages('release.exportCiTemplate')}
+                                </Button>
+                            </Space>
+                        );
+                    }}
+                />
 
                 <AppPagination
                     className="rounded-b-md"
