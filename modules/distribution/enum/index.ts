@@ -23,6 +23,15 @@ export enum DISTRIBUTION_STATUS {
     NEVER_DISTRIBUTED = 'never_distributed',
 }
 
+export enum RELEASE_DSP_DELIVERY_STATUS {
+    DRAFT = 'draft',
+    PROCESSING = 'processing',
+    ISSUES = 'issues',
+    NEVER_DISTRIBUTED = 'never_distributed',
+    DISTRIBUTED = 'distributed',
+    TAKEN_DOWN = 'taken_down',
+}
+
 export enum TYPE_MODAL_DISTRIBUTION {
     DETAIL = 'DETAIL_DISTRIBUTION',
 }

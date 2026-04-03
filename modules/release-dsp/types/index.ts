@@ -1,9 +1,9 @@
-import { DISTRIBUTION_STATUS } from '@/modules/distribution/enum';
+import { RELEASE_DSP_DELIVERY_STATUS } from '@/modules/distribution/enum';
 import { DspData } from '@/modules/dsp/types';
 import { RELEASES_STATUS } from '@/modules/releases/enums';
-import { CommonParams } from '@/types/api';
+import { CommonAttribute, CommonParams } from '@/types/api';
 
-export interface ReleaseDspData {
+export interface ReleaseDspData extends CommonAttribute {
     dsp: DspData;
     status: RELEASES_STATUS;
     isSelected: boolean;
@@ -12,5 +12,5 @@ export interface ReleaseDspData {
 }
 
 export interface ReleaseDspDataFilter extends CommonParams {
-    status?: DISTRIBUTION_STATUS;
+    status?: RELEASE_DSP_DELIVERY_STATUS;
 }

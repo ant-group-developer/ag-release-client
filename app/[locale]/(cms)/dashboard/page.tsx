@@ -4,6 +4,7 @@ import DateSelect from '@/components/ui/select/date-select';
 import { PAGE_SIZE } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
 import StreamChart from '@/modules/dashboard/components/bar-chart/stream-chart';
+import DistributionRow from '@/modules/dashboard/components/distribution-row';
 import ListNews from '@/modules/dashboard/components/list-news';
 import ListRelease from '@/modules/dashboard/components/list-release';
 import ListTop from '@/modules/dashboard/components/list-top';
@@ -18,7 +19,7 @@ import {
 import { DashboardDataFilter } from '@/modules/dashboard/types';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { PageContainer } from '@ant-design/pro-components';
-import { theme } from 'antd';
+import { Col, Row, theme } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -80,13 +81,15 @@ function Dashboard({}: Props) {
                     onChangeFilter={onChangeFilter}
                 /> */}
 
-                <div className="flex flex-col gap-4 overflow-auto">
+                <div className="flex flex-col gap-4">
                     <StatsOverview
                         issuesData={countIssuesData}
                         overviewData={countOverviewData}
                         isIssuesLoading={isIssuesLoading}
                         isOverviewLoading={isOverviewLoading}
                     />
+
+                    <DistributionRow />
 
                     {/* <DspChart /> */}
                     <div className="grid grid-cols-2 gap-4">
@@ -95,10 +98,14 @@ function Dashboard({}: Props) {
                         <NewUpdatesCard />
                     </div>
 
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        <StreamChart />
-                        <ListTop />
-                    </div>
+                    <Row gutter={[16, 16]}>
+                        <Col span={12}>
+                            <StreamChart />
+                        </Col>
+                        <Col span={12}>
+                            <ListTop />
+                        </Col>
+                    </Row>
                 </div>
 
                 <ListRelease data={releasesData.items.slice(0, 7)} />

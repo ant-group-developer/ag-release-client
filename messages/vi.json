@@ -1201,6 +1201,8 @@
             "metadataLanguageCountryId": "Ngôn ngữ quốc gia",
             "recordingCountryId": "Quốc gia ghi âm"
         },
+        "releaseContributors": "Người đóng góp",
+        "trackContributors": "Người đóng góp bài hát",
         "selectedCountries": "Khu vực",
         "upc": "UPC",
         "trackSensitiveId": "Nội dung nhạy cảm",

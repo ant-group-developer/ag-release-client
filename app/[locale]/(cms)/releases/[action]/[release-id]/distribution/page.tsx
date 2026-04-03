@@ -7,11 +7,12 @@ import { setSortOrder } from '@/helpers/common';
 import { toastPromise } from '@/helpers/messages-helper';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { DISTRIBUTION_STATUS } from '@/modules/distribution/enum';
+import { RELEASE_DSP_DELIVERY_STATUS } from '@/modules/distribution/enum';
 import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribute';
 import { useReleaseDistribute } from '@/modules/distribution/hooks/use-release-distribute';
 import { DistributeRelease } from '@/modules/distribution/types/payload';
 import { releaseDspQueryKey } from '@/modules/release-dsp/constants/query-keys';
+import { useBulkUpdateReleaseDsp } from '@/modules/release-dsp/hooks/use-bulk-update';
 import { useGetListReleaseDsp } from '@/modules/release-dsp/hooks/use-get-list-release-dsp';
 import {
     ReleaseDspData,
@@ -23,8 +24,9 @@ import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useQueryClient } from '@tanstack/react-query';
 import { theme } from 'antd';
+import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 type Props = {};
 
 export default function Distribution({}: Props) {
@@ -35,25 +37,14 @@ export default function Distribution({}: Props) {
     );
     const formValues = useReleaseFormStore((state) => state.formValues);
     const [releaseDspStatus, setReleaseDspStatus] = useState<
-        DISTRIBUTION_STATUS | undefined
+        RELEASE_DSP_DELIVERY_STATUS | undefined
     >();
+    const { bulkUpdate } = useBulkUpdateReleaseDsp();
 
     const openModal = useModalStore((state) => state.openModal);
     const dataEdit = useModalStore((state) => state.dataEdit);
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
-
-    const handleSelectedRow = (
-        _selectedRowKeys: React.Key[],
-        selectedRows: ReleaseDspData[]
-    ) => {
-        setSelectedRow(selectedRows);
-    };
-
-    const rowSelection = {
-        selectedRowKeys: selectedRow.map((row) => row.dsp?.id),
-        onChange: handleSelectedRow,
-    };
 
     const {
         dataFilter,
@@ -65,22 +56,16 @@ export default function Distribution({}: Props) {
         page: 1,
         pageSize: 999,
         status:
-            releaseDspStatus === DISTRIBUTION_STATUS.ALL
-                ? undefined
-                : releaseDspStatus,
+            releaseDspStatus ?? RELEASE_DSP_DELIVERY_STATUS.NEVER_DISTRIBUTED,
+        orderBy: ORDER.DESC,
+        fieldOrder: 'releaseDspDelivery.lastEnqueuedAt',
     });
 
     const {
         releaseDsp,
-        isFetching: isLoadingReleaseDsp,
+        isLoading: isLoadingReleaseDsp,
         refetch: refetchReleaseDsp,
     } = useGetListReleaseDsp(formValues?.id ?? '', dataFilter);
-
-    useEffect(() => {
-        setSelectedRow(
-            releaseDsp?.items?.filter((item) => item.isSelected) ?? []
-        );
-    }, [releaseDsp, setSelectedRow]);
 
     const { distributeRelease } = useDistributeRelease();
 
@@ -127,6 +112,52 @@ export default function Distribution({}: Props) {
             false
         );
     };
+
+    const debouncedBulkUpdate = useRef(
+        debounce((selectedDsp: Partial<ReleaseDspData>[]) => {
+            bulkUpdate({
+                items: selectedDsp,
+                onSuccess() {
+                    refetchReleaseDsp();
+                },
+            });
+        }, 2000)
+    ).current;
+
+    const handleSelectedRow = (
+        _selectedRowKeys: React.Key[],
+        selectedRows: ReleaseDspData[]
+    ) => {
+        setSelectedRow(selectedRows);
+        const selectedDsp =
+            releaseDsp?.items?.map((row) => {
+                const isSelected = selectedRows.some(
+                    (selected) => selected.id === row.id
+                );
+                return {
+                    id: row.id,
+                    isSelected,
+                };
+            }) ?? [];
+        debouncedBulkUpdate(selectedDsp);
+    };
+
+    const rowSelection = {
+        selectedRowKeys: selectedRow.map((row) => row.dsp?.id),
+        onChange: handleSelectedRow,
+    };
+
+    useEffect(() => {
+        setSelectedRow(
+            releaseDsp?.items?.filter((item) => item.isSelected) ?? []
+        );
+    }, [releaseDsp, setSelectedRow]);
+
+    useEffect(() => {
+        return () => {
+            debouncedBulkUpdate.cancel();
+        };
+    }, [debouncedBulkUpdate]);
 
     return (
         <div className="flex h-full flex-col justify-between pb-4">
