@@ -6,12 +6,10 @@ import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
-import { useLoadingStatus } from '@/hooks/use-loading-status';
 import useModalStore from '@/hooks/use-modal';
 import PriceTiersHeader from '@/modules/price_tiers/components/header';
 import PriceTiersFormModal from '@/modules/price_tiers/components/modal/price-tiers-form';
 import PriceTiersTable from '@/modules/price_tiers/components/table';
-import { priceTiersQueryKeys } from '@/modules/price_tiers/constants/query-keys';
 import { TYPE_MODAL_PRICE_TIERS } from '@/modules/price_tiers/enums';
 import { useDeletePriceTiers } from '@/modules/price_tiers/hooks/use-delete-price-tiers';
 import { useGetListPriceTiers } from '@/modules/price_tiers/hooks/use-get-list-tiers';
@@ -40,13 +38,15 @@ export default function PriceTiers({}: Props) {
         useFilter<PriceTiersDataFilter>({
             page: 1,
             pageSize: PAGE_SIZE,
+            orderBy: ORDER.ASC,
+            fieldOrder: 'order',
         });
-    const { priceTiersData, dataUpdatedAt, refetch } =
+    const { priceTiersData, dataUpdatedAt, refetch, isLoading } =
         useGetListPriceTiers(dataFilter);
-    const { isLoading } = useLoadingStatus({
-        queryKeys: [priceTiersQueryKeys.lists()],
-        mutationKeys: [priceTiersQueryKeys.all],
-    });
+    // const { isLoading } = useLoadingStatus({
+    //     queryKeys: [priceTiersQueryKeys.lists()],
+    //     mutationKeys: [priceTiersQueryKeys.all],
+    // });
     const { deletePriceTiers } = useDeletePriceTiers();
 
     //const
