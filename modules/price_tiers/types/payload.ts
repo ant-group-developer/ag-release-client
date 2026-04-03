@@ -1,3 +1,4 @@
+import { PriceTiersData } from '.';
 import { PRICE_TIER_TYPE } from '../enums';
 
 export interface CreatePriceTiersPayload {
@@ -12,10 +13,7 @@ export interface CreatePriceTiersPayload {
 export interface UpdatePriceTiersPayload
     extends Partial<CreatePriceTiersPayload> {}
 export interface UpdatePriceTiersOrderPayload {
-    priceTiers: {
-        id: string;
-        order: number;
-    }[];
+    priceTiers: Partial<PriceTiersData>[];
     onSuccess?: () => void;
     onError?: () => void;
 }

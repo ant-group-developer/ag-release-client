@@ -20,8 +20,10 @@ import {
     PriceTiersDataFilter,
 } from '@/modules/price_tiers/types';
 import { PageContainer } from '@ant-design/pro-components';
+import { TableProps } from 'antd';
 
 import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 
 type Props = {};
 
@@ -31,6 +33,7 @@ export default function PriceTiers({}: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore<PriceTiersData>((state) => state.dataEdit);
+    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
     // apis
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
@@ -45,6 +48,14 @@ export default function PriceTiers({}: Props) {
         mutationKeys: [priceTiersQueryKeys.all],
     });
     const { deletePriceTiers } = useDeletePriceTiers();
+
+    //const
+    const rowSelection: TableProps<PriceTiersData>['rowSelection'] = {
+        selectedRowKeys,
+        onChange: (selectedRowKeys: React.Key[]) => {
+            setSelectedRowKeys(selectedRowKeys);
+        },
+    };
 
     const onChangeSort = (pagination: any, filters: any, sort: any) => {
         const orderBy = setSortOrder(sort, ORDER.ASC);
@@ -67,6 +78,7 @@ export default function PriceTiers({}: Props) {
                             dataFilter={dataFilter}
                             onSearch={onSearch}
                             onChangeFilter={onChangeFilter}
+                            selectedRowKeys={selectedRowKeys}
                         />
                     )}
                     sticky
@@ -79,6 +91,7 @@ export default function PriceTiers({}: Props) {
                     loading={isLoading}
                     dataFilter={dataFilter}
                     onChange={onChangeSort}
+                    rowSelection={rowSelection}
                 />
 
                 <AppPagination
@@ -94,8 +107,12 @@ export default function PriceTiers({}: Props) {
                 />
 
                 {(typeModal === TYPE_MODAL_PRICE_TIERS.CREATE ||
-                    typeModal === TYPE_MODAL_PRICE_TIERS.UPDATE) && (
-                    <PriceTiersFormModal />
+                    typeModal === TYPE_MODAL_PRICE_TIERS.UPDATE ||
+                    typeModal === TYPE_MODAL_PRICE_TIERS.BULK_UPDATE) && (
+                    <PriceTiersFormModal
+                        selectedRowKeys={selectedRowKeys}
+                        onSuccess={() => setSelectedRowKeys([])}
+                    />
                 )}
 
                 {typeModal === TYPE_MODAL_PRICE_TIERS.DELETE && (

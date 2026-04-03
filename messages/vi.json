@@ -265,6 +265,7 @@
         "description": "Mô tả",
         "iNo": "STT",
         "update": "Cập nhật",
+        "bulkUpdate": "Cập nhật hàng loạt",
         "create": "Thêm mới",
         "detail": "Chi tiết ",
         "delete": "Xoá",

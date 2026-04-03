@@ -265,6 +265,7 @@
         "description": "Description",
         "iNo": "No.",
         "update": "Update",
+        "bulkUpdate": "Bulk update",
         "create": "Create",
         "detail": "Detail",
         "delete": "Delete",
