@@ -115,6 +115,7 @@ export default function ReleaseContributorsTable({
                                 })
                             }
                             disabled={disabled}
+                            variant="borderless"
                         />
                     </div>
                 );
@@ -171,17 +172,19 @@ export default function ReleaseContributorsTable({
             render: (_, record, index) => {
                 return (
                     <div onClick={(e) => e.preventDefault()}>
-                        <IconButton
-                            onClick={() => {
-                                setReleaseContributorModal({
-                                    isOpen: true,
-                                    data: record,
-                                });
-                            }}
-                            disabled={disabled}
-                        >
-                            <Trash color="red" size={SIZE_ICON} />
-                        </IconButton>
+                        {!disabled && (
+                            <IconButton
+                                onClick={() => {
+                                    setReleaseContributorModal({
+                                        isOpen: true,
+                                        data: record,
+                                    });
+                                }}
+                                disabled={disabled}
+                            >
+                                <Trash color="red" size={SIZE_ICON} />
+                            </IconButton>
+                        )}
                     </div>
                 );
             },

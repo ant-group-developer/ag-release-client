@@ -1,4 +1,7 @@
-import { DISTRIBUTION_STATUS } from '@/modules/distribution/enum';
+import {
+    DISTRIBUTION_STATUS,
+    RELEASE_DSP_DELIVERY_STATUS,
+} from '@/modules/distribution/enum';
 import { RELEASES_STATUS } from '@/modules/releases/enums';
 import { STATUS_BACKUP } from '@/modules/setting/enums';
 import { GENRES, SCAN_COPYRIGHT_STATUS } from '@/modules/tracks/enums';
@@ -9,7 +12,8 @@ type DistributionStatusMessageKey =
     | 'common.distributed'
     | 'common.takenDown'
     | 'common.neverDistributed'
-    | 'common.all';
+    | 'common.all'
+    | 'common.draft';
 export const getIntlCodeByDistributionStatus = (
     status: DISTRIBUTION_STATUS
 ) => {
@@ -26,6 +30,25 @@ export const getIntlCodeByDistributionStatus = (
     };
 
     return distributionStatusToMessageMap[status] || 'common.progress';
+};
+
+export const getIntlCodeByReleaseDspDeliveryStatus = (
+    status: RELEASE_DSP_DELIVERY_STATUS
+) => {
+    const distributionStatusToMessageMap: Record<
+        RELEASE_DSP_DELIVERY_STATUS,
+        DistributionStatusMessageKey
+    > = {
+        [RELEASE_DSP_DELIVERY_STATUS.DRAFT]: 'common.draft',
+        [RELEASE_DSP_DELIVERY_STATUS.PROCESSING]: 'common.processing',
+        [RELEASE_DSP_DELIVERY_STATUS.ISSUES]: 'common.issues',
+        [RELEASE_DSP_DELIVERY_STATUS.DISTRIBUTED]: 'common.distributed',
+        [RELEASE_DSP_DELIVERY_STATUS.TAKEN_DOWN]: 'common.takenDown',
+        [RELEASE_DSP_DELIVERY_STATUS.NEVER_DISTRIBUTED]:
+            'common.neverDistributed',
+    };
+
+    return distributionStatusToMessageMap[status];
 };
 
 type ReleaseStatusMessageKey =

@@ -20,18 +20,22 @@ const ExportTemplateModal = () => {
         aggregatorCode: 'CI',
     });
 
-    const options = dspData?.items?.map((item) => ({
-        label: item.name,
-        value: item.codeCi,
-    }));
+    const dspDataFilter = dspData?.items?.filter((item) => !!item.codeCi);
+
+    const options = dspDataFilter?.map((item) => {
+        return {
+            label: item.name,
+            value: item.codeCi,
+        };
+    });
 
     useEffect(() => {
-        if (dspData?.items && dspData.items.length > 0) {
+        if (dspDataFilter && dspDataFilter.length > 0) {
             form.setFieldsValue({
-                dspIds: dspData.items.map((item) => item.codeCi),
+                dspIds: dspDataFilter.map((item) => item.codeCi),
             });
         }
-    }, [dspData, form]);
+    }, [dspDataFilter, form]);
 
     const onFinish = (values: { dspIds: string[] }) => {
         if (!dataEdit || dataEdit.length === 0) return;
@@ -61,6 +65,7 @@ const ExportTemplateModal = () => {
                     {messages('common.submit')}
                 </Button>,
             ]}
+            spinning={isFetchingDsp}
         >
             <Form form={form} onFinish={onFinish} layout="vertical">
                 <Form.Item
