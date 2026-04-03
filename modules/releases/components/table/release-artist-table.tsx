@@ -173,17 +173,19 @@ export default function ReleaseArtistTable({
                             e.stopPropagation();
                         }}
                     >
-                        <IconButton
-                            disabled={disabled}
-                            onClick={() => {
-                                setReleaseArtistModal({
-                                    isOpen: true,
-                                    data: record,
-                                });
-                            }}
-                        >
-                            <Trash color="red" size={SIZE_ICON} />
-                        </IconButton>
+                        {!disabled && (
+                            <IconButton
+                                disabled={disabled}
+                                onClick={() => {
+                                    setReleaseArtistModal({
+                                        isOpen: true,
+                                        data: record,
+                                    });
+                                }}
+                            >
+                                <Trash color="red" size={SIZE_ICON} />
+                            </IconButton>
+                        )}
                     </div>
                 );
             },

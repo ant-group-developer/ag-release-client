@@ -1,19 +1,19 @@
 import { Badge, Segmented, theme } from 'antd';
 
-import { getIntlCodeByDistributionStatus } from '@/helpers/intl';
-import { DISTRIBUTION_STATUS } from '@/modules/distribution/enum';
+import { getIntlCodeByReleaseDspDeliveryStatus } from '@/helpers/intl';
+import { RELEASE_DSP_DELIVERY_STATUS } from '@/modules/distribution/enum';
 import { useTranslations } from 'next-intl';
 
 type Props = {
-    onChangeStatus: (status: DISTRIBUTION_STATUS) => void;
-    value: DISTRIBUTION_STATUS | undefined;
+    onChangeStatus: (status: RELEASE_DSP_DELIVERY_STATUS) => void;
+    value: RELEASE_DSP_DELIVERY_STATUS | undefined;
 };
 
 export default function DistributionStatus({ onChangeStatus, value }: Props) {
     const messages = useTranslations();
     const { token } = theme.useToken();
 
-    const handleChangeStatus = (status: DISTRIBUTION_STATUS) => {
+    const handleChangeStatus = (status: RELEASE_DSP_DELIVERY_STATUS) => {
         onChangeStatus(status);
     };
 
@@ -23,13 +23,15 @@ export default function DistributionStatus({ onChangeStatus, value }: Props) {
             style={{ backgroundColor: token.colorBgContainer }}
         >
             <Segmented
-                options={Object.values(DISTRIBUTION_STATUS).map(
+                options={Object.values(RELEASE_DSP_DELIVERY_STATUS).map(
                     (item, index) => ({
                         label: (
                             <div className="flex items-center gap-2">
                                 <span className="font-medium">
                                     {messages(
-                                        getIntlCodeByDistributionStatus(item)
+                                        getIntlCodeByReleaseDspDeliveryStatus(
+                                            item
+                                        )
                                     )}
                                 </span>
                                 <Badge

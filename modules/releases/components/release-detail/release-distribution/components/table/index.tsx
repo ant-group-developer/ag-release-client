@@ -41,9 +41,15 @@ export default function DistributionTable({
         },
         {
             title: messages('distribution.digitalServiceProviders'),
-            dataIndex: 'dsp',
-            key: 'dsp',
+            dataIndex: 'dsp.name',
+            key: 'dsp.name',
             width: 250,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter?.orderBy,
+                dataFilter?.fieldOrder,
+                'dsp.name'
+            ),
             render: (value, record) => {
                 return (
                     <div className="flex items-center gap-2">
@@ -63,15 +69,15 @@ export default function DistributionTable({
         },
         {
             title: messages('distribution.lastEnqueue'),
-            key: 'lastEnqueuedAt',
-            dataIndex: 'lastEnqueuedAt',
+            key: 'releaseDspDelivery.lastEnqueuedAt',
+            dataIndex: 'releaseDspDelivery.lastEnqueuedAt',
             align: 'left',
             width: 250,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter?.orderBy,
                 dataFilter?.fieldOrder,
-                'lastEnqueuedAt'
+                'releaseDspDelivery.lastEnqueuedAt'
             ),
             render: (value, record) => (
                 <span className="truncate text-wrap">
@@ -82,15 +88,15 @@ export default function DistributionTable({
         },
         {
             title: 'Last Delivered',
-            key: 'lastDeliveredAt',
-            dataIndex: 'lastDeliveredAt',
+            key: 'releaseDspDelivery.lastDeliveredAt',
+            dataIndex: 'releaseDspDelivery.lastDeliveredAt',
             align: 'left',
             width: 250,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter?.orderBy,
                 dataFilter?.fieldOrder,
-                'lastDeliveredAt'
+                'releaseDspDelivery.lastDeliveredAt'
             ),
             render: (value, record) => (
                 <span className="truncate text-wrap">
@@ -99,7 +105,6 @@ export default function DistributionTable({
                 </span>
             ),
         },
-
         {
             title: messages('common.status'),
             key: 'status',
@@ -110,7 +115,6 @@ export default function DistributionTable({
                 <ReleaseStatusTag status={record?.status} />
             ),
         },
-
         {
             key: 'actions',
             align: 'center',
