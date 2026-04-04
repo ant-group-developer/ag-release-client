@@ -13,7 +13,6 @@ import { ColumnType } from 'antd/es/table';
 import { Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import AddArtistForm from './add-artist-form';
 
 type Props = AppTableProps<ReleaseArtist> & {
     disabled?: boolean;
@@ -193,20 +192,19 @@ export default function ReleaseArtistTable({
     ];
     return (
         <div className="space-y-2">
-            <div className="overflow-hidden rounded-lg border dark:border-zinc-700">
+            <div className="overflow-hidden rounded-lg border border-b-0 dark:border-zinc-700">
                 <AppTable
                     {...props}
                     columns={columns}
                     scroll={{ x: 'max-content' }}
                 />
                 {!disabled && (
-                    <div className="px-4 py-2">
-                        <AddArtistForm disabled={disabled} />
+                    <div>
                         <AppConfirm
                             open={releaseArtistModal?.isOpen}
                             modalTitle={messages('delete.confirmTitle')}
-                            paragraph={messages('delete.confirmMessage', {
-                                value: releaseArtistModal?.data?.artist?.name,
+                            paragraph={messages('action.delete.alert', {
+                                label: releaseArtistModal?.data?.artist?.name,
                             })}
                             onCancel={() => {
                                 setReleaseArtistModal({

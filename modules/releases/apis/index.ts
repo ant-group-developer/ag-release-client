@@ -161,4 +161,9 @@ export const releasesApi = {
             }
         );
     },
+    getReleaseXml: (id: ReleasesData['id'], code: string) => {
+        return axiosInstance.get(`/releases/${id}/xml`, {
+            params: { code },
+        });
+    },
 };

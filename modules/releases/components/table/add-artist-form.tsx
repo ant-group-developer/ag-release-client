@@ -1,29 +1,26 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
+import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import ArtistSelect from '@/components/ui/select/artist-select';
-import { SIZE_ICON } from '@/constants/common';
+import { toastPromise } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import { useCreateReleaseArtist } from '@/modules/release-artist/hooks/use-create-release-artist';
 import { CreateReleaseArtistPayload } from '@/modules/release-artist/types/payload';
 import { CreateVariables } from '@/types/api';
-import { Button, Form, Switch } from 'antd';
-import { Plus } from 'lucide-react';
+import { Form, Switch } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useParams } from 'next/navigation';
 import { useReleaseFormStore } from '../../hooks/release-form-store';
 
-type Props = {
+type Props = Omit<AppModalProps, 'children'> & {
     disabled?: boolean;
 };
 
-export default function AddArtistForm({ disabled = false }: Props) {
+export default function AddArtistForm({ disabled = false, ...props }: Props) {
     // hooks
     const messages = useTranslations();
     const { active, deActive, isActive } = useActive();
     const [form] = Form.useForm();
     const releaseValues = useReleaseFormStore((state) => state.formValues);
-    const params = useParams();
-    const isCreateReleasePage = params['action'] === 'create';
 
     // apis
     const { createReleaseArtist } = useCreateReleaseArtist();
@@ -45,18 +42,24 @@ export default function AddArtistForm({ disabled = false }: Props) {
                 deActive();
             },
         };
-        createReleaseArtist(variables);
+        props.onCancel?.({} as any);
+        toastPromise(createReleaseArtist(variables), messages);
     };
     return (
-        <AppForm
-            form={form}
-            onFinish={(values) => handleSubmit(values)}
-            layout="vertical"
-            showSubmit={false}
-            disabled={disabled || isActive}
-            variant={disabled ? 'underlined' : 'outlined'}
+        <AppModal
+            {...props}
+            title={messages('artist.add')}
+            onOk={() => form.submit()}
+            loading={isActive}
         >
-            <div className="grid grid-cols-5 gap-4">
+            <AppForm
+                form={form}
+                onFinish={(values) => handleSubmit(values)}
+                layout="vertical"
+                showSubmit={false}
+                disabled={disabled || isActive}
+                variant={disabled ? 'underlined' : 'outlined'}
+            >
                 <AppFormItem
                     className="col-span-2"
                     name="artistId"
@@ -79,25 +82,25 @@ export default function AddArtistForm({ disabled = false }: Props) {
                 </AppFormItem>
 
                 {/* <AppFormItem
-                    className="flex-1"
-                    name="roleId"
-                    label={messages('common.role')}
-                    required
-                    rules={[
-                        {
-                            required: true,
-                            message: messages('validation.select'),
-                        },
-                    ]}
-                >
-                    <RoleArtistSelect
-                        // fallBack={dataEdit?.artistRole?.name}
-                        placeholder={messages('common.role')}
-                        // disabledRoleIds={disabledRoleIds}
-                        placement="topLeft"
-                        allowClear
-                    />
-                </AppFormItem> */}
+                        className="flex-1"
+                        name="roleId"
+                        label={messages('common.role')}
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.select'),
+                            },
+                        ]}
+                    >
+                        <RoleArtistSelect
+                            // fallBack={dataEdit?.artistRole?.name}
+                            placeholder={messages('common.role')}
+                            // disabledRoleIds={disabledRoleIds}
+                            placement="topLeft"
+                            allowClear
+                        />
+                    </AppFormItem> */}
 
                 <AppFormItem
                     className="flex-1"
@@ -107,26 +110,7 @@ export default function AddArtistForm({ disabled = false }: Props) {
                 >
                     <Switch />
                 </AppFormItem>
-
-                <div></div>
-
-                <div className="mt-4 flex items-center justify-end space-x-2">
-                    <Button
-                        id="releaseArtists"
-                        disabled={disabled || isActive || isCreateReleasePage}
-                        loading={isActive}
-                        onClick={() => form.submit()}
-                        icon={
-                            <div>
-                                <Plus size={SIZE_ICON} />
-                            </div>
-                        }
-                        type="primary"
-                    >
-                        {messages('common.add')}
-                    </Button>
-                </div>
-            </div>
-        </AppForm>
+            </AppForm>
+        </AppModal>
     );
 }

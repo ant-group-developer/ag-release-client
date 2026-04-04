@@ -60,6 +60,7 @@ export interface ReleasesData extends CommonAttribute {
     tenant?: Pick<TenantData, 'id' | 'name'>;
     releaseTimeMode: RELEASE_TIME_MODE;
     logs: string;
+    priceTierId?: string;
 }
 
 export interface ReleasesDataSimple
@@ -82,9 +83,9 @@ export interface ReleasesDataFilter extends CommonParams {
 }
 
 export interface ReleaseTerritory extends CommonParams {
-    distributeWorldwide: boolean;
-    selectedCountries: string[];
-    distributionType: string;
+    distributeWorldwide?: boolean;
+    selectedCountries?: string[];
+    distributionType?: string;
 }
 
 export interface ReleaseLanguage extends CommonParams {

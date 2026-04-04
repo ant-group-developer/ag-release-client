@@ -19,6 +19,7 @@ export default function CountrySelect({ fallBack, ...props }: Props) {
                     <span>{item?.name}</span>
                 </div>
             ),
+            title: item?.name,
             name: item?.name,
         };
     });

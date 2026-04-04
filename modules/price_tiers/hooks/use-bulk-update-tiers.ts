@@ -6,7 +6,7 @@ import { priceTiersApis } from '../apis';
 import { priceTiersQueryKeys } from '../constants/query-keys';
 import { UpdatePriceTiersOrderPayload } from '../types/payload';
 
-export const useUpdatePriceTiersOrder = () => {
+export const useBulkUpdatePriceTiers = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
     const { handleError } = useApiNotify();
