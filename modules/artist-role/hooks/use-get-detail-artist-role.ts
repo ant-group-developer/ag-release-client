@@ -17,6 +17,7 @@ export const useGetDetailArtistRole = (id: ArtistRoleData['id']) => {
         createdAt: '',
         updatedAt: null,
         code: '',
+        isRequired: false,
     };
 
     return {
