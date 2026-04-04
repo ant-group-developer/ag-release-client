@@ -14,8 +14,8 @@ import { Switch, Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { PRICE_TIER_TYPE, TYPE_MODAL_PRICE_TIERS } from '../../enums';
+import { useBulkUpdatePriceTiers } from '../../hooks/use-bulk-update-tiers';
 import { useUpdatePriceTiers } from '../../hooks/use-update-tiers';
-import { useUpdatePriceTiersOrder } from '../../hooks/use-update-tiers-order';
 import { PriceTiersData, PriceTiersDataFilter } from '../../types';
 
 type Props = any & {
@@ -30,7 +30,7 @@ export default function PriceTiersTable({ dataFilter, ...props }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const { updatePriceTiers } = useUpdatePriceTiers();
-    const { updatePriceTiersOrder } = useUpdatePriceTiersOrder();
+    const { updatePriceTiersOrder } = useBulkUpdatePriceTiers();
 
     const handleDragEnd: OnDragEnd<PriceTiersData[]> = (newData) => {
         const payload = newData.map((item, index) => ({

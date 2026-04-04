@@ -8,8 +8,10 @@ import { MouseEventHandler } from 'react';
 interface Props {
     showDistribute?: boolean;
     showDelete?: boolean;
+    showViewXml?: boolean;
     onShowDistribute?: MouseEventHandler<HTMLElement>;
     onShowDelete?: MouseEventHandler<HTMLElement>;
+    onShowViewXml?: MouseEventHandler<HTMLElement>;
 }
 
 enum ACTION_BUTTON {
@@ -20,8 +22,10 @@ enum ACTION_BUTTON {
 export default function DistributionActionButton({
     showDelete,
     showDistribute,
+    showViewXml,
     onShowDistribute,
     onShowDelete,
+    onShowViewXml,
 }: Props) {
     const messages = useTranslations();
     const items: MenuProps['items'] = [];

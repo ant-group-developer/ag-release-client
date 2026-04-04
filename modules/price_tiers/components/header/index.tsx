@@ -4,6 +4,8 @@ import AppSearch from '@/components/ui/input/search';
 import ActiveSelect from '@/components/ui/select/active-select';
 import { UseFilterProps } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { EditOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_PRICE_TIERS } from '../../enums';
 import { PriceTiersDataFilter } from '../../types';
@@ -11,12 +13,15 @@ import { PriceTiersDataFilter } from '../../types';
 type Props = Pick<
     UseFilterProps<PriceTiersDataFilter>,
     'dataFilter' | 'onSearch' | 'onChangeFilter'
->;
+> & {
+    selectedRowKeys?: React.Key[];
+};
 
 export default function PriceTiersHeader({
     dataFilter,
     onSearch,
     onChangeFilter,
+    selectedRowKeys = [],
 }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
@@ -41,6 +46,17 @@ export default function PriceTiersHeader({
             </AppHeaderGroup>
             <AppHeaderGroup position="end" className="flex-1">
                 <div className="flex items-center gap-2">
+                    {selectedRowKeys.length > 0 && (
+                        <Button
+                            icon={<EditOutlined />}
+                            type="primary"
+                            onClick={() =>
+                                openModal(TYPE_MODAL_PRICE_TIERS.BULK_UPDATE)
+                            }
+                        >
+                            {messages('common.bulkUpdate')}
+                        </Button>
+                    )}
                     <CreateButton
                         canCreate={true}
                         text={messages('common.create')}

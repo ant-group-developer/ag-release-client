@@ -51,7 +51,7 @@ export const useCreateReleaseArtist = () => {
     const createReleaseArtist = (
         variables: CreateVariables<CreateReleaseArtistPayload>
     ) => {
-        mutation.mutate(variables);
+        return mutation.mutateAsync(variables);
     };
 
     return {
