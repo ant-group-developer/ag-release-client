@@ -48,7 +48,7 @@ export const useCreateReleaseContributor = () => {
     const createReleaseContributor = (
         variables: CreateVariables<CreateReleaseContributorPayload>
     ) => {
-        mutation.mutate(variables);
+        return mutation.mutateAsync(variables);
     };
 
     return {

@@ -68,7 +68,7 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
                 },
             });
         }
-    }, [trackData?.id, form]);
+    }, [trackData, form]);
 
     // focus and scroll into field
     useEffect(() => {
@@ -85,7 +85,7 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
         }
 
         form.validateFields([fieldPath]);
-    }, [focusField, trackData?.id]);
+    }, [focusField, trackData]);
 
     return (
         <AppForm

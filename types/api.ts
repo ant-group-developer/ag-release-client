@@ -26,7 +26,7 @@ export interface ListResponse<T = any> {
 export interface DetailResponse<T> {
     statusCode?: number;
     message?: string;
-    messagesCode?: string;
+    messageCode?: string;
     data: T;
 }
 

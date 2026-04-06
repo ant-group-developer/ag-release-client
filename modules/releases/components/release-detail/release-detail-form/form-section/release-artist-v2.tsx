@@ -1,10 +1,11 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import { SIZE_ICON } from '@/constants/common';
+import useModalStore from '@/hooks/use-modal';
+import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '@/modules/releases/enums';
 import { ReleaseDetailSchema } from '@/modules/releases/schemas';
 import { Button, Radio } from 'antd';
 import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import AddArtistForm from '../../../table/add-artist-form';
 import ReleaseArtistTable from '../../../table/release-artist-table';
@@ -23,8 +24,9 @@ export default function ReleaseArtistSectionV2({
     releaseArtist,
 }: Props) {
     // hooks
-    const [openAddArtistModal, setOpenAddArtistModal] = useState(false);
-
+    const openModal = useModalStore((state) => state.openModal);
+    const closeModal = useModalStore((state) => state.closeModal);
+    const typeModal = useModalStore((state) => state.typeModal);
     const { control, watch } = useFormContext<ReleaseDetailSchema>();
     const messages = useTranslations();
     const isVariousArtist = watch('isVariousArtist');
@@ -86,16 +88,23 @@ export default function ReleaseArtistSectionV2({
                                 }
                                 type="default"
                                 shape="round"
-                                onClick={() => setOpenAddArtistModal(true)}
+                                onClick={() =>
+                                    openModal(
+                                        TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST
+                                    )
+                                }
                             >
-                                {messages('common.add')}
+                                {messages('releaseArtist.label')}
                             </Button>
                         )}
-                        <AddArtistForm
-                            disabled={isReadMode}
-                            open={openAddArtistModal}
-                            onCancel={() => setOpenAddArtistModal(false)}
-                        />
+                        {TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST ===
+                            typeModal && (
+                            <AddArtistForm
+                                open
+                                disabled={isReadMode}
+                                onCancel={() => closeModal()}
+                            />
+                        )}
                     </div>
                 )}
             </div>

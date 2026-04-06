@@ -14,6 +14,8 @@ type Props = SelectProps & {
     disabledArtistIds?: string[];
     showCreate?: boolean;
     artistId?: string;
+    isAddReleaseArtist?: boolean;
+    isAddReleaseContributor?: boolean;
 };
 
 export default function ArtistSelect({
@@ -21,6 +23,8 @@ export default function ArtistSelect({
     disabledArtistIds,
     showCreate = true,
     artistId,
+    isAddReleaseArtist = false,
+    isAddReleaseContributor = false,
     ...props
 }: Props) {
     const [searchKeyword, setSearchKeyword] = useState('');
@@ -42,15 +46,6 @@ export default function ArtistSelect({
         keyword: searchKeyword,
         idInclude: artistId ?? artistIdFromParams,
     });
-
-    // const spotify = artistsData?.map((item) => {
-    //     item.artistProfiles?.map((artistProfile) => {
-    //         if (artistProfile.name == 'Spotify') {
-    //             return artistProfile;
-    //         }
-    //         return;
-    //     });
-    // });
 
     const debounceSearch = useMemo(
         () =>
@@ -200,6 +195,8 @@ export default function ArtistSelect({
                 open={openCreate}
                 onCancel={() => setOpenCreate(false)}
                 onSuccess={() => setOpenCreate(false)}
+                isAddReleaseArtist={isAddReleaseArtist}
+                // isAddReleaseContributor={isAddReleaseContributor}
             />
         </>
     );

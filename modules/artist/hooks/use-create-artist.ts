@@ -1,28 +1,24 @@
-import { showNotification } from '@/helpers/messages-helper';
 import { useApiNotify } from '@/hooks/use-api-notify';
-import { CreateVariables } from '@/types/api';
+import { CreateVariables, DetailResponse } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useTranslations } from 'next-intl';
+import { AxiosResponse } from 'axios';
 import { artistApi } from '../apis';
 import { artistQueryKeys } from '../constants/query-keys';
+import { ArtistData } from '../types';
 import { CreateArtistPayload } from '../types/payload';
 
 export const useCreateArtist = () => {
-    const messages = useTranslations();
     const queryClient = useQueryClient();
-    const { handleError } = useApiNotify();
+    const { handleError, handleSuccess } = useApiNotify();
     const onSuccess = (
-        data: any,
+        data: AxiosResponse<DetailResponse<ArtistData>, any>,
         { onSuccess }: CreateVariables<CreateArtistPayload>
     ) => {
         queryClient.invalidateQueries({
             queryKey: artistQueryKeys.lists(),
         });
-
-        const responseMessages = messages(data?.data?.messageCode);
-
-        onSuccess?.();
-        showNotification('success', responseMessages);
+        onSuccess?.(data?.data?.data);
+        handleSuccess(data?.data);
     };
 
     const onError = (

@@ -1,4 +1,3 @@
-import { useApiNotify } from '@/hooks/use-api-notify';
 import { releasesQueryKeys } from '@/modules/releases/constants/query-keys';
 import { trackQueryKeys } from '@/modules/tracks/constants/query-keys';
 import { CreateVariables } from '@/types/api';
@@ -10,7 +9,7 @@ import { CreateTrackArtistPayload } from '../types/payload';
 export const useCreateTrackArtist = () => {
     const messages = useTranslations();
     const queryClient = useQueryClient();
-    const { handleError } = useApiNotify();
+    // const { handleError } = useApiNotify();
 
     const onSuccess = (
         data: any,
@@ -37,7 +36,7 @@ export const useCreateTrackArtist = () => {
         { onError }: CreateVariables<CreateTrackArtistPayload>
     ) => {
         onError?.();
-        handleError(data);
+        // handleError(data);
     };
     const mutation = useMutation({
         mutationFn: ({ payload }: CreateVariables<CreateTrackArtistPayload>) =>
@@ -49,7 +48,7 @@ export const useCreateTrackArtist = () => {
     const createTrackArtist = (
         variables: CreateVariables<CreateTrackArtistPayload>
     ) => {
-        mutation.mutate(variables);
+        return mutation.mutateAsync(variables);
     };
 
     return {

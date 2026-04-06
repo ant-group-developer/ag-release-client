@@ -192,14 +192,14 @@ export default function ReleaseContributorsTable({
     ];
     return (
         <div className="space-y-2">
-            <div className="overflow-hidden rounded-lg border dark:border-zinc-700">
+            <div className="overflow-hidden rounded-lg border border-b-0 dark:border-zinc-700">
                 <AppTable
                     {...props}
                     columns={columns}
                     scroll={{ x: 'max-content' }}
                 />
                 {!disabled && (
-                    <div className="px-4 py-2">
+                    <div className="px-4">
                         <AddArtistContributorForm disabled={disabled} />
                         <AppConfirm
                             open={releaseContributorModal?.isOpen}
