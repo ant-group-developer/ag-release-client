@@ -64,6 +64,8 @@
         }
     },
     "common": {
+        "others": "Others",
+        "save": "Save",
         "viewXml": "View XML",
         "regionCode": "Region Code",
         "link": "Link",
@@ -1187,6 +1189,7 @@
     },
 
     "formFields": {
+        "releaseNameMustMatchTrackName": "The release title must match at least one track title",
         "releaseOriginalDate": "Original release date",
         "audioFile": {
             "preview": "Preview audio"

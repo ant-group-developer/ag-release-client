@@ -52,7 +52,7 @@ export default function OtherSection({
         >
             <div className="space-y-4">
                 <p className="text-base font-semibold">
-                    {messages('common.other')}
+                    {messages('common.others')}
                 </p>
                 <div className="grid grid-cols-2 gap-4">
                     {/* Sensitive Content */}

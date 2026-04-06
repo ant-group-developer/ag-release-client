@@ -1,4 +1,5 @@
 import { LoadingType, useLoading } from '@/hooks/use-loading';
+import { CircleAlert } from 'lucide-react';
 import { ReactNode } from 'react';
 import AppModal, { AppModalProps } from './normal-modal';
 
@@ -25,7 +26,11 @@ const AppConfirm = ({
             open={open}
             onOk={onOk}
             onCancel={onCancel}
-            title={modalTitle}
+            title={
+                <div className="flex gap-2">
+                    <CircleAlert className="text-red-500" /> {modalTitle}
+                </div>
+            }
             okButtonProps={{
                 danger: typeDelete,
                 ghost: typeDelete,

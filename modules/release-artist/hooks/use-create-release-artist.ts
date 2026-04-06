@@ -25,10 +25,7 @@ export const useCreateReleaseArtist = () => {
             queryKey: releasesQueryKeys.validations(),
         });
 
-        // const responseMessages = messages(data?.data?.messageCode);
-
         onSuccess?.(data?.data?.data);
-        // showNotification('success', responseMessages);
     };
 
     const onError = (

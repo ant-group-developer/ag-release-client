@@ -1,6 +1,5 @@
 import AppFilter from '@/components/ui/antd-form/app-filter';
 import DateRangePicker from '@/components/ui/input/date-range-picker';
-import ArtistSelect from '@/components/ui/select/artist-select';
 import GenresSelect from '@/components/ui/select/genres-select';
 import LabelSelect from '@/components/ui/select/label-select';
 import { arrayFromString, getDateRange } from '@/helpers/array';
@@ -59,10 +58,10 @@ export default function ReleasesHeaderV2({
         ),
     };
 
-    const handleSubmit = (values: any) => {
+    const handleFilter = (values: any) => {
         const { dateCreated, dateUpdated, ...res } = values;
-        const startCreatedAt = dateCreated?.[0] ? dateCreated[0] : null;
-        const endCreatedAt = dateCreated?.[1] ? dateCreated[1] : null;
+        const startCreatedAt = dateCreated?.[0] ?? null;
+        const endCreatedAt = dateCreated?.[1] ?? null;
 
         const startUpdatedAt = dateUpdated?.[0] ?? null;
         const endUpdatedAt = dateUpdated?.[1] ?? null;
@@ -88,8 +87,11 @@ export default function ReleasesHeaderV2({
         <div className="app-header mb-4">
             <AppFilter
                 form={form}
-                onFinish={handleSubmit}
+                onFinish={handleFilter}
                 onReset={handleReset}
+                onValuesChange={(_, allValues) => {
+                    handleFilter(allValues);
+                }}
             >
                 <ProFormText
                     name="keyword"
@@ -125,7 +127,7 @@ export default function ReleasesHeaderV2({
                     />
                 </ProForm.Item>
 
-                <ProForm.Item name="artistId" label={messages('artist.label')}>
+                {/* <ProForm.Item name="artistId" label={messages('artist.label')}>
                     <ArtistSelect
                         showCreate={false}
                         allowClear
@@ -136,7 +138,7 @@ export default function ReleasesHeaderV2({
                         mode="multiple"
                         maxTagCount={'responsive'}
                     />
-                </ProForm.Item>
+                </ProForm.Item> */}
 
                 <ProFormSelect
                     name="status"
