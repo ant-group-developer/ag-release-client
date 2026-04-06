@@ -1,3 +1,5 @@
+import AppConfirm from '@/components/ui/modal/confirm-modal';
+import { APP_ROUTES } from '@/enums/routes';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
@@ -5,8 +7,9 @@ import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { useHash } from '@/hooks/use-hash';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
-import { RELEASES_TABS } from '@/modules/releases/enums';
+import { RELEASES_STATUS, RELEASES_TABS } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
 import {
     releaseDetailSchema,
@@ -14,13 +17,14 @@ import {
 } from '@/modules/releases/schemas';
 import { ReleasesData } from '@/modules/releases/types';
 import { UpdateReleaseDraftPayload } from '@/modules/releases/types/payload';
-import { UpdateVariables } from '@/types/api';
+import { DeleteVariables, UpdateVariables } from '@/types/api';
+import { DeleteOutlined } from '@ant-design/icons';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, ConfigProvider, Form, theme } from 'antd';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 // Section dependencies
@@ -35,10 +39,10 @@ import ReleaseContributorsSectionV2 from './form-section/release-contributors-v2
 export default function ReleaseDetailFormV2() {
     // Hooks
     const messages = useTranslations();
-    const { updateReleaseDraft } = useUpdateReleaseDraft();
     const { active, deActive, isActive } = useActive();
     const { token } = theme.useToken();
     const hash = useHash();
+    const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
     // Zustand store - state
     const formValues = useReleaseFormStore((state) => {
@@ -51,6 +55,8 @@ export default function ReleaseDetailFormV2() {
 
     // Apis
     const { releaseData } = useGetDetailRelease(formValues?.id as string);
+    const { updateReleaseDraft } = useUpdateReleaseDraft();
+    const { deleteRelease } = useDeleteRelease();
 
     // Route
     const router = useRouter();
@@ -103,6 +109,20 @@ export default function ReleaseDetailFormV2() {
 
     const handleFormError = (errors: any) => {};
 
+    const handleDeleteRelease = () => {
+        const variables: DeleteVariables<ReleasesData['id']> = {
+            id: formValues.id as string,
+            onSuccess: () => {
+                setIsDeleteConfirmOpen(false);
+                router.push(APP_ROUTES.RELEASES);
+            },
+            onError: () => {
+                setIsDeleteConfirmOpen(false);
+            },
+        };
+        deleteRelease(variables);
+    };
+
     const debouncedUpdate = useCallback(
         debounce(async (data: any, fieldName?: string) => {
             if (fieldName) {
@@ -153,6 +173,7 @@ export default function ReleaseDetailFormV2() {
             const el = document.getElementById(field);
             if (el) {
                 el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                el.focus();
             }
             clearErrors();
             await trigger(field as keyof ReleaseDetailSchema);
@@ -234,23 +255,37 @@ export default function ReleaseDetailFormV2() {
                     >
                         <ReleaseContributorsSectionV2
                             isReadMode={isReadMode}
+                            isCreateReleasePage={isCreateReleasePage}
                             releaseContributor={releaseContributor}
                         />
                     </div>
+                </Form>
 
-                    <div className="my-4 flex w-full justify-end">
-                        {!isCreateReleasePage && (
+                <div className="my-4">
+                    {!isCreateReleasePage &&
+                        releaseData?.status == RELEASES_STATUS.DRAFT && (
                             <Button
-                                htmlType="submit"
+                                danger
                                 disabled={isReadMode}
-                                type="primary"
+                                shape="round"
                                 loading={isActive}
+                                icon={<DeleteOutlined />}
+                                onClick={() => setIsDeleteConfirmOpen(true)}
                             >
-                                {messages('common.continue')}
+                                {messages('common.delete')}
                             </Button>
                         )}
-                    </div>
-                </Form>
+                </div>
+
+                <AppConfirm
+                    open={isDeleteConfirmOpen}
+                    modalTitle={`${messages('common.delete')} ${messages('release.label').toLowerCase()}`}
+                    paragraph={messages('action.delete.alert', {
+                        label: formValues?.title ?? '',
+                    })}
+                    onCancel={() => setIsDeleteConfirmOpen(false)}
+                    onOk={handleDeleteRelease}
+                />
             </ConfigProvider>
         </FormProvider>
     );

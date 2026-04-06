@@ -91,16 +91,6 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
         }
     };
     const getErrorMessages = (error: ReleaseValidate) => {
-        if (error.field == 'maxTrackCount') {
-            return messages('formFields.tracks.maxCountTrack', {
-                number: error.message,
-            });
-        } else if (error.field == 'minTrackCount') {
-            return messages('formFields.tracks.minCountTrack', {
-                number: error.message,
-            });
-        }
-
         return messages(error.messageCode as any);
     };
     const toggleSidebar = () => {

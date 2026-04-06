@@ -14,9 +14,8 @@ import {
 } from '@/helpers/link';
 import { OnChangeFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { usePermission } from '@/hooks/use-permission';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
-import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { ProColumns } from '@ant-design/pro-components';
 import { Tag, theme } from 'antd';
@@ -29,8 +28,6 @@ import {
     RELEASES_TABS,
     TYPE_MODAL_RELEASE,
 } from '../../enums';
-import { useTestUploadCi } from '../../hooks/use-test-upload-ci';
-import { useTestUploadSpotify } from '../../hooks/use-test-upload-spotify';
 import { ReleasesData, ReleasesDataFilter } from '../../types';
 import ReleaseStatusTag from '../tag/release-status-tag';
 import ReleaseTitleColumn from './title-column';
@@ -54,9 +51,7 @@ export default function ReleasesTable({
     const openModal = useModalStore((state) => state.openModal);
     const { token } = theme.useToken();
     const { isSystemTenant } = useAuth();
-    const { hasPermission } = usePermission();
-    const { testUploadSpotify } = useTestUploadSpotify();
-    const { testUploadCi } = useTestUploadCi();
+    const setAction = useReleaseActionStore((state) => state.setAction);
 
     const column: ProColumns<ReleasesData>[] = [
         {
@@ -273,9 +268,6 @@ export default function ReleasesTable({
                 return (
                     <div onClick={(e) => e.stopPropagation()}>
                         <ActionButton
-                            showUpdate={hasPermission(
-                                PERMISSION.RELEASE.UPDATE
-                            )}
                             showDetail
                             showDelete={status === RELEASES_STATUS.DRAFT}
                             onShowDelete={() =>
@@ -283,21 +275,11 @@ export default function ReleasesTable({
                             }
                             onShowDetail={() => {
                                 nProgress.start();
+                                setAction(RELEASE_DETAIL_ACTION.READ);
                                 router.push(
                                     getReleaseDetailTabRoute(
                                         record?.id,
-                                        RELEASES_TABS.CORE_DETAIL,
-                                        RELEASE_DETAIL_ACTION.READ
-                                    )
-                                );
-                            }}
-                            onShowUpdate={() => {
-                                nProgress.start();
-                                router.push(
-                                    getReleaseDetailTabRoute(
-                                        record?.id,
-                                        RELEASES_TABS.CORE_DETAIL,
-                                        RELEASE_DETAIL_ACTION.EDIT
+                                        RELEASES_TABS.CORE_DETAIL
                                     )
                                 );
                             }}

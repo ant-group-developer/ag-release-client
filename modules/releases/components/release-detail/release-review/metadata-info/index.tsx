@@ -1,8 +1,10 @@
+import { DATE_FORMAT } from '@/enums/common';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { ReleaseContributor } from '@/modules/release-contributor/types';
 import type { ReleaseFormStoreData } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
+import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import ArtistItem from './artist-item';
 import MetadataInfoItem from './metadata-info-item';
@@ -22,8 +24,12 @@ export default function MetadataInfo({}: Props) {
             case 'version':
             case 'upc':
             case 'catalogId':
+                return value;
+
             case 'releaseDate':
             case 'releaseOriginalDate':
+                return value ? dayjs(value).format(DATE_FORMAT.DATE_ONLY) : '';
+
             case 'releaseTime':
                 return value;
 

@@ -138,7 +138,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                 return { currentStep: 0, stepStatus: 'process' as const };
         }
     }, [releaseData?.status]);
-    // const validateLength = releaseValidateData && releaseValidateData?.length;
+    const validateLength = releaseValidateData && releaseValidateData?.length;
 
     const statusItems: StepsProps['items'] = [
         {
@@ -292,6 +292,9 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         const variables: DistributeRelease = {
             id: formValues?.id ?? '',
             code: dspCode,
+            onSuccess(e) {
+                setReleaseAction(RELEASE_DETAIL_ACTION.READ);
+            },
         };
         const promise = distributeRelease(variables);
         toastPromise(promise, messages);
@@ -352,10 +355,11 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                 loading={isDistributingRelease}
                                 onClick={handleDistribution}
                                 type="primary"
-                                // disabled={
-                                //     validateLength > 0 ||
-                                //     releaseData?.status !== RELEASES_STATUS.DRAFT
-                                // }
+                                disabled={
+                                    validateLength > 0 ||
+                                    releaseData?.status !==
+                                        RELEASES_STATUS.DRAFT
+                                }
                             >
                                 {messages('release.action.submit')}
                             </Button>

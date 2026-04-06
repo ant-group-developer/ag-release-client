@@ -64,6 +64,8 @@
         }
     },
     "common": {
+        "others": "Khác",
+        "save": "Lưu",
         "viewXml": "Xem XML",
         "regionCode": "Mã vùng",
         "link": "Đường dẫn",
@@ -1188,6 +1190,7 @@
     },
 
     "formFields": {
+        "singleNameMustMatchTrack": "Tiêu đề phát hành phải khớp với ít nhất một tiêu đề bài hát",
         "releaseOriginalDate": "Ngày phát hành gốc",
         "audioFile": {
             "preview": "Đoạn nghe trước"

@@ -204,7 +204,7 @@ export default function TrackDetailModal({ tracks, ...props }: Props) {
             footer={null}
             width={'75vw'}
             style={{
-                top: '1rem',
+                top: '8px',
             }}
             spinning={isLoading}
             styles={{

@@ -43,7 +43,9 @@ export default function AddArtistForm({ disabled = false, ...props }: Props) {
             },
         };
         props.onCancel?.({} as any);
-        toastPromise(createReleaseArtist(variables), messages);
+        toastPromise(createReleaseArtist(variables), messages, {
+            success: messages('common.success'),
+        });
     };
     return (
         <AppModal
@@ -78,6 +80,7 @@ export default function AddArtistForm({ disabled = false, ...props }: Props) {
                         placeholder={messages('artist.select')}
                         // disabledArtistIds={disabledArtistIds}
                         allowClear
+                        isAddReleaseArtist
                     />
                 </AppFormItem>
 

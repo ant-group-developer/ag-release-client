@@ -33,22 +33,34 @@ export default function ArtistRoleFormModal({ ...props }: Props) {
         useUpdateArtistRole();
 
     const handleCreateArtistRole = (values: any) => {
+        active();
         const variables: CreateVariables<CreateArtistRolePayload> = {
             payload: values,
             onSuccess: () => {
                 form.resetFields();
+                deActive();
+            },
+            onError: () => {
+                deActive();
             },
         };
         createArtistRole(variables);
     };
 
     const handleUpdateArtistRole = (values: any) => {
+        active();
         const variables: UpdateVariables<
             ArtistRoleData['id'],
             UpdateArtistRolePayload
         > = {
             id: dataEdit?.id,
             payload: values,
+            onSuccess: () => {
+                deActive();
+            },
+            onError: () => {
+                deActive();
+            },
         };
 
         updateArtistRole(variables);
