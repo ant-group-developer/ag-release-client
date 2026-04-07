@@ -160,7 +160,11 @@ export default function ReleaseSchedulingForm({}: Props) {
             style={{ backgroundColor: token.colorBgContainer }}
         >
             <FormProvider {...formMethods}>
-                <AppForm className="flex flex-col gap-4" layout="vertical">
+                <AppForm
+                    className="flex flex-col gap-4"
+                    layout="vertical"
+                    showSubmit={false}
+                >
                     <div className="grid grid-cols-2 gap-6 gap-x-12">
                         <AppFormItem
                             name="releaseDate"
