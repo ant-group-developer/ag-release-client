@@ -991,8 +991,11 @@
             "sampleLengthMustBeLessThanDuration": "Thời lượng đoạn mẫu phải nhỏ hơn thời gian bài hát",
             "sampleExceedsDuration": "Tổng Độ dài mẫu & Hook không được dài hơn thời gian bài hát",
             "trackUpload": "{type} chỉ tải lên tối đa được {maxCount} bài",
-            "trackFileName": "Tên File không được vượt quá {number} ký tự"
+            "trackFileName": "Tên File không được vượt quá {number} ký tự",
+            "bitDepth16": "BitDepth phải là 16bit",
+            "sampleRate44100": "SampleRate phải là 44100Hz"
         },
+
         "acrCloud": {
             "compareResult": "Chọn kết quả muốn so sánh"
         },
