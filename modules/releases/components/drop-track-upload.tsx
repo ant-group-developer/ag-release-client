@@ -50,14 +50,14 @@ export default function DropUploadTracks({ ...props }: Props) {
         if (metadata?.bitDepth !== 16 || metadata?.sampleRate !== 44100) {
             const reasons: string[] = [];
             if (metadata.bitDepth !== 16)
-                reasons.push(`BitDepth must be 16bit`);
+                reasons.push(messages('track.validation.bitDepth16'));
             if (metadata.sampleRate !== 44100)
-                reasons.push(`SampleRate must be 44100Hz`);
+                reasons.push(messages('track.validation.sampleRate44100'));
 
             showNotification(
                 'error',
                 `${fileOriginal.name}: ${reasons.join(', ')}`,
-                { autoClose: 8000 }
+                { autoClose: 4000 }
             );
             return false;
         }
@@ -311,27 +311,23 @@ export default function DropUploadTracks({ ...props }: Props) {
     };
 
     const handleUpload = async (files: any[]) => {
-        const sortedFiles = [...files].sort((a, b) => {
-            const nameA = (a.name || a.originFileObj?.name || '').toLowerCase();
-            const nameB = (b.name || b.originFileObj?.name || '').toLowerCase();
-            return nameA.localeCompare(nameB);
-        });
-
         try {
-            manageProgress.initialize(sortedFiles);
+            manageProgress.initialize(files);
 
             const tracksPayload: TracksPayload[] = [];
             const temp: { file: any; key: string }[] = [];
 
-            // Process all files
-            const newTracksPromises = sortedFiles.map(
-                (file: any, index: number) =>
-                    processFile(file, index, tracksPayload, temp)
-            );
-
-            const newTracks = (await Promise.all(newTracksPromises))
-                .flat()
-                .filter((item): item is CreateBucketFile => !!item);
+            // keep order of files
+            const newTracks: CreateBucketFile[] = [];
+            for (let index = 0; index < files.length; index++) {
+                const result = await processFile(
+                    files[index],
+                    index,
+                    tracksPayload,
+                    temp
+                );
+                if (result) newTracks.push(...result);
+            }
 
             // Create buckets and upload files
             const response = await bucketApi.createBuckets({
@@ -341,11 +337,14 @@ export default function DropUploadTracks({ ...props }: Props) {
             await uploadAndMapFiles(response.data, temp, tracksPayload);
 
             // Submit files
-            const fileIdsSubmit = response.data.map((item: any) => item.fileId);
-            await bucketApi.submit({ ids: fileIdsSubmit });
+            await bucketApi.submit({
+                ids: response.data.map((item: any) => item.fileId),
+            });
 
-            // Create track drafts
-            createTrackDraft({ payload: tracksPayload });
+            // Create track drafts — sort theo order để chắc chắn
+            createTrackDraft({
+                payload: tracksPayload.sort((a, b) => a.order - b.order),
+            });
         } catch (error) {
             manageProgress.reset();
             showNotification(
@@ -368,6 +367,7 @@ export default function DropUploadTracks({ ...props }: Props) {
                         }
                         prevLength.current = fileList.length;
                     }}
+                    maxCount={50}
                 />
             )}
 
