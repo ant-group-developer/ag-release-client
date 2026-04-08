@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "direct": "Trực tiếp",
         "others": "Khác",
         "save": "Lưu",
         "viewXml": "Xem XML",
@@ -274,6 +275,7 @@
         "detail": "Chi tiết ",
         "delete": "Xoá",
         "upload": "Tải lên",
+        "uploadError": "Lỗi tải ảnh",
         "uploadImage": "Tải ảnh lên",
         "dateCreated": "Ngày tạo",
         "createdAt": "Ngày tạo",
@@ -534,6 +536,7 @@
         "minValid": "Tối thiểu {number} ký tự hợp lệ",
         "minWithValid": "Tối thiểu {number} ký tự hợp lệ",
         "max": "Tối đa {number} ký tự",
+        "fileNameTooLong": "Tên file không được vượt quá 80 ký tự",
         "image": "Xin vui lòng chọn ảnh hợp lệ",
         "video": "Xin vui lòng chọn video hợp lệ",
         "phoneNumber": "Số điện thoại phải gồm đúng 10 số",
@@ -855,7 +858,11 @@
         "coverArt": {
             "label": "Ảnh bìa",
             "required": "Yêu cầu ảnh bìa",
-            "size": "Ảnh phải vuông, từ 1400x1400 pixel đến 4000x4000x pixel"
+            "requirements": "Yêu cầu ảnh bìa",
+            "size": "Ảnh phải vuông, từ 1400x1400 pixel đến 4000x4000 pixel",
+            "resolution": "Độ phân giải tối thiểu 300 DPI",
+            "format": "Định dạng .jpg hoặc .tif ở hệ màu RGB (không dùng CMYK)",
+            "layered": "QUAN TRỌNG: Không chấp nhận các tệp phân lớp (layered) hoặc có kênh màu alpha"
         },
         "message": {
             "success": {
@@ -1337,6 +1344,7 @@
         "profileList": "Danh sách hồ sơ",
         "fullNameOfDDexParty": "Tên DDex party",
         "ddexPartyId": "DDex party Id",
+        "dealType": "Loại thoả thuận",
         "message": {
             "success": {
                 "create": "Thêm nền tảng thành công",
@@ -1868,6 +1876,9 @@
         "systemDefault": "Cổng mặc định",
         "createsDoneFolder": "Tạo thư mục done",
         "ddexName": "Tên ddex",
+        "deliveryEmail": "Email giao hàng",
+        "deliveryEmailSubject": "Tiêu đề email giao hàng",
+        "manualUploadUrl": "Đường dẫn upload thủ công",
         "ernVersion": "Phiên bản ERN",
         "action": {
             "create": "Tạo đơn vị tổng hợp",
@@ -1943,5 +1954,69 @@
         "label": "Nhật ký phát hành",
         "statusRelease": "Trạng thái phát hành",
         "statusLog": "Trạng thái nhật ký"
+    },
+    "distributionMonitor": {
+        "label": "Theo dõi phân phối"
+    },
+    "releaseExecution": {
+        "confirm": {
+            "retryTitle": "Thử lại tiến trình",
+            "retryDescription": "Bạn có chắc muốn thử lại tiến trình này không?"
+        },
+        "message": {
+            "retrySuccess": "Thử lại tiến trình thành công"
+        },
+        "detail": {
+            "columns": {
+                "dspName": "DSP Name",
+                "step": "Step",
+                "status": "Status",
+                "startedAt": "Started At",
+                "completedAt": "Completed At",
+                "duration": "Duration"
+            }
+        },
+        "columns": {
+            "upc": "UPC",
+            "originalDspCodes": "Mã DSP đích",
+            "since": "Từ lúc",
+            "stepType": "Loại bước",
+            "releaseName": "Tên phát hành",
+            "type": "Loại",
+            "status": "Trạng thái",
+            "targetDspCodes": "Mã DSP đích",
+            "triggeredBy": "Người kích hoạt",
+            "startedAt": "Bắt đầu lúc",
+            "completedAt": "Hoàn thành lúc",
+            "summary": "Tóm tắt"
+        },
+        "typeOptions": {
+            "INITIAL_RELEASE": "Phát hành ban đầu",
+            "UPDATE": "Cập nhật",
+            "TAKEDOWN": "Gỡ xuống",
+            "RETRY": "Thử lại"
+        },
+        "stepTypeOptions": {
+            "VALIDATE": "Kiểm tra",
+            "GEN_UPC_ISRC": "Tạo UPC / ISRC",
+            "CREATE_METADATA": "Tạo metadata",
+            "UPLOAD_SFTP": "Tải lên SFTP",
+            "POST_UPLOAD_HOOK": "Hook sau tải lên",
+            "EXPORT_EXCEL": "Xuất Excel",
+            "SEND_EMAIL": "Gui email",
+            "WAITING_EXPORT": "Cho xuat",
+            "CLEANUP": "Don dep"
+        },
+        "statusOptions": {
+            "QUEUED": "Đang chờ",
+            "RUNNING": "Đang chạy",
+            "AWAITING_ACTION": "Chờ xử lý",
+            "COMPLETED": "Hoàn thành",
+            "PARTIALLY_COMPLETED": "Hoàn thành một phần",
+            "FAILED": "Thất bại",
+            "CANCELLED": "Đã hủy"
+        },
+        "label": "Lệnh thực thi phát hành"
     }
 }
+

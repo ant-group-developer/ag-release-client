@@ -64,6 +64,7 @@
         }
     },
     "common": {
+        "direct": "Direct",
         "others": "Others",
         "save": "Save",
         "viewXml": "View XML",
@@ -227,6 +228,7 @@
         "columnsDisplay": "Columns display",
         "all": "All",
         "cancel": "Cancel",
+        "confirm": "Confirm",
         "used": "Used",
         "notUsed": "Not used",
         "use": "Use status",
@@ -274,9 +276,11 @@
         "detail": "Detail",
         "delete": "Delete",
         "upload": "Upload",
+        "uploadError": "Upload Error",
         "uploadImage": "Upload image",
         "dateCreated": "Date created",
         "createdAt": "Created at",
+        "startedAt": "Started at",
         "updatedAt": "Updated at",
         "dateUpdated": "Date updated",
         "removeFilter": "Remove filter",
@@ -536,6 +540,7 @@
         "min": "Must be min {number} characters",
         "minValid": "Must be min {number} valid characters",
         "max": "Must be less than {number} characters",
+        "fileNameTooLong": "File name must not exceed 80 characters",
         "image": "Please select a image file",
         "video": "Please select a video file",
         "phoneNumber": "Phone number must be 10 digits",
@@ -857,7 +862,11 @@
         "coverArt": {
             "label": "Cover art",
             "required": "Required cover art",
-            "size": "Perfectly Square image from 1400x1400 pixels to 4000x4000 pixels"
+            "requirements": "Cover Art Requirements",
+            "size": "Perfectly Square image from 1400x1400 pixels to 4000x4000 pixels",
+            "resolution": "Resolution of at least 300 DPI",
+            "format": "Image Format of .jpg in RGB color mode (not CMYK)",
+            "layered": "IMPORTANT: Layered files or files with alpha color channels are NOT ACCEPTED"
         },
         "message": {
             "success": {
@@ -1336,6 +1345,7 @@
         "profileList": "Profile list",
         "fullNameOfDDexParty": "Full Name of DDEX Party",
         "ddexPartyId": "DDex Party ID",
+        "dealType": "Deal Type",
         "message": {
             "success": {
                 "create": "Create platform successfully",
@@ -1866,6 +1876,9 @@
         "systemDefault": "System default",
         "createsDoneFolder": "Create done folder",
         "ddexName": "DDex name",
+        "deliveryEmail": "Delivery email",
+        "deliveryEmailSubject": "Delivery email subject",
+        "manualUploadUrl": "Manual upload URL",
         "ernVersion": "ERN version",
         "action": {
             "create": "Create aggregator",
@@ -1941,5 +1954,68 @@
         "label": "Release logs",
         "statusRelease": "Release status",
         "statusLog": "Log status"
+    },
+    "distributionMonitor": {
+        "label": "Distribution monitor"
+    },
+    "releaseExecution": {
+        "label": "Release executions",
+        "confirm": {
+            "retryTitle": "Retry execution",
+            "retryDescription": "Are you sure you want to retry this execution?"
+        },
+        "detail": {
+            "columns": {
+                "dspName": "DSP Name",
+                "step": "Step",
+                "status": "Status",
+                "startedAt": "Started At",
+                "completedAt": "Completed At",
+                "duration": "Duration"
+            }
+        },
+        "message": {
+            "retrySuccess": "Retry execution successfully"
+        },
+        "columns": {
+            "upc": "UPC",
+            "targetDspCodes": "Target DSP Codes",
+            "releaseName": "Release name",
+            "type": "Type",
+            "stepType": "Step type",
+            "status": "Status",
+            "originalDspCodes": "Target DSP Codes",
+            "triggeredBy": "Triggered By",
+            "since": "Since",
+            "startedAt": "Started At",
+            "completedAt": "Completed At",
+            "summary": "Summary"
+        },
+        "typeOptions": {
+            "INITIAL_RELEASE": "Initial release",
+            "UPDATE": "Update",
+            "TAKEDOWN": "Takedown",
+            "RETRY": "Retry"
+        },
+        "stepTypeOptions": {
+            "VALIDATE": "Validate",
+            "GEN_UPC_ISRC": "Generate UPC / ISRC",
+            "CREATE_METADATA": "Create metadata",
+            "UPLOAD_SFTP": "Upload SFTP",
+            "POST_UPLOAD_HOOK": "Post upload hook",
+            "EXPORT_EXCEL": "Export Excel",
+            "SEND_EMAIL": "Send email",
+            "WAITING_EXPORT": "Waiting export",
+            "CLEANUP": "Cleanup"
+        },
+        "statusOptions": {
+            "QUEUED": "Queued",
+            "RUNNING": "Running",
+            "AWAITING_ACTION": "Awaiting action",
+            "COMPLETED": "Completed",
+            "PARTIALLY_COMPLETED": "Partially completed",
+            "FAILED": "Failed",
+            "CANCELLED": "Cancelled"
+        }
     }
 }

@@ -57,6 +57,7 @@ export enum APP_ROUTES {
     DEAL_TYPE = '/deal-type',
     PING = '/ping',
     RELEASE_LOG = '/release-log',
+    RELEASE_EXECUTIONS = '/release-executions',
 }
 
 export const AUTH_ROUTES: string[] = [APP_ROUTES.SIGN_IN];

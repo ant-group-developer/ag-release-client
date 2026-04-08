@@ -384,4 +384,9 @@ export const QUERY_KEY = {
         KEY: 'RELEASE_LOG',
         GET_LIST: 'GET_LIST_RELEASE_LOG',
     },
+    RELEASE_EXECUTION: {
+        KEY: 'RELEASE_EXECUTION',
+        GET_LIST: 'GET_LIST_RELEASE_EXECUTION',
+        RETRY: 'RETRY_RELEASE_EXECUTION',
+    },
 };

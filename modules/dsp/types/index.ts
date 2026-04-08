@@ -1,4 +1,4 @@
-import { SftpMetadata } from '@/modules/aggregator/types';
+import { AggregatorData, SftpMetadata } from '@/modules/aggregator/types';
 import { DspActionData } from '@/modules/dsp-action/types';
 import { CommonAttribute, CommonParams } from '@/types/api';
 import { DSP_DEAL } from '../enums';
@@ -16,6 +16,7 @@ export interface DspData extends CommonAttribute {
     codeCi?: string;
     ddexId?: string;
     ddexName?: string;
+    dspRoutingConfig?: DspRoutingConfig;
 }
 
 export interface DspDataFilter extends CommonParams {
@@ -28,6 +29,7 @@ export interface DspRoutingConfig extends CommonAttribute {
     dspId: DspData['id'];
     mode: DSP_DEAL | null;
     aggregatorId?: string;
+    aggregator?: AggregatorData;
     sftpConfig?: {
         id: string;
         metadata: SftpMetadata;

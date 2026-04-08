@@ -445,6 +445,15 @@ export const adminRoutes: RouteNode[] = [
                 required: SYS_ADMIN_REQ,
             },
             {
+                id: 'release-executions',
+                type: 'link',
+                label: 'releaseExecution.label',
+                title: 'Release Executions',
+                href: APP_ROUTES.RELEASE_EXECUTIONS,
+                icon: ScrollText,
+                required: SYS_ADMIN_REQ,
+            },
+            {
                 id: 'setting',
                 type: 'link',
                 label: 'setting.label',

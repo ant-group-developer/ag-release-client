@@ -32,11 +32,11 @@ export default function ImageListUpload({
     const containerRef = useRef<HTMLDivElement>(null);
 
     function beforeUpload(file: RcFile, _fileList: RcFile[]) {
-        const isImage = file.type.startsWith('image/');
-        if (!isImage) {
-            showNotification('error', messages('validation.image'));
-            return Upload.LIST_IGNORE;
-        }
+        // const isImage = file.type.startsWith('image/');
+        // if (!isImage) {
+        //     showNotification('error', messages('validation.image'));
+        //     return Upload.LIST_IGNORE;
+        // }
         const isLessThanMaxSize = file.size / 1024 / 1024 < maxSizeMB;
         if (!isLessThanMaxSize) {
             showNotification(
