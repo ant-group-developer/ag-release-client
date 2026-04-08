@@ -1,6 +1,8 @@
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
+import { SIZE_ICON_SMALL } from '@/constants/common';
 import useModalStore from '@/hooks/use-modal';
-import { Avatar, Card, Empty, Space, Tag, Typography } from 'antd';
+import { Avatar, Button, Card, Empty, Space, Tag, Typography } from 'antd';
+import { RotateCcw } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { RELEASE_EXECUTION_STATUS } from '../../enums';
 import { getStatusColor } from '../../helpers';
@@ -16,19 +18,17 @@ export default function ReleaseExecutionDetailModal({ ...props }: Props) {
     const dataEdit = useModalStore<ReleaseExecutionData>(
         (state) => state.dataEdit
     );
-    const { releaseExecutionDetail, isFetching } = useGetDetailReleaseExecution(
-        dataEdit?.id
-    );
+    const { releaseExecutionDetail, isFetching, refetch } =
+        useGetDetailReleaseExecution(dataEdit?.id);
 
     const isHasExecutionDsps = !!releaseExecutionDetail?.executionDsps;
     const getExecutionStatusLabel = (status?: RELEASE_EXECUTION_STATUS) => {
         if (!status) return;
-
         return messages(`releaseExecution.statusOptions.${status}`);
     };
 
     const title = (
-        <div className="flex flex-col gap-1">
+        <div className="flex items-center justify-between">
             <Space className="font-semibold">
                 <span>{releaseExecutionDetail?.release?.title}</span>
                 <Typography.Text type="secondary" className="text-xs">
@@ -41,6 +41,19 @@ export default function ReleaseExecutionDetailModal({ ...props }: Props) {
                     {getExecutionStatusLabel(releaseExecutionDetail?.status)}
                 </Tag>
             </Space>
+            <Button
+                className="mr-6"
+                size="small"
+                onClick={() => refetch()}
+                loading={isFetching}
+                icon={
+                    <div>
+                        <RotateCcw size={SIZE_ICON_SMALL} />
+                    </div>
+                }
+            >
+                {messages('common.refresh')}
+            </Button>
         </div>
     );
 

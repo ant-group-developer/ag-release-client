@@ -876,6 +876,15 @@
             "submit": "Gửi phát hành",
             "edit": "Chỉnh sửa phát hành",
             "completeTheTask": "Hoàn thành công việc"
+        },
+        "status": {
+            "draft": "Nháp",
+            "issues": "Có vấn đề",
+            "processing": "Đang xử lý",
+            "partially_distributed": "Đã phân phối một phần",
+            "taken_down": "Đã gỡ xuống",
+            "distributed": "Đã phân phối",
+            "never_distributed": "Chưa từng phân phối"
         }
     },
 
@@ -1339,6 +1348,7 @@
         "label": "DSP",
         "name": "Tên nền tảng",
         "codeCi": "Mã CI",
+        "hasDeal": "has deal CI",
         "add": "Thêm nền tảng",
         "oneLinkPerLine": "Mỗi link một dòng",
         "profileList": "Danh sách hồ sơ",
@@ -2019,4 +2029,3 @@
         "label": "Lệnh thực thi phát hành"
     }
 }
-

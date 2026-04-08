@@ -879,6 +879,15 @@
             "submit": "Submit release",
             "edit": "Edit release",
             "completeTheTask": "Complete the task"
+        },
+        "status": {
+            "draft": "Draft",
+            "issues": "Issues",
+            "processing": "Processing",
+            "partially_distributed": "Partially distributed",
+            "taken_down": "Taken down",
+            "distributed": "Distributed",
+            "never_distributed": "Never distributed"
         }
     },
 
@@ -1340,6 +1349,7 @@
         "label": "DSP",
         "name": "Platform name",
         "codeCi": "CI Code",
+        "hasDeal": "has deal CI",
         "add": "Add platform",
         "oneLinkPerLine": "One link per line",
         "profileList": "Profile list",

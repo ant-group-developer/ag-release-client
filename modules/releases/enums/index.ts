@@ -58,6 +58,7 @@ export enum RELEASES_STATUS {
     PROCESSING = 'processing',
     ISSUES = 'issues',
     NEVER_DISTRIBUTED = 'never_distributed',
+    // PARTIALLY_DISTRIBUTED = 'partially_distributed',
     DISTRIBUTED = 'distributed',
     TAKEN_DOWN = 'taken_down',
 }

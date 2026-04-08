@@ -45,7 +45,7 @@ export const DspTable = ({ ...props }: Props) => {
             dataIndex: 'name',
             ellipsis: true,
             align: 'left',
-            width: 200,
+            width: 250,
             fixed: 'left',
             render: (value, record) => (
                 <div className="flex items-center gap-4">
@@ -85,7 +85,7 @@ export const DspTable = ({ ...props }: Props) => {
             key: 'codeCi',
             dataIndex: 'codeCi',
             align: 'left',
-            width: 100,
+            width: 120,
             render: (value, record) => (
                 <CopyText
                     tooltipProps={{ placement: 'right' }}
@@ -100,7 +100,7 @@ export const DspTable = ({ ...props }: Props) => {
             key: 'ddexId',
             dataIndex: 'ddexId',
             align: 'left',
-            width: 180,
+            width: 200,
             render: (value, record) => (
                 <CopyText
                     tooltipProps={{ placement: 'right' }}
@@ -115,7 +115,7 @@ export const DspTable = ({ ...props }: Props) => {
             key: 'ddexName',
             dataIndex: 'ddexName',
             align: 'left',
-            width: 180,
+            width: 200,
             render: (value, record) => (
                 <CopyText
                     tooltipProps={{ placement: 'right' }}
@@ -153,6 +153,24 @@ export const DspTable = ({ ...props }: Props) => {
                         updateDsp({
                             id: record?.id,
                             payload: { enablePolicy: e },
+                        })
+                    }
+                />
+            ),
+        },
+        {
+            title: messages('dsp.hasDeal'),
+            key: 'hasDeal',
+            dataIndex: 'hasDeal',
+            align: 'center',
+            width: 120,
+            render: (value, record) => (
+                <Switch
+                    value={record?.hasDeal}
+                    onChange={(e) =>
+                        updateDsp({
+                            id: record?.id,
+                            payload: { hasDeal: e },
                         })
                     }
                 />

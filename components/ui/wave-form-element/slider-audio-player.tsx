@@ -26,9 +26,13 @@ const SliderAudioPlayer = ({
                 onClick={togglePlayback}
                 icon={
                     playing ? (
-                        <CirclePause size={SIZE_ICON_BIG} />
+                        <div>
+                            <CirclePause size={SIZE_ICON_BIG} />
+                        </div>
                     ) : (
-                        <CirclePlay size={SIZE_ICON_BIG} />
+                        <div>
+                            <CirclePlay size={SIZE_ICON_BIG} />
+                        </div>
                     )
                 }
             />

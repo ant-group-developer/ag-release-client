@@ -1,4 +1,3 @@
-import { getIntlCodeByReleaseStatus } from '@/helpers/intl';
 import { Tag, TagProps } from 'antd';
 import { useTranslations } from 'next-intl';
 import { RELEASES_STATUS } from '../../enums';
@@ -20,6 +19,9 @@ export default function ReleaseStatusTag({ status, ...props }: Props) {
         case RELEASES_STATUS.PROCESSING:
             color = 'blue';
             break;
+        // case RELEASES_STATUS.PARTIALLY_DISTRIBUTED:
+        //     color = 'blue';
+        //     break;
         case RELEASES_STATUS.TAKEN_DOWN:
             color = 'yellow';
             break;
@@ -35,7 +37,7 @@ export default function ReleaseStatusTag({ status, ...props }: Props) {
     if (!status) return;
     return (
         <Tag color={color} {...props}>
-            {messages(getIntlCodeByReleaseStatus(status))}
+            {messages(`release.status.${status}`)}
         </Tag>
     );
 }

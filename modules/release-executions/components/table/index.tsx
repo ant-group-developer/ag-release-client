@@ -44,7 +44,7 @@ export default function ReleaseExecutionTable({ ...props }: Props) {
         {
             title: messages('common.iNo'),
             key: 'iNo',
-            width: 70,
+            width: 50,
             align: 'center',
             fixed: 'left',
             render: (_, __, index) =>
