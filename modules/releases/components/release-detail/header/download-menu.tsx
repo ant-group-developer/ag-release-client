@@ -147,7 +147,7 @@ export default function DownloadMenu({}: Props) {
                 message: messages('common.preparingDownload'),
                 description: messages('common.preparingDownloadDesc'),
                 icon: <Spin spinning={true} />,
-                placement: 'bottomLeft',
+                placement: 'top',
                 duration: 0,
             });
         } else {

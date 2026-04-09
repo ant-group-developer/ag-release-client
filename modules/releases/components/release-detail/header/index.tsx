@@ -50,10 +50,13 @@ import { SegmentedOptions } from 'antd/es/segmented';
 import exifr from 'exifr';
 import {
     Box,
+    Check,
     CircleAlert,
     FileSearch,
+    GitCommitHorizontal,
     NotebookText,
     PackageX,
+    X,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
@@ -140,16 +143,21 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         const status = releaseData?.status;
         switch (status) {
             case RELEASES_STATUS.DRAFT:
-            case RELEASES_STATUS.NEVER_DISTRIBUTED:
-                return { currentStep: 0, stepStatus: 'process' as const };
             case RELEASES_STATUS.PROCESSING:
                 return { currentStep: 1, stepStatus: 'process' as const };
-            case RELEASES_STATUS.ISSUES:
-                return { currentStep: 2, stepStatus: 'error' as const };
+            case RELEASES_STATUS.SUBMITTED:
+                return { currentStep: 2, stepStatus: 'process' as const };
+            case RELEASES_STATUS.AWAITING_ACTION:
+                return { currentStep: 3, stepStatus: 'process' as const };
+            case RELEASES_STATUS.PARTIALLY_FAILED:
+                return { currentStep: 4, stepStatus: 'process' as const };
+            case RELEASES_STATUS.FAILED:
+                return { currentStep: 5, stepStatus: 'process' as const };
             case RELEASES_STATUS.DISTRIBUTED:
-                return { currentStep: 3, stepStatus: 'finish' as const };
+                return { currentStep: 3, stepStatus: 'process' as const };
             case RELEASES_STATUS.TAKEN_DOWN:
-                return { currentStep: 4, stepStatus: 'error' as const };
+                return { currentStep: 6, stepStatus: 'process' as const };
+
             default:
                 return { currentStep: 0, stepStatus: 'process' as const };
         }
@@ -168,29 +176,44 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
 
     const statusItems: StepsProps['items'] = [
         {
-            title: messages('common.draft'),
+            title: messages('release.status.draft'),
             icon: <NotebookText size={SIZE_ICON} />,
             status: currentStep === 0 ? 'process' : 'wait',
         },
         {
-            title: messages('common.processing'),
+            title: messages('release.status.processing'),
             icon: <FileSearch size={SIZE_ICON} />,
             status: currentStep === 1 ? 'process' : 'wait',
         },
         {
-            title: messages('issue.label'),
-            icon: <CircleAlert size={SIZE_ICON} />,
+            title: messages('release.status.submitted'),
+            icon: <Check size={SIZE_ICON} />,
             status: currentStep === 2 ? 'process' : 'wait',
         },
         {
-            title: messages('common.distributed'),
-            icon: <Box size={SIZE_ICON} />,
+            title: messages('release.status.awaiting_action'),
+            icon: <GitCommitHorizontal size={SIZE_ICON} />,
             status: currentStep === 3 ? 'process' : 'wait',
         },
         {
-            title: messages('common.takenDown'),
-            icon: <PackageX size={SIZE_ICON} />,
+            title: messages('release.status.partially_failed'),
+            icon: <CircleAlert size={SIZE_ICON} />,
             status: currentStep === 4 ? 'process' : 'wait',
+        },
+        {
+            title: messages('release.status.failed'),
+            icon: <X size={SIZE_ICON} />,
+            status: currentStep === 5 ? 'process' : 'wait',
+        },
+        {
+            title: messages('release.status.distributed'),
+            icon: <Box size={SIZE_ICON} />,
+            status: currentStep === 6 ? 'process' : 'wait',
+        },
+        {
+            title: messages('release.status.taken_down'),
+            icon: <PackageX size={SIZE_ICON} />,
+            status: currentStep === 7 ? 'process' : 'wait',
         },
     ];
 

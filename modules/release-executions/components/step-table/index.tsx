@@ -1,6 +1,6 @@
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
-import { Table, Tag } from 'antd';
+import { Table, Tag, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { STEP_STATUS } from '../../enums';
 import {
@@ -83,6 +83,15 @@ export default function ReleaseExecutionStepTable({ dataSource }: Props) {
                         ) || '-',
                 },
             ]}
+            expandable={{
+                columnWidth: 20,
+                rowExpandable: (record) => !!record.logs,
+                expandedRowRender: (record) => (
+                    <div className="px-4 py-2">
+                        <Typography.Text>{record?.logs}</Typography.Text>
+                    </div>
+                ),
+            }}
         />
     );
 }

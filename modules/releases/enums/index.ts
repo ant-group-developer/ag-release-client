@@ -56,11 +56,13 @@ export enum RELEASES_TABS {
 export enum RELEASES_STATUS {
     DRAFT = 'draft',
     PROCESSING = 'processing',
-    ISSUES = 'issues',
-    NEVER_DISTRIBUTED = 'never_distributed',
-    // PARTIALLY_DISTRIBUTED = 'partially_distributed',
+    AWAITING_ACTION = 'awaiting_action',
     DISTRIBUTED = 'distributed',
+    PARTIALLY_FAILED = 'partially_failed',
+    FAILED = 'failed',
     TAKEN_DOWN = 'taken_down',
+    SUBMITTED = 'submitted',
+
 }
 
 export enum RELEASES_COLUMNS_DISPLAY {

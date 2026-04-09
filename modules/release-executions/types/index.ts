@@ -1,13 +1,8 @@
 import { AggregatorData } from '@/modules/aggregator/types';
 import { DspData } from '@/modules/dsp/types';
-import { LogData } from '@/modules/log/types/data';
 import { ReleasesData } from '@/modules/releases/types';
 import { UserData } from '@/modules/user/types/data';
-import {
-    CommonAttribute,
-    CommonParams,
-    PaginationResponse,
-} from '@/types/api';
+import { CommonAttribute, CommonParams, PaginationResponse } from '@/types/api';
 import {
     RELEASE_EXECUTION_STATUS,
     RELEASE_EXECUTION_TYPE,
@@ -44,7 +39,7 @@ export interface StepData extends CommonAttribute {
     dsp?: DspData;
     aggregatorId?: string;
     aggregator?: AggregatorData;
-    logs?: LogData;
+    logs?: string;
     metadata?: string;
     startedAt?: string;
     completedAt?: string;

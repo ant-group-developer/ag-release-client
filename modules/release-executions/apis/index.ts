@@ -1,5 +1,5 @@
 import axiosInstance from '@/api/axios-auth';
-import { DetailResponse, PaginationResponse } from '@/types/api';
+import { DetailResponse } from '@/types/api';
 import {
     ReleaseExecutionData,
     ReleaseExecutionFilter,
@@ -21,6 +21,21 @@ export const releaseExecutionApis = {
     retry: (id: string) => {
         return axiosInstance.post<DetailResponse<ReleaseExecutionData>>(
             `/release-executions/${id}/retry`
+        );
+    },
+    downloadManualExport: (ids: string[]) => {
+        return axiosInstance.post(
+            '/release-executions/manual-export/bulk-download',
+            { ids },
+            {
+                responseType: 'blob',
+            }
+        );
+    },
+    bulkMarkCompleted: (ids: string[]) => {
+        return axiosInstance.post(
+            '/release-executions/manual-export/bulk-mark-completed',
+            { ids }
         );
     },
 };

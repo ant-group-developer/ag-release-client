@@ -283,6 +283,7 @@
         "startedAt": "Started at",
         "updatedAt": "Updated at",
         "dateUpdated": "Date updated",
+        "completedAt": "Completed at",
         "removeFilter": "Remove filter",
         "filter": "Filters",
         "submit": "Submit",
@@ -885,9 +886,14 @@
             "issues": "Issues",
             "processing": "Processing",
             "partially_distributed": "Partially distributed",
+            "awaiting_action": "Awaiting action",
             "taken_down": "Taken down",
             "distributed": "Distributed",
-            "never_distributed": "Never distributed"
+            "never_distributed": "Never distributed",
+            "label": "Release status",
+            "submitted": "Submitted",
+            "partially_failed": "Partially failed",
+            "failed": "Failed"
         }
     },
 
@@ -1971,8 +1977,10 @@
     "releaseExecution": {
         "label": "Release executions",
         "confirm": {
-            "retryTitle": "Retry execution",
-            "retryDescription": "Are you sure you want to retry this execution?"
+            "retryTitle": "Are you sure you want to retry?",
+            "retryDescription": "This action will restart the distribution process.",
+            "markCompletedTitle": "Are you sure you want to mark as completed?",
+            "markCompletedDescription": "This action will mark the selected records as completed."
         },
         "detail": {
             "columns": {
@@ -2008,15 +2016,21 @@
             "RETRY": "Retry"
         },
         "stepTypeOptions": {
-            "VALIDATE": "Validate",
-            "GEN_UPC_ISRC": "Generate UPC / ISRC",
-            "CREATE_METADATA": "Create metadata",
+            "GENERATE_UPC": "Generate UPC",
+            "GENERATE_ISRC": "Generate ISRC",
+            "CREATE_METADATA_ERN": "Create metadata ERN",
+            "CREATE_METADATA_CI": "Create metadata CI",
+            "UPLOAD_SFTP_CI": "Upload SFTP CI",
+            "CREATE_DONE_FOLDER": "Create done folder",
             "UPLOAD_SFTP": "Upload SFTP",
             "POST_UPLOAD_HOOK": "Post upload hook",
             "EXPORT_EXCEL": "Export Excel",
-            "SEND_EMAIL": "Send email",
+            "SEND_EMAIL_EXPORT": "Send email",
             "WAITING_EXPORT": "Waiting export",
             "CLEANUP": "Cleanup"
+        },
+        "action": {
+            "markCompleted": "Mark completed"
         },
         "statusOptions": {
             "QUEUED": "Queued",

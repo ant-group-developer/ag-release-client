@@ -27,7 +27,6 @@ const initialValue: ReleaseFormStoreData = {
     modifierId: '',
     upc: '',
     status: RELEASES_STATUS.DRAFT,
-    isSensitiveContent: false,
     createdAt: '',
     updatedAt: null,
     releaseDate: '',

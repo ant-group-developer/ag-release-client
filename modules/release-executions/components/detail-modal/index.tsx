@@ -41,19 +41,21 @@ export default function ReleaseExecutionDetailModal({ ...props }: Props) {
                     {getExecutionStatusLabel(releaseExecutionDetail?.status)}
                 </Tag>
             </Space>
-            <Button
-                className="mr-6"
-                size="small"
-                onClick={() => refetch()}
-                loading={isFetching}
-                icon={
-                    <div>
-                        <RotateCcw size={SIZE_ICON_SMALL} />
-                    </div>
-                }
-            >
-                {messages('common.refresh')}
-            </Button>
+            {releaseExecutionDetail && (
+                <Button
+                    className="mr-6"
+                    size="small"
+                    onClick={() => refetch()}
+                    loading={isFetching}
+                    icon={
+                        <div>
+                            <RotateCcw size={SIZE_ICON_SMALL} />
+                        </div>
+                    }
+                >
+                    {messages('common.refresh')}
+                </Button>
+            )}
         </div>
     );
 
@@ -83,37 +85,51 @@ export default function ReleaseExecutionDetailModal({ ...props }: Props) {
             <div className="space-y-4">
                 {isHasExecutionDsps ? (
                     releaseExecutionDetail?.executionDsps?.map(
-                        (executionDsp: ExecutionDspData) => (
-                            <Card
-                                key={executionDsp.id}
-                                title={
-                                    <Space>
-                                        <Avatar
-                                            src={executionDsp?.dsp?.picture}
-                                            size={24}
-                                        />
-                                        <Typography.Text strong>
-                                            {executionDsp?.dsp?.name}
-                                        </Typography.Text>
-                                        <Tag
-                                            bordered={false}
-                                            color={getStatusColor(
-                                                executionDsp.status
+                        (executionDsp: ExecutionDspData) => {
+                            const dsp = executionDsp?.dsp;
+                            return (
+                                <Card
+                                    key={executionDsp.id}
+                                    title={
+                                        <Space>
+                                            {dsp && (
+                                                <Avatar
+                                                    src={dsp?.picture}
+                                                    size={24}
+                                                />
                                             )}
-                                        >
-                                            {getExecutionStatusLabel(
-                                                executionDsp.status
+                                            {!dsp && (
+                                                <div>
+                                                    <Typography.Text>
+                                                        {messages(
+                                                            'release.status.label'
+                                                        )}
+                                                    </Typography.Text>
+                                                </div>
                                             )}
-                                        </Tag>
-                                    </Space>
-                                }
-                                size="small"
-                            >
-                                <ReleaseExecutionStepTable
-                                    dataSource={executionDsp.steps || []}
-                                />
-                            </Card>
-                        )
+                                            <Typography.Text strong>
+                                                {dsp?.name}
+                                            </Typography.Text>
+                                            <Tag
+                                                bordered={false}
+                                                color={getStatusColor(
+                                                    executionDsp.status
+                                                )}
+                                            >
+                                                {getExecutionStatusLabel(
+                                                    executionDsp.status
+                                                )}
+                                            </Tag>
+                                        </Space>
+                                    }
+                                    size="small"
+                                >
+                                    <ReleaseExecutionStepTable
+                                        dataSource={executionDsp.steps || []}
+                                    />
+                                </Card>
+                            );
+                        }
                     )
                 ) : (
                     <Empty />

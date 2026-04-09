@@ -280,6 +280,7 @@
         "dateCreated": "Ngày tạo",
         "createdAt": "Ngày tạo",
         "dateUpdated": "Ngày cập nhật",
+        "completedAt": "Ngày hoàn thành",
         "updatedAt": "Ngày cập nhật",
         "removeFilter": "Xoá bộ lọc",
         "filter": "Bộ lọc",
@@ -882,9 +883,14 @@
             "issues": "Có vấn đề",
             "processing": "Đang xử lý",
             "partially_distributed": "Đã phân phối một phần",
+            "awaiting_action": "Chờ hành động",
             "taken_down": "Đã gỡ xuống",
             "distributed": "Đã phân phối",
-            "never_distributed": "Chưa từng phân phối"
+            "never_distributed": "Chưa từng phân phối",
+            "label": "Trạng thái phát hành",
+            "submitted": "Đã gửi",
+            "partially_failed": "Một phần thất bại",
+            "failed": "Thất bại"
         }
     },
 
@@ -1970,8 +1976,10 @@
     },
     "releaseExecution": {
         "confirm": {
-            "retryTitle": "Thử lại tiến trình",
-            "retryDescription": "Bạn có chắc muốn thử lại tiến trình này không?"
+            "retryTitle": "Bạn có chắc chắn muốn thử lại?",
+            "retryDescription": "Hành động này sẽ thực hiện lại quá trình phát hành.",
+            "markCompletedTitle": "Bạn có chắc chắn muốn đánh dấu hoàn thành?",
+            "markCompletedDescription": "Hành động này sẽ đánh dấu các bản ghi đã chọn là đã hoàn thành."
         },
         "message": {
             "retrySuccess": "Thử lại tiến trình thành công"
@@ -2007,15 +2015,21 @@
             "RETRY": "Thử lại"
         },
         "stepTypeOptions": {
-            "VALIDATE": "Kiểm tra",
-            "GEN_UPC_ISRC": "Tạo UPC / ISRC",
-            "CREATE_METADATA": "Tạo metadata",
+            "GENERATE_UPC": "Tạo UPC",
+            "GENERATE_ISRC": "Tạo ISRC",
+            "CREATE_METADATA_ERN": "Tạo metadata ERN",
+            "CREATE_METADATA_CI": "Tạo metadata CI",
+            "UPLOAD_SFTP_CI": "Tải lên SFTP CI",
+            "CREATE_DONE_FOLDER": "Tạo thư mục xong",
             "UPLOAD_SFTP": "Tải lên SFTP",
             "POST_UPLOAD_HOOK": "Hook sau tải lên",
             "EXPORT_EXCEL": "Xuất Excel",
-            "SEND_EMAIL": "Gui email",
-            "WAITING_EXPORT": "Cho xuat",
-            "CLEANUP": "Don dep"
+            "SEND_EMAIL_EXPORT": "Gửi email",
+            "WAITING_EXPORT": "Chờ xuất",
+            "CLEANUP": "Dọn dẹp"
+        },
+        "action": {
+            "markCompleted": "Đánh dấu hoàn thành"
         },
         "statusOptions": {
             "QUEUED": "Đang chờ",

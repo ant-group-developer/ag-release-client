@@ -1,7 +1,8 @@
 import IconButton from '@/components/ui/button/icon-button';
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
-import { getIndex } from '@/helpers/common';
+import { formattedDate, getIndex } from '@/helpers/common';
 import { OnChangeFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { ProColumns } from '@ant-design/pro-components';
@@ -130,44 +131,59 @@ export default function ReleaseExecutionTable({ ...props }: Props) {
 
                 if (!sinceText && !completedText && !summaryText) return '-';
 
-                return (
-                    <div className="min-w-0">
-                        {sinceText && (
-                            <div className="text-blue-500">
-                                {messages('common.startedAt')} {sinceText}
-                            </div>
-                        )}
-                        {completedText && (
-                            <Typography.Text
-                                type="secondary"
-                                className="!text-xs"
-                            >
-                                {completedText}
-                            </Typography.Text>
-                        )}
-                        {!completedText && summaryText && (
-                            <Typography.Text
-                                type="secondary"
-                                className="!text-xs"
-                            >
-                                {summaryText}
-                            </Typography.Text>
-                        )}
+                const tooltipStartDate = (
+                    <div>
+                        <p>
+                            {messages('common.startedAt')}:{' '}
+                            {formattedDate(record?.startedAt)}
+                        </p>
+                        <p>
+                            {messages('common.completedAt')}:{' '}
+                            {formattedDate(record?.completedAt)}
+                        </p>
                     </div>
+                );
+
+                return (
+                    <CustomTooltip title={tooltipStartDate}>
+                        <div className="min-w-0">
+                            {sinceText && (
+                                <div className="text-blue-500">
+                                    {messages('common.startedAt')} {sinceText}
+                                </div>
+                            )}
+                            {completedText && (
+                                <Typography.Text
+                                    type="secondary"
+                                    className="!text-xs"
+                                >
+                                    {completedText}
+                                </Typography.Text>
+                            )}
+                            {!completedText && summaryText && (
+                                <Typography.Text
+                                    type="secondary"
+                                    className="!text-xs"
+                                >
+                                    {summaryText}
+                                </Typography.Text>
+                            )}
+                        </div>
+                    </CustomTooltip>
                 );
             },
         },
         {
             title: '',
             key: 'actions',
-            width: 80,
+            width: 60,
             fixed: 'right',
             align: 'center',
             render: (_, record) => {
                 const isFailed =
                     record.status === RELEASE_EXECUTION_STATUS.FAILED;
                 return (
-                    <div className="flex items-center justify-center">
+                    <div className="flex items-center justify-start">
                         <IconButton
                             onClick={() =>
                                 openModal(

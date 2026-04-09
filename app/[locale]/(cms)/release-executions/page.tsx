@@ -4,28 +4,29 @@ import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
-import ReleaseExecutionHeader from '@/modules/release-executions/components/header';
+import useModalStore from '@/hooks/use-modal';
 import ReleaseExecutionDetailModal from '@/modules/release-executions/components/detail-modal';
+import ReleaseExecutionHeader from '@/modules/release-executions/components/header';
 import ReleaseExecutionStatusSummary from '@/modules/release-executions/components/status-summary';
 import ReleaseExecutionTable from '@/modules/release-executions/components/table';
+import ReleaseExecutionTableAlert from '@/modules/release-executions/components/table-alert';
 import {
     RELEASE_EXECUTION_STATUS,
     TYPE_MODAL_RELEASE_EXECUTION,
 } from '@/modules/release-executions/enums';
 import { useGetListReleaseExecutions } from '@/modules/release-executions/hooks/use-get-list';
 import { ReleaseExecutionFilter } from '@/modules/release-executions/types';
-import useModalStore from '@/hooks/use-modal';
 import { PageContainer } from '@ant-design/pro-components';
-import { Space, theme } from 'antd';
+import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
-import { Key, useMemo, useState } from 'react';
-import ExportExcelButton from '@/components/ui/button/export-button';
+import { Key, useState } from 'react';
 
 export default function ReleaseExecutionsPage() {
     const messages = useTranslations();
     const { token } = theme.useToken();
     const typeModal = useModalStore((state) => state.typeModal);
     const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
+
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
         useFilter<ReleaseExecutionFilter>({
             page: 1,
@@ -42,24 +43,16 @@ export default function ReleaseExecutionsPage() {
         })
     );
 
-    const selectedRows = useMemo(
-        () =>
-            releaseExecutionsData?.items?.filter((item) =>
-                selectedRowKeys.includes(item.id)
-            ) ?? [],
-        [releaseExecutionsData?.items, selectedRowKeys]
-    );
-
     const rowSelection = {
         selectedRowKeys,
         onChange: (keys: Key[]) => {
             setSelectedRowKeys(keys);
         },
         columnWidth: 40,
-    };
-
-    const handleExport = () => {
-        if (selectedRows.length === 0) return;
+        getCheckboxProps: (record: any) => ({
+            disabled:
+                record.status !== RELEASE_EXECUTION_STATUS.AWAITING_ACTION,
+        }),
     };
 
     return (
@@ -88,17 +81,11 @@ export default function ReleaseExecutionsPage() {
                         current: releaseExecutionsData?.metadata?.page ?? 1,
                     }}
                     rowSelection={rowSelection}
-                    tableAlertRender={({ selectedRowKeys: tableSelectedRowKeys }) => (
-                        <Space size={16}>
-                            <span>
-                                {tableSelectedRowKeys.length}{' '}
-                                {messages('common.selected')}
-                            </span>
-                            <ExportExcelButton
-                                onClick={handleExport}
-                                disabled={tableSelectedRowKeys.length === 0}
-                            />
-                        </Space>
+                    tableAlertRender={() => (
+                        <ReleaseExecutionTableAlert
+                            selectedRowKeys={selectedRowKeys}
+                            onSelectedRowKeysChange={setSelectedRowKeys}
+                        />
                     )}
                     options={{
                         reload: () => refetch(),
