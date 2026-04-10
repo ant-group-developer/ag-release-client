@@ -81,6 +81,7 @@ export default function ReleaseArtistSectionV2({
                             <Button
                                 id="releaseArtists"
                                 disabled={isCreateReleasePage || isReadMode}
+                                className="focus:!border-blue-500"
                                 icon={
                                     <div>
                                         <Plus size={SIZE_ICON} />

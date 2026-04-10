@@ -41,7 +41,6 @@ export const useGetDetailRelease = (id: ReleasesData['id']) => {
             distributionType: '',
         },
         timeZone: null,
-        isSensitiveContent: false,
         tracksCount: 0,
         albumFormat: {
             name: '',

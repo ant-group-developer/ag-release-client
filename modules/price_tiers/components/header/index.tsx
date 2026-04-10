@@ -4,7 +4,7 @@ import AppSearch from '@/components/ui/input/search';
 import ActiveSelect from '@/components/ui/select/active-select';
 import { UseFilterProps } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { EditOutlined } from '@ant-design/icons';
+import { EditOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_PRICE_TIERS } from '../../enums';
@@ -15,6 +15,9 @@ type Props = Pick<
     'dataFilter' | 'onSearch' | 'onChangeFilter'
 > & {
     selectedRowKeys?: React.Key[];
+    isReordered?: boolean;
+    onSaveOrder?: () => void;
+    isUpdatingOrder?: boolean;
 };
 
 export default function PriceTiersHeader({
@@ -22,6 +25,9 @@ export default function PriceTiersHeader({
     onSearch,
     onChangeFilter,
     selectedRowKeys = [],
+    isReordered = false,
+    onSaveOrder,
+    isUpdatingOrder = false,
 }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
@@ -55,6 +61,16 @@ export default function PriceTiersHeader({
                             }
                         >
                             {messages('common.bulkUpdate')}
+                        </Button>
+                    )}
+                    {isReordered && (
+                        <Button
+                            type="primary"
+                            icon={<SaveOutlined />}
+                            onClick={onSaveOrder}
+                            loading={isUpdatingOrder}
+                        >
+                            Lưu vị trí
                         </Button>
                     )}
                     <CreateButton

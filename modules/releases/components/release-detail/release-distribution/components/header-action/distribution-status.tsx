@@ -34,21 +34,24 @@ export default function DistributionStatus({ onChangeStatus, value }: Props) {
             ),
             value: 'all',
         },
-        ...Object.values(RELEASE_DSP_DELIVERY_STATUS).map((item, index) => ({
-            label: (
-                <div className="flex items-center gap-2">
-                    <span className="font-medium">
-                        {messages(getIntlCodeByReleaseDspDeliveryStatus(item))}
-                    </span>
-                    <Badge
-                        className="custom-medium-badge"
-                        color={item === value ? 'blue' : '#ccc'}
-                        // count={index === 0 ? '20' : index + 1}
-                    />
-                </div>
-            ),
-            value: item,
-        })),
+        ...Object.values(RELEASE_DSP_DELIVERY_STATUS)
+            .filter((item) => item !== RELEASE_DSP_DELIVERY_STATUS.DRAFT)
+            .map((item) => ({
+                label: (
+                    <div className="flex items-center gap-2">
+                        <span className="font-medium">
+                            {messages(
+                                getIntlCodeByReleaseDspDeliveryStatus(item)
+                            )}
+                        </span>
+                        <Badge
+                            className="custom-medium-badge"
+                            color={item === value ? 'blue' : '#ccc'}
+                        />
+                    </div>
+                ),
+                value: item,
+            })),
     ];
 
     return (

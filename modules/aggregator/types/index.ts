@@ -14,6 +14,9 @@ export interface AggregatorData extends CommonAttribute {
     isActive: boolean;
     isDefault: boolean;
     createsDoneFolder: boolean;
+    deliveryEmail?: string;
+    deliveryEmailSubject?: string;
+    manualUploadUrl?: string;
     sftpConfig: {
         id: string;
         ernVersion?: ERN_VERSION;

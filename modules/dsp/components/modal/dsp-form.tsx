@@ -183,6 +183,7 @@ export default function DspFormModal({ ...props }: Props) {
                     disabled={isActive}
                     initialValues={{
                         isActive: false,
+                        hasDeal: false,
                         enablePolicy: true,
                     }}
                     submitProps={{

@@ -8,7 +8,7 @@ import useModalStore from '@/hooks/use-modal';
 import { ProColumns } from '@ant-design/pro-components';
 import { Switch, theme } from 'antd';
 import { useTranslations } from 'next-intl';
-import { TYPE_MODAL_DSP } from '../../enums';
+import { DSP_DEAL, TYPE_MODAL_DSP } from '../../enums';
 import { useUpdateDsp } from '../../hooks/use-update-dsp';
 import { DspData } from '../../types';
 
@@ -39,25 +39,6 @@ export const DspTable = ({ ...props }: Props) => {
                     index
                 ),
         },
-        // {
-        //     title: '',
-        //     key: 'picture',
-        //     dataIndex: 'picture',
-        //     align: 'center',
-        //     width: 50,
-        //     render: (value) => (
-        //         <div className="flex justify-center">
-        //             <ImageFallback
-        //                 fallbackSrc={FALLBACK_IMAGE}
-        //                 src={value ?? ''}
-        //                 alt="genre"
-        //                 width={48}
-        //                 height={48}
-        //                 className="aspect-square rounded-lg object-cover"
-        //             />
-        //         </div>
-        //     ),
-        // },
         {
             title: messages('dsp.name'),
             key: 'name',
@@ -78,12 +59,9 @@ export const DspTable = ({ ...props }: Props) => {
                             className="aspect-square rounded-lg object-cover"
                         />
                     </div>
-                    <CopyText
-                        tooltipProps={{ placement: 'right' }}
-                        text={record?.name}
-                    >
-                        <p className="truncate">{record?.name}</p>
-                    </CopyText>
+                    <span title={record?.name} className="truncate">
+                        {record?.name}
+                    </span>
                 </div>
             ),
         },
@@ -107,7 +85,7 @@ export const DspTable = ({ ...props }: Props) => {
             key: 'codeCi',
             dataIndex: 'codeCi',
             align: 'left',
-            width: 100,
+            width: 120,
             render: (value, record) => (
                 <CopyText
                     tooltipProps={{ placement: 'right' }}
@@ -167,7 +145,7 @@ export const DspTable = ({ ...props }: Props) => {
             key: 'enablePolicy',
             dataIndex: 'enablePolicy',
             align: 'center',
-            width: 150,
+            width: 130,
             render: (value, record) => (
                 <Switch
                     value={record?.enablePolicy}
@@ -179,6 +157,46 @@ export const DspTable = ({ ...props }: Props) => {
                     }
                 />
             ),
+        },
+        {
+            title: messages('dsp.hasDeal'),
+            key: 'hasDeal',
+            dataIndex: 'hasDeal',
+            align: 'center',
+            width: 120,
+            render: (value, record) => (
+                <Switch
+                    value={record?.hasDeal}
+                    onChange={(e) =>
+                        updateDsp({
+                            id: record?.id,
+                            payload: { hasDeal: e },
+                        })
+                    }
+                />
+            ),
+        },
+        {
+            title: messages('dsp.dealType'),
+            key: 'dspRoutingConfig',
+            dataIndex: 'dspRoutingConfig',
+            align: 'center',
+            width: 100,
+            ellipsis: true,
+            render: (value, record) => {
+                const isDirect =
+                    record?.dspRoutingConfig?.mode === DSP_DEAL.DIRECT;
+                const isSystem =
+                    record?.dspRoutingConfig?.mode === DSP_DEAL.SYSTEM_DEFAULT;
+                const aggregatorName =
+                    record?.dspRoutingConfig?.aggregator?.name;
+                const display = isDirect
+                    ? messages('common.direct')
+                    : isSystem
+                      ? messages('common.system')
+                      : aggregatorName;
+                return <span>{display}</span>;
+            },
         },
         {
             title: messages('common.createdAt'),

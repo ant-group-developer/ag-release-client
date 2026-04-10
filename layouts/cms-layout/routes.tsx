@@ -19,6 +19,7 @@ import {
     DiscAlbum,
     Earth,
     FileMusic,
+    FileTerminal,
     FileVolume,
     Flag,
     Globe,
@@ -442,6 +443,15 @@ export const adminRoutes: RouteNode[] = [
                 title: 'Release Log',
                 href: APP_ROUTES.RELEASE_LOG,
                 icon: ScrollText,
+                required: SYS_ADMIN_REQ,
+            },
+            {
+                id: 'release-executions',
+                type: 'link',
+                label: 'releaseExecution.label',
+                title: 'Release Executions',
+                href: APP_ROUTES.RELEASE_EXECUTIONS,
+                icon: FileTerminal,
                 required: SYS_ADMIN_REQ,
             },
             {

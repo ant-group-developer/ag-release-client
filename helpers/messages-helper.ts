@@ -24,7 +24,7 @@ export const showNotification = (
 ) => {
     const duration = toastOptions?.autoClose
         ? (toastOptions.autoClose as number) / 1000
-        : 3;
+        : 4;
 
     const antdType = typeMap[type] ?? 'info';
     const key = (toastOptions?.toastId as string) ?? msg ?? 'notification';
@@ -67,7 +67,7 @@ export const notificationSuccess = (id: Id, msg?: string) => {
         key: id as string,
         type: 'success',
         content: msg ?? 'Completed',
-        duration: 2,
+        duration: 4,
     });
 };
 
@@ -76,7 +76,7 @@ export const notificationError = (id: Id, msg?: string) => {
         key: id as string,
         type: 'error',
         content: msg ?? 'Failure',
-        duration: 2,
+        duration: 4,
     });
 };
 
@@ -107,7 +107,7 @@ export const toastPromise = <T>(
                 key,
                 type: 'success',
                 content: messages(code),
-                duration: 2,
+                duration: 4,
             });
             return data;
         })
@@ -119,7 +119,7 @@ export const toastPromise = <T>(
                 key,
                 type: 'error',
                 content: messages(code),
-                duration: 2,
+                duration: 4,
             });
             throw error;
         });
