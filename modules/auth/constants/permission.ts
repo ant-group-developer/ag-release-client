@@ -31,4 +31,15 @@ export const PERMISSION = {
         READ: 'workspace.read',
         UPDATE: 'workspace.update',
     },
+    ISSUE: {
+        CREATE: 'issue.create',
+        READ: 'issue.read',
+        UPDATE: 'issue.update',
+    },
+    TENANT_ISSUE: {
+        READ: 'tenant_issue.read',
+    },
+    TENANT_TIER: {
+        READ: 'tenant_tier.read',
+    },
 } as const;

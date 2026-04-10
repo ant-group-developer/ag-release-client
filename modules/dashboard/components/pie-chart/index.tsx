@@ -5,7 +5,7 @@ import {
     CustomizedPieLabel,
 } from '@/components/shared/chart/chart-custom-render';
 import { CustomTooltip } from '@/components/shared/chart/chart-tooltip';
-import { Card, Grid, Segmented, Typography, theme } from 'antd';
+import { Card, Grid, Segmented, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import {
@@ -40,7 +40,7 @@ export default function DistributionPieChart({
     colors,
 }: DistributionPieChartProps) {
     const t = useTranslations();
-    const { token } = theme.useToken();
+    // const { token } = theme.useToken();
     const screens = Grid.useBreakpoint();
     const isSmallDevice = !screens.xxl;
 
@@ -59,7 +59,7 @@ export default function DistributionPieChart({
         >
             <div className="mb-4 flex items-start justify-between">
                 <div>
-                    <Title level={5} style={{ margin: 0, color: '#2F54EB' }}>
+                    <Title level={5} className="!m-0 !text-blue-500">
                         {title}
                     </Title>
                     <Text type="secondary" style={{ fontSize: 13 }}>
@@ -83,7 +83,7 @@ export default function DistributionPieChart({
                             data={data}
                             cx={isSmallDevice ? '50%' : '35%'}
                             cy="50%"
-                            innerRadius={50}
+                            innerRadius={40}
                             outerRadius={80}
                             stroke="none"
                             dataKey="value"
@@ -107,6 +107,7 @@ export default function DistributionPieChart({
                                 verticalAlign="middle"
                                 align="right"
                                 layout="vertical"
+                                wrapperStyle={{ paddingRight: 12 }}
                                 formatter={(value, entry: any) => (
                                     <ChartLegendItem
                                         label={value}

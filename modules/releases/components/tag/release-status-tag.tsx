@@ -8,7 +8,7 @@ type Props = TagProps & {
 
 export default function ReleaseStatusTag({ status, ...props }: Props) {
     const messages = useTranslations();
-    let color = 'green';
+    let color = 'default';
     switch (status) {
         case RELEASES_STATUS.DRAFT:
             color = 'default';
@@ -17,7 +17,7 @@ export default function ReleaseStatusTag({ status, ...props }: Props) {
             color = 'blue';
             break;
         case RELEASES_STATUS.SUBMITTED:
-            color = 'green';
+            color = 'cyan';
             break;
         case RELEASES_STATUS.AWAITING_ACTION:
             color = 'orange';
@@ -29,12 +29,13 @@ export default function ReleaseStatusTag({ status, ...props }: Props) {
             color = 'gold';
             break;
         case RELEASES_STATUS.DISTRIBUTED:
-            color = 'cyan';
+            color = 'green';
             break;
         case RELEASES_STATUS.PARTIALLY_FAILED:
             color = 'volcano';
             break;
         default:
+            color = 'default';
             break;
     }
     if (!status) return;

@@ -4,7 +4,7 @@ import { Typography } from 'antd';
 export const ChartLegendItem = ({
     label,
     value,
-    width = '120px',
+    width = '140px',
 }: {
     label: string | number;
     value: string | number;
@@ -14,14 +14,33 @@ export const ChartLegendItem = ({
         <div
             style={{
                 display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
                 justifyContent: 'space-between',
                 width: width,
                 marginLeft: '10px',
-                whiteSpace: 'nowrap',
+                maxWidth: '100%',
             }}
         >
-            <Typography.Text>{label}</Typography.Text>
-            <Typography.Text style={{ color: '#8c8c8c' }}>
+            <Typography.Text
+                style={{
+                    flex: 1,
+                    minWidth: 0,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                }}
+                title={String(label)}
+            >
+                {label}
+            </Typography.Text>
+            <Typography.Text
+                style={{
+                    color: '#8c8c8c',
+                    flexShrink: 0,
+                    whiteSpace: 'nowrap',
+                }}
+            >
                 {formattedNumber(value)}
             </Typography.Text>
         </div>

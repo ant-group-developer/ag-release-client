@@ -43,7 +43,7 @@ export default function StreamChart({ color, className }: Props) {
         <Card className="h-full" styles={{ body: { padding: '24px' } }}>
             <div className="mb-8 flex items-start justify-between">
                 <div>
-                    <h3 className="mb-1 text-lg font-bold">
+                    <h3 className="mb-1 text-lg font-bold text-blue-500">
                         {messages('dashboard.stream_by_dsp')}
                     </h3>
                     <p className="text-sm text-gray-400">

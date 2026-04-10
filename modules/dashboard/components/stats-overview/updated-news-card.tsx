@@ -43,14 +43,14 @@ const updates: UpdateItem[] = [
 export default function NewsUpdatedCard() {
     return (
         <Card
-            className="overflow-hidden rounded-2xl border-0 shadow-sm"
+            className="overflow-hidden"
             styles={{
                 header: { borderBottom: 0, paddingBottom: 0, paddingTop: 24 },
             }}
             title={
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <h3 className="m-0 text-lg font-bold">
+                        <h3 className="m-0 text-lg font-bold text-blue-500">
                             Recent Updates
                         </h3>
                     </div>
