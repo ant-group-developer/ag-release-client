@@ -258,7 +258,7 @@ export const adminRoutes: RouteNode[] = [
                 required: { permission: [PERMISSION.LABEL.READ] },
             },
             {
-                id: 'labelDetail', // fixed duplicate id
+                id: 'labelDetail',
                 type: 'link',
                 label: 'labels.label',
                 title: 'Label Detail',
