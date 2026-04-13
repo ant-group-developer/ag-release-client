@@ -208,8 +208,8 @@ export default function TrackDetailModal({ tracks, ...props }: Props) {
             }}
             spinning={isLoading}
             styles={{
-                content: { backgroundColor: token?.colorBgLayout },
-                header: { backgroundColor: token?.colorBgLayout },
+                content: { backgroundColor: token?.colorBgContainer },
+                header: { backgroundColor: token?.colorBgContainer },
             }}
             className="h-[80vh]"
         >
@@ -219,7 +219,7 @@ export default function TrackDetailModal({ tracks, ...props }: Props) {
                     <div
                         className="flex w-[240px] shrink-0 flex-col border-r pt-3"
                         style={{
-                            maxHeight: '80vh',
+                            maxHeight: `calc(100vh - 100px)`,
                             borderColor: token?.colorBorderSecondary,
                         }}
                     >

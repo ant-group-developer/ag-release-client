@@ -456,6 +456,7 @@
         "select": "Select asset"
     },
     "setting": {
+        "activeBackup": "Active backup",
         "settings": "Settings",
         "label": "Setting",
         "telegramSupportLink": "Telegram support link",
