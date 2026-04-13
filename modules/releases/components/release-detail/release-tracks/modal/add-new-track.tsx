@@ -20,7 +20,7 @@ export default function AddNewTrackModal({ ...props }: Props) {
     const closeModal = useModalStore((state) => state.closeModal);
 
     const { isActive, active, deActive } = useActive();
-    const { uploadProgress, handleUpload } = useTrackUpload();
+    const { uploadProgress, handleUpload, pending } = useTrackUpload();
 
     const onFinish = async () => {
         try {
@@ -57,14 +57,17 @@ export default function AddNewTrackModal({ ...props }: Props) {
             confirmLoading={isActive}
             loading={isActive}
             width={750}
-            style={{ top: '4rem' }}
+            style={{ top: '2rem' }}
+            styles={{
+                body: { maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' },
+            }}
         >
             <AppForm
                 form={form}
                 layout="vertical"
                 onFinish={onFinish}
                 showSubmit={false}
-                disabled={isActive}
+                disabled={isActive || pending}
             >
                 <AppFormItem
                     name="tracks"
@@ -98,6 +101,7 @@ export default function AddNewTrackModal({ ...props }: Props) {
                                 </p>
                             </div>
                         }
+                        disabled={pending}
                     />
 
                     {/* Progress bars */}
@@ -116,7 +120,11 @@ export default function AddNewTrackModal({ ...props }: Props) {
                                     <Progress
                                         percent={progress.progress}
                                         size="small"
-                                        strokeColor="#1890ff"
+                                        strokeColor={
+                                            progress.progress === 100
+                                                ? '#BFBFBF'
+                                                : undefined
+                                        }
                                     />
                                 </div>
                             ))}

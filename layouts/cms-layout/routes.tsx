@@ -138,7 +138,7 @@ export const adminRoutes: RouteNode[] = [
                 title: 'Analytics',
                 href: APP_ROUTES.ANALYTICS,
                 icon: ChartNoAxesCombined,
-                required: SYS_ADMIN_REQ,
+                required: { permission: [PERMISSION.ANALYTICS.READ] },
             },
             {
                 id: 'analytics2',
@@ -147,7 +147,7 @@ export const adminRoutes: RouteNode[] = [
                 title: 'Analytics 2',
                 href: APP_ROUTES.ANALYTICS2,
                 icon: ChartNoAxesCombined,
-                required: SYS_ADMIN_REQ,
+                required: { permission: [PERMISSION.ANALYTICS.READ] },
             },
             {
                 id: 'analytics',
@@ -157,7 +157,7 @@ export const adminRoutes: RouteNode[] = [
                 hidden: true,
                 href: APP_ROUTES.ANALYTIC_DETAIL,
                 icon: ChartNoAxesCombined,
-                required: SYS_ADMIN_REQ,
+                required: { permission: [PERMISSION.ANALYTICS.READ] },
             },
             {
                 id: 'release',
@@ -220,7 +220,7 @@ export const adminRoutes: RouteNode[] = [
                 title: 'Revenue',
                 href: APP_ROUTES.REVENUE,
                 icon: ClipboardList,
-                required: SYS_ADMIN_REQ,
+                required: { permission: [PERMISSION.REVENUE.READ] },
             },
         ],
     },

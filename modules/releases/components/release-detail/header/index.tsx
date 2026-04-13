@@ -40,7 +40,6 @@ import {
     Form,
     Segmented,
     Space,
-    Steps,
     Typography,
     notification,
     theme,
@@ -62,6 +61,7 @@ import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { RELEASES_STATUS } from '../../../enums';
+import ReleaseStatusTagIcon from '../../tag/release-status-tag-icon';
 import DownloadMenu from './download-menu';
 import ReleaseInfoV2 from './release-info-v2';
 type Props = {
@@ -154,9 +154,9 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
             case RELEASES_STATUS.FAILED:
                 return { currentStep: 5, stepStatus: 'process' as const };
             case RELEASES_STATUS.DISTRIBUTED:
-                return { currentStep: 3, stepStatus: 'process' as const };
-            case RELEASES_STATUS.TAKEN_DOWN:
                 return { currentStep: 6, stepStatus: 'process' as const };
+            case RELEASES_STATUS.TAKEN_DOWN:
+                return { currentStep: 7, stepStatus: 'process' as const };
 
             default:
                 return { currentStep: 0, stepStatus: 'process' as const };
@@ -469,6 +469,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
             code: dspCode,
             onSuccess(e) {
                 setReleaseAction(RELEASE_DETAIL_ACTION.READ);
+                router.push(APP_ROUTES.RELEASES);
             },
         };
         const promise = distributeRelease(variables);
@@ -566,7 +567,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
             {contextHolder}
             {!isCreateReleasePage && (
                 <div
-                    className="flex justify-between overflow-hidden px-6 transition-all duration-300"
+                    className="flex items-center justify-between overflow-hidden px-6 transition-all duration-300"
                     style={{
                         maxHeight: isScrolled ? 0 : 100,
                         opacity: isScrolled ? 0 : 1,
@@ -576,13 +577,20 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                         paddingBottom: isScrolled ? 0 : 24,
                     }}
                 >
-                    <Steps
+                    {/* <Steps
                         className="!w-4/6 !px-0"
                         size="small"
                         current={currentStep}
                         status={stepStatus}
                         labelPlacement="vertical"
-                        items={statusItems}
+                        /> */}
+
+                    <ReleaseStatusTagIcon
+                        style={{
+                            padding: '4px 12px',
+                            borderRadius: '24px',
+                        }}
+                        status={releaseData?.status}
                     />
 
                     <div>
@@ -597,6 +605,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                     // releaseData?.status !==
                                     //     RELEASES_STATUS.DRAFT
                                 }
+                                shape="round"
                             >
                                 {messages('release.action.submit')}
                             </Button>

@@ -17,7 +17,7 @@ export default function ReleaseStatusTag({ status, ...props }: Props) {
             color = 'blue';
             break;
         case RELEASES_STATUS.SUBMITTED:
-            color = 'cyan';
+            color = 'green';
             break;
         case RELEASES_STATUS.AWAITING_ACTION:
             color = 'orange';
