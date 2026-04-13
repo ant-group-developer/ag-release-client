@@ -140,13 +140,14 @@ export const BackupDatabaseLogTable = ({ dataFilter, ...props }: Props) => {
                 </span>
             ),
         },
-
         {
             key: 'actions',
             align: 'center',
             width: 50,
             render: (_, record) => {
-                if (record?.status !== STATUS_BACKUP.SUCCESS) return;
+                if (record?.status !== STATUS_BACKUP.SUCCESS || !record?.urlGcs)
+                    return;
+
                 return (
                     <ActionButton
                         showDownload={
