@@ -8,7 +8,7 @@ import { useActive } from '@/hooks/use-active';
 import { useFilter } from '@/hooks/use-filter';
 import { useListBackupDatabaseLogs } from '@/modules/backup-dabatase/hooks/use-get-backup-database-logs';
 import { BackupDatabaseLogDataFilter } from '@/modules/backup-dabatase/types';
-import { Checkbox, Divider, Form, Input } from 'antd';
+import { Checkbox, Divider, Form, Input, Switch } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { Cron } from 'react-js-cron';
@@ -90,6 +90,13 @@ export default function BackupDatabaseForm({}: Props) {
                 submitProps={{ loading: isActive }}
                 submitText={messages('action.update.button')}
             >
+                <AppFormItem
+                    name="enable"
+                    valuePropName="checked"
+                    label={messages('setting.activeBackup')}
+                >
+                    <Switch />
+                </AppFormItem>
                 <AppFormItem label={messages('setting.executeCycle')}>
                     <Cron
                         value={cronValue}
@@ -125,6 +132,9 @@ export default function BackupDatabaseForm({}: Props) {
                         </AppFormItem>
                         <AppFormItem name="toGcs" valuePropName="checked">
                             <Checkbox>Google Cloud Storage</Checkbox>
+                        </AppFormItem>
+                        <AppFormItem name="toR2" valuePropName="checked">
+                            <Checkbox>R2</Checkbox>
                         </AppFormItem>
                     </div>
                 </AppFormItem>
