@@ -32,7 +32,7 @@ export interface ReleasesData extends CommonAttribute {
     subGenre?: GenresData;
     labelId: string;
     label?: LabelData;
-    isSensitiveContent: boolean;
+    // isSensitiveContent: boolean;
     title: string;
     version: string | null;
     status: RELEASES_STATUS;

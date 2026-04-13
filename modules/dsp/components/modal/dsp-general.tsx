@@ -163,6 +163,18 @@ export default function DspGeneral({ form, isActive }: Props) {
             >
                 <Switch />
             </AppFormItem>
+            <AppFormItem
+                className="!mb-1"
+                name="hasDeal"
+                valuePropName="checked"
+                label={
+                    <div className="text-wrap pb-2">
+                        {messages('dsp.hasDeal')}
+                    </div>
+                }
+            >
+                <Switch />
+            </AppFormItem>
         </>
     );
 }

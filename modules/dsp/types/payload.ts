@@ -5,6 +5,7 @@ export interface CreateDspPayload {
     name: string;
     picture?: string | null;
     isActive: boolean;
+    hasDeal: boolean;
     enablePolicy: boolean;
     codeCi?: string;
 }

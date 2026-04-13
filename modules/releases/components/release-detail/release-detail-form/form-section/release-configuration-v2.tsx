@@ -199,7 +199,7 @@ export default function ReleaseConfigurationSectionV2({
                                     }}
                                     disabled={
                                         isOnCreatingDraft ||
-                                        (!isCreateReleasePage && isReadMode)
+                                        !isCreateReleasePage
                                     }
                                 >
                                     {releaseTypesData?.map(

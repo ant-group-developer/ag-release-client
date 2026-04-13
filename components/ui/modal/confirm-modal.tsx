@@ -28,17 +28,17 @@ const AppConfirm = ({
             onCancel={onCancel}
             title={
                 <div className="flex gap-2">
-                    <CircleAlert className="text-red-500" /> {modalTitle}
+                    {typeDelete && <CircleAlert />} {modalTitle}
                 </div>
             }
             okButtonProps={{
                 danger: typeDelete,
-                ghost: typeDelete,
+                // ghost: typeDelete,
                 disabled: loading,
             }}
             cancelButtonProps={{
-                type: !typeDelete ? 'default' : 'primary',
-                ghost: true,
+                type: 'default',
+                // ghost: true,
                 disabled: loading,
             }}
         >

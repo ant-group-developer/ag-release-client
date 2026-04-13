@@ -11,6 +11,7 @@ import PriceTiersHeader from '@/modules/price_tiers/components/header';
 import PriceTiersFormModal from '@/modules/price_tiers/components/modal/price-tiers-form';
 import PriceTiersTable from '@/modules/price_tiers/components/table';
 import { TYPE_MODAL_PRICE_TIERS } from '@/modules/price_tiers/enums';
+import { useBulkUpdatePriceTiers } from '@/modules/price_tiers/hooks/use-bulk-update-tiers';
 import { useDeletePriceTiers } from '@/modules/price_tiers/hooks/use-delete-price-tiers';
 import { useGetListPriceTiers } from '@/modules/price_tiers/hooks/use-get-list-tiers';
 import {
@@ -21,7 +22,7 @@ import { PageContainer } from '@ant-design/pro-components';
 import { TableProps } from 'antd';
 
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type Props = {};
 
@@ -48,6 +49,36 @@ export default function PriceTiers({}: Props) {
     //     mutationKeys: [priceTiersQueryKeys.all],
     // });
     const { deletePriceTiers } = useDeletePriceTiers();
+    const { updatePriceTiersOrder, isPending: isUpdatingOrder } =
+        useBulkUpdatePriceTiers();
+
+    const [localData, setLocalData] = useState<PriceTiersData[]>([]);
+    const [isReordered, setIsReordered] = useState(false);
+
+    useEffect(() => {
+        setLocalData(priceTiersData?.items || []);
+        setIsReordered(false);
+    }, [priceTiersData?.items]);
+
+    const handleDragEnd = (newData: PriceTiersData[]) => {
+        setLocalData(newData);
+        setIsReordered(true);
+    };
+
+    const handleSaveOrder = () => {
+        const payload = localData.map((item, index) => ({
+            id: item.id,
+            order: index + 1,
+        }));
+
+        updatePriceTiersOrder({
+            priceTiers: payload,
+            onSuccess: () => {
+                setIsReordered(false);
+                setSelectedRowKeys([]);
+            },
+        });
+    };
 
     //const
     const rowSelection: TableProps<PriceTiersData>['rowSelection'] = {
@@ -79,10 +110,15 @@ export default function PriceTiers({}: Props) {
                             onSearch={onSearch}
                             onChangeFilter={onChangeFilter}
                             selectedRowKeys={selectedRowKeys}
+                            isReordered={isReordered}
+                            onSaveOrder={handleSaveOrder}
+                            isUpdatingOrder={isUpdatingOrder}
                         />
                     )}
                     sticky
-                    dataSource={priceTiersData.items}
+                    dataSource={
+                        localData.length ? localData : priceTiersData?.items
+                    }
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
                         current: priceTiersData.metadata.page,
@@ -92,6 +128,7 @@ export default function PriceTiers({}: Props) {
                     dataFilter={dataFilter}
                     onChange={onChangeSort}
                     rowSelection={rowSelection}
+                    onDragEnd={handleDragEnd}
                 />
 
                 <AppPagination

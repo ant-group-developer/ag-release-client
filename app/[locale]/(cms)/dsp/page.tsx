@@ -8,6 +8,8 @@ import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
 import { useLoadingStatus } from '@/hooks/use-loading-status';
 import useModalStore from '@/hooks/use-modal';
+import { usePermission } from '@/hooks/use-permission';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import DspFormModal from '@/modules/dsp/components/modal/dsp-form';
 import { DspTable } from '@/modules/dsp/components/table';
@@ -29,6 +31,7 @@ export default function Dsp() {
         page: 1,
         pageSize: PAGE_SIZE,
     });
+    const { hasPermission } = usePermission();
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore<DspData>((state) => state.dataEdit);
     const closeModal = useModalStore((state) => state.closeModal);
@@ -64,7 +67,8 @@ export default function Dsp() {
                 }}
                 extra={
                     <div className="">
-                        {isSystemTenant && (
+                        {(isSystemTenant ||
+                            hasPermission(PERMISSION.DSP.CREATE)) && (
                             <CreateButton
                                 canCreate={true}
                                 text={messages('dsp.add')}

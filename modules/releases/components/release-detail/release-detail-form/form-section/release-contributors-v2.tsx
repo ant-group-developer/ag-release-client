@@ -37,6 +37,7 @@ export default function ReleaseContributorsSectionV2({
                 {!isCreateReleasePage && !isReadMode && (
                     <Button
                         id="releaseContributors"
+                        className="focus:!border-blue-500"
                         disabled={isCreateReleasePage || isReadMode}
                         icon={
                             <div>

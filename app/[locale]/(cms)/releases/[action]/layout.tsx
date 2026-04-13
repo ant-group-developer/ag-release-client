@@ -6,6 +6,8 @@ import { cn } from '@/helpers/common';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { Link } from '@/i18n/routing';
 import AppError from '@/modules/auth/components/error';
+import { useReleaseDistribute } from '@/modules/distribution/hooks/use-release-distribute';
+import { useGetListReleaseDsp } from '@/modules/release-dsp/hooks/use-get-list-release-dsp';
 import ReleaseDetailHeader from '@/modules/releases/components/release-detail/header';
 import RightSidebar from '@/modules/releases/components/release-detail/right-sidebar';
 import { RELEASES_TABS } from '@/modules/releases/enums';
@@ -200,6 +202,20 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             title: currentItem?.label,
         },
     ];
+
+    const setSelectedRow = useReleaseDistribute(
+        (state) => state.setSelectedRows
+    );
+    const { releaseDsp } = useGetListReleaseDsp(releaseId, {
+        page: 1,
+        pageSize: 999,
+    });
+
+    useEffect(() => {
+        setSelectedRow(
+            releaseDsp?.items?.filter((item) => item.isSelected) ?? []
+        );
+    }, [releaseDsp, setSelectedRow]);
 
     if (error) {
         return <AppError error={error} />;

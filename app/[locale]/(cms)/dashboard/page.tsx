@@ -19,7 +19,7 @@ import {
 import { DashboardDataFilter } from '@/modules/dashboard/types';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { PageContainer } from '@ant-design/pro-components';
-import { Col, Row, theme } from 'antd';
+import { theme } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -98,14 +98,10 @@ function Dashboard({}: Props) {
                         <NewUpdatesCard />
                     </div>
 
-                    <Row gutter={[16, 16]}>
-                        <Col span={12}>
-                            <StreamChart />
-                        </Col>
-                        <Col span={12}>
-                            <ListTop />
-                        </Col>
-                    </Row>
+                    <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                        <StreamChart />
+                        <ListTop />
+                    </div>
                 </div>
 
                 <ListRelease data={releasesData.items.slice(0, 7)} />

@@ -32,7 +32,7 @@ import { Barcode, Music, SquarePen, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo } from 'react';
 import TrackActionButton from '../button/track-action';
-import { TrackWaveform } from '../track-wave-form';
+import { TrackSliderPlayer } from '../track-slider-player';
 import { EditableIsrc } from './track-edit-isrc';
 import { EditableTitle } from './track-edit-title';
 
@@ -125,7 +125,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             render: (value, record, index) => {
                 return (
                     <div className="min-h-10">
-                        <TrackWaveform
+                        <TrackSliderPlayer
                             key={`${record.id}-${index}`}
                             data={record}
                         />

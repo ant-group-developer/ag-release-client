@@ -14,6 +14,7 @@ export const useGetDetailDsp = (id: DspData['id']) => {
         creatorId: '',
         name: '',
         isActive: false,
+        hasDeal: false,
         id: '',
         createdAt: '',
         updatedAt: null,

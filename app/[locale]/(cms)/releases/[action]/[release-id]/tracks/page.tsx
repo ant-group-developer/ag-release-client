@@ -28,7 +28,7 @@ import { useDeleteTrack } from '@/modules/tracks/hooks/use-delete-track';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { TrackData, TrackDataFilter } from '@/modules/tracks/types';
 import { DeleteVariables } from '@/types/api';
-import { Button, ConfigProvider, Empty, Modal, theme } from 'antd';
+import { Button, ConfigProvider, Empty, theme } from 'antd';
 import { TableRowSelection } from 'antd/es/table/interface';
 import { Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -183,16 +183,15 @@ export default function Tracks() {
                 )}
 
                 {typeModal === TYPE_MODAL_TRACK.DELETE && (
-                    <Modal
+                    <AppConfirm
                         open
-                        title={messages('delete.confirmTitle')}
+                        modalTitle={messages('delete.confirmTitle')}
+                        paragraph={messages('action.delete.alert', {
+                            label: dataEdit?.title,
+                        })}
                         onCancel={closeModal}
                         onOk={() => handleRemoveTrack()}
-                    >
-                        {messages('delete.confirmMessage', {
-                            value: dataEdit?.title,
-                        })}
-                    </Modal>
+                    />
                 )}
 
                 {typeModal === TYPE_MODAL_TRACK_ARTIST.DELETE && (

@@ -222,6 +222,7 @@ export default function AggregatorForm({ ...props }: Props) {
                 body: {
                     overflowY: 'auto',
                     paddingRight: '4px',
+                    height: 'calc(100vh - 200px)',
                 },
             }}
             footer={(originNode) => (
@@ -336,6 +337,68 @@ export default function AggregatorForm({ ...props }: Props) {
                                     message: messages('validation.stringMax', {
                                         max: MAX_NAME_LENGTH,
                                         field: messages('aggregator.ddexName'),
+                                    }),
+                                },
+                            ]}
+                        >
+                            <Input allowClear />
+                        </AppFormItem>
+
+                        <AppFormItem
+                            name="deliveryEmail"
+                            label={messages('aggregator.deliveryEmail')}
+                            rules={[
+                                {
+                                    type: 'email',
+                                    message: messages('validation.email'),
+                                },
+                                {
+                                    max: 200,
+                                    message: messages('validation.stringMax', {
+                                        max: 200,
+                                        field: messages(
+                                            'aggregator.deliveryEmail'
+                                        ),
+                                    }),
+                                },
+                            ]}
+                        >
+                            <Input allowClear />
+                        </AppFormItem>
+
+                        <AppFormItem
+                            name="deliveryEmailSubject"
+                            label={messages('aggregator.deliveryEmailSubject')}
+                            rules={[
+                                {
+                                    max: 200,
+                                    message: messages('validation.stringMax', {
+                                        max: 200,
+                                        field: messages(
+                                            'aggregator.deliveryEmailSubject'
+                                        ),
+                                    }),
+                                },
+                            ]}
+                        >
+                            <Input allowClear />
+                        </AppFormItem>
+
+                        <AppFormItem
+                            name="manualUploadUrl"
+                            label={messages('aggregator.manualUploadUrl')}
+                            rules={[
+                                {
+                                    type: 'url',
+                                    message: messages('validation.url'),
+                                },
+                                {
+                                    max: 500,
+                                    message: messages('validation.stringMax', {
+                                        max: 500,
+                                        field: messages(
+                                            'aggregator.manualUploadUrl'
+                                        ),
                                     }),
                                 },
                             ]}

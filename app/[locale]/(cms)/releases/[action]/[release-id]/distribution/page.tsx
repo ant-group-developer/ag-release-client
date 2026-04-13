@@ -4,9 +4,11 @@ import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
+import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { toastPromise } from '@/helpers/messages-helper';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { RELEASE_DSP_DELIVERY_STATUS } from '@/modules/distribution/enum';
 import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribute';
 import { useReleaseDistribute } from '@/modules/distribution/hooks/use-release-distribute';
@@ -40,6 +42,8 @@ export default function Distribution({}: Props) {
         RELEASE_DSP_DELIVERY_STATUS | undefined
     >();
     const { bulkUpdate } = useBulkUpdateReleaseDsp();
+    const releaseAction = useReleaseActionStore((state) => state.action);
+    const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
 
     const openModal = useModalStore((state) => state.openModal);
     const dataEdit = useModalStore((state) => state.dataEdit);
@@ -144,6 +148,9 @@ export default function Distribution({}: Props) {
     const rowSelection = {
         selectedRowKeys: selectedRow.map((row) => row.dsp?.id),
         onChange: handleSelectedRow,
+        getCheckboxProps: (record: ReleaseDspData) => ({
+            disabled: isReadMode,
+        }),
     };
 
     useEffect(() => {

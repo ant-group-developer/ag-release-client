@@ -2,7 +2,6 @@ import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { formattedDate, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
-import { useRouter } from '@/i18n/routing';
 import {
     ReleaseDspData,
     ReleaseDspDataFilter,
@@ -10,9 +9,8 @@ import {
 import ReleaseStatusTag from '@/modules/releases/components/tag/release-status-tag';
 import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
 import { ProColumns } from '@ant-design/pro-components';
+import { Avatar } from 'antd';
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
-import { useParams } from 'next/navigation';
 import DistributionActionButton from '../button/distribution-action';
 
 type Props = Omit<AppProTableProps<ReleaseDspData>, 'columns'> & {
@@ -55,12 +53,10 @@ export default function DistributionTable({
                 return (
                     <div className="flex items-center gap-2">
                         <div>
-                            <Image
+                            <Avatar
                                 src={record?.dsp?.picture ?? FALLBACK_IMAGE}
                                 alt="thumbnail"
-                                width={32}
-                                height={32}
-                                className="rounded-full"
+                                size={32}
                             />
                         </div>
                         <span className="font-bold">{record?.dsp?.name}</span>

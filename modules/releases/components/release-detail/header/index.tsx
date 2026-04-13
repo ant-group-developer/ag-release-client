@@ -4,12 +4,11 @@ import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
-import { ACCEPT_IMAGE } from '@/constants/validate';
 import { TYPE_UPLOAD_BUCKET } from '@/enums/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedDate } from '@/helpers/common';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
-import { showNotification, toastPromise } from '@/helpers/messages-helper';
+import { toastPromise } from '@/helpers/messages-helper';
 import { cn } from '@/helpers/tailwind';
 import { useHash } from '@/hooks/use-hash';
 import useModalStore from '@/hooks/use-modal';
@@ -19,6 +18,11 @@ import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribut
 import { useReleaseDistribute } from '@/modules/distribution/hooks/use-release-distribute';
 import { DistributeRelease } from '@/modules/distribution/types/payload';
 import { TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
+import {
+    convertTiffToPreviewUrl,
+    isTiffContent,
+    resolvePreviewUrl,
+} from '@/modules/releases/helpers/cover-art-preview';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
 import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
@@ -31,20 +35,33 @@ import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-fil
 import { CreateBucketFile } from '@/modules/upload/types/data';
 import { DeleteVariables, UpdateVariables } from '@/types/api';
 import { EditOutlined, EyeOutlined } from '@ant-design/icons';
-import { useQueryClient } from '@tanstack/react-query';
-import { Button, Form, Segmented, Steps, type StepsProps, theme } from 'antd';
+import {
+    Button,
+    Form,
+    Segmented,
+    Space,
+    Typography,
+    notification,
+    theme,
+    type StepsProps,
+} from 'antd';
 import { SegmentedOptions } from 'antd/es/segmented';
+import exifr from 'exifr';
 import {
     Box,
+    Check,
     CircleAlert,
     FileSearch,
+    GitCommitHorizontal,
     NotebookText,
     PackageX,
+    X,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { RELEASES_STATUS } from '../../../enums';
+import ReleaseStatusTagIcon from '../../tag/release-status-tag-icon';
 import DownloadMenu from './download-menu';
 import ReleaseInfoV2 from './release-info-v2';
 type Props = {
@@ -55,16 +72,18 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     // hooks - state
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
-    const queryClient = useQueryClient();
     const selectedRows = useReleaseDistribute((state) => state.selectedRows);
 
     const messages = useTranslations();
     const [form] = Form.useForm();
+    const [notificationApi, contextHolder] = notification.useNotification();
     const formValues = useReleaseFormStore((state) => state.formValues);
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const params = useParams();
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
+    const [coverArtPreviewUrl, setCoverArtPreviewUrl] = useState('');
+    const localPreviewUrlRef = useRef<string | null>(null);
     const { token } = theme.useToken();
     const router = useRouter();
     const releaseAction = useReleaseActionStore((state) => state.action);
@@ -124,51 +143,140 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         const status = releaseData?.status;
         switch (status) {
             case RELEASES_STATUS.DRAFT:
-            case RELEASES_STATUS.NEVER_DISTRIBUTED:
-                return { currentStep: 0, stepStatus: 'process' as const };
             case RELEASES_STATUS.PROCESSING:
                 return { currentStep: 1, stepStatus: 'process' as const };
-            case RELEASES_STATUS.ISSUES:
-                return { currentStep: 2, stepStatus: 'error' as const };
+            case RELEASES_STATUS.SUBMITTED:
+                return { currentStep: 2, stepStatus: 'process' as const };
+            case RELEASES_STATUS.AWAITING_ACTION:
+                return { currentStep: 3, stepStatus: 'process' as const };
+            case RELEASES_STATUS.PARTIALLY_FAILED:
+                return { currentStep: 4, stepStatus: 'process' as const };
+            case RELEASES_STATUS.FAILED:
+                return { currentStep: 5, stepStatus: 'process' as const };
             case RELEASES_STATUS.DISTRIBUTED:
-                return { currentStep: 3, stepStatus: 'finish' as const };
+                return { currentStep: 6, stepStatus: 'process' as const };
             case RELEASES_STATUS.TAKEN_DOWN:
-                return { currentStep: 4, stepStatus: 'error' as const };
+                return { currentStep: 7, stepStatus: 'process' as const };
+
             default:
                 return { currentStep: 0, stepStatus: 'process' as const };
         }
     }, [releaseData?.status]);
     const validateLength = releaseValidateData && releaseValidateData?.length;
+    const coverArtRequirementKeys = [
+        'release.coverArt.size',
+        'release.coverArt.resolution',
+        'release.coverArt.format',
+        'release.coverArt.layered',
+    ] as const;
+    const coverArtRequirements = [
+        ...coverArtRequirementKeys.map((key) => messages(key)),
+        messages('image.validation.mustBeLessThanMB', { value: 10 }),
+    ];
 
     const statusItems: StepsProps['items'] = [
         {
-            title: messages('common.draft'),
+            title: messages('release.status.draft'),
             icon: <NotebookText size={SIZE_ICON} />,
             status: currentStep === 0 ? 'process' : 'wait',
         },
         {
-            title: messages('common.processing'),
+            title: messages('release.status.processing'),
             icon: <FileSearch size={SIZE_ICON} />,
             status: currentStep === 1 ? 'process' : 'wait',
         },
         {
-            title: messages('issue.label'),
-            icon: <CircleAlert size={SIZE_ICON} />,
+            title: messages('release.status.submitted'),
+            icon: <Check size={SIZE_ICON} />,
             status: currentStep === 2 ? 'process' : 'wait',
         },
         {
-            title: messages('common.distributed'),
-            icon: <Box size={SIZE_ICON} />,
+            title: messages('release.status.awaiting_action'),
+            icon: <GitCommitHorizontal size={SIZE_ICON} />,
             status: currentStep === 3 ? 'process' : 'wait',
         },
         {
-            title: messages('common.takenDown'),
-            icon: <PackageX size={SIZE_ICON} />,
+            title: messages('release.status.partially_failed'),
+            icon: <CircleAlert size={SIZE_ICON} />,
             status: currentStep === 4 ? 'process' : 'wait',
+        },
+        {
+            title: messages('release.status.failed'),
+            icon: <X size={SIZE_ICON} />,
+            status: currentStep === 5 ? 'process' : 'wait',
+        },
+        {
+            title: messages('release.status.distributed'),
+            icon: <Box size={SIZE_ICON} />,
+            status: currentStep === 6 ? 'process' : 'wait',
+        },
+        {
+            title: messages('release.status.taken_down'),
+            icon: <PackageX size={SIZE_ICON} />,
+            status: currentStep === 7 ? 'process' : 'wait',
         },
     ];
 
     // func
+    async function validateCoverArt(file: File): Promise<string[]> {
+        const errorKeys: string[] = [];
+
+        if (file.name.length > 80) {
+            errorKeys.push('validation.fileNameTooLong');
+        }
+
+        if (file.size > 10 * 1024 * 1024) {
+            errorKeys.push('image.validation.mustBeLessThanMB');
+        }
+
+        try {
+            const exifData = await exifr.parse(file, {
+                exif: true,
+                icc: true,
+            });
+
+            const width = exifData?.ImageWidth;
+            const height = exifData?.ImageHeight;
+
+            if (width !== height || width < 1400 || width > 4000) {
+                errorKeys.push('release.coverArt.size');
+            }
+
+            const dpiX = exifData?.XResolution;
+            const dpiY = exifData?.YResolution;
+            if (!dpiX || !dpiY || dpiX < 300 || dpiY < 300) {
+                errorKeys.push('release.coverArt.resolution');
+            }
+
+            // CMYK check
+            const iccColorSpace =
+                exifData?.ColorSpaceData?.trim().toLowerCase();
+            if (iccColorSpace === 'cmyk') {
+                errorKeys.push('release.coverArt.format');
+            }
+        } catch (error) {
+            console.error('Validation error:', error);
+        }
+
+        return errorKeys;
+    }
+
+    const resolvePreviewFromFile = async (file: File) => {
+        const buffer = await file.arrayBuffer();
+        const bytes = new Uint8Array(buffer.slice(0, 4));
+
+        if (isTiffContent(file.type, bytes)) {
+            return {
+                previewUrl: await convertTiffToPreviewUrl(buffer),
+                revokeUrl: false,
+            };
+        }
+
+        return {
+            previewUrl: URL.createObjectURL(file),
+            revokeUrl: true,
+        };
+    };
 
     const handleImageUpload = async (info: any) => {
         setIsUploading(true);
@@ -177,23 +285,90 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
             return;
         }
         const fileOriginal = file.originFileObj;
-        // const fileNameWithoutExtension =
-        //     fileOriginal.name.lastIndexOf('.') !== -1
-        //         ? fileOriginal.name.substring(
-        //               0,
-        //               fileOriginal.name.lastIndexOf('.')
-        //           )
-        //         : fileOriginal.name;
-
-        if (fileOriginal.name.length > 80) {
+        const showError = (errorKeys: string[]) => {
             setIsUploading(false);
             form.setFieldsValue({
                 thumbnail: undefined,
             });
-            return showNotification(
-                'error',
-                messages('validation.max', { number: 80 })
+
+            const currentErrors = errorKeys.map((errorKey) =>
+                errorKey === 'image.validation.mustBeLessThanMB'
+                    ? messages(errorKey, { value: 10 })
+                    : messages(errorKey as any)
             );
+
+            return notificationApi.open({
+                key: 'release-cover-art-error',
+                placement: 'top',
+                duration: 4,
+                type: 'error',
+                message: (
+                    <Typography className="!text-lg font-semibold">
+                        {messages('common.uploadError')}
+                    </Typography>
+                ),
+                description: (
+                    <Space direction="vertical">
+                        <Typography className="text-base font-medium leading-6">
+                            {currentErrors.join(', ')}
+                        </Typography>
+                        <Typography className="text-base font-semibold">
+                            {messages('release.coverArt.requirements')}
+                        </Typography>
+                        <ul className="list-disc px-4">
+                            {coverArtRequirements.map((requirement) => (
+                                <li key={requirement}>{requirement}</li>
+                            ))}
+                        </ul>
+                    </Space>
+                ),
+                style: {
+                    width: 500,
+                },
+            });
+        };
+
+        const validationErrors = await validateCoverArt(fileOriginal);
+        if (validationErrors.length > 0) {
+            return showError(validationErrors);
+        }
+
+        try {
+            const { previewUrl, revokeUrl } =
+                await resolvePreviewFromFile(fileOriginal);
+
+            if (localPreviewUrlRef.current) {
+                URL.revokeObjectURL(localPreviewUrlRef.current);
+                localPreviewUrlRef.current = null;
+            }
+
+            if (revokeUrl) {
+                localPreviewUrlRef.current = previewUrl;
+            }
+
+            const updatedFileList = info.fileList.map((item: any) =>
+                item.uid === file.uid
+                    ? {
+                          ...item,
+                          status: 'done',
+                          url: previewUrl,
+                          thumbUrl: previewUrl,
+                          preview: previewUrl,
+                          originFileObj: fileOriginal,
+                          name: fileOriginal.name,
+                      }
+                    : item
+            );
+
+            setCoverArtPreviewUrl(previewUrl);
+            form.setFieldsValue({
+                thumbnail: {
+                    ...info,
+                    fileList: updatedFileList,
+                },
+            });
+        } catch (error) {
+            console.error('Local preview conversion error:', error);
         }
 
         const payload: CreateBucketFile = {
@@ -294,6 +469,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
             code: dspCode,
             onSuccess(e) {
                 setReleaseAction(RELEASE_DETAIL_ACTION.READ);
+                router.push(APP_ROUTES.RELEASES);
             },
         };
         const promise = distributeRelease(variables);
@@ -301,21 +477,81 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     };
 
     useEffect(() => {
+        let isMounted = true;
+        let objectUrlToRevoke: string | null = null;
+
+        const updatePreviewUrl = async () => {
+            if (!linkReadFile) {
+                setCoverArtPreviewUrl('');
+                return;
+            }
+
+            try {
+                const { previewUrl, revokeUrl } =
+                    await resolvePreviewUrl(linkReadFile);
+                if (localPreviewUrlRef.current) {
+                    URL.revokeObjectURL(localPreviewUrlRef.current);
+                    localPreviewUrlRef.current = null;
+                }
+                if (revokeUrl) {
+                    objectUrlToRevoke = previewUrl;
+                }
+                if (isMounted) {
+                    setCoverArtPreviewUrl(previewUrl);
+                }
+            } catch (error) {
+                console.error('TIFF preview conversion error:', error);
+                if (isMounted) {
+                    setCoverArtPreviewUrl(linkReadFile);
+                }
+            }
+        };
+
+        updatePreviewUrl();
+
+        return () => {
+            isMounted = false;
+            if (objectUrlToRevoke) {
+                URL.revokeObjectURL(objectUrlToRevoke);
+            }
+        };
+    }, [linkReadFile]);
+
+    useEffect(() => {
+        return () => {
+            if (localPreviewUrlRef.current) {
+                URL.revokeObjectURL(localPreviewUrlRef.current);
+            }
+        };
+    }, []);
+
+    useEffect(() => {
+        const currentThumbnail = form.getFieldValue('thumbnail');
+        if (!formValues.coverArtThumbnails?.['160x160']) {
+            if (currentThumbnail?.fileList?.length) {
+                return;
+            }
+
+            form.setFieldsValue({
+                thumbnail: undefined,
+            });
+            return;
+        }
+
         form.setFieldsValue({
-            thumbnail:
-                formValues.coverArtThumbnails?.['160x160'] && linkReadFile
-                    ? {
-                          fileList: [
-                              {
-                                  uid: formValues.coverArtThumbnails['160x160'],
-                                  url: linkReadFile,
-                                  name: formValues.title,
-                              },
-                          ],
-                      }
-                    : undefined,
+            thumbnail: coverArtPreviewUrl
+                ? {
+                      fileList: [
+                          {
+                              uid: formValues.coverArtThumbnails['160x160'],
+                              url: coverArtPreviewUrl,
+                              name: formValues.title,
+                          },
+                      ],
+                  }
+                : undefined,
         });
-    }, [formValues, form, linkReadFile]);
+    }, [formValues, form, coverArtPreviewUrl]);
 
     const hash = useHash();
     const hasCoverArtError = useMemo(() => {
@@ -328,9 +564,10 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                 backgroundColor: token.colorBgContainer,
             }}
         >
+            {contextHolder}
             {!isCreateReleasePage && (
                 <div
-                    className="flex justify-between overflow-hidden px-6 transition-all duration-300"
+                    className="flex items-center justify-between overflow-hidden px-6 transition-all duration-300"
                     style={{
                         maxHeight: isScrolled ? 0 : 100,
                         opacity: isScrolled ? 0 : 1,
@@ -340,17 +577,24 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                         paddingBottom: isScrolled ? 0 : 24,
                     }}
                 >
-                    <Steps
+                    {/* <Steps
                         className="!w-4/6 !px-0"
                         size="small"
                         current={currentStep}
                         status={stepStatus}
                         labelPlacement="vertical"
-                        items={statusItems}
+                        /> */}
+
+                    <ReleaseStatusTagIcon
+                        style={{
+                            padding: '4px 12px',
+                            borderRadius: '24px',
+                        }}
+                        status={releaseData?.status}
                     />
 
                     <div>
-                        {!isCreateReleasePage && (
+                        {!isCreateReleasePage && !isReadMode && (
                             <Button
                                 loading={isDistributingRelease}
                                 onClick={handleDistribution}
@@ -361,6 +605,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                     // releaseData?.status !==
                                     //     RELEASES_STATUS.DRAFT
                                 }
+                                shape="round"
                             >
                                 {messages('release.action.submit')}
                             </Button>
@@ -380,19 +625,11 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                         <CustomTooltip
                             title={
                                 <>
-                                    <div>
-                                        {messages('release.coverArt.required')}
-                                    </div>
-                                    <div>
-                                        - {messages('release.coverArt.size')}
-                                    </div>
-                                    <div>
-                                        -{' '}
-                                        {messages(
-                                            'image.validation.mustBeLessThanMB',
-                                            { value: 10 }
-                                        )}
-                                    </div>
+                                    {coverArtRequirements.map((requirement) => (
+                                        <div key={requirement}>
+                                            - {requirement}
+                                        </div>
+                                    ))}
                                 </>
                             }
                             placement="right"
@@ -431,9 +668,8 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                                 isScrolled,
                                         }
                                     )}
-                                    accept={ACCEPT_IMAGE}
+                                    accept=".jpg,.jpeg,.tiff,.tif"
                                     maxCount={1}
-                                    minWidth={1400}
                                     maxSizeMB={10}
                                     placeholder={messages('common.uploadImage')}
                                     onChange={handleImageUpload}
@@ -466,11 +702,9 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                     />
                                 </div>
                             </div>
-                            {!isScrolled && (
-                                <div className="flex justify-end">
-                                    <DownloadMenu />
-                                </div>
-                            )}
+                            <div className="flex justify-end">
+                                <DownloadMenu />
+                            </div>
                         </div>
                     )}
                 </div>

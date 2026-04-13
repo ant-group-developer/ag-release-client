@@ -11,21 +11,7 @@ export default function CoreDetailCreate() {
         (state) => state.resetFormValues
     );
 
-    const setSelectedRow = useReleaseDistribute(
-        (state) => state.setSelectedRows
-    );
-    const params = useParams();
-    const releaseId = params['release-id'] as string;
-    const { releaseDsp } = useGetListReleaseDsp(releaseId, {
-        page: 1,
-        pageSize: 999,
-    });
-
-    useEffect(() => {
-        setSelectedRow(
-            releaseDsp?.items?.filter((item) => item.isSelected) ?? []
-        );
-    }, [releaseDsp, setSelectedRow]);
+  
 
     useEffect(() => {
         resetFormValues();

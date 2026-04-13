@@ -48,14 +48,15 @@ export default function AggregatorTable({
             dataIndex: 'name',
             ellipsis: true,
             align: 'left',
-            width: 300,
+            width: 200,
+            fixed: 'left',
             render: (value, record) => value,
         },
         {
             title: messages('common.code'),
             key: 'code',
             dataIndex: 'code',
-            width: 200,
+            width: 100,
             ellipsis: true,
             align: 'left',
             render: (value, record) => value,
@@ -64,7 +65,7 @@ export default function AggregatorTable({
             title: 'Host',
             key: 'host',
             dataIndex: 'host',
-            width: 200,
+            width: 250,
             ellipsis: true,
             align: 'left',
             render: (value, record) => (
@@ -75,7 +76,7 @@ export default function AggregatorTable({
             title: 'Port',
             key: 'port',
             dataIndex: 'port',
-            width: 200,
+            width: 80,
             ellipsis: true,
             align: 'left',
             render: (value, record) => (
@@ -84,6 +85,7 @@ export default function AggregatorTable({
                 </Typography.Text>
             ),
         },
+
         {
             title: messages('status.active'),
             key: 'isActive',
@@ -132,17 +134,37 @@ export default function AggregatorTable({
                 );
             },
         },
-        // {
-        //     title: messages('common.email'),
-        //     key: 'contactEmail',
-        //     dataIndex: 'contactEmail',
-        //     ellipsis: true,
-        //     align: 'left',
-        //     render: (value, record) => value,
-        // },
+        {
+            title: messages('aggregator.deliveryEmail'),
+            key: 'deliveryEmail',
+            dataIndex: 'deliveryEmail',
+            width: 220,
+            ellipsis: true,
+            align: 'left',
+            render: (value) => value,
+        },
+        {
+            title: messages('aggregator.deliveryEmailSubject'),
+            key: 'deliveryEmailSubject',
+            dataIndex: 'deliveryEmailSubject',
+            width: 240,
+            ellipsis: true,
+            align: 'left',
+            render: (value) => value,
+        },
+        {
+            title: messages('aggregator.manualUploadUrl'),
+            key: 'manualUploadUrl',
+            dataIndex: 'manualUploadUrl',
+            width: 260,
+            ellipsis: true,
+            align: 'left',
+            render: (value) => value,
+        },
         {
             align: 'center',
             width: 100,
+            fixed: 'right',
             render: (value, record) => (
                 <ActionButton
                     showUpdate

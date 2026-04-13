@@ -14,7 +14,6 @@ import { Switch, Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { PRICE_TIER_TYPE, TYPE_MODAL_PRICE_TIERS } from '../../enums';
-import { useBulkUpdatePriceTiers } from '../../hooks/use-bulk-update-tiers';
 import { useUpdatePriceTiers } from '../../hooks/use-update-tiers';
 import { PriceTiersData, PriceTiersDataFilter } from '../../types';
 
@@ -24,24 +23,13 @@ type Props = any & {
         current: number;
     };
     dataFilter: PriceTiersDataFilter;
+    onDragEnd?: OnDragEnd<PriceTiersData[]>;
 };
 
 export default function PriceTiersTable({ dataFilter, ...props }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
-    const { updatePriceTiers } = useUpdatePriceTiers();
-    const { updatePriceTiersOrder } = useBulkUpdatePriceTiers();
-
-    const handleDragEnd: OnDragEnd<PriceTiersData[]> = (newData) => {
-        const payload = newData.map((item, index) => ({
-            id: item.id,
-            order: index + 1,
-        }));
-
-        updatePriceTiersOrder({
-            priceTiers: payload,
-        });
-    };
+    const { updatePriceTiers, isPending, variables } = useUpdatePriceTiers();
 
     const column: ColumnType<PriceTiersData>[] = [
         {
@@ -148,18 +136,26 @@ export default function PriceTiersTable({ dataFilter, ...props }: Props) {
             align: 'center',
             width: 100,
             ellipsis: true,
-            render: (value: any, record: PriceTiersData) => (
-                <Switch
-                    disabled={!record?.isActive}
-                    value={record?.isDefault}
-                    onChange={(value) =>
-                        updatePriceTiers({
-                            id: record?.id,
-                            payload: { isDefault: value },
-                        })
-                    }
-                />
-            ),
+            render: (value: any, record: PriceTiersData) => {
+                const isLoading =
+                    isPending &&
+                    variables?.id === record?.id &&
+                    variables?.payload &&
+                    'isDefault' in variables.payload;
+                return (
+                    <Switch
+                        disabled={!record?.isActive}
+                        value={record?.isDefault}
+                        loading={isLoading}
+                        onChange={(value) =>
+                            updatePriceTiers({
+                                id: record?.id,
+                                payload: { isDefault: value },
+                            })
+                        }
+                    />
+                );
+            },
         },
         {
             title: messages('status.active'),
@@ -169,6 +165,11 @@ export default function PriceTiersTable({ dataFilter, ...props }: Props) {
             width: 100,
             ellipsis: true,
             render: (value: any, record: PriceTiersData) => {
+                const isLoading =
+                    isPending &&
+                    variables?.id === record?.id &&
+                    variables?.payload &&
+                    'isActive' in variables.payload;
                 return (
                     <CustomTooltip
                         title={
@@ -181,9 +182,9 @@ export default function PriceTiersTable({ dataFilter, ...props }: Props) {
                     >
                         <Switch
                             disabled={record?.isDefault}
-                            // defaultChecked={record?.isActive}
                             checked={record?.isActive}
                             value={record?.isActive}
+                            loading={isLoading}
                             onChange={(value) =>
                                 updatePriceTiers({
                                     id: record?.id,
@@ -257,7 +258,7 @@ export default function PriceTiersTable({ dataFilter, ...props }: Props) {
             pagination={false}
             columns={column}
             rowClassName={'group'}
-            onDragEnd={handleDragEnd}
+            onDragEnd={props.onDragEnd}
         />
     );
 }
