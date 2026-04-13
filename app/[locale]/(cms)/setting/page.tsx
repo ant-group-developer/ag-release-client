@@ -13,7 +13,7 @@ import { settingQueryKeys } from '@/modules/setting/constants/query-keys';
 import { SETTING_TABS } from '@/modules/setting/enums';
 import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
-import { Spin, Tabs, TabsProps } from 'antd';
+import { Spin, Tabs, TabsProps, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 
 type SettingDataFilter = {
@@ -27,7 +27,7 @@ export default function SettingPage({}: Props) {
         queryKeys: [settingQueryKeys.details()],
         mutationKeys: [settingQueryKeys.updates()],
     });
-    // const { token } = theme.useToken();
+    const { token } = theme.useToken();
     const messages = useTranslations();
 
     const { dataFilter, onChangeFilter } = useFilter<SettingDataFilter>({
@@ -75,7 +75,12 @@ export default function SettingPage({}: Props) {
 
     return (
         <PageContainer title={messages('setting.settings')}>
-            <div className="rounded-lg bg-white">
+            <div
+                className="rounded-lg"
+                style={{
+                    backgroundColor: token.colorBgContainer,
+                }}
+            >
                 <Spin spinning={isFetching}>
                     <div className="m-auto">
                         <Tabs
