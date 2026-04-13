@@ -451,6 +451,7 @@
         "select": "Chọn kho nội dung"
     },
     "setting": {
+        "activeBackup": "Kích hoạt sao lưu",
         "settings": "Cài đặt",
         "label": "Cài đặt",
         "telegramSupportLink": "Telegram hỗ trợ",
