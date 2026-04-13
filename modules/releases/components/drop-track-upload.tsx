@@ -31,7 +31,11 @@ export default function DropUploadTracks({ ...props }: Props) {
             {uploadProgress.map((p) => (
                 <div key={p.key} className="mt-2 flex flex-col justify-start">
                     <span className="text-left">{p.fileName}</span>
-                    <Progress percent={p.progress} size="small" />
+                    <Progress
+                        percent={p.progress}
+                        size="small"
+                        strokeColor={p.progress === 100 ? '#BFBFBF' : undefined}
+                    />
                 </div>
             ))}
         </div>

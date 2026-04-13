@@ -27,6 +27,10 @@ interface PlaySongState extends CurrentSong {
     reactPlayerRef: any;
     songTimeMap: Map<string, number>;
     isSeeking: boolean;
+    pendingSeekTime: number | null;
+    pendingAutoPlay: boolean;
+    setPendingSeekTime: (second: number | null) => void;
+    setPendingAutoPlay: (value: boolean) => void;
 }
 
 const defaultValue = {
@@ -36,6 +40,8 @@ const defaultValue = {
     isPlaying: false,
     currentTimePlaying: 0,
     isSeeking: false,
+    pendingSeekTime: null,
+    pendingAutoPlay: false,
 };
 
 export const usePlaySongStore = create<PlaySongState>((set, get) => ({
@@ -43,17 +49,21 @@ export const usePlaySongStore = create<PlaySongState>((set, get) => ({
     reactPlayerRef: null,
     songTimeMap: new Map(),
     setReactPlayerRef: (ref) => set({ reactPlayerRef: ref }),
+    setPendingSeekTime: (second) => set({ pendingSeekTime: second }),
+    setPendingAutoPlay: (value) => set({ pendingAutoPlay: value }),
 
     onPlay: ({ url, songId }) => {
         const state = get();
         const savedTime = state.songTimeMap.get(songId) || 0;
 
-        set((state) => ({
-            ...state,
+        set((prevState) => ({
+            ...prevState,
             isPlaying: true,
-            url: url ?? state.url,
-            songId: songId ?? state.songId,
+            url: url ?? prevState.url,
+            songId: songId ?? prevState.songId,
             currentTimePlaying: savedTime,
+            pendingSeekTime: savedTime,
+            pendingAutoPlay: false,
         }));
     },
 
@@ -61,34 +71,38 @@ export const usePlaySongStore = create<PlaySongState>((set, get) => ({
         const state = get();
         if (close) {
             set(defaultValue);
-        } else {
-            // Lưu thời gian hiện tại của bài hát trước khi dừng
-            if (state.songId) {
-                state.songTimeMap.set(state.songId, state.currentTimePlaying);
-            }
-            set((state) => ({
-                ...state,
-                isPlaying: false,
-            }));
+            return;
         }
+
+        if (state.songId) {
+            state.songTimeMap.set(state.songId, state.currentTimePlaying);
+        }
+
+        set((prevState) => ({
+            ...prevState,
+            isPlaying: false,
+            pendingAutoPlay: false,
+        }));
     },
 
     onSeek: ({ second, url, songId }) => {
         const state = get();
-        console.log('🚀 ~ const:', state);
+        const shouldDeferPlayback =
+            state.songId !== songId ||
+            state.url !== url ||
+            !state.reactPlayerRef;
+
         state.songTimeMap.set(songId, second);
-        set((state) => ({
-            ...state,
-            isPlaying: true,
+
+        set((prevState) => ({
+            ...prevState,
+            isPlaying: shouldDeferPlayback ? false : true,
             isSeeking: true,
-            url: url ?? state.url,
-            songId: songId ?? state.songId,
+            url: url ?? prevState.url,
+            songId: songId ?? prevState.songId,
             currentTimePlaying: second,
+            pendingSeekTime: second,
+            pendingAutoPlay: shouldDeferPlayback,
         }));
-        get().reactPlayerRef?.seekTo(second, 'seconds');
-        console.log(
-            "🚀 ~ get().reactPlayerRef?.seekTo(second, 'seconds'):",
-            get().reactPlayerRef?.seekTo(second, 'seconds')
-        );
     },
 }));

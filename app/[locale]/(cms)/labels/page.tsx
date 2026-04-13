@@ -10,6 +10,7 @@ import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { usePermission } from '@/hooks/use-permission';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 
 import LabelFormModal from '@/modules/labels/components/modal/label-form';
@@ -80,14 +81,16 @@ export default function Labels({}: Props) {
                 }}
                 extra={
                     <div className="flex items-center gap-2">
-                        {/* {isSystemTenant &&
-                            hasPermission(PERMISSION.LABEL.CREATE) && ( */}
-                        <CreateButton
-                            canCreate={true}
-                            text={messages('label.create')}
-                            onClick={() => openModal(TYPE_MODAL_LABEL.CREATE)}
-                        />
-                        {/* )} */}
+                        {!isSystemTenant &&
+                            hasPermission(PERMISSION.LABEL.CREATE) && (
+                                <CreateButton
+                                    canCreate={true}
+                                    text={messages('label.create')}
+                                    onClick={() =>
+                                        openModal(TYPE_MODAL_LABEL.CREATE)
+                                    }
+                                />
+                            )}
                     </div>
                 }
             >

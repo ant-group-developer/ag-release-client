@@ -138,6 +138,7 @@ export const adminRoutes: RouteNode[] = [
                 title: 'Analytics',
                 href: APP_ROUTES.ANALYTICS,
                 icon: ChartNoAxesCombined,
+                required: { permission: [PERMISSION.ANALYTICS.READ] },
             },
             {
                 id: 'analytics2',
@@ -146,7 +147,7 @@ export const adminRoutes: RouteNode[] = [
                 title: 'Analytics 2',
                 href: APP_ROUTES.ANALYTICS2,
                 icon: ChartNoAxesCombined,
-                hidden: true,
+                required: { permission: [PERMISSION.ANALYTICS.READ] },
             },
             {
                 id: 'analytics',
@@ -156,6 +157,7 @@ export const adminRoutes: RouteNode[] = [
                 hidden: true,
                 href: APP_ROUTES.ANALYTIC_DETAIL,
                 icon: ChartNoAxesCombined,
+                required: { permission: [PERMISSION.ANALYTICS.READ] },
             },
             {
                 id: 'release',
@@ -218,6 +220,7 @@ export const adminRoutes: RouteNode[] = [
                 title: 'Revenue',
                 href: APP_ROUTES.REVENUE,
                 icon: ClipboardList,
+                required: { permission: [PERMISSION.REVENUE.READ] },
             },
         ],
     },
@@ -255,7 +258,7 @@ export const adminRoutes: RouteNode[] = [
                 required: { permission: [PERMISSION.LABEL.READ] },
             },
             {
-                id: 'labelDetail', // fixed duplicate id
+                id: 'labelDetail',
                 type: 'link',
                 label: 'labels.label',
                 title: 'Label Detail',
@@ -287,6 +290,7 @@ export const adminRoutes: RouteNode[] = [
                 title: 'Partner issue',
                 href: APP_ROUTES.TENANT_ISSUE,
                 icon: Flag,
+                required: { permission: [PERMISSION.TENANT_ISSUE.READ] },
             },
             {
                 id: 'tenant-tier',
@@ -295,6 +299,7 @@ export const adminRoutes: RouteNode[] = [
                 title: 'Partner tier',
                 href: APP_ROUTES.TENANT_TIERS,
                 icon: ChevronsUp,
+                required: { permission: [PERMISSION.TENANT_TIER.READ] },
             },
             {
                 id: 'issues',
@@ -303,6 +308,7 @@ export const adminRoutes: RouteNode[] = [
                 title: 'Issues',
                 href: APP_ROUTES.ISSUES,
                 icon: CircleAlert,
+                required: { permission: [PERMISSION.ISSUE.READ] },
             },
             {
                 id: 'issue-level',
@@ -311,6 +317,7 @@ export const adminRoutes: RouteNode[] = [
                 title: 'Issue level',
                 href: APP_ROUTES.ISSUE_LEVEL,
                 icon: ListOrdered,
+                required: { permission: [PERMISSION.ISSUE.READ] },
             },
         ],
     },

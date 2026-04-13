@@ -14,14 +14,16 @@ import {
 import DistributionPieChart from '../pie-chart';
 
 export default function DistributionRow() {
-    const t = useTranslations();
+    const messages = useTranslations();
 
     return (
         <Row gutter={[16, 16]}>
             <Col xs={24} md={8}>
                 <DistributionPieChart
                     title="DSP"
-                    subtitle={t('dashboard.dsp_distribution_subtitle', { year: 2026 })}
+                    subtitle={messages('dashboard.dsp_distribution_subtitle', {
+                        year: 2026,
+                    })}
                     streamData={DSP_DATA_STREAM}
                     revenueData={DSP_DATA_REVENUE}
                     colors={CHART_COLORS}
@@ -30,7 +32,10 @@ export default function DistributionRow() {
             <Col xs={24} md={8}>
                 <DistributionPieChart
                     title="Label"
-                    subtitle={t('dashboard.label_distribution_subtitle', { year: 2026 })}
+                    subtitle={messages(
+                        'dashboard.label_distribution_subtitle',
+                        { year: 2026 }
+                    )}
                     streamData={LABEL_DATA_STREAM}
                     revenueData={LABEL_DATA_REVENUE}
                     colors={CHART_COLORS}
@@ -39,7 +44,10 @@ export default function DistributionRow() {
             <Col xs={24} md={8}>
                 <DistributionPieChart
                     title="Artist"
-                    subtitle={t('dashboard.artist_distribution_subtitle', { year: 2026 })}
+                    subtitle={messages(
+                        'dashboard.artist_distribution_subtitle',
+                        { year: 2026 }
+                    )}
                     streamData={ARTIST_DATA_STREAM}
                     revenueData={ARTIST_DATA_REVENUE}
                     colors={CHART_COLORS}

@@ -1,6 +1,7 @@
 import { TYPE_UPLOAD_BUCKET } from '@/enums/common';
 import extractAudioMetadata from '@/helpers/common';
 import { showNotification } from '@/helpers/messages-helper';
+import { useActive } from '@/hooks/use-active';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useCreateTrackDraft } from '@/modules/tracks/hooks/use-create-track-draft';
 import { TrackPayload } from '@/modules/tracks/types/payload';
@@ -32,20 +33,19 @@ interface HandleUploadCallbacks {
     onError?: () => void;
 }
 
-// ─── Hook ────────────────────────────────────────────────────────────────────
-
 export function useTrackUpload() {
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
     const { createTrackDraft } = useCreateTrackDraft();
     const [uploadProgress, setUploadProgress] = useState<UploadProgress[]>([]);
+    const { isActive, deActive, active } = useActive();
 
     const stripExtension = (fileName: string) =>
         fileName.lastIndexOf('.') !== -1
             ? fileName.substring(0, fileName.lastIndexOf('.'))
             : fileName;
 
-    // ─── Step 1: Validate file ──────────────────────────────────────────────
+    // ─── Step 1: Validate file
 
     const validateFile = (fileOriginal: any, metadata: any): boolean => {
         if (fileOriginal.name.length > 80) {
@@ -74,7 +74,7 @@ export function useTrackUpload() {
         return true;
     };
 
-    // ─── Step 2: Build bucket data for one file ─────────────────────────────
+    // ─── Step 2: Build bucket data for one file
 
     const buildTrackBucketData = async (
         file: any,
@@ -128,16 +128,16 @@ export function useTrackUpload() {
         return trackInfo;
     };
 
-    // ─── Step 3: Init progress bars ─────────────────────────────────────────
+    // ─── Step 3: Init progress bars
 
     const initUploadProgress = (
         bucketItems: any[],
         temp: { file: any; key: string }[]
-    ): UploadProgress[] =>
-        bucketItems
+    ): UploadProgress[] => {
+        return bucketItems
             .filter((item) => item.key.startsWith('track-'))
             .flatMap((item) => {
-                const matched = temp.find((i) => item.key.includes(i.key));
+                const matched = temp.find((i) => item.key === i.key);
                 if (!matched) return [];
                 return [
                     {
@@ -150,15 +150,16 @@ export function useTrackUpload() {
                     },
                 ];
             });
+    };
 
-    // ─── Step 4: Upload one file + update progress + assign fileIds ─────────
+    // ─── Step 4: Upload one file + update progress + assign fileIds
 
     const uploadOneBucketItem = async (
         item: any,
         temp: { file: any; key: string }[],
         tracksPayload: TracksPayload[]
     ) => {
-        const matchedFile = temp.find((i) => item.key.includes(i.key));
+        const matchedFile = temp.find((i) => item.key === i.key);
 
         if (matchedFile) {
             const fileToUpload =
@@ -208,7 +209,7 @@ export function useTrackUpload() {
         }
     };
 
-    // ─── Step 5: Save track drafts via API ──────────────────────────────────
+    // ─── Step 5: Save track drafts via API
 
     const saveTrackDrafts = (
         tracksPayload: TracksPayload[],
@@ -228,12 +229,13 @@ export function useTrackUpload() {
         createTrackDraft(variables);
     };
 
-    // ─── Main entry point ───────────────────────────────────────────────────
+    // ─── Main entry point
 
     const handleUpload = async (
         files: any[],
         callbacks?: HandleUploadCallbacks
     ) => {
+        active();
         try {
             const tracksPayload: TracksPayload[] = [];
             const temp: { file: any; key: string }[] = [];
@@ -285,11 +287,14 @@ export function useTrackUpload() {
                 messages('file.message.uploadFileFailed')
             );
             callbacks?.onError?.();
+        } finally {
+            deActive();
         }
     };
 
     return {
         uploadProgress,
         handleUpload,
+        pending: isActive,
     };
 }

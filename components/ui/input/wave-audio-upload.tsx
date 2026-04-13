@@ -248,7 +248,7 @@ const WaveAudioUpload = ({
 
     return (
         <React.Fragment>
-            <Dragger {...uploadProps} disabled={isProcessing}>
+            <Dragger {...uploadProps} disabled={isProcessing || disabled}>
                 <p className="mx-auto mb-3 grid aspect-square w-14 place-content-center rounded-full bg-gray-200 text-2xl">
                     <UploadIcon />
                 </p>
@@ -258,7 +258,7 @@ const WaveAudioUpload = ({
             </Dragger>
 
             {audioFiles.length > 0 && (
-                <div className="mt-4 max-h-[400px] space-y-4 overflow-y-auto">
+                <div className="mt-4 space-y-4 overflow-y-auto">
                     {audioFiles.map((audioFile, index) => (
                         <AudioItem
                             key={index}

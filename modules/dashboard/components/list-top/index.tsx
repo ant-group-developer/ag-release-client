@@ -75,10 +75,15 @@ export default function ListTop({ className }: Props) {
 
     return (
         <Card
-            className={`overflow-hidden rounded-lg border-0 shadow-sm ${className}`}
+            className={`flex h-full w-full flex-col overflow-hidden rounded-lg ${className}`}
             styles={{
                 header: { borderBottom: 0, paddingBottom: 0, paddingTop: 24 },
-                body: { padding: '0 24px' },
+                body: {
+                    padding: '0 24px',
+                    display: 'flex',
+                    flex: 1,
+                    flexDirection: 'column',
+                },
             }}
             title={
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -91,7 +96,7 @@ export default function ListTop({ className }: Props) {
                 </div>
             }
         >
-            <div className="mt-6">{renderTable()}</div>
+            <div className="mt-6 flex-1">{renderTable()}</div>
         </Card>
     );
 }
