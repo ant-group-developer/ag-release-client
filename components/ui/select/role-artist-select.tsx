@@ -1,6 +1,7 @@
 import { toNonAccentVietnamese } from '@/helpers/string';
 import { useGetListSimpleArtistRole } from '@/modules/artist-role/hooks/use-get-list-simple-artist-role';
 import { Select, SelectProps } from 'antd';
+import { useTranslations } from 'next-intl';
 
 type Props = Omit<SelectProps, 'options'> & {
     fallBack?: string;
@@ -12,11 +13,13 @@ export default function RoleArtistSelect({
     fallBack,
     ...props
 }: Props) {
+    const messages = useTranslations();
     const { artistsRolesData, isLoading } = useGetListSimpleArtistRole();
     const labelRender = (props: any) => {
-        const { value, label } = props;
+        const { value } = props;
         if (value) {
-            return fallBack || label;
+            const matched = artistsRolesData.find((r) => r.id === value);
+            return fallBack || matched?.name || value;
         }
     };
 
@@ -26,34 +29,29 @@ export default function RoleArtistSelect({
             loading={props?.loading || isLoading}
             showSearch
             filterOption={(input, option) =>
-                toNonAccentVietnamese(option?.label ?? '')
+                toNonAccentVietnamese(option?.name ?? '')
                     .toLowerCase()
                     .includes(toNonAccentVietnamese(input).toLowerCase())
             }
             options={artistsRolesData.map((item) => ({
                 id: item.id,
                 value: item.id,
-                label: item.name,
+                name: item.name,
+                label: (
+                    <div className="flex justify-between gap-1">
+                        <span title={item.name} className="min-w-0 truncate">
+                            {item.name}
+                        </span>
+                        <span className="text-red-400">
+                            {item?.isRequired
+                                ? messages('common.required')
+                                : ''}
+                        </span>
+                    </div>
+                ),
                 disabled: disabledRoleIds?.includes(item.id) ?? false,
             }))}
             labelRender={labelRender}
-            // dropdownRender={(menu) => {
-            //     return (
-            //         <div>
-            //             {menu}
-            //             <div className="flex justify-end py-2">
-            //                 <Button
-            //                     type="primary"
-            //                     onClick={() =>
-            //                         openModal(TYPE_MODAL_ARTIST.CREATE)
-            //                     }
-            //                 >
-            //                     {messages('release.createArtist')}
-            //                 </Button>
-            //             </div>
-            //         </div>
-            //     );
-            // }}
         />
     );
 }
