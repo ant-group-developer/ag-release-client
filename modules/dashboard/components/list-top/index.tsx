@@ -14,9 +14,8 @@ export default function ListTop({ className }: Props) {
     const [activeTab, setActiveTab] = useState<string>('track');
 
     const tabOptions = [
-        { label: messages('track.label'), value: 'track' },
         { label: messages('release.label'), value: 'release' },
-        { label: messages('artist.label'), value: 'artist' },
+        { label: messages('track.label'), value: 'track' },
     ];
 
     const renderTable = () => {
@@ -34,22 +33,6 @@ export default function ListTop({ className }: Props) {
                             { id: 2, name: 'Summer Breeze', total: 812005 },
                             { id: 7, name: 'City Lights', total: 750200 },
                             { id: 9, name: 'Wanderlust', total: 680300 },
-                        ]}
-                    />
-                );
-            case 'artist':
-                return (
-                    <TopStreamsTable
-                        dataFilter={{}}
-                        orderByField={undefined}
-                        orderField={ORDER.ASC}
-                        pagination={{ pageSize: 10, current: 1 }}
-                        dataSource={[
-                            { id: 2, name: 'Kai Nakamura', total: 5432100 },
-                            { id: 7, name: 'Maya Santos', total: 4321000 },
-                            { id: 5, name: 'Aiko Tanaka', total: 3210000 },
-                            { id: 9, name: 'Hana Suzuki', total: 2100000 },
-                            { id: 1, name: 'Luna Rivera', total: 1980000 },
                         ]}
                     />
                 );
@@ -87,7 +70,9 @@ export default function ListTop({ className }: Props) {
             }}
             title={
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <h3 className="m-0 text-lg font-bold">Top Performance</h3>
+                    <h3 className="m-0 text-lg font-bold text-blue-500">
+                        Top Performance
+                    </h3>
                     <Segmented
                         options={tabOptions}
                         value={activeTab}

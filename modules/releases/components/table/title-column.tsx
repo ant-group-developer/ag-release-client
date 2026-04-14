@@ -25,6 +25,10 @@ export default function ReleaseTitleColumn({ record, onChangeFilter }: Props) {
     const displayName = isVariousArtist
         ? messages('common.variousArtists')
         : artistName;
+
+    const title =
+        record?.title + (record?.version ? ` [${record?.version}]` : '');
+
     return (
         <div className="flex items-center gap-4">
             <div className="h-10 min-w-10">
@@ -38,9 +42,9 @@ export default function ReleaseTitleColumn({ record, onChangeFilter }: Props) {
                     )}
                 >
                     <div className="!max-w-80 truncate">
-                        <CustomTooltip title={record?.title}>
+                        <CustomTooltip title={title}>
                             <span className="cursor-pointer hover:underline">
-                                {record?.title}
+                                {title}
                             </span>
                         </CustomTooltip>
                     </div>

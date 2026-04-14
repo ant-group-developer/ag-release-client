@@ -140,7 +140,7 @@ export default function StatsOverview({
                 return (
                     <div
                         key={index}
-                        className="rounded-2xl border border-gray-100 p-5 shadow-sm transition-all hover:shadow-md dark:border-zinc-800"
+                        className="rounded-md border border-gray-100 p-5 shadow-sm transition-all hover:shadow-md dark:border-zinc-800"
                         style={{ backgroundColor: token.colorBgContainer }}
                     >
                         <div className="mb-4 flex items-center justify-between">
@@ -195,7 +195,7 @@ export default function StatsOverview({
 
             {/* 5th Box: Issues */}
             <div
-                className="rounded-2xl border border-gray-100 p-5 shadow-sm transition-all hover:shadow-md dark:border-zinc-800"
+                className="rounded-md border border-gray-100 p-5 shadow-sm transition-all hover:shadow-md dark:border-zinc-800"
                 style={{ backgroundColor: token.colorBgContainer }}
             >
                 <div className="mb-2 flex items-center justify-between">

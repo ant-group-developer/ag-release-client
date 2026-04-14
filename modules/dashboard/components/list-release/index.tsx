@@ -19,7 +19,7 @@ export default function ListRelease({ data }: Props) {
     const releaseLength = data?.length;
 
     return (
-        <div className="mt-8 space-y-4">
+        <div className="mt-8 space-y-2">
             <div className="flex items-center justify-between">
                 <p className="text-lg font-bold">
                     {messages('release.latestReleases')}

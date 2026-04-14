@@ -52,8 +52,7 @@ export default function DistributionPieChart({
         <Card
             styles={{ body: { padding: '20px 24px' } }}
             style={{
-                borderRadius: 16,
-                border: '1px solid #f0f0f0',
+                borderRadius: 8,
                 height: '100%',
             }}
         >
