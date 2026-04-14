@@ -9,7 +9,7 @@ export interface ArtistRoleData extends CommonAttribute {
 }
 
 export interface ArtistRoleSimpleData
-    extends Pick<ArtistRoleData, 'id' | 'name' | 'code'> {}
+    extends Pick<ArtistRoleData, 'id' | 'name' | 'code' | 'isRequired'> {}
 
 export interface ArtistRoleDataFilter extends CommonParams {
     keyword?: string;

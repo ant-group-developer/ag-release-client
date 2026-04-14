@@ -1230,6 +1230,9 @@
     },
 
     "formFields": {
+        "contributorsMustIncludeProducer": "Người đóng góp phải bao gồm nhà sản xuất",
+        "contributorsMustIncludeComposer": "Người đóng góp phải bao gồm nhà soạn nhạc",
+        "contributorsMustIncludeMixer": "Người đóng góp phải bao gồm nhà phối khí",
         "singleNameMustMatchTrack": "Tiêu đề phát hành phải khớp với ít nhất một tiêu đề bài hát",
         "releaseOriginalDate": "Ngày phát hành gốc",
         "audioFile": {
@@ -1247,8 +1250,8 @@
             "metadataLanguageCountryId": "Ngôn ngữ quốc gia",
             "recordingCountryId": "Quốc gia ghi âm"
         },
-        "releaseContributors": "Người đóng góp phải bao gồm composer và mixer",
-        "trackContributors": "Người đóng góp phải bao gồm composer và mixer",
+        "releaseContributors": "Người đóng góp phát hành",
+        "trackContributors": "Người đóng góp bài hát",
         "selectedCountries": "Khu vực",
         "upc": "UPC",
         "trackSensitiveId": "Nội dung nhạy cảm",
