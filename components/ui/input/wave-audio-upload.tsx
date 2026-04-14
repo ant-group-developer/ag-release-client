@@ -249,7 +249,7 @@ const WaveAudioUpload = ({
     return (
         <React.Fragment>
             <Dragger {...uploadProps} disabled={isProcessing || disabled}>
-                <p className="mx-auto mb-3 grid aspect-square w-14 place-content-center rounded-full bg-gray-200 text-2xl">
+                <p className="mx-auto mb-3 grid aspect-square w-14 place-content-center rounded-full bg-gray-200 text-2xl dark:bg-zinc-700">
                     <UploadIcon />
                 </p>
                 <p className="ant-upload-text">

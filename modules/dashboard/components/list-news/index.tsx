@@ -25,7 +25,7 @@ export default function ListNews({}: Props) {
     if (newsDataLength < 1) return;
 
     return (
-        <div className="my-8 space-y-4">
+        <div className="my-8 space-y-2">
             <div className="flex items-center justify-between">
                 <p className="text-lg font-bold">
                     {messages('dashboard.latestNews')}

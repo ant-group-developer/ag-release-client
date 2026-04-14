@@ -31,7 +31,7 @@ export default function MapChart({ data, className }: Props) {
 
     return (
         <Card className={`${className}`} styles={{ body: { padding: '24px' } }}>
-            <h3 className="mb-1 text-lg font-bold">
+            <h3 className="mb-1 text-lg font-bold text-blue-500">
                 {messages('dashboard.stream_by_dsp')}
             </h3>
 
@@ -39,7 +39,7 @@ export default function MapChart({ data, className }: Props) {
                 <WorldMap
                     color="#0071ff"
                     value-suffix="people"
-                    size="md"
+                    size="lg"
                     data={countData}
                     backgroundColor="transparent"
                 />

@@ -43,7 +43,7 @@ const updates: UpdateItem[] = [
 export default function NewsUpdatedCard() {
     return (
         <Card
-            className="overflow-hidden"
+            className="h-full overflow-hidden"
             styles={{
                 header: { borderBottom: 0, paddingBottom: 0, paddingTop: 24 },
             }}
@@ -57,7 +57,7 @@ export default function NewsUpdatedCard() {
                 </div>
             }
         >
-            <div className="scrollbar-thin scrollbar-thumb-gray-200 max-h-[250px] overflow-auto px-1 py-2">
+            <div className="scrollbar-thin scrollbar-thumb-gray-200 max-h-[350px] overflow-auto px-1 py-2">
                 <Timeline
                     items={updates.map((item) => ({
                         dot: (

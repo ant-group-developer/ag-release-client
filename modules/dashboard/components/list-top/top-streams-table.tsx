@@ -39,7 +39,7 @@ export default function TopStreamsTable({ titleHeader, ...props }: Props) {
             },
         },
         {
-            title: 'TRACK DETAIL',
+            title: 'Name',
             dataIndex: 'name',
             key: 'name',
             width: 100,
@@ -63,7 +63,7 @@ export default function TopStreamsTable({ titleHeader, ...props }: Props) {
             ),
         },
         {
-            title: 'STREAMS',
+            title: 'Streams',
             dataIndex: 'total',
             key: 'total',
             align: 'right',
