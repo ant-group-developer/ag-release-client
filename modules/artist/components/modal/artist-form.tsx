@@ -19,9 +19,9 @@ import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store
 import { uploadApi } from '@/modules/upload/apis';
 import { ENTITY_TYPE_PICTURE } from '@/modules/upload/types/data';
 import { CreateVariables, UpdateVariables } from '@/types/api';
-import { Button, Card, Divider, Form, Input, Spin } from 'antd';
+import { Button, Divider, Form, Input, Spin, Table } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import { Trash } from 'lucide-react';
+import { ExternalLink, Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { useCreateArtist } from '../../hooks/use-create-artist';
@@ -53,6 +53,7 @@ export default function ArtistFormModal({
 
     const { active, isActive, deActive } = useActive();
     const isUpdateForm = dataEdit?.id;
+    const watchedProfiles = Form.useWatch('artistProfiles', form) || [];
 
     const releaseValues = useReleaseFormStore((state) => state.formValues);
     const { createReleaseArtist } = useCreateReleaseArtist();
@@ -159,6 +160,32 @@ export default function ArtistFormModal({
     const titleModal = isUpdateForm
         ? messages('artist.update')
         : messages('artist.create');
+
+    // Thêm sẵn profile spotify và apple
+    useEffect(() => {
+        if (!isUpdateForm && dspData?.items?.length) {
+            const defaultNames = ['spotify', 'apple'];
+            const defaultProfiles = defaultNames
+                .map((keyword) =>
+                    dspData.items.find((dsp) =>
+                        dsp.name.toLowerCase().includes(keyword)
+                    )
+                )
+                .filter(Boolean)
+                .map((dsp) => ({
+                    dspId: dsp!.id,
+                    name: dsp!.name,
+                    url: '',
+                }));
+
+            if (defaultProfiles.length > 0) {
+                const current = form.getFieldValue('artistProfiles');
+                if (!current || current.length === 0) {
+                    form.setFieldsValue({ artistProfiles: defaultProfiles });
+                }
+            }
+        }
+    }, [isUpdateForm, dspData, form]);
 
     useEffect(() => {
         const initialData = {
@@ -287,12 +314,7 @@ export default function ArtistFormModal({
                     <AppFormItem
                         name="biography"
                         label={messages('common.biography')}
-                        // required
                         rules={[
-                            // {
-                            //     required: true,
-                            //     message: messages('validation.input'),
-                            // },
                             {
                                 max: 250,
                                 message: messages('validation.max', {
@@ -313,117 +335,104 @@ export default function ArtistFormModal({
                         {(fields, { add, remove }) => (
                             <div className="overflow-y-auto">
                                 <Divider />
-                                <p className="mb-2 font-semibold">
-                                    {' '}
-                                    {messages('dsp.profileList')}{' '}
+                                <p className="mb-3 font-semibold">
+                                    {messages('dsp.profileList')}
                                 </p>
-                                <div className="space-y-4">
-                                    {fields.map(
-                                        ({ key, name, ...restField }) => (
-                                            <Card
-                                                key={key}
-                                                styles={{
-                                                    body: {
-                                                        paddingRight: '38px',
-                                                    },
-                                                }}
-                                            >
-                                                <div className="relative">
-                                                    <AppFormItem
-                                                        {...restField}
-                                                        className="flex-1"
-                                                        name={[name, 'url']}
-                                                        label={messages(
-                                                            'common.link'
-                                                        )}
-                                                        required
-                                                        rules={[
-                                                            {
-                                                                required: true,
-                                                                message:
-                                                                    messages(
-                                                                        'validation.input'
-                                                                    ),
-                                                            },
-                                                            {
-                                                                max: MAX_NAME_LENGTH,
-                                                                message:
-                                                                    messages(
-                                                                        'validation.stringMax',
-                                                                        {
-                                                                            max: MAX_NAME_LENGTH,
-                                                                            field: 'URL',
-                                                                        }
-                                                                    ),
-                                                            },
-                                                        ]}
-                                                    >
-                                                        <Input
-                                                            allowClear
-                                                            onChange={(e) => {
-                                                                const url =
-                                                                    e.target.value.toLowerCase();
-                                                                const matched =
-                                                                    dspData?.items.find(
-                                                                        (dsp) =>
-                                                                            dsp.formatLinks?.some(
-                                                                                (
-                                                                                    link: string
-                                                                                ) =>
-                                                                                    url.includes(
-                                                                                        link.toLowerCase()
-                                                                                    )
-                                                                            )
-                                                                    );
-                                                                if (matched) {
-                                                                    const current =
-                                                                        form.getFieldValue(
-                                                                            'artistProfiles'
-                                                                        ) || [];
-                                                                    current[
-                                                                        name
-                                                                    ] = {
-                                                                        ...(current[
-                                                                            name
-                                                                        ] ||
-                                                                            {}),
-                                                                        dspId: matched.id,
-                                                                    };
-                                                                    form.setFieldsValue(
-                                                                        {
-                                                                            artistProfiles:
-                                                                                current,
-                                                                        }
-                                                                    );
-                                                                }
-                                                            }}
-                                                        />
-                                                    </AppFormItem>
-                                                    <IconButton
-                                                        onClick={() => {
-                                                            const currentProfiles =
-                                                                form.getFieldValue(
-                                                                    'artistProfiles'
-                                                                ) || [];
 
-                                                            remove(name);
-                                                        }}
-                                                        className="absolute right-[-34px] top-0 mb-1"
-                                                        disabled={isActive}
-                                                    >
-                                                        <Trash
-                                                            size={SIZE_ICON}
-                                                            className="text-red-500"
-                                                        />
-                                                    </IconButton>
-                                                </div>
+                                <Table
+                                    dataSource={fields.map((field) => ({
+                                        ...field,
+                                        fieldKey: field.key,
+                                    }))}
+                                    rowKey="key"
+                                    pagination={false}
+                                    size="small"
+                                    bordered
+                                    columns={[
+                                        {
+                                            title: '#',
+                                            width: 50,
+                                            align: 'center' as const,
+                                            render: (
+                                                _: any,
+                                                __: any,
+                                                index: number
+                                            ) => <span>{index + 1}</span>,
+                                        },
+                                        {
+                                            title: messages('common.platforms'),
+                                            width: '25%',
+                                            render: (_: any, field: any) => (
                                                 <AppFormItem
-                                                    {...restField}
-                                                    name={[name, 'name']}
-                                                    label={messages(
-                                                        'channel.name'
-                                                    )}
+                                                    name={[field.name, 'dspId']}
                                                     required
+                                                    noStyle
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message:
+                                                                messages(
+                                                                    'validation.input'
+                                                                ),
+                                                        },
+                                                    ]}
+                                                >
+                                                    <PlatformSelect
+                                                        allowClear
+                                                        placeholder={messages(
+                                                            'common.platforms'
+                                                        )}
+                                                        className="w-full"
+                                                    />
+                                                </AppFormItem>
+                                            ),
+                                        },
+                                        // {
+                                        //     title: messages('channel.name'),
+                                        //     width: '25%',
+                                        //     render: (_: any, field: any) => (
+                                        //         <AppFormItem
+                                        //             name={[field.name, 'name']}
+                                        //             required
+                                        //             noStyle
+                                        //             rules={[
+                                        //                 {
+                                        //                     required: true,
+                                        //                     message:
+                                        //                         messages(
+                                        //                             'validation.input'
+                                        //                         ),
+                                        //                 },
+                                        //                 {
+                                        //                     max: MAX_NAME_LENGTH,
+                                        //                     message: messages(
+                                        //                         'validation.stringMax',
+                                        //                         {
+                                        //                             max: MAX_NAME_LENGTH,
+                                        //                             field: messages(
+                                        //                                 'channel.name'
+                                        //                             ),
+                                        //                         }
+                                        //                     ),
+                                        //                 },
+                                        //             ]}
+                                        //         >
+                                        //             <Input
+                                        //                 allowClear
+                                        //                 placeholder={messages(
+                                        //                     'channel.name'
+                                        //                 )}
+                                        //             />
+                                        //         </AppFormItem>
+                                        //     ),
+                                        // },
+                                        {
+                                            title: messages('common.link'),
+                                            render: (_: any, field: any) => (
+                                                <AppFormItem
+                                                    name={[field.name, 'url']}
+                                                    required
+                                                    noStyle
                                                     rules={[
                                                         {
                                                             required: true,
@@ -438,41 +447,116 @@ export default function ArtistFormModal({
                                                                 'validation.stringMax',
                                                                 {
                                                                     max: MAX_NAME_LENGTH,
-                                                                    field: messages(
-                                                                        'channel.name'
-                                                                    ),
+                                                                    field: 'URL',
                                                                 }
                                                             ),
                                                         },
                                                     ]}
                                                 >
-                                                    <Input allowClear />
-                                                </AppFormItem>
-                                                <AppFormItem
-                                                    {...restField}
-                                                    name={[name, 'dspId']}
-                                                    label={messages(
-                                                        'common.platforms'
-                                                    )}
-                                                    required
-                                                    rules={[
-                                                        {
-                                                            required: true,
-                                                            message:
-                                                                messages(
-                                                                    'validation.input'
-                                                                ),
-                                                        },
-                                                    ]}
-                                                >
-                                                    <PlatformSelect
+                                                    <Input
                                                         allowClear
+                                                        placeholder="https://..."
+                                                        onChange={(e) => {
+                                                            const url =
+                                                                e.target.value.toLowerCase();
+                                                            const matched =
+                                                                dspData?.items.find(
+                                                                    (dsp) =>
+                                                                        dsp.formatLinks?.some(
+                                                                            (
+                                                                                link: string
+                                                                            ) =>
+                                                                                url.includes(
+                                                                                    link.toLowerCase()
+                                                                                )
+                                                                        )
+                                                                );
+                                                            if (matched) {
+                                                                const current =
+                                                                    form.getFieldValue(
+                                                                        'artistProfiles'
+                                                                    ) || [];
+                                                                current[
+                                                                    field.name
+                                                                ] = {
+                                                                    ...(current[
+                                                                        field
+                                                                            .name
+                                                                    ] || {}),
+                                                                    dspId: matched.id,
+                                                                };
+                                                                form.setFieldsValue(
+                                                                    {
+                                                                        artistProfiles:
+                                                                            current,
+                                                                    }
+                                                                );
+                                                            }
+                                                        }}
                                                     />
                                                 </AppFormItem>
-                                            </Card>
-                                        )
-                                    )}
-                                </div>
+                                            ),
+                                        },
+                                        {
+                                            title: '',
+                                            width: 80,
+                                            align: 'center' as const,
+                                            render: (_: any, field: any) => {
+                                                const url =
+                                                    watchedProfiles[field.name]
+                                                        ?.url;
+                                                const hasUrl = !!url?.trim();
+                                                return (
+                                                    <div className="flex items-center gap-1">
+                                                        <IconButton
+                                                            type="button"
+                                                            onClick={() => {
+                                                                if (hasUrl) {
+                                                                    window.open(
+                                                                        url.startsWith(
+                                                                            'http'
+                                                                        )
+                                                                            ? url
+                                                                            : `https://${url}`,
+                                                                        '_blank'
+                                                                    );
+                                                                }
+                                                            }}
+                                                            disabled={!hasUrl}
+                                                        >
+                                                            <ExternalLink
+                                                                size={SIZE_ICON}
+                                                                className={
+                                                                    hasUrl
+                                                                        ? 'text-blue-500'
+                                                                        : 'text-gray-300'
+                                                                }
+                                                            />
+                                                        </IconButton>
+                                                        <IconButton
+                                                            type="button"
+                                                            onClick={() =>
+                                                                remove(
+                                                                    field.name
+                                                                )
+                                                            }
+                                                            disabled={isActive}
+                                                        >
+                                                            <Trash
+                                                                size={SIZE_ICON}
+                                                                className="text-red-500"
+                                                            />
+                                                        </IconButton>
+                                                    </div>
+                                                );
+                                            },
+                                        },
+                                    ]}
+                                    scroll={{
+                                        y: 110,
+                                    }}
+                                />
+
                                 <div className="my-4">
                                     <Button
                                         className="w-full"

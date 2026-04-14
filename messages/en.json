@@ -1230,6 +1230,9 @@
     },
 
     "formFields": {
+        "contributorsMustIncludeProducer": "Contributors must include producer",
+        "contributorsMustIncludeComposer": "Contributors must include composer",
+        "contributorsMustIncludeMixer": "Contributors must include mixer",
         "releaseNameMustMatchTrackName": "The release title must match at least one track title",
         "releaseOriginalDate": "Original release date",
         "audioFile": {
@@ -1247,8 +1250,8 @@
             "metadataLanguageCountryId": "Metadata country language",
             "recordingCountryId": "Recording country"
         },
-        "releaseContributors": "Contributors must include composer and mixer",
-        "trackContributors": "Contributors must include composer and mixer",
+        "releaseContributors": "Release contributors",
+        "trackContributors": "Track contributors",
         "upc": "UPC",
         "selectedCountries": "Region",
         "trackSensitiveId": "Sensitive content",

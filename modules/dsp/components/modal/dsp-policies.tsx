@@ -2,7 +2,7 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import IconButton from '@/components/ui/button/icon-button';
 import ActionsSelect from '@/components/ui/select/actions-select';
 import { SIZE_ICON } from '@/constants/common';
-import { Button, Form, FormInstance, Radio } from 'antd';
+import { Button, Form, FormInstance, Radio, Table } from 'antd';
 import { Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
@@ -13,6 +13,8 @@ type Props = {
 
 export default function DspPolicies({ form, isActive }: Props) {
     const messages = useTranslations();
+    const watchedActions = Form.useWatch('dspActions', form) || [];
+
     const handleDefaultChange = (changedIndex: number) => {
         const currentActions = form.getFieldValue('dspActions') || [];
         form.setFieldsValue({
@@ -22,64 +24,100 @@ export default function DspPolicies({ form, isActive }: Props) {
             })),
         });
     };
+
     return (
         <>
             <Form.List name="dspActions">
                 {(fields, { add, remove }) => (
-                    <div className="max-h-[70vh] space-y-2 overflow-auto">
-                        {/* <p className="mb-2 font-semibold">
-                            {messages('common.policies')}
-                        </p> */}
-
-                        {fields.map(({ key, name, ...restField }) => (
-                            <div key={key}>
-                                <div className="relative grid grid-cols-2 gap-4">
-                                    <AppFormItem
-                                        {...restField}
-                                        name={[name, 'actionId']}
-                                        required
-                                    >
-                                        <ActionsSelect allowClear />
-                                    </AppFormItem>
-                                    <IconButton
-                                        onClick={() => {
-                                            // const currentProfiles =
-                                            //     form.getFieldValue(
-                                            //         'dspActions'
-                                            //     ) || [];
-                                            remove(name);
-                                        }}
-                                        className="absolute right-0 top-0"
-                                        disabled={isActive}
-                                    >
-                                        <Trash
-                                            size={SIZE_ICON}
-                                            className="text-red-500"
-                                        />
-                                    </IconButton>
-                                    <AppFormItem
-                                        {...restField}
-                                        name={[name, 'isDefault']}
-                                        className="w-full"
-                                    >
-                                        <Radio
-                                            defaultChecked={false}
-                                            checked={form.getFieldValue([
-                                                'dspActions',
-                                                name,
-                                                'isDefault',
-                                            ])}
-                                            onChange={(e) =>
-                                                handleDefaultChange(name)
-                                            }
+                    <div className="max-h-[70vh] overflow-auto">
+                        <Table
+                            dataSource={fields.map((field) => ({
+                                ...field,
+                                fieldKey: field.key,
+                            }))}
+                            rowKey="key"
+                            pagination={false}
+                            size="small"
+                            bordered
+                            columns={[
+                                {
+                                    title: '#',
+                                    width: 50,
+                                    align: 'center' as const,
+                                    render: (
+                                        _: any,
+                                        __: any,
+                                        index: number
+                                    ) => <span>{index + 1}</span>,
+                                },
+                                {
+                                    title: messages('policy.label'),
+                                    render: (_: any, field: any) => (
+                                        <AppFormItem
+                                            name={[field.name, 'actionId']}
+                                            required
+                                            noStyle
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message:
+                                                        messages(
+                                                            'validation.input'
+                                                        ),
+                                                },
+                                            ]}
                                         >
-                                            {messages('common.setIsDefault')}
-                                        </Radio>
-                                    </AppFormItem>
-                                </div>
-                            </div>
-                        ))}
-                        <div className="mb-4">
+                                            <ActionsSelect
+                                                allowClear
+                                                className="w-full"
+                                            />
+                                        </AppFormItem>
+                                    ),
+                                },
+                                {
+                                    title: messages('common.setIsDefault'),
+                                    width: 140,
+                                    align: 'center' as const,
+                                    render: (_: any, field: any) => (
+                                        <AppFormItem
+                                            name={[field.name, 'isDefault']}
+                                            noStyle
+                                        >
+                                            <Radio
+                                                checked={
+                                                    watchedActions[field.name]
+                                                        ?.isDefault
+                                                }
+                                                onChange={() =>
+                                                    handleDefaultChange(
+                                                        field.name
+                                                    )
+                                                }
+                                            />
+                                        </AppFormItem>
+                                    ),
+                                },
+                                {
+                                    title: '',
+                                    width: 50,
+                                    align: 'center' as const,
+                                    render: (_: any, field: any) => (
+                                        <IconButton
+                                            type="button"
+                                            onClick={() => remove(field.name)}
+                                            disabled={isActive}
+                                        >
+                                            <Trash
+                                                size={SIZE_ICON}
+                                                className="text-red-500"
+                                            />
+                                        </IconButton>
+                                    ),
+                                },
+                            ]}
+                        />
+
+                        <div className="my-4">
                             <Button
                                 className="w-full"
                                 type="dashed"

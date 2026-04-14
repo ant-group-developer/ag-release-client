@@ -23,6 +23,8 @@ export default function TracksInfo({}: Props) {
     const { tracksData, isFetching: isTracksFetching } = useGetListTracks({
         releaseId: formValue?.id,
         fieldOrder: 'order',
+        page: 1,
+        pageSize: 999,
     });
     const { releaseValidateData } = useReleaseValidate(releaseId as string);
 
