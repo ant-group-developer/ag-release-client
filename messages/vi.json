@@ -890,7 +890,21 @@
             "never_distributed": "Chưa từng phân phối",
             "label": "Trạng thái phát hành",
             "submitted": "Đã gửi",
-            "partially_failed": "Một phần thất bại",
+            "partially_failed": "Phân phối thất bại một phần",
+            "failed": "Thất bại"
+        },
+        "statusV2": {
+            "draft": "Nháp",
+            "issues": "Có vấn đề",
+            "processing": "Đang xử lý",
+            "partially_distributed": "Đã phân phối một phần",
+            "awaiting_action": "Chờ hành động",
+            "taken_down": "Đã gỡ xuống",
+            "distributed": "Đã phân phối",
+            "never_distributed": "Chưa từng phân phối",
+            "label": "Trạng thái phát hành",
+            "submitted": "Đã gửi",
+            "partially_failed": "Phân phối thất bại một phần",
             "failed": "Thất bại"
         }
     },
@@ -2040,6 +2054,24 @@
             "PARTIALLY_COMPLETED": "Hoàn thành một phần",
             "FAILED": "Thất bại",
             "CANCELLED": "Đã hủy"
+        },
+        "statusOptionsV2": {
+            "QUEUED": "Đang chờ",
+            "RUNNING": "Đang chạy",
+            "AWAITING_ACTION": "Chờ xử lý",
+            "COMPLETED": "Hoàn thành",
+            "PARTIALLY_COMPLETED": "Hoàn thành một phần",
+            "FAILED": "Thất bại",
+            "CANCELLED": "Đã hủy"
+        },
+        "stepStatus": {
+            "PENDING": "Chưa bắt đầu",
+            "RUNNING": "Đang thực hiện",
+            "AWAITING_ACTION": "Chờ admin",
+            "FAILED": "Thất bại",
+            "CANCELLED": "Đã hủy",
+            "SKIPPED": "Không áp dụng",
+            "SUCCESS": "Hoàn thành"
         },
         "label": "Lệnh thực thi phát hành"
     }

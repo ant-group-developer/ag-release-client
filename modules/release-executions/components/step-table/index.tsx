@@ -3,11 +3,7 @@ import { formattedDate } from '@/helpers/common';
 import { Table, Tag, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { STEP_STATUS } from '../../enums';
-import {
-    formatDurationShort,
-    formatEnumLabel,
-    getStepStatusColor,
-} from '../../helpers';
+import { formatDurationShort, getStepStatusColor } from '../../helpers';
 import { StepData } from '../../types';
 
 type Props = {
@@ -48,7 +44,9 @@ export default function ReleaseExecutionStepTable({ dataSource }: Props) {
                                 record?.status as STEP_STATUS
                             )}
                         >
-                            {formatEnumLabel(String(record?.status))}
+                            {messages(
+                                `releaseExecution.stepStatus.${record?.status}` as any
+                            )}
                         </Tag>
                     ),
                 },

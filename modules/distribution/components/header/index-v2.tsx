@@ -3,7 +3,6 @@ import DateRangePicker from '@/components/ui/input/date-range-picker';
 import ArtistSelect from '@/components/ui/select/artist-select';
 import GenresSelect from '@/components/ui/select/genres-select';
 import { arrayFromString, getDateRange } from '@/helpers/array';
-import { getIntlCodeByReleaseStatus } from '@/helpers/intl';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
 import { useGetListSimpleReleaseTypes } from '@/modules/release-types/hooks/use-get-list-simple-release-types';
 import { RELEASES_STATUS } from '@/modules/releases/enums';
@@ -38,7 +37,7 @@ export default function DistributionHeaderV2({
     const messages = useTranslations();
     const { releaseTypesData } = useGetListSimpleReleaseTypes();
     const releaseStatus = Object.values(RELEASES_STATUS).map((item) => ({
-        label: messages(getIntlCodeByReleaseStatus(item)),
+        label: messages(`release.statusV2.${item}`),
         value: item,
     }));
 

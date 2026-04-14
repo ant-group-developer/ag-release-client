@@ -3,7 +3,6 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import { MAX_NAME_LENGTH } from '@/constants/validate';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
-import { getIntlCodeByReleaseStatus } from '@/helpers/intl';
 import { useActive } from '@/hooks/use-active';
 import { RELEASES_STATUS } from '@/modules/releases/enums';
 import { Form, Input, InputNumber, Select, Switch, TimePicker } from 'antd';
@@ -148,7 +147,7 @@ export default function ACRCloudForm({}: Props) {
                     <Select
                         mode="multiple"
                         options={Object.values(RELEASES_STATUS).map((item) => ({
-                            label: messages(getIntlCodeByReleaseStatus(item)),
+                            label: messages(`release.statusV2.${item}`),
                             value: item,
                         }))}
                         allowClear

@@ -3,7 +3,6 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
-import { getIntlCodeByReleaseStatus } from '@/helpers/intl';
 import {
     getReleaseDetailTabRoute,
     RELEASE_DETAIL_ACTION,
@@ -24,7 +23,7 @@ type Props = CardProps & {
 export default function CardRelease({ data, ...props }: Props) {
     const messages = useTranslations();
     const router = useRouter();
-    // const albumStatus = messages(getIntlCodeByReleaseStatus(data.status));
+
     const imageFileId =
         data?.coverArtThumbnails?.['300x300'] ??
         data?.coverArtThumbnails?.original;
@@ -70,7 +69,7 @@ export default function CardRelease({ data, ...props }: Props) {
                             <span>
                                 {' '}
                                 {messages(
-                                    getIntlCodeByReleaseStatus(data?.status)
+                                    `release.statusV2.${data?.status}`
                                 )}{' '}
                             </span>
                         </div>

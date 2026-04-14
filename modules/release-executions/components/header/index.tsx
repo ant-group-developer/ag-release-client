@@ -1,4 +1,3 @@
-import ExportExcelButton from '@/components/ui/button/export-button';
 import AppSearch from '@/components/ui/input/search';
 import { OnChangeFilter, TOnSearch } from '@/hooks/use-filter';
 import { Select, Space } from 'antd';
@@ -21,7 +20,7 @@ export default function ReleaseExecutionHeader({
 
     const statusOptions = Object.values(RELEASE_EXECUTION_STATUS).map(
         (status) => ({
-            label: messages(`releaseExecution.statusOptions.${status}`),
+            label: messages(`releaseExecution.statusOptionsV2.${status}`),
             value: status,
         })
     );
