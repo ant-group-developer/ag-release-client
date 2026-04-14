@@ -2,7 +2,6 @@ import ActionButton from '@/components/ui/button/action-button';
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { convertSecondsToHoursMinutes, formattedDate } from '@/helpers/common';
-import { getIntlCodeByReleaseStatus } from '@/helpers/intl';
 import { OnChangeFilter } from '@/hooks/use-filter';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
@@ -110,7 +109,7 @@ export default function DistributionTable({
             width: 120,
             render: (value, record) => (
                 <Tag className="cursor-pointer truncate hover:text-blue-500 group-hover:underline">
-                    {messages(getIntlCodeByReleaseStatus(record?.status))}
+                    {messages(`release.statusV2.${record?.status}`)}
                 </Tag>
             ),
         },

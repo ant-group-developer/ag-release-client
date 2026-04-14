@@ -85,7 +85,7 @@ export default function ReleaseExecutionStatusSummary({
                             <div className="min-w-0">
                                 <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">
                                     {messages(
-                                        `releaseExecution.statusOptions.${item.status}`
+                                        `releaseExecution.statusOptionsV2.${item.status}`
                                     )}
                                 </div>
                                 <div

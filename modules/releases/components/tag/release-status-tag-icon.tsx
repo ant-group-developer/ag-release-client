@@ -47,7 +47,7 @@ export default function ReleaseStatusTagIcon({ status, ...props }: Props) {
 
     return (
         <Tag color={config.color} icon={config.icon} {...props}>
-            {messages(`release.status.${status}`)}
+            {messages(`release.statusV2.${status}`)}
         </Tag>
     );
 }
