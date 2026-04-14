@@ -41,7 +41,7 @@ export default function ReleaseStatusTag({ status, ...props }: Props) {
     if (!status) return;
     return (
         <Tag color={color} {...props}>
-            {messages(`release.status.${status}`)}
+            {messages(`release.statusV2.${status}`)}
         </Tag>
     );
 }

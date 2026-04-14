@@ -895,6 +895,19 @@
             "submitted": "Submitted",
             "partially_failed": "Partially failed",
             "failed": "Failed"
+        },
+        "statusV2": {
+            "draft": "Editing",
+            "issues": "ALL failed",
+            "processing": "Being handled",
+            "partially_distributed": "Some DSPs live, some failed",
+            "awaiting_action": "Awaiting action",
+            "taken_down": "Removed",
+            "distributed": "Live on DSPs",
+            "never_distributed": "Never distributed",
+            "submitted": "Submitted",
+            "partially_failed": "Partially failed",
+            "failed": "Failed"
         }
     },
 
@@ -2041,6 +2054,24 @@
             "PARTIALLY_COMPLETED": "Partially completed",
             "FAILED": "Failed",
             "CANCELLED": "Cancelled"
+        },
+        "statusOptionsV2": {
+            "QUEUED": "In queue",
+            "RUNNING": "Steps in progress",
+            "AWAITING_ACTION": "Admin export pending",
+            "COMPLETED": "All steps succeeded",
+            "PARTIALLY_COMPLETED": "Some ok, some failed",
+            "FAILED": "All failed",
+            "CANCELLED": "Cancelled"
+        },
+        "stepStatus": {
+            "PENDING": "Not started",
+            "RUNNING": "Executing",
+            "AWAITING_ACTION": "Waiting admin",
+            "FAILED": "Failed",
+            "CANCELLED": "Cancelled",
+            "SKIPPED": "Not applicable",
+            "SUCCESS": "Done"
         }
     }
 }

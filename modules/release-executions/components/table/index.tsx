@@ -38,7 +38,7 @@ export default function ReleaseExecutionTable({ ...props }: Props) {
     const getStatusLabel = (status?: RELEASE_EXECUTION_STATUS) => {
         if (!status) return '-';
 
-        return messages(`releaseExecution.statusOptions.${status}`);
+        return messages(`releaseExecution.statusOptionsV2.${status}`);
     };
 
     const columns: ProColumns<ReleaseExecutionData>[] = [
@@ -84,7 +84,7 @@ export default function ReleaseExecutionTable({ ...props }: Props) {
             title: messages('releaseExecution.columns.status'),
             dataIndex: 'status',
             key: 'status',
-            width: 100,
+            width: 150,
             render: (_, record) =>
                 record?.status ? (
                     <Tag color={getStatusColor(record.status)}>
