@@ -6,6 +6,7 @@ import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { toastPromise } from '@/helpers/messages-helper';
+import { useElementHeightById } from '@/hooks/use-element-height-by-id';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
@@ -44,6 +45,7 @@ export default function Distribution({}: Props) {
     const { bulkUpdate } = useBulkUpdateReleaseDsp();
     const releaseAction = useReleaseActionStore((state) => state.action);
     const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
+    const headerHeight = useElementHeightById('release-header');
 
     const openModal = useModalStore((state) => state.openModal);
     const dataEdit = useModalStore((state) => state.dataEdit);
@@ -192,6 +194,9 @@ export default function Distribution({}: Props) {
                     }}
                 >
                     <DistributionTable
+                        sticky={{
+                            offsetHeader: headerHeight,
+                        }}
                         options={false}
                         dataSource={releaseDsp?.items}
                         scroll={{ x: 'max-content' }}

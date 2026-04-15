@@ -152,6 +152,21 @@ export default function ArtistFormModal({
             payloadValues.picture = defaultImage;
         }
 
+        // Auto-set channel name = DSP name before sending to backend
+        if (payloadValues.artistProfiles?.length && dspData?.items?.length) {
+            payloadValues.artistProfiles = payloadValues.artistProfiles.map(
+                (profile: any) => {
+                    const matched = dspData.items.find(
+                        (dsp) => dsp.id === profile.dspId
+                    );
+                    return {
+                        ...profile,
+                        name: matched?.name || profile.name || '',
+                    };
+                }
+            );
+        }
+
         return isUpdateForm
             ? handleUpdateArtist(payloadValues)
             : handleCreateArtist(payloadValues);

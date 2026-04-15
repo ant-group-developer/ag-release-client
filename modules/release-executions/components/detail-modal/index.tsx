@@ -24,7 +24,7 @@ export default function ReleaseExecutionDetailModal({ ...props }: Props) {
     const isHasExecutionDsps = !!releaseExecutionDetail?.executionDsps;
     const getExecutionStatusLabel = (status?: RELEASE_EXECUTION_STATUS) => {
         if (!status) return;
-        return messages(`releaseExecution.statusOptions.${status}`);
+        return messages(`releaseExecution.statusOptionsV2.${status}`);
     };
 
     const title = (

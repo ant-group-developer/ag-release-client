@@ -6,7 +6,7 @@ import {
     ReleaseDspData,
     ReleaseDspDataFilter,
 } from '@/modules/release-dsp/types';
-import ReleaseStatusTag from '@/modules/releases/components/tag/release-status-tag';
+import ReleaseDspStatusTag from '@/modules/release-dsp/components/release-dsp-status-tag';
 import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
 import { ProColumns } from '@ant-design/pro-components';
 import { Avatar } from 'antd';
@@ -109,7 +109,7 @@ export default function DistributionTable({
             align: 'left',
             width: 250,
             render: (value, record) => (
-                <ReleaseStatusTag status={record?.status} />
+                <ReleaseDspStatusTag status={record?.status} />
             ),
         },
         {

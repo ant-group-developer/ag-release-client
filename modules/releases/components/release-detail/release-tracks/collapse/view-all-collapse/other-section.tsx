@@ -2,11 +2,11 @@
 
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import CountrySelect from '@/components/ui/select/country-select';
-import SensitiveContentSelect from '@/components/ui/select/isSensitiveContent-select';
 import OriginalTypeSelect from '@/components/ui/select/original-type-select';
 import TrackTypesSelect from '@/components/ui/select/track-types-select';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
+import SensitiveContentSelect from '@/modules/track-sensitive/components/select/isSensitiveContent-select';
 import { TrackData } from '@/modules/tracks/types';
 import { ConfigProvider, DatePicker, Form, Input, Radio } from 'antd';
 import TextArea from 'antd/es/input/TextArea';

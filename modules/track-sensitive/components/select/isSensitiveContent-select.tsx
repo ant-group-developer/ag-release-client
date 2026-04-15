@@ -15,7 +15,7 @@ enum SENSITIVE_CONTENT_CODE {
     PARENTAL_ADVISORY = 'ParentalAdvisory',
 }
 
-export const getIntlSensitiveContent = (value: string, fallBack?: string) => {
+export const getIntlSensitiveContent = (value: string, fallBack: string) => {
     switch (value) {
         case SENSITIVE_CONTENT_CODE.EXPLICIT_CONTENT_EDITED:
             return 'trackSensitive.explicitContentEdited';
