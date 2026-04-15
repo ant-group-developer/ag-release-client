@@ -48,10 +48,10 @@ export function useTrackUpload() {
     // ─── Step 1: Validate file
 
     const validateFile = (fileOriginal: any, metadata: any): boolean => {
-        if (fileOriginal.name.length > 80) {
+        if (fileOriginal.name.length > 500) {
             showNotification(
                 'error',
-                messages('track.validation.trackFileName', { number: 80 })
+                messages('track.validation.trackFileName', { number: 500 })
             );
             return false;
         }

@@ -909,6 +909,17 @@
         }
     },
 
+    "releaseDsp": {
+        "status": {
+            "draft": "Nháp",
+            "processing": "Đang xử lý",
+            "issues": "Có vấn đề",
+            "never_distributed": "Chưa từng phân phối",
+            "distributed": "Đã phân phối",
+            "taken_down": "Đã gỡ xuống"
+        }
+    },
+
     "releaseArtist": {
         "label": "Nghệ sĩ phát hành",
         "message": {
