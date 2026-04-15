@@ -911,6 +911,17 @@
         }
     },
 
+    "releaseDsp": {
+        "status": {
+            "draft": "Draft",
+            "processing": "Processing",
+            "issues": "Issues",
+            "never_distributed": "Never distributed",
+            "distributed": "Distributed",
+            "taken_down": "Taken down"
+        }
+    },
+
     "releaseArtist": {
         "label": "Release artists",
         "message": {
@@ -1100,10 +1111,10 @@
 
     "trackSensitive": {
         "label": "Sensitive Content",
-        "explicitContentEdited": "Explicit content (edited)",
-        "notExplicit": "Not explicit",
-        "noAdviceAvailable": "No advice available",
-        "parentalAdvisory": "Parental advisory",
+        "explicitContentEdited": "Explicit Content (edited)",
+        "notExplicit": "Not Explicit",
+        "noAdviceAvailable": "No Advice Available",
+        "parentalAdvisory": "Parental Advisory",
         "name": "Name sensitive content",
         "message": {
             "success": {

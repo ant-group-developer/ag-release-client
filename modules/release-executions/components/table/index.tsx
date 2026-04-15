@@ -62,7 +62,11 @@ export default function ReleaseExecutionTable({ ...props }: Props) {
             width: 120,
             fixed: 'left',
             ellipsis: true,
-            render: (_, record) => record?.release?.upc || '-',
+            render: (_, record) => (
+                <Typography.Text copyable>
+                    {record?.release?.upc || '-'}
+                </Typography.Text>
+            ),
         },
         {
             title: messages('releaseExecution.columns.releaseName'),
@@ -70,8 +74,15 @@ export default function ReleaseExecutionTable({ ...props }: Props) {
             key: 'releaseId',
             width: 200,
             fixed: 'left',
-            ellipsis: true,
-            render: (_, record) => record?.release?.title || '-',
+            render: (_, record) => (
+                <Typography.Text
+                    copyable
+                    ellipsis={{ tooltip: record?.release?.title }}
+                    style={{ maxWidth: '100%' }}
+                >
+                    {record?.release?.title || '-'}
+                </Typography.Text>
+            ),
         },
         // {
         //     title: 'Type',
