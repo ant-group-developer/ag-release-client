@@ -130,7 +130,7 @@ export default function ReleasesHeaderV2({
                     <ArtistSelect
                         showCreate={false}
                         allowClear
-                        dropdownMatchSelectWidth={false}
+                        popupMatchSelectWidth={false}
                         placeholder={messages('placeholder.filterBy', {
                             value: messages('artist.label').toLowerCase(),
                         })}

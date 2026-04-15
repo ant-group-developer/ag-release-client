@@ -213,7 +213,7 @@ export default function TrackDetailModal({ tracks, ...props }: Props) {
             }}
             className="h-[80vh]"
         >
-            <div className="flex gap-4 overflow-x-hidden">
+            <div className="flex gap-2 overflow-x-hidden">
                 {/* Track list sidebar */}
                 {tracks && tracks.length > 0 && (
                     <div
@@ -269,7 +269,7 @@ export default function TrackDetailModal({ tracks, ...props }: Props) {
                         variant={isReadMode ? 'underlined' : 'outlined'}
                     >
                         <Tabs
-                            className="rounded !p-4 pt-1"
+                            className="rounded !p-4 !pt-0"
                             style={{
                                 backgroundColor: token.colorBgContainer,
                             }}

@@ -165,7 +165,7 @@ export default function ShowColumnOptionDropdown({
             open={open}
             trigger={['click']}
             placement="bottomRight"
-            dropdownRender={() => {
+            popupRender={() => {
                 const countSelected = tempVisibleColumns.filter((col) =>
                     toggleableColumns.some((item) => item.key === col)
                 ).length;

@@ -98,7 +98,7 @@ export default function RevenueHeaderV2({
                     <ArtistSelect
                         showCreate={false}
                         allowClear
-                        dropdownMatchSelectWidth={false}
+                        popupMatchSelectWidth={false}
                         placeholder={messages('placeholder.selectArtist')}
                         mode="multiple"
                         maxTagCount={'responsive'}

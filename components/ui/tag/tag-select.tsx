@@ -54,7 +54,7 @@ export default function TagSelect({
             onChange={onChange}
             // loading={isFetching}
             {...props}
-            dropdownRender={(menu) => (
+            popupRender={(menu) => (
                 <>
                     {menu}
                     <Divider style={{ margin: '8px 0' }} />
