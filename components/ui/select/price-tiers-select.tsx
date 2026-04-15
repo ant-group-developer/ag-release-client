@@ -19,7 +19,7 @@ export default function PriceTiersSelect({
     const { priceTiersData } = useGetListPriceTiers({
         pageSize: PAGE_SIZE_EXTRA_LARGE,
         orderBy: ORDER.ASC,
-        fieldOrder: 'order',
+        fieldOrder: 'priceTier.code',
         ...params,
     });
 
