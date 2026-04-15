@@ -65,45 +65,45 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
                 </Link>
             ),
         },
-        {
-            key: TENANT_TABS.USER,
-            label: (
-                <Link href={getTenantDetailRoute(tenantId, TENANT_TABS.USER)}>
-                    {messages('common.users')}
-                </Link>
-            ),
-        },
-        {
-            key: TENANT_TABS.RELEASE,
-            label: (
-                <Link
-                    href={getTenantDetailRoute(tenantId, TENANT_TABS.RELEASE)}
-                >
-                    {messages('release.releases')}
-                </Link>
-            ),
-        },
-        {
-            key: TENANT_TABS.TRACK,
-            label: (
-                <Link href={getTenantDetailRoute(tenantId, TENANT_TABS.TRACK)}>
-                    {messages('common.tracks')}
-                </Link>
-            ),
-        },
-        {
-            key: TENANT_TABS.INTEGRATION,
-            label: (
-                <Link
-                    href={getTenantDetailRoute(
-                        tenantId,
-                        TENANT_TABS.INTEGRATION
-                    )}
-                >
-                    {messages('integration.label')}
-                </Link>
-            ),
-        },
+        // {
+        //     key: TENANT_TABS.USER,
+        //     label: (
+        //         <Link href={getTenantDetailRoute(tenantId, TENANT_TABS.USER)}>
+        //             {messages('common.users')}
+        //         </Link>
+        //     ),
+        // },
+        // {
+        //     key: TENANT_TABS.RELEASE,
+        //     label: (
+        //         <Link
+        //             href={getTenantDetailRoute(tenantId, TENANT_TABS.RELEASE)}
+        //         >
+        //             {messages('release.releases')}
+        //         </Link>
+        //     ),
+        // },
+        // {
+        //     key: TENANT_TABS.TRACK,
+        //     label: (
+        //         <Link href={getTenantDetailRoute(tenantId, TENANT_TABS.TRACK)}>
+        //             {messages('common.tracks')}
+        //         </Link>
+        //     ),
+        // },
+        // {
+        //     key: TENANT_TABS.INTEGRATION,
+        //     label: (
+        //         <Link
+        //             href={getTenantDetailRoute(
+        //                 tenantId,
+        //                 TENANT_TABS.INTEGRATION
+        //             )}
+        //         >
+        //             {messages('integration.label')}
+        //         </Link>
+        //     ),
+        // },
     ];
 
     if (error) {
