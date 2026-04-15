@@ -13,9 +13,11 @@ import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
 import { TrackData } from '@/modules/releases/types';
+import { trackQueryKeys } from '@/modules/tracks/constants/query-keys';
 import { TRACK_TABS } from '@/modules/tracks/enums';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
 import { useUpdateTrackPolicy } from '@/modules/tracks/hooks/use-update-track-policy';
+import { useQueryClient } from '@tanstack/react-query';
 import { Table, TableColumnsType, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
@@ -34,6 +36,7 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
     const { updateTrackPolicy } = useUpdateTrackPolicy();
     const { updateReleaseDraft } = useUpdateReleaseDraft();
     const { dspData } = useGetListEnablePolicyDsp();
+    const queryClient = useQueryClient();
     const action = useReleaseActionStore((s) => s.action);
     const formValues = useReleaseFormStore((state) => state.formValues);
 
@@ -96,7 +99,7 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
                 return (
                     <PriceTiersSelect
                         disabled={!isCanEdit}
-                        defaultValue={record?.priceTier?.id}
+                        value={record?.priceTier?.id}
                         className="w-full"
                         variant="borderless"
                         params={{
@@ -204,6 +207,12 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
                                     id: releaseId as string,
                                     payload: {
                                         priceTierId: value,
+                                    },
+                                    onSuccess: () => {
+                                        queryClient.invalidateQueries({
+                                            queryKey:
+                                                trackQueryKeys.listsTracksPolicies(),
+                                        });
                                     },
                                 })
                             }

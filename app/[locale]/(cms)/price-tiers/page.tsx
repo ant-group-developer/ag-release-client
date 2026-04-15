@@ -2,7 +2,11 @@
 import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
-import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import {
+    PAGE_SIZE,
+    PAGE_SIZE_EXTRA_LARGE,
+    PAGE_SIZE_OPTIONS,
+} from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
@@ -38,9 +42,9 @@ export default function PriceTiers({}: Props) {
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
         useFilter<PriceTiersDataFilter>({
             page: 1,
-            pageSize: PAGE_SIZE,
+            pageSize: PAGE_SIZE_EXTRA_LARGE,
             orderBy: ORDER.ASC,
-            fieldOrder: 'order',
+            fieldOrder: 'priceTier.code',
         });
     const { priceTiersData, dataUpdatedAt, refetch, isLoading } =
         useGetListPriceTiers(dataFilter);
