@@ -28,6 +28,7 @@ const releaseSchedulingSchema = (messages: any) =>
     releaseSchema(messages).pick({
         releaseDate: true,
         releaseOriginalDate: true,
+        releaseEndDate: true,
         releaseTime: true,
         releaseTimezoneId: true,
         releaseTerritory: true,
@@ -58,6 +59,7 @@ export default function ReleaseSchedulingForm({}: Props) {
         defaultValues: {
             releaseDate: formValues?.releaseDate,
             releaseOriginalDate: formValues?.releaseOriginalDate,
+            releaseEndDate: formValues?.releaseEndDate,
             releaseTime: formValues?.releaseTime,
             releaseTimezoneId: formValues?.releaseTimezoneId,
             releaseTerritory: {
@@ -113,6 +115,7 @@ export default function ReleaseSchedulingForm({}: Props) {
         const initialFormValue: ReleaseSchedulingSchema = {
             releaseDate: formValues?.releaseDate || '',
             releaseOriginalDate: formValues?.releaseOriginalDate || '',
+            releaseEndDate: formValues?.releaseEndDate || null,
             releaseTime: formValues?.releaseTime || '',
             releaseTimezoneId: formValues?.releaseTimezoneId || null,
             releaseTerritory: {
@@ -247,6 +250,50 @@ export default function ReleaseSchedulingForm({}: Props) {
                                 }}
                             />
                         </AppFormItem>
+
+                        {/* <div className="col-span-2">
+                            <AppFormItem
+                                name="releaseEndDate"
+                                label={messages('release.releaseEndDate')}
+                                help={errors.releaseEndDate?.message}
+                                validateStatus={
+                                    errors.releaseEndDate ? 'error' : ''
+                                }
+                                className="!w-3/6 !pr-6"
+                            >
+                                <Controller
+                                    control={control}
+                                    name="releaseEndDate"
+                                    render={({ field }) => {
+                                        return (
+                                            <DatePicker
+                                                id="releaseEndDate"
+                                                className="w-full"
+                                                format={DATE_FORMAT.DATE_ONLY}
+                                                value={
+                                                    field.value
+                                                        ? dayjs(field.value)
+                                                        : null
+                                                }
+                                                onChange={(date) => {
+                                                    field.onChange(
+                                                        date
+                                                            ? date.toISOString()
+                                                            : null
+                                                    );
+                                                    debouncedUpdate({
+                                                        releaseEndDate: date
+                                                            ? date.toISOString()
+                                                            : null,
+                                                    });
+                                                }}
+                                                disabled={isReadMode}
+                                            />
+                                        );
+                                    }}
+                                />
+                            </AppFormItem>
+                        </div> */}
 
                         <div className="space-y-2">
                             <AppFormItem

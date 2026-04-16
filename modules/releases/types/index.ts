@@ -51,6 +51,7 @@ export interface ReleasesData extends CommonAttribute {
     releaseLanguage?: ReleaseLanguage;
     releaseDate: string;
     releaseOriginalDate: string;
+    releaseEndDate?: string | null;
     releaseTime: string;
     releaseTimezoneId: string | null;
     releaseTerritory: ReleaseTerritory;

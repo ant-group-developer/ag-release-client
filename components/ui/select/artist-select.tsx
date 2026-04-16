@@ -146,7 +146,7 @@ export default function ArtistSelect({
                 options={options}
                 optionRender={optionRender}
                 labelRender={labelRender}
-                dropdownRender={(menu) => {
+                popupRender={(menu) => {
                     return (
                         <div>
                             {menu}

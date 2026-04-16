@@ -112,7 +112,7 @@ export default function DistributionHeaderV2({
                     <ArtistSelect
                         showCreate={false}
                         allowClear
-                        dropdownMatchSelectWidth={false}
+                        popupMatchSelectWidth={false}
                         placeholder={messages('placeholder.filterBy', {
                             value: messages('artist.artists').toLowerCase(),
                         })}
