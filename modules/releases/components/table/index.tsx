@@ -1,6 +1,7 @@
 import ActionButton from '@/components/ui/button/action-button';
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { SIZE_ICON_SMALL } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
 import {
     convertSecondsToHoursMinutes,
@@ -17,9 +18,11 @@ import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
+import { useTakedownRelease } from '@/modules/releases/hooks/use-takedown-release';
 import { ProColumns } from '@ant-design/pro-components';
-import { Tag, theme } from 'antd';
+import { Modal, Tag, theme } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
+import { CircleX } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import nProgress from 'nprogress';
 import {
@@ -52,6 +55,7 @@ export default function ReleasesTable({
     const { token } = theme.useToken();
     const { isSystemTenant } = useAuth();
     const setAction = useReleaseActionStore((state) => state.setAction);
+    const { takedownRelease } = useTakedownRelease();
 
     const column: ProColumns<ReleasesData>[] = [
         {
@@ -283,6 +287,44 @@ export default function ReleasesTable({
                                     )
                                 );
                             }}
+                            extraItems={[
+                                {
+                                    key: 'take-down',
+                                    label: (
+                                        <div className="flex items-center gap-2">
+                                            <CircleX size={SIZE_ICON_SMALL} />
+                                            {messages('release.takeDown')}
+                                        </div>
+                                    ),
+                                    show:
+                                        status === RELEASES_STATUS.DISTRIBUTED,
+                                    danger: true,
+                                    onClick: () => {
+                                        Modal.confirm({
+                                            title: messages(
+                                                'release.takeDownConfirmTitle'
+                                            ),
+                                            content: messages.rich(
+                                                'release.takeDownConfirmContent',
+                                                {
+                                                    title: record?.title,
+                                                    b: (chuck) => (
+                                                        <strong>{chuck}</strong>
+                                                    ),
+                                                }
+                                            ),
+                                            okText: messages('common.yes'),
+                                            cancelText:
+                                                messages('common.cancel'),
+                                            onOk: () => {
+                                                takedownRelease({
+                                                    id: record?.id,
+                                                });
+                                            },
+                                        });
+                                    },
+                                },
+                            ]}
                         />
                     </div>
                 );
