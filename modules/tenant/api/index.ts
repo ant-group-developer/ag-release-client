@@ -6,8 +6,10 @@ import {
     TenantData,
     TenantDetail,
     TenantDspData,
+    TenantRoleData,
     UpdateTenantDspPayload,
     UpdateTenantPayload,
+    UpdateTenantRolesPayload,
 } from '../types/data';
 
 export const tenantApi = {
@@ -57,5 +59,15 @@ export const tenantApi = {
 
     updateDsp(payload: UpdateTenantDspPayload) {
         return axiosInstance.post('tenants/dsps', payload);
+    },
+
+    getRoles(tenantId: string) {
+        return axiosInstance.get<DetailResponse<TenantRoleData[]>>(
+            `tenants/roles/${tenantId}`
+        );
+    },
+
+    updateRoles(payload: UpdateTenantRolesPayload) {
+        return axiosInstance.post('tenants/roles', payload);
     },
 };

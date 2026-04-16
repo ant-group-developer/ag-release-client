@@ -1,5 +1,6 @@
 import { ORDER } from '@/enums/common';
 import { DspData } from '@/modules/dsp/types';
+import { RolesData } from '@/modules/roles/types';
 import { UserData } from '@/modules/user/types/data';
 import {
     CommonAttributeCreator,
@@ -107,4 +108,20 @@ export interface TenantDspData {
     isActive: boolean;
     tenantId: TenantData['id'];
     dsp: Pick<DspData, 'id' | 'name'>;
+}
+
+export interface TenantRoleData {
+    id: string;
+    isActive: boolean;
+    tenantId: TenantData['id'];
+    role: Pick<RolesData, 'id' | 'name' | 'code' | 'color' | 'note'>;
+}
+
+export interface UpdateTenantRolesPayload {
+    tenantId: TenantData['id'];
+    data: { roleId: string; isActive: boolean }[];
+}
+
+export interface UpdateTenantRoles extends CommonFunction {
+    payload: UpdateTenantRolesPayload;
 }

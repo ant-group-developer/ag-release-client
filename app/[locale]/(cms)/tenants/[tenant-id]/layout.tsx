@@ -5,6 +5,7 @@ import { getAvatarPlaceholder } from '@/helpers/common';
 import { useLoadingStatus } from '@/hooks/use-loading-status';
 import { Link, usePathname } from '@/i18n/routing';
 import AppError from '@/modules/auth/components/error';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { tenantQueryKeys } from '@/modules/tenant/constants';
 import { TENANT_TABS } from '@/modules/tenant/enums';
 import { useTenantDetail } from '@/modules/tenant/hooks/use-get-tenant';
@@ -34,6 +35,8 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
     const pathname = usePathname();
     const tabKey = pathname.split('/').pop();
 
+    const { isAdmin } = useAuth();
+
     const value = useParams();
     const tenantId = value['tenant-id'] as string;
     const { dataTenant, error } = useTenantDetail(tenantId);
@@ -62,6 +65,18 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
                     className=""
                 >
                     {messages('common.coreInfo')}
+                </Link>
+            ),
+        },
+        {
+            key: TENANT_TABS.ROLES,
+            disabled: !isAdmin,
+            label: (
+                <Link
+                    href={getTenantDetailRoute(tenantId, TENANT_TABS.ROLES)}
+                    className=""
+                >
+                    {messages('roles.label')}
                 </Link>
             ),
         },
