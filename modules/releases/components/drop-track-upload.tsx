@@ -24,7 +24,7 @@ export default function DropUploadTracks({ ...props }: Props) {
                         }
                         prevLength.current = fileList.length;
                     }}
-                    maxCount={50}
+                    maxCount={200}
                 />
             )}
 
