@@ -1,5 +1,5 @@
 import { useApiNotify } from '@/hooks/use-api-notify';
-import { releasesQueryKeys } from '@/modules/releases/constants/query-keys';
+import { trackQueryKeys } from '@/modules/tracks/constants/query-keys';
 import { CreateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { trackContributorApi } from '../apis';
@@ -12,14 +12,18 @@ export const useBulkCreateTrackContributor = () => {
 
     const onSuccess = (
         data: any,
-        { onSuccess }: CreateVariables<BulkCreateTrackContributorPayload>
+        {
+            onSuccess,
+            payload,
+        }: CreateVariables<BulkCreateTrackContributorPayload>
     ) => {
         queryClient.invalidateQueries({
             queryKey: trackContributorQueryKeys.lists(),
         });
         queryClient.invalidateQueries({
-            queryKey: releasesQueryKeys.details(),
+            queryKey: trackQueryKeys.detail(payload.items[0].trackId),
         });
+
         onSuccess?.(data?.data?.data);
     };
 

@@ -96,10 +96,10 @@ export default function LegalNoticesSectionV2({
                         render={({ field }) => (
                             <Input
                                 id="cLineOwner"
-                                // {...field}
+                                {...field}
                                 value={field.value ?? ''}
                                 disabled={isCreateReleasePage || isReadMode}
-                                onChange={(e) => {
+                                onBlur={(e) => {
                                     const value = e.target.value || null;
                                     field.onChange(value);
                                     debouncedUpdate(
@@ -175,11 +175,11 @@ export default function LegalNoticesSectionV2({
                         name="pLineOwner"
                         render={({ field }) => (
                             <Input
-                                // {...field}
+                                {...field}
                                 id="pLineOwner"
                                 value={field.value ?? ''}
                                 disabled={isCreateReleasePage || isReadMode}
-                                onChange={(e) => {
+                                onBlur={(e) => {
                                     const newOwner = e.target.value || null;
                                     field.onChange(newOwner);
                                     debouncedUpdate(
@@ -187,15 +187,7 @@ export default function LegalNoticesSectionV2({
                                         'pLineOwner'
                                     );
                                 }}
-                                // onBlur={(e) => {
-                                //     const newOwner = e.target.value;
-                                //     debouncedUpdate(
-                                //         { pLineOwner: newOwner },
-                                //         'pLineOwner'
-                                //     );
-                                //     field.onChange(newOwner);
-                                // }}
-                                // status={errors.pLineOwner ? 'error' : undefined}
+                                status={errors.pLineOwner ? 'error' : undefined}
                             />
                         )}
                     />

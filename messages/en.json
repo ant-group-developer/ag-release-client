@@ -1923,7 +1923,7 @@
         "aggregators": "Aggregators",
         "list": "List aggregator",
         "systemDefault": "System default",
-        "createsDoneFolder": "Create done folder",
+        "createsDoneFolder": "Create folder .done ",
         "ddexName": "DDex name",
         "deliveryEmail": "Delivery email",
         "deliveryEmailSubject": "Delivery email subject",
