@@ -40,6 +40,10 @@
         font-family: var(--font-family-inter);
         scroll-behavior: smooth;
     }
+
+    html.dark {
+        color-scheme: dark;
+    }
 }
 
 /* Cấu hình rõ font-weight cho Inter */

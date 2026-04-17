@@ -84,13 +84,14 @@ export default function ReleaseExecutionTable({ ...props }: Props) {
                 </Typography.Text>
             ),
         },
-        // {
-        //     title: 'Type',
-        //     dataIndex: 'type',
-        //     key: 'type',
-        //     width: 160,
-        //     render: (value) => value || '-',
-        // },
+        {
+            title: 'Type',
+            dataIndex: 'type',
+            key: 'type',
+            width: 100,
+            render: (value, record) =>
+                messages(`releaseExecution.typeOptions.${record?.type}`) || '-',
+        },
         {
             title: messages('releaseExecution.columns.status'),
             dataIndex: 'status',

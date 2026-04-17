@@ -792,6 +792,9 @@
     },
 
     "release": {
+        "takeDown": "Take down",
+        "takeDownConfirmTitle": "Take down release?",
+        "takeDownConfirmContent": "Are you sure you want to take down the release <b>{title}</b> ?",
         "exportCiTemplate": "Export CI template",
         "audioLanguage": "Audio language",
         "metadataLanguageCountry": "Metadata language country",
@@ -814,6 +817,7 @@
         "type": "Release type",
         "releaseDate": "Release date",
         "releaseOriginalDate": "Original release date",
+        "releaseEndDate": "Release take down date",
         "releaseTime": "Release time",
         "duration": "Duration",
         "trackCount": "Track count",

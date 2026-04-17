@@ -166,4 +166,10 @@ export const releasesApi = {
             params: { code },
         });
     },
+
+    takedownRelease: (id: ReleasesData['id']) => {
+        return axiosInstance.post<DetailResponse<ReleasesData>>(
+            `/releases/${id}/takedown`
+        );
+    },
 };

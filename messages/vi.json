@@ -787,6 +787,9 @@
     },
 
     "release": {
+        "takeDown": "Gỡ phát hành",
+        "takeDownConfirmTitle": "Gỡ phát hành?",
+        "takeDownConfirmContent": "Bạn có chắc chắn muốn gỡ phát hành <b>{title}</b> không?",
         "exportCiTemplate": "Xuất mẫu CI",
         "audioLanguage": "Ngôn ngữ âm thanh",
         "metadataLanguageCountry": "Ngôn ngữ metadata quốc gia",
@@ -809,6 +812,7 @@
         "type": "Loại phát hành",
         "releaseDate": "Ngày phát hành",
         "releaseOriginalDate": "Ngày phát hành gốc",
+        "releaseEndDate": "Ngày gỡ phát hành",
         "releaseTime": "Thời gian phát hành",
         "duration": "Thời lượng",
         "trackCount": "Số bài hát",
