@@ -5,8 +5,13 @@ import ArtistSelect from '@/components/ui/select/artist-select';
 import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import { toastPromise } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
-import { useCreateReleaseContributor } from '@/modules/release-contributor/hooks/use-create-release-contributor';
-import { CreateReleaseContributorPayload } from '@/modules/release-contributor/types/payload';
+import useModalStore from '@/hooks/use-modal';
+import { ArtistData } from '@/modules/artist/types';
+import { useBulkCreateReleaseContributor } from '@/modules/release-contributor/hooks/use-bulk-create-release-contributor';
+import {
+    BulkCreateReleaseContributorPayload,
+    CreateReleaseContributorPayload,
+} from '@/modules/release-contributor/types/payload';
 import { CreateVariables } from '@/types/api';
 import { Form, Switch } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -25,33 +30,48 @@ export default function AddContributorForm({
     const { active, deActive, isActive } = useActive();
     const [form] = Form.useForm();
     const releaseValues = useReleaseFormStore((state) => state.formValues);
+    const closeModal = useModalStore((state) => state.closeModal);
 
     // apis
-    const { createReleaseContributor } = useCreateReleaseContributor();
+    const { bulkCreateReleaseContributor } = useBulkCreateReleaseContributor();
 
     // func
-    const handleSubmit = async (values: any) => {
+    const handleSubmit = async (values: {
+        artistId: string;
+        roleId: string[];
+        addContributorToTracks: boolean;
+    }) => {
         active();
-        const variables: CreateVariables<CreateReleaseContributorPayload> = {
-            payload: {
-                artistId: values.artistId,
-                artistRoleId: values.roleId,
-                releaseId: releaseValues.id as string,
-                addContributorToTracks: !!values?.addContributorToTracks,
-            },
-            onSuccess: () => {
-                form.resetFields();
-                deActive();
-            },
-            onError(e) {
-                deActive();
-            },
-        };
+        const roleIds = values.roleId;
+        const items: CreateReleaseContributorPayload[] =
+            roleIds?.map((id) => {
+                return {
+                    artistId: values.artistId,
+                    artistRoleId: id,
+                    releaseId: releaseValues?.id as string,
+                    addContributorToTracks: values.addContributorToTracks,
+                };
+            }) ?? [];
+        const variables: CreateVariables<BulkCreateReleaseContributorPayload> =
+            {
+                payload: { items },
+                onSuccess: () => {
+                    form.resetFields();
+                    deActive();
+                },
+                onError(e) {
+                    deActive();
+                },
+            };
         props.onCancel?.({} as any);
-        toastPromise(createReleaseContributor(variables), messages, {
+        toastPromise(bulkCreateReleaseContributor(variables), messages, {
             success: messages('common.success'),
         });
     };
+    const handleCreateArtistSuccess = (data: ArtistData) => {
+        form.setFieldValue('artistId', data.id);
+    };
+
     return (
         <AppModal
             {...props}
@@ -66,6 +86,9 @@ export default function AddContributorForm({
                 showSubmit={false}
                 disabled={disabled || isActive}
                 variant={disabled ? 'underlined' : 'outlined'}
+                initialValues={{
+                    addContributorToTracks: true,
+                }}
             >
                 <AppFormItem
                     className="col-span-2"
@@ -83,7 +106,7 @@ export default function AddContributorForm({
                         showSearch
                         placeholder={messages('artist.select')}
                         allowClear
-                        isAddReleaseContributor
+                        onCreateSuccess={handleCreateArtistSuccess}
                     />
                 </AppFormItem>
 
@@ -103,6 +126,7 @@ export default function AddContributorForm({
                         placeholder={messages('common.role')}
                         placement="topLeft"
                         allowClear
+                        mode="multiple"
                     />
                 </AppFormItem>
 

@@ -2,7 +2,11 @@ import { cn } from '@/helpers/common';
 import { useQueryParams } from '@/hooks/use-query-params';
 import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
 import { useGetArtistSimpleList } from '@/modules/artist/hooks/use-get-artist-simple-list';
-import { ArtistDataSimple, ArtistProfileData } from '@/modules/artist/types';
+import {
+    ArtistData,
+    ArtistDataSimple,
+    ArtistProfileData,
+} from '@/modules/artist/types';
 import { Avatar, Button, Empty, Select, SelectProps, Spin } from 'antd';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
@@ -14,8 +18,8 @@ type Props = SelectProps & {
     disabledArtistIds?: string[];
     showCreate?: boolean;
     artistId?: string;
-    isAddReleaseArtist?: boolean;
-    isAddReleaseContributor?: boolean;
+    onCreateSuccess?: (data: ArtistData) => void;
+    onUpdateSuccess?: (data: ArtistData) => void;
 };
 
 export default function ArtistSelect({
@@ -23,8 +27,8 @@ export default function ArtistSelect({
     disabledArtistIds,
     showCreate = true,
     artistId,
-    isAddReleaseArtist = false,
-    isAddReleaseContributor = false,
+    onCreateSuccess,
+    onUpdateSuccess,
     ...props
 }: Props) {
     const [searchKeyword, setSearchKeyword] = useState('');
@@ -32,7 +36,6 @@ export default function ArtistSelect({
     const messages = useTranslations();
     const queryParams = useQueryParams();
     const artistIdFromParams = queryParams['artistId'];
-    // const { token } = theme.useToken();
 
     const {
         artistsData,
@@ -194,9 +197,10 @@ export default function ArtistSelect({
             <ArtistFormModal
                 open={openCreate}
                 onCancel={() => setOpenCreate(false)}
-                onSuccess={() => setOpenCreate(false)}
-                isAddReleaseArtist={isAddReleaseArtist}
-                // isAddReleaseContributor={isAddReleaseContributor}
+                onCreateSuccess={(data) => {
+                    setOpenCreate(false);
+                    onCreateSuccess?.(data);
+                }}
             />
         </>
     );

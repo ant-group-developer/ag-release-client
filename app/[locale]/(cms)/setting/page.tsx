@@ -8,6 +8,7 @@ import CiTemplateForm from '@/modules/setting/components/forms/ci-template-form'
 import GeneralForm from '@/modules/setting/components/forms/general-form';
 import GeneratorForm from '@/modules/setting/components/forms/generator-form';
 import TelegramForm from '@/modules/setting/components/forms/telegram-form';
+import ResendForm from '@/modules/setting/components/forms/resend-form';
 import WebsiteForm from '@/modules/setting/components/forms/website-form';
 import { settingQueryKeys } from '@/modules/setting/constants/query-keys';
 import { SETTING_TABS } from '@/modules/setting/enums';
@@ -70,6 +71,11 @@ export default function SettingPage({}: Props) {
             key: SETTING_TABS.CI_TEMPLATE,
             label: 'CI Template',
             children: <CiTemplateForm />,
+        },
+        {
+            key: SETTING_TABS.RESEND,
+            label: 'Resend',
+            children: <ResendForm />,
         },
     ];
 

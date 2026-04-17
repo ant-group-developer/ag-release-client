@@ -18,6 +18,7 @@ export interface SettingConfig {
     generator: GeneratorConfig;
     backupDatabase: BackupDatabaseConfig;
     other?: OtherConfig;
+    resend?: ResendConfig;
 }
 
 export interface OtherConfig {
@@ -108,4 +109,9 @@ export interface ACRCloudConfig {
     autoScan: boolean;
     autoScanTime: string;
     releaseStatusAutoScans: RELEASES_STATUS[];
+}
+
+export interface ResendConfig {
+    email: string;
+    apiKey: string;
 }

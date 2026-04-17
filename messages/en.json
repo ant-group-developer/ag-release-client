@@ -553,6 +553,7 @@
         "required": "Please enter your {field}.",
         "stringMin": "{field} must have at least {min} characters.",
         "stringMax": "{field} can have up to {max} characters only.",
+        "mustBeLength": "{field} Must be {number} characters",
         "numberMin": "{field} must be at least {min}.",
         "numberMax": "{field} must not exceed {max}.",
         "invalidType": "{field} must be a valid value.",

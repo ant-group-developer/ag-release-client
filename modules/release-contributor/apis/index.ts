@@ -2,6 +2,7 @@ import axiosInstance from '@/api/axios-auth';
 import { DetailResponse } from '@/types/api';
 import { ReleaseContributor } from '../types';
 import {
+    BulkCreateReleaseContributorPayload,
     CreateReleaseContributorPayload,
     UpdateReleaseContributorPayload,
 } from '../types/payload';
@@ -12,6 +13,10 @@ export const releaseContributorApi = {
             '/release-contributors',
             payload
         );
+    },
+
+    bulkCreate: (payload: BulkCreateReleaseContributorPayload) => {
+        return axiosInstance.post('/release-contributors/bulk', payload);
     },
 
     update: (
