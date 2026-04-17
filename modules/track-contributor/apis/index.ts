@@ -2,6 +2,7 @@ import axiosInstance from '@/api/axios-auth';
 import { DetailResponse } from '@/types/api';
 import { TrackContributorData } from '../types';
 import {
+    BulkCreateTrackContributorPayload,
     CreateTrackContributorPayload,
     UpdateTrackContributorPayload,
 } from '../types/payload';
@@ -12,6 +13,10 @@ export const trackContributorApi = {
             '/track-contributors',
             payload
         );
+    },
+
+    bulkCreate: (payload: BulkCreateTrackContributorPayload) => {
+        return axiosInstance.post('/track-contributors/bulk', payload);
     },
 
     update: (

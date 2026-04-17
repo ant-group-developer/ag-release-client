@@ -7,9 +7,13 @@ import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { toastPromise } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
+import { ArtistData } from '@/modules/artist/types';
 import { TrackData } from '@/modules/releases/types';
-import { useCreateTrackContributor } from '@/modules/track-contributor/hooks/use-create-track-contributor';
-import { CreateTrackContributorPayload } from '@/modules/track-contributor/types/payload';
+import { useBulkCreateTrackContributor } from '@/modules/track-contributor/hooks/use-bulk-create-track-contributor';
+import {
+    BulkCreateTrackContributorPayload,
+    CreateTrackContributorPayload,
+} from '@/modules/track-contributor/types/payload';
 import { CreateVariables } from '@/types/api';
 import { Form } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -31,20 +35,29 @@ export default function AddTrackContributorForm({
     const releaseAction = useReleaseActionStore((s) => s.action);
 
     // apis
-    const { createTrackContributor } = useCreateTrackContributor();
+    const { bulkCreateTrackContributor } = useBulkCreateTrackContributor();
 
     // const
     const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
 
     // func
-    const handleSubmit = async (values: any) => {
+    const handleSubmit = async (values: {
+        artistId: string;
+        roleId: string[];
+    }) => {
         active();
-        const variables: CreateVariables<CreateTrackContributorPayload> = {
-            payload: {
-                artistId: values.artistId,
-                artistRoleId: values.roleId,
-                trackId: trackData?.id as string,
-            },
+        const roleIds = values.roleId;
+        const items: CreateTrackContributorPayload[] =
+            roleIds?.map((id) => {
+                return {
+                    artistId: values.artistId,
+                    artistRoleId: id,
+                    trackId: trackData?.id as string,
+                };
+            }) ?? [];
+            
+        const variables: CreateVariables<BulkCreateTrackContributorPayload> = {
+            payload: { items },
             onSuccess: () => {
                 form.resetFields();
                 deActive();
@@ -52,10 +65,15 @@ export default function AddTrackContributorForm({
             onError: () => deActive(),
         };
         props.onCancel?.({} as any);
-        toastPromise(createTrackContributor(variables), messages, {
+        toastPromise(bulkCreateTrackContributor(variables), messages, {
             success: messages('common.success'),
         });
     };
+
+    const handleCreateArtistSuccess = (data: ArtistData) => {
+        form.setFieldValue('artistId', data.id);
+    };
+
     return (
         <AppModal
             {...props}
@@ -88,7 +106,7 @@ export default function AddTrackContributorForm({
                         placeholder={messages('artist.select')}
                         allowClear
                         disabled={isReadMode || isActive}
-                        showCreate={false}
+                        onCreateSuccess={handleCreateArtistSuccess}
                     />
                 </AppFormItem>
 
@@ -109,6 +127,7 @@ export default function AddTrackContributorForm({
                         placement="topLeft"
                         allowClear
                         disabled={isReadMode || isActive}
+                        mode="multiple"
                     />
                 </AppFormItem>
             </AppForm>
