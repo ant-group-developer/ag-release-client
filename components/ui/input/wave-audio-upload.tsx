@@ -140,7 +140,6 @@ const AudioItem = ({
 
 const WaveAudioUpload = ({
     value,
-    maxCount = 10,
     disabled,
     placeholder,
     multiple = true,
@@ -240,7 +239,7 @@ const WaveAudioUpload = ({
         onChange: onChange,
         onRemove: onRemove,
         accept: props.accept || 'audio/*',
-        maxCount: maxCount,
+        maxCount: props.maxCount,
         disabled: disabled,
         multiple: multiple,
         showUploadList: false,
