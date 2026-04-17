@@ -86,7 +86,7 @@ export default function AddNewTrackModal({ ...props }: Props) {
                     ]}
                 >
                     <WaveAudioUpload
-                        maxCount={50}
+                        maxCount={200}
                         multiple
                         accept="audio/wav"
                         placeholder={
