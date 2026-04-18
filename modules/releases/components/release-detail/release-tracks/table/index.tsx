@@ -5,7 +5,7 @@ import SortableTable, {
     SortableTableProps,
 } from '@/components/ui/table/sortable-table';
 import { SIZE_ICON } from '@/constants/common';
-import { getIndex } from '@/helpers/common';
+import { getIndex, getSortOrder } from '@/helpers/common';
 import { getTrackDetailRoute, RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
@@ -17,7 +17,7 @@ import { TrackArtistData } from '@/modules/track-artist/types';
 import { TRACK_TABS, TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
 import { useUpdateTrackOrder } from '@/modules/tracks/hooks/use-update-track-order';
-import { TrackData } from '@/modules/tracks/types';
+import { TrackData, TrackDataFilter } from '@/modules/tracks/types';
 
 import {
     UpdateTrackOrderPayload,
@@ -41,9 +41,10 @@ type Props = {
         pageSize: number;
         current: number;
     };
+    dataFilter?: TrackDataFilter;
 } & Omit<SortableTableProps<TrackData>, 'columns'>;
 
-export default function ReleaseTracksTable({ ...props }: Props) {
+export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
     // hooks - state
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
@@ -145,6 +146,12 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             align: 'left',
             width: 300,
             ellipsis: true,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter?.orderBy,
+                dataFilter?.fieldOrder,
+                'title'
+            ),
             render: (value, record) => {
                 return (
                     <EditableTitle

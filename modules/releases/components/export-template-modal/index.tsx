@@ -1,6 +1,7 @@
 'use client';
 
 import AppModal from '@/components/ui/modal/normal-modal';
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import useModalStore from '@/hooks/use-modal';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { useExportTemplateCi } from '@/modules/releases/hooks/export-template-ci';
@@ -16,7 +17,7 @@ const ExportTemplateModal = () => {
     const { exportTemplateCi, isPending: isExporting } = useExportTemplateCi();
 
     const { dspData, isFetching: isFetchingDsp } = useGetListDsp({
-        pageSize: 999,
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
         aggregatorCode: 'CI',
     });
 

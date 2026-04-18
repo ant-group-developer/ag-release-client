@@ -62,7 +62,6 @@ export enum RELEASES_STATUS {
     FAILED = 'failed',
     TAKEN_DOWN = 'taken_down',
     SUBMITTED = 'submitted',
-
 }
 
 export enum RELEASES_COLUMNS_DISPLAY {
@@ -88,3 +87,5 @@ export enum RELEASE_TIME_MODE {
     GLOBAL_MIDNIGHT = 'global_midnight',
     SPECIFIC_TIMEZONE = 'specific_timezone',
 }
+
+

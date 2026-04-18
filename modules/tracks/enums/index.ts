@@ -46,3 +46,9 @@ export enum SCAN_COPYRIGHT_STATUS {
     WARNING = 'warning',
     REJECTED = 'rejected',
 }
+
+export enum TRACK_SORT_FIELD {
+    TITLE = 'track.title',
+    ORDER = 'track.order',
+    CREATED_AT = 'track.createdAt',
+}

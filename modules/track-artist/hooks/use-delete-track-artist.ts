@@ -1,3 +1,4 @@
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { useApiNotify } from '@/hooks/use-api-notify';
 import { trackQueryKeys } from '@/modules/tracks/constants/query-keys';
 import { DeleteVariables } from '@/types/api';
@@ -14,7 +15,7 @@ export const useDeleteTrackArtist = () => {
     const onSuccess = (data: any, { onSuccess, trackId }: any) => {
         queryClient.invalidateQueries({
             queryKey: trackQueryKeys.list({
-                pageSize: 999,
+                pageSize: PAGE_SIZE_EXTRA_LARGE,
             }),
         });
         queryClient.invalidateQueries({
