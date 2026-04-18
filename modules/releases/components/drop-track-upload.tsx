@@ -1,6 +1,7 @@
 'use client';
 import DndUpload from '@/components/ui/input/dnd-upload';
 import { useTrackUpload } from '@/modules/releases/hooks/use-track-upload';
+import { MAX_COUNT_UPLOAD_TRACK } from '@/modules/tracks/constants';
 import { Progress, UploadProps } from 'antd';
 import { useRef } from 'react';
 
@@ -24,7 +25,7 @@ export default function DropUploadTracks({ ...props }: Props) {
                         }
                         prevLength.current = fileList.length;
                     }}
-                    maxCount={200}
+                    maxCount={MAX_COUNT_UPLOAD_TRACK}
                 />
             )}
 
