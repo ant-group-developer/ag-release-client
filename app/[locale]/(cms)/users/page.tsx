@@ -8,6 +8,8 @@ import { BOOLEAN_RAW, ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import CreateUserModal from '@/modules/user/components/user-create';
 import UserHeaderV2 from '@/modules/user/components/user-header-v2';
@@ -32,7 +34,7 @@ export default function UserPage({}: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore<UserData>((state) => state.dataEdit);
-    const { isNotSystemTenant } = useAuth();
+    const { isSystemTenant } = useAuth();
     const openModal = useModalStore((state) => state.openModal);
 
     // apis
@@ -70,7 +72,7 @@ export default function UserPage({}: Props) {
                 title={messages('common.users')}
                 extra={
                     <div className="flex items-center gap-2">
-                        {isNotSystemTenant && (
+                        <PermissionGate permission={PERMISSION.USER.INVITE}>
                             <CreateButton
                                 canCreate={true}
                                 text={messages('action.invite.title', {
@@ -82,14 +84,17 @@ export default function UserPage({}: Props) {
                                 ghost
                                 icon={<UserAddOutlined />}
                             />
-                        )}
-                        <CreateButton
-                            canCreate={true}
-                            text={messages('action.create.title', {
-                                label: messages('user.label'),
-                            })}
-                            onClick={() => openModal(TYPE_MODAL_USER.CREATE)}
-                        />
+                        </PermissionGate>
+                        <PermissionGate permission={PERMISSION.USER.CREATE}>
+                            <CreateButton
+                                text={messages('action.create.title', {
+                                    label: messages('user.label'),
+                                })}
+                                onClick={() =>
+                                    openModal(TYPE_MODAL_USER.CREATE)
+                                }
+                            />
+                        </PermissionGate>
                     </div>
                 }
             >

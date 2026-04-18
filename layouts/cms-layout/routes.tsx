@@ -395,7 +395,7 @@ export const adminRoutes: RouteNode[] = [
                 title: 'Users',
                 href: APP_ROUTES.USER,
                 icon: User2,
-                required: OWNER_OR_ADMIN_TENANT_REQ,
+                required: { permission: [PERMISSION.USER.READ] },
             },
             {
                 id: 'tenant',
@@ -404,7 +404,7 @@ export const adminRoutes: RouteNode[] = [
                 title: 'Workspace',
                 href: APP_ROUTES.TENANT,
                 icon: Layers,
-                required: OWNER_OR_ADMIN_TENANT_REQ,
+                required: { permission: [PERMISSION.WORKSPACE.READ] },
             },
             {
                 id: 'aggregator',

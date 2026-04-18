@@ -10,6 +10,7 @@ import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { usePermission } from '@/hooks/use-permission';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 
@@ -80,18 +81,12 @@ export default function Labels({}: Props) {
                     backgroundColor: token.colorBgLayout,
                 }}
                 extra={
-                    <div className="flex items-center gap-2">
-                        {!isSystemTenant &&
-                            hasPermission(PERMISSION.LABEL.CREATE) && (
-                                <CreateButton
-                                    canCreate={true}
-                                    text={messages('label.create')}
-                                    onClick={() =>
-                                        openModal(TYPE_MODAL_LABEL.CREATE)
-                                    }
-                                />
-                            )}
-                    </div>
+                    <PermissionGate permission={PERMISSION.LABEL.CREATE}>
+                        <CreateButton
+                            text={messages('label.create')}
+                            onClick={() => openModal(TYPE_MODAL_LABEL.CREATE)}
+                        />
+                    </PermissionGate>
                 }
             >
                 {/* <LabelsHeader dataFilter={dataFilter} onSearch={onSearch} /> */}

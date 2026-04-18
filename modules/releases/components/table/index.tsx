@@ -15,8 +15,10 @@ import {
 } from '@/helpers/link';
 import { OnChangeFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { usePermission } from '@/hooks/use-permission';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { useTakedownRelease } from '@/modules/releases/hooks/use-takedown-release';
 import { ProColumns } from '@ant-design/pro-components';
@@ -54,6 +56,9 @@ export default function ReleasesTable({
     const openModal = useModalStore((state) => state.openModal);
     const { token } = theme.useToken();
     const { isSystemTenant } = useAuth();
+    const { hasPermission } = usePermission();
+    const canDelete = hasPermission(PERMISSION.RELEASE.DELETE);
+    const canTakedown = hasPermission(PERMISSION.RELEASE.TAKE_DOWN);
     const setAction = useReleaseActionStore((state) => state.setAction);
     const { takedownRelease } = useTakedownRelease();
 
@@ -273,7 +278,9 @@ export default function ReleasesTable({
                     <div onClick={(e) => e.stopPropagation()}>
                         <ActionButton
                             showDetail
-                            showDelete={status === RELEASES_STATUS.DRAFT}
+                            showDelete={
+                                status === RELEASES_STATUS.DRAFT && canDelete
+                            }
                             onShowDelete={() =>
                                 openModal(TYPE_MODAL_RELEASE.DELETE, record)
                             }
@@ -297,7 +304,9 @@ export default function ReleasesTable({
                                         </div>
                                     ),
                                     show:
-                                        status === RELEASES_STATUS.DISTRIBUTED,
+                                        status ===
+                                            RELEASES_STATUS.DISTRIBUTED &&
+                                        canTakedown,
                                     danger: true,
                                     onClick: () => {
                                         Modal.confirm({

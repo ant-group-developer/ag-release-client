@@ -1,12 +1,16 @@
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { formattedDate, getSortOrder } from '@/helpers/common';
+import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
+import { PERMISSION } from '@/modules/auth/constants/permission';
+import ReleaseDspStatusTag from '@/modules/release-dsp/components/release-dsp-status-tag';
 import {
     ReleaseDspData,
     ReleaseDspDataFilter,
 } from '@/modules/release-dsp/types';
-import ReleaseDspStatusTag from '@/modules/release-dsp/components/release-dsp-status-tag';
 import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
 import { ProColumns } from '@ant-design/pro-components';
 import { Avatar } from 'antd';
@@ -29,6 +33,8 @@ export default function DistributionTable({
             : 10;
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
+    const releaseAction = useReleaseActionStore((state) => state.action);
+    const isEditMode = releaseAction === RELEASE_DETAIL_ACTION.EDIT;
 
     const column: ProColumns<ReleaseDspData>[] = [
         {
@@ -117,20 +123,22 @@ export default function DistributionTable({
             align: 'center',
             fixed: 'right',
             width: 100,
-            render: (value, record) => (
-                <DistributionActionButton
-                    showDistribute
-                    showViewXml
-                    // showDelete
-                    onShowDistribute={() => {
-                        openModal(
-                            TYPE_MODAL_RELEASE_DISTRIBUTION.DISTRIBUTION,
-                            record
-                        );
-                    }}
-                    // onShowDelete={() => {}}
-                />
-            ),
+            render: (value, record) => {
+                if (!isEditMode) return;
+                return (
+                    <PermissionGate permission={PERMISSION.RELEASE.UPDATE}>
+                        <DistributionActionButton
+                            showDistribute={isEditMode}
+                            onShowDistribute={() => {
+                                openModal(
+                                    TYPE_MODAL_RELEASE_DISTRIBUTION.DISTRIBUTION,
+                                    record
+                                );
+                            }}
+                        />
+                    </PermissionGate>
+                );
+            },
         },
     ];
 

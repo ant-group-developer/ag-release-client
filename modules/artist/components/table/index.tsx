@@ -14,6 +14,7 @@ import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { ProColumns } from '@ant-design/pro-components';
 import { Avatar, theme, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
+import nProgress from 'nprogress';
 import { ARTIST_DETAIL_TABS, TYPE_MODAL_ARTIST } from '../../enum';
 import { ArtistData, ArtistDataFilter } from '../../types';
 
@@ -221,6 +222,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
                         openModal(TYPE_MODAL_ARTIST.UPDATE, record);
                     }}
                     onShowDetail={() => {
+                        nProgress.start();
                         router.push(
                             getArtistDetailRoute(
                                 record?.id,

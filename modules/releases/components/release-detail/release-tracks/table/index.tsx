@@ -22,6 +22,8 @@ import {
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
 import { useUpdateTrackOrder } from '@/modules/tracks/hooks/use-update-track-order';
 import { TrackData, TrackDataFilter } from '@/modules/tracks/types';
+import { usePermission } from '@/hooks/use-permission';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 
 import {
     UpdateTrackOrderPayload,
@@ -66,6 +68,8 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
 
     // const
     const isReadMode = action !== RELEASE_DETAIL_ACTION.EDIT;
+    const { hasPermission } = usePermission();
+    const canUpdate = hasPermission(PERMISSION.RELEASE.UPDATE);
 
     const handleDragEnd: OnDragEnd<TrackData[]> = (newData) => {
         const payload = newData.map((item, index) => ({
@@ -103,11 +107,15 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
     }, [debouncedUpdate]);
 
     const columns: ColumnType<TrackData>[] = [
-        {
-            key: 'sort',
-            width: 30,
-            align: 'center',
-        },
+        ...(canUpdate && !isReadMode
+            ? [
+                  {
+                      key: 'sort',
+                      width: 30,
+                      align: 'center' as const,
+                  },
+              ]
+            : []),
         {
             title: messages('common.iNo'),
             dataIndex: 'index',

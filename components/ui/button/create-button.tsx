@@ -3,11 +3,11 @@ import { Button, ButtonProps } from 'antd';
 import { useTranslations } from 'next-intl';
 
 type Props = {
-    canCreate: boolean;
+    canCreate?: boolean;
     text?: string;
 } & ButtonProps;
 
-function CreateButton({ text, canCreate, ...props }: Props) {
+function CreateButton({ text, canCreate = true, ...props }: Props) {
     const messages = useTranslations();
     if (!canCreate) return null;
     return (
