@@ -141,7 +141,9 @@ export default function Artists({}: Props) {
                     <ArtistFormModal
                         open
                         onCancel={closeModal}
-                        onSuccess={closeModal}
+                        onCreateSuccess={() => {
+                            closeModal();
+                        }}
                     />
                 )}
 
