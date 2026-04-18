@@ -1,3 +1,4 @@
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { toNonAccentVietnamese } from '@/helpers/string';
 import { Select, SelectProps } from 'antd';
 import { useGetListDsp } from '../../hooks/use-get-list-dsp';
@@ -9,7 +10,7 @@ type Props = SelectProps & {
 
 export default function DspSelect({ fallBack, ...props }: Props) {
     const { dspData } = useGetListDsp({
-        pageSize: 999,
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
     });
 
     const options = dspData?.items?.map((item: DspData) => ({

@@ -5,6 +5,7 @@ import { useFilter } from '@/hooks/use-filter';
 import ReleaseSchedulingForm from '@/modules/releases/components/release-detail/release-scheduling/form';
 import ReleaseSchedulingTable from '@/modules/releases/components/release-detail/release-scheduling/table';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { TRACK_SORT_FIELD } from '@/modules/tracks/enums';
 import { useGetListTracksWithPolicies } from '@/modules/tracks/hooks/use-get-list-tracks-with-policies';
 import { TrackDataFilter } from '@/modules/tracks/types';
 import { ConfigProvider, theme } from 'antd';
@@ -15,7 +16,7 @@ export default function Schedule() {
 
     const { dataFilter, onChangePage } = useFilter<TrackDataFilter>({
         releaseId: formValues?.id as string,
-        fieldOrder: 'order',
+        fieldOrder: TRACK_SORT_FIELD.ORDER,
         pageSize: PAGE_SIZE_EXTRA_LARGE,
     });
 

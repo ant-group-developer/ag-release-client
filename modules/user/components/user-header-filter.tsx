@@ -15,6 +15,7 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import { USER_TYPE } from '../enums';
 import { DataFilterUser } from '../types/data';
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 
 type Props = Pick<
     UseFilterProps<DataFilterUser>,
@@ -37,7 +38,7 @@ export default function UserHeaderFilter({
         {
             fieldOrder: TENANT_ORDER_BY.NAME,
             orderBy: ORDER.ASC,
-            pageSize: 999,
+            pageSize: PAGE_SIZE_EXTRA_LARGE,
         },
         Boolean(dataFilter.tenantIds) || typeFilter === TYPE_FILTER.WORKSPACE
     );
