@@ -20,15 +20,17 @@ export const userApi = {
         });
     },
 
-    getUserRole(id: string) {
+    getUserRole(id: string, tenantId?: string) {
         return axiosInstance.get<DetailResponse<UserRoleData[]>>(
-            `/user-role/${id}/role`
+            `/users/${id}/roles`,
+            { params: { tenantId } }
         );
     },
 
-    getUserPermission(id: string) {
+    getUserPermission(id: string, tenantId?: string) {
         return axiosInstance.get<DetailResponse<UserPermissionData[]>>(
-            `/user-role/${id}/permission`
+            `/users/${id}/permissions`,
+            { params: { tenantId } }
         );
     },
 
@@ -47,8 +49,18 @@ export const userApi = {
         return axiosInstance.post(`/users/invite`, payload);
     },
 
-    updateRole(payload: UpdateUserRolePayload) {
-        return axiosInstance.post(`/user-role`, payload);
+    updateRole(
+        userId: string,
+        payload: { roleIds: string[]; tenantId?: string }
+    ) {
+        return axiosInstance.post(`/users/${userId}/roles`, payload);
+    },
+
+    getAssignableRoles(tenantId?: string) {
+        return axiosInstance.get<DetailResponse<UserRoleData[]>>(
+            `/users/assignable-roles`,
+            { params: { tenantId } }
+        );
     },
 
     update(id: string, payload: UpdateUserPayload) {

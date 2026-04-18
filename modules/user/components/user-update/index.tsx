@@ -10,6 +10,7 @@ import UpdateInfo from './update-info';
 import UpdatePassword from './update-password';
 import UpdatePermission from './update-permission';
 import UpdateTenant from './update-tenant';
+import ViewPermission from './view-permission';
 
 type Props = {} & AppModalProps;
 
@@ -18,6 +19,7 @@ enum TAB_KEY {
     UPDATE_PASSWORD = 'update-password',
     UPDATE_TENANT = 'update-tenant',
     UPDATE_PERMISSION = 'update-permission',
+    VIEW_PERMISSION = 'view-permission',
 }
 
 function UpdateUserModal({ ...props }: Props) {
@@ -39,6 +41,16 @@ function UpdateUserModal({ ...props }: Props) {
             label: messages('user.changePassword'),
             children: <UpdatePassword dataEdit={dataEdit!} />,
         },
+        {
+            key: TAB_KEY.UPDATE_PERMISSION,
+            label: messages('user.grantPermission.label'),
+            children: <UpdatePermission dataEdit={dataEdit!} />,
+        },
+        {
+            key: TAB_KEY.VIEW_PERMISSION,
+            label: messages('permission.label'),
+            children: <ViewPermission dataEdit={dataEdit!} />,
+        },
     ];
 
     if (isSystemTenant) {
@@ -46,12 +58,6 @@ function UpdateUserModal({ ...props }: Props) {
             key: TAB_KEY.UPDATE_TENANT,
             label: messages('tenant.label'),
             children: <UpdateTenant dataEdit={dataEdit!} />,
-        });
-    } else {
-        items.push({
-            key: TAB_KEY.UPDATE_PERMISSION,
-            label: messages('user.grantPermission.label'),
-            children: <UpdatePermission dataEdit={dataEdit!} />,
         });
     }
 

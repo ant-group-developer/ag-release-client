@@ -13,7 +13,7 @@ export const useUpdateTenantRoles = () => {
 
     const onSuccess = (
         data: any,
-        { onSuccess, payload: { tenantId } }: UpdateTenantRoles
+        { onSuccess, tenantId }: UpdateTenantRoles
     ) => {
         queryClient.invalidateQueries({
             queryKey: tenantQueryKeys.tenantRoles(tenantId),
@@ -28,8 +28,8 @@ export const useUpdateTenantRoles = () => {
     };
 
     const mutation = useMutation({
-        mutationFn: ({ payload }: UpdateTenantRoles) =>
-            tenantApi.updateRoles(payload),
+        mutationFn: ({ tenantId, payload }: UpdateTenantRoles) =>
+            tenantApi.updateRoles(tenantId, payload),
         onSuccess,
         onError,
         mutationKey: tenantQueryKeys.updates(),

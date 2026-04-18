@@ -63,11 +63,11 @@ export const tenantApi = {
 
     getRoles(tenantId: string) {
         return axiosInstance.get<DetailResponse<TenantRoleData[]>>(
-            `tenants/roles/${tenantId}`
+            `tenants/${tenantId}/configured-roles`
         );
     },
 
-    updateRoles(payload: UpdateTenantRolesPayload) {
-        return axiosInstance.post('tenants/roles', payload);
+    updateRoles(tenantId: string, payload: UpdateTenantRolesPayload) {
+        return axiosInstance.post(`tenants/${tenantId}/configured-roles`, payload);
     },
 };

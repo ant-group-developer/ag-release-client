@@ -81,8 +81,8 @@ function TenantRoles() {
     const onSave = () => {
         active();
         updateTenantRoles({
+            tenantId,
             payload: {
-                tenantId,
                 data: toggleStates,
             },
             onSuccess: () => {

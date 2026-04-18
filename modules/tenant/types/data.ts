@@ -118,10 +118,10 @@ export interface TenantRoleData {
 }
 
 export interface UpdateTenantRolesPayload {
-    tenantId: TenantData['id'];
     data: { roleId: string; isActive: boolean }[];
 }
 
 export interface UpdateTenantRoles extends CommonFunction {
+    tenantId: string;
     payload: UpdateTenantRolesPayload;
 }

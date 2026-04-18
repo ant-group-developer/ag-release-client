@@ -39,10 +39,10 @@ export function useUserDetail(id: string | null) {
     };
 }
 
-export function useUserRole(id: string | null) {
+export function useUserRole(id: string | null, tenantId?: string) {
     const { data, ...restResponse } = useQuery({
-        queryKey: userQueryKeys.role(id ?? ''),
-        queryFn: () => userApi.getUserRole(id as string),
+        queryKey: [...userQueryKeys.role(id ?? ''), tenantId],
+        queryFn: () => userApi.getUserRole(id as string, tenantId),
         enabled: Boolean(id),
     });
 
@@ -52,15 +52,27 @@ export function useUserRole(id: string | null) {
     };
 }
 
-export function useUserPermission(id: string | null) {
+export function useUserPermission(id: string | null, tenantId?: string) {
     const { data, ...restResponse } = useQuery({
-        queryKey: userQueryKeys.role(id ?? ''),
-        queryFn: () => userApi.getUserPermission(id as string),
+        queryKey: [...userQueryKeys.permission(id ?? ''), tenantId],
+        queryFn: () => userApi.getUserPermission(id as string, tenantId),
         enabled: Boolean(id),
     });
 
     return {
         ...restResponse,
         data: data?.data?.data ?? ([] as UserPermissionData[]),
+    };
+}
+
+export function useAssignableRoles(tenantId?: string) {
+    const { data, ...restResponse } = useQuery({
+        queryKey: [...userQueryKeys.roles(), 'assignable', tenantId],
+        queryFn: () => userApi.getAssignableRoles(tenantId),
+    });
+
+    return {
+        ...restResponse,
+        data: data?.data?.data ?? ([] as UserRoleData[]),
     };
 }

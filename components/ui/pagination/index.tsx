@@ -37,6 +37,7 @@ function AppPagination({
 
     return (
         <Pagination
+            hideOnSinglePage
             showSizeChanger={false}
             className={cn(
                 'rounded-b-lg !px-5 !py-3 text-center',
