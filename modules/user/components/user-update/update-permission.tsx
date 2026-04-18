@@ -185,7 +185,7 @@ function UpdatePermission({ dataEdit }: Props) {
                             label: tu.tenant.name,
                             value: tu.tenant.id,
                         }))}
-                        className="w-full max-w-sm"
+                        className="w-full"
                     />
                     {dataEdit.tenantUser?.length === 0 && (
                         <Alert
@@ -201,6 +201,21 @@ function UpdatePermission({ dataEdit }: Props) {
                             )}
                         />
                     )}
+                    {(dataEdit.tenantUser?.length ?? 0) > 0 &&
+                        !selectedTenantId && (
+                            <Alert
+                                type="warning"
+                                showIcon
+                                className="mt-2"
+                                message={messages(
+                                    'user.grantPermission.selectWorkspaceHint',
+                                    {
+                                        defaultMessage:
+                                            "Please select a workspace to view or manage this user's roles and permissions.",
+                                    }
+                                )}
+                            />
+                        )}
                 </div>
             )}
             {!isSystemTenant && isSystemAdmin && (
@@ -238,6 +253,7 @@ function UpdatePermission({ dataEdit }: Props) {
                     className="rounded-lg border"
                     scroll={{
                         x: 0,
+                        y: 'calc(100vh - 350px)',
                     }}
                     columns={column}
                     expandable={{
@@ -248,10 +264,6 @@ function UpdatePermission({ dataEdit }: Props) {
                         ),
                     }}
                     dataSource={assignableRoles as any}
-                    pagination={{
-                        pageSize: 15,
-                        total: assignableRoles?.length || 0,
-                    }}
                     rowSelection={{
                         selectedRowKeys: selectedKeys,
                         onChange: (value) => setSelectedKeys(value),

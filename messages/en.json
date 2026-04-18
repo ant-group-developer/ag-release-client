@@ -722,7 +722,8 @@
             "systemAdminAlert": "This user is a System Admin and automatically inherits all active capabilities.",
             "tenantOwnerAlert": "This user is a Tenant Owner/Admin and automatically inherits all active capabilities.",
             "disabledTooltip": "Role assignment is disabled in this context.",
-            "noTenants": "This user is not assigned to any workspace."
+            "noTenants": "This user is not assigned to any workspace.",
+            "selectWorkspaceHint": "Please select a workspace to view or manage this user's roles and permissions."
         },
         "update": {
             "tenant": {

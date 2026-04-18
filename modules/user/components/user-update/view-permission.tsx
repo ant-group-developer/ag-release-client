@@ -72,9 +72,7 @@ function ViewPermission({ dataEdit }: Props) {
             dataIndex: 'code',
             width: '35%',
             ellipsis: true,
-            render: (value) => (
-                <Tag className="font-mono text-xs">{value}</Tag>
-            ),
+            render: (value) => <Tag className="font-mono text-xs">{value}</Tag>,
         },
         {
             title: messages('common.note'),
@@ -92,7 +90,7 @@ function ViewPermission({ dataEdit }: Props) {
     return (
         <div className="flex flex-col gap-4">
             {isSystemTenant && (
-                <div className="flex flex-col gap-2 rounded-lg border p-4 bg-gray-50/50">
+                <div className="flex flex-col gap-2 rounded-lg border bg-gray-50/50 p-4">
                     <span className="text-sm font-medium">
                         {messages('tenant.selectTitle', {
                             defaultMessage: 'Select Workspace',
@@ -109,7 +107,7 @@ function ViewPermission({ dataEdit }: Props) {
                             label: tu.tenant.name,
                             value: tu.tenant.id,
                         }))}
-                        className="w-full max-w-sm"
+                        className="w-full"
                     />
                     {dataEdit.tenantUser?.length === 0 && (
                         <Alert
@@ -125,32 +123,41 @@ function ViewPermission({ dataEdit }: Props) {
                             )}
                         />
                     )}
+                    {(dataEdit.tenantUser?.length ?? 0) > 0 &&
+                        !selectedTenantId && (
+                            <Alert
+                                type="warning"
+                                showIcon
+                                className="mt-2"
+                                message={messages(
+                                    'user.grantPermission.selectWorkspaceHint',
+                                    {
+                                        defaultMessage:
+                                            "Please select a workspace to view or manage this user's roles and permissions.",
+                                    }
+                                )}
+                            />
+                        )}
                 </div>
             )}
             {!isSystemTenant && isSystemAdmin && (
                 <Alert
                     type="success"
                     showIcon
-                    message={messages(
-                        'user.grantPermission.systemAdminAlert',
-                        {
-                            defaultMessage:
-                                'This user is a System Admin and automatically inherits all active capabilities.',
-                        }
-                    )}
+                    message={messages('user.grantPermission.systemAdminAlert', {
+                        defaultMessage:
+                            'This user is a System Admin and automatically inherits all active capabilities.',
+                    })}
                 />
             )}
             {!isSystemTenant && isTenantOwnerOrAdmin && (
                 <Alert
                     type="success"
                     showIcon
-                    message={messages(
-                        'user.grantPermission.tenantOwnerAlert',
-                        {
-                            defaultMessage:
-                                'This user is a Tenant Owner/Admin and automatically inherits all active capabilities.',
-                        }
-                    )}
+                    message={messages('user.grantPermission.tenantOwnerAlert', {
+                        defaultMessage:
+                            'This user is a Tenant Owner/Admin and automatically inherits all active capabilities.',
+                    })}
                 />
             )}
 
@@ -158,7 +165,7 @@ function ViewPermission({ dataEdit }: Props) {
                 placeholder={messages('common.search')}
                 allowClear
                 onChange={(e) => setSearch(e.target.value)}
-                className="max-w-xs"
+                className="w-full"
             />
 
             <AppTable
@@ -166,13 +173,7 @@ function ViewPermission({ dataEdit }: Props) {
                 columns={columns}
                 dataSource={filteredData}
                 loading={isLoading}
-                scroll={{ x: 0 }}
-                pagination={{
-                    pageSize: 10,
-                    total: filteredData.length,
-                    hideOnSinglePage: true,
-                    showSizeChanger: false,
-                }}
+                scroll={{ x: 0, y: 'calc(100vh - 420px)' }}
                 summary={() => (
                     <Table.Summary fixed>
                         <Table.Summary.Row>
