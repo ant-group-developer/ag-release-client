@@ -12,6 +12,8 @@ import AcrCloudScanModal from '@/modules/acr-cloud/components/modal/acr-scan-mod
 import AcrCloudScanResultModal from '@/modules/acr-cloud/components/modal/acr-scan-result-modal';
 import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { TRACK_SORT_FIELD } from '@/modules/tracks/enums';
+import { usePermission } from '@/hooks/use-permission';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { ReleasesDataFilter } from '@/modules/releases/types';
 import TrackHeaderV2 from '@/modules/tracks/components/header/index-v2';
 
@@ -31,6 +33,9 @@ export default function Tracks({}: Props) {
     const { token } = theme.useToken();
     const typeModal = useModalStore((state) => state.typeModal);
     const [selectedRow, setSelectedRow] = useState<Key[]>([]);
+    
+    const { hasPermission } = usePermission();
+    const canScan = hasPermission(PERMISSION.TRACK.SCAN);
 
     const { layoutTable } = useTableLayoutToggle();
     const {
@@ -75,11 +80,11 @@ export default function Tracks({}: Props) {
     };
 
     // const
-    const rowSelection = {
+    const rowSelection = canScan ? {
         selectedRowKeys: selectedRow,
         onChange: handleSelectedRow,
         columnWidth: 30,
-    };
+    } : false;
 
     return (
         <AppPageWrapper>

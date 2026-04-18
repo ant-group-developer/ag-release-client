@@ -9,6 +9,7 @@ import { useFilter } from '@/hooks/use-filter';
 import { useLoadingStatus } from '@/hooks/use-loading-status';
 import useModalStore from '@/hooks/use-modal';
 import { usePermission } from '@/hooks/use-permission';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import DspFormModal from '@/modules/dsp/components/modal/dsp-form';
@@ -66,16 +67,12 @@ export default function Dsp() {
                     backgroundColor: token.colorBgLayout,
                 }}
                 extra={
-                    <div className="">
-                        {(isSystemTenant ||
-                            hasPermission(PERMISSION.DSP.CREATE)) && (
-                            <CreateButton
-                                canCreate={true}
-                                text={messages('dsp.add')}
-                                onClick={() => openModal(TYPE_MODAL_DSP.CREATE)}
-                            />
-                        )}
-                    </div>
+                    <PermissionGate permission={PERMISSION.DSP.CREATE}>
+                        <CreateButton
+                            text={messages('dsp.add')}
+                            onClick={() => openModal(TYPE_MODAL_DSP.CREATE)}
+                        />
+                    </PermissionGate>
                 }
             >
                 {/* <DspHeader dataFilter={dataFilter} onSearch={onSearch} /> */}

@@ -204,6 +204,7 @@ export default function Distribution({}: Props) {
                         dataSource={releaseDsp?.items}
                         scroll={{ x: 'max-content' }}
                         rowSelection={rowSelection}
+                        tableAlertOptionRender={isReadMode ? false : undefined}
                         size="large"
                         rowKey={(record) => record.dsp?.id}
                         pagination={{

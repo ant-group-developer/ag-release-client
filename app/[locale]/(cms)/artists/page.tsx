@@ -16,6 +16,7 @@ import { TYPE_MODAL_ARTIST } from '@/modules/artist/enum';
 import { useDeleteArtist } from '@/modules/artist/hooks/use-delete-artist';
 import { useGetListArtist } from '@/modules/artist/hooks/use-get-list-artists';
 import { ArtistData, ArtistDataFilter } from '@/modules/artist/types';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { DeleteVariables } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
@@ -81,17 +82,12 @@ export default function Artists({}: Props) {
             <PageContainer
                 title={messages('artist.artists')}
                 extra={
-                    <>
-                        {hasPermission(PERMISSION.ARTIST.CREATE) && (
-                            <CreateButton
-                                canCreate={true}
-                                text={messages('artist.create')}
-                                onClick={() =>
-                                    openModal(TYPE_MODAL_ARTIST.CREATE)
-                                }
-                            />
-                        )}
-                    </>
+                    <PermissionGate permission={PERMISSION.ARTIST.CREATE}>
+                        <CreateButton
+                            text={messages('artist.create')}
+                            onClick={() => openModal(TYPE_MODAL_ARTIST.CREATE)}
+                        />
+                    </PermissionGate>
                 }
             >
                 {/* <ArtistsHeader dataFilter={dataFilter} onSearch={onSearch} /> */}

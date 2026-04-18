@@ -29,6 +29,7 @@ export const PERMISSION = {
         READ: 'release.read',
         TAKE_DOWN: 'release.take_down',
         UPDATE: 'release.update',
+        DELETE: 'release.delete',
     },
     TRACK: {
         READ: 'track.read',
@@ -62,6 +63,7 @@ export const PERMISSION = {
         CREATE: 'user.create',
         UPDATE: 'user.update',
         DELETE: 'user.delete',
+        INVITE: 'user.invite',
     },
     ANALYTICS: {
         READ: 'analytics.read',

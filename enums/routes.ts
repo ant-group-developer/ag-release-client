@@ -62,7 +62,7 @@ export enum APP_ROUTES {
 
 export const AUTH_ROUTES: string[] = [APP_ROUTES.SIGN_IN];
 
-export const DEFAULT_ROUTE = APP_ROUTES.DASHBOARD;
+export const DEFAULT_ROUTE = APP_ROUTES.RELEASES;
 
 export const HOME_ROUTE = APP_ROUTES.DASHBOARD;
 

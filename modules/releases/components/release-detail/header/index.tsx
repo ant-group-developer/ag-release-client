@@ -13,6 +13,8 @@ import { useHash } from '@/hooks/use-hash';
 import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribute';
 import { useReleaseDistribute } from '@/modules/distribution/hooks/use-release-distribute';
 import { DistributeRelease } from '@/modules/distribution/types/payload';
@@ -677,17 +679,21 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                     {releaseData?.modifier?.name} |{' '}
                                     {formattedDate(releaseData?.updatedAt)}
                                 </p>
-                                <div className="flex justify-end">
-                                    <Segmented
-                                        value={releaseAction}
-                                        options={segmentedOptions}
-                                        onChange={(val) =>
-                                            handleChangeAction(
-                                                val as RELEASE_DETAIL_ACTION
-                                            )
-                                        }
-                                    />
-                                </div>
+                                <PermissionGate
+                                    permission={PERMISSION.RELEASE.UPDATE}
+                                >
+                                    <div className="flex justify-end">
+                                        <Segmented
+                                            value={releaseAction}
+                                            options={segmentedOptions}
+                                            onChange={(val) =>
+                                                handleChangeAction(
+                                                    val as RELEASE_DETAIL_ACTION
+                                                )
+                                            }
+                                        />
+                                    </div>
+                                </PermissionGate>
                             </div>
                             <div className="flex justify-end">
                                 <DownloadMenu />

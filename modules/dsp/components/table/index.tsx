@@ -5,6 +5,9 @@ import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { formattedDate, getIndex } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
+import { usePermission } from '@/hooks/use-permission';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { ProColumns } from '@ant-design/pro-components';
 import { Switch, theme } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -24,6 +27,8 @@ export const DspTable = ({ ...props }: Props) => {
     const openModal = useModalStore((state) => state.openModal);
     const { updateDsp } = useUpdateDsp();
     const { token } = theme.useToken();
+    const { hasPermission } = usePermission();
+    const canUpdate = hasPermission(PERMISSION.DSP.UPDATE);
 
     const column: ProColumns<DspData>[] = [
         {
@@ -137,6 +142,7 @@ export const DspTable = ({ ...props }: Props) => {
                     onChange={(e) =>
                         updateDsp({ id: record?.id, payload: { isActive: e } })
                     }
+                    disabled={!canUpdate}
                 />
             ),
         },
@@ -155,6 +161,7 @@ export const DspTable = ({ ...props }: Props) => {
                             payload: { enablePolicy: e },
                         })
                     }
+                    disabled={!canUpdate}
                 />
             ),
         },
@@ -173,6 +180,7 @@ export const DspTable = ({ ...props }: Props) => {
                             payload: { hasDeal: e },
                         })
                     }
+                    disabled={!canUpdate}
                 />
             ),
         },
@@ -227,18 +235,20 @@ export const DspTable = ({ ...props }: Props) => {
             key: 'action',
             dataIndex: '',
             width: 50,
-            fixed: 'right',
+            fixed: canUpdate ? 'right' : undefined,
             render: (_, record) => (
-                <ActionButton
-                    showDelete
-                    onShowDelete={() =>
-                        openModal(TYPE_MODAL_DSP.DELETE, record)
-                    }
-                    showUpdate
-                    onShowUpdate={() =>
-                        openModal(TYPE_MODAL_DSP.UPDATE, record)
-                    }
-                />
+                <PermissionGate permission={PERMISSION.DSP.UPDATE}>
+                    <ActionButton
+                        showDelete={canUpdate}
+                        onShowDelete={() =>
+                            openModal(TYPE_MODAL_DSP.DELETE, record)
+                        }
+                        showUpdate={canUpdate}
+                        onShowUpdate={() =>
+                            openModal(TYPE_MODAL_DSP.UPDATE, record)
+                        }
+                    />
+                </PermissionGate>
             ),
         },
     ];

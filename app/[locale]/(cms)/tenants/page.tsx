@@ -16,6 +16,8 @@ import { TENANT_ORDER_BY, TYPE_MODAL_TENANT } from '@/modules/tenant/enums';
 import { useTenantList } from '@/modules/tenant/hooks/use-get-tenant';
 import { DataFilterTenant } from '@/modules/tenant/types/data';
 import { checkTenantType } from '@/modules/user/utils/role';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { PageContainer } from '@ant-design/pro-components';
 import { useTranslations } from 'next-intl';
 
@@ -31,7 +33,6 @@ export default function TenantPage({}: Props) {
     const {
         profile: { tenantType },
     } = useAuth();
-    const { isTypeWhiteLabel } = checkTenantType(tenantType);
 
     // apis
     const { dataFilter, canClearFilter, onChangeFilter, removeFilter } =
@@ -62,9 +63,8 @@ export default function TenantPage({}: Props) {
                 title={messages('tenant.label')}
                 extra={
                     <div>
-                        {isTypeWhiteLabel && (
+                        <PermissionGate permission={PERMISSION.WORKSPACE.CREATE}>
                             <CreateButton
-                                canCreate={true}
                                 text={messages('action.create.title', {
                                     label: messages('tenant.label'),
                                 })}
@@ -72,7 +72,7 @@ export default function TenantPage({}: Props) {
                                     openModal(TYPE_MODAL_TENANT.CREATE)
                                 }
                             />
-                        )}
+                        </PermissionGate>
                     </div>
                 }
             >
