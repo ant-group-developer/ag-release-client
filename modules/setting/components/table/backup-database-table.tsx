@@ -58,9 +58,9 @@ export const BackupDatabaseLogTable = ({ dataFilter, ...props }: Props) => {
                 <CustomTooltip title={value}>
                     <span
                         onClick={() => {
-                            if (!record.urlFolderGcs) return;
+                            if (!record.urlFolderR2) return;
                             window.open(
-                                record?.urlFolderGcs,
+                                record?.urlFolderR2,
                                 '_blank',
                                 'noopener,noreferrer'
                             );
@@ -145,14 +145,14 @@ export const BackupDatabaseLogTable = ({ dataFilter, ...props }: Props) => {
             align: 'center',
             width: 50,
             render: (_, record) => {
-                if (record?.status !== STATUS_BACKUP.SUCCESS || !record?.urlGcs)
+                if (record?.status !== STATUS_BACKUP.SUCCESS || !record?.urlR2)
                     return;
 
                 return (
                     <ActionButton
                         showDownload={
                             record?.status === STATUS_BACKUP.SUCCESS &&
-                            (!!record?.urlGcs || !!record?.urlDrive)
+                            !!record?.urlR2
                         }
                         onShowDownload={async () => {
                             try {
@@ -160,7 +160,7 @@ export const BackupDatabaseLogTable = ({ dataFilter, ...props }: Props) => {
                                     await bucketApi.downloadNonFile({
                                         fileName: record?.fileName,
                                         isPublic: false,
-                                        url: record?.urlGcs,
+                                        url: record?.urlR2,
                                     });
                                 if (
                                     linkDownload?.status === 201 ||

@@ -8,6 +8,8 @@ export interface BackupDatabaseLogData extends CommonAttribute {
     fileName: string;
     fileSize: string;
     elapsedTime: string;
+    urlR2: string;
+    urlFolderR2: string;
 }
 
 export interface BackupDatabaseLogDataFilter extends CommonParams {}
