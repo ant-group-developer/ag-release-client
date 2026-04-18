@@ -7,11 +7,13 @@ import type { TrackData } from '@/modules/releases/types';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { TrackContributorData } from '@/modules/track-contributor/types';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
+import { TRACK_SORT_FIELD } from '@/modules/tracks/enums';
 import { Collapse, Skeleton } from 'antd';
 import { CircleCheck, OctagonAlert } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import ArtistItem from '../metadata-info/artist-item';
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 
 type Props = {};
 
@@ -22,9 +24,9 @@ export default function TracksInfo({}: Props) {
     const formValue = useReleaseFormStore((state) => state.formValues);
     const { tracksData, isFetching: isTracksFetching } = useGetListTracks({
         releaseId: formValue?.id,
-        fieldOrder: 'order',
+        fieldOrder: TRACK_SORT_FIELD.ORDER,
         page: 1,
-        pageSize: 999,
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
     });
     const { releaseValidateData } = useReleaseValidate(releaseId as string);
 
