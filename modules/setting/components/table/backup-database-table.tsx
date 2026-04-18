@@ -15,7 +15,6 @@ import {
     BackupDatabaseLogData,
     BackupDatabaseLogDataFilter,
 } from '@/modules/backup-dabatase/types';
-import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
@@ -155,26 +154,12 @@ export const BackupDatabaseLogTable = ({ dataFilter, ...props }: Props) => {
                             !!record?.urlR2
                         }
                         onShowDownload={async () => {
-                            try {
-                                const linkDownload =
-                                    await bucketApi.downloadNonFile({
-                                        fileName: record?.fileName,
-                                        isPublic: false,
-                                        url: record?.urlR2,
-                                    });
-                                if (
-                                    linkDownload?.status === 201 ||
-                                    linkDownload.status === 200
-                                ) {
-                                    window.open(
-                                        linkDownload?.data?.data,
-                                        '_blank',
-                                        'noopener,noreferrer'
-                                    );
-                                }
-                            } catch (error) {
-                                handleError(error);
-                            }
+                            const linkDownload = record?.urlR2;
+                            window.open(
+                                linkDownload,
+                                '_blank',
+                                'noopener,noreferrer'
+                            );
                         }}
                     />
                 );
