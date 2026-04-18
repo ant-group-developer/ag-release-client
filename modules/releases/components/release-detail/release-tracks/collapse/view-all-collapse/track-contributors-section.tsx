@@ -1,7 +1,7 @@
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { TrackData } from '@/modules/tracks/types';
-import { ConfigProvider, Form, Typography } from 'antd';
+import { ConfigProvider, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import TrackContributorsTable from '../../table/track-contributors-table';
 const { Title } = Typography;
@@ -22,7 +22,7 @@ export default function TrackContributorsSection({
     // const openModal = useModalStore((state) => state.openModal);
     const releaseAction = useReleaseActionStore((s) => s.action);
 
-    const form = Form.useFormInstance();
+    // const form = Form.useFormInstance();
     // router
     // const params = useParams();
     // const router = useRouter();

@@ -9,6 +9,7 @@ import TrackActionButton from '@/modules/releases/components/release-detail/rele
 import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import {
     SCAN_COPYRIGHT_STATUS,
+    TRACK_SORT_FIELD,
     TRACK_TABS,
     TRACKS_COLUMNS_DISPLAY,
 } from '@/modules/tracks/enums';
@@ -53,7 +54,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
         {
             title: messages('track.name'),
             key: 'title',
-            dataIndex: 'title',
+            dataIndex: TRACK_SORT_FIELD.TITLE,
             ellipsis: true,
             align: 'left',
             fixed: 'left',
@@ -62,7 +63,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'title'
+                TRACK_SORT_FIELD.TITLE
             ),
             render: (_, record) => {
                 const trackArtist = record?.trackArtists ?? [];
@@ -192,16 +193,16 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
         {
             title: messages('common.createdAt'),
             key: 'createdAt',
-            dataIndex: 'createdAt',
+            dataIndex: TRACK_SORT_FIELD.CREATED_AT,
             align: 'left',
             width: 80,
             sorter: true,
             defaultSortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'createdAt'
+                TRACK_SORT_FIELD.CREATED_AT
             ),
-            render: (value, record) => (
+            render: (_, record) => (
                 <span className="truncate text-wrap">
                     {' '}
                     {formattedDate(record?.createdAt)}{' '}

@@ -1,4 +1,5 @@
 import AppFilter from '@/components/ui/antd-form/app-filter';
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
 import { arrayFromString } from '@/helpers/array';
 import { flattenData } from '@/helpers/common';
@@ -47,7 +48,7 @@ export default function UserHeaderV2({
     const { data: dataTenant } = useTenantList({
         fieldOrder: TENANT_ORDER_BY.NAME,
         orderBy: ORDER.ASC,
-        pageSize: 999,
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
     });
     const flattenDataTenant = flattenData(dataTenant.items, {});
 

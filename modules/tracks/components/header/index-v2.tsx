@@ -107,7 +107,7 @@ export default function TrackHeaderV2({
                     <ArtistSelect
                         showCreate={false}
                         allowClear
-                        dropdownMatchSelectWidth={false}
+                        popupMatchSelectWidth={false}
                         placeholder={messages('placeholder.filterBy', {
                             value: messages('artist.artists').toLowerCase(),
                         })}

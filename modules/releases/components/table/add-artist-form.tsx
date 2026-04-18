@@ -4,6 +4,8 @@ import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import ArtistSelect from '@/components/ui/select/artist-select';
 import { toastPromise } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
+import useModalStore from '@/hooks/use-modal';
+import { ArtistData } from '@/modules/artist/types';
 import { useCreateReleaseArtist } from '@/modules/release-artist/hooks/use-create-release-artist';
 import { CreateReleaseArtistPayload } from '@/modules/release-artist/types/payload';
 import { CreateVariables } from '@/types/api';
@@ -21,6 +23,7 @@ export default function AddArtistForm({ disabled = false, ...props }: Props) {
     const { active, deActive, isActive } = useActive();
     const [form] = Form.useForm();
     const releaseValues = useReleaseFormStore((state) => state.formValues);
+    const closeModal = useModalStore((state) => state.closeModal);
 
     // apis
     const { createReleaseArtist } = useCreateReleaseArtist();
@@ -47,6 +50,18 @@ export default function AddArtistForm({ disabled = false, ...props }: Props) {
             success: messages('common.success'),
         });
     };
+    const handleCreateArtistSuccess = (data: ArtistData) => {
+        closeModal();
+        const variables: CreateVariables<CreateReleaseArtistPayload> = {
+            payload: {
+                artistId: data?.id,
+                releaseId: releaseValues.id as string,
+                addArtistToTracks: false,
+            },
+        };
+        createReleaseArtist(variables);
+    };
+
     return (
         <AppModal
             {...props}
@@ -61,6 +76,9 @@ export default function AddArtistForm({ disabled = false, ...props }: Props) {
                 showSubmit={false}
                 disabled={disabled || isActive}
                 variant={disabled ? 'underlined' : 'outlined'}
+                initialValues={{
+                    addArtistToTracks: true,
+                }}
             >
                 <AppFormItem
                     className="col-span-2"
@@ -76,34 +94,11 @@ export default function AddArtistForm({ disabled = false, ...props }: Props) {
                 >
                     <ArtistSelect
                         showSearch
-                        // fallBack={dataEdit?.artist?.name}
                         placeholder={messages('artist.select')}
-                        // disabledArtistIds={disabledArtistIds}
                         allowClear
-                        isAddReleaseArtist
+                        onCreateSuccess={handleCreateArtistSuccess}
                     />
                 </AppFormItem>
-
-                {/* <AppFormItem
-                        className="flex-1"
-                        name="roleId"
-                        label={messages('common.role')}
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.select'),
-                            },
-                        ]}
-                    >
-                        <RoleArtistSelect
-                            // fallBack={dataEdit?.artistRole?.name}
-                            placeholder={messages('common.role')}
-                            // disabledRoleIds={disabledRoleIds}
-                            placement="topLeft"
-                            allowClear
-                        />
-                    </AppFormItem> */}
 
                 <AppFormItem
                     className="flex-1"

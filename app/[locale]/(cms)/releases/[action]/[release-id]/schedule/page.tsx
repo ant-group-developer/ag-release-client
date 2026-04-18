@@ -1,10 +1,11 @@
 'use client';
-import { PAGE_SIZE } from '@/constants/page-size';
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { useElementHeightById } from '@/hooks/use-element-height-by-id';
 import { useFilter } from '@/hooks/use-filter';
 import ReleaseSchedulingForm from '@/modules/releases/components/release-detail/release-scheduling/form';
 import ReleaseSchedulingTable from '@/modules/releases/components/release-detail/release-scheduling/table';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import { TRACK_SORT_FIELD } from '@/modules/tracks/enums';
 import { useGetListTracksWithPolicies } from '@/modules/tracks/hooks/use-get-list-tracks-with-policies';
 import { TrackDataFilter } from '@/modules/tracks/types';
 import { ConfigProvider, theme } from 'antd';
@@ -15,14 +16,13 @@ export default function Schedule() {
 
     const { dataFilter, onChangePage } = useFilter<TrackDataFilter>({
         releaseId: formValues?.id as string,
-        fieldOrder: 'order',
-        pageSize: 30,
+        fieldOrder: TRACK_SORT_FIELD.ORDER,
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
     });
 
     const { tracksData, isFetching } = useGetListTracksWithPolicies(dataFilter);
 
     const { token } = theme.useToken();
-    // const { isDark } = useThemeMode();
     const customTheme = {
         token: {
             colorTextDisabled: token?.colorText,
@@ -39,7 +39,7 @@ export default function Schedule() {
                     dataSource={tracksData?.items}
                     loading={isFetching}
                     pagination={{
-                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE_EXTRA_LARGE,
                         current: tracksData.metadata.page,
                         total: tracksData.metadata.totalItems,
                     }}

@@ -13,8 +13,6 @@ import { getAvatarUrl } from '@/helpers/avatar-tailwind';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
-import { useCreateReleaseArtist } from '@/modules/release-artist/hooks/use-create-release-artist';
-import { useCreateReleaseContributor } from '@/modules/release-contributor/hooks/use-create-release-contributor';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { uploadApi } from '@/modules/upload/apis';
 import { ENTITY_TYPE_PICTURE } from '@/modules/upload/types/data';
@@ -35,15 +33,17 @@ type ArtistFormValues = Omit<ArtistData, 'id' | 'createdAt' | 'updatedAt'> & {
 };
 
 type Props = Omit<AppModalProps, 'children'> & {
-    onSuccess?: () => void;
-    isAddReleaseArtist?: boolean;
-    isAddReleaseContributor?: boolean;
+    onCreateSuccess?: (data: ArtistData) => void;
+    onUpdateSuccess?: (data: ArtistData) => void;
+    // isAddReleaseArtist?: boolean;
+    // isAddReleaseContributor?: boolean;
 };
 
 export default function ArtistFormModal({
-    isAddReleaseArtist = false,
-    isAddReleaseContributor = false,
-    onSuccess,
+    // isAddReleaseArtist = false,
+    // isAddReleaseContributor = false,
+    onCreateSuccess,
+    onUpdateSuccess,
     ...props
 }: Props) {
     const messages = useTranslations();
@@ -56,8 +56,8 @@ export default function ArtistFormModal({
     const watchedProfiles = Form.useWatch('artistProfiles', form) || [];
 
     const releaseValues = useReleaseFormStore((state) => state.formValues);
-    const { createReleaseArtist } = useCreateReleaseArtist();
-    const { createReleaseContributor } = useCreateReleaseContributor();
+    // const { createReleaseArtist } = useCreateReleaseArtist();
+    // const { createReleaseContributor } = useCreateReleaseContributor();
     const { createArtist } = useCreateArtist();
     const { updateArtist } = useUpdateArtist();
     const { dspData } = useGetListDsp({ pageSize: PAGE_SIZE_LARGE });
@@ -72,28 +72,28 @@ export default function ArtistFormModal({
             onSuccess: (data: ArtistData) => {
                 deActive();
                 form.resetFields();
-                if (isAddReleaseArtist) {
-                    closeModal();
-                    createReleaseArtist({
-                        payload: {
-                            releaseId: releaseValues?.id as string,
-                            artistId: data.id,
-                            addArtistToTracks: false,
-                        },
-                    });
-                }
-                if (isAddReleaseContributor) {
-                    closeModal();
-                    createReleaseContributor({
-                        payload: {
-                            releaseId: releaseValues?.id as string,
-                            artistId: data.id,
-                            artistRoleId: '',
-                            addContributorToTracks: false,
-                        },
-                    });
-                }
-                onSuccess?.();
+                // if (isAddReleaseArtist) {
+                //     closeModal();
+                //     createReleaseArtist({
+                //         payload: {
+                //             releaseId: releaseValues?.id as string,
+                //             artistId: data.id,
+                //             addArtistToTracks: false,
+                //         },
+                //     });
+                // }
+                // if (isAddReleaseContributor) {
+                //     closeModal();
+                //     createReleaseContributor({
+                //         payload: {
+                //             releaseId: releaseValues?.id as string,
+                //             artistId: data.id,
+                //             artistRoleId: '',
+                //             addContributorToTracks: false,
+                //         },
+                //     });
+                // }
+                onCreateSuccess?.(data);
             },
             onError: () => {
                 deActive();
@@ -109,9 +109,9 @@ export default function ArtistFormModal({
         > = {
             id: dataEdit?.id,
             payload: values,
-            onSuccess: () => {
+            onSuccess: (data) => {
                 deActive();
-                onSuccess?.();
+                onUpdateSuccess?.(data);
             },
             onError: () => {
                 deActive();

@@ -9,6 +9,7 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import WaveAudioUpload from '@/components/ui/input/wave-audio-upload';
 import { useActive } from '@/hooks/use-active';
 import { useTrackUpload } from '@/modules/releases/hooks/use-track-upload';
+import { MAX_COUNT_UPLOAD_TRACK } from '@/modules/tracks/constants';
 
 type Props = {} & Omit<AppModalProps, 'children'>;
 
@@ -86,7 +87,7 @@ export default function AddNewTrackModal({ ...props }: Props) {
                     ]}
                 >
                     <WaveAudioUpload
-                        maxCount={50}
+                        maxCount={MAX_COUNT_UPLOAD_TRACK}
                         multiple
                         accept="audio/wav"
                         placeholder={

@@ -200,7 +200,21 @@ export default function OtherSection({
                     </AppFormItem>
 
                     {/* ISRC */}
-                    <AppFormItem label="ISRC" name="isrc">
+                    <AppFormItem
+                        label="ISRC"
+                        name="isrc"
+                        required
+                        rules={[
+                            {
+                                min: 12,
+                                max: 12,
+                                message: messages('validation.mustBeLength', {
+                                    number: 12,
+                                    field: 'ISRC',
+                                }),
+                            },
+                        ]}
+                    >
                         <Input
                             id={`tracks.${index}.isrc`}
                             allowClear

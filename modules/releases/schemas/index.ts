@@ -27,8 +27,13 @@ export const releaseSchema = (messages: any) =>
                 }
             ),
         upc: z
-            .string()
-            .max(20, messages('validation.max', { number: 20 }))
+            .union([
+                z.literal(''),
+                z
+                    .string()
+                    .min(10, messages('validation.min', { number: 10 }))
+                    .max(14, messages('validation.max', { number: 14 })),
+            ])
             .optional()
             .nullable(),
         primaryGenreId: z
@@ -145,6 +150,7 @@ export const releaseSchema = (messages: any) =>
             .refine((val) => val !== null && val !== '', {
                 message: messages('validation.input'),
             }),
+        releaseEndDate: z.string().optional().nullable(),
 
         releaseTime: z
             .string()

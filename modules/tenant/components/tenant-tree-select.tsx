@@ -1,3 +1,4 @@
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
 import { cn } from '@/helpers/common';
 import { TreeSelect, TreeSelectProps } from 'antd';
@@ -28,7 +29,7 @@ function TenantTreeSelect({
     const { data: dataTenant } = useTenantList({
         fieldOrder: TENANT_ORDER_BY.EMAIL,
         orderBy: ORDER.ASC,
-        pageSize: 999,
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
     });
 
     const getTreeData = (data: TenantData[]): TreeSelectProps['treeData'] => {

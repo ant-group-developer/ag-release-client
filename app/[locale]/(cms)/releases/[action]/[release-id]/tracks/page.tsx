@@ -1,7 +1,9 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import { SIZE_ICON } from '@/constants/common';
-import { PAGE_SIZE } from '@/constants/page-size';
+import { PAGE_SIZE, PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
+import { ORDER } from '@/enums/common';
+import { setSortOrder } from '@/helpers/common';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { toastPromise } from '@/helpers/messages-helper';
 import { useElementHeightById } from '@/hooks/use-element-height-by-id';
@@ -18,6 +20,7 @@ import {
     TYPE_MODAL_RELEASE,
     TYPE_MODAL_TRACK,
 } from '@/modules/releases/enums';
+import { TRACK_SORT_FIELD } from '@/modules/tracks/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import TrackArtistModal from '@/modules/track-artist/components/modal/track-artist-modal';
 import { useDeleteTrackArtist } from '@/modules/track-artist/hooks/use-delete-track-artist';
@@ -57,10 +60,10 @@ export default function Tracks() {
 
     const isReleaseReadAction = releaseAction === RELEASE_DETAIL_ACTION.READ;
 
-    const { dataFilter } = useFilter<TrackDataFilter>({
+    const { dataFilter, onChangeFilter } = useFilter<TrackDataFilter>({
         releaseId: formValues?.id as string,
-        fieldOrder: 'order',
-        pageSize: 999,
+        fieldOrder: TRACK_SORT_FIELD.ORDER,
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
     });
 
     // apis
@@ -96,6 +99,17 @@ export default function Tracks() {
         };
 
         deleteTrackArtist(variable);
+    };
+    const onChangeSort = (pagination: any, filters: any, sort: any) => {
+        const orderBy = setSortOrder(sort, ORDER.ASC);
+        const fieldOrder = sort.field;
+        onChangeFilter(
+            {
+                orderBy,
+                fieldOrder,
+            },
+            false
+        );
     };
 
     // const
@@ -154,6 +168,8 @@ export default function Tracks() {
                             <DropUploadTracks disabled={isReleaseReadAction} />
                         ),
                     }}
+                    onChange={onChangeSort}
+                    dataFilter={dataFilter}
                 />
 
                 {typeModal === TYPE_MODAL_RELEASE.ADD_TRACK && (

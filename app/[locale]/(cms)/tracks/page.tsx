@@ -11,6 +11,7 @@ import AcrCloudScanHistoryModal from '@/modules/acr-cloud/components/modal/acr-s
 import AcrCloudScanModal from '@/modules/acr-cloud/components/modal/acr-scan-modal';
 import AcrCloudScanResultModal from '@/modules/acr-cloud/components/modal/acr-scan-result-modal';
 import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
+import { TRACK_SORT_FIELD } from '@/modules/tracks/enums';
 import { ReleasesDataFilter } from '@/modules/releases/types';
 import TrackHeaderV2 from '@/modules/tracks/components/header/index-v2';
 
@@ -43,7 +44,7 @@ export default function Tracks({}: Props) {
         page: 1,
         pageSize: PAGE_SIZE,
         orderBy: ORDER.DESC,
-        fieldOrder: 'createdAt',
+        fieldOrder: TRACK_SORT_FIELD.CREATED_AT,
     });
     const {
         tracksData,

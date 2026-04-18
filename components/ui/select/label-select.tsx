@@ -46,7 +46,7 @@ export default function LabelSelect({
                 }
                 options={option}
                 labelRender={labelRender}
-                dropdownRender={(menu) => {
+                popupRender={(menu) => {
                     return (
                         <div>
                             {menu}

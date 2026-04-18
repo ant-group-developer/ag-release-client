@@ -17,8 +17,12 @@ export const releaseTrackSchema = (messages: any) =>
             .optional()
             .nullable(),
         isrc: z
-            .string()
-            .max(20, messages('validation.max', { number: 20 }))
+            .union([
+                z.literal(''),
+                z.string()
+                    .min(12, messages('validation.min', { number: 12 }))
+                    .max(12, messages('validation.max', { number: 12 })),
+            ])
             .optional()
             .nullable(),
         iswc: z.string().optional().nullable(),

@@ -42,11 +42,11 @@ export default function BackupDatabaseForm({}: Props) {
     const onFinish = (values: any) => {
         try {
             active();
-            const { nMinutes, nHours, nDays, dayOfWeek, ...rest } = values;
+
             const payload: UpdateSettingPayload = {
                 backupDatabase: {
-                    ...rest,
-                    cronValue,
+                    ...values,
+                    cronValue: cronValue,
                 },
             };
             updateSetting({
@@ -80,6 +80,12 @@ export default function BackupDatabaseForm({}: Props) {
             ...backupDatabase,
         });
     }, [form, backupDatabase]);
+
+    useEffect(() => {
+        if (backupDatabase?.cronValue) {
+            setCronValue(backupDatabase.cronValue);
+        }
+    }, [backupDatabase?.cronValue]);
 
     return (
         <div className="space-y-4">
@@ -145,6 +151,32 @@ export default function BackupDatabaseForm({}: Props) {
                     <Input />
                 </AppFormItem>
                 <AppFormItem label={'Shell'} name="shell">
+                    <Input />
+                </AppFormItem>
+
+                <AppFormItem
+                    label={'Base Url R2'}
+                    name="baseUrlR2"
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.input'),
+                        },
+                    ]}
+                >
+                    <Input />
+                </AppFormItem>
+
+                <AppFormItem
+                    label={'Base Url Console R2'}
+                    name="baseUrlConsoleR2"
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.input'),
+                        },
+                    ]}
+                >
                     <Input />
                 </AppFormItem>
             </AppForm>

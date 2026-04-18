@@ -1,7 +1,10 @@
 'use client';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
-import { PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import {
+    PAGE_SIZE_EXTRA_LARGE,
+    PAGE_SIZE_OPTIONS,
+} from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
@@ -60,7 +63,7 @@ export default function Distribution({}: Props) {
         onChangePage,
     } = useFilter<ReleaseDspDataFilter>({
         page: 1,
-        pageSize: 999,
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
         status: releaseDspStatus,
         orderBy: ORDER.DESC,
         fieldOrder: 'dsp.name',

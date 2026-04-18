@@ -6,6 +6,7 @@ import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { toastPromise } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
+import { ArtistData } from '@/modules/artist/types';
 import { TrackData } from '@/modules/releases/types';
 import { useCreateTrackArtist } from '@/modules/track-artist/hooks/use-create-track-artist';
 import { CreateTrackArtistPayload } from '@/modules/track-artist/types/payload';
@@ -54,6 +55,23 @@ export default function AddTrackArtistForm({
             success: messages('common.success'),
         });
     };
+    const handleCreateArtistSuccess = (data: ArtistData) => {
+        props.onCancel?.({} as any);
+        const variables: CreateVariables<CreateTrackArtistPayload> = {
+            payload: {
+                artistId: data.id,
+                trackId: trackData?.id as string,
+            },
+            onSuccess: () => {
+                form.resetFields();
+                deActive();
+            },
+            onError: () => deActive(),
+        };
+        toastPromise(createTrackArtist(variables), messages, {
+            success: messages('common.success'),
+        });
+    };
     return (
         <AppModal
             {...props}
@@ -86,7 +104,7 @@ export default function AddTrackArtistForm({
                         placeholder={messages('artist.select')}
                         allowClear
                         disabled={isReadMode || isActive}
-                        showCreate={false}
+                        onCreateSuccess={handleCreateArtistSuccess}
                     />
                 </AppFormItem>
             </AppForm>

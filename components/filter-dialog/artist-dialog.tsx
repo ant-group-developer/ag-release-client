@@ -29,7 +29,7 @@
 //     const [keyword, setKeyword] = useState<string>();
 
 //     const { artistsData, isFetching } = useGetListArtist({
-//         pageSize: 999,
+//         pageSize: PAGE_SIZE_EXTRA_LARGE,
 //     });
 
 //     const dataFiltered = artistsData?.items?.filter((item) =>

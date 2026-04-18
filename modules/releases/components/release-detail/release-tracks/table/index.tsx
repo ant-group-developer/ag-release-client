@@ -5,7 +5,7 @@ import SortableTable, {
     SortableTableProps,
 } from '@/components/ui/table/sortable-table';
 import { SIZE_ICON } from '@/constants/common';
-import { getIndex } from '@/helpers/common';
+import { getIndex, getSortOrder } from '@/helpers/common';
 import { getTrackDetailRoute, RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
@@ -14,10 +14,14 @@ import { TYPE_MODAL_RELEASE, TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
 import { TrackArtistData } from '@/modules/track-artist/types';
-import { TRACK_TABS, TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
+import {
+    TRACK_SORT_FIELD,
+    TRACK_TABS,
+    TYPE_MODAL_TRACK_ARTIST,
+} from '@/modules/tracks/enums';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
 import { useUpdateTrackOrder } from '@/modules/tracks/hooks/use-update-track-order';
-import { TrackData } from '@/modules/tracks/types';
+import { TrackData, TrackDataFilter } from '@/modules/tracks/types';
 
 import {
     UpdateTrackOrderPayload,
@@ -41,9 +45,10 @@ type Props = {
         pageSize: number;
         current: number;
     };
+    dataFilter?: TrackDataFilter;
 } & Omit<SortableTableProps<TrackData>, 'columns'>;
 
-export default function ReleaseTracksTable({ ...props }: Props) {
+export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
     // hooks - state
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
@@ -140,12 +145,18 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                     {messages('track.label')}
                 </span>
             ),
-            dataIndex: 'title',
+            dataIndex: TRACK_SORT_FIELD.TITLE,
             key: 'title',
             align: 'left',
             width: 300,
             ellipsis: true,
-            render: (value, record) => {
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter?.orderBy,
+                dataFilter?.fieldOrder,
+                TRACK_SORT_FIELD.TITLE
+            ),
+            render: (_, record) => {
                 return (
                     <EditableTitle
                         record={record}

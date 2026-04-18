@@ -6,3 +6,7 @@ export interface CreateTrackContributorPayload {
 
 export interface UpdateTrackContributorPayload
     extends Partial<CreateTrackContributorPayload> {}
+
+export interface BulkCreateTrackContributorPayload {
+    items: CreateTrackContributorPayload[];
+}
