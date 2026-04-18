@@ -14,7 +14,11 @@ import { TYPE_MODAL_RELEASE, TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
 import { TrackArtistData } from '@/modules/track-artist/types';
-import { TRACK_TABS, TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
+import {
+    TRACK_SORT_FIELD,
+    TRACK_TABS,
+    TYPE_MODAL_TRACK_ARTIST,
+} from '@/modules/tracks/enums';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
 import { useUpdateTrackOrder } from '@/modules/tracks/hooks/use-update-track-order';
 import { TrackData, TrackDataFilter } from '@/modules/tracks/types';
@@ -141,7 +145,7 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
                     {messages('track.label')}
                 </span>
             ),
-            dataIndex: 'title',
+            dataIndex: TRACK_SORT_FIELD.TITLE,
             key: 'title',
             align: 'left',
             width: 300,
@@ -150,9 +154,9 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
             sortOrder: getSortOrder(
                 dataFilter?.orderBy,
                 dataFilter?.fieldOrder,
-                'title'
+                TRACK_SORT_FIELD.TITLE
             ),
-            render: (value, record) => {
+            render: (_, record) => {
                 return (
                     <EditableTitle
                         record={record}
