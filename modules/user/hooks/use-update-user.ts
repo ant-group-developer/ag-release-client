@@ -49,11 +49,13 @@ export const useUpdateUserRole = () => {
     const messages = useTranslations();
     const { handleError } = useApiNotify();
 
-    const onSuccess = (data: any, { onSuccess, payload }: UpdateUserRole) => {
+    const onSuccess = (data: any, { onSuccess, payload, userId }: UpdateUserRole) => {
         queryClient.invalidateQueries({
-            queryKey: userQueryKeys.role(payload.userId),
+            queryKey: userQueryKeys.role(userId),
         });
+        queryClient.invalidateQueries({ queryKey: userQueryKeys.detail(userId) });
         queryClient.invalidateQueries({ queryKey: userQueryKeys.info() });
+        queryClient.invalidateQueries({ queryKey: userQueryKeys.lists() });
         showNotification('success', messages('message.updateSuccessfully'));
         onSuccess?.();
     };
@@ -64,8 +66,8 @@ export const useUpdateUserRole = () => {
     };
 
     const mutation = useMutation({
-        mutationFn: ({ payload }: UpdateUserRole) =>
-            userApi.updateRole(payload),
+        mutationFn: ({ payload, userId }: UpdateUserRole) =>
+            userApi.updateRole(userId, payload),
         onSuccess,
         onError,
     });
