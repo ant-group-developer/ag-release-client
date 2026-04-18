@@ -70,3 +70,7 @@ export const PERMISSION = {
         READ: 'revenue.read',
     },
 } as const;
+
+// Type helper for permission values
+type PermissionModule = (typeof PERMISSION)[keyof typeof PERMISSION];
+export type Permission = PermissionModule[keyof PermissionModule];

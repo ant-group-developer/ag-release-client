@@ -238,6 +238,7 @@ function UpdatePermission({ dataEdit }: Props) {
                     className="rounded-lg border"
                     scroll={{
                         x: 0,
+                        y: 450,
                     }}
                     columns={column}
                     expandable={{
@@ -251,6 +252,9 @@ function UpdatePermission({ dataEdit }: Props) {
                     pagination={{
                         pageSize: 15,
                         total: assignableRoles?.length || 0,
+                        style: {
+                            padding: '0 20px',
+                        },
                     }}
                     rowSelection={{
                         selectedRowKeys: selectedKeys,
