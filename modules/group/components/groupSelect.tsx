@@ -1,3 +1,4 @@
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { cn } from '@/helpers/common';
 import { toNonAccentVietnamese } from '@/helpers/string';
 import { Select, SelectProps } from 'antd';
@@ -10,7 +11,7 @@ function GroupSelect({ className, ...props }: Props) {
     const messages = useTranslations();
     const { dataGroup } = useGroupListAll({
         page: 1,
-        pageSize: 999,
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
     });
 
     const allOption = {
