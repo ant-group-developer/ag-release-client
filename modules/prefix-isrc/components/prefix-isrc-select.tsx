@@ -1,3 +1,4 @@
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { toNonAccentVietnamese } from '@/helpers/string';
 import { Select, SelectProps } from 'antd';
 import { useGetListPrefixIsrc } from '../hooks/use-get-list';
@@ -9,7 +10,7 @@ type Props = SelectProps & {
 
 export default function PrefixIsrcSelect({ fallBack, ...props }: Props) {
     const { prefixIsrcData, isFetching } = useGetListPrefixIsrc({
-        pageSize: 999,
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
     });
 
     const options = prefixIsrcData?.items?.map((item: PrefixIsrcData) => ({

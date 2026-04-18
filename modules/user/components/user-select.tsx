@@ -1,3 +1,4 @@
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
 import { cn } from '@/helpers/common';
 import { toNonAccentVietnamese } from '@/helpers/string';
@@ -22,7 +23,7 @@ function UserSelect({
     const { data: dataUser } = useUserList({
         fieldOrder: USER_ORDER_BY.EMAIL,
         orderBy: ORDER.ASC,
-        pageSize: 999,
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
     });
 
     const options = dataUser.items

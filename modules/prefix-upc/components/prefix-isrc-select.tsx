@@ -1,3 +1,4 @@
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { toNonAccentVietnamese } from '@/helpers/string';
 import { Select, SelectProps } from 'antd';
 import { useGetListPrefixUpc } from '../hooks/use-get-list';
@@ -9,7 +10,7 @@ type Props = SelectProps & {
 
 export default function PrefixUpcSelect({ fallBack, ...props }: Props) {
     const { prefixUpcData, isFetching } = useGetListPrefixUpc({
-        pageSize: 999,
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
     });
 
     const options = prefixUpcData?.items?.map((item: PrefixUpcData) => ({

@@ -1,3 +1,4 @@
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { toNonAccentVietnamese } from '@/helpers/string';
 import { ReleasesData } from '@/modules/releases/types';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
@@ -14,7 +15,7 @@ export default function TracksSelect({
     ...props
 }: Props) {
     const { tracksData } = useGetListTracks({
-        pageSize: 999,
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
     });
 
     const options = tracksData.items.map((item: ReleasesData) => ({

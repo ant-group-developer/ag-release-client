@@ -1,4 +1,5 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { useGetListRoles } from '@/modules/roles/hooks/use-get-list-roles';
 import { RolePermission, RolesData } from '@/modules/roles/types';
 import { Badge, Button } from 'antd';
@@ -69,7 +70,7 @@ function UpdatePermission({ dataEdit }: Props) {
     );
 
     const { rolesData } = useGetListRoles({
-        pageSize: 999,
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
     });
     const { updateUserRole, isPending } = useUpdateUserRole();
 

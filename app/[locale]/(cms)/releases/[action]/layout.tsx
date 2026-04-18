@@ -1,6 +1,7 @@
 'use client';
 import DetailSkeleton from '@/components/ui/skeleton/detail-skeleton';
 import { SIZE_ICON } from '@/constants/common';
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { cn } from '@/helpers/common';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
@@ -208,7 +209,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     );
     const { releaseDsp } = useGetListReleaseDsp(releaseId, {
         page: 1,
-        pageSize: 999,
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
     });
 
     useEffect(() => {

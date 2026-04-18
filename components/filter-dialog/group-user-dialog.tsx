@@ -2,6 +2,7 @@ import { AppPopover } from '@/components/shared/app-popover';
 import FilterCheckbox from '@/components/ui/checkbox/filter-count-checkbox';
 import { Chip } from '@/components/ui/chip';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { TYPE_FILTER } from '@/enums/common';
 import { toNonAccentVietnamese } from '@/helpers/string';
 import { useGroupListAll } from '@/modules/group/hooks/useGetGroup';
@@ -30,7 +31,7 @@ const GroupUserDialog = <T extends Record<string, any>>({
 
     const { dataGroup, isFetching } = useGroupListAll({
         page: 1,
-        pageSize: 999,
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
     });
 
     // const { creatorUserList, isFetching } = useGetCreatorUserList({
