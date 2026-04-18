@@ -154,16 +154,12 @@ export const BackupDatabaseLogTable = ({ dataFilter, ...props }: Props) => {
                             !!record?.urlR2
                         }
                         onShowDownload={async () => {
-                            try {
-                                const linkDownload = record?.urlR2;
-                                window.open(
-                                    linkDownload,
-                                    '_blank',
-                                    'noopener,noreferrer'
-                                );
-                            } catch (error) {
-                                handleError(error);
-                            }
+                            const linkDownload = record?.urlR2;
+                            window.open(
+                                linkDownload,
+                                '_blank',
+                                'noopener,noreferrer'
+                            );
                         }}
                     />
                 );
