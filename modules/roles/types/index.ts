@@ -10,6 +10,7 @@ export interface RolesData extends CommonAttribute {
     note: string | null;
     rolePermissions: RolePermission[];
     isActive: boolean;
+    isDefault: boolean;
 }
 
 export interface RolePermission {
