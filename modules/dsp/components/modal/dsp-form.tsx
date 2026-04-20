@@ -127,18 +127,21 @@ export default function DspFormModal({ ...props }: Props) {
             label: messages('common.general'),
             children: <DspGeneral form={form} isActive={isActive} />,
         },
-        {
-            key: 'Policies',
-            label: messages('policy.policies'),
-            children: <DspPolicies form={form} isActive={isActive} />,
-            disabled: !isAdmin,
-        },
-        {
-            key: 'Deals',
-            label: messages('common.deals'),
-            children: <DspDeals dspId={dspData?.id} />,
-            disabled: isCreateForm || !isAdmin,
-        },
+        ...(isAdmin
+            ? [
+                  {
+                      key: 'Policies',
+                      label: messages('policy.policies'),
+                      children: <DspPolicies form={form} isActive={isActive} />,
+                  },
+                  {
+                      key: 'Deals',
+                      label: messages('common.deals'),
+                      children: <DspDeals dspId={dspData?.id} />,
+                      disabled: isCreateForm,
+                  },
+              ]
+            : []),
     ];
 
     useEffect(() => {

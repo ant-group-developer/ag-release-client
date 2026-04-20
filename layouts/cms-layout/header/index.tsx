@@ -6,6 +6,7 @@ import { toastPromise } from '@/helpers/messages-helper';
 import { usePermission } from '@/hooks/use-permission';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { useDownloadTemplate } from '@/modules/releases/hooks/use-download-template';
@@ -76,34 +77,37 @@ function Header({ collapsed, toggleCollapsed }: Props) {
             </div> */}
 
             <div className="flex flex-1 items-center justify-end gap-2">
-                {isNotSystemTenant &&
-                    hasPermission(PERMISSION.RELEASE.CREATE) && (
-                        <Space.Compact>
-                            {/* <Link href={'/releases/create'}> */}
-                            <CreateButton
-                                canCreate
-                                text={messages('release.create')}
-                                onClick={() => {
-                                    nProgress.start();
-                                    setReleaseAction(
-                                        RELEASE_DETAIL_ACTION.READ
-                                    );
-                                    router.push('/releases/create');
-                                }}
-                            />
-                            {/* </Link> */}
+                <PermissionGate
+                    anyOf={[
+                        PERMISSION.RELEASE.CREATE,
+                        PERMISSION.RELEASE.UPDATE,
+                    ]}
+                >
+                    <Space.Compact>
+                        {/* <Link href={'/releases/create'}> */}
 
-                            <Dropdown
-                                menu={{ items: dropdownOptions }}
-                                trigger={['click']}
-                            >
-                                <Button
-                                    type="primary"
-                                    icon={<EllipsisOutlined />}
-                                />
-                            </Dropdown>
-                        </Space.Compact>
-                    )}
+                        <CreateButton
+                            text={messages('release.create')}
+                            onClick={() => {
+                                nProgress.start();
+                                setReleaseAction(RELEASE_DETAIL_ACTION.READ);
+                                router.push('/releases/create');
+                            }}
+                        />
+
+                        {/* </Link> */}
+
+                        <Dropdown
+                            menu={{ items: dropdownOptions }}
+                            trigger={['click']}
+                        >
+                            <Button
+                                type="primary"
+                                icon={<EllipsisOutlined />}
+                            />
+                        </Dropdown>
+                    </Space.Compact>
+                </PermissionGate>
                 <AppSupport />
                 <AppAvatar />
             </div>

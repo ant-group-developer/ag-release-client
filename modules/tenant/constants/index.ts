@@ -18,6 +18,10 @@ export const tenantQueryKeys = {
     detail: (id: string) => [...tenantQueryKeys.details(), id] as const,
     dsps: () => [...tenantQueryKeys.all, QUERY_KEY.TENANT.GET_DSP] as const,
     dsp: (id: string) => [...tenantQueryKeys.dsps(), id] as const,
+    roles: () =>
+        [...tenantQueryKeys.all, QUERY_KEY.TENANT.GET_ROLES] as const,
+    tenantRoles: (id: string) =>
+        [...tenantQueryKeys.roles(), id] as const,
     updates: () => [...tenantQueryKeys.all, QUERY_KEY.TENANT.UPDATE] as const,
     update: (id: string) => [...tenantQueryKeys.updates(), id] as const,
     creates: () => [...tenantQueryKeys.all, QUERY_KEY.TENANT.CREATE] as const,

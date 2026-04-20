@@ -29,6 +29,7 @@ export const PERMISSION = {
         READ: 'release.read',
         TAKE_DOWN: 'release.take_down',
         UPDATE: 'release.update',
+        DELETE: 'release.delete',
     },
     TRACK: {
         READ: 'track.read',
@@ -62,6 +63,7 @@ export const PERMISSION = {
         CREATE: 'user.create',
         UPDATE: 'user.update',
         DELETE: 'user.delete',
+        INVITE: 'user.invite',
     },
     ANALYTICS: {
         READ: 'analytics.read',
@@ -70,3 +72,7 @@ export const PERMISSION = {
         READ: 'revenue.read',
     },
 } as const;
+
+// Type helper for permission values
+type PermissionModule = (typeof PERMISSION)[keyof typeof PERMISSION];
+export type Permission = PermissionModule[keyof PermissionModule];

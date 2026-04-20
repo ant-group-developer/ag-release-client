@@ -10,6 +10,8 @@ import {
     getSortOrder,
 } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
+import { usePermission } from '@/hooks/use-permission';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { Avatar, Popover, Switch, Tag, theme } from 'antd';
 import { ColumnsType } from 'antd/es/table';
@@ -32,7 +34,8 @@ function UserTable({ dataFilter, actionProps, ...props }: Props) {
     const { token } = theme.useToken();
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
-    const canUpdate = true;
+    const { hasPermission } = usePermission();
+    const canUpdate = hasPermission(PERMISSION.USER.UPDATE);
 
     const { isAdmin, isNotSystemTenant } = useAuth();
 

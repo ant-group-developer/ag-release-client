@@ -4,7 +4,9 @@ import {
     getAvatarPlaceholder,
     getSortOrder,
 } from '@/helpers/common';
+import { usePermission } from '@/hooks/use-permission';
 import { Link } from '@/i18n/routing';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { Avatar, Space, Switch, theme, Tooltip } from 'antd';
 import { ColumnsType } from 'antd/es/table';
@@ -31,6 +33,8 @@ function TenantTable({ dataFilter, ...props }: Props) {
     } = useAuth();
 
     const { updateTenant, isPending } = useUpdateTenant();
+    const { hasPermission } = usePermission();
+    const canUpdateTenant = hasPermission(PERMISSION.WORKSPACE.UPDATE);
 
     const updateTenantStatus = (tenantId: string, status: boolean) => {
         updateTenant({
@@ -153,7 +157,7 @@ function TenantTable({ dataFilter, ...props }: Props) {
             render: (cell, record) => (
                 <Switch
                     checked={cell}
-                    disabled={tenantId === record.id}
+                    disabled={tenantId === record.id || !canUpdateTenant}
                     onChange={(status) => updateTenantStatus(record.id, status)}
                 />
             ),

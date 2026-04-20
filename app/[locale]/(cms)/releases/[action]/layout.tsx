@@ -4,7 +4,9 @@ import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { cn } from '@/helpers/common';
+import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { Link } from '@/i18n/routing';
 import AppError from '@/modules/auth/components/error';
 import { useReleaseDistribute } from '@/modules/distribution/hooks/use-release-distribute';
@@ -38,7 +40,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     );
     const { token } = theme.useToken();
     const { getReleaseTabRoute } = useGetReleaseDetailRoute();
-    // const releaseAction = useReleaseActionStore((s) => s.action);
+    const setReleaseAction = useReleaseActionStore((state) => state.setAction);
 
     // state
     const [activeTab, setActiveTab] = useState<string>(
@@ -180,6 +182,12 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             setFormValues(initialData);
         }
     }, [releaseId, releaseData?.id]);
+
+    useEffect(() => {
+        if (!isCreateReleasePage && releaseId) {
+            setReleaseAction(RELEASE_DETAIL_ACTION.READ);
+        }
+    }, [releaseId, isCreateReleasePage, setReleaseAction]);
 
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
         const scrollTop = e.currentTarget.scrollTop;

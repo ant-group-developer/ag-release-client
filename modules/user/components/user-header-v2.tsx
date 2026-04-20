@@ -4,6 +4,7 @@ import { ORDER } from '@/enums/common';
 import { arrayFromString } from '@/helpers/array';
 import { flattenData } from '@/helpers/common';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { TENANT_ORDER_BY } from '@/modules/tenant/enums';
 import { useTenantList } from '@/modules/tenant/hooks/use-get-tenant';
 import {
@@ -32,6 +33,8 @@ export default function UserHeaderV2({
     // const { layoutTable, toggleLayoutTable } = useTableLayoutToggle();
     const [form] = ProForm.useForm();
     const messages = useTranslations();
+
+    const { isAdmin, isSystemTenant } = useAuth();
 
     const initialValue = {
         ...dataFilter,
@@ -88,43 +91,47 @@ export default function UserHeaderV2({
                     })}
                 />
 
-                <ProFormSelect
-                    name="tenantIds"
-                    label={messages('tenant.label')}
-                    placeholder={messages('placeholder.filterBy', {
-                        value: messages('tenant.label').toLowerCase(),
-                    })}
-                    options={flattenDataTenant?.map((item) => ({
-                        value: item?.id,
-                        label: item?.name,
-                    }))}
-                    mode="multiple"
-                    fieldProps={{
-                        maxTagCount: 'responsive',
-                    }}
-                />
+                {isSystemTenant && isAdmin && (
+                    <ProFormSelect
+                        name="tenantIds"
+                        label={messages('tenant.label')}
+                        placeholder={messages('placeholder.filterBy', {
+                            value: messages('tenant.label').toLowerCase(),
+                        })}
+                        options={flattenDataTenant?.map((item) => ({
+                            value: item?.id,
+                            label: item?.name,
+                        }))}
+                        mode="multiple"
+                        fieldProps={{
+                            maxTagCount: 'responsive',
+                        }}
+                    />
+                )}
 
-                <ProFormSelect
-                    name="type"
-                    label={messages('user.type')}
-                    placeholder={messages('placeholder.filterBy', {
-                        value: messages('user.type').toLowerCase(),
-                    })}
-                    options={[
-                        {
-                            label: messages('user.admin'),
-                            value: USER_TYPE.ADMIN,
-                        },
-                        {
-                            label: messages('user.user'),
-                            value: USER_TYPE.USER,
-                        },
-                    ]}
-                    mode="multiple"
-                    fieldProps={{
-                        maxTagCount: 'responsive',
-                    }}
-                />
+                {isAdmin && (
+                    <ProFormSelect
+                        name="type"
+                        label={messages('user.type')}
+                        placeholder={messages('placeholder.filterBy', {
+                            value: messages('user.type').toLowerCase(),
+                        })}
+                        options={[
+                            {
+                                label: messages('user.admin'),
+                                value: USER_TYPE.ADMIN,
+                            },
+                            {
+                                label: messages('user.user'),
+                                value: USER_TYPE.USER,
+                            },
+                        ]}
+                        mode="multiple"
+                        fieldProps={{
+                            maxTagCount: 'responsive',
+                        }}
+                    />
+                )}
 
                 {/* <ProFormSelect
                     name="status"

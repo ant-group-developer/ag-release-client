@@ -713,7 +713,13 @@
             }
         },
         "grantPermission": {
-            "label": "Phân quyền"
+            "label": "Phân quyền",
+            "systemTenantAlert": "Không thể phân quyền trong Workspace Hệ thống.",
+            "systemAdminAlert": "Người dùng này là Quản trị viên Hệ thống và tự động có tất cả quyền.",
+            "tenantOwnerAlert": "Người dùng này là Chủ sở hữu/Quản trị viên và tự động có tất cả quyền.",
+            "disabledTooltip": "Tính năng phân quyền bị vô hiệu hóa trong ngữ cảnh này.",
+            "noTenants": "Người dùng này không thuộc về bất cứ workspace nào.",
+            "selectWorkspaceHint": "Vui lòng chọn workspace để xem hoặc quản lý vai trò và quyền của người dùng này."
         },
         "update": {
             "tenant": {

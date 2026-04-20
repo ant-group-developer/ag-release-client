@@ -4,7 +4,9 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import { getTrackDetailRoute } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
+import { usePermission } from '@/hooks/use-permission';
 import { Link, useRouter } from '@/i18n/routing';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import TrackActionButton from '@/modules/releases/components/release-detail/release-tracks/button/track-action';
 import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import {
@@ -37,6 +39,8 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
     const router = useRouter();
     const params = useParams();
     const { token } = theme.useToken();
+    const { hasPermission } = usePermission();
+    const canScan = hasPermission(PERMISSION.TRACK.SCAN);
     const column: ProColumns<TrackData>[] = [
         {
             title: messages('common.iNo'),
@@ -174,10 +178,13 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
                             className="!border-0 hover:cursor-pointer hover:opacity-70"
                             onClick={() => {
                                 if (isUnScanned) {
-                                    return openModal(
-                                        TYPE_MODAL_TRACK.ACR_CLOUD_SCAN,
-                                        record
-                                    );
+                                    if (canScan) {
+                                        return openModal(
+                                            TYPE_MODAL_TRACK.ACR_CLOUD_SCAN,
+                                            record
+                                        );
+                                    }
+                                    return;
                                 }
                                 openModal(
                                     TYPE_MODAL_TRACK.ACR_CLOUD_SCAN_RESULT,
@@ -222,7 +229,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
                     <TrackActionButton
                         showDownload
                         showDetail
-                        showScan
+                        showScan={canScan}
                         showScanResult={!isUnScanned}
                         onShowScanResult={() =>
                             openModal(
