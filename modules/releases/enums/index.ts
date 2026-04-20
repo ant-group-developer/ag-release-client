@@ -15,6 +15,11 @@ export enum TYPE_MODAL_RELEASE {
     EXPORT_TEMPLATE = 'EXPORT_TEMPLATE',
 }
 
+export enum RELEASE_ROUTE_ACTION {
+    CREATE = 'create',
+    DETAIL = 'detail',
+}
+
 export enum TYPE_MODAL_TRACK {
     ADD = 'ADD',
     DELETE = 'DELETE',

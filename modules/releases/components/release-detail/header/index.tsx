@@ -18,7 +18,7 @@ import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribute';
 import { useReleaseDistribute } from '@/modules/distribution/hooks/use-release-distribute';
 import { DistributeRelease } from '@/modules/distribution/types/payload';
-import { TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
+import { RELEASE_ROUTE_ACTION, TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
 import {
     convertTiffToPreviewUrl,
     isTiffContent,
@@ -93,7 +93,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         useDistributeRelease();
 
     // const
-    const isCreateReleasePage = params['action'] === 'create';
+    const isCreateReleasePage = params['action'] === RELEASE_ROUTE_ACTION.CREATE;
 
     const getActiveTextColor = (action: RELEASE_DETAIL_ACTION) =>
         releaseAction === action ? { color: token.colorPrimary } : undefined;

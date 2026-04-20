@@ -6,14 +6,16 @@ import { APP_ROUTES } from '@/enums/routes';
 import { cn } from '@/helpers/common';
 import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
+import { usePermission } from '@/hooks/use-permission';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { Link } from '@/i18n/routing';
 import AppError from '@/modules/auth/components/error';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useReleaseDistribute } from '@/modules/distribution/hooks/use-release-distribute';
 import { useGetListReleaseDsp } from '@/modules/release-dsp/hooks/use-get-list-release-dsp';
 import ReleaseDetailHeader from '@/modules/releases/components/release-detail/header';
 import RightSidebar from '@/modules/releases/components/release-detail/right-sidebar';
-import { RELEASES_TABS } from '@/modules/releases/enums';
+import { RELEASE_ROUTE_ACTION, RELEASES_TABS } from '@/modules/releases/enums';
 import {
     ReleaseFormStoreData,
     useReleaseFormStore,
@@ -23,7 +25,7 @@ import { Breadcrumb, Tabs, TabsProps, theme } from 'antd';
 import { BookHeadphones, Box, Calendar, Eye, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname } from 'next/navigation';
-import { PropsWithChildren, useEffect, useState } from 'react';
+import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 
 type Props = {};
 
@@ -41,6 +43,11 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const { token } = theme.useToken();
     const { getReleaseTabRoute } = useGetReleaseDetailRoute();
     const setReleaseAction = useReleaseActionStore((state) => state.setAction);
+    const setLastPathAction = useReleaseActionStore((s) => s.setLastPathAction);
+    const lastPathAction = useReleaseActionStore((s) => s.lastPathAction);
+    const setLastReleaseId = useReleaseActionStore((s) => s.setLastReleaseId);
+    const lastReleaseId = useReleaseActionStore((s) => s.lastReleaseId);
+    const { hasPermission } = usePermission();
 
     // state
     const [activeTab, setActiveTab] = useState<string>(
@@ -50,8 +57,11 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
 
     // const
     const releaseId = params['release-id'] ? `${params['release-id']}` : '';
-    const isCreateReleasePage = params['action'] === 'create';
+    const isCreateReleasePage =
+        params['action'] === RELEASE_ROUTE_ACTION.CREATE;
     const isDisableTab = releaseId == '';
+
+    const canUpdate = hasPermission(PERMISSION.RELEASE.UPDATE);
     const isDetailPage = pathname.includes(`/${RELEASES_TABS.CORE_DETAIL}`);
     // const isTracksPage = pathname.includes(`/${RELEASES_TABS.TRACKS}`);
     const coreDetailTabsNavigate = isCreateReleasePage
@@ -183,11 +193,36 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         }
     }, [releaseId, releaseData?.id]);
 
+    // selective reset based on navigation transition and permissions
     useEffect(() => {
-        if (!isCreateReleasePage && releaseId) {
-            setReleaseAction(RELEASE_DETAIL_ACTION.READ);
+        if (params['action'] === RELEASE_ROUTE_ACTION.DETAIL && releaseId) {
+            // Force READ if user doesn't have update permission
+            if (!canUpdate) {
+                setReleaseAction(RELEASE_DETAIL_ACTION.READ);
+            }
+            // Case 1: Just transitioned from create to detail (after successful creation)
+            else if (lastPathAction === RELEASE_ROUTE_ACTION.CREATE) {
+                setReleaseAction(RELEASE_DETAIL_ACTION.EDIT);
+            }
+            // Case 2: Entered from elsewhere, basic switch releases, or first entry in session
+            else if (releaseId !== lastReleaseId) {
+                setReleaseAction(RELEASE_DETAIL_ACTION.READ);
+            }
         }
-    }, [releaseId, isCreateReleasePage, setReleaseAction]);
+
+        // Update store for next mount/change
+        setLastPathAction(params['action'] as string);
+        setLastReleaseId(releaseId);
+    }, [
+        params['action'],
+        releaseId,
+        setReleaseAction,
+        canUpdate,
+        lastPathAction,
+        lastReleaseId,
+        setLastPathAction,
+        setLastReleaseId,
+    ]);
 
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
         const scrollTop = e.currentTarget.scrollTop;
