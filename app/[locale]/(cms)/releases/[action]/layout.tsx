@@ -240,7 +240,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
 
     return (
         <div
-            className="flex h-full overflow-x-clip"
+            className="flex flex-1 overflow-x-clip"
             style={{ backgroundColor: token.colorBgLayout }}
         >
             <div
