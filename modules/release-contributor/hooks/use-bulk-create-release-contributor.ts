@@ -1,9 +1,9 @@
 import { useApiNotify } from '@/hooks/use-api-notify';
 import { releasesQueryKeys } from '@/modules/releases/constants/query-keys';
+import { trackQueryKeys } from '@/modules/tracks/constants/query-keys';
 import { CreateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { releaseContributorApi } from '../apis';
-import { releaseContributorQueryKeys } from '../constants/query-keys';
 import { BulkCreateReleaseContributorPayload } from '../types/payload';
 
 export const useBulkCreateReleaseContributor = () => {
@@ -12,13 +12,22 @@ export const useBulkCreateReleaseContributor = () => {
 
     const onSuccess = (
         data: any,
-        { onSuccess }: CreateVariables<BulkCreateReleaseContributorPayload>
+        {
+            onSuccess,
+            payload,
+        }: CreateVariables<BulkCreateReleaseContributorPayload>
     ) => {
-        queryClient.invalidateQueries({
-            queryKey: releaseContributorQueryKeys.lists(),
-        });
+        // queryClient.invalidateQueries({
+        //     queryKey: releaseContributorQueryKeys.lists(),
+        // });
         queryClient.invalidateQueries({
             queryKey: releasesQueryKeys.details(),
+        });
+        queryClient.invalidateQueries({
+            queryKey: trackQueryKeys.list(),
+        });
+        queryClient.invalidateQueries({
+            queryKey: releasesQueryKeys.validate(payload.items[0].releaseId),
         });
         onSuccess?.(data?.data?.data);
     };

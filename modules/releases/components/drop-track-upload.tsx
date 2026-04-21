@@ -30,7 +30,7 @@ export default function DropUploadTracks({ ...props }: Props) {
 
                 return {
                     uid: file.uid,
-                    name: request.filename || file.name,
+                    name: file.name,
                     size: file.size,
                     type: file.type,
                     originFileObj: file,

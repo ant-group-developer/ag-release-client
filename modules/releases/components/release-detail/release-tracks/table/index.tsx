@@ -8,8 +8,10 @@ import { SIZE_ICON } from '@/constants/common';
 import { getIndex, getSortOrder } from '@/helpers/common';
 import { getTrackDetailRoute, RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
+import { usePermission } from '@/hooks/use-permission';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { TYPE_MODAL_RELEASE, TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
@@ -22,8 +24,6 @@ import {
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
 import { useUpdateTrackOrder } from '@/modules/tracks/hooks/use-update-track-order';
 import { TrackData, TrackDataFilter } from '@/modules/tracks/types';
-import { usePermission } from '@/hooks/use-permission';
-import { PERMISSION } from '@/modules/auth/constants/permission';
 
 import {
     UpdateTrackOrderPayload,
@@ -97,7 +97,7 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
             };
 
             updateTrackDraft(variables);
-        }, 800);
+        }, 300);
     }, [formValues?.id, updateTrackDraft]);
 
     useEffect(() => {
