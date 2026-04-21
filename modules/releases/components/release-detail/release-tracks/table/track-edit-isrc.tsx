@@ -4,7 +4,6 @@ import { UpdateTrackPayload } from '@/modules/tracks/types/payload';
 import { UpdateVariables } from '@/types/api';
 import { Input } from 'antd';
 import { debounce } from 'lodash';
-import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 
 export const EditableIsrc = ({
@@ -17,7 +16,7 @@ export const EditableIsrc = ({
     onUpdate: (variables: UpdateVariables<string, UpdateTrackPayload>) => void;
 }) => {
     const [localIsrc, setLocalIsrc] = useState(record.isrc ?? '');
-    const messages = useTranslations();
+    // const messages = useTranslations();
 
     const debouncedUpdate = useMemo(() => {
         return debounce((id: string, isrc: string) => {
@@ -25,7 +24,7 @@ export const EditableIsrc = ({
                 id,
                 payload: { isrc },
             });
-        }, 300);
+        }, 800);
     }, [onUpdate]);
 
     useEffect(() => {

@@ -26,6 +26,7 @@ import { Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { Barcode, Music, SquarePen, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useCallback } from 'react';
 import TrackActionButton from '../button/track-action';
 import { TrackSliderPlayer } from '../track-slider-player';
 import { TrackArtists } from './track-artists';
@@ -50,7 +51,14 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
     const router = useRouter();
 
     // apis
-    const { updateTrackDraft } = useUpdateTrackDraft();
+    const { mutate: updateTrackDraft } = useUpdateTrackDraft();
+    const handleUpdateTrack = useCallback(
+        (variables: any) => {
+            updateTrackDraft(variables);
+        },
+        [updateTrackDraft]
+    );
+
     const { updateTrackOrder } = useUpdateTrackOrder();
     const { releaseValidateData } = useReleaseValidate(
         formValues?.id as string
@@ -137,7 +145,7 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
                     <EditableTitle
                         record={record}
                         isReadMode={isReadMode}
-                        onUpdate={updateTrackDraft}
+                        onUpdate={handleUpdateTrack}
                         messages={messages}
                     />
                 );
@@ -180,7 +188,7 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
                     <EditableIsrc
                         record={record}
                         isReadMode={isReadMode}
-                        onUpdate={updateTrackDraft}
+                        onUpdate={handleUpdateTrack}
                     />
                 );
             },

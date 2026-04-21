@@ -25,7 +25,7 @@ export const EditableTitle = ({
                 id,
                 payload: { title },
             });
-        }, 300);
+        }, 800);
     }, [onUpdate]);
 
     useEffect(() => {
