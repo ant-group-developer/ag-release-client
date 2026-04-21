@@ -3,13 +3,57 @@ import DndUpload from '@/components/ui/input/dnd-upload';
 import { useTrackUpload } from '@/modules/releases/hooks/use-track-upload';
 import { MAX_COUNT_UPLOAD_TRACK } from '@/modules/tracks/constants';
 import { Progress, UploadProps } from 'antd';
+import type { RcFile, UploadRequestOption } from 'rc-upload/lib/interface';
 import { useRef } from 'react';
 
 interface Props extends UploadProps {}
 
 export default function DropUploadTracks({ ...props }: Props) {
-    const { uploadProgress, handleUpload } = useTrackUpload();
-    const prevLength = useRef(0);
+    const { uploadProgress, handleUpload, pending } = useTrackUpload();
+    const pendingRequestsRef = useRef<UploadRequestOption[]>([]);
+    const flushTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const flushUploadBatch = () => {
+        if (flushTimerRef.current) {
+            clearTimeout(flushTimerRef.current);
+            flushTimerRef.current = null;
+        }
+
+        const requests = pendingRequestsRef.current;
+        if (!requests.length || pending) return;
+
+        pendingRequestsRef.current = [];
+
+        handleUpload(
+            requests.map((request) => {
+                const file = request.file as RcFile;
+
+                return {
+                    uid: file.uid,
+                    name: request.filename || file.name,
+                    size: file.size,
+                    type: file.type,
+                    originFileObj: file,
+                };
+            })
+        )
+            .then(() => {
+                requests.forEach((request) => request.onSuccess?.({}, request.file));
+            })
+            .catch((error) => {
+                requests.forEach((request) => request.onError?.(error));
+            });
+    };
+
+    const customRequest = (options: UploadRequestOption) => {
+        pendingRequestsRef.current.push(options);
+
+        if (flushTimerRef.current) {
+            clearTimeout(flushTimerRef.current);
+        }
+
+        flushTimerRef.current = setTimeout(flushUploadBatch, 0);
+    };
 
     return (
         <div>
@@ -18,14 +62,10 @@ export default function DropUploadTracks({ ...props }: Props) {
                     {...props}
                     multiple
                     accept="audio/wav"
-                    beforeUpload={() => false}
-                    onChange={({ fileList }) => {
-                        if (fileList.length > prevLength.current) {
-                            handleUpload(fileList);
-                        }
-                        prevLength.current = fileList.length;
-                    }}
+                    customRequest={customRequest}
+                    showUploadList={false}
                     maxCount={MAX_COUNT_UPLOAD_TRACK}
+                    disabled={pending || props.disabled}
                 />
             )}
 
