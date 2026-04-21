@@ -135,7 +135,7 @@ export default function ReleaseArtistTable({
         },
         {
             title: messages('artist.profiles'),
-            width: 100,
+            width: 80,
             render: (_, record, index) => {
                 return (
                     <div className="space-x-1">

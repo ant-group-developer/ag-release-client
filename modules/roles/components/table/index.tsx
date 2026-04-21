@@ -100,6 +100,26 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
                 </div>
             ),
         },
+        {
+            title: messages('roles.isDefault'),
+            key: 'isDefault',
+            dataIndex: 'isDefault',
+            align: 'center',
+            width: 100,
+            render: (_, record) => (
+                <div onClick={(e) => e.stopPropagation()}>
+                    <Switch
+                        checked={record.isDefault}
+                        onChange={(checked) =>
+                            updateRole({
+                                id: record.id,
+                                payload: { isDefault: checked },
+                            })
+                        }
+                    />
+                </div>
+            ),
+        },
 
         {
             title: messages('common.createdAt'),

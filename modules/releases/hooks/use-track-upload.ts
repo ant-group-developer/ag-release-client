@@ -142,8 +142,8 @@ export function useTrackUpload() {
                 return [
                     {
                         fileName:
-                            matched.file.name ||
                             matched.file.originFileObj?.name ||
+                            matched.file.name ||
                             item.key,
                         progress: 0,
                         key: item.key,

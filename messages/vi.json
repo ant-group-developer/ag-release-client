@@ -1395,7 +1395,7 @@
         "label": "DSP",
         "name": "Tên nền tảng",
         "codeCi": "Mã CI",
-        "hasDeal": "has deal CI",
+        "hasDeal": "Thoả thuận CI",
         "add": "Thêm nền tảng",
         "oneLinkPerLine": "Mỗi link một dòng",
         "profileList": "Danh sách hồ sơ",
@@ -1636,6 +1636,7 @@
         "label": "Vai trò",
         "name": "Tên vai trò",
         "isActive": "Trạng thái",
+        "isDefault": "Mặc định",
         "message": {
             "success": {
                 "create": "Thêm vai trò thành công",

@@ -10,6 +10,7 @@ import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { toastPromise } from '@/helpers/messages-helper';
 import { cn } from '@/helpers/tailwind';
 import { useHash } from '@/hooks/use-hash';
+import { LoadingType, useLoading, waitForLoading } from '@/hooks/use-loading';
 import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
@@ -18,7 +19,7 @@ import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribute';
 import { useReleaseDistribute } from '@/modules/distribution/hooks/use-release-distribute';
 import { DistributeRelease } from '@/modules/distribution/types/payload';
-import { TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
+import { RELEASE_ROUTE_ACTION, TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
 import {
     convertTiffToPreviewUrl,
     isTiffContent,
@@ -35,6 +36,7 @@ import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { CreateBucketFile } from '@/modules/upload/types/data';
 import { DeleteVariables, UpdateVariables } from '@/types/api';
+import { useQueryClient } from '@tanstack/react-query';
 import { EditOutlined, EyeOutlined } from '@ant-design/icons';
 import {
     Button,
@@ -64,6 +66,8 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     const selectedRows = useReleaseDistribute((state) => state.selectedRows);
 
     const messages = useTranslations();
+    const queryClient = useQueryClient();
+    const isAnyMutating = useLoading(LoadingType.Mutating);
     const [form] = Form.useForm();
     const [notificationApi, contextHolder] = notification.useNotification();
     const formValues = useReleaseFormStore((state) => state.formValues);
@@ -93,7 +97,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         useDistributeRelease();
 
     // const
-    const isCreateReleasePage = params['action'] === 'create';
+    const isCreateReleasePage = params['action'] === RELEASE_ROUTE_ACTION.CREATE;
 
     const getActiveTextColor = (action: RELEASE_DETAIL_ACTION) =>
         releaseAction === action ? { color: token.colorPrimary } : undefined;
@@ -449,8 +453,12 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         };
         deleteRelease(variables);
     };
-    const handleDistribution = () => {
+    const handleDistribution = async () => {
         closeModal();
+
+        // Đợi cho đến khi các mutation đang active hoàn thành mới xử lý tiếp
+        await waitForLoading(queryClient, LoadingType.Mutating);
+
         const dspCode = selectedRows.map((row) => row.dsp.code);
 
         const variables: DistributeRelease = {
@@ -588,12 +596,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                 loading={isDistributingRelease}
                                 onClick={handleDistribution}
                                 type="primary"
-                                disabled={
-                                    validateLength > 0
-                                    // ||
-                                    // releaseData?.status !==
-                                    //     RELEASES_STATUS.DRAFT
-                                }
+                                disabled={validateLength > 0 || isAnyMutating}
                                 shape="round"
                             >
                                 {messages('release.action.submit')}

@@ -7,7 +7,7 @@ import { cn } from '@/helpers/common';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
 import { Link } from '@/i18n/routing';
-import { RELEASES_TABS, TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
+import { RELEASE_ROUTE_ACTION, RELEASES_TABS, TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
 import { ReleaseValidate } from '@/modules/releases/types';
@@ -26,7 +26,7 @@ interface RightSidebarProps {}
 export default function RightSidebar({ ...props }: RightSidebarProps) {
     // hook - state
     const params = useParams();
-    const isCreateReleasePage = params['action'] == 'create';
+    const isCreateReleasePage = params['action'] == RELEASE_ROUTE_ACTION.CREATE;
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
     const { releaseValidateData } = useReleaseValidate(
