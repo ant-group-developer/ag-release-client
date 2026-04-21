@@ -15,30 +15,20 @@ import { PERMISSION } from '@/modules/auth/constants/permission';
 import { TYPE_MODAL_RELEASE, TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
-import { TrackArtistData } from '@/modules/track-artist/types';
-import {
-    TRACK_SORT_FIELD,
-    TRACK_TABS,
-    TYPE_MODAL_TRACK_ARTIST,
-} from '@/modules/tracks/enums';
+import { TRACK_SORT_FIELD, TRACK_TABS } from '@/modules/tracks/enums';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
 import { useUpdateTrackOrder } from '@/modules/tracks/hooks/use-update-track-order';
 import { TrackData, TrackDataFilter } from '@/modules/tracks/types';
 
-import {
-    UpdateTrackOrderPayload,
-    UpdateTrackPayload,
-} from '@/modules/tracks/types/payload';
+import { UpdateTrackOrderPayload } from '@/modules/tracks/types/payload';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
-import { UpdateVariables } from '@/types/api';
 import { Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
-import { debounce } from 'lodash';
 import { Barcode, Music, SquarePen, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useEffect, useMemo } from 'react';
 import TrackActionButton from '../button/track-action';
 import { TrackSliderPlayer } from '../track-slider-player';
+import { TrackArtists } from './track-artists';
 import { EditableIsrc } from './track-edit-isrc';
 import { EditableTitle } from './track-edit-title';
 
@@ -83,28 +73,6 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
 
         updateTrackOrder(variables);
     };
-
-    const debouncedUpdate = useMemo(() => {
-        return debounce((id: TrackData['id'], data: UpdateTrackPayload) => {
-            if (!formValues?.id) return;
-
-            const variables: UpdateVariables<
-                TrackData['id'],
-                UpdateTrackPayload
-            > = {
-                id,
-                payload: data,
-            };
-
-            updateTrackDraft(variables);
-        }, 300);
-    }, [formValues?.id, updateTrackDraft]);
-
-    useEffect(() => {
-        return () => {
-            debouncedUpdate.cancel();
-        };
-    }, [debouncedUpdate]);
 
     const columns: ColumnType<TrackData>[] = [
         ...(canUpdate && !isReadMode
@@ -169,7 +137,7 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
                     <EditableTitle
                         record={record}
                         isReadMode={isReadMode}
-                        onUpdate={debouncedUpdate}
+                        onUpdate={updateTrackDraft}
                         messages={messages}
                     />
                 );
@@ -185,47 +153,13 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
             align: 'left',
             dataIndex: 'artist',
             width: 250,
-            render: (value, record) => {
+            render: (_, record) => {
                 return (
-                    <div>
-                        <div className="flex flex-wrap gap-y-2">
-                            {record?.trackArtists?.map(
-                                (trackArtist: TrackArtistData) => (
-                                    <Tag
-                                        key={`${record.id}-${trackArtist.id}`}
-                                        closeIcon
-                                        onClick={() => {}}
-                                        onClose={(e) => {
-                                            e.preventDefault();
-                                            openModal(
-                                                TYPE_MODAL_TRACK_ARTIST.DELETE,
-                                                trackArtist
-                                            );
-                                        }}
-                                        closable={!isReadMode}
-                                        className="max-w-full whitespace-normal break-words"
-                                    >
-                                        {trackArtist?.artist?.name}
-                                    </Tag>
-                                )
-                            )}
-                            {!isReadMode && (
-                                <Tag
-                                    key={`${record.id}-add-artist`}
-                                    className="border-dashed hover:border-blue-500"
-                                    onClick={() => {
-                                        if (isReadMode) return;
-                                        openModal(
-                                            TYPE_MODAL_TRACK_ARTIST.ADD,
-                                            record
-                                        );
-                                    }}
-                                >
-                                    + {messages('artist.add')}
-                                </Tag>
-                            )}
-                        </div>
-                    </div>
+                    <TrackArtists
+                        record={record}
+                        isReadMode={isReadMode}
+                        openModal={openModal}
+                    />
                 );
             },
         },
@@ -246,7 +180,7 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
                     <EditableIsrc
                         record={record}
                         isReadMode={isReadMode}
-                        onUpdate={debouncedUpdate}
+                        onUpdate={updateTrackDraft}
                     />
                 );
             },
