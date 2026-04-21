@@ -7,7 +7,11 @@ import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { useHash } from '@/hooks/use-hash';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
-import { RELEASES_STATUS, RELEASES_TABS } from '@/modules/releases/enums';
+import {
+    RELEASE_ROUTE_ACTION,
+    RELEASES_STATUS,
+    RELEASES_TABS,
+} from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
@@ -62,7 +66,7 @@ export default function ReleaseDetailFormV2() {
     const router = useRouter();
     const params = useParams();
     const releaseId = params['release-id'];
-    const isCreateReleasePage = params['action'] === 'create';
+    const isCreateReleasePage = params['action'] === RELEASE_ROUTE_ACTION.CREATE;
 
     // Const
     const isReadMode = releaseAction !== RELEASE_DETAIL_ACTION.EDIT;

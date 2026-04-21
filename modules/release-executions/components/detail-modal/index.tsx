@@ -37,6 +37,7 @@ export default function ReleaseExecutionDetailModal({ ...props }: Props) {
                 <Tag
                     bordered={false}
                     color={getStatusColor(releaseExecutionDetail?.status)}
+                    className="font-normal"
                 >
                     {getExecutionStatusLabel(releaseExecutionDetail?.status)}
                 </Tag>
@@ -99,13 +100,11 @@ export default function ReleaseExecutionDetailModal({ ...props }: Props) {
                                                 />
                                             )}
                                             {!dsp && (
-                                                <div>
-                                                    <Typography.Text>
-                                                        {messages(
-                                                            'release.status.label'
-                                                        )}
-                                                    </Typography.Text>
-                                                </div>
+                                                <Typography.Text>
+                                                    {messages(
+                                                        'release.status.label'
+                                                    )}
+                                                </Typography.Text>
                                             )}
                                             <Typography.Text strong>
                                                 {dsp?.name}
@@ -115,6 +114,7 @@ export default function ReleaseExecutionDetailModal({ ...props }: Props) {
                                                 color={getStatusColor(
                                                     executionDsp.status
                                                 )}
+                                                className="font-normal"
                                             >
                                                 {getExecutionStatusLabel(
                                                     executionDsp.status

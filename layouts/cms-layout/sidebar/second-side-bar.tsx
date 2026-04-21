@@ -49,7 +49,7 @@ function SecondSidebar({
                 trigger={null}
                 {...props}
             >
-                <div className="h-[calc(100vh-5rem)]">
+                <div className="h-[calc(100vh-4rem)]">
                     {/* @ts-ignore */}
                     <Scrollbars autoHide>
                         <div className="flex items-center justify-between border-b p-2">

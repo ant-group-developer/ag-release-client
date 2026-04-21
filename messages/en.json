@@ -1394,7 +1394,7 @@
         "label": "DSP",
         "name": "Platform name",
         "codeCi": "CI Code",
-        "hasDeal": "has deal CI",
+        "hasDeal": "Has deal CI",
         "add": "Add platform",
         "oneLinkPerLine": "One link per line",
         "profileList": "Profile list",

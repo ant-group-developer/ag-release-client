@@ -1,8 +1,10 @@
 import { showNotification } from '@/helpers/messages-helper';
 import { TrackData } from '@/modules/releases/types';
 import { UpdateTrackPayload } from '@/modules/tracks/types/payload';
+import { UpdateVariables } from '@/types/api';
 import { Input } from 'antd';
-import { useEffect, useState } from 'react';
+import { debounce } from 'lodash';
+import { useEffect, useMemo, useState } from 'react';
 
 export const EditableTitle = ({
     record,
@@ -12,10 +14,25 @@ export const EditableTitle = ({
 }: {
     record: TrackData;
     isReadMode: boolean;
-    onUpdate: (id: string, data: UpdateTrackPayload) => void;
+    onUpdate: (variables: UpdateVariables<string, UpdateTrackPayload>) => void;
     messages: any;
 }) => {
     const [localTitle, setLocalTitle] = useState(record.title);
+
+    const debouncedUpdate = useMemo(() => {
+        return debounce((id: string, title: string) => {
+            onUpdate({
+                id,
+                payload: { title },
+            });
+        }, 300);
+    }, [onUpdate]);
+
+    useEffect(() => {
+        return () => {
+            debouncedUpdate.cancel();
+        };
+    }, [debouncedUpdate]);
 
     useEffect(() => {
         setLocalTitle(record.title);
@@ -42,9 +59,7 @@ export const EditableTitle = ({
                         );
                     }
                     if (value !== record.title) {
-                        onUpdate(record.id, {
-                            title: value,
-                        });
+                        debouncedUpdate(record.id, value);
                     }
                 }}
             />
