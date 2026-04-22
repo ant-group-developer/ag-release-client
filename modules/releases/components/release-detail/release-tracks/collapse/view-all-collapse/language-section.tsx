@@ -48,7 +48,7 @@ export default function LanguageSection({
                 <div className="grid grid-cols-2 gap-4">
                     {/* Country Language */}
                     <AppFormItem
-                        label={messages('release.metadataLanguageCountry')}
+                        label={messages('release.countryLanguage')}
                         name={['trackLanguage', 'metadataLanguageCountryId']}
                         required
                         rules={[

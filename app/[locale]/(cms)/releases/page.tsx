@@ -62,8 +62,7 @@ export default function Releases({}: Props) {
         dataUpdatedAt,
     } = useGetListReleases(dataFilter);
     const { deleteRelease } = useDeleteRelease();
-    const { exportTemplateCi, isPending: isExportTemplateCiLoading } =
-        useExportTemplateCi();
+    const { isPending: isExportTemplateCiLoading } = useExportTemplateCi();
 
     // func
     const handleRefresh = () => {

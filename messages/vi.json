@@ -834,6 +834,7 @@
         "isMoreThan4Artists": "Có nhiều hơn 4 nghệ sĩ hay không",
         "cLineYearDescription": "Năm đầu tiên xuất bản phiên bản này ở bất kỳ nơi nào trên thế giới.",
         "pLineYearDescription": "Năm bản ghi âm đầu tiên được phát hành trên toàn thế giới.",
+        "countryLanguage": "Ngôn ngữ quốc gia",
 
         "select": {
             "artist": "Chọn nghệ sĩ",

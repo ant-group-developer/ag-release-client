@@ -66,7 +66,8 @@ export default function ReleaseDetailFormV2() {
     const router = useRouter();
     const params = useParams();
     const releaseId = params['release-id'];
-    const isCreateReleasePage = params['action'] === RELEASE_ROUTE_ACTION.CREATE;
+    const isCreateReleasePage =
+        params['action'] === RELEASE_ROUTE_ACTION.CREATE;
 
     // Const
     const isReadMode = releaseAction !== RELEASE_DETAIL_ACTION.EDIT;
@@ -202,8 +203,8 @@ export default function ReleaseDetailFormV2() {
                     className="form-read-only-primary"
                     layout="horizontal"
                     onFinish={handleSubmit(handleNext, handleFormError)}
-                    labelCol={{ span: 8 }}
-                    wrapperCol={{ span: 16 }}
+                    labelCol={{ xl: 10, lg: 10, md: 12, sm: 24 }}
+                    wrapperCol={{ xl: 14, lg: 14, md: 12, sm: 24 }}
                     labelAlign="left"
                     variant={
                         isReadMode && !isCreateReleasePage
@@ -270,7 +271,6 @@ export default function ReleaseDetailFormV2() {
                         releaseData?.status == RELEASES_STATUS.DRAFT && (
                             <Button
                                 danger
-                                disabled={isReadMode}
                                 shape="round"
                                 loading={isActive}
                                 icon={<DeleteOutlined />}

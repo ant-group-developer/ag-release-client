@@ -686,10 +686,12 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                     {releaseData?.modifier?.name} |{' '}
                                     {formattedDate(releaseData?.updatedAt)}
                                 </p>
-                                <PermissionGate
-                                    permission={PERMISSION.RELEASE.UPDATE}
-                                >
-                                    <div className="flex justify-end">
+
+                                <div className="flex justify-between">
+                                    <div>{isScrolled && <DownloadMenu />}</div>
+                                    <PermissionGate
+                                        permission={PERMISSION.RELEASE.UPDATE}
+                                    >
                                         <Segmented
                                             value={releaseAction}
                                             options={segmentedOptions}
@@ -699,12 +701,14 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                                 )
                                             }
                                         />
-                                    </div>
-                                </PermissionGate>
+                                    </PermissionGate>
+                                </div>
                             </div>
-                            <div className="flex justify-end">
-                                <DownloadMenu />
-                            </div>
+                            {!isScrolled && (
+                                <div className="flex justify-end">
+                                    <DownloadMenu />
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>
