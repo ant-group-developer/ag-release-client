@@ -220,7 +220,7 @@ export default function OtherSection({
                             allowClear
                             disabled={isReadMode}
                             onChange={(e) => {
-                                const value = e.target.value;
+                                const value = e.target.value.trim();
                                 updateTrackDraft({ isrc: value }, 'isrc');
                             }}
                         />
@@ -278,7 +278,7 @@ export default function OtherSection({
                             allowClear
                             disabled={isReadMode}
                             onChange={(e) => {
-                                const value = e.target.value;
+                                const value = e.target.value.trim();
                                 updateTrackDraft({
                                     pLineOwner: value,
                                 });
@@ -298,7 +298,7 @@ export default function OtherSection({
                             autoSize={{ minRows: 2, maxRows: 20 }}
                             disabled={isReadMode}
                             onChange={(e) => {
-                                const value = e.target.value;
+                                const value = e.target.value.trim();
                                 updateTrackDraft({ lyric: value }, 'lyric');
                             }}
                         />

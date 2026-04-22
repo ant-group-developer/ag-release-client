@@ -70,7 +70,7 @@ export default function TrackAndArtistSection({
                                 id={`tracks.${index}.title`}
                                 allowClear
                                 onBlur={(e) => {
-                                    const value = e.target.value;
+                                    const value = e.target.value.trim();
                                     updateTrackDraft(
                                         {
                                             title: value,
@@ -90,7 +90,7 @@ export default function TrackAndArtistSection({
                                 id={`tracks.${index}.version`}
                                 allowClear
                                 onBlur={(e) => {
-                                    const value = e.target.value;
+                                    const value = e.target.value.trim();
                                     updateTrackDraft(
                                         {
                                             version: value,

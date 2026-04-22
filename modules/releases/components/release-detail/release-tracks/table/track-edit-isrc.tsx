@@ -28,7 +28,7 @@ export const EditableIsrc = ({
             value={localIsrc}
             onChange={(e) => setLocalIsrc(e.target.value)}
             onBlur={(e) => {
-                const value = e.target.value;
+                const value = e.target.value.trim();
                 if (value !== (record.isrc ?? '')) {
                     onUpdate({
                         id: record.id,

@@ -32,7 +32,7 @@ export const EditableTitle = ({
                 allowClear
                 onChange={(e) => setLocalTitle(e.target.value)}
                 onBlur={(e) => {
-                    const value = e.target.value;
+                    const value = e.target.value.trim();
 
                     if (value.length < 1) {
                         return showNotification(
