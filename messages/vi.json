@@ -1277,6 +1277,7 @@
         "trackContributors": "Người đóng góp bài hát",
         "selectedCountries": "Khu vực",
         "upc": "UPC",
+        "isrc": "ISRC",
         "trackSensitiveId": "Nội dung nhạy cảm",
         "recordingCountryId": "Quốc gia ghi âm",
         "trackArtists": "Nghệ sĩ bài hát",
@@ -1368,6 +1369,13 @@
         },
         "coverArtThumbnails": {
             "original": "Ảnh phát hành"
+        },
+        "validate": {
+            "isrcMustBe12Characters": "ISRC phải đủ 12 ký tự",
+            "missingRequiredContributorsRoles": "Thiếu vai trò người đóng góp",
+            "coverArtIsRequired": "Ảnh phát hành là bắt buộc",
+            "atLeastOneMainArtist": "Phải có ít nhất một nghệ sĩ chính",
+            "atLeastOneTrack": "Phải có ít nhất một bài hát"
         }
     },
 

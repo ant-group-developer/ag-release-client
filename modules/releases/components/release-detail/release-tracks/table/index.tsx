@@ -52,12 +52,6 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
 
     // apis
     const { mutate: updateTrackDraft } = useUpdateTrackDraft();
-    const handleUpdateTrack = useCallback(
-        (variables: any) => {
-            updateTrackDraft(variables);
-        },
-        [updateTrackDraft]
-    );
 
     const { updateTrackOrder } = useUpdateTrackOrder();
     const { releaseValidateData } = useReleaseValidate(
@@ -81,6 +75,13 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
 
         updateTrackOrder(variables);
     };
+
+    const handleUpdateTrack = useCallback(
+        (variables: any) => {
+            updateTrackDraft(variables);
+        },
+        [updateTrackDraft]
+    );
 
     const columns: ColumnType<TrackData>[] = [
         ...(canUpdate && !isReadMode
