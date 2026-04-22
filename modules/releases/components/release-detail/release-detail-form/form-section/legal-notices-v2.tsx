@@ -100,7 +100,7 @@ export default function LegalNoticesSectionV2({
                                 value={field.value ?? ''}
                                 disabled={isCreateReleasePage || isReadMode}
                                 onBlur={(e) => {
-                                    const value = e.target.value || null;
+                                    const value = e.target.value.trim() || null;
                                     field.onChange(value);
                                     debouncedUpdate(
                                         { cLineOwner: value },
@@ -180,7 +180,8 @@ export default function LegalNoticesSectionV2({
                                 value={field.value ?? ''}
                                 disabled={isCreateReleasePage || isReadMode}
                                 onBlur={(e) => {
-                                    const newOwner = e.target.value || null;
+                                    const newOwner =
+                                        e.target.value.trim() || null;
                                     field.onChange(newOwner);
                                     debouncedUpdate(
                                         { pLineOwner: newOwner },

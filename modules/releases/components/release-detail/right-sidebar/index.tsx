@@ -7,7 +7,11 @@ import { cn } from '@/helpers/common';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import useModalStore from '@/hooks/use-modal';
 import { Link } from '@/i18n/routing';
-import { RELEASE_ROUTE_ACTION, RELEASES_TABS, TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
+import {
+    RELEASE_ROUTE_ACTION,
+    RELEASES_TABS,
+    TYPE_MODAL_RELEASE,
+} from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
 import { ReleaseValidate } from '@/modules/releases/types';
@@ -73,7 +77,7 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                 if (parts.length >= 3) {
                     const trackIndex = Number(parts[1]) + 1;
                     const fieldName = parts.slice(2).join('.');
-                    return `${messages('track.number')} ${trackIndex}: ${safeMessage(`formFields.${fieldName}`) || field}`;
+                    return `${messages('track.label')} ${trackIndex}: ${safeMessage(`formFields.${fieldName}`) || field}`;
                 } else if (
                     field === 'maxTrackCount' ||
                     field === 'minTrackCount'
@@ -90,6 +94,7 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                 return safeMessage(`formFields.${field}`);
         }
     };
+
     const getErrorMessages = (error: ReleaseValidate) => {
         return messages(error.messageCode as any);
     };
@@ -216,7 +221,7 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                                                         <Alert
                                                             className="custom-alert-sidebar cursor-pointer !px-[14px] !py-3 !text-sm hover:underline"
                                                             message={
-                                                                <div className="max-w-full truncate text-sm dark:text-white">
+                                                                <div className="max-w-full truncate text-xs font-medium dark:text-white">
                                                                     <CustomTooltip
                                                                         title={
                                                                             label
@@ -227,7 +232,12 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                                                                 </div>
                                                             }
                                                             description={
-                                                                <p className="line-clamp-3 text-xs">
+                                                                <p
+                                                                    className="line-clamp-3 text-xs"
+                                                                    title={getErrorMessages(
+                                                                        err
+                                                                    )}
+                                                                >
                                                                     {getErrorMessages(
                                                                         err
                                                                     )}

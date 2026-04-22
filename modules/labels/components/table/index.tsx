@@ -41,6 +41,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             key: 'iNo',
             width: 40,
             align: 'center',
+            fixed: 'left',
             render: (_, __, index) =>
                 getIndex(
                     props.pagination.pageSize,
@@ -48,32 +49,6 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
                     index
                 ),
         },
-        // {
-        //     key: 'picture',
-        //     dataIndex: 'picture',
-        //     align: 'center',
-        //     width: 30,
-        //     fixed: 'left',
-        //     render: (value, record) => {
-        //         return (
-        //             <div
-        //                 className="flex cursor-pointer justify-center"
-        //                 onClick={() => {
-        //                     router.push(`/labels/detail/${record.id}/overview`);
-        //                 }}
-        //             >
-        //                 <ImageFallback
-        //                     fallbackSrc={FALLBACK_IMAGE}
-        //                     src={value ?? ''}
-        //                     alt="genre"
-        //                     width={48}
-        //                     height={48}
-        //                     className="aspect-square rounded-full object-cover"
-        //                 />
-        //             </div>
-        //         );
-        //     },
-        // },
         {
             title: messages('label.name'),
             key: 'name',

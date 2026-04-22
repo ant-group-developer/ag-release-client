@@ -88,7 +88,7 @@ export default function ReleaseConfigurationSectionV2({
                                     {...field}
                                     value={field.value ?? ''}
                                     onBlur={(e) => {
-                                        const value = e.target.value;
+                                        const value = e.target.value.trim();
                                         field.onChange(value);
                                         debouncedUpdate(
                                             { title: value },
@@ -121,7 +121,7 @@ export default function ReleaseConfigurationSectionV2({
                                     {...field}
                                     value={field.value ?? ''}
                                     onBlur={(e) => {
-                                        const value = e.target.value;
+                                        const value = e.target.value.trim();
                                         field.onChange(value);
                                         debouncedUpdate(
                                             { version: value },

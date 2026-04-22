@@ -1,10 +1,8 @@
-'use client';
 import { TrackData } from '@/modules/tracks/types';
 import { UpdateTrackPayload } from '@/modules/tracks/types/payload';
 import { UpdateVariables } from '@/types/api';
 import { Input } from 'antd';
-import { debounce } from 'lodash';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const EditableIsrc = ({
     record,
@@ -16,22 +14,6 @@ export const EditableIsrc = ({
     onUpdate: (variables: UpdateVariables<string, UpdateTrackPayload>) => void;
 }) => {
     const [localIsrc, setLocalIsrc] = useState(record.isrc ?? '');
-    // const messages = useTranslations();
-
-    const debouncedUpdate = useMemo(() => {
-        return debounce((id: string, isrc: string) => {
-            onUpdate({
-                id,
-                payload: { isrc },
-            });
-        }, 800);
-    }, [onUpdate]);
-
-    useEffect(() => {
-        return () => {
-            debouncedUpdate.cancel();
-        };
-    }, [debouncedUpdate]);
 
     useEffect(() => {
         setLocalIsrc(record.isrc ?? '');
@@ -44,11 +26,14 @@ export const EditableIsrc = ({
             size="small"
             allowClear
             value={localIsrc}
-            onChange={(e) => {
-                const next = e.target.value;
-                setLocalIsrc(next);
-                if (next !== record.isrc) {
-                    debouncedUpdate(record.id, next);
+            onChange={(e) => setLocalIsrc(e.target.value)}
+            onBlur={(e) => {
+                const value = e.target.value.trim();
+                if (value !== (record.isrc ?? '')) {
+                    onUpdate({
+                        id: record.id,
+                        payload: { isrc: value },
+                    });
                 }
             }}
         />
