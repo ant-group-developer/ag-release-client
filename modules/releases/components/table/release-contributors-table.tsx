@@ -72,7 +72,7 @@ export default function ReleaseContributorsTable({
         },
         {
             title: messages('common.name'),
-            width: 250,
+            width: 300,
             render: (_, record, index) => {
                 const artist = record?.artist;
                 return (
@@ -85,7 +85,7 @@ export default function ReleaseContributorsTable({
         },
         {
             title: messages('artist.addToTracks'),
-            width: 120,
+            width: 150,
             render: (_, record, index) => {
                 return (
                     <Switch
@@ -102,7 +102,7 @@ export default function ReleaseContributorsTable({
         },
         {
             title: messages('common.role'),
-            width: 100,
+            width: 200,
             render: (_, record, index) => {
                 return (
                     <div className="max-w-52">
@@ -123,7 +123,7 @@ export default function ReleaseContributorsTable({
         },
         {
             title: messages('genre.label'),
-            width: 100,
+            width: 150,
             render: (_, record, index) => {
                 const artist = record?.artist;
                 return <span>{artist?.genre?.name}</span>;
@@ -131,7 +131,7 @@ export default function ReleaseContributorsTable({
         },
         {
             title: messages('country.label'),
-            width: 100,
+            width: 150,
             render: (_, record, index) => {
                 const artist = record?.artist;
                 return <span>{artist?.country?.name}</span>;
@@ -140,7 +140,7 @@ export default function ReleaseContributorsTable({
 
         {
             title: messages('artist.profiles'),
-            width: 150,
+            width: 100,
             render: (_, record, index) => {
                 return (
                     <div className="space-x-1">
