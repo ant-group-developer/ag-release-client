@@ -42,7 +42,7 @@ export default function CodesSectionV2({
                                 {...field}
                                 value={field.value ?? ''}
                                 onBlur={(e) => {
-                                    const value = e.target.value;
+                                    const value = e.target.value.trim();
                                     field.onChange(value);
                                     debouncedUpdate({
                                         upc: value,
@@ -70,7 +70,7 @@ export default function CodesSectionV2({
                                 {...field}
                                 value={field.value ?? ''}
                                 onBlur={(e) => {
-                                    const value = e.target.value;
+                                    const value = e.target.value.trim();
                                     field.onChange(value);
                                     debouncedUpdate({
                                         catalogId: value,

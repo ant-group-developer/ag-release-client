@@ -3,8 +3,7 @@ import { TrackData } from '@/modules/releases/types';
 import { UpdateTrackPayload } from '@/modules/tracks/types/payload';
 import { UpdateVariables } from '@/types/api';
 import { Input } from 'antd';
-import { debounce } from 'lodash';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const EditableTitle = ({
     record,
@@ -19,21 +18,6 @@ export const EditableTitle = ({
 }) => {
     const [localTitle, setLocalTitle] = useState(record.title);
 
-    const debouncedUpdate = useMemo(() => {
-        return debounce((id: string, title: string) => {
-            onUpdate({
-                id,
-                payload: { title },
-            });
-        }, 800);
-    }, [onUpdate]);
-
-    useEffect(() => {
-        return () => {
-            debouncedUpdate.cancel();
-        };
-    }, [debouncedUpdate]);
-
     useEffect(() => {
         setLocalTitle(record.title);
     }, [record.title]);
@@ -46,9 +30,9 @@ export const EditableTitle = ({
                 value={localTitle}
                 disabled={isReadMode}
                 allowClear
-                onChange={(e) => {
-                    const value = e.target.value;
-                    setLocalTitle(value);
+                onChange={(e) => setLocalTitle(e.target.value)}
+                onBlur={(e) => {
+                    const value = e.target.value.trim();
 
                     if (value.length < 1) {
                         return showNotification(
@@ -59,7 +43,10 @@ export const EditableTitle = ({
                         );
                     }
                     if (value !== record.title) {
-                        debouncedUpdate(record.id, value);
+                        onUpdate({
+                            id: record.id,
+                            payload: { title: value },
+                        });
                     }
                 }}
             />

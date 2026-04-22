@@ -17,13 +17,13 @@ export default function ReleaseDspStatusTag({ status, ...props }: Props) {
             color = 'blue';
             break;
         case RELEASE_DSP_DELIVERY_STATUS.ISSUES:
-            color = 'orange';
+            color = 'red';
             break;
         case RELEASE_DSP_DELIVERY_STATUS.DISTRIBUTED:
             color = 'green';
             break;
         case RELEASE_DSP_DELIVERY_STATUS.TAKEN_DOWN:
-            color = 'gold';
+            color = 'orange';
             break;
         case RELEASE_DSP_DELIVERY_STATUS.NEVER_DISTRIBUTED:
             color = 'default';

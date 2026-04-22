@@ -1275,6 +1275,7 @@
         "releaseContributors": "Release contributors",
         "trackContributors": "Track contributors",
         "upc": "UPC",
+        "isrc": "ISRC",
         "selectedCountries": "Region",
         "trackSensitiveId": "Sensitive content",
         "recordingCountryId": "Recording country",
@@ -1367,6 +1368,14 @@
         },
         "coverArtThumbnails": {
             "original": "Release image"
+        },
+        "validate": {
+            "releaseNameMustMatchTrackName": "The release title must match at least one track title",
+            "isrcMustBe12Characters": "ISRC must be 12 characters",
+            "missingRequiredContributorsRoles": "Missing required contributors roles",
+            "coverArtIsRequired": "Cover art is required",
+            "atLeastOneMainArtist": "Must have at least one main artist",
+            "atLeastOneTrack": "Release must have at least one track"
         }
     },
 

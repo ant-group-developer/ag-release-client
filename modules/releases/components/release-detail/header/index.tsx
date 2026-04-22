@@ -19,7 +19,10 @@ import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribute';
 import { useReleaseDistribute } from '@/modules/distribution/hooks/use-release-distribute';
 import { DistributeRelease } from '@/modules/distribution/types/payload';
-import { RELEASE_ROUTE_ACTION, TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
+import {
+    RELEASE_ROUTE_ACTION,
+    TYPE_MODAL_RELEASE,
+} from '@/modules/releases/enums';
 import {
     convertTiffToPreviewUrl,
     isTiffContent,
@@ -36,8 +39,8 @@ import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { CreateBucketFile } from '@/modules/upload/types/data';
 import { DeleteVariables, UpdateVariables } from '@/types/api';
-import { useQueryClient } from '@tanstack/react-query';
 import { EditOutlined, EyeOutlined } from '@ant-design/icons';
+import { useQueryClient } from '@tanstack/react-query';
 import {
     Button,
     Form,
@@ -97,7 +100,8 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         useDistributeRelease();
 
     // const
-    const isCreateReleasePage = params['action'] === RELEASE_ROUTE_ACTION.CREATE;
+    const isCreateReleasePage =
+        params['action'] === RELEASE_ROUTE_ACTION.CREATE;
 
     const getActiveTextColor = (action: RELEASE_DETAIL_ACTION) =>
         releaseAction === action ? { color: token.colorPrimary } : undefined;
@@ -597,7 +601,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                 onClick={handleDistribution}
                                 type="primary"
                                 disabled={validateLength > 0 || isAnyMutating}
-                                shape="round"
+                                shape="default"
                             >
                                 {messages('release.action.submit')}
                             </Button>

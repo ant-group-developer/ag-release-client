@@ -25,7 +25,7 @@ import { Breadcrumb, Tabs, TabsProps, theme } from 'antd';
 import { BookHeadphones, Box, Calendar, Eye, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname } from 'next/navigation';
-import { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 
 type Props = {};
 
@@ -275,12 +275,12 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
 
     return (
         <div
-            className="flex flex-1 overflow-x-clip"
+            className="flex flex-1 overflow-y-hidden overflow-x-clip"
             style={{ backgroundColor: token.colorBgLayout }}
         >
             <div
                 onScroll={handleScroll}
-                className="thin-scrollbar mx-auto flex min-w-0 flex-1 flex-col overflow-y-auto px-8"
+                className="thin-scrollbar mx-auto flex h-[calc(100vh-4rem)] min-w-0 flex-1 flex-col overflow-y-auto px-8"
             >
                 <Breadcrumb items={breadcrumbItems} className="!py-4" />
                 <div

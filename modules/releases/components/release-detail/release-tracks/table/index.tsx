@@ -24,7 +24,7 @@ import { UpdateTrackOrderPayload } from '@/modules/tracks/types/payload';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
-import { Barcode, Music, SquarePen, Users } from 'lucide-react';
+import { Barcode, Disc3, Music, SquarePen, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useCallback } from 'react';
 import TrackActionButton from '../button/track-action';
@@ -52,12 +52,6 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
 
     // apis
     const { mutate: updateTrackDraft } = useUpdateTrackDraft();
-    const handleUpdateTrack = useCallback(
-        (variables: any) => {
-            updateTrackDraft(variables);
-        },
-        [updateTrackDraft]
-    );
 
     const { updateTrackOrder } = useUpdateTrackOrder();
     const { releaseValidateData } = useReleaseValidate(
@@ -68,6 +62,7 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
     const isReadMode = action !== RELEASE_DETAIL_ACTION.EDIT;
     const { hasPermission } = usePermission();
     const canUpdate = hasPermission(PERMISSION.RELEASE.UPDATE);
+    const tracksLength = props.dataSource?.length || 0;
 
     const handleDragEnd: OnDragEnd<TrackData[]> = (newData) => {
         const payload = newData.map((item, index) => ({
@@ -81,6 +76,13 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
 
         updateTrackOrder(variables);
     };
+
+    const handleUpdateTrack = useCallback(
+        (variables: any) => {
+            updateTrackDraft(variables);
+        },
+        [updateTrackDraft]
+    );
 
     const columns: ColumnType<TrackData>[] = [
         ...(canUpdate && !isReadMode
@@ -106,7 +108,12 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
                 ),
         },
         {
-            title: '',
+            title: (
+                <div className="flex items-center gap-1 pl-2">
+                    <Disc3 size={SIZE_ICON} />
+                    {messages('common.total')}: {tracksLength}
+                </div>
+            ),
             dataIndex: 'waveform',
             key: 'waveform',
             align: 'center',

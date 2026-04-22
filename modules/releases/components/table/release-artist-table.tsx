@@ -70,7 +70,7 @@ export default function ReleaseArtistTable({
         },
         {
             title: messages('common.name'),
-            width: 250,
+            width: 400,
             render: (_, record, index) => {
                 const artist = record?.artist;
                 return (
@@ -83,7 +83,7 @@ export default function ReleaseArtistTable({
         },
         {
             title: messages('artist.addToTracks'),
-            width: 100,
+            width: 200,
             render: (_, record, index) => {
                 return (
                     <Switch
@@ -98,28 +98,9 @@ export default function ReleaseArtistTable({
                 );
             },
         },
-        // {
-        //     title: messages('common.role'),
-        //     width: 100,
-        //     render: (_, record, index) => {
-        //         return (
-        //             <div className="max-w-52">
-        //                 <RoleArtistSelect
-        //                     defaultValue={record?.artistRole?.id}
-        //                     className="w-full"
-        //                     onChange={(e) =>
-        //                         handleUpdate(record?.id, {
-        //                             artistRoleId: e,
-        //                         })
-        //                     }
-        //                 />
-        //             </div>
-        //         );
-        //     },
-        // },
         {
             title: messages('genre.label'),
-            width: 100,
+            width: 200,
             render: (_, record, index) => {
                 const artist = record?.artist;
                 return <span>{artist?.genre?.name}</span>;
@@ -127,7 +108,7 @@ export default function ReleaseArtistTable({
         },
         {
             title: messages('country.label'),
-            width: 100,
+            width: 200,
             render: (_, record, index) => {
                 const artist = record?.artist;
                 return <span>{artist?.country?.name}</span>;
@@ -135,7 +116,7 @@ export default function ReleaseArtistTable({
         },
         {
             title: messages('artist.profiles'),
-            width: 80,
+            width: 150,
             render: (_, record, index) => {
                 return (
                     <div className="space-x-1">
@@ -143,7 +124,7 @@ export default function ReleaseArtistTable({
                             (profile: ArtistProfileData) => (
                                 <Avatar
                                     key={profile.id}
-                                    size={26}
+                                    size={'small'}
                                     src={profile.dsp?.picture ?? ''}
                                     className="cursor-pointer hover:opacity-80"
                                     onClick={(e) => {
@@ -162,7 +143,7 @@ export default function ReleaseArtistTable({
             },
         },
         {
-            width: 40,
+            width: 50,
             align: 'center',
             render: (_, record, index) => {
                 return (
@@ -196,7 +177,7 @@ export default function ReleaseArtistTable({
                 <AppTable
                     {...props}
                     columns={columns}
-                    scroll={{ x: 'max-content' }}
+                    // scroll={{ x: 'max-content' }}
                 />
                 {!disabled && (
                     <div>

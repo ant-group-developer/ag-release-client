@@ -211,6 +211,7 @@ export const adminRoutes: RouteNode[] = [
                 title: 'Distribution',
                 href: APP_ROUTES.DISTRIBUTION,
                 icon: Box,
+                hidden: true,
                 required: {
                     permission: [PERMISSION.RELEASE.UPDATE],
                 },
