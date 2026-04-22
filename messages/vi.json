@@ -1371,6 +1371,7 @@
             "original": "Ảnh phát hành"
         },
         "validate": {
+            "releaseNameMustMatchTrackName": "Tên phát hành phải trùng với tên một bài hát",
             "isrcMustBe12Characters": "ISRC phải đủ 12 ký tự",
             "missingRequiredContributorsRoles": "Thiếu vai trò người đóng góp",
             "coverArtIsRequired": "Ảnh phát hành là bắt buộc",
