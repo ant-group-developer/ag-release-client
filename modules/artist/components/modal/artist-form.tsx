@@ -152,21 +152,6 @@ export default function ArtistFormModal({
             payloadValues.picture = defaultImage;
         }
 
-        // Auto-set channel name = DSP name before sending to backend
-        if (payloadValues.artistProfiles?.length && dspData?.items?.length) {
-            payloadValues.artistProfiles = payloadValues.artistProfiles.map(
-                (profile: any) => {
-                    const matched = dspData.items.find(
-                        (dsp) => dsp.id === profile.dspId
-                    );
-                    return {
-                        ...profile,
-                        name: matched?.name || profile.name || '',
-                    };
-                }
-            );
-        }
-
         return isUpdateForm
             ? handleUpdateArtist(payloadValues)
             : handleCreateArtist(payloadValues);
@@ -189,7 +174,8 @@ export default function ArtistFormModal({
                 .filter(Boolean)
                 .map((dsp) => ({
                     dspId: dsp!.id,
-                    name: dsp!.name,
+                    // name: dsp!.name,
+                    name: ' ',
                     url: '',
                 }));
 
@@ -229,10 +215,10 @@ export default function ArtistFormModal({
             title={titleModal}
             onOk={form.submit}
             loading={isActive}
-            className="!top-6 !w-[50vw]"
+            className="!top-5 !w-[50vw]"
             styles={{
                 body: {
-                    maxHeight: '80vh',
+                    maxHeight: '85vh',
                     overflowY: 'auto',
                     paddingRight: '8px',
                 },
@@ -402,45 +388,37 @@ export default function ArtistFormModal({
                                                 </AppFormItem>
                                             ),
                                         },
-                                        // {
-                                        //     title: messages('channel.name'),
-                                        //     width: '25%',
-                                        //     render: (_: any, field: any) => (
-                                        //         <AppFormItem
-                                        //             name={[field.name, 'name']}
-                                        //             required
-                                        //             noStyle
-                                        //             rules={[
-                                        //                 {
-                                        //                     required: true,
-                                        //                     message:
-                                        //                         messages(
-                                        //                             'validation.input'
-                                        //                         ),
-                                        //                 },
-                                        //                 {
-                                        //                     max: MAX_NAME_LENGTH,
-                                        //                     message: messages(
-                                        //                         'validation.stringMax',
-                                        //                         {
-                                        //                             max: MAX_NAME_LENGTH,
-                                        //                             field: messages(
-                                        //                                 'channel.name'
-                                        //                             ),
-                                        //                         }
-                                        //                     ),
-                                        //                 },
-                                        //             ]}
-                                        //         >
-                                        //             <Input
-                                        //                 allowClear
-                                        //                 placeholder={messages(
-                                        //                     'channel.name'
-                                        //                 )}
-                                        //             />
-                                        //         </AppFormItem>
-                                        //     ),
-                                        // },
+                                        {
+                                            title: messages('common.name'),
+                                            width: '25%',
+                                            render: (_: any, field: any) => (
+                                                <AppFormItem
+                                                    name={[field.name, 'name']}
+                                                    noStyle
+                                                    rules={[
+                                                        {
+                                                            max: MAX_NAME_LENGTH,
+                                                            message: messages(
+                                                                'validation.stringMax',
+                                                                {
+                                                                    max: MAX_NAME_LENGTH,
+                                                                    field: messages(
+                                                                        'channel.name'
+                                                                    ),
+                                                                }
+                                                            ),
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Input
+                                                        allowClear
+                                                        placeholder={messages(
+                                                            'common.name'
+                                                        )}
+                                                    />
+                                                </AppFormItem>
+                                            ),
+                                        },
                                         {
                                             title: messages('common.link'),
                                             render: (_: any, field: any) => (
@@ -568,7 +546,7 @@ export default function ArtistFormModal({
                                         },
                                     ]}
                                     scroll={{
-                                        y: 110,
+                                        y: 160,
                                     }}
                                 />
 
