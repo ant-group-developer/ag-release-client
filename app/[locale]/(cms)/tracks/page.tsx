@@ -7,16 +7,16 @@ import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import useModalStore from '@/hooks/use-modal';
+import { usePermission } from '@/hooks/use-permission';
 import AcrCloudScanHistoryModal from '@/modules/acr-cloud/components/modal/acr-scan-history-modal';
 import AcrCloudScanModal from '@/modules/acr-cloud/components/modal/acr-scan-modal';
 import AcrCloudScanResultModal from '@/modules/acr-cloud/components/modal/acr-scan-result-modal';
-import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
-import { TRACK_SORT_FIELD } from '@/modules/tracks/enums';
-import { usePermission } from '@/hooks/use-permission';
 import { PERMISSION } from '@/modules/auth/constants/permission';
+import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { ReleasesDataFilter } from '@/modules/releases/types';
-import TrackHeaderV2 from '@/modules/tracks/components/header/index-v2';
+import { TRACK_SORT_FIELD } from '@/modules/tracks/enums';
 
+import TrackHeader from '@/modules/tracks/components/header';
 import TracksTable from '@/modules/tracks/components/table';
 import TracksGridTable from '@/modules/tracks/components/table/grid-table';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
@@ -33,7 +33,7 @@ export default function Tracks({}: Props) {
     const { token } = theme.useToken();
     const typeModal = useModalStore((state) => state.typeModal);
     const [selectedRow, setSelectedRow] = useState<Key[]>([]);
-    
+
     const { hasPermission } = usePermission();
     const canScan = hasPermission(PERMISSION.TRACK.SCAN);
 
@@ -80,11 +80,13 @@ export default function Tracks({}: Props) {
     };
 
     // const
-    const rowSelection = canScan ? {
-        selectedRowKeys: selectedRow,
-        onChange: handleSelectedRow,
-        columnWidth: 30,
-    } : false;
+    const rowSelection = canScan
+        ? {
+              selectedRowKeys: selectedRow,
+              onChange: handleSelectedRow,
+              columnWidth: 30,
+          }
+        : false;
 
     return (
         <AppPageWrapper>
@@ -102,13 +104,11 @@ export default function Tracks({}: Props) {
                     />
                 </div> */}
 
-                <TrackHeaderV2
+                <TrackHeader
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
                     canClearFilter={canClearFilter}
                     removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
-                    dataUpdatedAt={dataUpdatedAt}
                 />
 
                 {/* <div

@@ -42,6 +42,8 @@ export interface FilterConfig {
     loading?: boolean;
     /** Whether the checkbox values are comma-separated strings in the URL */
     isCommaSeparated?: boolean;
+    /** Callback when user searches within the filter content (for async/server-side search) */
+    onSearch?: (keyword: string) => void;
 }
 
 /**

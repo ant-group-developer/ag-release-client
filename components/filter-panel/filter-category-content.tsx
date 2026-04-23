@@ -132,6 +132,7 @@ export default function FilterCategoryContent({
                         onChange={handleCheckboxChange}
                         loading={config.loading}
                         placeholder={config.placeholder}
+                        onSearch={config.onSearch}
                     />
                 )}
 

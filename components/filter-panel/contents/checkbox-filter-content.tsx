@@ -2,9 +2,10 @@
 
 import { toNonAccentVietnamese } from '@/helpers/string';
 import { Checkbox, Empty, Input } from 'antd';
+import { debounce } from 'lodash';
 import { Search } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FilterOption } from '../types';
 
 type Props = {
@@ -13,6 +14,7 @@ type Props = {
     onChange: (values: string[]) => void;
     loading?: boolean;
     placeholder?: string;
+    onSearch?: (keyword: string) => void;
 };
 
 export default function CheckboxFilterContent({
@@ -21,19 +23,38 @@ export default function CheckboxFilterContent({
     onChange,
     loading = false,
     placeholder,
+    onSearch,
 }: Props) {
     const messages = useTranslations();
     const [searchKeyword, setSearchKeyword] = useState('');
     const [internalValues, setInternalValues] =
         useState<string[]>(externalValues);
 
-    // Đồng bộ ngược lại nếu externalValues thay đổi (ví dụ khi xóa Tag hoặc Clear Filter)
+    // Debounce search
+    const debouncedSearch = useCallback(
+        debounce((keyword: string) => {
+            onSearch?.(keyword);
+        }, 500),
+        [onSearch]
+    );
+
+    // Xử lý khi gõ tìm kiếm
+    const handleSearchChange = (val: string) => {
+        setSearchKeyword(val);
+        if (onSearch) {
+            debouncedSearch(val);
+        }
+    };
+
+    // Đồng bộ ngược lại nếu externalValues thay đổi
     useEffect(() => {
         setInternalValues(externalValues);
     }, [JSON.stringify(externalValues)]);
 
     const filteredOptions = useMemo(() => {
-        if (!searchKeyword.trim()) return options;
+        // Nếu có onSearch thì coi như Options đã được lọc từ Server/Parent
+        if (onSearch || !searchKeyword.trim()) return options;
+
         const normalizedKeyword = toNonAccentVietnamese(
             searchKeyword.trim()
         ).toLowerCase();
@@ -42,7 +63,7 @@ export default function CheckboxFilterContent({
                 .toLowerCase()
                 .includes(normalizedKeyword)
         );
-    }, [options, searchKeyword]);
+    }, [options, searchKeyword, onSearch]);
 
     const handleCheckboxChange = (checkedValues: string[]) => {
         // Cập nhật local state ngay lập tức để UI mượt mà
@@ -58,7 +79,7 @@ export default function CheckboxFilterContent({
                 prefix={<Search size={14} className="text-gray-400" />}
                 placeholder={placeholder || messages('common.search')}
                 value={searchKeyword}
-                onChange={(e) => setSearchKeyword(e.target.value)}
+                onChange={(e) => handleSearchChange(e.target.value)}
                 allowClear
                 size="small"
                 className="mb-1"
