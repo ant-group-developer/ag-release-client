@@ -19,6 +19,13 @@ export interface SettingConfig {
     backupDatabase: BackupDatabaseConfig;
     other?: OtherConfig;
     resend?: ResendConfig;
+    partners?: PartnersConfig;
+}
+
+export interface PartnersConfig {
+    spotify?: {
+        token: string;
+    };
 }
 
 export interface OtherConfig {

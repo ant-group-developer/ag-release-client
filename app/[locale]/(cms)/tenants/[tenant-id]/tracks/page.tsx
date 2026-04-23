@@ -111,8 +111,8 @@ export default function Tracks({}: Props) {
                 onChangeFilter={onChangeFilter}
                 canClearFilter={canClearFilter}
                 removeFilter={removeFilter}
-                handleRefresh={handleRefresh}
-                dataUpdatedAt={dataUpdatedAt}
+                // handleRefresh={handleRefresh}
+                // dataUpdatedAt={dataUpdatedAt}
             />
 
             {layoutTable === LAYOUT_TABLE.LIST && (

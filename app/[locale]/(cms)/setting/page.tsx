@@ -10,6 +10,7 @@ import GeneratorForm from '@/modules/setting/components/forms/generator-form';
 import TelegramForm from '@/modules/setting/components/forms/telegram-form';
 import ResendForm from '@/modules/setting/components/forms/resend-form';
 import WebsiteForm from '@/modules/setting/components/forms/website-form';
+import PartnersForm from '@/modules/setting/components/forms/partners-form';
 import { settingQueryKeys } from '@/modules/setting/constants/query-keys';
 import { SETTING_TABS } from '@/modules/setting/enums';
 import { CommonParams } from '@/types/api';
@@ -76,6 +77,11 @@ export default function SettingPage({}: Props) {
             key: SETTING_TABS.RESEND,
             label: 'Resend',
             children: <ResendForm />,
+        },
+        {
+            key: SETTING_TABS.PARTNERS,
+            label: 'Partners',
+            children: <PartnersForm />,
         },
     ];
 
