@@ -50,4 +50,8 @@ export const artistApi = {
             `/artists/${artistId}/artist-profiles/${profileId}`
         );
     },
+
+    syncSpotify: () => {
+        return axiosInstance.post('/artists/sync-spotify');
+    },
 };

@@ -337,6 +337,8 @@
         "filterBy": "Filter by",
         "filterByValue": "Lọc theo {value}",
         "noMatchingFilter": "No matching filter",
+        "searchFilter": "Search filter...",
+        "activeFilterCount": "{count} filter(s) active",
         "hint": "Separated by commas",
         "last28Days": "Last 28 days",
         "filterComment": "Filter comment",
@@ -657,7 +659,8 @@
         "clickToShowFilters": "Click to show filters",
         "openNewTab": "Open new tab",
         "ifVideoNotProcessed": "If the video is not processed yet, please download it for use.",
-        "exportExcelFailed": "Export excel failed"
+        "exportExcelFailed": "Export excel failed",
+        "jobIsProcessing": "Job is processing, will be completed in a few minutes"
     },
     "userProfile": {
         "logout": "Log out"
@@ -842,6 +845,7 @@
         },
         "cLineYearDescription": "The first year this version was released anywhere in the world.",
         "pLineYearDescription": "The first year this recording was released worldwide.",
+        "countryLanguage": "Country language",
 
         "placeholder": {
             "selectArtist": "Select artist",
@@ -1024,7 +1028,9 @@
             "unknown": "Unknown"
         },
         "action": {
-            "deleteTracks": "Delete tracks"
+            "deleteTracks": "Delete tracks",
+            "bulkUpdate": "Bulk Update",
+            "bulkUpdateDescription": "Check the fields you want to update. Only checked fields will be applied to all selected tracks."
         },
         "original": {
             "label": "Original Work",

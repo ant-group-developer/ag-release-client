@@ -7,7 +7,7 @@ import {
 } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { toastPromise } from '@/helpers/messages-helper';
 import { useElementHeightById } from '@/hooks/use-element-height-by-id';
 import { useFilter } from '@/hooks/use-filter';

@@ -1,7 +1,7 @@
 import AppForm from '@/components/ui/antd-form/form';
 import { DATE_FORMAT } from '@/enums/common';
 import { convertSecondsToHoursMinutes } from '@/helpers/common';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { TrackData } from '@/modules/tracks/types';
@@ -136,3 +136,4 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
         </AppForm>
     );
 }
+

@@ -6,7 +6,7 @@ import { LAYOUT_TABLE, SESSION_STORAGE_KEY } from '@/enums/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import { ReleasesDataFilter } from '@/modules/releases/types';
-import TrackHeaderV2 from '@/modules/tracks/components/header/index-v2';
+import TrackHeaderV2 from '@/modules/tracks/components/header';
 import TracksTable from '@/modules/tracks/components/table';
 import TracksGridTable from '@/modules/tracks/components/table/grid-table';
 import { defaultVisibleColumnsTracks } from '@/modules/tracks/constants';
@@ -111,8 +111,8 @@ export default function Tracks({}: Props) {
                 onChangeFilter={onChangeFilter}
                 canClearFilter={canClearFilter}
                 removeFilter={removeFilter}
-                handleRefresh={handleRefresh}
-                dataUpdatedAt={dataUpdatedAt}
+                // handleRefresh={handleRefresh}
+                // dataUpdatedAt={dataUpdatedAt}
             />
 
             {layoutTable === LAYOUT_TABLE.LIST && (

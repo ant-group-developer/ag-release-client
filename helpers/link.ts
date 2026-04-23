@@ -7,10 +7,7 @@ import {
     ICON_VIDEO,
 } from '@/constants/common';
 import { UPLOAD_TYPE } from '@/enums/common';
-import { ARTIST_DETAIL_TABS } from '@/modules/artist/enum';
-import { LABEL_DETAIL_TABS } from '@/modules/labels/enum';
-import { RELEASES_TABS } from '@/modules/releases/enums';
-import { TRACK_TABS } from '@/modules/tracks/enums';
+import { APP_ROUTES } from '@/enums/routes';
 
 export const getLinkDrive = (fileId: string) =>
     `https://drive.google.com/uc?export=view&id=${fileId}`;
@@ -81,26 +78,6 @@ export const getIconByType = (type: string) => {
     return icons[type] || ICON_IMAGE;
 };
 
-export enum RELEASE_DETAIL_ACTION {
-    EDIT = 'edit',
-    READ = 'read',
-}
-export const getReleaseDetailTabRoute = (
-    releaseId: string,
-    tab: RELEASES_TABS,
-    action?: RELEASE_DETAIL_ACTION
-) => `/releases/detail/${releaseId}/${tab}${action ? `?action=${action}` : ''}`;
-
-export const getTrackDetailRoute = (trackId: string, tab: TRACK_TABS) =>
-    `/tracks/detail/${trackId}/${tab}`;
-
-export const getArtistDetailRoute = (
-    artistId: string,
-    tab: ARTIST_DETAIL_TABS
-) => `/artists/detail/${artistId}/${tab}`;
-
-export const getLabelDetailRoute = (labelId: string, tab: LABEL_DETAIL_TABS) =>
-    `/labels/detail/${labelId}/${tab}`;
 
 // export const getAvatarUrl = (
 //     name: string,

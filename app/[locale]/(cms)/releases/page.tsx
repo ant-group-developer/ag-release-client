@@ -62,8 +62,7 @@ export default function Releases({}: Props) {
         dataUpdatedAt,
     } = useGetListReleases(dataFilter);
     const { deleteRelease } = useDeleteRelease();
-    const { exportTemplateCi, isPending: isExportTemplateCiLoading } =
-        useExportTemplateCi();
+    const { isPending: isExportTemplateCiLoading } = useExportTemplateCi();
 
     // func
     const handleRefresh = () => {
@@ -108,8 +107,6 @@ export default function Releases({}: Props) {
                     onChangeFilter={onChangeFilter}
                     canClearFilter={canClearFilter}
                     removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
-                    dataUpdatedAt={dataUpdatedAt}
                 />
 
                 <ReleasesTable

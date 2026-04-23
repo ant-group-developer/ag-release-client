@@ -4,7 +4,7 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import CountrySelect from '@/components/ui/select/country-select';
 import OriginalTypeSelect from '@/components/ui/select/original-type-select';
 import TrackTypesSelect from '@/components/ui/select/track-types-select';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import SensitiveContentSelect from '@/modules/track-sensitive/components/select/isSensitiveContent-select';
 import { TrackData } from '@/modules/tracks/types';
@@ -308,3 +308,4 @@ export default function OtherSection({
         </ConfigProvider>
     );
 }
+

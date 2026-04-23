@@ -71,7 +71,7 @@ export default function ReleaseExecutionStatusSummary({
                 return (
                     <Card
                         key={item.status}
-                        bordered={false}
+                        variant="borderless"
                         className="shadow-sm"
                         styles={{
                             body: {

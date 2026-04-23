@@ -2,7 +2,7 @@
 
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import GenresSelect from '@/components/ui/select/genres-select';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { TrackData } from '@/modules/tracks/types';
 import { ConfigProvider, Form, Typography } from 'antd';
@@ -108,3 +108,4 @@ export default function GenreSection({
         </ConfigProvider>
     );
 }
+

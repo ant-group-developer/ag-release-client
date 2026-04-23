@@ -4,7 +4,7 @@ import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { cn } from '@/helpers/common';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { usePermission } from '@/hooks/use-permission';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';

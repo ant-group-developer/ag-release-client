@@ -58,10 +58,10 @@ export default function Releases({}: Props) {
                 onChangeFilter={onChangeFilter}
                 canClearFilter={canClearFilter}
                 removeFilter={removeFilter}
-                handleRefresh={handleRefresh}
+                // handleRefresh={handleRefresh}
                 // handleChangeVisibleColumns={handleChangeVisibleColumns}
                 // visibleColumn={visibleColumns}
-                dataUpdatedAt={dataUpdatedAt}
+                // dataUpdatedAt={dataUpdatedAt}
             />
 
             {layoutTable === LAYOUT_TABLE.LIST && (

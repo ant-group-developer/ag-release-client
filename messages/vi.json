@@ -336,6 +336,8 @@
         "filterBy": "Lọc theo",
         "filterByValue": "Lọc theo {value}",
         "noMatchingFilter": "Không có bộ lọc nào khớp",
+        "searchFilter": "Tìm kiếm bộ lọc...",
+        "activeFilterCount": "{count} bộ lọc đang hoạt động",
         "hint": "Phân tách bằng dấu phẩy",
         "last28Days": "28 ngày qua",
         "filterComment": "Lọc bình luận",
@@ -653,7 +655,8 @@
         "clickToShowFilters": "Nhấn vào đây để hiển thị bộ lọc",
         "openNewTab": "Mở cửa sổ mới",
         "ifVideoNotProcessed": "Nếu video chưa xử lý xong vui lòng tải xuống để xem",
-        "exportExcelFailed": "Xuất file excel gặp lỗi"
+        "exportExcelFailed": "Xuất file excel gặp lỗi",
+        "jobIsProcessing": "Đang xử lý, vui lòng đợi trong giây lát"
     },
     "userProfile": {
         "logout": "Đăng xuất"
@@ -834,6 +837,7 @@
         "isMoreThan4Artists": "Có nhiều hơn 4 nghệ sĩ hay không",
         "cLineYearDescription": "Năm đầu tiên xuất bản phiên bản này ở bất kỳ nơi nào trên thế giới.",
         "pLineYearDescription": "Năm bản ghi âm đầu tiên được phát hành trên toàn thế giới.",
+        "countryLanguage": "Ngôn ngữ quốc gia",
 
         "select": {
             "artist": "Chọn nghệ sĩ",
@@ -1023,7 +1027,9 @@
             "unknown": "Không xác định"
         },
         "action": {
-            "deleteTracks": "Xoá bài hát"
+            "deleteTracks": "Xoá bài hát",
+            "bulkUpdate": "Cập nhật hàng loạt",
+            "bulkUpdateDescription": "Đánh dấu các trường bạn muốn cập nhật. Chỉ các trường được chọn mới được áp dụng cho tất cả bài hát đã chọn."
         },
         "original": {
             "label": "Tác phẩm gốc",

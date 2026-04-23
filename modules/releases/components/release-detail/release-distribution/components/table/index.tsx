@@ -1,7 +1,7 @@
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { formattedDate, getSortOrder } from '@/helpers/common';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { PermissionGate } from '@/modules/auth/components/permission-gate';
@@ -151,3 +151,4 @@ export default function DistributionTable({
         />
     );
 }
+

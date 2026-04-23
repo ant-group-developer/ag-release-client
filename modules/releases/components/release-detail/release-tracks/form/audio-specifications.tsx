@@ -4,7 +4,7 @@ import {
     convertSecondsToHoursMinutes,
     timeStringToSeconds,
 } from '@/helpers/common';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
@@ -269,3 +269,4 @@ export default function AudioSpecifications({ trackData }: Props) {
         </ConfigProvider>
     );
 }
+
