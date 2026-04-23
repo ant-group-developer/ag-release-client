@@ -3,7 +3,7 @@ import AppConfirm from '@/components/ui/modal/confirm-modal';
 import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { SIZE_ICON } from '@/constants/common';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useActive } from '@/hooks/use-active';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { ReleaseContributor } from '@/modules/release-contributor/types';
@@ -261,3 +261,4 @@ export default function TrackContributorsTable({ trackData, ...props }: Props) {
         </div>
     );
 }
+

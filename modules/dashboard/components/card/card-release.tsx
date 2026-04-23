@@ -6,7 +6,7 @@ import { formattedDate } from '@/helpers/common';
 import {
     getReleaseDetailTabRoute,
     RELEASE_DETAIL_ACTION,
-} from '@/helpers/link';
+} from '@/modules/releases/helpers/link';
 import { Link, useRouter } from '@/i18n/routing';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { ReleasesData } from '@/modules/releases/types';

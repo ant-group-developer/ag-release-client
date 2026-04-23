@@ -5,7 +5,7 @@ import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { getIndex, getSortOrder } from '@/helpers/common';
-import { getLabelDetailRoute } from '@/helpers/link';
+import { getLabelDetailRoute } from '@/modules/labels/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { usePermission } from '@/hooks/use-permission';
 import { Link, useRouter } from '@/i18n/routing';

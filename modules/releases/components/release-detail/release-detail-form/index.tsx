@@ -1,4 +1,4 @@
-// import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+// import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 // import { showNotification } from '@/helpers/messages-helper';
 // import { useActive } from '@/hooks/use-active';
 // import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
@@ -206,3 +206,4 @@
 //         </ConfigProvider>
 //     );
 // }
+

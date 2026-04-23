@@ -2,7 +2,7 @@ import CopyText from '@/components/ui/copy-text/copy-text';
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
-import { getTrackDetailRoute } from '@/helpers/link';
+import { getTrackDetailRoute } from '@/modules/tracks/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { usePermission } from '@/hooks/use-permission';
 import { Link, useRouter } from '@/i18n/routing';

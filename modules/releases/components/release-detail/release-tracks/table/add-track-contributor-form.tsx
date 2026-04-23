@@ -3,7 +3,7 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import ArtistSelect from '@/components/ui/select/artist-select';
 import RoleArtistSelect from '@/components/ui/select/role-artist-select';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { toastPromise } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
@@ -134,3 +134,4 @@ export default function AddTrackContributorForm({
         </AppModal>
     );
 }
+

@@ -102,7 +102,7 @@ export default function FilterCategoryContent({
     return (
         <div className="flex h-full w-[450px] flex-col">
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-gray-100 px-4 py-2.5">
+            <div className="flex h-11 items-center justify-between border-b border-gray-100 px-4">
                 <div className="flex items-center gap-2">
                     {config.icon && (
                         <span className="text-base text-gray-500">
@@ -136,16 +136,20 @@ export default function FilterCategoryContent({
                     />
                 )}
 
-                {config.type === 'dateRange' && (() => {
-                    const [startKey, endKey] = config.filterKey as [string, string];
-                    return (
-                        <DateRangeFilterContent
-                            startDate={dataFilter[startKey]}
-                            endDate={dataFilter[endKey]}
-                            onChange={handleDateRangeChange}
-                        />
-                    );
-                })()}
+                {config.type === 'dateRange' &&
+                    (() => {
+                        const [startKey, endKey] = config.filterKey as [
+                            string,
+                            string,
+                        ];
+                        return (
+                            <DateRangeFilterContent
+                                startDate={dataFilter[startKey]}
+                                endDate={dataFilter[endKey]}
+                                onChange={handleDateRangeChange}
+                            />
+                        );
+                    })()}
 
                 {config.type === 'input' && (
                     <InputFilterContent

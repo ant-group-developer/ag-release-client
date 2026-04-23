@@ -1,7 +1,7 @@
 import CreateButton from '@/components/ui/button/create-button';
 import IconButton from '@/components/ui/button/icon-button';
 import { SIZE_ICON_BIG } from '@/constants/common';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { toastPromise } from '@/helpers/messages-helper';
 import { usePermission } from '@/hooks/use-permission';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
@@ -116,3 +116,4 @@ function Header({ collapsed, toggleCollapsed }: Props) {
 }
 
 export default Header;
+

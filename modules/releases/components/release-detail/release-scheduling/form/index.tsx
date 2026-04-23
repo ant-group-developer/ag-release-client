@@ -4,7 +4,7 @@ import CountrySelect from '@/components/ui/select/country-select';
 import TimezoneSelect from '@/components/ui/select/timezone-select';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { DATE_FORMAT, DISTRIBUTE_TYPES } from '@/enums/common';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useHash } from '@/hooks/use-hash';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { RELEASE_TIME_MODE } from '@/modules/releases/enums';
@@ -660,3 +660,4 @@ export default function ReleaseSchedulingForm({}: Props) {
         </div>
     );
 }
+

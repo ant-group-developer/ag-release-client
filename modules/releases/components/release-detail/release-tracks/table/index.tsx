@@ -6,7 +6,9 @@ import SortableTable, {
 } from '@/components/ui/table/sortable-table';
 import { SIZE_ICON } from '@/constants/common';
 import { getIndex, getSortOrder } from '@/helpers/common';
-import { getTrackDetailRoute, RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { getTrackDetailRoute } from '@/modules/tracks/helpers/link';
+
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { usePermission } from '@/hooks/use-permission';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
@@ -290,3 +292,4 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
         </div>
     );
 }
+

@@ -1,6 +1,6 @@
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import { APP_ROUTES } from '@/enums/routes';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
@@ -294,3 +294,4 @@ export default function ReleaseDetailFormV2() {
         </FormProvider>
     );
 }
+

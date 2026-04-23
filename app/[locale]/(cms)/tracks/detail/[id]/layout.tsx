@@ -5,7 +5,7 @@ import IconButton from '@/components/ui/button/icon-button';
 import DetailSkeleton from '@/components/ui/skeleton/detail-skeleton';
 import { SIZE_ICON_BIG } from '@/constants/common';
 import { APP_ROUTES } from '@/enums/routes';
-import { getTrackDetailRoute } from '@/helpers/link';
+import { getTrackDetailRoute } from '@/modules/tracks/helpers/link';
 import { Link } from '@/i18n/routing';
 import AppError from '@/modules/auth/components/error';
 import { TRACK_TABS } from '@/modules/tracks/enums';

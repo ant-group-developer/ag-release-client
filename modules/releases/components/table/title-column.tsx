@@ -1,5 +1,5 @@
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { getReleaseDetailTabRoute } from '@/helpers/link';
+import { getReleaseDetailTabRoute } from '@/modules/releases/helpers/link';
 import { OnChangeFilter } from '@/hooks/use-filter';
 import { Link } from '@/i18n/routing';
 import { ReleaseArtist } from '@/modules/release-artist/types';

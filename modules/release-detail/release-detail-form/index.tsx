@@ -5,7 +5,7 @@
 // import LabelSelect from '@/components/ui/select/label-select';
 // import LanguageSelect from '@/components/ui/select/language-select';
 // import ErrorText from '@/components/ui/text/error-text';
-// import { getReleaseDetailTabRoute } from '@/helpers/link';
+// import { getReleaseDetailTabRoute } from '@/modules/releases/helpers/link';
 // import useModalStore from '@/hooks/use-modal';
 // import { useRouter } from '@/i18n/routing';
 // import { ArtistData } from '@/modules/artist/types';
@@ -796,3 +796,4 @@
 //         </FormProvider>
 //     );
 // }
+
