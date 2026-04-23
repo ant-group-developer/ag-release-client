@@ -655,7 +655,8 @@
         "clickToShowFilters": "Nhấn vào đây để hiển thị bộ lọc",
         "openNewTab": "Mở cửa sổ mới",
         "ifVideoNotProcessed": "Nếu video chưa xử lý xong vui lòng tải xuống để xem",
-        "exportExcelFailed": "Xuất file excel gặp lỗi"
+        "exportExcelFailed": "Xuất file excel gặp lỗi",
+        "jobIsProcessing": "Đang xử lý, vui lòng đợi trong giây lát"
     },
     "userProfile": {
         "logout": "Đăng xuất"
@@ -1026,7 +1027,9 @@
             "unknown": "Không xác định"
         },
         "action": {
-            "deleteTracks": "Xoá bài hát"
+            "deleteTracks": "Xoá bài hát",
+            "bulkUpdate": "Cập nhật hàng loạt",
+            "bulkUpdateDescription": "Đánh dấu các trường bạn muốn cập nhật. Chỉ các trường được chọn mới được áp dụng cho tất cả bài hát đã chọn."
         },
         "original": {
             "label": "Tác phẩm gốc",

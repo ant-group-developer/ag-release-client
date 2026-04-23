@@ -1,6 +1,5 @@
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import { APP_ROUTES } from '@/enums/routes';
-import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
@@ -12,6 +11,7 @@ import {
     RELEASES_STATUS,
     RELEASES_TABS,
 } from '@/modules/releases/enums';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
@@ -32,6 +32,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 // Section dependencies
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import CodesSectionV2 from './form-section/codes-section-v2';
 import GenreLanguageSectionV2 from './form-section/genre-language-v2';
@@ -203,8 +205,8 @@ export default function ReleaseDetailFormV2() {
                     className="form-read-only-primary"
                     layout="horizontal"
                     onFinish={handleSubmit(handleNext, handleFormError)}
-                    labelCol={{ xl: 10, lg: 10, md: 12, sm: 24 }}
-                    wrapperCol={{ xl: 14, lg: 14, md: 12, sm: 24 }}
+                    labelCol={{ xl: 8, lg: 10, md: 12, sm: 24 }}
+                    wrapperCol={{ xl: 16, lg: 14, md: 12, sm: 24 }}
                     labelAlign="left"
                     variant={
                         isReadMode && !isCreateReleasePage
@@ -267,18 +269,20 @@ export default function ReleaseDetailFormV2() {
                 </Form>
 
                 <div className="my-4">
-                    {!isCreateReleasePage &&
-                        releaseData?.status == RELEASES_STATUS.DRAFT && (
-                            <Button
-                                danger
-                                shape="round"
-                                loading={isActive}
-                                icon={<DeleteOutlined />}
-                                onClick={() => setIsDeleteConfirmOpen(true)}
-                            >
-                                {messages('common.delete')}
-                            </Button>
-                        )}
+                    <PermissionGate permission={PERMISSION.RELEASE.DELETE}>
+                        {!isCreateReleasePage &&
+                            releaseData?.status == RELEASES_STATUS.DRAFT && (
+                                <Button
+                                    danger
+                                    shape="round"
+                                    loading={isActive}
+                                    icon={<DeleteOutlined />}
+                                    onClick={() => setIsDeleteConfirmOpen(true)}
+                                >
+                                    {messages('common.delete')}
+                                </Button>
+                            )}
+                    </PermissionGate>
                 </div>
 
                 <AppConfirm
@@ -294,4 +298,3 @@ export default function ReleaseDetailFormV2() {
         </FormProvider>
     );
 }
-

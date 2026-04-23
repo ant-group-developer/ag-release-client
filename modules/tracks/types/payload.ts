@@ -11,11 +11,8 @@ export interface TrackPayload {
 
 export interface UpdateTrackPayload extends Partial<TrackData> {}
 
-export interface UpdateTrackOrderPayload extends CommonFunction {
-    trackDrafts: {
-        id: string;
-        order: number;
-    }[];
+export interface BulkUpdateTrackPayload extends CommonFunction {
+    trackDrafts: Partial<TrackData>[];
 }
 
 export interface UpdateTrackPolicy extends CommonFunction {
