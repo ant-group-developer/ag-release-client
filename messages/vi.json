@@ -336,6 +336,8 @@
         "filterBy": "Lọc theo",
         "filterByValue": "Lọc theo {value}",
         "noMatchingFilter": "Không có bộ lọc nào khớp",
+        "searchFilter": "Tìm kiếm bộ lọc...",
+        "activeFilterCount": "{count} bộ lọc đang hoạt động",
         "hint": "Phân tách bằng dấu phẩy",
         "last28Days": "28 ngày qua",
         "filterComment": "Lọc bình luận",

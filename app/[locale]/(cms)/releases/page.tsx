@@ -107,8 +107,6 @@ export default function Releases({}: Props) {
                     onChangeFilter={onChangeFilter}
                     canClearFilter={canClearFilter}
                     removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
-                    dataUpdatedAt={dataUpdatedAt}
                 />
 
                 <ReleasesTable

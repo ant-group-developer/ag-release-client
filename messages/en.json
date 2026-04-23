@@ -337,6 +337,8 @@
         "filterBy": "Filter by",
         "filterByValue": "Lọc theo {value}",
         "noMatchingFilter": "No matching filter",
+        "searchFilter": "Search filter...",
+        "activeFilterCount": "{count} filter(s) active",
         "hint": "Separated by commas",
         "last28Days": "Last 28 days",
         "filterComment": "Filter comment",
