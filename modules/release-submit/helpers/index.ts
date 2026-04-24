@@ -16,6 +16,8 @@ export const getReleaseSubmitStatusColor = (status?: RELEASE_SUBMIT_STATUS) => {
         case RELEASE_SUBMIT_STATUS.PROCESSING:
             return 'processing';
         case RELEASE_SUBMIT_STATUS.NEW:
+        case RELEASE_SUBMIT_STATUS.PARTIAL_DONE:
+            return 'lime';
         default:
             return 'default';
     }
@@ -54,6 +56,7 @@ export const getReleaseSubmitLogLevelColor = (
         case RELEASE_SUBMIT_LOG_LEVEL.WARNING:
             return 'warning';
         case RELEASE_SUBMIT_LOG_LEVEL.LOG:
+            return 'blue';
         default:
             return 'default';
     }

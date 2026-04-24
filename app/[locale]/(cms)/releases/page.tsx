@@ -102,14 +102,22 @@ export default function Releases({}: Props) {
     return (
         <AppPageWrapper>
             <PageContainer title={messages('release.releases')}>
-                <ReleasesHeaderV2
+                {/* <ReleasesHeaderV2
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
                     canClearFilter={canClearFilter}
                     removeFilter={removeFilter}
-                />
+                /> */}
 
                 <ReleasesTable
+                    headerTitle={
+                        <ReleasesHeaderV2
+                            dataFilter={dataFilter}
+                            onChangeFilter={onChangeFilter}
+                            canClearFilter={canClearFilter}
+                            removeFilter={removeFilter}
+                        />
+                    }
                     sticky
                     dataSource={releasesData?.items}
                     loading={isReleaseDataLoading}

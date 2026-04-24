@@ -1,6 +1,8 @@
 'use client';
 
 import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
+import JsonViewer from '@/components/ui/json-viewer';
+import AppModal from '@/components/ui/modal/normal-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
@@ -16,11 +18,14 @@ import { ReleaseSubmitFilter } from '@/modules/release-submit/types';
 import { PageContainer } from '@ant-design/pro-components';
 import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 
 export default function ReleaseSubmitsPage() {
     const messages = useTranslations();
     const { token } = theme.useToken();
     const typeModal = useModalStore((state) => state.typeModal);
+    const [snapshotModalOpen, setSnapshotModalOpen] = useState(false);
+    const [selectedSnapshot, setSelectedSnapshot] = useState<any>(null);
 
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
         useFilter<ReleaseSubmitFilter>({
@@ -88,6 +93,10 @@ export default function ReleaseSubmitsPage() {
                         density: false,
                     }}
                     onChange={onChangeSort}
+                    onViewSnapshot={(snapshot) => {
+                        setSelectedSnapshot(snapshot);
+                        setSnapshotModalOpen(true);
+                    }}
                 />
 
                 <AppPagination
@@ -115,6 +124,34 @@ export default function ReleaseSubmitsPage() {
                 {typeModal === TYPE_MODAL_RELEASE_EXECUTION.DETAIL && (
                     <ReleaseSubmitDetailModal open />
                 )}
+
+                <AppModal
+                    open={snapshotModalOpen}
+                    onCancel={() => {
+                        setSnapshotModalOpen(false);
+                        setSelectedSnapshot(null);
+                    }}
+                    title="Release Snapshot"
+                    footer={null}
+                    width={800}
+                    className="!top-10 !w-[60vw]"
+                    styles={{
+                        body: {
+                            height: 'calc(100vh - 140px)',
+                            overflowY: 'auto',
+                        },
+                    }}
+                >
+                    {selectedSnapshot && (
+                        <JsonViewer
+                            src={selectedSnapshot}
+                            style={{
+                                height: 'calc(100vh - 150px)',
+                                overflowY: 'auto',
+                            }}
+                        />
+                    )}
+                </AppModal>
             </PageContainer>
         </AppPageWrapper>
     );

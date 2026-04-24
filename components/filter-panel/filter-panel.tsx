@@ -131,7 +131,7 @@ export default function FilterPanel<TFilter extends Record<string, any>>({
             style={{
                 backgroundColor: token.colorBgContainer,
                 borderRadius: token.borderRadius,
-                padding: '8px 12px',
+                // padding: '8px 12px',
             }}
         >
             {/* Filter trigger button */}

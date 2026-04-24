@@ -8,8 +8,8 @@ import { OnChangeFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { TYPE_MODAL_RELEASE_EXECUTION } from '@/modules/release-executions/enums';
 import { ProColumns } from '@ant-design/pro-components';
-import { Tag, Typography } from 'antd';
-import { Eye } from 'lucide-react';
+import { Space, Tag, Typography } from 'antd';
+import { Eye, FileJson } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import {
     formatDurationShort,
@@ -26,6 +26,7 @@ type Props = Omit<AppProTableProps<ReleaseSubmitData>, 'columns'> & {
         pageSize: number;
         current: number;
     };
+    onViewSnapshot?: (snapshot: any) => void;
 };
 
 export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
@@ -165,17 +166,33 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
         {
             title: '',
             key: 'actions',
-            width: 60,
+            width: 80,
             fixed: 'right',
             align: 'center',
             render: (_, record) => (
-                <IconButton
-                    onClick={() =>
-                        openModal(TYPE_MODAL_RELEASE_EXECUTION.DETAIL, record)
-                    }
-                >
-                    <Eye size={SIZE_ICON} />
-                </IconButton>
+                <Space>
+                    {record?.metadata?.input?.releaseSnapshot && (
+                        <IconButton
+                            onClick={() => {
+                                props.onViewSnapshot?.(
+                                    record.metadata.input.releaseSnapshot
+                                );
+                            }}
+                        >
+                            <FileJson size={SIZE_ICON} />
+                        </IconButton>
+                    )}
+                    <IconButton
+                        onClick={() =>
+                            openModal(
+                                TYPE_MODAL_RELEASE_EXECUTION.DETAIL,
+                                record
+                            )
+                        }
+                    >
+                        <Eye size={SIZE_ICON} />
+                    </IconButton>
+                </Space>
             ),
         },
     ];
