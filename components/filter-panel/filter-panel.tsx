@@ -4,7 +4,7 @@ import { cn } from '@/helpers/common';
 import { Badge, Popover, theme } from 'antd';
 import { Filter } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import ActiveFilterTags from './active-filter-tags';
 import FilterCategoryContent from './filter-category-content';
 import FilterCategoryList from './filter-category-list';
@@ -31,10 +31,7 @@ export default function FilterPanel<TFilter extends Record<string, any>>({
     const getActiveCount = useCallback(
         (config: FilterConfig): number => {
             if (config.type === 'dateRange') {
-                const [startKey, endKey] = config.filterKey as [
-                    string,
-                    string,
-                ];
+                const [startKey, endKey] = config.filterKey as [string, string];
                 return dataFilter[startKey] && dataFilter[endKey] ? 1 : 0;
             }
             const key = config.filterKey as string;
@@ -65,10 +62,7 @@ export default function FilterPanel<TFilter extends Record<string, any>>({
     const handleRemoveFilter = useCallback(
         (config: FilterConfig) => {
             if (config.type === 'dateRange') {
-                const [startKey, endKey] = config.filterKey as [
-                    string,
-                    string,
-                ];
+                const [startKey, endKey] = config.filterKey as [string, string];
                 onChangeFilter({
                     [startKey]: undefined,
                     [endKey]: undefined,
@@ -90,10 +84,7 @@ export default function FilterPanel<TFilter extends Record<string, any>>({
     );
 
     const popoverContent = (
-        <div
-            className="flex"
-            style={{ height: 500 }}
-        >
+        <div className="flex" style={{ height: 500 }}>
             {/* Left sidebar */}
             <FilterCategoryList
                 configs={configs}
@@ -158,26 +149,26 @@ export default function FilterPanel<TFilter extends Record<string, any>>({
                     </div>
                 }
             >
-                <button
-                    className={cn(
-                        'flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm transition-colors',
-                        open
-                            ? 'border-blue-300 bg-blue-50 text-blue-600'
-                            : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50'
-                    )}
+                <Badge
+                    count={totalActiveCount}
+                    size="small"
+                    offset={[-2, 2]}
+                    color="#1677ff"
                 >
-                    <Filter size={14} />
-                    <span className="font-medium">
-                        {messages('common.filter')}
-                    </span>
-                    {totalActiveCount > 0 && (
-                        <Badge
-                            count={totalActiveCount}
-                            size="small"
-                            color="#1677ff"
-                        />
-                    )}
-                </button>
+                    <button
+                        className={cn(
+                            'flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm transition-colors',
+                            open
+                                ? 'border-blue-300 bg-blue-50 text-blue-600'
+                                : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50'
+                        )}
+                    >
+                        <Filter size={14} />
+                        <span className="font-medium">
+                            {messages('common.filter')}
+                        </span>
+                    </button>
+                </Badge>
             </Popover>
 
             {/* Active filter tags */}

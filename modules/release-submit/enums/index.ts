@@ -19,6 +19,8 @@ export enum RELEASE_SUBMIT_STEP_STATUS {
     SUCCESS = 'SUCCESS',
     FAILED = 'FAILED',
     CANCELLED = 'CANCELLED',
+    NEW = 'NEW',
+    DONE = 'DONE',
 }
 
 export enum RELEASE_PARENT_GROUP_STEPS {
