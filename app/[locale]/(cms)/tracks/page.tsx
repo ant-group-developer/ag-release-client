@@ -91,26 +91,6 @@ export default function Tracks({}: Props) {
     return (
         <AppPageWrapper>
             <PageContainer title={messages('common.tracks')}>
-                {/* <div className="app-header">
-                    <TracksHeader
-                        dataFilter={dataFilter}
-                        onChangeFilter={onChangeFilter}
-                        canClearFilter={canClearFilter}
-                        removeFilter={removeFilter}
-                        handleRefresh={handleRefresh}
-                        dataUpdatedAt={dataUpdatedAt}
-                        handleChangeVisibleColumns={handleChangeVisibleColumns}
-                        visibleColumn={visibleColumns}
-                    />
-                </div> */}
-
-                <TrackHeader
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                />
-
                 {/* <div
                     className="sticky top-0 z-50 mb-4 rounded-lg"
                     style={{ backgroundColor: token.colorBgContainer }}
@@ -122,6 +102,14 @@ export default function Tracks({}: Props) {
                 </div> */}
                 {layoutTable === LAYOUT_TABLE.LIST && (
                     <TracksTable
+                        headerTitle={
+                            <TrackHeader
+                                dataFilter={dataFilter}
+                                onChangeFilter={onChangeFilter}
+                                canClearFilter={canClearFilter}
+                                removeFilter={removeFilter}
+                            />
+                        }
                         sticky
                         dataSource={tracksData.items}
                         pagination={{

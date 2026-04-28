@@ -140,7 +140,7 @@ export default function TrackHeader({
     );
 
     return (
-        <div className="app-header mb-4">
+        <div className="app-header">
             <FilterPanel
                 configs={filterConfigs}
                 dataFilter={dataFilter}
