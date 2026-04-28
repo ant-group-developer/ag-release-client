@@ -173,9 +173,19 @@ export default function ReleaseSubmitStepDetailModal({
                             items={stepLogs.map((log) => {
                                 const dataJson = getJsonContent(log.data);
                                 const dataText = getTextContent(log.data);
+                                const isCollapsible = !!(
+                                    (dataJson || dataText) &&
+                                    log.message
+                                );
 
                                 return {
                                     key: log.id,
+                                    collapsible: isCollapsible
+                                        ? undefined
+                                        : 'icon',
+                                    className: isCollapsible
+                                        ? ''
+                                        : '[&_.ant-collapse-expand-icon]:!invisible [&_.ant-collapse-expand-icon]:!pointer-events-none [&_.ant-collapse-header]:!cursor-auto',
                                     label: (
                                         <div className="flex flex-wrap items-center gap-2">
                                             <Tag
@@ -199,9 +209,9 @@ export default function ReleaseSubmitStepDetailModal({
                                     ),
                                     children: (
                                         <div className="space-y-3 pt-1">
-                                            <Typography.Text className="whitespace-pre-wrap break-all">
+                                            {/* <Typography.Text className="whitespace-pre-wrap break-all">
                                                 {log.message}
-                                            </Typography.Text>
+                                            </Typography.Text> */}
                                             {(dataJson || dataText) &&
                                                 (dataJson ? (
                                                     <JsonViewer
