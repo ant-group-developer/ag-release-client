@@ -1,10 +1,8 @@
 import IconButton from '@/components/ui/button/icon-button';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
-import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
-import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { DspData } from '@/modules/dsp/types';
 import { Avatar, Table, Tag, theme } from 'antd';
 import { ColumnsType } from 'antd/es/table';
@@ -30,9 +28,7 @@ export default function ReleaseSubmitStepTable({
 }: Props) {
     const messages = useTranslations();
     const { token } = theme.useToken();
-    const { dspData } = useGetListDsp({
-        pageSize: PAGE_SIZE_EXTRA_LARGE,
-    });
+
     const columns: ColumnsType<ReleaseSubmitStepData> = [
         {
             title: 'Step type',

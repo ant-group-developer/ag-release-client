@@ -26,6 +26,10 @@ export interface PartnersConfig {
     spotify?: {
         token: string;
     };
+    ci?: {
+        baseUrl: string;
+        token: string;
+    };
 }
 
 export interface OtherConfig {

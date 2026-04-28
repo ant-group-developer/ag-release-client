@@ -8,6 +8,7 @@ export interface ReleaseDspData extends CommonAttribute {
     isSelected: boolean;
     lastEnqueuedAt: string | null;
     lastDeliveredAt: string | null;
+    issues?: any;
 }
 
 export interface ReleaseDspDataFilter extends CommonParams {
