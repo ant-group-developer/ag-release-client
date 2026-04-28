@@ -3,8 +3,8 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import CountrySelect from '@/components/ui/select/country-select';
 import LanguageSelect from '@/components/ui/select/language-select';
-import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { TrackData } from '@/modules/tracks/types';
 import { ConfigProvider, Form } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -62,7 +62,6 @@ export default function LanguageSection({
                             id={`tracks.${index}.trackLanguage.metadataLanguageCountryId`}
                             className="w-full"
                             showSearch
-                            allowClear
                             disabled={isReadMode}
                             // fallback={
                             //     trackData?.trackLanguage
@@ -107,7 +106,6 @@ export default function LanguageSection({
                             id={`tracks.${index}.trackLanguage.audioLanguageId`}
                             className="w-full"
                             showSearch
-                            allowClear
                             disabled={isReadMode}
                             // fallback={
                             //     trackData?.trackLanguage?.audioLanguage
@@ -153,7 +151,6 @@ export default function LanguageSection({
                             id={`tracks.${index}.trackLanguage.metadataLanguageId`}
                             className="w-full"
                             showSearch
-                            allowClear
                             disabled={isReadMode}
                             // fallback={
                             //     trackData?.trackLanguage
@@ -177,4 +174,3 @@ export default function LanguageSection({
         </ConfigProvider>
     );
 }
-

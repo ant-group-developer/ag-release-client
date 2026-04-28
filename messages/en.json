@@ -211,6 +211,7 @@
         "reviewer": "Reviewer",
         "lastTimeUpdated": "Last time updated",
         "refresh": "Refresh",
+        "retry": "Retry",
         "department": "Department",
         "icon": "Icon",
         "listLayout": "List layout",
@@ -922,6 +923,7 @@
             "never_distributed": "Never distributed",
             "submitted": "Submitted",
             "partially_failed": "Partially failed",
+            "partial_done": "Partial done",
             "failed": "Failed"
         }
     },

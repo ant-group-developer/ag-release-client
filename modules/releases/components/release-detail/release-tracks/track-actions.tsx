@@ -30,19 +30,19 @@ export default function TrackActions({ selectedRowKeys }: Props) {
                 {selectedRowKeys.length} {messages('common.selected')}
             </span>
             <div className="flex gap-2">
-                <Button
+                {/* <Button
                     type="primary"
                     onClick={() => openModal(TYPE_MODAL_TRACK.BULK_UPDATE)}
                 >
                     {messages('track.action.bulkUpdate')}
-                </Button>
-                {/* <Button
+                </Button> */}
+                <Button
                     danger
                     type="primary"
                     onClick={() => openModal(TYPE_MODAL_TRACK.BULK_DELETE)}
                 >
                     {messages('track.action.deleteTracks')}
-                </Button> */}
+                </Button>
             </div>
         </div>
     );
