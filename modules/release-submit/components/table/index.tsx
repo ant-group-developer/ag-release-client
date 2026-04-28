@@ -2,13 +2,15 @@ import IconButton from '@/components/ui/button/icon-button';
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import { OnChangeFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { TYPE_MODAL_RELEASE_EXECUTION } from '@/modules/release-executions/enums';
 import { ProColumns } from '@ant-design/pro-components';
-import { Space, Tag, Typography } from 'antd';
+import { Avatar, Space, Tag, theme, Typography } from 'antd';
 import { Eye, FileJson } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import {
@@ -32,6 +34,10 @@ type Props = Omit<AppProTableProps<ReleaseSubmitData>, 'columns'> & {
 export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
+    const { dspData } = useGetListDsp({
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
+    });
+    const { token } = theme.useToken();
 
     const columns: ProColumns<ReleaseSubmitData>[] = [
         {
@@ -86,14 +92,44 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
         {
             title: messages('releaseExecution.columns.targetDspCodes'),
             key: 'dspCodes',
-            width: 240,
-            render: (_, record) => (
-                <span>
-                    {record?.metadata?.input?.dspCodes?.length
-                        ? record.metadata.input.dspCodes.join(', ')
-                        : '-'}
-                </span>
-            ),
+            width: 180,
+            render: (_, record) => {
+                const dspCodes = record?.metadata?.input?.dspCodes;
+                if (!dspCodes || !dspCodes.length) return '-';
+
+                return (
+                    <Avatar.Group
+                        max={{
+                            count: 10,
+                            popover: { trigger: 'hover' },
+                            style: {
+                                color: token.colorText,
+                                backgroundColor: token.colorBgLayout,
+                                cursor: 'pointer',
+                            },
+                        }}
+                        size="small"
+                    >
+                        {dspCodes.map((code) => {
+                            const dsp = dspData?.items?.find(
+                                (d) => d.code === code
+                            );
+                            return (
+                                <CustomTooltip
+                                    key={code}
+                                    title={dsp?.name || code}
+                                >
+                                    <Avatar src={dsp?.picture} size="small">
+                                        {(dsp?.name || code)
+                                            .charAt(0)
+                                            .toUpperCase()}
+                                    </Avatar>
+                                </CustomTooltip>
+                            );
+                        })}
+                    </Avatar.Group>
+                );
+            },
         },
         {
             title: messages('releaseExecution.columns.since'),
@@ -172,26 +208,32 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
             render: (_, record) => (
                 <Space>
                     {record?.metadata?.input?.releaseSnapshot && (
-                        <IconButton
-                            onClick={() => {
-                                props.onViewSnapshot?.(
-                                    record.metadata.input.releaseSnapshot
-                                );
-                            }}
+                        <CustomTooltip
+                            title={messages('releaseExecution.releaseSnapshot')}
                         >
-                            <FileJson size={SIZE_ICON} />
-                        </IconButton>
+                            <IconButton
+                                onClick={() => {
+                                    props.onViewSnapshot?.(
+                                        record.metadata.input.releaseSnapshot
+                                    );
+                                }}
+                            >
+                                <FileJson size={SIZE_ICON} />
+                            </IconButton>
+                        </CustomTooltip>
                     )}
-                    <IconButton
-                        onClick={() =>
-                            openModal(
-                                TYPE_MODAL_RELEASE_EXECUTION.DETAIL,
-                                record
-                            )
-                        }
-                    >
-                        <Eye size={SIZE_ICON} />
-                    </IconButton>
+                    <CustomTooltip title={messages('common.viewDetail')}>
+                        <IconButton
+                            onClick={() =>
+                                openModal(
+                                    TYPE_MODAL_RELEASE_EXECUTION.DETAIL,
+                                    record
+                                )
+                            }
+                        >
+                            <Eye size={SIZE_ICON} />
+                        </IconButton>
+                    </CustomTooltip>
                 </Space>
             ),
         },

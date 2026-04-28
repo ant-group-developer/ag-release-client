@@ -2031,6 +2031,7 @@
     },
     "releaseExecution": {
         "label": "Release executions",
+        "releaseSnapshot": "Release snapshot",
         "confirm": {
             "retryTitle": "Are you sure you want to retry?",
             "retryDescription": "This action will restart the distribution process.",

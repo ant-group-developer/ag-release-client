@@ -108,6 +108,7 @@ export default function LegalNoticesSectionV2({
                                     );
                                 }}
                                 status={errors.cLineOwner ? 'error' : undefined}
+                                autoComplete="on"
                             />
                         )}
                     />
@@ -189,6 +190,7 @@ export default function LegalNoticesSectionV2({
                                     );
                                 }}
                                 status={errors.pLineOwner ? 'error' : undefined}
+                                autoComplete="on"
                             />
                         )}
                     />

@@ -34,9 +34,10 @@ export default async function RootLayout({ children }: Props) {
     const session = await getServerSession(authOptions);
 
     return (
-        <html lang="en">
+        <html lang="en" suppressHydrationWarning>
             <body
                 className={`${openSans.variable} ${openSans.className} ${inter.variable} ${inter.className} text-sm antialiased`}
+                suppressHydrationWarning
             >
                 <AntdRegistry>
                     <ReactQueryProviders>

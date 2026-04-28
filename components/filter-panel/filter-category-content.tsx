@@ -102,14 +102,14 @@ export default function FilterCategoryContent({
     return (
         <div className="flex h-full w-[450px] flex-col">
             {/* Header */}
-            <div className="flex h-11 items-center justify-between border-b border-gray-100 px-4">
+            <div className="flex h-11 items-center justify-between border-b border-gray-100 px-4 dark:border-zinc-700">
                 <div className="flex items-center gap-2">
                     {config.icon && (
-                        <span className="text-base text-gray-500">
+                        <span className="text-base text-gray-500 dark:text-gray-300">
                             {config.icon}
                         </span>
                     )}
-                    <h3 className="text-sm font-semibold text-gray-800">
+                    <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-300">
                         {config.label}
                     </h3>
                 </div>

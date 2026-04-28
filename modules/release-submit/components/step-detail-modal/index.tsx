@@ -40,8 +40,7 @@ export default function ReleaseSubmitStepDetailModal({
                 </div>
             }
             footer={null}
-            width={900}
-            className="!top-12 !w-[65vw]"
+            className="!top-12 !w-[75vw]"
             styles={{
                 body: {
                     maxHeight: 'calc(100vh - 160px)',

@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/helpers/common';
-import { Badge, Popover, theme } from 'antd';
+import { Badge, Button, Popover, theme } from 'antd';
 import { Filter } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useCallback, useMemo, useState } from 'react';
@@ -155,19 +155,12 @@ export default function FilterPanel<TFilter extends Record<string, any>>({
                     offset={[-2, 2]}
                     color="#1677ff"
                 >
-                    <button
-                        className={cn(
-                            'flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm transition-colors',
-                            open
-                                ? 'border-blue-300 bg-blue-50 text-blue-600'
-                                : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50'
-                        )}
-                    >
+                    <Button>
                         <Filter size={14} />
                         <span className="font-medium">
                             {messages('common.filter')}
                         </span>
-                    </button>
+                    </Button>
                 </Badge>
             </Popover>
 

@@ -107,7 +107,7 @@ export default function CheckboxFilterContent({
                         {filteredOptions.map((opt) => (
                             <label
                                 key={opt.value}
-                                className="flex cursor-pointer items-center rounded-md px-1 py-1.5 transition-colors hover:bg-gray-50"
+                                className="flex cursor-pointer items-center rounded-md px-1 py-1.5 transition-colors hover:bg-gray-50 dark:hover:bg-zinc-700"
                             >
                                 <Checkbox value={opt.value}>
                                     {opt.label}

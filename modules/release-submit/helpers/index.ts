@@ -36,10 +36,13 @@ export const getReleaseSubmitStepStatusColor = (
             return 'geekblue';
         case RELEASE_SUBMIT_STEP_STATUS.PENDING:
             return 'warning';
-        case RELEASE_SUBMIT_STEP_STATUS.NEW:
+        case RELEASE_SUBMIT_STEP_STATUS.PROCESSING:
             return 'blue';
+        case RELEASE_SUBMIT_STEP_STATUS.WAITING_ACTION:
+            return 'purple';
         case RELEASE_SUBMIT_STEP_STATUS.DONE:
             return 'success';
+
         default:
             return 'default';
     }
@@ -55,6 +58,8 @@ export const getReleaseSubmitLogLevelColor = (
             return 'error';
         case RELEASE_SUBMIT_LOG_LEVEL.WARNING:
             return 'warning';
+        case RELEASE_SUBMIT_LOG_LEVEL.LOG:
+            return 'blue';
         case RELEASE_SUBMIT_LOG_LEVEL.LOG:
             return 'blue';
         default:

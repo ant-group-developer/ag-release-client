@@ -1,10 +1,15 @@
 import IconButton from '@/components/ui/button/icon-button';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
-import { Table, Tag } from 'antd';
+import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
+import { DspData } from '@/modules/dsp/types';
+import { Avatar, Table, Tag, theme } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { Eye } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import {
     formatDurationShort,
     formatEnumLabel,
@@ -23,6 +28,11 @@ export default function ReleaseSubmitStepTable({
     logs = [],
     onViewDetail,
 }: Props) {
+    const messages = useTranslations();
+    const { token } = theme.useToken();
+    const { dspData } = useGetListDsp({
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
+    });
     const columns: ColumnsType<ReleaseSubmitStepData> = [
         {
             title: 'Step type',
@@ -36,7 +46,40 @@ export default function ReleaseSubmitStepTable({
             dataIndex: 'dsp',
             key: 'dsp',
             width: 160,
-            render: (_, record) => record?.dsp?.name || '-',
+            render: (_, record) => {
+                const dsps = record?.metadata?.input?.dsps as DspData[];
+                if (!dsps) return '-';
+                return (
+                    <Avatar.Group
+                        max={{
+                            count: 5,
+                            popover: { trigger: 'hover' },
+                            style: {
+                                color: token.colorText,
+                                backgroundColor: token.colorBgLayout,
+                                cursor: 'pointer',
+                            },
+                        }}
+                        size="small"
+                    >
+                        {dsps?.map((dsp) => {
+                            const displayName = dsp?.name || dsp?.code || '-';
+                            return (
+                                <CustomTooltip
+                                    key={dsp?.code}
+                                    title={displayName}
+                                >
+                                    <Avatar src={dsp?.picture} size="small">
+                                        {String(displayName)
+                                            ?.charAt(0)
+                                            ?.toUpperCase()}
+                                    </Avatar>
+                                </CustomTooltip>
+                            );
+                        })}
+                    </Avatar.Group>
+                );
+            },
         },
         {
             title: 'Status',
@@ -99,9 +142,11 @@ export default function ReleaseSubmitStepTable({
             fixed: 'right',
             align: 'center',
             render: (_, record) => (
-                <IconButton onClick={() => onViewDetail(record)}>
-                    <Eye size={SIZE_ICON} />
-                </IconButton>
+                <CustomTooltip title={messages('common.viewDetail')}>
+                    <IconButton onClick={() => onViewDetail(record)}>
+                        <Eye size={SIZE_ICON} />
+                    </IconButton>
+                </CustomTooltip>
             ),
         },
     ];
@@ -117,7 +162,7 @@ export default function ReleaseSubmitStepTable({
             expandable={{
                 rowExpandable: (record) => !!record.childSteps?.length,
                 expandedRowRender: (record) => (
-                    <div className="rounded-md border">
+                    <div className="rounded-md border dark:border-zinc-700">
                         <ReleaseSubmitStepTable
                             dataSource={record.childSteps}
                             logs={logs}
