@@ -38,7 +38,7 @@ export interface ReleaseSubmitStepData extends CommonAttribute {
     startedAt: string | null;
     completedAt: string | null;
     retryCount: number;
-    metadata: unknown | null;
+    metadata: any | null;
     childSteps: ReleaseSubmitStepData[];
 }
 

@@ -1,8 +1,10 @@
 import JsonViewer from '@/components/ui/json-viewer';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
-import { Card, Collapse, Descriptions, Tag, Typography } from 'antd';
+import { DspData } from '@/modules/dsp/types';
+import { Avatar, Card, Collapse, Descriptions, Tag, Typography } from 'antd';
 import {
     formatDurationShort,
     formatEnumLabel,
@@ -21,11 +23,14 @@ export default function ReleaseSubmitStepDetailModal({
     step,
     ...props
 }: Props) {
+    console.log('🚀 ~ ReleaseSubmitStepDetailModal ~ step:', step);
     if (!step) return null;
 
     const stepLogs = logs.filter((log) => log.releaseSubmitStepId === step.id);
     const metadataJson = getJsonContent(step.metadata);
     const metadataText = getTextContent(step.metadata);
+
+    const dsps = step?.metadata?.input?.dsps as DspData[];
 
     return (
         <AppModal
@@ -40,8 +45,7 @@ export default function ReleaseSubmitStepDetailModal({
                 </div>
             }
             footer={null}
-            width={900}
-            className="!top-12 !w-[65vw]"
+            className="!top-12 !w-[75vw]"
             styles={{
                 body: {
                     maxHeight: 'calc(100vh - 160px)',
@@ -77,7 +81,28 @@ export default function ReleaseSubmitStepDetailModal({
                             {
                                 key: 'dsp',
                                 label: 'DSP',
-                                children: step.dsp?.name || '-',
+                                children: (
+                                    <Avatar.Group
+                                        max={{ count: 5 }}
+                                        size="small"
+                                    >
+                                        {dsps?.map((dsp) => (
+                                            <CustomTooltip
+                                                key={dsp?.code}
+                                                title={dsp?.name}
+                                            >
+                                                <Avatar
+                                                    src={dsp?.picture}
+                                                    size="small"
+                                                >
+                                                    {String(dsp?.name)
+                                                        ?.charAt(0)
+                                                        ?.toUpperCase()}
+                                                </Avatar>
+                                            </CustomTooltip>
+                                        ))}
+                                    </Avatar.Group>
+                                ),
                             },
                             {
                                 key: 'retry',

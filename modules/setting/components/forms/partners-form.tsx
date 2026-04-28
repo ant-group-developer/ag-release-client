@@ -27,6 +27,10 @@ export default function PartnersForm({}: Props) {
                     spotify: {
                         token: values.spotifyToken,
                     },
+                    ci: {
+                        baseUrl: values.ciBaseUrl,
+                        token: values.ciToken,
+                    },
                 },
             };
             updateSetting({
@@ -46,6 +50,8 @@ export default function PartnersForm({}: Props) {
     useEffect(() => {
         form.setFieldsValue({
             spotifyToken: partnersConfigData?.spotify?.token,
+            ciBaseUrl: partnersConfigData?.ci?.baseUrl,
+            ciToken: partnersConfigData?.ci?.token,
         });
     }, [form, partnersConfigData]);
 
@@ -66,6 +72,36 @@ export default function PartnersForm({}: Props) {
                             message: messages('validation.stringMax', {
                                 max: 1000,
                                 field: 'Spotify Token',
+                            }),
+                        },
+                    ]}
+                >
+                    <Input.Password />
+                </AppFormItem>
+                <AppFormItem
+                    name="ciBaseUrl"
+                    label={'CI Base URL'}
+                    rules={[
+                        {
+                            max: MAX_NAME_LENGTH,
+                            message: messages('validation.stringMax', {
+                                max: MAX_NAME_LENGTH,
+                                field: 'CI Base URL',
+                            }),
+                        },
+                    ]}
+                >
+                    <Input />
+                </AppFormItem>
+                <AppFormItem
+                    name="ciToken"
+                    label={'CI Token'}
+                    rules={[
+                        {
+                            max: 1000,
+                            message: messages('validation.stringMax', {
+                                max: 1000,
+                                field: 'CI Token',
                             }),
                         },
                     ]}

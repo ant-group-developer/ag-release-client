@@ -2032,6 +2032,8 @@
         "label": "Theo dõi phân phối"
     },
     "releaseExecution": {
+        "label": "Triển khai phát hành",
+        "releaseSnapshot": "Bản ghi phát hành",
         "confirm": {
             "retryTitle": "Bạn có chắc chắn muốn thử lại?",
             "retryDescription": "Hành động này sẽ thực hiện lại quá trình phát hành.",
@@ -2114,7 +2116,6 @@
             "CANCELLED": "Đã hủy",
             "SKIPPED": "Không áp dụng",
             "SUCCESS": "Hoàn thành"
-        },
-        "label": "Lệnh thực thi phát hành"
+        }
     }
 }

@@ -25,6 +25,8 @@ function Forbidden({ className }: Props) {
                 alt="forbidden"
                 width={500}
                 height={400}
+                priority
+                style={{ width: 'auto', height: 'auto' }}
             />
             <h1 className="mb-2 pt-10 text-2xl font-bold capitalize">
                 {messages('auth.forbidden.title')}

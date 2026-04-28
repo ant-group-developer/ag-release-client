@@ -72,10 +72,10 @@ export default function ReleaseSubmitDetailModal({ ...props }: Props) {
             footer={null}
             spinning={isFetching}
             onCancel={closeModal}
-            className="!top-10 !w-[70vw]"
+            className="!w-[70vw]"
             styles={{
                 body: {
-                    maxHeight: 'calc(100vh - 150px)',
+                    maxHeight: '75vh',
                     overflowY: 'auto',
                 },
             }}

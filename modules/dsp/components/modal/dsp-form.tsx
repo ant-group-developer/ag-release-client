@@ -188,9 +188,9 @@ export default function DspFormModal({ ...props }: Props) {
                     layout="horizontal"
                     disabled={isActive}
                     initialValues={{
-                        isActive: false,
+                        isActive: true,
                         hasDeal: false,
-                        enablePolicy: true,
+                        enablePolicy: false,
                     }}
                     submitProps={{
                         loading: isActive,

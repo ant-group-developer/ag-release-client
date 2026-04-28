@@ -36,9 +36,9 @@ export default function FilterCategoryList({
     }, [configs, searchKeyword]);
 
     return (
-        <div className="flex h-full w-[250px] flex-shrink-0 flex-col border-r border-gray-100">
+        <div className="flex h-full w-[250px] flex-shrink-0 flex-col border-r border-gray-100 dark:border-zinc-700">
             {/* Search categories */}
-            <div className="border-b border-gray-100 p-2">
+            <div className="border-b border-gray-100 p-2 dark:border-zinc-700">
                 <Input
                     prefix={<Search size={14} className="text-gray-400" />}
                     placeholder={messages('filter.searchFilter')}
@@ -62,8 +62,8 @@ export default function FilterCategoryList({
                             onClick={() => onSelect(config.key)}
                             className={`flex cursor-pointer items-center gap-2 px-3 py-2 text-sm transition-colors ${
                                 isActive
-                                    ? 'bg-blue-50 font-semibold text-blue-600'
-                                    : 'text-gray-700 hover:bg-gray-50'
+                                    ? 'bg-blue-50 font-semibold text-blue-600 dark:bg-blue-900/20'
+                                    : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-zinc-700'
                             }`}
                         >
                             {config.icon && (
