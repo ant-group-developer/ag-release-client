@@ -5,10 +5,10 @@ import { PAGE_SIZE } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
 import StreamChart from '@/modules/dashboard/components/bar-chart/stream-chart';
 import DistributionRow from '@/modules/dashboard/components/distribution-row';
-import ListNews from '@/modules/dashboard/components/list-news';
 import ListRelease from '@/modules/dashboard/components/list-release';
 import ListTop from '@/modules/dashboard/components/list-top';
 import MapChart from '@/modules/dashboard/components/map-chart';
+import RecentIssuesCard from '@/modules/dashboard/components/recent-issues';
 import StatsOverview from '@/modules/dashboard/components/stats-overview';
 import NewUpdatesCard from '@/modules/dashboard/components/stats-overview/updated-news-card';
 import {
@@ -91,7 +91,15 @@ function Dashboard({}: Props) {
 
                     <DistributionRow />
 
-                    {/* <DspChart /> */}
+                    <Row gutter={16} align="stretch">
+                        <Col span={16}>
+                            <StreamChart />
+                        </Col>
+                        <Col span={8}>
+                            <ListTop />
+                        </Col>
+                    </Row>
+
                     <Row gutter={16} align="stretch">
                         <Col span={8}>
                             <MapChart
@@ -100,19 +108,17 @@ function Dashboard({}: Props) {
                             />
                         </Col>
                         <Col span={8}>
-                            <ListTop />
-                        </Col>
-                        <Col span={8}>
                             <NewUpdatesCard />
                         </Col>
+                        <Col span={8}>
+                            <RecentIssuesCard issuesData={countIssuesData} />
+                        </Col>
                     </Row>
-
-                    <StreamChart />
                 </div>
 
                 <ListRelease data={releasesData.items.slice(0, 7)} />
 
-                <ListNews />
+                {/* <ListNews /> */}
             </PageContainer>
         </div>
     );
