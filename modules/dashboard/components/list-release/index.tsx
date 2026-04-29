@@ -27,14 +27,17 @@ export default function ListRelease({ data }: Props) {
             }}
             title={
                 <div className="flex items-center justify-between">
-                    <h3 className="m-0 text-lg font-bold">
+                    <h3 className="m-0 text-lg font-bold text-blue-500">
                         {messages('release.latestReleases')}
                     </h3>
 
                     {releaseLength >= 7 && (
                         <Link href={APP_ROUTES.RELEASES}>
                             <SeeMoreButton
-                                type="link"
+                                type="default"
+                                style={{
+                                    height: 32,
+                                }}
                                 icon={<RightOutlined />}
                             />
                         </Link>

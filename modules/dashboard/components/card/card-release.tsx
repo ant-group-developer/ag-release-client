@@ -35,7 +35,7 @@ export default function CardRelease({ data, ...props }: Props) {
         <Card
             {...props}
             hoverable
-            variant="borderless"
+            variant="outlined"
             // className="custom-card-body !bg-card-bg dark:!bg-card-bg-dark"
             cover={
                 <Link
