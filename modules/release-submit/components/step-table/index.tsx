@@ -6,13 +6,15 @@ import { formattedDate } from '@/helpers/common';
 import { DspData } from '@/modules/dsp/types';
 import { Avatar, Table, Tag, theme } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { Eye } from 'lucide-react';
+import { Eye, RotateCcw } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { RELEASE_SUBMIT_STEP_STATUS } from '../../enums';
 import {
     formatDurationShort,
     formatEnumLabel,
     getReleaseSubmitStepStatusColor,
 } from '../../helpers';
+import { useRetryReleaseSubmitStep } from '../../hooks/use-retry-step';
 import { ReleaseSubmitLogsData, ReleaseSubmitStepData } from '../../types';
 
 type Props = {
@@ -28,6 +30,7 @@ export default function ReleaseSubmitStepTable({
 }: Props) {
     const messages = useTranslations();
     const { token } = theme.useToken();
+    const { retryStep, isPending, variables } = useRetryReleaseSubmitStep();
 
     const columns: ColumnsType<ReleaseSubmitStepData> = [
         {
@@ -134,15 +137,30 @@ export default function ReleaseSubmitStepTable({
         {
             title: '',
             key: 'actions',
-            width: 70,
+            width: 100,
             fixed: 'right',
             align: 'center',
             render: (_, record) => (
-                <CustomTooltip title={messages('common.viewDetail')}>
-                    <IconButton onClick={() => onViewDetail(record)}>
-                        <Eye size={SIZE_ICON} />
-                    </IconButton>
-                </CustomTooltip>
+                <div className="flex items-center justify-start gap-2">
+                    <CustomTooltip title={messages('common.viewDetail')}>
+                        <IconButton onClick={() => onViewDetail(record)}>
+                            <Eye size={SIZE_ICON} />
+                        </IconButton>
+                    </CustomTooltip>
+                    {record.status === RELEASE_SUBMIT_STEP_STATUS.FAILED && (
+                        <CustomTooltip title={messages('common.retry')}>
+                            <IconButton
+                                onClick={() => {
+                                    retryStep({
+                                        stepId: record.id,
+                                    });
+                                }}
+                            >
+                                <RotateCcw size={SIZE_ICON} />
+                            </IconButton>
+                        </CustomTooltip>
+                    )}
+                </div>
             ),
         },
     ];
@@ -154,7 +172,7 @@ export default function ReleaseSubmitStepTable({
             pagination={false}
             dataSource={dataSource}
             columns={columns}
-            scroll={{ x: 1150 }}
+            loading={isPending}
             expandable={{
                 rowExpandable: (record) => !!record.childSteps?.length,
                 expandedRowRender: (record) => (

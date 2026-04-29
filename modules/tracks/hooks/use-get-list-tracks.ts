@@ -10,6 +10,7 @@ export const useGetListTracks = (params: TrackDataFilter) => {
         queryFn: () => trackApi.getListTrack(params),
         placeholderData: (prev) => prev,
         enabled: params.hasOwnProperty('releaseId') ? !!params.releaseId : true,
+        refetchOnWindowFocus: true,
     });
 
     const tracksData = data?.data?.data ?? DEFAULT_DATA_PAGINATION;

@@ -1,7 +1,7 @@
 'use client';
+import JsonViewer from '@/components/ui/json-viewer';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppModal from '@/components/ui/modal/normal-modal';
-import JsonViewer from '@/components/ui/json-viewer';
 import AppPagination from '@/components/ui/pagination';
 import {
     PAGE_SIZE_EXTRA_LARGE,
@@ -9,11 +9,11 @@ import {
 } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
-import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { toastPromise } from '@/helpers/messages-helper';
 import { useElementHeightById } from '@/hooks/use-element-height-by-id';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { useThemeMode } from '@/hooks/use-theme-mode';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { RELEASE_DSP_DELIVERY_STATUS } from '@/modules/distribution/enum';
 import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribute';
@@ -29,6 +29,7 @@ import {
 import DistributionStatus from '@/modules/releases/components/release-detail/release-distribution/components/header-action/distribution-status';
 import DistributionTable from '@/modules/releases/components/release-detail/release-distribution/components/table';
 import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useQueryClient } from '@tanstack/react-query';
 import { theme } from 'antd';
@@ -81,6 +82,7 @@ export default function Distribution({}: Props) {
 
     const { token } = theme.useToken();
 
+    const { isDark } = useThemeMode();
     const messages = useTranslations();
     const queryClient = useQueryClient();
 
@@ -273,6 +275,7 @@ export default function Distribution({}: Props) {
                     {dataEdit && (
                         <JsonViewer
                             src={dataEdit}
+                            theme={isDark ? 'ocean' : 'rjv-default'}
                             style={{
                                 height: 'calc(100vh - 150px)',
                                 overflowY: 'auto',

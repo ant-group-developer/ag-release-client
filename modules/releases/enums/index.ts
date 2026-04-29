@@ -66,6 +66,7 @@ export enum RELEASES_STATUS {
     AWAITING_ACTION = 'awaiting_action',
     DISTRIBUTED = 'distributed',
     PARTIALLY_FAILED = 'partially_failed',
+    PARTIAL_DONE = 'partial_done',
     FAILED = 'failed',
     TAKEN_DOWN = 'taken_down',
     SUBMITTED = 'submitted',
@@ -94,5 +95,3 @@ export enum RELEASE_TIME_MODE {
     GLOBAL_MIDNIGHT = 'global_midnight',
     SPECIFIC_TIMEZONE = 'specific_timezone',
 }
-
-

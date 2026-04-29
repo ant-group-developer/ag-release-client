@@ -2,7 +2,7 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import { MAX_NAME_LENGTH } from '@/constants/validate';
 import { useActive } from '@/hooks/use-active';
-import { Form, Input } from 'antd';
+import { Form, Input, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { useGetSetting } from '../../hooks/use-get-setting';
@@ -23,15 +23,7 @@ export default function PartnersForm({}: Props) {
         try {
             active();
             const payload: UpdateSettingPayload = {
-                partners: {
-                    spotify: {
-                        token: values.spotifyToken,
-                    },
-                    ci: {
-                        baseUrl: values.ciBaseUrl,
-                        token: values.ciToken,
-                    },
-                },
+                partners: values,
             };
             updateSetting({
                 payload,
@@ -48,11 +40,7 @@ export default function PartnersForm({}: Props) {
     };
 
     useEffect(() => {
-        form.setFieldsValue({
-            spotifyToken: partnersConfigData?.spotify?.token,
-            ciBaseUrl: partnersConfigData?.ci?.baseUrl,
-            ciToken: partnersConfigData?.ci?.token,
-        });
+        form.setFieldsValue(partnersConfigData);
     }, [form, partnersConfigData]);
 
     return (
@@ -63,51 +51,90 @@ export default function PartnersForm({}: Props) {
                 disabled={isActive}
                 submitProps={{ loading: isActive }}
             >
-                <AppFormItem
-                    name="spotifyToken"
-                    label={'Spotify Token'}
-                    rules={[
-                        {
-                            max: 1000,
-                            message: messages('validation.stringMax', {
+                <Typography.Title level={5}>Spotify</Typography.Title>
+                <div className="pl-4">
+                    <AppFormItem
+                        name={['spotify', 'token']}
+                        label={'Token'}
+                        rules={[
+                            {
                                 max: 1000,
-                                field: 'Spotify Token',
-                            }),
-                        },
-                    ]}
-                >
-                    <Input.Password />
-                </AppFormItem>
-                <AppFormItem
-                    name="ciBaseUrl"
-                    label={'CI Base URL'}
-                    rules={[
-                        {
-                            max: MAX_NAME_LENGTH,
-                            message: messages('validation.stringMax', {
+                                message: messages('validation.stringMax', {
+                                    max: 1000,
+                                    field: 'Spotify Token',
+                                }),
+                            },
+                        ]}
+                    >
+                        <Input.Password />
+                    </AppFormItem>
+                    <AppFormItem
+                        name={['spotify', 'clientId']}
+                        label={'Client ID'}
+                        rules={[
+                            {
                                 max: MAX_NAME_LENGTH,
-                                field: 'CI Base URL',
-                            }),
-                        },
-                    ]}
-                >
-                    <Input />
-                </AppFormItem>
-                <AppFormItem
-                    name="ciToken"
-                    label={'CI Token'}
-                    rules={[
-                        {
-                            max: 1000,
-                            message: messages('validation.stringMax', {
+                                message: messages('validation.stringMax', {
+                                    max: MAX_NAME_LENGTH,
+                                    field: 'Spotify Client ID',
+                                }),
+                            },
+                        ]}
+                    >
+                        <Input />
+                    </AppFormItem>
+                    <AppFormItem
+                        name={['spotify', 'clientSecret']}
+                        label={'Client Secret'}
+                        rules={[
+                            {
                                 max: 1000,
-                                field: 'CI Token',
-                            }),
-                        },
-                    ]}
-                >
-                    <Input.Password />
-                </AppFormItem>
+                                message: messages('validation.stringMax', {
+                                    max: 1000,
+                                    field: 'Spotify Client Secret',
+                                }),
+                            },
+                        ]}
+                    >
+                        <Input.Password />
+                    </AppFormItem>
+                </div>
+
+                <Typography.Title level={5} className="!mt-8">
+                    CI
+                </Typography.Title>
+                <div className="pl-4">
+                    <AppFormItem
+                        name={['ci', 'baseUrl']}
+                        label={'Base URL'}
+                        rules={[
+                            {
+                                max: MAX_NAME_LENGTH,
+                                message: messages('validation.stringMax', {
+                                    max: MAX_NAME_LENGTH,
+                                    field: 'CI Base URL',
+                                }),
+                            },
+                        ]}
+                    >
+                        <Input />
+                    </AppFormItem>
+                    <AppFormItem
+                        name={['ci', 'token']}
+                        label={'Token'}
+                        rules={[
+                            {
+                                max: 1000,
+                                message: messages('validation.stringMax', {
+                                    max: 1000,
+                                    field: 'CI Token',
+                                }),
+                            },
+                        ]}
+                    >
+                        <Input.Password />
+                    </AppFormItem>
+                </div>
             </AppForm>
         </div>
     );

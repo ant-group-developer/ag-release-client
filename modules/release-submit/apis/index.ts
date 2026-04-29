@@ -18,4 +18,7 @@ export const releaseSubmitApis = {
             `/release-submits/${id}`
         );
     },
+    retryStep: (stepId: string) => {
+        return axiosInstance.post(`/release-submits/steps/${stepId}/retry`);
+    },
 };

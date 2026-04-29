@@ -9,6 +9,7 @@ import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { useThemeMode } from '@/hooks/use-theme-mode';
 import { TYPE_MODAL_RELEASE_EXECUTION } from '@/modules/release-executions/enums';
 import ReleaseSubmitDetailModal from '@/modules/release-submit/components/detail-modal';
 import ReleaseSubmitHeader from '@/modules/release-submit/components/header';
@@ -26,6 +27,7 @@ export default function ReleaseSubmitsPage() {
     const typeModal = useModalStore((state) => state.typeModal);
     const [snapshotModalOpen, setSnapshotModalOpen] = useState(false);
     const [selectedSnapshot, setSelectedSnapshot] = useState<any>(null);
+    const { isDark } = useThemeMode();
 
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
         useFilter<ReleaseSubmitFilter>({
@@ -144,6 +146,7 @@ export default function ReleaseSubmitsPage() {
                 >
                     {selectedSnapshot && (
                         <JsonViewer
+                            theme={isDark ? 'ocean' : 'rjv-default'}
                             src={selectedSnapshot}
                             style={{
                                 height: 'calc(100vh - 150px)',

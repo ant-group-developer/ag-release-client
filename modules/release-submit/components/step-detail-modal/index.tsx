@@ -23,7 +23,6 @@ export default function ReleaseSubmitStepDetailModal({
     step,
     ...props
 }: Props) {
-    console.log('🚀 ~ ReleaseSubmitStepDetailModal ~ step:', step);
     if (!step) return null;
 
     const stepLogs = logs.filter((log) => log.releaseSubmitStepId === step.id);

@@ -211,6 +211,7 @@
         "reviewer": "Người đánh giá",
         "lastTimeUpdated": "Lần cập nhật cuối",
         "refresh": "Làm mới",
+        "retry": "Thử lại",
         "department": "Phòng ban",
         "icon": "Biểu tượng",
         "listLayout": "Bố cục dạng danh sách",
@@ -907,6 +908,7 @@
             "label": "Trạng thái phát hành",
             "submitted": "Đã gửi",
             "partially_failed": "Phân phối thất bại một phần",
+            "partial_done": "Phân phối một phần",
             "failed": "Thất bại"
         },
         "statusV2": {

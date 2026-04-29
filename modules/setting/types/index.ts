@@ -25,6 +25,8 @@ export interface SettingConfig {
 export interface PartnersConfig {
     spotify?: {
         token: string;
+        clientId?: string;
+        clientSecret?: string;
     };
     ci?: {
         baseUrl: string;
