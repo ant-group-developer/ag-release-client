@@ -48,6 +48,13 @@ export default function ReleaseSubmitStepTable({
             render: (_, record) => {
                 const dsps = record?.metadata?.input?.dsps as DspData[];
                 if (!dsps) return '-';
+
+                const sortedDsps = [...dsps].sort((a, b) => {
+                    const nameA = a?.name || a?.code || '';
+                    const nameB = b?.name || b?.code || '';
+                    return nameA.localeCompare(nameB);
+                });
+
                 return (
                     <Avatar.Group
                         max={{
@@ -61,7 +68,7 @@ export default function ReleaseSubmitStepTable({
                         }}
                         size="small"
                     >
-                        {dsps?.map((dsp) => {
+                        {sortedDsps?.map((dsp) => {
                             const displayName = dsp?.name || dsp?.code || '-';
                             return (
                                 <CustomTooltip

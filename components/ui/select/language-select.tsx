@@ -8,19 +8,28 @@ type Props = Omit<SelectProps, 'options'> & {
 
 export default function LanguageSelect({ fallBack, ...props }: Props) {
     const { languagesData } = useGetListSimpleLanguage();
-    const option = languagesData?.map((item) => {
-        return {
-            id: item.id,
-            value: item.id,
-            label: (
-                <div className="space-x-1">
-                    <span className="!text-xs">{item?.code}</span>
-                    <span>{item?.name}</span>
-                </div>
-            ),
-            name: item?.name,
-        };
-    });
+    const option =
+        languagesData?.map((item) => {
+            const isNoLanguage = item?.code === 'NoLanguage';
+            return {
+                id: item.id,
+                value: item.id,
+                label: (
+                    <div
+                        className={`space-x-1 ${
+                            isNoLanguage ? 'font-bold text-blue-400' : ''
+                        }`}
+                    >
+                        <span className="!text-xs opacity-60">
+                            {item?.code}
+                        </span>
+                        <span>{item?.name}</span>
+                    </div>
+                ),
+                name: item?.name,
+                code: item?.code,
+            };
+        }) || [];
 
     const labelRender = (props: any) => {
         const { value, label } = props;
@@ -33,11 +42,16 @@ export default function LanguageSelect({ fallBack, ...props }: Props) {
         <Select
             {...props}
             showSearch
-            filterOption={(input, option) =>
-                toNonAccentVietnamese(option?.name ?? '')
+            filterOption={(input, option: any) => {
+                const searchValue = toNonAccentVietnamese(input).toLowerCase();
+                const nameMatch = toNonAccentVietnamese(option?.name ?? '')
                     .toLowerCase()
-                    .includes(toNonAccentVietnamese(input).toLowerCase())
-            }
+                    .includes(searchValue);
+                const codeMatch = toNonAccentVietnamese(option?.code ?? '')
+                    .toLowerCase()
+                    .includes(searchValue);
+                return nameMatch || codeMatch;
+            }}
             options={option}
             labelRender={labelRender}
         />
