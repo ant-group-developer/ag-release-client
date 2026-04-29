@@ -1,4 +1,3 @@
-import { ScrollArea } from '@/components/ui/scroll/scroll-area';
 import { formattedNumber } from '@/helpers/common';
 import { theme } from 'antd';
 import { Building2, DiscAlbum, Music, Users } from 'lucide-react';
@@ -12,13 +11,6 @@ type Props = {
     overviewData: OverviewCountData;
     isOverviewLoading: boolean;
 };
-
-const fakeIssues: IssueCountData[] = [
-    { id: '1', nameEn: 'Copyright Claims', total: 32 },
-    { id: '2', nameEn: 'Metadata Fixes', total: 12 },
-    { id: '3', nameEn: 'Audio Quality', total: 33 },
-    { id: '4', nameEn: 'Artwork Issues', total: 12 },
-];
 
 const MiniChart = ({
     data,
@@ -129,12 +121,8 @@ export default function StatsOverview({
         },
     ];
 
-    const displayIssues = (
-        issuesData?.length > 0 ? issuesData : fakeIssues
-    ).slice(0, 4);
-
     return (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
             {overviewCount?.map((item, index) => {
                 const Icon = item.icon;
                 return (
@@ -192,36 +180,6 @@ export default function StatsOverview({
                     </div>
                 );
             })}
-
-            {/* 5th Box: Issues */}
-            <div
-                className="rounded-md border border-gray-100 p-5 shadow-sm transition-all hover:shadow-md dark:border-zinc-800"
-                style={{ backgroundColor: token.colorBgContainer }}
-            >
-                <div className="mb-2 flex items-center justify-between">
-                    <div className="text-[10px] font-bold uppercase tracking-[0.1em] text-gray-400 dark:text-zinc-500">
-                        {messages('common.issues')}
-                    </div>
-                </div>
-
-                <ScrollArea className="h-24 pr-2">
-                    <div className="space-y-2.5">
-                        {displayIssues.map((issue, idx) => (
-                            <div
-                                key={issue.id || idx}
-                                className="flex items-center justify-between transition-colors hover:bg-gray-50/50 dark:hover:bg-zinc-800/50"
-                            >
-                                <span className="truncate text-[11px] font-medium text-gray-500 dark:text-zinc-400">
-                                    {issue.nameEn}
-                                </span>
-                                <span className="text-[11px] font-bold text-gray-900 dark:text-white">
-                                    {formattedNumber(issue.total)}
-                                </span>
-                            </div>
-                        ))}
-                    </div>
-                </ScrollArea>
-            </div>
         </div>
     );
 }

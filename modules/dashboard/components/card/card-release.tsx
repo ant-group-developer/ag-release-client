@@ -3,7 +3,7 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
-import { Link, useRouter } from '@/i18n/routing';
+import { Link } from '@/i18n/routing';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { getReleaseDetailTabRoute } from '@/modules/releases/helpers/link';
 import { ReleasesData } from '@/modules/releases/types';
@@ -19,7 +19,7 @@ type Props = CardProps & {
 
 export default function CardRelease({ data, ...props }: Props) {
     const messages = useTranslations();
-    const router = useRouter();
+    // const router = useRouter();
 
     const imageFileId =
         data?.coverArtThumbnails?.['300x300'] ??

@@ -39,7 +39,7 @@ export default function DistributionPieChart({
     revenueData,
     colors,
 }: DistributionPieChartProps) {
-    const t = useTranslations();
+    const messages = useTranslations();
     // const { token } = theme.useToken();
     const screens = Grid.useBreakpoint();
     const isSmallDevice = !screens.xxl;
@@ -67,8 +67,8 @@ export default function DistributionPieChart({
                 </div>
                 <Segmented
                     options={[
-                        { label: t('common.streams'), value: 'stream' },
-                        { label: t('common.revenue'), value: 'revenue' },
+                        { label: messages('common.streams'), value: 'stream' },
+                        { label: messages('common.revenue'), value: 'revenue' },
                     ]}
                     value={mode}
                     onChange={(value) => setMode(value as 'stream' | 'revenue')}
@@ -106,11 +106,12 @@ export default function DistributionPieChart({
                                 verticalAlign="middle"
                                 align="right"
                                 layout="vertical"
-                                wrapperStyle={{ paddingRight: 12 }}
+                                wrapperStyle={{ paddingRight: 0, right: 0 }}
                                 formatter={(value, entry: any) => (
                                     <ChartLegendItem
                                         label={value}
                                         value={entry.payload.value}
+                                        width="200px"
                                     />
                                 )}
                                 iconType="circle"

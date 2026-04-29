@@ -97,6 +97,10 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
                 const dspCodes = record?.metadata?.input?.dspCodes;
                 if (!dspCodes || !dspCodes.length) return '-';
 
+                const sortedDspCodes = [...dspCodes].sort((a, b) =>
+                    a.localeCompare(b)
+                );
+
                 return (
                     <Avatar.Group
                         max={{
@@ -110,7 +114,7 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
                         }}
                         size="small"
                     >
-                        {dspCodes.map((code) => {
+                        {sortedDspCodes.map((code) => {
                             const dsp = dspData?.items?.find(
                                 (d) => d.code === code
                             );
