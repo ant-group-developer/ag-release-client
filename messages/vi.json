@@ -2033,6 +2033,32 @@
     "distributionMonitor": {
         "label": "Theo dõi phân phối"
     },
+    "distributionJobs": {
+        "label": "Công việc phân phối",
+        "autoSendEmail": "Tự động gửi email",
+        "downloadExcel": "Tải file excel",
+        "confirmCompleted": "Xác nhận đã hoàn thành",
+        "columns": {
+            "upc": "UPC",
+            "type": "Loại",
+            "dspCiCodes": "Mã DSP CI",
+            "status": "Trạng thái",
+            "deliveryEmail": "Email nhận",
+            "deliveryEmailSubject": "Tiêu đề email",
+            "sentAt": "Thời gian gửi",
+            "stepLabel": "Bước"
+        },
+        "statusOptions": {
+            "pending": "Đang chờ",
+            "processing": "Đang xử lý",
+            "completed": "Hoàn thành",
+            "failed": "Thất bại"
+        },
+        "typeOptions": {
+            "EMAIL_STATE51": "Tự động gửi email",
+            "ADMIN_EXPORT": "Tải file excel"
+        }
+    },
     "releaseExecution": {
         "label": "Triển khai phát hành",
         "releaseSnapshot": "Bản ghi phát hành",

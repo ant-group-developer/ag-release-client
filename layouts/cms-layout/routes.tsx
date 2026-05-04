@@ -474,6 +474,15 @@ export const adminRoutes: RouteNode[] = [
                 required: SYS_ADMIN_REQ,
             },
             {
+                id: 'distribution-jobs',
+                type: 'link',
+                label: 'distributionJobs.label',
+                title: 'Distribution Jobs',
+                href: APP_ROUTES.DISTRIBUTION_JOBS,
+                icon: ClipboardList,
+                required: SYS_ADMIN_REQ,
+            },
+            {
                 id: 'setting',
                 type: 'link',
                 label: 'setting.label',

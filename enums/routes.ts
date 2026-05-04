@@ -59,6 +59,7 @@ export enum APP_ROUTES {
     RELEASE_LOG = '/release-log',
     RELEASE_EXECUTIONS = '/release-executions',
     RELEASE_SUBMITS = '/release-submits',
+    DISTRIBUTION_JOBS = '/distribution-jobs',
 }
 
 export const AUTH_ROUTES: string[] = [APP_ROUTES.SIGN_IN];
