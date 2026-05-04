@@ -2046,6 +2046,7 @@
             "deliveryEmail": "Email nhận",
             "deliveryEmailSubject": "Tiêu đề email",
             "sentAt": "Thời gian gửi",
+            "expectedSendTime": "Dự kiến gửi",
             "stepLabel": "Bước"
         },
         "statusOptions": {

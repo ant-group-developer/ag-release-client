@@ -2044,6 +2044,7 @@
             "deliveryEmail": "Delivery email",
             "deliveryEmailSubject": "Email subject",
             "sentAt": "Sent at",
+            "expectedSendTime": "Expected send time",
             "stepLabel": "Step"
         },
         "statusOptions": {
