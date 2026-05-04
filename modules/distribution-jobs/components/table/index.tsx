@@ -69,11 +69,10 @@ export default function DistributionJobsTable({ dataFilter, ...props }: Props) {
             width: 180,
             render: (_, record) => {
                 if (!record.type) return '-';
-                const translationKey =
-                    `distributionJobs.typeOptions.${record.type.toUpperCase()}` as any;
-                return messages.has(translationKey)
-                    ? messages(translationKey)
-                    : record.type;
+                return (
+                    record.type.charAt(0).toUpperCase() +
+                    record.type.slice(1).replace(/_/g, ' ')
+                );
             },
         },
         {

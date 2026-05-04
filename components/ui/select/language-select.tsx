@@ -17,7 +17,7 @@ export default function LanguageSelect({ fallBack, ...props }: Props) {
                 label: (
                     <div
                         className={`space-x-1 ${
-                            isNoLanguage ? 'font-bold text-blue-400' : ''
+                            isNoLanguage ? 'text-blue-500' : ''
                         }`}
                     >
                         <span className="!text-xs opacity-60">

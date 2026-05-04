@@ -42,7 +42,7 @@ export default function DistributionJobsHeader({
     }));
 
     const typeOptions = TYPE_OPTIONS.map((type) => ({
-        label: messages(`distributionJobs.typeOptions.${type.toUpperCase()}` as any),
+        label: type.charAt(0).toUpperCase() + type.slice(1).replace(/_/g, ' '),
         value: type,
     }));
 

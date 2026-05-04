@@ -923,7 +923,8 @@
             "label": "Trạng thái phát hành",
             "submitted": "Đã gửi",
             "partially_failed": "Phân phối thất bại một phần",
-            "failed": "Thất bại"
+            "failed": "Thất bại",
+            "partial_done": "Hoàn thành một phần"
         }
     },
 
