@@ -23,9 +23,7 @@ export const distributionJobApis = {
             { responseType: 'blob' }
         );
     },
-    confirmCompleted: (ids: any[]) => {
-        return axiosInstance.post('/ci-distribution-jobs/confirm-completed', {
-            ids,
-        });
+    confirmCompleted: (data: { ids: any[]; exportIdFromCi: string }) => {
+        return axiosInstance.post('/ci-distribution-jobs/confirm-completed', data);
     },
 };

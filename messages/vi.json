@@ -2031,6 +2031,11 @@
         "statusRelease": "Trạng thái phát hành",
         "statusLog": "Trạng thái nhật ký"
     },
+    "ciJob": {
+        "error": {
+            "invalidTypeAdminExport": "Chỉ có thể xác nhận hoàn thành cho các công việc loại Admin Export"
+        }
+    },
     "distributionMonitor": {
         "label": "Theo dõi phân phối"
     },
@@ -2055,6 +2060,12 @@
             "processing": "Đang xử lý",
             "completed": "Hoàn thành",
             "failed": "Thất bại"
+        },
+        "confirmCompletedModal": {
+            "title": "Xác nhận đã hoàn thành",
+            "exportIdFromCiLabel": "Mã xuất từ CI",
+            "exportIdFromCiPlaceholder": "Nhập mã xuất từ CI",
+            "exportIdFromCiRequired": "Vui lòng nhập mã xuất từ CI"
         },
         "typeOptions": {
             "EMAIL_STATE51": "Tự động gửi email",

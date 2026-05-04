@@ -8,6 +8,7 @@ import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import DistributionJobsHeader from '@/modules/distribution-jobs/components/header';
 import DistributionJobsTable from '@/modules/distribution-jobs/components/table';
+import ConfirmCompletedModal from '@/modules/distribution-jobs/components/confirm-completed-modal';
 import { useAutoSendEmailDistributionJobs } from '@/modules/distribution-jobs/hooks/use-auto-send-email';
 import { useConfirmCompletedDistributionJobs } from '@/modules/distribution-jobs/hooks/use-confirm-completed';
 import { useDownloadExcelDistributionJobs } from '@/modules/distribution-jobs/hooks/use-download-excel';
@@ -33,6 +34,7 @@ export default function DistributionJobsPage() {
     const { token } = theme.useToken();
     const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
     const [selectedRows, setSelectedRows] = useState<DistributionJobData[]>([]);
+    const [openConfirmCompleted, setOpenConfirmCompleted] = useState(false);
 
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
         useFilter<DistributionJobFilter>({
@@ -84,12 +86,14 @@ export default function DistributionJobsPage() {
         });
     };
 
-    const onConfirmCompleted = () => {
+    const onConfirmCompleted = (exportIdFromCi: string) => {
         confirmCompleted({
             ids: selectedRowKeys,
+            exportIdFromCi,
             onSuccess: () => {
                 setSelectedRowKeys([]);
                 setSelectedRows([]);
+                setOpenConfirmCompleted(false);
             },
         });
     };
@@ -163,7 +167,7 @@ export default function DistributionJobsPage() {
                                     type="text"
                                     icon={<CheckOutlined />}
                                     loading={isConfirmingCompleted}
-                                    onClick={onConfirmCompleted}
+                                    onClick={() => setOpenConfirmCompleted(true)}
                                     style={{ color: token.colorPrimary }}
                                 >
                                     {messages(
@@ -179,6 +183,13 @@ export default function DistributionJobsPage() {
                         density: false,
                     }}
                     onChange={onChangeSort}
+                />
+
+                <ConfirmCompletedModal
+                    open={openConfirmCompleted}
+                    onCancel={() => setOpenConfirmCompleted(false)}
+                    onConfirm={onConfirmCompleted}
+                    loading={isConfirmingCompleted}
                 />
 
                 <AppPagination

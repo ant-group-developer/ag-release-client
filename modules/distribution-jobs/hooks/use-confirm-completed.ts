@@ -11,7 +11,7 @@ export const useConfirmCompletedDistributionJobs = () => {
 
     const onSuccess = (
         data: AxiosResponse<SuccessResponse, any>,
-        { onSuccess }: CommonFunction & { ids: any[] }
+        { onSuccess }: CommonFunction & { ids: any[]; exportIdFromCi: string }
     ) => {
         queryClient.invalidateQueries({
             queryKey: distributionJobQueryKeys.getList(),
@@ -22,21 +22,24 @@ export const useConfirmCompletedDistributionJobs = () => {
 
     const onError = (
         data: any,
-        { onError }: CommonFunction & { ids: any[] }
+        { onError }: CommonFunction & { ids: any[]; exportIdFromCi: string }
     ) => {
         onError?.();
         handleError(data);
     };
 
     const mutation = useMutation({
-        mutationFn: ({ ids }: { ids: any[] } & CommonFunction) =>
-            distributionJobApis.confirmCompleted(ids),
+        mutationFn: ({
+            ids,
+            exportIdFromCi,
+        }: { ids: any[]; exportIdFromCi: string } & CommonFunction) =>
+            distributionJobApis.confirmCompleted({ ids, exportIdFromCi }),
         onSuccess,
         onError,
     });
 
     const confirmCompleted = (
-        variables: { ids: any[] } & CommonFunction
+        variables: { ids: any[]; exportIdFromCi: string } & CommonFunction
     ) => {
         mutation.mutate(variables);
     };

@@ -2028,6 +2028,11 @@
         "statusRelease": "Release status",
         "statusLog": "Log status"
     },
+    "ciJob": {
+        "error": {
+            "invalidTypeAdminExport": "Only Admin Export jobs can be confirmed as completed"
+        }
+    },
     "distributionMonitor": {
         "label": "Distribution monitor"
     },
@@ -2052,6 +2057,12 @@
             "processing": "Processing",
             "completed": "Completed",
             "failed": "Failed"
+        },
+        "confirmCompletedModal": {
+            "title": "Confirm completed",
+            "exportIdFromCiLabel": "Export ID from CI",
+            "exportIdFromCiPlaceholder": "Enter export ID from CI",
+            "exportIdFromCiRequired": "Please enter export ID from CI"
         },
         "typeOptions": {
             "EMAIL_STATE51": "Email state51",
