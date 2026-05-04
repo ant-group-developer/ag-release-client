@@ -8,7 +8,7 @@ import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import DistributionJobsHeader from '@/modules/distribution-jobs/components/header';
 import DistributionJobsTable from '@/modules/distribution-jobs/components/table';
-import ConfirmCompletedModal from '@/modules/distribution-jobs/components/confirm-completed-modal';
+import DistributionJobsTableAlertAction from '@/modules/distribution-jobs/components/table-alert-action';
 import { useAutoSendEmailDistributionJobs } from '@/modules/distribution-jobs/hooks/use-auto-send-email';
 import { useConfirmCompletedDistributionJobs } from '@/modules/distribution-jobs/hooks/use-confirm-completed';
 import { useDownloadExcelDistributionJobs } from '@/modules/distribution-jobs/hooks/use-download-excel';
@@ -19,13 +19,8 @@ import {
     DistributionJobData,
     DistributionJobFilter,
 } from '@/modules/distribution-jobs/types';
-import {
-    CheckOutlined,
-    FileExcelOutlined,
-    MailOutlined,
-} from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { Button, Space, theme } from 'antd';
+import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { Key, useState } from 'react';
 
@@ -86,14 +81,14 @@ export default function DistributionJobsPage() {
         });
     };
 
-    const onConfirmCompleted = (exportIdFromCi: string) => {
+    const onConfirmCompleted = () => {
         confirmCompleted({
             ids: selectedRowKeys,
-            exportIdFromCi,
+            exportIdFromCi: '',
             onSuccess: () => {
                 setSelectedRowKeys([]);
                 setSelectedRows([]);
-                setOpenConfirmCompleted(false);
+                // setOpenConfirmCompleted(false);
             },
         });
     };
@@ -108,6 +103,17 @@ export default function DistributionJobsPage() {
             },
             false
         );
+    };
+
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: (keys: Key[], rows: DistributionJobData[]) => {
+            setSelectedRowKeys(keys);
+            setSelectedRows(rows);
+        },
+        getCheckboxProps: (record: DistributionJobData) => ({
+            disabled: record.status === DISTRIBUTION_JOB_STATUS.COMPLETED,
+        }),
     };
 
     return (
@@ -130,53 +136,17 @@ export default function DistributionJobsPage() {
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
                         current: distributionJobsData?.metadata?.page ?? 1,
                     }}
-                    rowSelection={{
-                        selectedRowKeys,
-                        onChange: (keys, rows) => {
-                            setSelectedRowKeys(keys);
-                            setSelectedRows(rows);
-                        },
-                        getCheckboxProps: (record: DistributionJobData) => ({
-                            disabled:
-                                record.status ===
-                                DISTRIBUTION_JOB_STATUS.COMPLETED,
-                        }),
-                    }}
-                    tableAlertOptionRender={() => {
-                        return (
-                            <Space size={16}>
-                                <Button
-                                    type="text"
-                                    icon={<MailOutlined />}
-                                    loading={isAutoSendingEmail}
-                                    onClick={onAutoSendEmail}
-                                    style={{ color: token.colorPrimary }}
-                                >
-                                    {messages('distributionJobs.autoSendEmail')}
-                                </Button>
-                                <Button
-                                    type="text"
-                                    icon={<FileExcelOutlined />}
-                                    loading={isDownloadingExcel}
-                                    onClick={onDownloadExcel}
-                                    style={{ color: token.colorPrimary }}
-                                >
-                                    {messages('distributionJobs.downloadExcel')}
-                                </Button>
-                                <Button
-                                    type="text"
-                                    icon={<CheckOutlined />}
-                                    loading={isConfirmingCompleted}
-                                    onClick={() => setOpenConfirmCompleted(true)}
-                                    style={{ color: token.colorPrimary }}
-                                >
-                                    {messages(
-                                        'distributionJobs.confirmCompleted'
-                                    )}
-                                </Button>
-                            </Space>
-                        );
-                    }}
+                    rowSelection={rowSelection}
+                    tableAlertOptionRender={() => (
+                        <DistributionJobsTableAlertAction
+                            isAutoSendingEmail={isAutoSendingEmail}
+                            onAutoSendEmail={onAutoSendEmail}
+                            isDownloadingExcel={isDownloadingExcel}
+                            onDownloadExcel={onDownloadExcel}
+                            isConfirmingCompleted={isConfirmingCompleted}
+                            onConfirmCompleted={onConfirmCompleted}
+                        />
+                    )}
                     options={{
                         reload: () => refetch(),
                         setting: false,
@@ -185,12 +155,12 @@ export default function DistributionJobsPage() {
                     onChange={onChangeSort}
                 />
 
-                <ConfirmCompletedModal
+                {/* <ConfirmCompletedModal
                     open={openConfirmCompleted}
                     onCancel={() => setOpenConfirmCompleted(false)}
                     onConfirm={onConfirmCompleted}
                     loading={isConfirmingCompleted}
-                />
+                /> */}
 
                 <AppPagination
                     className="rounded-b-md"

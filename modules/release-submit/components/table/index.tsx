@@ -217,9 +217,7 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
                         >
                             <IconButton
                                 onClick={() => {
-                                    props.onViewSnapshot?.(
-                                        record.metadata.input.releaseSnapshot
-                                    );
+                                    props.onViewSnapshot?.(record);
                                 }}
                             >
                                 <FileJson size={SIZE_ICON} />
