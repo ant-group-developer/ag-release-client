@@ -10,7 +10,7 @@ import { useFilter } from '@/hooks/use-filter';
 import BatchImportTable from '@/modules/batch-import/components/batch-import-table';
 import { useGetBatchImportLogs } from '@/modules/batch-import/hooks/use-get-batch-import-logs';
 import { BatchImportLogFilter } from '@/modules/batch-import/types/data';
-import { ThunderboltOutlined } from '@ant-design/icons';
+import { ReloadOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { Button, message, Select, Space } from 'antd';
 import dayjs from 'dayjs';
 
@@ -41,10 +41,8 @@ function BatchImportPage() {
     const { dataFilter, onSearch, onChangePage, onChangeFilter, isReady } =
         useFilter<BatchImportLogFilter>(defaultFilter);
 
-    const { dataLogs, totalRecord, isFetching } = useGetBatchImportLogs(
-        dataFilter,
-        isReady
-    );
+    const { dataLogs, totalRecord, isFetching, refetch } =
+        useGetBatchImportLogs(dataFilter, isReady);
 
     if (!isReady) {
         return <AppLoader className="bg-white" />;
@@ -84,6 +82,12 @@ function BatchImportPage() {
                         }}
                     >
                         Generate Batch ID
+                    </Button>
+                    <Button
+                        icon={<ReloadOutlined spin={isFetching} />}
+                        onClick={() => refetch()}
+                    >
+                        Refresh
                     </Button>
                 </Space>
             </AppHeader>
