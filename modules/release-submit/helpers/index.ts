@@ -3,6 +3,7 @@ import {
     RELEASE_SUBMIT_LOG_LEVEL,
     RELEASE_SUBMIT_STATUS,
     RELEASE_SUBMIT_STEP_STATUS,
+    RELEASE_SUBMIT_TYPE,
 } from '../enums';
 
 export const getReleaseSubmitStatusColor = (status?: RELEASE_SUBMIT_STATUS) => {
@@ -18,6 +19,21 @@ export const getReleaseSubmitStatusColor = (status?: RELEASE_SUBMIT_STATUS) => {
         case RELEASE_SUBMIT_STATUS.NEW:
         case RELEASE_SUBMIT_STATUS.PARTIAL_DONE:
             return 'lime';
+        default:
+            return 'default';
+    }
+};
+
+export const getReleaseSubmitTypeColor = (type?: RELEASE_SUBMIT_TYPE) => {
+    switch (type) {
+        case RELEASE_SUBMIT_TYPE.INITIAL_RELEASE:
+            return 'green';
+        case RELEASE_SUBMIT_TYPE.UPDATE:
+            return 'blue';
+        case RELEASE_SUBMIT_TYPE.TAKEDOWN:
+            return 'orange';
+        case RELEASE_SUBMIT_TYPE.RETRY:
+            return 'purple';
         default:
             return 'default';
     }
@@ -58,8 +74,6 @@ export const getReleaseSubmitLogLevelColor = (
             return 'error';
         case RELEASE_SUBMIT_LOG_LEVEL.WARNING:
             return 'warning';
-        case RELEASE_SUBMIT_LOG_LEVEL.LOG:
-            return 'blue';
         case RELEASE_SUBMIT_LOG_LEVEL.LOG:
             return 'blue';
         default:

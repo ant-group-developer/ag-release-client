@@ -5,7 +5,12 @@ import { Button, Empty, Space, Tag, Typography } from 'antd';
 import { RotateCcw } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import { formatEnumLabel, getReleaseSubmitStatusColor } from '../../helpers';
+import {
+    formatEnumLabel,
+    getReleaseSubmitStatusColor,
+    getReleaseSubmitTypeColor,
+} from '../../helpers';
+import { RELEASE_SUBMIT_TYPE } from '../../enums';
 import { useGetDetailReleaseSubmit } from '../../hooks/use-get-detail';
 import { ReleaseSubmitData, ReleaseSubmitStepData } from '../../types';
 import ReleaseSubmitStepDetailModal from '../step-detail-modal';
@@ -44,6 +49,18 @@ export default function ReleaseSubmitDetailModal({ ...props }: Props) {
                 >
                     {formatEnumLabel(releaseSubmitDetail?.status)}
                 </Tag>
+                {releaseSubmitDetail?.type && (
+                    <Tag
+                        color={getReleaseSubmitTypeColor(
+                            releaseSubmitDetail.type
+                        )}
+                        className="font-normal"
+                    >
+                        {messages(
+                            `releaseExecution.typeOptions.${releaseSubmitDetail.type}`
+                        )}
+                    </Tag>
+                )}
             </Space>
             {releaseSubmitDetail && (
                 <Button
