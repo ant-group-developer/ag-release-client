@@ -31,6 +31,7 @@ export interface PartnersConfig {
     ci?: {
         baseUrl: string;
         token: string;
+        dailySendCron?: string;
     };
 }
 

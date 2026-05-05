@@ -2028,8 +2028,46 @@
         "statusRelease": "Release status",
         "statusLog": "Log status"
     },
+    "ciJob": {
+        "error": {
+            "invalidTypeAdminExport": "Only Admin Export jobs can be confirmed as completed"
+        }
+    },
     "distributionMonitor": {
         "label": "Distribution monitor"
+    },
+    "distributionJobs": {
+        "label": "Distribution jobs",
+        "autoSendEmail": "Auto send email",
+        "downloadExcel": "Download excel",
+        "confirmCompleted": "Confirm completed",
+        "columns": {
+            "upc": "UPC",
+            "type": "Type",
+            "dspCiCodes": "DSP CI codes",
+            "status": "Status",
+            "deliveryEmail": "Delivery email",
+            "deliveryEmailSubject": "Email subject",
+            "sentAt": "Sent at",
+            "expectedSendTime": "Expected send time",
+            "stepLabel": "Step"
+        },
+        "statusOptions": {
+            "pending": "Pending",
+            "processing": "Processing",
+            "completed": "Completed",
+            "failed": "Failed"
+        },
+        "confirmCompletedModal": {
+            "title": "Confirm completed",
+            "exportIdFromCiLabel": "Export ID from CI",
+            "exportIdFromCiPlaceholder": "Enter export ID from CI",
+            "exportIdFromCiRequired": "Please enter export ID from CI"
+        },
+        "typeOptions": {
+            "EMAIL_STATE51": "Email state51",
+            "ADMIN_EXPORT": "Admin export"
+        }
     },
     "releaseExecution": {
         "label": "Release executions",

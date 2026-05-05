@@ -923,7 +923,8 @@
             "label": "Trạng thái phát hành",
             "submitted": "Đã gửi",
             "partially_failed": "Phân phối thất bại một phần",
-            "failed": "Thất bại"
+            "failed": "Thất bại",
+            "partial_done": "Hoàn thành một phần"
         }
     },
 
@@ -2030,8 +2031,46 @@
         "statusRelease": "Trạng thái phát hành",
         "statusLog": "Trạng thái nhật ký"
     },
+    "ciJob": {
+        "error": {
+            "invalidTypeAdminExport": "Chỉ có thể xác nhận hoàn thành cho các công việc loại Admin Export"
+        }
+    },
     "distributionMonitor": {
         "label": "Theo dõi phân phối"
+    },
+    "distributionJobs": {
+        "label": "Công việc phân phối",
+        "autoSendEmail": "Tự động gửi email",
+        "downloadExcel": "Tải file excel",
+        "confirmCompleted": "Xác nhận đã hoàn thành",
+        "columns": {
+            "upc": "UPC",
+            "type": "Loại",
+            "dspCiCodes": "Mã DSP CI",
+            "status": "Trạng thái",
+            "deliveryEmail": "Email nhận",
+            "deliveryEmailSubject": "Tiêu đề email",
+            "sentAt": "Thời gian gửi",
+            "expectedSendTime": "Dự kiến gửi",
+            "stepLabel": "Bước"
+        },
+        "statusOptions": {
+            "pending": "Đang chờ",
+            "processing": "Đang xử lý",
+            "completed": "Hoàn thành",
+            "failed": "Thất bại"
+        },
+        "confirmCompletedModal": {
+            "title": "Xác nhận đã hoàn thành",
+            "exportIdFromCiLabel": "Mã xuất từ CI",
+            "exportIdFromCiPlaceholder": "Nhập mã xuất từ CI",
+            "exportIdFromCiRequired": "Vui lòng nhập mã xuất từ CI"
+        },
+        "typeOptions": {
+            "EMAIL_STATE51": "Tự động gửi email",
+            "ADMIN_EXPORT": "Tải file excel"
+        }
     },
     "releaseExecution": {
         "label": "Triển khai phát hành",

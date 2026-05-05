@@ -4,7 +4,9 @@ import { MAX_NAME_LENGTH } from '@/constants/validate';
 import { useActive } from '@/hooks/use-active';
 import { Form, Input, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Cron } from 'react-js-cron';
+import 'react-js-cron/dist/styles.css';
 import { useGetSetting } from '../../hooks/use-get-setting';
 import { useUpdateSetting } from '../../hooks/use-update-role';
 import { UpdateSettingPayload } from '../../types/payload';
@@ -18,12 +20,21 @@ export default function PartnersForm({}: Props) {
     const { updateSetting } = useUpdateSetting();
     const { active, deActive, isActive } = useActive();
     const partnersConfigData = settingConfig?.partners;
+    const [dailySendCronValue, setDailySendCronValue] = useState<string>(
+        partnersConfigData?.ci?.dailySendCron ?? ''
+    );
 
     const onFinish = (values: any) => {
         try {
             active();
             const payload: UpdateSettingPayload = {
-                partners: values,
+                partners: {
+                    ...values,
+                    ci: {
+                        ...values.ci,
+                        dailySendCron: dailySendCronValue,
+                    },
+                },
             };
             updateSetting({
                 payload,
@@ -41,6 +52,11 @@ export default function PartnersForm({}: Props) {
 
     useEffect(() => {
         form.setFieldsValue(partnersConfigData);
+        if (partnersConfigData?.ci?.dailySendCron) {
+            setDailySendCronValue(partnersConfigData.ci.dailySendCron);
+        } else {
+            setDailySendCronValue('');
+        }
     }, [form, partnersConfigData]);
 
     return (
@@ -104,6 +120,15 @@ export default function PartnersForm({}: Props) {
                     CI
                 </Typography.Title>
                 <div className="pl-4">
+                    <AppFormItem label={'Daily Send Cron'}>
+                        <Cron
+                            value={dailySendCronValue}
+                            setValue={setDailySendCronValue}
+                            clearButtonProps={{ type: 'default' }}
+                            disabled={isActive}
+                        />
+                    </AppFormItem>
+
                     <AppFormItem
                         name={['ci', 'baseUrl']}
                         label={'Base URL'}

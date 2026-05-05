@@ -1,7 +1,6 @@
 'use client';
 
 import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
-import JsonViewer from '@/components/ui/json-viewer';
 import AppModal from '@/components/ui/modal/normal-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -12,6 +11,7 @@ import useModalStore from '@/hooks/use-modal';
 import { useThemeMode } from '@/hooks/use-theme-mode';
 import { TYPE_MODAL_RELEASE_EXECUTION } from '@/modules/release-executions/enums';
 import ReleaseSubmitDetailModal from '@/modules/release-submit/components/detail-modal';
+import ReleaseSubmitSnapshotModal from '@/modules/release-submit/components/snapshot-modal';
 import ReleaseSubmitHeader from '@/modules/release-submit/components/header';
 import ReleaseSubmitTable from '@/modules/release-submit/components/table';
 import { useGetListReleaseSubmits } from '@/modules/release-submit/hooks/use-get-list';
@@ -26,7 +26,7 @@ export default function ReleaseSubmitsPage() {
     const { token } = theme.useToken();
     const typeModal = useModalStore((state) => state.typeModal);
     const [snapshotModalOpen, setSnapshotModalOpen] = useState(false);
-    const [selectedSnapshot, setSelectedSnapshot] = useState<any>(null);
+    const [selectedRecord, setSelectedRecord] = useState<any>(null);
     const { isDark } = useThemeMode();
 
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
@@ -95,8 +95,8 @@ export default function ReleaseSubmitsPage() {
                         density: false,
                     }}
                     onChange={onChangeSort}
-                    onViewSnapshot={(snapshot) => {
-                        setSelectedSnapshot(snapshot);
+                    onViewSnapshot={(record) => {
+                        setSelectedRecord(record);
                         setSnapshotModalOpen(true);
                     }}
                 />
@@ -127,34 +127,14 @@ export default function ReleaseSubmitsPage() {
                     <ReleaseSubmitDetailModal open />
                 )}
 
-                <AppModal
+                <ReleaseSubmitSnapshotModal
                     open={snapshotModalOpen}
                     onCancel={() => {
                         setSnapshotModalOpen(false);
-                        setSelectedSnapshot(null);
+                        setSelectedRecord(null);
                     }}
-                    title="Release Snapshot"
-                    footer={null}
-                    width={800}
-                    className="!top-10 !w-[60vw]"
-                    styles={{
-                        body: {
-                            height: 'calc(100vh - 140px)',
-                            overflowY: 'auto',
-                        },
-                    }}
-                >
-                    {selectedSnapshot && (
-                        <JsonViewer
-                            theme={isDark ? 'ocean' : 'rjv-default'}
-                            src={selectedSnapshot}
-                            style={{
-                                height: 'calc(100vh - 150px)',
-                                overflowY: 'auto',
-                            }}
-                        />
-                    )}
-                </AppModal>
+                    record={selectedRecord}
+                />
             </PageContainer>
         </AppPageWrapper>
     );
