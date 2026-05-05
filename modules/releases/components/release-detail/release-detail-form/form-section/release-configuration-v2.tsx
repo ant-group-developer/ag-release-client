@@ -1,6 +1,6 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import LabelSelect from '@/components/ui/select/label-select';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
@@ -239,3 +239,4 @@ export default function ReleaseConfigurationSectionV2({
         </div>
     );
 }
+

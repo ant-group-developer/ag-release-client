@@ -19,6 +19,20 @@ export interface SettingConfig {
     backupDatabase: BackupDatabaseConfig;
     other?: OtherConfig;
     resend?: ResendConfig;
+    partners?: PartnersConfig;
+}
+
+export interface PartnersConfig {
+    spotify?: {
+        token: string;
+        clientId?: string;
+        clientSecret?: string;
+    };
+    ci?: {
+        baseUrl: string;
+        token: string;
+        dailySendCron?: string;
+    };
 }
 
 export interface OtherConfig {

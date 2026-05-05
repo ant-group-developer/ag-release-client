@@ -4,7 +4,6 @@ import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE, PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { toastPromise } from '@/helpers/messages-helper';
 import { useElementHeightById } from '@/hooks/use-element-height-by-id';
 import { useFilter } from '@/hooks/use-filter';
@@ -12,6 +11,7 @@ import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import DropUploadTracks from '@/modules/releases/components/drop-track-upload';
 import AddNewTrackModal from '@/modules/releases/components/release-detail/release-tracks/modal/add-new-track';
+import BulkUpdateTracksModal from '@/modules/releases/components/release-detail/release-tracks/modal/bulk-update-tracks';
 import TrackDetailModal from '@/modules/releases/components/release-detail/release-tracks/modal/track-detail';
 import ReleaseTracksTable from '@/modules/releases/components/release-detail/release-tracks/table';
 import TrackActions from '@/modules/releases/components/release-detail/release-tracks/track-actions';
@@ -20,12 +20,15 @@ import {
     TYPE_MODAL_RELEASE,
     TYPE_MODAL_TRACK,
 } from '@/modules/releases/enums';
-import { TRACK_SORT_FIELD } from '@/modules/tracks/enums';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import TrackArtistModal from '@/modules/track-artist/components/modal/track-artist-modal';
 import { useDeleteTrackArtist } from '@/modules/track-artist/hooks/use-delete-track-artist';
 import { TrackArtistData } from '@/modules/track-artist/types';
-import { TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
+import {
+    TRACK_SORT_FIELD,
+    TYPE_MODAL_TRACK_ARTIST,
+} from '@/modules/tracks/enums';
 import { useBulkDeleteTracks } from '@/modules/tracks/hooks/use-bulk-delete-tracks';
 import { useDeleteTrack } from '@/modules/tracks/hooks/use-delete-track';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
@@ -182,6 +185,13 @@ export default function Tracks() {
 
                 {typeModal === TYPE_MODAL_TRACK_ARTIST.ADD && (
                     <TrackArtistModal onCancel={closeModal} />
+                )}
+
+                {typeModal === TYPE_MODAL_TRACK.BULK_UPDATE && (
+                    <BulkUpdateTracksModal
+                        selectedRowKeys={selectedRow}
+                        onSuccess={() => setSelectedRow([])}
+                    />
                 )}
 
                 {typeModal === TYPE_MODAL_TRACK.BULK_DELETE && (

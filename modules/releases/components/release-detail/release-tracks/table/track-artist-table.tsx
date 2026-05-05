@@ -2,7 +2,7 @@ import IconButton from '@/components/ui/button/icon-button';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { SIZE_ICON } from '@/constants/common';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { TrackData } from '@/modules/releases/types';
 import { useDeleteTrackArtist } from '@/modules/track-artist/hooks/use-delete-track-artist';
@@ -233,3 +233,4 @@ export default function TrackArtistTable({ trackData, ...props }: Props) {
         </div>
     );
 }
+

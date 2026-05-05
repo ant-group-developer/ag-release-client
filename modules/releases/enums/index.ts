@@ -24,6 +24,7 @@ export enum TYPE_MODAL_TRACK {
     ADD = 'ADD',
     DELETE = 'DELETE',
     BULK_DELETE = 'BULK_DELETE',
+    BULK_UPDATE = 'BULK_UPDATE',
     ACR_CLOUD_SCAN = 'ACR_CLOUD_SCAN',
     ACR_CLOUD_SCAN_HISTORY = 'ACR_CLOUD_SCAN_HISTORY',
     ACR_CLOUD_SCAN_RESULT = 'ACR_CLOUD_SCAN_RESULT',
@@ -48,6 +49,7 @@ export enum TYPE_MODAL_RELEASE_CONTRIBUTOR_LIST {
 export enum TYPE_MODAL_RELEASE_DISTRIBUTION {
     DISTRIBUTION = 'RELEASE_DISTRIBUTION',
     TAKE_DOWN = 'RELEASE_TAKE_DOWN',
+    ISSUES = 'RELEASE_DISTRIBUTION_ISSUES',
 }
 
 export enum RELEASES_TABS {
@@ -64,6 +66,7 @@ export enum RELEASES_STATUS {
     AWAITING_ACTION = 'awaiting_action',
     DISTRIBUTED = 'distributed',
     PARTIALLY_FAILED = 'partially_failed',
+    PARTIAL_DONE = 'partial_done',
     FAILED = 'failed',
     TAKEN_DOWN = 'taken_down',
     SUBMITTED = 'submitted',
@@ -92,5 +95,3 @@ export enum RELEASE_TIME_MODE {
     GLOBAL_MIDNIGHT = 'global_midnight',
     SPECIFIC_TIMEZONE = 'specific_timezone',
 }
-
-

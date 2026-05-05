@@ -5,7 +5,7 @@ import { APP_ROUTES } from '@/enums/routes';
 import { Link } from '@/i18n/routing';
 import { ReleasesData } from '@/modules/releases/types';
 import { RightOutlined } from '@ant-design/icons';
-import { Empty, theme } from 'antd';
+import { Card, Empty, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import CardRelease from '../card/card-release';
 
@@ -19,19 +19,32 @@ export default function ListRelease({ data }: Props) {
     const releaseLength = data?.length;
 
     return (
-        <div className="mt-8 space-y-2">
-            <div className="flex items-center justify-between">
-                <p className="text-lg font-bold">
-                    {messages('release.latestReleases')}
-                </p>
+        <Card
+            className="!mt-4 overflow-hidden rounded-lg border-0 shadow-sm"
+            styles={{
+                header: { borderBottom: 0, paddingBottom: 0, paddingTop: 24 },
+                body: { padding: '24px' },
+            }}
+            title={
+                <div className="flex items-center justify-between">
+                    <h3 className="m-0 text-lg font-bold text-blue-500">
+                        {messages('release.latestReleases')}
+                    </h3>
 
-                {releaseLength >= 7 && (
-                    <Link href={APP_ROUTES.RELEASES}>
-                        <SeeMoreButton type="link" icon={<RightOutlined />} />
-                    </Link>
-                )}
-            </div>
-
+                    {releaseLength >= 7 && (
+                        <Link href={APP_ROUTES.RELEASES}>
+                            <SeeMoreButton
+                                type="default"
+                                style={{
+                                    height: 32,
+                                }}
+                                icon={<RightOutlined />}
+                            />
+                        </Link>
+                    )}
+                </div>
+            }
+        >
             <AppGrid className="">
                 <FlatList
                     data={data}
@@ -50,6 +63,6 @@ export default function ListRelease({ data }: Props) {
                     }}
                 />
             )}
-        </div>
+        </Card>
     );
 }

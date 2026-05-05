@@ -4,7 +4,7 @@ import GenresSelect from '@/components/ui/select/genres-select';
 import LanguageSelect from '@/components/ui/select/language-select';
 import OriginalTypeSelect from '@/components/ui/select/original-type-select';
 import TrackTypesSelect from '@/components/ui/select/track-types-select';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import SensitiveContentSelect from '@/modules/track-sensitive/components/select/isSensitiveContent-select';
@@ -631,3 +631,4 @@ export default function OtherMetadataForm({ trackData }: Props) {
         </ConfigProvider>
     );
 }
+

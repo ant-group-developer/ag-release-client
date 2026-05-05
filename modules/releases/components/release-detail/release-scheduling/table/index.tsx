@@ -3,7 +3,9 @@ import PriceTiersSelect from '@/components/ui/select/price-tiers-select';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { getIndex } from '@/helpers/common';
-import { getTrackDetailRoute, RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { getTrackDetailRoute } from '@/modules/tracks/helpers/link';
+
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { Link } from '@/i18n/routing';
 import { useGetListEnablePolicyDsp } from '@/modules/dsp/hooks/use-get-list-enable-policy-dsp';
@@ -253,3 +255,4 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
         />
     );
 }
+

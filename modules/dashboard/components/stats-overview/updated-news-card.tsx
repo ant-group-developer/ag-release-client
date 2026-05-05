@@ -1,3 +1,4 @@
+import { ScrollArea } from '@/components/ui/scroll/scroll-area';
 import { Card, Timeline } from 'antd';
 
 type UpdateItem = {
@@ -57,32 +58,36 @@ export default function NewsUpdatedCard() {
                 </div>
             }
         >
-            <div className="scrollbar-thin scrollbar-thumb-gray-200 max-h-[350px] overflow-auto px-1 py-2">
-                <Timeline
-                    items={updates.map((item) => ({
-                        dot: (
-                            <div
-                                className={`h-4 w-4 rounded-full border-2 border-white shadow-sm ${
-                                    item.isNew ? 'bg-blue-800' : 'bg-gray-300'
-                                }`}
-                            />
-                        ),
-                        children: (
-                            <div className="pb-6">
-                                <div className="mb-1 text-[10px] font-bold text-gray-300">
-                                    {item.time}
+            <ScrollArea className="h-[350px]">
+                <div className="p-1">
+                    <Timeline
+                        items={updates.map((item) => ({
+                            dot: (
+                                <div
+                                    className={`h-4 w-4 rounded-full border-2 border-white shadow-sm ${
+                                        item.isNew
+                                            ? 'bg-blue-800'
+                                            : 'bg-gray-300'
+                                    }`}
+                                />
+                            ),
+                            children: (
+                                <div className="pb-6">
+                                    <div className="mb-1 text-[10px] font-bold text-gray-300">
+                                        {item.time}
+                                    </div>
+                                    <h4 className="mb-1 text-sm font-bold text-gray-900">
+                                        {item.title}
+                                    </h4>
+                                    <p className="m-0 text-xs leading-relaxed text-gray-400">
+                                        {item.description}
+                                    </p>
                                 </div>
-                                <h4 className="mb-1 text-sm font-bold text-gray-900">
-                                    {item.title}
-                                </h4>
-                                <p className="m-0 text-xs leading-relaxed text-gray-400">
-                                    {item.description}
-                                </p>
-                            </div>
-                        ),
-                    }))}
-                />
-            </div>
+                            ),
+                        }))}
+                    />
+                </div>
+            </ScrollArea>
         </Card>
     );
 }

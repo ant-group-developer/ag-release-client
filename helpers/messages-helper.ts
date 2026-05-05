@@ -1,5 +1,6 @@
 import { message } from 'antd';
-import type { Id, ToastOptions, TypeOptions } from 'react-toastify';
+import { NoticeType } from 'antd/es/message/interface';
+import type { Id, ToastOptions } from 'react-toastify';
 
 // Ant Design message không có concept "toastId" như react-toastify,
 // nhưng ta có thể dùng message.open với key để mô phỏng behavior tương tự.
@@ -18,7 +19,7 @@ const typeMap: Record<
 };
 
 export const showNotification = (
-    type: TypeOptions,
+    type: NoticeType,
     msg: string,
     toastOptions?: ToastOptions
 ) => {
@@ -26,11 +27,11 @@ export const showNotification = (
         ? (toastOptions.autoClose as number) / 1000
         : 4;
 
-    const antdType = typeMap[type] ?? 'info';
+    // const antdType = typeMap[type] ?? 'info';
     const key = (toastOptions?.toastId as string) ?? msg ?? 'notification';
 
     message.open({
-        type: antdType,
+        type: type,
         content: msg,
         duration,
         key,

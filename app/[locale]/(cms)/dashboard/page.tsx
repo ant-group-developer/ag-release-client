@@ -3,16 +3,16 @@
 import DateSelect from '@/components/ui/select/date-select';
 import { PAGE_SIZE } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
-import StreamChart from '@/modules/dashboard/components/bar-chart/stream-chart';
+// import StreamChart from '@/modules/dashboard/components/bar-chart/stream-chart';
 import DistributionRow from '@/modules/dashboard/components/distribution-row';
-import ListNews from '@/modules/dashboard/components/list-news';
 import ListRelease from '@/modules/dashboard/components/list-release';
 import ListTop from '@/modules/dashboard/components/list-top';
-import MapChart from '@/modules/dashboard/components/map-chart';
+// import MapChart from '@/modules/dashboard/components/map-chart';
+import RecentIssuesCard from '@/modules/dashboard/components/recent-issues';
 import StatsOverview from '@/modules/dashboard/components/stats-overview';
 import NewUpdatesCard from '@/modules/dashboard/components/stats-overview/updated-news-card';
 import {
-    useGetCountCountries,
+    //     useGetCountCountries,
     useGetCountIssues,
     useGetCountOverview,
 } from '@/modules/dashboard/hooks/use-get-count';
@@ -52,7 +52,7 @@ function Dashboard({}: Props) {
         useGetCountIssues(dataFilter);
     const { countOverviewData, isFetching: isOverviewLoading } =
         useGetCountOverview(dataFilter);
-    const { countCountriesData } = useGetCountCountries(dataFilter);
+    // const { countCountriesData } = useGetCountCountries(dataFilter);
 
     return (
         <div
@@ -89,30 +89,24 @@ function Dashboard({}: Props) {
                         isOverviewLoading={isOverviewLoading}
                     />
 
+                    <ListRelease data={releasesData.items.slice(0, 7)} />
+
                     <DistributionRow />
 
-                    {/* <DspChart /> */}
                     <Row gutter={16} align="stretch">
-                        <Col span={8}>
-                            <MapChart
-                                data={countCountriesData}
-                                className="h-full"
-                            />
-                        </Col>
                         <Col span={8}>
                             <ListTop />
                         </Col>
                         <Col span={8}>
                             <NewUpdatesCard />
                         </Col>
+                        <Col span={8}>
+                            <RecentIssuesCard issuesData={countIssuesData} />
+                        </Col>
                     </Row>
-
-                    <StreamChart />
                 </div>
 
-                <ListRelease data={releasesData.items.slice(0, 7)} />
-
-                <ListNews />
+                {/* <ListNews /> */}
             </PageContainer>
         </div>
     );

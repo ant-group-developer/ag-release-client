@@ -211,6 +211,7 @@
         "reviewer": "Người đánh giá",
         "lastTimeUpdated": "Lần cập nhật cuối",
         "refresh": "Làm mới",
+        "retry": "Thử lại",
         "department": "Phòng ban",
         "icon": "Biểu tượng",
         "listLayout": "Bố cục dạng danh sách",
@@ -336,6 +337,8 @@
         "filterBy": "Lọc theo",
         "filterByValue": "Lọc theo {value}",
         "noMatchingFilter": "Không có bộ lọc nào khớp",
+        "searchFilter": "Tìm kiếm bộ lọc...",
+        "activeFilterCount": "{count} bộ lọc đang hoạt động",
         "hint": "Phân tách bằng dấu phẩy",
         "last28Days": "28 ngày qua",
         "filterComment": "Lọc bình luận",
@@ -653,7 +656,8 @@
         "clickToShowFilters": "Nhấn vào đây để hiển thị bộ lọc",
         "openNewTab": "Mở cửa sổ mới",
         "ifVideoNotProcessed": "Nếu video chưa xử lý xong vui lòng tải xuống để xem",
-        "exportExcelFailed": "Xuất file excel gặp lỗi"
+        "exportExcelFailed": "Xuất file excel gặp lỗi",
+        "jobIsProcessing": "Đang xử lý, vui lòng đợi trong giây lát"
     },
     "userProfile": {
         "logout": "Đăng xuất"
@@ -834,6 +838,7 @@
         "isMoreThan4Artists": "Có nhiều hơn 4 nghệ sĩ hay không",
         "cLineYearDescription": "Năm đầu tiên xuất bản phiên bản này ở bất kỳ nơi nào trên thế giới.",
         "pLineYearDescription": "Năm bản ghi âm đầu tiên được phát hành trên toàn thế giới.",
+        "countryLanguage": "Ngôn ngữ quốc gia",
 
         "select": {
             "artist": "Chọn nghệ sĩ",
@@ -903,6 +908,7 @@
             "label": "Trạng thái phát hành",
             "submitted": "Đã gửi",
             "partially_failed": "Phân phối thất bại một phần",
+            "partial_done": "Phân phối một phần",
             "failed": "Thất bại"
         },
         "statusV2": {
@@ -917,7 +923,8 @@
             "label": "Trạng thái phát hành",
             "submitted": "Đã gửi",
             "partially_failed": "Phân phối thất bại một phần",
-            "failed": "Thất bại"
+            "failed": "Thất bại",
+            "partial_done": "Hoàn thành một phần"
         }
     },
 
@@ -1023,7 +1030,9 @@
             "unknown": "Không xác định"
         },
         "action": {
-            "deleteTracks": "Xoá bài hát"
+            "deleteTracks": "Xoá bài hát",
+            "bulkUpdate": "Cập nhật hàng loạt",
+            "bulkUpdateDescription": "Đánh dấu các trường bạn muốn cập nhật. Chỉ các trường được chọn mới được áp dụng cho tất cả bài hát đã chọn."
         },
         "original": {
             "label": "Tác phẩm gốc",
@@ -1374,6 +1383,27 @@
             "releaseNameMustMatchTrackName": "Tên phát hành phải trùng với tên một bài hát",
             "isrcMustBe12Characters": "ISRC phải đủ 12 ký tự",
             "missingRequiredContributorsRoles": "Thiếu vai trò người đóng góp",
+            "missingRequired": {
+                "Producer": "Bản phát hành bắt buộc phải có nhà sản xuất",
+                "Composer": "Bản phát hành bắt buộc phải có nhà soạn nhạc",
+                "Mixer": "Bản phát hành bắt buộc phải có kỹ sư hòa âm",
+                "Lyricist": "Bản phát hành bắt buộc phải có người viết lời",
+                "ProducerComposer": "Bản phát hành bắt buộc phải có nhà sản xuất và nhà soạn nhạc",
+                "ProducerMixer": "Bản phát hành bắt buộc phải có nhà sản xuất và kỹ sư hòa âm",
+                "ProducerLyricist": "Bản phát hành bắt buộc phải có nhà sản xuất và người viết lời",
+                "ComposerMixer": "Bản phát hành bắt buộc phải có nhà soạn nhạc và kỹ sư hòa âm",
+                "MixerComposer": "Bản phát hành bắt buộc phải có kỹ sư hòa âm và nhà soạn nhạc",
+                "ComposerLyricist": "Bản phát hành bắt buộc phải có nhà soạn nhạc và người viết lời",
+                "MixerLyricist": "Bản phát hành bắt buộc phải có kỹ sư hòa âm và người viết lời",
+                "ProducerComposerMixer": "Bản phát hành bắt buộc phải có nhà sản xuất, nhà soạn nhạc và kỹ sư hòa âm",
+                "ProducerMixerComposer": "Bản phát hành bắt buộc phải có nhà sản xuất, kỹ sư hòa âm và nhà soạn nhạc",
+                "ProducerComposerLyricist": "Bản phát hành bắt buộc phải có nhà sản xuất, nhà soạn nhạc và người viết lời",
+                "ProducerMixerLyricist": "Bản phát hành bắt buộc phải có nhà sản xuất, kỹ sư hòa âm và người viết lời",
+                "ComposerMixerLyricist": "Bản phát hành bắt buộc phải có nhà soạn nhạc, kỹ sư hòa âm và người viết lời",
+                "MixerComposerLyricist": "Bản phát hành bắt buộc phải có kỹ sư hòa âm, nhà soạn nhạc và người viết lời",
+                "ProducerComposerMixerLyricist": "Bản phát hành bắt buộc phải có nhà sản xuất, nhà soạn nhạc, kỹ sư hòa âm và người viết lời",
+                "ProducerMixerComposerLyricist": "Bản phát hành bắt buộc phải có nhà sản xuất, kỹ sư hòa âm, nhà soạn nhạc và người viết lời"
+            },
             "coverArtIsRequired": "Ảnh phát hành là bắt buộc",
             "atLeastOneMainArtist": "Phải có ít nhất một nghệ sĩ chính",
             "atLeastOneTrack": "Phải có ít nhất một bài hát"
@@ -2022,10 +2052,50 @@
         "statusRelease": "Trạng thái phát hành",
         "statusLog": "Trạng thái nhật ký"
     },
+    "ciJob": {
+        "error": {
+            "invalidTypeAdminExport": "Chỉ có thể xác nhận hoàn thành cho các công việc loại Admin Export"
+        }
+    },
     "distributionMonitor": {
         "label": "Theo dõi phân phối"
     },
+    "distributionJobs": {
+        "label": "Công việc phân phối",
+        "autoSendEmail": "Tự động gửi email",
+        "downloadExcel": "Tải file excel",
+        "confirmCompleted": "Xác nhận đã hoàn thành",
+        "columns": {
+            "upc": "UPC",
+            "type": "Loại",
+            "dspCiCodes": "Mã DSP CI",
+            "status": "Trạng thái",
+            "deliveryEmail": "Email nhận",
+            "deliveryEmailSubject": "Tiêu đề email",
+            "sentAt": "Thời gian gửi",
+            "expectedSendTime": "Dự kiến gửi",
+            "stepLabel": "Bước"
+        },
+        "statusOptions": {
+            "pending": "Đang chờ",
+            "processing": "Đang xử lý",
+            "completed": "Hoàn thành",
+            "failed": "Thất bại"
+        },
+        "confirmCompletedModal": {
+            "title": "Xác nhận đã hoàn thành",
+            "exportIdFromCiLabel": "Mã xuất từ CI",
+            "exportIdFromCiPlaceholder": "Nhập mã xuất từ CI",
+            "exportIdFromCiRequired": "Vui lòng nhập mã xuất từ CI"
+        },
+        "typeOptions": {
+            "EMAIL_STATE51": "Tự động gửi email",
+            "ADMIN_EXPORT": "Tải file excel"
+        }
+    },
     "releaseExecution": {
+        "label": "Triển khai phát hành",
+        "releaseSnapshot": "Bản ghi phát hành",
         "confirm": {
             "retryTitle": "Bạn có chắc chắn muốn thử lại?",
             "retryDescription": "Hành động này sẽ thực hiện lại quá trình phát hành.",
@@ -2108,7 +2178,6 @@
             "CANCELLED": "Đã hủy",
             "SKIPPED": "Không áp dụng",
             "SUCCESS": "Hoàn thành"
-        },
-        "label": "Lệnh thực thi phát hành"
+        }
     }
 }

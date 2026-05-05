@@ -8,7 +8,7 @@ import { usePermission } from '@/hooks/use-permission';
 import { Link } from '@/i18n/routing';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
-import { Avatar, Space, Switch, theme, Tooltip } from 'antd';
+import { Avatar, Space, Switch, theme, Tooltip, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { TENANT_ORDER_BY, TENANT_TABS } from '../enums';
@@ -134,6 +134,9 @@ function TenantTable({ dataFilter, ...props }: Props) {
             dataIndex: 'code',
             width: 120,
             ellipsis: true,
+            render: (cell) => (
+                <Typography.Text copyable>{cell}</Typography.Text>
+            ),
         },
         {
             title: messages('tenant.type.titleShort'),

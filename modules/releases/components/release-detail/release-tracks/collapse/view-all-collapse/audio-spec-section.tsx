@@ -6,7 +6,7 @@ import {
     convertSecondsToHoursMinutes,
     timeStringToSeconds,
 } from '@/helpers/common';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { TrackData } from '@/modules/tracks/types';
 import { ConfigProvider, Form, Input, TimePicker } from 'antd';
@@ -309,3 +309,4 @@ export default function AudioSpecSection({
         </ConfigProvider>
     );
 }
+

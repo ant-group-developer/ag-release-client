@@ -95,7 +95,8 @@ export const formatDurationShort = (
     const seconds = totalSeconds % 60;
 
     if (days > 0) {
-        const remainder = hours > 0 ? formatUnit(hours, 'h') : formatUnit(minutes, 'm');
+        const remainder =
+            hours > 0 ? formatUnit(hours, 'h') : formatUnit(minutes, 'm');
         return `completed in ${formatUnit(days, 'd')}${remainder}`;
     }
 

@@ -3,12 +3,9 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
-import {
-    getReleaseDetailTabRoute,
-    RELEASE_DETAIL_ACTION,
-} from '@/helpers/link';
-import { Link, useRouter } from '@/i18n/routing';
+import { Link } from '@/i18n/routing';
 import { RELEASES_TABS } from '@/modules/releases/enums';
+import { getReleaseDetailTabRoute } from '@/modules/releases/helpers/link';
 import { ReleasesData } from '@/modules/releases/types';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { Card, CardProps, Skeleton } from 'antd';
@@ -22,7 +19,7 @@ type Props = CardProps & {
 
 export default function CardRelease({ data, ...props }: Props) {
     const messages = useTranslations();
-    const router = useRouter();
+    // const router = useRouter();
 
     const imageFileId =
         data?.coverArtThumbnails?.['300x300'] ??
@@ -38,14 +35,13 @@ export default function CardRelease({ data, ...props }: Props) {
         <Card
             {...props}
             hoverable
-            bordered={false}
+            variant="outlined"
             // className="custom-card-body !bg-card-bg dark:!bg-card-bg-dark"
             cover={
                 <Link
                     href={getReleaseDetailTabRoute(
                         data.id,
-                        RELEASES_TABS.CORE_DETAIL,
-                        RELEASE_DETAIL_ACTION.READ
+                        RELEASES_TABS.CORE_DETAIL
                     )}
                 >
                     <div className="relative aspect-square overflow-hidden rounded-t-lg">
@@ -82,8 +78,7 @@ export default function CardRelease({ data, ...props }: Props) {
                     <Link
                         href={getReleaseDetailTabRoute(
                             data.id,
-                            RELEASES_TABS.CORE_DETAIL,
-                            RELEASE_DETAIL_ACTION.READ
+                            RELEASES_TABS.CORE_DETAIL
                         )}
                     >
                         <CustomTooltip title={data.title}>

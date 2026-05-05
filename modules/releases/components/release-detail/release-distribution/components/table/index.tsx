@@ -1,21 +1,24 @@
+import IconButton from '@/components/ui/button/icon-button';
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
-import { FALLBACK_IMAGE } from '@/constants/common';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { FALLBACK_IMAGE, SIZE_ICON } from '@/constants/common';
 import { formattedDate, getSortOrder } from '@/helpers/common';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
+import { RELEASE_DSP_DELIVERY_STATUS } from '@/modules/distribution/enum';
 import ReleaseDspStatusTag from '@/modules/release-dsp/components/release-dsp-status-tag';
 import {
     ReleaseDspData,
     ReleaseDspDataFilter,
 } from '@/modules/release-dsp/types';
 import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { ProColumns } from '@ant-design/pro-components';
-import { Avatar } from 'antd';
+import { Avatar, Space } from 'antd';
+import { Box } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import DistributionActionButton from '../button/distribution-action';
 
 type Props = Omit<AppProTableProps<ReleaseDspData>, 'columns'> & {
     currentPage?: number;
@@ -114,9 +117,30 @@ export default function DistributionTable({
             dataIndex: 'status',
             align: 'left',
             width: 250,
-            render: (value, record) => (
-                <ReleaseDspStatusTag status={record?.status} />
-            ),
+            render: (value, record) => {
+                if (record?.status === RELEASE_DSP_DELIVERY_STATUS.ISSUES) {
+                    return (
+                        <CustomTooltip title={messages('common.viewDetail')}>
+                            <div
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    openModal(
+                                        TYPE_MODAL_RELEASE_DISTRIBUTION.ISSUES,
+                                        record?.issues
+                                    );
+                                }}
+                                className="inline-block cursor-pointer"
+                            >
+                                <ReleaseDspStatusTag
+                                    status={record?.status}
+                                    className="hover:opacity-70"
+                                />
+                            </div>
+                        </CustomTooltip>
+                    );
+                }
+                return <ReleaseDspStatusTag status={record?.status} />;
+            },
         },
         {
             key: 'actions',
@@ -127,15 +151,24 @@ export default function DistributionTable({
                 if (!isEditMode) return;
                 return (
                     <PermissionGate permission={PERMISSION.RELEASE.UPDATE}>
-                        <DistributionActionButton
-                            showDistribute={isEditMode}
-                            onShowDistribute={() => {
-                                openModal(
-                                    TYPE_MODAL_RELEASE_DISTRIBUTION.DISTRIBUTION,
-                                    record
-                                );
-                            }}
-                        />
+                        <Space>
+                            {isEditMode && (
+                                <CustomTooltip
+                                    title={messages('distribute.label')}
+                                >
+                                    <IconButton
+                                        onClick={() =>
+                                            openModal(
+                                                TYPE_MODAL_RELEASE_DISTRIBUTION.DISTRIBUTION,
+                                                record
+                                            )
+                                        }
+                                    >
+                                        <Box size={SIZE_ICON} />
+                                    </IconButton>
+                                </CustomTooltip>
+                            )}
+                        </Space>
                     </PermissionGate>
                 );
             },

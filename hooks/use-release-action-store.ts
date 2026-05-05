@@ -1,4 +1,4 @@
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
@@ -27,3 +27,4 @@ export const useReleaseActionStore = create<ReleaseActionStoreType>()(
         }
     )
 );
+

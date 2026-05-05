@@ -181,12 +181,6 @@ export default function MetadataInfo({}: Props) {
             <MetadataInfoItem label={messages('country.language')}>
                 {renderField('metadataLanguageCountryId')}
             </MetadataInfoItem>
-
-            <MetadataInfoItem
-                label={messages('formFields.tracks.sensitiveContent')}
-            >
-                {renderField('isSensitiveContent')}
-            </MetadataInfoItem>
         </div>
     );
 }

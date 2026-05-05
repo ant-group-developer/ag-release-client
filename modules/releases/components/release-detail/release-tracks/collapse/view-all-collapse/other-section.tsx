@@ -4,8 +4,8 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import CountrySelect from '@/components/ui/select/country-select';
 import OriginalTypeSelect from '@/components/ui/select/original-type-select';
 import TrackTypesSelect from '@/components/ui/select/track-types-select';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import SensitiveContentSelect from '@/modules/track-sensitive/components/select/isSensitiveContent-select';
 import { TrackData } from '@/modules/tracks/types';
 import { ConfigProvider, DatePicker, Form, Input, Radio } from 'antd';
@@ -71,7 +71,6 @@ export default function OtherSection({
                             id={`tracks.${index}.trackSensitiveId`}
                             className="w-full"
                             showSearch
-                            allowClear
                             disabled={isReadMode}
                             onChange={(value) => {
                                 updateTrackDraft(
@@ -122,7 +121,6 @@ export default function OtherSection({
                         <OriginalTypeSelect
                             id={`tracks.${index}.trackOriginTypeId`}
                             className="w-full"
-                            allowClear
                             disabled={isReadMode}
                             // fallback={trackData?.trackOriginType?.name}
                             onChange={(value) => {
@@ -150,7 +148,6 @@ export default function OtherSection({
                             id={`tracks.${index}.trackLanguage.recordingCountryId`}
                             className="w-full"
                             showSearch
-                            allowClear
                             disabled={isReadMode}
                             // fallback={
                             //     trackData?.trackLanguage
@@ -183,7 +180,6 @@ export default function OtherSection({
                             id={`tracks.${index}.trackTypeId`}
                             className="w-full"
                             showSearch
-                            allowClear
                             disabled={isReadMode}
                             // fallback={trackData?.trackType?.name}
 
@@ -250,7 +246,6 @@ export default function OtherSection({
                             className="w-full"
                             disabled={isReadMode}
                             disabledDate={disabledYear}
-                            allowClear
                             onChange={(date) => {
                                 const value = date ? date.year() : undefined;
                                 updateTrackDraft(
@@ -275,7 +270,6 @@ export default function OtherSection({
                     >
                         <Input
                             id={`tracks.${index}.pLineOwner`}
-                            allowClear
                             disabled={isReadMode}
                             onChange={(e) => {
                                 const value = e.target.value.trim();

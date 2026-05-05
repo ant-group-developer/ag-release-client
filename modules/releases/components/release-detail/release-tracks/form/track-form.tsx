@@ -1,6 +1,6 @@
 import { LabelForm } from '@/components/ui/label/labelForm';
 import ErrorText from '@/components/ui/text/error-text';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
@@ -245,3 +245,4 @@ export default function TracksForm({ trackData, index }: Props) {
         </ConfigProvider>
     );
 }
+

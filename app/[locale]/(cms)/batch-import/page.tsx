@@ -10,7 +10,9 @@ import { useFilter } from '@/hooks/use-filter';
 import BatchImportTable from '@/modules/batch-import/components/batch-import-table';
 import { useGetBatchImportLogs } from '@/modules/batch-import/hooks/use-get-batch-import-logs';
 import { BatchImportLogFilter } from '@/modules/batch-import/types/data';
-import { Select, Space } from 'antd';
+import { ReloadOutlined, ThunderboltOutlined } from '@ant-design/icons';
+import { Button, message, Select, Space } from 'antd';
+import dayjs from 'dayjs';
 
 const STATUS_OPTIONS = [
     { label: 'All Statuses', value: '' },
@@ -22,6 +24,14 @@ const STATUS_OPTIONS = [
     { label: '🔴 Failed', value: 'failed' },
 ];
 
+/**
+ * Generate a batch ID from the current timestamp.
+ * Format: YYYYMMDDHHmmssSSS (e.g. 20251211111052956)
+ */
+function generateBatchId(): string {
+    return dayjs().format('YYYYMMDDHHmmssSSS');
+}
+
 function BatchImportPage() {
     const defaultFilter: BatchImportLogFilter = {
         page: 1,
@@ -31,10 +41,8 @@ function BatchImportPage() {
     const { dataFilter, onSearch, onChangePage, onChangeFilter, isReady } =
         useFilter<BatchImportLogFilter>(defaultFilter);
 
-    const { dataLogs, totalRecord, isFetching } = useGetBatchImportLogs(
-        dataFilter,
-        isReady
-    );
+    const { dataLogs, totalRecord, isFetching, refetch } =
+        useGetBatchImportLogs(dataFilter, isReady);
 
     if (!isReady) {
         return <AppLoader className="bg-white" />;
@@ -65,6 +73,22 @@ function BatchImportPage() {
                             onChangeFilter({ status: value || undefined })
                         }
                     />
+                    <Button
+                        icon={<ThunderboltOutlined />}
+                        onClick={() => {
+                            const batchId = generateBatchId();
+                            navigator.clipboard.writeText(batchId);
+                            message.success(`Batch ID copied: ${batchId}`);
+                        }}
+                    >
+                        Generate Batch ID
+                    </Button>
+                    <Button
+                        icon={<ReloadOutlined spin={isFetching} />}
+                        onClick={() => refetch()}
+                    >
+                        Refresh
+                    </Button>
                 </Space>
             </AppHeader>
 

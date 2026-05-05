@@ -24,3 +24,4 @@ export const getReleaseStatusColor = (
             return '#d9d9d9';
     }
 };
+export * from './link';

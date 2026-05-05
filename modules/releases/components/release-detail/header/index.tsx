@@ -6,7 +6,6 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { TYPE_UPLOAD_BUCKET } from '@/enums/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedDate } from '@/helpers/common';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
 import { toastPromise } from '@/helpers/messages-helper';
 import { cn } from '@/helpers/tailwind';
 import { useHash } from '@/hooks/use-hash';
@@ -28,6 +27,7 @@ import {
     isTiffContent,
     resolvePreviewUrl,
 } from '@/modules/releases/helpers/cover-art-preview';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
 import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
@@ -135,30 +135,6 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         },
     ];
     const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
-
-    // const { currentStep, stepStatus } = useMemo(() => {
-    //     const status = releaseData?.status;
-    //     switch (status) {
-    //         case RELEASES_STATUS.DRAFT:
-    //         case RELEASES_STATUS.PROCESSING:
-    //             return { currentStep: 1, stepStatus: 'process' as const };
-    //         case RELEASES_STATUS.SUBMITTED:
-    //             return { currentStep: 2, stepStatus: 'process' as const };
-    //         case RELEASES_STATUS.AWAITING_ACTION:
-    //             return { currentStep: 3, stepStatus: 'process' as const };
-    //         case RELEASES_STATUS.PARTIALLY_FAILED:
-    //             return { currentStep: 4, stepStatus: 'process' as const };
-    //         case RELEASES_STATUS.FAILED:
-    //             return { currentStep: 5, stepStatus: 'process' as const };
-    //         case RELEASES_STATUS.DISTRIBUTED:
-    //             return { currentStep: 6, stepStatus: 'process' as const };
-    //         case RELEASES_STATUS.TAKEN_DOWN:
-    //             return { currentStep: 7, stepStatus: 'process' as const };
-
-    //         default:
-    //             return { currentStep: 0, stepStatus: 'process' as const };
-    //     }
-    // }, [releaseData?.status]);
     const validateLength = releaseValidateData && releaseValidateData?.length;
     const coverArtRequirementKeys = [
         'release.coverArt.size',
@@ -170,49 +146,6 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         ...coverArtRequirementKeys.map((key) => messages(key)),
         messages('image.validation.mustBeLessThanMB', { value: 10 }),
     ];
-
-    // const statusItems: StepsProps['items'] = [
-    //     {
-    //         title: messages('release.status.draft'),
-    //         icon: <NotebookText size={SIZE_ICON} />,
-    //         status: currentStep === 0 ? 'process' : 'wait',
-    //     },
-    //     {
-    //         title: messages('release.status.processing'),
-    //         icon: <FileSearch size={SIZE_ICON} />,
-    //         status: currentStep === 1 ? 'process' : 'wait',
-    //     },
-    //     {
-    //         title: messages('release.status.submitted'),
-    //         icon: <Check size={SIZE_ICON} />,
-    //         status: currentStep === 2 ? 'process' : 'wait',
-    //     },
-    //     {
-    //         title: messages('release.status.awaiting_action'),
-    //         icon: <GitCommitHorizontal size={SIZE_ICON} />,
-    //         status: currentStep === 3 ? 'process' : 'wait',
-    //     },
-    //     {
-    //         title: messages('release.status.partially_failed'),
-    //         icon: <CircleAlert size={SIZE_ICON} />,
-    //         status: currentStep === 4 ? 'process' : 'wait',
-    //     },
-    //     {
-    //         title: messages('release.status.failed'),
-    //         icon: <X size={SIZE_ICON} />,
-    //         status: currentStep === 5 ? 'process' : 'wait',
-    //     },
-    //     {
-    //         title: messages('release.status.distributed'),
-    //         icon: <Box size={SIZE_ICON} />,
-    //         status: currentStep === 6 ? 'process' : 'wait',
-    //     },
-    //     {
-    //         title: messages('release.status.taken_down'),
-    //         icon: <PackageX size={SIZE_ICON} />,
-    //         status: currentStep === 7 ? 'process' : 'wait',
-    //     },
-    // ];
 
     // func
     async function validateCoverArt(file: File): Promise<string[]> {
@@ -588,8 +521,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
 
                     <ReleaseStatusTagIcon
                         style={{
-                            padding: '4px 12px',
-                            borderRadius: '24px',
+                            padding: '2px 16px',
                         }}
                         status={releaseData?.status}
                     />
@@ -686,10 +618,12 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                     {releaseData?.modifier?.name} |{' '}
                                     {formattedDate(releaseData?.updatedAt)}
                                 </p>
-                                <PermissionGate
-                                    permission={PERMISSION.RELEASE.UPDATE}
-                                >
-                                    <div className="flex justify-end">
+
+                                <div className="flex justify-between">
+                                    <div>{isScrolled && <DownloadMenu />}</div>
+                                    <PermissionGate
+                                        permission={PERMISSION.RELEASE.UPDATE}
+                                    >
                                         <Segmented
                                             value={releaseAction}
                                             options={segmentedOptions}
@@ -699,12 +633,14 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                                 )
                                             }
                                         />
-                                    </div>
-                                </PermissionGate>
+                                    </PermissionGate>
+                                </div>
                             </div>
-                            <div className="flex justify-end">
-                                <DownloadMenu />
-                            </div>
+                            {!isScrolled && (
+                                <div className="flex justify-end">
+                                    <DownloadMenu />
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>

@@ -211,6 +211,7 @@
         "reviewer": "Reviewer",
         "lastTimeUpdated": "Last time updated",
         "refresh": "Refresh",
+        "retry": "Retry",
         "department": "Department",
         "icon": "Icon",
         "listLayout": "List layout",
@@ -337,6 +338,8 @@
         "filterBy": "Filter by",
         "filterByValue": "Lọc theo {value}",
         "noMatchingFilter": "No matching filter",
+        "searchFilter": "Search filter...",
+        "activeFilterCount": "{count} filter(s) active",
         "hint": "Separated by commas",
         "last28Days": "Last 28 days",
         "filterComment": "Filter comment",
@@ -657,7 +660,8 @@
         "clickToShowFilters": "Click to show filters",
         "openNewTab": "Open new tab",
         "ifVideoNotProcessed": "If the video is not processed yet, please download it for use.",
-        "exportExcelFailed": "Export excel failed"
+        "exportExcelFailed": "Export excel failed",
+        "jobIsProcessing": "Job is processing, will be completed in a few minutes"
     },
     "userProfile": {
         "logout": "Log out"
@@ -842,6 +846,7 @@
         },
         "cLineYearDescription": "The first year this version was released anywhere in the world.",
         "pLineYearDescription": "The first year this recording was released worldwide.",
+        "countryLanguage": "Country language",
 
         "placeholder": {
             "selectArtist": "Select artist",
@@ -918,6 +923,7 @@
             "never_distributed": "Never distributed",
             "submitted": "Submitted",
             "partially_failed": "Partially failed",
+            "partial_done": "Partial done",
             "failed": "Failed"
         }
     },
@@ -1024,7 +1030,9 @@
             "unknown": "Unknown"
         },
         "action": {
-            "deleteTracks": "Delete tracks"
+            "deleteTracks": "Delete tracks",
+            "bulkUpdate": "Bulk Update",
+            "bulkUpdateDescription": "Check the fields you want to update. Only checked fields will be applied to all selected tracks."
         },
         "original": {
             "label": "Original Work",
@@ -1373,6 +1381,27 @@
             "releaseNameMustMatchTrackName": "The release title must match at least one track title",
             "isrcMustBe12Characters": "ISRC must be 12 characters",
             "missingRequiredContributorsRoles": "Missing required contributors roles",
+            "missingRequired": {
+                "Producer": "The release must have a producer",
+                "Composer": "The release must have a composer",
+                "Mixer": "The release must have a mixer",
+                "Lyricist": "The release must have a lyricist",
+                "ProducerComposer": "The release must have a producer and a composer",
+                "ProducerMixer": "The release must have a producer and a mixer",
+                "ProducerLyricist": "The release must have a producer and a lyricist",
+                "ComposerMixer": "The release must have a composer and a mixer",
+                "MixerComposer": "The release must have a mixer and a composer",
+                "ComposerLyricist": "The release must have a composer and a lyricist",
+                "MixerLyricist": "The release must have a mixer and a lyricist",
+                "ProducerComposerMixer": "The release must have a producer, a composer, and a mixer",
+                "ProducerMixerComposer": "The release must have a producer, a mixer, and a composer",
+                "ProducerComposerLyricist": "The release must have a producer, a composer, and a lyricist",
+                "ProducerMixerLyricist": "The release must have a producer, a mixer, and a lyricist",
+                "ComposerMixerLyricist": "The release must have a composer, a mixer, and a lyricist",
+                "MixerComposerLyricist": "The release must have a mixer, a composer, and a lyricist",
+                "ProducerComposerMixerLyricist": "The release must have a producer, a composer, a mixer, and a lyricist",
+                "ProducerMixerComposerLyricist": "The release must have a producer, a mixer, a composer, and a lyricist"
+            },
             "coverArtIsRequired": "Cover art is required",
             "atLeastOneMainArtist": "Must have at least one main artist",
             "atLeastOneTrack": "Release must have at least one track"
@@ -2020,11 +2049,50 @@
         "statusRelease": "Release status",
         "statusLog": "Log status"
     },
+    "ciJob": {
+        "error": {
+            "invalidTypeAdminExport": "Only Admin Export jobs can be confirmed as completed"
+        }
+    },
     "distributionMonitor": {
         "label": "Distribution monitor"
     },
+    "distributionJobs": {
+        "label": "Distribution jobs",
+        "autoSendEmail": "Auto send email",
+        "downloadExcel": "Download excel",
+        "confirmCompleted": "Confirm completed",
+        "columns": {
+            "upc": "UPC",
+            "type": "Type",
+            "dspCiCodes": "DSP CI codes",
+            "status": "Status",
+            "deliveryEmail": "Delivery email",
+            "deliveryEmailSubject": "Email subject",
+            "sentAt": "Sent at",
+            "expectedSendTime": "Expected send time",
+            "stepLabel": "Step"
+        },
+        "statusOptions": {
+            "pending": "Pending",
+            "processing": "Processing",
+            "completed": "Completed",
+            "failed": "Failed"
+        },
+        "confirmCompletedModal": {
+            "title": "Confirm completed",
+            "exportIdFromCiLabel": "Export ID from CI",
+            "exportIdFromCiPlaceholder": "Enter export ID from CI",
+            "exportIdFromCiRequired": "Please enter export ID from CI"
+        },
+        "typeOptions": {
+            "EMAIL_STATE51": "Email state51",
+            "ADMIN_EXPORT": "Admin export"
+        }
+    },
     "releaseExecution": {
         "label": "Release executions",
+        "releaseSnapshot": "Release snapshot",
         "confirm": {
             "retryTitle": "Are you sure you want to retry?",
             "retryDescription": "This action will restart the distribution process.",
