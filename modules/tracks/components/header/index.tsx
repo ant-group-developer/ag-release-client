@@ -1,4 +1,5 @@
 import { FilterConfig, FilterPanel } from '@/components/filter-panel';
+import { SIZE_ICON } from '@/constants/common';
 import { getIntlCodeByScanCopyrightStatus } from '@/helpers/intl';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
 import { useGetArtistSimpleList } from '@/modules/artist/hooks/use-get-artist-simple-list';
@@ -10,6 +11,9 @@ import {
     SoundOutlined,
     TeamOutlined,
 } from '@ant-design/icons';
+import { Layers } from 'lucide-react';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
+import { useGetListSimpleTenant } from '@/modules/tenant/hooks/use-get-simple-list';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { SCAN_COPYRIGHT_STATUS } from '../../enums';
@@ -30,6 +34,8 @@ export default function TrackHeader({
 }: Props) {
     const messages = useTranslations();
     const [artistKeyword, setArtistKeyword] = useState('');
+    const { isAdmin } = useAuth();
+    const { tenantSimpleData, isLoading: isLoadingTenants } = useGetListSimpleTenant();
 
     // 1. Truyền keyword vào hook.
     // Chúng ta lấy pageSize lớn hơn (ví dụ 100) để cover tốt hơn
@@ -80,8 +86,17 @@ export default function TrackHeader({
         [messages]
     );
 
-    const filterConfigs: FilterConfig[] = useMemo(
-        () => [
+    const tenantOptions = useMemo(
+        () =>
+            tenantSimpleData?.map((item) => ({
+                label: item.name,
+                value: item.id,
+            })) || [],
+        [tenantSimpleData]
+    );
+
+    const filterConfigs: FilterConfig[] = useMemo(() => {
+        const configs: FilterConfig[] = [
             {
                 key: 'keyword',
                 label: messages('common.keyword'),
@@ -129,15 +144,32 @@ export default function TrackHeader({
                 type: 'dateRange',
                 filterKey: ['startCreatedAt', 'endCreatedAt'],
             },
-        ],
-        [
-            messages,
-            scanStatusOptions,
-            artistOptions,
-            isLoadingArtists,
-            genreOptions,
-        ]
-    );
+        ];
+
+        if (isAdmin) {
+            configs.splice(1, 0, {
+                key: 'tenantIds',
+                label: messages('tenant.label'),
+                icon: <Layers size={SIZE_ICON} />,
+                type: 'checkbox',
+                filterKey: 'tenantIds',
+                options: tenantOptions,
+                loading: isLoadingTenants,
+                isCommaSeparated: true,
+            });
+        }
+
+        return configs;
+    }, [
+        messages,
+        scanStatusOptions,
+        artistOptions,
+        isLoadingArtists,
+        genreOptions,
+        isAdmin,
+        tenantOptions,
+        isLoadingTenants,
+    ]);
 
     return (
         <div className="app-header">

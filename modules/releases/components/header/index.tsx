@@ -1,8 +1,11 @@
 import { FilterConfig, FilterPanel } from '@/components/filter-panel';
+import { SIZE_ICON } from '@/constants/common';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { useGetListSimpleGenres } from '@/modules/genres/hooks/use-get-list-simple-genres';
 import { useGetListLabelsSimple } from '@/modules/labels/hooks/use-get-list-simple-labels';
 import { useGetListSimpleReleaseTypes } from '@/modules/release-types/hooks/use-get-list-simple-release-types';
+import { useGetListSimpleTenant } from '@/modules/tenant/hooks/use-get-simple-list';
 import {
     AppstoreOutlined,
     BarsOutlined,
@@ -11,6 +14,7 @@ import {
     SoundOutlined,
     TagOutlined,
 } from '@ant-design/icons';
+import { Layers } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import { RELEASES_STATUS } from '../../enums';
@@ -33,6 +37,9 @@ export default function ReleasesHeaderV2({
     const { releaseTypesData } = useGetListSimpleReleaseTypes();
     const { genresData } = useGetListSimpleGenres();
     const { labelsData } = useGetListLabelsSimple();
+    const { isAdmin } = useAuth();
+    const { tenantSimpleData, isLoading: isLoadingTenants } =
+        useGetListSimpleTenant();
 
     const releaseStatusOptions = useMemo(
         () =>
@@ -70,8 +77,17 @@ export default function ReleasesHeaderV2({
         [labelsData]
     );
 
-    const filterConfigs: FilterConfig[] = useMemo(
-        () => [
+    const tenantOptions = useMemo(
+        () =>
+            tenantSimpleData?.map((item) => ({
+                label: item.name,
+                value: item.id,
+            })) || [],
+        [tenantSimpleData]
+    );
+
+    const filterConfigs: FilterConfig[] = useMemo(() => {
+        const configs: FilterConfig[] = [
             {
                 key: 'keyword',
                 label: messages('common.keyword'),
@@ -132,15 +148,32 @@ export default function ReleasesHeaderV2({
                 type: 'dateRange',
                 filterKey: ['startUpdatedAt', 'endUpdatedAt'],
             },
-        ],
-        [
-            messages,
-            releaseTypeOptions,
-            labelOptions,
-            releaseStatusOptions,
-            genreOptions,
-        ]
-    );
+        ];
+
+        if (isAdmin) {
+            configs.splice(1, 0, {
+                key: 'tenantIds',
+                label: messages('tenant.label'),
+                icon: <Layers size={SIZE_ICON} />,
+                type: 'checkbox',
+                filterKey: 'tenantIds',
+                options: tenantOptions,
+                loading: isLoadingTenants,
+                isCommaSeparated: true,
+            });
+        }
+
+        return configs;
+    }, [
+        messages,
+        releaseTypeOptions,
+        labelOptions,
+        releaseStatusOptions,
+        genreOptions,
+        isAdmin,
+        tenantOptions,
+        isLoadingTenants,
+    ]);
 
     return (
         <div className="app-header">
