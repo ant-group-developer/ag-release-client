@@ -6,10 +6,12 @@ import {
     RELEASE_SUBMIT_STATUS,
     RELEASE_SUBMIT_STEP_STATUS,
     RELEASE_SUBMIT_STEP_TYPE,
+    RELEASE_SUBMIT_TYPE,
 } from '../enums';
 
 export interface ReleaseSubmitData extends CommonAttribute {
     releaseId: ReleasesData['id'];
+    type: RELEASE_SUBMIT_TYPE;
     status: RELEASE_SUBMIT_STATUS;
     metadata: {
         input: {
@@ -25,6 +27,7 @@ export interface ReleaseSubmitData extends CommonAttribute {
 
 export interface ReleaseSubmitFilter extends CommonParams {
     releaseId?: string;
+    type?: RELEASE_SUBMIT_TYPE;
     status?: RELEASE_SUBMIT_STATUS;
 }
 

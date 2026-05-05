@@ -76,6 +76,16 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
             ),
         },
         {
+            title: messages('releaseExecution.columns.type'),
+            dataIndex: 'type',
+            key: 'type',
+            width: 140,
+            render: (_, record) =>
+                record.type
+                    ? messages(`releaseExecution.typeOptions.${record.type}`)
+                    : '-',
+        },
+        {
             title: messages('releaseExecution.columns.status'),
             dataIndex: 'status',
             key: 'status',

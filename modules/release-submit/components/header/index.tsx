@@ -1,6 +1,7 @@
 import AppSearch from '@/components/ui/input/search';
 import { OnChangeFilter, TOnSearch } from '@/hooks/use-filter';
 import { RELEASE_EXECUTION_STATUS } from '@/modules/release-executions/enums';
+import { RELEASE_SUBMIT_TYPE } from '../../enums';
 import { Select, Space } from 'antd';
 import { useTranslations } from 'next-intl';
 import { formatEnumLabel } from '../../helpers';
@@ -26,6 +27,11 @@ export default function ReleaseSubmitHeader({
         })
     );
 
+    const typeOptions = Object.values(RELEASE_SUBMIT_TYPE).map((type) => ({
+        label: messages(`releaseExecution.typeOptions.${type}`),
+        value: type,
+    }));
+
     return (
         <Space className="font-normal">
             <AppSearch
@@ -34,6 +40,17 @@ export default function ReleaseSubmitHeader({
                 onChange={onSearch}
                 defaultValue={dataFilter?.keyword}
                 allowClear
+            />
+
+            <Select
+                options={typeOptions}
+                placeholder={messages('placeholder.filterBy', {
+                    value: messages('releaseExecution.columns.type').toLowerCase(),
+                })}
+                onChange={(value) => onChangeFilter({ type: value })}
+                defaultValue={dataFilter?.type}
+                allowClear
+                className="w-52"
             />
 
             <Select
