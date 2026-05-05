@@ -5,7 +5,6 @@ import ArtistSelect from '@/components/ui/select/artist-select';
 import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import { toastPromise } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
-import useModalStore from '@/hooks/use-modal';
 import { ArtistData } from '@/modules/artist/types';
 import { useBulkCreateReleaseContributor } from '@/modules/release-contributor/hooks/use-bulk-create-release-contributor';
 import {
@@ -30,7 +29,8 @@ export default function AddContributorForm({
     const { active, deActive, isActive } = useActive();
     const [form] = Form.useForm();
     const releaseValues = useReleaseFormStore((state) => state.formValues);
-    const closeModal = useModalStore((state) => state.closeModal);
+    // const closeModal = useModalStore((state) => state.closeModal);
+    const artistIdValue = Form.useWatch('artistId', form);
 
     // apis
     const { bulkCreateReleaseContributor } = useBulkCreateReleaseContributor();
@@ -103,6 +103,7 @@ export default function AddContributorForm({
                     ]}
                 >
                     <ArtistSelect
+                        artistId={artistIdValue}
                         showSearch
                         placeholder={messages('artist.select')}
                         allowClear
