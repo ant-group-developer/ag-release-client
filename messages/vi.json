@@ -2103,10 +2103,13 @@
         "typeOptions": {
             "EMAIL_STATE51": "Tự động gửi email",
             "ADMIN_EXPORT": "Tải file excel"
-        }
+        },
+        "cancelConfirmTitle": "Hủy lệnh phân phối",
+        "cancelConfirmMessage": "Bạn có chắc chắn muốn hủy lệnh phân phối này?"
     },
     "releaseExecution": {
         "label": "Triển khai phát hành",
+        "labelOld": "Triển khai phát hành (Cũ)",
         "releaseSnapshot": "Bản ghi phát hành",
         "confirm": {
             "retryTitle": "Bạn có chắc chắn muốn thử lại?",

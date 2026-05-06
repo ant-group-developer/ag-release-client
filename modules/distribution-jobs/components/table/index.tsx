@@ -1,12 +1,22 @@
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
+import { SIZE_ICON } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate, getIndex } from '@/helpers/common';
 import { OnChangeFilter } from '@/hooks/use-filter';
 import { ProColumns } from '@ant-design/pro-components';
-import { Space, Tag, Typography } from 'antd';
+import { Button, Modal, Space, Tag, Tooltip, Typography } from 'antd';
+import { X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { getDistributionJobStatusColor } from '../../helpers';
-import { DistributionJobData, DistributionJobFilter } from '../../types';
+import {
+    getDistributionJobStatusColor,
+    getDistributionJobTypeColor,
+} from '../../helpers';
+import { useUpdateDistributionJob } from '../../hooks/use-update-distribution-job';
+import {
+    DISTRIBUTION_JOB_STATUS,
+    DistributionJobData,
+    DistributionJobFilter,
+} from '../../types';
 
 type Props = Omit<AppProTableProps<DistributionJobData>, 'columns'> & {
     dataFilter: DistributionJobFilter;
@@ -19,6 +29,7 @@ type Props = Omit<AppProTableProps<DistributionJobData>, 'columns'> & {
 
 export default function DistributionJobsTable({ dataFilter, ...props }: Props) {
     const messages = useTranslations();
+    const { updateDistributionJob } = useUpdateDistributionJob();
 
     const renderText = (value?: string | null, copyable = false) => {
         if (!value) return '-';
@@ -38,6 +49,12 @@ export default function DistributionJobsTable({ dataFilter, ...props }: Props) {
     const getStatusLabel = (status?: string | null) => {
         if (!status) return '-';
         return messages(`distributionJobs.statusOptions.${status}` as any);
+    };
+    const getTypeLabel = (type?: string | null) => {
+        if (!type) return '-';
+        return messages(
+            `distributionJobs.typeOptions.${type.toUpperCase()}` as any
+        );
     };
 
     const columns: ProColumns<DistributionJobData>[] = [
@@ -67,13 +84,14 @@ export default function DistributionJobsTable({ dataFilter, ...props }: Props) {
             dataIndex: 'type',
             key: 'type',
             width: 180,
-            render: (_, record) => {
-                if (!record.type) return '-';
-                return (
-                    record.type.charAt(0).toUpperCase() +
-                    record.type.slice(1).replace(/_/g, ' ')
-                );
-            },
+            render: (_, record) =>
+                record.type ? (
+                    <Tag color={getDistributionJobTypeColor(record.type)}>
+                        {getTypeLabel(record.type)}
+                    </Tag>
+                ) : (
+                    '-'
+                ),
         },
         {
             title: messages('distributionJobs.columns.stepLabel'),
@@ -103,7 +121,7 @@ export default function DistributionJobsTable({ dataFilter, ...props }: Props) {
             title: messages('distributionJobs.columns.status'),
             dataIndex: 'status',
             key: 'status',
-            width: 140,
+            width: 100,
             render: (_, record) =>
                 record.status ? (
                     <Tag color={getDistributionJobStatusColor(record.status)}>
@@ -137,6 +155,45 @@ export default function DistributionJobsTable({ dataFilter, ...props }: Props) {
                 record.sentAt
                     ? formattedDate(record.sentAt, DATE_FORMAT.DATE_MINUTE)
                     : '-',
+        },
+        {
+            title: '',
+            key: 'actions',
+            width: 80,
+            align: 'center',
+            fixed: 'right',
+            render: (_, record) => {
+                if (record.status !== DISTRIBUTION_JOB_STATUS.PENDING)
+                    return null;
+
+                return (
+                    <Tooltip title={messages('common.cancel')}>
+                        <Button
+                            type="text"
+                            danger
+                            icon={<X size={SIZE_ICON} />}
+                            onClick={() => {
+                                Modal.confirm({
+                                    title: messages(
+                                        'distributionJobs.cancelConfirmTitle'
+                                    ),
+                                    content: messages(
+                                        'distributionJobs.cancelConfirmMessage'
+                                    ),
+                                    okText: messages('common.yes'),
+                                    cancelText: messages('common.no'),
+                                    onOk: () => {
+                                        updateDistributionJob({
+                                            id: record.id,
+                                            status: DISTRIBUTION_JOB_STATUS.SKIPPED,
+                                        });
+                                    },
+                                });
+                            }}
+                        />
+                    </Tooltip>
+                );
+            },
         },
     ];
 

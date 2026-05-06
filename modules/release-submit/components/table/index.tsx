@@ -18,6 +18,7 @@ import {
     formatEnumLabel,
     formatRelativeShort,
     getReleaseSubmitStatusColor,
+    getReleaseSubmitTypeColor,
 } from '../../helpers';
 import { ReleaseSubmitData, ReleaseSubmitFilter } from '../../types';
 
@@ -81,7 +82,13 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
             key: 'type',
             width: 140,
             render: (_, record) =>
-                record.type ? formatEnumLabel(record.type) : '-',
+                record.type ? (
+                    <Tag color={getReleaseSubmitTypeColor(record.type)}>
+                        {formatEnumLabel(record.type)}
+                    </Tag>
+                ) : (
+                    '-'
+                ),
         },
         {
             title: messages('releaseExecution.columns.status'),

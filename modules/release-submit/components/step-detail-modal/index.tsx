@@ -168,7 +168,7 @@ export default function ReleaseSubmitStepDetailModal({
                         {metadataJson ? (
                             <JsonViewer
                                 src={metadataJson}
-                                collapsed={true}
+                                collapsed={2}
                                 style={{ maxHeight: 'unset' }}
                             />
                         ) : (
@@ -237,7 +237,7 @@ export default function ReleaseSubmitStepDetailModal({
                                                 (dataJson ? (
                                                     <JsonViewer
                                                         src={dataJson}
-                                                        collapsed={1}
+                                                        collapsed={2}
                                                         style={{
                                                             maxHeight: 'unset',
                                                         }}

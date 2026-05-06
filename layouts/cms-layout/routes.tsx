@@ -459,7 +459,7 @@ export const adminRoutes: RouteNode[] = [
             {
                 id: 'release-executions',
                 type: 'link',
-                label: 'releaseExecution.label',
+                label: 'releaseExecution.labelOld',
                 title: 'Release Executions',
                 href: APP_ROUTES.RELEASE_EXECUTIONS,
                 icon: Trash,

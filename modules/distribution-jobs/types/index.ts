@@ -45,3 +45,6 @@ export interface DistributionJobFilter extends CommonParams {
 
 export type DistributionJobPaginationResponse =
     PaginationResponse<DistributionJobData>;
+
+export interface UpdateDistributionJobPayload
+    extends Partial<DistributionJobData> {}

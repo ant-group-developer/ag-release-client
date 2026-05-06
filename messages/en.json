@@ -2100,10 +2100,13 @@
         "typeOptions": {
             "EMAIL_STATE51": "Email state51",
             "ADMIN_EXPORT": "Admin export"
-        }
+        },
+        "cancelConfirmTitle": "Cancel distribution job",
+        "cancelConfirmMessage": "Are you sure you want to cancel this distribution job?"
     },
     "releaseExecution": {
         "label": "Release executions",
+        "labelOld": "Release executions (Old)",
         "releaseSnapshot": "Release snapshot",
         "confirm": {
             "retryTitle": "Are you sure you want to retry?",
