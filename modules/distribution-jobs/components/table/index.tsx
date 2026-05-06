@@ -129,7 +129,7 @@ export default function DistributionJobsTable({ dataFilter, ...props }: Props) {
                 renderText(record?.deliveryEmailSubject, true),
         },
         {
-            title: messages('distributionJobs.columns.expectedSendTime'),
+            title: messages('distributionJobs.columns.sentAt'),
             dataIndex: 'sentAt',
             key: 'sentAt',
             width: 160,

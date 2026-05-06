@@ -22,6 +22,7 @@ const STATUS_OPTIONS: DistributionJobStatus[] = [
     'processing',
     'completed',
     'failed',
+    'skipped',
 ];
 
 const TYPE_OPTIONS = [

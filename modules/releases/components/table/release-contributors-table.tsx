@@ -2,6 +2,7 @@ import IconButton from '@/components/ui/button/icon-button';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
 import { ArtistProfileData } from '@/modules/artist/types';
 import { useDeleteReleaseContributor } from '@/modules/release-contributor/hooks/use-delete-release-contributor';
@@ -146,20 +147,26 @@ export default function ReleaseContributorsTable({
                     <div className="space-x-1">
                         {record?.artist?.artistProfiles?.map(
                             (profile: ArtistProfileData) => (
-                                <Avatar
+                                <CustomTooltip
                                     key={profile.id}
-                                    size={26}
-                                    src={profile.dsp?.picture ?? ''}
-                                    className="cursor-pointer hover:opacity-80"
-                                    onClick={(e) => {
-                                        e?.stopPropagation();
-                                        window.open(
-                                            profile.url,
-                                            '_blank',
-                                            'noopener'
-                                        );
-                                    }}
-                                />
+                                    title={profile.dsp?.name}
+                                >
+                                    <Avatar
+                                        size={26}
+                                        src={profile.dsp?.picture ?? ''}
+                                        className="cursor-pointer hover:opacity-80"
+                                        onClick={(e) => {
+                                            e?.stopPropagation();
+                                            window.open(
+                                                profile.url,
+                                                '_blank',
+                                                'noopener'
+                                            );
+                                        }}
+                                    >
+                                        {profile.dsp?.name[0]}
+                                    </Avatar>
+                                </CustomTooltip>
                             )
                         )}
                     </div>

@@ -75,7 +75,14 @@ export default function ReleaseSubmitStepTable({
                                     key={dsp?.code}
                                     title={displayName}
                                 >
-                                    <Avatar src={dsp?.picture} size="small">
+                                    <Avatar
+                                        src={dsp?.picture}
+                                        size="small"
+                                        style={{
+                                            backgroundColor: token.colorBgLayout,
+                                            color: token.colorText,
+                                        }}
+                                    >
                                         {String(displayName)
                                             ?.charAt(0)
                                             ?.toUpperCase()}

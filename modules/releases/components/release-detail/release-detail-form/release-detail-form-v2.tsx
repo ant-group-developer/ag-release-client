@@ -205,8 +205,8 @@ export default function ReleaseDetailFormV2() {
                     className="form-read-only-primary"
                     layout="horizontal"
                     onFinish={handleSubmit(handleNext, handleFormError)}
-                    labelCol={{ xl: 8, lg: 10, md: 12, sm: 24 }}
-                    wrapperCol={{ xl: 16, lg: 14, md: 12, sm: 24 }}
+                    labelCol={{ xl: 10, lg: 14, md: 24, sm: 24 }}
+                    wrapperCol={{ xl: 14, lg: 10, md: 24, sm: 24 }}
                     labelAlign="left"
                     variant={
                         isReadMode && !isCreateReleasePage

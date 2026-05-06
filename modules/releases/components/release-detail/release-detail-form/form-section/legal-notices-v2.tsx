@@ -116,7 +116,7 @@ export default function LegalNoticesSectionV2({
 
                 <div className="col-span-2 mb-4 flex justify-end">
                     {showCLine && (
-                        <div className="col-span-1 text-sm text-gray-600 md:col-span-2 lg:col-span-2">
+                        <div className="col-span-1 text-xs text-gray-600 md:col-span-2 lg:col-span-2">
                             © {cLineYear} {cLineOwner}.{' '}
                             {messages('legal.allRightsReserved')}
                         </div>
@@ -198,7 +198,7 @@ export default function LegalNoticesSectionV2({
 
                 <div className="col-span-2 mb-4 flex justify-end">
                     {showPLine && (
-                        <div className="col-span-1 text-sm text-gray-600 md:col-span-2 lg:col-span-2">
+                        <div className="col-span-1 text-xs text-gray-600 md:col-span-2 lg:col-span-2">
                             ℗ {pLineYear} {pLineOwner}.{' '}
                             {messages('legal.allRightsReserved')}
                         </div>

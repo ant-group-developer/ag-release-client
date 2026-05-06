@@ -81,9 +81,7 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
             key: 'type',
             width: 140,
             render: (_, record) =>
-                record.type
-                    ? messages(`releaseExecution.typeOptions.${record.type}`)
-                    : '-',
+                record.type ? formatEnumLabel(record.type) : '-',
         },
         {
             title: messages('releaseExecution.columns.status'),
@@ -133,7 +131,13 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
                                     key={code}
                                     title={dsp?.name || code}
                                 >
-                                    <Avatar src={dsp?.picture} size="small">
+                                    <Avatar
+                                        src={dsp?.picture}
+                                        size="small"
+                                        style={{
+                                            backgroundColor: '#ccc',
+                                        }}
+                                    >
                                         {(dsp?.name || code)
                                             .charAt(0)
                                             .toUpperCase()}
@@ -207,7 +211,7 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
                 dataFilter?.fieldOrder,
                 'submit.createdAt'
             ),
-            width: 100,
+            width: 110,
             render: (value, record) =>
                 record?.createdAt
                     ? formattedDate(record?.createdAt, DATE_FORMAT.DATE_MINUTE)

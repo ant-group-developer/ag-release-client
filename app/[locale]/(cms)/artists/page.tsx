@@ -16,6 +16,7 @@ import { TYPE_MODAL_ARTIST } from '@/modules/artist/enum';
 import { useDeleteArtist } from '@/modules/artist/hooks/use-delete-artist';
 import { useGetListArtist } from '@/modules/artist/hooks/use-get-list-artists';
 import { useSyncSpotify } from '@/modules/artist/hooks/use-sync-spotify';
+import { useSyncArtistProfileName } from '@/modules/artist/hooks/use-sync-artist-profile-name';
 import { ArtistData, ArtistDataFilter } from '@/modules/artist/types';
 import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
@@ -54,7 +55,13 @@ export default function Artists({}: Props) {
     const { artistsData, isFetching, lastUpdatedAt, refetch } =
         useGetListArtist(dataFilter);
     const { syncSpotify, isPending: isSyncingSpotify } = useSyncSpotify();
+    const {
+        syncArtistProfileName,
+        isPending: isSyncingArtistProfileName,
+    } = useSyncArtistProfileName();
     const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
+    const [isSyncProfileNameModalOpen, setIsSyncProfileNameModalOpen] =
+        useState(false);
 
     // func
     const handleRefresh = () => {
@@ -88,13 +95,24 @@ export default function Artists({}: Props) {
                 extra={
                     <Space>
                         {isAdmin && (
-                            <Button
-                                type="primary"
-                                onClick={() => setIsSyncModalOpen(true)}
-                                loading={isSyncingSpotify}
-                            >
-                                Sync Spotify
-                            </Button>
+                            <Space>
+                                <Button
+                                    type="primary"
+                                    onClick={() => setIsSyncModalOpen(true)}
+                                    loading={isSyncingSpotify}
+                                >
+                                    {messages('artist.syncSpotify')}
+                                </Button>
+                                <Button
+                                    type="primary"
+                                    onClick={() =>
+                                        setIsSyncProfileNameModalOpen(true)
+                                    }
+                                    loading={isSyncingArtistProfileName}
+                                >
+                                    {messages('artist.syncProfileName')}
+                                </Button>
+                            </Space>
                         )}
                         <PermissionGate permission={PERMISSION.ARTIST.CREATE}>
                             <CreateButton
@@ -183,8 +201,28 @@ export default function Artists({}: Props) {
                             });
                         }}
                         onCancel={() => setIsSyncModalOpen(false)}
-                        modalTitle="Xác nhận đồng bộ"
-                        paragraph="Hành động này sẽ cập nhật tên hồ sơ nghệ sĩ spotify ở danh sách profile list, bạn có chắc chắn không"
+                        modalTitle={messages('artist.syncSpotifyConfirmTitle')}
+                        paragraph={messages('artist.syncSpotifyConfirmParagraph')}
+                    />
+                )}
+
+                {isSyncProfileNameModalOpen && (
+                    <AppConfirm
+                        open
+                        onOk={() => {
+                            syncArtistProfileName({
+                                onSuccess: () => {
+                                    setIsSyncProfileNameModalOpen(false);
+                                },
+                            });
+                        }}
+                        onCancel={() => setIsSyncProfileNameModalOpen(false)}
+                        modalTitle={messages(
+                            'artist.syncProfileNameConfirmTitle'
+                        )}
+                        paragraph={messages(
+                            'artist.syncProfileNameConfirmParagraph'
+                        )}
                     />
                 )}
             </PageContainer>

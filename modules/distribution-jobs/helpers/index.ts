@@ -12,6 +12,8 @@ export const getDistributionJobStatusColor = (
             return 'processing';
         case 'pending':
             return 'warning';
+        case 'skipped':
+            return 'default';
         default:
             return 'default';
     }

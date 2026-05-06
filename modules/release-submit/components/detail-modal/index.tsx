@@ -10,7 +10,6 @@ import {
     getReleaseSubmitStatusColor,
     getReleaseSubmitTypeColor,
 } from '../../helpers';
-import { RELEASE_SUBMIT_TYPE } from '../../enums';
 import { useGetDetailReleaseSubmit } from '../../hooks/use-get-detail';
 import { ReleaseSubmitData, ReleaseSubmitStepData } from '../../types';
 import ReleaseSubmitStepDetailModal from '../step-detail-modal';
@@ -56,9 +55,7 @@ export default function ReleaseSubmitDetailModal({ ...props }: Props) {
                         )}
                         className="font-normal"
                     >
-                        {messages(
-                            `releaseExecution.typeOptions.${releaseSubmitDetail.type}`
-                        )}
+                        {formatEnumLabel(releaseSubmitDetail.type)}
                     </Tag>
                 )}
             </Space>

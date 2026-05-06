@@ -5,6 +5,7 @@ export enum DISTRIBUTION_JOB_STATUS {
     PROCESSING = 'processing',
     COMPLETED = 'completed',
     FAILED = 'failed',
+    SKIPPED = 'skipped',
 }
 
 export enum DISTRIBUTION_JOB_TYPE {
@@ -16,7 +17,8 @@ export type DistributionJobStatus =
     | 'pending'
     | 'processing'
     | 'completed'
-    | 'failed';
+    | 'failed'
+    | 'skipped';
 
 export interface DistributionJobData extends CommonAttribute {
     type: DISTRIBUTION_JOB_TYPE | string;
