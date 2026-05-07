@@ -7,11 +7,10 @@ import { AxiosResponse } from 'axios';
 import { artistApi } from '../apis';
 import { artistQueryKeys } from '../constants/query-keys';
 
-export const useSyncSpotify = () => {
+export const useSyncArtistProfileName = () => {
     const queryClient = useQueryClient();
-    const { handleError, handleSuccess } = useApiNotify();
     const messages = useTranslations();
-
+    const { handleError } = useApiNotify();
     const onSuccess = (
         data: AxiosResponse<DetailResponse<any>, any>,
         { onSuccess }: CommonFunction
@@ -20,8 +19,10 @@ export const useSyncSpotify = () => {
             queryKey: artistQueryKeys.lists(),
         });
         onSuccess?.(data?.data?.data);
-        // handleSuccess(data?.data);
-        showNotification('success', messages('artist.message.success.syncSpotify'));
+        showNotification(
+            'success',
+            messages('artist.message.success.syncProfileName')
+        );
     };
 
     const onError = (data: any, { onError }: CommonFunction) => {
@@ -30,17 +31,17 @@ export const useSyncSpotify = () => {
     };
 
     const mutation = useMutation({
-        mutationFn: () => artistApi.syncSpotify(),
+        mutationFn: () => artistApi.syncArtistProfileName(),
         onSuccess,
         onError,
     });
 
-    const syncSpotify = (variables?: CommonFunction) => {
+    const syncArtistProfileName = (variables?: CommonFunction) => {
         mutation.mutate(variables || {});
     };
 
     return {
-        syncSpotify,
+        syncArtistProfileName,
         ...mutation,
     };
 };

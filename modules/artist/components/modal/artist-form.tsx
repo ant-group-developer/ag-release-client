@@ -414,7 +414,7 @@ export default function ArtistFormModal({
                                                 ),
                                             },
                                             {
-                                                title: messages('common.name'),
+                                                title: messages('artist.name'),
                                                 width: '25%',
                                                 render: (
                                                     _: any,
@@ -443,7 +443,6 @@ export default function ArtistFormModal({
                                                         ]}
                                                     >
                                                         <Input
-                                                            allowClear
                                                             placeholder={messages(
                                                                 'common.name'
                                                             )}

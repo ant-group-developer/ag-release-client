@@ -40,6 +40,7 @@ import {
     Speaker,
     SquareActivity,
     SquareUser,
+    Trash,
     User,
     User2,
 } from 'lucide-react';
@@ -455,15 +456,15 @@ export const adminRoutes: RouteNode[] = [
                 icon: ScrollText,
                 required: SYS_ADMIN_REQ,
             },
-            // {
-            //     id: 'release-executions',
-            //     type: 'link',
-            //     label: 'releaseExecution.label',
-            //     title: 'Release Executions',
-            //     href: APP_ROUTES.RELEASE_EXECUTIONS,
-            //     icon: FileTerminal,
-            //     required: SYS_ADMIN_REQ,
-            // },
+            {
+                id: 'release-executions',
+                type: 'link',
+                label: 'releaseExecution.labelOld',
+                title: 'Release Executions',
+                href: APP_ROUTES.RELEASE_EXECUTIONS,
+                icon: Trash,
+                required: SYS_ADMIN_REQ,
+            },
             {
                 id: 'release-submits',
                 type: 'link',

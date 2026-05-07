@@ -9,10 +9,6 @@ import {
     getIndex,
     getSortOrder,
 } from '@/helpers/common';
-import {
-    getReleaseDetailTabRoute,
-    RELEASE_DETAIL_ACTION,
-} from '@/modules/releases/helpers/link';
 import { OnChangeFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { usePermission } from '@/hooks/use-permission';
@@ -20,6 +16,10 @@ import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
+import {
+    getReleaseDetailTabRoute,
+    RELEASE_DETAIL_ACTION,
+} from '@/modules/releases/helpers/link';
 import { useTakedownRelease } from '@/modules/releases/hooks/use-takedown-release';
 import { ProColumns } from '@ant-design/pro-components';
 import { Modal, Tag, theme } from 'antd';
@@ -305,7 +305,8 @@ export default function ReleasesTable({
                                     ),
                                     show:
                                         status ===
-                                            RELEASES_STATUS.DISTRIBUTED &&
+                                            (RELEASES_STATUS.DISTRIBUTED ||
+                                                RELEASES_STATUS.AWAITING_ACTION) &&
                                         canTakedown,
                                     danger: true,
                                     onClick: () => {

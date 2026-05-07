@@ -4,7 +4,15 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
 import { DspData } from '@/modules/dsp/types';
-import { Avatar, Card, Collapse, Descriptions, Tag, Typography } from 'antd';
+import {
+    Avatar,
+    Card,
+    Collapse,
+    Descriptions,
+    Tag,
+    Typography,
+    theme,
+} from 'antd';
 import {
     formatDurationShort,
     formatEnumLabel,
@@ -23,6 +31,8 @@ export default function ReleaseSubmitStepDetailModal({
     step,
     ...props
 }: Props) {
+    const { token } = theme.useToken();
+
     if (!step) return null;
 
     const stepLogs = logs.filter((log) => log.releaseSubmitStepId === step.id);
@@ -82,7 +92,16 @@ export default function ReleaseSubmitStepDetailModal({
                                 label: 'DSP',
                                 children: (
                                     <Avatar.Group
-                                        max={{ count: 5 }}
+                                        max={{
+                                            count: 5,
+                                            popover: { trigger: 'hover' },
+                                            style: {
+                                                color: token.colorText,
+                                                backgroundColor:
+                                                    token.colorBgLayout,
+                                                cursor: 'pointer',
+                                            },
+                                        }}
                                         size="small"
                                     >
                                         {dsps?.map((dsp) => (
@@ -93,6 +112,9 @@ export default function ReleaseSubmitStepDetailModal({
                                                 <Avatar
                                                     src={dsp?.picture}
                                                     size="small"
+                                                    style={{
+                                                        backgroundColor: '#ccc',
+                                                    }}
                                                 >
                                                     {String(dsp?.name)
                                                         ?.charAt(0)
@@ -146,7 +168,7 @@ export default function ReleaseSubmitStepDetailModal({
                         {metadataJson ? (
                             <JsonViewer
                                 src={metadataJson}
-                                collapsed={true}
+                                collapsed={2}
                                 style={{ maxHeight: 'unset' }}
                             />
                         ) : (
@@ -215,7 +237,7 @@ export default function ReleaseSubmitStepDetailModal({
                                                 (dataJson ? (
                                                     <JsonViewer
                                                         src={dataJson}
-                                                        collapsed={1}
+                                                        collapsed={2}
                                                         style={{
                                                             maxHeight: 'unset',
                                                         }}

@@ -12,6 +12,7 @@ export const getReleaseSubmitStatusColor = (status?: RELEASE_SUBMIT_STATUS) => {
             return 'success';
         case RELEASE_SUBMIT_STATUS.WAITING_ACTION:
             return 'warning';
+        case RELEASE_SUBMIT_STATUS.CANCELLED:
         case RELEASE_SUBMIT_STATUS.FAILED:
             return 'error';
         case RELEASE_SUBMIT_STATUS.PROCESSING:

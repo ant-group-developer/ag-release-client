@@ -2,6 +2,7 @@ import axiosInstance from '@/api/axios-auth';
 import {
     DistributionJobFilter,
     DistributionJobPaginationResponse,
+    UpdateDistributionJobPayload,
 } from '../types';
 
 export const distributionJobApis = {
@@ -24,6 +25,12 @@ export const distributionJobApis = {
         );
     },
     confirmCompleted: (data: { ids: any[]; exportIdFromCi: string }) => {
-        return axiosInstance.post('/ci-distribution-jobs/confirm-completed', data);
+        return axiosInstance.post(
+            '/ci-distribution-jobs/confirm-completed',
+            data
+        );
+    },
+    update: (id: string, data: UpdateDistributionJobPayload) => {
+        return axiosInstance.put(`/ci-distribution-jobs/${id}`, data);
     },
 };

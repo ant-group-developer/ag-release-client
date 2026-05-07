@@ -33,24 +33,33 @@ export default function RoleArtistSelect({
                     .toLowerCase()
                     .includes(toNonAccentVietnamese(input).toLowerCase())
             }
-            options={artistsRolesData.map((item) => ({
-                id: item.id,
-                value: item.id,
-                name: item.name,
-                label: (
-                    <div className="flex justify-between gap-1">
-                        <span title={item.name} className="min-w-0 truncate">
-                            {item.name}
-                        </span>
-                        <span className="text-red-400">
-                            {item?.isRequired
-                                ? messages('common.required')
-                                : ''}
-                        </span>
-                    </div>
-                ),
-                disabled: disabledRoleIds?.includes(item.id) ?? false,
-            }))}
+            options={artistsRolesData.map((item) => {
+                const isLyricist = item?.name
+                    ?.toLowerCase()
+                    .includes('lyricist');
+                const isRequired = item?.isRequired;
+                return {
+                    id: item.id,
+                    value: item.id,
+                    name: item.name,
+                    label: (
+                        <div className="flex justify-between gap-1">
+                            <span
+                                title={item.name}
+                                className="min-w-0 truncate"
+                            >
+                                {item.name}
+                            </span>
+                            <span className="text-red-400">
+                                {!isLyricist && isRequired
+                                    ? messages('common.required')
+                                    : ''}
+                            </span>
+                        </div>
+                    ),
+                    disabled: disabledRoleIds?.includes(item.id) ?? false,
+                };
+            })}
             labelRender={labelRender}
         />
     );
