@@ -10,18 +10,19 @@ import { useFilter } from '@/hooks/use-filter';
 import BatchImportTable from '@/modules/batch-import/components/batch-import-table';
 import { useGetBatchImportLogs } from '@/modules/batch-import/hooks/use-get-batch-import-logs';
 import { BatchImportLogFilter } from '@/modules/batch-import/types/data';
+import { BatchImportStatus } from '@/modules/batch-import/enums/batch-import-status.enum';
 import { ReloadOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { Button, message, Select, Space } from 'antd';
 import dayjs from 'dayjs';
 
 const STATUS_OPTIONS = [
     { label: 'All Statuses', value: '' },
-    { label: '🔄 Validating', value: 'validating' },
-    { label: '✅ Validated', value: 'validated' },
-    { label: '❌ Validation Failed', value: 'validation_failed' },
-    { label: '⏳ Uploading', value: 'uploading' },
-    { label: '🟢 Uploaded', value: 'uploaded' },
-    { label: '🔴 Failed', value: 'failed' },
+    { label: '🔄 Validating', value: BatchImportStatus.VALIDATING },
+    { label: '✅ Validated', value: BatchImportStatus.VALIDATED },
+    { label: '❌ Validation Failed', value: BatchImportStatus.VALIDATION_FAILED },
+    { label: '⏳ Uploading', value: BatchImportStatus.UPLOADING },
+    { label: '🟢 Uploaded', value: BatchImportStatus.UPLOADED },
+    { label: '🔴 Failed', value: BatchImportStatus.FAILED },
 ];
 
 /**
