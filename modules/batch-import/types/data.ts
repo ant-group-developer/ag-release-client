@@ -15,5 +15,7 @@ export interface BatchImportLogData {
 
 export interface BatchImportLogFilter extends CommonParams {
     batchId?: string;
+    upc?: string;
+    tenantCode?: string;
     status?: string;
 }
