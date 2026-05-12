@@ -1207,11 +1207,19 @@
         "canLinkArtistProfile": "Có thể liên kết hồ sơ nghệ sĩ",
         "back": "Trở lại danh sách nghệ sĩ",
         "visitProfile": "Xem hồ sơ",
+        "syncSpotify": "Sync Spotify",
+        "syncProfileName": "Sync Profile Name",
+        "syncSpotifyConfirmTitle": "Xác nhận đồng bộ Spotify",
+        "syncSpotifyConfirmParagraph": "Hành động này sẽ cập nhật tên hồ sơ nghệ sĩ spotify ở danh sách profile list, bạn có chắc chắn không",
+        "syncProfileNameConfirmTitle": "Xác nhận đồng bộ tên nghệ sĩ",
+        "syncProfileNameConfirmParagraph": "Hành động này sẽ cập nhật tên hồ sơ nghệ sĩ ở danh sách profile list, bạn có chắc chắn không",
         "message": {
             "success": {
                 "create": "Thêm mới nghệ sĩ thành công",
                 "update": "Cập nhật nghệ sĩ thành công",
-                "delete": "xoá nghệ sĩ thành công"
+                "delete": "xoá nghệ sĩ thành công",
+                "syncSpotify": "Đang đồng bộ, sẽ mất khoảng 2-5 phút...",
+                "syncProfileName": "Đang đồng bộ tên nghệ sĩ, sẽ mất khoảng 2-5 phút..."
             },
             "error": {
                 "duplicateNameArtist": "Nghệ sĩ này đã tồn tại",
@@ -1384,29 +1392,32 @@
             "isrcMustBe12Characters": "ISRC phải đủ 12 ký tự",
             "missingRequiredContributorsRoles": "Thiếu vai trò người đóng góp",
             "missingRequired": {
-                "Producer": "Bản phát hành bắt buộc phải có nhà sản xuất",
-                "Composer": "Bản phát hành bắt buộc phải có nhà soạn nhạc",
-                "Mixer": "Bản phát hành bắt buộc phải có kỹ sư hòa âm",
-                "Lyricist": "Bản phát hành bắt buộc phải có người viết lời",
-                "ProducerComposer": "Bản phát hành bắt buộc phải có nhà sản xuất và nhà soạn nhạc",
-                "ProducerMixer": "Bản phát hành bắt buộc phải có nhà sản xuất và kỹ sư hòa âm",
-                "ProducerLyricist": "Bản phát hành bắt buộc phải có nhà sản xuất và người viết lời",
-                "ComposerMixer": "Bản phát hành bắt buộc phải có nhà soạn nhạc và kỹ sư hòa âm",
-                "MixerComposer": "Bản phát hành bắt buộc phải có kỹ sư hòa âm và nhà soạn nhạc",
-                "ComposerLyricist": "Bản phát hành bắt buộc phải có nhà soạn nhạc và người viết lời",
-                "MixerLyricist": "Bản phát hành bắt buộc phải có kỹ sư hòa âm và người viết lời",
-                "ProducerComposerMixer": "Bản phát hành bắt buộc phải có nhà sản xuất, nhà soạn nhạc và kỹ sư hòa âm",
-                "ProducerMixerComposer": "Bản phát hành bắt buộc phải có nhà sản xuất, kỹ sư hòa âm và nhà soạn nhạc",
-                "ProducerComposerLyricist": "Bản phát hành bắt buộc phải có nhà sản xuất, nhà soạn nhạc và người viết lời",
-                "ProducerMixerLyricist": "Bản phát hành bắt buộc phải có nhà sản xuất, kỹ sư hòa âm và người viết lời",
-                "ComposerMixerLyricist": "Bản phát hành bắt buộc phải có nhà soạn nhạc, kỹ sư hòa âm và người viết lời",
-                "MixerComposerLyricist": "Bản phát hành bắt buộc phải có kỹ sư hòa âm, nhà soạn nhạc và người viết lời",
-                "ProducerComposerMixerLyricist": "Bản phát hành bắt buộc phải có nhà sản xuất, nhà soạn nhạc, kỹ sư hòa âm và người viết lời",
-                "ProducerMixerComposerLyricist": "Bản phát hành bắt buộc phải có nhà sản xuất, kỹ sư hòa âm, nhà soạn nhạc và người viết lời"
+                "Producer": "Yêu cầu phải có nhà sản xuất",
+                "Composer": "Yêu cầu phải có nhà soạn nhạc",
+                "Mixer": "Yêu cầu phải có nhà hòa âm",
+                "Lyricist": "Yêu cầu phải có người viết lời",
+                "ProducerComposer": "Yêu cầu phải có nhà sản xuất và nhà soạn nhạc",
+                "ProducerMixer": "Yêu cầu phải có nhà sản xuất và nhà hòa âm",
+                "ProducerLyricist": "Yêu cầu phải có nhà sản xuất và người viết lời",
+                "ComposerMixer": "Yêu cầu phải có nhà soạn nhạc và nhà hòa âm",
+                "MixerComposer": "Yêu cầu phải có nhà hòa âm và nhà soạn nhạc",
+                "ComposerLyricist": "Yêu cầu phải có nhà soạn nhạc và người viết lời",
+                "MixerLyricist": "Yêu cầu phải có nhà hòa âm và người viết lời",
+                "ProducerComposerMixer": "Yêu cầu phải có nhà sản xuất, nhà soạn nhạc và nhà hòa âm",
+                "ProducerMixerComposer": "Yêu cầu phải có nhà sản xuất, nhà hòa âm và nhà soạn nhạc",
+                "ProducerComposerLyricist": "Yêu cầu phải có nhà sản xuất, nhà soạn nhạc và người viết lời",
+                "ProducerMixerLyricist": "Yêu cầu phải có nhà sản xuất, nhà hòa âm và người viết lời",
+                "ComposerMixerLyricist": "Yêu cầu phải có nhà soạn nhạc, nhà hòa âm và người viết lời",
+                "MixerComposerLyricist": "Yêu cầu phải có nhà hòa âm, nhà soạn nhạc và người viết lời",
+                "ProducerComposerMixerLyricist": "Yêu cầu phải có nhà sản xuất, nhà soạn nhạc, nhà hòa âm và người viết lời",
+                "ProducerMixerComposerLyricist": "Yêu cầu phải có nhà sản xuất, nhà hòa âm, nhà soạn nhạc và người viết lời"
             },
             "coverArtIsRequired": "Ảnh phát hành là bắt buộc",
             "atLeastOneMainArtist": "Phải có ít nhất một nghệ sĩ chính",
-            "atLeastOneTrack": "Phải có ít nhất một bài hát"
+            "atLeastOneTrack": "Phải có ít nhất một bài hát",
+            "invalidFeatFormat": "Tiêu đề có feat phải theo định dạng: feat.artist, feat.artist1, v.v.",
+            "noLeadingTrailingSpace": "Không được có khoảng trắng ở đầu hoặc cuối",
+            "titleCannotContainFeat": "Tiêu đề không được chứa từ \"feat\""
         }
     },
 
@@ -2080,7 +2091,8 @@
             "pending": "Đang chờ",
             "processing": "Đang xử lý",
             "completed": "Hoàn thành",
-            "failed": "Thất bại"
+            "failed": "Thất bại",
+            "skipped": "Bỏ qua"
         },
         "confirmCompletedModal": {
             "title": "Xác nhận đã hoàn thành",
@@ -2091,10 +2103,13 @@
         "typeOptions": {
             "EMAIL_STATE51": "Tự động gửi email",
             "ADMIN_EXPORT": "Tải file excel"
-        }
+        },
+        "cancelConfirmTitle": "Hủy lệnh phân phối",
+        "cancelConfirmMessage": "Bạn có chắc chắn muốn hủy lệnh phân phối này?"
     },
     "releaseExecution": {
         "label": "Triển khai phát hành",
+        "labelOld": "Triển khai phát hành (Cũ)",
         "releaseSnapshot": "Bản ghi phát hành",
         "confirm": {
             "retryTitle": "Bạn có chắc chắn muốn thử lại?",

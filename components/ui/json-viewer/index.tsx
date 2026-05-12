@@ -15,7 +15,7 @@ function JsonViewer({ ...props }: ReactJsonViewProps) {
         >
             <ReactJson
                 name={false}
-                collapsed={3}
+                collapsed={2}
                 theme={'ocean'}
                 displayDataTypes={false}
                 style={{

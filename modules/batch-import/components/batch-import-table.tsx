@@ -30,6 +30,7 @@ import {
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { BatchImportLogData } from '../types/data';
+import { BatchImportStatus } from '../enums/batch-import-status.enum';
 
 const { Text } = Typography;
 
@@ -41,47 +42,47 @@ const STATUS_CONFIG: Record<
         label: string;
     }
 > = {
-    validating: {
+    [BatchImportStatus.VALIDATING]: {
         color: 'processing',
         icon: <SyncOutlined spin />,
         label: 'Validating',
     },
-    validated: {
+    [BatchImportStatus.VALIDATED]: {
         color: 'cyan',
         icon: <CheckCircleOutlined />,
         label: 'Validated',
     },
-    validation_failed: {
+    [BatchImportStatus.VALIDATION_FAILED]: {
         color: 'error',
         icon: <CloseCircleOutlined />,
         label: 'Validation Failed',
     },
-    uploading: {
+    [BatchImportStatus.UPLOADING]: {
         color: 'warning',
         icon: <LoadingOutlined />,
         label: 'Uploading',
     },
-    uploaded: {
+    [BatchImportStatus.UPLOADED]: {
         color: 'success',
         icon: <CheckCircleOutlined />,
         label: 'Uploaded',
     },
-    creating: {
+    [BatchImportStatus.CREATING]: {
         color: 'geekblue',
         icon: <RocketOutlined />,
         label: 'Creating',
     },
-    completed: {
+    [BatchImportStatus.COMPLETED]: {
         color: 'success',
         icon: <CheckCircleOutlined />,
         label: 'Completed',
     },
-    failed: {
+    [BatchImportStatus.FAILED]: {
         color: 'error',
         icon: <ExclamationCircleOutlined />,
         label: 'Failed',
     },
-    skipped: {
+    [BatchImportStatus.SKIPPED]: {
         color: 'warning',
         icon: <ExclamationCircleOutlined />,
         label: 'Skipped',

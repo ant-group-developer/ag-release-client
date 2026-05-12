@@ -112,7 +112,9 @@ export default function DistributionJobsPage() {
             setSelectedRows(rows);
         },
         getCheckboxProps: (record: DistributionJobData) => ({
-            disabled: record.status === DISTRIBUTION_JOB_STATUS.COMPLETED,
+            disabled:
+                record.status === DISTRIBUTION_JOB_STATUS.COMPLETED ||
+                record.status === DISTRIBUTION_JOB_STATUS.SKIPPED,
         }),
     };
 

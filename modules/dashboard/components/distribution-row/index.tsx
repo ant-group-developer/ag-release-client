@@ -21,9 +21,7 @@ export default function DistributionRow() {
             <Col xs={24} md={8}>
                 <DistributionPieChart
                     title="DSP"
-                    subtitle={messages('dashboard.dsp_distribution_subtitle', {
-                        year: 2026,
-                    })}
+                    subtitle={`Biểu đồ phân phối theo DSP`}
                     streamData={DSP_DATA_STREAM}
                     revenueData={DSP_DATA_REVENUE}
                     colors={CHART_COLORS}
@@ -32,10 +30,7 @@ export default function DistributionRow() {
             <Col xs={24} md={8}>
                 <DistributionPieChart
                     title="Label"
-                    subtitle={messages(
-                        'dashboard.label_distribution_subtitle',
-                        { year: 2026 }
-                    )}
+                    subtitle={`Biểu đồ thống kê theo Label`}
                     streamData={LABEL_DATA_STREAM}
                     revenueData={LABEL_DATA_REVENUE}
                     colors={CHART_COLORS}
@@ -44,10 +39,7 @@ export default function DistributionRow() {
             <Col xs={24} md={8}>
                 <DistributionPieChart
                     title="Artist"
-                    subtitle={messages(
-                        'dashboard.artist_distribution_subtitle',
-                        { year: 2026 }
-                    )}
+                    subtitle={`Biểu đồ thống kê theo nghệ sĩ`}
                     streamData={ARTIST_DATA_STREAM}
                     revenueData={ARTIST_DATA_REVENUE}
                     colors={CHART_COLORS}

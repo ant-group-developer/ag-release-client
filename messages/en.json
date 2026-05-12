@@ -1205,11 +1205,19 @@
         "canLinkArtistProfile": "Can link artist profile",
         "back": "Back to artist list",
         "visitProfile": "Visit profile",
+        "syncSpotify": "Sync Spotify",
+        "syncProfileName": "Sync Profile Name",
+        "syncSpotifyConfirmTitle": "Confirm Sync Spotify",
+        "syncSpotifyConfirmParagraph": "This action will update spotify artist profile names in the profile list, are you sure?",
+        "syncProfileNameConfirmTitle": "Confirm Sync Artist Name",
+        "syncProfileNameConfirmParagraph": "This action will update artist profile names in the profile list, are you sure?",
         "message": {
             "success": {
                 "create": "Add new artist successfully",
                 "update": "Update artist successfully",
-                "delete": "Delete artist successfully"
+                "delete": "Delete artist successfully",
+                "syncSpotify": "Syncing, it will take about 2-5 minutes...",
+                "syncProfileName": "Syncing artist names, it will take about 2-5 minutes..."
             },
             "error": {
                 "duplicateNameArtist": "This artist already exist",
@@ -1382,29 +1390,32 @@
             "isrcMustBe12Characters": "ISRC must be 12 characters",
             "missingRequiredContributorsRoles": "Missing required contributors roles",
             "missingRequired": {
-                "Producer": "The release must have a producer",
-                "Composer": "The release must have a composer",
-                "Mixer": "The release must have a mixer",
-                "Lyricist": "The release must have a lyricist",
-                "ProducerComposer": "The release must have a producer and a composer",
-                "ProducerMixer": "The release must have a producer and a mixer",
-                "ProducerLyricist": "The release must have a producer and a lyricist",
-                "ComposerMixer": "The release must have a composer and a mixer",
-                "MixerComposer": "The release must have a mixer and a composer",
-                "ComposerLyricist": "The release must have a composer and a lyricist",
-                "MixerLyricist": "The release must have a mixer and a lyricist",
-                "ProducerComposerMixer": "The release must have a producer, a composer, and a mixer",
-                "ProducerMixerComposer": "The release must have a producer, a mixer, and a composer",
-                "ProducerComposerLyricist": "The release must have a producer, a composer, and a lyricist",
-                "ProducerMixerLyricist": "The release must have a producer, a mixer, and a lyricist",
-                "ComposerMixerLyricist": "The release must have a composer, a mixer, and a lyricist",
-                "MixerComposerLyricist": "The release must have a mixer, a composer, and a lyricist",
-                "ProducerComposerMixerLyricist": "The release must have a producer, a composer, a mixer, and a lyricist",
-                "ProducerMixerComposerLyricist": "The release must have a producer, a mixer, a composer, and a lyricist"
+                "Producer": "Contributors must have a producer",
+                "Composer": "Contributors must have a composer",
+                "Mixer": "Contributors must have a mixer",
+                "Lyricist": "Contributors must have a lyricist",
+                "ProducerComposer": "Contributors must have a producer and a composer",
+                "ProducerMixer": "Contributors must have a producer and a mixer",
+                "ProducerLyricist": "Contributors must have a producer and a lyricist",
+                "ComposerMixer": "Contributors must have a composer and a mixer",
+                "MixerComposer": "Contributors must have a mixer and a composer",
+                "ComposerLyricist": "Contributors must have a composer and a lyricist",
+                "MixerLyricist": "Contributors must have a mixer and a lyricist",
+                "ProducerComposerMixer": "Contributors must have a producer, a composer, and a mixer",
+                "ProducerMixerComposer": "Contributors must have a producer, a mixer, and a composer",
+                "ProducerComposerLyricist": "Contributors must have a producer, a composer, and a lyricist",
+                "ProducerMixerLyricist": "Contributors must have a producer, a mixer, and a lyricist",
+                "ComposerMixerLyricist": "Contributors must have a composer, a mixer, and a lyricist",
+                "MixerComposerLyricist": "Contributors must have a mixer, a composer, and a lyricist",
+                "ProducerComposerMixerLyricist": "Contributors must have a producer, a composer, a mixer, and a lyricist",
+                "ProducerMixerComposerLyricist": "Contributors must have a producer, a mixer, a composer, and a lyricist"
             },
             "coverArtIsRequired": "Cover art is required",
             "atLeastOneMainArtist": "Must have at least one main artist",
-            "atLeastOneTrack": "Release must have at least one track"
+            "atLeastOneTrack": "Release must have at least one track",
+            "invalidFeatFormat": "Title containing \"feat\" must follow the format: feat.artist, feat.artist1, etc.",
+            "noLeadingTrailingSpace": "No leading or trailing spaces allowed",
+            "titleCannotContainFeat": "Title cannot contain \"feat\""
         }
     },
 
@@ -2077,7 +2088,8 @@
             "pending": "Pending",
             "processing": "Processing",
             "completed": "Completed",
-            "failed": "Failed"
+            "failed": "Failed",
+            "skipped": "Skipped"
         },
         "confirmCompletedModal": {
             "title": "Confirm completed",
@@ -2088,10 +2100,13 @@
         "typeOptions": {
             "EMAIL_STATE51": "Email state51",
             "ADMIN_EXPORT": "Admin export"
-        }
+        },
+        "cancelConfirmTitle": "Cancel distribution job",
+        "cancelConfirmMessage": "Are you sure you want to cancel this distribution job?"
     },
     "releaseExecution": {
         "label": "Release executions",
+        "labelOld": "Release executions (Old)",
         "releaseSnapshot": "Release snapshot",
         "confirm": {
             "retryTitle": "Are you sure you want to retry?",
