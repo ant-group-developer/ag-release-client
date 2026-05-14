@@ -4,6 +4,7 @@ import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-fil
 import { useIntersectionObserver } from '@uidotdev/usehooks';
 import { Skeleton } from 'antd';
 import { useEffect, useState } from 'react';
+import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { TrackData } from '../../types';
 
 type Props = {
@@ -13,8 +14,8 @@ type Props = {
 export default function TrackCoverArt({ trackData }: Props) {
     const [isLoading, setIsLoading] = useState(true);
     const imgFileId =
-        trackData?.release?.coverArtThumbnails?.['75x75'] ??
-        trackData?.release?.coverArtThumbnails?.original;
+        trackData?.release?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.S75] ??
+        trackData?.release?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.ORIGINAL];
 
     const [ref, entry] = useIntersectionObserver({
         root: null,

@@ -17,3 +17,12 @@ export const defaultVisibleColumnsReleases = [
     // RELEASES_COLUMNS_DISPLAY.UPDATED_AT,
     RELEASES_COLUMNS_DISPLAY.ACTIONS,
 ];
+
+export const RELEASE_COVER_ART_SIZE = {
+    S75: '75x75',
+    S100: '100x100',
+    S160: '160x160',
+    S300: '300x300',
+    S900: '900x900',
+    ORIGINAL: 'original',
+} as const;

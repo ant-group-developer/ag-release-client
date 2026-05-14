@@ -4,6 +4,7 @@ import { useIntersectionObserver } from '@uidotdev/usehooks';
 import { Skeleton } from 'antd';
 import { useEffect, useState } from 'react';
 import { ReleasesData } from '../../types';
+import { RELEASE_COVER_ART_SIZE } from '../../constants';
 
 type Props = {
     data: ReleasesData;
@@ -12,8 +13,8 @@ type Props = {
 export default function ReleaseCoverImage({ data }: Props) {
     const [isLoading, setIsLoading] = useState(true);
     const imgFileId =
-        data?.coverArtThumbnails?.['75x75'] ??
-        data?.coverArtThumbnails?.original;
+        data?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.S75] ??
+        data?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.ORIGINAL];
 
     const [ref, entry] = useIntersectionObserver({
         root: null,
