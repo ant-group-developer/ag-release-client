@@ -1,8 +1,8 @@
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { getReleaseDetailTabRoute } from '@/modules/releases/helpers/link';
 import { OnChangeFilter } from '@/hooks/use-filter';
 import { Link } from '@/i18n/routing';
 import { ReleaseArtist } from '@/modules/release-artist/types';
+import { getReleaseDetailTabRoute } from '@/modules/releases/helpers/link';
 import { useTranslations } from 'next-intl';
 import { RELEASES_TABS } from '../../enums';
 import { ReleasesData, ReleasesDataFilter } from '../../types';
@@ -31,7 +31,7 @@ export default function ReleaseTitleColumn({ record, onChangeFilter }: Props) {
 
     return (
         <div className="flex items-center gap-4">
-            <div className="h-10 min-w-10">
+            <div className="h-14 min-w-14">
                 <ReleaseCoverImage data={record} />
             </div>
             <div>

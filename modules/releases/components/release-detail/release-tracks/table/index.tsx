@@ -236,21 +236,19 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
             render: (value, record, index) => {
                 return (
                     <div className="flex items-center justify-center">
-                        {!isReadMode && (
-                            <IconButton
-                                onClick={() =>
-                                    openModal(
-                                        TYPE_MODAL_RELEASE.DETAIL_TRACK_RELEASE,
-                                        {
-                                            trackId: record?.id,
-                                            index,
-                                        }
-                                    )
-                                }
-                            >
-                                <SquarePen size={SIZE_ICON} />
-                            </IconButton>
-                        )}
+                        <IconButton
+                            onClick={() =>
+                                openModal(
+                                    TYPE_MODAL_RELEASE.DETAIL_TRACK_RELEASE,
+                                    {
+                                        trackId: record?.id,
+                                        index,
+                                    }
+                                )
+                            }
+                        >
+                            <SquarePen size={SIZE_ICON} />
+                        </IconButton>
                         <TrackActionButton
                             // disabled={isReadMode}
                             showDelete={!isReadMode}

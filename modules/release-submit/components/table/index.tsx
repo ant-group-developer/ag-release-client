@@ -59,7 +59,6 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
             key: 'upc',
             width: 120,
             fixed: 'left',
-            ellipsis: true,
             render: (_, record) => (
                 <Typography.Text copyable>
                     {record?.metadata?.input?.releaseSnapshot?.upc || '-'}

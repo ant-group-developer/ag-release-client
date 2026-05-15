@@ -3,8 +3,8 @@ import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-fil
 import { useIntersectionObserver } from '@uidotdev/usehooks';
 import { Skeleton } from 'antd';
 import { useEffect, useState } from 'react';
-import { ReleasesData } from '../../types';
 import { RELEASE_COVER_ART_SIZE } from '../../constants';
+import { ReleasesData } from '../../types';
 
 type Props = {
     data: ReleasesData;
@@ -41,7 +41,7 @@ export default function ReleaseCoverImage({ data }: Props) {
             <div ref={ref}>
                 <Skeleton.Node
                     active
-                    className="aspect-square !h-10 !w-10 !rounded-lg"
+                    className="aspect-square !h-14 !w-14 !rounded-lg"
                 />
             </div>
         );
@@ -49,13 +49,11 @@ export default function ReleaseCoverImage({ data }: Props) {
 
     return (
         <div ref={ref}>
-            {/* Image */}
-
             <ImageFallback
                 src={linkReadFile}
                 alt="cover"
-                width={40}
-                height={40}
+                width={56}
+                height={56}
                 className={`aspect-square rounded-lg object-cover transition-opacity duration-300`}
                 onLoad={() => setIsLoading(false)}
                 onError={() => setIsLoading(false)}
