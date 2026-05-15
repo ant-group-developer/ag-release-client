@@ -8,6 +8,7 @@ import {
     ReleaseValidate,
 } from '../types';
 import {
+    BulkSubmitRelease,
     CreateReleaseDraftPayload,
     ExportTemplateCi,
     UpdateReleaseDraftPayload,
@@ -171,5 +172,12 @@ export const releasesApi = {
         return axiosInstance.post<DetailResponse<ReleasesData>>(
             `/releases/${id}/takedown`
         );
+    },
+
+    bulkSubmit: ({ ids, codes }: BulkSubmitRelease) => {
+        return axiosInstance.post('/releases/bulk-submit', {
+            ids,
+            codes,
+        });
     },
 };

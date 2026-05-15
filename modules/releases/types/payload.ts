@@ -28,3 +28,8 @@ export interface ExportTemplateCi extends CommonFunction {
     ids: string[];
     dspCodeCi: string[];
 }
+
+export interface BulkSubmitRelease extends CommonFunction {
+    ids: string[];
+    codes: string[];
+}

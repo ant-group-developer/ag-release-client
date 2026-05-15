@@ -807,6 +807,8 @@
         "takeDownConfirmTitle": "Take down release?",
         "takeDownConfirmContent": "Are you sure you want to take down the release <b>{title}</b> ?",
         "exportCiTemplate": "Export CI template",
+        "bulkSubmit": "Bulk Submit",
+        "bulkSubmitConfirm": "Are you sure you want to submit {count} selected releases?",
         "audioLanguage": "Audio language",
         "metadataLanguageCountry": "Metadata language country",
         "metadataLanguage": "Metadata language",

@@ -803,6 +803,8 @@
         "takeDownConfirmTitle": "Gỡ phát hành?",
         "takeDownConfirmContent": "Bạn có chắc chắn muốn gỡ phát hành <b>{title}</b> không?",
         "exportCiTemplate": "Xuất mẫu CI",
+        "bulkSubmit": "Gửi hàng loạt",
+        "bulkSubmitConfirm": "Bạn có chắc chắn muốn gửi {count} phát hành đã chọn không?",
         "audioLanguage": "Ngôn ngữ âm thanh",
         "metadataLanguageCountry": "Ngôn ngữ metadata quốc gia",
         "metadataLanguage": "Ngôn ngữ metadata",

@@ -4,21 +4,22 @@ import AppModal from '@/components/ui/modal/normal-modal';
 import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import useModalStore from '@/hooks/use-modal';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
-import { useExportTemplateCi } from '@/modules/releases/hooks/export-template-ci';
+import { useBulkSubmitRelease } from '@/modules/releases/hooks/use-bulk-submit-release';
 import { Button, Form, Select } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 
-interface ExportTemplateModalProps {
+interface BulkSubmitModalProps {
     onFinished?: () => void;
 }
 
-const ExportTemplateModal = ({ onFinished }: ExportTemplateModalProps) => {
+const BulkSubmitModal = ({ onFinished }: BulkSubmitModalProps) => {
     const messages = useTranslations();
     const [form] = Form.useForm();
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore<string[]>((state) => state.dataEdit);
-    const { exportTemplateCi, isPending: isExporting } = useExportTemplateCi();
+    const { bulkSubmitRelease, isPending: isSubmitting } =
+        useBulkSubmitRelease();
 
     const { dspData, isFetching: isFetchingDsp } = useGetListDsp({
         pageSize: PAGE_SIZE_EXTRA_LARGE,
@@ -45,18 +46,22 @@ const ExportTemplateModal = ({ onFinished }: ExportTemplateModalProps) => {
     const onFinish = (values: { dspIds: string[] }) => {
         if (!dataEdit || dataEdit.length === 0) return;
 
-        exportTemplateCi({
-            ids: dataEdit,
-            dspCodeCi: values.dspIds,
+        bulkSubmitRelease({
+            payload: {
+                ids: dataEdit,
+                codes: values.dspIds,
+            },
+            onSuccess: () => {
+                closeModal();
+                onFinished?.();
+            },
         });
-        closeModal();
-        onFinished?.();
     };
 
     return (
         <AppModal
             open
-            title={messages('release.exportCiTemplate')}
+            title={messages('release.bulkSubmit')}
             onCancel={closeModal}
             footer={[
                 <Button key="cancel" onClick={closeModal}>
@@ -65,7 +70,7 @@ const ExportTemplateModal = ({ onFinished }: ExportTemplateModalProps) => {
                 <Button
                     key="submit"
                     type="primary"
-                    loading={isExporting}
+                    loading={isSubmitting}
                     onClick={() => form.submit()}
                 >
                     {messages('common.submit')}
@@ -96,4 +101,4 @@ const ExportTemplateModal = ({ onFinished }: ExportTemplateModalProps) => {
     );
 };
 
-export default ExportTemplateModal;
+export default BulkSubmitModal;
