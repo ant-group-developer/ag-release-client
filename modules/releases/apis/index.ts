@@ -1,6 +1,7 @@
 import axiosInstance from '@/api/axios-auth';
 import { CreateBucketFile } from '@/modules/upload/types/data';
 import { DetailResponse, PaginationResponse } from '@/types/api';
+import { Key } from 'react';
 import {
     ReleasesData,
     ReleasesDataFilter,
@@ -8,6 +9,7 @@ import {
     ReleaseValidate,
 } from '../types';
 import {
+    BulkSubmitRelease,
     CreateReleaseDraftPayload,
     ExportTemplateCi,
     UpdateReleaseDraftPayload,
@@ -171,5 +173,16 @@ export const releasesApi = {
         return axiosInstance.post<DetailResponse<ReleasesData>>(
             `/releases/${id}/takedown`
         );
+    },
+
+    bulkSubmit: ({ ids, codes }: BulkSubmitRelease) => {
+        return axiosInstance.post('/releases/bulk-submit', {
+            ids,
+            codes,
+        });
+    },
+
+    bulkDeleteReleaseDraft: (ids: Key[]) => {
+        return axiosInstance.post('/releases/draft', { ids });
     },
 };
