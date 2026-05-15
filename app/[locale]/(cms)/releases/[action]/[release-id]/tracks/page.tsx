@@ -10,6 +10,7 @@ import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import DropUploadTracks from '@/modules/releases/components/drop-track-upload';
+import AudioPlayer from '@/modules/releases/components/release-detail/release-tracks/audio-player';
 import AddNewTrackModal from '@/modules/releases/components/release-detail/release-tracks/modal/add-new-track';
 import BulkUpdateTracksModal from '@/modules/releases/components/release-detail/release-tracks/modal/bulk-update-tracks';
 import TrackDetailModal from '@/modules/releases/components/release-detail/release-tracks/modal/track-detail';
@@ -232,6 +233,8 @@ export default function Tracks() {
                         onOk={() => handleRemoveTrackArtist()}
                     />
                 )}
+
+                <AudioPlayer />
             </div>
         </ConfigProvider>
     );

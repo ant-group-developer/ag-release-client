@@ -4,6 +4,7 @@ import { FALLBACK_IMAGE } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
 import { Link } from '@/i18n/routing';
+import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { getReleaseDetailTabRoute } from '@/modules/releases/helpers/link';
 import { ReleasesData } from '@/modules/releases/types';
@@ -22,8 +23,8 @@ export default function CardRelease({ data, ...props }: Props) {
     // const router = useRouter();
 
     const imageFileId =
-        data?.coverArtThumbnails?.['300x300'] ??
-        data?.coverArtThumbnails?.original;
+        data?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.S300] ??
+        data?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.ORIGINAL];
 
     const { linkReadFile, isFetching } = useGetLinkReadFile(
         imageFileId as string

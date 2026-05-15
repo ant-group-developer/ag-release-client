@@ -25,7 +25,7 @@ const ReleaseLogTableFilter = ({ dataFilter, onChangeFilter }: Props) => {
         <Space className="font-normal">
             <AppSearch
                 placeholder={messages('common.search')}
-                onSearch={(value) => onChangeFilter({ keyword: value })}
+                onChange={(e) => onChangeFilter({ keyword: e.target.value })}
                 defaultValue={dataFilter.keyword}
                 allowClear
                 style={{ width: 200 }}

@@ -1,10 +1,11 @@
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
+import PopoverTags from '@/components/ui/tag/popover-tags';
 import { SIZE_ICON } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
-import { formattedDate, getIndex } from '@/helpers/common';
+import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import { OnChangeFilter } from '@/hooks/use-filter';
 import { ProColumns } from '@ant-design/pro-components';
-import { Button, Modal, Space, Tag, Tooltip, Typography } from 'antd';
+import { Button, Modal, Tag, Tooltip, Typography } from 'antd';
 import { X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import {
@@ -73,17 +74,29 @@ export default function DistributionJobsTable({ dataFilter, ...props }: Props) {
         },
         {
             title: messages('distributionJobs.columns.upc'),
-            dataIndex: 'upc',
-            key: 'upc',
+            dataIndex: 'job.upc',
+            key: 'job.upc',
             width: 150,
             fixed: 'left',
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'job.upc'
+            ),
             render: (_, record) => renderText(record.upc, true),
         },
         {
             title: messages('distributionJobs.columns.type'),
-            dataIndex: 'type',
-            key: 'type',
+            dataIndex: 'job.type',
+            key: 'job.type',
             width: 180,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'job.type'
+            ),
             render: (_, record) =>
                 record.type ? (
                     <Tag color={getDistributionJobTypeColor(record.type)}>
@@ -109,19 +122,24 @@ export default function DistributionJobsTable({ dataFilter, ...props }: Props) {
                 if (!record?.dspCiCodes?.length) return '-';
 
                 return (
-                    <Space wrap size={[4, 4]}>
-                        {record.dspCiCodes.map((code) => (
-                            <Tag key={code}>{code}</Tag>
-                        ))}
-                    </Space>
+                    <PopoverTags
+                        tags={record?.dspCiCodes || []}
+                        maxVisibleTags={2}
+                    />
                 );
             },
         },
         {
             title: messages('distributionJobs.columns.status'),
-            dataIndex: 'status',
-            key: 'status',
+            dataIndex: 'job.status',
+            key: 'job.status',
             width: 100,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'job.status'
+            ),
             render: (_, record) =>
                 record.status ? (
                     <Tag color={getDistributionJobStatusColor(record.status)}>

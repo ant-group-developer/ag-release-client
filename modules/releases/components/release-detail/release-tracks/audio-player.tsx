@@ -12,6 +12,7 @@ export default function AudioPlayer() {
         pendingAutoPlay,
         setPendingSeekTime,
         setPendingAutoPlay,
+        onStop,
     } = usePlaySongStore();
     const playerRef = useRef<ReactPlayer>(null);
 
@@ -118,7 +119,11 @@ export default function AudioPlayer() {
 
     useEffect(() => {
         setMounted(true);
-    }, []);
+
+        return () => {
+            onStop(false);
+        };
+    }, [onStop]);
 
     if (!mounted) return null;
 
