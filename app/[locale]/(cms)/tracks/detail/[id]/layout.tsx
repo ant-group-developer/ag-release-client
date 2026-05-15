@@ -8,6 +8,7 @@ import { APP_ROUTES } from '@/enums/routes';
 import { getTrackDetailRoute } from '@/modules/tracks/helpers/link';
 import { Link } from '@/i18n/routing';
 import AppError from '@/modules/auth/components/error';
+import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { TRACK_TABS } from '@/modules/tracks/enums';
 import { useGetDetailTrack } from '@/modules/tracks/hooks/use-get-detail-tracks';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
@@ -36,7 +37,7 @@ export default function TrackDetail({ children }: PropsWithChildren) {
         trackId as string
     );
     const { linkReadFile, isFetching: imageFetching } = useGetLinkReadFile(
-        trackData?.release?.coverArtThumbnails?.['160x160'] as string
+        trackData?.release?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.S160] as string
     );
 
     // const

@@ -22,6 +22,7 @@ import {
     RELEASE_ROUTE_ACTION,
     TYPE_MODAL_RELEASE,
 } from '@/modules/releases/enums';
+import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import {
     convertTiffToPreviewUrl,
     isTiffContent,
@@ -88,7 +89,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     // apis
     const { updateReleaseDraft, isPending: isUpdatingRelease } =
         useUpdateReleaseDraft();
-    const coverArtFileId = formValues?.coverArtThumbnails?.original ?? '';
+    const coverArtFileId = formValues?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.ORIGINAL] ?? '';
     const { linkReadFile, isFetching: isCoverArtLoading } =
         useGetLinkReadFile(coverArtFileId);
     const { releaseData } = useGetDetailRelease(formValues?.id as string);
@@ -356,12 +357,12 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                 setIsConfirmOpen(false);
                 setFormValues({
                     coverArtThumbnails: {
-                        '75x75': null,
-                        '100x100': null,
-                        '160x160': null,
-                        '300x300': null,
-                        '900x900': null,
-                        original: null,
+                        [RELEASE_COVER_ART_SIZE.S75]: null,
+                        [RELEASE_COVER_ART_SIZE.S100]: null,
+                        [RELEASE_COVER_ART_SIZE.S160]: null,
+                        [RELEASE_COVER_ART_SIZE.S300]: null,
+                        [RELEASE_COVER_ART_SIZE.S900]: null,
+                        [RELEASE_COVER_ART_SIZE.ORIGINAL]: null,
                     },
                 });
                 form.setFieldsValue({
@@ -461,7 +462,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
 
     useEffect(() => {
         const currentThumbnail = form.getFieldValue('thumbnail');
-        if (!formValues.coverArtThumbnails?.['160x160']) {
+        if (!formValues.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.S160]) {
             if (currentThumbnail?.fileList?.length) {
                 return;
             }
@@ -477,7 +478,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                 ? {
                       fileList: [
                           {
-                              uid: formValues.coverArtThumbnails['160x160'],
+                              uid: formValues.coverArtThumbnails[RELEASE_COVER_ART_SIZE.S160],
                               url: coverArtPreviewUrl,
                               name: formValues.title,
                           },

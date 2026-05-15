@@ -5,6 +5,7 @@ import { FALLBACK_IMAGE } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
+import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { ReleasesData } from '@/modules/releases/types';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { ColumnType } from 'antd/es/table';
@@ -19,7 +20,7 @@ export default function DetailDistributionModal({ ...props }: Props) {
         return state.dataEdit;
     });
     const { linkReadFile } = useGetLinkReadFile(
-        dataEdit?.coverArtThumbnails?.['300x300'] as string
+        dataEdit?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.S300] as string
     );
 
     const closeModal = useModalStore((state) => state.closeModal);

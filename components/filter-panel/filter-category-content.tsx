@@ -1,5 +1,7 @@
 'use client';
 
+import { DATE_FORMAT } from '@/enums/common';
+import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import CheckboxFilterContent from './contents/checkbox-filter-content';
 import DateRangeFilterContent from './contents/date-range-filter-content';
@@ -58,8 +60,16 @@ export default function FilterCategoryContent({
     ) => {
         const [startKey, endKey] = config.filterKey as [string, string];
         onChangeFilter({
-            [startKey]: startDate || undefined,
-            [endKey]: endDate || undefined,
+            [startKey]: startDate
+                ? dayjs(startDate)
+                      .startOf('day')
+                      .format(DATE_FORMAT.YEAR_MONTH_DAY_TIME)
+                : undefined,
+            [endKey]: endDate
+                ? dayjs(endDate)
+                      .endOf('day')
+                      .format(DATE_FORMAT.YEAR_MONTH_DAY_TIME)
+                : undefined,
         });
     };
 

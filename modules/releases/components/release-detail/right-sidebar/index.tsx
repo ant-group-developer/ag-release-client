@@ -21,6 +21,7 @@ import {
     AlertTriangle,
     ChevronLeft,
     ChevronRight,
+    Loader2,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
@@ -33,7 +34,7 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
     const isCreateReleasePage = params['action'] == RELEASE_ROUTE_ACTION.CREATE;
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
-    const { releaseValidateData } = useReleaseValidate(
+    const { releaseValidateData, isFetching } = useReleaseValidate(
         formValues?.id as string
     );
 
@@ -149,13 +150,18 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                         <>
                             <h3
                                 className={cn(
-                                    'flex-1 text-nowrap font-semibold text-red-500 transition-all duration-200',
+                                    'flex flex-1 items-center gap-2 overflow-hidden text-nowrap font-semibold text-red-500 transition-all duration-200',
                                     isSidebarOpen
                                         ? 'w-auto opacity-100'
-                                        : 'w-0 overflow-hidden opacity-0'
+                                        : 'w-0 opacity-0'
                                 )}
                             >
-                                {`${messages('validation.error')} (${errorCount})`}
+                                <span className="truncate">
+                                    {`${messages('validation.error')} (${errorCount})`}
+                                </span>
+                                {isFetching && (
+                                    <Loader2 className="h-4 w-4 animate-spin shrink-0" />
+                                )}
                             </h3>
                             {
                                 <IconButton
@@ -184,8 +190,15 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                         {!isSidebarOpen && (
                             <div>
                                 <h4 className="mb-2 flex items-center gap-2 text-red-500">
-                                    <AlertTriangle size={SIZE_ICON} />(
-                                    {errorCount})
+                                    {isFetching ? (
+                                        <Loader2
+                                            size={SIZE_ICON}
+                                            className="animate-spin"
+                                        />
+                                    ) : (
+                                        <AlertTriangle size={SIZE_ICON} />
+                                    )}
+                                    ({errorCount})
                                 </h4>
                             </div>
                         )}

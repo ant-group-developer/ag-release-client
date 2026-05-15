@@ -7,7 +7,6 @@ import usePermissionStore from '@/hooks/use-permission-store';
 import Forbidden from '@/modules/auth/components/forbidden';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { useCheckPermission } from '@/modules/auth/hooks/use-permission';
-import AudioPlayer from '@/modules/releases/components/release-detail/release-tracks/audio-player';
 import { Layout } from 'antd';
 import { useSession } from 'next-auth/react';
 import { ReactNode, useEffect } from 'react';
@@ -109,7 +108,7 @@ export default function CMSLayout({ children }: Props) {
                                 className="bg-white"
                                 loading={isLoading || !!sessionData?.error}
                             />
-                            <AudioPlayer />
+                            {/* <AudioPlayer /> */}
                         </div>
                     </Layout>
                 </Layout>

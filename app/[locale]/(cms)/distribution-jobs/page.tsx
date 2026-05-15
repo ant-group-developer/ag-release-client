@@ -29,7 +29,7 @@ export default function DistributionJobsPage() {
     const { token } = theme.useToken();
     const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
     const [selectedRows, setSelectedRows] = useState<DistributionJobData[]>([]);
-    const [openConfirmCompleted, setOpenConfirmCompleted] = useState(false);
+    // const [openConfirmCompleted, setOpenConfirmCompleted] = useState(false);
 
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
         useFilter<DistributionJobFilter>({
