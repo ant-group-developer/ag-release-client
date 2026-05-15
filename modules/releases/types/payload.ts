@@ -33,3 +33,6 @@ export interface BulkSubmitRelease extends CommonFunction {
     ids: string[];
     codes: string[];
 }
+export interface BulkDeleteRelease extends CommonFunction {
+    ids: string[];
+}

@@ -37,11 +37,12 @@ const AppConfirm = ({
                 danger: typeDelete,
                 ghost: typeDelete,
                 disabled: loading,
+                ...props.okButtonProps,
             }}
             cancelButtonProps={{
                 type: 'default',
-                // ghost: true,
                 disabled: loading,
+                ...props.cancelButtonProps,
             }}
         >
             {paragraph}

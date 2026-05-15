@@ -1,6 +1,7 @@
 import axiosInstance from '@/api/axios-auth';
 import { CreateBucketFile } from '@/modules/upload/types/data';
 import { DetailResponse, PaginationResponse } from '@/types/api';
+import { Key } from 'react';
 import {
     ReleasesData,
     ReleasesDataFilter,
@@ -179,5 +180,9 @@ export const releasesApi = {
             ids,
             codes,
         });
+    },
+
+    bulkDeleteReleaseDraft: (ids: Key[]) => {
+        return axiosInstance.post('/releases/draft', { ids });
     },
 };

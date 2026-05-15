@@ -15,13 +15,15 @@ import ReleasesTable from '@/modules/releases/components/table';
 
 import {
     RELEASES_COLUMNS_DISPLAY,
+    RELEASES_STATUS,
     TYPE_MODAL_RELEASE,
 } from '@/modules/releases/enums';
+import { useBulkDeleteRelease } from '@/modules/releases/hooks/use-bulk-delete-release';
 import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
 import { DeleteVariables } from '@/types/api';
-import { SendOutlined } from '@ant-design/icons';
+import { DeleteOutlined, SendOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { Button, Space, TableProps, theme } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -61,6 +63,8 @@ export default function Releases({}: Props) {
         dataUpdatedAt,
     } = useGetListReleases(dataFilter);
     const { deleteRelease } = useDeleteRelease();
+    const { bulkDeleteRelease, isPending: isBulkDeleteLoading } =
+        useBulkDeleteRelease();
     // const { isPending: isExportTemplateCiLoading } = useExportTemplateCi();
 
     // func
@@ -77,6 +81,25 @@ export default function Releases({}: Props) {
         };
         deleteRelease(variables);
     };
+
+    const handleBulkDelete = (selectedRowKeys: Key[]) => {
+        const drafts = releasesData?.items?.filter(
+            (item) =>
+                selectedRowKeys.includes(item.id) &&
+                item.status === RELEASES_STATUS.DRAFT
+        );
+
+        if (drafts.length === 0) {
+            openModal(TYPE_MODAL_RELEASE.BULK_DELETE, []);
+            return;
+        }
+
+        openModal(
+            TYPE_MODAL_RELEASE.BULK_DELETE,
+            drafts.map((d) => d.id)
+        );
+    };
+
     const onChangeSort = (pagination: any, filters: any, sort: any) => {
         const orderBy = setSortOrder(sort, ORDER.ASC);
         const fieldOrder = sort.field;
@@ -96,7 +119,7 @@ export default function Releases({}: Props) {
         },
         getCheckboxProps: (record: ReleasesData) => {
             return {
-                disabled: !isAdmin,
+                disabled: !isAdmin || record.status !== RELEASES_STATUS.DRAFT,
             };
         },
     };
@@ -164,6 +187,16 @@ export default function Releases({}: Props) {
                                 >
                                     {messages('release.bulkSubmit')}
                                 </Button>
+                                <Button
+                                    danger
+                                    type="primary"
+                                    icon={<DeleteOutlined />}
+                                    onClick={() =>
+                                        handleBulkDelete(selectedRowKeys)
+                                    }
+                                >
+                                    {messages('release.bulkDelete')}
+                                </Button>
                             </Space>
                         );
                     }}
@@ -203,6 +236,40 @@ export default function Releases({}: Props) {
 
                 {typeModal === TYPE_MODAL_RELEASE.BULK_SUBMIT && (
                     <BulkSubmitModal onFinished={() => setSelectedRows([])} />
+                )}
+
+                {typeModal === TYPE_MODAL_RELEASE.BULK_DELETE && (
+                    <AppConfirm
+                        open
+                        onOk={() => {
+                            if ((dataEdit as Key[])?.length === 0) {
+                                closeModal();
+                                return;
+                            }
+                            bulkDeleteRelease({
+                                payload: {
+                                    ids: dataEdit as string[],
+                                },
+                                onSuccess: () => {
+                                    closeModal();
+                                    setSelectedRows([]);
+                                },
+                            });
+                        }}
+                        onCancel={closeModal}
+                        modalTitle={messages('release.bulkDelete')}
+                        loading={isBulkDeleteLoading}
+                        paragraph={
+                            (dataEdit as Key[])?.length === 0
+                                ? messages('release.onlyDraftCanBeDeleted')
+                                : messages('release.bulkDeleteConfirm', {
+                                      count: (dataEdit as string[])?.length,
+                                  })
+                        }
+                        okButtonProps={{
+                            disabled: (dataEdit as Key[])?.length === 0,
+                        }}
+                    />
                 )}
             </PageContainer>
         </AppPageWrapper>
