@@ -1,9 +1,10 @@
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
-import PopoverTags from '@/components/ui/tag/popover-tags';
 import { SIZE_ICON } from '@/constants/common';
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import { OnChangeFilter } from '@/hooks/use-filter';
+import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { ProColumns } from '@ant-design/pro-components';
 import { Button, Modal, Tag, Tooltip, Typography } from 'antd';
 import { X } from 'lucide-react';
@@ -18,6 +19,7 @@ import {
     DistributionJobData,
     DistributionJobFilter,
 } from '../../types';
+import PopoverDspTags from '../popover-dsp-tags';
 
 type Props = Omit<AppProTableProps<DistributionJobData>, 'columns'> & {
     dataFilter: DistributionJobFilter;
@@ -31,6 +33,12 @@ type Props = Omit<AppProTableProps<DistributionJobData>, 'columns'> & {
 export default function DistributionJobsTable({ dataFilter, ...props }: Props) {
     const messages = useTranslations();
     const { updateDistributionJob } = useUpdateDistributionJob();
+    const { dspData } = useGetListDsp({
+        page: 1,
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
+    });
+
+    const dspList = dspData?.items;
 
     const renderText = (value?: string | null, copyable = false) => {
         if (!value) return '-';
@@ -90,7 +98,7 @@ export default function DistributionJobsTable({ dataFilter, ...props }: Props) {
             title: messages('distributionJobs.columns.type'),
             dataIndex: 'job.type',
             key: 'job.type',
-            width: 180,
+            width: 160,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -114,17 +122,18 @@ export default function DistributionJobsTable({ dataFilter, ...props }: Props) {
             render: (_, record) => renderText(record.stepLabel),
         },
         {
-            title: messages('distributionJobs.columns.dspCiCodes'),
+            title: 'DSPs',
             dataIndex: 'dspCiCodes',
             key: 'dspCiCodes',
-            width: 160,
+            width: 200,
             render: (_, record) => {
                 if (!record?.dspCiCodes?.length) return '-';
 
                 return (
-                    <PopoverTags
+                    <PopoverDspTags
                         tags={record?.dspCiCodes || []}
-                        maxVisibleTags={2}
+                        dspList={dspList}
+                        maxVisibleTags={1}
                     />
                 );
             },
@@ -153,7 +162,7 @@ export default function DistributionJobsTable({ dataFilter, ...props }: Props) {
             title: messages('distributionJobs.columns.deliveryEmail'),
             dataIndex: 'deliveryEmail',
             key: 'deliveryEmail',
-            width: 220,
+            width: 200,
             render: (_, record) => renderText(record?.deliveryEmail, true),
         },
         {
