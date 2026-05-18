@@ -183,6 +183,8 @@ export const releasesApi = {
     },
 
     bulkDeleteReleaseDraft: (ids: Key[]) => {
-        return axiosInstance.post('/releases/draft', { ids });
+        return axiosInstance.delete('/releases/draft', {
+            params: { ids: ids.join(',') },
+        });
     },
 };
