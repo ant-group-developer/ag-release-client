@@ -6,92 +6,29 @@ import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
+import DistributionJobDetailModal from '@/modules/distribution-jobs/components/detail-modal';
+import DistributionJobsGroupedTable from '@/modules/distribution-jobs/components/grouped-table';
 import DistributionJobsHeader from '@/modules/distribution-jobs/components/header';
-import DistributionJobsTable from '@/modules/distribution-jobs/components/table';
-import DistributionJobsTableAlertAction from '@/modules/distribution-jobs/components/table-alert-action';
-import { useAutoSendEmailDistributionJobs } from '@/modules/distribution-jobs/hooks/use-auto-send-email';
-import { useConfirmCompletedDistributionJobs } from '@/modules/distribution-jobs/hooks/use-confirm-completed';
-import { useDownloadExcelDistributionJobs } from '@/modules/distribution-jobs/hooks/use-download-excel';
-import { useGetListDistributionJobs } from '@/modules/distribution-jobs/hooks/use-get-list';
-import {
-    DISTRIBUTION_JOB_STATUS,
-    DISTRIBUTION_JOB_TYPE,
-    DistributionJobData,
-    DistributionJobFilter,
-} from '@/modules/distribution-jobs/types';
+import { useGetListDistributionJobsGrouped } from '@/modules/distribution-jobs/hooks/use-get-list-grouped';
+import { DistributionJobFilter } from '@/modules/distribution-jobs/types';
 import { PageContainer } from '@ant-design/pro-components';
 import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
-import { Key, useState } from 'react';
 
 export default function DistributionJobsPage() {
     const messages = useTranslations();
     const { token } = theme.useToken();
-    const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
-    const [selectedRows, setSelectedRows] = useState<DistributionJobData[]>([]);
-    // const [openConfirmCompleted, setOpenConfirmCompleted] = useState(false);
 
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
         useFilter<DistributionJobFilter>({
             page: 1,
             pageSize: PAGE_SIZE,
             orderBy: ORDER.DESC,
-            fieldOrder: 'job.createdAt',
+            // fieldOrder: 'job.createdAt',
         });
 
-    const { distributionJobsData, isFetching, refetch } =
-        useGetListDistributionJobs(dataFilter);
-
-    const { autoSendEmail, isPending: isAutoSendingEmail } =
-        useAutoSendEmailDistributionJobs();
-    const { downloadExcel, isPending: isDownloadingExcel } =
-        useDownloadExcelDistributionJobs();
-    const { confirmCompleted, isPending: isConfirmingCompleted } =
-        useConfirmCompletedDistributionJobs();
-
-    const onAutoSendEmail = () => {
-        const filteredIds = selectedRows
-            .filter((row) => row.type === DISTRIBUTION_JOB_TYPE.EMAIL_STATE51)
-            .map((row) => row.id);
-
-        if (filteredIds.length === 0) return;
-
-        autoSendEmail({
-            ids: filteredIds,
-            onSuccess: () => {
-                setSelectedRowKeys([]);
-                setSelectedRows([]);
-            },
-        });
-    };
-
-    const onDownloadExcel = () => {
-        const filteredIds = selectedRows
-            .filter((row) => row.type === DISTRIBUTION_JOB_TYPE.ADMIN_EXPORT)
-            .map((row) => row.id);
-
-        if (filteredIds.length === 0) return;
-
-        downloadExcel({
-            ids: filteredIds,
-            onSuccess: () => {
-                setSelectedRowKeys([]);
-                setSelectedRows([]);
-            },
-        });
-    };
-
-    const onConfirmCompleted = () => {
-        confirmCompleted({
-            ids: selectedRowKeys,
-            exportIdFromCi: '',
-            onSuccess: () => {
-                setSelectedRowKeys([]);
-                setSelectedRows([]);
-                // setOpenConfirmCompleted(false);
-            },
-        });
-    };
+    const { distributionJobsGroupedData, isFetching, refetch } =
+        useGetListDistributionJobsGrouped(dataFilter);
 
     const onChangeSort = (pagination: any, filters: any, sort: any) => {
         const orderBy = setSortOrder(sort, ORDER.ASC);
@@ -105,23 +42,10 @@ export default function DistributionJobsPage() {
         );
     };
 
-    const rowSelection = {
-        selectedRowKeys,
-        onChange: (keys: Key[], rows: DistributionJobData[]) => {
-            setSelectedRowKeys(keys);
-            setSelectedRows(rows);
-        },
-        getCheckboxProps: (record: DistributionJobData) => ({
-            disabled:
-                record.status === DISTRIBUTION_JOB_STATUS.COMPLETED ||
-                record.status === DISTRIBUTION_JOB_STATUS.SKIPPED,
-        }),
-    };
-
     return (
         <AppPageWrapper>
             <PageContainer title={messages('distributionJobs.label')}>
-                <DistributionJobsTable
+                <DistributionJobsGroupedTable
                     headerTitle={
                         <DistributionJobsHeader
                             dataFilter={dataFilter}
@@ -130,25 +54,15 @@ export default function DistributionJobsPage() {
                         />
                     }
                     sticky
-                    dataSource={distributionJobsData?.items}
+                    dataSource={distributionJobsGroupedData?.items}
                     loading={isFetching}
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: distributionJobsData?.metadata?.page ?? 1,
+                        current:
+                            distributionJobsGroupedData?.metadata?.page ?? 1,
                     }}
-                    rowSelection={rowSelection}
-                    tableAlertOptionRender={() => (
-                        <DistributionJobsTableAlertAction
-                            isAutoSendingEmail={isAutoSendingEmail}
-                            onAutoSendEmail={onAutoSendEmail}
-                            isDownloadingExcel={isDownloadingExcel}
-                            onDownloadExcel={onDownloadExcel}
-                            isConfirmingCompleted={isConfirmingCompleted}
-                            onConfirmCompleted={onConfirmCompleted}
-                        />
-                    )}
                     options={{
                         reload: () => refetch(),
                         setting: false,
@@ -157,26 +71,19 @@ export default function DistributionJobsPage() {
                     onChange={onChangeSort}
                 />
 
-                {/* <ConfirmCompletedModal
-                    open={openConfirmCompleted}
-                    onCancel={() => setOpenConfirmCompleted(false)}
-                    onConfirm={onConfirmCompleted}
-                    loading={isConfirmingCompleted}
-                /> */}
-
                 <AppPagination
                     className="rounded-b-md"
                     style={{ backgroundColor: token.colorBgContainer }}
                     align="end"
                     current={
-                        distributionJobsData?.metadata?.page ??
+                        distributionJobsGroupedData?.metadata?.page ??
                         dataFilter.page ??
                         1
                     }
                     pageSize={dataFilter.pageSize}
                     total={
-                        distributionJobsData?.metadata?.totalItems ??
-                        distributionJobsData?.items?.length ??
+                        distributionJobsGroupedData?.metadata?.totalItems ??
+                        distributionJobsGroupedData?.items?.length ??
                         0
                     }
                     onChange={onChangePage}
@@ -186,6 +93,9 @@ export default function DistributionJobsPage() {
                     pageSizeOptions={PAGE_SIZE_OPTIONS}
                 />
             </PageContainer>
+
+            <DistributionJobDetailModal />
         </AppPageWrapper>
     );
 }
+

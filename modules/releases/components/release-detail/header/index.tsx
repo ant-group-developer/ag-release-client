@@ -18,11 +18,11 @@ import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribute';
 import { useReleaseDistribute } from '@/modules/distribution/hooks/use-release-distribute';
 import { DistributeRelease } from '@/modules/distribution/types/payload';
+import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import {
     RELEASE_ROUTE_ACTION,
     TYPE_MODAL_RELEASE,
 } from '@/modules/releases/enums';
-import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import {
     convertTiffToPreviewUrl,
     isTiffContent,
@@ -89,7 +89,8 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     // apis
     const { updateReleaseDraft, isPending: isUpdatingRelease } =
         useUpdateReleaseDraft();
-    const coverArtFileId = formValues?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.ORIGINAL] ?? '';
+    const coverArtFileId =
+        formValues?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.ORIGINAL] ?? '';
     const { linkReadFile, isFetching: isCoverArtLoading } =
         useGetLinkReadFile(coverArtFileId);
     const { releaseData } = useGetDetailRelease(formValues?.id as string);
@@ -478,7 +479,9 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                 ? {
                       fileList: [
                           {
-                              uid: formValues.coverArtThumbnails[RELEASE_COVER_ART_SIZE.S160],
+                              uid: formValues.coverArtThumbnails[
+                                  RELEASE_COVER_ART_SIZE.S160
+                              ],
                               url: coverArtPreviewUrl,
                               name: formValues.title,
                           },

@@ -1,6 +1,7 @@
-import ActionButton from '@/components/ui/button/action-button';
+import IconButton from '@/components/ui/button/icon-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { SIZE_ICON } from '@/constants/common';
 import {
     convertSecondsToTime,
     formatFileSize,
@@ -17,6 +18,7 @@ import {
 } from '@/modules/backup-dabatase/types';
 import { Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
+import { Download } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { STATUS_BACKUP } from '../../enums';
 type Props = Omit<AppTableProps<BackupDatabaseLogData>, 'columns'> & {
@@ -148,20 +150,17 @@ export const BackupDatabaseLogTable = ({ dataFilter, ...props }: Props) => {
                     return;
 
                 return (
-                    <ActionButton
-                        showDownload={
-                            record?.status === STATUS_BACKUP.SUCCESS &&
-                            !!record?.urlR2
-                        }
-                        onShowDownload={async () => {
-                            const linkDownload = record?.urlR2;
+                    <IconButton
+                        onClick={() =>
                             window.open(
-                                linkDownload,
+                                record?.urlR2,
                                 '_blank',
                                 'noopener,noreferrer'
-                            );
-                        }}
-                    />
+                            )
+                        }
+                    >
+                        <Download size={SIZE_ICON} />
+                    </IconButton>
                 );
             },
         },

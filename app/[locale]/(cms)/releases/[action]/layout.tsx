@@ -2,9 +2,8 @@
 import DetailSkeleton from '@/components/ui/skeleton/detail-skeleton';
 import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
-import { APP_ROUTES } from '@/enums/routes';
+import { APP_ROUTES, PATH_PARAMS } from '@/enums/routes';
 import { cn } from '@/helpers/common';
-import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { usePermission } from '@/hooks/use-permission';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
@@ -16,12 +15,13 @@ import { useGetListReleaseDsp } from '@/modules/release-dsp/hooks/use-get-list-r
 import ReleaseDetailHeader from '@/modules/releases/components/release-detail/header';
 import RightSidebar from '@/modules/releases/components/release-detail/right-sidebar';
 import { RELEASE_ROUTE_ACTION, RELEASES_TABS } from '@/modules/releases/enums';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import {
     ReleaseFormStoreData,
     useReleaseFormStore,
 } from '@/modules/releases/hooks/release-form-store';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
-import { Breadcrumb, Tabs, TabsProps, theme } from 'antd';
+import { Breadcrumb, BreadcrumbProps, Tabs, TabsProps, theme } from 'antd';
 import { BookHeadphones, Box, Calendar, Eye, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname } from 'next/navigation';
@@ -56,16 +56,16 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const [isScrolled, setIsScrolled] = useState(false);
 
     // const
-    const releaseId = params['release-id'] ? `${params['release-id']}` : '';
+    const releaseId = params[PATH_PARAMS.RELEASE_ID] ? `${params[PATH_PARAMS.RELEASE_ID]}` : '';
     const isCreateReleasePage =
-        params['action'] === RELEASE_ROUTE_ACTION.CREATE;
+        params[PATH_PARAMS.ACTION] === RELEASE_ROUTE_ACTION.CREATE;
     const isDisableTab = releaseId == '';
 
     const canUpdate = hasPermission(PERMISSION.RELEASE.UPDATE);
     const isDetailPage = pathname.includes(`/${RELEASES_TABS.CORE_DETAIL}`);
     // const isTracksPage = pathname.includes(`/${RELEASES_TABS.TRACKS}`);
     const coreDetailTabsNavigate = isCreateReleasePage
-        ? '/releases/create'
+        ? APP_ROUTES.RELEASES_CREATE
         : getReleaseTabRoute(releaseId, RELEASES_TABS.CORE_DETAIL);
     const items: TabsProps['items'] = [
         {
@@ -195,7 +195,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
 
     // selective reset based on navigation transition and permissions
     useEffect(() => {
-        if (params['action'] === RELEASE_ROUTE_ACTION.DETAIL && releaseId) {
+        if (params[PATH_PARAMS.ACTION] === RELEASE_ROUTE_ACTION.DETAIL && releaseId) {
             // Force READ if user doesn't have update permission
             if (!canUpdate) {
                 setReleaseAction(RELEASE_DETAIL_ACTION.READ);
@@ -211,10 +211,10 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         }
 
         // Update store for next mount/change
-        setLastPathAction(params['action'] as string);
+        setLastPathAction(params[PATH_PARAMS.ACTION] as string);
         setLastReleaseId(releaseId);
     }, [
-        params['action'],
+        params[PATH_PARAMS.ACTION],
         releaseId,
         setReleaseAction,
         canUpdate,
@@ -234,10 +234,13 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     };
 
     const currentItem = items.find((item) => item.key === activeTab);
-    const breadcrumbItems = [
+    const breadcrumbItems: BreadcrumbProps['items'] = [
         {
-            title: messages('release.releases'),
-            href: APP_ROUTES.RELEASES,
+            title: (
+                <Link href={APP_ROUTES.RELEASES}>
+                    {messages('release.releases')}
+                </Link>
+            ),
         },
         {
             title: releaseData?.title || messages('common.create'),

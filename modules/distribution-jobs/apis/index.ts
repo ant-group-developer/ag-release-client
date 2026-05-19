@@ -1,6 +1,8 @@
 import axiosInstance from '@/api/axios-auth';
+import { PaginationResponse } from '@/types/api';
 import {
     DistributionJobFilter,
+    DistributionJobGroupedData,
     DistributionJobPaginationResponse,
     UpdateDistributionJobPayload,
 } from '../types';
@@ -12,6 +14,12 @@ export const distributionJobApis = {
             { params }
         );
     },
+    getGroupedList: (params: DistributionJobFilter) => {
+        return axiosInstance.get<
+            PaginationResponse<DistributionJobGroupedData>
+        >('/ci-distribution-jobs/grouped', { params });
+    },
+
     autoSendEmail: (ids: any[]) => {
         return axiosInstance.post('/ci-distribution-jobs/auto-send-email', {
             ids,

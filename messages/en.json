@@ -2075,19 +2075,23 @@
     },
     "distributionJobs": {
         "label": "Distribution jobs",
+        "detail": "Distribution job detail",
         "autoSendEmail": "Auto send email",
         "downloadExcel": "Download excel",
         "confirmCompleted": "Confirm completed",
         "columns": {
             "upc": "UPC",
+            "upcs": "UPCs",
             "type": "Type",
             "dspCiCodes": "DSP CI codes",
             "status": "Status",
             "deliveryEmail": "Delivery email",
+            "recipients": "Recipients",
             "deliveryEmailSubject": "Email subject",
             "sentAt": "Sent at",
             "expectedSendTime": "Expected send time",
-            "stepLabel": "Step"
+            "stepLabel": "Step",
+            "dateGroup": "Date group"
         },
         "statusOptions": {
             "pending": "Pending",
