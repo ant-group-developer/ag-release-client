@@ -1,11 +1,8 @@
 import AppSearch from '@/components/ui/input/search';
 import { OnChangeFilter, TOnSearch } from '@/hooks/use-filter';
-import { FileExcelOutlined, MailOutlined } from '@ant-design/icons';
-import { Button, Select, Space } from 'antd';
+import { Select, Space } from 'antd';
 import { useTranslations } from 'next-intl';
-import { Key } from 'react';
 import {
-    DISTRIBUTION_JOB_STATUS,
     DISTRIBUTION_JOB_TYPE,
     DistributionJobFilter,
     DistributionJobStatus,
@@ -43,7 +40,9 @@ export default function DistributionJobsHeader({
     }));
 
     const typeOptions = TYPE_OPTIONS.map((type) => ({
-        label: messages(`distributionJobs.typeOptions.${type.toUpperCase()}` as any),
+        label: messages(
+            `distributionJobs.typeOptions.${type.toUpperCase()}` as any
+        ),
         value: type,
     }));
 
@@ -70,7 +69,7 @@ export default function DistributionJobsHeader({
                 className="w-52"
             />
 
-            <Select
+            {/* <Select
                 options={statusOptions}
                 placeholder={messages('placeholder.filterBy', {
                     value: messages(
@@ -81,7 +80,7 @@ export default function DistributionJobsHeader({
                 defaultValue={dataFilter?.status}
                 allowClear
                 className="w-52"
-            />
+            /> */}
         </Space>
     );
 }

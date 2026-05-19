@@ -23,7 +23,7 @@ export type DistributionJobStatus =
 export interface DistributionJobData extends CommonAttribute {
     type: DISTRIBUTION_JOB_TYPE | string;
     upc: string;
-    dspCiCodes: string[];
+    dspCodes: string[];
     releaseSubmitId: string;
     stepId: string;
     releaseId: string;
@@ -41,6 +41,18 @@ export interface DistributionJobFilter extends CommonParams {
     releaseSubmitId?: string;
     stepId?: string;
     upc?: string;
+    upcs?: string;
+    dateGroup?: string;
+}
+
+export interface DistributionJobGroupedData {
+    type: DISTRIBUTION_JOB_TYPE;
+    deliveryEmail: string;
+    deliveryEmailSubject: string;
+    dateGroup: string;
+    sentAt: string;
+    data: DistributionJobData[];
+    upcs: string[];
 }
 
 export type DistributionJobPaginationResponse =

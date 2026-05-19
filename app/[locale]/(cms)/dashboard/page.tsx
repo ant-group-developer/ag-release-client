@@ -8,7 +8,6 @@ import DistributionRow from '@/modules/dashboard/components/distribution-row';
 import ListRelease from '@/modules/dashboard/components/list-release';
 import ListTop from '@/modules/dashboard/components/list-top';
 // import MapChart from '@/modules/dashboard/components/map-chart';
-import RecentIssuesCard from '@/modules/dashboard/components/recent-issues';
 import StatsOverview from '@/modules/dashboard/components/stats-overview';
 import NewUpdatesCard from '@/modules/dashboard/components/stats-overview/updated-news-card';
 import {
@@ -89,20 +88,20 @@ function Dashboard({}: Props) {
                         isOverviewLoading={isOverviewLoading}
                     />
 
-                    <ListRelease data={releasesData.items.slice(0, 7)} />
+                    <ListRelease data={releasesData.items.slice(0, 10)} />
 
                     <DistributionRow />
 
                     <Row gutter={16} align="stretch">
-                        <Col span={8}>
+                        <Col span={12}>
                             <ListTop />
                         </Col>
-                        <Col span={8}>
+                        <Col span={12}>
                             <NewUpdatesCard />
                         </Col>
-                        <Col span={8}>
+                        {/* <Col span={8}>
                             <RecentIssuesCard issuesData={countIssuesData} />
-                        </Col>
+                        </Col> */}
                     </Row>
                 </div>
 

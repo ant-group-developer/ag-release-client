@@ -80,10 +80,10 @@ export default function DistributionPieChart({
                     <PieChart>
                         <Pie
                             data={data}
-                            cx={isSmallDevice ? '50%' : '35%'}
+                            cx={'45%'}
                             cy="50%"
                             innerRadius={40}
-                            outerRadius={80}
+                            outerRadius={70}
                             stroke="none"
                             dataKey="value"
                             nameKey="type"

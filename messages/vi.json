@@ -2078,19 +2078,26 @@
     },
     "distributionJobs": {
         "label": "Công việc phân phối",
+        "detail": "Chi tiết công việc phân phối",
         "autoSendEmail": "Tự động gửi email",
         "downloadExcel": "Tải file excel",
         "confirmCompleted": "Xác nhận đã hoàn thành",
+        "error": {
+            "mustHaveAdminExport": "Phải có bản ghi thuộc loại Admin Export"
+        },
         "columns": {
             "upc": "UPC",
+            "upcs": "UPCs",
             "type": "Loại",
             "dspCiCodes": "Mã DSP CI",
             "status": "Trạng thái",
             "deliveryEmail": "Email nhận",
+            "recipients": "Người nhận",
             "deliveryEmailSubject": "Tiêu đề email",
             "sentAt": "Thời gian gửi",
             "expectedSendTime": "Dự kiến gửi",
-            "stepLabel": "Bước"
+            "stepLabel": "Bước",
+            "dateGroup": "Nhóm ngày"
         },
         "statusOptions": {
             "pending": "Đang chờ",
