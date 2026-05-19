@@ -2082,6 +2082,9 @@
         "autoSendEmail": "Tự động gửi email",
         "downloadExcel": "Tải file excel",
         "confirmCompleted": "Xác nhận đã hoàn thành",
+        "error": {
+            "mustHaveAdminExport": "Phải có bản ghi thuộc loại Admin Export"
+        },
         "columns": {
             "upc": "UPC",
             "upcs": "UPCs",

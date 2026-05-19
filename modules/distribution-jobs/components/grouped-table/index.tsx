@@ -190,7 +190,7 @@ export default function DistributionJobsGroupedTable({
                         onClick={() =>
                             openModal(
                                 TYPE_MODAL_DISTRIBUTION_JOB.DETAIL,
-                                record.data
+                                record
                             )
                         }
                     />

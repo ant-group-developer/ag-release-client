@@ -2079,6 +2079,9 @@
         "autoSendEmail": "Auto send email",
         "downloadExcel": "Download excel",
         "confirmCompleted": "Confirm completed",
+        "error": {
+            "mustHaveAdminExport": "There must be at least one record of type Admin Export"
+        },
         "columns": {
             "upc": "UPC",
             "upcs": "UPCs",

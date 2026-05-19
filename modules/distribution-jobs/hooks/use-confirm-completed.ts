@@ -16,6 +16,9 @@ export const useConfirmCompletedDistributionJobs = () => {
         queryClient.invalidateQueries({
             queryKey: distributionJobQueryKeys.getList(),
         });
+        queryClient.invalidateQueries({
+            queryKey: distributionJobQueryKeys.getListGrouped(),
+        });
         onSuccess?.(data?.data);
         handleSuccess(data?.data);
     };

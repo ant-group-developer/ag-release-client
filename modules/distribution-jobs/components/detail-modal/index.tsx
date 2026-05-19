@@ -1,4 +1,5 @@
 import AppModal from '@/components/ui/modal/normal-modal';
+import { showNotification } from '@/helpers/messages-helper';
 import useModalStore from '@/hooks/use-modal';
 import { Select, Space } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -11,14 +12,19 @@ import {
     DISTRIBUTION_JOB_STATUS,
     DISTRIBUTION_JOB_TYPE,
     DistributionJobData,
+    DistributionJobGroupedData,
 } from '../../types';
 import DistributionJobsTable from '../table';
 import DistributionJobsTableAlertAction from '../table-alert-action';
 
-export default function DistributionJobDetailModal() {
+interface Props {
+    groupedData?: DistributionJobGroupedData[];
+}
+
+export default function DistributionJobDetailModal({ groupedData }: Props) {
     const messages = useTranslations();
     const typeModal = useModalStore((state) => state.typeModal);
-    const dataEdit = useModalStore<DistributionJobData[]>(
+    const dataEdit = useModalStore<DistributionJobGroupedData>(
         (state) => state.dataEdit
     );
     const closeModal = useModalStore((state) => state.closeModal);
@@ -31,13 +37,27 @@ export default function DistributionJobDetailModal() {
     const [filterType, setFilterType] = useState<string | null>(null);
     const [filterStatus, setFilterStatus] = useState<string | null>(null);
 
+    const activeData = useMemo(() => {
+        if (!dataEdit) return [];
+        if (!groupedData) return dataEdit.data || [];
+
+        const currentGroup = groupedData.find(
+            (item) =>
+                item.dateGroup === dataEdit.dateGroup &&
+                item.type === dataEdit.type &&
+                item.deliveryEmailSubject === dataEdit.deliveryEmailSubject
+        );
+
+        return currentGroup ? currentGroup.data : dataEdit.data || [];
+    }, [dataEdit, groupedData]);
+
     const filteredData = useMemo(() => {
-        return dataEdit?.filter((item) => {
+        return activeData.filter((item) => {
             if (filterType && item.type !== filterType) return false;
             if (filterStatus && item.status !== filterStatus) return false;
             return true;
         });
-    }, [dataEdit, filterType, filterStatus]);
+    }, [activeData, filterType, filterStatus]);
 
     const typeOptions = Object.values(DISTRIBUTION_JOB_TYPE).map((type) => ({
         label: messages(
@@ -81,7 +101,11 @@ export default function DistributionJobDetailModal() {
             .filter((row) => row.type === DISTRIBUTION_JOB_TYPE.ADMIN_EXPORT)
             .map((row) => row.id);
 
-        if (filteredIds.length === 0) return;
+        if (filteredIds.length === 0)
+            return showNotification(
+                'info',
+                messages('distributionJobs.error.mustHaveAdminExport')
+            );
 
         downloadExcel({
             ids: filteredIds,

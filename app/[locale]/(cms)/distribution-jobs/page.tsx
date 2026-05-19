@@ -94,7 +94,9 @@ export default function DistributionJobsPage() {
                 />
             </PageContainer>
 
-            <DistributionJobDetailModal />
+            <DistributionJobDetailModal
+                groupedData={distributionJobsGroupedData?.items}
+            />
         </AppPageWrapper>
     );
 }
