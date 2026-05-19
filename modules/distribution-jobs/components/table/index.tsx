@@ -1,4 +1,5 @@
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { DATE_FORMAT } from '@/enums/common';
@@ -6,7 +7,7 @@ import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import { OnChangeFilter } from '@/hooks/use-filter';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { ProColumns } from '@ant-design/pro-components';
-import { Button, Modal, Tag, Tooltip, Typography } from 'antd';
+import { Avatar, Button, Modal, Tag, theme, Tooltip, Typography } from 'antd';
 import { X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import {
@@ -19,7 +20,6 @@ import {
     DistributionJobData,
     DistributionJobFilter,
 } from '../../types';
-import PopoverDspTags from '../popover-dsp-tags';
 
 type Props = Omit<AppProTableProps<DistributionJobData>, 'columns'> & {
     dataFilter: DistributionJobFilter;
@@ -32,6 +32,7 @@ type Props = Omit<AppProTableProps<DistributionJobData>, 'columns'> & {
 
 export default function DistributionJobsTable({ dataFilter, ...props }: Props) {
     const messages = useTranslations();
+    const { token } = theme.useToken();
     const { updateDistributionJob } = useUpdateDistributionJob();
     const { dspData } = useGetListDsp({
         page: 1,
@@ -130,11 +131,37 @@ export default function DistributionJobsTable({ dataFilter, ...props }: Props) {
                 if (!record?.dspCiCodes?.length) return '-';
 
                 return (
-                    <PopoverDspTags
-                        tags={record?.dspCiCodes || []}
-                        dspList={dspList}
-                        maxVisibleTags={1}
-                    />
+                    <Avatar.Group
+                        max={{
+                            count: 8,
+                            style: {
+                                backgroundColor: '#ccc',
+                            },
+                        }}
+                        size={'small'}
+                    >
+                        {record.dspCiCodes.map((dspCiCode) => {
+                            const dsp = dspList?.find(
+                                (dsp) => dsp.codeCi === dspCiCode
+                            );
+                            return (
+                                <CustomTooltip
+                                    key={dspCiCode}
+                                    title={dsp?.name}
+                                >
+                                    <Avatar
+                                        src={dsp?.picture}
+                                        size="small"
+                                        style={{
+                                            backgroundColor: '#ccc',
+                                        }}
+                                    >
+                                        {dspCiCode?.[0]?.toUpperCase()}
+                                    </Avatar>
+                                </CustomTooltip>
+                            );
+                        })}
+                    </Avatar.Group>
                 );
             },
         },
