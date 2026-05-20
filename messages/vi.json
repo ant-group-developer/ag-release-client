@@ -1067,7 +1067,10 @@
             "trackUpload": "{type} chỉ tải lên tối đa được {maxCount} bài",
             "trackFileName": "Tên File không được vượt quá {number} ký tự",
             "bitDepth16": "BitDepth phải là 16bit",
-            "sampleRate44100": "SampleRate phải là 44100Hz"
+            "sampleRate44100": "SampleRate phải là 44100Hz",
+            "bitDepth16Or24": "BitDepth phải là 16bit hoặc 24bit",
+            "sampleRate44100Or48000": "SampleRate phải là 44100Hz hoặc 48000Hz",
+            "invalidAudioCombination": "Thông số âm thanh phải là 16bit - 44100Hz hoặc 24bit - 48000Hz"
         },
 
         "acrCloud": {

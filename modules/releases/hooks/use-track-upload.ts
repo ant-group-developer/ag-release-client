@@ -56,12 +56,25 @@ export function useTrackUpload() {
             return false;
         }
 
-        if (metadata?.bitDepth !== 16 || metadata?.sampleRate !== 44100) {
+        const bitDepth = metadata?.bitDepth;
+        const sampleRate = metadata?.sampleRate;
+
+        const isValid =
+            (bitDepth === 16 && sampleRate === 44100) ||
+            (bitDepth === 24 && sampleRate === 48000);
+
+        if (!isValid) {
             const reasons: string[] = [];
-            if (metadata.bitDepth !== 16)
-                reasons.push(messages('track.validation.bitDepth16'));
-            if (metadata.sampleRate !== 44100)
-                reasons.push(messages('track.validation.sampleRate44100'));
+            if (bitDepth !== 16 && bitDepth !== 24) {
+                reasons.push(messages('track.validation.bitDepth16Or24'));
+            }
+            if (sampleRate !== 44100 && sampleRate !== 48000) {
+                reasons.push(messages('track.validation.sampleRate44100Or48000'));
+            }
+
+            if (reasons.length === 0) {
+                reasons.push(messages('track.validation.invalidAudioCombination'));
+            }
 
             showNotification(
                 'error',

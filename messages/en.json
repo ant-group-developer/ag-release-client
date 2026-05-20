@@ -1067,7 +1067,10 @@
             "trackUpload": "{type} can upload a maximum of {maxCount} track",
             "trackFileName": "File name cannot over {number} characters",
             "bitDepth16": "BitDepth must be 16bit",
-            "sampleRate44100": "SampleRate must be 44100Hz"
+            "sampleRate44100": "SampleRate must be 44100Hz",
+            "bitDepth16Or24": "BitDepth must be 16bit or 24bit",
+            "sampleRate44100Or48000": "SampleRate must be 44100Hz or 48000Hz",
+            "invalidAudioCombination": "Audio specifications must be 16bit - 44100Hz or 24bit - 48000Hz"
         },
 
         "acrCloud": {
