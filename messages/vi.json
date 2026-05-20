@@ -1067,7 +1067,10 @@
             "trackUpload": "{type} chỉ tải lên tối đa được {maxCount} bài",
             "trackFileName": "Tên File không được vượt quá {number} ký tự",
             "bitDepth16": "BitDepth phải là 16bit",
-            "sampleRate44100": "SampleRate phải là 44100Hz"
+            "sampleRate44100": "SampleRate phải là 44100Hz",
+            "bitDepth16Or24": "BitDepth phải là 16bit hoặc 24bit",
+            "sampleRate44100Or48000": "SampleRate phải là 44100Hz hoặc 48000Hz",
+            "invalidAudioCombination": "Thông số âm thanh phải là 16bit - 44100Hz hoặc 24bit - 48000Hz"
         },
 
         "acrCloud": {
@@ -2078,19 +2081,26 @@
     },
     "distributionJobs": {
         "label": "Công việc phân phối",
+        "detail": "Chi tiết công việc phân phối",
         "autoSendEmail": "Tự động gửi email",
         "downloadExcel": "Tải file excel",
         "confirmCompleted": "Xác nhận đã hoàn thành",
+        "error": {
+            "mustHaveAdminExport": "Phải có bản ghi thuộc loại Admin Export"
+        },
         "columns": {
             "upc": "UPC",
+            "upcs": "UPCs",
             "type": "Loại",
             "dspCiCodes": "Mã DSP CI",
             "status": "Trạng thái",
             "deliveryEmail": "Email nhận",
+            "recipients": "Người nhận",
             "deliveryEmailSubject": "Tiêu đề email",
             "sentAt": "Thời gian gửi",
             "expectedSendTime": "Dự kiến gửi",
-            "stepLabel": "Bước"
+            "stepLabel": "Bước",
+            "dateGroup": "Nhóm ngày"
         },
         "statusOptions": {
             "pending": "Đang chờ",

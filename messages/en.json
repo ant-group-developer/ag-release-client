@@ -1067,7 +1067,10 @@
             "trackUpload": "{type} can upload a maximum of {maxCount} track",
             "trackFileName": "File name cannot over {number} characters",
             "bitDepth16": "BitDepth must be 16bit",
-            "sampleRate44100": "SampleRate must be 44100Hz"
+            "sampleRate44100": "SampleRate must be 44100Hz",
+            "bitDepth16Or24": "BitDepth must be 16bit or 24bit",
+            "sampleRate44100Or48000": "SampleRate must be 44100Hz or 48000Hz",
+            "invalidAudioCombination": "Audio specifications must be 16bit - 44100Hz or 24bit - 48000Hz"
         },
 
         "acrCloud": {
@@ -2075,19 +2078,26 @@
     },
     "distributionJobs": {
         "label": "Distribution jobs",
+        "detail": "Distribution job detail",
         "autoSendEmail": "Auto send email",
         "downloadExcel": "Download excel",
         "confirmCompleted": "Confirm completed",
+        "error": {
+            "mustHaveAdminExport": "There must be at least one record of type Admin Export"
+        },
         "columns": {
             "upc": "UPC",
+            "upcs": "UPCs",
             "type": "Type",
             "dspCiCodes": "DSP CI codes",
             "status": "Status",
             "deliveryEmail": "Delivery email",
+            "recipients": "Recipients",
             "deliveryEmailSubject": "Email subject",
             "sentAt": "Sent at",
             "expectedSendTime": "Expected send time",
-            "stepLabel": "Step"
+            "stepLabel": "Step",
+            "dateGroup": "Date group"
         },
         "statusOptions": {
             "pending": "Pending",

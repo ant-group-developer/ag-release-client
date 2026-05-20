@@ -12,10 +12,15 @@ export const useUpdateDistributionJob = () => {
 
     const onSuccess = (
         data: AxiosResponse<SuccessResponse, any>,
-        { onSuccess }: CommonFunction & { id: string } & UpdateDistributionJobPayload
+        {
+            onSuccess,
+        }: CommonFunction & { id: string } & UpdateDistributionJobPayload
     ) => {
+        // queryClient.invalidateQueries({
+        //     queryKey: distributionJobQueryKeys.getList(),
+        // });
         queryClient.invalidateQueries({
-            queryKey: distributionJobQueryKeys.getList(),
+            queryKey: distributionJobQueryKeys.getListGrouped(),
         });
         onSuccess?.(data?.data);
         handleSuccess(data?.data);
@@ -23,7 +28,9 @@ export const useUpdateDistributionJob = () => {
 
     const onError = (
         data: any,
-        { onError }: CommonFunction & { id: string } & UpdateDistributionJobPayload
+        {
+            onError,
+        }: CommonFunction & { id: string } & UpdateDistributionJobPayload
     ) => {
         onError?.();
         handleError(data);
@@ -40,7 +47,8 @@ export const useUpdateDistributionJob = () => {
     });
 
     const updateDistributionJob = (
-        variables: { id: string } & UpdateDistributionJobPayload & CommonFunction
+        variables: { id: string } & UpdateDistributionJobPayload &
+            CommonFunction
     ) => {
         mutation.mutate(variables);
     };

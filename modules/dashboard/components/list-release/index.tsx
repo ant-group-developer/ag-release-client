@@ -1,12 +1,14 @@
 import SeeMoreButton from '@/components/ui/button/see-more-button';
-import FlatList from '@/components/ui/flat-list';
-import AppGrid from '@/components/ui/grid/app-grid';
 import { APP_ROUTES } from '@/enums/routes';
 import { Link } from '@/i18n/routing';
 import { ReleasesData } from '@/modules/releases/types';
 import { RightOutlined } from '@ant-design/icons';
 import { Card, Empty, theme } from 'antd';
 import { useTranslations } from 'next-intl';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import { Navigation, Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import CardRelease from '../card/card-release';
 
 type Props = {
@@ -20,7 +22,7 @@ export default function ListRelease({ data }: Props) {
 
     return (
         <Card
-            className="!mt-4 overflow-hidden rounded-lg border-0 shadow-sm"
+            className="overflow-hidden rounded-lg border-0 shadow-sm"
             styles={{
                 header: { borderBottom: 0, paddingBottom: 0, paddingTop: 24 },
                 body: { padding: '24px' },
@@ -45,15 +47,21 @@ export default function ListRelease({ data }: Props) {
                 </div>
             }
         >
-            <AppGrid className="">
-                <FlatList
-                    data={data}
-                    renderItem={({ item }) => <CardRelease data={item} />}
-                    keyExtractor={(item) => item.id.toString()}
-                    loading={false}
-                    className="contents"
-                />
-            </AppGrid>
+            {releaseLength > 0 && (
+                <Swiper
+                    modules={[Pagination, Navigation]}
+                    spaceBetween={20}
+                    slidesPerView={6}
+                    // navigation
+                    pagination={{ clickable: true }}
+                >
+                    {data?.map((item) => (
+                        <SwiperSlide className="pb-8" key={item.id.toString()}>
+                            <CardRelease data={item} />
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
+            )}
 
             {releaseLength <= 0 && (
                 <Empty

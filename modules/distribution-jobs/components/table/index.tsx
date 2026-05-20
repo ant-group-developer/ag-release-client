@@ -1,11 +1,12 @@
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
-import PopoverTags from '@/components/ui/tag/popover-tags';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { DATE_FORMAT } from '@/enums/common';
-import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
-import { OnChangeFilter } from '@/hooks/use-filter';
+import { formattedDate } from '@/helpers/common';
+import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { ProColumns } from '@ant-design/pro-components';
-import { Button, Modal, Tag, Tooltip, Typography } from 'antd';
+import { Avatar, Button, Modal, Tag, theme, Tooltip, Typography } from 'antd';
 import { X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import {
@@ -13,24 +14,20 @@ import {
     getDistributionJobTypeColor,
 } from '../../helpers';
 import { useUpdateDistributionJob } from '../../hooks/use-update-distribution-job';
-import {
-    DISTRIBUTION_JOB_STATUS,
-    DistributionJobData,
-    DistributionJobFilter,
-} from '../../types';
+import { DISTRIBUTION_JOB_STATUS, DistributionJobData } from '../../types';
 
-type Props = Omit<AppProTableProps<DistributionJobData>, 'columns'> & {
-    dataFilter: DistributionJobFilter;
-    onChangeFilter: OnChangeFilter<DistributionJobFilter>;
-    pagination: {
-        pageSize: number;
-        current: number;
-    };
-};
+type Props = Omit<AppProTableProps<DistributionJobData>, 'columns'>;
 
-export default function DistributionJobsTable({ dataFilter, ...props }: Props) {
+export default function DistributionJobsTable(props: Props) {
     const messages = useTranslations();
+    const { token } = theme.useToken();
     const { updateDistributionJob } = useUpdateDistributionJob();
+    const { dspData } = useGetListDsp({
+        page: 1,
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
+    });
+
+    const dspList = dspData?.items;
 
     const renderText = (value?: string | null, copyable = false) => {
         if (!value) return '-';
@@ -66,37 +63,28 @@ export default function DistributionJobsTable({ dataFilter, ...props }: Props) {
             align: 'center',
             fixed: 'left',
             render: (_, __, index) =>
-                getIndex(
-                    props?.pagination?.pageSize,
-                    props?.pagination?.current,
-                    index
-                ),
+                // getIndex(
+                //     props?.pagination?.pageSize,
+                //     props?.pagination?.current,
+                //     index
+                // ),
+                index + 1,
         },
         {
             title: messages('distributionJobs.columns.upc'),
-            dataIndex: 'job.upc',
-            key: 'job.upc',
-            width: 150,
+            dataIndex: 'upc',
+            key: 'upc',
+            width: 180,
             fixed: 'left',
-            sorter: true,
-            sortOrder: getSortOrder(
-                dataFilter.orderBy,
-                dataFilter.fieldOrder,
-                'job.upc'
-            ),
+            sorter: (a, b) => (a.upc || '').localeCompare(b.upc || ''),
             render: (_, record) => renderText(record.upc, true),
         },
         {
             title: messages('distributionJobs.columns.type'),
-            dataIndex: 'job.type',
-            key: 'job.type',
-            width: 180,
-            sorter: true,
-            sortOrder: getSortOrder(
-                dataFilter.orderBy,
-                dataFilter.fieldOrder,
-                'job.type'
-            ),
+            dataIndex: 'type',
+            key: 'type',
+            width: 160,
+            sorter: (a, b) => (a.type || '').localeCompare(b.type || ''),
             render: (_, record) =>
                 record.type ? (
                     <Tag color={getDistributionJobTypeColor(record.type)}>
@@ -110,36 +98,56 @@ export default function DistributionJobsTable({ dataFilter, ...props }: Props) {
             title: messages('distributionJobs.columns.stepLabel'),
             dataIndex: 'stepLabel',
             key: 'stepLabel',
+            ellipsis: true,
             width: 220,
             render: (_, record) => renderText(record.stepLabel),
         },
         {
-            title: messages('distributionJobs.columns.dspCiCodes'),
+            title: 'DSPs',
             dataIndex: 'dspCiCodes',
             key: 'dspCiCodes',
-            width: 160,
+            width: 230,
             render: (_, record) => {
-                if (!record?.dspCiCodes?.length) return '-';
+                if (!record?.dspCodes?.length) return '-';
 
                 return (
-                    <PopoverTags
-                        tags={record?.dspCiCodes || []}
-                        maxVisibleTags={2}
-                    />
+                    <Avatar.Group
+                        max={{
+                            count: 8,
+                            style: {
+                                backgroundColor: '#ccc',
+                            },
+                        }}
+                        size={'small'}
+                    >
+                        {record.dspCodes.map((dspCodes) => {
+                            const dsp = dspList?.find(
+                                (dsp) => dsp.codeCi === dspCodes
+                            );
+                            return (
+                                <CustomTooltip key={dspCodes} title={dsp?.name}>
+                                    <Avatar
+                                        src={dsp?.picture}
+                                        size="small"
+                                        style={{
+                                            backgroundColor: '#ccc',
+                                        }}
+                                    >
+                                        {dspCodes?.[0]?.toUpperCase()}
+                                    </Avatar>
+                                </CustomTooltip>
+                            );
+                        })}
+                    </Avatar.Group>
                 );
             },
         },
         {
             title: messages('distributionJobs.columns.status'),
-            dataIndex: 'job.status',
-            key: 'job.status',
-            width: 100,
-            sorter: true,
-            sortOrder: getSortOrder(
-                dataFilter.orderBy,
-                dataFilter.fieldOrder,
-                'job.status'
-            ),
+            dataIndex: 'status',
+            key: 'status',
+            width: 150,
+            sorter: (a, b) => (a.status || '').localeCompare(b.status || ''),
             render: (_, record) =>
                 record.status ? (
                     <Tag color={getDistributionJobStatusColor(record.status)}>
@@ -150,7 +158,7 @@ export default function DistributionJobsTable({ dataFilter, ...props }: Props) {
                 ),
         },
         {
-            title: messages('distributionJobs.columns.deliveryEmail'),
+            title: messages('distributionJobs.columns.recipients'),
             dataIndex: 'deliveryEmail',
             key: 'deliveryEmail',
             width: 220,
@@ -169,6 +177,7 @@ export default function DistributionJobsTable({ dataFilter, ...props }: Props) {
             dataIndex: 'sentAt',
             key: 'sentAt',
             width: 160,
+            fixed: 'right',
             render: (_, record) =>
                 record.sentAt
                     ? formattedDate(record.sentAt, DATE_FORMAT.DATE_MINUTE)
@@ -177,7 +186,7 @@ export default function DistributionJobsTable({ dataFilter, ...props }: Props) {
         {
             title: '',
             key: 'actions',
-            width: 80,
+            width: 50,
             align: 'center',
             fixed: 'right',
             render: (_, record) => {
@@ -215,5 +224,11 @@ export default function DistributionJobsTable({ dataFilter, ...props }: Props) {
         },
     ];
 
-    return <AppProTable {...props} columns={columns} pagination={false} />;
+    return (
+        <AppProTable
+            {...props}
+            columns={columns}
+            pagination={props.pagination ?? false}
+        />
+    );
 }

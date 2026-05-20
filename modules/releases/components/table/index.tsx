@@ -377,20 +377,20 @@ export default function ReleasesTable({
                     updatedAt: { show: false },
                 },
             }}
-            onRow={(record) => ({
-                onClick: (e) => {
-                    const target = e.target as HTMLElement;
-                    if (target.closest('[data-stop-row-click="true"]')) return;
+            // onRow={(record) => ({
+            //     onClick: (e) => {
+            //         const target = e.target as HTMLElement;
+            //         if (target.closest('[data-stop-row-click="true"]')) return;
 
-                    nProgress.start();
-                    router.push(
-                        getReleaseDetailTabRoute(
-                            record?.id,
-                            RELEASES_TABS.CORE_DETAIL
-                        )
-                    );
-                },
-            })}
+            //         nProgress.start();
+            //         router.push(
+            //             getReleaseDetailTabRoute(
+            //                 record?.id,
+            //                 RELEASES_TABS.CORE_DETAIL
+            //             )
+            //         );
+            //     },
+            // })}
         />
         // </div>
     );

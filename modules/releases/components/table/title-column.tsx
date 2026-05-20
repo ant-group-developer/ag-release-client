@@ -31,9 +31,16 @@ export default function ReleaseTitleColumn({ record, onChangeFilter }: Props) {
 
     return (
         <div className="flex items-center gap-4">
-            <div className="h-14 min-w-14">
-                <ReleaseCoverImage data={record} />
-            </div>
+            <Link
+                href={getReleaseDetailTabRoute(
+                    record?.id,
+                    RELEASES_TABS.CORE_DETAIL
+                )}
+            >
+                <div className="h-14 min-w-14">
+                    <ReleaseCoverImage data={record} />
+                </div>
+            </Link>
             <div>
                 <Link
                     href={getReleaseDetailTabRoute(

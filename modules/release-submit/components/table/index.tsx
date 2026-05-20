@@ -57,7 +57,7 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
         {
             title: messages('releaseExecution.columns.upc'),
             key: 'upc',
-            width: 120,
+            width: 150,
             fixed: 'left',
             render: (_, record) => (
                 <Typography.Text copyable>
@@ -68,7 +68,8 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
         {
             title: messages('releaseExecution.columns.releaseName'),
             key: 'releaseId',
-            width: 220,
+            width: 200,
+            ellipsis: true,
             render: (_, record) => (
                 <Typography.Text copyable>
                     {record?.metadata?.input?.releaseSnapshot?.title || '-'}
@@ -79,7 +80,7 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
             title: messages('releaseExecution.columns.type'),
             dataIndex: 'type',
             key: 'type',
-            width: 140,
+            width: 120,
             render: (_, record) =>
                 record.type ? (
                     <Tag color={getReleaseSubmitTypeColor(record.type)}>
@@ -93,7 +94,7 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
             title: messages('releaseExecution.columns.status'),
             dataIndex: 'status',
             key: 'status',
-            width: 150,
+            width: 130,
             render: (_, record) =>
                 record.status ? (
                     <Tag color={getReleaseSubmitStatusColor(record.status)}>
@@ -106,7 +107,7 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
         {
             title: messages('releaseExecution.columns.targetDspCodes'),
             key: 'dspCodes',
-            width: 180,
+            width: 200,
             render: (_, record) => {
                 const dspCodes = record?.metadata?.input?.dspCodes;
                 if (!dspCodes || !dspCodes.length) return '-';
@@ -118,7 +119,7 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
                 return (
                     <Avatar.Group
                         max={{
-                            count: 10,
+                            count: 8,
                             popover: { trigger: 'hover' },
                             style: {
                                 color: token.colorText,
@@ -158,7 +159,7 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
         {
             title: messages('releaseExecution.columns.since'),
             key: 'since',
-            width: 120,
+            width: 150,
             render: (_, record) => {
                 const sinceText =
                     formatRelativeShort(record?.completedAt) ??
@@ -217,7 +218,7 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
                 dataFilter?.fieldOrder,
                 'submit.createdAt'
             ),
-            width: 110,
+            width: 150,
             render: (value, record) =>
                 record?.createdAt
                     ? formattedDate(record?.createdAt, DATE_FORMAT.DATE_MINUTE)

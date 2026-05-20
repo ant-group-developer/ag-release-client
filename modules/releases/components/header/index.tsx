@@ -181,7 +181,7 @@ export default function ReleasesHeaderV2({
         <div className="app-header">
             <Space>
                 <AppSearch
-                    value={dataFilter?.keyword}
+                    defaultValue={dataFilter?.keyword}
                     style={{
                         width: 200,
                     }}

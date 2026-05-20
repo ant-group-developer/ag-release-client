@@ -12,6 +12,7 @@ export enum APP_ROUTES {
     HOME = '/',
     DASHBOARD = '/dashboard',
     RELEASES = '/releases',
+    RELEASES_CREATE = '/releases/create',
     RELEASES_DETAIL = '/releases/*',
     RELEASE_TYPE = '/release-type',
     TRACKS = '/tracks',
@@ -69,3 +70,8 @@ export const DEFAULT_ROUTE = APP_ROUTES.RELEASES;
 export const HOME_ROUTE = APP_ROUTES.DASHBOARD;
 
 export const PUBLIC_ROUTES = [APP_ROUTES.NOT_FOUND, APP_ROUTES.SERVER_ERROR];
+
+export enum PATH_PARAMS {
+    ACTION = 'action',
+    RELEASE_ID = 'release-id',
+}

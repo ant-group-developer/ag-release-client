@@ -13,8 +13,11 @@ export const useAutoSendEmailDistributionJobs = () => {
         data: AxiosResponse<SuccessResponse, any>,
         { onSuccess }: CommonFunction & { ids: any[] }
     ) => {
+        // queryClient.invalidateQueries({
+        //     queryKey: distributionJobQueryKeys.getList(),
+        // });
         queryClient.invalidateQueries({
-            queryKey: distributionJobQueryKeys.getList(),
+            queryKey: distributionJobQueryKeys.getListGrouped(),
         });
         onSuccess?.(data?.data);
         handleSuccess(data?.data);
@@ -35,9 +38,7 @@ export const useAutoSendEmailDistributionJobs = () => {
         onError,
     });
 
-    const autoSendEmail = (
-        variables: { ids: any[] } & CommonFunction
-    ) => {
+    const autoSendEmail = (variables: { ids: any[] } & CommonFunction) => {
         mutation.mutate(variables);
     };
 

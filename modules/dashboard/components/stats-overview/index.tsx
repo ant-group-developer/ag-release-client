@@ -1,5 +1,4 @@
-import { formattedNumber } from '@/helpers/common';
-import { theme } from 'antd';
+import { Space, theme } from 'antd';
 import { Building2, DiscAlbum, Music, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Area, AreaChart, ResponsiveContainer } from 'recharts';
@@ -128,15 +127,25 @@ export default function StatsOverview({
                 return (
                     <div
                         key={index}
-                        className="rounded-md border border-gray-100 p-5 shadow-sm transition-all hover:shadow-md dark:border-zinc-800"
+                        className="rounded-lg border border-gray-100 p-5 shadow-sm transition-all hover:shadow-md dark:border-zinc-800"
                         style={{ backgroundColor: token.colorBgContainer }}
                     >
-                        <div className="mb-4 flex items-center justify-between">
-                            <div
-                                className={`rounded-xl p-2.5 ${item.bgColor} ${item.color}`}
-                            >
-                                <Icon size={24} />
-                            </div>
+                        <div className="flex items-center justify-between">
+                            <Space size={12}>
+                                <div
+                                    className={`rounded-xl p-2.5 ${item.bgColor} ${item.color}`}
+                                >
+                                    <Icon size={24} />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-xs font-medium uppercase text-gray-400 dark:text-zinc-500">
+                                        {item?.label}
+                                    </span>
+                                    <span className="text-xl font-bold">
+                                        {item?.count}
+                                    </span>
+                                </div>
+                            </Space>
                             <div
                                 className={`text-[14px] font-semibold ${item.trendColor}`}
                             >
@@ -161,21 +170,6 @@ export default function StatsOverview({
                                     <span>{item.trend}</span>
                                 )}
                             </div>
-                        </div>
-
-                        <div className="mb-1 text-[12px] font-bold uppercase tracking-[0.1em] text-gray-400 dark:text-zinc-500">
-                            {item?.label}
-                        </div>
-
-                        <div className="flex items-end justify-between">
-                            <div className="text-xl font-bold text-gray-900 dark:text-white">
-                                {formattedNumber(item?.count)}
-                            </div>
-                            <MiniChart
-                                data={item.chartData}
-                                color={item.chartColor}
-                                index={index}
-                            />
                         </div>
                     </div>
                 );

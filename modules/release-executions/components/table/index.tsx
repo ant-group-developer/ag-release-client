@@ -59,7 +59,7 @@ export default function ReleaseExecutionTable({ ...props }: Props) {
             title: messages('releaseExecution.columns.upc'),
             dataIndex: 'upc',
             key: 'upc',
-            width: 120,
+            width: 150,
             fixed: 'left',
             ellipsis: true,
             render: (_, record) => (
