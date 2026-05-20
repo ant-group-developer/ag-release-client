@@ -36,3 +36,17 @@ export interface BulkSubmitRelease extends CommonFunction {
 export interface BulkDeleteRelease extends CommonFunction {
     ids: string[];
 }
+
+export interface SyncReleaseDraftToTracksPayload {
+    syncPrimaryGenre: boolean;
+    syncSubGenre: boolean;
+    syncLanguage: boolean;
+    syncCopyright: boolean;
+    syncArtists: boolean;
+    syncContributors: boolean;
+}
+
+export interface SyncReleaseDraftToTracks extends CommonFunction {
+    id: ReleasesData['id'];
+    payload: SyncReleaseDraftToTracksPayload;
+}

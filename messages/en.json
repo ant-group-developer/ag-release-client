@@ -852,6 +852,24 @@
         "cLineYearDescription": "The first year this version was released anywhere in the world.",
         "pLineYearDescription": "The first year this recording was released worldwide.",
         "countryLanguage": "Country language",
+        "syncToTracks": {
+            "button": "Sync data",
+            "title": "Sync data to tracks",
+            "description": "Selected data will be synced to all tracks.",
+            "emptyValue": "No data",
+            "dataColumn": "Data",
+            "currentValueColumn": "Current value",
+            "primaryGenre": "Primary genre",
+            "subGenre": "Sub genre",
+            "language": "Language",
+            "pCopyright": "P copyright",
+            "artists": "Artists",
+            "contributors": "Contributors",
+            "validation": {
+                "selectAtLeastOne": "Please select at least one data field to sync",
+                "releaseNotFound": "Release id not found"
+            }
+        },
 
         "placeholder": {
             "selectArtist": "Select artist",
