@@ -13,9 +13,9 @@ export const useConfirmCompletedDistributionJobs = () => {
         data: AxiosResponse<SuccessResponse, any>,
         { onSuccess }: CommonFunction & { ids: any[]; exportIdFromCi: string }
     ) => {
-        queryClient.invalidateQueries({
-            queryKey: distributionJobQueryKeys.getList(),
-        });
+        // queryClient.invalidateQueries({
+        //     queryKey: distributionJobQueryKeys.getList(),
+        // });
         queryClient.invalidateQueries({
             queryKey: distributionJobQueryKeys.getListGrouped(),
         });
