@@ -12,6 +12,7 @@ import {
     BulkSubmitRelease,
     CreateReleaseDraftPayload,
     ExportTemplateCi,
+    SyncReleaseDraftToTracksPayload,
     UpdateReleaseDraftPayload,
 } from '../types/payload';
 
@@ -186,5 +187,15 @@ export const releasesApi = {
         return axiosInstance.delete('/releases/draft', {
             params: { ids: ids.join(',') },
         });
+    },
+
+    syncReleaseDraftToTracks: (
+        id: ReleasesData['id'],
+        payload: SyncReleaseDraftToTracksPayload
+    ) => {
+        return axiosInstance.post(
+            `/releases/draft/${id}/sync-to-tracks`,
+            payload
+        );
     },
 };

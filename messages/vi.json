@@ -844,6 +844,24 @@
         "cLineYearDescription": "Năm đầu tiên xuất bản phiên bản này ở bất kỳ nơi nào trên thế giới.",
         "pLineYearDescription": "Năm bản ghi âm đầu tiên được phát hành trên toàn thế giới.",
         "countryLanguage": "Ngôn ngữ quốc gia",
+        "syncToTracks": {
+            "button": "Đồng bộ dữ liệu",
+            "title": "Đồng bộ dữ liệu các bài hát",
+            "description": "Các dữ liệu được chọn sẽ được đồng bộ với tất cả các bài hát.",
+            "emptyValue": "Chưa có dữ liệu",
+            "dataColumn": "Dữ liệu",
+            "currentValueColumn": "Giá trị hiện tại",
+            "primaryGenre": "Thể loại chính",
+            "subGenre": "Thể loại phụ",
+            "language": "Ngôn ngữ",
+            "pCopyright": "Bản quyền P",
+            "artists": "Nghệ sĩ",
+            "contributors": "Người đóng góp",
+            "validation": {
+                "selectAtLeastOne": "Vui lòng chọn ít nhất một dữ liệu để đồng bộ",
+                "releaseNotFound": "Không tìm thấy release id"
+            }
+        },
 
         "select": {
             "artist": "Chọn nghệ sĩ",
