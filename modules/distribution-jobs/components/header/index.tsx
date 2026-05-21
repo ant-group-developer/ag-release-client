@@ -1,6 +1,8 @@
 import AppSearch from '@/components/ui/input/search';
+import { DATE_FORMAT } from '@/enums/common';
 import { OnChangeFilter, TOnSearch } from '@/hooks/use-filter';
-import { Select, Space } from 'antd';
+import { DatePicker, Select, Space } from 'antd';
+import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import {
     DISTRIBUTION_JOB_TYPE,
@@ -51,9 +53,30 @@ export default function DistributionJobsHeader({
             <AppSearch
                 className="w-52"
                 placeholder={messages('common.search')}
-                onChange={onSearch}
-                defaultValue={dataFilter?.keyword}
+                onChange={(e) => {
+                    onChangeFilter({
+                        upcs: e.target.value?.trim(),
+                    });
+                }}
+                defaultValue={dataFilter?.upcs}
                 allowClear
+            />
+
+            <DatePicker
+                allowClear
+                placeholder={messages('common.date')}
+                className="w-52"
+                onChange={(date) => {
+                    onChangeFilter({
+                        dateGroup: date ? date.format('YYYY-MM-DD') : undefined,
+                    });
+                }}
+                defaultValue={
+                    dataFilter?.dateGroup
+                        ? dayjs(dataFilter.dateGroup)
+                        : undefined
+                }
+                format={DATE_FORMAT.DATE_ONLY}
             />
 
             <Select
@@ -69,18 +92,26 @@ export default function DistributionJobsHeader({
                 className="w-52"
             />
 
-            {/* <Select
+            <Select
+                mode="multiple"
                 options={statusOptions}
                 placeholder={messages('placeholder.filterBy', {
                     value: messages(
                         'distributionJobs.columns.status'
                     ).toLowerCase(),
                 })}
-                onChange={(value) => onChangeFilter({ status: value })}
-                defaultValue={dataFilter?.status}
+                onChange={(value: string[]) =>
+                    onChangeFilter({
+                        status: value?.length ? value.join(',') : undefined,
+                    })
+                }
+                defaultValue={
+                    dataFilter?.status ? dataFilter.status.split(',') : undefined
+                }
                 allowClear
                 className="w-52"
-            /> */}
+                maxTagCount="responsive"
+            />
         </Space>
     );
 }

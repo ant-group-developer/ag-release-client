@@ -32,10 +32,11 @@ export interface DistributionJobData extends CommonAttribute {
     deliveryEmailSubject: string | null;
     sentAt: string | null;
     stepLabel: string | null;
+    notes: string | null;
 }
 
 export interface DistributionJobFilter extends CommonParams {
-    status?: DistributionJobStatus;
+    status?: DistributionJobStatus | string;
     type?: string;
     releaseId?: string;
     releaseSubmitId?: string;
@@ -53,6 +54,7 @@ export interface DistributionJobGroupedData {
     sentAt: string;
     data: DistributionJobData[];
     upcs: string[];
+    status: string[];
 }
 
 export type DistributionJobPaginationResponse =

@@ -96,7 +96,7 @@ export interface CreateTenant extends CommonFunction {
 
 export interface UpdateTenantDspPayload {
     tenantId: TenantData['id'];
-    data: { dspId: DspData['id']; isActive: boolean }[];
+    data: { dspId: DspData['id']; isActive: boolean; isDefault: boolean }[];
 }
 
 export interface UpdateTenantDsp extends CommonFunction {
@@ -106,6 +106,7 @@ export interface UpdateTenantDsp extends CommonFunction {
 export interface TenantDspData {
     id: string;
     isActive: boolean;
+    isDefault: boolean;
     tenantId: TenantData['id'];
     dsp: Pick<DspData, 'id' | 'name'>;
 }

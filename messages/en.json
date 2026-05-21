@@ -281,6 +281,7 @@
         "uploadImage": "Upload image",
         "dateCreated": "Date created",
         "createdAt": "Created at",
+        "sentAt": "Sent at",
         "startedAt": "Started at",
         "updatedAt": "Updated at",
         "dateUpdated": "Date updated",
