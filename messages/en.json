@@ -1467,7 +1467,7 @@
     },
 
     "dspSystem": {
-        "label": "DSP System"
+        "label": "DSP system"
     },
     "dsp": {
         "label": "DSP",
@@ -2009,6 +2009,7 @@
         "aggregators": "Aggregators",
         "list": "List aggregator",
         "systemDefault": "System default",
+        "systemDefaultNote": "This option will use the system's default configuration",
         "createsDoneFolder": "Create folder .done ",
         "ddexName": "DDex name",
         "deliveryEmail": "Delivery email",

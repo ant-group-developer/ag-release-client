@@ -7,6 +7,7 @@ export interface CreateDspPayload {
     isActive: boolean;
     hasDeal: boolean;
     enablePolicy: boolean;
+    isDefault: boolean;
     codeCi?: string;
 }
 

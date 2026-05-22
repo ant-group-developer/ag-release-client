@@ -67,7 +67,7 @@ export default function Dsp() {
                     backgroundColor: token.colorBgLayout,
                 }}
                 extra={
-                    <PermissionGate permission={PERMISSION.DSP.CREATE}>
+                    <PermissionGate permission={PERMISSION.DSP_SYSTEM.CREATE}>
                         <CreateButton
                             text={messages('dsp.add')}
                             onClick={() => openModal(TYPE_MODAL_DSP.CREATE)}

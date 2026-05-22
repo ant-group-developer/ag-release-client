@@ -378,7 +378,6 @@
         "decreaseComparePercent": "Giảm {value}% so với thời gian trước",
         "exportStatisticOrder": "Xuất thống kê đơn hàng"
     },
-
     "product": {
         "label": "Sản phẩm",
         "productManagement": "Quản lý sản phẩm",
@@ -398,7 +397,6 @@
         "groupUserAssignee": "Nhóm người thực hiện",
         "statisticsByDepartment": "Thống kê sản phẩm theo phòng ban"
     },
-
     "video": {
         "label": "Video",
         "thumbnail": "Thumbnail",
@@ -420,7 +418,6 @@
         "encoding": "Video Encoding",
         "tag": "Từ khoá"
     },
-
     "review": {
         "message": {
             "createReviewSuccessfully": "Thêm bình luận thành công",
@@ -430,7 +427,6 @@
             "notAuthorizedToRate": "Không có quyền đánh giá"
         }
     },
-
     "dashboard": {
         "label": "Tổng quan",
         "latestNews": "Tin tức mới nhất",
@@ -786,19 +782,16 @@
             "updateSuccessfully": "Cập nhật thông tin thành công!"
         }
     },
-
     "select": {
         "date": "Chọn ngày",
         "approver": "Chọn người duyệt",
         "option": "Vui lòng chọn"
     },
-
     "theme": {
         "dark": "Tối",
         "light": "Sáng",
         "system": "Hệ thống"
     },
-
     "release": {
         "takeDown": "Gỡ phát hành",
         "takeDownConfirmTitle": "Gỡ phát hành?",
@@ -863,12 +856,10 @@
                 "releaseNotFound": "Không tìm thấy release id"
             }
         },
-
         "select": {
             "artist": "Chọn nghệ sĩ",
             "subArtist": "Chọn nghệ sĩ phụ"
         },
-
         "placeholder": {
             "select": "Chọn {value}",
             "selectRelease": "Chọn phát hành",
@@ -886,18 +877,15 @@
             "selectLanguageMetadata": "Chọn ngôn ngữ metadata",
             "enterTitleAndReleaseType": "Nhập tên phát hành, label và loại phát hành để tiếp tục"
         },
-
         "validation": {
             "mustHaveMainArtist": "Vui lòng thêm nghệ sĩ chính (Main Artist)"
         },
-
         "scheduling": {
             "label": "Lên lịch",
             "atMidnightInEveryCountry": "Vào lúc nửa đêm ở mọi quốc gia trên thế giới",
             "atSpecificTime": "Vào một thời điểm cụ thể trong một múi giờ cụ thể",
             "goLiveTime": "Bạn muốn phát hành thời điểm nào?"
         },
-
         "coverArt": {
             "label": "Ảnh bìa",
             "required": "Yêu cầu ảnh bìa",
@@ -914,7 +902,6 @@
                 "delete": "Xoá phát hành thành công"
             }
         },
-
         "action": {
             "submit": "Gửi phát hành",
             "edit": "Chỉnh sửa phát hành",
@@ -951,7 +938,6 @@
             "partial_done": "Hoàn thành một phần"
         }
     },
-
     "releaseDsp": {
         "status": {
             "draft": "Nháp",
@@ -962,7 +948,6 @@
             "taken_down": "Đã gỡ xuống"
         }
     },
-
     "releaseArtist": {
         "label": "Nghệ sĩ phát hành",
         "message": {
@@ -976,7 +961,6 @@
             }
         }
     },
-
     "releaseContributor": {
         "message": {
             "error": {
@@ -984,11 +968,9 @@
             }
         }
     },
-
     "releaseType": {
         "label": "Loại phát hành"
     },
-
     "albumFormat": {
         "message": {
             "success": {
@@ -1004,7 +986,6 @@
             }
         }
     },
-
     "track": {
         "parentalAdvisoryNotice": "Cảnh báo nội dung",
         "list": "Danh sách bài hát",
@@ -1091,7 +1072,6 @@
             "sampleRate44100Or48000": "SampleRate phải là 44100Hz hoặc 48000Hz",
             "invalidAudioCombination": "Thông số âm thanh phải là 16bit - 44100Hz hoặc 24bit - 48000Hz"
         },
-
         "acrCloud": {
             "compareResult": "Chọn kết quả muốn so sánh"
         },
@@ -1106,7 +1086,6 @@
             }
         }
     },
-
     "trackArtist": {
         "message": {
             "success": {
@@ -1120,7 +1099,6 @@
             }
         }
     },
-
     "trackType": {
         "label": "Thể loại bài hát",
         "description": "Designates the track as a musical or non-musical work.",
@@ -1137,7 +1115,6 @@
             }
         }
     },
-
     "trackOriginType": {
         "label": "Nguồn gốc bài hát",
         "value": "Giá trị",
@@ -1154,7 +1131,6 @@
             }
         }
     },
-
     "trackSensitive": {
         "label": "Nội dung nhạy cảm",
         "name": "Tên nội dung nhạy cảm",
@@ -1176,7 +1152,6 @@
             }
         }
     },
-
     "genres": {
         "name": "Tên thể loại",
         "pop": "Pop",
@@ -1194,7 +1169,6 @@
         "primary": "Thể loại chính",
         "label": "Thể loại"
     },
-
     "genre": {
         "genres": "Thể loại",
         "label": "Thể loại",
@@ -1215,7 +1189,6 @@
             }
         }
     },
-
     "artist": {
         "artists": "Nghệ sĩ",
         "label": "Nghệ sĩ",
@@ -1255,14 +1228,12 @@
             }
         }
     },
-
     "role": {
         "roles": "Vai trò",
         "add": "Thêm vai trò",
         "update": "Cập nhật vai trò",
         "name": "Tên vai trò"
     },
-
     "label": {
         "labels": "Labels",
         "label": "Label",
@@ -1282,7 +1253,6 @@
             }
         }
     },
-
     "distribution": {
         "label": "Phân phối",
         "create": "Tạo phân phối",
@@ -1295,7 +1265,6 @@
         "lastEnqueue": "Lần xếp hàng cuối",
         "lastDelivered": "Lần gửi cuối"
     },
-
     "formFields": {
         "contributorsMustIncludeProducer": "Người đóng góp phải bao gồm nhà sản xuất",
         "contributorsMustIncludeComposer": "Người đóng góp phải bao gồm nhà soạn nhạc",
@@ -1447,7 +1416,6 @@
             "titleCannotContainFeat": "Tiêu đề không được chứa từ \"feat\""
         }
     },
-
     "distribute": {
         "label": "Phân phối",
         "create": "Tạo phân phối",
@@ -1458,16 +1426,13 @@
         "wordWide": "Phân phối khắp thế giới",
         "confirmDistribute": "Bạn có chắc chắn muốn phát hành trên nền tảng này không?"
     },
-
     "takeDown": {
         "label": "Gỡ khỏi nền tảng",
         "confirmTakeDown": "Bạn có chắc chắn muốn gỡ khỏi nền tảng này không?"
     },
-
     "emailSender": {
         "label": "Email sender"
     },
-
     "dspSystem": {
         "label": "Hệ thống DSP"
     },
@@ -1495,7 +1460,6 @@
             }
         }
     },
-
     "artistRole": {
         "message": {
             "success": {
@@ -1511,7 +1475,6 @@
             }
         }
     },
-
     "timezone": {
         "label": "Múi giờ",
         "create": "Tạo múi giờ",
@@ -1534,7 +1497,6 @@
             "selectTimezone": "Chọn múi giờ"
         }
     },
-
     "tooltipForm": {
         "releaseTitle": "Không bao gồm thông tin phiên bản như Remix hoặc Uncut trong trường Tiêu đề chính. Hãy sử dụng trường Phiên bản thay thế.",
         "version": "Một phiên bản cụ thể của sản phẩm sẽ được cung cấp cho các cửa hàng và hiển thị cùng với tiêu đề. Ví dụ: 'Live', 'Phiên bản Deluxe'. Nếu có nhiều phiên bản của album, sử dụng trường này để chỉ định phiên bản đúng.",
@@ -1554,7 +1516,6 @@
         "countryLanguage": "Ngôn ngữ chính thức của quốc gia liên quan đến phát hành này. Ví dụ: Việt Nam, Hoa Kỳ, v.v.",
         "isMoreThan4Artists": "Chọn 'Có' nếu phát hành này có từ 5 nghệ sĩ trở lên để hiển thị là 'Nhiều nghệ sĩ'."
     },
-
     "tenant": {
         "label": "Workspace",
         "selectTitle": "Chọn Workspace",
@@ -1622,7 +1583,6 @@
             }
         }
     },
-
     "integration": {
         "label": "Tích hợp",
         "deal": {
@@ -1642,7 +1602,6 @@
             }
         }
     },
-
     "action": {
         "create": {
             "button": "Thêm mới",
@@ -1676,7 +1635,6 @@
         },
         "quickActions": "Hành động nhanh"
     },
-
     "permission": {
         "label": "Quyền",
         "name": "Tên quyền",
@@ -1711,7 +1669,6 @@
             "delete": "Xoá quyền"
         }
     },
-
     "roles": {
         "label": "Vai trò",
         "name": "Tên vai trò",
@@ -1733,7 +1690,6 @@
             "delete": "Xoá vai trò"
         }
     },
-
     "actions": {
         "label": "Hành động",
         "name": "Tên hành động",
@@ -1753,7 +1709,6 @@
             "delete": "Xoá hành động"
         }
     },
-
     "policy": {
         "policies": "Chính sách",
         "label": "Chính sách",
@@ -1762,7 +1717,6 @@
             "delete": "Xoá chính sách"
         }
     },
-
     "currencies": {
         "currencies": "Tiền tệ",
         "label": "Tiền tệ",
@@ -1797,7 +1751,6 @@
             }
         }
     },
-
     "price": {
         "label": "Giá",
         "prices": "Giá",
@@ -1811,7 +1764,6 @@
             "delete": "Xoá giá"
         }
     },
-
     "priceTier": {
         "canDeactivateOnlyWhenNotDefault": "Chỉ khi không là 'giá trị mặc định' thì mới được tắt kích hoạt",
         "message": {
@@ -1826,7 +1778,6 @@
             }
         }
     },
-
     "weekDays": {
         "monday": "Thứ Hai",
         "tuesday": "Thứ Ba",
@@ -1836,20 +1787,17 @@
         "saturday": "Thứ Bảy",
         "sunday": "Chủ Nhật"
     },
-
     "scanStatus": {
         "unScanned": "Chưa được quét",
         "finished": "Không có vi phạm",
         "warning": "Cảnh báo",
         "rejected": "Từ chối"
     },
-
     "backupLog": {
         "success": {
             "startedPleaseWait": "Đang sao lưu, xin vui lòng đợi..."
         }
     },
-
     "analytics": {
         "label": "Phân tích",
         "name": "Tên phân tích",
@@ -1857,7 +1805,6 @@
             "delete": "Xoá phân tích"
         }
     },
-
     "issue": {
         "label": "Vấn đề",
         "name": "Tên vấn đề",
@@ -1877,7 +1824,6 @@
             }
         }
     },
-
     "issueLevel": {
         "label": "Mức độ vấn đề",
         "name": "Tên mức độ vấn đề",
@@ -1898,11 +1844,9 @@
             }
         }
     },
-
     "issueCategory": {
         "label": "Danh mục vấn đề"
     },
-
     "tenantIssue": {
         "label": "Vấn đề workspace",
         "message": {
@@ -1919,7 +1863,6 @@
             }
         }
     },
-
     "tenantTier": {
         "label": "Xếp hạng workspace",
         "name": "Tên workspace",
@@ -1937,7 +1880,6 @@
             }
         }
     },
-
     "newsCategory": {
         "label": "Danh mục tin tức",
         "name": "Tên danh mục",
@@ -1956,14 +1898,12 @@
             }
         }
     },
-
     "news": {
         "label": "Tin tức",
         "name": "Tiêu đề tin tức",
         "addTranslate": "Thêm bản dịch",
         "updateTranslate": "Cập nhật bản dịch"
     },
-
     "newsPost": {
         "label": "Tin tức mới",
         "latest": "Tin mới nhất",
@@ -1984,7 +1924,6 @@
             }
         }
     },
-
     "newsPostTranslation": {
         "label": "Bản dịch tin tức",
         "message": {
@@ -2006,7 +1945,6 @@
     "legal": {
         "allRightsReserved": "Đã đăng ký bản quyền."
     },
-
     "aggregator": {
         "label": "Đơn vị tổng hợp",
         "aggregators": "Đơn vị tổng hợp",
@@ -2035,9 +1973,9 @@
                 "nameExisted": "Tên Aggregator đã tồn tại",
                 "defaultActiveError": "Aggregator mặc định đang hoạt động"
             }
-        }
+        },
+        "systemDefaultNote": "Lựa chọn này sẽ áp dụng cấu hình DSP mặc định của hệ thống."
     },
-
     "tenantIntegration": {
         "message": {
             "success": {
@@ -2051,12 +1989,10 @@
             }
         }
     },
-
     "dealType": {
         "label": "Loại thỏa thuận",
         "requiredConnection": "Yêu cầu kết nối"
     },
-
     "dspRoutingConfig": {
         "message": {
             "success": {
@@ -2072,22 +2008,18 @@
             }
         }
     },
-
     "connection": {
         "success": "Kết nối thành công",
         "failure": "Kết nối thất bại",
         "test": "Kiểm tra kết nối"
     },
-
     "sftp": {
         "requiredSftpInfo": "Vui lòng nhập đủ thông tin SFTP",
         "requiredPasswordOrPrivateKey": "Vui lòng nhập mật khẩu hoặc khoá riêng tư"
     },
-
     "batchImport": {
         "label": "Nhập hàng loạt"
     },
-
     "releaseLog": {
         "label": "Nhật ký phát hành",
         "statusRelease": "Trạng thái phát hành",
