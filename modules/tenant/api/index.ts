@@ -5,11 +5,13 @@ import {
     DataFilterTenant,
     TenantData,
     TenantDetail,
+    TenantDspAgreementData,
     TenantDspData,
     TenantRoleData,
-    UpdateTenantDspPayload,
     UpdateTenantPayload,
     UpdateTenantRolesPayload,
+    UpdateTenantDspAgreementPayload,
+    UpdateTenantDspPayload,
 } from '../types/data';
 
 export const tenantApi = {
@@ -57,6 +59,25 @@ export const tenantApi = {
         );
     },
 
+    getTenantDspAgreements(id: string) {
+        return axiosInstance.get<DetailResponse<TenantDspAgreementData[]>>(
+            `/tenant-dsp-agreements/admin/tenants/${id}/dsps`
+        );
+    },
+
+    getTenantDspAgreementsUser() {
+        return axiosInstance.get<DetailResponse<TenantDspAgreementData[]>>(
+            `/tenant-dsp-agreements/tenant/dsps`
+        );
+    },
+
+    updateTenantDspAgreement(tenantId: string, dspId: string, payload: UpdateTenantDspAgreementPayload) {
+        return axiosInstance.patch(
+            `/tenant-dsp-agreements/admin/tenants/${tenantId}/dsps/${dspId}`,
+            payload
+        );
+    },
+
     updateDsp(payload: UpdateTenantDspPayload) {
         return axiosInstance.post('tenants/dsps', payload);
     },
@@ -68,6 +89,9 @@ export const tenantApi = {
     },
 
     updateRoles(tenantId: string, payload: UpdateTenantRolesPayload) {
-        return axiosInstance.post(`tenants/${tenantId}/configured-roles`, payload);
+        return axiosInstance.post(
+            `tenants/${tenantId}/configured-roles`,
+            payload
+        );
     },
 };

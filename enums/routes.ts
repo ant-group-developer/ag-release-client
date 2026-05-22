@@ -26,7 +26,7 @@ export enum APP_ROUTES {
     LANGUAGES = '/languages',
     COUNTRIES = '/countries',
     GENRES = '/genres',
-    DSP = '/dsp',
+    DSP = '/dsp-system',
     ARTIST_ROLE = '/artist-role',
     EMAIL_SENDER = '/email-sender',
     TIMEZONE = '/timezone',

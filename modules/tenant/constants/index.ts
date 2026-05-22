@@ -18,6 +18,9 @@ export const tenantQueryKeys = {
     detail: (id: string) => [...tenantQueryKeys.details(), id] as const,
     dsps: () => [...tenantQueryKeys.all, QUERY_KEY.TENANT.GET_DSP] as const,
     dsp: (id: string) => [...tenantQueryKeys.dsps(), id] as const,
+    dspAgreements: () => [...tenantQueryKeys.all, QUERY_KEY.TENANT.GET_DSP_AGREEMENT] as const,
+    dspAgreement: (id: string) => [...tenantQueryKeys.dspAgreements(), id] as const,
+    dspAgreementsUser: () => [...tenantQueryKeys.all, QUERY_KEY.TENANT.GET_DSP_AGREEMENT_USER] as const,
     roles: () =>
         [...tenantQueryKeys.all, QUERY_KEY.TENANT.GET_ROLES] as const,
     tenantRoles: (id: string) =>

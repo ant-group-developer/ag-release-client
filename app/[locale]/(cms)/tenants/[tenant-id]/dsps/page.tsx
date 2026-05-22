@@ -6,22 +6,14 @@ import AppProTable from '@/components/ui/table/pro-table';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { useActive } from '@/hooks/use-active';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
-import { useGetListDspSimple } from '@/modules/dsp/hooks/use-get-list-simple-dsp';
-import { DspData } from '@/modules/dsp/types';
-import { useTenantDsp } from '@/modules/tenant/hooks/use-get-tenant';
-import { useUpdateTenantDsp } from '@/modules/tenant/hooks/use-update-tenant';
-import { TenantDspData } from '@/modules/tenant/types/data';
+import { useGetTenantDspAgreements } from '@/modules/tenant/hooks/use-get-tenant';
+import { useUpdateTenantDspAgreement } from '@/modules/tenant/hooks/use-update-tenant';
+import { TenantDspAgreementData } from '@/modules/tenant/types/data';
 import { ProColumns } from '@ant-design/pro-components';
 import { Switch, theme, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
-
-interface DspToggleState {
-    dspId: string;
-    isActive: boolean;
-    isDefault: boolean;
-}
+import { useState } from 'react';
 
 function TenantDsps() {
     const messages = useTranslations();
@@ -32,111 +24,57 @@ function TenantDsps() {
     const value = useParams();
     const tenantId = value['tenant-id'] as string;
 
-    const { dspData, isLoading: isLoadingDsps } = useGetListDspSimple();
+    const { dataTenantDspAgreement, isLoading: isLoadingDsps } =
+        useGetTenantDspAgreements(tenantId);
 
-    const { dataTenantDsp, isLoading: isLoadingTenantDsps } =
-        useTenantDsp(tenantId);
+    const { updateTenantDspAgreement } = useUpdateTenantDspAgreement();
 
-    const { updateTenantDsp } = useUpdateTenantDsp();
+    const [pendingChanges, setPendingChanges] = useState<Record<string, boolean>>({});
 
-    const [toggleStates, setToggleStates] = useState<DspToggleState[]>([]);
-    const [hasChanges, setHasChanges] = useState(false);
+    const hasChanges = Object.keys(pendingChanges).length > 0;
 
-    const allDsps = useMemo(() => {
-        return dspData ?? [];
-    }, [dspData]);
-
-    // Build toggle states from API data
-    useEffect(() => {
-        if (allDsps.length > 0) {
-            const tenantDspMap = new Map<
-                string,
-                { isActive: boolean; isDefault: boolean }
-            >();
-            dataTenantDsp.forEach((td: TenantDspData) => {
-                tenantDspMap.set(td.dsp.id, {
-                    isActive: td.isActive,
-                    isDefault: td.isDefault ?? false,
-                });
-            });
-
-            const states: DspToggleState[] = allDsps.map((dsp: DspData) => ({
-                dspId: dsp.id,
-                isActive: tenantDspMap.has(dsp.id)
-                    ? tenantDspMap.get(dsp.id)!.isActive
-                    : false,
-                isDefault: tenantDspMap.has(dsp.id)
-                    ? tenantDspMap.get(dsp.id)!.isDefault
-                    : false,
-            }));
-
-            setToggleStates(states);
-            setHasChanges(false);
-        }
-    }, [allDsps, dataTenantDsp]);
+    const getRowId = (record: any) => record.dspId || record.dsp?.id || record.id;
 
     const onToggleActive = (dspId: string, checked: boolean) => {
-        setToggleStates((prev) =>
-            prev.map((s) =>
-                s.dspId === dspId
-                    ? {
-                          ...s,
-                          isActive: checked,
-                          isDefault: checked ? s.isDefault : false,
-                      }
-                    : s
-            )
-        );
-        setHasChanges(true);
-    };
-
-    const onToggleDefault = (dspId: string, checked: boolean) => {
-        setToggleStates((prev) =>
-            prev.map(
-                (s) =>
-                    s.dspId === dspId
-                        ? {
-                              ...s,
-                              isDefault: checked,
-                              isActive: checked ? true : s.isActive,
-                          }
-                        : { ...s, isDefault: checked ? false : s.isDefault } // Assuming only one can be default
-            )
-        );
-        setHasChanges(true);
+        setPendingChanges((prev) => {
+            const originalState = dataTenantDspAgreement.find((d) => getRowId(d) === dspId)?.isActive;
+            const next = { ...prev };
+            if (checked === originalState) {
+                delete next[dspId];
+            } else {
+                next[dspId] = checked;
+            }
+            return next;
+        });
     };
 
     const onSave = () => {
         active();
-        return;
-        updateTenantDsp({
-            payload: {
-                tenantId,
-                data: toggleStates,
-            },
-            onSuccess: () => {
+        const entries = Object.entries(pendingChanges);
+        Promise.all(
+            entries.map(([dspId, isActive]) =>
+                updateTenantDspAgreement({
+                    tenantId,
+                    dspId,
+                    payload: { isActive },
+                    onSuccess: () => {}, 
+                })
+            )
+        )
+            .then(() => {
                 deActive();
-                setHasChanges(false);
-            },
-            onError: deActive,
-        });
+                setPendingChanges({});
+            })
+            .catch(() => {
+                deActive();
+            });
     };
 
-    const getState = (dspId: string) => {
-        return (
-            toggleStates.find((s) => s.dspId === dspId) ?? {
-                isActive: false,
-                isDefault: false,
-                dspId,
-            }
-        );
-    };
-
-    const columns: ProColumns<DspData>[] = [
+    const columns: ProColumns<TenantDspAgreementData>[] = [
         {
-            title: messages('dsp.name') || 'Name',
+            title: messages('dsp.name') || 'DPS',
             key: 'name',
-            dataIndex: 'name',
+            dataIndex: 'dspName',
             ellipsis: true,
             align: 'left',
             width: 200,
@@ -146,69 +84,41 @@ function TenantDsps() {
                     <div className="flex-shrink-0">
                         <ImageFallback
                             fallbackSrc={FALLBACK_IMAGE}
-                            src={record?.picture ?? FALLBACK_IMAGE}
+                            src={record?.dsp?.picture ?? FALLBACK_IMAGE}
                             alt="dsp"
                             width={40}
                             height={40}
                             className="aspect-square rounded-lg object-cover"
                         />
                     </div>
-                    <span title={record?.name} className="truncate">
-                        {record?.name}
+                    <span title={record?.dsp?.name} className="truncate">
+                        {record?.dsp?.name}
                     </span>
                 </div>
             ),
         },
         {
-            title: messages('common.code') || 'Code',
-            key: 'code',
-            dataIndex: 'code',
-            align: 'left',
-            width: 150,
-            ellipsis: true,
-        },
-        {
             title: messages('roles.isActive') || 'Active',
             key: 'isActive',
-            dataIndex: 'id',
             align: 'center',
             width: 100,
             render: (_, record) => {
-                const state = getState(record.id);
+                const rowId = getRowId(record);
+                const isChecked = pendingChanges[rowId] ?? record.isActive;
                 return (
                     <div onClick={(e) => e.stopPropagation()}>
                         <Switch
-                            checked={state.isActive}
+                            checked={isChecked}
                             disabled={!isAdmin}
-                            onChange={(val) => onToggleActive(record.id, val)}
-                        />
-                    </div>
-                );
-            },
-        },
-        {
-            title: 'Default',
-            key: 'isDefault',
-            dataIndex: 'id',
-            align: 'center',
-            width: 100,
-            className: '!pr-6',
-            render: (_, record) => {
-                const state = getState(record.id);
-                return (
-                    <div onClick={(e) => e.stopPropagation()}>
-                        <Switch
-                            checked={state.isDefault}
-                            disabled={!isAdmin}
-                            onChange={(val) => onToggleDefault(record.id, val)}
+                            onChange={(val) =>
+                                onToggleActive(rowId, val)
+                            }
                         />
                     </div>
                 );
             },
         },
     ];
-
-    const isLoadingPage = isLoadingDsps || isLoadingTenantDsps;
 
     return (
         <div>
@@ -229,10 +139,10 @@ function TenantDsps() {
             </div>
 
             <AppProTable
-                dataSource={allDsps}
+                dataSource={dataTenantDspAgreement}
                 columns={columns}
-                rowKey="id"
-                loading={isLoadingPage}
+                rowKey={getRowId}
+                loading={isLoadingDsps}
                 pagination={false}
                 search={false}
                 toolBarRender={false}

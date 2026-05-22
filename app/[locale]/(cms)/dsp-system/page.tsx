@@ -62,7 +62,7 @@ export default function Dsp() {
     return (
         <AppPageWrapper>
             <PageContainer
-                title={messages('dsp.label')}
+                title={messages('dspSystem.label')}
                 style={{
                     backgroundColor: token.colorBgLayout,
                 }}

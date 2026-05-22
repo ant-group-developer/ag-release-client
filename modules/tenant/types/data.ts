@@ -111,6 +111,24 @@ export interface TenantDspData {
     dsp: Pick<DspData, 'id' | 'name'>;
 }
 
+export interface TenantDspAgreementData {
+    dspId: string;
+    agreementId: string | null;
+    isActive: boolean;
+    mode: string | null;
+    dsp: DspData;
+}
+
+export interface UpdateTenantDspAgreementPayload {
+    isActive: boolean;
+}
+
+export interface UpdateTenantDspAgreement extends CommonFunction {
+    tenantId: string;
+    dspId: string;
+    payload: UpdateTenantDspAgreementPayload;
+}
+
 export interface TenantRoleData {
     id: string;
     isActive: boolean;

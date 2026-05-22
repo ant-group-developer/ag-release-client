@@ -4,7 +4,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { tenantApi } from '../api';
 import { tenantQueryKeys } from '../constants';
-import { UpdateTenant, UpdateTenantDsp } from '../types/data';
+import {
+    UpdateTenant,
+    UpdateTenantDsp,
+    UpdateTenantDspAgreement,
+} from '../types/data';
 
 export const useUpdateTenant = () => {
     const queryClient = useQueryClient();
@@ -75,4 +79,40 @@ export const useUpdateTenantDsp = () => {
     };
 
     return { updateTenantDsp, ...mutation };
+};
+
+export const useUpdateTenantDspAgreement = () => {
+    const queryClient = useQueryClient();
+    const messages = useTranslations();
+    const { handleError } = useApiNotify();
+
+    const onSuccess = (
+        data: any,
+        { onSuccess, tenantId }: UpdateTenantDspAgreement
+    ) => {
+        queryClient.invalidateQueries({
+            queryKey: tenantQueryKeys.dspAgreements(),
+        });
+        showNotification('success', messages('message.updateSuccessfully'));
+        onSuccess?.();
+    };
+
+    const onError = (error: any, { onError }: UpdateTenantDspAgreement) => {
+        handleError(error);
+        onError?.(error);
+    };
+
+    const mutation = useMutation({
+        mutationFn: ({ tenantId, dspId, payload }: UpdateTenantDspAgreement) =>
+            tenantApi.updateTenantDspAgreement(tenantId, dspId, payload),
+        onSuccess,
+        onError,
+        mutationKey: tenantQueryKeys.updates(),
+    });
+
+    const updateTenantDspAgreement = (variables: UpdateTenantDspAgreement) => {
+        return mutation.mutateAsync(variables);
+    };
+
+    return { updateTenantDspAgreement, ...mutation };
 };

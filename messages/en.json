@@ -1466,6 +1466,9 @@
         "label": "Email sender"
     },
 
+    "dspSystem": {
+        "label": "DSP System"
+    },
     "dsp": {
         "label": "DSP",
         "name": "Platform name",

@@ -1468,6 +1468,9 @@
         "label": "Email sender"
     },
 
+    "dspSystem": {
+        "label": "Hệ thống DSP"
+    },
     "dsp": {
         "label": "DSP",
         "name": "Tên nền tảng",
