@@ -22,6 +22,7 @@ export enum TENANT_TABS {
     TRACK = 'tracks',
     RELEASE = 'releases',
     ROLES = 'roles',
+    DSP = 'dsps',
 }
 
 export enum TENANT_USER_TYPE {

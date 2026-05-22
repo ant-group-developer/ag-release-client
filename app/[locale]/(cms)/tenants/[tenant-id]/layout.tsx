@@ -119,6 +119,14 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
         //         </Link>
         //     ),
         // },
+        {
+            key: TENANT_TABS.DSP,
+            label: (
+                <Link href={getTenantDetailRoute(tenantId, TENANT_TABS.DSP)}>
+                    {'DSPs'}
+                </Link>
+            ),
+        },
     ];
 
     if (error) {

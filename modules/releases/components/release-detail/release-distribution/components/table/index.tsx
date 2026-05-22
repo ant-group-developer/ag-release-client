@@ -2,7 +2,7 @@ import IconButton from '@/components/ui/button/icon-button';
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE, SIZE_ICON } from '@/constants/common';
-import { formattedDate, getSortOrder } from '@/helpers/common';
+import { getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { PermissionGate } from '@/modules/auth/components/permission-gate';
@@ -17,23 +17,22 @@ import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
 import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { ProColumns } from '@ant-design/pro-components';
 import { Avatar, Space } from 'antd';
-import { Box } from 'lucide-react';
+import { Box, Lock } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 type Props = Omit<AppProTableProps<ReleaseDspData>, 'columns'> & {
-    currentPage?: number;
     dataFilter?: ReleaseDspDataFilter;
+    pagination?: {
+        current: number;
+        pageSize: number;
+    };
 };
 
 export default function DistributionTable({
-    currentPage = 1,
     dataFilter,
+    pagination,
     ...props
 }: Props) {
-    const pageSize =
-        typeof props.pagination === 'object'
-            ? (props.pagination?.pageSize ?? 10)
-            : 10;
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const releaseAction = useReleaseActionStore((state) => state.action);
@@ -43,9 +42,13 @@ export default function DistributionTable({
         {
             title: messages('common.iNo'),
             key: 'iNo',
-            width: 80,
+            width: 50,
             align: 'center',
-            render: (_, __, index) => (currentPage - 1) * pageSize + index + 1,
+            render: (_, __, index) =>
+                ((pagination?.current || 1) - 1) *
+                    (pagination?.pageSize || 999) +
+                index +
+                1,
         },
         {
             title: messages('distribution.digitalServiceProviders'),
@@ -69,54 +72,61 @@ export default function DistributionTable({
                             />
                         </div>
                         <span className="font-bold">{record?.dsp?.name}</span>
+                        {record?.isActive === false && (
+                            <CustomTooltip
+                                title={messages('distribution.inactiveDsp')}
+                            >
+                                <Lock size={16} className="text-gray-400" />
+                            </CustomTooltip>
+                        )}
                     </div>
                 );
             },
         },
-        {
-            title: messages('distribution.lastEnqueue'),
-            key: 'releaseDspDelivery.lastEnqueuedAt',
-            dataIndex: 'releaseDspDelivery.lastEnqueuedAt',
-            align: 'left',
-            width: 250,
-            sorter: true,
-            sortOrder: getSortOrder(
-                dataFilter?.orderBy,
-                dataFilter?.fieldOrder,
-                'releaseDspDelivery.lastEnqueuedAt'
-            ),
-            render: (value, record) => (
-                <span className="truncate text-wrap">
-                    {' '}
-                    {formattedDate(record?.lastEnqueuedAt)}{' '}
-                </span>
-            ),
-        },
-        {
-            title: 'Last Delivered',
-            key: 'releaseDspDelivery.lastDeliveredAt',
-            dataIndex: 'releaseDspDelivery.lastDeliveredAt',
-            align: 'left',
-            width: 250,
-            sorter: true,
-            sortOrder: getSortOrder(
-                dataFilter?.orderBy,
-                dataFilter?.fieldOrder,
-                'releaseDspDelivery.lastDeliveredAt'
-            ),
-            render: (value, record) => (
-                <span className="truncate text-wrap">
-                    {' '}
-                    {formattedDate(record?.lastDeliveredAt)}{' '}
-                </span>
-            ),
-        },
+        // {
+        //     title: messages('distribution.lastEnqueue'),
+        //     key: 'releaseDspDelivery.lastEnqueuedAt',
+        //     dataIndex: 'releaseDspDelivery.lastEnqueuedAt',
+        //     align: 'left',
+        //     width: 250,
+        //     sorter: true,
+        //     sortOrder: getSortOrder(
+        //         dataFilter?.orderBy,
+        //         dataFilter?.fieldOrder,
+        //         'releaseDspDelivery.lastEnqueuedAt'
+        //     ),
+        //     render: (value, record) => (
+        //         <span className="truncate text-wrap">
+        //             {' '}
+        //             {formattedDate(record?.lastEnqueuedAt)}{' '}
+        //         </span>
+        //     ),
+        // },
+        // {
+        //     title: 'Last Delivered',
+        //     key: 'releaseDspDelivery.lastDeliveredAt',
+        //     dataIndex: 'releaseDspDelivery.lastDeliveredAt',
+        //     align: 'left',
+        //     width: 250,
+        //     sorter: true,
+        //     sortOrder: getSortOrder(
+        //         dataFilter?.orderBy,
+        //         dataFilter?.fieldOrder,
+        //         'releaseDspDelivery.lastDeliveredAt'
+        //     ),
+        //     render: (value, record) => (
+        //         <span className="truncate text-wrap">
+        //             {' '}
+        //             {formattedDate(record?.lastDeliveredAt)}{' '}
+        //         </span>
+        //     ),
+        // },
         {
             title: messages('common.status'),
             key: 'status',
             dataIndex: 'status',
             align: 'left',
-            width: 250,
+            width: 200,
             render: (value, record) => {
                 if (record?.status === RELEASE_DSP_DELIVERY_STATUS.ISSUES) {
                     return (
@@ -147,8 +157,11 @@ export default function DistributionTable({
             align: 'center',
             fixed: 'right',
             width: 100,
+            onCell: (record) => ({
+                className: record.isActive === false ? '!bg-zinc-50' : '',
+            }),
             render: (value, record) => {
-                if (!isEditMode) return;
+                if (!isEditMode || record?.isActive === false) return;
                 return (
                     <PermissionGate permission={PERMISSION.RELEASE.UPDATE}>
                         <Space>
@@ -180,7 +193,11 @@ export default function DistributionTable({
             {...props}
             pagination={false}
             columns={column}
-            rowClassName={'group cursor-pointer'}
+            rowClassName={(record) =>
+                record.isActive === false
+                    ? 'bg-zinc-50 opacity-50'
+                    : 'group cursor-pointer'
+            }
         />
     );
 }

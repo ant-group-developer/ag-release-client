@@ -162,7 +162,7 @@ function TenantRoles() {
     return (
         <div>
             <div
-                className="mb-4 flex items-center justify-between rounded-t-lg p-4"
+                className="mb-4 flex items-center justify-between rounded-lg p-4"
                 style={{ background: token.colorBgContainer }}
             >
                 <Typography.Title level={5} style={{ margin: 0 }}>

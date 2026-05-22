@@ -28,7 +28,7 @@ export const DspTable = ({ ...props }: Props) => {
     const { updateDsp } = useUpdateDsp();
     const { token } = theme.useToken();
     const { hasPermission } = usePermission();
-    const canUpdate = hasPermission(PERMISSION.DSP.UPDATE);
+    const canUpdate = hasPermission(PERMISSION.DSP_SYSTEM.UPDATE);
 
     const column: ProColumns<DspData>[] = [
         {
@@ -166,6 +166,25 @@ export const DspTable = ({ ...props }: Props) => {
             ),
         },
         {
+            title: messages('roles.isDefault'),
+            key: 'isDefault',
+            dataIndex: 'isDefault',
+            align: 'center',
+            width: 100,
+            render: (value, record) => (
+                <Switch
+                    value={record?.isDefault}
+                    onChange={(e) =>
+                        updateDsp({
+                            id: record?.id,
+                            payload: { isDefault: e },
+                        })
+                    }
+                    disabled={!canUpdate}
+                />
+            ),
+        },
+        {
             title: messages('dsp.hasDeal'),
             key: 'hasDeal',
             dataIndex: 'hasDeal',
@@ -237,7 +256,7 @@ export const DspTable = ({ ...props }: Props) => {
             width: 50,
             fixed: canUpdate ? 'right' : undefined,
             render: (_, record) => (
-                <PermissionGate permission={PERMISSION.DSP.UPDATE}>
+                <PermissionGate permission={PERMISSION.DSP_SYSTEM.UPDATE}>
                     <ActionButton
                         showDelete={canUpdate}
                         onShowDelete={() =>

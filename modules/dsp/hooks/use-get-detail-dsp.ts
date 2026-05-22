@@ -22,6 +22,7 @@ export const useGetDetailDsp = (id: DspData['id']) => {
         dspActions: [],
         enablePolicy: false,
         code: '',
+        isDefault: false,
     };
 
     return {

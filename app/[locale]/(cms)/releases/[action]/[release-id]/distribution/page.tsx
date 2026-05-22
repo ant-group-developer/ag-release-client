@@ -13,8 +13,8 @@ import { toastPromise } from '@/helpers/messages-helper';
 import { useElementHeightById } from '@/hooks/use-element-height-by-id';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { useThemeMode } from '@/hooks/use-theme-mode';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
+import { useThemeMode } from '@/hooks/use-theme-mode';
 import { RELEASE_DSP_DELIVERY_STATUS } from '@/modules/distribution/enum';
 import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribute';
 import { useReleaseDistribute } from '@/modules/distribution/hooks/use-release-distribute';
@@ -68,7 +68,7 @@ export default function Distribution({}: Props) {
         page: 1,
         pageSize: PAGE_SIZE_EXTRA_LARGE,
         status: releaseDspStatus,
-        orderBy: ORDER.DESC,
+        orderBy: ORDER.ASC,
         fieldOrder: 'dsp.name',
     });
 
@@ -158,7 +158,7 @@ export default function Distribution({}: Props) {
         selectedRowKeys: selectedRow.map((row) => row.dsp?.id),
         onChange: handleSelectedRow,
         getCheckboxProps: (record: ReleaseDspData) => ({
-            disabled: isReadMode,
+            disabled: isReadMode || record.isActive === false,
         }),
     };
 
@@ -206,14 +206,15 @@ export default function Distribution({}: Props) {
                         }}
                         options={false}
                         dataSource={releaseDsp?.items}
-                        scroll={{ x: 'max-content' }}
+                        // scroll={{ x: 'max-content' }}
                         rowSelection={rowSelection}
                         tableAlertOptionRender={isReadMode ? false : undefined}
                         size="large"
                         rowKey={(record) => record.dsp?.id}
                         pagination={{
-                            pageSize: dataFilter?.pageSize,
+                            pageSize: dataFilter?.pageSize || 999,
                             total: releaseDsp?.metadata?.totalItems,
+                            current: dataFilter.page || 1,
                         }}
                         loading={isLoadingReleaseDsp}
                         onChange={onChangeSort}
