@@ -71,9 +71,9 @@ export const tenantApi = {
         );
     },
 
-    updateTenantDspAgreement(tenantId: string, dspId: string, payload: UpdateTenantDspAgreementPayload) {
+    updateTenantDspAgreement(tenantId: string, payload: UpdateTenantDspAgreementPayload) {
         return axiosInstance.patch(
-            `/tenant-dsp-agreements/admin/tenants/${tenantId}/dsps/${dspId}`,
+            `/tenant-dsp-agreements/admin/tenants/${tenantId}/dsps`,
             payload
         );
     },

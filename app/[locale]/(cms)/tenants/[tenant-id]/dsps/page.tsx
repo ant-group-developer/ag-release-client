@@ -50,24 +50,22 @@ function TenantDsps() {
 
     const onSave = () => {
         active();
-        const entries = Object.entries(pendingChanges);
-        Promise.all(
-            entries.map(([dspId, isActive]) =>
-                updateTenantDspAgreement({
-                    tenantId,
-                    dspId,
-                    payload: { isActive },
-                    onSuccess: () => {}, 
-                })
-            )
-        )
-            .then(() => {
+        const items = Object.entries(pendingChanges).map(([dspId, isActive]) => ({
+            dspId,
+            isActive,
+        }));
+
+        updateTenantDspAgreement({
+            tenantId,
+            payload: { items },
+            onSuccess: () => {
                 deActive();
                 setPendingChanges({});
-            })
-            .catch(() => {
+            },
+            onError: () => {
                 deActive();
-            });
+            },
+        });
     };
 
     const columns: ProColumns<TenantDspAgreementData>[] = [

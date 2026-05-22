@@ -6,19 +6,25 @@ import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import ErnVersionSelect from '@/modules/aggregator/components/select/ern-version-select';
-import { useTestConnection, useTestConnectionById } from '@/modules/sftp-config/hooks/use-test-connection';
-import { TestSftpConnectionByIdPayload, TestSftpConnectionPayload } from '@/modules/sftp-config/types/payload';
+import { DSP_DEAL } from '@/modules/dsp/enums';
+import {
+    useTestConnection,
+    useTestConnectionById,
+} from '@/modules/sftp-config/hooks/use-test-connection';
+import {
+    TestSftpConnectionByIdPayload,
+    TestSftpConnectionPayload,
+} from '@/modules/sftp-config/types/payload';
 import { CreateVariables } from '@/types/api';
 import { CheckCard } from '@ant-design/pro-components';
 import { Alert, Button, Divider, Form, Input, InputNumber } from 'antd';
 import { useWatch } from 'antd/es/form/Form';
 import TextArea from 'antd/es/input/TextArea';
-import { Play, UserCog, Settings } from 'lucide-react';
+import { Play, Settings, UserCog } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
-import { DSP_DEAL } from '@/modules/dsp/enums';
-import { TenantDspData } from '../../types';
 import { useUpdateTenantDsp } from '../../hooks/use-update-tenant-dsp';
+import { TenantDspData } from '../../types';
 import { UpdateTenantDspPayload } from '../../types/payload';
 
 export default function DspTenantModal() {
@@ -66,6 +72,7 @@ export default function DspTenantModal() {
             }
 
             if (dspId) {
+                return;
                 updateTenantDsp({
                     id: dspId,
                     payload,
@@ -96,19 +103,32 @@ export default function DspTenantModal() {
         connectionActive();
         try {
             const { sftpConfig } = form.getFieldsValue();
-            const { host, port, username, password, privateKey } = sftpConfig?.metadata || {};
+            const { host, port, username, password, privateKey } =
+                sftpConfig?.metadata || {};
 
             if (password || privateKey) {
                 form.setFields([
-                    { name: ['sftpConfig', 'metadata', 'password'], errors: [] },
-                    { name: ['sftpConfig', 'metadata', 'privateKey'], errors: [] },
+                    {
+                        name: ['sftpConfig', 'metadata', 'password'],
+                        errors: [],
+                    },
+                    {
+                        name: ['sftpConfig', 'metadata', 'privateKey'],
+                        errors: [],
+                    },
                 ]);
             }
 
             if (!password && !privateKey && !dataEdit?.sftpConfig?.id) {
                 form.setFields([
-                    { name: ['sftpConfig', 'metadata', 'password'], errors: [messages('sftp.requiredPasswordOrPrivateKey')] },
-                    { name: ['sftpConfig', 'metadata', 'privateKey'], errors: [messages('sftp.requiredPasswordOrPrivateKey')] },
+                    {
+                        name: ['sftpConfig', 'metadata', 'password'],
+                        errors: [messages('sftp.requiredPasswordOrPrivateKey')],
+                    },
+                    {
+                        name: ['sftpConfig', 'metadata', 'privateKey'],
+                        errors: [messages('sftp.requiredPasswordOrPrivateKey')],
+                    },
                 ]);
                 deActiveConnection();
                 return;
@@ -137,20 +157,21 @@ export default function DspTenantModal() {
                 },
             };
             if (dataEdit?.sftpConfig?.id && !password && !privateKey) {
-                const variables: CreateVariables<TestSftpConnectionByIdPayload> = {
-                    payload: {
-                        id: dataEdit.sftpConfig.id,
-                        ...payload,
-                    },
-                    onSuccess(e) {
-                        deActiveConnection();
-                        handleShowNotiTestConnection(e.status);
-                    },
-                    onError(e) {
-                        console.log('Test connection sftp', e);
-                        deActiveConnection();
-                    },
-                };
+                const variables: CreateVariables<TestSftpConnectionByIdPayload> =
+                    {
+                        payload: {
+                            id: dataEdit.sftpConfig.id,
+                            ...payload,
+                        },
+                        onSuccess(e) {
+                            deActiveConnection();
+                            handleShowNotiTestConnection(e.status);
+                        },
+                        onError(e) {
+                            console.log('Test connection sftp', e);
+                            deActiveConnection();
+                        },
+                    };
                 return testConnectionById(variables);
             } else {
                 testConnection(variables);
@@ -207,13 +228,23 @@ export default function DspTenantModal() {
                             <CheckCard
                                 className="!m-0 !w-full"
                                 avatar={<UserCog size={SIZE_ICON_BIG} />}
-                                title={<span>{messages('integration.deal.direct.label')}</span>}
+                                title={
+                                    <span>
+                                        {messages(
+                                            'integration.deal.direct.label'
+                                        )}
+                                    </span>
+                                }
                                 value={DSP_DEAL.DIRECT}
                             />
                             <CheckCard
                                 className="!m-0 !w-full"
                                 avatar={<Settings size={SIZE_ICON_BIG} />}
-                                title={<span>{messages('aggregator.systemDefault')}</span>}
+                                title={
+                                    <span>
+                                        {messages('aggregator.systemDefault')}
+                                    </span>
+                                }
                                 value={'SYSTEM'}
                             />
                         </CheckCard.Group>
@@ -236,7 +267,12 @@ export default function DspTenantModal() {
                                 label="Host/Server address"
                                 name={['sftpConfig', 'metadata', 'host']}
                                 required
-                                rules={[{ required: true, message: messages('validation.input') }]}
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: messages('validation.input'),
+                                    },
+                                ]}
                             >
                                 <Input placeholder="For ex: example.service.com or 216.81.210.36" />
                             </AppFormItem>
@@ -244,43 +280,75 @@ export default function DspTenantModal() {
                                 label="Port"
                                 name={['sftpConfig', 'metadata', 'port']}
                                 required
-                                rules={[{ required: true, message: messages('validation.input') }]}
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: messages('validation.input'),
+                                    },
+                                ]}
                             >
                                 <InputNumber
                                     placeholder="Enter 21 unless you received other instructions"
                                     style={{ width: '100%' }}
                                 />
                             </AppFormItem>
-                            <AppFormItem label="Path" name={['sftpConfig', 'metadata', 'path']}>
+                            <AppFormItem
+                                label="Path"
+                                name={['sftpConfig', 'metadata', 'path']}
+                            >
                                 <Input />
                             </AppFormItem>
-                            <AppFormItem name={['sftpConfig', 'ernVersion']} label={messages('aggregator.ernVersion')}>
+                            <AppFormItem
+                                name={['sftpConfig', 'ernVersion']}
+                                label={messages('aggregator.ernVersion')}
+                            >
                                 <ErnVersionSelect />
                             </AppFormItem>
                             <AppFormItem
                                 label="Username"
                                 name={['sftpConfig', 'metadata', 'username']}
                                 required
-                                rules={[{ required: true, message: messages('validation.input') }]}
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: messages('validation.input'),
+                                    },
+                                ]}
                             >
-                                <Input autoComplete="off" placeholder="Enter name" />
+                                <Input
+                                    autoComplete="off"
+                                    placeholder="Enter name"
+                                />
                             </AppFormItem>
-                            <AppFormItem label="Password" name={['sftpConfig', 'metadata', 'password']}>
-                                <Input.Password autoComplete="off" placeholder="Enter password" />
+                            <AppFormItem
+                                label="Password"
+                                name={['sftpConfig', 'metadata', 'password']}
+                            >
+                                <Input.Password
+                                    autoComplete="off"
+                                    placeholder="Enter password"
+                                />
                             </AppFormItem>
 
-                            <AppFormItem label={messages('common.privateKey')} name={['sftpConfig', 'metadata', 'privateKey']}>
+                            <AppFormItem
+                                label={messages('common.privateKey')}
+                                name={['sftpConfig', 'metadata', 'privateKey']}
+                            >
                                 <TextArea />
                             </AppFormItem>
                         </>
                     )}
                 </AppForm>
 
-                <div className="flex justify-end gap-2 mt-4">
+                <div className="mt-4 flex justify-end gap-2">
                     {watchDeal === DSP_DEAL.DIRECT && (
                         <Button
                             onClick={handleTestConnection}
-                            icon={<div><Play size={SIZE_ICON} /></div>}
+                            icon={
+                                <div>
+                                    <Play size={SIZE_ICON} />
+                                </div>
+                            }
                             loading={isConnectionActive}
                             type="default"
                             htmlType="button"

@@ -120,12 +120,14 @@ export interface TenantDspAgreementData {
 }
 
 export interface UpdateTenantDspAgreementPayload {
-    isActive: boolean;
+    items: {
+        dspId: string;
+        isActive: boolean;
+    }[];
 }
 
 export interface UpdateTenantDspAgreement extends CommonFunction {
     tenantId: string;
-    dspId: string;
     payload: UpdateTenantDspAgreementPayload;
 }
 

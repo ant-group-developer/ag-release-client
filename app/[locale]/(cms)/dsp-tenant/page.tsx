@@ -27,7 +27,6 @@ export default function DspTenant() {
 
     // apis
     const { dspData, refetch } = useGetTenantDsps(dataFilter);
-    console.log('🚀 ~ DspTenant ~ dspData:', dspData);
 
     // func
     const handleRefresh = () => {

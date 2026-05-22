@@ -103,8 +103,8 @@ export const useUpdateTenantDspAgreement = () => {
     };
 
     const mutation = useMutation({
-        mutationFn: ({ tenantId, dspId, payload }: UpdateTenantDspAgreement) =>
-            tenantApi.updateTenantDspAgreement(tenantId, dspId, payload),
+        mutationFn: ({ tenantId, payload }: UpdateTenantDspAgreement) =>
+            tenantApi.updateTenantDspAgreement(tenantId, payload),
         onSuccess,
         onError,
         mutationKey: tenantQueryKeys.updates(),
