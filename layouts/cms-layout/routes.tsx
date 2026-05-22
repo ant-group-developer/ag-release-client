@@ -40,6 +40,7 @@ import {
     Speaker,
     SquareActivity,
     SquareUser,
+    Server,
     Trash,
     User,
     User2,
@@ -277,7 +278,7 @@ export const adminRoutes: RouteNode[] = [
                 label: 'dspSystem.label',
                 title: 'DSP System',
                 href: APP_ROUTES.DSP,
-                icon: SquareActivity,
+                icon: Server,
                 required: { permission: [PERMISSION.DSP_SYSTEM.READ] },
             },
             {

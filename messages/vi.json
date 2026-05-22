@@ -1439,6 +1439,7 @@
     },
     "dsp": {
         "label": "DSP",
+        "systemTenantNoAgreement": "Quản trị viên hệ thống không có thỏa thuận DSP.",
         "name": "Tên nền tảng",
         "codeCi": "Mã CI",
         "hasDeal": "Thoả thuận CI",

@@ -192,6 +192,12 @@ export const QUERY_KEY = {
         UPDATE: 'UPDATE_DSP',
         GET_DETAIL_ROUTING_CONFIG: 'GET_DETAIL_DSP',
     },
+    DSP_SYSTEM: {
+        KEY: 'DPS_SYSTEM',
+        GET_LIST: 'GET_LIST_DSP_SYSTEM',
+        GET_DETAIL: 'GET_DETAIL_DSP_SYSTEM',
+        UPDATE: 'UPDATE_DSP_SYSTEM',
+    },
     DSP_ACTION: {
         KEY: 'DPS_ACTION',
         GET_LIST: 'GET_LIST_DSP_ACTION',

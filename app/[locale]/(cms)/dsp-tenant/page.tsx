@@ -4,6 +4,7 @@ import AppSearch from '@/components/ui/input/search';
 import { useFilter } from '@/hooks/use-filter';
 import { useLoadingStatus } from '@/hooks/use-loading-status';
 import useModalStore from '@/hooks/use-modal';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import DspTenantModal from '@/modules/dsp-tenant/components/modal/dsp-tenant-modal';
 import { DspTenantTable } from '@/modules/dsp-tenant/components/table';
 import { tenantDspQueryKeys } from '@/modules/dsp-tenant/constants/query-keys';
@@ -22,6 +23,7 @@ export default function DspTenant() {
     const typeModal = useModalStore((state) => state.typeModal);
     const { dataFilter } = useFilter<TenantDspDataFilter>({});
     const [keyword, setKeyword] = useState<string>('');
+    const { isAdmin } = useAuth();
     const { isLoading } = useLoadingStatus({
         queryKeys: [tenantDspQueryKeys.lists()],
         mutationKeys: [tenantDspQueryKeys.all],
@@ -58,6 +60,11 @@ export default function DspTenant() {
                     sticky
                     dataSource={filteredData}
                     loading={isLoading}
+                    locale={{
+                        emptyText: isAdmin
+                            ? messages('dsp.systemTenantNoAgreement')
+                            : undefined,
+                    }}
                     headerTitle={
                         <AppSearch
                             className="max-w-52"

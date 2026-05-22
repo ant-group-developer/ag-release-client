@@ -7,7 +7,9 @@ import { ProColumns } from '@ant-design/pro-components';
 import { Tag, theme } from 'antd';
 import { Edit, Settings, UserCog } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 import { DSP_DEAL_TENANT, TYPE_MODAL_DSP_TENANT } from '../../enums';
+import { useUpdateTenantDsp } from '../../hooks/use-update-tenant-dsp';
 import { TenantDspData } from '../../types';
 
 type Props = Omit<AppProTableProps<TenantDspData>, 'columns'>;
@@ -16,6 +18,8 @@ export const DspTenantTable = ({ ...props }: Props) => {
     const messages = useTranslations();
     const { token } = theme.useToken();
     const openModal = useModalStore((state) => state.openModal);
+    const { updateTenantDsp, isUpdating } = useUpdateTenantDsp();
+    const [updatingId, setUpdatingId] = useState<string | null>(null);
 
     const column: ProColumns<TenantDspData>[] = [
         {
@@ -88,7 +92,7 @@ export const DspTenantTable = ({ ...props }: Props) => {
             title: messages('dsp.dealType'),
             key: 'mode',
             dataIndex: 'mode',
-            align: 'center',
+            align: 'left',
             width: 150,
             ellipsis: true,
             render: (value, record) => {
@@ -146,7 +150,30 @@ export const DspTenantTable = ({ ...props }: Props) => {
         //     dataIndex: 'isActive',
         //     align: 'center',
         //     width: 80,
-        //     render: (value, record) => <Switch value={true} disabled={true} />,
+        //     render: (value, record) => {
+        //         const isLoading = updatingId === record.dspId && isUpdating;
+
+        //         const handleChange = (checked: boolean, e: any) => {
+        //             e.stopPropagation();
+        //             setUpdatingId(record.dspId);
+        //             updateTenantDsp({
+        //                 id: record.dspId,
+        //                 payload: {
+        //                     isActive: checked,
+        //                 },
+        //                 onSuccess: () => setUpdatingId(null),
+        //                 onError: () => setUpdatingId(null),
+        //             });
+        //         };
+
+        //         return (
+        //             <Switch
+        //                 checked={!!value}
+        //                 onChange={handleChange}
+        //                 loading={isLoading}
+        //             />
+        //         );
+        //     },
         // },
         // {
         //     title: messages('roles.isDefault'),

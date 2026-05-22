@@ -1472,6 +1472,7 @@
     },
     "dsp": {
         "label": "DSP",
+        "systemTenantNoAgreement": "System administrators do not have DSP agreements.",
         "name": "Platform name",
         "codeCi": "CI Code",
         "hasDeal": "Has deal CI",
