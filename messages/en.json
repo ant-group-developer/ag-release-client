@@ -1291,7 +1291,8 @@
         "platform": "Platform",
         "digitalServiceProviders": "Digital service providers",
         "lastEnqueue": "Last Enqueue",
-        "lastDelivered": "Last Delivered"
+        "lastDelivered": "Last Delivered",
+        "inactiveDsp": "This DSP is locked, cannot be distributed"
     },
 
     "formFields": {

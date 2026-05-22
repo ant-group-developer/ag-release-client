@@ -14,7 +14,7 @@ export const tenantDspApi = {
     },
 
     update: (dspId: string, payload: UpdateTenantDspPayload) => {
-        return axiosInstance.put(
+        return axiosInstance.patch(
             `/tenant-dsp-agreements/tenant/dsps/${dspId}`,
             payload
         );

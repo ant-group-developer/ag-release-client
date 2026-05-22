@@ -6,7 +6,6 @@ import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import ErnVersionSelect from '@/modules/aggregator/components/select/ern-version-select';
-import { DSP_DEAL } from '@/modules/dsp/enums';
 import {
     useTestConnection,
     useTestConnectionById,
@@ -23,6 +22,7 @@ import TextArea from 'antd/es/input/TextArea';
 import { Play, Settings, UserCog } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
+import { DSP_DEAL_TENANT } from '../../enums';
 import { useUpdateTenantDsp } from '../../hooks/use-update-tenant-dsp';
 import { TenantDspData } from '../../types';
 import { UpdateTenantDspPayload } from '../../types/payload';
@@ -52,7 +52,6 @@ export default function DspTenantModal() {
         try {
             const payload: UpdateTenantDspPayload = {
                 mode: values.mode,
-                aggregatorId: values.aggregatorId,
             };
 
             if (sftpConfig) {
@@ -72,7 +71,6 @@ export default function DspTenantModal() {
             }
 
             if (dspId) {
-                return;
                 updateTenantDsp({
                     id: dspId,
                     payload,
@@ -235,7 +233,7 @@ export default function DspTenantModal() {
                                         )}
                                     </span>
                                 }
-                                value={DSP_DEAL.DIRECT}
+                                value={DSP_DEAL_TENANT.DIRECT}
                             />
                             <CheckCard
                                 className="!m-0 !w-full"
@@ -245,14 +243,14 @@ export default function DspTenantModal() {
                                         {messages('aggregator.systemDefault')}
                                     </span>
                                 }
-                                value={'SYSTEM'}
+                                value={DSP_DEAL_TENANT.SYSTEM_DEFAULT}
                             />
                         </CheckCard.Group>
                     </AppFormItem>
 
                     <Divider />
 
-                    {watchDeal === 'SYSTEM' && (
+                    {watchDeal === DSP_DEAL_TENANT.SYSTEM_DEFAULT && (
                         <Alert
                             message={messages('aggregator.systemDefaultNote')}
                             type="info"
@@ -261,7 +259,7 @@ export default function DspTenantModal() {
                         />
                     )}
 
-                    {watchDeal === DSP_DEAL.DIRECT && (
+                    {watchDeal === DSP_DEAL_TENANT.DIRECT && (
                         <>
                             <AppFormItem
                                 label="Host/Server address"
@@ -341,7 +339,7 @@ export default function DspTenantModal() {
                 </AppForm>
 
                 <div className="mt-4 flex justify-end gap-2">
-                    {watchDeal === DSP_DEAL.DIRECT && (
+                    {watchDeal === DSP_DEAL_TENANT.DIRECT && (
                         <Button
                             onClick={handleTestConnection}
                             icon={

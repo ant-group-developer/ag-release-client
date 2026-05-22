@@ -13,20 +13,32 @@ import { TenantDspDataFilter } from '@/modules/dsp-tenant/types';
 import { PageContainer } from '@ant-design/pro-components';
 import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
+import { useMemo, useState } from 'react';
 
 export default function DspTenant() {
     // hooks - state
     const messages = useTranslations();
     const { token } = theme.useToken();
     const typeModal = useModalStore((state) => state.typeModal);
-    const { dataFilter, onSearch } = useFilter<TenantDspDataFilter>({});
+    const { dataFilter } = useFilter<TenantDspDataFilter>({});
+    const [keyword, setKeyword] = useState<string>('');
     const { isLoading } = useLoadingStatus({
         queryKeys: [tenantDspQueryKeys.lists()],
         mutationKeys: [tenantDspQueryKeys.all],
     });
 
     // apis
-    const { dspData, refetch } = useGetTenantDsps(dataFilter);
+    const { dspData, refetch } = useGetTenantDsps({
+        ...dataFilter,
+    });
+
+    const filteredData = useMemo(() => {
+        if (!keyword) return dspData;
+        const lowerKeyword = keyword.toLowerCase();
+        return dspData.filter((item) =>
+            item.dsp?.name?.toLowerCase().includes(lowerKeyword)
+        );
+    }, [dspData, keyword]);
 
     // func
     const handleRefresh = () => {
@@ -44,13 +56,13 @@ export default function DspTenant() {
                 <DspTenantTable
                     className="rounded-t-lg"
                     sticky
-                    dataSource={dspData}
+                    dataSource={filteredData}
                     loading={isLoading}
                     headerTitle={
                         <AppSearch
                             className="max-w-52"
-                            onChange={onSearch}
-                            defaultValue={dataFilter.keyword}
+                            onChange={(e) => setKeyword(e.target.value)}
+                            onSearch={(value) => setKeyword(value)}
                         />
                     }
                     options={{
