@@ -1,4 +1,6 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import { usePermission } from '@/hooks/use-permission';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { RolePermission, RolesData } from '@/modules/roles/types';
 import { useTenantActive } from '@/modules/tenant/hooks/use-get-tenant';
@@ -10,9 +12,7 @@ import { useAssignableRoles, useUserRole } from '../../hooks/use-get-user';
 import { useUpdateUserRole } from '../../hooks/use-update-user';
 import { UserData } from '../../types/data';
 import {
-    checkCanAccessTenantAll,
     checkIsSystemAdmin,
-    checkIsTenantOwnerOrAdmin,
 } from '../../utils/role';
 
 type Props = {
@@ -69,6 +69,8 @@ function UpdatePermission({ dataEdit }: Props) {
 
     const userId = dataEdit.id;
     const { isSystemTenant } = useAuth();
+    const { hasPermission } = usePermission();
+    const canUpdateRole = hasPermission(PERMISSION.USER.UPDATE_ROLE);
     const { data: tenantActive } = useTenantActive();
     const tenantId = tenantActive?.items?.[0]?.id || '';
 
@@ -81,14 +83,6 @@ function UpdatePermission({ dataEdit }: Props) {
         : tenantActive?.items?.[0]?.id || '';
 
     const isSystemAdmin = checkIsSystemAdmin(dataEdit.type);
-    const tenantUserType = dataEdit.tenantUser?.find(
-        (tu) => tu.tenant.id === activeTenantId
-    )?.type as any;
-    const isTenantOwnerOrAdmin = checkIsTenantOwnerOrAdmin(tenantUserType);
-    const canAccessTenantAll = checkCanAccessTenantAll(
-        dataEdit.type,
-        tenantUserType
-    );
 
     const { data: assignableRoles } = useAssignableRoles(
         isSystemTenant ? selectedTenantId : undefined
@@ -114,12 +108,8 @@ function UpdatePermission({ dataEdit }: Props) {
     );
 
     useEffect(() => {
-        if (canAccessTenantAll) {
-            setSelectedKeys(assignableRoleIds);
-        } else {
-            setSelectedKeys(userRoleIds);
-        }
-    }, [userRoleIds, canAccessTenantAll, assignableRoleIds]);
+        setSelectedKeys(userRoleIds);
+    }, [userRoleIds]);
 
     const [selectedKeys, setSelectedKeys] = useState<Key[]>([]);
 
@@ -163,7 +153,7 @@ function UpdatePermission({ dataEdit }: Props) {
     };
 
     const isTableDisabled =
-        (isSystemTenant && !selectedTenantId) || canAccessTenantAll;
+        (isSystemTenant && !selectedTenantId) || !canUpdateRole;
 
     return (
         <div className="flex flex-col gap-4">
@@ -228,16 +218,7 @@ function UpdatePermission({ dataEdit }: Props) {
                     })}
                 />
             )}
-            {!isSystemTenant && isTenantOwnerOrAdmin && (
-                <Alert
-                    type="success"
-                    showIcon
-                    message={messages('user.grantPermission.tenantOwnerAlert', {
-                        defaultMessage:
-                            'This user is a Tenant Owner/Admin and automatically inherits all active capabilities.',
-                    })}
-                />
-            )}
+
 
             <Tooltip
                 title={

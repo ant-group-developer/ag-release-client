@@ -2,6 +2,8 @@ import AppForm, { AppFormProps } from '@/components/ui/antd-form/form';
 import AppColorPicker from '@/components/ui/colorPicker/app-color-picker';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
+import { PERMISSION } from '@/modules/auth/constants/permission';
+import { usePermission } from '@/hooks/use-permission';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import UserSelect from '@/modules/user/components/user-select';
 import {
@@ -32,8 +34,8 @@ function TenantFormV2({ excludeIds, wrapperClassName, ...props }: Props) {
     const {
         isAdmin,
         profile: { tenantId },
-        isTenantOwner,
     } = useAuth();
+    const { hasPermission } = usePermission();
 
     return (
         <AppForm {...props}>
@@ -159,8 +161,7 @@ function TenantFormV2({ excludeIds, wrapperClassName, ...props }: Props) {
                                     >
                                         <UserSelect
                                             disabled={
-                                                tenantId === props.tenantId &&
-                                                isTenantOwner
+                                                !hasPermission(PERMISSION.WORKSPACE.UPDATE_OWNER)
                                             }
                                             externalOnChange={(
                                                 value,
@@ -238,7 +239,7 @@ function TenantFormV2({ excludeIds, wrapperClassName, ...props }: Props) {
                                             placeholder={messages(
                                                 'tenant.labels.max.label'
                                             )}
-                                            disabled={!isAdmin}
+                                            disabled={!hasPermission(PERMISSION.WORKSPACE.UPDATE_CONFIG)}
                                             style={{ width: '100%' }}
                                         />
                                     </AppForm.Item>
@@ -249,8 +250,7 @@ function TenantFormV2({ excludeIds, wrapperClassName, ...props }: Props) {
                                     >
                                         <Switch
                                             disabled={
-                                                tenantId === props.tenantId &&
-                                                isTenantOwner
+                                                !hasPermission(PERMISSION.WORKSPACE.UPDATE_STATUS)
                                             }
                                         />
                                     </AppForm.Item>

@@ -10,7 +10,6 @@ import useModalStore from '@/hooks/use-modal';
 import { usePermission } from '@/hooks/use-permission';
 import { Link, useRouter } from '@/i18n/routing';
 import { PERMISSION } from '@/modules/auth/constants/permission';
-import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { ProColumns } from '@ant-design/pro-components';
 import { Avatar, theme, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -32,8 +31,8 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
     const openModal = useModalStore((state) => state.openModal);
     const { token } = theme.useToken();
 
-    const { isSystemTenant } = useAuth();
     const { hasPermission } = usePermission();
+    const canDelete = hasPermission(PERMISSION.ARTIST.DELETE);
 
     const column: ProColumns<ArtistData>[] = [
         {
@@ -217,7 +216,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
                 <ActionButton
                     showUpdate={hasPermission(PERMISSION.ARTIST.UPDATE)}
                     showDetail
-                    showDelete={isSystemTenant}
+                    showDelete={canDelete}
                     onShowUpdate={() => {
                         openModal(TYPE_MODAL_ARTIST.UPDATE, record);
                     }}
