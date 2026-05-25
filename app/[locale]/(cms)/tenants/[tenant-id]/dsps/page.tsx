@@ -29,15 +29,20 @@ function TenantDsps() {
 
     const { updateTenantDspAgreement } = useUpdateTenantDspAgreement();
 
-    const [pendingChanges, setPendingChanges] = useState<Record<string, boolean>>({});
+    const [pendingChanges, setPendingChanges] = useState<
+        Record<string, boolean>
+    >({});
 
     const hasChanges = Object.keys(pendingChanges).length > 0;
 
-    const getRowId = (record: any) => record.dspId || record.dsp?.id || record.id;
+    const getRowId = (record: any) =>
+        record.dspId || record.dsp?.id || record.id;
 
     const onToggleActive = (dspId: string, checked: boolean) => {
         setPendingChanges((prev) => {
-            const originalState = dataTenantDspAgreement.find((d) => getRowId(d) === dspId)?.isActive;
+            const originalState = dataTenantDspAgreement.find(
+                (d) => getRowId(d) === dspId
+            )?.isActive;
             const next = { ...prev };
             if (checked === originalState) {
                 delete next[dspId];
@@ -50,10 +55,12 @@ function TenantDsps() {
 
     const onSave = () => {
         active();
-        const items = Object.entries(pendingChanges).map(([dspId, isActive]) => ({
-            dspId,
-            isActive,
-        }));
+        const items = Object.entries(pendingChanges).map(
+            ([dspId, isActive]) => ({
+                dspId,
+                isActive,
+            })
+        );
 
         updateTenantDspAgreement({
             tenantId,
@@ -108,9 +115,7 @@ function TenantDsps() {
                         <Switch
                             checked={isChecked}
                             disabled={!isAdmin}
-                            onChange={(val) =>
-                                onToggleActive(rowId, val)
-                            }
+                            onChange={(val) => onToggleActive(rowId, val)}
                         />
                     </div>
                 );

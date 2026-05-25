@@ -140,6 +140,7 @@ function TenantFormV2({ excludeIds, wrapperClassName, ...props }: Props) {
                                                             TENANT_TYPE.WHITE_LABEL,
                                                         ]}
                                                         disabled={!isAdmin}
+                                                        allowClear
                                                     />
                                                 </AppForm.Item>
                                             );
