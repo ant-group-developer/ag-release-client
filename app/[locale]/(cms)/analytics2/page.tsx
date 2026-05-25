@@ -3,6 +3,7 @@
 import AnalyticsChart from '@/modules/analytics2/components/analytics-chart';
 import MetricCards from '@/modules/analytics2/components/metric-cards';
 import TracksArtistsTable from '@/modules/analytics2/components/tracks-artists-table';
+import RecentReleasesTable from '@/modules/analytics2/components/recent-releases-table';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { PageContainer } from '@ant-design/pro-components';
 import { Select, theme } from 'antd';
@@ -49,6 +50,7 @@ export default function Analytics2Page() {
                 <MetricCards />
                 <AnalyticsChart />
                 <TracksArtistsTable />
+                <RecentReleasesTable />
             </div>
         </PageContainer>
     );

@@ -309,7 +309,10 @@
         "support": "Support",
         "email": "Email",
         "method": "Method",
-        "copied": "Copied"
+        "copied": "Copied",
+        "engagement": "Engagement",
+        "listeners": "Listeners",
+        "label": "Label"
     },
     "country": {
         "label": "Country",
@@ -431,7 +434,8 @@
         "stream_distribution_subtitle": "Streams distribution by platform in {year}",
         "dsp_distribution_subtitle": "DSP distribution in {year}",
         "label_distribution_subtitle": "Label distribution in {year}",
-        "artist_distribution_subtitle": "Artist distribution in {year}"
+        "artist_distribution_subtitle": "Artist distribution in {year}",
+        "recentReleases": "Recent releases"
     },
     "review": {
         "message": {
@@ -1897,6 +1901,9 @@
         "name": "Analytics name",
         "action": {
             "delete": "Delete analytics"
+        },
+        "chart": {
+            "title": "Analytics charts"
         }
     },
 

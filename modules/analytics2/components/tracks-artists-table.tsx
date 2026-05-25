@@ -1,13 +1,28 @@
 'use client';
 
-import { Card, Input, Table, Tabs } from 'antd';
-import { Search } from 'lucide-react';
+import { Card, Radio, Select, Table, Tabs } from 'antd';
 import { useTranslations } from 'next-intl';
-import { ARTIST_DATA, TRACK_DATA } from '../constants/mock-data';
+import Image from 'next/image';
+import { useState } from 'react';
+import {
+    ARTIST_DATA,
+    LABEL_DATA,
+    RELEASE_DATA,
+    TRACK_DATA,
+} from '../constants/mock-data';
+import { useTopNData } from '../hooks/use-top-n';
 
 export default function TracksArtistsTable() {
     const messages = useTranslations();
+    const [metric, setMetric] = useState<'views' | 'revenue'>('views');
+    const [topN, setTopN] = useState<number>(5);
 
+    const sortedTracks = useTopNData(TRACK_DATA, metric, topN);
+    const sortedReleases = useTopNData(RELEASE_DATA, metric, topN);
+    const sortedArtists = useTopNData(ARTIST_DATA, metric, topN);
+    const sortedLabels = useTopNData(LABEL_DATA, metric, topN);
+
+    // Columns config
     const trackColumns = [
         {
             title: messages('common.track'),
@@ -15,24 +30,73 @@ export default function TracksArtistsTable() {
             key: 'track',
             render: (text: string, record: any) => (
                 <div className="flex items-center gap-3">
-                    <img
+                    <Image
                         src={record.cover}
                         alt={text}
-                        className="h-10 w-10 rounded-lg object-cover"
+                        width={40}
+                        height={40}
+                        className="rounded-lg object-cover"
                     />
                     <span className="font-medium text-gray-900">{text}</span>
                 </div>
             ),
         },
-        { title: 'Videos', dataIndex: 'videos', key: 'videos' },
-        { title: messages('common.views'), dataIndex: 'views', key: 'views' },
-        { title: 'Engagement', dataIndex: 'engagement', key: 'engagement' },
+        { title: messages('common.video'), dataIndex: 'videos', key: 'videos' },
+        ...(metric === 'views'
+            ? [
+                  {
+                      title: messages('common.views'),
+                      dataIndex: 'viewsStr',
+                      key: 'views',
+                  },
+                  {
+                      title: messages('common.streams'),
+                      dataIndex: 'streams',
+                      key: 'streams',
+                  },
+              ]
+            : [
+                  { title: messages('common.revenue'), dataIndex: 'revenueStr', key: 'revenue' },
+                  {
+                      title: messages('common.streams'),
+                      dataIndex: 'streams',
+                      key: 'streams',
+                  },
+              ]),
+        { title: messages('common.engagement'), dataIndex: 'engagement', key: 'engagement' },
+        { title: messages('common.listeners'), dataIndex: 'listeners', key: 'listeners' },
+    ];
+
+    const releaseColumns = [
         {
-            title: messages('common.streams'),
-            dataIndex: 'streams',
-            key: 'streams',
+            title: messages('common.release'),
+            dataIndex: 'release',
+            key: 'release',
+            render: (text: string, record: any) => (
+                <div className="flex items-center gap-3">
+                    <Image
+                        src={record.cover}
+                        alt={text}
+                        width={40}
+                        height={40}
+                        className="rounded-lg object-cover"
+                    />
+                    <span className="font-medium text-gray-900">{text}</span>
+                </div>
+            ),
         },
-        { title: 'Listeners', dataIndex: 'listeners', key: 'listeners' },
+        { title: messages('common.track'), dataIndex: 'tracks', key: 'tracks' },
+        { title: messages('common.video'), dataIndex: 'videos', key: 'videos' },
+        ...(metric === 'views'
+            ? [
+                  {
+                      title: messages('common.views'),
+                      dataIndex: 'viewsStr',
+                      key: 'views',
+                  },
+              ]
+            : [{ title: messages('common.revenue'), dataIndex: 'revenueStr', key: 'revenue' }]),
+        { title: messages('common.releaseDate'), dataIndex: 'releaseDate', key: 'releaseDate' },
     ];
 
     const artistColumns = [
@@ -42,24 +106,73 @@ export default function TracksArtistsTable() {
             key: 'artist',
             render: (text: string, record: any) => (
                 <div className="flex items-center gap-3">
-                    <img
+                    <Image
                         src={record.image}
                         alt={text}
-                        className="h-10 w-10 rounded-full object-cover"
+                        width={40}
+                        height={40}
+                        className="rounded-full object-cover"
                     />
                     <span className="font-medium text-gray-900">{text}</span>
                 </div>
             ),
         },
-        { title: 'Videos', dataIndex: 'videos', key: 'videos' },
-        { title: messages('common.views'), dataIndex: 'views', key: 'views' },
-        { title: 'Engagement', dataIndex: 'engagement', key: 'engagement' },
+        { title: messages('common.video'), dataIndex: 'videos', key: 'videos' },
+        ...(metric === 'views'
+            ? [
+                  {
+                      title: messages('common.views'),
+                      dataIndex: 'viewsStr',
+                      key: 'views',
+                  },
+                  {
+                      title: messages('common.streams'),
+                      dataIndex: 'streams',
+                      key: 'streams',
+                  },
+              ]
+            : [
+                  { title: messages('common.revenue'), dataIndex: 'revenueStr', key: 'revenue' },
+                  {
+                      title: messages('common.streams'),
+                      dataIndex: 'streams',
+                      key: 'streams',
+                  },
+              ]),
+        { title: messages('common.engagement'), dataIndex: 'engagement', key: 'engagement' },
+        { title: messages('common.listeners'), dataIndex: 'listeners', key: 'listeners' },
+    ];
+
+    const labelColumns = [
         {
-            title: messages('common.streams'),
-            dataIndex: 'streams',
-            key: 'streams',
+            title: messages('common.label'),
+            dataIndex: 'label',
+            key: 'label',
+            render: (text: string, record: any) => (
+                <div className="flex items-center gap-3">
+                    <Image
+                        src={record.logo}
+                        alt={text}
+                        width={40}
+                        height={40}
+                        className="rounded-lg object-cover"
+                    />
+                    <span className="font-medium text-gray-900">{text}</span>
+                </div>
+            ),
         },
-        { title: 'Listeners', dataIndex: 'listeners', key: 'listeners' },
+        { title: messages('common.artist'), dataIndex: 'artistsCount', key: 'artistsCount' },
+        { title: messages('common.release'), dataIndex: 'releasesCount', key: 'releasesCount' },
+        ...(metric === 'views'
+            ? [
+                  {
+                      title: messages('common.views'),
+                      dataIndex: 'viewsStr',
+                      key: 'views',
+                  },
+              ]
+            : [{ title: messages('common.revenue'), dataIndex: 'revenueStr', key: 'revenue' }]),
+        { title: messages('common.engagement'), dataIndex: 'engagement', key: 'engagement' },
     ];
 
     const tabItems = [
@@ -69,13 +182,19 @@ export default function TracksArtistsTable() {
             children: (
                 <Table
                     columns={trackColumns}
-                    dataSource={TRACK_DATA}
-                    pagination={{
-                        pageSize: 5,
-                        showSizeChanger: false,
-                        className: 'px-4',
-                    }}
-                    className="mt-4"
+                    dataSource={sortedTracks}
+                    pagination={false}
+                />
+            ),
+        },
+        {
+            key: 'releases',
+            label: messages('common.release'),
+            children: (
+                <Table
+                    columns={releaseColumns}
+                    dataSource={sortedReleases}
+                    pagination={false}
                 />
             ),
         },
@@ -85,13 +204,19 @@ export default function TracksArtistsTable() {
             children: (
                 <Table
                     columns={artistColumns}
-                    dataSource={ARTIST_DATA}
-                    pagination={{
-                        pageSize: 5,
-                        showSizeChanger: false,
-                        className: 'px-4',
-                    }}
-                    className="mt-4"
+                    dataSource={sortedArtists}
+                    pagination={false}
+                />
+            ),
+        },
+        {
+            key: 'labels',
+            label: messages('common.label'),
+            children: (
+                <Table
+                    columns={labelColumns}
+                    dataSource={sortedLabels}
+                    pagination={false}
                 />
             ),
         },
@@ -107,12 +232,35 @@ export default function TracksArtistsTable() {
                 items={tabItems}
                 className="analytics-tabs"
                 tabBarExtraContent={
-                    <Input
-                        placeholder="Search"
-                        prefix={<Search className="h-4 w-4 text-gray-400" />}
-                        className="h-9 w-64 border-none bg-gray-50"
-                        style={{ borderRadius: '8px' }}
-                    />
+                    <div className="flex items-center gap-3">
+                        <Select
+                            value={topN}
+                            onChange={(value) => setTopN(value)}
+                            style={{ width: 100 }}
+                            options={[
+                                { value: 5, label: 'Top 5' },
+                                { value: 10, label: 'Top 10' },
+                            ]}
+                        />
+                        <Radio.Group
+                            value={metric}
+                            onChange={(e) => setMetric(e.target.value)}
+                            buttonStyle="solid"
+                        >
+                            <Radio.Button
+                                value="views"
+                                className="px-4 text-center"
+                            >
+                                {messages('common.views')}
+                            </Radio.Button>
+                            <Radio.Button
+                                value="revenue"
+                                className="px-4 text-center"
+                            >
+                                {messages('common.revenue')}
+                            </Radio.Button>
+                        </Radio.Group>
+                    </div>
                 }
             />
         </Card>
