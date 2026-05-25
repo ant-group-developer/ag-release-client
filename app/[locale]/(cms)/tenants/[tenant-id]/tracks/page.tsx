@@ -106,17 +106,16 @@ export default function Tracks({}: Props) {
                 />
             </div> */}
 
-            <TrackHeaderV2
-                dataFilter={dataFilter}
-                onChangeFilter={onChangeFilter}
-                canClearFilter={canClearFilter}
-                removeFilter={removeFilter}
-                // handleRefresh={handleRefresh}
-                // dataUpdatedAt={dataUpdatedAt}
-            />
-
             {layoutTable === LAYOUT_TABLE.LIST && (
                 <TracksTable
+                    headerTitle={
+                        <TrackHeaderV2
+                            dataFilter={dataFilter}
+                            onChangeFilter={onChangeFilter}
+                            canClearFilter={canClearFilter}
+                            removeFilter={removeFilter}
+                        />
+                    }
                     sticky={{ offsetHeader: 170 }}
                     dataSource={tracksData.items}
                     loading={isTrackDataLoading}
