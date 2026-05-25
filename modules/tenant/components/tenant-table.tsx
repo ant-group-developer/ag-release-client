@@ -62,7 +62,7 @@ function TenantTable({ dataFilter, ...props }: Props) {
         {
             dataIndex: '',
             title: '',
-            width: 20,
+            width: 40,
             render: () => null,
         },
         {
