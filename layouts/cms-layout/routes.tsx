@@ -272,10 +272,10 @@ export const adminRoutes: RouteNode[] = [
                 required: { permission: [PERMISSION.LABEL.READ] },
             },
             {
-                id: 'dsp-system',
+                id: 'dsp',
                 type: 'link',
                 label: 'dsp.label',
-                title: 'DSP System',
+                title: 'DSP',
                 href: APP_ROUTES.DSP,
                 icon: Server,
                 required: { permission: [PERMISSION.DSP_SYSTEM.READ] },
