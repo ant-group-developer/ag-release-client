@@ -20,7 +20,11 @@ export const usePermission = () => {
     const check = (req: string): boolean => data.has(req);
 
     const hasPermission = (requirement: Requirement): boolean => {
-        if (isAdmin || isTenantOwnerOrAdmin) {
+        // if (isAdmin || isTenantOwnerOrAdmin) {
+        //     return true;
+        // }
+
+        if (isAdmin) {
             return true;
         }
 

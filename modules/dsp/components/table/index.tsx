@@ -28,7 +28,7 @@ export const DspTable = ({ ...props }: Props) => {
     const { updateDsp } = useUpdateDsp();
     const { token } = theme.useToken();
     const { hasPermission } = usePermission();
-    const canUpdate = hasPermission(PERMISSION.DSP_SYSTEM.UPDATE);
+    const canUpdate = hasPermission(PERMISSION.DSP.UPDATE);
 
     const column: ProColumns<DspData>[] = [
         {
@@ -256,7 +256,7 @@ export const DspTable = ({ ...props }: Props) => {
             width: 50,
             fixed: canUpdate ? 'right' : undefined,
             render: (_, record) => (
-                <PermissionGate permission={PERMISSION.DSP_SYSTEM.UPDATE}>
+                <PermissionGate permission={PERMISSION.DSP.UPDATE}>
                     <ActionButton
                         showDelete={canUpdate}
                         onShowDelete={() =>

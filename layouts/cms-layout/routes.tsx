@@ -278,7 +278,7 @@ export const adminRoutes: RouteNode[] = [
                 title: 'DSP',
                 href: APP_ROUTES.DSP,
                 icon: Server,
-                required: { permission: [PERMISSION.DSP_SYSTEM.READ] },
+                required: { permission: [PERMISSION.DSP.READ] },
             },
             // {
             //     id: 'dsp-tenant',

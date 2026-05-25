@@ -8,6 +8,15 @@ export const PERMISSION = {
         UPDATE: 'artist.update',
         DELETE: 'artist.delete',
     },
+    DSP: {
+        CONFIGURE_INTEGRATION: 'dsp.configure_integration',
+        READ: 'dsp.read',
+        CREATE: 'dsp.create',
+        UPDATE: 'dsp.update',
+        DELETE: 'dsp.delete',
+        UPDATE_POLICIES: 'dsp.update.policies',
+        UPDATE_DEALS: 'dsp.update.deals',
+    },
     DSP_SYSTEM: {
         CONFIGURE_INTEGRATION: 'dsp_system.configure_integration',
         READ: 'dsp_system.read',
