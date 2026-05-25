@@ -83,7 +83,7 @@ export const tenantApi = {
     },
 
     getRoles(tenantId: string) {
-        return axiosInstance.get<DetailResponse<TenantRoleData[]>>(
+        return axiosInstance.get<DetailResponse<string[]>>(
             `tenants/${tenantId}/configured-roles`
         );
     },
