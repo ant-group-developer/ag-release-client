@@ -50,7 +50,10 @@ export const PERMISSION = {
     WORKSPACE: {
         CREATE: 'workspace.create',
         READ: 'workspace.read',
-        UPDATE: 'workspace.update',
+        UPDATE_INFO: 'workspace.update.info',
+        UPDATE_STATUS: 'workspace.update.status',
+        UPDATE_OWNER: 'workspace.update.owner',
+        UPDATE_CONFIG: 'workspace.update.config',
     },
     ISSUE: {
         CREATE: 'issue.create',
@@ -73,9 +76,18 @@ export const PERMISSION = {
     USER: {
         READ: 'user.read',
         CREATE: 'user.create',
-        UPDATE: 'user.update',
-        DELETE: 'user.delete',
         INVITE: 'user.invite',
+        UPDATE_INFO: 'user.update.info',
+        UPDATE_STATUS: 'user.update.status',
+        UPDATE_ROLE: 'user.update.role',
+        UPDATE_TENANT_TYPE: 'user.update.tenant_type',
+        DELETE: 'user.delete',
+    },
+    ROLE: {
+        READ: 'role.read',
+    },
+    PERMISSION_MODULE: {
+        READ: 'permission.read',
     },
     ANALYTICS: {
         READ: 'analytics.read',
@@ -88,3 +100,4 @@ export const PERMISSION = {
 // Type helper for permission values
 type PermissionModule = (typeof PERMISSION)[keyof typeof PERMISSION];
 export type Permission = PermissionModule[keyof PermissionModule];
+

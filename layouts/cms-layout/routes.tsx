@@ -94,10 +94,6 @@ const SYS_ADMIN_REQ: RouteRequired = {
     tenantId: [SYSTEM_TENANT_ID],
 };
 
-const OWNER_OR_ADMIN_TENANT_REQ: RouteRequired = {
-    tenantUserType: [TENANT_USER_TYPE.OWNER, TENANT_USER_TYPE.ADMIN],
-};
-
 export enum ROUTES_ID {
     SYSTEM = 'system',
     GENERAL = 'general',
@@ -436,7 +432,7 @@ export const adminRoutes: RouteNode[] = [
                 href: APP_ROUTES.TENANT_DETAIL,
                 hidden: true,
                 icon: Layers,
-                required: OWNER_OR_ADMIN_TENANT_REQ,
+                required: { permission: [PERMISSION.WORKSPACE.READ] },
             },
             {
                 id: 'email-sender',

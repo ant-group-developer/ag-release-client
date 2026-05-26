@@ -15,7 +15,7 @@ const isAnyOf = (x: Requirement): x is { anyOf: string[] } =>
 
 export const usePermission = () => {
     const data = usePermissionStore((state) => state.permission);
-    const { isAdmin, isTenantOwnerOrAdmin, permission } = useAuth();
+    const { isAdmin, permission } = useAuth();
 
     const check = (req: string): boolean => data.has(req);
 
