@@ -10,7 +10,8 @@ export default function LanguageSelect({ fallBack, ...props }: Props) {
     const { languagesData } = useGetListSimpleLanguage();
     const option =
         languagesData?.map((item) => {
-            const isNoLanguage = item?.code === 'NoLanguage';
+            const isNoLanguage = item?.code === 'zxx';
+
             return {
                 id: item.id,
                 value: item.id,

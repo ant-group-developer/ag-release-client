@@ -1189,6 +1189,47 @@
             }
         }
     },
+    "releaseVideo": {
+        "label": "Video Phát hành",
+        "title": "Video Phát hành",
+        "add": "Thêm Video Phát hành",
+        "fields": {
+            "videoTitle": "Tiêu đề Video",
+            "isrc": "ISRC",
+            "primaryArtists": "Nghệ sĩ chính",
+            "primaryArtistsPlaceholder": "Nhập tên nghệ sĩ chính rồi nhấn Enter",
+            "featuredArtists": "Nghệ sĩ kết hợp",
+            "featuredArtistsPlaceholder": "Nhập tên nghệ sĩ kết hợp rồi nhấn Enter",
+            "genres": "Thể loại",
+            "genresPlaceholder": "Nhập thể loại rồi nhấn Enter",
+            "contentProvider": "Nhà cung cấp nội dung",
+            "repertoireOwner": "Chủ sở hữu tác phẩm",
+            "channel": "Kênh",
+            "keywords": "Từ khóa",
+            "keywordsPlaceholder": "Nhập từ khóa rồi nhấn Enter",
+            "isExplicit": "Nội dung nhạy cảm (Explicit)",
+            "containsAiContent": "Có chứa nội dung AI",
+            "isMadeForKids": "Dành cho trẻ em"
+        },
+        "tabs": {
+            "details": "Chi tiết",
+            "additional": "Bổ sung",
+            "distribution": "Phân phối"
+        },
+        "additionalTitle": "Siêu dữ liệu bổ sung",
+        "additionalDesc": "Cấu hình các tùy chọn nâng cao, tiêu đề thay thế hoặc thẻ bổ sung.",
+        "distributionTitle": "Đối tượng phân phối",
+        "distributionDesc": "Chọn nền tảng phát hành, khu vực và khoảng thời gian phát hành cho video.",
+        "requirements": {
+            "title": "Thông số yêu cầu của Video",
+            "format": "Định dạng: MP4, MOV, MKV (H.264 / AAC / ProRes)",
+            "ratio": "Tỷ lệ khung hình: 16:9 (Ngang) hoặc 9:16 (Dọc)",
+            "resolution": "Độ phân giải tối thiểu: 1080p (Full HD) đến 4K",
+            "audio": "Âm thanh: Stereo, 48kHz, 320kbps trở lên",
+            "size": "Kích thước tối đa: 5 GB",
+            "tip": "Mẹo: Đảm bảo chất lượng video và âm thanh tốt nhất để tối ưu hiển thị trên các nền tảng phân phối."
+        }
+    },
     "artist": {
         "artists": "Nghệ sĩ",
         "label": "Nghệ sĩ",
@@ -1414,7 +1455,8 @@
             "atLeastOneTrack": "Phải có ít nhất một bài hát",
             "invalidFeatFormat": "Tiêu đề có feat phải theo định dạng: feat.artist, feat.artist1, v.v.",
             "noLeadingTrailingSpace": "Không được có khoảng trắng ở đầu hoặc cuối",
-            "titleCannotContainFeat": "Tiêu đề không được chứa từ \"feat\""
+            "titleCannotContainFeat": "Tiêu đề không được chứa từ \"feat\"",
+            "noLinguisticContentHasLyricist": "Không có ngôn ngữ âm thành thì không được có \"người đóng góp\" với vai trò \"người viết lời\""
         }
     },
     "distribute": {

@@ -13,6 +13,7 @@ import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { TrackDataFilter } from '@/modules/tracks/types';
 import { theme } from 'antd';
 import { useParams } from 'next/navigation';
+
 type Props = {};
 
 export default function Tracks({}: Props) {
@@ -56,17 +57,16 @@ export default function Tracks({}: Props) {
                 }}
             ></div>
 
-            <TrackHeaderV2
-                dataFilter={dataFilter}
-                onChangeFilter={onChangeFilter}
-                canClearFilter={canClearFilter}
-                removeFilter={removeFilter}
-                // handleRefresh={handleRefresh}
-                // dataUpdatedAt={dataUpdatedAt}
-            />
-
             {layoutTable === LAYOUT_TABLE.LIST && (
                 <TracksTable
+                    headerTitle={
+                        <TrackHeaderV2
+                            dataFilter={dataFilter}
+                            onChangeFilter={onChangeFilter}
+                            canClearFilter={canClearFilter}
+                            removeFilter={removeFilter}
+                        />
+                    }
                     sticky={{ offsetHeader: headerLayoutHeight }}
                     dataSource={tracksData?.items}
                     loading={isFetching}
