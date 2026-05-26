@@ -43,6 +43,7 @@ import {
     Trash,
     User,
     User2,
+    Video,
 } from 'lucide-react';
 import type { ForwardRefExoticComponent, RefAttributes } from 'react';
 
@@ -171,6 +172,7 @@ export const adminRoutes: RouteNode[] = [
                 icon: DiscAlbum,
                 required: { permission: [PERMISSION.RELEASE.READ] },
             },
+
             {
                 id: 'releaseDetail',
                 type: 'link',
@@ -185,6 +187,15 @@ export const adminRoutes: RouteNode[] = [
                         PERMISSION.RELEASE.CREATE,
                     ],
                 },
+            },
+            {
+                id: 'release-videos',
+                type: 'link',
+                label: 'releaseVideo.label',
+                title: 'Release Videos',
+                href: APP_ROUTES.RELEASE_VIDEOS,
+                icon: Video,
+                required: SYS_ADMIN_REQ,
             },
             {
                 id: 'track',
@@ -528,6 +539,7 @@ export const adminRoutes: RouteNode[] = [
                         icon: Library,
                         required: SYS_ADMIN_REQ,
                     },
+
                     {
                         id: 'currencies',
                         type: 'link',
