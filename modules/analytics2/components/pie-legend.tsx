@@ -1,13 +1,22 @@
 'use client';
 
 import { formattedNumber } from '@/helpers/common';
-import { PIE_CHART_DATA } from '../constants/mock-data';
 
-export default function PieLegend() {
-    const total = PIE_CHART_DATA.reduce((sum, d) => sum + d.value, 0);
+interface PieLegendItem {
+    name: string;
+    value: number;
+    color: string;
+}
+
+interface Props {
+    data: PieLegendItem[];
+}
+
+export default function PieLegend({ data }: Props) {
+    const total = data.reduce((sum, d) => sum + d.value, 0);
     return (
         <div className="flex flex-col gap-2.5 pl-4">
-            {PIE_CHART_DATA.map((item) => (
+            {data.map((item) => (
                 <div
                     key={item.name}
                     className="flex items-center justify-between gap-4 text-sm"
@@ -21,14 +30,6 @@ export default function PieLegend() {
                             {item.name}
                         </span>
                     </div>
-                    {/* <div className="flex items-center gap-3 text-nowrap">
-                        <span className="font-semibold">
-                            {formattedNumber(item.value, undefined as any, true)}
-                        </span>
-                        <span className="w-12 text-right text-gray-400">
-                            {((item.value / total) * 100).toFixed(1)}%
-                        </span>
-                    </div> */}
                 </div>
             ))}
         </div>

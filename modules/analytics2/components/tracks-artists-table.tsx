@@ -1,178 +1,326 @@
 'use client';
 
-import { Card, Radio, Select, Table, Tabs } from 'antd';
+import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
+import { Card, Select, Table, Tabs } from 'antd';
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
-import { useState } from 'react';
 import {
-    ARTIST_DATA,
-    LABEL_DATA,
-    RELEASE_DATA,
-    TRACK_DATA,
-} from '../constants/mock-data';
-import { useTopNData } from '../hooks/use-top-n';
+    useGetArtistRanking,
+    useGetLabelRanking,
+    useGetReleaseRanking,
+    useGetTrackRanking,
+} from '../hooks/use-get-rankings';
+import { useAnalyticsTopNStore } from '../store/use-analytics-top-n-store';
+import {
+    ArtistRankingItem,
+    LabelRankingItem,
+    ReleaseRankingItem,
+    TrackRankingItem,
+} from '../types';
 
-export default function TracksArtistsTable() {
+interface Props {
+    fromDate: string;
+    toDate: string;
+}
+
+export default function TracksArtistsTable({ fromDate, toDate }: Props) {
     const messages = useTranslations();
-    const [metric, setMetric] = useState<'views' | 'revenue'>('views');
-    const [topN, setTopN] = useState<number>(5);
+    const { topN, setTopN } = useAnalyticsTopNStore();
 
-    const sortedTracks = useTopNData(TRACK_DATA, metric, topN);
-    const sortedReleases = useTopNData(RELEASE_DATA, metric, topN);
-    const sortedArtists = useTopNData(ARTIST_DATA, metric, topN);
-    const sortedLabels = useTopNData(LABEL_DATA, metric, topN);
+    // Fetch live ranking data
+    const { trackRankingData, isFetching: isTracksFetching } =
+        useGetTrackRanking({
+            fromDate,
+            toDate,
+            page: 1,
+            pageSize: topN,
+        });
+
+    const { releaseRankingData, isFetching: isReleasesFetching } =
+        useGetReleaseRanking({
+            fromDate,
+            toDate,
+            page: 1,
+            pageSize: topN,
+        });
+
+    const { artistRankingData, isFetching: isArtistsFetching } =
+        useGetArtistRanking({
+            fromDate,
+            toDate,
+            page: 1,
+            pageSize: topN,
+        });
+
+    const { labelRankingData, isFetching: isLabelsFetching } =
+        useGetLabelRanking({
+            fromDate,
+            toDate,
+            page: 1,
+            pageSize: topN,
+        });
 
     // Columns config
     const trackColumns = [
         {
+            title: 'Rank',
+            dataIndex: 'rank',
+            key: 'rank',
+            width: 80,
+            align: 'center' as const,
+            render: (rank: number) => (
+                <span className="font-bold text-gray-700 dark:text-zinc-300">
+                    #{rank}
+                </span>
+            ),
+        },
+        {
             title: messages('common.track'),
-            dataIndex: 'track',
-            key: 'track',
-            render: (text: string, record: any) => (
+            dataIndex: 'title',
+            key: 'title',
+            width: 350,
+            render: (text: string, record: TrackRankingItem) => (
                 <div className="flex items-center gap-3">
-                    <Image
-                        src={record.cover}
-                        alt={text}
-                        width={40}
-                        height={40}
-                        className="rounded-lg object-cover"
-                    />
-                    <span className="font-medium text-gray-900">{text}</span>
+                    <ReleaseCoverImage data={{ id: record.releaseId } as any} />
+                    <div className="flex flex-col">
+                        <span className="font-medium text-gray-900 dark:text-zinc-100">
+                            {text}
+                        </span>
+                    </div>
                 </div>
             ),
         },
-        { title: messages('common.video'), dataIndex: 'videos', key: 'videos' },
-        ...(metric === 'views'
-            ? [
-                  {
-                      title: messages('common.views'),
-                      dataIndex: 'viewsStr',
-                      key: 'views',
-                  },
-                  {
-                      title: messages('common.streams'),
-                      dataIndex: 'streams',
-                      key: 'streams',
-                  },
-              ]
-            : [
-                  { title: messages('common.revenue'), dataIndex: 'revenueStr', key: 'revenue' },
-                  {
-                      title: messages('common.streams'),
-                      dataIndex: 'streams',
-                      key: 'streams',
-                  },
-              ]),
-        { title: messages('common.engagement'), dataIndex: 'engagement', key: 'engagement' },
-        { title: messages('common.listeners'), dataIndex: 'listeners', key: 'listeners' },
+        {
+            title: messages('common.artist'),
+            dataIndex: 'artistName',
+            key: 'artistName',
+            width: 200,
+            render: (text: string) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {text || '—'}
+                </span>
+            ),
+        },
+        {
+            title: 'ISRC',
+            dataIndex: 'isrc',
+            key: 'isrc',
+            width: 200,
+            render: (text: string) => (
+                <span className="text-gray-500 dark:text-zinc-400">
+                    {text || '—'}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.release'),
+            dataIndex: 'releaseTitle',
+            key: 'releaseTitle',
+            width: 300,
+            render: (text: string) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {text || '—'}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.streams'),
+            dataIndex: 'totalViews',
+            key: 'totalViews',
+            width: 150,
+            render: (views: number) => (
+                <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                    {views ? views.toLocaleString() : 0}
+                </span>
+            ),
+        },
     ];
 
     const releaseColumns = [
         {
+            title: 'Rank',
+            dataIndex: 'rank',
+            key: 'rank',
+            width: 80,
+            align: 'center' as const,
+            render: (rank: number) => (
+                <span className="font-bold text-gray-700 dark:text-zinc-300">
+                    #{rank}
+                </span>
+            ),
+        },
+        {
             title: messages('common.release'),
-            dataIndex: 'release',
-            key: 'release',
-            render: (text: string, record: any) => (
+            dataIndex: 'title',
+            key: 'title',
+            width: 350,
+            render: (text: string, record: ReleaseRankingItem) => (
                 <div className="flex items-center gap-3">
-                    <Image
-                        src={record.cover}
-                        alt={text}
-                        width={40}
-                        height={40}
-                        className="rounded-lg object-cover"
-                    />
-                    <span className="font-medium text-gray-900">{text}</span>
+                    <ReleaseCoverImage data={{ id: record.releaseId } as any} />
+                    <div className="flex flex-col">
+                        <span className="font-medium text-gray-900 dark:text-zinc-100">
+                            {text}
+                        </span>
+                    </div>
                 </div>
             ),
         },
-        { title: messages('common.track'), dataIndex: 'tracks', key: 'tracks' },
-        { title: messages('common.video'), dataIndex: 'videos', key: 'videos' },
-        ...(metric === 'views'
-            ? [
-                  {
-                      title: messages('common.views'),
-                      dataIndex: 'viewsStr',
-                      key: 'views',
-                  },
-              ]
-            : [{ title: messages('common.revenue'), dataIndex: 'revenueStr', key: 'revenue' }]),
-        { title: messages('common.releaseDate'), dataIndex: 'releaseDate', key: 'releaseDate' },
+        {
+            title: messages('common.label'),
+            dataIndex: 'labelName',
+            key: 'labelName',
+            width: 200,
+            render: (text: string) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {text || '—'}
+                </span>
+            ),
+        },
+        {
+            title: 'UPC',
+            dataIndex: 'upc',
+            key: 'upc',
+            width: 200,
+            render: (text: string) => (
+                <span className="text-gray-500 dark:text-zinc-400">
+                    {text || '—'}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.tracks'),
+            dataIndex: 'trackCount',
+            key: 'trackCount',
+            width: 120,
+            render: (count: number) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {count || 0}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.streams'),
+            dataIndex: 'totalViews',
+            key: 'totalViews',
+            width: 150,
+            render: (views: number) => (
+                <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                    {views ? views.toLocaleString() : 0}
+                </span>
+            ),
+        },
     ];
 
     const artistColumns = [
         {
+            title: 'Rank',
+            dataIndex: 'rank',
+            key: 'rank',
+            width: 80,
+            align: 'center' as const,
+            render: (rank: number) => (
+                <span className="font-bold text-gray-700 dark:text-zinc-300">
+                    #{rank}
+                </span>
+            ),
+        },
+        {
             title: messages('common.artist'),
-            dataIndex: 'artist',
-            key: 'artist',
-            render: (text: string, record: any) => (
+            dataIndex: 'artistName',
+            key: 'artistName',
+            width: 300,
+            render: (text: string, record: ArtistRankingItem) => (
                 <div className="flex items-center gap-3">
-                    <Image
-                        src={record.image}
-                        alt={text}
-                        width={40}
-                        height={40}
-                        className="rounded-full object-cover"
-                    />
-                    <span className="font-medium text-gray-900">{text}</span>
+                    <ReleaseCoverImage data={{ id: record.picture } as any} />
+                    <span className="font-medium text-gray-900 dark:text-zinc-100">
+                        {text}
+                    </span>
                 </div>
             ),
         },
-        { title: messages('common.video'), dataIndex: 'videos', key: 'videos' },
-        ...(metric === 'views'
-            ? [
-                  {
-                      title: messages('common.views'),
-                      dataIndex: 'viewsStr',
-                      key: 'views',
-                  },
-                  {
-                      title: messages('common.streams'),
-                      dataIndex: 'streams',
-                      key: 'streams',
-                  },
-              ]
-            : [
-                  { title: messages('common.revenue'), dataIndex: 'revenueStr', key: 'revenue' },
-                  {
-                      title: messages('common.streams'),
-                      dataIndex: 'streams',
-                      key: 'streams',
-                  },
-              ]),
-        { title: messages('common.engagement'), dataIndex: 'engagement', key: 'engagement' },
-        { title: messages('common.listeners'), dataIndex: 'listeners', key: 'listeners' },
+        {
+            title: messages('common.tracks'),
+            dataIndex: 'trackCount',
+            key: 'trackCount',
+            width: 120,
+            render: (count: number) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {count || 0}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.streams'),
+            dataIndex: 'totalViews',
+            key: 'totalViews',
+            width: 150,
+            render: (views: number) => (
+                <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                    {views ? views.toLocaleString() : 0}
+                </span>
+            ),
+        },
     ];
 
     const labelColumns = [
         {
+            title: 'Rank',
+            dataIndex: 'rank',
+            key: 'rank',
+            width: 80,
+            align: 'center' as const,
+            render: (rank: number) => (
+                <span className="font-bold text-gray-700 dark:text-zinc-300">
+                    #{rank}
+                </span>
+            ),
+        },
+        {
             title: messages('common.label'),
-            dataIndex: 'label',
-            key: 'label',
-            render: (text: string, record: any) => (
+            dataIndex: 'labelName',
+            key: 'labelName',
+            width: 300,
+            render: (text: string, record: LabelRankingItem) => (
                 <div className="flex items-center gap-3">
-                    <Image
-                        src={record.logo}
-                        alt={text}
-                        width={40}
-                        height={40}
-                        className="rounded-lg object-cover"
-                    />
-                    <span className="font-medium text-gray-900">{text}</span>
+                    <ReleaseCoverImage data={{ id: record.labelId } as any} />
+                    <span className="font-medium text-gray-900 dark:text-zinc-100">
+                        {text}
+                    </span>
                 </div>
             ),
         },
-        { title: messages('common.artist'), dataIndex: 'artistsCount', key: 'artistsCount' },
-        { title: messages('common.release'), dataIndex: 'releasesCount', key: 'releasesCount' },
-        ...(metric === 'views'
-            ? [
-                  {
-                      title: messages('common.views'),
-                      dataIndex: 'viewsStr',
-                      key: 'views',
-                  },
-              ]
-            : [{ title: messages('common.revenue'), dataIndex: 'revenueStr', key: 'revenue' }]),
-        { title: messages('common.engagement'), dataIndex: 'engagement', key: 'engagement' },
+        {
+            title: messages('common.release'),
+            dataIndex: 'releaseCount',
+            key: 'releaseCount',
+            width: 150,
+            render: (count: number) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {count || 0}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.tracks'),
+            dataIndex: 'trackCount',
+            key: 'trackCount',
+            width: 150,
+            render: (count: number) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {count || 0}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.streams'),
+            dataIndex: 'totalViews',
+            key: 'totalViews',
+            width: 150,
+            render: (views: number) => (
+                <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                    {views ? views.toLocaleString() : 0}
+                </span>
+            ),
+        },
     ];
 
     const tabItems = [
@@ -182,7 +330,9 @@ export default function TracksArtistsTable() {
             children: (
                 <Table
                     columns={trackColumns}
-                    dataSource={sortedTracks}
+                    dataSource={trackRankingData}
+                    loading={isTracksFetching}
+                    rowKey="isrc"
                     pagination={false}
                 />
             ),
@@ -193,7 +343,9 @@ export default function TracksArtistsTable() {
             children: (
                 <Table
                     columns={releaseColumns}
-                    dataSource={sortedReleases}
+                    dataSource={releaseRankingData}
+                    loading={isReleasesFetching}
+                    rowKey="releaseId"
                     pagination={false}
                 />
             ),
@@ -204,7 +356,9 @@ export default function TracksArtistsTable() {
             children: (
                 <Table
                     columns={artistColumns}
-                    dataSource={sortedArtists}
+                    dataSource={artistRankingData}
+                    loading={isArtistsFetching}
+                    rowKey="artistId"
                     pagination={false}
                 />
             ),
@@ -215,7 +369,9 @@ export default function TracksArtistsTable() {
             children: (
                 <Table
                     columns={labelColumns}
-                    dataSource={sortedLabels}
+                    dataSource={labelRankingData}
+                    loading={isLabelsFetching}
+                    rowKey="labelId"
                     pagination={false}
                 />
             ),
@@ -242,24 +398,6 @@ export default function TracksArtistsTable() {
                                 { value: 10, label: 'Top 10' },
                             ]}
                         />
-                        <Radio.Group
-                            value={metric}
-                            onChange={(e) => setMetric(e.target.value)}
-                            buttonStyle="solid"
-                        >
-                            <Radio.Button
-                                value="views"
-                                className="px-4 text-center"
-                            >
-                                {messages('common.views')}
-                            </Radio.Button>
-                            <Radio.Button
-                                value="revenue"
-                                className="px-4 text-center"
-                            >
-                                {messages('common.revenue')}
-                            </Radio.Button>
-                        </Radio.Group>
                     </div>
                 }
             />

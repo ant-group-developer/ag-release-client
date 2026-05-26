@@ -1,18 +1,30 @@
 'use client';
 
+import DateSelect from '@/components/ui/select/date-select';
+import { useFilter } from '@/hooks/use-filter';
 import AnalyticsChart from '@/modules/analytics2/components/analytics-chart';
 import MetricCards from '@/modules/analytics2/components/metric-cards';
-import TracksArtistsTable from '@/modules/analytics2/components/tracks-artists-table';
 import RecentReleasesTable from '@/modules/analytics2/components/recent-releases-table';
-import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
+import TracksArtistsTable from '@/modules/analytics2/components/tracks-artists-table';
+import { Analytics2DataFilter } from '@/modules/analytics2/types';
 import { PageContainer } from '@ant-design/pro-components';
-import { Select, theme } from 'antd';
+import { theme } from 'antd';
+import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
+
+const defaultFilter: Analytics2DataFilter = {
+    startDate: dayjs().subtract(6, 'month').startOf('month').format('YYYY-MM-DD'),
+    endDate: dayjs().endOf('month').format('YYYY-MM-DD'),
+};
 
 export default function Analytics2Page() {
     const { token } = theme.useToken();
     const messages = useTranslations();
-    const { dspData } = useGetListDsp({ page: 1, pageSize: 100 });
+
+    const { dataFilter, onChangeFilter } = useFilter<Analytics2DataFilter>(defaultFilter);
+
+    const fromDate = dataFilter.startDate ?? defaultFilter.startDate!;
+    const toDate = dataFilter.endDate ?? defaultFilter.endDate!;
 
     return (
         <PageContainer
@@ -22,35 +34,22 @@ export default function Analytics2Page() {
                 minHeight: '100vh',
             }}
             extra={[
-                <Select
-                    key="platform"
-                    defaultValue="all-platforms"
-                    style={{ width: 160 }}
-                    options={[
-                        { value: 'all-platforms', label: 'All platforms' },
-                        ...(dspData?.items?.map((dsp) => ({
-                            value: dsp.id,
-                            label: dsp.name,
-                        })) || []),
-                    ]}
-                />,
-                <Select
-                    key="region"
-                    defaultValue="all-regions"
-                    style={{ width: 160 }}
-                    options={[
-                        { value: 'all-regions', label: 'All Regions' },
-                        { value: 'vn', label: 'Vietnam' },
-                        { value: 'us', label: 'United States' },
-                    ]}
+                <DateSelect
+                    key="date"
+                    selectClassName="w-[150px]"
+                    rangeClassName="w-[250px]"
+                    value={`${fromDate},${toDate}`}
+                    externalOnChange={(from, to) =>
+                        onChangeFilter({ startDate: from, endDate: to })
+                    }
                 />,
             ]}
         >
             <div className="flex flex-col gap-6">
-                <MetricCards />
-                <AnalyticsChart />
-                <TracksArtistsTable />
-                <RecentReleasesTable />
+                <MetricCards fromDate={fromDate} toDate={toDate} />
+                <AnalyticsChart fromDate={fromDate} toDate={toDate} />
+                <TracksArtistsTable fromDate={fromDate} toDate={toDate} />
+                <RecentReleasesTable fromDate={fromDate} toDate={toDate} />
             </div>
         </PageContainer>
     );

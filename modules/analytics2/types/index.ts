@@ -1,0 +1,76 @@
+import { CommonParams } from '@/types/api';
+
+export interface Analytics2DataFilter extends CommonParams {
+    startDate?: string;
+    endDate?: string;
+}
+
+export interface DspTimelineParams {
+    fromDate: string;
+    toDate: string;
+    topN?: number;
+    includeOther?: boolean;
+}
+
+export interface DspSeriesItem {
+    dsp: string;
+    salesViews: number;
+}
+
+export interface DspTimelinePeriod {
+    period: string;
+    series: DspSeriesItem[];
+}
+
+export interface DspTimelineData {
+    topDsps: string[];
+    items: DspTimelinePeriod[];
+}
+
+export interface RankingParams {
+    fromDate: string;
+    toDate: string;
+    page: number;
+    pageSize: number;
+}
+
+export interface TrackRankingItem {
+    rank: number;
+    isrc: string;
+    title: string;
+    version: string;
+    artistName: string;
+    releaseId: string;
+    releaseTitle: string;
+    totalViews: number;
+}
+
+export interface ReleaseRankingItem {
+    rank: number;
+    releaseId: string;
+    title: string;
+    upc: string;
+    labelId: string;
+    labelName: string;
+    trackCount: number;
+    totalViews: number;
+}
+
+export interface ArtistRankingItem {
+    rank: number;
+    artistId: string;
+    artistName: string;
+    picture: string | null;
+    trackCount: number;
+    totalViews: number;
+}
+
+export interface LabelRankingItem {
+    rank: number;
+    labelId: string;
+    labelName: string;
+    picture: string | null;
+    releaseCount: number;
+    trackCount: number;
+    totalViews: number;
+}
