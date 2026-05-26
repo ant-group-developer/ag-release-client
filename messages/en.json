@@ -1903,7 +1903,8 @@
             "delete": "Delete analytics"
         },
         "chart": {
-            "title": "Analytics charts"
+            "title": "Analytics charts",
+            "trendView": "Trend View"
         }
     },
 

@@ -1853,7 +1853,8 @@
             "delete": "Xoá phân tích"
         },
         "chart": {
-            "title": "Biểu đồ"
+            "title": "Biểu đồ",
+            "trendView": "Lượt xem theo xu hướng"
         }
     },
     "issue": {

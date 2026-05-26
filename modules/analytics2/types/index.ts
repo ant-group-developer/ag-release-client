@@ -12,9 +12,21 @@ export interface DspTimelineParams {
     includeOther?: boolean;
 }
 
+export interface TrendTimelineParams {
+    fromDate: string;
+    toDate: string;
+    topN?: number;
+    includeOther?: boolean;
+}
+
 export interface DspSeriesItem {
     dsp: string;
     salesViews: number;
+}
+
+export interface TrendSeriesItem {
+    dsp: string;
+    trendViews: number;
 }
 
 export interface DspTimelinePeriod {
@@ -22,9 +34,19 @@ export interface DspTimelinePeriod {
     series: DspSeriesItem[];
 }
 
+export interface TrendTimelinePeriod {
+    period: string;
+    series: TrendSeriesItem[];
+}
+
 export interface DspTimelineData {
     topDsps: string[];
     items: DspTimelinePeriod[];
+}
+
+export interface TrendTimelineData {
+    topDsps: string[];
+    items: TrendTimelinePeriod[];
 }
 
 export interface RankingParams {

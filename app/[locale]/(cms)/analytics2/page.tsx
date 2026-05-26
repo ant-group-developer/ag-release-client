@@ -3,6 +3,7 @@
 import DateSelect from '@/components/ui/select/date-select';
 import { useFilter } from '@/hooks/use-filter';
 import AnalyticsChart from '@/modules/analytics2/components/analytics-chart';
+import AnalyticsChartTrendView from '@/modules/analytics2/components/analytics-chart-trend-view';
 import MetricCards from '@/modules/analytics2/components/metric-cards';
 import RecentReleasesTable from '@/modules/analytics2/components/recent-releases-table';
 import TracksArtistsTable from '@/modules/analytics2/components/tracks-artists-table';
@@ -48,6 +49,7 @@ export default function Analytics2Page() {
             <div className="flex flex-col gap-6">
                 <MetricCards fromDate={fromDate} toDate={toDate} />
                 <AnalyticsChart fromDate={fromDate} toDate={toDate} />
+                <AnalyticsChartTrendView fromDate={fromDate} toDate={toDate} />
                 <TracksArtistsTable fromDate={fromDate} toDate={toDate} />
                 <RecentReleasesTable fromDate={fromDate} toDate={toDate} />
             </div>

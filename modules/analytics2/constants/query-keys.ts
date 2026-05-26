@@ -1,9 +1,11 @@
-import { DspTimelineParams, RankingParams } from '../types';
+import { DspTimelineParams, RankingParams, TrendTimelineParams } from '../types';
 
 export const analytics2QueryKeys = {
     all: ['analytics2'] as const,
     dspTimeline: (params: DspTimelineParams) =>
         [...analytics2QueryKeys.all, 'dsp-timeline', params] as const,
+    dspTrend: (params: TrendTimelineParams) =>
+        [...analytics2QueryKeys.all, 'dsp-trend', params] as const,
     trackRanking: (params: RankingParams) =>
         [...analytics2QueryKeys.all, 'track-ranking', params] as const,
     releaseRanking: (params: RankingParams) =>

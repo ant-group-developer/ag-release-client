@@ -3,6 +3,8 @@ import { DetailResponse } from '@/types/api';
 import {
     DspTimelineData,
     DspTimelineParams,
+    TrendTimelineData,
+    TrendTimelineParams,
     RankingParams,
     TrackRankingItem,
     ReleaseRankingItem,
@@ -14,6 +16,12 @@ export const analytics2Apis = {
     getDspTimeline: (params: DspTimelineParams) => {
         return axiosInstance.post<DetailResponse<DspTimelineData>>(
             '/analytics/sales-view/dsp/timeline',
+            params
+        );
+    },
+    getTrendTimeline: (params: TrendTimelineParams) => {
+        return axiosInstance.post<DetailResponse<TrendTimelineData>>(
+            '/analytics/trend-view/dsp/timeline',
             params
         );
     },
