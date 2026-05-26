@@ -34,7 +34,7 @@ function TenantTable({ dataFilter, ...props }: Props) {
 
     const { updateTenant, isPending } = useUpdateTenant();
     const { hasPermission } = usePermission();
-    const canUpdateTenant = hasPermission(PERMISSION.WORKSPACE.UPDATE);
+    const canUpdateTenant = hasPermission(PERMISSION.WORKSPACE.UPDATE_STATUS);
 
     const updateTenantStatus = (tenantId: string, status: boolean) => {
         updateTenant({
@@ -62,7 +62,7 @@ function TenantTable({ dataFilter, ...props }: Props) {
         {
             dataIndex: '',
             title: '',
-            width: 20,
+            width: 40,
             render: () => null,
         },
         {

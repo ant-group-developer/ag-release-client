@@ -166,6 +166,25 @@ export const DspTable = ({ ...props }: Props) => {
             ),
         },
         {
+            title: messages('roles.isDefault'),
+            key: 'isDefault',
+            dataIndex: 'isDefault',
+            align: 'center',
+            width: 100,
+            render: (value, record) => (
+                <Switch
+                    value={record?.isDefault}
+                    onChange={(e) =>
+                        updateDsp({
+                            id: record?.id,
+                            payload: { isDefault: e },
+                        })
+                    }
+                    disabled={!canUpdate}
+                />
+            ),
+        },
+        {
             title: messages('dsp.hasDeal'),
             key: 'hasDeal',
             dataIndex: 'hasDeal',

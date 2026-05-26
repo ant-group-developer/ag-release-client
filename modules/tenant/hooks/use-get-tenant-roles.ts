@@ -12,6 +12,6 @@ export function useTenantRoles(id: string | null) {
 
     return {
         ...restResponse,
-        dataTenantRoles: data?.data?.data ?? ([] as TenantRoleData[]),
+        dataTenantRoles: data?.data?.data ?? ([] as string[]),
     };
 }

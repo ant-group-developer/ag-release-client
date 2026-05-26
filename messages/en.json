@@ -281,6 +281,7 @@
         "uploadImage": "Upload image",
         "dateCreated": "Date created",
         "createdAt": "Created at",
+        "sentAt": "Sent at",
         "startedAt": "Started at",
         "updatedAt": "Updated at",
         "dateUpdated": "Date updated",
@@ -1213,6 +1214,47 @@
             }
         }
     },
+    "releaseVideo": {
+        "label": "Release Videos",
+        "title": "Release Video",
+        "add": "Add Release Video",
+        "fields": {
+            "videoTitle": "Video Title",
+            "isrc": "ISRC",
+            "primaryArtists": "Primary Artist(s)",
+            "primaryArtistsPlaceholder": "Type primary artists and press Enter",
+            "featuredArtists": "Featured Artist(s)",
+            "featuredArtistsPlaceholder": "Type featured artists and press Enter",
+            "genres": "Genre(s)",
+            "genresPlaceholder": "Type genres and press Enter",
+            "contentProvider": "Content Provider",
+            "repertoireOwner": "Repertoire Owner",
+            "channel": "Channel",
+            "keywords": "Keywords",
+            "keywordsPlaceholder": "Type keywords and press Enter",
+            "isExplicit": "Explicit Content",
+            "containsAiContent": "Contains AI Content",
+            "isMadeForKids": "Made for Kids"
+        },
+        "tabs": {
+            "details": "Details",
+            "additional": "Additional",
+            "distribution": "Distribution"
+        },
+        "additionalTitle": "Additional Metadata",
+        "additionalDesc": "Configure advanced options, alternative titles, or supplementary tags.",
+        "distributionTitle": "Distribution Target",
+        "distributionDesc": "Select platforms, regions, and release window for the video.",
+        "requirements": {
+            "title": "Video Specifications & Requirements",
+            "format": "Format: MP4, MOV, MKV (H.264 / AAC / ProRes)",
+            "ratio": "Aspect Ratio: 16:9 (Horizontal) or 9:16 (Vertical)",
+            "resolution": "Resolution: 1080p (Full HD) up to 4K (UHD)",
+            "audio": "Audio specs: Stereo, 48kHz, 320kbps or higher",
+            "size": "Max File Size: 5 GB",
+            "tip": "Tip: Maintain the best video and audio quality to optimize distribution across all delivery channels."
+        }
+    },
     "artist": {
         "artists": "Artists",
         "label": "Artist",
@@ -1290,7 +1332,8 @@
         "platform": "Platform",
         "digitalServiceProviders": "Digital service providers",
         "lastEnqueue": "Last Enqueue",
-        "lastDelivered": "Last Delivered"
+        "lastDelivered": "Last Delivered",
+        "inactiveDsp": "This DSP is locked, cannot be distributed"
     },
 
     "formFields": {
@@ -1441,7 +1484,8 @@
             "atLeastOneTrack": "Release must have at least one track",
             "invalidFeatFormat": "Title containing \"feat\" must follow the format: feat.artist, feat.artist1, etc.",
             "noLeadingTrailingSpace": "No leading or trailing spaces allowed",
-            "titleCannotContainFeat": "Title cannot contain \"feat\""
+            "titleCannotContainFeat": "Title cannot contain \"feat\"",
+            "noLinguisticContentHasLyricist": "Release with no audio language cannot have a \"contributor\" with the role of \"lyricist\""
         }
     },
 
@@ -1465,8 +1509,12 @@
         "label": "Email sender"
     },
 
+    "dspSystem": {
+        "label": "DSP system"
+    },
     "dsp": {
         "label": "DSP",
+        "systemTenantNoAgreement": "System administrators do not have DSP agreements.",
         "name": "Platform name",
         "codeCi": "CI Code",
         "hasDeal": "Has deal CI",
@@ -2005,6 +2053,7 @@
         "aggregators": "Aggregators",
         "list": "List aggregator",
         "systemDefault": "System default",
+        "systemDefaultNote": "This option will use the system's default configuration",
         "createsDoneFolder": "Create folder .done ",
         "ddexName": "DDex name",
         "deliveryEmail": "Delivery email",

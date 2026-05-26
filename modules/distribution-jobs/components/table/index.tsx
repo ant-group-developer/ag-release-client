@@ -6,8 +6,17 @@ import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { ProColumns } from '@ant-design/pro-components';
-import { Avatar, Button, Modal, Tag, theme, Tooltip, Typography } from 'antd';
-import { X } from 'lucide-react';
+import {
+    Avatar,
+    Button,
+    Modal,
+    Popover,
+    Tag,
+    theme,
+    Tooltip,
+    Typography,
+} from 'antd';
+import { Eye, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import {
     getDistributionJobStatusColor,
@@ -120,24 +129,29 @@ export default function DistributionJobsTable(props: Props) {
                         }}
                         size={'small'}
                     >
-                        {record.dspCodes.map((dspCodes) => {
-                            const dsp = dspList?.find(
-                                (dsp) => dsp.codeCi === dspCodes
-                            );
-                            return (
-                                <CustomTooltip key={dspCodes} title={dsp?.name}>
-                                    <Avatar
-                                        src={dsp?.picture}
-                                        size="small"
-                                        style={{
-                                            backgroundColor: '#ccc',
-                                        }}
+                        {[...record.dspCodes]
+                            .sort((a, b) => a.localeCompare(b))
+                            .map((dspCodes) => {
+                                const dsp = dspList?.find(
+                                    (dsp) => dsp.codeCi === dspCodes
+                                );
+                                return (
+                                    <CustomTooltip
+                                        key={dspCodes}
+                                        title={dsp?.name}
                                     >
-                                        {dspCodes?.[0]?.toUpperCase()}
-                                    </Avatar>
-                                </CustomTooltip>
-                            );
-                        })}
+                                        <Avatar
+                                            src={dsp?.picture}
+                                            size="small"
+                                            style={{
+                                                backgroundColor: '#ccc',
+                                            }}
+                                        >
+                                            {dspCodes?.[0]?.toUpperCase()}
+                                        </Avatar>
+                                    </CustomTooltip>
+                                );
+                            })}
                     </Avatar.Group>
                 );
             },
@@ -173,7 +187,58 @@ export default function DistributionJobsTable(props: Props) {
                 renderText(record?.deliveryEmailSubject, true),
         },
         {
-            title: messages('distributionJobs.columns.sentAt'),
+            title: messages('common.note'),
+            dataIndex: 'notes',
+            key: 'notes',
+            width: 200,
+            render: (_, record) => {
+                const notes = record.notes;
+                if (!notes) return '-';
+
+                const isLong = notes.length > 30;
+
+                return (
+                    <div className="flex items-center gap-1">
+                        <Typography.Paragraph
+                            className="!mb-0 whitespace-pre-line"
+                            style={{
+                                maxWidth: isLong ? 'calc(100% - 24px)' : '100%',
+                            }}
+                            ellipsis={isLong ? { tooltip: false } : false}
+                        >
+                            {notes}
+                        </Typography.Paragraph>
+                        {isLong && (
+                            <Popover
+                                content={
+                                    <div className="max-h-60 max-w-xs overflow-y-auto whitespace-pre-wrap">
+                                        {notes}
+                                    </div>
+                                }
+                                trigger="hover"
+                            >
+                                <Eye
+                                    size={16}
+                                    className="shrink-0 cursor-pointer text-gray-500"
+                                />
+                            </Popover>
+                        )}
+                    </div>
+                );
+            },
+        },
+        {
+            title: messages('common.createdAt'),
+            dataIndex: 'createdAt',
+            key: 'createdAt',
+            width: 160,
+            render: (_, record) =>
+                record.createdAt
+                    ? formattedDate(record.createdAt, DATE_FORMAT.DATE_MINUTE)
+                    : '-',
+        },
+        {
+            title: messages('common.sentAt'),
             dataIndex: 'sentAt',
             key: 'sentAt',
             width: 160,

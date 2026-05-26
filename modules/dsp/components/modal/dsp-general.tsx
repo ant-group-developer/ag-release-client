@@ -175,6 +175,18 @@ export default function DspGeneral({ form, isActive }: Props) {
             >
                 <Switch />
             </AppFormItem>
+            <AppFormItem
+                className="!mb-1"
+                name="isDefault"
+                valuePropName="checked"
+                label={
+                    <div className="text-wrap pb-2">
+                        {messages('roles.isDefault')}
+                    </div>
+                }
+            >
+                <Switch />
+            </AppFormItem>
         </>
     );
 }

@@ -9,6 +9,7 @@ export interface DspData extends CommonAttribute {
     name: string;
     picture?: string | null;
     isActive: boolean;
+    isDefault: boolean;
     hasDeal: boolean;
     enablePolicy: boolean;
     formatLinks: string[];

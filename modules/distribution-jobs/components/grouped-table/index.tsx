@@ -9,7 +9,10 @@ import { Button, Popover, Tag, Tooltip, Typography } from 'antd';
 import { Eye } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_DISTRIBUTION_JOB } from '../../constants/modal';
-import { getDistributionJobTypeColor } from '../../helpers';
+import {
+    getDistributionJobStatusColor,
+    getDistributionJobTypeColor,
+} from '../../helpers';
 import { DistributionJobFilter, DistributionJobGroupedData } from '../../types';
 
 type Props = Omit<AppProTableProps<DistributionJobGroupedData>, 'columns'> & {
@@ -34,6 +37,11 @@ export default function DistributionJobsGroupedTable({
         return messages(
             `distributionJobs.typeOptions.${type.toUpperCase()}` as any
         );
+    };
+
+    const getStatusLabel = (status?: string | null) => {
+        if (!status) return '-';
+        return messages(`distributionJobs.statusOptions.${status}` as any);
     };
 
     const columns: ProColumns<DistributionJobGroupedData>[] = [
@@ -62,7 +70,7 @@ export default function DistributionJobsGroupedTable({
             //     'dateGroup'
             // ),
             render: (_, record) =>
-                formattedDate(record.dateGroup, DATE_FORMAT.DATE_MINUTE),
+                formattedDate(record.dateGroup, DATE_FORMAT.DATE_ONLY),
         },
         {
             title: messages('distributionJobs.columns.upcs'),
@@ -93,7 +101,7 @@ export default function DistributionJobsGroupedTable({
                         <Popover
                             content={
                                 <div className="flex max-h-60 flex-col gap-1 overflow-y-auto p-1">
-                                    {upcs.map((upc) => (
+                                    {upcs.slice(1).map((upc) => (
                                         <Typography.Text
                                             key={upc}
                                             copyable={{ tooltips: false }}
@@ -127,6 +135,57 @@ export default function DistributionJobsGroupedTable({
                 ) : (
                     '-'
                 ),
+        },
+        {
+            title: messages('distributionJobs.columns.status'),
+            dataIndex: 'status',
+            key: 'status',
+            width: 180,
+            render: (_, record) => {
+                const statuses = Array.from(
+                    new Set(record.status?.filter(Boolean))
+                );
+
+                if (!statuses || statuses.length === 0) return '-';
+
+                if (statuses.length === 1) {
+                    return (
+                        <Tag color={getDistributionJobStatusColor(statuses[0])}>
+                            {getStatusLabel(statuses[0])}
+                        </Tag>
+                    );
+                }
+
+                return (
+                    <span className="flex items-center gap-1">
+                        <Tag color={getDistributionJobStatusColor(statuses[0])}>
+                            {getStatusLabel(statuses[0])}
+                        </Tag>
+                        <Popover
+                            content={
+                                <div className="flex max-h-60 flex-col gap-1 overflow-y-auto p-1">
+                                    {statuses.slice(1).map((status) => (
+                                        <Tag
+                                            key={status}
+                                            color={getDistributionJobStatusColor(
+                                                status
+                                            )}
+                                        >
+                                            {getStatusLabel(status)}
+                                        </Tag>
+                                    ))}
+                                </div>
+                            }
+                            trigger="hover"
+                            placement="topLeft"
+                        >
+                            <Tag className="!mr-0 ml-1 cursor-pointer">
+                                +{statuses.length - 1}
+                            </Tag>
+                        </Popover>
+                    </span>
+                );
+            },
         },
         {
             title: messages('distributionJobs.columns.recipients'),

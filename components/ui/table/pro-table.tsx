@@ -41,10 +41,10 @@ export default function AppProTable<RecordType extends object>({
                               ),
                           }
                 }
+                // headerTitle={
+                //     <span className="font-semibold">{props?.headerTitle}</span>
+                // }
                 {...props}
-                headerTitle={
-                    <span className="font-semibold">{props?.headerTitle}</span>
-                }
                 cardProps={{
                     bodyStyle: { padding: 0 },
                     style: { backgroundColor: token.colorBgContainer },

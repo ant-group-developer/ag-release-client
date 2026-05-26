@@ -8,9 +8,7 @@ import { useMemo, useState } from 'react';
 import { useUserPermission } from '../../hooks/use-get-user';
 import { UserData, UserPermissionData } from '../../types/data';
 import {
-    checkCanAccessTenantAll,
     checkIsSystemAdmin,
-    checkIsTenantOwnerOrAdmin,
 } from '../../utils/role';
 
 type Props = {
@@ -34,14 +32,6 @@ function ViewPermission({ dataEdit }: Props) {
         : tenantActive?.items?.[0]?.id || '';
 
     const isSystemAdmin = checkIsSystemAdmin(dataEdit.type);
-    const tenantUserType = dataEdit.tenantUser?.find(
-        (tu) => tu.tenant.id === activeTenantId
-    )?.type as any;
-    const isTenantOwnerOrAdmin = checkIsTenantOwnerOrAdmin(tenantUserType);
-    const canAccessTenantAll = checkCanAccessTenantAll(
-        dataEdit.type,
-        tenantUserType
-    );
 
     const { data, isLoading } = useUserPermission(
         userId,
@@ -150,16 +140,7 @@ function ViewPermission({ dataEdit }: Props) {
                     })}
                 />
             )}
-            {!isSystemTenant && isTenantOwnerOrAdmin && (
-                <Alert
-                    type="success"
-                    showIcon
-                    message={messages('user.grantPermission.tenantOwnerAlert', {
-                        defaultMessage:
-                            'This user is a Tenant Owner/Admin and automatically inherits all active capabilities.',
-                    })}
-                />
-            )}
+
 
             <Input.Search
                 placeholder={messages('common.search')}

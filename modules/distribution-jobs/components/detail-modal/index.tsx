@@ -1,7 +1,6 @@
-import AppModal from '@/components/ui/modal/normal-modal';
 import { showNotification } from '@/helpers/messages-helper';
 import useModalStore from '@/hooks/use-modal';
-import { Select, Space } from 'antd';
+import { Drawer, Select, Space } from 'antd';
 import { useTranslations } from 'next-intl';
 import { Key, useEffect, useMemo, useState } from 'react';
 import { TYPE_MODAL_DISTRIBUTION_JOB } from '../../constants/modal';
@@ -151,16 +150,11 @@ export default function DistributionJobDetailModal({ groupedData }: Props) {
     }, [open]);
 
     return (
-        <AppModal
+        <Drawer
             open={open}
-            onCancel={closeModal}
+            onClose={closeModal}
             title={messages('distributionJobs.detail')}
             width="100%"
-            style={{
-                maxWidth: '90vw',
-                top: 16,
-            }}
-            footer={null}
         >
             <DistributionJobsTable
                 sticky
@@ -168,6 +162,9 @@ export default function DistributionJobDetailModal({ groupedData }: Props) {
                 pagination={{
                     pageSize: 8,
                 }}
+                // scroll={{
+                //     y: 'calc(100vh - 350px)',
+                // }}
                 headerTitle={
                     <Space>
                         <Select
@@ -192,9 +189,7 @@ export default function DistributionJobDetailModal({ groupedData }: Props) {
                         />
                     </Space>
                 }
-                // scroll={{
-                //     y: 'calc(100vh - 350px)',
-                // }}
+                className="rounded-lg border pb-4"
                 rowSelection={rowSelection}
                 tableAlertOptionRender={() => (
                     <DistributionJobsTableAlertAction
@@ -212,6 +207,6 @@ export default function DistributionJobDetailModal({ groupedData }: Props) {
                     density: false,
                 }}
             />
-        </AppModal>
+        </Drawer>
     );
 }

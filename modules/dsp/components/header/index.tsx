@@ -3,7 +3,8 @@ import CreateButton from '@/components/ui/button/create-button';
 import AppSearch from '@/components/ui/input/search';
 import { UseFilterProps } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { useAuth } from '@/modules/auth/hooks/use-auth';
+import { usePermission } from '@/hooks/use-permission';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_DSP } from '../../enums';
 import { DspDataFilter } from '../../types';
@@ -14,7 +15,7 @@ export default function DspHeader({ dataFilter, onSearch }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
 
-    const { isSystemTenant } = useAuth();
+    const { hasPermission } = usePermission();
 
     return (
         <AppHeader className="app-header border-b-0 px-0 pb-3">
@@ -29,7 +30,7 @@ export default function DspHeader({ dataFilter, onSearch }: Props) {
             </AppHeaderGroup>
             <AppHeaderGroup position="end" className="flex-1">
                 <div className="flex items-center gap-2">
-                    {isSystemTenant && (
+                    {hasPermission(PERMISSION.DSP_SYSTEM.CREATE) && (
                         <CreateButton
                             canCreate={true}
                             text={messages('dsp.add')}

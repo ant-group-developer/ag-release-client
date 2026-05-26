@@ -53,19 +53,18 @@ export default function Releases({}: Props) {
                 }}
             ></div>
 
-            <ReleasesHeaderV2
-                dataFilter={dataFilter}
-                onChangeFilter={onChangeFilter}
-                canClearFilter={canClearFilter}
-                removeFilter={removeFilter}
-                // handleRefresh={handleRefresh}
-                // handleChangeVisibleColumns={handleChangeVisibleColumns}
-                // visibleColumn={visibleColumns}
-                // dataUpdatedAt={dataUpdatedAt}
-            />
-
             {layoutTable === LAYOUT_TABLE.LIST && (
                 <ReleasesTable
+                    headerTitle={
+                        <>
+                            <ReleasesHeaderV2
+                                dataFilter={dataFilter}
+                                onChangeFilter={onChangeFilter}
+                                canClearFilter={canClearFilter}
+                                removeFilter={removeFilter}
+                            />
+                        </>
+                    }
                     className="rounded-t-lg"
                     style={{
                         backgroundColor: token.colorBgContainer,

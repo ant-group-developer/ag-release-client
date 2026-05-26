@@ -17,6 +17,18 @@ export const PERMISSION = {
         UPDATE_POLICIES: 'dsp.update.policies',
         UPDATE_DEALS: 'dsp.update.deals',
     },
+    DSP_SYSTEM: {
+        CONFIGURE_INTEGRATION: 'dsp_system.configure_integration',
+        READ: 'dsp_system.read',
+        CREATE: 'dsp_system.create',
+        UPDATE: 'dsp_system.update',
+        DELETE: 'dsp_system.delete',
+        UPDATE_POLICIES: 'dsp_system.update.policies',
+        UPDATE_DEALS: 'dsp_system.update.deals',
+    },
+    DSP_TENANT: {
+        READ: 'dsp_tenant.read',
+    },
     LABEL: {
         CREATE: 'label.create',
         READ: 'label.read',
@@ -38,7 +50,10 @@ export const PERMISSION = {
     WORKSPACE: {
         CREATE: 'workspace.create',
         READ: 'workspace.read',
-        UPDATE: 'workspace.update',
+        UPDATE_INFO: 'workspace.update.info',
+        UPDATE_STATUS: 'workspace.update.status',
+        UPDATE_OWNER: 'workspace.update.owner',
+        UPDATE_CONFIG: 'workspace.update.config',
     },
     ISSUE: {
         CREATE: 'issue.create',
@@ -61,9 +76,18 @@ export const PERMISSION = {
     USER: {
         READ: 'user.read',
         CREATE: 'user.create',
-        UPDATE: 'user.update',
-        DELETE: 'user.delete',
         INVITE: 'user.invite',
+        UPDATE_INFO: 'user.update.info',
+        UPDATE_STATUS: 'user.update.status',
+        UPDATE_ROLE: 'user.update.role',
+        UPDATE_TENANT_TYPE: 'user.update.tenant_type',
+        DELETE: 'user.delete',
+    },
+    ROLE: {
+        READ: 'role.read',
+    },
+    PERMISSION_MODULE: {
+        READ: 'permission.read',
     },
     ANALYTICS: {
         READ: 'analytics.read',
@@ -76,3 +100,4 @@ export const PERMISSION = {
 // Type helper for permission values
 type PermissionModule = (typeof PERMISSION)[keyof typeof PERMISSION];
 export type Permission = PermissionModule[keyof PermissionModule];
+

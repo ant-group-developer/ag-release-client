@@ -36,13 +36,14 @@ import {
     Music,
     Newspaper,
     ScrollText,
+    Server,
     Settings,
     Speaker,
-    SquareActivity,
     SquareUser,
     Trash,
     User,
     User2,
+    Video,
 } from 'lucide-react';
 import type { ForwardRefExoticComponent, RefAttributes } from 'react';
 
@@ -92,10 +93,6 @@ export type RouteNode = RouteLinkNode | RouteGroupNode;
 const SYS_ADMIN_REQ: RouteRequired = {
     userType: [USER_TYPE.ADMIN],
     tenantId: [SYSTEM_TENANT_ID],
-};
-
-const OWNER_OR_ADMIN_TENANT_REQ: RouteRequired = {
-    tenantUserType: [TENANT_USER_TYPE.OWNER, TENANT_USER_TYPE.ADMIN],
 };
 
 export enum ROUTES_ID {
@@ -171,6 +168,7 @@ export const adminRoutes: RouteNode[] = [
                 icon: DiscAlbum,
                 required: { permission: [PERMISSION.RELEASE.READ] },
             },
+
             {
                 id: 'releaseDetail',
                 type: 'link',
@@ -185,6 +183,15 @@ export const adminRoutes: RouteNode[] = [
                         PERMISSION.RELEASE.CREATE,
                     ],
                 },
+            },
+            {
+                id: 'release-videos',
+                type: 'link',
+                label: 'releaseVideo.label',
+                title: 'Release Videos',
+                href: APP_ROUTES.RELEASE_VIDEOS,
+                icon: Video,
+                required: SYS_ADMIN_REQ,
             },
             {
                 id: 'track',
@@ -277,9 +284,18 @@ export const adminRoutes: RouteNode[] = [
                 label: 'dsp.label',
                 title: 'DSP',
                 href: APP_ROUTES.DSP,
-                icon: SquareActivity,
+                icon: Server,
                 required: { permission: [PERMISSION.DSP.READ] },
             },
+            // {
+            //     id: 'dsp-tenant',
+            //     type: 'link',
+            //     label: 'dsp.label',
+            //     title: 'DSP',
+            //     href: APP_ROUTES.DSP_TENANT,
+            //     icon: SquareActivity,
+            //     required: { permission: [PERMISSION.DSP_TENANT.READ] },
+            // },
         ],
     },
     {
@@ -427,7 +443,7 @@ export const adminRoutes: RouteNode[] = [
                 href: APP_ROUTES.TENANT_DETAIL,
                 hidden: true,
                 icon: Layers,
-                required: OWNER_OR_ADMIN_TENANT_REQ,
+                required: { permission: [PERMISSION.WORKSPACE.READ] },
             },
             {
                 id: 'email-sender',
@@ -519,6 +535,7 @@ export const adminRoutes: RouteNode[] = [
                         icon: Library,
                         required: SYS_ADMIN_REQ,
                     },
+
                     {
                         id: 'currencies',
                         type: 'link',

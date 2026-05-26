@@ -8,6 +8,7 @@ import {
     TenantData,
     TenantDetail,
     TenantDspData,
+    TenantDspAgreementData,
 } from '../types/data';
 
 export function useTenantList(params: DataFilterTenant, enabled = true) {
@@ -64,5 +65,30 @@ export function useTenantDsp(id: string | null) {
     return {
         ...restResponse,
         dataTenantDsp: data?.data?.data ?? ([] as TenantDspData[]),
+    };
+}
+
+export function useGetTenantDspAgreements(id: string | null) {
+    const { data, ...restResponse } = useQuery({
+        queryKey: tenantQueryKeys.dspAgreement(id ?? ''),
+        queryFn: () => tenantApi.getTenantDspAgreements(id as string),
+        enabled: Boolean(id),
+    });
+
+    return {
+        ...restResponse,
+        dataTenantDspAgreement: data?.data?.data ?? ([] as TenantDspAgreementData[]),
+    };
+}
+
+export function useGetTenantDspAgreementsUser() {
+    const { data, ...restResponse } = useQuery({
+        queryKey: tenantQueryKeys.dspAgreementsUser(),
+        queryFn: () => tenantApi.getTenantDspAgreementsUser(),
+    });
+
+    return {
+        ...restResponse,
+        dataTenantDspAgreement: data?.data?.data ?? ([] as TenantDspAgreementData[]),
     };
 }

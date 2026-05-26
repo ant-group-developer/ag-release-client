@@ -50,17 +50,10 @@ function TenantRoles() {
     // Build toggle states from API data
     useEffect(() => {
         if (allRoles.length > 0) {
-            const tenantRoleMap = new Map<string, boolean>();
-            dataTenantRoles.forEach((tr: TenantRoleData) => {
-                tenantRoleMap.set(tr.role.id, tr.isActive);
-            });
-
             const states: RoleToggleState[] = allRoles.map(
                 (role: RolesData) => ({
                     roleId: role.id,
-                    isActive: tenantRoleMap.has(role.id)
-                        ? tenantRoleMap.get(role.id)!
-                        : true,
+                    isActive: dataTenantRoles.includes(role.id),
                 })
             );
 
@@ -162,7 +155,7 @@ function TenantRoles() {
     return (
         <div>
             <div
-                className="mb-4 flex items-center justify-between rounded-t-lg p-4"
+                className="mb-4 flex items-center justify-between rounded-lg p-4"
                 style={{ background: token.colorBgContainer }}
             >
                 <Typography.Title level={5} style={{ margin: 0 }}>
