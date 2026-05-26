@@ -13,7 +13,7 @@ import {
 export const analytics2Apis = {
     getDspTimeline: (params: DspTimelineParams) => {
         return axiosInstance.post<DetailResponse<DspTimelineData>>(
-            '/analytics/dsp/timeline',
+            '/analytics/sales-view/dsp/timeline',
             params
         );
     },
