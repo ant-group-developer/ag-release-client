@@ -15,8 +15,8 @@ export const DSP_PALETTE = [
 export function transformBarData(items: DspTimelinePeriod[]) {
     return items.map((item) => {
         const row: Record<string, any> = { period: item.period };
-        item.series.forEach(({ dsp, salesViews }) => {
-            row[dsp] = salesViews;
+        item.series.forEach(({ dsp, trendViews }) => {
+            row[dsp] = trendViews;
         });
         return row;
     });
@@ -30,8 +30,8 @@ export function useDspPieData(
     return useMemo(() => {
         const totals: Record<string, number> = {};
         items.forEach((item) => {
-            item.series.forEach(({ dsp, salesViews }) => {
-                totals[dsp] = (totals[dsp] ?? 0) + salesViews;
+            item.series.forEach(({ dsp, trendViews }) => {
+                totals[dsp] = (totals[dsp] ?? 0) + trendViews;
             });
         });
         return [...topDsps, 'Other']

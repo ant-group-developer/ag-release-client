@@ -2280,5 +2280,26 @@
             "SKIPPED": "Not applicable",
             "SUCCESS": "Done"
         }
+    },
+    "analytics2": {
+        "syncAll": {
+            "button": "Sync data",
+            "syncing": "Sync in progress...",
+            "modalTitle": "Sync data",
+            "syncMode": "Sync mode",
+            "syncModeSingle": "Sync single month",
+            "syncModeFrom": "Sync from month",
+            "period": "Month",
+            "startPeriod": "Start month",
+            "accept": "Accept",
+            "cancel": "Cancel",
+            "force": "Force sync",
+            "forceTooltip": "Re-sync even if data already exists",
+            "started": "Sync data started",
+            "startFailed": "Failed to start sync data",
+            "completed": "Sync data completed",
+            "failed": "Sync data failed",
+            "jobNotFound": "Something went wrong while syncing data"
+        }
     }
 }

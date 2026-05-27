@@ -8,12 +8,16 @@ import {
     ReleaseRankingItem,
     ArtistRankingItem,
     LabelRankingItem,
+    SyncRequest,
+    SyncAllRequest,
+    SyncAllResponse,
+    SyncJobResponse,
 } from '../types';
 
 export const analytics2Apis = {
     getDspTimeline: (params: DspTimelineParams) => {
         return axiosInstance.post<DetailResponse<DspTimelineData>>(
-            '/analytics/sales-view/dsp/timeline',
+            '/analytics/trend-view/dsp/timeline',
             params
         );
     },
@@ -40,5 +44,20 @@ export const analytics2Apis = {
             '/analytics/ranking/labels',
             params
         );
+    },
+    startSync: ({ period, force }: SyncRequest) => {
+        return axiosInstance.post<SyncAllResponse>('/etl/ftp/sync', {
+            period,
+            force,
+        });
+    },
+    startSyncAll: ({ startPeriod, force }: SyncAllRequest) => {
+        return axiosInstance.post<SyncAllResponse>('/etl/ftp/sync-all', {
+            force,
+            startPeriod,
+        });
+    },
+    getSyncJob: (jobId: string) => {
+        return axiosInstance.get<SyncJobResponse>(`/etl/jobs/${jobId}`);
     },
 };

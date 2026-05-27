@@ -66,6 +66,7 @@ export default function TracksArtistsTable({ fromDate, toDate }: Props) {
             dataIndex: 'rank',
             key: 'rank',
             width: 80,
+            fixed: 'left' as const,
             align: 'center' as const,
             render: (rank: number) => (
                 <span className="font-bold text-gray-700 dark:text-zinc-300">
@@ -78,6 +79,7 @@ export default function TracksArtistsTable({ fromDate, toDate }: Props) {
             dataIndex: 'title',
             key: 'title',
             width: 350,
+            fixed: 'left' as const,
             render: (text: string, record: TrackRankingItem) => (
                 <div className="flex items-center gap-3">
                     <ReleaseCoverImage data={{ id: record.releaseId } as any} />
@@ -141,6 +143,7 @@ export default function TracksArtistsTable({ fromDate, toDate }: Props) {
             dataIndex: 'rank',
             key: 'rank',
             width: 80,
+            fixed: 'left' as const,
             align: 'center' as const,
             render: (rank: number) => (
                 <span className="font-bold text-gray-700 dark:text-zinc-300">
@@ -153,6 +156,7 @@ export default function TracksArtistsTable({ fromDate, toDate }: Props) {
             dataIndex: 'title',
             key: 'title',
             width: 350,
+            fixed: 'left' as const,
             render: (text: string, record: ReleaseRankingItem) => (
                 <div className="flex items-center gap-3">
                     <ReleaseCoverImage data={{ id: record.releaseId } as any} />
@@ -216,6 +220,7 @@ export default function TracksArtistsTable({ fromDate, toDate }: Props) {
             dataIndex: 'rank',
             key: 'rank',
             width: 80,
+            fixed: 'left' as const,
             align: 'center' as const,
             render: (rank: number) => (
                 <span className="font-bold text-gray-700 dark:text-zinc-300">
@@ -228,6 +233,7 @@ export default function TracksArtistsTable({ fromDate, toDate }: Props) {
             dataIndex: 'artistName',
             key: 'artistName',
             width: 300,
+            fixed: 'left' as const,
             render: (text: string, record: ArtistRankingItem) => (
                 <div className="flex items-center gap-3">
                     <ReleaseCoverImage data={{ id: record.picture } as any} />
@@ -267,6 +273,7 @@ export default function TracksArtistsTable({ fromDate, toDate }: Props) {
             dataIndex: 'rank',
             key: 'rank',
             width: 80,
+            fixed: 'left' as const,
             align: 'center' as const,
             render: (rank: number) => (
                 <span className="font-bold text-gray-700 dark:text-zinc-300">
@@ -279,6 +286,7 @@ export default function TracksArtistsTable({ fromDate, toDate }: Props) {
             dataIndex: 'labelName',
             key: 'labelName',
             width: 300,
+            fixed: 'left' as const,
             render: (text: string, record: LabelRankingItem) => (
                 <div className="flex items-center gap-3">
                     <ReleaseCoverImage data={{ id: record.labelId } as any} />
@@ -334,6 +342,7 @@ export default function TracksArtistsTable({ fromDate, toDate }: Props) {
                     loading={isTracksFetching}
                     rowKey="isrc"
                     pagination={false}
+                    scroll={{ x: 900 }}
                 />
             ),
         },
@@ -347,6 +356,7 @@ export default function TracksArtistsTable({ fromDate, toDate }: Props) {
                     loading={isReleasesFetching}
                     rowKey="releaseId"
                     pagination={false}
+                    scroll={{ x: 900 }}
                 />
             ),
         },
@@ -360,6 +370,7 @@ export default function TracksArtistsTable({ fromDate, toDate }: Props) {
                     loading={isArtistsFetching}
                     rowKey="artistId"
                     pagination={false}
+                    scroll={{ x: 900 }}
                 />
             ),
         },
@@ -373,6 +384,7 @@ export default function TracksArtistsTable({ fromDate, toDate }: Props) {
                     loading={isLabelsFetching}
                     rowKey="labelId"
                     pagination={false}
+                    scroll={{ x: 900 }}
                 />
             ),
         },

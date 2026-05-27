@@ -12,4 +12,6 @@ export const analytics2QueryKeys = {
         [...analytics2QueryKeys.all, 'artist-ranking', params] as const,
     labelRanking: (params: RankingParams) =>
         [...analytics2QueryKeys.all, 'label-ranking', params] as const,
+    syncJob: (jobId?: string) =>
+        [...analytics2QueryKeys.all, 'SYNC_JOB', jobId] as const,
 };

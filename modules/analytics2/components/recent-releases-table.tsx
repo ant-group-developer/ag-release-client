@@ -10,7 +10,7 @@ import { formattedDate } from '@/helpers/common';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { ReleasesData } from '@/modules/releases/types';
-import { Card, Skeleton, Table } from 'antd';
+import { Card, Skeleton, Table } from 'antd'
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 interface Props {
@@ -39,6 +39,8 @@ export default function RecentReleasesTable({ fromDate, toDate }: Props) {
             dataIndex: 'title',
             key: 'title',
             width: 350,
+            ellipsis: true,
+            fixed: 'left' as const,
             render: (text: string, record: ReleasesData) => (
                 <div className="flex items-center gap-3">
                     <ReleaseCoverImage data={record} />
@@ -119,6 +121,7 @@ export default function RecentReleasesTable({ fromDate, toDate }: Props) {
                     rowKey="id"
                     loading={isFetching}
                     className="analytics-tabs"
+                    scroll={{ x: 1100 }}
                     pagination={{
                         current: page,
                         pageSize,
