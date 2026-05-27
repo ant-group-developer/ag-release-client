@@ -2214,5 +2214,26 @@
             "SKIPPED": "Không áp dụng",
             "SUCCESS": "Hoàn thành"
         }
+    },
+    "analytics2": {
+        "syncAll": {
+            "button": "Đồng bộ dữ liệu",
+            "syncing": "Đang đồng bộ dữ liệu...",
+            "modalTitle": "Đồng bộ dữ liệu",
+            "syncMode": "Chế độ đồng bộ",
+            "syncModeSingle": "Đồng bộ 1 tháng",
+            "syncModeFrom": "Đồng bộ từ tháng",
+            "period": "Tháng",
+            "startPeriod": "Tháng bắt đầu",
+            "accept": "Xác nhận",
+            "cancel": "Hủy",
+            "force": "Buộc đồng bộ",
+            "forceTooltip": "Đồng bộ lại dù dữ liệu đã tồn tại",
+            "started": "Đã bắt đầu đồng bộ dữ liệu",
+            "startFailed": "Không thể bắt đầu đồng bộ dữ liệu",
+            "completed": "Đồng bộ dữ liệu hoàn tất",
+            "failed": "Đồng bộ dữ liệu thất bại",
+            "jobNotFound": "Có lỗi khi đồng bộ dữ liệu"
+        }
     }
 }

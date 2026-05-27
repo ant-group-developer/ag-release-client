@@ -14,7 +14,7 @@ export interface DspTimelineParams {
 
 export interface DspSeriesItem {
     dsp: string;
-    salesViews: number;
+    trendViews: number;
 }
 
 export interface DspTimelinePeriod {
@@ -73,4 +73,39 @@ export interface LabelRankingItem {
     releaseCount: number;
     trackCount: number;
     totalViews: number;
+}
+
+export interface SyncRequest {
+    period: string;
+    force: boolean;
+}
+
+export interface SyncAllRequest {
+    startPeriod: string;
+    force: boolean;
+}
+
+export interface SyncAllResponse {
+    jobId: string;
+    message: string;
+}
+
+export interface SyncJobProgress {
+    current: number;
+    total: number;
+    currentItem?: string;
+}
+
+export interface SyncJobResponse {
+    id: string;
+    type: string;
+    status: string;
+    progress?: SyncJobProgress;
+    params: {
+        force: boolean;
+        startPeriod: string;
+    };
+    createdAt: string;
+    startedAt?: string;
+    durationMs?: number;
 }

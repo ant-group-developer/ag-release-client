@@ -5,6 +5,7 @@ import { useFilter } from '@/hooks/use-filter';
 import AnalyticsChart from '@/modules/analytics2/components/analytics-chart';
 import MetricCards from '@/modules/analytics2/components/metric-cards';
 import RecentReleasesTable from '@/modules/analytics2/components/recent-releases-table';
+import SyncAllButton from '@/modules/analytics2/components/sync-button';
 import TracksArtistsTable from '@/modules/analytics2/components/tracks-artists-table';
 import { Analytics2DataFilter } from '@/modules/analytics2/types';
 import { PageContainer } from '@ant-design/pro-components';
@@ -13,7 +14,7 @@ import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 
 const defaultFilter: Analytics2DataFilter = {
-    startDate: dayjs().subtract(6, 'month').startOf('month').format('YYYY-MM-DD'),
+    startDate: dayjs().subtract(5, 'month').startOf('month').format('YYYY-MM-DD'),
     endDate: dayjs().endOf('month').format('YYYY-MM-DD'),
 };
 
@@ -43,6 +44,7 @@ export default function Analytics2Page() {
                         onChangeFilter({ startDate: from, endDate: to })
                     }
                 />,
+                <SyncAllButton key="sync" />,
             ]}
         >
             <div className="flex flex-col gap-6">
