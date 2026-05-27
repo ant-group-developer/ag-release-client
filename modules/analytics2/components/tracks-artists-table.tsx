@@ -1,65 +1,326 @@
 'use client';
 
-import { Card, Input, Table, Tabs } from 'antd';
-import { Search } from 'lucide-react';
+import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
+import { Card, Select, Table, Tabs } from 'antd';
 import { useTranslations } from 'next-intl';
-import { ARTIST_DATA, TRACK_DATA } from '../constants/mock-data';
+import {
+    useGetArtistRanking,
+    useGetLabelRanking,
+    useGetReleaseRanking,
+    useGetTrackRanking,
+} from '../hooks/use-get-rankings';
+import { useAnalyticsTopNStore } from '../store/use-analytics-top-n-store';
+import {
+    ArtistRankingItem,
+    LabelRankingItem,
+    ReleaseRankingItem,
+    TrackRankingItem,
+} from '../types';
 
-export default function TracksArtistsTable() {
+interface Props {
+    fromDate: string;
+    toDate: string;
+}
+
+export default function TracksArtistsTable({ fromDate, toDate }: Props) {
     const messages = useTranslations();
+    const { topN, setTopN } = useAnalyticsTopNStore();
 
+    // Fetch live ranking data
+    const { trackRankingData, isFetching: isTracksFetching } =
+        useGetTrackRanking({
+            fromDate,
+            toDate,
+            page: 1,
+            pageSize: topN,
+        });
+
+    const { releaseRankingData, isFetching: isReleasesFetching } =
+        useGetReleaseRanking({
+            fromDate,
+            toDate,
+            page: 1,
+            pageSize: topN,
+        });
+
+    const { artistRankingData, isFetching: isArtistsFetching } =
+        useGetArtistRanking({
+            fromDate,
+            toDate,
+            page: 1,
+            pageSize: topN,
+        });
+
+    const { labelRankingData, isFetching: isLabelsFetching } =
+        useGetLabelRanking({
+            fromDate,
+            toDate,
+            page: 1,
+            pageSize: topN,
+        });
+
+    // Columns config
     const trackColumns = [
         {
+            title: 'Rank',
+            dataIndex: 'rank',
+            key: 'rank',
+            width: 80,
+            align: 'center' as const,
+            render: (rank: number) => (
+                <span className="font-bold text-gray-700 dark:text-zinc-300">
+                    #{rank}
+                </span>
+            ),
+        },
+        {
             title: messages('common.track'),
-            dataIndex: 'track',
-            key: 'track',
-            render: (text: string, record: any) => (
+            dataIndex: 'title',
+            key: 'title',
+            width: 350,
+            render: (text: string, record: TrackRankingItem) => (
                 <div className="flex items-center gap-3">
-                    <img
-                        src={record.cover}
-                        alt={text}
-                        className="h-10 w-10 rounded-lg object-cover"
-                    />
-                    <span className="font-medium text-gray-900">{text}</span>
+                    <ReleaseCoverImage data={{ id: record.releaseId } as any} />
+                    <div className="flex flex-col">
+                        <span className="font-medium text-gray-900 dark:text-zinc-100">
+                            {text}
+                        </span>
+                    </div>
                 </div>
             ),
         },
-        { title: 'Videos', dataIndex: 'videos', key: 'videos' },
-        { title: messages('common.views'), dataIndex: 'views', key: 'views' },
-        { title: 'Engagement', dataIndex: 'engagement', key: 'engagement' },
+        {
+            title: messages('common.artist'),
+            dataIndex: 'artistName',
+            key: 'artistName',
+            width: 200,
+            render: (text: string) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {text || '—'}
+                </span>
+            ),
+        },
+        {
+            title: 'ISRC',
+            dataIndex: 'isrc',
+            key: 'isrc',
+            width: 200,
+            render: (text: string) => (
+                <span className="text-gray-500 dark:text-zinc-400">
+                    {text || '—'}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.release'),
+            dataIndex: 'releaseTitle',
+            key: 'releaseTitle',
+            width: 300,
+            render: (text: string) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {text || '—'}
+                </span>
+            ),
+        },
         {
             title: messages('common.streams'),
-            dataIndex: 'streams',
-            key: 'streams',
+            dataIndex: 'totalViews',
+            key: 'totalViews',
+            width: 150,
+            render: (views: number) => (
+                <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                    {views ? views.toLocaleString() : 0}
+                </span>
+            ),
         },
-        { title: 'Listeners', dataIndex: 'listeners', key: 'listeners' },
+    ];
+
+    const releaseColumns = [
+        {
+            title: 'Rank',
+            dataIndex: 'rank',
+            key: 'rank',
+            width: 80,
+            align: 'center' as const,
+            render: (rank: number) => (
+                <span className="font-bold text-gray-700 dark:text-zinc-300">
+                    #{rank}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.release'),
+            dataIndex: 'title',
+            key: 'title',
+            width: 350,
+            render: (text: string, record: ReleaseRankingItem) => (
+                <div className="flex items-center gap-3">
+                    <ReleaseCoverImage data={{ id: record.releaseId } as any} />
+                    <div className="flex flex-col">
+                        <span className="font-medium text-gray-900 dark:text-zinc-100">
+                            {text}
+                        </span>
+                    </div>
+                </div>
+            ),
+        },
+        {
+            title: messages('common.label'),
+            dataIndex: 'labelName',
+            key: 'labelName',
+            width: 200,
+            render: (text: string) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {text || '—'}
+                </span>
+            ),
+        },
+        {
+            title: 'UPC',
+            dataIndex: 'upc',
+            key: 'upc',
+            width: 200,
+            render: (text: string) => (
+                <span className="text-gray-500 dark:text-zinc-400">
+                    {text || '—'}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.tracks'),
+            dataIndex: 'trackCount',
+            key: 'trackCount',
+            width: 120,
+            render: (count: number) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {count || 0}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.streams'),
+            dataIndex: 'totalViews',
+            key: 'totalViews',
+            width: 150,
+            render: (views: number) => (
+                <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                    {views ? views.toLocaleString() : 0}
+                </span>
+            ),
+        },
     ];
 
     const artistColumns = [
         {
+            title: 'Rank',
+            dataIndex: 'rank',
+            key: 'rank',
+            width: 80,
+            align: 'center' as const,
+            render: (rank: number) => (
+                <span className="font-bold text-gray-700 dark:text-zinc-300">
+                    #{rank}
+                </span>
+            ),
+        },
+        {
             title: messages('common.artist'),
-            dataIndex: 'artist',
-            key: 'artist',
-            render: (text: string, record: any) => (
+            dataIndex: 'artistName',
+            key: 'artistName',
+            width: 300,
+            render: (text: string, record: ArtistRankingItem) => (
                 <div className="flex items-center gap-3">
-                    <img
-                        src={record.image}
-                        alt={text}
-                        className="h-10 w-10 rounded-full object-cover"
-                    />
-                    <span className="font-medium text-gray-900">{text}</span>
+                    <ReleaseCoverImage data={{ id: record.picture } as any} />
+                    <span className="font-medium text-gray-900 dark:text-zinc-100">
+                        {text}
+                    </span>
                 </div>
             ),
         },
-        { title: 'Videos', dataIndex: 'videos', key: 'videos' },
-        { title: messages('common.views'), dataIndex: 'views', key: 'views' },
-        { title: 'Engagement', dataIndex: 'engagement', key: 'engagement' },
+        {
+            title: messages('common.tracks'),
+            dataIndex: 'trackCount',
+            key: 'trackCount',
+            width: 120,
+            render: (count: number) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {count || 0}
+                </span>
+            ),
+        },
         {
             title: messages('common.streams'),
-            dataIndex: 'streams',
-            key: 'streams',
+            dataIndex: 'totalViews',
+            key: 'totalViews',
+            width: 150,
+            render: (views: number) => (
+                <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                    {views ? views.toLocaleString() : 0}
+                </span>
+            ),
         },
-        { title: 'Listeners', dataIndex: 'listeners', key: 'listeners' },
+    ];
+
+    const labelColumns = [
+        {
+            title: 'Rank',
+            dataIndex: 'rank',
+            key: 'rank',
+            width: 80,
+            align: 'center' as const,
+            render: (rank: number) => (
+                <span className="font-bold text-gray-700 dark:text-zinc-300">
+                    #{rank}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.label'),
+            dataIndex: 'labelName',
+            key: 'labelName',
+            width: 300,
+            render: (text: string, record: LabelRankingItem) => (
+                <div className="flex items-center gap-3">
+                    <ReleaseCoverImage data={{ id: record.labelId } as any} />
+                    <span className="font-medium text-gray-900 dark:text-zinc-100">
+                        {text}
+                    </span>
+                </div>
+            ),
+        },
+        {
+            title: messages('common.release'),
+            dataIndex: 'releaseCount',
+            key: 'releaseCount',
+            width: 150,
+            render: (count: number) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {count || 0}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.tracks'),
+            dataIndex: 'trackCount',
+            key: 'trackCount',
+            width: 150,
+            render: (count: number) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {count || 0}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.streams'),
+            dataIndex: 'totalViews',
+            key: 'totalViews',
+            width: 150,
+            render: (views: number) => (
+                <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                    {views ? views.toLocaleString() : 0}
+                </span>
+            ),
+        },
     ];
 
     const tabItems = [
@@ -69,13 +330,23 @@ export default function TracksArtistsTable() {
             children: (
                 <Table
                     columns={trackColumns}
-                    dataSource={TRACK_DATA}
-                    pagination={{
-                        pageSize: 5,
-                        showSizeChanger: false,
-                        className: 'px-4',
-                    }}
-                    className="mt-4"
+                    dataSource={trackRankingData}
+                    loading={isTracksFetching}
+                    rowKey="isrc"
+                    pagination={false}
+                />
+            ),
+        },
+        {
+            key: 'releases',
+            label: messages('common.release'),
+            children: (
+                <Table
+                    columns={releaseColumns}
+                    dataSource={releaseRankingData}
+                    loading={isReleasesFetching}
+                    rowKey="releaseId"
+                    pagination={false}
                 />
             ),
         },
@@ -85,13 +356,23 @@ export default function TracksArtistsTable() {
             children: (
                 <Table
                     columns={artistColumns}
-                    dataSource={ARTIST_DATA}
-                    pagination={{
-                        pageSize: 5,
-                        showSizeChanger: false,
-                        className: 'px-4',
-                    }}
-                    className="mt-4"
+                    dataSource={artistRankingData}
+                    loading={isArtistsFetching}
+                    rowKey="artistId"
+                    pagination={false}
+                />
+            ),
+        },
+        {
+            key: 'labels',
+            label: messages('common.label'),
+            children: (
+                <Table
+                    columns={labelColumns}
+                    dataSource={labelRankingData}
+                    loading={isLabelsFetching}
+                    rowKey="labelId"
+                    pagination={false}
                 />
             ),
         },
@@ -107,12 +388,17 @@ export default function TracksArtistsTable() {
                 items={tabItems}
                 className="analytics-tabs"
                 tabBarExtraContent={
-                    <Input
-                        placeholder="Search"
-                        prefix={<Search className="h-4 w-4 text-gray-400" />}
-                        className="h-9 w-64 border-none bg-gray-50"
-                        style={{ borderRadius: '8px' }}
-                    />
+                    <div className="flex items-center gap-3">
+                        <Select
+                            value={topN}
+                            onChange={(value) => setTopN(value)}
+                            style={{ width: 100 }}
+                            options={[
+                                { value: 5, label: 'Top 5' },
+                                { value: 10, label: 'Top 10' },
+                            ]}
+                        />
+                    </div>
                 }
             />
         </Card>

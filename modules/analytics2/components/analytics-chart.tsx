@@ -1,24 +1,56 @@
 'use client';
 
-import { formattedNumber } from '@/helpers/common';
-import { Card, Radio } from 'antd';
+import { Card, Empty, Radio, Skeleton } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
-import {
-    Bar,
-    CartesianGrid,
-    ComposedChart,
-    Line,
-    ResponsiveContainer,
-    Tooltip,
-    XAxis,
-    YAxis,
-} from 'recharts';
-import { CHART_DATA } from '../constants/mock-data';
+import { useMemo, useState } from 'react';
+import { useGetDspTimeline } from '../hooks/use-get-dsp-timeline';
+import BarView from './bar-view';
+import PieView from './pie-view';
+import { DSP_PALETTE, transformBarData, useDspPieData } from '../helpers/analytics-chart-helper';
 
-export default function AnalyticsChart() {
-    const [view, setView] = useState('bar');
+interface Props {
+    fromDate: string;
+    toDate: string;
+}
+
+export default function AnalyticsChart({ fromDate, toDate }: Props) {
+    const [view, setView] = useState<'bar' | 'pie'>('bar');
     const messages = useTranslations();
+
+    const { timelineData, isFetching } = useGetDspTimeline({
+        fromDate,
+        toDate,
+        topN: 5,
+        includeOther: true,
+    });
+
+    const topDsps = useMemo(() => {
+        return timelineData?.topDsps ?? [];
+    }, [timelineData?.topDsps]);
+
+    const items = useMemo(() => {
+        return timelineData?.items ?? [];
+    }, [timelineData?.items]);
+
+    const colorMap = useMemo(() => {
+        const map: Record<string, string> = {};
+        topDsps.forEach((dsp, i) => {
+            map[dsp] = DSP_PALETTE[i % DSP_PALETTE.length];
+        });
+        map['Other'] = '#94a3b8';
+        return map;
+    }, [topDsps]);
+
+    const barData = useMemo(() => transformBarData(items), [items]);
+    const pieData = useDspPieData(items, topDsps, colorMap);
+
+    const allDspKeys = useMemo(() => {
+        const keys = new Set<string>();
+        items.forEach((item) =>
+            item.series.forEach(({ dsp }) => keys.add(dsp))
+        );
+        return Array.from(keys);
+    }, [items]);
 
     return (
         <Card
@@ -26,23 +58,10 @@ export default function AnalyticsChart() {
             styles={{ body: { padding: '24px' } }}
         >
             <div className="mb-6 flex items-center justify-between">
-                <div className="flex items-center gap-6">
-                    <div className="flex items-center gap-2">
-                        <div className="h-0.5 w-4 bg-blue-500" />
-                        <span className="text-sm">TikTok</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <div className="h-4 w-4 rounded-sm bg-emerald-400" />
-                        <span className="text-sm">Spotify</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <div className="h-4 w-4 rounded-sm bg-rose-500" />
-                        <span className="text-sm">Apple music</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <div className="h-4 w-4 rounded-sm bg-amber-400" />
-                        <span className="text-sm">Youtube</span>
-                    </div>
+                <div>
+                    <span className="text-base font-bold text-gray-800 dark:text-zinc-100">
+                        {messages('analytics.chart.title')}
+                    </span>
                 </div>
                 <Radio.Group
                     value={view}
@@ -52,80 +71,29 @@ export default function AnalyticsChart() {
                     <Radio.Button value="bar" className="w-16 text-center">
                         Bar
                     </Radio.Button>
-                    <Radio.Button value="line" className="w-16 text-center">
-                        Line
+                    <Radio.Button value="pie" className="w-16 text-center">
+                        Pie
                     </Radio.Button>
                 </Radio.Group>
             </div>
 
-            <div className="h-[400px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart
-                        data={CHART_DATA}
-                        margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-                    >
-                        <CartesianGrid
-                            strokeDasharray="3 3"
-                            vertical={false}
-                            stroke="#f0f0f0"
+            {isFetching ? (
+                <Skeleton active paragraph={{ rows: 8 }} />
+            ) : items.length === 0 ? (
+                <Empty className="py-12" description={messages('common.noDataAvailable')} />
+            ) : (
+                <>
+                    {view === 'bar' && (
+                        <BarView
+                            barData={barData}
+                            allDspKeys={allDspKeys}
+                            colorMap={colorMap}
                         />
-                        <XAxis
-                            dataKey="date"
-                            axisLine={false}
-                            tickLine={false}
-                            tick={{ fontSize: 12, fill: '#999' }}
-                            dy={10}
-                        />
-                        <YAxis
-                            axisLine={false}
-                            tickLine={false}
-                            tick={{ fontSize: 12, fill: '#999' }}
-                            orientation="left"
-                            tickFormatter={(v) =>
-                                formattedNumber(v, undefined as any, true)
-                            }
-                        />
-                        <Tooltip
-                            contentStyle={{
-                                borderRadius: '8px',
-                                border: 'none',
-                                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                            }}
-                        />
-                        <Bar
-                            dataKey="youtube"
-                            stackId="a"
-                            fill="#FFC107"
-                            radius={[2, 2, 0, 0]}
-                            barSize={32}
-                            hide={view === 'line'}
-                        />
-                        <Bar
-                            dataKey="apple"
-                            stackId="a"
-                            fill="#F44336"
-                            radius={[2, 2, 0, 0]}
-                            barSize={32}
-                            hide={view === 'line'}
-                        />
-                        <Bar
-                            dataKey="spotify"
-                            stackId="a"
-                            fill="#4ADE80"
-                            radius={[2, 2, 0, 0]}
-                            barSize={32}
-                            hide={view === 'line'}
-                        />
-                        <Line
-                            type="monotone"
-                            dataKey="line"
-                            stroke="#3B82F6"
-                            strokeWidth={2}
-                            dot={false}
-                        />
-                    </ComposedChart>
-                </ResponsiveContainer>
-            </div>
+                    )}
+
+                    {view === 'pie' && <PieView pieData={pieData} />}
+                </>
+            )}
         </Card>
     );
 }
