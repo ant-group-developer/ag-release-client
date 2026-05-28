@@ -198,6 +198,16 @@ export const adminRoutes: RouteNode[] = [
                 required: SYS_ADMIN_REQ,
             },
             {
+                id: 'releaseVideosDetail',
+                type: 'link',
+                label: 'releaseVideo.label',
+                title: 'Release Video Detail',
+                href: APP_ROUTES.RELEASE_VIDEOS_DETAIL,
+                hidden: true,
+                icon: Video,
+                required: SYS_ADMIN_REQ,
+            },
+            {
                 id: 'track',
                 type: 'link',
                 label: 'track.label',

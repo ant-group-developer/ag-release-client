@@ -9,7 +9,6 @@ import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import ReleaseVideoHeader from '@/modules/release-video/components/header';
-import ReleaseVideoFormModal from '@/modules/release-video/components/modal/release-video-form';
 import { ReleaseVideoTable } from '@/modules/release-video/components/table';
 import { TYPE_MODAL_RELEASE_VIDEO } from '@/modules/release-video/enums';
 import { useDeleteReleaseVideo } from '@/modules/release-video/hooks/use-delete-release-video';
@@ -106,10 +105,6 @@ export default function ReleaseVideos() {
                     />
                 )}
 
-                {(typeModal === TYPE_MODAL_RELEASE_VIDEO.CREATE ||
-                    typeModal === TYPE_MODAL_RELEASE_VIDEO.UPDATE) && (
-                    <ReleaseVideoFormModal />
-                )}
             </PageContainer>
         </AppPageWrapper>
     );

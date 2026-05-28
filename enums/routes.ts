@@ -28,6 +28,8 @@ export enum APP_ROUTES {
     GENRES = '/genres',
     DSP = '/dsp',
     RELEASE_VIDEOS = '/release-videos',
+    RELEASE_VIDEOS_CREATE = '/release-videos/create',
+    RELEASE_VIDEOS_DETAIL = '/release-videos/*',
     DSP_TENANT = '/dsp-tenant',
     ARTIST_ROLE = '/artist-role',
     EMAIL_SENDER = '/email-sender',

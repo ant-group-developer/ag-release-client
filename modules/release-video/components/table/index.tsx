@@ -9,6 +9,7 @@ import { Tag, Tooltip } from 'antd';
 import { TYPE_MODAL_RELEASE_VIDEO } from '../../enums';
 import { ReleaseVideoData, ReleaseVideoDataFilter } from '../../types';
 import { Sparkles } from 'lucide-react';
+import { useRouter } from '@/i18n/routing';
 
 type Props = Omit<AppTableProps<ReleaseVideoData>, 'columns'> & {
     pagination: {
@@ -21,6 +22,7 @@ type Props = Omit<AppTableProps<ReleaseVideoData>, 'columns'> & {
 export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
+    const router = useRouter();
 
     const columns: ColumnType<ReleaseVideoData>[] = [
         {
@@ -172,7 +174,7 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
                     }
                     showUpdate
                     onShowUpdate={() =>
-                        openModal(TYPE_MODAL_RELEASE_VIDEO.UPDATE, record)
+                        router.push(`/release-videos/${record.id}`)
                     }
                 />
             ),

@@ -2,16 +2,16 @@ import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
 import CreateButton from '@/components/ui/button/create-button';
 import AppSearch from '@/components/ui/input/search';
 import { UseFilterProps } from '@/hooks/use-filter';
-import useModalStore from '@/hooks/use-modal';
 import { useTranslations } from 'next-intl';
-import { TYPE_MODAL_RELEASE_VIDEO } from '../../enums';
 import { ReleaseVideoDataFilter } from '../../types';
+import { useRouter } from '@/i18n/routing';
+import { APP_ROUTES } from '@/enums/routes';
 
 type Props = Pick<UseFilterProps<ReleaseVideoDataFilter>, 'dataFilter' | 'onSearch'>;
 
 export default function ReleaseVideoHeader({ dataFilter, onSearch }: Props) {
     const messages = useTranslations();
-    const openModal = useModalStore((state) => state.openModal);
+    const router = useRouter();
     return (
         <AppHeader className="app-header p-2">
             <AppHeaderGroup>
@@ -28,7 +28,7 @@ export default function ReleaseVideoHeader({ dataFilter, onSearch }: Props) {
                     <CreateButton
                         canCreate={true}
                         text={messages('releaseVideo.add')}
-                        onClick={() => openModal(TYPE_MODAL_RELEASE_VIDEO.CREATE)}
+                        onClick={() => router.push(APP_ROUTES.RELEASE_VIDEOS_CREATE)}
                     />
                 </div>
             </AppHeaderGroup>
