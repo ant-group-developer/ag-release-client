@@ -1,6 +1,16 @@
 import { useMemo } from 'react';
 import { TrendTimelinePeriod } from '../types';
 
+export function getDateRange(days: number): { fromDate: string; toDate: string } {
+    const today = new Date();
+    const toDate = today.toISOString().split('T')[0];
+    const from = new Date(today);
+    from.setDate(from.getDate() - (days - 1));
+    const fromDate = from.toISOString().split('T')[0];
+    return { fromDate, toDate };
+}
+
+
 export const DSP_PALETTE = [
     '#6366f1',
     '#06b6d4',

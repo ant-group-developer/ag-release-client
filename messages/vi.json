@@ -1854,7 +1854,14 @@
         },
         "chart": {
             "title": "Biểu đồ",
-            "trendView": "Lượt xem theo xu hướng"
+            "trendView": "Lượt xem theo xu hướng",
+            "trendViewDaily": "Lượt xem theo xu hướng hàng ngày",
+            "total": "Tổng",
+            "dayRange": {
+                "last7Days": "7 ngày gần nhất",
+                "last15Days": "15 ngày gần nhất",
+                "last30Days": "30 ngày gần nhất"
+            }
         }
     },
     "issue": {

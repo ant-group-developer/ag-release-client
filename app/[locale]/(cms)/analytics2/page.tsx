@@ -7,6 +7,7 @@ import AnalyticsChartTrendView from '@/modules/analytics2/components/analytics-c
 import MetricCards from '@/modules/analytics2/components/metric-cards';
 import RecentReleasesTable from '@/modules/analytics2/components/recent-releases-table';
 import TracksArtistsTable from '@/modules/analytics2/components/tracks-artists-table';
+import TrendViewDaily from '@/modules/analytics2/components/trend-view-daily';
 import { Analytics2DataFilter } from '@/modules/analytics2/types';
 import { PageContainer } from '@ant-design/pro-components';
 import { theme } from 'antd';
@@ -50,6 +51,7 @@ export default function Analytics2Page() {
                 <MetricCards fromDate={fromDate} toDate={toDate} />
                 <AnalyticsChart fromDate={fromDate} toDate={toDate} />
                 <AnalyticsChartTrendView fromDate={fromDate} toDate={toDate} />
+                <TrendViewDaily />
                 <TracksArtistsTable fromDate={fromDate} toDate={toDate} />
                 <RecentReleasesTable fromDate={fromDate} toDate={toDate} />
             </div>

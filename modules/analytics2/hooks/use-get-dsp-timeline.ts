@@ -28,3 +28,16 @@ export const useGetTrendTimeline = (params: TrendTimelineParams) => {
         ...res,
     };
 };
+
+export const useGetTrendViewDaily = (params: TrendTimelineParams) => {
+    const { data, ...res } = useQuery({
+        queryKey: analytics2QueryKeys.trendViewDaily(params),
+        queryFn: () => analytics2Apis.getTrendViewDailyTimeline(params),
+        placeholderData: (prev) => prev,
+    });
+
+    return {
+        trendTimelineData: data?.data?.data ?? ({} as TrendTimelineData),
+        ...res,
+    };
+};

@@ -25,6 +25,12 @@ export const analytics2Apis = {
             params
         );
     },
+    getTrendViewDailyTimeline: (params: TrendTimelineParams) => {
+        return axiosInstance.post<DetailResponse<TrendTimelineData>>(
+            '/analytics/trend-view/dsp/timeline/daily',
+            params
+        );
+    },
     getTrackRanking: (params: RankingParams) => {
         return axiosInstance.post<DetailResponse<{ items: TrackRankingItem[] }>>(
             '/analytics/ranking/tracks',
