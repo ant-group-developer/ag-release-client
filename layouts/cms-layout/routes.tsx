@@ -195,7 +195,12 @@ export const adminRoutes: RouteNode[] = [
                 title: 'Release Videos',
                 href: APP_ROUTES.RELEASE_VIDEOS,
                 icon: Video,
-                required: SYS_ADMIN_REQ,
+                required: {
+                    permission: [
+                        PERMISSION.RELEASE.READ,
+                        PERMISSION.RELEASE.CREATE,
+                    ],
+                },
             },
             {
                 id: 'releaseVideosDetail',
@@ -205,7 +210,12 @@ export const adminRoutes: RouteNode[] = [
                 href: APP_ROUTES.RELEASE_VIDEOS_DETAIL,
                 hidden: true,
                 icon: Video,
-                required: SYS_ADMIN_REQ,
+                required: {
+                    permission: [
+                        PERMISSION.RELEASE.READ,
+                        PERMISSION.RELEASE.CREATE,
+                    ],
+                },
             },
             {
                 id: 'track',

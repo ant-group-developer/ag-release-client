@@ -50,7 +50,7 @@ export default function Permission({}: Props) {
     const rowSelection = {
         selectedRowKeys: selectedRow,
         onChange: handleSelectedRow,
-        columnWidth: 20,
+        columnWidth: 30,
     };
 
     // apis

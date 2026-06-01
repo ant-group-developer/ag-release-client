@@ -64,6 +64,11 @@
         }
     },
     "common": {
+        "undetermined": "Chưa xác định",
+        "partly": "Một phần",
+        "none": "Không",
+        "select": "Chọn...",
+        "ownership": "Quyền sở hữu",
         "direct": "Trực tiếp",
         "others": "Khác",
         "save": "Lưu",
@@ -1200,6 +1205,7 @@
             "primaryArtistsPlaceholder": "Nhập tên nghệ sĩ chính rồi nhấn Enter",
             "featuredArtists": "Nghệ sĩ kết hợp",
             "featuredArtistsPlaceholder": "Nhập tên nghệ sĩ kết hợp rồi nhấn Enter",
+            "genre": "Thể loại",
             "genres": "Thể loại",
             "genresPlaceholder": "Nhập thể loại rồi nhấn Enter",
             "contentProvider": "Nhà cung cấp nội dung",
@@ -1209,7 +1215,9 @@
             "keywordsPlaceholder": "Nhập từ khóa rồi nhấn Enter",
             "isExplicit": "Nội dung nhạy cảm (Explicit)",
             "containsAiContent": "Có chứa nội dung AI",
-            "isMadeForKids": "Dành cho trẻ em"
+            "isMadeForKids": "Dành cho trẻ em",
+            "videoTitlePlaceholder": "Thêm tiêu đề",
+            "isrcPlaceholder": "ISRC của bạn"
         },
         "tabs": {
             "details": "Chi tiết",

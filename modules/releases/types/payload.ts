@@ -1,19 +1,32 @@
 import { CreateBucketFile } from '@/modules/upload/types/data';
 import { CommonFunction } from '@/types/api';
-import { ReleasesData } from '.';
+import { ReleasesData, VideoData } from '.';
+import { RELEASES_TYPE } from '../enums';
 
-export interface CreateReleaseDraftPayload {
+interface CreateStandardReleaseDraftPayload {
     title: string;
     albumFormatId: string;
     version?: string;
     labelId: string;
+    type?: Exclude<RELEASES_TYPE, RELEASES_TYPE.VIDEO>;
 }
 
-export interface UpdateReleaseDraftPayload extends Partial<ReleasesData> {
+interface CreateVideoReleaseDraftPayload {
+    title: string;
+    version?: string;
+    type: RELEASES_TYPE.VIDEO;
+}
+
+export type CreateReleaseDraftPayload =
+    | CreateStandardReleaseDraftPayload
+    | CreateVideoReleaseDraftPayload;
+
+export type UpdateReleaseDraftPayload = Omit<Partial<ReleasesData>, 'video'> & {
     releaseCoverArt?: {
         fileId: string;
     } | null;
-}
+    video?: Partial<VideoData>;
+};
 
 export interface GenerateUpc extends CommonFunction {
     releaseId: string;

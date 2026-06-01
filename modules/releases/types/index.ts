@@ -62,6 +62,27 @@ export interface ReleasesData extends CommonAttribute {
     releaseTimeMode: RELEASE_TIME_MODE;
     logs: string;
     priceTierId?: string;
+    type?: RELEASES_TYPE;
+    video?: VideoData;
+}
+
+export interface VideoData {
+    id?: string;
+    releaseId: string;
+    isrc: string;
+    explicit: boolean;
+    aiContent: string;
+    channel: string;
+    description?: string;
+    keywords?: string[];
+    isKids: boolean;
+    isUnlisted: boolean;
+    subtitles?: string[];
+    contentProvider?: string;
+    copyrightOwner?: string;
+    partnerCustomId1?: string;
+    partnerCustomId2?: string;
+    fileId?: string;
 }
 
 export interface ReleasesDataSimple

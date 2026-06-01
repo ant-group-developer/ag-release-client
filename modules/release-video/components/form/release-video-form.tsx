@@ -1,20 +1,22 @@
 import AppForm from '@/components/ui/antd-form/form';
+import { APP_ROUTES } from '@/enums/routes';
 import { useActive } from '@/hooks/use-active';
-import { useGetListSimpleLanguage } from '@/modules/languages/hooks/use-get-list-simple-language';
-import { Form, Tabs, TabsProps, Card, Button } from 'antd';
-import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
-import { useCreateReleaseVideo } from '../../hooks/use-create-release-video';
-import { useUpdateReleaseVideo } from '../../hooks/use-update-release-video';
-import { ReleaseVideoData } from '../../types';
+import { useRouter } from '@/i18n/routing';
 import AdditionalTab from '@/modules/release-video/components/modal/additional-tab';
 import DetailsTab from '@/modules/release-video/components/modal/details-tab';
 import DistributionTab from '@/modules/release-video/components/modal/distribution-tab';
-import { useRouter } from '@/i18n/routing';
-import { APP_ROUTES } from '@/enums/routes';
+import { RELEASES_TYPE } from '@/modules/releases/enums';
+import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
+import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
+import { ReleasesData } from '@/modules/releases/types';
+import { Button, Card, Form, Tabs, TabsProps } from 'antd';
+import dayjs from 'dayjs';
+import { debounce } from 'lodash';
+import { useTranslations } from 'next-intl';
+import { useCallback, useEffect } from 'react';
 
 type Props = {
-    dataEdit?: ReleaseVideoData;
+    dataEdit?: ReleasesData;
 };
 
 export default function ReleaseVideoForm({ dataEdit }: Props) {
@@ -24,37 +26,38 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
     const { active, isActive, deActive } = useActive();
     const isUpdateForm = !!dataEdit?.id;
 
-    const { createReleaseVideo } = useCreateReleaseVideo();
-    const { updateReleaseVideo } = useUpdateReleaseVideo();
-    const { languagesData } = useGetListSimpleLanguage();
+    const { createReleaseDraft } = useCreateReleaseDraft();
+    const { updateReleaseDraft } = useUpdateReleaseDraft();
 
-    const [videoUrl, setVideoUrl] = useState<string>('');
-    const [thumbnailUrl, setThumbnailUrl] = useState<string>('');
+    const debouncedUpdate = useCallback(
+        debounce((changedValues: any) => {
+            if (!isUpdateForm || !dataEdit?.id) return;
+
+            const payloadValues = {
+                ...changedValues,
+            };
+
+            if ('cLineYear' in changedValues) {
+                payloadValues.cLineYear = changedValues.cLineYear
+                    ? dayjs(changedValues.cLineYear).year()
+                    : null;
+            }
+
+            updateReleaseDraft({
+                id: dataEdit.id,
+                payload: payloadValues,
+            });
+        }, 500),
+        [isUpdateForm, dataEdit?.id, updateReleaseDraft]
+    );
 
     const onFinish = async (values: any) => {
         active();
 
-        // Map the language ID to its name or code if selected via LanguageSelect
-        let finalLanguage = values.language;
-        if (languagesData && languagesData.length > 0) {
-            const foundLang = languagesData.find(
-                (lang) => lang.id === values.language
-            );
-            if (foundLang) {
-                finalLanguage = foundLang.name || foundLang.code;
-            }
-        }
-
         const payloadValues = {
             ...values,
-            language: finalLanguage,
-            isExplicit: !!values.isExplicit,
-            containsAiContent: !!values.containsAiContent,
-            isMadeForKids: !!values.isMadeForKids,
-            primaryArtists: values.primaryArtists || [],
-            genres: values.genres || [],
-            featuredArtists: values.featuredArtists || [],
-            keywords: values.keywords || [],
+            cLineYear: values.cLineYear ? dayjs(values.cLineYear).year() : null,
+            type: RELEASES_TYPE.VIDEO as RELEASES_TYPE.VIDEO,
         };
 
         const handleSuccess = () => {
@@ -68,14 +71,14 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
         };
 
         if (isUpdateForm) {
-            updateReleaseVideo({
+            updateReleaseDraft({
                 id: dataEdit.id,
                 payload: payloadValues,
                 onSuccess: handleSuccess,
                 onError: handleError,
             });
         } else {
-            createReleaseVideo({
+            createReleaseDraft({
                 payload: payloadValues,
                 onSuccess: handleSuccess,
                 onError: handleError,
@@ -85,40 +88,26 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
 
     useEffect(() => {
         if (dataEdit) {
-            let matchedLanguageId = dataEdit.language;
-            if (languagesData && languagesData.length > 0) {
-                const foundLang = languagesData.find(
-                    (lang) =>
-                        lang.name === dataEdit.language ||
-                        lang.code === dataEdit.language
-                );
-                if (foundLang) {
-                    matchedLanguageId = foundLang.id;
-                }
-            }
-
             form.setFieldsValue({
                 ...dataEdit,
-                language: matchedLanguageId,
+                cLineYear: dataEdit.cLineYear
+                    ? dayjs().year(dataEdit.cLineYear)
+                    : undefined,
+                artistIds:
+                    dataEdit.releaseArtists?.map((a) => a.artistId) || [],
+                featuredArtistIds:
+                    dataEdit.releaseContributors?.map((c) => c.artistId) || [],
             });
         } else {
             form.resetFields();
         }
-    }, [dataEdit, languagesData, form]);
+    }, [dataEdit, form]);
 
     const releaseVideoTabs: TabsProps['items'] = [
         {
             key: 'details',
             label: messages('releaseVideo.tabs.details'),
-            children: (
-                <DetailsTab
-                    form={form}
-                    videoUrl={videoUrl}
-                    setVideoUrl={setVideoUrl}
-                    thumbnailUrl={thumbnailUrl}
-                    setThumbnailUrl={setThumbnailUrl}
-                />
-            ),
+            children: <DetailsTab form={form} />,
         },
         {
             key: 'additional',
@@ -140,24 +129,31 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
                 onFinish={onFinish}
                 layout="vertical"
                 disabled={isActive}
+                onValuesChange={(changedValues) => {
+                    debouncedUpdate(changedValues);
+                }}
             >
                 <Tabs defaultActiveKey="details" items={releaseVideoTabs} />
 
-                <div className="mt-6 flex justify-end gap-3 border-t pt-4">
-                    <Button
-                        onClick={() => router.push(APP_ROUTES.RELEASE_VIDEOS)}
-                        disabled={isActive}
-                    >
-                        {messages('common.cancel')}
-                    </Button>
-                    <Button
-                        type="primary"
-                        onClick={form.submit}
-                        loading={isActive}
-                    >
-                        {messages('common.save')}
-                    </Button>
-                </div>
+                {!isUpdateForm && (
+                    <div className="mt-6 flex justify-end gap-3 border-t pt-4">
+                        <Button
+                            onClick={() =>
+                                router.push(APP_ROUTES.RELEASE_VIDEOS)
+                            }
+                            disabled={isActive}
+                        >
+                            {messages('common.cancel')}
+                        </Button>
+                        <Button
+                            type="primary"
+                            onClick={form.submit}
+                            loading={isActive}
+                        >
+                            {messages('common.save')}
+                        </Button>
+                    </div>
+                )}
             </AppForm>
         </Card>
     );

@@ -1,5 +1,5 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
-import { Col, Input, Row, Select } from 'antd';
+import { Col, Input, Row, DatePicker } from 'antd';
 import { useTranslations } from 'next-intl';
 
 export default function AdditionalTab() {
@@ -13,37 +13,13 @@ export default function AdditionalTab() {
                         <Input placeholder="UPC" allowClear />
                     </AppFormItem>
                 </Col>
-                <Col span={8}>
-                    <AppFormItem name="audioIsrc" label="Audio ISRC">
-                        <Input placeholder="Audio ISRC" allowClear />
-                    </AppFormItem>
-                </Col>
-                <Col span={8}>
-                    <AppFormItem name="videoVersion" label="Video version">
-                        <Select
-                            placeholder="Select..."
-                            allowClear
-                            options={[
-                                {
-                                    value: 'official',
-                                    label: 'Official Video',
-                                },
-                                {
-                                    value: 'lyrics',
-                                    label: 'Lyrics Video',
-                                },
-                                { value: 'teaser', label: 'Teaser' },
-                                {
-                                    value: 'live',
-                                    label: 'Live Performance',
-                                },
-                            ]}
-                        />
-                    </AppFormItem>
-                </Col>
-            </Row>
 
-            <Row gutter={16}>
+                <Col span={8}>
+                    <AppFormItem name="version" label="Video version">
+                        <Input placeholder="Video version" allowClear />
+                    </AppFormItem>
+                </Col>
+
                 <Col span={8}>
                     <AppFormItem
                         name="partnerCustomId1"
@@ -91,13 +67,18 @@ export default function AdditionalTab() {
                     </AppFormItem>
                 </Col>
                 <Col span={8}>
-                    <AppFormItem name="copyright" label="Copyright">
+                    <AppFormItem name="cLineOwner" label="Copyright">
                         <Input placeholder="Copyright" allowClear />
                     </AppFormItem>
                 </Col>
                 <Col span={8}>
-                    <AppFormItem name="copyrightYear" label="Copyright year">
-                        <Input placeholder="Copyright year" allowClear />
+                    <AppFormItem name="cLineYear" label="Copyright year">
+                        <DatePicker
+                            picker="year"
+                            placeholder="Copyright year"
+                            className="w-full"
+                            allowClear
+                        />
                     </AppFormItem>
                 </Col>
             </Row>

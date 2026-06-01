@@ -64,6 +64,11 @@
         }
     },
     "common": {
+        "undetermined": "Undetermined",
+        "partly": "Partly",
+        "none": "None",
+        "select": "Select...",
+        "ownership": "Ownership",
         "direct": "Direct",
         "others": "Others",
         "save": "Save",
@@ -1215,26 +1220,29 @@
         }
     },
     "releaseVideo": {
-        "label": "Release Videos",
-        "title": "Release Video",
-        "add": "Add Release Video",
+        "label": "Release videos",
+        "title": "Release video",
+        "add": "Add Release video",
         "fields": {
-            "videoTitle": "Video Title",
+            "videoTitle": "Video title",
             "isrc": "ISRC",
-            "primaryArtists": "Primary Artist(s)",
+            "primaryArtists": "Primary artist(s)",
             "primaryArtistsPlaceholder": "Type primary artists and press Enter",
-            "featuredArtists": "Featured Artist(s)",
+            "featuredArtists": "Featured artist(s)",
             "featuredArtistsPlaceholder": "Type featured artists and press Enter",
+            "genre": "Genre",
             "genres": "Genre(s)",
             "genresPlaceholder": "Type genres and press Enter",
-            "contentProvider": "Content Provider",
-            "repertoireOwner": "Repertoire Owner",
+            "contentProvider": "Content provider",
+            "repertoireOwner": "Repertoire owner",
             "channel": "Channel",
             "keywords": "Keywords",
             "keywordsPlaceholder": "Type keywords and press Enter",
-            "isExplicit": "Explicit Content",
-            "containsAiContent": "Contains AI Content",
-            "isMadeForKids": "Made for Kids"
+            "isExplicit": "Explicit content",
+            "containsAiContent": "Contains AI content",
+            "isMadeForKids": "Made for kids",
+            "videoTitlePlaceholder": "Add a title",
+            "isrcPlaceholder": "Your ISRC"
         },
         "tabs": {
             "details": "Details",

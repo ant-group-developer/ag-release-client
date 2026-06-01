@@ -2,16 +2,42 @@ import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
 import CreateButton from '@/components/ui/button/create-button';
 import AppSearch from '@/components/ui/input/search';
 import { UseFilterProps } from '@/hooks/use-filter';
+import { ReleasesDataFilter } from '@/modules/releases/types';
 import { useTranslations } from 'next-intl';
-import { ReleaseVideoDataFilter } from '../../types';
+import nProgress from 'nprogress';
 import { useRouter } from '@/i18n/routing';
 import { APP_ROUTES } from '@/enums/routes';
+import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
+import { RELEASES_TYPE } from '@/modules/releases/enums';
 
-type Props = Pick<UseFilterProps<ReleaseVideoDataFilter>, 'dataFilter' | 'onSearch'>;
+type Props = Pick<UseFilterProps<ReleasesDataFilter>, 'dataFilter' | 'onSearch'>;
 
 export default function ReleaseVideoHeader({ dataFilter, onSearch }: Props) {
     const messages = useTranslations();
     const router = useRouter();
+    const { createReleaseDraft, isPending } = useCreateReleaseDraft();
+
+    const handleCreateReleaseVideo = () => {
+        nProgress.start();
+        createReleaseDraft({
+            payload: {
+                title: 'New release video',
+                type: RELEASES_TYPE.VIDEO,
+            },
+            onSuccess: (data) => {
+                nProgress.done();
+                if (data?.id) {
+                    router.push(`${APP_ROUTES.RELEASE_VIDEOS}/${data.id}`);
+                } else {
+                    router.push(APP_ROUTES.RELEASE_VIDEOS);
+                }
+            },
+            onError: () => {
+                nProgress.done();
+            },
+        });
+    };
+
     return (
         <AppHeader className="app-header p-2">
             <AppHeaderGroup>
@@ -28,7 +54,8 @@ export default function ReleaseVideoHeader({ dataFilter, onSearch }: Props) {
                     <CreateButton
                         canCreate={true}
                         text={messages('releaseVideo.add')}
-                        onClick={() => router.push(APP_ROUTES.RELEASE_VIDEOS_CREATE)}
+                        loading={isPending}
+                        onClick={handleCreateReleaseVideo}
                     />
                 </div>
             </AppHeaderGroup>

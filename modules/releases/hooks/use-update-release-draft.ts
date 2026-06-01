@@ -29,13 +29,27 @@ export const useUpdateReleaseDraft = () => {
         // Optimistically update detail
         queryClient.setQueryData(releasesQueryKeys.detail(id), (old: any) => {
             if (!old) return old;
+            const previousRelease = old.data?.data;
+
             return {
                 ...old,
                 data: {
                     ...old.data,
                     data: {
-                        ...old.data?.data,
+                        ...previousRelease,
                         ...payload,
+                        ...(payload.video && {
+                            video: {
+                                ...previousRelease?.video,
+                                ...payload.video,
+                            },
+                        }),
+                        ...(payload.releaseLanguage && {
+                            releaseLanguage: {
+                                ...previousRelease?.releaseLanguage,
+                                ...payload.releaseLanguage,
+                            },
+                        }),
                     },
                 },
             };

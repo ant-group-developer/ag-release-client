@@ -2,6 +2,7 @@ export enum RELEASES_TYPE {
     ALBUM = 'album',
     SINGLE = 'single',
     EP = 'ep',
+    VIDEO = 'video',
 }
 
 export enum TYPE_MODAL_RELEASE {
@@ -97,4 +98,16 @@ export enum RELEASES_COLUMNS_DISPLAY {
 export enum RELEASE_TIME_MODE {
     GLOBAL_MIDNIGHT = 'global_midnight',
     SPECIFIC_TIMEZONE = 'specific_timezone',
+}
+
+export enum RELEASE_TYPE {
+    VIDEO = 'video',
+    TRACK = 'track',
+}
+
+export enum RELEASE_AI_CONTENT {
+    ALL = 'All',
+    PARTLY = 'Partly',
+    NONE = 'None',
+    UNDETERMINED = 'Undetermined',
 }
