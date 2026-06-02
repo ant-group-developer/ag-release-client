@@ -1,21 +1,18 @@
 import AppForm from '@/components/ui/antd-form/form';
 import { APP_ROUTES } from '@/enums/routes';
+import { toastPromise } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import { usePathname, useRouter } from '@/i18n/routing';
 import { useGetListSimpleArtistRole } from '@/modules/artist-role/hooks/use-get-list-simple-artist-role';
+import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribute';
 import AdditionalTab from '@/modules/release-video/components/modal/additional-tab';
 import DetailsTab from '@/modules/release-video/components/modal/details-tab';
 import DistributionTab from '@/modules/release-video/components/modal/distribution-tab';
 import { RELEASE_VIDEO_TABS } from '@/modules/release-video/enums';
-import { RELEASE_TYPE } from '@/modules/releases/enums';
 import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
 import { ReleasesData } from '@/modules/releases/types';
-import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribute';
-import { useGetListDspSimple } from '@/modules/dsp/hooks/use-get-list-simple-dsp';
-import { toastPromise } from '@/helpers/messages-helper';
-import { showNotification } from '@/helpers/messages-helper';
-import { Button, Card, Form, Tabs, TabsProps } from 'antd';
+import { Card, Form, Tabs, TabsProps } from 'antd';
 import dayjs from 'dayjs';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
@@ -47,8 +44,9 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
 
     const { createReleaseDraft } = useCreateReleaseDraft();
     const { updateReleaseDraft } = useUpdateReleaseDraft();
-    const { distributeRelease, isPending: isDistributingRelease } = useDistributeRelease();
-    const { dspData } = useGetListDspSimple();
+    const { distributeRelease, isPending: isDistributingRelease } =
+        useDistributeRelease();
+    // const { dspData } = useGetListDspSimple();
     const { artistsRolesData } = useGetListSimpleArtistRole();
 
     const featuredRoleId = artistsRolesData?.find((r) =>
@@ -130,22 +128,23 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
     const onFinish = async () => {
         if (!dataEdit?.id) return;
 
-        const vevoDsp = dspData.find((dsp) => dsp.name.toLowerCase().includes('vevo'));
-        if (!vevoDsp?.code) {
-            showNotification('error', 'Vevo DSP not found.');
-            return;
-        }
+        // const vevoDsp = dspData.find((dsp) =>
+        //     dsp.name.toLowerCase().includes('vevo')
+        // );
+        // if (!vevoDsp?.code) {
+        //     showNotification('error', 'Vevo DSP not found.');
+        //     return;
+        // }
 
         const promise = distributeRelease({
             id: dataEdit.id,
-            code: [vevoDsp.code],
+            code: ['VEVO'],
             onSuccess: () => {
                 router.push(APP_ROUTES.RELEASE_VIDEOS);
             },
         });
         toastPromise(promise, messages);
     };
-
 
     useEffect(() => {
         if (dataEdit) {

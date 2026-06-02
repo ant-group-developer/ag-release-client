@@ -6,6 +6,7 @@ import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { Link, useRouter } from '@/i18n/routing';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
+import ReleaseStatusTag from '@/modules/releases/components/tag/release-status-tag';
 import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
 import { Typography } from 'antd';
 import { ColumnType } from 'antd/es/table';
@@ -118,6 +119,16 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             render: (value) => (
                 <Text copyable={{ tooltips: false }}>{value}</Text>
             ),
+        },
+        {
+            title: messages('common.status'),
+            key: 'status',
+            dataIndex: 'status',
+            align: 'center',
+            width: 120,
+            render: (value, record) => {
+                return <ReleaseStatusTag status={record?.status} />;
+            },
         },
         {
             title: messages('common.createdAt'),
