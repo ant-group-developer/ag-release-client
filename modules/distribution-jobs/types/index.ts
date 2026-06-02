@@ -1,16 +1,16 @@
 import { CommonAttribute, CommonParams, PaginationResponse } from '@/types/api';
 
 export enum DISTRIBUTION_JOB_STATUS {
-    PENDING = 'pending',
-    PROCESSING = 'processing',
-    COMPLETED = 'completed',
-    FAILED = 'failed',
-    SKIPPED = 'skipped',
+    PENDING = 'PENDING',
+    PROCESSING = 'PROCESSING',
+    COMPLETED = 'COMPLETED',
+    FAILED = 'FAILED',
+    SKIPPED = 'SKIPPED',
 }
 
 export enum DISTRIBUTION_JOB_TYPE {
-    EMAIL_STATE51 = 'email_state51',
-    ADMIN_EXPORT = 'admin_export',
+    EMAIL_STATE51 = 'EMAIL_STATE51',
+    ADMIN_EXPORT = 'ADMIN_EXPORT',
 }
 
 export type DistributionJobStatus =

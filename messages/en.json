@@ -2206,11 +2206,11 @@
             "dateGroup": "Date group"
         },
         "statusOptions": {
-            "pending": "Pending",
-            "processing": "Processing",
-            "completed": "Completed",
-            "failed": "Failed",
-            "skipped": "Skipped"
+            "PENDING": "Pending",
+            "PROCESSING": "Processing",
+            "COMPLETED": "Completed",
+            "FAILED": "Failed",
+            "SKIPPED": "Skipped"
         },
         "confirmCompletedModal": {
             "title": "Confirm completed",

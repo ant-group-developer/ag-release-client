@@ -4,15 +4,17 @@ import { useGetListSimpleArtistRole } from '@/modules/artist-role/hooks/use-get-
 import { useCreateReleaseContributor } from '@/modules/release-contributor/hooks/use-create-release-contributor';
 import { useDeleteReleaseContributor } from '@/modules/release-contributor/hooks/use-delete-release-contributor';
 import { ReleasesData } from '@/modules/releases/types';
-import { Col, DatePicker, Input, Row } from 'antd';
+import { Col, DatePicker, FormInstance, Input, Row } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 
 interface AdditionalTabProps {
     dataEdit?: ReleasesData;
+    onFieldUpdate?: (payload: Record<string, any>) => void;
+    form: FormInstance;
 }
 
-export default function AdditionalTab({ dataEdit }: AdditionalTabProps) {
+export default function AdditionalTab({ dataEdit, onFieldUpdate, form }: AdditionalTabProps) {
     const messages = useTranslations();
     const { createReleaseContributor } = useCreateReleaseContributor();
     const { deleteReleaseContributor } = useDeleteReleaseContributor();
@@ -171,6 +173,7 @@ export default function AdditionalTab({ dataEdit }: AdditionalTabProps) {
                         <Input
                             placeholder={messages('releaseVideo.fields.upc')}
                             allowClear
+                            onBlur={(e) => onFieldUpdate?.({ upc: e.target.value })}
                         />
                     </AppFormItem>
                 </Col>
@@ -185,6 +188,7 @@ export default function AdditionalTab({ dataEdit }: AdditionalTabProps) {
                                 'releaseVideo.fields.videoVersion'
                             )}
                             allowClear
+                            onBlur={(e) => onFieldUpdate?.({ version: e.target.value })}
                         />
                     </AppFormItem>
                 </Col>
@@ -199,6 +203,11 @@ export default function AdditionalTab({ dataEdit }: AdditionalTabProps) {
                                 'releaseVideo.fields.partnerCustomId1'
                             )}
                             allowClear
+                            onBlur={() =>
+                                onFieldUpdate?.({
+                                    video: form.getFieldValue('video'),
+                                })
+                            }
                         />
                     </AppFormItem>
                 </Col>
@@ -212,6 +221,11 @@ export default function AdditionalTab({ dataEdit }: AdditionalTabProps) {
                                 'releaseVideo.fields.partnerCustomId2'
                             )}
                             allowClear
+                            onBlur={() =>
+                                onFieldUpdate?.({
+                                    video: form.getFieldValue('video'),
+                                })
+                            }
                         />
                     </AppFormItem>
                 </Col>
@@ -287,6 +301,7 @@ export default function AdditionalTab({ dataEdit }: AdditionalTabProps) {
                                 'releaseVideo.fields.copyright'
                             )}
                             allowClear
+                            onBlur={(e) => onFieldUpdate?.({ cLineOwner: e.target.value })}
                         />
                     </AppFormItem>
                 </Col>

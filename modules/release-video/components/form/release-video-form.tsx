@@ -11,6 +11,10 @@ import { RELEASE_TYPE } from '@/modules/releases/enums';
 import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
 import { ReleasesData } from '@/modules/releases/types';
+import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribute';
+import { useGetListDspSimple } from '@/modules/dsp/hooks/use-get-list-simple-dsp';
+import { toastPromise } from '@/helpers/messages-helper';
+import { showNotification } from '@/helpers/messages-helper';
 import { Button, Card, Form, Tabs, TabsProps } from 'antd';
 import dayjs from 'dayjs';
 import { debounce } from 'lodash';
@@ -43,6 +47,8 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
 
     const { createReleaseDraft } = useCreateReleaseDraft();
     const { updateReleaseDraft } = useUpdateReleaseDraft();
+    const { distributeRelease, isPending: isDistributingRelease } = useDistributeRelease();
+    const { dspData } = useGetListDspSimple();
     const { artistsRolesData } = useGetListSimpleArtistRole();
 
     const featuredRoleId = artistsRolesData?.find((r) =>
@@ -76,15 +82,28 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
             delete payloadValues.producers;
             delete payloadValues.directors;
 
+            // Remove text input fields (handled by onBlur)
+            delete payloadValues.title;
+            delete payloadValues.upc;
+            delete payloadValues.version;
+            delete payloadValues.cLineOwner;
+            if (payloadValues.video) {
+                delete payloadValues.video.isrc;
+                delete payloadValues.video.channel;
+                delete payloadValues.video.description;
+                delete payloadValues.video.copyrightOwner;
+                delete payloadValues.video.partnerCustomId1;
+                delete payloadValues.video.partnerCustomId2;
+
+                if (Object.keys(payloadValues.video).length === 0) {
+                    delete payloadValues.video;
+                }
+            }
+
             if ('cLineYear' in changedValues) {
                 payloadValues.cLineYear = changedValues.cLineYear
                     ? dayjs(changedValues.cLineYear).year()
                     : null;
-            }
-
-            // Skip update if title is being cleared (user is typing a new title)
-            if ('title' in payloadValues && !payloadValues.title?.trim()) {
-                delete payloadValues.title;
             }
 
             if (Object.keys(payloadValues).length === 0) return;
@@ -97,47 +116,36 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
         [isUpdateForm, dataEdit?.id, updateReleaseDraft]
     );
 
-    const onFinish = async (values: any) => {
-        active();
-
-        const payloadValues = {
-            ...values,
-            cLineYear: values.cLineYear ? dayjs(values.cLineYear).year() : null,
-            type: RELEASE_TYPE.VIDEO as RELEASE_TYPE.VIDEO,
-        };
-
-        delete payloadValues.artistIds;
-        delete payloadValues.featuredArtistIds;
-        delete payloadValues.composers;
-        delete payloadValues.editors;
-        delete payloadValues.producers;
-        delete payloadValues.directors;
-
-        const handleSuccess = () => {
-            deActive();
-            form.resetFields();
-            router.push(APP_ROUTES.RELEASE_VIDEOS);
-        };
-
-        const handleError = () => {
-            deActive();
-        };
-
-        if (isUpdateForm) {
+    const handleFieldUpdate = useCallback(
+        (payload: Record<string, any>) => {
+            if (!isUpdateForm || !dataEdit?.id) return;
             updateReleaseDraft({
                 id: dataEdit.id,
-                payload: payloadValues,
-                onSuccess: handleSuccess,
-                onError: handleError,
+                payload,
             });
-        } else {
-            createReleaseDraft({
-                payload: payloadValues,
-                onSuccess: handleSuccess,
-                onError: handleError,
-            });
+        },
+        [isUpdateForm, dataEdit?.id, updateReleaseDraft]
+    );
+
+    const onFinish = async () => {
+        if (!dataEdit?.id) return;
+
+        const vevoDsp = dspData.find((dsp) => dsp.name.toLowerCase().includes('vevo'));
+        if (!vevoDsp?.code) {
+            showNotification('error', 'Vevo DSP not found.');
+            return;
         }
+
+        const promise = distributeRelease({
+            id: dataEdit.id,
+            code: [vevoDsp.code],
+            onSuccess: () => {
+                router.push(APP_ROUTES.RELEASE_VIDEOS);
+            },
+        });
+        toastPromise(promise, messages);
     };
+
 
     useEffect(() => {
         if (dataEdit) {
@@ -186,12 +194,20 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
         {
             key: RELEASE_VIDEO_TABS.DETAILS,
             label: messages('releaseVideo.tabs.details'),
-            children: <DetailsTab form={form} />,
+            children: (
+                <DetailsTab form={form} onFieldUpdate={handleFieldUpdate} />
+            ),
         },
         {
             key: RELEASE_VIDEO_TABS.ADDITIONAL,
             label: messages('releaseVideo.tabs.additional'),
-            children: <AdditionalTab dataEdit={dataEdit} />,
+            children: (
+                <AdditionalTab
+                    dataEdit={dataEdit}
+                    onFieldUpdate={handleFieldUpdate}
+                    form={form}
+                />
+            ),
         },
         {
             key: RELEASE_VIDEO_TABS.DISTRIBUTION,
@@ -210,7 +226,13 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
         <Card bordered={false} className="shadow-sm">
             <AppForm
                 form={form}
-                showSubmit={false}
+                showSubmit={isUpdateForm}
+                submitText={messages('release.action.submit')}
+                submitProps={{
+                    loading: isDistributingRelease,
+                    disabled: isActive,
+                }}
+                submitRootClassName="mt-6 border-t pt-4"
                 onFinish={onFinish}
                 layout="vertical"
                 disabled={isActive}
@@ -223,26 +245,6 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
                     items={releaseVideoTabs}
                     onChange={onChangeTab}
                 />
-
-                {!isUpdateForm && (
-                    <div className="mt-6 flex justify-end gap-3 border-t pt-4">
-                        <Button
-                            onClick={() =>
-                                router.push(APP_ROUTES.RELEASE_VIDEOS)
-                            }
-                            disabled={isActive}
-                        >
-                            {messages('common.cancel')}
-                        </Button>
-                        <Button
-                            type="primary"
-                            onClick={form.submit}
-                            loading={isActive}
-                        >
-                            {messages('common.save')}
-                        </Button>
-                    </div>
-                )}
             </AppForm>
         </Card>
     );

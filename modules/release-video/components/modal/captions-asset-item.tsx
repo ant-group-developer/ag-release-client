@@ -1,5 +1,8 @@
 import { ReleasesData } from '@/modules/releases/types';
+import { Flex, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
+import { useState } from 'react';
+import ManageCaptionsModal from './manage-captions-modal';
 
 interface CaptionsAssetItemProps {
     dataEdit?: ReleasesData;
@@ -9,26 +12,42 @@ export default function CaptionsAssetItem({
     dataEdit,
 }: CaptionsAssetItemProps) {
     const messages = useTranslations();
+    const [isManageModalOpen, setIsManageModalOpen] = useState(false);
+
     // Currently captions are read from video details or kept as placeholder
     const captionCount = dataEdit?.video?.subtitles?.length || 0;
 
     return (
-        <div>
-            <div className="flex items-center gap-2 text-xs font-bold text-gray-800">
-                <span>
+        <Flex vertical gap={4}>
+            <Flex align="center" gap={8}>
+                <Typography.Text strong style={{ fontSize: 12 }}>
                     {messages('releaseVideo.fields.captionsAndSubtitles')}
-                </span>
-                <span className="text-gray-300">|</span>
-                <span className="cursor-pointer text-blue-500 transition-all hover:text-blue-600 hover:underline">
+                </Typography.Text>
+                <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+                    |
+                </Typography.Text>
+                <Typography.Text
+                    style={{ fontSize: 12 }}
+                    onClick={() => setIsManageModalOpen(true)}
+                    className="cursor-pointer font-medium !text-blue-500"
+                >
                     {messages('releaseVideo.fields.manage')}
-                </span>
-            </div>
-            <div className="mt-1 text-xs font-medium text-gray-500">
+                </Typography.Text>
+            </Flex>
+            <Typography.Text
+                type="secondary"
+                style={{ fontSize: 12, fontWeight: 500 }}
+            >
                 {messages('releaseVideo.fields.captionFilesSummary', {
                     captionCount,
                     subtitleCount: captionCount,
                 })}
-            </div>
-        </div>
+            </Typography.Text>
+
+            <ManageCaptionsModal
+                isOpen={isManageModalOpen}
+                onClose={() => setIsManageModalOpen(false)}
+            />
+        </Flex>
     );
 }

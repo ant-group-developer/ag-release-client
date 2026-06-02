@@ -10,6 +10,7 @@ import { TimezoneData } from '@/modules/timezone/types';
 import { TrackData } from '@/modules/tracks/types';
 import { UserData } from '@/modules/user/types/data';
 import { CommonAttribute, CommonParams } from '@/types/api';
+import { FileBucket } from '@/modules/upload/types/data';
 import { RELEASE_TIME_MODE, RELEASE_TYPE, RELEASES_STATUS } from '../enums';
 
 export interface ReleaseCoverArt {
@@ -83,6 +84,7 @@ export interface VideoData {
     partnerCustomId1?: string;
     partnerCustomId2?: string;
     fileId?: string;
+    videoFile?: FileBucket;
 }
 
 export interface ReleasesDataSimple

@@ -121,51 +121,56 @@ export default function DspDeals({ dspId }: Props) {
         connectionActive();
         try {
             const { sftpConfig } = form.getFieldsValue();
-            const { host, port, username, password, privateKey } =
-                sftpConfig.metadata;
+            const metadata = sftpConfig.metadata;
+            const storageType = metadata?.type || STORAGE_TYPE.SFTP;
 
-            if (password || privateKey) {
-                form.setFields([
-                    {
-                        name: ['sftpConfig', 'metadata', 'password'],
-                        errors: [],
-                    },
-                    {
-                        name: ['sftpConfig', 'metadata', 'privateKey'],
-                        errors: [],
-                    },
-                ]);
-            }
+            if (storageType === STORAGE_TYPE.SFTP) {
+                const { password, privateKey } = metadata;
 
-            if (!password && !privateKey && !dspRoutingConfig?.sftpConfig?.id) {
-                form.setFields([
-                    {
-                        name: ['sftpConfig', 'metadata', 'password'],
-                        errors: [messages('sftp.requiredPasswordOrPrivateKey')],
-                    },
-                ]);
+                if (password || privateKey) {
+                    form.setFields([
+                        {
+                            name: ['sftpConfig', 'metadata', 'password'],
+                            errors: [],
+                        },
+                        {
+                            name: ['sftpConfig', 'metadata', 'privateKey'],
+                            errors: [],
+                        },
+                    ]);
+                }
 
-                form.setFields([
-                    {
-                        name: ['sftpConfig', 'metadata', 'privateKey'],
-                        errors: [messages('sftp.requiredPasswordOrPrivateKey')],
-                    },
-                ]);
-
-                deActiveConnection();
-                return;
+                if (
+                    !password &&
+                    !privateKey &&
+                    !dspRoutingConfig?.sftpConfig?.id
+                ) {
+                    form.setFields([
+                        {
+                            name: ['sftpConfig', 'metadata', 'password'],
+                            errors: [
+                                messages('sftp.requiredPasswordOrPrivateKey'),
+                            ],
+                        },
+                        {
+                            name: ['sftpConfig', 'metadata', 'privateKey'],
+                            errors: [
+                                messages('sftp.requiredPasswordOrPrivateKey'),
+                            ],
+                        },
+                    ]);
+                    deActiveConnection();
+                    return;
+                }
             }
 
             const payload = {
-                ...sftpConfig.metadata,
+                ...metadata,
             };
 
-            if (!payload?.password) {
-                delete payload.password;
-            }
-            if (!payload?.privateKey) {
-                delete payload.privateKey;
-            }
+            // Clean empty optional fields
+            if (!payload?.password) delete payload.password;
+            if (!payload?.privateKey) delete payload.privateKey;
 
             const variables: CreateVariables<TestSftpConnectionPayload> = {
                 payload,
@@ -174,11 +179,17 @@ export default function DspDeals({ dspId }: Props) {
                     handleShowNotiTestConnection(e.status);
                 },
                 onError(e) {
-                    console.log('Test connection sftp', e);
+                    console.log('Test connection', e);
                     deActiveConnection();
                 },
             };
-            if (dspRoutingConfig?.sftpConfig?.id && !password && !privateKey) {
+
+            if (
+                storageType === STORAGE_TYPE.SFTP &&
+                dspRoutingConfig?.sftpConfig?.id &&
+                !metadata?.password &&
+                !metadata?.privateKey
+            ) {
                 const variables: CreateVariables<TestSftpConnectionByIdPayload> =
                     {
                         payload: {
@@ -190,7 +201,7 @@ export default function DspDeals({ dspId }: Props) {
                             handleShowNotiTestConnection(e.status);
                         },
                         onError(e) {
-                            console.log('Test connection sftp', e);
+                            console.log('Test connection', e);
                             deActiveConnection();
                         },
                     };
@@ -313,12 +324,8 @@ export default function DspDeals({ dspId }: Props) {
                             ]}
                         >
                             <Radio.Group>
-                                <Radio value={STORAGE_TYPE.SFTP}>
-                                    SFTP
-                                </Radio>
-                                <Radio value={STORAGE_TYPE.S3}>
-                                    S3
-                                </Radio>
+                                <Radio value={STORAGE_TYPE.SFTP}>SFTP</Radio>
+                                <Radio value={STORAGE_TYPE.S3}>S3</Radio>
                             </Radio.Group>
                         </AppFormItem>
 
@@ -326,11 +333,7 @@ export default function DspDeals({ dspId }: Props) {
                             <>
                                 <AppFormItem
                                     label="Bucket"
-                                    name={[
-                                        'sftpConfig',
-                                        'metadata',
-                                        'bucket',
-                                    ]}
+                                    name={['sftpConfig', 'metadata', 'bucket']}
                                     required
                                     rules={[
                                         {
@@ -344,11 +347,7 @@ export default function DspDeals({ dspId }: Props) {
                                 </AppFormItem>
                                 <AppFormItem
                                     label="Region"
-                                    name={[
-                                        'sftpConfig',
-                                        'metadata',
-                                        'region',
-                                    ]}
+                                    name={['sftpConfig', 'metadata', 'region']}
                                     required
                                     rules={[
                                         {
@@ -402,7 +401,7 @@ export default function DspDeals({ dspId }: Props) {
                                         placeholder="Enter secret access key"
                                     />
                                 </AppFormItem>
-                                <AppFormItem
+                                {/* <AppFormItem
                                     label="Endpoint"
                                     name={[
                                         'sftpConfig',
@@ -411,14 +410,10 @@ export default function DspDeals({ dspId }: Props) {
                                     ]}
                                 >
                                     <Input placeholder="Custom endpoint (MinIO, DigitalOcean Spaces...)" />
-                                </AppFormItem>
+                                </AppFormItem> */}
                                 <AppFormItem
                                     label="Path"
-                                    name={[
-                                        'sftpConfig',
-                                        'metadata',
-                                        'path',
-                                    ]}
+                                    name={['sftpConfig', 'metadata', 'path']}
                                 >
                                     <Input placeholder="e.g. /uploads/releases" />
                                 </AppFormItem>
@@ -433,11 +428,7 @@ export default function DspDeals({ dspId }: Props) {
                             <>
                                 <AppFormItem
                                     label="Host/Server address"
-                                    name={[
-                                        'sftpConfig',
-                                        'metadata',
-                                        'host',
-                                    ]}
+                                    name={['sftpConfig', 'metadata', 'host']}
                                     required
                                     rules={[
                                         {
@@ -451,11 +442,7 @@ export default function DspDeals({ dspId }: Props) {
                                 </AppFormItem>
                                 <AppFormItem
                                     label="Port"
-                                    name={[
-                                        'sftpConfig',
-                                        'metadata',
-                                        'port',
-                                    ]}
+                                    name={['sftpConfig', 'metadata', 'port']}
                                     required
                                     rules={[
                                         {
@@ -472,11 +459,7 @@ export default function DspDeals({ dspId }: Props) {
                                 </AppFormItem>
                                 <AppFormItem
                                     label="Path"
-                                    name={[
-                                        'sftpConfig',
-                                        'metadata',
-                                        'path',
-                                    ]}
+                                    name={['sftpConfig', 'metadata', 'path']}
                                 >
                                     <Input />
                                 </AppFormItem>

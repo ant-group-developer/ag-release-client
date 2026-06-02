@@ -2140,11 +2140,11 @@
             "dateGroup": "Nhóm ngày"
         },
         "statusOptions": {
-            "pending": "Đang chờ",
-            "processing": "Đang xử lý",
-            "completed": "Hoàn thành",
-            "failed": "Thất bại",
-            "skipped": "Bỏ qua"
+            "PENDING": "Đang chờ",
+            "PROCESSING": "Đang xử lý",
+            "COMPLETED": "Hoàn thành",
+            "FAILED": "Thất bại",
+            "SKIPPED": "Bỏ qua"
         },
         "confirmCompletedModal": {
             "title": "Xác nhận đã hoàn thành",

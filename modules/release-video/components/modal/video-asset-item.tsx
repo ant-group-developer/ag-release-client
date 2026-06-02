@@ -50,14 +50,16 @@ export default function VideoAssetItem({
                         fileList: [
                             {
                                 uid: videoFileId,
-                                name: dataEdit?.title
-                                    ? messages(
-                                          'releaseVideo.fields.videoFileName',
-                                          {
-                                              title: dataEdit.title,
-                                          }
-                                      )
-                                    : messages('releaseVideo.fields.videoFile'),
+                                name:
+                                    dataEdit?.video?.videoFile?.fileName ||
+                                    (dataEdit?.title
+                                        ? messages(
+                                              'releaseVideo.fields.videoFileName',
+                                              { title: dataEdit.title }
+                                          )
+                                        : messages(
+                                              'releaseVideo.fields.videoFile'
+                                          )),
                                 status: 'done',
                             },
                         ],

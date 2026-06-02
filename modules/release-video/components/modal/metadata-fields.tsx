@@ -12,14 +12,16 @@ import { useCreateReleaseContributor } from '@/modules/release-contributor/hooks
 import { useDeleteReleaseContributor } from '@/modules/release-contributor/hooks/use-delete-release-contributor';
 import { RELEASE_AI_CONTENT } from '@/modules/releases/enums';
 import { ReleasesData } from '@/modules/releases/types';
-import { Col, Input, Row, Select } from 'antd';
+import { Col, FormInstance, Input, Row, Select } from 'antd';
 import { useTranslations } from 'next-intl';
 
 interface MetadataFieldsProps {
     dataEdit?: ReleasesData;
+    onFieldUpdate?: (payload: Record<string, any>) => void;
+    form: FormInstance;
 }
 
-export default function MetadataFields({ dataEdit }: MetadataFieldsProps) {
+export default function MetadataFields({ dataEdit, onFieldUpdate, form }: MetadataFieldsProps) {
     const messages = useTranslations();
     const { createReleaseArtist } = useCreateReleaseArtist();
     const { deleteReleaseArtist } = useDeleteReleaseArtist();
@@ -108,6 +110,11 @@ export default function MetadataFields({ dataEdit }: MetadataFieldsProps) {
                     allowClear
                     showCount
                     maxLength={MAX_NAME_LENGTH}
+                    onBlur={(e) => {
+                        if (e.target.value?.trim()) {
+                            onFieldUpdate?.({ title: e.target.value });
+                        }
+                    }}
                 />
             </AppFormItem>
 
@@ -250,6 +257,11 @@ export default function MetadataFields({ dataEdit }: MetadataFieldsProps) {
                                 'releaseVideo.fields.isrcPlaceholder'
                             )}
                             allowClear
+                            onBlur={() =>
+                                onFieldUpdate?.({
+                                    video: form.getFieldValue('video'),
+                                })
+                            }
                         />
                     </AppFormItem>
                 </Col>
@@ -297,28 +309,60 @@ export default function MetadataFields({ dataEdit }: MetadataFieldsProps) {
                                 'releaseVideo.fields.repertoireOwner'
                             )}
                             allowClear
+                            onBlur={() =>
+                                onFieldUpdate?.({
+                                    video: form.getFieldValue('video'),
+                                })
+                            }
                         />
                     </AppFormItem>
                 </Col>
             </Row>
 
-            {/* Channel (Full Width) */}
-            <AppFormItem
-                name={['video', 'channel']}
-                label={messages('releaseVideo.fields.channel')}
-                required
-                rules={[
-                    {
-                        required: true,
-                        message: messages('validation.input'),
-                    },
-                ]}
-            >
-                <Input
-                    placeholder={messages('releaseVideo.fields.channel')}
-                    allowClear
-                />
-            </AppFormItem>
+            {/* Channel & Label */}
+            <Row gutter={16}>
+                <Col span={12}>
+                    <AppFormItem
+                        name={['video', 'channel']}
+                        label={messages('releaseVideo.fields.channel')}
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <Input
+                            placeholder={messages('releaseVideo.fields.channel')}
+                            allowClear
+                            onBlur={() =>
+                                onFieldUpdate?.({
+                                    video: form.getFieldValue('video'),
+                                })
+                            }
+                        />
+                    </AppFormItem>
+                </Col>
+                <Col span={12}>
+                    <AppFormItem
+                        name="labelId"
+                        label={messages('formFields.labelId')}
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.select'),
+                            },
+                        ]}
+                    >
+                        <LabelSelect
+                            placeholder={messages('common.select')}
+                            allowClear
+                        />
+                    </AppFormItem>
+                </Col>
+            </Row>
 
             {/* Keywords (Full Width) */}
             <AppFormItem
@@ -356,6 +400,11 @@ export default function MetadataFields({ dataEdit }: MetadataFieldsProps) {
                     autoSize={{ minRows: 4, maxRows: 6 }}
                     maxLength={MAX_NOTE_LENGTH}
                     className="mb-2"
+                    onBlur={() =>
+                        onFieldUpdate?.({
+                            video: form.getFieldValue('video'),
+                        })
+                    }
                 />
             </AppFormItem>
 

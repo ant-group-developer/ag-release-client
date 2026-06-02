@@ -6,9 +6,10 @@ import VideoAssets from './video-assets';
 
 interface DetailsTabProps {
     form: FormInstance;
+    onFieldUpdate?: (payload: Record<string, any>) => void;
 }
 
-export default function DetailsTab({ form }: DetailsTabProps) {
+export default function DetailsTab({ form, onFieldUpdate }: DetailsTabProps) {
     const params = useParams();
     const id = params?.id as string;
     const { releaseData: dataEdit } = useGetDetailRelease(id);
@@ -26,7 +27,7 @@ export default function DetailsTab({ form }: DetailsTabProps) {
 
                 {/* Right Side: Metadata Fields Layout */}
                 <Col span={16}>
-                    <MetadataFields dataEdit={dataEdit} />
+                    <MetadataFields dataEdit={dataEdit} onFieldUpdate={onFieldUpdate} form={form} />
                 </Col>
             </Row>
         </div>

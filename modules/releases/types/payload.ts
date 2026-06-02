@@ -63,3 +63,12 @@ export interface SyncReleaseDraftToTracks extends CommonFunction {
     id: ReleasesData['id'];
     payload: SyncReleaseDraftToTracksPayload;
 }
+
+export interface BulkUpsertCaptionsPayload extends CommonFunction {
+    videoId: string;
+    captions: {
+        languageId: string;
+        type: string;
+        fileId: string;
+    }[];
+}
