@@ -166,7 +166,7 @@ export const adminRoutes: RouteNode[] = [
             {
                 id: 'release',
                 type: 'link',
-                label: 'release.label',
+                label: 'release.routeLabel',
                 title: 'Releases',
                 href: APP_ROUTES.RELEASES,
                 icon: DiscAlbum,
@@ -176,7 +176,7 @@ export const adminRoutes: RouteNode[] = [
             {
                 id: 'releaseDetail',
                 type: 'link',
-                label: 'release.label',
+                label: 'release.routeLabel',
                 title: 'Release Detail',
                 href: APP_ROUTES.RELEASES_DETAIL,
                 hidden: true,
@@ -191,7 +191,7 @@ export const adminRoutes: RouteNode[] = [
             {
                 id: 'release-videos',
                 type: 'link',
-                label: 'releaseVideo.label',
+                label: 'releaseVideo.routeLabel',
                 title: 'Release Videos',
                 href: APP_ROUTES.RELEASE_VIDEOS,
                 icon: Video,
@@ -205,7 +205,7 @@ export const adminRoutes: RouteNode[] = [
             {
                 id: 'releaseVideosDetail',
                 type: 'link',
-                label: 'releaseVideo.label',
+                label: 'releaseVideo.routeLabel',
                 title: 'Release Video Detail',
                 href: APP_ROUTES.RELEASE_VIDEOS_DETAIL,
                 hidden: true,

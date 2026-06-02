@@ -1,8 +1,8 @@
-import { Col, FormInstance, Row } from 'antd';
-import VideoAssets from './video-assets';
-import MetadataFields from './metadata-fields';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
+import { Col, FormInstance, Row } from 'antd';
 import { useParams } from 'next/navigation';
+import MetadataFields from './metadata-fields';
+import VideoAssets from './video-assets';
 
 interface DetailsTabProps {
     form: FormInstance;
@@ -21,10 +21,7 @@ export default function DetailsTab({ form }: DetailsTabProps) {
                     span={8}
                     className="flex flex-col gap-6 border-r border-gray-100 pr-6"
                 >
-                    <VideoAssets
-                        form={form}
-                        dataEdit={dataEdit}
-                    />
+                    <VideoAssets form={form} dataEdit={dataEdit} />
                 </Col>
 
                 {/* Right Side: Metadata Fields Layout */}

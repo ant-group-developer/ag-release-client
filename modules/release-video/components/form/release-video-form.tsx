@@ -82,13 +82,18 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
                     : null;
             }
 
+            // Skip update if title is being cleared (user is typing a new title)
+            if ('title' in payloadValues && !payloadValues.title?.trim()) {
+                delete payloadValues.title;
+            }
+
             if (Object.keys(payloadValues).length === 0) return;
 
             updateReleaseDraft({
                 id: dataEdit.id,
                 payload: payloadValues,
             });
-        }, 500),
+        }, 700),
         [isUpdateForm, dataEdit?.id, updateReleaseDraft]
     );
 

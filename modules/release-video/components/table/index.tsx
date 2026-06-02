@@ -95,12 +95,17 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             },
         },
         {
-            title: messages('releaseVideo.fields.genre'),
+            title: messages('releaseVideo.fields.genres'),
             key: 'primaryGenre',
             dataIndex: 'primaryGenre',
             width: 150,
-            render: (value, record) => {
-                return record?.primaryGenre?.name || '-';
+            render: (_, record) => {
+                const genres = [
+                    record.primaryGenre?.name,
+                    record.subGenre?.name,
+                ].filter((name): name is string => !!name);
+
+                return genres.length ? <PopoverTags tags={genres} /> : '-';
             },
         },
         {

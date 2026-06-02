@@ -33,28 +33,38 @@ export default function DistributionTab({ form }: DistributionTabProps) {
         <div className="mx-auto w-full pb-8 pt-4">
             <AppFormItem
                 name={['video', 'visibility']}
-                label="Visibility"
+                label={messages('releaseVideo.fields.visibility')}
                 initialValue={RELEASE_VIDEO_VISIBILITY.DEFAULT}
             >
                 <Select
                     className="w-full"
-                    placeholder="Select visibility..."
+                    placeholder={messages(
+                        'releaseVideo.fields.selectVisibility'
+                    )}
                     options={[
                         {
                             value: RELEASE_VIDEO_VISIBILITY.DEFAULT,
-                            label: 'Default',
+                            label: messages(
+                                'releaseVideo.fields.visibilityDefault'
+                            ),
                         },
                         {
                             value: RELEASE_VIDEO_VISIBILITY.UNLISTED_ON_YOUTUBE,
-                            label: 'Unlisted on YouTube',
+                            label: messages(
+                                'releaseVideo.fields.unlistedOnYoutube'
+                            ),
                         },
                         {
                             value: RELEASE_VIDEO_VISIBILITY.UNLISTED_ON_VEVO,
-                            label: 'Unlisted on Vevo',
+                            label: messages(
+                                'releaseVideo.fields.unlistedOnVevo'
+                            ),
                         },
                         {
                             value: RELEASE_VIDEO_VISIBILITY.UNLISTED_ON_YOUTUBE_VEVO,
-                            label: 'Unlisted on YouTube/Vevo',
+                            label: messages(
+                                'releaseVideo.fields.unlistedOnYoutubeVevo'
+                            ),
                         },
                     ]}
                 />

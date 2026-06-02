@@ -80,8 +80,7 @@ export default function AdditionalTab({ dataEdit }: AdditionalTabProps) {
     const handleDeselectEditor = (artistId: string) => {
         if (!dataEdit?.id) return;
         const contributor = dataEdit.releaseContributors?.find(
-            (c) =>
-                c.artistId === artistId && c.artistRole?.id === editorRoleId
+            (c) => c.artistId === artistId && c.artistRole?.id === editorRoleId
         );
         if (contributor?.id) {
             deleteReleaseContributor({
@@ -153,7 +152,7 @@ export default function AdditionalTab({ dataEdit }: AdditionalTabProps) {
                 <Col span={8}>
                     <AppFormItem
                         name="upc"
-                        label="UPC"
+                        label={messages('releaseVideo.fields.upc')}
                         rules={[
                             {
                                 min: 10,
@@ -169,41 +168,65 @@ export default function AdditionalTab({ dataEdit }: AdditionalTabProps) {
                             },
                         ]}
                     >
-                        <Input placeholder="UPC" allowClear />
+                        <Input
+                            placeholder={messages('releaseVideo.fields.upc')}
+                            allowClear
+                        />
                     </AppFormItem>
                 </Col>
 
                 <Col span={8}>
-                    <AppFormItem name="version" label="Video version">
-                        <Input placeholder="Video version" allowClear />
+                    <AppFormItem
+                        name="version"
+                        label={messages('releaseVideo.fields.videoVersion')}
+                    >
+                        <Input
+                            placeholder={messages(
+                                'releaseVideo.fields.videoVersion'
+                            )}
+                            allowClear
+                        />
                     </AppFormItem>
                 </Col>
 
                 <Col span={8}>
                     <AppFormItem
                         name={['video', 'partnerCustomId1']}
-                        label="Partner custom ID 1"
+                        label={messages('releaseVideo.fields.partnerCustomId1')}
                     >
-                        <Input placeholder="Partner custom ID 1" allowClear />
+                        <Input
+                            placeholder={messages(
+                                'releaseVideo.fields.partnerCustomId1'
+                            )}
+                            allowClear
+                        />
                     </AppFormItem>
                 </Col>
                 <Col span={8}>
                     <AppFormItem
                         name={['video', 'partnerCustomId2']}
-                        label="Partner custom ID 2"
+                        label={messages('releaseVideo.fields.partnerCustomId2')}
                     >
-                        <Input placeholder="Partner custom ID 2" allowClear />
+                        <Input
+                            placeholder={messages(
+                                'releaseVideo.fields.partnerCustomId2'
+                            )}
+                            allowClear
+                        />
                     </AppFormItem>
                 </Col>
             </Row>
 
             <div className="mb-4 mt-6 border-b border-gray-100 pb-2 text-base font-bold text-gray-800">
-                Credits
+                {messages('releaseVideo.fields.credits')}
             </div>
 
             <Row gutter={16}>
                 <Col span={8}>
-                    <AppFormItem name="composers" label="Composer(s)">
+                    <AppFormItem
+                        name="composers"
+                        label={messages('releaseVideo.fields.composers')}
+                    >
                         <ArtistSelect
                             mode="multiple"
                             placeholder={messages('artist.select')}
@@ -213,7 +236,10 @@ export default function AdditionalTab({ dataEdit }: AdditionalTabProps) {
                     </AppFormItem>
                 </Col>
                 <Col span={8}>
-                    <AppFormItem name="editors" label="Editor(s)">
+                    <AppFormItem
+                        name="editors"
+                        label={messages('releaseVideo.fields.editors')}
+                    >
                         <ArtistSelect
                             mode="multiple"
                             placeholder={messages('artist.select')}
@@ -223,7 +249,10 @@ export default function AdditionalTab({ dataEdit }: AdditionalTabProps) {
                     </AppFormItem>
                 </Col>
                 <Col span={8}>
-                    <AppFormItem name="producers" label="Producer(s)">
+                    <AppFormItem
+                        name="producers"
+                        label={messages('releaseVideo.fields.producers')}
+                    >
                         <ArtistSelect
                             mode="multiple"
                             placeholder={messages('artist.select')}
@@ -236,7 +265,10 @@ export default function AdditionalTab({ dataEdit }: AdditionalTabProps) {
 
             <Row gutter={16}>
                 <Col span={8}>
-                    <AppFormItem name="directors" label="Director(s)">
+                    <AppFormItem
+                        name="directors"
+                        label={messages('releaseVideo.fields.directors')}
+                    >
                         <ArtistSelect
                             mode="multiple"
                             placeholder={messages('artist.select')}
@@ -246,14 +278,22 @@ export default function AdditionalTab({ dataEdit }: AdditionalTabProps) {
                     </AppFormItem>
                 </Col>
                 <Col span={8}>
-                    <AppFormItem name="cLineOwner" label="Copyright">
-                        <Input placeholder="Copyright" allowClear />
+                    <AppFormItem
+                        name="cLineOwner"
+                        label={messages('releaseVideo.fields.copyright')}
+                    >
+                        <Input
+                            placeholder={messages(
+                                'releaseVideo.fields.copyright'
+                            )}
+                            allowClear
+                        />
                     </AppFormItem>
                 </Col>
                 <Col span={8}>
                     <AppFormItem
                         name="cLineYear"
-                        label="Copyright year"
+                        label={messages('releaseVideo.fields.copyrightYear')}
                         required
                         rules={[
                             {
@@ -264,7 +304,9 @@ export default function AdditionalTab({ dataEdit }: AdditionalTabProps) {
                     >
                         <DatePicker
                             picker="year"
-                            placeholder="Copyright year"
+                            placeholder={messages(
+                                'releaseVideo.fields.copyrightYear'
+                            )}
                             className="w-full"
                             allowClear
                             disabledDate={disabledYear}

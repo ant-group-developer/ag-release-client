@@ -40,8 +40,13 @@ export default function ThumbnailAssetItem({
                             uid: coverArtFileId,
                             url: thumbnailReadUrl,
                             name: dataEdit?.title
-                                ? `${dataEdit.title} Thumbnail`
-                                : 'Thumbnail image',
+                                ? messages(
+                                      'releaseVideo.fields.thumbnailFileName',
+                                      {
+                                          title: dataEdit.title,
+                                      }
+                                  )
+                                : messages('releaseVideo.fields.thumbnailFile'),
                             status: 'done',
                         },
                     ],
@@ -58,6 +63,7 @@ export default function ThumbnailAssetItem({
         coverArtFileId,
         dataEdit?.title,
         form,
+        messages,
         setThumbnailUrl,
     ]);
 
@@ -233,7 +239,7 @@ export default function ThumbnailAssetItem({
     return (
         <div className="thumbnail-upload-container mb-5">
             <div className="mb-2 flex items-center justify-between text-xs font-bold text-gray-800">
-                <span>Thumbnail file *</span>
+                <span>{messages('releaseVideo.fields.thumbnailFile')} *</span>
             </div>
 
             <ImageListUpload
@@ -250,7 +256,7 @@ export default function ThumbnailAssetItem({
             {fileList.length < 1 && !isThumbnailUploading && (
                 <div className="mt-1.5 text-left">
                     <span className="text-[11px] font-normal italic text-red-500">
-                        Thumbnail has not been uploaded *
+                        {messages('releaseVideo.fields.thumbnailNotUploaded')} *
                     </span>
                 </div>
             )}

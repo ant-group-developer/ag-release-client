@@ -63,7 +63,7 @@ export default function ReleaseVideos() {
 
     return (
         <AppPageWrapper>
-            <PageContainer title={messages('releaseVideo.title')}>
+            <PageContainer title={messages('releaseVideo.routeLabel')}>
                 <ReleaseVideoTable
                     title={() => (
                         <ReleaseVideoHeader

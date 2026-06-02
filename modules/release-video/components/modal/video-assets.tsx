@@ -1,5 +1,6 @@
 import { ReleasesData } from '@/modules/releases/types';
 import { FormInstance } from 'antd';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import ReactPlayer from 'react-player';
 import CaptionsAssetItem from './captions-asset-item';
@@ -12,6 +13,7 @@ interface VideoAssetsProps {
 }
 
 export default function VideoAssets({ form, dataEdit }: VideoAssetsProps) {
+    const messages = useTranslations();
     const [videoUrl, setVideoUrl] = useState<string>('');
     return (
         <>
@@ -48,7 +50,7 @@ export default function VideoAssets({ form, dataEdit }: VideoAssetsProps) {
                             vevo
                         </div> */}
                         <div className="select-none text-xl font-semibold uppercase tracking-wider text-zinc-600">
-                            No Video Selected
+                            {messages('releaseVideo.fields.noVideoSelected')}
                         </div>
                     </div>
                 )}
@@ -57,7 +59,7 @@ export default function VideoAssets({ form, dataEdit }: VideoAssetsProps) {
             <div>
                 <div className="mt-6 border-t border-gray-100 pt-6">
                     <h3 className="mb-4 text-base font-bold tracking-wide text-gray-800">
-                        Assets
+                        {messages('releaseVideo.fields.assets')}
                     </h3>
 
                     {/* Asset: Video file */}

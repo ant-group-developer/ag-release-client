@@ -22,6 +22,7 @@ import {
     Form,
     Input,
     InputNumber,
+    Radio,
     Select,
     SelectProps,
     Spin,
@@ -31,7 +32,7 @@ import TextArea from 'antd/es/input/TextArea';
 import { LayoutList, Play, UserCog } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
-import { DSP_DEAL } from '../../enums';
+import { DSP_DEAL, STORAGE_TYPE } from '../../enums';
 import { useGetDspRoutingConfig } from '../../hooks/use-get-dsp-routing-config';
 import { useUpdateDspRoutingConfig } from '../../hooks/use-update-dsp-routing-config';
 import { UpdateDspRoutingConfig } from '../../types/payload';
@@ -44,6 +45,7 @@ export default function DspDeals({ dspId }: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
     const watchDeal = useWatch('mode', form);
+    const watchStorageType = useWatch(['sftpConfig', 'metadata', 'type'], form);
     const { isActive, deActive, active } = useActive();
     const {
         active: connectionActive,
@@ -299,78 +301,237 @@ export default function DspDeals({ dspId }: Props) {
                 {watchDeal === DSP_DEAL.DIRECT && (
                     <>
                         <AppFormItem
-                            label="Host/Server address"
-                            name={['sftpConfig', 'metadata', 'host']}
+                            label="Storage Type"
+                            name={['sftpConfig', 'metadata', 'type']}
+                            initialValue={STORAGE_TYPE.SFTP}
                             required
                             rules={[
                                 {
                                     required: true,
-                                    message: messages('validation.input'),
+                                    message: messages('validation.select'),
                                 },
                             ]}
                         >
-                            <Input placeholder="For ex: example.service.com or 216.81.210.36" />
-                        </AppFormItem>
-                        <AppFormItem
-                            label="Port"
-                            name={['sftpConfig', 'metadata', 'port']}
-                            required
-                            rules={[
-                                {
-                                    required: true,
-                                    message: messages('validation.input'),
-                                },
-                            ]}
-                        >
-                            <InputNumber
-                                placeholder="Enter 21 unless you received other instructions"
-                                style={{ width: '100%' }}
-                            />
-                        </AppFormItem>
-                        <AppFormItem
-                            label="Path"
-                            name={['sftpConfig', 'metadata', 'path']}
-                        >
-                            <Input />
-                        </AppFormItem>
-                        <AppFormItem
-                            name={['sftpConfig', 'ernVersion']}
-                            label={messages('aggregator.ernVersion')}
-                        >
-                            <ErnVersionSelect />
-                        </AppFormItem>
-                        <AppFormItem
-                            label="Username"
-                            name={['sftpConfig', 'metadata', 'username']}
-                            required
-                            rules={[
-                                {
-                                    required: true,
-                                    message: messages('validation.input'),
-                                },
-                            ]}
-                        >
-                            <Input
-                                autoComplete="off"
-                                placeholder="Enter name"
-                            />
-                        </AppFormItem>
-                        <AppFormItem
-                            label="Password"
-                            name={['sftpConfig', 'metadata', 'password']}
-                        >
-                            <Input.Password
-                                autoComplete="off"
-                                placeholder="Enter password"
-                            />
+                            <Radio.Group>
+                                <Radio value={STORAGE_TYPE.SFTP}>
+                                    SFTP
+                                </Radio>
+                                <Radio value={STORAGE_TYPE.S3}>
+                                    S3
+                                </Radio>
+                            </Radio.Group>
                         </AppFormItem>
 
-                        <AppFormItem
-                            label={messages('common.privateKey')}
-                            name={['sftpConfig', 'metadata', 'privateKey']}
-                        >
-                            <TextArea />
-                        </AppFormItem>
+                        {watchStorageType === STORAGE_TYPE.S3 ? (
+                            <>
+                                <AppFormItem
+                                    label="Bucket"
+                                    name={[
+                                        'sftpConfig',
+                                        'metadata',
+                                        'bucket',
+                                    ]}
+                                    required
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                messages('validation.input'),
+                                        },
+                                    ]}
+                                >
+                                    <Input placeholder="e.g. my-bucket-name" />
+                                </AppFormItem>
+                                <AppFormItem
+                                    label="Region"
+                                    name={[
+                                        'sftpConfig',
+                                        'metadata',
+                                        'region',
+                                    ]}
+                                    required
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                messages('validation.input'),
+                                        },
+                                    ]}
+                                >
+                                    <Input placeholder="e.g. us-east-1" />
+                                </AppFormItem>
+                                <AppFormItem
+                                    label="Access Key ID"
+                                    name={[
+                                        'sftpConfig',
+                                        'metadata',
+                                        'accessKeyId',
+                                    ]}
+                                    required
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                messages('validation.input'),
+                                        },
+                                    ]}
+                                >
+                                    <Input
+                                        autoComplete="off"
+                                        placeholder="Enter access key ID"
+                                    />
+                                </AppFormItem>
+                                <AppFormItem
+                                    label="Secret Access Key"
+                                    name={[
+                                        'sftpConfig',
+                                        'metadata',
+                                        'secretAccessKey',
+                                    ]}
+                                    required
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                messages('validation.input'),
+                                        },
+                                    ]}
+                                >
+                                    <Input.Password
+                                        autoComplete="off"
+                                        placeholder="Enter secret access key"
+                                    />
+                                </AppFormItem>
+                                <AppFormItem
+                                    label="Endpoint"
+                                    name={[
+                                        'sftpConfig',
+                                        'metadata',
+                                        'endpoint',
+                                    ]}
+                                >
+                                    <Input placeholder="Custom endpoint (MinIO, DigitalOcean Spaces...)" />
+                                </AppFormItem>
+                                <AppFormItem
+                                    label="Path"
+                                    name={[
+                                        'sftpConfig',
+                                        'metadata',
+                                        'path',
+                                    ]}
+                                >
+                                    <Input placeholder="e.g. /uploads/releases" />
+                                </AppFormItem>
+                                <AppFormItem
+                                    name={['sftpConfig', 'ernVersion']}
+                                    label={messages('aggregator.ernVersion')}
+                                >
+                                    <ErnVersionSelect />
+                                </AppFormItem>
+                            </>
+                        ) : (
+                            <>
+                                <AppFormItem
+                                    label="Host/Server address"
+                                    name={[
+                                        'sftpConfig',
+                                        'metadata',
+                                        'host',
+                                    ]}
+                                    required
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                messages('validation.input'),
+                                        },
+                                    ]}
+                                >
+                                    <Input placeholder="For ex: example.service.com or 216.81.210.36" />
+                                </AppFormItem>
+                                <AppFormItem
+                                    label="Port"
+                                    name={[
+                                        'sftpConfig',
+                                        'metadata',
+                                        'port',
+                                    ]}
+                                    required
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                messages('validation.input'),
+                                        },
+                                    ]}
+                                >
+                                    <InputNumber
+                                        placeholder="Enter 21 unless you received other instructions"
+                                        style={{ width: '100%' }}
+                                    />
+                                </AppFormItem>
+                                <AppFormItem
+                                    label="Path"
+                                    name={[
+                                        'sftpConfig',
+                                        'metadata',
+                                        'path',
+                                    ]}
+                                >
+                                    <Input />
+                                </AppFormItem>
+                                <AppFormItem
+                                    name={['sftpConfig', 'ernVersion']}
+                                    label={messages('aggregator.ernVersion')}
+                                >
+                                    <ErnVersionSelect />
+                                </AppFormItem>
+                                <AppFormItem
+                                    label="Username"
+                                    name={[
+                                        'sftpConfig',
+                                        'metadata',
+                                        'username',
+                                    ]}
+                                    required
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                messages('validation.input'),
+                                        },
+                                    ]}
+                                >
+                                    <Input
+                                        autoComplete="off"
+                                        placeholder="Enter name"
+                                    />
+                                </AppFormItem>
+                                <AppFormItem
+                                    label="Password"
+                                    name={[
+                                        'sftpConfig',
+                                        'metadata',
+                                        'password',
+                                    ]}
+                                >
+                                    <Input.Password
+                                        autoComplete="off"
+                                        placeholder="Enter password"
+                                    />
+                                </AppFormItem>
+                                <AppFormItem
+                                    label={messages('common.privateKey')}
+                                    name={[
+                                        'sftpConfig',
+                                        'metadata',
+                                        'privateKey',
+                                    ]}
+                                >
+                                    <TextArea />
+                                </AppFormItem>
+                            </>
+                        )}
                     </>
                 )}
             </AppForm>

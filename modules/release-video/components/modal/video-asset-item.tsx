@@ -35,8 +35,11 @@ export default function VideoAssetItem({
 
     useEffect(() => {
         if (videoReadUrl && videoFileId) {
-            const currentFileList = form.getFieldValue('videoFile')?.fileList || [];
-            const hasExistingFile = currentFileList.some((file: any) => file.uid === videoFileId);
+            const currentFileList =
+                form.getFieldValue('videoFile')?.fileList || [];
+            const hasExistingFile = currentFileList.some(
+                (file: any) => file.uid === videoFileId
+            );
 
             if (!hasExistingFile || currentFileList.length === 0 || !videoUrl) {
                 if (!videoUrl) {
@@ -48,8 +51,13 @@ export default function VideoAssetItem({
                             {
                                 uid: videoFileId,
                                 name: dataEdit?.title
-                                    ? `${dataEdit.title} Video`
-                                    : 'Video file',
+                                    ? messages(
+                                          'releaseVideo.fields.videoFileName',
+                                          {
+                                              title: dataEdit.title,
+                                          }
+                                      )
+                                    : messages('releaseVideo.fields.videoFile'),
                                 status: 'done',
                             },
                         ],
@@ -67,7 +75,15 @@ export default function VideoAssetItem({
                 });
             }
         }
-    }, [videoReadUrl, videoFileId, dataEdit?.title, form, setVideoUrl, videoUrl]);
+    }, [
+        videoReadUrl,
+        videoFileId,
+        dataEdit?.title,
+        form,
+        messages,
+        setVideoUrl,
+        videoUrl,
+    ]);
 
     const handleVideoUpload = async (file: File) => {
         if (!dataEdit?.id) return;
@@ -263,7 +279,7 @@ export default function VideoAssetItem({
     return (
         <div className="mb-5">
             <div className="mb-2 flex items-center justify-between text-xs font-bold text-gray-800">
-                <span>Video file *</span>
+                <span>{messages('releaseVideo.fields.videoFile')} *</span>
             </div>
 
             <Upload
@@ -275,7 +291,7 @@ export default function VideoAssetItem({
                     if (!isVideo) {
                         showNotification(
                             'error',
-                            'Please select a valid video file'
+                            messages('releaseVideo.fields.invalidVideoFile')
                         );
                         return Upload.LIST_IGNORE;
                     }
@@ -312,7 +328,7 @@ export default function VideoAssetItem({
             {fileList.length < 1 && !isVideoUploading && (
                 <div className="mt-1.5 text-left">
                     <span className="text-[11px] font-normal italic text-red-500">
-                        Video has not been uploaded *
+                        {messages('releaseVideo.fields.videoNotUploaded')} *
                     </span>
                 </div>
             )}

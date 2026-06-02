@@ -15,7 +15,7 @@ export default function CreateReleaseVideo() {
         {
             title: (
                 <Link href={APP_ROUTES.RELEASE_VIDEOS}>
-                    {messages('releaseVideo.title')}
+                    {messages('releaseVideo.routeLabel')}
                 </Link>
             ),
         },
