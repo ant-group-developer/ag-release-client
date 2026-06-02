@@ -1,20 +1,20 @@
 import { CreateBucketFile } from '@/modules/upload/types/data';
 import { CommonFunction } from '@/types/api';
 import { ReleasesData, VideoData } from '.';
-import { RELEASES_TYPE } from '../enums';
+import { RELEASES_TYPE, RELEASE_TYPE } from '../enums';
 
 interface CreateStandardReleaseDraftPayload {
     title: string;
     albumFormatId: string;
     version?: string;
     labelId: string;
-    type?: Exclude<RELEASES_TYPE, RELEASES_TYPE.VIDEO>;
+    type?: RELEASES_TYPE;
 }
 
 interface CreateVideoReleaseDraftPayload {
     title: string;
     version?: string;
-    type: RELEASES_TYPE.VIDEO;
+    type: RELEASE_TYPE.VIDEO;
 }
 
 export type CreateReleaseDraftPayload =
