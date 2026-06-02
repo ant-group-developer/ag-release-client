@@ -14,6 +14,7 @@ import {
     ExportTemplateCi,
     SyncReleaseDraftToTracksPayload,
     UpdateReleaseDraftPayload,
+    BulkUpsertCaptionsPayload,
 } from '../types/payload';
 
 export const releasesApi = {
@@ -197,5 +198,9 @@ export const releasesApi = {
             `/releases/draft/${id}/sync-to-tracks`,
             payload
         );
+    },
+
+    bulkUpsertCaptions: (payload: BulkUpsertCaptionsPayload) => {
+        return axiosInstance.post('/videos/captions/bulk-upsert', payload);
     },
 };

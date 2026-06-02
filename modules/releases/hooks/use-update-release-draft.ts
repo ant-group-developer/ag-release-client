@@ -2,6 +2,7 @@ import { useApiNotify } from '@/hooks/use-api-notify';
 import { DetailResponse, UpdateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
+import { useCallback } from 'react';
 import { releasesApi } from '../apis';
 import { releasesQueryKeys } from '../constants/query-keys';
 import { ReleasesData } from '../types';
@@ -29,13 +30,27 @@ export const useUpdateReleaseDraft = () => {
         // Optimistically update detail
         queryClient.setQueryData(releasesQueryKeys.detail(id), (old: any) => {
             if (!old) return old;
+            const previousRelease = old.data?.data;
+
             return {
                 ...old,
                 data: {
                     ...old.data,
                     data: {
-                        ...old.data?.data,
+                        ...previousRelease,
                         ...payload,
+                        ...(payload.video && {
+                            video: {
+                                ...previousRelease?.video,
+                                ...payload.video,
+                            },
+                        }),
+                        ...(payload.releaseLanguage && {
+                            releaseLanguage: {
+                                ...previousRelease?.releaseLanguage,
+                                ...payload.releaseLanguage,
+                            },
+                        }),
                     },
                 },
             };
@@ -100,14 +115,15 @@ export const useUpdateReleaseDraft = () => {
         onSuccess,
         onError,
     });
-    const updateReleaseDraft = (
-        variables: UpdateVariables<
-            ReleasesData['id'],
-            UpdateReleaseDraftPayload
-        >
-    ) => {
-        return mutation.mutate(variables);
-    };
+    const updateReleaseDraft = useCallback(
+        (
+            variables: UpdateVariables<
+                ReleasesData['id'],
+                UpdateReleaseDraftPayload
+            >
+        ) => mutation.mutate(variables),
+        [mutation.mutate]
+    );
 
     return {
         updateReleaseDraft,

@@ -13,6 +13,8 @@ interface DistributionJobsTableAlertActionProps {
     onDownloadExcel: () => void;
     isConfirmingCompleted: boolean;
     onConfirmCompleted: () => void;
+    showAutoSendEmail?: boolean;
+    showDownloadExcel?: boolean;
 }
 
 const DistributionJobsTableAlertAction = ({
@@ -22,30 +24,36 @@ const DistributionJobsTableAlertAction = ({
     onDownloadExcel,
     isConfirmingCompleted,
     onConfirmCompleted,
+    showAutoSendEmail = true,
+    showDownloadExcel = true,
 }: DistributionJobsTableAlertActionProps) => {
     const messages = useTranslations();
     const { token } = theme.useToken();
 
     return (
         <Space size={16}>
-            <Button
-                type="text"
-                icon={<MailOutlined />}
-                loading={isAutoSendingEmail}
-                onClick={onAutoSendEmail}
-                style={{ color: token.colorPrimary }}
-            >
-                {messages('distributionJobs.autoSendEmail')}
-            </Button>
-            <Button
-                type="text"
-                icon={<FileExcelOutlined />}
-                loading={isDownloadingExcel}
-                onClick={onDownloadExcel}
-                style={{ color: token.colorPrimary }}
-            >
-                {messages('distributionJobs.downloadExcel')}
-            </Button>
+            {showAutoSendEmail && (
+                <Button
+                    type="text"
+                    icon={<MailOutlined />}
+                    loading={isAutoSendingEmail}
+                    onClick={onAutoSendEmail}
+                    style={{ color: token.colorPrimary }}
+                >
+                    {messages('distributionJobs.autoSendEmail')}
+                </Button>
+            )}
+            {showDownloadExcel && (
+                <Button
+                    type="text"
+                    icon={<FileExcelOutlined />}
+                    loading={isDownloadingExcel}
+                    onClick={onDownloadExcel}
+                    style={{ color: token.colorPrimary }}
+                >
+                    {messages('distributionJobs.downloadExcel')}
+                </Button>
+            )}
             <Button
                 type="text"
                 icon={<CheckOutlined />}

@@ -49,6 +49,7 @@ export default function Tracks() {
     const [selectedRow, setSelectedRow] = useState<Key[]>([]);
     const pathname = usePathname();
     const headerHeight = useElementHeightById('release-header');
+    console.log('🚀 ~ Tracks ~ headerHeight:', headerHeight);
 
     const formValues = useReleaseFormStore((state) => state.formValues);
     // const setFormValues = useReleaseFormStore((state) => state.setFormValues);
@@ -147,9 +148,7 @@ export default function Tracks() {
                                     </div>
                                 }
                                 onClick={() =>
-                                    openModal(
-                                        TYPE_MODAL_RELEASE.SYNC_TO_TRACKS
-                                    )
+                                    openModal(TYPE_MODAL_RELEASE.SYNC_TO_TRACKS)
                                 }
                                 type="default"
                             >

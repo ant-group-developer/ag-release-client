@@ -10,7 +10,8 @@ import { TimezoneData } from '@/modules/timezone/types';
 import { TrackData } from '@/modules/tracks/types';
 import { UserData } from '@/modules/user/types/data';
 import { CommonAttribute, CommonParams } from '@/types/api';
-import { RELEASE_TIME_MODE, RELEASES_STATUS, RELEASES_TYPE } from '../enums';
+import { FileBucket } from '@/modules/upload/types/data';
+import { RELEASE_TIME_MODE, RELEASE_TYPE, RELEASES_STATUS } from '../enums';
 
 export interface ReleaseCoverArt {
     '75x75': string | null;
@@ -62,13 +63,35 @@ export interface ReleasesData extends CommonAttribute {
     releaseTimeMode: RELEASE_TIME_MODE;
     logs: string;
     priceTierId?: string;
+    type?: RELEASE_TYPE;
+    video?: VideoData;
+}
+
+export interface VideoData {
+    id?: string;
+    releaseId: string;
+    isrc: string;
+    explicit: boolean;
+    aiContent: string;
+    channel: string;
+    description?: string;
+    keywords?: string[];
+    isKids: boolean;
+    isUnlisted: boolean;
+    subtitles?: string[];
+    contentProvider?: string;
+    copyrightOwner?: string;
+    partnerCustomId1?: string;
+    partnerCustomId2?: string;
+    fileId?: string;
+    videoFile?: FileBucket;
 }
 
 export interface ReleasesDataSimple
     extends Pick<ReleasesData, 'id' | 'title'> {}
 
 export interface ReleasesDataFilter extends CommonParams {
-    type?: RELEASES_TYPE;
+    type?: RELEASE_TYPE;
     status?: RELEASES_STATUS;
     startDateCreated?: string;
     endDateCreated?: string;

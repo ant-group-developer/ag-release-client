@@ -98,3 +98,15 @@ export enum RELEASE_TIME_MODE {
     GLOBAL_MIDNIGHT = 'global_midnight',
     SPECIFIC_TIMEZONE = 'specific_timezone',
 }
+
+export enum RELEASE_TYPE {
+    VIDEO = 'video',
+    AUDIO = 'audio',
+}
+
+export enum RELEASE_AI_CONTENT {
+    ALL = 'ALL',
+    PARTLY = 'PARTLY',
+    NONE = 'NONE',
+    UNDETERMINED = 'UNDETERMINED',
+}

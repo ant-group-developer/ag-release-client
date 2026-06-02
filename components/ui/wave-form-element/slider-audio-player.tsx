@@ -36,7 +36,7 @@ const SliderAudioPlayer = ({
                     )
                 }
             />
-            <span className="w-[44px] text-xs tabular-nums">
+            <span className="w-[44px] pr-2 text-xs tabular-nums">
                 {convertSecondsToTime(playedTime)}
             </span>
             <Slider

@@ -14,6 +14,7 @@ import ReleasesHeaderV2 from '@/modules/releases/components/header';
 import ReleasesTable from '@/modules/releases/components/table';
 
 import {
+    RELEASE_TYPE,
     RELEASES_COLUMNS_DISPLAY,
     RELEASES_STATUS,
     TYPE_MODAL_RELEASE,
@@ -44,6 +45,7 @@ export default function Releases({}: Props) {
         pageSize: PAGE_SIZE,
         orderBy: ORDER.DESC,
         fieldOrder: RELEASES_COLUMNS_DISPLAY.CREATED_AT,
+        type: RELEASE_TYPE.AUDIO,
     });
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
@@ -126,7 +128,7 @@ export default function Releases({}: Props) {
 
     return (
         <AppPageWrapper>
-            <PageContainer title={messages('release.releases')}>
+            <PageContainer title={messages('release.routeLabel')}>
                 {/* <ReleasesHeaderV2
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}

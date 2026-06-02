@@ -9,3 +9,8 @@ export enum DSP_DEAL {
     DIRECT = 'direct',
     SYSTEM_DEFAULT = 'system',
 }
+
+export enum STORAGE_TYPE {
+    SFTP = 'SFTP',
+    S3 = 'S3',
+}

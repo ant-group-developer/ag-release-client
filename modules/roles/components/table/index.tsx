@@ -30,7 +30,7 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
         {
             title: messages('common.iNo'),
             key: 'iNo',
-            width: 30,
+            width: 40,
             align: 'center',
             render: (_, __, index) =>
                 getIndex(

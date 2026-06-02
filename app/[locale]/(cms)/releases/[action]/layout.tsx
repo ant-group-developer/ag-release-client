@@ -56,7 +56,9 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const [isScrolled, setIsScrolled] = useState(false);
 
     // const
-    const releaseId = params[PATH_PARAMS.RELEASE_ID] ? `${params[PATH_PARAMS.RELEASE_ID]}` : '';
+    const releaseId = params[PATH_PARAMS.RELEASE_ID]
+        ? `${params[PATH_PARAMS.RELEASE_ID]}`
+        : '';
     const isCreateReleasePage =
         params[PATH_PARAMS.ACTION] === RELEASE_ROUTE_ACTION.CREATE;
     const isDisableTab = releaseId == '';
@@ -195,7 +197,10 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
 
     // selective reset based on navigation transition and permissions
     useEffect(() => {
-        if (params[PATH_PARAMS.ACTION] === RELEASE_ROUTE_ACTION.DETAIL && releaseId) {
+        if (
+            params[PATH_PARAMS.ACTION] === RELEASE_ROUTE_ACTION.DETAIL &&
+            releaseId
+        ) {
             // Force READ if user doesn't have update permission
             if (!canUpdate) {
                 setReleaseAction(RELEASE_DETAIL_ACTION.READ);
