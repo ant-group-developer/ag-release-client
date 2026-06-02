@@ -1,20 +1,17 @@
 import { ReleasesData } from '@/modules/releases/types';
 import { FormInstance } from 'antd';
+import { useState } from 'react';
 import ReactPlayer from 'react-player';
 import CaptionsAssetItem from './captions-asset-item';
 import ThumbnailAssetItem from './thumbnail-asset-item';
 import VideoAssetItem from './video-asset-item';
-import { useState } from 'react';
 
 interface VideoAssetsProps {
     form: FormInstance;
     dataEdit?: ReleasesData;
 }
 
-export default function VideoAssets({
-    form,
-    dataEdit,
-}: VideoAssetsProps) {
+export default function VideoAssets({ form, dataEdit }: VideoAssetsProps) {
     const [videoUrl, setVideoUrl] = useState<string>('');
     return (
         <>
@@ -47,10 +44,10 @@ export default function VideoAssets({
                     />
                 ) : (
                     <div className="flex flex-col items-center justify-center gap-2 text-gray-600">
-                        <div className="select-none text-5xl font-extrabold tracking-widest text-zinc-800">
+                        {/* <div className="select-none text-5xl font-extrabold tracking-widest text-zinc-800">
                             vevo
-                        </div>
-                        <div className="select-none text-[10px] font-semibold uppercase tracking-wider text-zinc-600">
+                        </div> */}
+                        <div className="select-none text-xl font-semibold uppercase tracking-wider text-zinc-600">
                             No Video Selected
                         </div>
                     </div>
@@ -72,10 +69,7 @@ export default function VideoAssets({
                     />
 
                     {/* Asset: Thumbnail */}
-                    <ThumbnailAssetItem
-                        form={form}
-                        dataEdit={dataEdit}
-                    />
+                    <ThumbnailAssetItem form={form} dataEdit={dataEdit} />
 
                     {/* Asset: Captions and Subtitles */}
                     <CaptionsAssetItem dataEdit={dataEdit} />

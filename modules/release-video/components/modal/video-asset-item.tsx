@@ -47,7 +47,6 @@ export default function VideoAssetItem({
                         fileList: [
                             {
                                 uid: videoFileId,
-                                url: videoReadUrl,
                                 name: dataEdit?.title
                                     ? `${dataEdit.title} Video`
                                     : 'Video file',
@@ -191,7 +190,6 @@ export default function VideoAssetItem({
                                     uid: fileId,
                                     name: file.name,
                                     status: 'done' as const,
-                                    url: objectUrl,
                                 },
                             ],
                         },

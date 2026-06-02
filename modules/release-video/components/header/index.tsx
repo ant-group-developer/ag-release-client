@@ -1,16 +1,19 @@
 import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
 import CreateButton from '@/components/ui/button/create-button';
 import AppSearch from '@/components/ui/input/search';
+import { APP_ROUTES } from '@/enums/routes';
 import { UseFilterProps } from '@/hooks/use-filter';
+import { useRouter } from '@/i18n/routing';
+import { RELEASE_TYPE } from '@/modules/releases/enums';
+import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
 import { ReleasesDataFilter } from '@/modules/releases/types';
 import { useTranslations } from 'next-intl';
 import nProgress from 'nprogress';
-import { useRouter } from '@/i18n/routing';
-import { APP_ROUTES } from '@/enums/routes';
-import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
-import { RELEASES_TYPE } from '@/modules/releases/enums';
 
-type Props = Pick<UseFilterProps<ReleasesDataFilter>, 'dataFilter' | 'onSearch'>;
+type Props = Pick<
+    UseFilterProps<ReleasesDataFilter>,
+    'dataFilter' | 'onSearch'
+>;
 
 export default function ReleaseVideoHeader({ dataFilter, onSearch }: Props) {
     const messages = useTranslations();
@@ -22,7 +25,7 @@ export default function ReleaseVideoHeader({ dataFilter, onSearch }: Props) {
         createReleaseDraft({
             payload: {
                 title: 'New release video',
-                type: RELEASES_TYPE.VIDEO,
+                type: RELEASE_TYPE.VIDEO,
             },
             onSuccess: (data) => {
                 nProgress.done();

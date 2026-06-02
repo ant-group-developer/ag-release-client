@@ -1,239 +1,264 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
-import { useGetListSimpleCountries } from '@/modules/countries/hooks/use-get-list-simple-countries';
+import CountrySelect from '@/components/ui/select/country-select';
+import TimezoneSelect from '@/components/ui/select/timezone-select';
+import { DATE_FORMAT, DISTRIBUTE_TYPES } from '@/enums/common';
+import { RELEASE_VIDEO_VISIBILITY } from '@/modules/release-video/enums';
+import { RELEASE_TIME_MODE } from '@/modules/releases/enums';
 import {
-    Alert,
-    Button,
-    Divider,
-    Dropdown,
+    Col,
+    DatePicker,
     Form,
     FormInstance,
+    Radio,
+    Row,
     Select,
-    Space,
-    Tooltip,
-    Typography,
+    TimePicker,
 } from 'antd';
-import { ChevronDown, Globe } from 'lucide-react';
-import PolicyItem from './policy-item';
+import dayjs from 'dayjs';
+import { useTranslations } from 'next-intl';
 
 interface DistributionTabProps {
     form: FormInstance;
 }
 
 export default function DistributionTab({ form }: DistributionTabProps) {
-    const { countriesData = [] } = useGetListSimpleCountries();
-
-    // Add policy dropdown menu items
-    const policyMenuItems = [
-        {
-            key: 'Monetized',
-            label: 'Territory policy - Monetized',
-        },
-        {
-            key: 'Blocked',
-            label: 'Territory policy - Blocked',
-        },
-    ];
+    const messages = useTranslations();
+    const releaseTimeMode = Form.useWatch('releaseTimeMode', form);
+    const distributeWorldwide = Form.useWatch(
+        ['releaseTerritory', 'distributeWorldwide'],
+        form
+    );
 
     return (
-        <div style={{ maxWidth: '100%', padding: '16px 0 32px 0' }}>
-            {/* Visibility Section */}
+        <div className="mx-auto w-full pb-8 pt-4">
             <AppFormItem
-                name="visibility"
+                name={['video', 'visibility']}
                 label="Visibility"
-                initialValue="Default"
-                tooltipInfo="Configure video access scope and standard visibility settings."
+                initialValue={RELEASE_VIDEO_VISIBILITY.DEFAULT}
             >
                 <Select
-                    style={{ width: '100%', maxWidth: '448px' }}
+                    className="w-full"
                     placeholder="Select visibility..."
-                    defaultValue="Default"
                     options={[
-                        { value: 'Default', label: 'Default' },
                         {
-                            value: 'Unlisted on YouTube',
+                            value: RELEASE_VIDEO_VISIBILITY.DEFAULT,
+                            label: 'Default',
+                        },
+                        {
+                            value: RELEASE_VIDEO_VISIBILITY.UNLISTED_ON_YOUTUBE,
                             label: 'Unlisted on YouTube',
                         },
                         {
-                            value: 'Unlisted on Vevo',
+                            value: RELEASE_VIDEO_VISIBILITY.UNLISTED_ON_VEVO,
                             label: 'Unlisted on Vevo',
                         },
                         {
-                            value: 'Unlisted on YouTube/Vevo',
+                            value: RELEASE_VIDEO_VISIBILITY.UNLISTED_ON_YOUTUBE_VEVO,
                             label: 'Unlisted on YouTube/Vevo',
                         },
                     ]}
                 />
             </AppFormItem>
 
-            {/* Form list for dynamic policies */}
-            <Form.List name="territoryPolicies">
-                {(fields, { add, remove }) => {
-                    const handleAddPolicy = (type: string) => {
-                        add({
-                            policyType: type,
-                            startTime: null,
-                            endTime: null,
-                            displayFullNames: false,
-                            countries: [],
-                        });
-                    };
+            <Row gutter={[32, 16]} className="mt-6">
+                <Col span={12}>
+                    <AppFormItem
+                        name="releaseDate"
+                        label={messages('release.releaseDate')}
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.select'),
+                            },
+                        ]}
+                        getValueProps={(value) => ({
+                            value: value ? dayjs(value) : null,
+                        })}
+                        normalize={(value) =>
+                            value ? value.toISOString() : null
+                        }
+                    >
+                        <DatePicker
+                            className="w-full"
+                            format={DATE_FORMAT.DATE_ONLY}
+                        />
+                    </AppFormItem>
+                </Col>
 
-                    return (
-                        <div>
-                            <Divider style={{ margin: '32px 0 24px 0' }} />
+                <Col span={12}>
+                    <AppFormItem
+                        name="releaseEndDate"
+                        label={messages('release.releaseEndDate')}
+                        getValueProps={(value) => ({
+                            value: value ? dayjs(value) : null,
+                        })}
+                        normalize={(value) =>
+                            value ? value.toISOString() : null
+                        }
+                    >
+                        <DatePicker
+                            className="w-full"
+                            format={DATE_FORMAT.DATE_ONLY}
+                        />
+                    </AppFormItem>
+                </Col>
 
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    marginBottom: '16px',
-                                }}
-                            >
-                                <Space size={8} align="center">
-                                    <Typography.Text
-                                        strong
-                                        style={{
-                                            fontSize: '14px',
-                                            textTransform: 'uppercase',
-                                            letterSpacing: '0.05em',
-                                        }}
-                                    >
-                                        Territory policies
-                                    </Typography.Text>
-                                    <Typography.Text type="secondary">
-                                        |
-                                    </Typography.Text>
-                                    <Typography.Link
-                                        style={{
-                                            fontSize: '12px',
-                                            fontWeight: 600,
-                                        }}
-                                    >
-                                        View territory list
-                                    </Typography.Link>
-                                    <Typography.Text type="secondary">
-                                        |
-                                    </Typography.Text>
-                                    <Tooltip title="Define custom policies per country, set monetization active dates, or block territories.">
-                                        <Typography.Link
-                                            style={{
-                                                fontSize: '12px',
-                                                fontWeight: 600,
-                                            }}
-                                        >
-                                            Learn more
-                                        </Typography.Link>
-                                    </Tooltip>
-                                </Space>
+                <Col span={12}>
+                    <AppFormItem
+                        name="releaseTimeMode"
+                        label={messages('release.scheduling.goLiveTime')}
+                        initialValue={RELEASE_TIME_MODE.GLOBAL_MIDNIGHT}
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.select'),
+                            },
+                        ]}
+                    >
+                        <Radio.Group className="flex flex-col gap-2">
+                            <Radio value={RELEASE_TIME_MODE.GLOBAL_MIDNIGHT}>
+                                {messages(
+                                    'release.scheduling.atMidnightInEveryCountry'
+                                )}
+                            </Radio>
+                            <Radio value={RELEASE_TIME_MODE.SPECIFIC_TIMEZONE}>
+                                {messages('release.scheduling.atSpecificTime')}
+                            </Radio>
+                        </Radio.Group>
+                    </AppFormItem>
 
-                                <Dropdown
-                                    menu={{
-                                        items: policyMenuItems,
-                                        onClick: ({ key }) =>
-                                            handleAddPolicy(key),
-                                    }}
-                                    trigger={['click']}
+                    {releaseTimeMode ===
+                        RELEASE_TIME_MODE.SPECIFIC_TIMEZONE && (
+                        <Row gutter={16}>
+                            <Col span={12}>
+                                <AppFormItem
+                                    name="releaseTimezoneId"
+                                    label={messages('timezone.zone')}
+                                    required
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                messages('validation.select'),
+                                        },
+                                    ]}
                                 >
-                                    <Button
-                                        shape="round"
-                                        style={{ fontWeight: '500' }}
-                                    >
-                                        <Space size={6}>
-                                            Add policy
-                                            <ChevronDown
-                                                style={{
-                                                    width: 12,
-                                                    height: 12,
-                                                }}
-                                            />
-                                        </Space>
-                                    </Button>
-                                </Dropdown>
-                            </div>
-
-                            {/* Alert Callout Box */}
-                            <Alert
-                                type="info"
-                                showIcon
-                                message={
-                                    <div
-                                        style={{
-                                            fontSize: '12px',
-                                            lineHeight: '1.6',
-                                        }}
-                                    >
-                                        <p>
-                                            A video can have more than one
-                                            territory policy depending on
-                                            monetization, start, and end dates
-                                            in various territories. All
-                                            territories are blocked by default
-                                            unless explicitly added.
-                                        </p>
-                                        <p>
-                                            Note: Adding all territories is not
-                                            truly worldwide. If you would like
-                                            to apply a worldwide policy you must
-                                            select it from the drop down list.
-                                        </p>
-                                    </div>
-                                }
-                                style={{ marginBottom: '24px' }}
-                            />
-
-                            {/* Render added policy blocks */}
-                            {fields.length === 0 ? (
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        padding: '40px 24px',
-                                        border: '1px dashed #d9d9d9',
-                                        borderRadius: '8px',
-                                    }}
+                                    <TimezoneSelect />
+                                </AppFormItem>
+                            </Col>
+                            <Col span={12}>
+                                <AppFormItem
+                                    name="releaseTime"
+                                    label={messages('common.releaseTime')}
+                                    required
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                messages('validation.select'),
+                                        },
+                                    ]}
+                                    getValueProps={(value) => ({
+                                        value: value
+                                            ? dayjs(
+                                                  value,
+                                                  DATE_FORMAT.HOUR_MINUTE
+                                              )
+                                            : null,
+                                    })}
+                                    normalize={(value) =>
+                                        value
+                                            ? value.format(
+                                                  DATE_FORMAT.HOUR_MINUTE
+                                              )
+                                            : ''
+                                    }
                                 >
-                                    <Globe
-                                        style={{
-                                            width: 36,
-                                            height: 36,
-                                            color: '#bfbfbf',
-                                            marginBottom: 8,
-                                        }}
+                                    <TimePicker
+                                        className="w-full"
+                                        format={DATE_FORMAT.HOUR_MINUTE}
+                                        showSecond={false}
                                     />
-                                    <Typography.Text
-                                        type="secondary"
-                                        style={{ fontSize: '13px' }}
+                                </AppFormItem>
+                            </Col>
+                        </Row>
+                    )}
+                </Col>
+
+                <Col span={12}>
+                    <AppFormItem
+                        name={['releaseTerritory', 'distributeWorldwide']}
+                        label={messages('distribute.wordWide')}
+                        initialValue={true}
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.select'),
+                            },
+                        ]}
+                    >
+                        <Radio.Group>
+                            <Radio value={true}>{messages('common.yes')}</Radio>
+                            <Radio value={false}>{messages('common.no')}</Radio>
+                        </Radio.Group>
+                    </AppFormItem>
+
+                    {distributeWorldwide === false && (
+                        <>
+                            <AppFormItem
+                                name={['releaseTerritory', 'distributionType']}
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: messages('validation.select'),
+                                    },
+                                ]}
+                            >
+                                <Radio.Group className="flex flex-col gap-2">
+                                    <Radio
+                                        value={
+                                            DISTRIBUTE_TYPES.DISTRIBUTE_ONLY_IN
+                                        }
                                     >
-                                        No policies added yet. Click &quot;Add
-                                        policy&quot; to configure territory
-                                        availability.
-                                    </Typography.Text>
-                                </div>
-                            ) : (
-                                <Space
-                                    direction="vertical"
-                                    size={24}
-                                    style={{ width: '100%' }}
-                                >
-                                    {fields.map((field, index) => (
-                                        <PolicyItem
-                                            key={field.key}
-                                            field={field}
-                                            index={index}
-                                            form={form}
-                                            remove={remove}
-                                            countriesData={countriesData}
-                                        />
-                                    ))}
-                                </Space>
-                            )}
-                        </div>
-                    );
-                }}
-            </Form.List>
+                                        {messages('distribute.onlyIn')}
+                                    </Radio>
+                                    <Radio
+                                        value={
+                                            DISTRIBUTE_TYPES.DISTRIBUTE_EVERY_WHERE_EXCEPT
+                                        }
+                                    >
+                                        {messages(
+                                            'distribute.everyWhereExcept'
+                                        )}
+                                    </Radio>
+                                </Radio.Group>
+                            </AppFormItem>
+
+                            <AppFormItem
+                                name={['releaseTerritory', 'selectedCountries']}
+                                label={messages('common.region')}
+                                required
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: messages('validation.select'),
+                                    },
+                                ]}
+                            >
+                                <CountrySelect
+                                    className="w-full"
+                                    mode="multiple"
+                                    allowClear
+                                    maxTagCount="responsive"
+                                />
+                            </AppFormItem>
+                        </>
+                    )}
+                </Col>
+            </Row>
         </div>
     );
 }

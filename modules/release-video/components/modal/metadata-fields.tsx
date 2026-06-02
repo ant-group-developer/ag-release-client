@@ -1,9 +1,10 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ArtistSelect from '@/components/ui/select/artist-select';
 import GenresSelect from '@/components/ui/select/genres-select';
+import LabelSelect from '@/components/ui/select/label-select';
 import LanguageSelect from '@/components/ui/select/language-select';
 import AppSwitch from '@/components/ui/switch/status-switch';
-import { MAX_NAME_LENGTH } from '@/constants/validate';
+import { MAX_NAME_LENGTH, MAX_NOTE_LENGTH } from '@/constants/validate';
 import { useGetListSimpleArtistRole } from '@/modules/artist-role/hooks/use-get-list-simple-artist-role';
 import { useCreateReleaseArtist } from '@/modules/release-artist/hooks/use-create-release-artist';
 import { useDeleteReleaseArtist } from '@/modules/release-artist/hooks/use-delete-release-artist';
@@ -233,6 +234,16 @@ export default function MetadataFields({ dataEdit }: MetadataFieldsProps) {
                     <AppFormItem
                         name={['video', 'isrc']}
                         label={messages('releaseVideo.fields.isrc')}
+                        rules={[
+                            {
+                                min: 12,
+                                max: 12,
+                                message: messages('validation.mustBeLength', {
+                                    number: 12,
+                                    field: 'ISRC',
+                                }),
+                            },
+                        ]}
                     >
                         <Input
                             placeholder={messages(
@@ -259,14 +270,12 @@ export default function MetadataFields({ dataEdit }: MetadataFieldsProps) {
                         rules={[
                             {
                                 required: true,
-                                message: messages('validation.input'),
+                                message: messages('validation.select'),
                             },
                         ]}
                     >
-                        <Input
-                            placeholder={messages(
-                                'releaseVideo.fields.contentProvider'
-                            )}
+                        <LabelSelect
+                            placeholder={messages('common.select')}
                             allowClear
                         />
                     </AppFormItem>
@@ -330,12 +339,23 @@ export default function MetadataFields({ dataEdit }: MetadataFieldsProps) {
             <AppFormItem
                 name={['video', 'description']}
                 label={messages('common.description')}
+                rules={[
+                    {
+                        max: MAX_NOTE_LENGTH,
+                        message: messages('validation.stringMax', {
+                            max: MAX_NOTE_LENGTH,
+                            field: messages('common.description'),
+                        }),
+                    },
+                ]}
             >
                 <Input.TextArea
                     showCount
                     placeholder={messages('common.description')}
                     allowClear
                     autoSize={{ minRows: 4, maxRows: 6 }}
+                    maxLength={MAX_NOTE_LENGTH}
+                    className="mb-2"
                 />
             </AppFormItem>
 

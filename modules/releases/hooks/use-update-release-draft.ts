@@ -2,6 +2,7 @@ import { useApiNotify } from '@/hooks/use-api-notify';
 import { DetailResponse, UpdateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
+import { useCallback } from 'react';
 import { releasesApi } from '../apis';
 import { releasesQueryKeys } from '../constants/query-keys';
 import { ReleasesData } from '../types';
@@ -114,14 +115,15 @@ export const useUpdateReleaseDraft = () => {
         onSuccess,
         onError,
     });
-    const updateReleaseDraft = (
-        variables: UpdateVariables<
-            ReleasesData['id'],
-            UpdateReleaseDraftPayload
-        >
-    ) => {
-        return mutation.mutate(variables);
-    };
+    const updateReleaseDraft = useCallback(
+        (
+            variables: UpdateVariables<
+                ReleasesData['id'],
+                UpdateReleaseDraftPayload
+            >
+        ) => mutation.mutate(variables),
+        [mutation.mutate]
+    );
 
     return {
         updateReleaseDraft,
