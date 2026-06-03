@@ -222,7 +222,7 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
     };
 
     return (
-        <Card bordered={false} className="shadow-sm">
+        <Card variant="borderless" className="shadow-sm">
             <AppForm
                 form={form}
                 showSubmit={isUpdateForm}

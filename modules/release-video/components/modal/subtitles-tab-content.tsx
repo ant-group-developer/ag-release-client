@@ -117,6 +117,7 @@ export default function SubtitlesTabContent({
                 pagination={false}
                 size="middle"
                 locale={{ emptyText: messages('releaseVideo.captions.table.emptySubtitles') }}
+                scroll={{ y: 250 }}
             />
         </div>
     );

@@ -116,6 +116,8 @@ export default function CaptionsTabContent({
                 rowKey="id"
                 pagination={false}
                 size="middle"
+                locale={{ emptyText: messages('releaseVideo.captions.table.emptyCaptions') }}
+                scroll={{ y: 250 }}
             />
         </div>
     );

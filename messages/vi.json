@@ -1294,6 +1294,7 @@
                 "file": "Tệp",
                 "actions": "Thao tác",
                 "emptySubtitles": "Không có phụ đề nào",
+                "emptyCaptions": "Không có chú thích nào",
                 "upload": "Tải lên",
                 "pendingCaption": "Tệp chú thích mới của bạn đang chờ xuất bản.",
                 "pendingSubtitle": "Tệp phụ đề mới của bạn đang chờ xuất bản.",

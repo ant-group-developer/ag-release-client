@@ -1296,6 +1296,7 @@
                 "file": "File",
                 "actions": "Actions",
                 "emptySubtitles": "No subtitles available",
+                "emptyCaptions": "No captions available",
                 "upload": "Upload",
                 "pendingCaption": "Your new caption file is pending publish.",
                 "pendingSubtitle": "Your new subtitle file is pending publish.",
