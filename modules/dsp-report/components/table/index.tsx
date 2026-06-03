@@ -1,9 +1,12 @@
-import CopyText from '@/components/ui/copy-text/copy-text';
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
-import { formattedDate, getIndex } from '@/helpers/common';
+import { getIndex } from '@/helpers/common';
 import { ProColumns } from '@ant-design/pro-components';
 import { Tag, theme } from 'antd';
+import { useTranslations } from 'next-intl';
+import { useAssignDspReport } from '../../hooks/use-assign-dsp-report';
+import { useUnassignDspReport } from '../../hooks/use-unassign-dsp-report';
 import { DspReportData } from '../../types';
+import PgDspsSyncSelect from '../select/pg-dsps-sync-select';
 
 type Props = Omit<AppProTableProps<DspReportData>, 'columns'> & {
     pagination: {
@@ -13,11 +16,15 @@ type Props = Omit<AppProTableProps<DspReportData>, 'columns'> & {
 };
 
 export const DspReportTable = ({ ...props }: Props) => {
+    const messages = useTranslations();
     const { token } = theme.useToken();
+    const { assignDspReport, isPending: isAssigning } = useAssignDspReport();
+    const { unassignDspReport, isPending: isUnassigning } =
+        useUnassignDspReport();
 
     const columns: ProColumns<DspReportData>[] = [
         {
-            title: 'No.',
+            title: messages('dspReport.table.no'),
             key: 'iNo',
             width: 60,
             align: 'center',
@@ -30,7 +37,7 @@ export const DspReportTable = ({ ...props }: Props) => {
                 ),
         },
         {
-            title: 'DSP name',
+            title: messages('dspReport.table.reportName'),
             key: 'dspName',
             dataIndex: 'dspName',
             width: 240,
@@ -43,60 +50,58 @@ export const DspReportTable = ({ ...props }: Props) => {
             ),
         },
         {
-            title: 'Source',
+            title: messages('dspReport.table.source'),
             key: 'source',
             dataIndex: 'source',
-            width: 140,
+            width: 100,
             render: (_, record) => <Tag>{record.source}</Tag>,
         },
+        // {
+        //     title: messages('dspReport.table.dsp'),
+        //     key: 'dspCode',
+        //     dataIndex: ['pgDspsSync', 'dspCode'],
+        //     width: 220,
+        //     render: (_, record) => {
+        //         if (!record.pgDspsSync) return '-';
+        //         return (
+        //             <Space>
+        //                 <Avatar src={record.pgDspsSync.picture} size="small" />
+        //                 <span>{record.pgDspsSync.dspName}</span>
+        //             </Space>
+        //         );
+        //     },
+        // },
         {
-            title: 'PG UUID',
-            key: 'pgUuid',
-            dataIndex: 'pgUuid',
-            width: 140,
-            render: (_, record) => (
-                <CopyText text={record.pgUuid}>
-                    <span className="truncate">{record.pgUuid}</span>
-                </CopyText>
-            ),
-        },
-        {
-            title: 'DSP code',
-            key: 'dspCode',
-            dataIndex: ['pgDspsSync', 'dspCode'],
-            width: 220,
-            render: (_, record) => record.pgDspsSync?.dspCode ?? '-',
-        },
-        {
-            title: 'DSP sync name',
-            key: 'pgDspsSyncName',
-            dataIndex: ['pgDspsSync', 'dspName'],
-            width: 220,
-            ellipsis: true,
-            render: (_, record) => record.pgDspsSync?.dspName ?? '-',
-        },
-        {
-            title: 'DSP CI code',
+            title: messages('dspReport.table.ciCode'),
             key: 'dspCiCode',
             dataIndex: ['pgDspsSync', 'dspCiCode'],
             width: 160,
             render: (_, record) => record.pgDspsSync?.dspCiCode || '-',
         },
         {
-            title: 'Created at',
-            key: 'createdAt',
-            dataIndex: 'createdAt',
-            align: 'center',
-            width: 160,
-            render: (_, record) => formattedDate(record.createdAt),
-        },
-        {
-            title: 'Updated at',
-            key: 'updatedAt',
-            dataIndex: 'updatedAt',
-            align: 'center',
-            width: 160,
-            render: (_, record) => formattedDate(record.updatedAt),
+            title: messages('dspReport.table.assign'),
+            key: 'assign',
+            width: 260,
+            render: (_, record) => (
+                <PgDspsSyncSelect
+                    allowClear
+                    className="w-full"
+                    defaultValue={record.pgUuid}
+                    disabled={isAssigning || isUnassigning}
+                    onChange={(value) => {
+                        if (value) {
+                            assignDspReport({
+                                id: record.idDspsReport,
+                                payload: { pgUuid: value },
+                            });
+                        } else {
+                            unassignDspReport({
+                                id: record.idDspsReport,
+                            });
+                        }
+                    }}
+                />
+            ),
         },
     ];
 

@@ -3,14 +3,16 @@ import ArtistSelect from '@/components/ui/select/artist-select';
 import GenresSelect from '@/components/ui/select/genres-select';
 import LabelSelect from '@/components/ui/select/label-select';
 import LanguageSelect from '@/components/ui/select/language-select';
-import AppSwitch from '@/components/ui/switch/status-switch';
 import { MAX_NAME_LENGTH, MAX_NOTE_LENGTH } from '@/constants/validate';
 import { useGetListSimpleArtistRole } from '@/modules/artist-role/hooks/use-get-list-simple-artist-role';
 import { useCreateReleaseArtist } from '@/modules/release-artist/hooks/use-create-release-artist';
 import { useDeleteReleaseArtist } from '@/modules/release-artist/hooks/use-delete-release-artist';
 import { useCreateReleaseContributor } from '@/modules/release-contributor/hooks/use-create-release-contributor';
 import { useDeleteReleaseContributor } from '@/modules/release-contributor/hooks/use-delete-release-contributor';
-import { RELEASE_AI_CONTENT, RELEASE_MADE_FOR_KIDS } from '@/modules/releases/enums';
+import {
+    RELEASE_AI_CONTENT,
+    RELEASE_MADE_FOR_KIDS,
+} from '@/modules/releases/enums';
 import { ReleasesData } from '@/modules/releases/types';
 import { Col, FormInstance, Input, Row, Select } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -325,7 +327,7 @@ export default function MetadataFields({
 
             {/* Label */}
             <Row gutter={16}>
-                <Col span={12}>
+                <Col span={24}>
                     <AppFormItem
                         name="labelId"
                         label={messages('formFields.labelId')}
@@ -436,7 +438,9 @@ export default function MetadataFields({
                         },
                         {
                             value: RELEASE_MADE_FOR_KIDS.CHANNEL_DEFAULT,
-                            label: messages('releaseVideo.fields.channelDefault'),
+                            label: messages(
+                                'releaseVideo.fields.channelDefault'
+                            ),
                         },
                     ]}
                     onBlur={() =>

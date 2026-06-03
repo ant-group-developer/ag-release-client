@@ -5,9 +5,12 @@ export interface PgDspsSyncData {
     dspCode: string;
     dspName: string;
     dspCiCode: string;
+    picture?: string | null;
     createdAt: string;
     updatedAt: string;
 }
+
+export interface PgDspsSyncDataFilter extends CommonParams {}
 
 export interface DspReportData {
     idDspsReport: string;
@@ -22,4 +25,5 @@ export interface DspReportData {
 export interface DspReportDataFilter extends CommonParams {
     source?: string;
     pgUuid?: string;
+    status?: string;
 }

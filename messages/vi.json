@@ -1270,18 +1270,18 @@
             "tip": "Mẹo: Đảm bảo chất lượng video và âm thanh tốt nhất để tối ưu hiển thị trên các nền tảng phân phối."
         },
         "captions": {
-            "title": "Captions và subtitles",
-            "description": "Captions là phụ đề bằng ngôn ngữ gốc của video.",
-            "descriptionSubtitle": "Subtitles là phụ đề bằng các ngôn ngữ khác với ngôn ngữ âm thanh của video.",
+            "title": "Chú thích và phụ đề",
+            "description": "Chú thích là phụ đề bằng ngôn ngữ gốc của video.",
+            "descriptionSubtitle": "Phụ đề là phụ đề bằng các ngôn ngữ khác với ngôn ngữ âm thanh của video.",
             "tabs": {
-                "captions": "Captions",
-                "subtitles": "Subtitles"
+                "captions": "Chú thích",
+                "subtitles": "Phụ đề"
             },
             "uploadModal": {
                 "titleEdit": "Sửa tệp {type}",
                 "titleUpload": "Tải lên tệp {type}",
-                "caption": "caption",
-                "subtitle": "subtitle",
+                "caption": "Chú thích",
+                "subtitle": "Phụ đề",
                 "description": "Chỉ cho phép một tệp {type} và tệp đó phải bằng ngôn ngữ của video.",
                 "selectFile": "Chọn tệp (.ttml hoặc .srt)",
                 "fileRequired": "Vui lòng chọn tệp",
@@ -1295,12 +1295,12 @@
                 "actions": "Thao tác",
                 "emptySubtitles": "Không có phụ đề nào",
                 "upload": "Tải lên",
-                "pendingCaption": "Tệp caption mới của bạn đang chờ xuất bản.",
-                "pendingSubtitle": "Tệp subtitle mới của bạn đang chờ xuất bản.",
-                "deleteCaptionTitle": "Xóa caption",
-                "deleteCaptionContent": "Bạn có chắc chắn muốn xóa caption này không?",
-                "deleteSubtitleTitle": "Xóa subtitle",
-                "deleteSubtitleContent": "Bạn có chắc chắn muốn xóa subtitle này không?"
+                "pendingCaption": "Tệp chú thích mới của bạn đang chờ xuất bản.",
+                "pendingSubtitle": "Tệp phụ đề mới của bạn đang chờ xuất bản.",
+                "deleteCaptionTitle": "Xóa chú thích",
+                "deleteCaptionContent": "Bạn có chắc chắn muốn xóa chú thích này không?",
+                "deleteSubtitleTitle": "Xóa phụ đề",
+                "deleteSubtitleContent": "Bạn có chắc chắn muốn xóa phụ đề này không?"
             }
         }
     },
@@ -1554,7 +1554,22 @@
         "label": "Hệ thống DSP"
     },
     "dspReport": {
-        "label": "Báo cáo DSP"
+        "label": "Báo cáo DSP",
+        "table": {
+            "no": "STT",
+            "reportName": "Tên báo cáo",
+            "source": "Nguồn",
+            "dsp": "DSP",
+            "ciCode": "Mã CI",
+            "assign": "Gán"
+        },
+        "placeholder": {
+            "selectDsp": "Chọn DSP"
+        },
+        "status": {
+            "assigned": "Đã gán",
+            "unassigned": "Chưa gán"
+        }
     },
     "dsp": {
         "label": "DSP",

@@ -197,6 +197,10 @@ export const QUERY_KEY = {
         GET_LIST: 'GET_LIST_DSP_REPORT',
         GET_DETAIL: 'GET_DETAIL_DSP_REPORT',
     },
+    PG_DSPS_SYNC: {
+        KEY: 'PG_DSPS_SYNC',
+        GET_LIST: 'GET_LIST_PG_DSPS_SYNC',
+    },
     DSP_SYSTEM: {
         KEY: 'DPS_SYSTEM',
         GET_LIST: 'GET_LIST_DSP_SYSTEM',

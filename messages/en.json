@@ -1556,7 +1556,22 @@
         "label": "DSP system"
     },
     "dspReport": {
-        "label": "DSP Reports"
+        "label": "DSP reports",
+        "table": {
+            "no": "No.",
+            "reportName": "Report name",
+            "source": "Source",
+            "dsp": "DSP",
+            "ciCode": "CI code",
+            "assign": "Assign"
+        },
+        "placeholder": {
+            "selectDsp": "Select DSP"
+        },
+        "status": {
+            "assigned": "Assigned",
+            "unassigned": "Unassigned"
+        }
     },
     "dsp": {
         "label": "DSP",
