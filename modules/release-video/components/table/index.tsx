@@ -96,17 +96,13 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             },
         },
         {
-            title: messages('releaseVideo.fields.genres'),
+            title: messages('releaseVideo.fields.genre'),
             key: 'primaryGenre',
             dataIndex: 'primaryGenre',
             width: 150,
             render: (_, record) => {
-                const genres = [
-                    record.primaryGenre?.name,
-                    record.subGenre?.name,
-                ].filter((name): name is string => !!name);
-
-                return genres.length ? <PopoverTags tags={genres} /> : '-';
+                const genre = record.primaryGenre?.name;
+                return genre ? <PopoverTags tags={[genre]} /> : '-';
             },
         },
         {

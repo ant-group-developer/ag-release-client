@@ -1,8 +1,10 @@
 import { ReleasesData } from '@/modules/releases/types';
 import { Flex, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import ManageCaptionsModal from './manage-captions-modal';
+import { useGetReleaseCaptions } from '@/modules/releases/hooks/use-get-release-captions';
+import { RELEASE_VIDEO_CAPTION_TYPE } from '../../enums';
 
 interface CaptionsAssetItemProps {
     dataEdit?: ReleasesData;
@@ -14,14 +16,28 @@ export default function CaptionsAssetItem({
     const messages = useTranslations();
     const [isManageModalOpen, setIsManageModalOpen] = useState(false);
 
-    // Currently captions are read from video details or kept as placeholder
-    const captionCount = dataEdit?.video?.subtitles?.length || 0;
+    const { releaseCaptionsData } = useGetReleaseCaptions(dataEdit?.id ?? '');
+
+    const { captionCount, subtitleCount } = useMemo(() => {
+        let captionCount = 0;
+        let subtitleCount = 0;
+
+        releaseCaptionsData?.forEach((item) => {
+            if (item.type === RELEASE_VIDEO_CAPTION_TYPE.CAPTION) {
+                captionCount++;
+            } else if (item.type === RELEASE_VIDEO_CAPTION_TYPE.SUBTITLE) {
+                subtitleCount++;
+            }
+        });
+
+        return { captionCount, subtitleCount };
+    }, [releaseCaptionsData]);
 
     return (
         <Flex vertical gap={4}>
             <Flex align="center" gap={8}>
                 <Typography.Text strong style={{ fontSize: 12 }}>
-                    {messages('releaseVideo.fields.captionsAndSubtitles')}
+                    {messages('releaseVideo.captions.title')}
                 </Typography.Text>
                 <Typography.Text type="secondary" style={{ fontSize: 12 }}>
                     |
@@ -40,7 +56,7 @@ export default function CaptionsAssetItem({
             >
                 {messages('releaseVideo.fields.captionFilesSummary', {
                     captionCount,
-                    subtitleCount: captionCount,
+                    subtitleCount,
                 })}
             </Typography.Text>
 

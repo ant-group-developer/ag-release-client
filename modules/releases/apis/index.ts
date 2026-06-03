@@ -7,14 +7,16 @@ import {
     ReleasesDataFilter,
     ReleasesDataSimple,
     ReleaseValidate,
+    ReleaseCaptionData,
 } from '../types';
 import {
     BulkSubmitRelease,
+    UpsertReleaseCaptionsPayload,
     CreateReleaseDraftPayload,
     ExportTemplateCi,
     SyncReleaseDraftToTracksPayload,
     UpdateReleaseDraftPayload,
-    BulkUpsertCaptionsPayload,
+    UpdateReleaseCaptionPayload,
 } from '../types/payload';
 
 export const releasesApi = {
@@ -200,7 +202,24 @@ export const releasesApi = {
         );
     },
 
-    bulkUpsertCaptions: (payload: BulkUpsertCaptionsPayload) => {
-        return axiosInstance.post('/videos/captions/bulk-upsert', payload);
+    getReleaseCaptions: (releaseId: string, type?: string) => {
+        return axiosInstance.get<DetailResponse<ReleaseCaptionData[]>>(
+            `/releases/${releaseId}/release-captions`,
+            { params: { type } }
+        );
+    },
+
+    upsertReleaseCaptions: (payload: UpsertReleaseCaptionsPayload) => {
+        const { releaseId, ...rest } = payload;
+        return axiosInstance.post(`/releases/${releaseId}/release-captions`, rest);
+    },
+
+    updateReleaseCaption: (payload: UpdateReleaseCaptionPayload) => {
+        const { id, ...rest } = payload;
+        return axiosInstance.put(`/releases/release-captions/${id}`, rest);
+    },
+
+    deleteReleaseCaption: (id: string) => {
+        return axiosInstance.delete(`/releases/release-captions/${id}`);
     },
 };

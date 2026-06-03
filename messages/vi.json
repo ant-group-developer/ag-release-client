@@ -520,9 +520,19 @@
         }
     },
     "channel": {
-        "code": "Mã kênh",
+        "add": "Thêm kênh",
         "label": "Kênh",
-        "name": "Tên kênh"
+        "name": "Tên kênh",
+        "message": {
+            "success": {
+                "create": "Thêm mới kênh thành công",
+                "update": "Cập nhật kênh thành công",
+                "delete": "Xoá kênh thành công"
+            },
+            "error": {
+                "duplicateNameChannel": "Tên kênh đã tồn tại"
+            }
+        }
     },
     "system": {
         "label": "Hệ thống",
@@ -1252,7 +1262,10 @@
             "thumbnailNotUploaded": "Ảnh thu nhỏ chưa được tải lên",
             "captionsAndSubtitles": "Phụ đề",
             "manage": "Quản lý",
-            "captionFilesSummary": "{captionCount} tệp chú thích. {subtitleCount} tệp phụ đề."
+            "captionFilesSummary": "{captionCount} tệp chú thích. {subtitleCount} tệp phụ đề.",
+            "channelDefault": "Mặc định của kênh",
+            "collaboratingChannels": "Kênh cộng tác",
+            "manageCollaborators": "Quản lý cộng tác viên"
         },
         "tabs": {
             "details": "Chi tiết",
@@ -1271,6 +1284,54 @@
             "audio": "Âm thanh: Stereo, 48kHz, 320kbps trở lên",
             "size": "Kích thước tối đa: 5 GB",
             "tip": "Mẹo: Đảm bảo chất lượng video và âm thanh tốt nhất để tối ưu hiển thị trên các nền tảng phân phối."
+        },
+        "captions": {
+            "title": "Chú thích và phụ đề",
+            "description": "Chú thích là phụ đề bằng ngôn ngữ gốc của video.",
+            "descriptionSubtitle": "Phụ đề là phụ đề bằng các ngôn ngữ khác với ngôn ngữ âm thanh của video.",
+            "tabs": {
+                "captions": "Chú thích",
+                "subtitles": "Phụ đề"
+            },
+            "uploadModal": {
+                "titleEdit": "Sửa tệp {type}",
+                "titleUpload": "Tải lên tệp {type}",
+                "caption": "Chú thích",
+                "subtitle": "Phụ đề",
+                "description": "Chỉ cho phép một tệp {type} và tệp đó phải bằng ngôn ngữ của video.",
+                "selectFile": "Chọn tệp (.ttml hoặc .srt)",
+                "fileRequired": "Vui lòng chọn tệp",
+                "language": "Ngôn ngữ",
+                "languageRequired": "Vui lòng chọn ngôn ngữ",
+                "select": "Chọn..."
+            },
+            "table": {
+                "language": "Ngôn ngữ",
+                "file": "Tệp",
+                "actions": "Thao tác",
+                "emptySubtitles": "Không có phụ đề nào",
+                "emptyCaptions": "Không có chú thích nào",
+                "upload": "Tải lên",
+                "pendingCaption": "Tệp chú thích mới của bạn đang chờ xuất bản.",
+                "pendingSubtitle": "Tệp phụ đề mới của bạn đang chờ xuất bản.",
+                "deleteCaptionTitle": "Xóa chú thích",
+                "deleteCaptionContent": "Bạn có chắc chắn muốn xóa chú thích này không?",
+                "deleteSubtitleTitle": "Xóa phụ đề",
+                "deleteSubtitleContent": "Bạn có chắc chắn muốn xóa phụ đề này không?"
+            }
+        },
+        "collaborators": {
+            "title": "Thêm cộng tác viên YouTube",
+            "description": "Tính năng cộng tác trên YouTube cho phép tối đa 5 người cộng tác cho mỗi video. Sau khi đăng tải video, hãy sao chép và chia sẻ liên kết mời với người bạn muốn cộng tác.",
+            "noteDescription": "Hiện tại, tính năng xem phân tích dành cho cộng tác viên không khả dụng trong Backstage.",
+            "addVevoCollaborator": "Thêm cộng tác viên YouTube trên Vevo",
+            "oacOnYouTube": "OAC trên YouTube",
+            "addVevoChannel": "Thêm kênh Vevo",
+            "addChannelButton": "Thêm kênh",
+            "vevoChannel": "Kênh Vevo",
+            "officialArtistChannel": "Kênh chính thức của nghệ sĩ",
+            "copyInvite": "Sao chép lời mời",
+            "channelPlaceholder": "ExampleChannelVEVO"
         }
     },
     "artist": {
@@ -1521,6 +1582,24 @@
     },
     "dspSystem": {
         "label": "Hệ thống DSP"
+    },
+    "dspReport": {
+        "label": "Báo cáo DSP",
+        "table": {
+            "no": "STT",
+            "reportName": "Tên báo cáo",
+            "source": "Nguồn",
+            "dsp": "DSP",
+            "ciCode": "Mã CI",
+            "assign": "Gán"
+        },
+        "placeholder": {
+            "selectDsp": "Chọn DSP"
+        },
+        "status": {
+            "assigned": "Đã gán",
+            "unassigned": "Chưa gán"
+        }
     },
     "dsp": {
         "label": "DSP",
@@ -2221,7 +2300,30 @@
             "EXPORT_EXCEL": "Xuất Excel",
             "SEND_EMAIL_EXPORT": "Gửi email",
             "WAITING_EXPORT": "Chờ xuất",
-            "CLEANUP": "Dọn dẹp"
+            "CLEANUP": "Dọn dẹp",
+            "PROCESS_AGG": "Xử lý AGG",
+            "PROCESS_AGG_CI": "Xử lý AGG CI",
+            "IMPORT_CI": "Nhập CI",
+            "EXPORT_CI": "Xuất CI",
+            "CREATE_FOLDER_DONE_CI": "Tạo thư mục done CI",
+            "VALIDATE_QA_CI": "Kiểm tra QA CI",
+            "EXPORT_CI_CI": "Xuất CI CI",
+            "EXPORT_AGG_CI_STATE51": "Xuất AGG CI State51",
+            "WAITING_ADMIN_EXPORT": "Chờ admin xuất",
+            "SEND_EMAIL_STATE51": "Gửi email State51",
+            "SYNC_DATA_DSP_CI": "Đồng bộ dữ liệu DSP CI",
+            "GEN_UPC": "Tạo UPC",
+            "GEN_ISRCS": "Tạo ISRCs",
+            "GEN_ISRC": "Tạo ISRC",
+            "VALIDATE": "Xác thực",
+            "PROCESS_DSPS": "Xử lý DSPs",
+            "PROCESS_DIRECT": "Xử lý trực tiếp",
+            "PROCESS_DIRECT_CHILD": "Xử lý trực tiếp (con)",
+            "SYNC_DATA_PARTNER": "Đồng bộ dữ liệu đối tác",
+            "WAIT_PARTNER_PROCESS": "Chờ đối tác xử lý",
+            "CREATE_METADATA_ON_SERVER": "Tạo metadata trên server",
+            "UPLOAD_METADATA_TO_SFTP": "Tải metadata lên SFTP",
+            "SYNC_RESULT_TO_RELEASE": "Đồng bộ kết quả vào phát hành"
         },
         "action": {
             "markCompleted": "Đánh dấu hoàn thành"

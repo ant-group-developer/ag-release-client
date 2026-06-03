@@ -9,7 +9,6 @@ import AdditionalTab from '@/modules/release-video/components/modal/additional-t
 import DetailsTab from '@/modules/release-video/components/modal/details-tab';
 import DistributionTab from '@/modules/release-video/components/modal/distribution-tab';
 import { RELEASE_VIDEO_TABS } from '@/modules/release-video/enums';
-import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
 import { ReleasesData } from '@/modules/releases/types';
 import { Card, Form, Tabs, TabsProps } from 'antd';
@@ -42,7 +41,7 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
             ? (tabParam as RELEASE_VIDEO_TABS)
             : DEFAULT_RELEASE_VIDEO_TAB;
 
-    const { createReleaseDraft } = useCreateReleaseDraft();
+    // const { createReleaseDraft } = useCreateReleaseDraft();
     const { updateReleaseDraft } = useUpdateReleaseDraft();
     const { distributeRelease, isPending: isDistributingRelease } =
         useDistributeRelease();
@@ -87,7 +86,7 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
             delete payloadValues.cLineOwner;
             if (payloadValues.video) {
                 delete payloadValues.video.isrc;
-                delete payloadValues.video.channel;
+                delete payloadValues.video.title;
                 delete payloadValues.video.description;
                 delete payloadValues.video.copyrightOwner;
                 delete payloadValues.video.partnerCustomId1;
@@ -222,7 +221,7 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
     };
 
     return (
-        <Card bordered={false} className="shadow-sm">
+        <Card variant="borderless" className="shadow-sm">
             <AppForm
                 form={form}
                 showSubmit={isUpdateForm}

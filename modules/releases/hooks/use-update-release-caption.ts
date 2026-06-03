@@ -3,18 +3,21 @@ import { CreateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { releasesApi } from '../apis';
 import { releasesQueryKeys } from '../constants/query-keys';
-import { BulkUpsertCaptionsPayload } from '../types/payload';
+import { UpdateReleaseCaptionPayload } from '../types/payload';
 
-export const useBulkUpsertCaptions = () => {
+export const useUpdateReleaseCaption = () => {
     const queryClient = useQueryClient();
     const { handleError, handleSuccess } = useApiNotify();
 
     const onSuccess = (
         data: any,
-        { onSuccess }: CreateVariables<BulkUpsertCaptionsPayload>
+        { onSuccess }: CreateVariables<UpdateReleaseCaptionPayload>
     ) => {
         queryClient.invalidateQueries({
             queryKey: releasesQueryKeys.details(),
+        });
+        queryClient.invalidateQueries({
+            queryKey: releasesQueryKeys.captions(),
         });
 
         handleSuccess(data?.data);
@@ -23,27 +26,27 @@ export const useBulkUpsertCaptions = () => {
 
     const onError = (
         data: any,
-        { onError }: CreateVariables<BulkUpsertCaptionsPayload>
+        { onError }: CreateVariables<UpdateReleaseCaptionPayload>
     ) => {
         onError?.();
         handleError(data);
     };
 
     const mutation = useMutation({
-        mutationFn: ({ payload }: CreateVariables<BulkUpsertCaptionsPayload>) =>
-            releasesApi.bulkUpsertCaptions(payload),
+        mutationFn: ({ payload }: CreateVariables<UpdateReleaseCaptionPayload>) =>
+            releasesApi.updateReleaseCaption(payload),
         onSuccess,
         onError,
     });
 
-    const bulkUpsertCaptions = (
-        variables: CreateVariables<BulkUpsertCaptionsPayload>
+    const updateReleaseCaption = (
+        variables: CreateVariables<UpdateReleaseCaptionPayload>
     ) => {
         return mutation.mutate(variables);
     };
 
     return {
-        bulkUpsertCaptions,
+        updateReleaseCaption,
         ...mutation,
     };
 };

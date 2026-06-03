@@ -3,17 +3,22 @@ import ArtistSelect from '@/components/ui/select/artist-select';
 import GenresSelect from '@/components/ui/select/genres-select';
 import LabelSelect from '@/components/ui/select/label-select';
 import LanguageSelect from '@/components/ui/select/language-select';
-import AppSwitch from '@/components/ui/switch/status-switch';
 import { MAX_NAME_LENGTH, MAX_NOTE_LENGTH } from '@/constants/validate';
 import { useGetListSimpleArtistRole } from '@/modules/artist-role/hooks/use-get-list-simple-artist-role';
+import ChannelSelect from '@/modules/channels/components/select/channel-select';
 import { useCreateReleaseArtist } from '@/modules/release-artist/hooks/use-create-release-artist';
 import { useDeleteReleaseArtist } from '@/modules/release-artist/hooks/use-delete-release-artist';
 import { useCreateReleaseContributor } from '@/modules/release-contributor/hooks/use-create-release-contributor';
 import { useDeleteReleaseContributor } from '@/modules/release-contributor/hooks/use-delete-release-contributor';
-import { RELEASE_AI_CONTENT } from '@/modules/releases/enums';
+import {
+    RELEASE_AI_CONTENT,
+    RELEASE_MADE_FOR_KIDS,
+} from '@/modules/releases/enums';
 import { ReleasesData } from '@/modules/releases/types';
-import { Col, FormInstance, Input, Row, Select } from 'antd';
+import { Button, Col, FormInstance, Input, Row, Select } from 'antd';
 import { useTranslations } from 'next-intl';
+import { useState } from 'react';
+import ManageCollaboratorsModal from './manage-collaborators-modal';
 
 interface MetadataFieldsProps {
     dataEdit?: ReleasesData;
@@ -21,8 +26,14 @@ interface MetadataFieldsProps {
     form: FormInstance;
 }
 
-export default function MetadataFields({ dataEdit, onFieldUpdate, form }: MetadataFieldsProps) {
+export default function MetadataFields({
+    dataEdit,
+    onFieldUpdate,
+    form,
+}: MetadataFieldsProps) {
     const messages = useTranslations();
+    const [isManageCollaboratorsOpen, setIsManageCollaboratorsOpen] =
+        useState(false);
     const { createReleaseArtist } = useCreateReleaseArtist();
     const { deleteReleaseArtist } = useDeleteReleaseArtist();
     const { createReleaseContributor } = useCreateReleaseContributor();
@@ -319,32 +330,9 @@ export default function MetadataFields({ dataEdit, onFieldUpdate, form }: Metada
                 </Col>
             </Row>
 
-            {/* Channel & Label */}
+            {/* Label */}
             <Row gutter={16}>
-                <Col span={12}>
-                    <AppFormItem
-                        name={['video', 'channel']}
-                        label={messages('releaseVideo.fields.channel')}
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.input'),
-                            },
-                        ]}
-                    >
-                        <Input
-                            placeholder={messages('releaseVideo.fields.channel')}
-                            allowClear
-                            onBlur={() =>
-                                onFieldUpdate?.({
-                                    video: form.getFieldValue('video'),
-                                })
-                            }
-                        />
-                    </AppFormItem>
-                </Col>
-                <Col span={12}>
+                <Col span={24}>
                     <AppFormItem
                         name="labelId"
                         label={messages('formFields.labelId')}
@@ -360,6 +348,46 @@ export default function MetadataFields({ dataEdit, onFieldUpdate, form }: Metada
                             placeholder={messages('common.select')}
                             allowClear
                         />
+                    </AppFormItem>
+                </Col>
+            </Row>
+
+            {/* YouTube Subheader */}
+            <div className="mb-4 mt-6 border-b border-gray-100 pb-2 text-base font-bold tracking-wide text-gray-800">
+                YouTube
+            </div>
+
+            <Row gutter={16} align="bottom" className="mb-4">
+                <Col span={18}>
+                    <AppFormItem
+                        name={['video', 'channelId']}
+                        label={messages('releaseVideo.fields.channel')}
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.select'),
+                            },
+                        ]}
+                        className="mb-0"
+                    >
+                        <ChannelSelect
+                            placeholder={messages(
+                                'releaseVideo.fields.channel'
+                            )}
+                            allowClear
+                        />
+                    </AppFormItem>
+                </Col>
+                <Col span={6}>
+                    <AppFormItem label={''}>
+                        <Button
+                            shape="round"
+                            onClick={() => setIsManageCollaboratorsOpen(true)}
+                            className="font-semibold"
+                        >
+                            {messages('releaseVideo.fields.manageCollaborators')}
+                        </Button>
                     </AppFormItem>
                 </Col>
             </Row>
@@ -408,19 +436,42 @@ export default function MetadataFields({ dataEdit, onFieldUpdate, form }: Metada
                 />
             </AppFormItem>
 
-            {/* Is Made For Kids (Full Width Switch) */}
-            <div className="mt-4 flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50/50 p-3">
-                <span className="text-sm font-medium text-gray-600">
-                    {messages('releaseVideo.fields.isMadeForKids')}
-                </span>
-                <AppFormItem
-                    name={['video', 'isKids']}
-                    valuePropName="checked"
-                    noStyle
-                >
-                    <AppSwitch />
-                </AppFormItem>
-            </div>
+            {/* Is Made For Kids */}
+            <AppFormItem
+                name={['video', 'madeForKids']}
+                label={messages('releaseVideo.fields.isMadeForKids')}
+            >
+                <Select
+                    placeholder={messages('common.select')}
+                    allowClear
+                    options={[
+                        {
+                            value: RELEASE_MADE_FOR_KIDS.NO,
+                            label: messages('common.no'),
+                        },
+                        {
+                            value: RELEASE_MADE_FOR_KIDS.YES,
+                            label: messages('common.yes'),
+                        },
+                        {
+                            value: RELEASE_MADE_FOR_KIDS.CHANNEL_DEFAULT,
+                            label: messages(
+                                'releaseVideo.fields.channelDefault'
+                            ),
+                        },
+                    ]}
+                    onBlur={() =>
+                        onFieldUpdate?.({
+                            video: form.getFieldValue('video'),
+                        })
+                    }
+                />
+            </AppFormItem>
+
+            <ManageCollaboratorsModal
+                isOpen={isManageCollaboratorsOpen}
+                onClose={() => setIsManageCollaboratorsOpen(false)}
+            />
         </>
     );
 }

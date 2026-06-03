@@ -38,7 +38,11 @@ export default function ReleaseSubmitStepTable({
             dataIndex: 'type',
             key: 'type',
             width: 220,
-            render: (value) => formatEnumLabel(value),
+            render: (value, record) => {
+                return messages(
+                    `releaseExecution.stepTypeOptions.${record?.type}`
+                );
+            },
         },
         {
             title: 'DSP',
@@ -79,7 +83,8 @@ export default function ReleaseSubmitStepTable({
                                         src={dsp?.picture}
                                         size="small"
                                         style={{
-                                            backgroundColor: token.colorBgLayout,
+                                            backgroundColor:
+                                                token.colorBgLayout,
                                             color: token.colorText,
                                         }}
                                     >

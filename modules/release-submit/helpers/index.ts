@@ -9,15 +9,17 @@ import {
 export const getReleaseSubmitStatusColor = (status?: RELEASE_SUBMIT_STATUS) => {
     switch (status) {
         case RELEASE_SUBMIT_STATUS.DONE:
-            return 'success';
+            return 'green';
         case RELEASE_SUBMIT_STATUS.WAITING_ACTION:
-            return 'warning';
+            return 'blue';
         case RELEASE_SUBMIT_STATUS.CANCELLED:
+            return 'magenta';
         case RELEASE_SUBMIT_STATUS.FAILED:
-            return 'error';
+            return 'red';
         case RELEASE_SUBMIT_STATUS.PROCESSING:
-            return 'processing';
+            return 'blue';
         case RELEASE_SUBMIT_STATUS.NEW:
+            return 'geekblue';
         case RELEASE_SUBMIT_STATUS.PARTIAL_DONE:
             return 'lime';
         default:
@@ -28,13 +30,13 @@ export const getReleaseSubmitStatusColor = (status?: RELEASE_SUBMIT_STATUS) => {
 export const getReleaseSubmitTypeColor = (type?: RELEASE_SUBMIT_TYPE) => {
     switch (type) {
         case RELEASE_SUBMIT_TYPE.INITIAL_RELEASE:
-            return 'green';
-        case RELEASE_SUBMIT_TYPE.UPDATE:
             return 'blue';
-        case RELEASE_SUBMIT_TYPE.TAKEDOWN:
+        case RELEASE_SUBMIT_TYPE.UPDATE:
             return 'orange';
+        case RELEASE_SUBMIT_TYPE.TAKEDOWN:
+            return 'magenta';
         case RELEASE_SUBMIT_TYPE.RETRY:
-            return 'purple';
+            return 'orange';
         default:
             return 'default';
     }

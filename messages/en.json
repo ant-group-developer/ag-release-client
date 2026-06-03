@@ -387,7 +387,6 @@
         "decreaseComparePercent": "Decrease {value}% compare to previous time",
         "exportStatisticOrder": "Export statistic order"
     },
-
     "product": {
         "label": "Product",
         "productManagement": "Product management",
@@ -407,7 +406,6 @@
         "groupUserAssignee": "Group user assignee",
         "statisticsByDepartment": "Product statistic by department"
     },
-
     "video": {
         "label": "Video",
         "thumbnail": "Thumbnail",
@@ -429,7 +427,6 @@
         "encoding": "Video Encoding",
         "tag": "Tags"
     },
-
     "dashboard": {
         "label": "Dashboard",
         "latestNews": "Latest news",
@@ -451,7 +448,6 @@
             "notAuthorizedToRate": "Not authorized to rate"
         }
     },
-
     "image": {
         "label": "Image",
         "dimensions": "Dimensions",
@@ -528,9 +524,19 @@
         }
     },
     "channel": {
-        "code": "Channel code",
+        "add": "Add channel",
         "label": "Channel",
-        "name": "Channel name"
+        "name": "Channel name",
+        "message": {
+            "success": {
+                "create": "Add new channel successfully",
+                "update": "Update channel successfully",
+                "delete": "Delete channel successfully"
+            },
+            "error": {
+                "duplicateNameChannel": "This channel name already exists"
+            }
+        }
     },
     "system": {
         "label": "System",
@@ -799,19 +805,16 @@
             "updateSuccessfully": "Update successfully!"
         }
     },
-
     "select": {
         "date": "Select date",
         "approver": "Select approver",
         "option": "Please select options"
     },
-
     "theme": {
         "dark": "Dark",
         "light": "Light",
         "system": "System"
     },
-
     "release": {
         "takeDown": "Take down",
         "takeDownConfirmTitle": "Take down release?",
@@ -881,7 +884,6 @@
                 "releaseNotFound": "Release id not found"
             }
         },
-
         "placeholder": {
             "selectArtist": "Select artist",
             "selectSubArtist": "Select sub artist",
@@ -899,18 +901,15 @@
             "selectTrack": "Select track",
             "enterTitleAndReleaseType": "Enter release name, label and release type to continue"
         },
-
         "validation": {
             "mustHaveMainArtist": "Release must have a main artist"
         },
-
         "scheduling": {
             "label": "Scheduling",
             "atMidnightInEveryCountry": "At midnight in every country around the world",
             "atSpecificTime": "At a specific time in a specific time zone",
             "goLiveTime": "What time would you like it to go live"
         },
-
         "coverArt": {
             "label": "Cover art",
             "required": "Required cover art",
@@ -961,7 +960,6 @@
             "failed": "Failed"
         }
     },
-
     "releaseDsp": {
         "status": {
             "draft": "Draft",
@@ -972,7 +970,6 @@
             "taken_down": "Taken down"
         }
     },
-
     "releaseArtist": {
         "label": "Release artists",
         "message": {
@@ -986,7 +983,6 @@
             }
         }
     },
-
     "releaseContributor": {
         "message": {
             "error": {
@@ -994,11 +990,9 @@
             }
         }
     },
-
     "releaseType": {
         "label": "Release type"
     },
-
     "albumFormat": {
         "message": {
             "success": {
@@ -1014,7 +1008,6 @@
             }
         }
     },
-
     "track": {
         "parentalAdvisoryNotice": "Parental advisory notice",
         "list": "Track list",
@@ -1101,7 +1094,6 @@
             "sampleRate44100Or48000": "SampleRate must be 44100Hz or 48000Hz",
             "invalidAudioCombination": "Audio specifications must be 16bit - 44100Hz or 24bit - 48000Hz"
         },
-
         "acrCloud": {
             "compareResult": "Select results to compare"
         },
@@ -1116,7 +1108,6 @@
             }
         }
     },
-
     "trackArtist": {
         "message": {
             "success": {
@@ -1130,7 +1121,6 @@
             }
         }
     },
-
     "trackType": {
         "label": "Track type",
         "description": "Designates the track as a musical or non-musical work.",
@@ -1147,7 +1137,6 @@
             }
         }
     },
-
     "trackOriginType": {
         "label": "Track original",
         "value": "Value",
@@ -1164,7 +1153,6 @@
             }
         }
     },
-
     "trackSensitive": {
         "label": "Sensitive Content",
         "explicitContentEdited": "Explicit Content (edited)",
@@ -1186,7 +1174,6 @@
             }
         }
     },
-
     "genres": {
         "name": "Genre name",
         "pop": "Pop",
@@ -1277,7 +1264,10 @@
             "thumbnailNotUploaded": "Thumbnail has not been uploaded",
             "captionsAndSubtitles": "Captions and subtitles",
             "manage": "Manage",
-            "captionFilesSummary": "{captionCount} caption files. {subtitleCount} subtitle files."
+            "captionFilesSummary": "{captionCount} caption files. {subtitleCount} subtitle files.",
+            "channelDefault": "Channel Default",
+            "collaboratingChannels": "Collaborating channels",
+            "manageCollaborators": "Manage collaborators"
         },
         "tabs": {
             "details": "Details",
@@ -1296,6 +1286,54 @@
             "audio": "Audio specs: Stereo, 48kHz, 320kbps or higher",
             "size": "Max File Size: 5 GB",
             "tip": "Tip: Maintain the best video and audio quality to optimize distribution across all delivery channels."
+        },
+        "captions": {
+            "title": "Captions and subtitles",
+            "description": "Captions are in the video's language of performance.",
+            "descriptionSubtitle": "Subtitles are in languages other than the audio language of the video.",
+            "tabs": {
+                "captions": "Captions",
+                "subtitles": "Subtitles"
+            },
+            "uploadModal": {
+                "titleEdit": "Edit {type} file",
+                "titleUpload": "Upload {type} file",
+                "caption": "caption",
+                "subtitle": "subtitle",
+                "description": "Only one {type} file is allowed and must be in the language of the video.",
+                "selectFile": "Select file (.ttml or .srt)",
+                "fileRequired": "Please select a file",
+                "language": "Language",
+                "languageRequired": "Please select a language",
+                "select": "Select..."
+            },
+            "table": {
+                "language": "Language",
+                "file": "File",
+                "actions": "Actions",
+                "emptySubtitles": "No subtitles available",
+                "emptyCaptions": "No captions available",
+                "upload": "Upload",
+                "pendingCaption": "Your new caption file is pending publish.",
+                "pendingSubtitle": "Your new subtitle file is pending publish.",
+                "deleteCaptionTitle": "Delete caption",
+                "deleteCaptionContent": "Are you sure you want to delete this caption?",
+                "deleteSubtitleTitle": "Delete subtitle",
+                "deleteSubtitleContent": "Are you sure you want to delete this subtitle?"
+            }
+        },
+        "collaborators": {
+            "title": "Add YouTube collaborators",
+            "description": "The YouTube collaboration feature allows a maximum of 5 collaborators per video. After uploading the video, copy and share the invitation link with the person you want to collaborate with.",
+            "noteDescription": "Currently, the analytics view feature for collaborators is not available in Backstage.",
+            "addVevoCollaborator": "Add YouTube collaborator on Vevo",
+            "oacOnYouTube": "OAC on YouTube",
+            "addVevoChannel": "Add Vevo channel",
+            "addChannelButton": "Add channel",
+            "vevoChannel": "Vevo channel",
+            "officialArtistChannel": "Official artist channel",
+            "copyInvite": "Copy invitation",
+            "channelPlaceholder": "ExampleChannelVEVO"
         }
     },
     "artist": {
@@ -1337,14 +1375,12 @@
             }
         }
     },
-
     "role": {
         "roles": "Roles",
         "add": "Add role artist",
         "update": "Update role",
         "name": "Role name"
     },
-
     "label": {
         "labels": "Labels",
         "label": "Label",
@@ -1364,7 +1400,6 @@
             }
         }
     },
-
     "distribution": {
         "label": "Distribution",
         "create": "Create distribution",
@@ -1378,7 +1413,6 @@
         "lastDelivered": "Last Delivered",
         "inactiveDsp": "This DSP is locked, cannot be distributed"
     },
-
     "formFields": {
         "contributorsMustIncludeProducer": "Contributors must include producer",
         "contributorsMustIncludeComposer": "Contributors must include composer",
@@ -1531,7 +1565,6 @@
             "noLinguisticContentHasLyricist": "Release with no audio language cannot have a \"contributor\" with the role of \"lyricist\""
         }
     },
-
     "distribute": {
         "label": "Distribute",
         "create": "Create distribute",
@@ -1542,18 +1575,33 @@
         "wordWide": "Distribute worldwide",
         "confirmDistribute": "Are you sure you want to distribute on this platform?"
     },
-
     "takeDown": {
         "label": "Take down from platform",
         "confirmTakeDown": "Are you sure you want to take down from this platform?"
     },
-
     "emailSender": {
         "label": "Email sender"
     },
-
     "dspSystem": {
         "label": "DSP system"
+    },
+    "dspReport": {
+        "label": "DSP reports",
+        "table": {
+            "no": "No.",
+            "reportName": "Report name",
+            "source": "Source",
+            "dsp": "DSP",
+            "ciCode": "CI code",
+            "assign": "Assign"
+        },
+        "placeholder": {
+            "selectDsp": "Select DSP"
+        },
+        "status": {
+            "assigned": "Assigned",
+            "unassigned": "Unassigned"
+        }
     },
     "dsp": {
         "label": "DSP",
@@ -1580,7 +1628,6 @@
             }
         }
     },
-
     "artistRole": {
         "message": {
             "success": {
@@ -1596,7 +1643,6 @@
             }
         }
     },
-
     "timezone": {
         "label": "Timezone",
         "create": "Create timezone",
@@ -1619,7 +1665,6 @@
             "selectTimezone": "Select timezone"
         }
     },
-
     "tooltipForm": {
         "releaseTitle": "Do not include version information like Remix or Uncut in the main Title field. Use the Version field instead.",
         "version": "A particular iteration of the product that will be delivered to stores and displayed alongside the title. Example: 'Live' , 'Deluxe Version'. If multiple versions of an album exist, use this field to indicate the correct version.",
@@ -1639,7 +1684,6 @@
         "countryLanguage": "The official language of the country related to this release. For example: Vietnam, United States, etc.",
         "isMoreThan4Artists": "Select 'Yes' if this release has 5 or more artists to display as 'Various artists'."
     },
-
     "tenant": {
         "label": "Workspace",
         "selectTitle": "Select Workspace",
@@ -1707,7 +1751,6 @@
             }
         }
     },
-
     "integration": {
         "label": "Integrations",
         "deal": {
@@ -1727,7 +1770,6 @@
             }
         }
     },
-
     "action": {
         "create": {
             "button": "Create",
@@ -1761,7 +1803,6 @@
         },
         "quickActions": "Quick actions"
     },
-
     "permission": {
         "label": "Permission",
         "name": "Permission name",
@@ -1796,7 +1837,6 @@
             "delete": "Delete permission"
         }
     },
-
     "roles": {
         "label": "Role",
         "name": "Role name",
@@ -1818,7 +1858,6 @@
             "delete": "Delete role"
         }
     },
-
     "actions": {
         "label": "Actions",
         "name": "Action name",
@@ -1838,7 +1877,6 @@
             "delete": "Delete action"
         }
     },
-
     "policy": {
         "policies": "Policies",
         "label": "Policy",
@@ -1847,7 +1885,6 @@
             "delete": "Delete policy"
         }
     },
-
     "currencies": {
         "currencies": "Currencies",
         "label": "Currency",
@@ -1882,7 +1919,6 @@
             }
         }
     },
-
     "price": {
         "label": "Price",
         "prices": "Prices",
@@ -1896,7 +1932,6 @@
             "delete": "Delete price"
         }
     },
-
     "priceTier": {
         "canDeactivateOnlyWhenNotDefault": "You can only deactivate when it is not the default value",
         "message": {
@@ -1911,7 +1946,6 @@
             }
         }
     },
-
     "weekDays": {
         "monday": "Monday",
         "tuesday": "Tuesday",
@@ -1921,20 +1955,17 @@
         "saturday": "Saturday",
         "sunday": "Sunday"
     },
-
     "scanStatus": {
         "unScanned": "UnScanned",
         "finished": "No violations",
         "warning": "Warning",
         "rejected": "Rejected"
     },
-
     "backupLog": {
         "success": {
             "startedPleaseWait": "Backup has started, please wait..."
         }
     },
-
     "analytics": {
         "label": "Analytics",
         "name": "Analytics name",
@@ -1945,7 +1976,6 @@
             "title": "Analytics charts"
         }
     },
-
     "issue": {
         "label": "Issue",
         "name": "Name issue",
@@ -1965,7 +1995,6 @@
             }
         }
     },
-
     "issueLevel": {
         "label": "Issue level",
         "name": "Name issue level",
@@ -1986,11 +2015,9 @@
             }
         }
     },
-
     "issueCategory": {
         "label": "Issue category"
     },
-
     "tenantIssue": {
         "label": "Workspace issue",
         "message": {
@@ -2007,7 +2034,6 @@
             }
         }
     },
-
     "tenantTier": {
         "label": "Workspace tier",
         "name": "Workspace tier name",
@@ -2025,7 +2051,6 @@
             }
         }
     },
-
     "newsCategory": {
         "label": "News category",
         "name": "Category name",
@@ -2044,14 +2069,12 @@
             }
         }
     },
-
     "news": {
         "label": "News",
         "name": "News title",
         "addTranslate": "Add translate",
         "updateTranslate": "Update translate"
     },
-
     "newsPost": {
         "label": "News post",
         "latest": "Latest news",
@@ -2072,7 +2095,6 @@
             }
         }
     },
-
     "newsPostTranslation": {
         "label": "News post translation",
         "message": {
@@ -2125,7 +2147,6 @@
             }
         }
     },
-
     "tenantIntegration": {
         "message": {
             "success": {
@@ -2139,12 +2160,10 @@
             }
         }
     },
-
     "dealType": {
         "label": "Deal type",
         "requiredConnection": "Required connection"
     },
-
     "dspRoutingConfig": {
         "message": {
             "success": {
@@ -2160,22 +2179,18 @@
             }
         }
     },
-
     "connection": {
         "success": "Connection successful",
         "failure": "Connection failed",
         "test": "Test connection"
     },
-
     "sftp": {
         "requiredSftpInfo": "Please enter all required SFTP information",
         "requiredPasswordOrPrivateKey": "Please enter password or private key"
     },
-
     "batchImport": {
         "label": "Batch import"
     },
-
     "releaseLog": {
         "label": "Release logs",
         "statusRelease": "Release status",
@@ -2287,7 +2302,30 @@
             "EXPORT_EXCEL": "Export Excel",
             "SEND_EMAIL_EXPORT": "Send email",
             "WAITING_EXPORT": "Waiting export",
-            "CLEANUP": "Cleanup"
+            "CLEANUP": "Cleanup",
+            "PROCESS_AGG": "Process AGG",
+            "PROCESS_AGG_CI": "Process AGG CI",
+            "IMPORT_CI": "Import CI",
+            "EXPORT_CI": "Export CI",
+            "CREATE_FOLDER_DONE_CI": "Create folder done CI",
+            "VALIDATE_QA_CI": "Validate QA CI",
+            "EXPORT_CI_CI": "Export CI CI",
+            "EXPORT_AGG_CI_STATE51": "Export AGG CI State51",
+            "WAITING_ADMIN_EXPORT": "Waiting admin export",
+            "SEND_EMAIL_STATE51": "Send email State51",
+            "SYNC_DATA_DSP_CI": "Sync data DSP CI",
+            "GEN_UPC": "Generate UPC",
+            "GEN_ISRCS": "Generate ISRCs",
+            "GEN_ISRC": "Generate ISRC",
+            "VALIDATE": "Validate",
+            "PROCESS_DSPS": "Process DSPs",
+            "PROCESS_DIRECT": "Process direct",
+            "PROCESS_DIRECT_CHILD": "Process direct child",
+            "SYNC_DATA_PARTNER": "Sync data partner",
+            "WAIT_PARTNER_PROCESS": "Wait partner process",
+            "CREATE_METADATA_ON_SERVER": "Create metadata on server",
+            "UPLOAD_METADATA_TO_SFTP": "Upload metadata to SFTP",
+            "SYNC_RESULT_TO_RELEASE": "Sync result to release"
         },
         "action": {
             "markCompleted": "Mark completed"

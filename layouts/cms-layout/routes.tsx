@@ -307,6 +307,7 @@ export const adminRoutes: RouteNode[] = [
                 icon: Server,
                 required: { permission: [PERMISSION.DSP.READ] },
             },
+
             // {
             //     id: 'dsp-tenant',
             //     type: 'link',
@@ -474,6 +475,7 @@ export const adminRoutes: RouteNode[] = [
                 icon: Mail,
                 required: SYS_ADMIN_REQ,
             },
+
             {
                 id: 'batch-import',
                 type: 'link',
@@ -517,6 +519,15 @@ export const adminRoutes: RouteNode[] = [
                 title: 'Distribution Jobs',
                 href: APP_ROUTES.DISTRIBUTION_JOBS,
                 icon: ClipboardList,
+                required: SYS_ADMIN_REQ,
+            },
+            {
+                id: 'dsp-report',
+                type: 'link',
+                label: 'dspReport.label',
+                title: 'DSP Reports',
+                href: APP_ROUTES.DSP_REPORT,
+                icon: ScrollText,
                 required: SYS_ADMIN_REQ,
             },
             {
@@ -635,6 +646,15 @@ export const adminRoutes: RouteNode[] = [
                         title: 'Languages',
                         href: APP_ROUTES.LANGUAGES,
                         icon: Globe,
+                        required: SYS_ADMIN_REQ,
+                    },
+                    {
+                        id: 'channels',
+                        type: 'link',
+                        label: 'channel.label',
+                        title: 'Channels',
+                        href: APP_ROUTES.CHANNELS,
+                        icon: Video,
                         required: SYS_ADMIN_REQ,
                     },
                     {
