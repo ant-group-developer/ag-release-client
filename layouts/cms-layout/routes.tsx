@@ -653,6 +653,15 @@ export const adminRoutes: RouteNode[] = [
                         required: SYS_ADMIN_REQ,
                     },
                     {
+                        id: 'channels',
+                        type: 'link',
+                        label: 'channel.label',
+                        title: 'Channels',
+                        href: APP_ROUTES.CHANNELS,
+                        icon: Video,
+                        required: SYS_ADMIN_REQ,
+                    },
+                    {
                         id: 'countries',
                         type: 'link',
                         label: 'country.label',

@@ -520,9 +520,19 @@
         }
     },
     "channel": {
-        "code": "Channel code",
+        "add": "Add channel",
         "label": "Channel",
-        "name": "Channel name"
+        "name": "Channel name",
+        "message": {
+            "success": {
+                "create": "Add new channel successfully",
+                "update": "Update channel successfully",
+                "delete": "Delete channel successfully"
+            },
+            "error": {
+                "duplicateNameChannel": "This channel name already exists"
+            }
+        }
     },
     "system": {
         "label": "System",

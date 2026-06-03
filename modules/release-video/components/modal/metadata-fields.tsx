@@ -5,6 +5,7 @@ import LabelSelect from '@/components/ui/select/label-select';
 import LanguageSelect from '@/components/ui/select/language-select';
 import { MAX_NAME_LENGTH, MAX_NOTE_LENGTH } from '@/constants/validate';
 import { useGetListSimpleArtistRole } from '@/modules/artist-role/hooks/use-get-list-simple-artist-role';
+import ChannelSelect from '@/modules/channels/components/select/channel-select';
 import { useCreateReleaseArtist } from '@/modules/release-artist/hooks/use-create-release-artist';
 import { useDeleteReleaseArtist } from '@/modules/release-artist/hooks/use-delete-release-artist';
 import { useCreateReleaseContributor } from '@/modules/release-contributor/hooks/use-create-release-contributor';
@@ -354,24 +355,19 @@ export default function MetadataFields({
 
             {/* Channel (Full Width) */}
             <AppFormItem
-                name={['video', 'channel']}
+                name={['video', 'channelId']}
                 label={messages('releaseVideo.fields.channel')}
                 required
                 rules={[
                     {
                         required: true,
-                        message: messages('validation.input'),
+                        message: messages('validation.select'),
                     },
                 ]}
             >
-                <Input
+                <ChannelSelect
                     placeholder={messages('releaseVideo.fields.channel')}
                     allowClear
-                    onBlur={() =>
-                        onFieldUpdate?.({
-                            video: form.getFieldValue('video'),
-                        })
-                    }
                 />
             </AppFormItem>
 

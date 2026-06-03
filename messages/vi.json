@@ -516,9 +516,19 @@
         }
     },
     "channel": {
-        "code": "Mã kênh",
+        "add": "Thêm kênh",
         "label": "Kênh",
-        "name": "Tên kênh"
+        "name": "Tên kênh",
+        "message": {
+            "success": {
+                "create": "Thêm mới kênh thành công",
+                "update": "Cập nhật kênh thành công",
+                "delete": "Xoá kênh thành công"
+            },
+            "error": {
+                "duplicateNameChannel": "Tên kênh đã tồn tại"
+            }
+        }
     },
     "system": {
         "label": "Hệ thống",

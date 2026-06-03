@@ -87,7 +87,6 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
             if (payloadValues.video) {
                 delete payloadValues.video.isrc;
                 delete payloadValues.video.title;
-                delete payloadValues.video.channel;
                 delete payloadValues.video.description;
                 delete payloadValues.video.copyrightOwner;
                 delete payloadValues.video.partnerCustomId1;

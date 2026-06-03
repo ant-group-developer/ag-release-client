@@ -23,6 +23,7 @@ export enum APP_ROUTES {
     ARTISTS = '/artists',
     ARTIST_DETAIL = '/artists/*',
     DISTRIBUTION = '/distribution',
+    CHANNELS = '/channels',
     LANGUAGES = '/languages',
     COUNTRIES = '/countries',
     GENRES = '/genres',
