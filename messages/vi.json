@@ -1259,7 +1259,9 @@
             "captionsAndSubtitles": "Phụ đề",
             "manage": "Quản lý",
             "captionFilesSummary": "{captionCount} tệp chú thích. {subtitleCount} tệp phụ đề.",
-            "channelDefault": "Mặc định của kênh"
+            "channelDefault": "Mặc định của kênh",
+            "collaboratingChannels": "Kênh cộng tác",
+            "manageCollaborators": "Quản lý cộng tác viên"
         },
         "tabs": {
             "details": "Chi tiết",
@@ -1313,6 +1315,19 @@
                 "deleteSubtitleTitle": "Xóa phụ đề",
                 "deleteSubtitleContent": "Bạn có chắc chắn muốn xóa phụ đề này không?"
             }
+        },
+        "collaborators": {
+            "title": "Thêm cộng tác viên YouTube",
+            "description": "Tính năng cộng tác trên YouTube cho phép tối đa 5 người cộng tác cho mỗi video. Sau khi đăng tải video, hãy sao chép và chia sẻ liên kết mời với người bạn muốn cộng tác.",
+            "noteDescription": "Hiện tại, tính năng xem phân tích dành cho cộng tác viên không khả dụng trong Backstage.",
+            "addVevoCollaborator": "Thêm cộng tác viên YouTube trên Vevo",
+            "oacOnYouTube": "OAC trên YouTube",
+            "addVevoChannel": "Thêm kênh Vevo",
+            "addChannelButton": "Thêm kênh",
+            "vevoChannel": "Kênh Vevo",
+            "officialArtistChannel": "Kênh chính thức của nghệ sĩ",
+            "copyInvite": "Sao chép lời mời",
+            "channelPlaceholder": "ExampleChannelVEVO"
         }
     },
     "artist": {

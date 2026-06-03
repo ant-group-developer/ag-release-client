@@ -15,8 +15,10 @@ import {
     RELEASE_MADE_FOR_KIDS,
 } from '@/modules/releases/enums';
 import { ReleasesData } from '@/modules/releases/types';
-import { Col, FormInstance, Input, Row, Select } from 'antd';
+import { Button, Col, FormInstance, Input, Row, Select } from 'antd';
 import { useTranslations } from 'next-intl';
+import { useState } from 'react';
+import ManageCollaboratorsModal from './manage-collaborators-modal';
 
 interface MetadataFieldsProps {
     dataEdit?: ReleasesData;
@@ -30,6 +32,8 @@ export default function MetadataFields({
     form,
 }: MetadataFieldsProps) {
     const messages = useTranslations();
+    const [isManageCollaboratorsOpen, setIsManageCollaboratorsOpen] =
+        useState(false);
     const { createReleaseArtist } = useCreateReleaseArtist();
     const { deleteReleaseArtist } = useDeleteReleaseArtist();
     const { createReleaseContributor } = useCreateReleaseContributor();
@@ -353,23 +357,40 @@ export default function MetadataFields({
                 YouTube
             </div>
 
-            {/* Channel (Full Width) */}
-            <AppFormItem
-                name={['video', 'channelId']}
-                label={messages('releaseVideo.fields.channel')}
-                required
-                rules={[
-                    {
-                        required: true,
-                        message: messages('validation.select'),
-                    },
-                ]}
-            >
-                <ChannelSelect
-                    placeholder={messages('releaseVideo.fields.channel')}
-                    allowClear
-                />
-            </AppFormItem>
+            <Row gutter={16} align="bottom" className="mb-4">
+                <Col span={18}>
+                    <AppFormItem
+                        name={['video', 'channelId']}
+                        label={messages('releaseVideo.fields.channel')}
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.select'),
+                            },
+                        ]}
+                        className="mb-0"
+                    >
+                        <ChannelSelect
+                            placeholder={messages(
+                                'releaseVideo.fields.channel'
+                            )}
+                            allowClear
+                        />
+                    </AppFormItem>
+                </Col>
+                <Col span={6}>
+                    <AppFormItem label={''}>
+                        <Button
+                            shape="round"
+                            onClick={() => setIsManageCollaboratorsOpen(true)}
+                            className="font-semibold"
+                        >
+                            {messages('releaseVideo.fields.manageCollaborators')}
+                        </Button>
+                    </AppFormItem>
+                </Col>
+            </Row>
 
             {/* Keywords (Full Width) */}
             <AppFormItem
@@ -446,6 +467,11 @@ export default function MetadataFields({
                     }
                 />
             </AppFormItem>
+
+            <ManageCollaboratorsModal
+                isOpen={isManageCollaboratorsOpen}
+                onClose={() => setIsManageCollaboratorsOpen(false)}
+            />
         </>
     );
 }

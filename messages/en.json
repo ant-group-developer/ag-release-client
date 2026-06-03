@@ -1261,7 +1261,9 @@
             "captionsAndSubtitles": "Captions and subtitles",
             "manage": "Manage",
             "captionFilesSummary": "{captionCount} caption files. {subtitleCount} subtitle files.",
-            "channelDefault": "Channel Default"
+            "channelDefault": "Channel Default",
+            "collaboratingChannels": "Collaborating channels",
+            "manageCollaborators": "Manage collaborators"
         },
         "tabs": {
             "details": "Details",
@@ -1315,6 +1317,19 @@
                 "deleteSubtitleTitle": "Delete subtitle",
                 "deleteSubtitleContent": "Are you sure you want to delete this subtitle?"
             }
+        },
+        "collaborators": {
+            "title": "Add YouTube collaborators",
+            "description": "The YouTube collaboration feature allows a maximum of 5 collaborators per video. After uploading the video, copy and share the invitation link with the person you want to collaborate with.",
+            "noteDescription": "Currently, the analytics view feature for collaborators is not available in Backstage.",
+            "addVevoCollaborator": "Add YouTube collaborator on Vevo",
+            "oacOnYouTube": "OAC on YouTube",
+            "addVevoChannel": "Add Vevo channel",
+            "addChannelButton": "Add channel",
+            "vevoChannel": "Vevo channel",
+            "officialArtistChannel": "Official artist channel",
+            "copyInvite": "Copy invitation",
+            "channelPlaceholder": "ExampleChannelVEVO"
         }
     },
     "artist": {
