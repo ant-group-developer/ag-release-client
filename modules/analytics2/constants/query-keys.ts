@@ -4,6 +4,10 @@ export const analytics2QueryKeys = {
     all: ['analytics2'] as const,
     dspTimeline: (params: DspTimelineParams) =>
         [...analytics2QueryKeys.all, 'dsp-timeline', params] as const,
+    dspSalesTimeline: (params: DspTimelineParams) =>
+        [...analytics2QueryKeys.all, 'dsp-sales-timeline', params] as const,
+    dspDailyTimeline: (params: DspTimelineParams) =>
+        [...analytics2QueryKeys.all, 'dsp-daily-timeline', params] as const,
     trackRanking: (params: RankingParams) =>
         [...analytics2QueryKeys.all, 'track-ranking', params] as const,
     releaseRanking: (params: RankingParams) =>

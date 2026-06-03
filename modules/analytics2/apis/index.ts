@@ -2,6 +2,7 @@ import axiosInstance from '@/api/axios-auth';
 import { DetailResponse } from '@/types/api';
 import {
     DspTimelineData,
+    DspSalesTimelineData,
     DspTimelineParams,
     RankingParams,
     TrackRankingItem,
@@ -18,6 +19,18 @@ export const analytics2Apis = {
     getDspTimeline: (params: DspTimelineParams) => {
         return axiosInstance.post<DetailResponse<DspTimelineData>>(
             '/analytics/trend-view/dsp/timeline',
+            params
+        );
+    },
+    getDspSalesTimeline: (params: DspTimelineParams) => {
+        return axiosInstance.post<DetailResponse<DspSalesTimelineData>>(
+            '/analytics/sales-view/dsp/timeline',
+            params
+        );
+    },
+    getDspDailyTimeline: (params: DspTimelineParams) => {
+        return axiosInstance.post<DetailResponse<DspTimelineData>>(
+            '/analytics/trend-view/dsp/timeline/daily',
             params
         );
     },
