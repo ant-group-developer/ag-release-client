@@ -1942,7 +1942,15 @@
             "delete": "Delete analytics"
         },
         "chart": {
-            "title": "Analytics charts"
+            "title": "Monthly views by DSP",
+            "trends": "Trends",
+            "sales": "Sales"
+        },
+        "dailyChart": {
+            "title": "Daily trend views by DSP",
+            "last7Days": "Last 7 days",
+            "last15Days": "Last 15 days",
+            "last30Days": "Last 30 days"
         }
     },
 

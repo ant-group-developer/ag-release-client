@@ -1892,7 +1892,15 @@
             "delete": "Xoá phân tích"
         },
         "chart": {
-            "title": "Biểu đồ"
+            "title": "Thống kê lượt xem hàng tháng theo DSP",
+            "trends": "Xu hướng",
+            "sales": "Doanh số"
+        },
+        "dailyChart": {
+            "title": "Thống kê lượt xem hàng ngày theo DSP",
+            "last7Days": "7 ngày gần nhất",
+            "last15Days": "15 ngày gần nhất",
+            "last30Days": "30 ngày gần nhất"
         }
     },
     "issue": {

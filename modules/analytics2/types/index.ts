@@ -27,6 +27,21 @@ export interface DspTimelineData {
     items: DspTimelinePeriod[];
 }
 
+export interface DspSalesSeriesItem {
+    dsp: string;
+    salesViews: number;
+}
+
+export interface DspSalesTimelinePeriod {
+    period: string;
+    series: DspSalesSeriesItem[];
+}
+
+export interface DspSalesTimelineData {
+    topDsps: string[];
+    items: DspSalesTimelinePeriod[];
+}
+
 export interface RankingParams {
     fromDate: string;
     toDate: string;

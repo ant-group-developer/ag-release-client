@@ -4,9 +4,9 @@ import { Card, Empty, Radio, Skeleton } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { useGetDspTimeline } from '../hooks/use-get-dsp-timeline';
+import { useGetDspSalesTimeline } from '../hooks/use-get-dsp-sales-timeline';
 import BarView from './bar-view';
-import PieView from './pie-view';
-import { DSP_PALETTE, transformBarData, useDspPieData } from '../helpers/analytics-chart-helper';
+import { DSP_PALETTE, transformBarData, transformSalesBarData } from '../helpers/analytics-chart-helper';
 
 interface Props {
     fromDate: string;
@@ -14,43 +14,58 @@ interface Props {
 }
 
 export default function AnalyticsChart({ fromDate, toDate }: Props) {
-    const [view, setView] = useState<'bar' | 'pie'>('bar');
+    const [viewMode, setViewMode] = useState<'trends' | 'sales'>('trends');
     const messages = useTranslations();
 
-    const { timelineData, isFetching } = useGetDspTimeline({
+    // 1. Fetch Trends Timeline Data
+    const { timelineData: trendData, isFetching: isFetchingTrends } = useGetDspTimeline({
         fromDate,
         toDate,
         topN: 5,
         includeOther: true,
     });
 
-    const topDsps = useMemo(() => {
-        return timelineData?.topDsps ?? [];
-    }, [timelineData?.topDsps]);
+    // 2. Fetch Sales Timeline Data
+    const { timelineData: salesData, isFetching: isFetchingSales } = useGetDspSalesTimeline({
+        fromDate,
+        toDate,
+        topN: 5,
+        includeOther: true,
+    });
 
-    const items = useMemo(() => {
-        return timelineData?.items ?? [];
-    }, [timelineData?.items]);
+    const isFetching = viewMode === 'trends' ? isFetchingTrends : isFetchingSales;
+
+    // 3. Resolve active dataset based on viewMode
+    const activeData = useMemo(() => {
+        if (viewMode === 'trends') {
+            const topDsps = trendData?.topDsps ?? [];
+            const items = trendData?.items ?? [];
+            const barData = transformBarData(items);
+            return { topDsps, items, barData };
+        } else {
+            const topDsps = salesData?.topDsps ?? [];
+            const items = salesData?.items ?? [];
+            const barData = transformSalesBarData(items);
+            return { topDsps, items, barData };
+        }
+    }, [viewMode, trendData, salesData]);
 
     const colorMap = useMemo(() => {
         const map: Record<string, string> = {};
-        topDsps.forEach((dsp, i) => {
+        activeData.topDsps.forEach((dsp, i) => {
             map[dsp] = DSP_PALETTE[i % DSP_PALETTE.length];
         });
         map['Other'] = '#94a3b8';
         return map;
-    }, [topDsps]);
-
-    const barData = useMemo(() => transformBarData(items), [items]);
-    const pieData = useDspPieData(items, topDsps, colorMap);
+    }, [activeData.topDsps]);
 
     const allDspKeys = useMemo(() => {
         const keys = new Set<string>();
-        items.forEach((item) =>
+        activeData.items.forEach((item) =>
             item.series.forEach(({ dsp }) => keys.add(dsp))
         );
         return Array.from(keys);
-    }, [items]);
+    }, [activeData.items]);
 
     return (
         <Card
@@ -64,35 +79,29 @@ export default function AnalyticsChart({ fromDate, toDate }: Props) {
                     </span>
                 </div>
                 <Radio.Group
-                    value={view}
-                    onChange={(e) => setView(e.target.value)}
+                    value={viewMode}
+                    onChange={(e) => setViewMode(e.target.value)}
                     buttonStyle="solid"
                 >
-                    <Radio.Button value="bar" className="w-16 text-center">
-                        Bar
+                    <Radio.Button value="trends" className="px-4 text-center">
+                        {messages('analytics.chart.trends')}
                     </Radio.Button>
-                    <Radio.Button value="pie" className="w-16 text-center">
-                        Pie
+                    <Radio.Button value="sales" className="px-4 text-center">
+                        {messages('analytics.chart.sales')}
                     </Radio.Button>
                 </Radio.Group>
             </div>
 
             {isFetching ? (
                 <Skeleton active paragraph={{ rows: 8 }} />
-            ) : items.length === 0 ? (
+            ) : activeData.items.length === 0 ? (
                 <Empty className="py-12" description={messages('common.noDataAvailable')} />
             ) : (
-                <>
-                    {view === 'bar' && (
-                        <BarView
-                            barData={barData}
-                            allDspKeys={allDspKeys}
-                            colorMap={colorMap}
-                        />
-                    )}
-
-                    {view === 'pie' && <PieView pieData={pieData} />}
-                </>
+                <BarView
+                    barData={activeData.barData}
+                    allDspKeys={allDspKeys}
+                    colorMap={colorMap}
+                />
             )}
         </Card>
     );
