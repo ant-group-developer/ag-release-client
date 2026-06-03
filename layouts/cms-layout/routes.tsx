@@ -311,6 +311,15 @@ export const adminRoutes: RouteNode[] = [
                 icon: Server,
                 required: { permission: [PERMISSION.DSP.READ] },
             },
+            {
+                id: 'dsp-report',
+                type: 'link',
+                label: 'dspReport.label',
+                title: 'DSP Reports',
+                href: APP_ROUTES.DSP_REPORT,
+                icon: ScrollText,
+                required: { permission: [PERMISSION.DSP.READ] },
+            },
             // {
             //     id: 'dsp-tenant',
             //     type: 'link',

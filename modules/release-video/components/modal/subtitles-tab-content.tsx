@@ -1,56 +1,89 @@
-import { Button, Space, Table, Typography } from 'antd';
+import { RELEASE_VIDEO_CAPTION_TYPE } from '@/modules/release-video/enums';
+import { ReleaseCaptionData } from '@/modules/releases/types';
+import { useGetReleaseCaptions } from '@/modules/releases/hooks/use-get-release-captions';
+import { useDeleteReleaseCaption } from '@/modules/releases/hooks/use-delete-release-caption';
+import { Button, Space, Table, Typography, Modal } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { Trash2, Upload } from 'lucide-react';
+import { Trash2, Upload, Pencil } from 'lucide-react';
+import { useParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 const { Text } = Typography;
 
 interface SubtitlesTabContentProps {
     onUploadClick: () => void;
+    onEditClick?: (record: ReleaseCaptionData) => void;
 }
 
 export default function SubtitlesTabContent({
     onUploadClick,
+    onEditClick,
 }: SubtitlesTabContentProps) {
-    const columns: ColumnsType<any> = [
+    const messages = useTranslations();
+    const params = useParams<{ id: string }>();
+    const { releaseCaptionsData, isLoading } = useGetReleaseCaptions(
+        params?.id ?? '',
+        RELEASE_VIDEO_CAPTION_TYPE.SUBTITLE
+    );
+
+    const { deleteReleaseCaption } = useDeleteReleaseCaption();
+
+    const handleDelete = (id: string) => {
+        Modal.confirm({
+            title: messages('releaseVideo.captions.table.deleteSubtitleTitle'),
+            content: messages('releaseVideo.captions.table.deleteSubtitleContent'),
+            onOk: () => {
+                return new Promise<void>((resolve, reject) => {
+                    deleteReleaseCaption({
+                        payload: id,
+                        onSuccess: () => resolve(),
+                        onError: () => reject(),
+                    });
+                });
+            },
+        });
+    };
+
+    const columns: ColumnsType<ReleaseCaptionData> = [
         {
-            title: 'Language',
+            title: messages('releaseVideo.captions.table.language'),
             dataIndex: 'language',
             key: 'language',
-            render: (text: string) => (
-                <span style={{ fontWeight: 600 }}>{text}</span>
+            render: (_: any, record: ReleaseCaptionData) => (
+                <span style={{ fontWeight: 600 }}>{record.language?.name}</span>
             ),
         },
         {
-            title: 'File',
+            title: messages('releaseVideo.captions.table.file'),
             dataIndex: 'file',
             key: 'file',
-            render: (_: any, record: any) => (
+            render: (_: any, record: ReleaseCaptionData) => (
                 <Space direction="vertical" size={0}>
                     <Text strong style={{ fontSize: 13 }}>
-                        {record.fileName}
-                    </Text>
-                    <Text
-                        style={{
-                            color: '#d48806',
-                            fontWeight: 600,
-                            fontSize: 13,
-                        }}
-                    >
-                        {record.status}
+                        {record.file?.fileName}
                     </Text>
                 </Space>
             ),
         },
         {
-            title: 'Actions',
+            title: messages('releaseVideo.captions.table.actions'),
             key: 'actions',
             align: 'center',
-            render: () => (
-                <Button
-                    type="text"
-                    icon={<Trash2 size={18} />}
-                    style={{ padding: 0 }}
-                />
+            render: (_: any, record: ReleaseCaptionData) => (
+                <Space size={8}>
+                    <Button
+                        type="text"
+                        icon={<Pencil size={18} />}
+                        style={{ padding: 0 }}
+                        onClick={() => onEditClick?.(record)}
+                    />
+                    <Button
+                        type="text"
+                        icon={<Trash2 size={18} />}
+                        style={{ padding: 0 }}
+                        onClick={() => handleDelete(record.id)}
+                    />
+                </Space>
             ),
         },
     ];
@@ -66,22 +99,24 @@ export default function SubtitlesTabContent({
                 }}
             >
                 <Text strong style={{ fontSize: 14 }}>
-                    Your new subtitle file is pending publish.
+                    {messages('releaseVideo.captions.table.pendingSubtitle')}
                 </Text>
                 <Button
                     type="primary"
                     icon={<Upload size={16} />}
                     onClick={onUploadClick}
                 >
-                    Upload
+                    {messages('releaseVideo.captions.table.upload')}
                 </Button>
             </div>
             <Table
                 columns={columns}
-                dataSource={[]}
+                dataSource={releaseCaptionsData}
+                loading={isLoading}
+                rowKey="id"
                 pagination={false}
                 size="middle"
-                locale={{ emptyText: 'No subtitles available' }}
+                locale={{ emptyText: messages('releaseVideo.captions.table.emptySubtitles') }}
             />
         </div>
     );

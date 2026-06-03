@@ -1,6 +1,8 @@
 import { Modal, Tabs, Typography } from 'antd';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { RELEASE_VIDEO_CAPTION_TYPE } from '../../enums';
+import { ReleaseCaptionData } from '@/modules/releases/types';
 import CaptionsTabContent from './captions-tab-content';
 import SubtitlesTabContent from './subtitles-tab-content';
 import UploadCaptionModal from './upload-caption-modal';
@@ -20,15 +22,23 @@ export default function ManageCaptionsModal({
     const [uploadType, setUploadType] = useState<RELEASE_VIDEO_CAPTION_TYPE>(
         RELEASE_VIDEO_CAPTION_TYPE.CAPTION
     );
+    const [editingData, setEditingData] = useState<ReleaseCaptionData | undefined>();
+    const messages = useTranslations();
 
     const tabItems = [
         {
             key: 'captions',
-            label: 'Captions',
+            label: messages('releaseVideo.captions.tabs.captions'),
             children: (
                 <CaptionsTabContent
                     onUploadClick={() => {
                         setUploadType(RELEASE_VIDEO_CAPTION_TYPE.CAPTION);
+                        setEditingData(undefined);
+                        setIsUploadModalOpen(true);
+                    }}
+                    onEditClick={(record: ReleaseCaptionData) => {
+                        setUploadType(RELEASE_VIDEO_CAPTION_TYPE.CAPTION);
+                        setEditingData(record);
                         setIsUploadModalOpen(true);
                     }}
                 />
@@ -36,11 +46,17 @@ export default function ManageCaptionsModal({
         },
         {
             key: 'subtitles',
-            label: 'Subtitles',
+            label: messages('releaseVideo.captions.tabs.subtitles'),
             children: (
                 <SubtitlesTabContent
                     onUploadClick={() => {
                         setUploadType(RELEASE_VIDEO_CAPTION_TYPE.SUBTITLE);
+                        setEditingData(undefined);
+                        setIsUploadModalOpen(true);
+                    }}
+                    onEditClick={(record: ReleaseCaptionData) => {
+                        setUploadType(RELEASE_VIDEO_CAPTION_TYPE.SUBTITLE);
+                        setEditingData(record);
                         setIsUploadModalOpen(true);
                     }}
                 />
@@ -52,7 +68,7 @@ export default function ManageCaptionsModal({
         <Modal
             title={
                 <Text strong style={{ fontSize: 18 }}>
-                    Captions and subtitles
+                    {messages('releaseVideo.captions.title')}
                 </Text>
             }
             open={isOpen}
@@ -62,10 +78,9 @@ export default function ManageCaptionsModal({
             styles={{ body: { paddingTop: 12 } }}
         >
             <Paragraph style={{ marginBottom: 12, fontSize: 14 }}>
-                Captions are in the video&apos;s language of performance.
+                <span dangerouslySetInnerHTML={{ __html: messages('releaseVideo.captions.description') }} />
                 <br />
-                Subtitles are in languages other than the audio language of the
-                video.
+                <span dangerouslySetInnerHTML={{ __html: messages('releaseVideo.captions.descriptionSubtitle') }} />
                 <br />
             </Paragraph>
 
@@ -74,7 +89,11 @@ export default function ManageCaptionsModal({
             <UploadCaptionModal
                 isOpen={isUploadModalOpen}
                 type={uploadType}
-                onClose={() => setIsUploadModalOpen(false)}
+                initialData={editingData}
+                onClose={() => {
+                    setIsUploadModalOpen(false);
+                    setEditingData(undefined);
+                }}
             />
         </Modal>
     );

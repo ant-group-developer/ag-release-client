@@ -8,9 +8,9 @@ import { ReleaseTypesData } from '@/modules/release-types/types';
 import { TenantData } from '@/modules/tenant/types/data';
 import { TimezoneData } from '@/modules/timezone/types';
 import { TrackData } from '@/modules/tracks/types';
+import { FileBucket } from '@/modules/upload/types/data';
 import { UserData } from '@/modules/user/types/data';
 import { CommonAttribute, CommonParams } from '@/types/api';
-import { FileBucket } from '@/modules/upload/types/data';
 import { RELEASE_TIME_MODE, RELEASE_TYPE, RELEASES_STATUS } from '../enums';
 
 export interface ReleaseCoverArt {
@@ -74,9 +74,10 @@ export interface VideoData {
     explicit: boolean;
     aiContent: string;
     channel: string;
+    title?: string;
     description?: string;
     keywords?: string[];
-    isKids: boolean;
+    madeForKids: string;
     isUnlisted: boolean;
     subtitles?: string[];
     contentProvider?: string;
@@ -131,3 +132,12 @@ export interface ReleaseValidate {
 }
 
 export type { TrackData } from '@/modules/tracks/types';
+
+export interface ReleaseCaptionData extends CommonAttribute {
+    releaseId: string;
+    languageId: string;
+    type: string;
+    fileId: string;
+    file?: FileBucket;
+    language?: LanguagesData;
+}

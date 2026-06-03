@@ -2,6 +2,7 @@ import { CreateBucketFile } from '@/modules/upload/types/data';
 import { CommonFunction } from '@/types/api';
 import { ReleasesData, VideoData } from '.';
 import { RELEASES_TYPE, RELEASE_TYPE } from '../enums';
+import { RELEASE_VIDEO_CAPTION_TYPE } from '@/modules/release-video/enums';
 
 interface CreateStandardReleaseDraftPayload {
     title: string;
@@ -64,11 +65,17 @@ export interface SyncReleaseDraftToTracks extends CommonFunction {
     payload: SyncReleaseDraftToTracksPayload;
 }
 
-export interface BulkUpsertCaptionsPayload extends CommonFunction {
-    videoId: string;
-    captions: {
-        languageId: string;
-        type: string;
-        fileId: string;
-    }[];
+
+export interface UpsertReleaseCaptionsPayload extends CommonFunction {
+    releaseId: string;
+    languageId: string;
+    type: RELEASE_VIDEO_CAPTION_TYPE;
+    fileId: string;
+}
+
+export interface UpdateReleaseCaptionPayload extends CommonFunction {
+    id: string;
+    languageId?: string;
+    type?: RELEASE_VIDEO_CAPTION_TYPE;
+    fileId?: string;
 }

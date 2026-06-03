@@ -1248,7 +1248,8 @@
             "thumbnailNotUploaded": "Ảnh thu nhỏ chưa được tải lên",
             "captionsAndSubtitles": "Phụ đề",
             "manage": "Quản lý",
-            "captionFilesSummary": "{captionCount} tệp chú thích. {subtitleCount} tệp phụ đề."
+            "captionFilesSummary": "{captionCount} tệp chú thích. {subtitleCount} tệp phụ đề.",
+            "channelDefault": "Mặc định của kênh"
         },
         "tabs": {
             "details": "Chi tiết",
@@ -1267,6 +1268,40 @@
             "audio": "Âm thanh: Stereo, 48kHz, 320kbps trở lên",
             "size": "Kích thước tối đa: 5 GB",
             "tip": "Mẹo: Đảm bảo chất lượng video và âm thanh tốt nhất để tối ưu hiển thị trên các nền tảng phân phối."
+        },
+        "captions": {
+            "title": "Captions và subtitles",
+            "description": "Captions là phụ đề bằng ngôn ngữ gốc của video.",
+            "descriptionSubtitle": "Subtitles là phụ đề bằng các ngôn ngữ khác với ngôn ngữ âm thanh của video.",
+            "tabs": {
+                "captions": "Captions",
+                "subtitles": "Subtitles"
+            },
+            "uploadModal": {
+                "titleEdit": "Sửa tệp {type}",
+                "titleUpload": "Tải lên tệp {type}",
+                "caption": "caption",
+                "subtitle": "subtitle",
+                "description": "Chỉ cho phép một tệp {type} và tệp đó phải bằng ngôn ngữ của video.",
+                "selectFile": "Chọn tệp (.ttml hoặc .srt)",
+                "fileRequired": "Vui lòng chọn tệp",
+                "language": "Ngôn ngữ",
+                "languageRequired": "Vui lòng chọn ngôn ngữ",
+                "select": "Chọn..."
+            },
+            "table": {
+                "language": "Ngôn ngữ",
+                "file": "Tệp",
+                "actions": "Thao tác",
+                "emptySubtitles": "Không có phụ đề nào",
+                "upload": "Tải lên",
+                "pendingCaption": "Tệp caption mới của bạn đang chờ xuất bản.",
+                "pendingSubtitle": "Tệp subtitle mới của bạn đang chờ xuất bản.",
+                "deleteCaptionTitle": "Xóa caption",
+                "deleteCaptionContent": "Bạn có chắc chắn muốn xóa caption này không?",
+                "deleteSubtitleTitle": "Xóa subtitle",
+                "deleteSubtitleContent": "Bạn có chắc chắn muốn xóa subtitle này không?"
+            }
         }
     },
     "artist": {
@@ -1517,6 +1552,9 @@
     },
     "dspSystem": {
         "label": "Hệ thống DSP"
+    },
+    "dspReport": {
+        "label": "Báo cáo DSP"
     },
     "dsp": {
         "label": "DSP",
@@ -2214,7 +2252,30 @@
             "EXPORT_EXCEL": "Xuất Excel",
             "SEND_EMAIL_EXPORT": "Gửi email",
             "WAITING_EXPORT": "Chờ xuất",
-            "CLEANUP": "Dọn dẹp"
+            "CLEANUP": "Dọn dẹp",
+            "PROCESS_AGG": "Xử lý AGG",
+            "PROCESS_AGG_CI": "Xử lý AGG CI",
+            "IMPORT_CI": "Nhập CI",
+            "EXPORT_CI": "Xuất CI",
+            "CREATE_FOLDER_DONE_CI": "Tạo thư mục done CI",
+            "VALIDATE_QA_CI": "Kiểm tra QA CI",
+            "EXPORT_CI_CI": "Xuất CI CI",
+            "EXPORT_AGG_CI_STATE51": "Xuất AGG CI State51",
+            "WAITING_ADMIN_EXPORT": "Chờ admin xuất",
+            "SEND_EMAIL_STATE51": "Gửi email State51",
+            "SYNC_DATA_DSP_CI": "Đồng bộ dữ liệu DSP CI",
+            "GEN_UPC": "Tạo UPC",
+            "GEN_ISRCS": "Tạo ISRCs",
+            "GEN_ISRC": "Tạo ISRC",
+            "VALIDATE": "Xác thực",
+            "PROCESS_DSPS": "Xử lý DSPs",
+            "PROCESS_DIRECT": "Xử lý trực tiếp",
+            "PROCESS_DIRECT_CHILD": "Xử lý trực tiếp (con)",
+            "SYNC_DATA_PARTNER": "Đồng bộ dữ liệu đối tác",
+            "WAIT_PARTNER_PROCESS": "Chờ đối tác xử lý",
+            "CREATE_METADATA_ON_SERVER": "Tạo metadata trên server",
+            "UPLOAD_METADATA_TO_SFTP": "Tải metadata lên SFTP",
+            "SYNC_RESULT_TO_RELEASE": "Đồng bộ kết quả vào phát hành"
         },
         "action": {
             "markCompleted": "Đánh dấu hoàn thành"

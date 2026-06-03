@@ -110,3 +110,9 @@ export enum RELEASE_AI_CONTENT {
     NONE = 'NONE',
     UNDETERMINED = 'UNDETERMINED',
 }
+
+export enum RELEASE_MADE_FOR_KIDS {
+    YES = 'YES',
+    NO = 'NO',
+    CHANNEL_DEFAULT = 'CHANNEL_DEFAULT',
+}
