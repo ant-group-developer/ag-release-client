@@ -1980,6 +1980,19 @@
             "last7Days": "7 ngày gần nhất",
             "last15Days": "15 ngày gần nhất",
             "last30Days": "30 ngày gần nhất"
+        },
+        "revenue": {
+            "totalRevenue": "Tổng doanh thu",
+            "totalPlays": "Tổng lượt nghe",
+            "totalTerritories": "Quốc gia/Vùng lãnh thổ",
+            "timelineTitle": "Doanh thu theo thời gian",
+            "modeRevenue": "Doanh thu (USD)",
+            "modeQuantity": "Lượt nghe (Số lượng)",
+            "label": "Doanh thu"
+        },
+        "tabs": {
+            "plays": "Lượt nghe & Xu hướng",
+            "revenue": "Doanh thu"
         }
     },
     "issue": {

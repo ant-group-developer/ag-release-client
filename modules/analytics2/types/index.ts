@@ -124,3 +124,68 @@ export interface SyncJobResponse {
     startedAt?: string;
     durationMs?: number;
 }
+
+// Params for Revenue APIs
+export interface RevenueQueryParams {
+    fromDate: string;
+    toDate: string;
+    topN?: number;
+    includeOther?: boolean;
+}
+
+// Summary Response
+export interface RevenueSummaryData {
+    totalRevenueUsd: number;
+    totalQuantity: number;
+    totalTerritories: number;
+}
+
+// Timeline Series Items
+export interface RevenueTimelineDspItem {
+    dsp: string;
+    revenueUsd: number;
+    quantity: number;
+}
+
+export interface RevenueTimelinePeriod {
+    period: string; // 'YYYY-MM'
+    revenueUsd: number;
+    quantity: number;
+    series: RevenueTimelineDspItem[];
+}
+
+export interface RevenueTimelineData {
+    topDsps: string[];
+    items: RevenueTimelinePeriod[];
+}
+
+// Top DSP Response
+export interface RevenueDspItem {
+    dspName: string;
+    revenueUsd: number;
+    quantity: number;
+}
+
+// Top Artist Response
+export interface RevenueArtistItem {
+    rank: number;
+    artistId: string;
+    artistName: string;
+    picture: string | null;
+    trackCount: number;
+    revenueUsd: number;
+    quantity: number;
+}
+
+// Top Track Response
+export interface RevenueTrackItem {
+    rank: number;
+    isrc: string;
+    title: string;
+    version: string | null;
+    artistName: string;
+    releaseId: string | null;
+    releaseTitle: string | null;
+    revenueUsd: number;
+    quantity: number;
+}

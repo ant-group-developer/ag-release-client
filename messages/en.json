@@ -1982,6 +1982,19 @@
             "last7Days": "Last 7 days",
             "last15Days": "Last 15 days",
             "last30Days": "Last 30 days"
+        },
+        "revenue": {
+            "totalRevenue": "Total Revenue",
+            "totalPlays": "Total Plays",
+            "totalTerritories": "Territories",
+            "timelineTitle": "Revenue Timeline",
+            "modeRevenue": "Revenue (USD)",
+            "modeQuantity": "Plays (Quantity)",
+            "label": "Revenue"
+        },
+        "tabs": {
+            "plays": "Plays & Trends",
+            "revenue": "Revenue"
         }
     },
     "issue": {
