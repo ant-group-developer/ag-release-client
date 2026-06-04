@@ -4,7 +4,7 @@ import { useGetListSimpleArtistRole } from '@/modules/artist-role/hooks/use-get-
 import { useCreateReleaseContributor } from '@/modules/release-contributor/hooks/use-create-release-contributor';
 import { useDeleteReleaseContributor } from '@/modules/release-contributor/hooks/use-delete-release-contributor';
 import { ReleasesData } from '@/modules/releases/types';
-import { Col, DatePicker, FormInstance, Input, Row } from 'antd';
+import { Col, DatePicker, FormInstance, Input, Row, Select } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 
@@ -13,6 +13,21 @@ interface AdditionalTabProps {
     onFieldUpdate?: (payload: Record<string, any>) => void;
     form: FormInstance;
 }
+
+const VIDEO_VERSION_OPTIONS = [
+    { value: 'Lyric Video', label: 'Lyric Video' },
+    { value: 'Interview', label: 'Interview' },
+    { value: 'Alternate Version', label: 'Alternate Version' },
+    { value: 'Original Content', label: 'Original Content' },
+    { value: 'Audio', label: 'Audio' },
+    { value: 'Visualizer', label: 'Visualizer' },
+    { value: 'Behind The Scenes', label: 'Behind The Scenes' },
+    { value: 'Teaser', label: 'Teaser' },
+    { value: 'Live', label: 'Live' },
+    { value: 'Podcast', label: 'Podcast' },
+    { value: 'Documentary', label: 'Documentary' },
+    { value: 'Official', label: 'Official' },
+];
 
 export default function AdditionalTab({ dataEdit, onFieldUpdate, form }: AdditionalTabProps) {
     const messages = useTranslations();
@@ -183,12 +198,11 @@ export default function AdditionalTab({ dataEdit, onFieldUpdate, form }: Additio
                         name="version"
                         label={messages('releaseVideo.fields.videoVersion')}
                     >
-                        <Input
-                            placeholder={messages(
-                                'releaseVideo.fields.videoVersion'
-                            )}
+                        <Select
+                            placeholder={messages('common.select')}
                             allowClear
-                            onBlur={(e) => onFieldUpdate?.({ version: e.target.value })}
+                            onChange={(value) => onFieldUpdate?.({ version: value })}
+                            options={VIDEO_VERSION_OPTIONS}
                         />
                     </AppFormItem>
                 </Col>
@@ -203,9 +217,11 @@ export default function AdditionalTab({ dataEdit, onFieldUpdate, form }: Additio
                                 'releaseVideo.fields.partnerCustomId1'
                             )}
                             allowClear
-                            onBlur={() =>
+                            onBlur={(e) =>
                                 onFieldUpdate?.({
-                                    video: form.getFieldValue('video'),
+                                    video: {
+                                        partnerCustomId1: e.target.value,
+                                    },
                                 })
                             }
                         />
@@ -221,9 +237,11 @@ export default function AdditionalTab({ dataEdit, onFieldUpdate, form }: Additio
                                 'releaseVideo.fields.partnerCustomId2'
                             )}
                             allowClear
-                            onBlur={() =>
+                            onBlur={(e) =>
                                 onFieldUpdate?.({
-                                    video: form.getFieldValue('video'),
+                                    video: {
+                                        partnerCustomId2: e.target.value,
+                                    },
                                 })
                             }
                         />
@@ -325,6 +343,11 @@ export default function AdditionalTab({ dataEdit, onFieldUpdate, form }: Additio
                             className="w-full"
                             allowClear
                             disabledDate={disabledYear}
+                            onChange={(date) => {
+                                onFieldUpdate?.({
+                                    cLineYear: date ? date.year() : null,
+                                });
+                            }}
                         />
                     </AppFormItem>
                 </Col>

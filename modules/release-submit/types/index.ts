@@ -48,6 +48,8 @@ export interface ReleaseSubmitStepData extends CommonAttribute {
 export interface ReleaseSubmitLogsData extends CommonAttribute {
     releaseSubmitId: ReleaseSubmitData['id'];
     releaseSubmitStepId: ReleaseSubmitStepData['id'];
+    releaseExecutionId: string;
+    releaseExecutionStepId: string;
     message: string;
     level: RELEASE_SUBMIT_LOG_LEVEL;
     data: any;

@@ -148,7 +148,7 @@ export default function ReleaseSubmitStepTable({
             align: 'center',
             render: (_, record) => {
                 const count = logs.filter(
-                    (log) => log.releaseSubmitStepId === record.id
+                    (log) => log.releaseExecutionStepId === record.id
                 ).length;
                 return count || '-';
             },
