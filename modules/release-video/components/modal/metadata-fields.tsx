@@ -6,7 +6,7 @@ import LanguageSelect from '@/components/ui/select/language-select';
 import { MAX_NAME_LENGTH, MAX_NOTE_LENGTH } from '@/constants/validate';
 import { useGetListSimpleArtistRole } from '@/modules/artist-role/hooks/use-get-list-simple-artist-role';
 import ChannelSelect from '@/modules/channels/components/select/channel-select';
-import { useCreateReleaseArtist } from '@/modules/release-artist/hooks/use-create-release-artist';
+import { useBulkCreateReleaseArtist } from '@/modules/release-artist/hooks/use-bulk-create-release-artist';
 import { useDeleteReleaseArtist } from '@/modules/release-artist/hooks/use-delete-release-artist';
 import { useBulkCreateReleaseContributor } from '@/modules/release-contributor/hooks/use-bulk-create-release-contributor';
 import { useDeleteReleaseContributor } from '@/modules/release-contributor/hooks/use-delete-release-contributor';
@@ -44,7 +44,7 @@ export default function MetadataFields({
     const messages = useTranslations();
     const [isManageCollaboratorsOpen, setIsManageCollaboratorsOpen] =
         useState(false);
-    const { createReleaseArtist } = useCreateReleaseArtist();
+    const { bulkCreateReleaseArtist } = useBulkCreateReleaseArtist();
     const { deleteReleaseArtist } = useDeleteReleaseArtist();
     const { bulkCreateReleaseContributor } = useBulkCreateReleaseContributor();
     const { deleteReleaseContributor } = useDeleteReleaseContributor();
@@ -55,15 +55,30 @@ export default function MetadataFields({
     );
     const featuredRoleId = featuredRole?.id;
 
-    const handleSelect = (artistId: string) => {
-        if (!dataEdit?.id) return;
-        createReleaseArtist({
-            payload: {
-                artistId,
-                releaseId: dataEdit.id,
-                addArtistToTracks: false,
-            },
-        });
+    const handleArtistsBlur = () => {
+        const releaseId = dataEdit?.id;
+        if (!releaseId) return;
+
+        const newArtistIds = form.getFieldValue('artistIds') || [];
+
+        const currentArtistIds =
+            dataEdit.releaseArtists?.map((a) => a.artistId) || [];
+
+        const addedIds = newArtistIds.filter(
+            (id: string) => !currentArtistIds.includes(id)
+        );
+
+        if (addedIds.length > 0) {
+            bulkCreateReleaseArtist({
+                payload: {
+                    items: addedIds.map((id: string) => ({
+                        artistId: id,
+                        releaseId,
+                        addArtistToTracks: false,
+                    })),
+                },
+            });
+        }
     };
 
     const handleDeselect = (artistId: string) => {
@@ -212,7 +227,7 @@ export default function MetadataFields({
                 <ArtistSelect
                     mode="multiple"
                     placeholder={messages('artist.select')}
-                    onSelect={handleSelect}
+                    onBlur={handleArtistsBlur}
                     onDeselect={handleDeselect}
                     tagRender={tagRender}
                 />

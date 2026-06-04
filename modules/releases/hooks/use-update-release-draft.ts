@@ -42,7 +42,7 @@ export const useUpdateReleaseDraft = () => {
 
                 latestResponseRef.current = null;
                 setCacheTimerRef.current = null;
-            }, 1000);
+            }, 15000);
         },
         [queryClient]
     );
