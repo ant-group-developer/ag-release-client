@@ -43,6 +43,7 @@ export interface ReleaseSubmitStepData extends CommonAttribute {
     retryCount: number;
     metadata: any | null;
     childSteps: ReleaseSubmitStepData[];
+    logs?: ReleaseSubmitLogsData[];
 }
 
 export interface ReleaseSubmitLogsData extends CommonAttribute {

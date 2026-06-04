@@ -19,13 +19,11 @@ import { ReleaseSubmitLogsData, ReleaseSubmitStepData } from '../../types';
 
 type Props = {
     dataSource: ReleaseSubmitStepData[];
-    logs?: ReleaseSubmitLogsData[];
     onViewDetail: (step: ReleaseSubmitStepData) => void;
 };
 
 export default function ReleaseSubmitStepTable({
     dataSource,
-    logs = [],
     onViewDetail,
 }: Props) {
     const messages = useTranslations();
@@ -147,9 +145,7 @@ export default function ReleaseSubmitStepTable({
             width: 80,
             align: 'center',
             render: (_, record) => {
-                const count = logs.filter(
-                    (log) => log.releaseExecutionStepId === record.id
-                ).length;
+                const count = record?.logs?.length;
                 return count || '-';
             },
         },
@@ -198,7 +194,6 @@ export default function ReleaseSubmitStepTable({
                     <div className="rounded-md border dark:border-zinc-700">
                         <ReleaseSubmitStepTable
                             dataSource={record.childSteps}
-                            logs={logs}
                             onViewDetail={onViewDetail}
                         />
                     </div>

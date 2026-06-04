@@ -22,12 +22,10 @@ import {
 import { ReleaseSubmitLogsData, ReleaseSubmitStepData } from '../../types';
 
 type Props = Omit<AppModalProps, 'children'> & {
-    logs?: ReleaseSubmitLogsData[];
     step?: ReleaseSubmitStepData | null;
 };
 
 export default function ReleaseSubmitStepDetailModal({
-    logs = [],
     step,
     ...props
 }: Props) {
@@ -35,7 +33,7 @@ export default function ReleaseSubmitStepDetailModal({
 
     if (!step) return null;
 
-    const stepLogs = logs.filter((log) => log.releaseSubmitStepId === step.id);
+    const stepLogs = step.logs || [];
     const metadataJson = getJsonContent(step.metadata);
     const metadataText = getTextContent(step.metadata);
 
