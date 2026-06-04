@@ -81,12 +81,11 @@ export default function ReleaseSubmitDetailModal({ ...props }: Props) {
         <AppModal
             {...props}
             open={props.open}
-            width={1100}
             title={title}
             footer={null}
             spinning={isFetching}
             onCancel={closeModal}
-            className="!w-[70vw]"
+            className="!top-10 !w-[85vw]"
             styles={{
                 body: {
                     maxHeight: '75vh',

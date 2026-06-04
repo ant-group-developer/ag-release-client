@@ -2261,6 +2261,19 @@
                 "duration": "Duration"
             }
         },
+        "childExecutionMode": {
+            "title": "Child mode",
+            "sequential": "SEQUENTIAL",
+            "parallel": "PARALLEL",
+            "tooltipSequential": "Chạy tuần tự: chạy từ trên xuống dưới, nếu cần dừng thì dừng",
+            "tooltipParallel": "Chạy song song: chạy song song kết quả không phụ thuộc, ảnh hưởng tới nhau"
+        },
+        "isDeliveryStep": {
+            "title": "Delivery step",
+            "tooltip": "Đánh dấu là step sẽ đồng bộ status với bảng release delivery dsp nếu gặp status cần đồng bộ",
+            "yes": "Có",
+            "no": "Không"
+        },
         "columns": {
             "upc": "UPC",
             "originalDspCodes": "Mã DSP đích",

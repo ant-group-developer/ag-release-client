@@ -192,13 +192,19 @@ export default function DspDeals({ dspId }: Props) {
                 },
             };
 
-            if (
+            const isExistingSftp =
                 storageType === STORAGE_TYPE.SFTP &&
                 dspRoutingConfig?.sftpConfig?.id &&
                 !metadata?.password &&
-                !metadata?.privateKey
-            ) {
-                const variables: CreateVariables<TestSftpConnectionByIdPayload> =
+                !metadata?.privateKey;
+
+            const isExistingS3 =
+                storageType === STORAGE_TYPE.S3 &&
+                dspRoutingConfig?.sftpConfig?.id &&
+                (!metadata?.secretAccessKey || metadata?.secretAccessKey === '');
+
+            if (isExistingSftp || isExistingS3) {
+                const variablesById: CreateVariables<TestSftpConnectionByIdPayload> =
                     {
                         payload: {
                             id: dspRoutingConfig?.sftpConfig?.id,
@@ -213,7 +219,7 @@ export default function DspDeals({ dspId }: Props) {
                             deActiveConnection();
                         },
                     };
-                return testConnectionById(variables);
+                return testConnectionById(variablesById);
             } else {
                 testConnection(variables);
             }
