@@ -6,7 +6,7 @@ import { formattedDate } from '@/helpers/common';
 import { DspData } from '@/modules/dsp/types';
 import { Avatar, Table, Tag, theme } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { Eye, ListOrdered, RefreshCw, RotateCcw, Workflow } from 'lucide-react';
+import { Check, Eye, RotateCcw, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { CHILD_EXECUTION_MODE, RELEASE_SUBMIT_STEP_STATUS } from '../../enums';
 import {
@@ -97,70 +97,7 @@ export default function ReleaseSubmitStepTable({
                 );
             },
         },
-        {
-            title: messages('releaseExecution.childExecutionMode.title'),
-            dataIndex: 'childExecutionMode',
-            key: 'childExecutionMode',
-            width: 130,
-            render: (value) => {
-                if (!value) return '-';
-                const isSequential = value === CHILD_EXECUTION_MODE.SEQUENTIAL;
-                const label = isSequential
-                    ? messages('releaseExecution.childExecutionMode.sequential')
-                    : messages('releaseExecution.childExecutionMode.parallel');
-                const tooltipText = isSequential
-                    ? messages(
-                          'releaseExecution.childExecutionMode.tooltipSequential'
-                      )
-                    : messages(
-                          'releaseExecution.childExecutionMode.tooltipParallel'
-                      );
-                return (
-                    <CustomTooltip title={tooltipText}>
-                        <Tag color={isSequential ? 'blue' : 'green'}>
-                            <span className="flex items-center gap-1">
-                                {isSequential ? (
-                                    <ListOrdered size={12} />
-                                ) : (
-                                    <Workflow size={12} />
-                                )}
-                                <span>{formatEnumLabel(value)}</span>
-                            </span>
-                        </Tag>
-                    </CustomTooltip>
-                );
-            },
-        },
-        {
-            title: messages('releaseExecution.isDeliveryStep.title'),
-            dataIndex: 'isDeliveryStep',
-            key: 'isDeliveryStep',
-            width: 150,
-            align: 'center',
-            render: (value) => {
-                if (typeof value !== 'boolean') return '-';
-                if (!value) return <span className="text-gray-400">-</span>;
 
-                return (
-                    <CustomTooltip
-                        title={messages(
-                            'releaseExecution.isDeliveryStep.tooltip'
-                        )}
-                    >
-                        <Tag color="cyan" className="!m-0">
-                            <span className="flex items-center gap-1">
-                                <RefreshCw size={12} />
-                                <span>
-                                    {messages(
-                                        'releaseExecution.isDeliveryStep.yes'
-                                    )}
-                                </span>
-                            </span>
-                        </Tag>
-                    </CustomTooltip>
-                );
-            },
-        },
         {
             title: 'Status',
             dataIndex: 'status',
@@ -197,13 +134,6 @@ export default function ReleaseSubmitStepTable({
                 '-',
         },
         {
-            title: 'Retry',
-            dataIndex: 'retryCount',
-            key: 'retryCount',
-            width: 80,
-            align: 'center',
-        },
-        {
             title: 'Logs',
             key: 'logs',
             width: 80,
@@ -211,6 +141,66 @@ export default function ReleaseSubmitStepTable({
             render: (_, record) => {
                 const count = record?.logs?.length;
                 return count || '-';
+            },
+        },
+        {
+            title: messages('releaseExecution.childExecutionMode.title'),
+            dataIndex: 'childExecutionMode',
+            key: 'childExecutionMode',
+            width: 130,
+            align: 'center',
+            render: (value) => {
+                if (!value) return '-';
+                const isSequential = value === CHILD_EXECUTION_MODE.SEQUENTIAL;
+                const label = isSequential
+                    ? messages('releaseExecution.childExecutionMode.sequential')
+                    : messages('releaseExecution.childExecutionMode.parallel');
+                const tooltipText = isSequential
+                    ? messages(
+                          'releaseExecution.childExecutionMode.tooltipSequential'
+                      )
+                    : messages(
+                          'releaseExecution.childExecutionMode.tooltipParallel'
+                      );
+                return (
+                    <CustomTooltip title={tooltipText}>
+                        <Tag color={isSequential ? 'blue' : 'green'}>
+                            <span className="flex items-center gap-1">
+                                <span>{formatEnumLabel(value)}</span>
+                            </span>
+                        </Tag>
+                    </CustomTooltip>
+                );
+            },
+        },
+        {
+            title: messages('releaseExecution.isDeliveryStep.title'),
+            dataIndex: 'isDeliveryStep',
+            key: 'isDeliveryStep',
+            width: 150,
+            align: 'center',
+            render: (value) => {
+                if (typeof value !== 'boolean') return '-';
+
+                if (!value) {
+                    return (
+                        <span className="flex items-center justify-center">
+                            <X color="red" size={SIZE_ICON} />
+                        </span>
+                    );
+                }
+
+                return (
+                    <CustomTooltip
+                        title={messages(
+                            'releaseExecution.isDeliveryStep.tooltip'
+                        )}
+                    >
+                        <span className="flex items-center justify-center">
+                            <Check size={SIZE_ICON} color="green" />
+                        </span>
+                    </CustomTooltip>
+                );
             },
         },
         {

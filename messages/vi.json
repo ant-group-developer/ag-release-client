@@ -2265,8 +2265,8 @@
             "title": "Child mode",
             "sequential": "SEQUENTIAL",
             "parallel": "PARALLEL",
-            "tooltipSequential": "Chạy tuần tự: chạy từ trên xuống dưới, nếu cần dừng thì dừng",
-            "tooltipParallel": "Chạy song song: chạy song song kết quả không phụ thuộc, ảnh hưởng tới nhau"
+            "tooltipSequential": "Các step con sẽ chạy từ trên xuống dưới",
+            "tooltipParallel": "Các step con sẽ chạy đồng thời, kết quả ko phụ thuộc vào nhau"
         },
         "isDeliveryStep": {
             "title": "Delivery step",

@@ -2264,8 +2264,8 @@
             "title": "Child mode",
             "sequential": "SEQUENTIAL",
             "parallel": "PARALLEL",
-            "tooltipSequential": "Run sequentially: run from top to bottom, stop if necessary",
-            "tooltipParallel": "Run in parallel: run concurrently, results do not depend on or affect each other"
+            "tooltipSequential": "Child steps will run from top to bottom",
+            "tooltipParallel": "Child steps will run concurrently, results are independent of each other"
         },
         "isDeliveryStep": {
             "title": "Delivery step",
