@@ -6,7 +6,7 @@ import { formattedDate } from '@/helpers/common';
 import { DspData } from '@/modules/dsp/types';
 import { Avatar, Table, Tag, theme } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { Check, Eye, RotateCcw, X } from 'lucide-react';
+import { Check, Eye, RotateCcw } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { CHILD_EXECUTION_MODE, RELEASE_SUBMIT_STEP_STATUS } from '../../enums';
 import {
@@ -20,11 +20,13 @@ import { ReleaseSubmitStepData } from '../../types';
 type Props = {
     dataSource: ReleaseSubmitStepData[];
     onViewDetail: (step: ReleaseSubmitStepData) => void;
+    showHeader?: boolean;
 };
 
 export default function ReleaseSubmitStepTable({
     dataSource,
     onViewDetail,
+    showHeader = true,
 }: Props) {
     const messages = useTranslations();
     const { token } = theme.useToken();
@@ -183,11 +185,7 @@ export default function ReleaseSubmitStepTable({
                 if (typeof value !== 'boolean') return '-';
 
                 if (!value) {
-                    return (
-                        <span className="flex items-center justify-center">
-                            <X color="red" size={SIZE_ICON} />
-                        </span>
-                    );
+                    return '-';
                 }
 
                 return (
@@ -242,13 +240,15 @@ export default function ReleaseSubmitStepTable({
             dataSource={dataSource}
             columns={columns}
             loading={isPending}
+            showHeader={showHeader}
             expandable={{
                 rowExpandable: (record) => !!record.childSteps?.length,
                 expandedRowRender: (record) => (
-                    <div className="rounded-md border dark:border-zinc-700">
+                    <div className="rounded-md">
                         <ReleaseSubmitStepTable
                             dataSource={record.childSteps}
                             onViewDetail={onViewDetail}
+                            showHeader={false}
                         />
                     </div>
                 ),

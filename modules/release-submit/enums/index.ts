@@ -63,7 +63,6 @@ export enum RELEASE_SUBMIT_LOG_LEVEL {
 }
 
 export enum CHILD_EXECUTION_MODE {
-    SEQUENTIAL = 'SEQUENTIAL',
-    PARALLEL = 'PARALLEL',
+    SEQUENTIAL = 'sequential',
+    PARALLEL = 'parallel',
 }
-
