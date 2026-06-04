@@ -6,16 +6,26 @@ import LanguageSelect from '@/components/ui/select/language-select';
 import { MAX_NAME_LENGTH, MAX_NOTE_LENGTH } from '@/constants/validate';
 import { useGetListSimpleArtistRole } from '@/modules/artist-role/hooks/use-get-list-simple-artist-role';
 import ChannelSelect from '@/modules/channels/components/select/channel-select';
-import { useCreateReleaseArtist } from '@/modules/release-artist/hooks/use-create-release-artist';
+import { useBulkCreateReleaseArtist } from '@/modules/release-artist/hooks/use-bulk-create-release-artist';
 import { useDeleteReleaseArtist } from '@/modules/release-artist/hooks/use-delete-release-artist';
-import { useCreateReleaseContributor } from '@/modules/release-contributor/hooks/use-create-release-contributor';
+import { useBulkCreateReleaseContributor } from '@/modules/release-contributor/hooks/use-bulk-create-release-contributor';
 import { useDeleteReleaseContributor } from '@/modules/release-contributor/hooks/use-delete-release-contributor';
 import {
     RELEASE_AI_CONTENT,
     RELEASE_MADE_FOR_KIDS,
 } from '@/modules/releases/enums';
 import { ReleasesData } from '@/modules/releases/types';
-import { Button, Col, FormInstance, Input, Row, Select } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
+import {
+    Button,
+    Col,
+    FormInstance,
+    Input,
+    Popconfirm,
+    Row,
+    Select,
+    Tag,
+} from 'antd';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import ManageCollaboratorsModal from './manage-collaborators-modal';
@@ -34,9 +44,9 @@ export default function MetadataFields({
     const messages = useTranslations();
     const [isManageCollaboratorsOpen, setIsManageCollaboratorsOpen] =
         useState(false);
-    const { createReleaseArtist } = useCreateReleaseArtist();
+    const { bulkCreateReleaseArtist } = useBulkCreateReleaseArtist();
     const { deleteReleaseArtist } = useDeleteReleaseArtist();
-    const { createReleaseContributor } = useCreateReleaseContributor();
+    const { bulkCreateReleaseContributor } = useBulkCreateReleaseContributor();
     const { deleteReleaseContributor } = useDeleteReleaseContributor();
     const { artistsRolesData } = useGetListSimpleArtistRole();
 
@@ -45,15 +55,30 @@ export default function MetadataFields({
     );
     const featuredRoleId = featuredRole?.id;
 
-    const handleSelect = (artistId: string) => {
-        if (!dataEdit?.id) return;
-        createReleaseArtist({
-            payload: {
-                artistId,
-                releaseId: dataEdit.id,
-                addArtistToTracks: false,
-            },
-        });
+    const handleArtistsBlur = () => {
+        const releaseId = dataEdit?.id;
+        if (!releaseId) return;
+
+        const newArtistIds = form.getFieldValue('artistIds') || [];
+
+        const currentArtistIds =
+            dataEdit.releaseArtists?.map((a) => a.artistId) || [];
+
+        const addedIds = newArtistIds.filter(
+            (id: string) => !currentArtistIds.includes(id)
+        );
+
+        if (addedIds.length > 0) {
+            bulkCreateReleaseArtist({
+                payload: {
+                    items: addedIds.map((id: string) => ({
+                        artistId: id,
+                        releaseId,
+                        addArtistToTracks: false,
+                    })),
+                },
+            });
+        }
     };
 
     const handleDeselect = (artistId: string) => {
@@ -68,18 +93,6 @@ export default function MetadataFields({
         }
     };
 
-    const handleSelectFeatured = (artistId: string) => {
-        if (!dataEdit?.id || !featuredRoleId) return;
-        createReleaseContributor({
-            payload: {
-                artistId,
-                artistRoleId: featuredRoleId,
-                releaseId: dataEdit.id,
-                addContributorToTracks: false,
-            },
-        });
-    };
-
     const handleDeselectFeatured = (artistId: string) => {
         if (!dataEdit?.id) return;
         const contributor = dataEdit.releaseContributors?.find(
@@ -91,6 +104,76 @@ export default function MetadataFields({
                 id: contributor.id,
             });
         }
+    };
+
+    const handleFeaturedArtistsBlur = () => {
+        const releaseId = dataEdit?.id;
+        if (!releaseId || !featuredRoleId) return;
+
+        const newArtistIds = form.getFieldValue('featuredArtistIds') || [];
+
+        const currentContributorIds =
+            dataEdit.releaseContributors
+                ?.filter((c) => c.artistRole?.id === featuredRoleId)
+                .map((c) => c.artistId) || [];
+
+        const addedIds = newArtistIds.filter(
+            (id: string) => !currentContributorIds.includes(id)
+        );
+
+        if (addedIds.length > 0) {
+            bulkCreateReleaseContributor({
+                payload: {
+                    items: addedIds.map((id: string) => ({
+                        artistId: id,
+                        artistRoleId: featuredRoleId,
+                        releaseId,
+                        addContributorToTracks: false,
+                    })),
+                },
+            });
+        }
+    };
+
+    const tagRender = (props: any) => {
+        const { label, closable, onClose } = props;
+        const onPreventMouseDown = (
+            event: React.MouseEvent<HTMLSpanElement>
+        ) => {
+            event.preventDefault();
+            event.stopPropagation();
+        };
+
+        return (
+            <Tag
+                onMouseDown={onPreventMouseDown}
+                closable={closable}
+                onClose={(e) => {
+                    e.preventDefault();
+                }}
+                closeIcon={
+                    closable ? (
+                        <Popconfirm
+                            title={messages('delete.confirmTitle')}
+                            onConfirm={onClose}
+                            onCancel={(e) => e?.stopPropagation()}
+                        >
+                            <span onClick={(e) => e.stopPropagation()}>
+                                <CloseOutlined className="text-[10px]" />
+                            </span>
+                        </Popconfirm>
+                    ) : null
+                }
+                style={{
+                    marginRight: 3,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 4,
+                }}
+            >
+                {label}
+            </Tag>
+        );
     };
 
     return (
@@ -144,8 +227,9 @@ export default function MetadataFields({
                 <ArtistSelect
                     mode="multiple"
                     placeholder={messages('artist.select')}
-                    onSelect={handleSelect}
+                    onBlur={handleArtistsBlur}
                     onDeselect={handleDeselect}
+                    tagRender={tagRender}
                 />
             </AppFormItem>
 
@@ -157,8 +241,9 @@ export default function MetadataFields({
                 <ArtistSelect
                     mode="multiple"
                     placeholder={messages('artist.select')}
-                    onSelect={handleSelectFeatured}
+                    onBlur={handleFeaturedArtistsBlur}
                     onDeselect={handleDeselectFeatured}
+                    tagRender={tagRender}
                 />
             </AppFormItem>
 
@@ -177,6 +262,9 @@ export default function MetadataFields({
                 <GenresSelect
                     placeholder={messages('releaseVideo.fields.genre')}
                     allowClear
+                    onChange={(value) =>
+                        onFieldUpdate?.({ primaryGenreId: value })
+                    }
                 />
             </AppFormItem>
 
@@ -197,6 +285,13 @@ export default function MetadataFields({
                         <LanguageSelect
                             placeholder={messages('common.select')}
                             allowClear
+                            onChange={(value) =>
+                                onFieldUpdate?.({
+                                    releaseLanguage: {
+                                        audioLanguageId: value,
+                                    },
+                                })
+                            }
                         />
                     </AppFormItem>
                 </Col>
@@ -211,6 +306,13 @@ export default function MetadataFields({
                                 { value: false, label: messages('common.no') },
                                 { value: true, label: messages('common.yes') },
                             ]}
+                            onChange={(value) =>
+                                onFieldUpdate?.({
+                                    video: {
+                                        explicit: value,
+                                    },
+                                })
+                            }
                         />
                     </AppFormItem>
                 </Col>
@@ -245,6 +347,13 @@ export default function MetadataFields({
                                     label: messages('common.undetermined'),
                                 },
                             ]}
+                            onChange={(value) =>
+                                onFieldUpdate?.({
+                                    video: {
+                                        aiContent: value,
+                                    },
+                                })
+                            }
                         />
                     </AppFormItem>
                 </Col>
@@ -268,9 +377,9 @@ export default function MetadataFields({
                                 'releaseVideo.fields.isrcPlaceholder'
                             )}
                             allowClear
-                            onBlur={() =>
+                            onBlur={(e) =>
                                 onFieldUpdate?.({
-                                    video: form.getFieldValue('video'),
+                                    video: { isrc: e.target.value },
                                 })
                             }
                         />
@@ -297,9 +406,22 @@ export default function MetadataFields({
                             },
                         ]}
                     >
-                        <LabelSelect
+                        <Select
                             placeholder={messages('common.select')}
                             allowClear
+                            onChange={(value) =>
+                                onFieldUpdate?.({
+                                    video: {
+                                        contentProvider: value,
+                                    },
+                                })
+                            }
+                            options={[
+                                {
+                                    value: 'ANT Music LLC',
+                                    label: 'ANT Music LLC',
+                                },
+                            ]}
                         />
                     </AppFormItem>
                 </Col>
@@ -320,9 +442,11 @@ export default function MetadataFields({
                                 'releaseVideo.fields.repertoireOwner'
                             )}
                             allowClear
-                            onBlur={() =>
+                            onBlur={(e) =>
                                 onFieldUpdate?.({
-                                    video: form.getFieldValue('video'),
+                                    video: {
+                                        copyrightOwner: e.target.value,
+                                    },
                                 })
                             }
                         />
@@ -347,6 +471,9 @@ export default function MetadataFields({
                         <LabelSelect
                             placeholder={messages('common.select')}
                             allowClear
+                            onChange={(value) =>
+                                onFieldUpdate?.({ labelId: value })
+                            }
                         />
                     </AppFormItem>
                 </Col>
@@ -376,6 +503,13 @@ export default function MetadataFields({
                                 'releaseVideo.fields.channel'
                             )}
                             allowClear
+                            onChange={(value) =>
+                                onFieldUpdate?.({
+                                    video: {
+                                        channelId: value,
+                                    },
+                                })
+                            }
                         />
                     </AppFormItem>
                 </Col>
@@ -386,7 +520,9 @@ export default function MetadataFields({
                             onClick={() => setIsManageCollaboratorsOpen(true)}
                             className="font-semibold"
                         >
-                            {messages('releaseVideo.fields.manageCollaborators')}
+                            {messages(
+                                'releaseVideo.fields.manageCollaborators'
+                            )}
                         </Button>
                     </AppFormItem>
                 </Col>
@@ -404,6 +540,13 @@ export default function MetadataFields({
                     )}
                     allowClear
                     tokenSeparators={[',']}
+                    onChange={(value) =>
+                        onFieldUpdate?.({
+                            video: {
+                                keywords: value,
+                            },
+                        })
+                    }
                 />
             </AppFormItem>
 
@@ -428,9 +571,9 @@ export default function MetadataFields({
                     autoSize={{ minRows: 4, maxRows: 6 }}
                     maxLength={MAX_NOTE_LENGTH}
                     className="mb-2"
-                    onBlur={() =>
+                    onBlur={(e) =>
                         onFieldUpdate?.({
-                            video: form.getFieldValue('video'),
+                            video: { description: e.target.value },
                         })
                     }
                 />
@@ -460,9 +603,11 @@ export default function MetadataFields({
                             ),
                         },
                     ]}
-                    onBlur={() =>
+                    onChange={(value) =>
                         onFieldUpdate?.({
-                            video: form.getFieldValue('video'),
+                            video: {
+                                madeForKids: value,
+                            },
                         })
                     }
                 />

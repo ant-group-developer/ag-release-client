@@ -2,7 +2,7 @@ import { useApiNotify } from '@/hooks/use-api-notify';
 import { DetailResponse, UpdateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import { releasesApi } from '../apis';
 import { releasesQueryKeys } from '../constants/query-keys';
 import { ReleasesData } from '../types';
@@ -13,10 +13,55 @@ export const useUpdateReleaseDraft = () => {
     const queryClient = useQueryClient();
     const { handleError } = useApiNotify();
 
+    const latestMutationRef = useRef(0);
+
+    const latestResponseRef = useRef<AxiosResponse<
+        DetailResponse<ReleasesData>
+    > | null>(null);
+
+    const setCacheTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const scheduleSetDetailCache = useCallback(
+        (
+            id: ReleasesData['id'],
+            data: AxiosResponse<DetailResponse<ReleasesData>>
+        ) => {
+            latestResponseRef.current = data;
+
+            if (setCacheTimerRef.current) {
+                clearTimeout(setCacheTimerRef.current);
+            }
+
+            setCacheTimerRef.current = setTimeout(() => {
+                if (!latestResponseRef.current) return;
+
+                queryClient.setQueryData(
+                    releasesQueryKeys.detail(id),
+                    latestResponseRef.current
+                );
+
+                latestResponseRef.current = null;
+                setCacheTimerRef.current = null;
+            }, 15000);
+        },
+        [queryClient]
+    );
+
     const onMutate = async (
         variables: UpdateVariables<string, UpdateReleaseDraftPayload>
     ) => {
         const { id, payload } = variables;
+
+        const mutationId = latestMutationRef.current + 1;
+        latestMutationRef.current = mutationId;
+
+        if (setCacheTimerRef.current) {
+            clearTimeout(setCacheTimerRef.current);
+            setCacheTimerRef.current = null;
+        }
+
+        latestResponseRef.current = null;
+
         // Cancel query đang pending của detail
         await queryClient.cancelQueries({
             queryKey: releasesQueryKeys.detail(id),
@@ -57,7 +102,7 @@ export const useUpdateReleaseDraft = () => {
         });
 
         // Return context với snapshot để rollback
-        return { previousDetail };
+        return { previousDetail, mutationId };
     };
 
     const onSuccess = (
@@ -65,10 +110,18 @@ export const useUpdateReleaseDraft = () => {
         {
             onSuccess,
             id,
-        }: UpdateVariables<ReleasesData['id'], UpdateReleaseDraftPayload>
+        }: UpdateVariables<ReleasesData['id'], UpdateReleaseDraftPayload>,
+        context: any
     ) => {
         // Set data chính xác từ API response vào detail cache
-        queryClient.setQueryData(releasesQueryKeys.detail(id), data);
+        // queryClient.setQueryData(releasesQueryKeys.detail(id), data);
+
+        const isLatestMutation =
+            context?.mutationId === latestMutationRef.current;
+
+        if (isLatestMutation) {
+            scheduleSetDetailCache(id, data);
+        }
 
         queryClient.invalidateQueries({
             queryKey: releasesQueryKeys.lists(),
@@ -94,8 +147,11 @@ export const useUpdateReleaseDraft = () => {
         }: UpdateVariables<ReleasesData['id'], UpdateReleaseDraftPayload>,
         context: any
     ) => {
+        const isLatestMutation =
+            context?.mutationId === latestMutationRef.current;
+
         // Rollback detail về state trước đó nếu có lỗi
-        if (context?.previousDetail) {
+        if (isLatestMutation && context?.previousDetail) {
             queryClient.setQueryData(
                 releasesQueryKeys.detail(id),
                 context.previousDetail

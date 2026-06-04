@@ -61,3 +61,8 @@ export enum RELEASE_SUBMIT_LOG_LEVEL {
     ERROR = 'ERROR',
     WARNING = 'WARNING',
 }
+
+export enum CHILD_EXECUTION_MODE {
+    SEQUENTIAL = 'sequential',
+    PARALLEL = 'parallel',
+}

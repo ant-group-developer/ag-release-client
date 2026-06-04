@@ -2275,6 +2275,19 @@
                 "duration": "Duration"
             }
         },
+        "childExecutionMode": {
+            "title": "Child mode",
+            "sequential": "SEQUENTIAL",
+            "parallel": "PARALLEL",
+            "tooltipSequential": "Child steps will run from top to bottom",
+            "tooltipParallel": "Child steps will run concurrently, results are independent of each other"
+        },
+        "isDeliveryStep": {
+            "title": "Delivery step",
+            "tooltip": "Marks that the step will sync status with the release delivery DSP table if it encounters a syncable status",
+            "yes": "Yes",
+            "no": "No"
+        },
         "message": {
             "retrySuccess": "Retry execution successfully"
         },

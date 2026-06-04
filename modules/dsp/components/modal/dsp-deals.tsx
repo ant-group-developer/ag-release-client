@@ -86,6 +86,12 @@ export default function DspDeals({ dspId }: Props) {
                 if (!metadata?.privateKey) {
                     delete metadata.privateKey;
                 }
+                if (
+                    !metadata?.secretAccessKey ||
+                    metadata.secretAccessKey === ''
+                ) {
+                    delete metadata.secretAccessKey;
+                }
 
                 payload.sftpConfig = {
                     ...sftpConfig,
@@ -171,6 +177,8 @@ export default function DspDeals({ dspId }: Props) {
             // Clean empty optional fields
             if (!payload?.password) delete payload.password;
             if (!payload?.privateKey) delete payload.privateKey;
+            if (!payload?.secretAccessKey || payload.secretAccessKey === '')
+                delete payload.secretAccessKey;
 
             const variables: CreateVariables<TestSftpConnectionPayload> = {
                 payload,
@@ -184,13 +192,19 @@ export default function DspDeals({ dspId }: Props) {
                 },
             };
 
-            if (
+            const isExistingSftp =
                 storageType === STORAGE_TYPE.SFTP &&
                 dspRoutingConfig?.sftpConfig?.id &&
                 !metadata?.password &&
-                !metadata?.privateKey
-            ) {
-                const variables: CreateVariables<TestSftpConnectionByIdPayload> =
+                !metadata?.privateKey;
+
+            const isExistingS3 =
+                storageType === STORAGE_TYPE.S3 &&
+                dspRoutingConfig?.sftpConfig?.id &&
+                (!metadata?.secretAccessKey || metadata?.secretAccessKey === '');
+
+            if (isExistingSftp || isExistingS3) {
+                const variablesById: CreateVariables<TestSftpConnectionByIdPayload> =
                     {
                         payload: {
                             id: dspRoutingConfig?.sftpConfig?.id,
@@ -205,7 +219,7 @@ export default function DspDeals({ dspId }: Props) {
                             deActiveConnection();
                         },
                     };
-                return testConnectionById(variables);
+                return testConnectionById(variablesById);
             } else {
                 testConnection(variables);
             }
@@ -386,14 +400,6 @@ export default function DspDeals({ dspId }: Props) {
                                         'sftpConfig',
                                         'metadata',
                                         'secretAccessKey',
-                                    ]}
-                                    required
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message:
-                                                messages('validation.input'),
-                                        },
                                     ]}
                                 >
                                     <Input.Password

@@ -7,6 +7,7 @@ import {
     RELEASE_SUBMIT_STEP_STATUS,
     RELEASE_SUBMIT_STEP_TYPE,
     RELEASE_SUBMIT_TYPE,
+    CHILD_EXECUTION_MODE,
 } from '../enums';
 
 export interface ReleaseSubmitData extends CommonAttribute {
@@ -43,11 +44,16 @@ export interface ReleaseSubmitStepData extends CommonAttribute {
     retryCount: number;
     metadata: any | null;
     childSteps: ReleaseSubmitStepData[];
+    logs?: ReleaseSubmitLogsData[];
+    childExecutionMode?: CHILD_EXECUTION_MODE;
+    isDeliveryStep?: boolean;
 }
 
 export interface ReleaseSubmitLogsData extends CommonAttribute {
     releaseSubmitId: ReleaseSubmitData['id'];
     releaseSubmitStepId: ReleaseSubmitStepData['id'];
+    releaseExecutionId: string;
+    releaseExecutionStepId: string;
     message: string;
     level: RELEASE_SUBMIT_LOG_LEVEL;
     data: any;

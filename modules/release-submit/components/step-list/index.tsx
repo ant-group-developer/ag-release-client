@@ -29,7 +29,7 @@ export default function ReleaseSubmitStepList({
         <div className={nested ? 'space-y-3' : 'space-y-4'}>
             {dataSource.map((record) => {
                 const stepLogs = logs.filter(
-                    (log) => log.releaseSubmitStepId === record.id
+                    (log) => log.releaseExecutionStepId === record.id
                 );
                 const durationText =
                     formatDurationShort(

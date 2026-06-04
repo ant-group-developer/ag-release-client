@@ -13,7 +13,6 @@ import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-relea
 import { ReleasesData } from '@/modules/releases/types';
 import { Card, Form, Tabs, TabsProps } from 'antd';
 import dayjs from 'dayjs';
-import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect } from 'react';
@@ -63,55 +62,6 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
     const directorRoleId = artistsRolesData?.find((r) =>
         r.name?.toLowerCase().includes('director')
     )?.id;
-
-    const debouncedUpdate = useCallback(
-        debounce((changedValues: any) => {
-            if (!isUpdateForm || !dataEdit?.id) return;
-
-            const payloadValues = {
-                ...changedValues,
-            };
-
-            delete payloadValues.artistIds;
-            delete payloadValues.featuredArtistIds;
-            delete payloadValues.composers;
-            delete payloadValues.editors;
-            delete payloadValues.producers;
-            delete payloadValues.directors;
-
-            // Remove text input fields (handled by onBlur)
-            delete payloadValues.title;
-            delete payloadValues.upc;
-            delete payloadValues.version;
-            delete payloadValues.cLineOwner;
-            if (payloadValues.video) {
-                delete payloadValues.video.isrc;
-                delete payloadValues.video.title;
-                delete payloadValues.video.description;
-                delete payloadValues.video.copyrightOwner;
-                delete payloadValues.video.partnerCustomId1;
-                delete payloadValues.video.partnerCustomId2;
-
-                if (Object.keys(payloadValues.video).length === 0) {
-                    delete payloadValues.video;
-                }
-            }
-
-            if ('cLineYear' in changedValues) {
-                payloadValues.cLineYear = changedValues.cLineYear
-                    ? dayjs(changedValues.cLineYear).year()
-                    : null;
-            }
-
-            if (Object.keys(payloadValues).length === 0) return;
-
-            updateReleaseDraft({
-                id: dataEdit.id,
-                payload: payloadValues,
-            });
-        }, 700),
-        [isUpdateForm, dataEdit?.id, updateReleaseDraft]
-    );
 
     const handleFieldUpdate = useCallback(
         (payload: Record<string, any>) => {
@@ -234,9 +184,6 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
                 onFinish={onFinish}
                 layout="vertical"
                 disabled={isActive}
-                onValuesChange={(changedValues) => {
-                    debouncedUpdate(changedValues);
-                }}
             >
                 <Tabs
                     activeKey={activeTab}

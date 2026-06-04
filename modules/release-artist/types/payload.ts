@@ -7,3 +7,7 @@ export interface CreateReleaseArtistPayload {
 
 export interface UpdateReleaseArtistPayload
     extends Partial<CreateReleaseArtistPayload> {}
+
+export interface BulkCreateReleaseArtistPayload {
+    items: CreateReleaseArtistPayload[];
+}
