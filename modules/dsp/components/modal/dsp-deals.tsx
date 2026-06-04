@@ -86,6 +86,12 @@ export default function DspDeals({ dspId }: Props) {
                 if (!metadata?.privateKey) {
                     delete metadata.privateKey;
                 }
+                if (
+                    !metadata?.secretAccessKey ||
+                    metadata.secretAccessKey === ''
+                ) {
+                    delete metadata.secretAccessKey;
+                }
 
                 payload.sftpConfig = {
                     ...sftpConfig,
@@ -171,6 +177,8 @@ export default function DspDeals({ dspId }: Props) {
             // Clean empty optional fields
             if (!payload?.password) delete payload.password;
             if (!payload?.privateKey) delete payload.privateKey;
+            if (!payload?.secretAccessKey || payload.secretAccessKey === '')
+                delete payload.secretAccessKey;
 
             const variables: CreateVariables<TestSftpConnectionPayload> = {
                 payload,
@@ -386,14 +394,6 @@ export default function DspDeals({ dspId }: Props) {
                                         'sftpConfig',
                                         'metadata',
                                         'secretAccessKey',
-                                    ]}
-                                    required
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message:
-                                                messages('validation.input'),
-                                        },
                                     ]}
                                 >
                                     <Input.Password
