@@ -15,6 +15,7 @@ import ReleaseSubmitSnapshotModal from '@/modules/release-submit/components/snap
 import ReleaseSubmitTable from '@/modules/release-submit/components/table';
 import { useGetListReleaseSubmits } from '@/modules/release-submit/hooks/use-get-list';
 import { ReleaseSubmitFilter } from '@/modules/release-submit/types';
+import { RELEASE_SUBMIT_SORT_FIELD } from '@/modules/release-submit/enums';
 import { PageContainer } from '@ant-design/pro-components';
 import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -33,7 +34,7 @@ export default function ReleaseSubmitsPage() {
             page: 1,
             pageSize: PAGE_SIZE,
             orderBy: ORDER.DESC,
-            fieldOrder: 'submit.createdAt',
+            fieldOrder: RELEASE_SUBMIT_SORT_FIELD.CREATED_AT,
         });
 
     const { releaseSubmitsData, isFetching, refetch } =

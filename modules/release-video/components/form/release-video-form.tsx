@@ -7,6 +7,7 @@ import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribut
 import AdditionalTab from '@/modules/release-video/components/modal/additional-tab';
 import DetailsTab from '@/modules/release-video/components/modal/details-tab';
 import DistributionTab from '@/modules/release-video/components/modal/distribution-tab';
+import SubmitsTab from '@/modules/release-video/components/modal/submits-tab';
 import { RELEASE_VIDEO_TABS } from '@/modules/release-video/enums';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
 import { ReleasesData } from '@/modules/releases/types';
@@ -15,6 +16,7 @@ import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect } from 'react';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 
 type Props = {
     dataEdit?: ReleasesData;
@@ -28,16 +30,21 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [form] = Form.useForm();
+    const { isAdmin } = useAuth();
     // const { active, isActive, deActive } = useActive();
     const isUpdateForm = !!dataEdit?.id;
     const tabParam = searchParams.get('tab');
-    const activeTab =
+    const activeTabTemp =
         tabParam !== null &&
         Object.values(RELEASE_VIDEO_TABS).includes(
             tabParam as RELEASE_VIDEO_TABS
         )
             ? (tabParam as RELEASE_VIDEO_TABS)
             : DEFAULT_RELEASE_VIDEO_TAB;
+    const activeTab =
+        activeTabTemp === RELEASE_VIDEO_TABS.SUBMITS && !isAdmin
+            ? DEFAULT_RELEASE_VIDEO_TAB
+            : activeTabTemp;
 
     // const { createReleaseDraft } = useCreateReleaseDraft();
     const { updateReleaseDraft, isPending: isUpdatingDraft } = useUpdateReleaseDraft();
@@ -146,6 +153,7 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
                 <DetailsTab form={form} onFieldUpdate={handleFieldUpdate} />
             ),
             style: { outline: 'none' },
+            forceRender: true,
         },
         {
             key: RELEASE_VIDEO_TABS.ADDITIONAL,
@@ -158,13 +166,25 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
                 />
             ),
             style: { outline: 'none' },
+            forceRender: true,
         },
         {
             key: RELEASE_VIDEO_TABS.DISTRIBUTION,
             label: messages('releaseVideo.tabs.distribution'),
             children: <DistributionTab form={form} dataEdit={dataEdit} onFieldUpdate={handleFieldUpdate} />,
             style: { outline: 'none' },
+            forceRender: true,
         },
+        ...(isAdmin
+            ? [
+                  {
+                      key: RELEASE_VIDEO_TABS.SUBMITS,
+                      label: messages('releaseVideo.tabs.submits'),
+                      children: <SubmitsTab releaseId={dataEdit?.id} />,
+                      style: { outline: 'none' },
+                  },
+              ]
+            : []),
     ];
 
     const onChangeTab = (tab: string) => {
@@ -177,7 +197,7 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
         <Card variant="borderless" className="shadow-sm">
             <AppForm
                 form={form}
-                showSubmit={isUpdateForm}
+                showSubmit={isUpdateForm && activeTab !== RELEASE_VIDEO_TABS.SUBMITS}
                 submitText={messages('release.action.submit')}
                 submitProps={{
                     loading: isDistributingRelease || isUpdatingDraft,

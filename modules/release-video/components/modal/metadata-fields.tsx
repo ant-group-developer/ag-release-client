@@ -1,7 +1,6 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ArtistSelect from '@/components/ui/select/artist-select';
 import GenresSelect from '@/components/ui/select/genres-select';
-import LabelSelect from '@/components/ui/select/label-select';
 import LanguageSelect from '@/components/ui/select/language-select';
 import { MAX_NAME_LENGTH, MAX_NOTE_LENGTH } from '@/constants/validate';
 import { showNotification } from '@/helpers/messages-helper';
@@ -390,12 +389,12 @@ export default function MetadataFields({
             </Row>
 
             {/* Ownership Subheader */}
-            <div className="mb-4 mt-6 border-b border-gray-100 pb-2 text-base font-bold tracking-wide text-gray-800">
+            <div className="mb-4 mt-6 border-b border-gray-100 pb-2 text-base font-bold tracking-wide">
                 {messages('common.ownership')}
             </div>
 
             {/* Content Provider & Repertoire Owner */}
-            <Row gutter={16}>
+            {/* <Row gutter={16}>
                 <Col span={12}>
                     <AppFormItem
                         name={['video', 'contentProvider']}
@@ -454,27 +453,31 @@ export default function MetadataFields({
                         />
                     </AppFormItem>
                 </Col>
-            </Row>
+            </Row> */}
 
             {/* Label */}
-            <Row gutter={16}>
+            <Row gutter={24}>
                 <Col span={24}>
                     <AppFormItem
-                        name="labelId"
+                        name={['video', 'label']}
                         label={messages('formFields.labelId')}
                         required
                         rules={[
                             {
                                 required: true,
-                                message: messages('validation.select'),
+                                message: messages('validation.input'),
                             },
                         ]}
                     >
-                        <LabelSelect
+                        <Input
                             placeholder={messages('formFields.labelId')}
                             allowClear
-                            onChange={(value) =>
-                                onFieldUpdate?.({ labelId: value })
+                            onBlur={(e) =>
+                                onFieldUpdate?.({
+                                    video: {
+                                        label: e.target.value,
+                                    },
+                                })
                             }
                         />
                     </AppFormItem>
@@ -482,7 +485,7 @@ export default function MetadataFields({
             </Row>
 
             {/* YouTube Subheader */}
-            <div className="mb-4 mt-6 border-b border-gray-100 pb-2 text-base font-bold tracking-wide text-gray-800">
+            <div className="mb-4 mt-6 border-b border-gray-100 pb-2 text-base font-bold tracking-wide">
                 YouTube
             </div>
 
@@ -520,7 +523,7 @@ export default function MetadataFields({
                         <Button
                             shape="round"
                             onClick={() => setIsManageCollaboratorsOpen(true)}
-                            className="font-semibold"
+                            className="w-full font-semibold"
                         >
                             {messages(
                                 'releaseVideo.fields.manageCollaborators'

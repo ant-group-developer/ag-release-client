@@ -58,7 +58,7 @@ export default function VideoAssets({ form, dataEdit }: VideoAssetsProps) {
 
             <div>
                 <div className="mt-6 border-t border-gray-100 pt-6">
-                    <h3 className="mb-4 text-base font-bold tracking-wide text-gray-800">
+                    <h3 className="mb-4 text-base font-bold tracking-wide">
                         {messages('releaseVideo.fields.assets')}
                     </h3>
 

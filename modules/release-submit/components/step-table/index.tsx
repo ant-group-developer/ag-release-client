@@ -4,7 +4,7 @@ import { SIZE_ICON } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
 import { DspData } from '@/modules/dsp/types';
-import { Avatar, Table, Tag, theme, Typography } from 'antd';
+import { Avatar, Popconfirm, Table, Tag, theme, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { Check, Eye, RotateCcw } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -234,17 +234,23 @@ export default function ReleaseSubmitStepTable({
                         </IconButton>
                     </CustomTooltip>
                     {record.status === RELEASE_SUBMIT_STEP_STATUS.FAILED && (
-                        <CustomTooltip title={messages('common.retry')}>
-                            <IconButton
-                                onClick={() => {
-                                    retryStep({
-                                        stepId: record.id,
-                                    });
-                                }}
-                            >
-                                <RotateCcw size={SIZE_ICON} />
-                            </IconButton>
-                        </CustomTooltip>
+                        <Popconfirm
+                            title={messages('releaseExecution.confirm.retryTitle')}
+                            description={messages('releaseExecution.confirm.retryDescription')}
+                            onConfirm={() => {
+                                retryStep({
+                                    stepId: record.id,
+                                });
+                            }}
+                            okText={messages('common.yes')}
+                            cancelText={messages('common.no')}
+                        >
+                            <CustomTooltip title={messages('common.retry')}>
+                                <IconButton>
+                                    <RotateCcw size={SIZE_ICON} />
+                                </IconButton>
+                            </CustomTooltip>
+                        </Popconfirm>
                     )}
                 </div>
             ),

@@ -18,6 +18,7 @@ function DeleteButton({ showTooltip = true, canDelete, ...props }: Props) {
         return (
             <Tooltip title={messages('common.delete')}>
                 <button
+                    type="button"
                     {...props}
                     className="rounded-full border-0 bg-inherit p-2"
                     onMouseEnter={(e) =>
@@ -33,19 +34,18 @@ function DeleteButton({ showTooltip = true, canDelete, ...props }: Props) {
         );
     }
     return (
-        <button {...props}>
-            <button
-                {...props}
-                className="rounded-full border-0 bg-inherit p-2"
-                onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor = '#fee2e2')
-                }
-                onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor = '')
-                }
-            >
-                <Trash size={16} color="red" />
-            </button>
+        <button
+            type="button"
+            {...props}
+            className={`rounded-full border-0 bg-inherit p-2 ${props.className || ''}`}
+            onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor = '#fee2e2')
+            }
+            onMouseLeave={(e) =>
+                (e.currentTarget.style.backgroundColor = '')
+            }
+        >
+            <Trash size={16} color="red" />
         </button>
     );
 }

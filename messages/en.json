@@ -1264,12 +1264,14 @@
             "captionFilesSummary": "{captionCount} caption files. {subtitleCount} subtitle files.",
             "channelDefault": "Channel Default",
             "collaboratingChannels": "Collaborating channels",
-            "manageCollaborators": "Manage collaborators"
+            "manageCollaborators": "Manage collaborators",
+            "roleNotFound": "Role not found"
         },
         "tabs": {
             "details": "Details",
             "additional": "Additional",
-            "distribution": "Distribution"
+            "distribution": "Distribution",
+            "submits": "Submit logs"
         },
         "additionalTitle": "Additional Metadata",
         "additionalDesc": "Configure advanced options, alternative titles, or supplementary tags.",

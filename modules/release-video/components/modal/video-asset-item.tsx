@@ -8,7 +8,7 @@ import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { CreateBucketFile } from '@/modules/upload/types/data';
 import { VideoCameraOutlined } from '@ant-design/icons';
-import { Button, FormInstance, Modal, Upload } from 'antd';
+import { Button, FormInstance, Modal, Space, Upload } from 'antd';
 import axios from 'axios';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
@@ -279,9 +279,10 @@ export default function VideoAssetItem({
 
     return (
         <div className="mb-5">
-            <div className="mb-2 flex items-center justify-between text-xs font-bold text-gray-800">
-                <span>{messages('releaseVideo.fields.videoFile')} *</span>
-            </div>
+            <Space className="text-xs font-bold">
+                <span>{messages('releaseVideo.fields.videoFile')}</span>
+                <span className="text-red-500">*</span>
+            </Space>
 
             <AppFormItem
                 name="videoFile"

@@ -1262,12 +1262,14 @@
             "captionFilesSummary": "{captionCount} tệp chú thích. {subtitleCount} tệp phụ đề.",
             "channelDefault": "Mặc định của kênh",
             "collaboratingChannels": "Kênh cộng tác",
-            "manageCollaborators": "Quản lý cộng tác viên"
+            "manageCollaborators": "Quản lý cộng tác viên",
+            "roleNotFound": "Không tìm thấy vai trò"
         },
         "tabs": {
             "details": "Chi tiết",
             "additional": "Bổ sung",
-            "distribution": "Phân phối"
+            "distribution": "Phân phối",
+            "submits": "Submit logs"
         },
         "additionalTitle": "Siêu dữ liệu bổ sung",
         "additionalDesc": "Cấu hình các tùy chọn nâng cao, tiêu đề thay thế hoặc thẻ bổ sung.",

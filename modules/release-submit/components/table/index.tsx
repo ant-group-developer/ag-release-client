@@ -22,6 +22,7 @@ import {
     getReleaseSubmitTypeColor,
 } from '../../helpers';
 import { ReleaseSubmitData, ReleaseSubmitFilter } from '../../types';
+import { RELEASE_SUBMIT_SORT_FIELD } from '../../enums';
 
 type Props = Omit<AppProTableProps<ReleaseSubmitData>, 'columns'> & {
     dataFilter: ReleaseSubmitFilter;
@@ -239,13 +240,13 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
         },
         {
             title: messages('common.createdAt'),
-            dataIndex: 'submit.createdAt',
-            key: 'submit.createdAt',
+            dataIndex: RELEASE_SUBMIT_SORT_FIELD.CREATED_AT,
+            key: RELEASE_SUBMIT_SORT_FIELD.CREATED_AT,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter?.orderBy,
                 dataFilter?.fieldOrder,
-                'submit.createdAt'
+                RELEASE_SUBMIT_SORT_FIELD.CREATED_AT
             ),
             width: 150,
             render: (value, record) =>
