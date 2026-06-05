@@ -162,7 +162,7 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
         {
             key: RELEASE_VIDEO_TABS.DISTRIBUTION,
             label: messages('releaseVideo.tabs.distribution'),
-            children: <DistributionTab form={form} />,
+            children: <DistributionTab form={form} dataEdit={dataEdit} onFieldUpdate={handleFieldUpdate} />,
             style: { outline: 'none' },
         },
     ];

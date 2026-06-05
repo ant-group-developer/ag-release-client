@@ -17,11 +17,15 @@ import {
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 
+import { ReleasesData } from '@/modules/releases/types';
+
 interface DistributionTabProps {
+    dataEdit?: ReleasesData;
+    onFieldUpdate?: (payload: Record<string, any>) => void;
     form: FormInstance;
 }
 
-export default function DistributionTab({ form }: DistributionTabProps) {
+export default function DistributionTab({ dataEdit, onFieldUpdate, form }: DistributionTabProps) {
     const messages = useTranslations();
     const releaseTimeMode = Form.useWatch('releaseTimeMode', form);
     const distributeWorldwide = Form.useWatch(
@@ -41,6 +45,9 @@ export default function DistributionTab({ form }: DistributionTabProps) {
                     placeholder={messages(
                         'releaseVideo.fields.selectVisibility'
                     )}
+                    onChange={(value) =>
+                        onFieldUpdate?.({ video: { visibility: value } })
+                    }
                     options={[
                         {
                             value: RELEASE_VIDEO_VISIBILITY.DEFAULT,
@@ -92,6 +99,11 @@ export default function DistributionTab({ form }: DistributionTabProps) {
                         <DatePicker
                             className="w-full"
                             format={DATE_FORMAT.DATE_ONLY}
+                            onChange={(date) =>
+                                onFieldUpdate?.({
+                                    releaseDate: date ? date.toISOString() : null,
+                                })
+                            }
                         />
                     </AppFormItem>
                 </Col>
@@ -110,6 +122,11 @@ export default function DistributionTab({ form }: DistributionTabProps) {
                         <DatePicker
                             className="w-full"
                             format={DATE_FORMAT.DATE_ONLY}
+                            onChange={(date) =>
+                                onFieldUpdate?.({
+                                    releaseEndDate: date ? date.toISOString() : null,
+                                })
+                            }
                         />
                     </AppFormItem>
                 </Col>
@@ -127,7 +144,14 @@ export default function DistributionTab({ form }: DistributionTabProps) {
                             },
                         ]}
                     >
-                        <Radio.Group className="flex flex-col gap-2">
+                        <Radio.Group 
+                            className="flex flex-col gap-2"
+                            onChange={(e) =>
+                                onFieldUpdate?.({
+                                    releaseTimeMode: e.target.value,
+                                })
+                            }
+                        >
                             <Radio value={RELEASE_TIME_MODE.GLOBAL_MIDNIGHT}>
                                 {messages(
                                     'release.scheduling.atMidnightInEveryCountry'
@@ -155,7 +179,13 @@ export default function DistributionTab({ form }: DistributionTabProps) {
                                         },
                                     ]}
                                 >
-                                    <TimezoneSelect />
+                                    <TimezoneSelect 
+                                        onChange={(value) =>
+                                            onFieldUpdate?.({
+                                                releaseTimezoneId: value,
+                                            })
+                                        }
+                                    />
                                 </AppFormItem>
                             </Col>
                             <Col span={12}>
@@ -190,6 +220,13 @@ export default function DistributionTab({ form }: DistributionTabProps) {
                                         className="w-full"
                                         format={DATE_FORMAT.HOUR_MINUTE}
                                         showSecond={false}
+                                        onChange={(time) =>
+                                            onFieldUpdate?.({
+                                                releaseTime: time
+                                                    ? time.format(DATE_FORMAT.HOUR_MINUTE)
+                                                    : '',
+                                            })
+                                        }
                                     />
                                 </AppFormItem>
                             </Col>
@@ -210,7 +247,15 @@ export default function DistributionTab({ form }: DistributionTabProps) {
                             },
                         ]}
                     >
-                        <Radio.Group>
+                        <Radio.Group
+                            onChange={(e) =>
+                                onFieldUpdate?.({
+                                    releaseTerritory: {
+                                        distributeWorldwide: e.target.value,
+                                    },
+                                })
+                            }
+                        >
                             <Radio value={true}>{messages('common.yes')}</Radio>
                             <Radio value={false}>{messages('common.no')}</Radio>
                         </Radio.Group>
@@ -227,7 +272,16 @@ export default function DistributionTab({ form }: DistributionTabProps) {
                                     },
                                 ]}
                             >
-                                <Radio.Group className="flex flex-col gap-2">
+                                <Radio.Group 
+                                    className="flex flex-col gap-2"
+                                    onChange={(e) =>
+                                        onFieldUpdate?.({
+                                            releaseTerritory: {
+                                                distributionType: e.target.value,
+                                            },
+                                        })
+                                    }
+                                >
                                     <Radio
                                         value={
                                             DISTRIBUTE_TYPES.DISTRIBUTE_ONLY_IN
@@ -263,6 +317,13 @@ export default function DistributionTab({ form }: DistributionTabProps) {
                                     mode="multiple"
                                     allowClear
                                     maxTagCount="responsive"
+                                    onChange={(value) =>
+                                        onFieldUpdate?.({
+                                            releaseTerritory: {
+                                                selectedCountries: value,
+                                            },
+                                        })
+                                    }
                                 />
                             </AppFormItem>
                         </>

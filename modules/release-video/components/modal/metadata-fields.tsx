@@ -1,6 +1,7 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ArtistSelect from '@/components/ui/select/artist-select';
 import GenresSelect from '@/components/ui/select/genres-select';
+import LabelSelect from '@/components/ui/select/label-select';
 import LanguageSelect from '@/components/ui/select/language-select';
 import { MAX_NAME_LENGTH, MAX_NOTE_LENGTH } from '@/constants/validate';
 import { showNotification } from '@/helpers/messages-helper';
@@ -459,21 +460,21 @@ export default function MetadataFields({
             <Row gutter={16}>
                 <Col span={24}>
                     <AppFormItem
-                        name="label"
+                        name="labelId"
                         label={messages('formFields.labelId')}
                         required
                         rules={[
                             {
                                 required: true,
-                                message: messages('validation.input'),
+                                message: messages('validation.select'),
                             },
                         ]}
                     >
-                        <Input
+                        <LabelSelect
                             placeholder={messages('formFields.labelId')}
                             allowClear
-                            onBlur={(e) =>
-                                onFieldUpdate?.({ label: e.target.value })
+                            onChange={(value) =>
+                                onFieldUpdate?.({ labelId: value })
                             }
                         />
                     </AppFormItem>
