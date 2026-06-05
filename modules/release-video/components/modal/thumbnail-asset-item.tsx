@@ -1,3 +1,4 @@
+import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import { TYPE_UPLOAD_BUCKET } from '@/enums/common';
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
@@ -242,24 +243,44 @@ export default function ThumbnailAssetItem({
                 <span>{messages('releaseVideo.fields.thumbnailFile')} *</span>
             </div>
 
-            <ImageListUpload
-                id="thumbnailFile"
-                // loading={isThumbnailUploading}
-                accept="image/*"
-                maxCount={1}
-                value={form.getFieldValue('thumbnailFile')}
-                placeholder={messages('common.uploadImage')}
-                onChange={handleThumbnailUpload}
-                onRemove={handleRemove}
-            />
-
-            {fileList.length < 1 && !isThumbnailUploading && (
-                <div className="mt-1.5 text-left">
-                    <span className="text-[11px] font-normal italic text-red-500">
-                        {messages('releaseVideo.fields.thumbnailNotUploaded')} *
-                    </span>
-                </div>
-            )}
+            <AppFormItem
+                name="thumbnailFile"
+                rules={[
+                    {
+                        validator: async (_, value) => {
+                            if (
+                                !value ||
+                                !value.fileList ||
+                                value.fileList.length === 0
+                            ) {
+                                return Promise.reject(
+                                    new Error(
+                                        messages(
+                                            'releaseVideo.fields.thumbnailNotUploaded'
+                                        )
+                                    )
+                                );
+                            }
+                            if (isThumbnailUploading) {
+                                return Promise.reject(
+                                    new Error(messages('common.processing'))
+                                );
+                            }
+                        },
+                    },
+                ]}
+            >
+                <ImageListUpload
+                    id="thumbnailFile"
+                    // loading={isThumbnailUploading}
+                    accept="image/*"
+                    maxCount={1}
+                    value={form.getFieldValue('thumbnailFile')}
+                    placeholder={messages('common.uploadImage')}
+                    onChange={handleThumbnailUpload}
+                    onRemove={handleRemove}
+                />
+            </AppFormItem>
         </div>
     );
 }

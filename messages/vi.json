@@ -539,6 +539,7 @@
     },
     "validation": {
         "error": "Lỗi xác thực",
+        "missingRequiredFields": "Vui lòng nhập đầy đủ các thông tin yêu cầu",
         "noError": "Không có lỗi xác thực",
         "emailFormat": "Vui lòng nhập đúng định dạng Email!",
         "select": "Vui lòng chọn thông tin!",
@@ -2253,28 +2254,36 @@
         },
         "detail": {
             "columns": {
-                "dspName": "DSP Name",
-                "step": "Step",
-                "status": "Status",
-                "startedAt": "Started At",
-                "completedAt": "Completed At",
-                "duration": "Duration"
+                "stepType": "Loại bước",
+                "dsp": "DSP",
+                "dspName": "Tên DSP",
+                "step": "Bước",
+                "status": "Trạng thái",
+                "startedAt": "Bắt đầu",
+                "completedAt": "Hoàn thành",
+                "duration": "Thời lượng",
+                "logs": "Nhật ký",
+                "completedIn": "Hoàn thành trong",
+                "logTime": "Thời gian",
+                "logLevel": "Cấp độ",
+                "logMessage": "Nội dung"
             }
         },
         "childExecutionMode": {
-            "title": "Child mode",
+            "title": "Chế độ thực thi",
             "sequential": "SEQUENTIAL",
             "parallel": "PARALLEL",
             "tooltipSequential": "Các step con sẽ chạy từ trên xuống dưới",
             "tooltipParallel": "Các step con sẽ chạy đồng thời, kết quả ko phụ thuộc vào nhau"
         },
         "isDeliveryStep": {
-            "title": "Delivery step",
+            "title": "Bước giao phát",
             "tooltip": "Đánh dấu là step sẽ đồng bộ status với bảng release delivery dsp nếu gặp status cần đồng bộ",
             "yes": "Có",
             "no": "Không"
         },
         "columns": {
+            "coverArt": "Ảnh bìa",
             "upc": "UPC",
             "originalDspCodes": "Mã DSP đích",
             "since": "Từ lúc",

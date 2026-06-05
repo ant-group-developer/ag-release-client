@@ -7,12 +7,16 @@ import { RELEASE_COVER_ART_SIZE } from '../../constants';
 import { ReleasesData } from '../../types';
 
 type Props = {
-    data: ReleasesData;
+    data?: ReleasesData;
+    fileId?: string;
+    width?: number;
+    height?: number;
 };
 
-export default function ReleaseCoverImage({ data }: Props) {
+export default function ReleaseCoverImage({ data, fileId, width = 56, height = 56 }: Props) {
     const [isLoading, setIsLoading] = useState(true);
     const imgFileId =
+        fileId ??
         data?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.S75] ??
         data?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.ORIGINAL];
 
@@ -41,7 +45,8 @@ export default function ReleaseCoverImage({ data }: Props) {
             <div ref={ref}>
                 <Skeleton.Node
                     active
-                    className="aspect-square !h-14 !w-14 !rounded-lg"
+                    style={{ width, height }}
+                    className="aspect-square !rounded-lg"
                 />
             </div>
         );
@@ -52,8 +57,8 @@ export default function ReleaseCoverImage({ data }: Props) {
             <ImageFallback
                 src={linkReadFile}
                 alt="cover"
-                width={56}
-                height={56}
+                width={width}
+                height={height}
                 className={`aspect-square rounded-lg object-cover transition-opacity duration-300`}
                 onLoad={() => setIsLoading(false)}
                 onError={() => setIsLoading(false)}

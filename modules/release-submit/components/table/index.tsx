@@ -9,6 +9,7 @@ import { OnChangeFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { TYPE_MODAL_RELEASE_EXECUTION } from '@/modules/release-executions/enums';
+import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { ProColumns } from '@ant-design/pro-components';
 import { Avatar, Space, Tag, theme, Typography } from 'antd';
 import { Eye, FileJson } from 'lucide-react';
@@ -61,20 +62,47 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
             fixed: 'left',
             render: (_, record) => (
                 <Typography.Text copyable>
-                    {record?.metadata?.input?.releaseSnapshot?.upc || '-'}
+                    {record?.metadata?.input?.upcAutoIfReleaseSnapshotNull ||
+                        record?.metadata?.input?.releaseSnapshot?.upc ||
+                        '-'}
                 </Typography.Text>
             ),
         },
         {
             title: messages('releaseExecution.columns.releaseName'),
             key: 'releaseId',
-            width: 200,
+            width: 250,
             ellipsis: true,
-            render: (_, record) => (
-                <Typography.Text copyable>
-                    {record?.metadata?.input?.releaseSnapshot?.title || '-'}
-                </Typography.Text>
-            ),
+            render: (_, record) => {
+                const releaseSnapshot =
+                    record?.metadata?.input?.releaseSnapshot;
+                const coverArts = (releaseSnapshot as any)?.releaseCoverArts as
+                    | { type: string; fileId: string }[]
+                    | undefined;
+                const coverArtFileId =
+                    coverArts?.find((art) => art.type === '75x75')?.fileId ??
+                    coverArts?.[0]?.fileId;
+                return (
+                    <Space>
+                        {coverArtFileId ? (
+                            <div style={{ flexShrink: 0 }}>
+                                <ReleaseCoverImage
+                                    fileId={coverArtFileId}
+                                    width={36}
+                                    height={36}
+                                />
+                            </div>
+                        ) : (
+                            <Avatar shape="square" size={36}>
+                                -
+                            </Avatar>
+                        )}
+                        <Typography.Text copyable ellipsis>
+                            {releaseSnapshot?.title || '-'}
+                        </Typography.Text>
+                    </Space>
+                );
+            },
         },
         {
             title: messages('releaseExecution.columns.type'),
@@ -166,7 +194,8 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
                     formatRelativeShort(record?.createdAt);
                 const completedText = formatDurationShort(
                     record?.createdAt,
-                    record?.completedAt
+                    record?.completedAt,
+                    messages('releaseExecution.detail.columns.completedIn')
                 );
 
                 if (!sinceText && !completedText && !record?.summary)

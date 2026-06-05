@@ -13,6 +13,7 @@ import {
     Typography,
     theme,
 } from 'antd';
+import { useTranslations } from 'next-intl';
 import {
     formatDurationShort,
     formatEnumLabel,
@@ -30,6 +31,7 @@ export default function ReleaseSubmitStepDetailModal({
     ...props
 }: Props) {
     const { token } = theme.useToken();
+    const messages = useTranslations();
 
     if (!step) return null;
 
@@ -150,11 +152,12 @@ export default function ReleaseSubmitStepDetailModal({
                             },
                             {
                                 key: 'duration',
-                                label: 'Duration',
+                                label: messages('releaseExecution.detail.columns.duration'),
                                 children:
                                     formatDurationShort(
                                         step.startedAt,
-                                        step.completedAt
+                                        step.completedAt,
+                                        messages('releaseExecution.detail.columns.completedIn')
                                     ) || '-',
                             },
                         ]}

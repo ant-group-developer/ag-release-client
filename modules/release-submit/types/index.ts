@@ -2,12 +2,12 @@ import { DspData } from '@/modules/dsp/types';
 import { ReleasesData } from '@/modules/releases/types';
 import { CommonAttribute, CommonParams, PaginationResponse } from '@/types/api';
 import {
+    CHILD_EXECUTION_MODE,
     RELEASE_SUBMIT_LOG_LEVEL,
     RELEASE_SUBMIT_STATUS,
     RELEASE_SUBMIT_STEP_STATUS,
     RELEASE_SUBMIT_STEP_TYPE,
     RELEASE_SUBMIT_TYPE,
-    CHILD_EXECUTION_MODE,
 } from '../enums';
 
 export interface ReleaseSubmitData extends CommonAttribute {
@@ -16,6 +16,7 @@ export interface ReleaseSubmitData extends CommonAttribute {
     status: RELEASE_SUBMIT_STATUS;
     metadata: {
         input: {
+            upcAutoIfReleaseSnapshotNull: string;
             dspCodes: string[];
             releaseSnapshot: ReleasesData;
         };

@@ -1,4 +1,5 @@
 import axiosInstance from '@/api/axios-auth';
+import AppFormItem from '@/components/ui/antd-form/form-Item';
 import { TYPE_UPLOAD_BUCKET } from '@/enums/common';
 import { showNotification } from '@/helpers/messages-helper';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
@@ -190,8 +191,6 @@ export default function VideoAssetItem({
                 payload: {
                     video: {
                         fileId: fileId as string,
-                        isrc: '123123123123',
-                        channel: 'test',
                     },
                 },
                 onSuccess: () => {
@@ -284,56 +283,76 @@ export default function VideoAssetItem({
                 <span>{messages('releaseVideo.fields.videoFile')} *</span>
             </div>
 
-            <Upload
-                accept="video/*"
-                fileList={fileList}
-                disabled={isVideoUploading}
-                beforeUpload={(file) => {
-                    const isVideo = file.type.startsWith('video/');
-                    if (!isVideo) {
-                        showNotification(
-                            'error',
-                            messages('releaseVideo.fields.invalidVideoFile')
-                        );
-                        return Upload.LIST_IGNORE;
-                    }
-                    if (file.name.length > 500) {
-                        showNotification(
-                            'error',
-                            messages('track.validation.trackFileName', {
-                                number: 500,
-                            })
-                        );
-                        return Upload.LIST_IGNORE;
-                    }
-                    handleVideoUpload(file);
-                    return false;
-                }}
-                onRemove={handleRemove}
-                listType="picture"
-                iconRender={() => (
-                    <VideoCameraOutlined
-                        style={{ fontSize: 24, color: '#3b82f6' }}
-                    />
-                )}
+            <AppFormItem
+                name="videoFile"
+                rules={[
+                    {
+                        validator: async (_, value) => {
+                            if (
+                                !value ||
+                                !value.fileList ||
+                                value.fileList.length === 0
+                            ) {
+                                return Promise.reject(
+                                    new Error(
+                                        messages(
+                                            'releaseVideo.fields.videoNotUploaded'
+                                        )
+                                    )
+                                );
+                            }
+                            if (isVideoUploading) {
+                                return Promise.reject(
+                                    new Error(messages('common.processing'))
+                                );
+                            }
+                        },
+                    },
+                ]}
             >
-                {fileList.length < 1 && (
-                    <Button
-                        icon={<VideoCameraOutlined />}
-                        disabled={isVideoUploading}
-                    >
-                        {messages('common.upload')}
-                    </Button>
-                )}
-            </Upload>
-
-            {fileList.length < 1 && !isVideoUploading && (
-                <div className="mt-1.5 text-left">
-                    <span className="text-[11px] font-normal italic text-red-500">
-                        {messages('releaseVideo.fields.videoNotUploaded')} *
-                    </span>
-                </div>
-            )}
+                <Upload
+                    accept="video/*"
+                    fileList={fileList}
+                    disabled={isVideoUploading}
+                    beforeUpload={(file) => {
+                        const isVideo = file.type.startsWith('video/');
+                        if (!isVideo) {
+                            showNotification(
+                                'error',
+                                messages('releaseVideo.fields.invalidVideoFile')
+                            );
+                            return Upload.LIST_IGNORE;
+                        }
+                        if (file.name.length > 500) {
+                            showNotification(
+                                'error',
+                                messages('track.validation.trackFileName', {
+                                    number: 500,
+                                })
+                            );
+                            return Upload.LIST_IGNORE;
+                        }
+                        handleVideoUpload(file);
+                        return false;
+                    }}
+                    onRemove={handleRemove}
+                    listType="picture"
+                    iconRender={() => (
+                        <VideoCameraOutlined
+                            style={{ fontSize: 24, color: '#3b82f6' }}
+                        />
+                    )}
+                >
+                    {fileList.length < 1 && (
+                        <Button
+                            icon={<VideoCameraOutlined />}
+                            disabled={isVideoUploading}
+                        >
+                            {messages('common.upload')}
+                        </Button>
+                    )}
+                </Upload>
+            </AppFormItem>
         </div>
     );
 }

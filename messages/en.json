@@ -543,6 +543,7 @@
     },
     "validation": {
         "error": "Validation errors",
+        "missingRequiredFields": "Please fill in all required fields",
         "noError": "No validation errors",
         "emailFormat": "Please enter a valid email!",
         "select": "Please select information!",
@@ -2252,12 +2253,19 @@
         },
         "detail": {
             "columns": {
+                "stepType": "Step type",
+                "dsp": "DSP",
                 "dspName": "DSP Name",
                 "step": "Step",
                 "status": "Status",
-                "startedAt": "Started At",
-                "completedAt": "Completed At",
-                "duration": "Duration"
+                "startedAt": "Started",
+                "completedAt": "Completed",
+                "duration": "Duration",
+                "logs": "Logs",
+                "completedIn": "Completed in",
+                "logTime": "Time",
+                "logLevel": "Level",
+                "logMessage": "Message"
             }
         },
         "childExecutionMode": {
@@ -2277,6 +2285,7 @@
             "retrySuccess": "Retry execution successfully"
         },
         "columns": {
+            "coverArt": "Cover art",
             "upc": "UPC",
             "targetDspCodes": "Target DSP Codes",
             "releaseName": "Release name",

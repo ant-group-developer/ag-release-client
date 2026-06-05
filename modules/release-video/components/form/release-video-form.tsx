@@ -1,7 +1,6 @@
 import AppForm from '@/components/ui/antd-form/form';
 import { APP_ROUTES } from '@/enums/routes';
-import { toastPromise } from '@/helpers/messages-helper';
-import { useActive } from '@/hooks/use-active';
+import { showNotification, toastPromise } from '@/helpers/messages-helper';
 import { usePathname, useRouter } from '@/i18n/routing';
 import { useGetListSimpleArtistRole } from '@/modules/artist-role/hooks/use-get-list-simple-artist-role';
 import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribute';
@@ -29,7 +28,7 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [form] = Form.useForm();
-    const { active, isActive, deActive } = useActive();
+    // const { active, isActive, deActive } = useActive();
     const isUpdateForm = !!dataEdit?.id;
     const tabParam = searchParams.get('tab');
     const activeTab =
@@ -41,7 +40,7 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
             : DEFAULT_RELEASE_VIDEO_TAB;
 
     // const { createReleaseDraft } = useCreateReleaseDraft();
-    const { updateReleaseDraft } = useUpdateReleaseDraft();
+    const { updateReleaseDraft, isPending: isUpdatingDraft } = useUpdateReleaseDraft();
     const { distributeRelease, isPending: isDistributingRelease } =
         useDistributeRelease();
     // const { dspData } = useGetListDspSimple();
@@ -76,6 +75,7 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
 
     const onFinish = async () => {
         if (!dataEdit?.id) return;
+
 
         // const vevoDsp = dspData.find((dsp) =>
         //     dsp.name.toLowerCase().includes('vevo')
@@ -145,6 +145,7 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
             children: (
                 <DetailsTab form={form} onFieldUpdate={handleFieldUpdate} />
             ),
+            style: { outline: 'none' },
         },
         {
             key: RELEASE_VIDEO_TABS.ADDITIONAL,
@@ -156,11 +157,13 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
                     form={form}
                 />
             ),
+            style: { outline: 'none' },
         },
         {
             key: RELEASE_VIDEO_TABS.DISTRIBUTION,
             label: messages('releaseVideo.tabs.distribution'),
             children: <DistributionTab form={form} />,
+            style: { outline: 'none' },
         },
     ];
 
@@ -177,13 +180,18 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
                 showSubmit={isUpdateForm}
                 submitText={messages('release.action.submit')}
                 submitProps={{
-                    loading: isDistributingRelease,
-                    disabled: isActive,
+                    loading: isDistributingRelease || isUpdatingDraft,
+                    title: isUpdatingDraft ? messages('common.processing') : undefined,
                 }}
                 submitRootClassName="mt-6 border-t pt-4"
                 onFinish={onFinish}
+                onFinishFailed={() => {
+                    showNotification(
+                        'error',
+                        messages('validation.missingRequiredFields')
+                    );
+                }}
                 layout="vertical"
-                disabled={isActive}
             >
                 <Tabs
                     activeKey={activeTab}

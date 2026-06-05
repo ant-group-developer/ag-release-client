@@ -121,7 +121,8 @@ export const formatRelativeShort = (date?: string | null) => {
 
 export const formatDurationShort = (
     startDate?: string | null,
-    endDate?: string | null
+    endDate?: string | null,
+    prefix?: string
 ) => {
     if (!startDate || !endDate) return null;
 
@@ -139,26 +140,28 @@ export const formatDurationShort = (
     const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
     const seconds = totalSeconds % 60;
 
+    const label = prefix ?? 'Completed in';
+
     if (days > 0) {
         const remainder =
             hours > 0 ? formatUnit(hours, 'h') : formatUnit(minutes, 'm');
-        return `Completed in ${formatUnit(days, 'd')}${remainder}`;
+        return `${label} ${formatUnit(days, 'd')}${remainder}`;
     }
 
     if (hours > 0) {
         const remainder =
             minutes > 0 ? formatUnit(minutes, 'm') : formatUnit(seconds, 's');
-        return `Completed in ${formatUnit(hours, 'h')}${remainder}`;
+        return `${label} ${formatUnit(hours, 'h')}${remainder}`;
     }
 
     if (minutes > 0) {
-        return `Completed in ${formatUnit(minutes, 'm')}${formatUnit(
+        return `${label} ${formatUnit(minutes, 'm')}${formatUnit(
             seconds,
             's'
         )}`;
     }
 
-    return `Completed in ${formatUnit(seconds, 's')}`;
+    return `${label} ${formatUnit(seconds, 's')}`;
 };
 
 export const formatDisplayContent = (value: unknown) => {
