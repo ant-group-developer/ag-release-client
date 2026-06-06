@@ -17,6 +17,7 @@ export const getDistributionJobStatusColor = (
         case DISTRIBUTION_JOB_STATUS.PENDING:
             return 'processing';
         case DISTRIBUTION_JOB_STATUS.SKIPPED:
+        case DISTRIBUTION_JOB_STATUS.CANCEL:
             return 'orange';
         default:
             return 'default';

@@ -2226,7 +2226,8 @@
             "PROCESSING": "Đang xử lý",
             "COMPLETED": "Hoàn thành",
             "FAILED": "Thất bại",
-            "SKIPPED": "Bỏ qua"
+            "SKIPPED": "Bỏ qua",
+            "CANCEL": "Hủy"
         },
         "confirmCompletedModal": {
             "title": "Xác nhận đã hoàn thành",
