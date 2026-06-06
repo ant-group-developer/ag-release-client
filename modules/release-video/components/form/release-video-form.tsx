@@ -42,7 +42,7 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
             ? (tabParam as RELEASE_VIDEO_TABS)
             : DEFAULT_RELEASE_VIDEO_TAB;
     const activeTab =
-        activeTabTemp === RELEASE_VIDEO_TABS.SUBMITS && !isAdmin
+        activeTabTemp === RELEASE_VIDEO_TABS.SUBMITS && (!isAdmin || !isUpdateForm)
             ? DEFAULT_RELEASE_VIDEO_TAB
             : activeTabTemp;
 
@@ -175,7 +175,7 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
             style: { outline: 'none' },
             forceRender: true,
         },
-        ...(isAdmin
+        ...(isAdmin && isUpdateForm
             ? [
                   {
                       key: RELEASE_VIDEO_TABS.SUBMITS,

@@ -27,6 +27,8 @@ export default function ReleaseVideos() {
             page: 1,
             pageSize: PAGE_SIZE,
             type: RELEASE_TYPE.VIDEO,
+            orderBy: ORDER.DESC,
+            fieldOrder: 'updatedAt',
         });
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
