@@ -4,10 +4,11 @@ import { SIZE_ICON } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
 import { DspData } from '@/modules/dsp/types';
-import { Avatar, Table, Tag, theme } from 'antd';
+import { Avatar, Popconfirm, Table, Tag, theme, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { Check, Eye, RotateCcw } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 import { CHILD_EXECUTION_MODE, RELEASE_SUBMIT_STEP_STATUS } from '../../enums';
 import {
     formatDurationShort,
@@ -15,7 +16,8 @@ import {
     getReleaseSubmitStepStatusColor,
 } from '../../helpers';
 import { useRetryReleaseSubmitStep } from '../../hooks/use-retry-step';
-import { ReleaseSubmitStepData } from '../../types';
+import { ReleaseSubmitLogsData, ReleaseSubmitStepData } from '../../types';
+import StepLogsModal from './step-logs-modal';
 
 type Props = {
     dataSource: ReleaseSubmitStepData[];
@@ -31,10 +33,14 @@ export default function ReleaseSubmitStepTable({
     const messages = useTranslations();
     const { token } = theme.useToken();
     const { retryStep, isPending, variables } = useRetryReleaseSubmitStep();
+    const [logsModalVisible, setLogsModalVisible] = useState(false);
+    const [selectedLogs, setSelectedLogs] = useState<ReleaseSubmitLogsData[]>(
+        []
+    );
 
     const columns: ColumnsType<ReleaseSubmitStepData> = [
         {
-            title: 'Step type',
+            title: messages('releaseExecution.detail.columns.stepType'),
             dataIndex: 'type',
             key: 'type',
             width: 220,
@@ -45,7 +51,7 @@ export default function ReleaseSubmitStepTable({
             },
         },
         {
-            title: 'DSP',
+            title: messages('releaseExecution.detail.columns.dsp'),
             dataIndex: 'dsp',
             key: 'dsp',
             width: 160,
@@ -101,7 +107,7 @@ export default function ReleaseSubmitStepTable({
         },
 
         {
-            title: 'Status',
+            title: messages('releaseExecution.detail.columns.status'),
             dataIndex: 'status',
             key: 'status',
             width: 140,
@@ -112,7 +118,7 @@ export default function ReleaseSubmitStepTable({
             ),
         },
         {
-            title: 'Started',
+            title: messages('releaseExecution.detail.columns.startedAt'),
             dataIndex: 'startedAt',
             key: 'startedAt',
             width: 150,
@@ -120,7 +126,7 @@ export default function ReleaseSubmitStepTable({
                 value ? formattedDate(value, DATE_FORMAT.DATE_MINUTE) : '-',
         },
         {
-            title: 'Completed',
+            title: messages('releaseExecution.detail.columns.completedAt'),
             dataIndex: 'completedAt',
             key: 'completedAt',
             width: 150,
@@ -128,21 +134,34 @@ export default function ReleaseSubmitStepTable({
                 value ? formattedDate(value, DATE_FORMAT.DATE_MINUTE) : '-',
         },
         {
-            title: 'Duration',
+            title: messages('releaseExecution.detail.columns.duration'),
             key: 'duration',
             width: 140,
             render: (_, record) =>
-                formatDurationShort(record?.startedAt, record?.completedAt) ||
-                '-',
+                formatDurationShort(
+                    record?.startedAt,
+                    record?.completedAt,
+                    messages('releaseExecution.detail.columns.completedIn')
+                ) || '-',
         },
         {
-            title: 'Logs',
+            title: messages('releaseExecution.detail.columns.logs'),
             key: 'logs',
             width: 80,
             align: 'center',
             render: (_, record) => {
                 const count = record?.logs?.length;
-                return count || '-';
+                if (!count) return '-';
+                return (
+                    <Typography.Link
+                        onClick={() => {
+                            setSelectedLogs(record.logs || []);
+                            setLogsModalVisible(true);
+                        }}
+                    >
+                        {count}
+                    </Typography.Link>
+                );
             },
         },
         {
@@ -166,7 +185,7 @@ export default function ReleaseSubmitStepTable({
                       );
                 return (
                     <CustomTooltip title={tooltipText}>
-                        <Tag color={isSequential ? 'blue' : 'green'}>
+                        <Tag color={isSequential ? 'orange' : 'pink'}>
                             <span className="flex items-center gap-1">
                                 <span>{formatEnumLabel(value)}</span>
                             </span>
@@ -215,17 +234,23 @@ export default function ReleaseSubmitStepTable({
                         </IconButton>
                     </CustomTooltip>
                     {record.status === RELEASE_SUBMIT_STEP_STATUS.FAILED && (
-                        <CustomTooltip title={messages('common.retry')}>
-                            <IconButton
-                                onClick={() => {
-                                    retryStep({
-                                        stepId: record.id,
-                                    });
-                                }}
-                            >
-                                <RotateCcw size={SIZE_ICON} />
-                            </IconButton>
-                        </CustomTooltip>
+                        <Popconfirm
+                            title={messages('releaseExecution.confirm.retryTitle')}
+                            description={messages('releaseExecution.confirm.retryDescription')}
+                            onConfirm={() => {
+                                retryStep({
+                                    stepId: record.id,
+                                });
+                            }}
+                            okText={messages('common.yes')}
+                            cancelText={messages('common.no')}
+                        >
+                            <CustomTooltip title={messages('common.retry')}>
+                                <IconButton>
+                                    <RotateCcw size={SIZE_ICON} />
+                                </IconButton>
+                            </CustomTooltip>
+                        </Popconfirm>
                     )}
                 </div>
             ),
@@ -233,26 +258,34 @@ export default function ReleaseSubmitStepTable({
     ];
 
     return (
-        <Table<ReleaseSubmitStepData>
-            rowKey="id"
-            size="small"
-            pagination={false}
-            dataSource={dataSource}
-            columns={columns}
-            loading={isPending}
-            showHeader={showHeader}
-            expandable={{
-                rowExpandable: (record) => !!record.childSteps?.length,
-                expandedRowRender: (record) => (
-                    <div className="rounded-md">
-                        <ReleaseSubmitStepTable
-                            dataSource={record.childSteps}
-                            onViewDetail={onViewDetail}
-                            showHeader={false}
-                        />
-                    </div>
-                ),
-            }}
-        />
+        <>
+            <Table<ReleaseSubmitStepData>
+                rowKey="id"
+                size="small"
+                pagination={false}
+                dataSource={dataSource}
+                columns={columns}
+                loading={isPending}
+                showHeader={showHeader}
+                expandable={{
+                    rowExpandable: (record) => !!record.childSteps?.length,
+                    expandedRowRender: (record) => (
+                        <div className="rounded-md">
+                            <ReleaseSubmitStepTable
+                                dataSource={record.childSteps}
+                                onViewDetail={onViewDetail}
+                                showHeader={false}
+                            />
+                        </div>
+                    ),
+                }}
+                rowClassName={'group'}
+            />
+            <StepLogsModal
+                open={logsModalVisible}
+                onClose={() => setLogsModalVisible(false)}
+                logs={selectedLogs}
+            />
+        </>
     );
 }

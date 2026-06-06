@@ -8,6 +8,7 @@ export enum RELEASE_VIDEO_TABS {
     DETAILS = 'details',
     ADDITIONAL = 'additional',
     DISTRIBUTION = 'distribution',
+    SUBMITS = 'submits',
 }
 
 export enum RELEASE_VIDEO_VISIBILITY {

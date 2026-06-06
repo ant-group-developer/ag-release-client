@@ -1,3 +1,4 @@
+import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import { TYPE_UPLOAD_BUCKET } from '@/enums/common';
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
@@ -6,7 +7,7 @@ import { ReleasesData } from '@/modules/releases/types';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { CreateBucketFile } from '@/modules/upload/types/data';
-import { FormInstance, Modal } from 'antd';
+import { FormInstance, Modal, Space } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
@@ -189,7 +190,7 @@ export default function ThumbnailAssetItem({
         }
     };
 
-    const fileList = form.getFieldValue('thumbnailFile')?.fileList || [];
+    // const fileList = form.getFieldValue('thumbnailFile')?.fileList || [];
 
     const handleRemove = () => {
         return new Promise<boolean>((resolve) => {
@@ -238,28 +239,49 @@ export default function ThumbnailAssetItem({
 
     return (
         <div className="thumbnail-upload-container mb-5">
-            <div className="mb-2 flex items-center justify-between text-xs font-bold text-gray-800">
-                <span>{messages('releaseVideo.fields.thumbnailFile')} *</span>
-            </div>
+            <Space className="mb-2 text-xs font-bold">
+                <span>{messages('releaseVideo.fields.thumbnailFile')}</span>
+                <span className="text-red-500">*</span>
+            </Space>
 
-            <ImageListUpload
-                id="thumbnailFile"
-                // loading={isThumbnailUploading}
-                accept="image/*"
-                maxCount={1}
-                value={form.getFieldValue('thumbnailFile')}
-                placeholder={messages('common.uploadImage')}
-                onChange={handleThumbnailUpload}
-                onRemove={handleRemove}
-            />
-
-            {fileList.length < 1 && !isThumbnailUploading && (
-                <div className="mt-1.5 text-left">
-                    <span className="text-[11px] font-normal italic text-red-500">
-                        {messages('releaseVideo.fields.thumbnailNotUploaded')} *
-                    </span>
-                </div>
-            )}
+            <AppFormItem
+                name="thumbnailFile"
+                rules={[
+                    {
+                        validator: async (_, value) => {
+                            if (
+                                !value ||
+                                !value.fileList ||
+                                value.fileList.length === 0
+                            ) {
+                                return Promise.reject(
+                                    new Error(
+                                        messages(
+                                            'releaseVideo.fields.thumbnailNotUploaded'
+                                        )
+                                    )
+                                );
+                            }
+                            if (isThumbnailUploading) {
+                                return Promise.reject(
+                                    new Error(messages('common.processing'))
+                                );
+                            }
+                        },
+                    },
+                ]}
+            >
+                <ImageListUpload
+                    id="thumbnailFile"
+                    // loading={isThumbnailUploading}
+                    accept="image/*"
+                    maxCount={1}
+                    value={form.getFieldValue('thumbnailFile')}
+                    placeholder={messages('common.uploadImage')}
+                    onChange={handleThumbnailUpload}
+                    onRemove={handleRemove}
+                />
+            </AppFormItem>
         </div>
     );
 }

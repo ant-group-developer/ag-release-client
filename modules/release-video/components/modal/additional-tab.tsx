@@ -1,10 +1,12 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ArtistSelect from '@/components/ui/select/artist-select';
+import { showNotification } from '@/helpers/messages-helper';
 import { useGetListSimpleArtistRole } from '@/modules/artist-role/hooks/use-get-list-simple-artist-role';
-import { useCreateReleaseContributor } from '@/modules/release-contributor/hooks/use-create-release-contributor';
+import { useBulkCreateReleaseContributor } from '@/modules/release-contributor/hooks/use-bulk-create-release-contributor';
 import { useDeleteReleaseContributor } from '@/modules/release-contributor/hooks/use-delete-release-contributor';
 import { ReleasesData } from '@/modules/releases/types';
-import { Col, DatePicker, FormInstance, Input, Row, Select } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
+import { Col, DatePicker, FormInstance, Input, Popconfirm, Row, Select, Tag } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 
@@ -29,9 +31,13 @@ const VIDEO_VERSION_OPTIONS = [
     { value: 'Official', label: 'Official' },
 ];
 
-export default function AdditionalTab({ dataEdit, onFieldUpdate, form }: AdditionalTabProps) {
+export default function AdditionalTab({
+    dataEdit,
+    onFieldUpdate,
+    form,
+}: AdditionalTabProps) {
     const messages = useTranslations();
-    const { createReleaseContributor } = useCreateReleaseContributor();
+    const { bulkCreateReleaseContributor } = useBulkCreateReleaseContributor();
     const { deleteReleaseContributor } = useDeleteReleaseContributor();
     const { artistsRolesData } = useGetListSimpleArtistRole();
 
@@ -55,107 +61,110 @@ export default function AdditionalTab({ dataEdit, onFieldUpdate, form }: Additio
     );
     const directorRoleId = directorRole?.id;
 
-    // Handlers for Composer
-    const handleSelectComposer = (artistId: string) => {
-        if (!dataEdit?.id || !composerRoleId) return;
-        createReleaseContributor({
-            payload: {
-                artistId,
-                artistRoleId: composerRoleId,
-                releaseId: dataEdit.id,
-                addContributorToTracks: false,
-            },
-        });
-    };
+    const handleBlurContributor = (
+        fieldName: string,
+        roleId: string | undefined
+    ) => {
+        const releaseId = dataEdit?.id;
+        if (!releaseId) return;
 
-    const handleDeselectComposer = (artistId: string) => {
-        if (!dataEdit?.id) return;
-        const contributor = dataEdit.releaseContributors?.find(
-            (c) =>
-                c.artistId === artistId && c.artistRole?.id === composerRoleId
+        const newArtistIds = form.getFieldValue(fieldName) || [];
+
+        const currentContributorIds =
+            dataEdit.releaseContributors
+                ?.filter((c) => c.artistRole?.id === roleId)
+                .map((c) => c.artistId) || [];
+
+        const addedIds = newArtistIds.filter(
+            (id: string) => !currentContributorIds.includes(id)
         );
-        if (contributor?.id) {
-            deleteReleaseContributor({
-                id: contributor.id,
+
+        if (addedIds.length > 0) {
+            if (!roleId) {
+                showNotification(
+                    'error',
+                    messages('releaseVideo.fields.roleNotFound')
+                );
+                form.setFieldValue(fieldName, currentContributorIds);
+                return;
+            }
+            bulkCreateReleaseContributor({
+                payload: {
+                    items: addedIds.map((id: string) => ({
+                        artistId: id,
+                        artistRoleId: roleId,
+                        releaseId,
+                        addContributorToTracks: false,
+                    })),
+                },
             });
         }
     };
 
-    // Handlers for Editor
-    const handleSelectEditor = (artistId: string) => {
-        if (!dataEdit?.id || !editorRoleId) return;
-        createReleaseContributor({
-            payload: {
-                artistId,
-                artistRoleId: editorRoleId,
-                releaseId: dataEdit.id,
-                addContributorToTracks: false,
-            },
-        });
-    };
-
-    const handleDeselectEditor = (artistId: string) => {
+    const handleDeselectContributor = (
+        artistId: string,
+        roleId: string | undefined
+    ) => {
         if (!dataEdit?.id) return;
         const contributor = dataEdit.releaseContributors?.find(
-            (c) => c.artistId === artistId && c.artistRole?.id === editorRoleId
+            (c) => c.artistId === artistId && c.artistRole?.id === roleId
         );
         if (contributor?.id) {
-            deleteReleaseContributor({
-                id: contributor.id,
-            });
+            deleteReleaseContributor({ id: contributor.id });
         }
     };
 
-    // Handlers for Producer
-    const handleSelectProducer = (artistId: string) => {
-        if (!dataEdit?.id || !producerRoleId) return;
-        createReleaseContributor({
-            payload: {
-                artistId,
-                artistRoleId: producerRoleId,
-                releaseId: dataEdit.id,
-                addContributorToTracks: false,
-            },
-        });
-    };
+    const handleBlurComposer = () => handleBlurContributor('composers', composerRoleId);
+    const handleDeselectComposer = (artistId: string) => handleDeselectContributor(artistId, composerRoleId);
 
-    const handleDeselectProducer = (artistId: string) => {
-        if (!dataEdit?.id) return;
-        const contributor = dataEdit.releaseContributors?.find(
-            (c) =>
-                c.artistId === artistId && c.artistRole?.id === producerRoleId
+    const handleBlurEditor = () => handleBlurContributor('editors', editorRoleId);
+    const handleDeselectEditor = (artistId: string) => handleDeselectContributor(artistId, editorRoleId);
+
+    const handleBlurProducer = () => handleBlurContributor('producers', producerRoleId);
+    const handleDeselectProducer = (artistId: string) => handleDeselectContributor(artistId, producerRoleId);
+
+    const handleBlurDirector = () => handleBlurContributor('directors', directorRoleId);
+    const handleDeselectDirector = (artistId: string) => handleDeselectContributor(artistId, directorRoleId);
+
+    const tagRender = (props: any) => {
+        const { label, closable, onClose } = props;
+        const onPreventMouseDown = (
+            event: React.MouseEvent<HTMLSpanElement>
+        ) => {
+            event.preventDefault();
+            event.stopPropagation();
+        };
+
+        return (
+            <Tag
+                onMouseDown={onPreventMouseDown}
+                closable={closable}
+                onClose={(e) => {
+                    e.preventDefault();
+                }}
+                closeIcon={
+                    closable ? (
+                        <Popconfirm
+                            title={messages('delete.confirmTitle')}
+                            onConfirm={onClose}
+                            onCancel={(e) => e?.stopPropagation()}
+                        >
+                            <span onClick={(e) => e.stopPropagation()}>
+                                <CloseOutlined className="text-[10px]" />
+                            </span>
+                        </Popconfirm>
+                    ) : null
+                }
+                style={{
+                    marginRight: 3,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 4,
+                }}
+            >
+                {label}
+            </Tag>
         );
-        if (contributor?.id) {
-            deleteReleaseContributor({
-                id: contributor.id,
-            });
-        }
-    };
-
-    // Handlers for Director
-    const handleSelectDirector = (artistId: string) => {
-        if (!dataEdit?.id || !directorRoleId) return;
-        createReleaseContributor({
-            payload: {
-                artistId,
-                artistRoleId: directorRoleId,
-                releaseId: dataEdit.id,
-                addContributorToTracks: false,
-            },
-        });
-    };
-
-    const handleDeselectDirector = (artistId: string) => {
-        if (!dataEdit?.id) return;
-        const contributor = dataEdit.releaseContributors?.find(
-            (c) =>
-                c.artistId === artistId && c.artistRole?.id === directorRoleId
-        );
-        if (contributor?.id) {
-            deleteReleaseContributor({
-                id: contributor.id,
-            });
-        }
     };
 
     const maxYear = dayjs().year() + 1;
@@ -188,7 +197,9 @@ export default function AdditionalTab({ dataEdit, onFieldUpdate, form }: Additio
                         <Input
                             placeholder={messages('releaseVideo.fields.upc')}
                             allowClear
-                            onBlur={(e) => onFieldUpdate?.({ upc: e.target.value })}
+                            onBlur={(e) =>
+                                onFieldUpdate?.({ upc: e.target.value })
+                            }
                         />
                     </AppFormItem>
                 </Col>
@@ -201,7 +212,9 @@ export default function AdditionalTab({ dataEdit, onFieldUpdate, form }: Additio
                         <Select
                             placeholder={messages('common.select')}
                             allowClear
-                            onChange={(value) => onFieldUpdate?.({ version: value })}
+                            onChange={(value) =>
+                                onFieldUpdate?.({ version: value })
+                            }
                             options={VIDEO_VERSION_OPTIONS}
                         />
                     </AppFormItem>
@@ -249,7 +262,7 @@ export default function AdditionalTab({ dataEdit, onFieldUpdate, form }: Additio
                 </Col>
             </Row>
 
-            <div className="mb-4 mt-6 border-b border-gray-100 pb-2 text-base font-bold text-gray-800">
+            <div className="mb-4 mt-6 border-b border-gray-100 pb-2 text-base font-bold">
                 {messages('releaseVideo.fields.credits')}
             </div>
 
@@ -262,8 +275,9 @@ export default function AdditionalTab({ dataEdit, onFieldUpdate, form }: Additio
                         <ArtistSelect
                             mode="multiple"
                             placeholder={messages('artist.select')}
-                            onSelect={handleSelectComposer}
+                            onBlur={handleBlurComposer}
                             onDeselect={handleDeselectComposer}
+                            tagRender={tagRender}
                         />
                     </AppFormItem>
                 </Col>
@@ -275,8 +289,9 @@ export default function AdditionalTab({ dataEdit, onFieldUpdate, form }: Additio
                         <ArtistSelect
                             mode="multiple"
                             placeholder={messages('artist.select')}
-                            onSelect={handleSelectEditor}
+                            onBlur={handleBlurEditor}
                             onDeselect={handleDeselectEditor}
+                            tagRender={tagRender}
                         />
                     </AppFormItem>
                 </Col>
@@ -288,8 +303,9 @@ export default function AdditionalTab({ dataEdit, onFieldUpdate, form }: Additio
                         <ArtistSelect
                             mode="multiple"
                             placeholder={messages('artist.select')}
-                            onSelect={handleSelectProducer}
+                            onBlur={handleBlurProducer}
                             onDeselect={handleDeselectProducer}
+                            tagRender={tagRender}
                         />
                     </AppFormItem>
                 </Col>
@@ -304,8 +320,9 @@ export default function AdditionalTab({ dataEdit, onFieldUpdate, form }: Additio
                         <ArtistSelect
                             mode="multiple"
                             placeholder={messages('artist.select')}
-                            onSelect={handleSelectDirector}
+                            onBlur={handleBlurDirector}
                             onDeselect={handleDeselectDirector}
+                            tagRender={tagRender}
                         />
                     </AppFormItem>
                 </Col>
@@ -319,7 +336,9 @@ export default function AdditionalTab({ dataEdit, onFieldUpdate, form }: Additio
                                 'releaseVideo.fields.copyright'
                             )}
                             allowClear
-                            onBlur={(e) => onFieldUpdate?.({ cLineOwner: e.target.value })}
+                            onBlur={(e) =>
+                                onFieldUpdate?.({ cLineOwner: e.target.value })
+                            }
                         />
                     </AppFormItem>
                 </Col>

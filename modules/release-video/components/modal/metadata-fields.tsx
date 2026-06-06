@@ -1,9 +1,9 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ArtistSelect from '@/components/ui/select/artist-select';
 import GenresSelect from '@/components/ui/select/genres-select';
-import LabelSelect from '@/components/ui/select/label-select';
 import LanguageSelect from '@/components/ui/select/language-select';
 import { MAX_NAME_LENGTH, MAX_NOTE_LENGTH } from '@/constants/validate';
+import { showNotification } from '@/helpers/messages-helper';
 import { useGetListSimpleArtistRole } from '@/modules/artist-role/hooks/use-get-list-simple-artist-role';
 import ChannelSelect from '@/modules/channels/components/select/channel-select';
 import { useBulkCreateReleaseArtist } from '@/modules/release-artist/hooks/use-bulk-create-release-artist';
@@ -15,7 +15,7 @@ import {
     RELEASE_MADE_FOR_KIDS,
 } from '@/modules/releases/enums';
 import { ReleasesData } from '@/modules/releases/types';
-import { CloseOutlined } from '@ant-design/icons';
+import { CloseOutlined, CopyOutlined } from '@ant-design/icons';
 import {
     Button,
     Col,
@@ -25,6 +25,7 @@ import {
     Row,
     Select,
     Tag,
+    Tooltip,
 } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -388,12 +389,12 @@ export default function MetadataFields({
             </Row>
 
             {/* Ownership Subheader */}
-            <div className="mb-4 mt-6 border-b border-gray-100 pb-2 text-base font-bold tracking-wide text-gray-800">
+            <div className="mb-4 mt-6 border-b border-gray-100 pb-2 text-base font-bold tracking-wide">
                 {messages('common.ownership')}
             </div>
 
             {/* Content Provider & Repertoire Owner */}
-            <Row gutter={16}>
+            {/* <Row gutter={16}>
                 <Col span={12}>
                     <AppFormItem
                         name={['video', 'contentProvider']}
@@ -452,27 +453,31 @@ export default function MetadataFields({
                         />
                     </AppFormItem>
                 </Col>
-            </Row>
+            </Row> */}
 
             {/* Label */}
-            <Row gutter={16}>
+            <Row gutter={24}>
                 <Col span={24}>
                     <AppFormItem
-                        name="labelId"
+                        name={['video', 'label']}
                         label={messages('formFields.labelId')}
                         required
                         rules={[
                             {
                                 required: true,
-                                message: messages('validation.select'),
+                                message: messages('validation.input'),
                             },
                         ]}
                     >
-                        <LabelSelect
-                            placeholder={messages('common.select')}
+                        <Input
+                            placeholder={messages('formFields.labelId')}
                             allowClear
-                            onChange={(value) =>
-                                onFieldUpdate?.({ labelId: value })
+                            onBlur={(e) =>
+                                onFieldUpdate?.({
+                                    video: {
+                                        label: e.target.value,
+                                    },
+                                })
                             }
                         />
                     </AppFormItem>
@@ -480,7 +485,7 @@ export default function MetadataFields({
             </Row>
 
             {/* YouTube Subheader */}
-            <div className="mb-4 mt-6 border-b border-gray-100 pb-2 text-base font-bold tracking-wide text-gray-800">
+            <div className="mb-4 mt-6 border-b border-gray-100 pb-2 text-base font-bold tracking-wide">
                 YouTube
             </div>
 
@@ -518,7 +523,7 @@ export default function MetadataFields({
                         <Button
                             shape="round"
                             onClick={() => setIsManageCollaboratorsOpen(true)}
-                            className="font-semibold"
+                            className="w-full font-semibold"
                         >
                             {messages(
                                 'releaseVideo.fields.manageCollaborators'
@@ -531,7 +536,40 @@ export default function MetadataFields({
             {/* Keywords (Full Width) */}
             <AppFormItem
                 name={['video', 'keywords']}
-                label={messages('common.keyword')}
+                label={
+                    <div className="flex items-center gap-2">
+                        <span>{messages('common.keyword')}</span>
+                        <Tooltip title={messages('common.copy') || 'Copy'}>
+                            <Button
+                                type="text"
+                                size="small"
+                                icon={<CopyOutlined />}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    const keywords = form.getFieldValue([
+                                        'video',
+                                        'keywords',
+                                    ]);
+                                    if (
+                                        keywords &&
+                                        Array.isArray(keywords) &&
+                                        keywords.length > 0
+                                    ) {
+                                        navigator.clipboard
+                                            .writeText(keywords.join(','))
+                                            .then(() => {
+                                                showNotification(
+                                                    'success',
+                                                    messages('common.copied')
+                                                );
+                                            });
+                                    }
+                                }}
+                            />
+                        </Tooltip>
+                    </div>
+                }
             >
                 <Select
                     mode="tags"

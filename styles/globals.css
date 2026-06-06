@@ -443,7 +443,7 @@ select {
 }
 
 .ant-upload-list-item {
-    @apply bg-white !important;
+    @apply !bg-white dark:!bg-[#1c1c1c];
 }
 
 /* close ckeditor css */
