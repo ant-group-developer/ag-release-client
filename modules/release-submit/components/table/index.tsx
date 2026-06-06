@@ -14,6 +14,7 @@ import { ProColumns } from '@ant-design/pro-components';
 import { Avatar, Space, Tag, theme, Typography } from 'antd';
 import { Eye, FileJson } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { RELEASE_SUBMIT_SORT_FIELD } from '../../enums';
 import {
     formatDurationShort,
     formatEnumLabel,
@@ -22,7 +23,6 @@ import {
     getReleaseSubmitTypeColor,
 } from '../../helpers';
 import { ReleaseSubmitData, ReleaseSubmitFilter } from '../../types';
-import { RELEASE_SUBMIT_SORT_FIELD } from '../../enums';
 
 type Props = Omit<AppProTableProps<ReleaseSubmitData>, 'columns'> & {
     dataFilter: ReleaseSubmitFilter;
@@ -134,7 +134,7 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
                 ),
         },
         {
-            title: messages('releaseExecution.columns.targetDspCodes'),
+            title: 'DSPs',
             key: 'dspCodes',
             width: 200,
             render: (_, record) => {

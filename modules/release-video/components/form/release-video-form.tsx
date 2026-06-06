@@ -3,6 +3,7 @@ import { APP_ROUTES } from '@/enums/routes';
 import { showNotification, toastPromise } from '@/helpers/messages-helper';
 import { usePathname, useRouter } from '@/i18n/routing';
 import { useGetListSimpleArtistRole } from '@/modules/artist-role/hooks/use-get-list-simple-artist-role';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribute';
 import AdditionalTab from '@/modules/release-video/components/modal/additional-tab';
 import DetailsTab from '@/modules/release-video/components/modal/details-tab';
@@ -16,13 +17,20 @@ import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect } from 'react';
-import { useAuth } from '@/modules/auth/hooks/use-auth';
 
 type Props = {
     dataEdit?: ReleasesData;
 };
 
 const DEFAULT_RELEASE_VIDEO_TAB = RELEASE_VIDEO_TABS.DETAILS;
+const PRESERVED_ARTIST_FIELD_NAMES = [
+    'artistIds',
+    'featuredArtistIds',
+    'composers',
+    'editors',
+    'producers',
+    'directors',
+];
 
 export default function ReleaseVideoForm({ dataEdit }: Props) {
     const messages = useTranslations();
@@ -42,12 +50,14 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
             ? (tabParam as RELEASE_VIDEO_TABS)
             : DEFAULT_RELEASE_VIDEO_TAB;
     const activeTab =
-        activeTabTemp === RELEASE_VIDEO_TABS.SUBMITS && (!isAdmin || !isUpdateForm)
+        activeTabTemp === RELEASE_VIDEO_TABS.SUBMITS &&
+        (!isAdmin || !isUpdateForm)
             ? DEFAULT_RELEASE_VIDEO_TAB
             : activeTabTemp;
 
     // const { createReleaseDraft } = useCreateReleaseDraft();
-    const { updateReleaseDraft, isPending: isUpdatingDraft } = useUpdateReleaseDraft();
+    const { updateReleaseDraft, isPending: isUpdatingDraft } =
+        useUpdateReleaseDraft();
     const { distributeRelease, isPending: isDistributingRelease } =
         useDistributeRelease();
     // const { dspData } = useGetListDspSimple();
@@ -83,7 +93,6 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
     const onFinish = async () => {
         if (!dataEdit?.id) return;
 
-
         // const vevoDsp = dspData.find((dsp) =>
         //     dsp.name.toLowerCase().includes('vevo')
         // );
@@ -104,7 +113,7 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
 
     useEffect(() => {
         if (dataEdit) {
-            form.setFieldsValue({
+            const nextValues: Record<string, any> = {
                 ...dataEdit,
                 cLineYear: dataEdit.cLineYear
                     ? dayjs().year(dataEdit.cLineYear)
@@ -131,7 +140,15 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
                     dataEdit.releaseContributors
                         ?.filter((c) => c.artistRole?.id === directorRoleId)
                         ?.map((c) => c.artistId) || [],
+            };
+
+            PRESERVED_ARTIST_FIELD_NAMES.forEach((fieldName) => {
+                if (form.isFieldTouched(fieldName)) {
+                    nextValues[fieldName] = form.getFieldValue(fieldName);
+                }
             });
+
+            form.setFieldsValue(nextValues);
         } else {
             form.resetFields();
         }
@@ -171,7 +188,13 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
         {
             key: RELEASE_VIDEO_TABS.DISTRIBUTION,
             label: messages('releaseVideo.tabs.distribution'),
-            children: <DistributionTab form={form} dataEdit={dataEdit} onFieldUpdate={handleFieldUpdate} />,
+            children: (
+                <DistributionTab
+                    form={form}
+                    dataEdit={dataEdit}
+                    onFieldUpdate={handleFieldUpdate}
+                />
+            ),
             style: { outline: 'none' },
             forceRender: true,
         },
@@ -197,11 +220,15 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
         <Card variant="borderless" className="shadow-sm">
             <AppForm
                 form={form}
-                showSubmit={isUpdateForm && activeTab !== RELEASE_VIDEO_TABS.SUBMITS}
+                showSubmit={
+                    isUpdateForm && activeTab !== RELEASE_VIDEO_TABS.SUBMITS
+                }
                 submitText={messages('release.action.submit')}
                 submitProps={{
                     loading: isDistributingRelease || isUpdatingDraft,
-                    title: isUpdatingDraft ? messages('common.processing') : undefined,
+                    title: isUpdatingDraft
+                        ? messages('common.processing')
+                        : undefined,
                 }}
                 submitRootClassName="mt-6 border-t pt-4"
                 onFinish={onFinish}
