@@ -41,3 +41,6 @@ next-env.d.ts
 
 .history
 .agent
+.agent
+AGENTS.md
+**/AGENTS.md

@@ -276,6 +276,8 @@ export default function ThumbnailAssetItem({
                     // loading={isThumbnailUploading}
                     accept="image/*"
                     maxCount={1}
+                    imageFit="contain"
+                    previewAspectRatio="16/9"
                     value={form.getFieldValue('thumbnailFile')}
                     placeholder={messages('common.uploadImage')}
                     onChange={handleThumbnailUpload}
