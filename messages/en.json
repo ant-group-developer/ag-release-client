@@ -203,6 +203,7 @@
         "track": "Track",
         "artist": "Artist",
         "release": "Release",
+        "releases": "Releases",
         "plays": "Plays",
         "dark": "Dark",
         "light": "Light",
@@ -314,7 +315,11 @@
         "support": "Support",
         "email": "Email",
         "method": "Method",
-        "copied": "Copied"
+        "copied": "Copied",
+        "engagement": "Engagement",
+        "listeners": "Listeners",
+        "label": "Label",
+        "labels": "Labels"
     },
     "country": {
         "label": "Country",
@@ -433,7 +438,8 @@
         "stream_distribution_subtitle": "Streams distribution by platform in {year}",
         "dsp_distribution_subtitle": "DSP distribution in {year}",
         "label_distribution_subtitle": "Label distribution in {year}",
-        "artist_distribution_subtitle": "Artist distribution in {year}"
+        "artist_distribution_subtitle": "Artist distribution in {year}",
+        "recentReleases": "Recent releases"
     },
     "review": {
         "message": {
@@ -648,6 +654,8 @@
             "label": "Second"
         },
         "selectDate": "Select date",
+        "lastDays": "Last {days} days",
+        "customRange": "Custom range",
         "last7Days": "Last 7 days",
         "lastMonth": "Last month",
         "lastYear": "Last year",
@@ -1970,6 +1978,35 @@
         "name": "Analytics name",
         "action": {
             "delete": "Delete analytics"
+        },
+        "chart": {
+            "title": "Monthly views by DSP",
+            "titleGeneric": "Views by DSP",
+            "trends": "Trends",
+            "sales": "Sales",
+            "dsp": "DSP",
+            "view": "View",
+            "monthly": "Monthly",
+            "daily": "Daily"
+        },
+        "dailyChart": {
+            "title": "Daily trend views by DSP",
+            "last7Days": "Last 7 days",
+            "last15Days": "Last 15 days",
+            "last30Days": "Last 30 days"
+        },
+        "revenue": {
+            "totalRevenue": "Total Revenue",
+            "totalPlays": "Total Plays",
+            "totalTerritories": "Territories",
+            "timelineTitle": "Revenue Timeline",
+            "modeRevenue": "Revenue (USD)",
+            "modeQuantity": "Plays (Quantity)",
+            "label": "Revenue"
+        },
+        "tabs": {
+            "plays": "Plays & Trends",
+            "revenue": "Revenue"
         }
     },
     "issue": {
@@ -2374,6 +2411,27 @@
             "CANCELLED": "Cancelled",
             "SKIPPED": "Not applicable",
             "SUCCESS": "Done"
+        }
+    },
+    "analytics2": {
+        "syncAll": {
+            "button": "Sync data",
+            "syncing": "Sync in progress...",
+            "modalTitle": "Sync data",
+            "syncMode": "Sync mode",
+            "syncModeSingle": "Sync single month",
+            "syncModeFrom": "Sync from month",
+            "period": "Month",
+            "startPeriod": "Start month",
+            "accept": "Accept",
+            "cancel": "Cancel",
+            "force": "Force sync",
+            "forceTooltip": "Re-sync even if data already exists",
+            "started": "Sync data started",
+            "startFailed": "Failed to start sync data",
+            "completed": "Sync data completed",
+            "failed": "Sync data failed",
+            "jobNotFound": "Something went wrong while syncing data"
         }
     }
 }

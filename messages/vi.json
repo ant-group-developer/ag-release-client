@@ -202,7 +202,8 @@
         "genres": "Thể loại nhạc",
         "track": "Bài hát",
         "artist": "Nghệ sĩ",
-        "release": "Bản cập nhật",
+        "release": "Bản phát hành",
+        "releases": "Phát hành",
         "plays": "Lượt phát",
         "dark": "Tối",
         "light": "Sáng",
@@ -313,7 +314,11 @@
         "support": "Hỗ trợ",
         "email": "Email",
         "method": "Phương thức",
-        "copied": "Đã sao chép"
+        "copied": "Đã sao chép",
+        "engagement": "Mức độ tương tác",
+        "listeners": "Người nghe",
+        "label": "Label",
+        "labels": "Hãng phát hành"
     },
     "country": {
         "label": "Quốc gia",
@@ -438,7 +443,8 @@
         "goTo": "Đi đến trang Tổng quan",
         "viewAllUpdates": "Xem tất cả tin tức",
         "stream_by_dsp": "Lượt phát theo DSP",
-        "stream_distribution_subtitle": "Phân bổ lượt phát theo nền tảng năm {year}"
+        "stream_distribution_subtitle": "Phân bổ lượt phát theo nền tảng năm {year}",
+        "recentReleases": "Các bản phát hành gần đây"
     },
     "image": {
         "label": "Hình ảnh",
@@ -644,6 +650,8 @@
             "label": "Giây"
         },
         "selectDate": "Chọn ngày",
+        "lastDays": "{days} ngày qua",
+        "customRange": "Tùy chỉnh khoảng ngày",
         "last7Days": "7 ngày qua",
         "lastMonth": "Tháng trước",
         "lastYear": "Năm trước",
@@ -1968,6 +1976,35 @@
         "name": "Tên phân tích",
         "action": {
             "delete": "Xoá phân tích"
+        },
+        "chart": {
+            "title": "Thống kê lượt xem hàng tháng theo DSP",
+            "titleGeneric": "Thống kê lượt xem theo DSP",
+            "trends": "Xu hướng",
+            "sales": "Doanh số",
+            "dsp": "DSP",
+            "view": "Lượt xem",
+            "monthly": "Hàng tháng",
+            "daily": "Hàng ngày"
+        },
+        "dailyChart": {
+            "title": "Thống kê lượt xem hàng ngày theo DSP",
+            "last7Days": "7 ngày gần nhất",
+            "last15Days": "15 ngày gần nhất",
+            "last30Days": "30 ngày gần nhất"
+        },
+        "revenue": {
+            "totalRevenue": "Tổng doanh thu",
+            "totalPlays": "Tổng lượt nghe",
+            "totalTerritories": "Quốc gia/Vùng lãnh thổ",
+            "timelineTitle": "Doanh thu theo thời gian",
+            "modeRevenue": "Doanh thu (USD)",
+            "modeQuantity": "Lượt nghe (Số lượng)",
+            "label": "Doanh thu"
+        },
+        "tabs": {
+            "plays": "Lượt nghe & Xu hướng",
+            "revenue": "Doanh thu"
         }
     },
     "issue": {
@@ -2372,6 +2409,27 @@
             "CANCELLED": "Đã hủy",
             "SKIPPED": "Không áp dụng",
             "SUCCESS": "Hoàn thành"
+        }
+    },
+    "analytics2": {
+        "syncAll": {
+            "button": "Đồng bộ dữ liệu",
+            "syncing": "Đang đồng bộ dữ liệu...",
+            "modalTitle": "Đồng bộ dữ liệu",
+            "syncMode": "Chế độ đồng bộ",
+            "syncModeSingle": "Đồng bộ 1 tháng",
+            "syncModeFrom": "Đồng bộ từ tháng",
+            "period": "Tháng",
+            "startPeriod": "Tháng bắt đầu",
+            "accept": "Xác nhận",
+            "cancel": "Hủy",
+            "force": "Buộc đồng bộ",
+            "forceTooltip": "Đồng bộ lại dù dữ liệu đã tồn tại",
+            "started": "Đã bắt đầu đồng bộ dữ liệu",
+            "startFailed": "Không thể bắt đầu đồng bộ dữ liệu",
+            "completed": "Đồng bộ dữ liệu hoàn tất",
+            "failed": "Đồng bộ dữ liệu thất bại",
+            "jobNotFound": "Có lỗi khi đồng bộ dữ liệu"
         }
     }
 }

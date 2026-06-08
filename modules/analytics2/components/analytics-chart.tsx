@@ -1,24 +1,153 @@
 'use client';
 
-import { formattedNumber } from '@/helpers/common';
-import { Card, Radio } from 'antd';
+import { SalesTooltip } from '@/components/shared/chart/chart-tooltip';
+import { Card, Empty, Radio, Select, Skeleton } from 'antd';
+import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
-    Bar,
-    CartesianGrid,
-    ComposedChart,
-    Line,
-    ResponsiveContainer,
-    Tooltip,
-    XAxis,
-    YAxis,
-} from 'recharts';
-import { CHART_DATA } from '../constants/mock-data';
+    ANALYTICS_CHART_PERIOD,
+    ANALYTICS_CHART_VIEW_MODE,
+} from '../enums/tabs';
+import {
+    DSP_PALETTE,
+    transformBarData,
+    transformSalesBarData,
+} from '../helpers/analytics-chart-helper';
+import { useGetDspDailyTimeline } from '../hooks/use-get-dsp-daily-timeline';
+import { useGetDspSalesTimeline } from '../hooks/use-get-dsp-sales-timeline';
+import { useGetDspTimeline } from '../hooks/use-get-dsp-timeline';
+import BarView from './bar-view';
 
-export default function AnalyticsChart() {
-    const [view, setView] = useState('bar');
+interface Props {
+    fromDate: string;
+    toDate: string;
+}
+
+export default function AnalyticsChart({ fromDate, toDate }: Props) {
+    const [chartPeriod, setChartPeriod] = useState<ANALYTICS_CHART_PERIOD>(
+        ANALYTICS_CHART_PERIOD.MONTHLY
+    );
+    const [viewMode, setViewMode] = useState<ANALYTICS_CHART_VIEW_MODE>(
+        ANALYTICS_CHART_VIEW_MODE.TRENDS
+    );
+    const [range, setRange] = useState<7 | 15 | 30>(7);
     const messages = useTranslations();
+
+    // 1. Fetch Trends Timeline Data (Monthly)
+    const { timelineData: trendData, isFetching: isFetchingTrends } =
+        useGetDspTimeline({
+            fromDate,
+            toDate,
+            topN: 5,
+            includeOther: true,
+        });
+
+    // 2. Fetch Sales Timeline Data (Monthly)
+    const { timelineData: salesData, isFetching: isFetchingSales } =
+        useGetDspSalesTimeline({
+            fromDate,
+            toDate,
+            topN: 5,
+            includeOther: true,
+        });
+
+    // 3. Fetch Daily Timeline Data
+    const toDateDaily = useMemo(() => dayjs().format('YYYY-MM-DD'), []);
+    const fromDateDaily = useMemo(() => {
+        return dayjs()
+            .subtract(range - 1, 'day')
+            .format('YYYY-MM-DD');
+    }, [range]);
+
+    const { timelineData: dailyData, isFetching: isFetchingDaily } =
+        useGetDspDailyTimeline({
+            fromDate: fromDateDaily,
+            toDate: toDateDaily,
+            topN: 5,
+            includeOther: true,
+        });
+
+    const isFetching =
+        chartPeriod === ANALYTICS_CHART_PERIOD.DAILY
+            ? isFetchingDaily
+            : viewMode === ANALYTICS_CHART_VIEW_MODE.TRENDS
+              ? isFetchingTrends
+              : isFetchingSales;
+
+    // 4. Resolve active dataset based on viewMode (Monthly)
+    const activeData = useMemo(() => {
+        if (viewMode === ANALYTICS_CHART_VIEW_MODE.TRENDS) {
+            const topDsps = trendData?.topDsps ?? [];
+            const items = trendData?.items ?? [];
+            const barData = transformBarData(items);
+            return { topDsps, items, barData };
+        } else {
+            const topDsps = salesData?.topDsps ?? [];
+            const items = salesData?.items ?? [];
+            const barData = transformSalesBarData(items);
+            return { topDsps, items, barData };
+        }
+    }, [viewMode, trendData, salesData]);
+
+    const colorMap = useMemo(() => {
+        const map: Record<string, string> = {};
+        activeData.topDsps.forEach((dsp, i) => {
+            map[dsp] = DSP_PALETTE[i % DSP_PALETTE.length];
+        });
+        map['Other'] = '#94a3b8';
+        return map;
+    }, [activeData.topDsps]);
+
+    const allDspKeys = useMemo(() => {
+        const keys = new Set<string>();
+        const totals: Record<string, number> = {};
+
+        activeData.barData.forEach((row) => {
+            Object.entries(row).forEach(([key, value]) => {
+                if (key === 'period' || key.endsWith('RevenueUsd')) return;
+
+                keys.add(key);
+                totals[key] = (totals[key] ?? 0) + (Number(value) || 0);
+            });
+        });
+
+        return Array.from(keys).sort((a, b) => {
+            const totalDiff = (totals[b] ?? 0) - (totals[a] ?? 0);
+            return totalDiff || a.localeCompare(b);
+        });
+    }, [activeData.barData]);
+
+    // 5. Resolve daily dataset logic
+    const dailyTopDsps = useMemo(() => {
+        return dailyData?.topDsps ?? [];
+    }, [dailyData?.topDsps]);
+
+    const dailyItems = useMemo(() => {
+        return dailyData?.items ?? [];
+    }, [dailyData?.items]);
+
+    const dailyColorMap = useMemo(() => {
+        const map: Record<string, string> = {};
+        dailyTopDsps.forEach((dsp, i) => {
+            map[dsp] = DSP_PALETTE[i % DSP_PALETTE.length];
+        });
+        map['Other'] = '#94a3b8';
+        return map;
+    }, [dailyTopDsps]);
+
+    const dailyBarData = useMemo(
+        () => transformBarData(dailyItems),
+        [dailyItems]
+    );
+
+    const dailyAllDspKeys = useMemo(() => {
+        const keys = new Set<string>();
+        dailyItems.forEach((item) =>
+            item.series.forEach(({ dsp }) => keys.add(dsp))
+        );
+        return Array.from(keys);
+    }, [dailyItems]);
 
     return (
         <Card
@@ -26,106 +155,133 @@ export default function AnalyticsChart() {
             styles={{ body: { padding: '24px' } }}
         >
             <div className="mb-6 flex items-center justify-between">
-                <div className="flex items-center gap-6">
-                    <div className="flex items-center gap-2">
-                        <div className="h-0.5 w-4 bg-blue-500" />
-                        <span className="text-sm">TikTok</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <div className="h-4 w-4 rounded-sm bg-emerald-400" />
-                        <span className="text-sm">Spotify</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <div className="h-4 w-4 rounded-sm bg-rose-500" />
-                        <span className="text-sm">Apple music</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <div className="h-4 w-4 rounded-sm bg-amber-400" />
-                        <span className="text-sm">Youtube</span>
-                    </div>
+                <div className="flex items-center gap-3">
+                    <Select
+                        variant="borderless"
+                        value={chartPeriod}
+                        onChange={(val) => setChartPeriod(val)}
+                        style={{
+                            fontSize: 16,
+                            fontWeight: 'bold',
+                        }}
+                        options={[
+                            {
+                                value: ANALYTICS_CHART_PERIOD.MONTHLY,
+                                label: (
+                                    <span
+                                        style={{
+                                            fontSize: 14,
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
+                                        {messages('analytics.chart.title')}
+                                    </span>
+                                ),
+                            },
+                            {
+                                value: ANALYTICS_CHART_PERIOD.DAILY,
+                                label: (
+                                    <span
+                                        style={{
+                                            fontSize: 14,
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
+                                        {messages('analytics.dailyChart.title')}
+                                    </span>
+                                ),
+                            },
+                        ]}
+                    />
                 </div>
-                <Radio.Group
-                    value={view}
-                    onChange={(e) => setView(e.target.value)}
-                    buttonStyle="solid"
-                >
-                    <Radio.Button value="bar" className="w-16 text-center">
-                        Bar
-                    </Radio.Button>
-                    <Radio.Button value="line" className="w-16 text-center">
-                        Line
-                    </Radio.Button>
-                </Radio.Group>
+                {chartPeriod === ANALYTICS_CHART_PERIOD.MONTHLY ? (
+                    <Radio.Group
+                        value={viewMode}
+                        onChange={(e) => setViewMode(e.target.value)}
+                        buttonStyle="solid"
+                    >
+                        <Radio.Button
+                            value={ANALYTICS_CHART_VIEW_MODE.TRENDS}
+                            className="px-4 text-center"
+                        >
+                            {messages('analytics.chart.trends')}
+                        </Radio.Button>
+                        <Radio.Button
+                            value={ANALYTICS_CHART_VIEW_MODE.SALES}
+                            className="px-4 text-center"
+                        >
+                            {messages('analytics.chart.sales')}
+                        </Radio.Button>
+                    </Radio.Group>
+                ) : (
+                    <Select
+                        value={range}
+                        onChange={(val) => setRange(val)}
+                        style={{ width: 160 }}
+                        options={[
+                            {
+                                value: 7,
+                                label: messages(
+                                    'analytics.dailyChart.last7Days'
+                                ),
+                            },
+                            {
+                                value: 15,
+                                label: messages(
+                                    'analytics.dailyChart.last15Days'
+                                ),
+                            },
+                            {
+                                value: 30,
+                                label: messages(
+                                    'analytics.dailyChart.last30Days'
+                                ),
+                            },
+                        ]}
+                    />
+                )}
             </div>
 
-            <div className="h-[400px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart
-                        data={CHART_DATA}
-                        margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-                    >
-                        <CartesianGrid
-                            strokeDasharray="3 3"
-                            vertical={false}
-                            stroke="#f0f0f0"
-                        />
-                        <XAxis
-                            dataKey="date"
-                            axisLine={false}
-                            tickLine={false}
-                            tick={{ fontSize: 12, fill: '#999' }}
-                            dy={10}
-                        />
-                        <YAxis
-                            axisLine={false}
-                            tickLine={false}
-                            tick={{ fontSize: 12, fill: '#999' }}
-                            orientation="left"
-                            tickFormatter={(v) =>
-                                formattedNumber(v, undefined as any, true)
-                            }
-                        />
-                        <Tooltip
-                            contentStyle={{
-                                borderRadius: '8px',
-                                border: 'none',
-                                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                            }}
-                        />
-                        <Bar
-                            dataKey="youtube"
-                            stackId="a"
-                            fill="#FFC107"
-                            radius={[2, 2, 0, 0]}
-                            barSize={32}
-                            hide={view === 'line'}
-                        />
-                        <Bar
-                            dataKey="apple"
-                            stackId="a"
-                            fill="#F44336"
-                            radius={[2, 2, 0, 0]}
-                            barSize={32}
-                            hide={view === 'line'}
-                        />
-                        <Bar
-                            dataKey="spotify"
-                            stackId="a"
-                            fill="#4ADE80"
-                            radius={[2, 2, 0, 0]}
-                            barSize={32}
-                            hide={view === 'line'}
-                        />
-                        <Line
-                            type="monotone"
-                            dataKey="line"
-                            stroke="#3B82F6"
-                            strokeWidth={2}
-                            dot={false}
-                        />
-                    </ComposedChart>
-                </ResponsiveContainer>
-            </div>
+            {isFetching ? (
+                <Skeleton active paragraph={{ rows: 8 }} />
+            ) : chartPeriod === ANALYTICS_CHART_PERIOD.MONTHLY ? (
+                activeData.items.length === 0 ? (
+                    <Empty
+                        className="py-12"
+                        description={messages('common.noDataAvailable')}
+                    />
+                ) : (
+                    <BarView
+                        barData={activeData.barData}
+                        allDspKeys={allDspKeys}
+                        colorMap={colorMap}
+                        tooltipHeaders={[
+                            messages('analytics.chart.dsp'),
+                            messages('analytics.chart.view'),
+                        ]}
+                        tooltipContent={
+                            viewMode === ANALYTICS_CHART_VIEW_MODE.SALES ? (
+                                <SalesTooltip />
+                            ) : undefined
+                        }
+                    />
+                )
+            ) : dailyItems.length === 0 ? (
+                <Empty
+                    className="py-12"
+                    description={messages('common.noDataAvailable')}
+                />
+            ) : (
+                <BarView
+                    barData={dailyBarData}
+                    allDspKeys={dailyAllDspKeys}
+                    colorMap={dailyColorMap}
+                    tooltipHeaders={[
+                        messages('analytics.chart.dsp'),
+                        messages('analytics.chart.view'),
+                    ]}
+                />
+            )}
         </Card>
     );
 }

@@ -3,6 +3,8 @@ import AppColorPicker from '@/components/ui/colorPicker/app-color-picker';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import InputNumber from '@/components/ui/input/input-number';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
+import { PERMISSION } from '@/modules/auth/constants/permission';
+import { usePermission } from '@/hooks/use-permission';
 import UserSelect from '@/modules/user/components/user-select';
 import { Form, Input, Switch, theme } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -24,8 +26,8 @@ function TenantForm({ excludeIds, wrapperClassName, ...props }: Props) {
     const {
         isAdmin,
         profile: { tenantId },
-        isTenantOwner,
     } = useAuth();
+    const { hasPermission } = usePermission();
 
     return (
         <AppForm {...props}>
@@ -123,7 +125,7 @@ function TenantForm({ excludeIds, wrapperClassName, ...props }: Props) {
                     ]}
                 >
                     <UserSelect
-                        disabled={tenantId === props.tenantId && isTenantOwner}
+                        disabled={!hasPermission(PERMISSION.WORKSPACE.UPDATE_OWNER)}
                         externalOnChange={(value, option) => {
                             if (
                                 props.form &&
@@ -178,7 +180,7 @@ function TenantForm({ excludeIds, wrapperClassName, ...props }: Props) {
                     <InputNumber
                         placeholder={messages('tenant.labels.max.label')}
                         allowClear={false}
-                        disabled={!isAdmin}
+                        disabled={!hasPermission(PERMISSION.WORKSPACE.UPDATE_CONFIG)}
                     />
                 </AppForm.Item>
 
@@ -214,7 +216,7 @@ function TenantForm({ excludeIds, wrapperClassName, ...props }: Props) {
             <div className={wrapperClassName}>
                 <AppForm.Item label={messages('status.label')} name="isActive">
                     <Switch
-                        disabled={tenantId === props.tenantId && isTenantOwner}
+                        disabled={!hasPermission(PERMISSION.WORKSPACE.UPDATE_STATUS)}
                     />
                 </AppForm.Item>
 

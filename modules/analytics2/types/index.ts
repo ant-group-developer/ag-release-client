@@ -1,0 +1,215 @@
+import { CommonParams } from '@/types/api';
+
+export interface Analytics2DataFilter extends CommonParams {
+    startDate?: string;
+    endDate?: string;
+}
+
+export interface DspTimelineParams {
+    fromDate: string;
+    toDate: string;
+    topN?: number;
+    includeOther?: boolean;
+}
+
+export interface DspSeriesItem {
+    dsp: string;
+    trendViews: number;
+}
+
+export interface DspTimelinePeriod {
+    period: string;
+    series: DspSeriesItem[];
+}
+
+export interface DspTimelineData {
+    topDsps: string[];
+    items: DspTimelinePeriod[];
+}
+
+export interface DspSalesSeriesItem {
+    dsp: string;
+    salesViews: number;
+    revenueUsd: number;
+}
+
+export interface DspSalesTimelinePeriod {
+    period: string;
+    series: DspSalesSeriesItem[];
+}
+
+export interface DspSalesTimelineData {
+    topDsps: string[];
+    items: DspSalesTimelinePeriod[];
+}
+
+export interface RankingParams {
+    fromDate: string;
+    toDate: string;
+    page: number;
+    pageSize: number;
+}
+
+export interface TrackRankingItem {
+    rank: number;
+    isrc: string;
+    title: string;
+    version: string;
+    artistName: string;
+    releaseId: string;
+    releaseTitle: string;
+    totalViews: number;
+}
+
+export interface ReleaseRankingItem {
+    rank: number;
+    releaseId: string;
+    title: string;
+    upc: string;
+    labelId: string;
+    labelName: string;
+    trackCount: number;
+    totalViews: number;
+}
+
+export interface ArtistRankingItem {
+    rank: number;
+    artistId: string;
+    artistName: string;
+    picture: string | null;
+    trackCount: number;
+    totalViews: number;
+}
+
+export interface LabelRankingItem {
+    rank: number;
+    labelId: string;
+    labelName: string;
+    picture: string | null;
+    releaseCount: number;
+    trackCount: number;
+    totalViews: number;
+}
+
+export interface SyncRequest {
+    period: string;
+    force: boolean;
+}
+
+export interface SyncAllRequest {
+    startPeriod: string;
+    force: boolean;
+}
+
+export interface SyncAllResponse {
+    jobId: string;
+    message: string;
+}
+
+export interface SyncJobProgress {
+    current: number;
+    total: number;
+    currentItem?: string;
+}
+
+export interface SyncJobResponse {
+    id: string;
+    type: string;
+    status: string;
+    progress?: SyncJobProgress;
+    params: {
+        force: boolean;
+        startPeriod: string;
+    };
+    createdAt: string;
+    startedAt?: string;
+    durationMs?: number;
+}
+
+// Params for Revenue APIs
+export interface RevenueQueryParams {
+    fromDate: string;
+    toDate: string;
+    topN?: number;
+    includeOther?: boolean;
+}
+
+// Summary Response
+export interface RevenueSummaryData {
+    totalRevenueUsd: number;
+    totalQuantity: number;
+    totalTerritories: number;
+}
+
+// Timeline Series Items
+export interface RevenueTimelineDspItem {
+    dsp: string;
+    revenueUsd: number;
+    quantity: number;
+}
+
+export interface RevenueTimelinePeriod {
+    period: string; // 'YYYY-MM'
+    revenueUsd: number;
+    quantity: number;
+    series: RevenueTimelineDspItem[];
+}
+
+export interface RevenueTimelineData {
+    topDsps: string[];
+    items: RevenueTimelinePeriod[];
+}
+
+// Top DSP Response
+export interface RevenueDspItem {
+    dspName: string;
+    revenueUsd: number;
+    quantity: number;
+}
+
+// Top Artist Response
+export interface RevenueArtistItem {
+    rank: number;
+    artistId: string;
+    artistName: string;
+    picture: string | null;
+    trackCount: number;
+    revenueUsd: number;
+    quantity: number;
+}
+
+// Top Track Response
+export interface RevenueTrackItem {
+    rank: number;
+    isrc: string;
+    title: string;
+    version: string | null;
+    artistName: string;
+    releaseId: string | null;
+    releaseTitle: string | null;
+    revenueUsd: number;
+    quantity: number;
+}
+
+export interface TerTimelineParams {
+    fromDate: string;
+    toDate: string;
+    topN?: number;
+    includeOther?: boolean;
+}
+
+export interface TerSeriesItem {
+    territory: string;
+    trendViews: number;
+}
+
+export interface TerTimelinePeriod {
+    period: string;
+    series: TerSeriesItem[];
+}
+
+export interface TerTimelineData {
+    topTerritories: string[];
+    items: TerTimelinePeriod[];
+}
+
