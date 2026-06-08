@@ -13,6 +13,12 @@ import {
     SyncAllRequest,
     SyncAllResponse,
     SyncJobResponse,
+    RevenueQueryParams,
+    RevenueSummaryData,
+    RevenueTimelineData,
+    RevenueDspItem,
+    RevenueArtistItem,
+    RevenueTrackItem,
 } from '../types';
 
 export const analytics2Apis = {
@@ -73,4 +79,35 @@ export const analytics2Apis = {
     getSyncJob: (jobId: string) => {
         return axiosInstance.get<SyncJobResponse>(`/etl/jobs/${jobId}`);
     },
+    getRevenueSummary: (params: { fromDate: string; toDate: string }) => {
+        return axiosInstance.post<DetailResponse<RevenueSummaryData>>(
+            '/analytics/revenue/summary',
+            params
+        );
+    },
+    getRevenueTimeline: (params: RevenueQueryParams) => {
+        return axiosInstance.post<DetailResponse<RevenueTimelineData>>(
+            '/analytics/revenue/timeline',
+            params
+        );
+    },
+    getRevenueTopDsp: (params: RevenueQueryParams) => {
+        return axiosInstance.post<DetailResponse<RevenueDspItem[]>>(
+            '/analytics/revenue/top-dsp',
+            params
+        );
+    },
+    getRevenueTopArtist: (params: RevenueQueryParams) => {
+        return axiosInstance.post<DetailResponse<RevenueArtistItem[]>>(
+            '/analytics/revenue/top-artist',
+            params
+        );
+    },
+    getRevenueTopTrack: (params: RevenueQueryParams) => {
+        return axiosInstance.post<DetailResponse<RevenueTrackItem[]>>(
+            '/analytics/revenue/top-track',
+            params
+        );
+    },
 };
+
