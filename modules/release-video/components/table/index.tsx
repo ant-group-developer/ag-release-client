@@ -126,17 +126,31 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
                 return <ReleaseStatusTag status={record?.status} />;
             },
         },
+        // {
+        //     title: messages('common.createdAt'),
+        //     key: 'createdAt',
+        //     dataIndex: 'createdAt',
+        //     align: 'center',
+        //     width: 140,
+        //     sorter: true,
+        //     sortOrder: getSortOrder(
+        //         dataFilter.orderBy,
+        //         dataFilter.fieldOrder,
+        //         'createdAt'
+        //     ),
+        //     render: (value) => <span>{formattedDate(value)}</span>,
+        // },
         {
-            title: messages('common.createdAt'),
-            key: 'createdAt',
-            dataIndex: 'createdAt',
+            title: messages('common.updatedAt'),
+            key: 'updatedAt',
+            dataIndex: 'updatedAt',
             align: 'center',
             width: 140,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'createdAt'
+                'updatedAt'
             ),
             render: (value) => <span>{formattedDate(value)}</span>,
         },

@@ -61,6 +61,7 @@ export enum RELEASES_TABS {
     SCHEDULE = 'schedule',
     REVIEW = 'review',
     DISTRIBUTION = 'distribution',
+    SUBMITS = 'submits',
 }
 
 export enum RELEASES_STATUS {

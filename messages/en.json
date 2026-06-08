@@ -2256,7 +2256,8 @@
             "PROCESSING": "Processing",
             "COMPLETED": "Completed",
             "FAILED": "Failed",
-            "SKIPPED": "Skipped"
+            "SKIPPED": "Skipped",
+            "CANCEL": "Cancel"
         },
         "confirmCompletedModal": {
             "title": "Confirm completed",
