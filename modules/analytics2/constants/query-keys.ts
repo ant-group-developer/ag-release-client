@@ -1,4 +1,4 @@
-import { DspTimelineParams, RankingParams, RevenueQueryParams, TerTimelineParams } from '../types';
+import { DspTimelineParams, RankingParams, RevenueQueryParams, TerTimelineParams, ReleaseOverviewParams } from '../types';
 
 export const analytics2QueryKeys = {
     all: ['analytics2'] as const,
@@ -30,5 +30,45 @@ export const analytics2QueryKeys = {
         [...analytics2QueryKeys.all, 'revenue-top-artist', params] as const,
     revenueTopTrack: (params: RevenueQueryParams) =>
         [...analytics2QueryKeys.all, 'revenue-top-track', params] as const,
+    releaseOverview: (releaseId: string, params: ReleaseOverviewParams) =>
+        [...analytics2QueryKeys.all, 'release-overview', releaseId, params] as const,
+    releaseDspTimeline: (releaseId: string, params: DspTimelineParams) =>
+        [...analytics2QueryKeys.all, 'release-dsp-timeline', releaseId, params] as const,
+    releaseDspSalesTimeline: (releaseId: string, params: DspTimelineParams) =>
+        [...analytics2QueryKeys.all, 'release-dsp-sales-timeline', releaseId, params] as const,
+    releaseDspDailyTimeline: (releaseId: string, params: DspTimelineParams) =>
+        [...analytics2QueryKeys.all, 'release-dsp-daily-timeline', releaseId, params] as const,
+    releaseRevenueTimeline: (releaseId: string, params: RevenueQueryParams) =>
+        [...analytics2QueryKeys.all, 'release-revenue-timeline', releaseId, params] as const,
+    trackOverview: (isrc: string, params: ReleaseOverviewParams) =>
+        [...analytics2QueryKeys.all, 'track-overview', isrc, params] as const,
+    trackDspTimeline: (isrc: string, params: DspTimelineParams) =>
+        [...analytics2QueryKeys.all, 'track-dsp-timeline', isrc, params] as const,
+    trackDspSalesTimeline: (isrc: string, params: DspTimelineParams) =>
+        [...analytics2QueryKeys.all, 'track-dsp-sales-timeline', isrc, params] as const,
+    trackDspDailyTimeline: (isrc: string, params: DspTimelineParams) =>
+        [...analytics2QueryKeys.all, 'track-dsp-daily-timeline', isrc, params] as const,
+    trackRevenueTimeline: (isrc: string, params: RevenueQueryParams) =>
+        [...analytics2QueryKeys.all, 'track-revenue-timeline', isrc, params] as const,
+    labelOverview: (labelId: string, params: ReleaseOverviewParams) =>
+        [...analytics2QueryKeys.all, 'label-overview', labelId, params] as const,
+    labelDspTimeline: (labelId: string, params: DspTimelineParams) =>
+        [...analytics2QueryKeys.all, 'label-dsp-timeline', labelId, params] as const,
+    labelDspSalesTimeline: (labelId: string, params: DspTimelineParams) =>
+        [...analytics2QueryKeys.all, 'label-dsp-sales-timeline', labelId, params] as const,
+    labelDspDailyTimeline: (labelId: string, params: DspTimelineParams) =>
+        [...analytics2QueryKeys.all, 'label-dsp-daily-timeline', labelId, params] as const,
+    labelRevenueTimeline: (labelId: string, params: RevenueQueryParams) =>
+        [...analytics2QueryKeys.all, 'label-revenue-timeline', labelId, params] as const,
+    artistOverview: (artistId: string, params: ReleaseOverviewParams) =>
+        [...analytics2QueryKeys.all, 'artist-overview', artistId, params] as const,
+    artistDspTimeline: (artistId: string, params: DspTimelineParams) =>
+        [...analytics2QueryKeys.all, 'artist-dsp-timeline', artistId, params] as const,
+    artistDspSalesTimeline: (artistId: string, params: DspTimelineParams) =>
+        [...analytics2QueryKeys.all, 'artist-dsp-sales-timeline', artistId, params] as const,
+    artistDspDailyTimeline: (artistId: string, params: DspTimelineParams) =>
+        [...analytics2QueryKeys.all, 'artist-dsp-daily-timeline', artistId, params] as const,
+    artistRevenueTimeline: (artistId: string, params: RevenueQueryParams) =>
+        [...analytics2QueryKeys.all, 'artist-revenue-timeline', artistId, params] as const,
 };
 

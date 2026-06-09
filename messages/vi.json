@@ -141,6 +141,7 @@
         "settingNote": "Tùy chọn cài đặt chỉ áp dụng cho trình duyệt này",
         "value": "Giá trị",
         "viewDetail": "Xem chi tiết",
+        "detailedAnalysis": "Phân tích chi tiết",
         "systemCategories": "Danh mục hệ thống",
         "category": "Danh mục",
         "categories": "Danh mục",
@@ -442,6 +443,7 @@
         "latestNews": "Tin tức mới nhất",
         "goTo": "Đi đến trang Tổng quan",
         "viewAllUpdates": "Xem tất cả tin tức",
+        "recentUpdates": "Cập nhật gần đây",
         "stream_by_dsp": "Lượt phát theo DSP",
         "stream_distribution_subtitle": "Phân bổ lượt phát theo nền tảng năm {year}",
         "recentReleases": "Các bản phát hành gần đây"
@@ -1978,17 +1980,17 @@
             "delete": "Xoá phân tích"
         },
         "chart": {
-            "title": "Thống kê lượt xem hàng tháng theo DSP",
-            "titleGeneric": "Thống kê lượt xem theo DSP",
+            "title": "Thống kê lượt nghe hàng tháng theo DSP",
+            "titleGeneric": "Thống kê lượt nghe theo DSP",
             "trends": "Xu hướng",
             "sales": "Doanh số",
             "dsp": "DSP",
-            "view": "Lượt xem",
+            "view": "Lượt nghe",
             "monthly": "Hàng tháng",
             "daily": "Hàng ngày"
         },
         "dailyChart": {
-            "title": "Thống kê lượt xem hàng ngày theo DSP",
+            "title": "Thống kê lượt nghe hàng ngày theo DSP",
             "last7Days": "7 ngày gần nhất",
             "last15Days": "15 ngày gần nhất",
             "last30Days": "30 ngày gần nhất"
@@ -2005,7 +2007,12 @@
         "tabs": {
             "plays": "Lượt nghe & Xu hướng",
             "revenue": "Doanh thu"
-        }
+        },
+        "totalTrendViews": "Lượt nghe xu hướng",
+        "totalSalesViews": "Lượt xem bán hàng",
+        "totalRevenueUsd": "Tổng doanh thu (USD)",
+        "detailTitle": "Chi tiết phân tích",
+        "detailChartTitle": "Biểu đồ diễn biến"
     },
     "issue": {
         "label": "Vấn đề",
@@ -2412,6 +2419,18 @@
         }
     },
     "analytics2": {
+        "rank": "Thứ hạng",
+        "topRankingTitle": "Top {count} {title}",
+        "detailEntityTitle": "({entity}: {title})",
+        "filters": {
+            "allPlatforms": "Tất cả nền tảng",
+            "allRegions": "Tất cả khu vực",
+            "vietnam": "Việt Nam",
+            "unitedStates": "Hoa Kỳ"
+        },
+        "metrics": {
+            "stable": "Ổn định"
+        },
         "syncAll": {
             "button": "Đồng bộ dữ liệu",
             "syncing": "Đang đồng bộ dữ liệu...",

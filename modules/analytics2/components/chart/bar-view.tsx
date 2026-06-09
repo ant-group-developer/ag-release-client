@@ -18,6 +18,7 @@ interface BarViewProps {
     barData: any[];
     allDspKeys: string[];
     colorMap: Record<string, string>;
+    chartHeight?: number;
     tooltipContent?: ReactElement;
     tooltipHeaders?: [string, string];
 }
@@ -26,6 +27,7 @@ export default function BarView({
     barData,
     allDspKeys,
     colorMap,
+    chartHeight = 400,
     tooltipContent,
     tooltipHeaders,
 }: BarViewProps) {
@@ -70,7 +72,7 @@ export default function BarView({
 
     return (
         <div className="w-full">
-            <div className="h-[400px] w-full">
+            <div className="w-full" style={{ height: chartHeight }}>
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                         data={stackedBarData}

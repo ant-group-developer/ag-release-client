@@ -6,7 +6,7 @@ import { Card, Empty, Segmented, Skeleton, Table } from 'antd';
 import { BarChart3, List } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import RankingBar from './ranking-bar';
+import RankingBar from '../ranking/ranking-bar';
 
 export enum RankingCardView {
     LIST = 'list',

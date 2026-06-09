@@ -41,49 +41,42 @@ export default function MetricCards({ fromDate, toDate }: Props) {
     const { countOverviewData, isFetching: isOverviewLoading } =
         useGetCountOverview({ startDate: fromDate, endDate: toDate });
 
-
     const metricsData = [
         {
-            title: 'Release',
+            key: 'release',
+            title: t('common.release'),
             value: countOverviewData?.releasesCount ?? 0,
             change: '+12%',
             isPositive: true,
         },
         {
-            title: 'Track',
+            key: 'track',
+            title: t('common.track'),
             value: countOverviewData?.tracksCount ?? 0,
             change: '+5.4%',
             isPositive: true,
         },
         {
-            title: 'Label',
+            key: 'label',
+            title: t('common.label'),
             value: countOverviewData?.labelsCount ?? 0,
-            change: 'Stable',
+            change: t('analytics2.metrics.stable'),
             isPositive: false,
         },
         {
-            title: 'Artist',
+            key: 'artist',
+            title: t('common.artist'),
             value: countOverviewData?.artistsCount ?? 0,
             change: '+3',
             isPositive: true,
         },
     ];
 
-    const getTranslatedTitle = (title: string) => {
-        const key = title.toLowerCase();
-        if (key === 'release') return t('release.label');
-        if (key === 'track') return t('track.label');
-        if (key === 'label') return t('label.label');
-        if (key === 'artist') return t('artist.label');
-        return title;
-    };
-
     return (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
             {metricsData.map((metric, index) => {
-                const titleLower = metric.title.toLowerCase();
-                const Icon = IconMap[titleLower] || Music;
-                const themeColors = ColorMap[titleLower] || {
+                const Icon = IconMap[metric.key] || Music;
+                const themeColors = ColorMap[metric.key] || {
                     color: 'text-blue-600 dark:text-blue-400',
                     bgColor: 'bg-blue-100/50 dark:bg-blue-900/30',
                 };
@@ -106,7 +99,7 @@ export default function MetricCards({ fromDate, toDate }: Props) {
                                 </div>
                                 <div className="flex flex-col">
                                     <span className="text-xs font-medium uppercase text-gray-400 dark:text-zinc-500">
-                                        {getTranslatedTitle(metric.title)}
+                                        {metric.title}
                                     </span>
                                     {isOverviewLoading ? (
                                         <div className="mt-1.5 h-6 w-20 animate-pulse rounded bg-gray-200 dark:bg-zinc-700" />

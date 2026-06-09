@@ -93,7 +93,7 @@ export default function CardRelease({ data, ...props }: Props) {
                 description={
                     <div className="flex flex-col font-medium">
                         <p className="flex justify-between">
-                            <p> {data?.albumFormat.name} </p>
+                            <p> {data?.albumFormat?.name} </p>
                             <span>
                                 {formattedDate(
                                     data.releaseDate,

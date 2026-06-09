@@ -1,8 +1,10 @@
 import AppForm from '@/components/ui/antd-form/form';
 import { APP_ROUTES } from '@/enums/routes';
 import { showNotification, toastPromise } from '@/helpers/messages-helper';
+import { usePermission } from '@/hooks/use-permission';
 import { usePathname, useRouter } from '@/i18n/routing';
 import { useGetListSimpleArtistRole } from '@/modules/artist-role/hooks/use-get-list-simple-artist-role';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribute';
 import AdditionalTab from '@/modules/release-video/components/modal/additional-tab';
@@ -39,8 +41,11 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
     const searchParams = useSearchParams();
     const [form] = Form.useForm();
     const { isAdmin } = useAuth();
+    const { hasPermission } = usePermission();
     // const { active, isActive, deActive } = useActive();
     const isUpdateForm = !!dataEdit?.id;
+    const canEditReleaseVideo =
+        !isUpdateForm || hasPermission(PERMISSION.RELEASE_VIDEO.UPDATE);
     const tabParam = searchParams.get('tab');
     const activeTabTemp =
         tabParam !== null &&
@@ -81,17 +86,17 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
 
     const handleFieldUpdate = useCallback(
         (payload: Record<string, any>) => {
-            if (!isUpdateForm || !dataEdit?.id) return;
+            if (!isUpdateForm || !dataEdit?.id || !canEditReleaseVideo) return;
             updateReleaseDraft({
                 id: dataEdit.id,
                 payload,
             });
         },
-        [isUpdateForm, dataEdit?.id, updateReleaseDraft]
+        [isUpdateForm, dataEdit?.id, canEditReleaseVideo, updateReleaseDraft]
     );
 
     const onFinish = async () => {
-        if (!dataEdit?.id) return;
+        if (!dataEdit?.id || !canEditReleaseVideo) return;
 
         // const vevoDsp = dspData.find((dsp) =>
         //     dsp.name.toLowerCase().includes('vevo')
@@ -167,7 +172,11 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
             key: RELEASE_VIDEO_TABS.DETAILS,
             label: messages('releaseVideo.tabs.details'),
             children: (
-                <DetailsTab form={form} onFieldUpdate={handleFieldUpdate} />
+                <DetailsTab
+                    form={form}
+                    onFieldUpdate={handleFieldUpdate}
+                    disabled={!canEditReleaseVideo}
+                />
             ),
             style: { outline: 'none' },
             forceRender: true,
@@ -221,7 +230,9 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
             <AppForm
                 form={form}
                 showSubmit={
-                    isUpdateForm && activeTab !== RELEASE_VIDEO_TABS.SUBMITS
+                    canEditReleaseVideo &&
+                    isUpdateForm &&
+                    activeTab !== RELEASE_VIDEO_TABS.SUBMITS
                 }
                 submitText={messages('release.action.submit')}
                 submitProps={{
@@ -239,6 +250,7 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
                     );
                 }}
                 layout="vertical"
+                disabled={!canEditReleaseVideo}
             >
                 <Tabs
                     activeKey={activeTab}

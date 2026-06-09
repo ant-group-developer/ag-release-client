@@ -14,11 +14,13 @@ import { useEffect, useState } from 'react';
 interface ThumbnailAssetItemProps {
     form: FormInstance;
     dataEdit?: ReleasesData;
+    disabled?: boolean;
 }
 
 export default function ThumbnailAssetItem({
     form,
     dataEdit,
+    disabled = false,
 }: ThumbnailAssetItemProps) {
     const messages = useTranslations();
     const [isThumbnailUploading, setIsThumbnailUploading] = useState(false);
@@ -69,6 +71,7 @@ export default function ThumbnailAssetItem({
     ]);
 
     const handleThumbnailUpload = async (info: any) => {
+        if (disabled) return;
         setIsThumbnailUploading(true);
         const file = info.fileList[0];
         if (!file) {
@@ -193,6 +196,7 @@ export default function ThumbnailAssetItem({
     // const fileList = form.getFieldValue('thumbnailFile')?.fileList || [];
 
     const handleRemove = () => {
+        if (disabled) return false;
         return new Promise<boolean>((resolve) => {
             Modal.confirm({
                 title: messages('delete.confirmTitle'),
@@ -280,6 +284,7 @@ export default function ThumbnailAssetItem({
                     previewAspectRatio="16/9"
                     value={form.getFieldValue('thumbnailFile')}
                     placeholder={messages('common.uploadImage')}
+                    disabled={disabled || isThumbnailUploading}
                     onChange={handleThumbnailUpload}
                     onRemove={handleRemove}
                 />

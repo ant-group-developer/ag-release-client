@@ -49,7 +49,7 @@ export default function RankingBar<T>({
                         margin={{
                             top: 10,
                             right: 45,
-                            left: -5,
+                            left: 15,
                             bottom: 0,
                         }}
                     >
@@ -81,8 +81,9 @@ export default function RankingBar<T>({
                                 fill: '#666',
                             }}
                             tickFormatter={(v) => truncateText(v, 22)}
-                            width={120}
+                            width={130}
                             interval={0}
+                            tickMargin={12}
                         />
                         <Tooltip
                             content={<CustomTooltip />}

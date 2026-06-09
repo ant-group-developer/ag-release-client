@@ -1,8 +1,10 @@
 'use client';
 
-import { Card, Empty, Radio, Skeleton } from 'antd';
+import { ThreeColumnTooltip } from '@/components/shared/chart/chart-tooltip';
+import { formattedNumber } from '@/helpers/common';
+import { Card, Empty, Skeleton } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import {
     Bar,
     BarChart,
@@ -12,17 +14,20 @@ import {
     XAxis,
     YAxis,
 } from 'recharts';
-import { formattedNumber } from '@/helpers/common';
-import { useGetRevenueTimeline } from '../hooks/use-get-revenue-data';
-import { DSP_PALETTE } from '../helpers/analytics-chart-helper';
+import { DSP_PALETTE } from '../../helpers/analytics-chart-helper';
+import { useGetRevenueTimeline } from '../../hooks/use-get-revenue-data';
 
 interface Props {
     fromDate: string;
     toDate: string;
+    chartHeight?: number;
 }
 
-export default function RevenueTimelineChart({ fromDate, toDate }: Props) {
-    const [viewMode, setViewMode] = useState<'revenue' | 'quantity'>('revenue');
+export default function RevenueTimelineChart({
+    fromDate,
+    toDate,
+    chartHeight = 400,
+}: Props) {
     const messages = useTranslations();
 
     // Fetch Revenue Timeline Data
@@ -41,11 +46,12 @@ export default function RevenueTimelineChart({ fromDate, toDate }: Props) {
         return items.map((item) => {
             const row: Record<string, any> = { period: item.period };
             item.series.forEach(({ dsp, revenueUsd, quantity }) => {
-                row[dsp] = viewMode === 'revenue' ? revenueUsd : quantity;
+                row[dsp] = revenueUsd;
+                row[`${dsp}Quantity`] = quantity;
             });
             return row;
         });
-    }, [items, viewMode]);
+    }, [items]);
 
     // Build DSP to Color mapping
     const colorMap = useMemo(() => {
@@ -57,32 +63,39 @@ export default function RevenueTimelineChart({ fromDate, toDate }: Props) {
         return map;
     }, [topDsps]);
 
-    // Retrieve all active DSP keys present in series
+    // Retrieve all active DSP keys present in series, sorted by total value descending
     const allDspKeys = useMemo(() => {
         const keys = new Set<string>();
-        items.forEach((item) =>
-            item.series.forEach(({ dsp }) => keys.add(dsp))
-        );
-        return Array.from(keys);
-    }, [items]);
+        const totals: Record<string, number> = {};
 
-    const barSize = Math.max(24, Math.min(56, Math.floor(400 / (barData.length || 1))));
+        barData.forEach((row) => {
+            Object.entries(row).forEach(([key, value]) => {
+                if (key === 'period' || key.endsWith('Quantity')) return;
+                keys.add(key);
+                totals[key] = (totals[key] ?? 0) + (Number(value) || 0);
+            });
+        });
+
+        return Array.from(keys).sort((a, b) => {
+            const totalDiff = (totals[b] ?? 0) - (totals[a] ?? 0);
+            return totalDiff || a.localeCompare(b);
+        });
+    }, [barData]);
+
+    const barSize = Math.max(
+        24,
+        Math.min(56, Math.floor(400 / (barData.length || 1)))
+    );
 
     const formatValue = (v: any) => {
-        if (viewMode === 'revenue') {
-            return `$${Number(v).toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-            })}`;
-        }
-        return formattedNumber(v, undefined as any, false);
+        return `$${Number(v).toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        })}`;
     };
 
     const formatAxisValue = (v: any) => {
-        if (viewMode === 'revenue') {
-            return `$${formattedNumber(v, undefined as any, true)}`;
-        }
-        return formattedNumber(v, undefined as any, true);
+        return `$${formattedNumber(v, undefined as any, true)}`;
     };
 
     return (
@@ -90,33 +103,22 @@ export default function RevenueTimelineChart({ fromDate, toDate }: Props) {
             className="rounded-xl border-none shadow-sm"
             styles={{ body: { padding: '24px' } }}
         >
-            <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                    <span className="text-base font-bold text-gray-800 dark:text-zinc-100">
-                        {messages('analytics.revenue.timelineTitle', { defaultValue: 'Revenue Timeline' })}
-                    </span>
-                </div>
-                <Radio.Group
-                    value={viewMode}
-                    onChange={(e) => setViewMode(e.target.value)}
-                    buttonStyle="solid"
-                >
-                    <Radio.Button value="revenue" className="px-4 text-center">
-                        {messages('analytics.revenue.modeRevenue', { defaultValue: 'Revenue (USD)' })}
-                    </Radio.Button>
-                    <Radio.Button value="quantity" className="px-4 text-center">
-                        {messages('analytics.revenue.modeQuantity', { defaultValue: 'Plays (Quantity)' })}
-                    </Radio.Button>
-                </Radio.Group>
+            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <span className="text-md font-bold text-gray-800 dark:text-zinc-100">
+                    {messages('analytics.revenue.timelineTitle')}
+                </span>
             </div>
 
             {isFetching ? (
                 <Skeleton active paragraph={{ rows: 8 }} />
             ) : items.length === 0 ? (
-                <Empty className="py-12" description={messages('common.noDataAvailable')} />
+                <Empty
+                    className="py-12"
+                    description={messages('common.noDataAvailable')}
+                />
             ) : (
                 <div className="w-full">
-                    <div className="h-[400px] w-full">
+                    <div className="w-full" style={{ height: chartHeight }}>
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart
                                 data={barData}
@@ -152,18 +154,34 @@ export default function RevenueTimelineChart({ fromDate, toDate }: Props) {
                                     tickFormatter={formatAxisValue}
                                 />
                                 <Tooltip
-                                    contentStyle={{
-                                        borderRadius: '8px',
-                                        border: 'none',
-                                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                                    }}
-                                    formatter={(value: any, name: string) => [
-                                        formatValue(value),
-                                        name,
-                                    ]}
+                                    content={
+                                        <ThreeColumnTooltip
+                                            headers={[
+                                                messages(
+                                                    'analytics.chart.dsp'
+                                                ),
+                                                messages(
+                                                    'analytics.revenue.label'
+                                                ),
+                                                messages(
+                                                    'analytics.chart.view'
+                                                ),
+                                            ]}
+                                            primaryFormatter={formatValue}
+                                            extraColumn={{
+                                                metaKey: 'Quantity',
+                                                formatter: (value) =>
+                                                    formattedNumber(
+                                                        value as any,
+                                                        undefined as any,
+                                                        false
+                                                    ),
+                                            }}
+                                        />
+                                    }
                                     animationEasing="ease"
                                 />
-                                {allDspKeys.map((dsp, i) => (
+                                {[...allDspKeys].reverse().map((dsp, i) => (
                                     <Bar
                                         key={dsp}
                                         dataKey={dsp}
@@ -187,7 +205,8 @@ export default function RevenueTimelineChart({ fromDate, toDate }: Props) {
                                 <div
                                     className="h-3 w-3 rounded-sm"
                                     style={{
-                                        backgroundColor: colorMap[dsp] ?? '#94a3b8',
+                                        backgroundColor:
+                                            colorMap[dsp] ?? '#94a3b8',
                                     }}
                                 />
                                 <span className="text-sm text-gray-600 dark:text-zinc-400">

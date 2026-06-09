@@ -22,7 +22,12 @@ export default function AnalyticsHeader({ dspData, onDateChange }: Props) {
                         defaultValue="all-platforms"
                         style={{ width: 160 }}
                         options={[
-                            { value: 'all-platforms', label: 'All platforms' },
+                            {
+                                value: 'all-platforms',
+                                label: messages(
+                                    'analytics2.filters.allPlatforms'
+                                ),
+                            },
                             ...(dspData?.map((dsp) => ({
                                 value: dsp.id,
                                 label: dsp.name,
@@ -33,9 +38,22 @@ export default function AnalyticsHeader({ dspData, onDateChange }: Props) {
                         defaultValue="all-regions"
                         style={{ width: 160 }}
                         options={[
-                            { value: 'all-regions', label: 'All Regions' },
-                            { value: 'vn', label: 'Vietnam' },
-                            { value: 'us', label: 'United States' },
+                            {
+                                value: 'all-regions',
+                                label: messages(
+                                    'analytics2.filters.allRegions'
+                                ),
+                            },
+                            {
+                                value: 'vn',
+                                label: messages('analytics2.filters.vietnam'),
+                            },
+                            {
+                                value: 'us',
+                                label: messages(
+                                    'analytics2.filters.unitedStates'
+                                ),
+                            },
                         ]}
                     />
                     {/* <DateSelect

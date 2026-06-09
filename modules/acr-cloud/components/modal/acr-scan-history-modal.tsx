@@ -8,6 +8,7 @@ import useModalStore from '@/hooks/use-modal';
 import { Spin } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useCallback, useState } from 'react';
+import { ACR_CLOUD_SCAN_HISTORY_TABLE_KEY } from '../../enums';
 import { useGetScanStatus } from '../../hooks/use-get-scan-status';
 import { TrackScanStatusDataFilter } from '../../types';
 import AcrScanHistoryTable from '../table/acr-scan-history-table';
@@ -22,7 +23,7 @@ export default function AcrCloudScanHistoryModal({ ...props }: Props) {
         page: 1,
         pageSize: PAGE_SIZE,
         orderBy: ORDER.DESC,
-        fieldOrder: 'createdAt',
+        fieldOrder: ACR_CLOUD_SCAN_HISTORY_TABLE_KEY.CREATED_AT,
     });
 
     const onChangePage = useCallback((page: number, pageSize: number) => {

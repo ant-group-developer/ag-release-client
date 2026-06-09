@@ -1,23 +1,28 @@
 'use client';
 
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { Col, Row } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
     useGetArtistRanking,
     useGetLabelRanking,
     useGetReleaseRanking,
     useGetTrackRanking,
-} from '../hooks/use-get-rankings';
-import { useGetTerTimeline } from '../hooks/use-get-ter-timeline';
+} from '../../hooks/use-get-rankings';
+import { useGetTerTimeline } from '../../hooks/use-get-ter-timeline';
 import {
     ArtistRankingItem,
     LabelRankingItem,
     ReleaseRankingItem,
     TrackRankingItem,
-} from '../types';
-import RankingCard, { RankingCardView } from './ranking-card';
+} from '../../types';
+import RankingCard, { RankingCardView } from '../card/ranking-card';
+import DetailArtistAnalyticsModal from '../detail-artist/detail-artist-analytics-modal';
+import DetailLabelAnalyticsModal from '../detail-label/detail-label-analytics-modal';
+import DetailReleaseAnalyticsModal from '../detail-release/detail-release-analytics-modal';
+import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
 
 interface Props {
     fromDate: string;
@@ -27,7 +32,47 @@ interface Props {
 export default function AnalyticsRankings({ fromDate, toDate }: Props) {
     const messages = useTranslations();
     const topN = 5;
-
+    const topRankingTitle = (title: string) =>
+        messages('analytics2.topRankingTitle', {
+            count: topN,
+            title,
+        });
+    const [detailModal, setDetailModal] = useState<{
+        open: boolean;
+        title: string;
+        releaseId: string;
+    }>({
+        open: false,
+        title: '',
+        releaseId: '',
+    });
+    const [trackDetailModal, setTrackDetailModal] = useState<{
+        open: boolean;
+        title: string;
+        isrc: string;
+    }>({
+        open: false,
+        title: '',
+        isrc: '',
+    });
+    const [labelDetailModal, setLabelDetailModal] = useState<{
+        open: boolean;
+        title: string;
+        labelId: string;
+    }>({
+        open: false,
+        title: '',
+        labelId: '',
+    });
+    const [artistDetailModal, setArtistDetailModal] = useState<{
+        open: boolean;
+        title: string;
+        artistId: string;
+    }>({
+        open: false,
+        title: '',
+        artistId: '',
+    });
     // Fetch live ranking data
     const { trackRankingData, isFetching: isTracksFetching } =
         useGetTrackRanking({
@@ -95,7 +140,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
     // Columns config
     const trackColumns = [
         {
-            title: 'Rank',
+            title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
             width: 50,
@@ -122,25 +167,38 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         data={{ id: record.releaseId } as any}
                     />
                     <div className="flex min-w-0 flex-col">
-                        <span className="truncate font-medium text-gray-900 dark:text-zinc-100">
-                            {text}
-                        </span>
+                        <CustomTooltip
+                            title={messages('common.detailedAnalysis')}
+                        >
+                            <span
+                                className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                onClick={() =>
+                                    setTrackDetailModal({
+                                        open: true,
+                                        title: text,
+                                        isrc: record.isrc,
+                                    })
+                                }
+                            >
+                                {text}
+                            </span>
+                        </CustomTooltip>
                     </div>
                 </div>
             ),
         },
-        {
-            title: messages('common.artist'),
-            dataIndex: 'artistName',
-            key: 'artistName',
-            width: 90,
-            ellipsis: true,
-            render: (text: string) => (
-                <span className="truncate text-gray-600 dark:text-zinc-400">
-                    {text || '—'}
-                </span>
-            ),
-        },
+        // {
+        //     title: messages('common.artist'),
+        //     dataIndex: 'artistName',
+        //     key: 'artistName',
+        //     width: 90,
+        //     ellipsis: true,
+        //     render: (text: string) => (
+        //         <span className="truncate text-gray-600 dark:text-zinc-400">
+        //             {text || '—'}
+        //         </span>
+        //     ),
+        // },
         {
             title: 'ISRC',
             dataIndex: 'isrc',
@@ -153,18 +211,18 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                 </span>
             ),
         },
-        {
-            title: messages('common.release'),
-            dataIndex: 'releaseTitle',
-            key: 'releaseTitle',
-            width: 85,
-            ellipsis: true,
-            render: (text: string) => (
-                <span className="truncate text-gray-600 dark:text-zinc-400">
-                    {text || '—'}
-                </span>
-            ),
-        },
+        // {
+        //     title: messages('common.release'),
+        //     dataIndex: 'releaseTitle',
+        //     key: 'releaseTitle',
+        //     width: 85,
+        //     ellipsis: true,
+        //     render: (text: string) => (
+        //         <span className="truncate text-gray-600 dark:text-zinc-400">
+        //             {text || '—'}
+        //         </span>
+        //     ),
+        // },
         {
             title: messages('common.streams'),
             dataIndex: 'totalViews',
@@ -180,7 +238,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
 
     const releaseColumns = [
         {
-            title: 'Rank',
+            title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
             width: 50,
@@ -207,25 +265,38 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         data={{ id: record.releaseId } as any}
                     />
                     <div className="flex min-w-0 flex-col">
-                        <span className="truncate font-medium text-gray-900 dark:text-zinc-100">
-                            {text}
-                        </span>
+                        <CustomTooltip
+                            title={messages('common.detailedAnalysis')}
+                        >
+                            <span
+                                className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                onClick={() =>
+                                    setDetailModal({
+                                        open: true,
+                                        title: text,
+                                        releaseId: record.releaseId,
+                                    })
+                                }
+                            >
+                                {text}
+                            </span>
+                        </CustomTooltip>
                     </div>
                 </div>
             ),
         },
-        {
-            title: messages('common.label'),
-            dataIndex: 'labelName',
-            key: 'labelName',
-            width: 90,
-            ellipsis: true,
-            render: (text: string) => (
-                <span className="truncate text-gray-600 dark:text-zinc-400">
-                    {text || '—'}
-                </span>
-            ),
-        },
+        // {
+        //     title: messages('common.label'),
+        //     dataIndex: 'labelName',
+        //     key: 'labelName',
+        //     width: 90,
+        //     ellipsis: true,
+        //     render: (text: string) => (
+        //         <span className="truncate text-gray-600 dark:text-zinc-400">
+        //             {text || '—'}
+        //         </span>
+        //     ),
+        // },
         {
             title: 'UPC',
             dataIndex: 'upc',
@@ -264,7 +335,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
 
     const artistColumns = [
         {
-            title: 'Rank',
+            title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
             width: 50,
@@ -290,9 +361,20 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         height={32}
                         data={{ id: record.picture } as any}
                     />
-                    <span className="truncate font-medium text-gray-900 dark:text-zinc-100">
-                        {text}
-                    </span>
+                    <CustomTooltip title={messages('common.detailedAnalysis')}>
+                        <span
+                            className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                            onClick={() =>
+                                setArtistDetailModal({
+                                    open: true,
+                                    title: text,
+                                    artistId: record.artistId,
+                                })
+                            }
+                        >
+                            {text}
+                        </span>
+                    </CustomTooltip>
                 </div>
             ),
         },
@@ -322,7 +404,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
 
     const labelColumns = [
         {
-            title: 'Rank',
+            title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
             width: 50,
@@ -348,9 +430,20 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         height={32}
                         data={{ id: record.labelId } as any}
                     />
-                    <span className="truncate font-medium text-gray-900 dark:text-zinc-100">
-                        {text}
-                    </span>
+                    <CustomTooltip title={messages('common.detailedAnalysis')}>
+                        <span
+                            className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                            onClick={() =>
+                                setLabelDetailModal({
+                                    open: true,
+                                    title: text,
+                                    labelId: record.labelId,
+                                })
+                            }
+                        >
+                            {text}
+                        </span>
+                    </CustomTooltip>
                 </div>
             ),
         },
@@ -391,7 +484,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
 
     const territoryColumns = [
         {
-            title: 'Rank',
+            title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
             width: 50,
@@ -434,7 +527,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             <Row gutter={[24, 24]}>
                 <Col span={12} xs={24} lg={12}>
                     <RankingCard
-                        title={messages('common.tracks')}
+                        title={topRankingTitle(messages('common.tracks'))}
                         columns={trackColumns}
                         dataSource={trackRankingData}
                         loading={isTracksFetching}
@@ -446,7 +539,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                 </Col>
                 <Col span={12} xs={24} lg={12}>
                     <RankingCard
-                        title={messages('common.releases')}
+                        title={topRankingTitle(messages('common.releases'))}
                         columns={releaseColumns}
                         dataSource={releaseRankingData}
                         loading={isReleasesFetching}
@@ -458,7 +551,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                 </Col>
                 <Col span={12} xs={24} lg={12}>
                     <RankingCard
-                        title={messages('common.partners')}
+                        title={topRankingTitle(messages('common.partners'))}
                         columns={artistColumns}
                         dataSource={artistRankingData}
                         loading={isArtistsFetching}
@@ -469,7 +562,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                 </Col>
                 <Col span={12} xs={24} lg={12}>
                     <RankingCard
-                        title={'Labels'}
+                        title={topRankingTitle(messages('common.labels'))}
                         columns={labelColumns}
                         dataSource={labelRankingData}
                         loading={isLabelsFetching}
@@ -481,7 +574,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                 </Col>
                 <Col span={12} xs={24} lg={12}>
                     <RankingCard
-                        title={messages('common.region')}
+                        title={topRankingTitle(messages('common.region'))}
                         columns={territoryColumns}
                         dataSource={territoryRankingData}
                         loading={isTerFetching}
@@ -492,6 +585,46 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                     />
                 </Col>
             </Row>
+            <DetailReleaseAnalyticsModal
+                open={detailModal.open}
+                onClose={() =>
+                    setDetailModal((prev) => ({ ...prev, open: false }))
+                }
+                title={detailModal.title}
+                releaseId={detailModal.releaseId}
+                fromDate={fromDate}
+                toDate={toDate}
+            />
+            <DetailTrackAnalyticsModal
+                open={trackDetailModal.open}
+                onClose={() =>
+                    setTrackDetailModal((prev) => ({ ...prev, open: false }))
+                }
+                title={trackDetailModal.title}
+                isrc={trackDetailModal.isrc}
+                fromDate={fromDate}
+                toDate={toDate}
+            />
+            <DetailLabelAnalyticsModal
+                open={labelDetailModal.open}
+                onClose={() =>
+                    setLabelDetailModal((prev) => ({ ...prev, open: false }))
+                }
+                title={labelDetailModal.title}
+                labelId={labelDetailModal.labelId}
+                fromDate={fromDate}
+                toDate={toDate}
+            />
+            <DetailArtistAnalyticsModal
+                open={artistDetailModal.open}
+                onClose={() =>
+                    setArtistDetailModal((prev) => ({ ...prev, open: false }))
+                }
+                title={artistDetailModal.title}
+                artistId={artistDetailModal.artistId}
+                fromDate={fromDate}
+                toDate={toDate}
+            />
         </div>
     );
 }

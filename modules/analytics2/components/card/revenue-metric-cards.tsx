@@ -3,7 +3,7 @@
 import { theme } from 'antd';
 import { DollarSign, Globe, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useGetRevenueSummary } from '../hooks/use-get-revenue-data';
+import { useGetRevenueSummary } from '../../hooks/use-get-revenue-data';
 
 interface Props {
     fromDate: string;
@@ -22,7 +22,6 @@ export default function RevenueMetricCards({ fromDate, toDate }: Props) {
     const metricsData = [
         {
             title: 'analytics.revenue.totalRevenue',
-            defaultTitle: 'Total Revenue',
             value: summaryData?.totalRevenueUsd
                 ? `$${summaryData.totalRevenueUsd.toLocaleString(undefined, {
                       minimumFractionDigits: 2,
@@ -37,7 +36,6 @@ export default function RevenueMetricCards({ fromDate, toDate }: Props) {
         },
         {
             title: 'analytics.revenue.totalPlays',
-            defaultTitle: 'Total Plays',
             value: summaryData?.totalQuantity
                 ? summaryData.totalQuantity.toLocaleString()
                 : '0',
@@ -49,7 +47,6 @@ export default function RevenueMetricCards({ fromDate, toDate }: Props) {
         },
         {
             title: 'analytics.revenue.totalTerritories',
-            defaultTitle: 'Territories',
             value: summaryData?.totalTerritories
                 ? summaryData.totalTerritories.toLocaleString()
                 : '0',
@@ -62,7 +59,7 @@ export default function RevenueMetricCards({ fromDate, toDate }: Props) {
     ] as const;
 
     return (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {metricsData.map((metric, index) => {
                 const Icon = metric.icon;
                 const themeColors = metric.colors;
@@ -76,9 +73,7 @@ export default function RevenueMetricCards({ fromDate, toDate }: Props) {
                         <div className="flex items-center justify-between">
                             <div className="flex flex-col gap-1">
                                 <span className="text-xs font-medium uppercase text-gray-400 dark:text-zinc-500">
-                                    {t(metric.title, {
-                                        defaultValue: metric.defaultTitle,
-                                    })}
+                                    {t(metric.title)}
                                 </span>
                                 {isLoading ? (
                                     <div className="mt-1 h-7 w-20 animate-pulse rounded bg-gray-200 dark:bg-zinc-700" />

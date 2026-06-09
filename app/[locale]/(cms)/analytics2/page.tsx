@@ -2,15 +2,15 @@
 
 import DateSelect2 from '@/components/ui/select/date-select2';
 import { useFilter } from '@/hooks/use-filter';
-import PlaysTabContent from '@/modules/analytics2/components/plays-tab-content';
-import RevenueTabContent from '@/modules/analytics2/components/revenue-tab-content';
+import PlaysTabContent from '@/modules/analytics2/components/tab/plays-tab-content';
+import RevenueTabContent from '@/modules/analytics2/components/tab/revenue-tab-content';
 import { ANALYTICS2_TABS } from '@/modules/analytics2/enums/tabs';
 import { Analytics2DataFilter } from '@/modules/analytics2/types';
 import { PageContainer } from '@ant-design/pro-components';
 import { Radio, Space, theme } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 
 const defaultFilter: Analytics2DataFilter = {
     startDate: dayjs().subtract(29, 'day').format('YYYY-MM-DD'),
@@ -20,9 +20,19 @@ const defaultFilter: Analytics2DataFilter = {
 export default function Analytics2Page() {
     const { token } = theme.useToken();
     const messages = useTranslations();
-    const [activeTab, setActiveTab] = useState<ANALYTICS2_TABS>(
-        ANALYTICS2_TABS.PLAYS
-    );
+
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const pathname = usePathname();
+
+    const activeTab =
+        (searchParams.get('tab') as ANALYTICS2_TABS) || ANALYTICS2_TABS.VIEWS;
+
+    const handleTabChange = (tab: ANALYTICS2_TABS) => {
+        const params = new URLSearchParams(searchParams.toString());
+        params.set('tab', tab);
+        router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    };
 
     const { dataFilter, onChangeFilter } =
         useFilter<Analytics2DataFilter>(defaultFilter);
@@ -44,15 +54,15 @@ export default function Analytics2Page() {
                         optionType="button"
                         value={activeTab}
                         onChange={(event) =>
-                            setActiveTab(event.target.value as ANALYTICS2_TABS)
+                            handleTabChange(event.target.value as ANALYTICS2_TABS)
                         }
                         options={[
                             {
-                                label: messages('analytics.chart.trends'),
-                                value: ANALYTICS2_TABS.PLAYS,
+                                label: messages('common.views'),
+                                value: ANALYTICS2_TABS.VIEWS,
                             },
                             {
-                                label: messages('analytics.chart.sales'),
+                                label: messages('common.revenue'),
                                 value: ANALYTICS2_TABS.REVENUE,
                             },
                         ]}
@@ -73,7 +83,7 @@ export default function Analytics2Page() {
             }
         >
             <div className="flex flex-col gap-6">
-                {activeTab === ANALYTICS2_TABS.PLAYS ? (
+                {activeTab === ANALYTICS2_TABS.VIEWS ? (
                     <PlaysTabContent fromDate={fromDate} toDate={toDate} />
                 ) : (
                     <RevenueTabContent fromDate={fromDate} toDate={toDate} />

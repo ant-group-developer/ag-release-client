@@ -1,23 +1,25 @@
 import { RELEASE_VIDEO_CAPTION_TYPE } from '@/modules/release-video/enums';
-import { useGetReleaseCaptions } from '@/modules/releases/hooks/use-get-release-captions';
 import { useDeleteReleaseCaption } from '@/modules/releases/hooks/use-delete-release-caption';
+import { useGetReleaseCaptions } from '@/modules/releases/hooks/use-get-release-captions';
 import { ReleaseCaptionData } from '@/modules/releases/types';
-import { Button, Space, Table, Typography, Modal } from 'antd';
+import { Button, Modal, Space, Table, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { Trash2, Upload, Pencil } from 'lucide-react';
-import { useParams } from 'next/navigation';
+import { Pencil, Trash2, Upload } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
 
 const { Text } = Typography;
 
 interface CaptionsTabContentProps {
     onUploadClick: () => void;
     onEditClick?: (record: ReleaseCaptionData) => void;
+    disabled?: boolean;
 }
 
 export default function CaptionsTabContent({
     onUploadClick,
     onEditClick,
+    disabled = false,
 }: CaptionsTabContentProps) {
     const messages = useTranslations();
     const params = useParams<{ id: string }>();
@@ -29,9 +31,12 @@ export default function CaptionsTabContent({
     const { deleteReleaseCaption } = useDeleteReleaseCaption();
 
     const handleDelete = (id: string) => {
+        if (disabled) return;
         Modal.confirm({
             title: messages('releaseVideo.captions.table.deleteCaptionTitle'),
-            content: messages('releaseVideo.captions.table.deleteCaptionContent'),
+            content: messages(
+                'releaseVideo.captions.table.deleteCaptionContent'
+            ),
             onOk: () => {
                 return new Promise<void>((resolve, reject) => {
                     deleteReleaseCaption({
@@ -75,12 +80,14 @@ export default function CaptionsTabContent({
                         type="text"
                         icon={<Pencil size={18} />}
                         style={{ padding: 0 }}
+                        disabled={disabled}
                         onClick={() => onEditClick?.(record)}
                     />
                     <Button
                         type="text"
                         icon={<Trash2 size={18} />}
                         style={{ padding: 0 }}
+                        disabled={disabled}
                         onClick={() => handleDelete(record.id)}
                     />
                 </Space>
@@ -104,6 +111,7 @@ export default function CaptionsTabContent({
                 <Button
                     type="primary"
                     icon={<Upload size={16} />}
+                    disabled={disabled}
                     onClick={onUploadClick}
                 >
                     {messages('releaseVideo.captions.table.upload')}
@@ -116,7 +124,11 @@ export default function CaptionsTabContent({
                 rowKey="id"
                 pagination={false}
                 size="middle"
-                locale={{ emptyText: messages('releaseVideo.captions.table.emptyCaptions') }}
+                locale={{
+                    emptyText: messages(
+                        'releaseVideo.captions.table.emptyCaptions'
+                    ),
+                }}
                 scroll={{ y: 250 }}
             />
         </div>

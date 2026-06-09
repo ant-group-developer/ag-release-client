@@ -10,9 +10,14 @@ import VideoAssetItem from './video-asset-item';
 interface VideoAssetsProps {
     form: FormInstance;
     dataEdit?: ReleasesData;
+    disabled?: boolean;
 }
 
-export default function VideoAssets({ form, dataEdit }: VideoAssetsProps) {
+export default function VideoAssets({
+    form,
+    dataEdit,
+    disabled = false,
+}: VideoAssetsProps) {
     const messages = useTranslations();
     const [videoUrl, setVideoUrl] = useState<string>('');
     return (
@@ -68,13 +73,21 @@ export default function VideoAssets({ form, dataEdit }: VideoAssetsProps) {
                         videoUrl={videoUrl}
                         setVideoUrl={setVideoUrl}
                         dataEdit={dataEdit}
+                        disabled={disabled}
                     />
 
                     {/* Asset: Thumbnail */}
-                    <ThumbnailAssetItem form={form} dataEdit={dataEdit} />
+                    <ThumbnailAssetItem
+                        form={form}
+                        dataEdit={dataEdit}
+                        disabled={disabled}
+                    />
 
                     {/* Asset: Captions and Subtitles */}
-                    <CaptionsAssetItem dataEdit={dataEdit} />
+                    <CaptionsAssetItem
+                        dataEdit={dataEdit}
+                        disabled={disabled}
+                    />
                 </div>
             </div>
         </>
