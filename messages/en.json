@@ -203,6 +203,7 @@
         "track": "Track",
         "artist": "Artist",
         "release": "Release",
+        "releases": "Releases",
         "plays": "Plays",
         "dark": "Dark",
         "light": "Light",
@@ -317,7 +318,8 @@
         "copied": "Copied",
         "engagement": "Engagement",
         "listeners": "Listeners",
-        "label": "Label"
+        "label": "Label",
+        "labels": "Labels"
     },
     "country": {
         "label": "Country",
@@ -652,6 +654,8 @@
             "label": "Second"
         },
         "selectDate": "Select date",
+        "lastDays": "Last {days} days",
+        "customRange": "Custom range",
         "last7Days": "Last 7 days",
         "lastMonth": "Last month",
         "lastYear": "Last year",
@@ -1977,8 +1981,13 @@
         },
         "chart": {
             "title": "Monthly views by DSP",
+            "titleGeneric": "Views by DSP",
             "trends": "Trends",
-            "sales": "Sales"
+            "sales": "Sales",
+            "dsp": "DSP",
+            "view": "View",
+            "monthly": "Monthly",
+            "daily": "Daily"
         },
         "dailyChart": {
             "title": "Daily trend views by DSP",

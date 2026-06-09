@@ -4,6 +4,8 @@ import {
     DspTimelineData,
     DspSalesTimelineData,
     DspTimelineParams,
+    TerTimelineData,
+    TerTimelineParams,
     RankingParams,
     TrackRankingItem,
     ReleaseRankingItem,
@@ -37,6 +39,12 @@ export const analytics2Apis = {
     getDspDailyTimeline: (params: DspTimelineParams) => {
         return axiosInstance.post<DetailResponse<DspTimelineData>>(
             '/analytics/trend-view/dsp/timeline/daily',
+            params
+        );
+    },
+    getTerTimeline: (params: TerTimelineParams) => {
+        return axiosInstance.post<DetailResponse<TerTimelineData>>(
+            '/analytics/trend-view/ter/timeline',
             params
         );
     },

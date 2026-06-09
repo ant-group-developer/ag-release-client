@@ -47,8 +47,9 @@ export function useDspPieData(
 export function transformSalesBarData(items: DspSalesTimelinePeriod[]) {
     return items.map((item) => {
         const row: Record<string, any> = { period: item.period };
-        item.series.forEach(({ dsp, salesViews }) => {
+        item.series.forEach(({ dsp, salesViews, revenueUsd }) => {
             row[dsp] = salesViews;
+            row[`${dsp}RevenueUsd`] = revenueUsd;
         });
         return row;
     });

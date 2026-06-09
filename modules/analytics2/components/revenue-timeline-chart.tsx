@@ -161,6 +161,7 @@ export default function RevenueTimelineChart({ fromDate, toDate }: Props) {
                                         formatValue(value),
                                         name,
                                     ]}
+                                    animationEasing="ease"
                                 />
                                 {allDspKeys.map((dsp, i) => (
                                     <Bar

@@ -40,6 +40,7 @@ export default function PieView({ pieData }: PieViewProps) {
                                 formattedNumber(value, undefined as any, true),
                                 'Streams',
                             ]}
+                            animationEasing="ease"
                         />
                     </PieChart>
                 </ResponsiveContainer>

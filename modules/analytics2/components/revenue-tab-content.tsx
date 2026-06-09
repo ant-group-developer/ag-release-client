@@ -1,12 +1,12 @@
 'use client';
 
-import RevenueMetricCards from './revenue-metric-cards';
-import RevenueTimelineChart from './revenue-timeline-chart';
-import RevenueHorizontalBarChart from './revenue-horizontal-bar-chart';
 import {
     useGetRevenueTopArtist,
     useGetRevenueTopTrack,
 } from '../hooks/use-get-revenue-data';
+import RevenueHorizontalBarChart from './revenue-horizontal-bar-chart';
+import RevenueMetricCards from './revenue-metric-cards';
+import RevenueTimelineChart from './revenue-timeline-chart';
 
 interface Props {
     fromDate: string;
@@ -14,19 +14,22 @@ interface Props {
 }
 
 export default function RevenueTabContent({ fromDate, toDate }: Props) {
-    const { topArtistData, isFetching: isArtistsLoading } = useGetRevenueTopArtist({
-        fromDate,
-        toDate,
-        topN: 10,
-        includeOther: true,
-    });
+    const { topArtistData, isFetching: isArtistsLoading } =
+        useGetRevenueTopArtist({
+            fromDate,
+            toDate,
+            topN: 10,
+            includeOther: true,
+        });
 
-    const { topTrackData, isFetching: isTracksLoading } = useGetRevenueTopTrack({
-        fromDate,
-        toDate,
-        topN: 10,
-        includeOther: true,
-    });
+    const { topTrackData, isFetching: isTracksLoading } = useGetRevenueTopTrack(
+        {
+            fromDate,
+            toDate,
+            topN: 10,
+            includeOther: true,
+        }
+    );
 
     return (
         <div className="flex flex-col gap-6">
@@ -37,7 +40,7 @@ export default function RevenueTabContent({ fromDate, toDate }: Props) {
             <RevenueTimelineChart fromDate={fromDate} toDate={toDate} />
 
             {/* 3. Top Rankings (Artists & Tracks Side-by-Side) */}
-            <div className="flex flex-col lg:flex-row gap-6">
+            <div className="flex flex-col gap-6 lg:flex-row">
                 <RevenueHorizontalBarChart
                     title="TOP 10 REVENUE ARTISTS"
                     data={topArtistData}

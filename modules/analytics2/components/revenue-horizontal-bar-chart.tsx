@@ -124,6 +124,7 @@ export default function RevenueHorizontalBarChart({
                                         })}`,
                                         messages('analytics.revenue.label', { defaultValue: 'Revenue' }),
                                     ]}
+                                    animationEasing="ease"
                                 />
                                 <Bar
                                     dataKey={valueKey}

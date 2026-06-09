@@ -1,7 +1,7 @@
 'use client';
 
-import { Space, theme } from 'antd';
-import { DollarSign, Music, Globe } from 'lucide-react';
+import { theme } from 'antd';
+import { DollarSign, Globe, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useGetRevenueSummary } from '../hooks/use-get-revenue-data';
 
@@ -74,25 +74,25 @@ export default function RevenueMetricCards({ fromDate, toDate }: Props) {
                         style={{ backgroundColor: token.colorBgContainer }}
                     >
                         <div className="flex items-center justify-between">
-                            <Space size={12}>
-                                <div
-                                    className={`rounded-xl p-2.5 ${themeColors.bgColor} ${themeColors.color}`}
-                                >
-                                    <Icon size={24} />
-                                </div>
-                                <div className="flex flex-col">
-                                    <span className="text-xs font-medium uppercase text-gray-400 dark:text-zinc-500">
-                                        {t(metric.title, { defaultValue: metric.defaultTitle })}
+                            <div className="flex flex-col gap-1">
+                                <span className="text-xs font-medium uppercase text-gray-400 dark:text-zinc-500">
+                                    {t(metric.title, {
+                                        defaultValue: metric.defaultTitle,
+                                    })}
+                                </span>
+                                {isLoading ? (
+                                    <div className="mt-1 h-7 w-20 animate-pulse rounded bg-gray-200 dark:bg-zinc-700" />
+                                ) : (
+                                    <span className="text-2xl font-bold">
+                                        {metric.value}
                                     </span>
-                                    {isLoading ? (
-                                        <div className="mt-1.5 h-6 w-32 animate-pulse rounded bg-gray-200 dark:bg-zinc-700" />
-                                    ) : (
-                                        <span className="text-xl font-bold text-gray-900 dark:text-zinc-100">
-                                            {metric.value}
-                                        </span>
-                                    )}
-                                </div>
-                            </Space>
+                                )}
+                            </div>
+                            <div
+                                className={`rounded-xl p-3 ${themeColors.bgColor} ${themeColors.color}`}
+                            >
+                                <Icon size={24} />
+                            </div>
                         </div>
                     </div>
                 );

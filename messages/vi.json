@@ -202,7 +202,8 @@
         "genres": "Thể loại nhạc",
         "track": "Bài hát",
         "artist": "Nghệ sĩ",
-        "release": "Bản cập nhật",
+        "release": "Bản phát hành",
+        "releases": "Phát hành",
         "plays": "Lượt phát",
         "dark": "Tối",
         "light": "Sáng",
@@ -316,7 +317,8 @@
         "copied": "Đã sao chép",
         "engagement": "Mức độ tương tác",
         "listeners": "Người nghe",
-        "label": "Label"
+        "label": "Label",
+        "labels": "Hãng phát hành"
     },
     "country": {
         "label": "Quốc gia",
@@ -648,6 +650,8 @@
             "label": "Giây"
         },
         "selectDate": "Chọn ngày",
+        "lastDays": "{days} ngày qua",
+        "customRange": "Tùy chỉnh khoảng ngày",
         "last7Days": "7 ngày qua",
         "lastMonth": "Tháng trước",
         "lastYear": "Năm trước",
@@ -1975,8 +1979,13 @@
         },
         "chart": {
             "title": "Thống kê lượt xem hàng tháng theo DSP",
+            "titleGeneric": "Thống kê lượt xem theo DSP",
             "trends": "Xu hướng",
-            "sales": "Doanh số"
+            "sales": "Doanh số",
+            "dsp": "DSP",
+            "view": "Lượt xem",
+            "monthly": "Hàng tháng",
+            "daily": "Hàng ngày"
         },
         "dailyChart": {
             "title": "Thống kê lượt xem hàng ngày theo DSP",

@@ -4,9 +4,12 @@ import { Card, Empty, Select, Skeleton } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
+import {
+    DSP_PALETTE,
+    transformBarData,
+} from '../helpers/analytics-chart-helper';
 import { useGetDspDailyTimeline } from '../hooks/use-get-dsp-daily-timeline';
 import BarView from './bar-view';
-import { DSP_PALETTE, transformBarData } from '../helpers/analytics-chart-helper';
 
 export default function AnalyticsDailyChart() {
     const messages = useTranslations();
@@ -15,7 +18,9 @@ export default function AnalyticsDailyChart() {
     // Calculate dynamic dates based on selected range
     const toDate = useMemo(() => dayjs().format('YYYY-MM-DD'), []);
     const fromDate = useMemo(() => {
-        return dayjs().subtract(range - 1, 'day').format('YYYY-MM-DD');
+        return dayjs()
+            .subtract(range - 1, 'day')
+            .format('YYYY-MM-DD');
     }, [range]);
 
     // Fetch daily trend stats
@@ -69,9 +74,18 @@ export default function AnalyticsDailyChart() {
                     onChange={(val) => setRange(val)}
                     style={{ width: 160 }}
                     options={[
-                        { value: 7, label: messages('analytics.dailyChart.last7Days') },
-                        { value: 15, label: messages('analytics.dailyChart.last15Days') },
-                        { value: 30, label: messages('analytics.dailyChart.last30Days') },
+                        {
+                            value: 7,
+                            label: messages('analytics.dailyChart.last7Days'),
+                        },
+                        {
+                            value: 15,
+                            label: messages('analytics.dailyChart.last15Days'),
+                        },
+                        {
+                            value: 30,
+                            label: messages('analytics.dailyChart.last30Days'),
+                        },
                     ]}
                 />
             </div>
@@ -79,12 +93,16 @@ export default function AnalyticsDailyChart() {
             {isFetching ? (
                 <Skeleton active paragraph={{ rows: 8 }} />
             ) : items.length === 0 ? (
-                <Empty className="py-12" description={messages('common.noDataAvailable')} />
+                <Empty
+                    className="py-12"
+                    description={messages('common.noDataAvailable')}
+                />
             ) : (
                 <BarView
                     barData={barData}
                     allDspKeys={allDspKeys}
                     colorMap={colorMap}
+                    tooltipHeaders={['DSP', 'View']}
                 />
             )}
         </Card>

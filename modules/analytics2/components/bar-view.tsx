@@ -1,10 +1,13 @@
 'use client';
 
+import { CustomTooltip } from '@/components/shared/chart/chart-tooltip';
 import { formattedNumber } from '@/helpers/common';
+import { ReactElement, useMemo } from 'react';
 import {
     Bar,
     BarChart,
     CartesianGrid,
+    Cell,
     ResponsiveContainer,
     Tooltip,
     XAxis,
@@ -15,21 +18,62 @@ interface BarViewProps {
     barData: any[];
     allDspKeys: string[];
     colorMap: Record<string, string>;
+    tooltipContent?: ReactElement;
+    tooltipHeaders?: [string, string];
 }
 
 export default function BarView({
     barData,
     allDspKeys,
     colorMap,
+    tooltipContent,
+    tooltipHeaders,
 }: BarViewProps) {
-    const barSize = Math.max(24, Math.min(56, Math.floor(400 / barData.length)));
+    const barSize = Math.max(
+        24,
+        Math.min(56, Math.floor(400 / barData.length))
+    );
+
+    const stackedBarData = useMemo(() => {
+        return barData.map((row) => {
+            const sortedEntries = allDspKeys
+                .map((dsp) => ({
+                    dsp,
+                    value: Number(row[dsp]) || 0,
+                    color: colorMap[dsp] ?? '#94a3b8',
+                    revenueUsd: Number(row[`${dsp}RevenueUsd`]) || 0,
+                }))
+                .sort((a, b) => {
+                    const valueDiff = a.value - b.value;
+                    return valueDiff || b.dsp.localeCompare(a.dsp);
+                });
+
+            return sortedEntries.reduce<Record<string, any>>(
+                (acc, item, index) => {
+                    const stackKey = `__stack_${index}`;
+
+                    acc[stackKey] = item.value;
+                    acc[`${stackKey}Name`] = item.dsp;
+                    acc[`${stackKey}Color`] = item.color;
+                    acc[`${stackKey}RevenueUsd`] = item.revenueUsd;
+
+                    return acc;
+                },
+                { period: row.period }
+            );
+        });
+    }, [allDspKeys, barData, colorMap]);
+
+    const stackKeys = useMemo(() => {
+        return allDspKeys.map((_, index) => `__stack_${index}`);
+    }, [allDspKeys]);
 
     return (
         <div className="w-full">
             <div className="h-[400px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart
-                        data={barData}
+                        data={stackedBarData}
                         margin={{
                             top: 10,
                             right: 30,
@@ -64,29 +108,34 @@ export default function BarView({
                             }
                         />
                         <Tooltip
-                            contentStyle={{
-                                borderRadius: '8px',
-                                border: 'none',
-                                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                            }}
-                            formatter={(value: any, name: string) => [
-                                formattedNumber(value, undefined as any, true),
-                                name,
-                            ]}
+                            content={
+                                tooltipContent ?? (
+                                    <CustomTooltip headers={tooltipHeaders} />
+                                )
+                            }
+                            animationEasing="ease"
                         />
-                        {allDspKeys.map((dsp, i) => (
+                        {stackKeys.map((stackKey, i) => (
                             <Bar
-                                key={dsp}
-                                dataKey={dsp}
+                                key={stackKey}
+                                dataKey={stackKey}
                                 stackId="a"
-                                fill={colorMap[dsp] ?? '#94a3b8'}
                                 barSize={barSize}
                                 radius={
-                                    i === allDspKeys.length - 1
+                                    i === stackKeys.length - 1
                                         ? [4, 4, 0, 0]
                                         : [0, 0, 0, 0]
                                 }
-                            />
+                            >
+                                {stackedBarData.map((row, rowIndex) => (
+                                    <Cell
+                                        key={`${stackKey}-${rowIndex}`}
+                                        fill={
+                                            row[`${stackKey}Color`] ?? '#94a3b8'
+                                        }
+                                    />
+                                ))}
+                            </Bar>
                         ))}
                     </BarChart>
                 </ResponsiveContainer>

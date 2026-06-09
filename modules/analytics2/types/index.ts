@@ -30,6 +30,7 @@ export interface DspTimelineData {
 export interface DspSalesSeriesItem {
     dsp: string;
     salesViews: number;
+    revenueUsd: number;
 }
 
 export interface DspSalesTimelinePeriod {
@@ -188,4 +189,27 @@ export interface RevenueTrackItem {
     releaseTitle: string | null;
     revenueUsd: number;
     quantity: number;
-}
+}
+
+export interface TerTimelineParams {
+    fromDate: string;
+    toDate: string;
+    topN?: number;
+    includeOther?: boolean;
+}
+
+export interface TerSeriesItem {
+    territory: string;
+    trendViews: number;
+}
+
+export interface TerTimelinePeriod {
+    period: string;
+    series: TerSeriesItem[];
+}
+
+export interface TerTimelineData {
+    topTerritories: string[];
+    items: TerTimelinePeriod[];
+}
+

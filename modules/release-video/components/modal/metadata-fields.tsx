@@ -27,6 +27,7 @@ import {
     Tag,
     Tooltip,
 } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import ManageCollaboratorsModal from './manage-collaborators-modal';
@@ -602,11 +603,11 @@ export default function MetadataFields({
                     },
                 ]}
             >
-                <Input.TextArea
+                <TextArea
                     showCount
                     placeholder={messages('common.description')}
                     allowClear
-                    autoSize={{ minRows: 4, maxRows: 6 }}
+                    rows={4}
                     maxLength={MAX_NOTE_LENGTH}
                     className="mb-2"
                     onBlur={(e) =>

@@ -1,9 +1,11 @@
-import { DspTimelineParams, RankingParams, RevenueQueryParams } from '../types';
+import { DspTimelineParams, RankingParams, RevenueQueryParams, TerTimelineParams } from '../types';
 
 export const analytics2QueryKeys = {
     all: ['analytics2'] as const,
     dspTimeline: (params: DspTimelineParams) =>
         [...analytics2QueryKeys.all, 'dsp-timeline', params] as const,
+    terTimeline: (params: TerTimelineParams) =>
+        [...analytics2QueryKeys.all, 'ter-timeline', params] as const,
     dspSalesTimeline: (params: DspTimelineParams) =>
         [...analytics2QueryKeys.all, 'dsp-sales-timeline', params] as const,
     dspDailyTimeline: (params: DspTimelineParams) =>
