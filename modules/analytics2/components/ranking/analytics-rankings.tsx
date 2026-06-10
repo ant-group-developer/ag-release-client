@@ -2,6 +2,7 @@
 
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
+import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { Col, Row } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
@@ -164,7 +165,11 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                     <ReleaseCoverImage
                         width={32}
                         height={32}
-                        data={{ id: record.releaseId } as any}
+                        fileId={
+                            record?.release?.coverArtThumbnails?.[
+                                RELEASE_COVER_ART_SIZE.S75
+                            ] as string
+                        }
                     />
                     <div className="flex min-w-0 flex-col">
                         <CustomTooltip
@@ -262,7 +267,11 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                     <ReleaseCoverImage
                         width={32}
                         height={32}
-                        data={{ id: record.releaseId } as any}
+                        fileId={
+                            record.release?.coverArtThumbnails?.[
+                                RELEASE_COVER_ART_SIZE.S75
+                            ] as string
+                        }
                     />
                     <div className="flex min-w-0 flex-col">
                         <CustomTooltip
@@ -359,7 +368,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                     <ReleaseCoverImage
                         width={32}
                         height={32}
-                        data={{ id: record.picture } as any}
+                        src={record.picture}
                     />
                     <CustomTooltip title={messages('common.detailedAnalysis')}>
                         <span
@@ -428,7 +437,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                     <ReleaseCoverImage
                         width={32}
                         height={32}
-                        data={{ id: record.labelId } as any}
+                        src={record.picture}
                     />
                     <CustomTooltip title={messages('common.detailedAnalysis')}>
                         <span
@@ -534,7 +543,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         rowKey="isrc"
                         labelKey="title"
                         valueKey="totalViews"
-                        defaultView={RankingCardView.BAR}
+                        defaultView={RankingCardView.LIST}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -546,7 +555,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         rowKey="releaseId"
                         labelKey="title"
                         valueKey="totalViews"
-                        defaultView={RankingCardView.BAR}
+                        defaultView={RankingCardView.LIST}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -558,6 +567,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         rowKey="artistId"
                         labelKey="artistName"
                         valueKey="totalViews"
+                        defaultView={RankingCardView.BAR}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -569,10 +579,10 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         rowKey="labelId"
                         labelKey="labelName"
                         valueKey="totalViews"
-                        defaultView={RankingCardView.LIST}
+                        defaultView={RankingCardView.BAR}
                     />
                 </Col>
-                <Col span={12} xs={24} lg={12}>
+                {/* <Col span={12} xs={24} lg={12}>
                     <RankingCard
                         title={topRankingTitle(messages('common.region'))}
                         columns={territoryColumns}
@@ -583,7 +593,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
                     />
-                </Col>
+                </Col> */}
             </Row>
             <DetailReleaseAnalyticsModal
                 open={detailModal.open}

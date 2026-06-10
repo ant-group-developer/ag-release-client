@@ -69,6 +69,7 @@ export default function Analytics2Page() {
                     />
                     <DateSelect2
                         key="date"
+                        rangePickerStyle={{ width: 180 }}
                         style={{ width: 180 }}
                         value={`${fromDate},${toDate}`}
                         onChange={(value) => {

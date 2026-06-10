@@ -129,6 +129,7 @@ export default function DetailReleaseAnalyticsModal({
                     </div>
                     <DateSelect2
                         key="date"
+                        rangePickerStyle={{ width: 180, height: 34 }}
                         style={{ width: 180, height: 34 }}
                         value={`${localFromDate},${localToDate}`}
                         onChange={(value) => {
@@ -155,7 +156,7 @@ export default function DetailReleaseAnalyticsModal({
                 />
 
                 <Row gutter={[24, 24]}>
-                    <Col xs={24} lg={12}>
+                    <Col xs={24} lg={12} className="flex">
                         {/* 2. Biểu đồ xu hướng theo DSP */}
                         <DetailDspTimelineChart
                             trendTimelineData={trendTimelineData}
@@ -168,7 +169,7 @@ export default function DetailReleaseAnalyticsModal({
                             onRangeChange={setRange}
                         />
                     </Col>
-                    <Col xs={24} lg={12}>
+                    <Col xs={24} lg={12} className="flex">
                         {/* 3. Biểu đồ doanh thu theo thời gian */}
                         <DetailRevenueTimelineChart
                             revenueTimelineData={revenueTimelineData}

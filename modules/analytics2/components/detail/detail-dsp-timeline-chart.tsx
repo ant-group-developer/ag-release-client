@@ -192,7 +192,7 @@ export default function DetailDspTimelineChart({
                     />
                 )
             }
-            className="rounded-xl border-none shadow-sm"
+            className="h-full w-full rounded-xl border-none shadow-sm"
             styles={{ body: { padding: '24px' } }}
         >
             {isTimelineFetching ? (

@@ -19,7 +19,8 @@ export const releaseTrackSchema = (messages: any) =>
         isrc: z
             .union([
                 z.literal(''),
-                z.string()
+                z
+                    .string()
                     .min(12, messages('validation.min', { number: 12 }))
                     .max(12, messages('validation.max', { number: 12 })),
             ])
@@ -89,6 +90,7 @@ export const releaseTrackSchema = (messages: any) =>
         copyArtistsFromRelease: z.boolean().optional(),
         trackSensitiveId: z.string().optional(),
         isByAi: z.boolean().optional(),
+        isInstrumental: z.boolean().optional(),
         lyric: z
             .string()
             .max(1000, messages('validation.max', { number: 1000 }))
