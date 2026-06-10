@@ -11,7 +11,7 @@ import useModalStore from '@/hooks/use-modal';
 import ReleaseVideoHeader from '@/modules/release-video/components/header';
 import { ReleaseVideoTable } from '@/modules/release-video/components/table';
 import { TYPE_MODAL_RELEASE_VIDEO } from '@/modules/release-video/enums';
-import { RELEASE_TYPE } from '@/modules/releases/enums';
+import { RELEASE_TYPE, RELEASES_TABLE_KEY } from '@/modules/releases/enums';
 import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
@@ -28,7 +28,7 @@ export default function ReleaseVideos() {
             pageSize: PAGE_SIZE,
             type: RELEASE_TYPE.VIDEO,
             orderBy: ORDER.DESC,
-            fieldOrder: 'updatedAt',
+            fieldOrder: RELEASES_TABLE_KEY.UPDATED_AT,
         });
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);

@@ -6,7 +6,16 @@ import { useBulkCreateReleaseContributor } from '@/modules/release-contributor/h
 import { useDeleteReleaseContributor } from '@/modules/release-contributor/hooks/use-delete-release-contributor';
 import { ReleasesData } from '@/modules/releases/types';
 import { CloseOutlined } from '@ant-design/icons';
-import { Col, DatePicker, FormInstance, Input, Popconfirm, Row, Select, Tag } from 'antd';
+import {
+    Col,
+    DatePicker,
+    FormInstance,
+    Input,
+    Popconfirm,
+    Row,
+    Select,
+    Tag,
+} from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 
@@ -114,17 +123,25 @@ export default function AdditionalTab({
         }
     };
 
-    const handleBlurComposer = () => handleBlurContributor('composers', composerRoleId);
-    const handleDeselectComposer = (artistId: string) => handleDeselectContributor(artistId, composerRoleId);
+    const handleBlurComposer = () =>
+        handleBlurContributor('composers', composerRoleId);
+    const handleDeselectComposer = (artistId: string) =>
+        handleDeselectContributor(artistId, composerRoleId);
 
-    const handleBlurEditor = () => handleBlurContributor('editors', editorRoleId);
-    const handleDeselectEditor = (artistId: string) => handleDeselectContributor(artistId, editorRoleId);
+    const handleBlurEditor = () =>
+        handleBlurContributor('editors', editorRoleId);
+    const handleDeselectEditor = (artistId: string) =>
+        handleDeselectContributor(artistId, editorRoleId);
 
-    const handleBlurProducer = () => handleBlurContributor('producers', producerRoleId);
-    const handleDeselectProducer = (artistId: string) => handleDeselectContributor(artistId, producerRoleId);
+    const handleBlurProducer = () =>
+        handleBlurContributor('producers', producerRoleId);
+    const handleDeselectProducer = (artistId: string) =>
+        handleDeselectContributor(artistId, producerRoleId);
 
-    const handleBlurDirector = () => handleBlurContributor('directors', directorRoleId);
-    const handleDeselectDirector = (artistId: string) => handleDeselectContributor(artistId, directorRoleId);
+    const handleBlurDirector = () =>
+        handleBlurContributor('directors', directorRoleId);
+    const handleDeselectDirector = (artistId: string) =>
+        handleDeselectContributor(artistId, directorRoleId);
 
     const tagRender = (props: any) => {
         const { label, closable, onClose } = props;

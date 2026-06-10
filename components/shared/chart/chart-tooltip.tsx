@@ -10,10 +10,12 @@ interface ChartTooltipBaseProps {
 
 export interface CustomTooltipProps extends ChartTooltipBaseProps {
     headers?: [string, string];
+    formatter?: (value: any) => string;
 }
 
-interface ThreeColumnTooltipProps extends ChartTooltipBaseProps {
+export interface ThreeColumnTooltipProps extends ChartTooltipBaseProps {
     headers?: [string, string, string];
+    primaryFormatter?: (value: any) => string;
     extraColumn: {
         metaKey: string;
         formatter?: (value: unknown) => string;
@@ -29,6 +31,7 @@ export const CustomTooltip = ({
     label,
     value,
     headers = ['Name', 'Value'],
+    formatter,
 }: CustomTooltipProps) => {
     if (active && payload && payload.length) {
         // Nếu chỉ có 1 item (ví dụ: Pie Chart)
@@ -81,7 +84,7 @@ export const CustomTooltip = ({
                     <Typography.Text
                         style={{ marginLeft: '12px', fontWeight: 500 }}
                     >
-                        {formattedNumber(displayValue)}
+                        {formatter ? formatter(displayValue) : formattedNumber(displayValue)}
                     </Typography.Text>
                 </div>
             );
@@ -199,7 +202,7 @@ export const CustomTooltip = ({
                                     textAlign: 'right',
                                 }}
                             >
-                                {formattedNumber(displayValue)}
+                                {formatter ? formatter(displayValue) : formattedNumber(displayValue)}
                             </Typography.Text>
                         </div>
                     );
@@ -215,6 +218,7 @@ export const ThreeColumnTooltip = ({
     payload,
     label,
     headers = ['Name', 'Value', 'Extra'],
+    primaryFormatter,
     extraColumn,
     minWidth = 280,
     gridTemplateColumns = 'minmax(100px, 1fr) 70px 90px',
@@ -349,7 +353,9 @@ export const ThreeColumnTooltip = ({
                                 textAlign: 'right',
                             }}
                         >
-                            {formattedNumber(displayValue)}
+                            {primaryFormatter
+                                ? primaryFormatter(displayValue)
+                                : formattedNumber(displayValue)}
                         </Typography.Text>
                         <Typography.Text
                             type={extraColumn.textType ?? 'secondary'}

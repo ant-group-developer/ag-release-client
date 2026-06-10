@@ -13,3 +13,14 @@ export enum ARTIST_DETAIL_TABS {
     RELEASES = 'releases',
     TRACKS = 'tracks',
 }
+
+export enum ARTIST_TABLE_KEY {
+    NAME = 'name',
+    CODE = 'code',
+    ARTIST_PROFILES = 'artistProfiles',
+    COUNTRY = 'country',
+    GENRE = 'genre',
+    RELEASE_COUNT = 'release_count',
+    TRACK_COUNT = 'track_count',
+    BIOGRAPHY = 'biography',
+}

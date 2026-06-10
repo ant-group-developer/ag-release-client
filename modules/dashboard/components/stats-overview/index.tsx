@@ -1,3 +1,5 @@
+import { APP_ROUTES } from '@/enums/routes';
+import { Link } from '@/i18n/routing';
 import { theme } from 'antd';
 import { Building2, DiscAlbum, Music, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -80,6 +82,7 @@ export default function StatsOverview({
             icon: DiscAlbum,
             color: 'text-purple-600 dark:text-purple-400',
             bgColor: 'bg-purple-100/50 dark:bg-purple-900/30',
+            href: APP_ROUTES.RELEASES,
             // trend: '+12%',
             // trendColor: 'text-cyan-500',
             // chartData: [20, 30, 25, 35, 50],
@@ -91,6 +94,7 @@ export default function StatsOverview({
             icon: Music,
             color: 'text-cyan-600 dark:text-cyan-400',
             bgColor: 'bg-cyan-100/50 dark:bg-cyan-900/30',
+            href: APP_ROUTES.TRACKS,
             // trend: '+5.4%',
             // trendColor: 'text-cyan-500',
             // chartData: [25, 40, 30, 45, 60],
@@ -102,6 +106,7 @@ export default function StatsOverview({
             icon: Building2,
             color: 'text-pink-600 dark:text-pink-400',
             bgColor: 'bg-pink-100/50 dark:bg-pink-900/30',
+            href: APP_ROUTES.LABELS,
             // trend: 'Stable',
             // trendColor: 'text-gray-400',
             // chartData: [40, 40, 40, 40, 40],
@@ -113,6 +118,7 @@ export default function StatsOverview({
             icon: Users,
             color: 'text-indigo-600 dark:text-indigo-400',
             bgColor: 'bg-indigo-100/50 dark:bg-indigo-900/30',
+            href: APP_ROUTES.ARTISTS,
             // trend: '+3',
             // trendColor: 'text-cyan-500',
             // chartData: [30, 40, 35, 45, 55],
@@ -138,9 +144,14 @@ export default function StatsOverview({
                                 {isOverviewLoading ? (
                                     <div className="mt-1 h-7 w-20 animate-pulse rounded bg-gray-200 dark:bg-zinc-700" />
                                 ) : (
-                                    <span className="text-2xl font-bold">
-                                        {item?.count}
-                                    </span>
+                                    <Link
+                                        href={item.href}
+                                        className="w-fit text-2xl font-bold transition-colors hover:text-blue-500"
+                                    >
+                                        <span className="hover:text-blue-500">
+                                            {item?.count}
+                                        </span>
+                                    </Link>
                                 )}
                             </div>
                             <div

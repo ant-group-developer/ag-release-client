@@ -1,17 +1,19 @@
+import { useGetReleaseCaptions } from '@/modules/releases/hooks/use-get-release-captions';
 import { ReleasesData } from '@/modules/releases/types';
 import { Flex, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
-import ManageCaptionsModal from './manage-captions-modal';
-import { useGetReleaseCaptions } from '@/modules/releases/hooks/use-get-release-captions';
 import { RELEASE_VIDEO_CAPTION_TYPE } from '../../enums';
+import ManageCaptionsModal from './manage-captions-modal';
 
 interface CaptionsAssetItemProps {
     dataEdit?: ReleasesData;
+    disabled?: boolean;
 }
 
 export default function CaptionsAssetItem({
     dataEdit,
+    disabled = false,
 }: CaptionsAssetItemProps) {
     const messages = useTranslations();
     const [isManageModalOpen, setIsManageModalOpen] = useState(false);
@@ -63,6 +65,7 @@ export default function CaptionsAssetItem({
             <ManageCaptionsModal
                 isOpen={isManageModalOpen}
                 onClose={() => setIsManageModalOpen(false)}
+                disabled={disabled}
             />
         </Flex>
     );

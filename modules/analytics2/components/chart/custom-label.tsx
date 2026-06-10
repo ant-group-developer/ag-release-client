@@ -1,4 +1,4 @@
-import { RADIAN } from "../constants/mock-data";
+import { RADIAN } from "../../constants/mock-data";
 
 export const renderCustomLabel = ({
     cx,

@@ -1,5 +1,5 @@
 export enum ANALYTICS2_TABS {
-    PLAYS = 'plays',
+    VIEWS = 'views',
     REVENUE = 'revenue',
 }
 

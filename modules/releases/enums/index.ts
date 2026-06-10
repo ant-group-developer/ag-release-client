@@ -95,6 +95,20 @@ export enum RELEASES_COLUMNS_DISPLAY {
     UPDATED_AT = 'updatedAt',
 }
 
+export enum RELEASES_TABLE_KEY {
+    TITLE = 'title',
+    PUBLISHER = 'publisher',
+    TYPE = 'type',
+    UPC = 'UPC',
+    STATUS = 'status',
+    TRACK_COUNT = 'tracks_count',
+    DURATION = 'total_duration',
+    RELEASE_DATE = 'releaseDate',
+    CREATED_AT = 'createdAt',
+    UPDATED_AT = 'updatedAt',
+    TENANT = 'tenant',
+}
+
 export enum RELEASE_TIME_MODE {
     GLOBAL_MIDNIGHT = 'global_midnight',
     SPECIFIC_TIMEZONE = 'specific_timezone',

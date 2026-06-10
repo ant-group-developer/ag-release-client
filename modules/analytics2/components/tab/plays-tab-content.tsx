@@ -4,8 +4,8 @@ import {
     useGetCountIssues,
     useGetCountOverview,
 } from '@/modules/dashboard/hooks/use-get-count';
-import AnalyticsChart from './analytics-chart';
-import AnalyticsRankings from './analytics-rankings';
+import PlaysTimelineChart from '../chart/plays-timeline-chart';
+import AnalyticsRankings from '../ranking/analytics-rankings';
 
 interface Props {
     fromDate: string;
@@ -42,7 +42,7 @@ export default function PlaysTabContent({ fromDate, toDate }: Props) {
                 isOverviewLoading={isOverviewLoading}
             />
 
-            <AnalyticsChart fromDate={fromDate} toDate={toDate} />
+            <PlaysTimelineChart fromDate={fromDate} toDate={toDate} />
             {/* <AnalyticsDailyChart /> */}
             <AnalyticsRankings fromDate={fromDate} toDate={toDate} />
             {/* <RecentReleasesTable fromDate={fromDate} toDate={toDate} /> */}

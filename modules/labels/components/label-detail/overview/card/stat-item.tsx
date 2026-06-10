@@ -1,4 +1,4 @@
-import { Button } from 'antd';
+import { Button, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { CSSProperties, ReactNode } from 'react';
 
@@ -32,8 +32,8 @@ export default function StatItem({
                     </div>
                 )}
                 <div className="flex flex-col">
-                    <span className="text-gray-500">{title}</span>
-                    <span className="text-lg font-semibold">{value}</span>
+                    <span className="text-md font-semibold">{title}</span>
+                    <Typography.Text type="secondary">{value}</Typography.Text>
                 </div>
             </div>
             <Button type="default" shape="round">

@@ -58,7 +58,7 @@ export default function DistributionPieChart({
         >
             <div className="mb-4 flex items-start justify-between">
                 <div>
-                    <Title level={5} className="!m-0 !text-blue-500">
+                    <Title level={5} className="!m-0">
                         {title}
                     </Title>
                     <Text type="secondary" style={{ fontSize: 13 }}>

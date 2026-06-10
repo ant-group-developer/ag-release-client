@@ -7,8 +7,8 @@ import { useMemo, useState } from 'react';
 import {
     DSP_PALETTE,
     transformBarData,
-} from '../helpers/analytics-chart-helper';
-import { useGetDspDailyTimeline } from '../hooks/use-get-dsp-daily-timeline';
+} from '../../helpers/analytics-chart-helper';
+import { useGetDspDailyTimeline } from '../../hooks/use-get-dsp-daily-timeline';
 import BarView from './bar-view';
 
 export default function AnalyticsDailyChart() {

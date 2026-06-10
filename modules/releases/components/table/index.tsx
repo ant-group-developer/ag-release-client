@@ -30,6 +30,7 @@ import nProgress from 'nprogress';
 import {
     RELEASES_COLUMNS_DISPLAY,
     RELEASES_STATUS,
+    RELEASES_TABLE_KEY,
     RELEASES_TABS,
     TYPE_MODAL_RELEASE,
 } from '../../enums';
@@ -84,7 +85,7 @@ export default function ReleasesTable({
         {
             title: messages('common.title'),
             key: 'title',
-            dataIndex: 'title',
+            dataIndex: RELEASES_TABLE_KEY.TITLE,
             ellipsis: true,
             align: 'left',
             width: 320,
@@ -101,7 +102,7 @@ export default function ReleasesTable({
         {
             title: 'Label',
             key: 'publisher',
-            dataIndex: 'publisher',
+            dataIndex: RELEASES_TABLE_KEY.PUBLISHER,
             align: 'left',
             width: 200,
             ellipsis: true,
@@ -128,7 +129,7 @@ export default function ReleasesTable({
         {
             title: messages('release.type'),
             key: 'type',
-            dataIndex: 'type',
+            dataIndex: RELEASES_TABLE_KEY.TYPE,
             align: 'left',
             width: 130,
             render: (_, record) => {
@@ -142,7 +143,7 @@ export default function ReleasesTable({
         {
             title: 'UPC',
             key: 'upc',
-            dataIndex: 'UPC',
+            dataIndex: RELEASES_TABLE_KEY.UPC,
             align: 'left',
             width: 150,
             render: (value, record) => (
@@ -158,7 +159,7 @@ export default function ReleasesTable({
         {
             title: messages('common.status'),
             key: 'status',
-            dataIndex: 'status',
+            dataIndex: RELEASES_TABLE_KEY.STATUS,
             align: 'left',
             width: 120,
             render: (value, record) => {
@@ -168,14 +169,14 @@ export default function ReleasesTable({
         {
             title: messages('release.trackCount'),
             key: 'tracks_count',
-            dataIndex: 'tracks_count',
+            dataIndex: RELEASES_TABLE_KEY.TRACK_COUNT,
             align: 'left',
             width: 120,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'tracks_count'
+                RELEASES_TABLE_KEY.TRACK_COUNT
             ),
             render: (value, record) => (
                 <span className="truncate"> {record?.tracksCount} </span>
@@ -184,7 +185,7 @@ export default function ReleasesTable({
         {
             title: messages('release.duration'),
             key: 'total_duration',
-            dataIndex: 'total_duration',
+            dataIndex: RELEASES_TABLE_KEY.DURATION,
             align: 'left',
             width: 100,
             sorter: true,
@@ -204,7 +205,7 @@ export default function ReleasesTable({
         {
             title: messages('release.releaseDate'),
             key: 'releaseDate',
-            dataIndex: 'releaseDate',
+            dataIndex: RELEASES_TABLE_KEY.RELEASE_DATE,
             align: 'left',
             width: 130,
             // sorter: true,
@@ -225,8 +226,8 @@ export default function ReleasesTable({
         },
         {
             title: messages('common.createdAt'),
-            key: 'createdAt',
-            dataIndex: 'createdAt',
+            // key: 'createdAt',
+            dataIndex: RELEASES_TABLE_KEY.CREATED_AT,
             align: 'left',
             width: 130,
             sorter: true,
@@ -248,14 +249,14 @@ export default function ReleasesTable({
         {
             title: messages('common.updatedAt'),
             key: 'updatedAt',
-            dataIndex: 'updatedAt',
+            dataIndex: RELEASES_TABLE_KEY.UPDATED_AT,
             align: 'left',
             width: 130,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'updatedAt'
+                RELEASES_TABLE_KEY.UPDATED_AT
             ),
             render: (value, record) => (
                 <span className="truncate text-wrap">
@@ -346,7 +347,7 @@ export default function ReleasesTable({
         column.splice(4, 0, {
             title: messages('tenant.label'),
             key: 'tenant',
-            dataIndex: 'tenant',
+            dataIndex: RELEASES_TABLE_KEY.TENANT,
             width: 180,
             render: (_, record) => {
                 return record.tenant?.name;

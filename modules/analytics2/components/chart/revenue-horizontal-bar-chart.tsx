@@ -122,7 +122,7 @@ export default function RevenueHorizontalBarChart({
                                             minimumFractionDigits: 2,
                                             maximumFractionDigits: 2,
                                         })}`,
-                                        messages('analytics.revenue.label', { defaultValue: 'Revenue' }),
+                                        messages('analytics.revenue.label'),
                                     ]}
                                     animationEasing="ease"
                                 />

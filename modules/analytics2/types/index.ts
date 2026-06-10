@@ -213,3 +213,14 @@ export interface TerTimelineData {
     items: TerTimelinePeriod[];
 }
 
+export interface ReleaseOverviewParams {
+    fromDate: string;
+    toDate: string;
+}
+
+export interface ReleaseOverviewData {
+    totalTrendViews: number;
+    totalSalesViews: number;
+    totalRevenueUsd: number;
+}
+

@@ -8,23 +8,28 @@ import { useMemo, useState } from 'react';
 import {
     ANALYTICS_CHART_PERIOD,
     ANALYTICS_CHART_VIEW_MODE,
-} from '../enums/tabs';
+} from '../../enums/tabs';
 import {
     DSP_PALETTE,
     transformBarData,
     transformSalesBarData,
-} from '../helpers/analytics-chart-helper';
-import { useGetDspDailyTimeline } from '../hooks/use-get-dsp-daily-timeline';
-import { useGetDspSalesTimeline } from '../hooks/use-get-dsp-sales-timeline';
-import { useGetDspTimeline } from '../hooks/use-get-dsp-timeline';
+} from '../../helpers/analytics-chart-helper';
+import { useGetDspDailyTimeline } from '../../hooks/use-get-dsp-daily-timeline';
+import { useGetDspSalesTimeline } from '../../hooks/use-get-dsp-sales-timeline';
+import { useGetDspTimeline } from '../../hooks/use-get-dsp-timeline';
 import BarView from './bar-view';
 
 interface Props {
     fromDate: string;
     toDate: string;
+    chartHeight?: number;
 }
 
-export default function AnalyticsChart({ fromDate, toDate }: Props) {
+export default function PlaysTimelineChart({
+    fromDate,
+    toDate,
+    chartHeight,
+}: Props) {
     const [chartPeriod, setChartPeriod] = useState<ANALYTICS_CHART_PERIOD>(
         ANALYTICS_CHART_PERIOD.MONTHLY
     );
@@ -163,6 +168,7 @@ export default function AnalyticsChart({ fromDate, toDate }: Props) {
                         style={{
                             fontSize: 16,
                             fontWeight: 'bold',
+                            width: 250,
                         }}
                         options={[
                             {
@@ -255,6 +261,7 @@ export default function AnalyticsChart({ fromDate, toDate }: Props) {
                         barData={activeData.barData}
                         allDspKeys={allDspKeys}
                         colorMap={colorMap}
+                        chartHeight={chartHeight}
                         tooltipHeaders={[
                             messages('analytics.chart.dsp'),
                             messages('analytics.chart.view'),
@@ -276,6 +283,7 @@ export default function AnalyticsChart({ fromDate, toDate }: Props) {
                     barData={dailyBarData}
                     allDspKeys={dailyAllDspKeys}
                     colorMap={dailyColorMap}
+                    chartHeight={chartHeight}
                     tooltipHeaders={[
                         messages('analytics.chart.dsp'),
                         messages('analytics.chart.view'),

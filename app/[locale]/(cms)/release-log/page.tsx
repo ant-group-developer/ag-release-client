@@ -7,6 +7,7 @@ import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import ReleaseLogTable from '@/modules/release-log/components/table';
 import ReleaseLogTableFilter from '@/modules/release-log/components/table/release-log-table-filter';
+import { RELEASE_LOG_TABLE_KEY } from '@/modules/release-log/enums';
 import { useGetListReleaseLog } from '@/modules/release-log/hooks/use-get-list';
 import { ReleaseLogFilter } from '@/modules/release-log/types';
 import { PageContainer } from '@ant-design/pro-components';
@@ -26,7 +27,7 @@ export default function ReleaseLog({}: Props) {
         page: 1,
         pageSize: PAGE_SIZE,
         orderBy: ORDER.DESC,
-        fieldOrder: 'log.createdAt',
+        fieldOrder: RELEASE_LOG_TABLE_KEY.CREATED_AT,
     });
     const messages = useTranslations();
 

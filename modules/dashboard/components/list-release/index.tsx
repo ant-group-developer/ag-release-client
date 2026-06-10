@@ -29,7 +29,7 @@ export default function ListRelease({ data }: Props) {
             }}
             title={
                 <div className="flex items-center justify-between">
-                    <h3 className="m-0 text-lg font-bold text-blue-500">
+                    <h3 className="text-md m-0 font-bold">
                         {messages('release.latestReleases')}
                     </h3>
 

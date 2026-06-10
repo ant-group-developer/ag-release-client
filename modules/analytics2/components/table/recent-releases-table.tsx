@@ -8,9 +8,10 @@ import {
 import { DATE_FORMAT, ORDER } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
+import { RELEASES_TABLE_KEY } from '@/modules/releases/enums';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { ReleasesData } from '@/modules/releases/types';
-import { Card, Skeleton, Table } from 'antd'
+import { Card, Skeleton, Table } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 interface Props {
@@ -27,7 +28,7 @@ export default function RecentReleasesTable({ fromDate, toDate }: Props) {
     const { releasesData, isFetching } = useGetListReleases({
         page,
         pageSize,
-        fieldOrder: 'releaseDate',
+        fieldOrder: RELEASES_TABLE_KEY.RELEASE_DATE,
         orderBy: ORDER.DESC,
         startDateRelease: fromDate,
         endDateRelease: toDate,

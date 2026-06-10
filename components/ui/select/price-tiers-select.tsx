@@ -2,6 +2,7 @@ import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
 import { formatCurrency } from '@/helpers/common';
 import { toNonAccentVietnamese } from '@/helpers/string';
+import { PRICE_TIERS_TABLE_KEY } from '@/modules/price_tiers/enums';
 import { useGetListPriceTiers } from '@/modules/price_tiers/hooks/use-get-list-tiers';
 import { PriceTiersDataFilter } from '@/modules/price_tiers/types';
 import { Select, SelectProps, Typography } from 'antd';
@@ -19,7 +20,7 @@ export default function PriceTiersSelect({
     const { priceTiersData } = useGetListPriceTiers({
         pageSize: PAGE_SIZE_EXTRA_LARGE,
         orderBy: ORDER.ASC,
-        fieldOrder: 'priceTier.code',
+        fieldOrder: PRICE_TIERS_TABLE_KEY.CODE,
         ...params,
     });
 

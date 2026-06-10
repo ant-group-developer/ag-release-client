@@ -141,6 +141,7 @@
         "settingNote": "Settings apply only to this browser",
         "value": "Value",
         "viewDetail": "View detail",
+        "detailedAnalysis": "Detailed analysis",
         "systemCategories": "System Categories",
         "category": "Category",
         "categories": "Categories",
@@ -434,6 +435,7 @@
         "latestNews": "Latest news",
         "goTo": "Go to Dashboard",
         "viewAllUpdates": "View all updates",
+        "recentUpdates": "Recent Updates",
         "stream_by_dsp": "Stream by DSP",
         "stream_distribution_subtitle": "Streams distribution by platform in {year}",
         "dsp_distribution_subtitle": "DSP distribution in {year}",
@@ -1980,17 +1982,17 @@
             "delete": "Delete analytics"
         },
         "chart": {
-            "title": "Monthly views by DSP",
-            "titleGeneric": "Views by DSP",
+            "title": "Monthly plays by DSP",
+            "titleGeneric": "Plays by DSP",
             "trends": "Trends",
             "sales": "Sales",
             "dsp": "DSP",
-            "view": "View",
+            "view": "Plays",
             "monthly": "Monthly",
             "daily": "Daily"
         },
         "dailyChart": {
-            "title": "Daily trend views by DSP",
+            "title": "Daily plays by DSP",
             "last7Days": "Last 7 days",
             "last15Days": "Last 15 days",
             "last30Days": "Last 30 days"
@@ -1999,7 +2001,7 @@
             "totalRevenue": "Total Revenue",
             "totalPlays": "Total Plays",
             "totalTerritories": "Territories",
-            "timelineTitle": "Revenue Timeline",
+            "timelineTitle": "Revenue timeline",
             "modeRevenue": "Revenue (USD)",
             "modeQuantity": "Plays (Quantity)",
             "label": "Revenue"
@@ -2007,7 +2009,12 @@
         "tabs": {
             "plays": "Plays & Trends",
             "revenue": "Revenue"
-        }
+        },
+        "totalTrendViews": "Trend Plays",
+        "totalSalesViews": "Sales Views",
+        "totalRevenueUsd": "Total Revenue (USD)",
+        "detailTitle": "Detailed Analytics",
+        "detailChartTitle": "Trend timeline"
     },
     "issue": {
         "label": "Issue",
@@ -2414,6 +2421,18 @@
         }
     },
     "analytics2": {
+        "rank": "Rank",
+        "topRankingTitle": "Top {count} {title}",
+        "detailEntityTitle": "({entity}: {title})",
+        "filters": {
+            "allPlatforms": "All platforms",
+            "allRegions": "All regions",
+            "vietnam": "Vietnam",
+            "unitedStates": "United States"
+        },
+        "metrics": {
+            "stable": "Stable"
+        },
         "syncAll": {
             "button": "Sync data",
             "syncing": "Sync in progress...",

@@ -25,7 +25,11 @@ interface DistributionTabProps {
     form: FormInstance;
 }
 
-export default function DistributionTab({ dataEdit, onFieldUpdate, form }: DistributionTabProps) {
+export default function DistributionTab({
+    dataEdit,
+    onFieldUpdate,
+    form,
+}: DistributionTabProps) {
     const messages = useTranslations();
     const releaseTimeMode = Form.useWatch('releaseTimeMode', form);
     const distributeWorldwide = Form.useWatch(
@@ -101,7 +105,9 @@ export default function DistributionTab({ dataEdit, onFieldUpdate, form }: Distr
                             format={DATE_FORMAT.DATE_ONLY}
                             onChange={(date) =>
                                 onFieldUpdate?.({
-                                    releaseDate: date ? date.toISOString() : null,
+                                    releaseDate: date
+                                        ? date.toISOString()
+                                        : null,
                                 })
                             }
                         />
@@ -124,7 +130,9 @@ export default function DistributionTab({ dataEdit, onFieldUpdate, form }: Distr
                             format={DATE_FORMAT.DATE_ONLY}
                             onChange={(date) =>
                                 onFieldUpdate?.({
-                                    releaseEndDate: date ? date.toISOString() : null,
+                                    releaseEndDate: date
+                                        ? date.toISOString()
+                                        : null,
                                 })
                             }
                         />
@@ -144,7 +152,7 @@ export default function DistributionTab({ dataEdit, onFieldUpdate, form }: Distr
                             },
                         ]}
                     >
-                        <Radio.Group 
+                        <Radio.Group
                             className="flex flex-col gap-2"
                             onChange={(e) =>
                                 onFieldUpdate?.({
@@ -179,7 +187,7 @@ export default function DistributionTab({ dataEdit, onFieldUpdate, form }: Distr
                                         },
                                     ]}
                                 >
-                                    <TimezoneSelect 
+                                    <TimezoneSelect
                                         onChange={(value) =>
                                             onFieldUpdate?.({
                                                 releaseTimezoneId: value,
@@ -223,7 +231,9 @@ export default function DistributionTab({ dataEdit, onFieldUpdate, form }: Distr
                                         onChange={(time) =>
                                             onFieldUpdate?.({
                                                 releaseTime: time
-                                                    ? time.format(DATE_FORMAT.HOUR_MINUTE)
+                                                    ? time.format(
+                                                          DATE_FORMAT.HOUR_MINUTE
+                                                      )
                                                     : '',
                                             })
                                         }
@@ -272,12 +282,13 @@ export default function DistributionTab({ dataEdit, onFieldUpdate, form }: Distr
                                     },
                                 ]}
                             >
-                                <Radio.Group 
+                                <Radio.Group
                                     className="flex flex-col gap-2"
                                     onChange={(e) =>
                                         onFieldUpdate?.({
                                             releaseTerritory: {
-                                                distributionType: e.target.value,
+                                                distributionType:
+                                                    e.target.value,
                                             },
                                         })
                                     }

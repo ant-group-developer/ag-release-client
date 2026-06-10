@@ -70,9 +70,7 @@ export default function ListTop({ className }: Props) {
             }}
             title={
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <h3 className="m-0 text-lg font-bold text-blue-500">
-                        Top Performance
-                    </h3>
+                    <h3 className="text-md m-0 font-bold">Top Performance</h3>
                     <Segmented
                         options={tabOptions}
                         value={activeTab}

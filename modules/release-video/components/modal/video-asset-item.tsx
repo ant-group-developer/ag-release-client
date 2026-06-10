@@ -18,6 +18,7 @@ interface VideoAssetItemProps {
     videoUrl: string;
     setVideoUrl: (url: string) => void;
     dataEdit?: ReleasesData;
+    disabled?: boolean;
 }
 
 export default function VideoAssetItem({
@@ -25,6 +26,7 @@ export default function VideoAssetItem({
     videoUrl,
     setVideoUrl,
     dataEdit,
+    disabled = false,
 }: VideoAssetItemProps) {
     const messages = useTranslations();
     const [isVideoUploading, setIsVideoUploading] = useState(false);
@@ -89,6 +91,7 @@ export default function VideoAssetItem({
     ]);
 
     const handleVideoUpload = async (file: File) => {
+        if (disabled) return;
         if (!dataEdit?.id) return;
         setIsVideoUploading(true);
 
@@ -229,6 +232,7 @@ export default function VideoAssetItem({
     };
 
     const handleRemove = () => {
+        if (disabled) return false;
         return new Promise<boolean>((resolve) => {
             Modal.confirm({
                 title: messages('delete.confirmTitle'),
@@ -314,7 +318,7 @@ export default function VideoAssetItem({
                 <Upload
                     accept="video/*"
                     fileList={fileList}
-                    disabled={isVideoUploading}
+                    disabled={disabled || isVideoUploading}
                     beforeUpload={(file) => {
                         const isVideo = file.type.startsWith('video/');
                         if (!isVideo) {
@@ -347,7 +351,7 @@ export default function VideoAssetItem({
                     {fileList.length < 1 && (
                         <Button
                             icon={<VideoCameraOutlined />}
-                            disabled={isVideoUploading}
+                            disabled={disabled || isVideoUploading}
                         >
                             {messages('common.upload')}
                         </Button>
