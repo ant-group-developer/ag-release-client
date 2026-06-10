@@ -83,7 +83,7 @@ export default function DistributionPieChart({
                             cx={'45%'}
                             cy="50%"
                             innerRadius={40}
-                            outerRadius={70}
+                            outerRadius={80}
                             stroke="none"
                             dataKey="value"
                             nameKey="type"

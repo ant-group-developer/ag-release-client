@@ -61,6 +61,7 @@ export enum APP_ROUTES {
     NEWS = '/news',
     NEWS_DETAIL = '/news/*',
     AGGREGATOR = '/aggregator',
+    REPORT_CONFIGS = '/report-configs',
     DEAL_TYPE = '/deal-type',
     PING = '/ping',
     RELEASE_LOG = '/release-log',

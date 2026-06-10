@@ -179,10 +179,11 @@ export const releasesApi = {
         );
     },
 
-    bulkSubmit: ({ ids, codes }: BulkSubmitRelease) => {
+    bulkSubmit: ({ ids, codes, idsExclude }: BulkSubmitRelease) => {
         return axiosInstance.post('/releases/bulk-submit', {
             ids,
             codes,
+            idsExclude,
         });
     },
 

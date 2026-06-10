@@ -1,15 +1,14 @@
 'use client';
 
-import DateSelect from '@/components/ui/select/date-select';
 import { PAGE_SIZE } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
 // import StreamChart from '@/modules/dashboard/components/bar-chart/stream-chart';
-import DistributionRow from '@/modules/dashboard/components/distribution-row';
 import ListRelease from '@/modules/dashboard/components/list-release';
-import ListTop from '@/modules/dashboard/components/list-top';
 // import MapChart from '@/modules/dashboard/components/map-chart';
+import DateSelect2 from '@/components/ui/select/date-select2';
+import PlaysTimelineChart from '@/modules/analytics2/components/chart/plays-timeline-chart';
+import AnalyticsRankings from '@/modules/analytics2/components/ranking/analytics-rankings';
 import StatsOverview from '@/modules/dashboard/components/stats-overview';
-import NewUpdatesCard from '@/modules/dashboard/components/stats-overview/updated-news-card';
 import {
     //     useGetCountCountries,
     useGetCountIssues,
@@ -18,7 +17,7 @@ import {
 import { DashboardDataFilter } from '@/modules/dashboard/types';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { PageContainer } from '@ant-design/pro-components';
-import { Col, Row, theme } from 'antd';
+import { theme } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -62,9 +61,8 @@ function Dashboard({}: Props) {
             <PageContainer
                 title={messages('dashboard.label')}
                 extra={
-                    <DateSelect
-                        selectClassName="w-[150px]"
-                        rangeClassName="w-[250px]"
+                    <DateSelect2
+                        width={240}
                         externalOnChange={(fromDate, toDate) =>
                             onChangeFilter({
                                 startDate: fromDate,
@@ -90,19 +88,34 @@ function Dashboard({}: Props) {
 
                     <ListRelease data={releasesData.items.slice(0, 10)} />
 
-                    <DistributionRow />
+                    {/* <DistributionRow />
 
-                    <Row gutter={16} align="stretch">
-                        <Col span={12}>
+                    <DashboardAnalyticsRow
+                        startDate={dataFilter.startDate}
+                        endDate={dataFilter.endDate}
+                    /> */}
+
+                    {/* <Row gutter={16} align="stretch"> */}
+                    {/* <Col span={12}>
                             <ListTop />
-                        </Col>
-                        <Col span={12}>
+                        </Col> */}
+                    {/* <Col span={12}>
                             <NewUpdatesCard />
-                        </Col>
-                        {/* <Col span={8}>
+                        </Col> */}
+                    {/* <Col span={8}>
                             <RecentIssuesCard issuesData={countIssuesData} />
                         </Col> */}
-                    </Row>
+                    {/* </Row> */}
+
+                    <PlaysTimelineChart
+                        fromDate={dataFilter.startDate ?? ''}
+                        toDate={dataFilter.endDate ?? ''}
+                    />
+
+                    <AnalyticsRankings
+                        fromDate={dataFilter.startDate ?? ''}
+                        toDate={dataFilter.endDate ?? ''}
+                    />
                 </div>
 
                 {/* <ListNews /> */}

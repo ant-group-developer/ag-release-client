@@ -129,9 +129,7 @@ export default function DetailArtistAnalyticsModal({
                         </span>
                     </div>
                     <DateSelect2
-                        key="date"
-                        rangePickerStyle={{ height: 32 }}
-                        style={{ width: 180, height: 32 }}
+                        style={{ width: 240, height: 32 }}
                         value={`${localFromDate},${localToDate}`}
                         onChange={(value) => {
                             const [startDate, endDate] = value

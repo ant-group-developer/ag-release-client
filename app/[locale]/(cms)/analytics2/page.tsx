@@ -10,7 +10,7 @@ import { PageContainer } from '@ant-design/pro-components';
 import { Radio, Space, theme } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
-import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 const defaultFilter: Analytics2DataFilter = {
     startDate: dayjs().subtract(29, 'day').format('YYYY-MM-DD'),
@@ -54,7 +54,9 @@ export default function Analytics2Page() {
                         optionType="button"
                         value={activeTab}
                         onChange={(event) =>
-                            handleTabChange(event.target.value as ANALYTICS2_TABS)
+                            handleTabChange(
+                                event.target.value as ANALYTICS2_TABS
+                            )
                         }
                         options={[
                             {
@@ -68,9 +70,7 @@ export default function Analytics2Page() {
                         ]}
                     />
                     <DateSelect2
-                        key="date"
-                        rangePickerStyle={{ width: 180 }}
-                        style={{ width: 180 }}
+                        style={{ width: 240 }}
                         value={`${fromDate},${toDate}`}
                         onChange={(value) => {
                             const [startDate, endDate] = value
