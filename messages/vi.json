@@ -819,6 +819,7 @@
         "system": "Hệ thống"
     },
     "release": {
+        "excludeTitle": "Loại trừ các phát hành",
         "takeDown": "Gỡ phát hành",
         "takeDownConfirmTitle": "Gỡ phát hành?",
         "takeDownConfirmContent": "Bạn có chắc chắn muốn gỡ phát hành <b>{title}</b> không?",
@@ -2416,6 +2417,40 @@
             "CANCELLED": "Đã hủy",
             "SKIPPED": "Không áp dụng",
             "SUCCESS": "Hoàn thành"
+        }
+    },
+    "reportConfigs": {
+        "label": "Cau hinh bao cao",
+        "configReport": "Cấu hình báo cáo",
+        "importReport": "Nhập báo cáo",
+        "importReportBtn": "Nhập báo cáo",
+        "importModalTitle": "Nhập báo cáo",
+        "allowedExtensions": "Định dạng file",
+        "uploadType": "Loại nhập",
+        "uploadTypeFiles": "Nhiều file",
+        "uploadTypeFolder": "Cả thư mục",
+        "selectFiles": "Chọn các tệp tin",
+        "selectFolder": "Chọn thư mục",
+        "dragDropHint": "Kéo thả tệp tin hoặc thư mục vào đây hoặc click để chọn",
+        "validation": {
+            "requiredExtensions": "Vui lòng chọn định dạng file!",
+            "requiredFiles": "Vui lòng chọn ít nhất một tệp tin hoặc thư mục!"
+        },
+        "source": "Nguon",
+        "sourceCode": "Ma nguon",
+        "sourceName": "Ten nguon",
+        "reportType": "Loai bao cao",
+        "folderPatterns": "Mau thu muc",
+        "filePatterns": "Mau file",
+        "requiredHeaders": "Header bat buoc",
+        "parserCode": "Ma parser",
+        "delimiter": "Ky tu phan tach",
+        "defaultCurrency": "Tien te mac dinh",
+        "defaultMember": "Member mac dinh",
+        "priority": "Do uu tien",
+        "action": {
+            "create": "Tao cau hinh bao cao",
+            "update": "Cap nhat cau hinh bao cao"
         }
     },
     "analytics2": {

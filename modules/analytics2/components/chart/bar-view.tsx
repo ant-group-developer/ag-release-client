@@ -21,6 +21,7 @@ interface BarViewProps {
     chartHeight?: number;
     tooltipContent?: ReactElement;
     tooltipHeaders?: [string, string];
+    yAxisFormatter?: (value: any) => string;
 }
 
 export default function BarView({
@@ -30,6 +31,7 @@ export default function BarView({
     chartHeight = 400,
     tooltipContent,
     tooltipHeaders,
+    yAxisFormatter,
 }: BarViewProps) {
     const barSize = Math.max(
         24,
@@ -39,12 +41,21 @@ export default function BarView({
     const stackedBarData = useMemo(() => {
         return barData.map((row) => {
             const sortedEntries = allDspKeys
-                .map((dsp) => ({
-                    dsp,
-                    value: Number(row[dsp]) || 0,
-                    color: colorMap[dsp] ?? '#94a3b8',
-                    revenueUsd: Number(row[`${dsp}RevenueUsd`]) || 0,
-                }))
+                .map((dsp) => {
+                    const extras: Record<string, any> = {};
+                    Object.keys(row).forEach((k) => {
+                        if (k.startsWith(dsp) && k !== dsp) {
+                            const suffix = k.slice(dsp.length);
+                            extras[suffix] = row[k];
+                        }
+                    });
+                    return {
+                        dsp,
+                        value: Number(row[dsp]) || 0,
+                        color: colorMap[dsp] ?? '#94a3b8',
+                        extras,
+                    };
+                })
                 .sort((a, b) => {
                     const valueDiff = a.value - b.value;
                     return valueDiff || b.dsp.localeCompare(a.dsp);
@@ -57,7 +68,10 @@ export default function BarView({
                     acc[stackKey] = item.value;
                     acc[`${stackKey}Name`] = item.dsp;
                     acc[`${stackKey}Color`] = item.color;
-                    acc[`${stackKey}RevenueUsd`] = item.revenueUsd;
+
+                    Object.entries(item.extras).forEach(([suffix, val]) => {
+                        acc[`${stackKey}${suffix}`] = val;
+                    });
 
                     return acc;
                 },
@@ -105,8 +119,9 @@ export default function BarView({
                                 fontSize: 12,
                                 fill: '#999',
                             }}
-                            tickFormatter={(v) =>
-                                formattedNumber(v, undefined as any, true)
+                            tickFormatter={
+                                yAxisFormatter ?? ((v) =>
+                                    formattedNumber(v, undefined as any, true))
                             }
                         />
                         <Tooltip

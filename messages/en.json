@@ -823,6 +823,7 @@
         "system": "System"
     },
     "release": {
+        "excludeTitle": "Exclude releases",
         "takeDown": "Take down",
         "takeDownConfirmTitle": "Take down release?",
         "takeDownConfirmContent": "Are you sure you want to take down the release <b>{title}</b> ?",
@@ -2418,6 +2419,40 @@
             "CANCELLED": "Cancelled",
             "SKIPPED": "Not applicable",
             "SUCCESS": "Done"
+        }
+    },
+    "reportConfigs": {
+        "label": "Report Configs",
+        "configReport": "Config report",
+        "importReport": "Import report",
+        "importReportBtn": "Import report",
+        "importModalTitle": "Import Report",
+        "allowedExtensions": "Allowed extensions",
+        "uploadType": "Import type",
+        "uploadTypeFiles": "Multiple files",
+        "uploadTypeFolder": "Folder",
+        "selectFiles": "Select files",
+        "selectFolder": "Select folder",
+        "dragDropHint": "Drag & drop files or folder here or click to select",
+        "validation": {
+            "requiredExtensions": "Please select allowed extensions!",
+            "requiredFiles": "Please select at least one file or folder!"
+        },
+        "source": "Source",
+        "sourceCode": "Source code",
+        "sourceName": "Source name",
+        "reportType": "Report type",
+        "folderPatterns": "Folder patterns",
+        "filePatterns": "File patterns",
+        "requiredHeaders": "Required headers",
+        "parserCode": "Parser code",
+        "delimiter": "Delimiter",
+        "defaultCurrency": "Default currency",
+        "defaultMember": "Default member",
+        "priority": "Priority",
+        "action": {
+            "create": "Create report config",
+            "update": "Update report config"
         }
     },
     "analytics2": {

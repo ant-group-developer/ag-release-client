@@ -46,6 +46,7 @@ export interface ExportTemplateCi extends CommonFunction {
 export interface BulkSubmitRelease extends CommonFunction {
     ids: string[];
     codes: string[];
+    idsExclude?: string[];
 }
 export interface BulkDeleteRelease extends CommonFunction {
     ids: string[];

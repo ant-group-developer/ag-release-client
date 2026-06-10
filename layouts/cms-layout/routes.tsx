@@ -20,6 +20,7 @@ import {
     Earth,
     FileMusic,
     FileTerminal,
+    FileText,
     FileVolume,
     Flag,
     Globe,
@@ -547,6 +548,15 @@ export const adminRoutes: RouteNode[] = [
                 icon: LayoutList,
                 required: SYS_ADMIN_REQ,
                 children: [
+                    {
+                        id: 'report-configs',
+                        type: 'link',
+                        label: 'reportConfigs.label',
+                        title: 'Report Configs',
+                        href: APP_ROUTES.REPORT_CONFIGS,
+                        icon: FileText,
+                        required: SYS_ADMIN_REQ,
+                    },
                     // {
                     //     id: 'deal-type',
                     //     type: 'link',
