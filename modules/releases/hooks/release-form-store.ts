@@ -23,6 +23,7 @@ const initialValue: ReleaseFormStoreData = {
     version: '',
     catalogId: null,
     isVariousArtist: false,
+    isInstrumental: false,
     creatorId: '',
     modifierId: '',
     upc: '',

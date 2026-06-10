@@ -1,3 +1,4 @@
+import { ReleasesData } from '@/modules/releases/types';
 import { CommonParams } from '@/types/api';
 
 export interface Analytics2DataFilter extends CommonParams {
@@ -59,6 +60,7 @@ export interface TrackRankingItem {
     releaseId: string;
     releaseTitle: string;
     totalViews: number;
+    release?: ReleasesData;
 }
 
 export interface ReleaseRankingItem {
@@ -70,6 +72,7 @@ export interface ReleaseRankingItem {
     labelName: string;
     trackCount: number;
     totalViews: number;
+    release?: ReleasesData;
 }
 
 export interface ArtistRankingItem {
@@ -223,4 +226,3 @@ export interface ReleaseOverviewData {
     totalSalesViews: number;
     totalRevenueUsd: number;
 }
-

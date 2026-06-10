@@ -49,6 +49,7 @@ export interface ReleasesData extends CommonAttribute {
     pLineYear: number | null;
     catalogId: string | null;
     isVariousArtist: boolean;
+    isInstrumental: boolean;
     releaseLanguage?: ReleaseLanguage;
     releaseDate: string;
     releaseOriginalDate: string;

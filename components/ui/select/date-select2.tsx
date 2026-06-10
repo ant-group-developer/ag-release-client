@@ -11,12 +11,14 @@ import type { RangePickerProps } from 'antd/es/date-picker';
 import dayjs, { Dayjs } from 'dayjs';
 import { ChevronDown } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import type { CSSProperties } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 
 const { RangePicker } = DatePicker;
 
 type Props = {
     externalOnChange?: (startDate: string, endDate: string) => void;
+    rangePickerStyle?: CSSProperties;
 } & SelectProps;
 
 type DateRangeOption = {
@@ -54,7 +56,11 @@ const getDateRangeOptions = (
     });
 };
 
-export default function DateSelect2({ externalOnChange, ...props }: Props) {
+export default function DateSelect2({
+    externalOnChange,
+    rangePickerStyle,
+    ...props
+}: Props) {
     const messages = useTranslations();
     const [type, setType] = useState<TYPE>(TYPE.SELECT);
     const [selectOpen, setSelectOpen] = useState(false);
@@ -254,7 +260,7 @@ export default function DateSelect2({ externalOnChange, ...props }: Props) {
                                 -
                             </span>
                         }
-                        style={{ width: 220 }}
+                        style={{ width: 220, ...rangePickerStyle }}
                         suffixIcon={<span />}
                         value={rangeValue}
                     />
@@ -262,6 +268,7 @@ export default function DateSelect2({ externalOnChange, ...props }: Props) {
                         aria-label={messages('date.selectDate')}
                         icon={<ChevronDown size={16} />}
                         onClick={showPresetSelect}
+                        style={{ height: rangePickerStyle?.height }}
                     />
                 </Space.Compact>
             )}

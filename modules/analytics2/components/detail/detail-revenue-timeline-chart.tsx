@@ -87,7 +87,7 @@ export default function DetailRevenueTimelineChart({
                     {messages('analytics.revenue.timelineTitle')}
                 </span>
             }
-            className="rounded-xl border-none shadow-sm"
+            className="h-full w-full rounded-xl border-none shadow-sm"
             styles={{ body: { padding: '24px' } }}
         >
             {isRevenueFetching ? (

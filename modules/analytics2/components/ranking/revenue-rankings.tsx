@@ -1,15 +1,19 @@
 'use client';
 
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { Col, Row } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
     useGetRevenueTopArtist,
     useGetRevenueTopDsp,
     useGetRevenueTopTrack,
 } from '../../hooks/use-get-revenue-data';
+import { RevenueArtistItem, RevenueTrackItem } from '../../types';
 import RankingCard, { RankingCardView } from '../card/ranking-card';
+import DetailArtistAnalyticsModal from '../detail-artist/detail-artist-analytics-modal';
+import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
 
 interface Props {
     fromDate: string;
@@ -19,6 +23,25 @@ interface Props {
 export default function RevenueRankings({ fromDate, toDate }: Props) {
     const messages = useTranslations();
     const topN = 5;
+    const [artistDetailModal, setArtistDetailModal] = useState<{
+        open: boolean;
+        title: string;
+        artistId: string;
+    }>({
+        open: false,
+        title: '',
+        artistId: '',
+    });
+    const [trackDetailModal, setTrackDetailModal] = useState<{
+        open: boolean;
+        title: string;
+        isrc: string;
+    }>({
+        open: false,
+        title: '',
+        isrc: '',
+    });
+
     const topRankingTitle = (title: string) =>
         messages('analytics2.topRankingTitle', {
             count: topN,
@@ -78,18 +101,31 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
                 width: 200,
                 ellipsis: true,
                 fixed: 'left' as const,
-                render: (text: string, record: any) => (
+                render: (text: string, record: RevenueArtistItem) => (
                     <div className="flex items-center gap-3">
                         <div className="flex-shrink-0">
                             <ReleaseCoverImage
                                 width={32}
                                 height={32}
-                                data={{ id: record.picture } as any}
+                                src={record.picture}
                             />
                         </div>
-                        <span className="truncate font-medium text-gray-900 dark:text-zinc-100">
-                            {text}
-                        </span>
+                        <CustomTooltip
+                            title={messages('common.detailedAnalysis')}
+                        >
+                            <span
+                                className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                onClick={() =>
+                                    setArtistDetailModal({
+                                        open: true,
+                                        title: text,
+                                        artistId: record.artistId,
+                                    })
+                                }
+                            >
+                                {text}
+                            </span>
+                        </CustomTooltip>
                     </div>
                 ),
             },
@@ -147,7 +183,7 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
                 width: 130,
                 ellipsis: true,
                 fixed: 'left' as const,
-                render: (text: string, record: any) => (
+                render: (text: string, record: RevenueTrackItem) => (
                     <div className="flex items-center gap-3">
                         <div className="flex-shrink-0">
                             <ReleaseCoverImage
@@ -157,9 +193,22 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
                             />
                         </div>
                         <div className="flex min-w-0 flex-col">
-                            <span className="truncate font-medium text-gray-900 dark:text-zinc-100">
-                                {text}
-                            </span>
+                            <CustomTooltip
+                                title={messages('common.detailedAnalysis')}
+                            >
+                                <span
+                                    className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                    onClick={() =>
+                                        setTrackDetailModal({
+                                            open: true,
+                                            title: text,
+                                            isrc: record.isrc,
+                                        })
+                                    }
+                                >
+                                    {text}
+                                </span>
+                            </CustomTooltip>
                         </div>
                     </div>
                 ),
@@ -270,43 +319,71 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
     );
 
     return (
-        <Row gutter={[24, 24]}>
-            <Col span={12} xs={24} lg={12}>
-                <RankingCard
-                    title={topRankingTitle(messages('common.partners'))}
-                    columns={artistColumns}
-                    dataSource={topArtistData}
-                    loading={isArtistsLoading}
-                    rowKey="artistId"
-                    labelKey="artistName"
-                    valueKey="revenueUsd"
-                    defaultView={RankingCardView.BAR}
-                />
-            </Col>
-            <Col span={12} xs={24} lg={12}>
-                <RankingCard
-                    title={topRankingTitle(messages('common.tracks'))}
-                    columns={trackColumns}
-                    dataSource={topTrackData}
-                    loading={isTracksLoading}
-                    rowKey="isrc"
-                    labelKey="title"
-                    valueKey="revenueUsd"
-                    defaultView={RankingCardView.BAR}
-                />
-            </Col>
-            <Col span={12} xs={24} lg={12}>
-                <RankingCard
-                    title={topRankingTitle(messages('common.platforms'))}
-                    columns={dspColumns}
-                    dataSource={dspDataWithRank}
-                    loading={isDspLoading}
-                    rowKey="dspName"
-                    labelKey="dspName"
-                    valueKey="revenueUsd"
-                    defaultView={RankingCardView.LIST}
-                />
-            </Col>
-        </Row>
+        <>
+            <Row gutter={[24, 24]}>
+                <Col span={12} xs={24} lg={12}>
+                    <RankingCard
+                        title={topRankingTitle(messages('common.partners'))}
+                        columns={artistColumns}
+                        dataSource={topArtistData}
+                        loading={isArtistsLoading}
+                        rowKey="artistId"
+                        labelKey="artistName"
+                        valueKey="revenueUsd"
+                        defaultView={RankingCardView.BAR}
+                    />
+                </Col>
+                <Col span={12} xs={24} lg={12}>
+                    <RankingCard
+                        title={topRankingTitle(messages('common.tracks'))}
+                        columns={trackColumns}
+                        dataSource={topTrackData}
+                        loading={isTracksLoading}
+                        rowKey="isrc"
+                        labelKey="title"
+                        valueKey="revenueUsd"
+                        defaultView={RankingCardView.BAR}
+                    />
+                </Col>
+                <Col span={12} xs={24} lg={12}>
+                    <RankingCard
+                        title={topRankingTitle(messages('common.platforms'))}
+                        columns={dspColumns}
+                        dataSource={dspDataWithRank}
+                        loading={isDspLoading}
+                        rowKey="dspName"
+                        labelKey="dspName"
+                        valueKey="revenueUsd"
+                        defaultView={RankingCardView.LIST}
+                    />
+                </Col>
+            </Row>
+            <DetailArtistAnalyticsModal
+                open={artistDetailModal.open}
+                onClose={() =>
+                    setArtistDetailModal((prev) => ({
+                        ...prev,
+                        open: false,
+                    }))
+                }
+                title={artistDetailModal.title}
+                artistId={artistDetailModal.artistId}
+                fromDate={fromDate}
+                toDate={toDate}
+            />
+            <DetailTrackAnalyticsModal
+                open={trackDetailModal.open}
+                onClose={() =>
+                    setTrackDetailModal((prev) => ({
+                        ...prev,
+                        open: false,
+                    }))
+                }
+                title={trackDetailModal.title}
+                isrc={trackDetailModal.isrc}
+                fromDate={fromDate}
+                toDate={toDate}
+            />
+        </>
     );
 }
