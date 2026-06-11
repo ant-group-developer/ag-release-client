@@ -54,7 +54,7 @@ const BulkSubmitModal = ({ onFinished }: BulkSubmitModalProps) => {
 
     const { dspData, isFetching: isFetchingDsp } = useGetListDsp({
         pageSize: PAGE_SIZE_EXTRA_LARGE,
-        aggregatorCode: 'CI',
+        isActive: true,
     });
 
     const dspDataFilter = dspData?.items?.filter((item) => !!item.codeCi);
