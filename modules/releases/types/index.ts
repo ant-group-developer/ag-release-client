@@ -106,6 +106,7 @@ export interface ReleasesDataFilter extends CommonParams {
     releaseId?: string;
     isVariousArtist?: string;
     idInclude?: string;
+    isImportedFromReport?: string;
 }
 
 export interface ReleaseTerritory extends CommonParams {

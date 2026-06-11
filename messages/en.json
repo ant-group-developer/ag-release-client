@@ -671,7 +671,8 @@
         "lastYear": "Last year",
         "last5Year": "Last 5 years",
         "thisMonth": "This month",
-        "thisYear": "This year"
+        "thisYear": "This year",
+        "thisWeek": "This week"
     },
     "message": {
         "createSuccessfully": "Create successfully!",
@@ -832,6 +833,7 @@
     },
     "release": {
         "excludeTitle": "Exclude releases",
+        "excludeAlertMsg": "Selected to exclude <b>{count}</b> releases",
         "takeDown": "Take down",
         "takeDownConfirmTitle": "Take down release?",
         "takeDownConfirmContent": "Are you sure you want to take down the release <b>{title}</b> ?",
@@ -855,6 +857,9 @@
         "configuration": "Release configuration",
         "otherMetadata": "Other metadata",
         "label": "Release",
+        "creationSource": "Creation Source",
+        "importedFromReport": "Imported from report",
+        "createdDirectly": "Created directly",
         "routeLabel": "Music releases",
         "create": "Create release",
         "latestReleases": "Latest releases",

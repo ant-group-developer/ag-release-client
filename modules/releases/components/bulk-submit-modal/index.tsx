@@ -43,7 +43,7 @@ const BulkSubmitModal = ({ onFinished }: BulkSubmitModalProps) => {
     const [idsExclude, setIdsExclude] = useState<string[]>([]);
     const [filterState, setFilterState] = useState<ReleasesDataFilter>({
         page: 1,
-        pageSize: 4,
+        pageSize: 3,
         orderBy: ORDER.DESC,
         fieldOrder: RELEASES_COLUMNS_DISPLAY.CREATED_AT,
         type: RELEASE_TYPE.AUDIO,
@@ -69,14 +69,14 @@ const BulkSubmitModal = ({ onFinished }: BulkSubmitModalProps) => {
                     <span>{item.name}</span>
                 </Space>
             ),
-            value: item.codeCi,
+            value: item.code,
         };
     });
 
     useEffect(() => {
         if (dspDataFilter && dspDataFilter.length > 0) {
             form.setFieldsValue({
-                dspIds: dspDataFilter.map((item) => item.codeCi),
+                dspIds: dspDataFilter.map((item) => item.code),
             });
         }
     }, [dspDataFilter, form]);
@@ -170,7 +170,7 @@ const BulkSubmitModal = ({ onFinished }: BulkSubmitModalProps) => {
             },
         },
         {
-            title: 'Label',
+            title: messages('label.label'),
             key: 'publisher',
             dataIndex: RELEASES_TABLE_KEY.PUBLISHER,
             align: 'left',
@@ -211,7 +211,7 @@ const BulkSubmitModal = ({ onFinished }: BulkSubmitModalProps) => {
             },
         },
         {
-            title: 'UPC',
+            title: messages('formFields.upc'),
             key: 'upc',
             dataIndex: RELEASES_TABLE_KEY.UPC,
             align: 'left',
@@ -269,6 +269,7 @@ const BulkSubmitModal = ({ onFinished }: BulkSubmitModalProps) => {
         onChange: (selectedRowKeys: Key[]) => {
             setIdsExclude(selectedRowKeys as string[]);
         },
+        preserveSelectedRowKeys: true,
     };
 
     return (
@@ -323,9 +324,15 @@ const BulkSubmitModal = ({ onFinished }: BulkSubmitModalProps) => {
                             <Alert
                                 message={
                                     <span>
-                                        Đã chọn loại trừ{' '}
-                                        <strong>{idsExclude.length}</strong> bản
-                                        phát hành
+                                        {messages.rich(
+                                            'release.excludeAlertMsg',
+                                            {
+                                                count: idsExclude.length,
+                                                b: (chunks) => (
+                                                    <strong>{chunks}</strong>
+                                                ),
+                                            }
+                                        )}
                                     </span>
                                 }
                                 type="warning"

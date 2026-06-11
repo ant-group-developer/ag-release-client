@@ -1,8 +1,11 @@
 import { DATE_FORMAT } from '@/enums/common';
 import { DatePicker, GetProps } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
+import isoWeek from 'dayjs/plugin/isoWeek';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
+
+dayjs.extend(isoWeek);
 
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
 
@@ -23,11 +26,31 @@ export default function DateSelect2({
     const messages = useTranslations();
 
     const presets = useMemo(() => {
-        return DAY_RANGES.map((days) => ({
+        const customPresets = [
+            {
+                label: messages('date.thisWeek'),
+                value: () =>
+                    [dayjs().startOf('isoWeek'), dayjs()] as [Dayjs, Dayjs],
+            },
+            {
+                label: messages('date.thisMonth'),
+                value: () =>
+                    [dayjs().startOf('month'), dayjs()] as [Dayjs, Dayjs],
+            },
+            {
+                label: messages('date.thisYear'),
+                value: () =>
+                    [dayjs().startOf('year'), dayjs()] as [Dayjs, Dayjs],
+            },
+        ];
+
+        const relativePresets = DAY_RANGES.map((days) => ({
             label: messages('date.lastDays', { days }),
             value: () =>
                 [dayjs().subtract(days - 1, 'day'), dayjs()] as [Dayjs, Dayjs],
         }));
+
+        return [...customPresets, ...relativePresets];
     }, [messages]);
 
     const rangeValue = useMemo<RangePickerProps['value']>(() => {
