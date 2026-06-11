@@ -121,7 +121,7 @@ export default function Releases({}: Props) {
         },
         getCheckboxProps: (record: ReleasesData) => {
             return {
-                disabled: !isAdmin || record.status !== RELEASES_STATUS.DRAFT,
+                disabled: !isAdmin && record.status !== RELEASES_STATUS.DRAFT,
             };
         },
     };
