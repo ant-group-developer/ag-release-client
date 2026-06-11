@@ -46,3 +46,17 @@ export interface DashboardDataFilter extends CommonParams {
     startDate?: string;
     endDate?: string;
 }
+
+export interface AnalyticDashboardParams {
+    fromDate: string;
+    toDate: string;
+    topN?: number;
+    includeOther?: boolean;
+    type: 'stream' | 'revenue';
+}
+
+export interface AnalyticDashboardData {
+    name: string;
+    value: number;
+}
+

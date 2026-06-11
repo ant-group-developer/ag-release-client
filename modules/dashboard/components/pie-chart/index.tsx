@@ -5,7 +5,7 @@ import {
     CustomizedPieLabel,
 } from '@/components/shared/chart/chart-custom-render';
 import { CustomTooltip } from '@/components/shared/chart/chart-tooltip';
-import { Card, Grid, Segmented, Typography } from 'antd';
+import { Card, Empty, Grid, Segmented, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import {
@@ -76,64 +76,80 @@ export default function DistributionPieChart({
                 />
             </div>
             <div style={{ width: '100%', height: 220 }}>
-                <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                        <Pie
-                            data={data}
-                            cx={'45%'}
-                            cy="50%"
-                            innerRadius={40}
-                            outerRadius={80}
-                            stroke="none"
-                            dataKey="value"
-                            nameKey="type"
-                            labelLine={false}
-                            label={(props) => CustomizedPieLabel(props)}
-                        >
-                            {data.map((_, index) => (
-                                <Cell
-                                    key={`cell-${index}`}
-                                    fill={colors[index % colors.length]}
+                {data && data.length > 0 ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                            <Pie
+                                data={data}
+                                cx={'45%'}
+                                cy="50%"
+                                innerRadius={40}
+                                outerRadius={80}
+                                stroke="none"
+                                dataKey="value"
+                                nameKey="type"
+                                labelLine={false}
+                                label={(props) => CustomizedPieLabel(props)}
+                            >
+                                {data.map((_, index) => (
+                                    <Cell
+                                        key={`cell-${index}`}
+                                        fill={colors[index % colors.length]}
+                                    />
+                                ))}
+                            </Pie>
+                            <Tooltip
+                                content={<CustomTooltip />}
+                                isAnimationActive={true}
+                            />
+                            {!isSmallDevice && (
+                                <Legend
+                                    verticalAlign="middle"
+                                    align="right"
+                                    layout="vertical"
+                                    wrapperStyle={{ paddingRight: 0, right: 0 }}
+                                    formatter={(value, entry: any) => (
+                                        <ChartLegendItem
+                                            label={value}
+                                            value={entry.payload.value}
+                                            width="200px"
+                                        />
+                                    )}
+                                    iconType="circle"
                                 />
-                            ))}
-                        </Pie>
-                        <Tooltip
-                            content={<CustomTooltip />}
-                            isAnimationActive={true}
+                            )}
+                            {isSmallDevice && (
+                                <Legend
+                                    verticalAlign="bottom"
+                                    align="center"
+                                    layout="horizontal"
+                                    formatter={(value, entry: any) => (
+                                        <ChartLegendItem
+                                            label={value}
+                                            value={entry.payload.value}
+                                            width="fit-content"
+                                        />
+                                    )}
+                                    iconType="circle"
+                                />
+                            )}
+                        </PieChart>
+                    </ResponsiveContainer>
+                ) : (
+                    <div
+                        style={{
+                            height: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Empty
+                            image={Empty.PRESENTED_IMAGE_SIMPLE}
+                            description={messages('common.noDataAvailable')}
                         />
-                        {!isSmallDevice && (
-                            <Legend
-                                verticalAlign="middle"
-                                align="right"
-                                layout="vertical"
-                                wrapperStyle={{ paddingRight: 0, right: 0 }}
-                                formatter={(value, entry: any) => (
-                                    <ChartLegendItem
-                                        label={value}
-                                        value={entry.payload.value}
-                                        width="200px"
-                                    />
-                                )}
-                                iconType="circle"
-                            />
-                        )}
-                        {isSmallDevice && (
-                            <Legend
-                                verticalAlign="bottom"
-                                align="center"
-                                layout="horizontal"
-                                formatter={(value, entry: any) => (
-                                    <ChartLegendItem
-                                        label={value}
-                                        value={entry.payload.value}
-                                        width="fit-content"
-                                    />
-                                )}
-                                iconType="circle"
-                            />
-                        )}
-                    </PieChart>
-                </ResponsiveContainer>
+                    </div>
+                )}
             </div>
         </Card>
     );

@@ -549,11 +549,11 @@ export const adminRoutes: RouteNode[] = [
                 required: SYS_ADMIN_REQ,
                 children: [
                     {
-                        id: 'report-configs',
+                        id: 'report-import',
                         type: 'link',
                         label: 'reportConfigs.label',
-                        title: 'Report Configs',
-                        href: APP_ROUTES.REPORT_CONFIGS,
+                        title: 'Report Import',
+                        href: APP_ROUTES.REPORT_IMPORT,
                         icon: FileText,
                         required: SYS_ADMIN_REQ,
                     },

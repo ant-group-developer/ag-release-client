@@ -24,3 +24,12 @@ export const reportConfigQueryKeys = {
             QUERY_KEY.REPORT_CONFIG.UPDATE,
         ] as const,
 };
+
+export const etlJobQueryKeys = {
+    all: ['ETL_JOBS'] as const,
+    lists: () => [...etlJobQueryKeys.all, 'GET_LIST'] as const,
+    list: (params?: any) =>
+        params
+            ? ([...etlJobQueryKeys.lists(), params] as const)
+            : etlJobQueryKeys.lists(),
+};

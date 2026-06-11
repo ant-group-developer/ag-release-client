@@ -1,27 +1,28 @@
 import { useApiNotify } from '@/hooks/use-api-notify';
-import { CreateVariables } from '@/types/api';
 import { useMutation } from '@tanstack/react-query';
 import { reportConfigApis } from '../apis';
-import { PreValidateImportPayload } from '../types/payload';
+import { CommonFunction } from '@/types/api';
 
-export const usePreValidateImport = () => {
+interface StartImportJobVariables extends CommonFunction {
+    jobId: string;
+}
+
+export const useStartImportJob = () => {
     const { handleSuccess, handleError } = useApiNotify();
 
     const mutation = useMutation({
-        mutationFn: ({
-            payload,
-        }: CreateVariables<PreValidateImportPayload>) =>
-            reportConfigApis.preValidateImport(payload),
+        mutationFn: ({ jobId }: StartImportJobVariables) =>
+            reportConfigApis.startImportJob(jobId),
         onSuccess: (
             data,
-            { onSuccess }: CreateVariables<PreValidateImportPayload>
+            { onSuccess }: StartImportJobVariables
         ) => {
             handleSuccess(data?.data);
             onSuccess?.(data?.data);
         },
         onError: (
             error,
-            { onError }: CreateVariables<PreValidateImportPayload>
+            { onError }: StartImportJobVariables
         ) => {
             onError?.();
             handleError(error);
@@ -29,7 +30,8 @@ export const usePreValidateImport = () => {
     });
 
     return {
-        preValidateImport: mutation.mutate,
+        startImportJob: mutation.mutate,
         ...mutation,
     };
 };
+export type { StartImportJobVariables };

@@ -2,7 +2,7 @@ import ActionButton from '@/components/ui/button/action-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { formattedDate, getIndex } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
-import { Space, Tag } from 'antd';
+import PopoverTags from '@/components/ui/tag/popover-tags';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_REPORT_CONFIG } from '../../enums';
@@ -21,13 +21,7 @@ const renderList = (items?: string[]) => {
         return '-';
     }
 
-    return (
-        <Space size={[4, 4]} wrap>
-            {items.map((item) => (
-                <Tag key={item}>{item}</Tag>
-            ))}
-        </Space>
-    );
+    return <PopoverTags tags={items} maxVisibleTags={2} />;
 };
 
 export default function ReportConfigTable({ dataFilter, ...props }: Props) {
