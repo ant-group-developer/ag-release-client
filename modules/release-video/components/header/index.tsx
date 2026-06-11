@@ -11,6 +11,7 @@ import { useTranslations } from 'next-intl';
 import nProgress from 'nprogress';
 import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 
 type Props = Pick<
     UseFilterProps<ReleasesDataFilter>,
@@ -21,6 +22,7 @@ export default function ReleaseVideoHeader({ dataFilter, onSearch }: Props) {
     const messages = useTranslations();
     const router = useRouter();
     const { createReleaseDraft, isPending } = useCreateReleaseDraft();
+    const { isSystemTenant } = useAuth();
 
     const handleCreateReleaseVideo = () => {
         nProgress.start();
@@ -56,14 +58,16 @@ export default function ReleaseVideoHeader({ dataFilter, onSearch }: Props) {
             </AppHeaderGroup>
             <AppHeaderGroup position="end" className="flex-1">
                 <div className="flex items-center gap-2">
-                    <PermissionGate permission={PERMISSION.RELEASE_VIDEO.CREATE}>
-                        <CreateButton
-                            canCreate={true}
-                            text={messages('releaseVideo.add')}
-                            loading={isPending}
-                            onClick={handleCreateReleaseVideo}
-                        />
-                    </PermissionGate>
+                    {!isSystemTenant && (
+                        <PermissionGate permission={PERMISSION.RELEASE_VIDEO.CREATE}>
+                            <CreateButton
+                                canCreate={true}
+                                text={messages('releaseVideo.add')}
+                                loading={isPending}
+                                onClick={handleCreateReleaseVideo}
+                            />
+                        </PermissionGate>
+                    )}
                 </div>
             </AppHeaderGroup>
         </AppHeader>

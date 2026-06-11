@@ -1,11 +1,14 @@
 import ActionButton from '@/components/ui/button/action-button';
 import CopyText from '@/components/ui/copy-text/copy-text';
+import TenantSelect from '@/components/ui/select/tenant-select';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_CHANNELS } from '../../enums';
+import { useUpdateChannel } from '../../hooks/use-update-channel';
 import { ChannelDataFilter, ChannelsData } from '../../types';
 
 type Props = Omit<AppTableProps<ChannelsData>, 'columns'> & {
@@ -19,6 +22,21 @@ type Props = Omit<AppTableProps<ChannelsData>, 'columns'> & {
 export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
+    const { isAdmin } = useAuth();
+    const { updateChannel, isPending } = useUpdateChannel();
+
+    const handleUpdateTenant = (record: ChannelsData, tenantId: string) => {
+        const currentTenantId = record.tenantId || record.tenant?.id;
+        if (!isAdmin || !tenantId || tenantId === currentTenantId) return;
+
+        updateChannel({
+            id: record.id,
+            payload: {
+                tenantId,
+            },
+        });
+    };
+
     const column: ColumnType<ChannelsData>[] = [
         {
             title: messages('common.iNo'),
@@ -49,6 +67,27 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
                 <CopyText tooltipProps={{ placement: 'right' }} text={value}>
                     <p className="truncate">{value}</p>
                 </CopyText>
+            ),
+        },
+        {
+            title: messages('tenant.label'),
+            key: 'tenant',
+            dataIndex: 'tenant',
+            ellipsis: true,
+            align: 'left',
+            width: 240,
+            render: (_, record) => (
+                <TenantSelect
+                    className="!w-full"
+                    value={record.tenantId || record.tenant?.id}
+                    fallBack={record.tenant?.name}
+                    placeholder={messages('tenant.selectTitle')}
+                    disabled={!isAdmin}
+                    loading={isPending}
+                    onChange={(tenantId) =>
+                        handleUpdateTenant(record, tenantId)
+                    }
+                />
             ),
         },
         {
@@ -97,7 +136,7 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
                     onShowDelete={() =>
                         openModal(TYPE_MODAL_CHANNELS.DELETE, record)
                     }
-                    showUpdate
+                    showUpdate={isAdmin}
                     onShowUpdate={() =>
                         openModal(TYPE_MODAL_CHANNELS.UPDATE, record)
                     }

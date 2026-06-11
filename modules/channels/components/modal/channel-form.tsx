@@ -1,6 +1,7 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
+import TenantSelect from '@/components/ui/select/tenant-select';
 import { MAX_NAME_LENGTH } from '@/constants/validate';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
@@ -16,7 +17,7 @@ import {
     UpdateChannelPayload,
 } from '../../types/payload';
 
-type ChannelFormValues = Omit<ChannelsData, 'id' | 'createdAt' | 'updatedAt'>;
+type ChannelFormValues = UpdateChannelPayload;
 
 type Props = Omit<AppModalProps, 'children'> & {};
 
@@ -32,8 +33,13 @@ export default function ChannelFormModal({ ...props }: Props) {
     const { updateChannel, isPending: isUpdatePending } = useUpdateChannel();
 
     const handleCreateChannel = (values: ChannelFormValues) => {
+        const payload = {
+            name: values.name,
+            tenantId: values.tenantId,
+        } as CreateChannelPayload;
+
         const variables: CreateVariables<CreateChannelPayload> = {
-            payload: values,
+            payload,
             onSuccess: () => {
                 form.resetFields();
                 deActive();
@@ -82,7 +88,7 @@ export default function ChannelFormModal({ ...props }: Props) {
             ...dataEdit,
         };
         form.setFieldsValue(initialData);
-    }, [dataEdit]);
+    }, [dataEdit, form]);
 
     return (
         <AppModal
@@ -102,6 +108,22 @@ export default function ChannelFormModal({ ...props }: Props) {
                 disabled={isActive}
             >
                 <AppFormItem
+                    name="tenantId"
+                    label={messages('tenant.label')}
+                    required
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.input'),
+                        },
+                    ]}
+                >
+                    <TenantSelect
+                        placeholder={messages('tenant.selectTitle')}
+                    />
+                </AppFormItem>
+
+                <AppFormItem
                     name="name"
                     label={messages('channel.name')}
                     required
@@ -116,6 +138,10 @@ export default function ChannelFormModal({ ...props }: Props) {
                                 max: MAX_NAME_LENGTH,
                                 field: messages('channel.name'),
                             }),
+                        },
+                        {
+                            pattern: /^[A-Za-z0-9]+VEVO$/,
+                            message: messages('channel.validation.nameFormat'),
                         },
                     ]}
                 >

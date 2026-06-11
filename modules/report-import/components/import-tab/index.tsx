@@ -1,20 +1,17 @@
-import { useState } from 'react';
-import { useTranslations } from 'next-intl';
-import { theme } from 'antd';
-import { useQueryClient } from '@tanstack/react-query';
-import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
-import AppPagination from '@/components/ui/pagination';
 import CreateButton from '@/components/ui/button/create-button';
-import { ImportModal } from './import-form-modal';
-import EtlJobsTable from './etl-jobs-table';
+import AppPagination from '@/components/ui/pagination';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { theme } from 'antd';
+import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 import { useGetListEtlJobs } from '../../hooks/use-get-list-etl-jobs';
-import { etlJobQueryKeys } from '../../constants/query-keys';
 import { EtlJobData } from '../../types/payload';
+import EtlJobsTable from './etl-jobs-table';
+import { ImportModal } from './import-form-modal';
 
 export default function ImportTab() {
     const messages = useTranslations();
     const { token } = theme.useToken();
-    const queryClient = useQueryClient();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [viewJobId, setViewJobId] = useState<string | null>(null);
@@ -30,7 +27,6 @@ export default function ImportTab() {
     const handleCloseModal = () => {
         setIsModalOpen(false);
         setViewJobId(null);
-        queryClient.invalidateQueries({ queryKey: etlJobQueryKeys.all });
     };
 
     const handleViewDetail = (record: EtlJobData) => {
@@ -44,7 +40,7 @@ export default function ImportTab() {
     };
 
     return (
-        <div style={{ padding: '24px 0' }}>
+        <div>
             <EtlJobsTable
                 title={() => (
                     <div
@@ -55,8 +51,10 @@ export default function ImportTab() {
                             width: '100%',
                         }}
                     >
-                        <span style={{ fontSize: 16, fontWeight: 600 }}>
-                            {messages('reportConfigs.importResult.recentJobsTitle')}
+                        <span style={{ fontSize: 14, fontWeight: 600 }}>
+                            {messages(
+                                'reportConfigs.importResult.recentJobsTitle'
+                            )}
                         </span>
                         <CreateButton
                             text={messages('reportConfigs.importReportBtn')}
@@ -74,12 +72,15 @@ export default function ImportTab() {
                     pageSize,
                     current: etlJobsData.metadata.page,
                 }}
-                scroll={{ x: 1200 }}
+                scroll={{ x: 1300 }}
                 onViewDetail={handleViewDetail}
                 onChange={() => undefined}
             />
             <AppPagination
-                style={{ backgroundColor: token.colorBgContainer, marginTop: 16 }}
+                style={{
+                    backgroundColor: token.colorBgContainer,
+                    marginTop: 16,
+                }}
                 align="end"
                 current={etlJobsData.metadata.page}
                 pageSize={pageSize}

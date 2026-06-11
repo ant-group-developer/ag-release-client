@@ -47,7 +47,7 @@ function Dashboard({}: Props) {
         endDate,
     });
     const messages = useTranslations();
-    const { releasesData } = useGetListReleases(dataFilter);
+    const { releasesData, isLoading } = useGetListReleases(dataFilter);
     const { countIssuesData, isFetching: isIssuesLoading } =
         useGetCountIssues(dataFilter);
     const { countOverviewData, isFetching: isOverviewLoading } =
@@ -88,7 +88,10 @@ function Dashboard({}: Props) {
                         isOverviewLoading={isOverviewLoading}
                     />
 
-                    <ListRelease data={releasesData.items.slice(0, 10)} />
+                    <ListRelease
+                        data={releasesData.items.slice(0, 10)}
+                        loading={isLoading}
+                    />
 
                     <DistributionRow
                         startDate={dataFilter.startDate ? dayjs(dataFilter.startDate).format(DATE_FORMAT.MYSQL_TYPE_DATE) : undefined}

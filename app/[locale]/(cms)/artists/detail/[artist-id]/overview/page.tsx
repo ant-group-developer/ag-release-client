@@ -23,7 +23,7 @@ export default function Overview({}: Props) {
     const params = useParams();
     const artistId = params['artist-id'];
     const { artistData } = useGetDetailArtist(artistId as string);
-    const { releasesData } = useGetListReleases(
+    const { releasesData, isLoading } = useGetListReleases(
         {
             artistId: artistId as string,
             status: RELEASES_STATUS.DISTRIBUTED,
@@ -90,7 +90,10 @@ export default function Overview({}: Props) {
                 />
             </div>
             <div>
-                <ListRelease data={releasesData.items.slice(0, 7)} />
+                <ListRelease
+                    data={releasesData.items.slice(0, 7)}
+                    loading={isLoading}
+                />
             </div>
         </div>
     );

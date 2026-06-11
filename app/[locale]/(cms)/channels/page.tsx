@@ -7,6 +7,7 @@ import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import ChannelsHeader from '@/modules/channels/components/header';
 import ChannelFormModal from '@/modules/channels/components/modal/channel-form';
 import { ChannelsTable } from '@/modules/channels/components/table';
@@ -30,6 +31,7 @@ export default function Channels({}: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore<ChannelsData>((state) => state.dataEdit);
+    const { isAdmin } = useAuth();
 
     const { deleteChannel } = useDeleteChannel();
     const { channelsData, isFetching } = useGetListChannel(dataFilter);
@@ -102,10 +104,11 @@ export default function Channels({}: Props) {
                     />
                 )}
 
-                {(typeModal === TYPE_MODAL_CHANNELS.CREATE ||
-                    typeModal === TYPE_MODAL_CHANNELS.UPDATE) && (
-                    <ChannelFormModal />
-                )}
+                {isAdmin &&
+                    (typeModal === TYPE_MODAL_CHANNELS.CREATE ||
+                        typeModal === TYPE_MODAL_CHANNELS.UPDATE) && (
+                        <ChannelFormModal />
+                    )}
             </PageContainer>
         </AppPageWrapper>
     );

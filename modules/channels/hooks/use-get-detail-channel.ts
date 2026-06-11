@@ -11,6 +11,7 @@ export const useGetDetailChannel = (id: ChannelsData['id']) => {
 
     const defaultData: ChannelsData = {
         name: '',
+        tenantId: '',
         id: '',
         createdAt: '',
         updatedAt: null,

@@ -229,7 +229,7 @@ export default function ReleasesTable({
             // key: 'createdAt',
             dataIndex: RELEASES_TABLE_KEY.CREATED_AT,
             align: 'left',
-            width: 130,
+            width: 150,
             sorter: true,
             defaultSortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -251,7 +251,7 @@ export default function ReleasesTable({
             key: 'updatedAt',
             dataIndex: RELEASES_TABLE_KEY.UPDATED_AT,
             align: 'left',
-            width: 130,
+            width: 150,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -372,7 +372,7 @@ export default function ReleasesTable({
                 persistenceKey: 'releases-table-columns',
                 persistenceType: 'sessionStorage',
                 defaultValue: {
-                    tenant: { show: false },
+                    tenant: { show: isSystemTenant },
                     tracks_count: { show: false },
                     total_duration: { show: false },
                     updatedAt: { show: false },

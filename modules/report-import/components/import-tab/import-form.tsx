@@ -1,3 +1,4 @@
+import TenantSelect from '@/components/ui/select/tenant-select';
 import { InboxOutlined } from '@ant-design/icons';
 import { Checkbox, Form, FormInstance, Upload } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -28,6 +29,19 @@ export const ImportForm: React.FC<ImportFormProps> = ({ form, onSubmit }) => {
             }}
             style={{ marginTop: 24 }}
         >
+            <Form.Item
+                name="tenantId"
+                label={messages('tenant.label')}
+                rules={[
+                    {
+                        required: true,
+                        message: messages('validation.input'),
+                    },
+                ]}
+            >
+                <TenantSelect placeholder={messages('tenant.selectTitle')} />
+            </Form.Item>
+
             {/* Format Selection */}
             <Form.Item
                 name="allowedExtensions"

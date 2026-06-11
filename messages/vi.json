@@ -90,6 +90,7 @@
         "password": "Mật khẩu",
         "users": "Người dùng",
         "errors": "Lỗi",
+        "importedFromReport": "Nhập từ báo cáo",
         "contributors": "Người đóng góp",
         "add": "Thêm",
         "information": "Thông tin",
@@ -535,6 +536,9 @@
         "add": "Thêm kênh",
         "label": "Kênh",
         "name": "Tên kênh",
+        "validation": {
+            "nameFormat": "Tên kênh chỉ được chứa chữ cái, chữ số và bắt buộc kết thúc bằng VEVO."
+        },
         "message": {
             "success": {
                 "create": "Thêm mới kênh thành công",
@@ -667,7 +671,8 @@
         "lastYear": "Năm trước",
         "last5Year": "5 năm qua",
         "thisMonth": "Tháng này",
-        "thisYear": "Năm nay"
+        "thisYear": "Năm nay",
+        "thisWeek": "Tuần này"
     },
     "message": {
         "createSuccessfully": "Thêm thành công!",
@@ -828,6 +833,7 @@
     },
     "release": {
         "excludeTitle": "Loại trừ các phát hành",
+        "excludeAlertMsg": "Đã chọn loại trừ <b>{count}</b> bản phát hành",
         "takeDown": "Gỡ phát hành",
         "takeDownConfirmTitle": "Gỡ phát hành?",
         "takeDownConfirmContent": "Bạn có chắc chắn muốn gỡ phát hành <b>{title}</b> không?",
@@ -851,6 +857,9 @@
         "configuration": "Thiết lập phát hành",
         "otherMetadata": "Các metadata khác",
         "label": "Phát hành",
+        "creationSource": "Nguồn tạo",
+        "importedFromReport": "Nhập từ báo cáo",
+        "createdDirectly": "Tạo trực tiếp",
         "routeLabel": "Phát hành âm nhạc",
         "create": "Tạo phát hành ",
         "latestReleases": "Phát hành gần đây",

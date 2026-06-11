@@ -46,7 +46,9 @@ export default function Releases({}: Props) {
         orderBy: ORDER.DESC,
         fieldOrder: RELEASES_COLUMNS_DISPLAY.CREATED_AT,
         type: RELEASE_TYPE.AUDIO,
+        isImportedFromReport: 'false',
     });
+
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
     const openModal = useModalStore((state) => state.openModal);
