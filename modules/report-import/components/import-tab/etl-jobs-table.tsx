@@ -1,8 +1,11 @@
-import ActionButton from '@/components/ui/button/action-button';
+import IconButton from '@/components/ui/button/icon-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import { SIZE_ICON } from '@/constants/common';
 import { formattedDate, getIndex } from '@/helpers/common';
+import { LoadingOutlined } from '@ant-design/icons';
 import { Tag, theme } from 'antd';
 import { ColumnType } from 'antd/es/table';
+import { Eye } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { EtlJobData, ImportJobStatus } from '../../types/payload';
 
@@ -83,40 +86,64 @@ export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
             width: 130,
             align: 'center',
             render: (status: ImportJobStatus) => (
-                <Tag color={getStatusTagColor(status)}>
+                <Tag
+                    color={getStatusTagColor(status)}
+                    icon={
+                        status === ImportJobStatus.PENDING ? (
+                            <LoadingOutlined spin />
+                        ) : undefined
+                    }
+                >
                     {getStatusLabel(status)}
                 </Tag>
             ),
         },
         {
             title: messages('reportConfigs.importResult.totalRows'),
-            key: 'rows',
-            width: 200,
+            key: 'totalRows',
+            width: 120,
+            align: 'center',
+            render: (_, record) => record.rows?.total ?? '-',
+        },
+        {
+            title: messages('reportConfigs.importResult.processedRows'),
+            key: 'processedRows',
+            width: 120,
+            align: 'center',
             render: (_, record) => {
-                if (!record.rows) return '-';
+                if (record.rows?.processed === undefined) return '-';
                 return (
-                    <div style={{ fontSize: 13, lineHeight: '1.5' }}>
-                        <div>
-                            {messages(
-                                'reportConfigs.importResult.totalRecords'
-                            )}
-                            : <strong>{record.rows.total}</strong>
-                        </div>
-                        <div style={{ color: token.colorSuccess }}>
-                            {messages(
-                                'reportConfigs.importResult.processedSuccess'
-                            )}
-                            : <strong>{record.rows.processed}</strong>
-                        </div>
-                        <div style={{ color: token.colorWarning }}>
-                            {messages('reportConfigs.importResult.skipped')}:{' '}
-                            <strong>{record.rows.skipped}</strong>
-                        </div>
-                        <div style={{ color: token.colorError }}>
-                            {messages('reportConfigs.importResult.errors')}:{' '}
-                            <strong>{record.rows.errors}</strong>
-                        </div>
-                    </div>
+                    <span style={{ color: token.colorSuccess, fontWeight: 600 }}>
+                        {record.rows.processed}
+                    </span>
+                );
+            },
+        },
+        {
+            title: messages('reportConfigs.importResult.skippedRows'),
+            key: 'skippedRows',
+            width: 120,
+            align: 'center',
+            render: (_, record) => {
+                if (record.rows?.skipped === undefined) return '-';
+                return (
+                    <span style={{ color: token.colorWarning, fontWeight: 600 }}>
+                        {record.rows.skipped}
+                    </span>
+                );
+            },
+        },
+        {
+            title: messages('reportConfigs.importResult.errorRows'),
+            key: 'errorRows',
+            width: 120,
+            align: 'center',
+            render: (_, record) => {
+                if (record.rows?.errors === undefined) return '-';
+                return (
+                    <span style={{ color: token.colorError, fontWeight: 600 }}>
+                        {record.rows.errors}
+                    </span>
                 );
             },
         },
@@ -134,10 +161,9 @@ export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
             align: 'center',
             fixed: 'right',
             render: (_, record) => (
-                <ActionButton
-                    showDetail
-                    onShowDetail={() => onViewDetail(record)}
-                />
+                <IconButton onClick={() => onViewDetail(record)}>
+                    <Eye size={SIZE_ICON} />
+                </IconButton>
             ),
         },
     ];

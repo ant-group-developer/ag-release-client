@@ -1,7 +1,6 @@
 import CreateButton from '@/components/ui/button/create-button';
 import IconButton from '@/components/ui/button/icon-button';
 import { SIZE_ICON_BIG } from '@/constants/common';
-import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { toastPromise } from '@/helpers/messages-helper';
 import { usePermission } from '@/hooks/use-permission';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
@@ -9,6 +8,7 @@ import { useRouter } from '@/i18n/routing';
 import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useDownloadTemplate } from '@/modules/releases/hooks/use-download-template';
 import TenantSwitch from '@/modules/tenant/components/tenant-switch';
 import { DownloadOutlined, EllipsisOutlined } from '@ant-design/icons';
@@ -77,6 +77,7 @@ function Header({ collapsed, toggleCollapsed }: Props) {
             </div> */}
 
             <div className="flex flex-1 items-center justify-end gap-2">
+                {/* {isNotSystemTenant && ( */}
                 <PermissionGate
                     anyOf={[
                         PERMISSION.RELEASE.CREATE,
@@ -108,6 +109,7 @@ function Header({ collapsed, toggleCollapsed }: Props) {
                         </Dropdown>
                     </Space.Compact>
                 </PermissionGate>
+                {/* )} */}
                 <AppSupport />
                 <AppAvatar />
             </div>
@@ -116,4 +118,3 @@ function Header({ collapsed, toggleCollapsed }: Props) {
 }
 
 export default Header;
-

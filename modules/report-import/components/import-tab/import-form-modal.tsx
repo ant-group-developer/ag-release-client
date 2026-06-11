@@ -1,22 +1,22 @@
 import { showNotification } from '@/helpers/messages-helper';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { DetailResponse } from '@/types/api';
-import { Form, Modal } from 'antd';
+import { Form, Modal, Spin } from 'antd';
 import { useTranslations } from 'next-intl';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useGetImportJobStatus } from '../../hooks/use-get-import-job-status';
 import { usePreValidateImport } from '../../hooks/use-pre-validate-import';
 import { useStartImportJob } from '../../hooks/use-start-import-job';
-import { useGetImportJobStatus } from '../../hooks/use-get-import-job-status';
 import {
     FileUploadStatus,
     ImportJobStatus,
     PreValidateImportFile,
-    PreValidateImportResponse,
     PreValidateImportMatchedFile,
+    PreValidateImportResponse,
 } from '../../types/payload';
 import { ImportForm } from './import-form';
-import { ImportResultView } from './import-result-view';
 import { ImportModalFooter } from './import-modal-footer';
+import { ImportResultView } from './import-result-view';
 
 interface ImportModalProps {
     open: boolean;
@@ -69,11 +69,13 @@ export const ImportModal: React.FC<ImportModalProps> = ({
     useEffect(() => {
         if (viewJobId && jobStatus) {
             const files = jobStatus.params?.files || [];
-            const matchedFiles: PreValidateImportMatchedFile[] = files.map((f: any) => ({
-                path: f.path || f.name || 'Unknown',
-                r2Key: f.r2Key || '',
-                uploadUrl: '',
-            }));
+            const matchedFiles: PreValidateImportMatchedFile[] = files.map(
+                (f: any) => ({
+                    path: f.path || f.name || 'Unknown',
+                    r2Key: f.r2Key || '',
+                    uploadUrl: '',
+                })
+            );
             setValidationResult({
                 jobId: viewJobId,
                 matched: matchedFiles,
@@ -223,7 +225,9 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                             setUploadStatus(FileUploadStatus.FAILED);
                             showNotification(
                                 'error',
-                                messages('reportConfigs.importResult.uploadFailedNotification')
+                                messages(
+                                    'reportConfigs.importResult.uploadFailedNotification'
+                                )
                             );
                             setIsUploading(false);
                         } else {
@@ -232,18 +236,26 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                                 startImportJob({
                                     jobId: data.jobId,
                                     onSuccess: () => {
-                                        setUploadStatus(FileUploadStatus.SUCCESS);
+                                        setUploadStatus(
+                                            FileUploadStatus.SUCCESS
+                                        );
                                         setIsUploading(false);
                                     },
                                     onError: () => {
-                                        setUploadStatus(FileUploadStatus.FAILED);
+                                        setUploadStatus(
+                                            FileUploadStatus.FAILED
+                                        );
                                         setStartedJobId(null);
                                         setUploadError(
-                                            messages('reportConfigs.importResult.uploadSuccessStartJobFailed')
+                                            messages(
+                                                'reportConfigs.importResult.uploadSuccessStartJobFailed'
+                                            )
                                         );
                                         showNotification(
                                             'error',
-                                            messages('reportConfigs.importResult.startJobFailedNotification')
+                                            messages(
+                                                'reportConfigs.importResult.startJobFailedNotification'
+                                            )
                                         );
                                         setIsUploading(false);
                                     },
@@ -252,7 +264,9 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                                 setUploadStatus(FileUploadStatus.SUCCESS);
                                 showNotification(
                                     'success',
-                                    messages('reportConfigs.importResult.uploadSuccessNotification')
+                                    messages(
+                                        'reportConfigs.importResult.uploadSuccessNotification'
+                                    )
                                 );
                                 setIsUploading(false);
                             }
@@ -260,11 +274,17 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                     } catch (error: any) {
                         setUploadStatus(FileUploadStatus.FAILED);
                         setUploadError(
-                            error?.message || messages('reportConfigs.importResult.uploadFailed')
+                            error?.message ||
+                                messages(
+                                    'reportConfigs.importResult.uploadFailed'
+                                )
                         );
                         showNotification(
                             'error',
-                            error?.message || messages('reportConfigs.importResult.uploadFailed')
+                            error?.message ||
+                                messages(
+                                    'reportConfigs.importResult.uploadFailed'
+                                )
                         );
                         setIsUploading(false);
                     }
@@ -307,7 +327,18 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                 ) : undefined
             }
         >
-            {validationResult ? (
+            {viewJobId && !validationResult ? (
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        minHeight: 200,
+                    }}
+                >
+                    <Spin size="small" tip={messages('common.loading')} />
+                </div>
+            ) : validationResult ? (
                 <ImportResultView
                     validationResult={validationResult}
                     startedJobId={startedJobId}
@@ -319,10 +350,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                     readOnly={!!viewJobId}
                 />
             ) : (
-                <ImportForm
-                    form={form}
-                    onSubmit={handleSubmit}
-                />
+                <ImportForm form={form} onSubmit={handleSubmit} />
             )}
         </Modal>
     );

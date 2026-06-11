@@ -79,6 +79,7 @@ export default function StatsOverview({
         {
             label: messages('release.label'),
             count: overviewData?.releasesCount,
+            importCount: overviewData?.releasesImportCount,
             icon: DiscAlbum,
             color: 'text-purple-600 dark:text-purple-400',
             bgColor: 'bg-purple-100/50 dark:bg-purple-900/30',
@@ -91,6 +92,7 @@ export default function StatsOverview({
         {
             label: messages('track.label'),
             count: overviewData?.tracksCount,
+            importCount: overviewData?.tracksImportCount,
             icon: Music,
             color: 'text-cyan-600 dark:text-cyan-400',
             bgColor: 'bg-cyan-100/50 dark:bg-cyan-900/30',
@@ -144,14 +146,25 @@ export default function StatsOverview({
                                 {isOverviewLoading ? (
                                     <div className="mt-1 h-7 w-20 animate-pulse rounded bg-gray-200 dark:bg-zinc-700" />
                                 ) : (
-                                    <Link
-                                        href={item.href}
-                                        className="w-fit text-2xl font-bold transition-colors hover:text-blue-500"
-                                    >
-                                        <span className="hover:text-blue-500">
-                                            {item?.count}
-                                        </span>
-                                    </Link>
+                                    <>
+                                        <Link
+                                            href={item.href}
+                                            className="w-fit text-2xl font-bold transition-colors hover:text-blue-500"
+                                        >
+                                            <span className="hover:text-blue-500">
+                                                {item?.count ?? 0}
+                                            </span>
+                                        </Link>
+                                        {typeof item.importCount ===
+                                            'number' && (
+                                            <span className="text-xs text-gray-400 dark:text-zinc-500">
+                                                {messages(
+                                                    'common.importedFromReport'
+                                                )}
+                                                : {item.importCount}
+                                            </span>
+                                        )}
+                                    </>
                                 )}
                             </div>
                             <div

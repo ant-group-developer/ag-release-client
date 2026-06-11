@@ -25,7 +25,7 @@ export default function Overview({}: Props) {
     const labelId = params['label-id'];
 
     const messages = useTranslations();
-    const { releasesData } = useGetListReleases({
+    const { releasesData, isLoading: isReleasesLoading } = useGetListReleases({
         labelId: labelId as string,
         status: RELEASES_STATUS.DISTRIBUTED,
         orderBy: ORDER.DESC,
@@ -78,7 +78,10 @@ export default function Overview({}: Props) {
                 />
             </div>
             <div>
-                <ListRelease data={releasesData.items.slice(0, 7)} />
+                <ListRelease
+                    data={releasesData.items.slice(0, 7)}
+                    loading={isReleasesLoading}
+                />
             </div>
         </div>
     );

@@ -90,6 +90,7 @@
         "password": "Password",
         "users": "Users",
         "errors": "Errors",
+        "importedFromReport": "Imported from report",
         "contributors": "Contributors",
         "add": "Add",
         "information": "Information",
