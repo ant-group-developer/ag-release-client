@@ -24,7 +24,6 @@ export default function DistributionJobsPage() {
             page: 1,
             pageSize: PAGE_SIZE,
             orderBy: ORDER.DESC,
-            // fieldOrder: 'job.createdAt',
         });
 
     const { distributionJobsGroupedData, isFetching, refetch } =
@@ -100,4 +99,3 @@ export default function DistributionJobsPage() {
         </AppPageWrapper>
     );
 }
-

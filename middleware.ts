@@ -33,7 +33,6 @@ export async function middleware(req: NextRequest) {
 
     // 2. Do your session check + redirects
     const token = await getToken(req);
-    // console.log('🚀 ~ middleware ~ token:', token?.accessToken);
     const locale = cookies().get('NEXT_LOCALE')?.value || defaultLocale;
 
     const normalizePath = (path: string) => path.replace(/\/+$/, '');

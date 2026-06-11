@@ -56,7 +56,7 @@ import exifr from 'exifr';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import ReleaseStatusTagIcon from '../../tag/release-status-tag-icon';
+import ReleaseStatusTag from '../../tag/release-status-tag';
 import DownloadMenu from './download-menu';
 import ReleaseInfoV2 from './release-info-v2';
 type Props = {
@@ -523,7 +523,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                         labelPlacement="vertical"
                         /> */}
 
-                    <ReleaseStatusTagIcon
+                    <ReleaseStatusTag
                         style={{
                             padding: '2px 16px',
                         }}

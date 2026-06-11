@@ -147,9 +147,7 @@ export default function Tracks() {
                                     </div>
                                 }
                                 onClick={() =>
-                                    openModal(
-                                        TYPE_MODAL_RELEASE.SYNC_TO_TRACKS
-                                    )
+                                    openModal(TYPE_MODAL_RELEASE.SYNC_TO_TRACKS)
                                 }
                                 type="default"
                             >

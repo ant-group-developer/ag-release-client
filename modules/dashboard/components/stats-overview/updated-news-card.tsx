@@ -1,5 +1,6 @@
 import { ScrollArea } from '@/components/ui/scroll/scroll-area';
 import { Card, Timeline } from 'antd';
+import { useTranslations } from 'next-intl';
 
 type UpdateItem = {
     id: string;
@@ -42,6 +43,8 @@ const updates: UpdateItem[] = [
 ];
 
 export default function NewsUpdatedCard() {
+    const messages = useTranslations();
+
     return (
         <Card
             className="h-full overflow-hidden"
@@ -51,8 +54,8 @@ export default function NewsUpdatedCard() {
             title={
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <h3 className="m-0 text-lg font-bold text-blue-500">
-                            Recent Updates
+                        <h3 className="text-md m-0 font-bold">
+                            {messages('dashboard.recentUpdates')}
                         </h3>
                     </div>
                 </div>

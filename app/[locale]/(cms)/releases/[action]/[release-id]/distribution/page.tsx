@@ -20,6 +20,7 @@ import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribut
 import { useReleaseDistribute } from '@/modules/distribution/hooks/use-release-distribute';
 import { DistributeRelease } from '@/modules/distribution/types/payload';
 import { releaseDspQueryKey } from '@/modules/release-dsp/constants/query-keys';
+import { RELEASE_DSP_TABLE_KEY } from '@/modules/release-dsp/enums';
 import { useBulkUpdateReleaseDsp } from '@/modules/release-dsp/hooks/use-bulk-update';
 import { useGetListReleaseDsp } from '@/modules/release-dsp/hooks/use-get-list-release-dsp';
 import {
@@ -69,7 +70,7 @@ export default function Distribution({}: Props) {
         pageSize: PAGE_SIZE_EXTRA_LARGE,
         status: releaseDspStatus,
         orderBy: ORDER.ASC,
-        fieldOrder: 'dsp.name',
+        fieldOrder: RELEASE_DSP_TABLE_KEY.DSP_NAME,
     });
 
     const {

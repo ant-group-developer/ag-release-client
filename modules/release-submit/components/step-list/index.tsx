@@ -2,6 +2,7 @@ import JsonViewer from '@/components/ui/json-viewer';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
 import { Card, Collapse, Empty, Space, Tag, Typography } from 'antd';
+import { useTranslations } from 'next-intl';
 import {
     formatDurationShort,
     formatEnumLabel,
@@ -21,6 +22,7 @@ export default function ReleaseSubmitStepList({
     logs = [],
     nested = false,
 }: Props) {
+    const messages = useTranslations();
     if (!dataSource?.length) {
         return <Empty />;
     }
@@ -29,12 +31,13 @@ export default function ReleaseSubmitStepList({
         <div className={nested ? 'space-y-3' : 'space-y-4'}>
             {dataSource.map((record) => {
                 const stepLogs = logs.filter(
-                    (log) => log.releaseSubmitStepId === record.id
+                    (log) => log.releaseExecutionStepId === record.id
                 );
                 const durationText =
                     formatDurationShort(
                         record?.startedAt,
-                        record?.completedAt
+                        record?.completedAt,
+                        messages('releaseExecution.detail.columns.completedIn')
                     ) || '-';
                 const metadataText = getTextContent(record.metadata);
                 const metadataJson = getJsonContent(record.metadata);

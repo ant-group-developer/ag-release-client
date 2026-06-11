@@ -1,6 +1,7 @@
-import { FileType, getBase64 } from '@/helpers/common';
+import { cn, FileType, getBase64 } from '@/helpers/common';
 import { showNotification } from '@/helpers/messages-helper';
 import { Image, Spin, Upload, UploadFile, UploadProps } from 'antd';
+import { createStyles } from 'antd-style';
 import type { RcFile } from 'antd/es/upload/interface';
 import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -13,6 +14,8 @@ type Props = UploadProps & {
     minWidth?: number;
     loading?: boolean;
     description?: ReactNode;
+    imageFit?: 'contain' | 'cover';
+    previewAspectRatio?: string;
 };
 
 export default function ImageListUpload({
@@ -22,9 +25,12 @@ export default function ImageListUpload({
     minWidth,
     loading = false,
     description,
+    imageFit = 'cover',
+    previewAspectRatio,
     ...props
 }: Props) {
     const messages = useTranslations();
+    const { styles } = useStyles({ imageFit, previewAspectRatio });
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
     const [showText, setShowText] = useState(true);
@@ -139,6 +145,7 @@ export default function ImageListUpload({
                 // multiple
                 disabled={loading || props.disabled} // Disable upload khi đang loading
                 {...props}
+                className={cn(styles.imageUpload, props.className)}
                 fileList={fileList}
                 onPreview={handlePreview}
                 onChange={handleChange}
@@ -185,3 +192,45 @@ export default function ImageListUpload({
         </div>
     );
 }
+
+const useStyles = createStyles(
+    (
+        _,
+        {
+            imageFit,
+            previewAspectRatio,
+        }: Pick<Props, 'imageFit' | 'previewAspectRatio'>
+    ) => ({
+        imageUpload: {
+            ...(previewAspectRatio
+                ? {
+                      width: '100%',
+
+                      '.ant-upload': {
+                          width: '100% !important',
+                          height: 'auto !important',
+                          aspectRatio: previewAspectRatio,
+                      },
+
+                      '.ant-upload-list': {
+                          width: '100%',
+                      },
+
+                      '.ant-upload-list-item-container': {
+                          width: '100% !important',
+                          height: 'auto !important',
+                          aspectRatio: previewAspectRatio,
+                      },
+
+                      '.ant-upload-list-item': {
+                          height: '100%',
+                      },
+                  }
+                : {}),
+
+            '.ant-upload-list-item-thumbnail img': {
+                objectFit: imageFit,
+            },
+        },
+    })
+);

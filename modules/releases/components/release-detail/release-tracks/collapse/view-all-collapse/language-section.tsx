@@ -91,7 +91,7 @@ export default function LanguageSection({
                     </AppFormItem>
 
                     {/* Audio Language */}
-                    <AppFormItem
+                    {/* <AppFormItem
                         label={messages('release.audioLanguage')}
                         name={['trackLanguage', 'audioLanguageId']}
                         required
@@ -133,7 +133,7 @@ export default function LanguageSection({
                                 );
                             }}
                         />
-                    </AppFormItem>
+                    </AppFormItem> */}
 
                     {/* Metadata Language */}
                     <AppFormItem

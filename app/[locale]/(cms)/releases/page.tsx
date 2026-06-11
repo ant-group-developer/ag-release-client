@@ -14,6 +14,7 @@ import ReleasesHeaderV2 from '@/modules/releases/components/header';
 import ReleasesTable from '@/modules/releases/components/table';
 
 import {
+    RELEASE_TYPE,
     RELEASES_COLUMNS_DISPLAY,
     RELEASES_STATUS,
     TYPE_MODAL_RELEASE,
@@ -44,7 +45,10 @@ export default function Releases({}: Props) {
         pageSize: PAGE_SIZE,
         orderBy: ORDER.DESC,
         fieldOrder: RELEASES_COLUMNS_DISPLAY.CREATED_AT,
+        type: RELEASE_TYPE.AUDIO,
+        isImportedFromReport: 'false',
     });
+
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
     const openModal = useModalStore((state) => state.openModal);
@@ -119,14 +123,14 @@ export default function Releases({}: Props) {
         },
         getCheckboxProps: (record: ReleasesData) => {
             return {
-                disabled: !isAdmin || record.status !== RELEASES_STATUS.DRAFT,
+                disabled: !isAdmin && record.status !== RELEASES_STATUS.DRAFT,
             };
         },
     };
 
     return (
         <AppPageWrapper>
-            <PageContainer title={messages('release.releases')}>
+            <PageContainer title={messages('release.routeLabel')}>
                 {/* <ReleasesHeaderV2
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}

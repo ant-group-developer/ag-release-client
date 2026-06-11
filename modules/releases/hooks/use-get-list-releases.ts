@@ -10,9 +10,14 @@ export const useGetListReleases = (
         enabled: boolean;
     }
 ) => {
+    const apiParams = { ...params };
+    if (apiParams.isImportedFromReport === 'all') {
+        delete apiParams.isImportedFromReport;
+    }
+
     const { data, ...res } = useQuery({
         queryKey: releasesQueryKeys.list(params),
-        queryFn: () => releasesApi.getList(params),
+        queryFn: () => releasesApi.getList(apiParams),
         placeholderData: (previousData) => previousData,
         enabled: options?.enabled ?? true,
     });

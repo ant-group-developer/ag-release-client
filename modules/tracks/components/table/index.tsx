@@ -2,7 +2,6 @@ import CopyText from '@/components/ui/copy-text/copy-text';
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
-import { getTrackDetailRoute } from '@/modules/tracks/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { usePermission } from '@/hooks/use-permission';
 import { Link, useRouter } from '@/i18n/routing';
@@ -11,10 +10,11 @@ import TrackActionButton from '@/modules/releases/components/release-detail/rele
 import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import {
     SCAN_COPYRIGHT_STATUS,
-    TRACK_SORT_FIELD,
     TRACK_TABS,
     TRACKS_COLUMNS_DISPLAY,
+    TRACKS_TABLE_KEY,
 } from '@/modules/tracks/enums';
+import { getTrackDetailRoute } from '@/modules/tracks/helpers/link';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { ProColumns } from '@ant-design/pro-components';
 import { Button, theme } from 'antd';
@@ -58,7 +58,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
         {
             title: messages('track.name'),
             key: 'title',
-            dataIndex: TRACK_SORT_FIELD.TITLE,
+            dataIndex: TRACKS_TABLE_KEY.TITLE,
             ellipsis: true,
             align: 'left',
             fixed: 'left',
@@ -67,7 +67,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                TRACK_SORT_FIELD.TITLE
+                TRACKS_TABLE_KEY.TITLE
             ),
             render: (_, record) => {
                 const trackArtist = record?.trackArtists ?? [];
@@ -102,7 +102,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
         {
             title: messages('release.version'),
             key: 'version',
-            dataIndex: 'version',
+            dataIndex: TRACKS_TABLE_KEY.VERSION,
             align: 'left',
             width: 50,
             render: (value, record) => {
@@ -112,7 +112,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
         {
             title: messages('track.id'),
             key: 'id',
-            dataIndex: 'id',
+            dataIndex: TRACKS_TABLE_KEY.ID,
             align: 'left',
             width: 60,
             render: (value, record) => (
@@ -124,7 +124,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
         {
             title: messages('release.label'),
             key: TRACKS_COLUMNS_DISPLAY.RELEASE_TITLE,
-            dataIndex: 'releaseTitle',
+            dataIndex: TRACKS_TABLE_KEY.RELEASE_TITLE,
             align: 'left',
             width: 80,
             ellipsis: true,
@@ -137,7 +137,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
         {
             title: messages('label.label'),
             key: TRACKS_COLUMNS_DISPLAY.LABEL_NAME,
-            dataIndex: 'labelName',
+            dataIndex: TRACKS_TABLE_KEY.LABEL_NAME,
             align: 'left',
             width: 80,
             ellipsis: true,
@@ -153,7 +153,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
         {
             title: 'ISRC',
             key: 'isrc',
-            dataIndex: 'isrc',
+            dataIndex: TRACKS_TABLE_KEY.ISRC,
             align: 'left',
             width: 80,
             render: (_, record) => (
@@ -165,7 +165,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
         {
             title: 'ACRCloud',
             key: 'acrCloud',
-            dataIndex: 'acrCloud',
+            dataIndex: TRACKS_TABLE_KEY.ACR_CLOUD,
             align: 'left',
             width: 80,
             render: (value, record) => {
@@ -200,14 +200,14 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
         {
             title: messages('common.createdAt'),
             key: 'createdAt',
-            dataIndex: TRACK_SORT_FIELD.CREATED_AT,
+            dataIndex: TRACKS_TABLE_KEY.CREATED_AT,
             align: 'left',
             width: 80,
             sorter: true,
             defaultSortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                TRACK_SORT_FIELD.CREATED_AT
+                TRACKS_TABLE_KEY.CREATED_AT
             ),
             render: (_, record) => (
                 <span className="truncate text-wrap">

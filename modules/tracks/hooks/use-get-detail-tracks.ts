@@ -73,6 +73,7 @@ export const useGetDetailTrack = (id: TrackData['id']) => {
         sampleLength: '',
         trackSensitiveId: '',
         trackSensitive: {} as TrackSensitiveData,
+        isInstrumental: false,
     };
 
     return {

@@ -101,7 +101,11 @@ export default function ArtistSelect({
                     </div>
                 </div>
                 <div className="mr-2 flex justify-end gap-1">
-                    <Avatar.Group maxCount={2}>
+                    <Avatar.Group
+                        max={{
+                            count: 2,
+                        }}
+                    >
                         {item?.artistProfiles?.map(
                             (profile: ArtistProfileData) => (
                                 <Avatar

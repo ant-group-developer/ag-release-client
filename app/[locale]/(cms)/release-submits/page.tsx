@@ -1,7 +1,6 @@
 'use client';
 
 import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
-import AppModal from '@/components/ui/modal/normal-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
@@ -11,11 +10,12 @@ import useModalStore from '@/hooks/use-modal';
 import { useThemeMode } from '@/hooks/use-theme-mode';
 import { TYPE_MODAL_RELEASE_EXECUTION } from '@/modules/release-executions/enums';
 import ReleaseSubmitDetailModal from '@/modules/release-submit/components/detail-modal';
-import ReleaseSubmitSnapshotModal from '@/modules/release-submit/components/snapshot-modal';
 import ReleaseSubmitHeader from '@/modules/release-submit/components/header';
+import ReleaseSubmitSnapshotModal from '@/modules/release-submit/components/snapshot-modal';
 import ReleaseSubmitTable from '@/modules/release-submit/components/table';
 import { useGetListReleaseSubmits } from '@/modules/release-submit/hooks/use-get-list';
 import { ReleaseSubmitFilter } from '@/modules/release-submit/types';
+import { RELEASE_SUBMIT_SORT_FIELD } from '@/modules/release-submit/enums';
 import { PageContainer } from '@ant-design/pro-components';
 import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -34,7 +34,7 @@ export default function ReleaseSubmitsPage() {
             page: 1,
             pageSize: PAGE_SIZE,
             orderBy: ORDER.DESC,
-            fieldOrder: 'submit.createdAt',
+            fieldOrder: RELEASE_SUBMIT_SORT_FIELD.CREATED_AT,
         });
 
     const { releaseSubmitsData, isFetching, refetch } =

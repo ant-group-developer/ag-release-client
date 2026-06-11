@@ -61,6 +61,7 @@ export enum RELEASES_TABS {
     SCHEDULE = 'schedule',
     REVIEW = 'review',
     DISTRIBUTION = 'distribution',
+    SUBMITS = 'submits',
 }
 
 export enum RELEASES_STATUS {
@@ -94,7 +95,39 @@ export enum RELEASES_COLUMNS_DISPLAY {
     UPDATED_AT = 'updatedAt',
 }
 
+export enum RELEASES_TABLE_KEY {
+    TITLE = 'title',
+    PUBLISHER = 'publisher',
+    TYPE = 'type',
+    UPC = 'UPC',
+    STATUS = 'status',
+    TRACK_COUNT = 'tracks_count',
+    DURATION = 'total_duration',
+    RELEASE_DATE = 'releaseDate',
+    CREATED_AT = 'createdAt',
+    UPDATED_AT = 'updatedAt',
+    TENANT = 'tenant',
+}
+
 export enum RELEASE_TIME_MODE {
     GLOBAL_MIDNIGHT = 'global_midnight',
     SPECIFIC_TIMEZONE = 'specific_timezone',
+}
+
+export enum RELEASE_TYPE {
+    VIDEO = 'video',
+    AUDIO = 'audio',
+}
+
+export enum RELEASE_AI_CONTENT {
+    ALL = 'ALL',
+    PARTLY = 'PARTLY',
+    NONE = 'NONE',
+    UNDETERMINED = 'UNDETERMINED',
+}
+
+export enum RELEASE_MADE_FOR_KIDS {
+    YES = 'YES',
+    NO = 'NO',
+    CHANNEL_DEFAULT = 'CHANNEL_DEFAULT',
 }

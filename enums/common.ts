@@ -181,6 +181,8 @@ export enum TYPE_UPLOAD_BUCKET {
     RELEASE_COVER_ART = 'release_cover_art',
     RELEASE_TEMPLATE = 'release_template_file',
     CI_TEMPLATE = 'template_export_ci',
+    VIDEO_FILE = 'video_file',
+    VIDEO_CAPTION = 'video_caption',
 }
 
 export enum DISTRIBUTE_TYPES {

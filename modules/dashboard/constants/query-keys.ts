@@ -18,4 +18,20 @@ export const dashboardQueryKeys = {
         QUERY_KEY?.DASHBOARD?.GET_COUNT_COUNTRY,
         params,
     ],
+    getAnalyticDsp: (params: any) => [
+        ...dashboardQueryKeys.all,
+        'GET_ANALYTIC_DSP',
+        params,
+    ],
+    getAnalyticLabel: (params: any) => [
+        ...dashboardQueryKeys.all,
+        'GET_ANALYTIC_LABEL',
+        params,
+    ],
+    getAnalyticArtist: (params: any) => [
+        ...dashboardQueryKeys.all,
+        'GET_ANALYTIC_ARTIST',
+        params,
+    ],
 };
+

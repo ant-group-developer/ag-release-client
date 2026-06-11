@@ -6,8 +6,8 @@ import { useTranslations } from 'next-intl';
 import AppForm from '@/components/ui/antd-form/form';
 import { DATE_FORMAT } from '@/enums/common';
 import { convertSecondsToHoursMinutes } from '@/helpers/common';
-import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { TrackData } from '@/modules/releases/types';
 import { useGetDetailTrack } from '@/modules/tracks/hooks/use-get-detail-tracks';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
@@ -162,6 +162,7 @@ export default function TrackDetailModal({ tracks, ...props }: Props) {
         if (trackData?.id) {
             form.setFieldsValue({
                 ...trackData,
+                isInstrumental: trackData.isInstrumental ?? false,
                 trackLanguage: {
                     ...trackData.trackLanguage,
                 },
@@ -282,4 +283,3 @@ export default function TrackDetailModal({ tracks, ...props }: Props) {
         </AppModal>
     );
 }
-

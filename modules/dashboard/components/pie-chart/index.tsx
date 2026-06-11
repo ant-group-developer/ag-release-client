@@ -1,21 +1,12 @@
 'use client';
 
-import {
-    ChartLegendItem,
-    CustomizedPieLabel,
-} from '@/components/shared/chart/chart-custom-render';
-import { CustomTooltip } from '@/components/shared/chart/chart-tooltip';
-import { Card, Grid, Segmented, Typography } from 'antd';
+import { CustomizedPieLabel } from '@/components/shared/chart/chart-custom-render';
+
+import { formattedNumber } from '@/helpers/common';
+import { Card, Empty, Grid, Segmented, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import {
-    Cell,
-    Legend,
-    Pie,
-    PieChart,
-    ResponsiveContainer,
-    Tooltip,
-} from 'recharts';
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 
 const { Title, Text } = Typography;
 
@@ -31,6 +22,60 @@ interface DistributionPieChartProps {
     revenueData: DataItem[];
     colors: string[];
 }
+
+const PieChartTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+        const item = payload[0];
+        const displayLabel = item?.name || '';
+        const displayValue = item?.value || '';
+        const color = item?.payload?.fill || item?.color || '#1890ff';
+
+        return (
+            <div
+                style={{
+                    backgroundColor: '#fff',
+                    padding: '8px 12px',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                    border: '1px solid #f0f0f0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '16px',
+                    justifyContent: 'space-between',
+                    minWidth: '160px',
+                    whiteSpace: 'nowrap',
+                }}
+            >
+                <div
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                    }}
+                >
+                    <div
+                        style={{
+                            width: '8px',
+                            height: '8px',
+                            borderRadius: '50%',
+                            backgroundColor: color,
+                        }}
+                    />
+                    <Typography.Text style={{ fontSize: 13, fontWeight: 500 }}>{displayLabel}</Typography.Text>
+                </div>
+                <Typography.Text
+                    style={{
+                        fontWeight: 600,
+                        fontSize: 13,
+                    }}
+                >
+                    {formattedNumber(displayValue)}
+                </Typography.Text>
+            </div>
+        );
+    }
+    return null;
+};
 
 export default function DistributionPieChart({
     title,
@@ -58,7 +103,7 @@ export default function DistributionPieChart({
         >
             <div className="mb-4 flex items-start justify-between">
                 <div>
-                    <Title level={5} className="!m-0 !text-blue-500">
+                    <Title level={5} className="!m-0">
                         {title}
                     </Title>
                     <Text type="secondary" style={{ fontSize: 13 }}>
@@ -75,65 +120,159 @@ export default function DistributionPieChart({
                     size="small"
                 />
             </div>
-            <div style={{ width: '100%', height: 220 }}>
-                <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                        <Pie
-                            data={data}
-                            cx={'45%'}
-                            cy="50%"
-                            innerRadius={40}
-                            outerRadius={70}
-                            stroke="none"
-                            dataKey="value"
-                            nameKey="type"
-                            labelLine={false}
-                            label={(props) => CustomizedPieLabel(props)}
+            <div>
+                {data && data.length > 0 ? (
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: isSmallDevice ? 'column' : 'row',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: isSmallDevice ? '12px' : '24px',
+                            height: isSmallDevice ? 260 : 220,
+                        }}
+                    >
+                        <div
+                            style={{
+                                flex: isSmallDevice ? 'none' : 1,
+                                height: isSmallDevice ? 160 : 220,
+                                width: '100%',
+                                minWidth: 0,
+                            }}
                         >
-                            {data.map((_, index) => (
-                                <Cell
-                                    key={`cell-${index}`}
-                                    fill={colors[index % colors.length]}
-                                />
-                            ))}
-                        </Pie>
-                        <Tooltip
-                            content={<CustomTooltip />}
-                            isAnimationActive={true}
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie
+                                        data={data}
+                                        cx="50%"
+                                        cy="40%"
+                                        innerRadius={40}
+                                        outerRadius={80}
+                                        stroke="none"
+                                        dataKey="value"
+                                        nameKey="type"
+                                        labelLine={false}
+                                        label={(props) =>
+                                            CustomizedPieLabel(props)
+                                        }
+                                    >
+                                        {data.map((_, index) => (
+                                            <Cell
+                                                key={`cell-${index}`}
+                                                fill={
+                                                    colors[
+                                                        index % colors.length
+                                                    ]
+                                                }
+                                            />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip
+                                        content={<PieChartTooltip />}
+                                        isAnimationActive={true}
+                                    />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: isSmallDevice ? 'row' : 'column',
+                                flexWrap: 'wrap',
+                                gap: '8px',
+                                justifyContent: isSmallDevice
+                                    ? 'center'
+                                    : 'flex-start',
+                                width: isSmallDevice ? '100%' : '200px',
+                                flex: isSmallDevice ? 1 : 'none',
+                                height: isSmallDevice ? 'auto' : 220,
+                                maxHeight: isSmallDevice ? 'none' : '220px',
+                                overflow: 'hidden',
+                                paddingLeft: isSmallDevice ? 0 : '12px',
+                            }}
+                        >
+                            {data.map((item, index) => {
+                                const color = colors[index % colors.length];
+                                const formattedVal = formattedNumber(
+                                    item.value
+                                );
+                                return (
+                                    <div
+                                        key={item.type}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '8px',
+                                            width: isSmallDevice
+                                                ? 'auto'
+                                                : '100%',
+                                            minWidth: 0,
+                                        }}
+                                        title={`${item.type}: ${formattedVal}`}
+                                    >
+                                        <span
+                                            style={{
+                                                width: 8,
+                                                height: 8,
+                                                borderRadius: '50%',
+                                                backgroundColor: color,
+                                                display: 'inline-block',
+                                                flexShrink: 0,
+                                            }}
+                                        />
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'space-between',
+                                                flex: 1,
+                                                minWidth: 0,
+                                                gap: '8px',
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    flex: 1,
+                                                    minWidth: 0,
+                                                    overflow: 'hidden',
+                                                    textOverflow: 'ellipsis',
+                                                    whiteSpace: 'nowrap',
+                                                    fontSize: 14,
+                                                }}
+                                            >
+                                                {item.type}
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    color: '#8c8c8c',
+                                                    flexShrink: 0,
+                                                    whiteSpace: 'nowrap',
+                                                    fontSize: 14,
+                                                }}
+                                            >
+                                                {formattedVal}
+                                            </Text>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                ) : (
+                    <div
+                        style={{
+                            height: 220,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Empty
+                            image={Empty.PRESENTED_IMAGE_SIMPLE}
+                            description={messages('common.noDataAvailable')}
                         />
-                        {!isSmallDevice && (
-                            <Legend
-                                verticalAlign="middle"
-                                align="right"
-                                layout="vertical"
-                                wrapperStyle={{ paddingRight: 0, right: 0 }}
-                                formatter={(value, entry: any) => (
-                                    <ChartLegendItem
-                                        label={value}
-                                        value={entry.payload.value}
-                                        width="200px"
-                                    />
-                                )}
-                                iconType="circle"
-                            />
-                        )}
-                        {isSmallDevice && (
-                            <Legend
-                                verticalAlign="bottom"
-                                align="center"
-                                layout="horizontal"
-                                formatter={(value, entry: any) => (
-                                    <ChartLegendItem
-                                        label={value}
-                                        value={entry.payload.value}
-                                        width="fit-content"
-                                    />
-                                )}
-                                iconType="circle"
-                            />
-                        )}
-                    </PieChart>
-                </ResponsiveContainer>
+                    </div>
+                )}
             </div>
         </Card>
     );

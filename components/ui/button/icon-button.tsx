@@ -26,6 +26,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
         return (
             <button
                 ref={ref}
+                type="button"
                 {...props}
                 className={cn(
                     'inline-grid aspect-square min-w-8 flex-none cursor-pointer place-content-center p-1.5 text-base hover:bg-gray-200 dark:hover:bg-zinc-700',

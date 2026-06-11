@@ -1,4 +1,6 @@
-import { Space, theme } from 'antd';
+import { APP_ROUTES } from '@/enums/routes';
+import { Link } from '@/i18n/routing';
+import { theme } from 'antd';
 import { Building2, DiscAlbum, Music, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Area, AreaChart, ResponsiveContainer } from 'recharts';
@@ -77,24 +79,28 @@ export default function StatsOverview({
         {
             label: messages('release.label'),
             count: overviewData?.releasesCount,
+            importCount: overviewData?.releasesImportCount,
             icon: DiscAlbum,
             color: 'text-purple-600 dark:text-purple-400',
             bgColor: 'bg-purple-100/50 dark:bg-purple-900/30',
-            trend: '+12%',
-            trendColor: 'text-cyan-500',
-            chartData: [20, 30, 25, 35, 50],
-            chartColor: '#a855f7', // purple-500
+            href: APP_ROUTES.RELEASES,
+            // trend: '+12%',
+            // trendColor: 'text-cyan-500',
+            // chartData: [20, 30, 25, 35, 50],
+            // chartColor: '#a855f7', // purple-500
         },
         {
             label: messages('track.label'),
             count: overviewData?.tracksCount,
+            importCount: overviewData?.tracksImportCount,
             icon: Music,
             color: 'text-cyan-600 dark:text-cyan-400',
             bgColor: 'bg-cyan-100/50 dark:bg-cyan-900/30',
-            trend: '+5.4%',
-            trendColor: 'text-cyan-500',
-            chartData: [25, 40, 30, 45, 60],
-            chartColor: '#22d3ee', // cyan-400
+            href: APP_ROUTES.TRACKS,
+            // trend: '+5.4%',
+            // trendColor: 'text-cyan-500',
+            // chartData: [25, 40, 30, 45, 60],
+            // chartColor: '#22d3ee', // cyan-400
         },
         {
             label: messages('label.label'),
@@ -102,10 +108,11 @@ export default function StatsOverview({
             icon: Building2,
             color: 'text-pink-600 dark:text-pink-400',
             bgColor: 'bg-pink-100/50 dark:bg-pink-900/30',
-            trend: 'Stable',
-            trendColor: 'text-gray-400',
-            chartData: [40, 40, 40, 40, 40],
-            chartColor: '#db2777', // pink-600
+            href: APP_ROUTES.LABELS,
+            // trend: 'Stable',
+            // trendColor: 'text-gray-400',
+            // chartData: [40, 40, 40, 40, 40],
+            // chartColor: '#db2777', // pink-600
         },
         {
             label: messages('artist.label'),
@@ -113,10 +120,11 @@ export default function StatsOverview({
             icon: Users,
             color: 'text-indigo-600 dark:text-indigo-400',
             bgColor: 'bg-indigo-100/50 dark:bg-indigo-900/30',
-            trend: '+3',
-            trendColor: 'text-cyan-500',
-            chartData: [30, 40, 35, 45, 55],
-            chartColor: '#6366f1', // indigo-500
+            href: APP_ROUTES.ARTISTS,
+            // trend: '+3',
+            // trendColor: 'text-cyan-500',
+            // chartData: [30, 40, 35, 45, 55],
+            // chartColor: '#6366f1', // indigo-500
         },
     ];
 
@@ -131,44 +139,38 @@ export default function StatsOverview({
                         style={{ backgroundColor: token.colorBgContainer }}
                     >
                         <div className="flex items-center justify-between">
-                            <Space size={12}>
-                                <div
-                                    className={`rounded-xl p-2.5 ${item.bgColor} ${item.color}`}
-                                >
-                                    <Icon size={24} />
-                                </div>
-                                <div className="flex flex-col">
-                                    <span className="text-xs font-medium uppercase text-gray-400 dark:text-zinc-500">
-                                        {item?.label}
-                                    </span>
-                                    <span className="text-xl font-bold">
-                                        {item?.count}
-                                    </span>
-                                </div>
-                            </Space>
-                            <div
-                                className={`text-[14px] font-semibold ${item.trendColor}`}
-                            >
-                                {item.trend.includes('+') ? (
-                                    <span className="flex items-center gap-1">
-                                        <svg
-                                            width="14"
-                                            height="14"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="3"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        >
-                                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-                                            <polyline points="17 6 23 6 23 12"></polyline>
-                                        </svg>
-                                        {item.trend}
-                                    </span>
+                            <div className="flex flex-col gap-1">
+                                <span className="text-xs font-medium uppercase text-gray-400 dark:text-zinc-500">
+                                    {item?.label}
+                                </span>
+                                {isOverviewLoading ? (
+                                    <div className="mt-1 h-7 w-20 animate-pulse rounded bg-gray-200 dark:bg-zinc-700" />
                                 ) : (
-                                    <span>{item.trend}</span>
+                                    <>
+                                        <Link
+                                            href={item.href}
+                                            className="w-fit text-2xl font-bold transition-colors hover:text-blue-500"
+                                        >
+                                            <span className="hover:text-blue-500">
+                                                {item?.count ?? 0}
+                                            </span>
+                                        </Link>
+                                        {typeof item.importCount ===
+                                            'number' && (
+                                            <span className="text-xs text-gray-400 dark:text-zinc-500">
+                                                {messages(
+                                                    'common.importedFromReport'
+                                                )}
+                                                : {item.importCount}
+                                            </span>
+                                        )}
+                                    </>
                                 )}
+                            </div>
+                            <div
+                                className={`rounded-xl p-3 ${item.bgColor} ${item.color}`}
+                            >
+                                <Icon size={24} />
                             </div>
                         </div>
                     </div>

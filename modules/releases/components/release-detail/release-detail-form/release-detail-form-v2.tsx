@@ -79,6 +79,9 @@ export default function ReleaseDetailFormV2() {
         resolver: zodResolver(releaseDetailSchema(messages)),
         mode: 'onChange',
         reValidateMode: 'onChange',
+        defaultValues: {
+            isInstrumental: false,
+        },
     });
 
     const {
@@ -167,6 +170,7 @@ export default function ReleaseDetailFormV2() {
         } else if (releaseId && formValues) {
             const initialFormValue: ReleaseDetailSchema = {
                 ...(formValues as ReleaseDetailSchema),
+                isInstrumental: formValues.isInstrumental ?? false,
             };
             reset(initialFormValue);
         }

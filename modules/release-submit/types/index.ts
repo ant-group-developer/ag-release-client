@@ -2,6 +2,7 @@ import { DspData } from '@/modules/dsp/types';
 import { ReleasesData } from '@/modules/releases/types';
 import { CommonAttribute, CommonParams, PaginationResponse } from '@/types/api';
 import {
+    CHILD_EXECUTION_MODE,
     RELEASE_SUBMIT_LOG_LEVEL,
     RELEASE_SUBMIT_STATUS,
     RELEASE_SUBMIT_STEP_STATUS,
@@ -15,6 +16,7 @@ export interface ReleaseSubmitData extends CommonAttribute {
     status: RELEASE_SUBMIT_STATUS;
     metadata: {
         input: {
+            upcAutoIfReleaseSnapshotNull: string;
             dspCodes: string[];
             releaseSnapshot: ReleasesData;
         };
@@ -43,11 +45,16 @@ export interface ReleaseSubmitStepData extends CommonAttribute {
     retryCount: number;
     metadata: any | null;
     childSteps: ReleaseSubmitStepData[];
+    logs?: ReleaseSubmitLogsData[];
+    childExecutionMode?: CHILD_EXECUTION_MODE;
+    isDeliveryStep?: boolean;
 }
 
 export interface ReleaseSubmitLogsData extends CommonAttribute {
     releaseSubmitId: ReleaseSubmitData['id'];
     releaseSubmitStepId: ReleaseSubmitStepData['id'];
+    releaseExecutionId: string;
+    releaseExecutionStepId: string;
     message: string;
     level: RELEASE_SUBMIT_LOG_LEVEL;
     data: any;

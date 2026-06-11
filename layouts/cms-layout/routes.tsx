@@ -20,6 +20,7 @@ import {
     Earth,
     FileMusic,
     FileTerminal,
+    FileText,
     FileVolume,
     Flag,
     Globe,
@@ -129,25 +130,25 @@ export const adminRoutes: RouteNode[] = [
                 icon: House,
                 required: { permission: [PERMISSION.DASHBOARD.READ] },
             },
+            // {
+            //     id: 'analytics',
+            //     type: 'link',
+            //     label: 'analytics.label',
+            //     title: 'Analytics',
+            //     href: APP_ROUTES.ANALYTICS,
+            //     icon: ChartNoAxesCombined,
+            //     required: { permission: [PERMISSION.ANALYTICS.READ] },
+            //     hidden: true,
+            // },
             {
                 id: 'analytics',
                 type: 'link',
                 label: 'analytics.label',
                 title: 'Analytics',
-                href: APP_ROUTES.ANALYTICS,
-                icon: ChartNoAxesCombined,
-                required: { permission: [PERMISSION.ANALYTICS.READ] },
-                hidden: true,
-            },
-            {
-                id: 'analytics2',
-                type: 'link',
-                label: 'analytics.label',
-                title: 'Analytics 2',
                 href: APP_ROUTES.ANALYTICS2,
                 icon: ChartNoAxesCombined,
                 required: { permission: [PERMISSION.ANALYTICS.READ] },
-                hidden: true,
+                // hidden: true,
             },
             {
                 id: 'analytics',
@@ -162,7 +163,7 @@ export const adminRoutes: RouteNode[] = [
             {
                 id: 'release',
                 type: 'link',
-                label: 'release.label',
+                label: 'release.routeLabel',
                 title: 'Releases',
                 href: APP_ROUTES.RELEASES,
                 icon: DiscAlbum,
@@ -172,7 +173,7 @@ export const adminRoutes: RouteNode[] = [
             {
                 id: 'releaseDetail',
                 type: 'link',
-                label: 'release.label',
+                label: 'release.routeLabel',
                 title: 'Release Detail',
                 href: APP_ROUTES.RELEASES_DETAIL,
                 hidden: true,
@@ -187,11 +188,31 @@ export const adminRoutes: RouteNode[] = [
             {
                 id: 'release-videos',
                 type: 'link',
-                label: 'releaseVideo.label',
+                label: 'releaseVideo.routeLabel',
                 title: 'Release Videos',
                 href: APP_ROUTES.RELEASE_VIDEOS,
                 icon: Video,
-                required: SYS_ADMIN_REQ,
+                required: {
+                    permission: [
+                        PERMISSION.RELEASE.READ,
+                        PERMISSION.RELEASE.CREATE,
+                    ],
+                },
+            },
+            {
+                id: 'releaseVideosDetail',
+                type: 'link',
+                label: 'releaseVideo.routeLabel',
+                title: 'Release Video Detail',
+                href: APP_ROUTES.RELEASE_VIDEOS_DETAIL,
+                hidden: true,
+                icon: Video,
+                required: {
+                    permission: [
+                        PERMISSION.RELEASE.READ,
+                        PERMISSION.RELEASE.CREATE,
+                    ],
+                },
             },
             {
                 id: 'track',
@@ -224,15 +245,15 @@ export const adminRoutes: RouteNode[] = [
                     permission: [PERMISSION.RELEASE.UPDATE],
                 },
             },
-            {
-                id: 'revenue',
-                type: 'link',
-                label: 'common.revenue',
-                title: 'Revenue',
-                href: APP_ROUTES.REVENUE,
-                icon: ClipboardList,
-                required: { permission: [PERMISSION.REVENUE.READ] },
-            },
+            // {
+            //     id: 'revenue',
+            //     type: 'link',
+            //     label: 'common.revenue',
+            //     title: 'Revenue',
+            //     href: APP_ROUTES.REVENUE,
+            //     icon: ClipboardList,
+            //     required: { permission: [PERMISSION.REVENUE.READ] },
+            // },
         ],
     },
     {
@@ -287,6 +308,7 @@ export const adminRoutes: RouteNode[] = [
                 icon: Server,
                 required: { permission: [PERMISSION.DSP.READ] },
             },
+
             // {
             //     id: 'dsp-tenant',
             //     type: 'link',
@@ -454,6 +476,7 @@ export const adminRoutes: RouteNode[] = [
                 icon: Mail,
                 required: SYS_ADMIN_REQ,
             },
+
             {
                 id: 'batch-import',
                 type: 'link',
@@ -500,6 +523,15 @@ export const adminRoutes: RouteNode[] = [
                 required: SYS_ADMIN_REQ,
             },
             {
+                id: 'dsp-report',
+                type: 'link',
+                label: 'dspReport.label',
+                title: 'DSP Reports',
+                href: APP_ROUTES.DSP_REPORT,
+                icon: ScrollText,
+                required: SYS_ADMIN_REQ,
+            },
+            {
                 id: 'setting',
                 type: 'link',
                 label: 'setting.label',
@@ -516,6 +548,15 @@ export const adminRoutes: RouteNode[] = [
                 icon: LayoutList,
                 required: SYS_ADMIN_REQ,
                 children: [
+                    {
+                        id: 'report-import',
+                        type: 'link',
+                        label: 'reportConfigs.label',
+                        title: 'Report Import',
+                        href: APP_ROUTES.REPORT_IMPORT,
+                        icon: FileText,
+                        required: SYS_ADMIN_REQ,
+                    },
                     // {
                     //     id: 'deal-type',
                     //     type: 'link',
@@ -615,6 +656,15 @@ export const adminRoutes: RouteNode[] = [
                         title: 'Languages',
                         href: APP_ROUTES.LANGUAGES,
                         icon: Globe,
+                        required: SYS_ADMIN_REQ,
+                    },
+                    {
+                        id: 'channels',
+                        type: 'link',
+                        label: 'channel.label',
+                        title: 'Channels',
+                        href: APP_ROUTES.CHANNELS,
+                        icon: Video,
                         required: SYS_ADMIN_REQ,
                     },
                     {

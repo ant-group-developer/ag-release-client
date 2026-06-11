@@ -64,6 +64,13 @@
         }
     },
     "common": {
+        "back": "Quay lại",
+        "close": "Đóng",
+        "undetermined": "Chưa xác định",
+        "partly": "Một phần",
+        "none": "Không",
+        "select": "Chọn...",
+        "ownership": "Quyền sở hữu",
         "direct": "Trực tiếp",
         "others": "Khác",
         "save": "Lưu",
@@ -83,6 +90,7 @@
         "password": "Mật khẩu",
         "users": "Người dùng",
         "errors": "Lỗi",
+        "importedFromReport": "Nhập từ báo cáo",
         "contributors": "Người đóng góp",
         "add": "Thêm",
         "information": "Thông tin",
@@ -136,6 +144,7 @@
         "settingNote": "Tùy chọn cài đặt chỉ áp dụng cho trình duyệt này",
         "value": "Giá trị",
         "viewDetail": "Xem chi tiết",
+        "detailedAnalysis": "Phân tích chi tiết",
         "systemCategories": "Danh mục hệ thống",
         "category": "Danh mục",
         "categories": "Danh mục",
@@ -197,7 +206,8 @@
         "genres": "Thể loại nhạc",
         "track": "Bài hát",
         "artist": "Nghệ sĩ",
-        "release": "Bản cập nhật",
+        "release": "Bản phát hành",
+        "releases": "Phát hành",
         "plays": "Lượt phát",
         "dark": "Tối",
         "light": "Sáng",
@@ -247,7 +257,7 @@
         "keyword": "Từ khoá",
         "setting": "Cài đặt",
         "overtime": "Quá hạn",
-        "noDataAvailable": "No data available",
+        "noDataAvailable": "Không có dữ liệu",
         "selectAssignee": "Chọn người thực hiện",
         "removeAssignee": "Gỡ bỏ người thực hiện",
         "custom": "Tùy chỉnh",
@@ -308,7 +318,11 @@
         "support": "Hỗ trợ",
         "email": "Email",
         "method": "Phương thức",
-        "copied": "Đã sao chép"
+        "copied": "Đã sao chép",
+        "engagement": "Mức độ tương tác",
+        "listeners": "Người nghe",
+        "label": "Label",
+        "labels": "Hãng phát hành"
     },
     "country": {
         "label": "Quốc gia",
@@ -432,8 +446,16 @@
         "latestNews": "Tin tức mới nhất",
         "goTo": "Đi đến trang Tổng quan",
         "viewAllUpdates": "Xem tất cả tin tức",
+        "recentUpdates": "Cập nhật gần đây",
         "stream_by_dsp": "Lượt phát theo DSP",
-        "stream_distribution_subtitle": "Phân bổ lượt phát theo nền tảng năm {year}"
+        "stream_distribution_subtitle": "Phân bổ lượt phát theo nền tảng năm {year}",
+        "recentReleases": "Các bản phát hành gần đây",
+        "dspChartTitle": "DSP",
+        "dspChartSubtitle": "Biểu đồ phân phối theo DSP",
+        "labelChartTitle": "Label",
+        "labelChartSubtitle": "Biểu đồ thống kê theo Label",
+        "artistChartTitle": "Nghệ sĩ",
+        "artistChartSubtitle": "Biểu đồ thống kê theo nghệ sĩ"
     },
     "image": {
         "label": "Hình ảnh",
@@ -511,9 +533,22 @@
         }
     },
     "channel": {
-        "code": "Mã kênh",
+        "add": "Thêm kênh",
         "label": "Kênh",
-        "name": "Tên kênh"
+        "name": "Tên kênh",
+        "validation": {
+            "nameFormat": "Tên kênh chỉ được chứa chữ cái, chữ số và bắt buộc kết thúc bằng VEVO."
+        },
+        "message": {
+            "success": {
+                "create": "Thêm mới kênh thành công",
+                "update": "Cập nhật kênh thành công",
+                "delete": "Xoá kênh thành công"
+            },
+            "error": {
+                "duplicateNameChannel": "Tên kênh đã tồn tại"
+            }
+        }
     },
     "system": {
         "label": "Hệ thống",
@@ -524,6 +559,7 @@
     },
     "validation": {
         "error": "Lỗi xác thực",
+        "missingRequiredFields": "Vui lòng nhập đầy đủ các thông tin yêu cầu",
         "noError": "Không có lỗi xác thực",
         "emailFormat": "Vui lòng nhập đúng định dạng Email!",
         "select": "Vui lòng chọn thông tin!",
@@ -628,12 +664,15 @@
             "label": "Giây"
         },
         "selectDate": "Chọn ngày",
+        "lastDays": "{days} ngày qua",
+        "customRange": "Tùy chỉnh khoảng ngày",
         "last7Days": "7 ngày qua",
         "lastMonth": "Tháng trước",
         "lastYear": "Năm trước",
         "last5Year": "5 năm qua",
         "thisMonth": "Tháng này",
-        "thisYear": "Năm nay"
+        "thisYear": "Năm nay",
+        "thisWeek": "Tuần này"
     },
     "message": {
         "createSuccessfully": "Thêm thành công!",
@@ -793,6 +832,8 @@
         "system": "Hệ thống"
     },
     "release": {
+        "excludeTitle": "Loại trừ các phát hành",
+        "excludeAlertMsg": "Đã chọn loại trừ <b>{count}</b> bản phát hành",
         "takeDown": "Gỡ phát hành",
         "takeDownConfirmTitle": "Gỡ phát hành?",
         "takeDownConfirmContent": "Bạn có chắc chắn muốn gỡ phát hành <b>{title}</b> không?",
@@ -816,6 +857,10 @@
         "configuration": "Thiết lập phát hành",
         "otherMetadata": "Các metadata khác",
         "label": "Phát hành",
+        "creationSource": "Nguồn tạo",
+        "importedFromReport": "Nhập từ báo cáo",
+        "createdDirectly": "Tạo trực tiếp",
+        "routeLabel": "Phát hành âm nhạc",
         "create": "Tạo phát hành ",
         "latestReleases": "Phát hành gần đây",
         "name": "Tên phát hành",
@@ -823,7 +868,7 @@
         "type": "Loại phát hành",
         "releaseDate": "Ngày phát hành",
         "releaseOriginalDate": "Ngày phát hành gốc",
-        "releaseEndDate": "Ngày gỡ phát hành",
+        "releaseEndDate": "Ngày kết thúc phát hành",
         "releaseTime": "Thời gian phát hành",
         "duration": "Thời lượng",
         "trackCount": "Số bài hát",
@@ -1191,6 +1236,7 @@
     },
     "releaseVideo": {
         "label": "Video Phát hành",
+        "routeLabel": "Phát hành video",
         "title": "Video Phát hành",
         "add": "Thêm Video Phát hành",
         "fields": {
@@ -1200,6 +1246,7 @@
             "primaryArtistsPlaceholder": "Nhập tên nghệ sĩ chính rồi nhấn Enter",
             "featuredArtists": "Nghệ sĩ kết hợp",
             "featuredArtistsPlaceholder": "Nhập tên nghệ sĩ kết hợp rồi nhấn Enter",
+            "genre": "Thể loại",
             "genres": "Thể loại",
             "genresPlaceholder": "Nhập thể loại rồi nhấn Enter",
             "contentProvider": "Nhà cung cấp nội dung",
@@ -1209,12 +1256,48 @@
             "keywordsPlaceholder": "Nhập từ khóa rồi nhấn Enter",
             "isExplicit": "Nội dung nhạy cảm (Explicit)",
             "containsAiContent": "Có chứa nội dung AI",
-            "isMadeForKids": "Dành cho trẻ em"
+            "isMadeForKids": "Dành cho trẻ em",
+            "videoTitlePlaceholder": "Thêm tiêu đề",
+            "isrcPlaceholder": "ISRC của bạn",
+            "upc": "UPC",
+            "videoVersion": "Phiên bản video",
+            "partnerCustomId1": "ID tùy chỉnh đối tác 1",
+            "partnerCustomId2": "ID tùy chỉnh đối tác 2",
+            "credits": "Thông tin đóng góp",
+            "composers": "Nhạc sĩ",
+            "editors": "Biên tập viên",
+            "producers": "Nhà sản xuất",
+            "directors": "Đạo diễn",
+            "copyright": "Bản quyền",
+            "copyrightYear": "Năm bản quyền",
+            "visibility": "Chế độ hiển thị",
+            "selectVisibility": "Chọn chế độ hiển thị...",
+            "visibilityDefault": "Mặc định",
+            "unlistedOnYoutube": "Không công khai trên YouTube",
+            "unlistedOnVevo": "Không công khai trên Vevo",
+            "unlistedOnYoutubeVevo": "Không công khai trên YouTube/Vevo",
+            "assets": "Tệp nội dung",
+            "noVideoSelected": "Chưa chọn video",
+            "videoFile": "Tệp video",
+            "videoFileName": "Video {title}",
+            "videoNotUploaded": "Video chưa được tải lên",
+            "invalidVideoFile": "Vui lòng chọn tệp video hợp lệ",
+            "thumbnailFile": "Tệp ảnh thu nhỏ",
+            "thumbnailFileName": "Ảnh thu nhỏ {title}",
+            "thumbnailNotUploaded": "Ảnh thu nhỏ chưa được tải lên",
+            "captionsAndSubtitles": "Phụ đề",
+            "manage": "Quản lý",
+            "captionFilesSummary": "{captionCount} tệp chú thích. {subtitleCount} tệp phụ đề.",
+            "channelDefault": "Mặc định của kênh",
+            "collaboratingChannels": "Kênh cộng tác",
+            "manageCollaborators": "Quản lý cộng tác viên",
+            "roleNotFound": "Không tìm thấy vai trò"
         },
         "tabs": {
             "details": "Chi tiết",
             "additional": "Bổ sung",
-            "distribution": "Phân phối"
+            "distribution": "Phân phối",
+            "submits": "Submit logs"
         },
         "additionalTitle": "Siêu dữ liệu bổ sung",
         "additionalDesc": "Cấu hình các tùy chọn nâng cao, tiêu đề thay thế hoặc thẻ bổ sung.",
@@ -1228,6 +1311,54 @@
             "audio": "Âm thanh: Stereo, 48kHz, 320kbps trở lên",
             "size": "Kích thước tối đa: 5 GB",
             "tip": "Mẹo: Đảm bảo chất lượng video và âm thanh tốt nhất để tối ưu hiển thị trên các nền tảng phân phối."
+        },
+        "captions": {
+            "title": "Chú thích và phụ đề",
+            "description": "Chú thích là phụ đề bằng ngôn ngữ gốc của video.",
+            "descriptionSubtitle": "Phụ đề là phụ đề bằng các ngôn ngữ khác với ngôn ngữ âm thanh của video.",
+            "tabs": {
+                "captions": "Chú thích",
+                "subtitles": "Phụ đề"
+            },
+            "uploadModal": {
+                "titleEdit": "Sửa tệp {type}",
+                "titleUpload": "Tải lên tệp {type}",
+                "caption": "Chú thích",
+                "subtitle": "Phụ đề",
+                "description": "Chỉ cho phép một tệp {type} và tệp đó phải bằng ngôn ngữ của video.",
+                "selectFile": "Chọn tệp (.ttml hoặc .srt)",
+                "fileRequired": "Vui lòng chọn tệp",
+                "language": "Ngôn ngữ",
+                "languageRequired": "Vui lòng chọn ngôn ngữ",
+                "select": "Chọn..."
+            },
+            "table": {
+                "language": "Ngôn ngữ",
+                "file": "Tệp",
+                "actions": "Thao tác",
+                "emptySubtitles": "Không có phụ đề nào",
+                "emptyCaptions": "Không có chú thích nào",
+                "upload": "Tải lên",
+                "pendingCaption": "Tệp chú thích mới của bạn đang chờ xuất bản.",
+                "pendingSubtitle": "Tệp phụ đề mới của bạn đang chờ xuất bản.",
+                "deleteCaptionTitle": "Xóa chú thích",
+                "deleteCaptionContent": "Bạn có chắc chắn muốn xóa chú thích này không?",
+                "deleteSubtitleTitle": "Xóa phụ đề",
+                "deleteSubtitleContent": "Bạn có chắc chắn muốn xóa phụ đề này không?"
+            }
+        },
+        "collaborators": {
+            "title": "Thêm cộng tác viên YouTube",
+            "description": "Tính năng cộng tác trên YouTube cho phép tối đa 5 người cộng tác cho mỗi video. Sau khi đăng tải video, hãy sao chép và chia sẻ liên kết mời với người bạn muốn cộng tác.",
+            "noteDescription": "Hiện tại, tính năng xem phân tích dành cho cộng tác viên không khả dụng trong Backstage.",
+            "addVevoCollaborator": "Thêm cộng tác viên YouTube trên Vevo",
+            "oacOnYouTube": "OAC trên YouTube",
+            "addVevoChannel": "Thêm kênh Vevo",
+            "addChannelButton": "Thêm kênh",
+            "vevoChannel": "Kênh Vevo",
+            "officialArtistChannel": "Kênh chính thức của nghệ sĩ",
+            "copyInvite": "Sao chép lời mời",
+            "channelPlaceholder": "ExampleChannelVEVO"
         }
     },
     "artist": {
@@ -1478,6 +1609,24 @@
     },
     "dspSystem": {
         "label": "Hệ thống DSP"
+    },
+    "dspReport": {
+        "label": "Báo cáo DSP",
+        "table": {
+            "no": "STT",
+            "reportName": "Tên báo cáo",
+            "source": "Nguồn",
+            "dsp": "DSP",
+            "ciCode": "Mã CI",
+            "assign": "Gán"
+        },
+        "placeholder": {
+            "selectDsp": "Chọn DSP"
+        },
+        "status": {
+            "assigned": "Đã gán",
+            "unassigned": "Chưa gán"
+        }
     },
     "dsp": {
         "label": "DSP",
@@ -1847,7 +1996,41 @@
         "name": "Tên phân tích",
         "action": {
             "delete": "Xoá phân tích"
-        }
+        },
+        "chart": {
+            "title": "Thống kê lượt nghe hàng tháng theo DSP",
+            "titleGeneric": "Thống kê lượt nghe theo DSP",
+            "trends": "Xu hướng",
+            "sales": "Doanh số",
+            "dsp": "DSP",
+            "view": "Lượt nghe",
+            "monthly": "Hàng tháng",
+            "daily": "Hàng ngày"
+        },
+        "dailyChart": {
+            "title": "Thống kê lượt nghe hàng ngày theo DSP",
+            "last7Days": "7 ngày gần nhất",
+            "last15Days": "15 ngày gần nhất",
+            "last30Days": "30 ngày gần nhất"
+        },
+        "revenue": {
+            "totalRevenue": "Tổng doanh thu",
+            "totalPlays": "Tổng lượt nghe",
+            "totalTerritories": "Quốc gia/Vùng lãnh thổ",
+            "timelineTitle": "Doanh thu theo thời gian",
+            "modeRevenue": "Doanh thu (USD)",
+            "modeQuantity": "Lượt nghe (Số lượng)",
+            "label": "Doanh thu"
+        },
+        "tabs": {
+            "plays": "Lượt nghe & Xu hướng",
+            "revenue": "Doanh thu"
+        },
+        "totalTrendViews": "Lượt nghe xu hướng",
+        "totalSalesViews": "Lượt xem bán hàng",
+        "totalRevenueUsd": "Tổng doanh thu (USD)",
+        "detailTitle": "Chi tiết phân tích",
+        "detailChartTitle": "Biểu đồ diễn biến"
     },
     "issue": {
         "label": "Vấn đề",
@@ -2101,11 +2284,12 @@
             "dateGroup": "Nhóm ngày"
         },
         "statusOptions": {
-            "pending": "Đang chờ",
-            "processing": "Đang xử lý",
-            "completed": "Hoàn thành",
-            "failed": "Thất bại",
-            "skipped": "Bỏ qua"
+            "PENDING": "Đang chờ",
+            "PROCESSING": "Đang xử lý",
+            "COMPLETED": "Hoàn thành",
+            "FAILED": "Thất bại",
+            "SKIPPED": "Bỏ qua",
+            "CANCEL": "Hủy"
         },
         "confirmCompletedModal": {
             "title": "Xác nhận đã hoàn thành",
@@ -2135,15 +2319,36 @@
         },
         "detail": {
             "columns": {
-                "dspName": "DSP Name",
-                "step": "Step",
-                "status": "Status",
-                "startedAt": "Started At",
-                "completedAt": "Completed At",
-                "duration": "Duration"
+                "stepType": "Loại bước",
+                "dsp": "DSP",
+                "dspName": "Tên DSP",
+                "step": "Bước",
+                "status": "Trạng thái",
+                "startedAt": "Bắt đầu",
+                "completedAt": "Hoàn thành",
+                "duration": "Thời lượng",
+                "logs": "Nhật ký",
+                "completedIn": "Hoàn thành trong",
+                "logTime": "Thời gian",
+                "logLevel": "Cấp độ",
+                "logMessage": "Nội dung"
             }
         },
+        "childExecutionMode": {
+            "title": "Chế độ thực thi",
+            "sequential": "SEQUENTIAL",
+            "parallel": "PARALLEL",
+            "tooltipSequential": "Các step con sẽ chạy từ trên xuống dưới",
+            "tooltipParallel": "Các step con sẽ chạy đồng thời, kết quả ko phụ thuộc vào nhau"
+        },
+        "isDeliveryStep": {
+            "title": "Bước giao phát",
+            "tooltip": "Đánh dấu là step sẽ đồng bộ status với bảng release delivery dsp nếu gặp status cần đồng bộ",
+            "yes": "Có",
+            "no": "Không"
+        },
         "columns": {
+            "coverArt": "Ảnh bìa",
             "upc": "UPC",
             "originalDspCodes": "Mã DSP đích",
             "since": "Từ lúc",
@@ -2175,7 +2380,30 @@
             "EXPORT_EXCEL": "Xuất Excel",
             "SEND_EMAIL_EXPORT": "Gửi email",
             "WAITING_EXPORT": "Chờ xuất",
-            "CLEANUP": "Dọn dẹp"
+            "CLEANUP": "Dọn dẹp",
+            "PROCESS_AGG": "Xử lý AGG",
+            "PROCESS_AGG_CI": "Xử lý AGG CI",
+            "IMPORT_CI": "Nhập CI",
+            "EXPORT_CI": "Xuất CI",
+            "CREATE_FOLDER_DONE_CI": "Tạo thư mục done CI",
+            "VALIDATE_QA_CI": "Kiểm tra QA CI",
+            "EXPORT_CI_CI": "Xuất CI CI",
+            "EXPORT_AGG_CI_STATE51": "Xuất AGG CI State51",
+            "WAITING_ADMIN_EXPORT": "Chờ admin xuất",
+            "SEND_EMAIL_STATE51": "Gửi email State51",
+            "SYNC_DATA_DSP_CI": "Đồng bộ dữ liệu DSP CI",
+            "GEN_UPC": "Tạo UPC",
+            "GEN_ISRCS": "Tạo ISRCs",
+            "GEN_ISRC": "Tạo ISRC",
+            "VALIDATE": "Xác thực",
+            "PROCESS_DSPS": "Xử lý DSPs",
+            "PROCESS_DIRECT": "Xử lý trực tiếp",
+            "PROCESS_DIRECT_CHILD": "Xử lý trực tiếp (con)",
+            "SYNC_DATA_PARTNER": "Đồng bộ dữ liệu đối tác",
+            "WAIT_PARTNER_PROCESS": "Chờ đối tác xử lý",
+            "CREATE_METADATA_ON_SERVER": "Tạo metadata trên server",
+            "UPLOAD_METADATA_TO_SFTP": "Tải metadata lên SFTP",
+            "SYNC_RESULT_TO_RELEASE": "Đồng bộ kết quả vào phát hành"
         },
         "action": {
             "markCompleted": "Đánh dấu hoàn thành"
@@ -2206,6 +2434,109 @@
             "CANCELLED": "Đã hủy",
             "SKIPPED": "Không áp dụng",
             "SUCCESS": "Hoàn thành"
+        }
+    },
+    "reportConfigs": {
+        "label": "Report import",
+        "configReport": "Cấu hình báo cáo",
+        "importReport": "Nhập báo cáo",
+        "importReportBtn": "Nhập báo cáo",
+        "importModalTitle": "Nhập báo cáo",
+        "allowedExtensions": "Định dạng file",
+        "uploadType": "Loại nhập",
+        "uploadTypeFiles": "Nhiều file",
+        "uploadTypeFolder": "Cả thư mục",
+        "selectFiles": "Chọn các tệp tin",
+        "selectFolder": "Chọn thư mục",
+        "dragDropHint": "Kéo thả tệp tin hoặc thư mục vào đây hoặc click để chọn",
+        "validation": {
+            "requiredExtensions": "Vui lòng chọn định dạng file!",
+            "requiredFiles": "Vui lòng chọn ít nhất một tệp tin hoặc thư mục!"
+        },
+        "source": "Nguon",
+        "sourceCode": "Ma nguon",
+        "sourceName": "Ten nguon",
+        "reportType": "Loai bao cao",
+        "folderPatterns": "Mau thu muc",
+        "filePatterns": "Mau file",
+        "requiredHeaders": "Header bat buoc",
+        "parserCode": "Ma parser",
+        "delimiter": "Ky tu phan tach",
+        "defaultCurrency": "Tien te mac dinh",
+        "defaultMember": "Member mac dinh",
+        "priority": "Do uu tien",
+        "action": {
+            "create": "Tao cau hinh bao cao",
+            "update": "Cap nhat cau hinh bao cao"
+        },
+        "importResult": {
+            "processingStatus": "Trạng thái xử lý báo cáo",
+            "statusPending": "Đang chờ",
+            "statusProcessing": "Đang xử lý...",
+            "statusCompleted": "Thành công",
+            "statusFailed": "Thất bại",
+            "filesUnit": "tệp",
+            "runningFile": "Đang chạy: {file}",
+            "totalRecords": "Tổng số bản ghi",
+            "processedSuccess": "Đã xử lý thành công",
+            "skipped": "Bỏ qua (Skipped)",
+            "errors": "Số lỗi (Errors)",
+            "errorDetails": "Chi tiết lỗi",
+            "sourceFile": "Tệp nguồn: {file}",
+            "duration": "Thời gian: {duration}s",
+            "uploadingMatched": "Đang tải lên {count} tệp tin hợp lệ...",
+            "uploadFailedMatched": "Tải lên thất bại {count} tệp tin hợp lệ. Vui lòng kiểm tra lại.",
+            "noValidFiles": "Không có tệp tin nào hợp lệ để tải lên. Vui lòng kiểm tra lại danh sách lỗi bên dưới.",
+            "validFiles": "Tệp tin hợp lệ ({count})",
+            "invalidFiles": "Tệp tin không hợp lệ ({count})",
+            "uploading": "Đang tải lên...",
+            "uploadSuccess": "Thành công",
+            "uploadFailed": "Thất bại",
+            "awaitingUpload": "Chờ tải lên",
+            "uploadFailedNotification": "Có tệp tin tải lên thất bại. Vui lòng kiểm tra danh sách bên dưới.",
+            "startJobFailedNotification": "Không thể khởi chạy tiến trình import.",
+            "uploadSuccessNotification": "Tải lên thành công!",
+            "uploadSuccessStartJobFailed": "Tải lên thành công nhưng không thể khởi chạy tiến trình import.",
+            "sourceType": "Loại nguồn",
+            "totalRows": "Tổng số dòng",
+            "processedRows": "Đã xử lý",
+            "skippedRows": "Bỏ qua",
+            "errorRows": "Lỗi",
+            "recentJobsTitle": "Lịch sử import/sync gần đây",
+            "uploadReportBtn": "Nhập báo cáo"
+        }
+    },
+    "analytics2": {
+        "rank": "Thứ hạng",
+        "topRankingTitle": "Top {count} {title}",
+        "detailEntityTitle": "({entity}: {title})",
+        "filters": {
+            "allPlatforms": "Tất cả nền tảng",
+            "allRegions": "Tất cả khu vực",
+            "vietnam": "Việt Nam",
+            "unitedStates": "Hoa Kỳ"
+        },
+        "metrics": {
+            "stable": "Ổn định"
+        },
+        "syncAll": {
+            "button": "Đồng bộ dữ liệu",
+            "syncing": "Đang đồng bộ dữ liệu...",
+            "modalTitle": "Đồng bộ dữ liệu",
+            "syncMode": "Chế độ đồng bộ",
+            "syncModeSingle": "Đồng bộ 1 tháng",
+            "syncModeFrom": "Đồng bộ từ tháng",
+            "period": "Tháng",
+            "startPeriod": "Tháng bắt đầu",
+            "accept": "Xác nhận",
+            "cancel": "Hủy",
+            "force": "Buộc đồng bộ",
+            "forceTooltip": "Đồng bộ lại dù dữ liệu đã tồn tại",
+            "started": "Đã bắt đầu đồng bộ dữ liệu",
+            "startFailed": "Không thể bắt đầu đồng bộ dữ liệu",
+            "completed": "Đồng bộ dữ liệu hoàn tất",
+            "failed": "Đồng bộ dữ liệu thất bại",
+            "jobNotFound": "Có lỗi khi đồng bộ dữ liệu"
         }
     }
 }

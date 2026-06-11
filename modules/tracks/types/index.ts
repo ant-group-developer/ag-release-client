@@ -36,6 +36,7 @@ export interface TrackData extends CommonAttribute {
     trackContributors?: TrackContributorData[];
     trackSensitiveId: string;
     trackSensitive: TrackSensitiveData;
+    isInstrumental: boolean;
     lyric: string;
     trackTypeId: string;
     trackType: TrackTypeData | null;
