@@ -28,25 +28,6 @@ export default function ArtistProfileCard({ artistData }: Props) {
                     'flex flex-col gap-4 overflow-y-auto rounded-md px-4 pb-4'
                 )}
             >
-                <div className="flex items-center gap-4 rounded-lg !bg-zinc-100 p-4">
-                    <ImageFallback
-                        className="aspect-square rounded-full object-cover"
-                        fallbackSrc={FALLBACK_IMAGE}
-                        src={artistData?.picture ?? ''}
-                        alt={artistData?.name || 'artist'}
-                        width={72}
-                        height={72}
-                    />
-                    <div className="min-w-0">
-                        <Typography.Text type="secondary">
-                            {messages('artist.label')}
-                        </Typography.Text>
-                        <Typography.Title level={4} className="!mb-0 truncate">
-                            {artistData?.name}
-                        </Typography.Title>
-                    </div>
-                </div>
-
                 <div className="flex gap-2 overflow-x-auto">
                     {artistProfiles?.map((item) => {
                         return (
