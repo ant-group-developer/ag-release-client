@@ -1,0 +1,146 @@
+import ActionButton from '@/components/ui/button/action-button';
+import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import { formattedDate, getIndex } from '@/helpers/common';
+import { Tag, theme } from 'antd';
+import { ColumnType } from 'antd/es/table';
+import { useTranslations } from 'next-intl';
+import { EtlJobData, ImportJobStatus } from '../../types/payload';
+
+type Props = Omit<AppTableProps<EtlJobData>, 'columns'> & {
+    pagination: {
+        pageSize: number;
+        current: number;
+    };
+    onViewDetail: (record: EtlJobData) => void;
+};
+
+export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
+    const messages = useTranslations();
+    const { token } = theme.useToken();
+
+    const getStatusTagColor = (status: ImportJobStatus) => {
+        switch (status) {
+            case ImportJobStatus.PENDING:
+                return 'warning';
+            case ImportJobStatus.PROCESSING:
+                return 'processing';
+            case ImportJobStatus.COMPLETED:
+                return 'success';
+            case ImportJobStatus.FAILED:
+                return 'error';
+            default:
+                return 'default';
+        }
+    };
+
+    const getStatusLabel = (status: ImportJobStatus) => {
+        switch (status) {
+            case ImportJobStatus.PENDING:
+                return messages('reportConfigs.importResult.statusPending');
+            case ImportJobStatus.PROCESSING:
+                return messages('reportConfigs.importResult.statusProcessing');
+            case ImportJobStatus.COMPLETED:
+                return messages('reportConfigs.importResult.statusCompleted');
+            case ImportJobStatus.FAILED:
+                return messages('reportConfigs.importResult.statusFailed');
+            default:
+                return status;
+        }
+    };
+
+    const columns: ColumnType<EtlJobData>[] = [
+        {
+            title: messages('common.iNo'),
+            key: 'iNo',
+            width: 70,
+            align: 'center',
+            fixed: 'left',
+            render: (_, __, index) =>
+                getIndex(
+                    props.pagination?.pageSize,
+                    props.pagination?.current,
+                    index
+                ),
+        },
+        {
+            title: messages('reportConfigs.importResult.sourceType'),
+            key: 'sourceType',
+            dataIndex: 'sourceType',
+            width: 150,
+            ellipsis: true,
+        },
+        {
+            title: messages('common.fileName'),
+            key: 'fileName',
+            width: 250,
+            ellipsis: true,
+            render: (_, record) => record.file?.name || '-',
+        },
+        {
+            title: messages('common.status'),
+            key: 'status',
+            dataIndex: 'status',
+            width: 130,
+            align: 'center',
+            render: (status: ImportJobStatus) => (
+                <Tag color={getStatusTagColor(status)}>
+                    {getStatusLabel(status)}
+                </Tag>
+            ),
+        },
+        {
+            title: messages('reportConfigs.importResult.totalRows'),
+            key: 'rows',
+            width: 200,
+            render: (_, record) => {
+                if (!record.rows) return '-';
+                return (
+                    <div style={{ fontSize: 13, lineHeight: '1.5' }}>
+                        <div>
+                            {messages(
+                                'reportConfigs.importResult.totalRecords'
+                            )}
+                            : <strong>{record.rows.total}</strong>
+                        </div>
+                        <div style={{ color: token.colorSuccess }}>
+                            {messages(
+                                'reportConfigs.importResult.processedSuccess'
+                            )}
+                            : <strong>{record.rows.processed}</strong>
+                        </div>
+                        <div style={{ color: token.colorWarning }}>
+                            {messages('reportConfigs.importResult.skipped')}:{' '}
+                            <strong>{record.rows.skipped}</strong>
+                        </div>
+                        <div style={{ color: token.colorError }}>
+                            {messages('reportConfigs.importResult.errors')}:{' '}
+                            <strong>{record.rows.errors}</strong>
+                        </div>
+                    </div>
+                );
+            },
+        },
+        {
+            title: messages('common.createdAt'),
+            key: 'createdAt',
+            dataIndex: 'createdAt',
+            width: 160,
+            align: 'center',
+            render: (value) => formattedDate(value),
+        },
+        {
+            key: 'actions',
+            width: 90,
+            align: 'center',
+            fixed: 'right',
+            render: (_, record) => (
+                <ActionButton
+                    showDetail
+                    onShowDetail={() => onViewDetail(record)}
+                />
+            ),
+        },
+    ];
+
+    return <AppTable {...props} columns={columns} pagination={false} />;
+}

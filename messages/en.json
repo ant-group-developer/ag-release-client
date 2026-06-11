@@ -64,6 +64,8 @@
         }
     },
     "common": {
+        "back": "Back",
+        "close": "Close",
         "undetermined": "Undetermined",
         "partly": "Partly",
         "none": "None",
@@ -441,7 +443,13 @@
         "dsp_distribution_subtitle": "DSP distribution in {year}",
         "label_distribution_subtitle": "Label distribution in {year}",
         "artist_distribution_subtitle": "Artist distribution in {year}",
-        "recentReleases": "Recent releases"
+        "recentReleases": "Recent releases",
+        "dspChartTitle": "DSP",
+        "dspChartSubtitle": "DSP distribution chart",
+        "labelChartTitle": "Label",
+        "labelChartSubtitle": "Label statistics chart",
+        "artistChartTitle": "Artist",
+        "artistChartSubtitle": "Artist statistics chart"
     },
     "review": {
         "message": {
@@ -2422,7 +2430,7 @@
         }
     },
     "reportConfigs": {
-        "label": "Report Configs",
+        "label": "Report Import",
         "configReport": "Config report",
         "importReport": "Import report",
         "importReportBtn": "Import report",
@@ -2453,6 +2461,42 @@
         "action": {
             "create": "Create report config",
             "update": "Update report config"
+        },
+        "importResult": {
+            "processingStatus": "Report processing status",
+            "statusPending": "Pending",
+            "statusProcessing": "Processing...",
+            "statusCompleted": "Completed",
+            "statusFailed": "Failed",
+            "filesUnit": "files",
+            "runningFile": "Running: {file}",
+            "totalRecords": "Total records",
+            "processedSuccess": "Processed successfully",
+            "skipped": "Skipped (Skipped)",
+            "errors": "Errors (Errors)",
+            "errorDetails": "Error details",
+            "sourceFile": "Source file: {file}",
+            "duration": "Duration: {duration}s",
+            "uploadingMatched": "Uploading {count} valid files...",
+            "uploadFailedMatched": "Failed to upload {count} valid files. Please check again.",
+            "noValidFiles": "No valid files to upload. Please check the error list below.",
+            "validFiles": "Valid files ({count})",
+            "invalidFiles": "Invalid files ({count})",
+            "uploading": "Uploading...",
+            "uploadSuccess": "Success",
+            "uploadFailed": "Failed",
+            "awaitingUpload": "Awaiting upload",
+            "uploadFailedNotification": "Some files failed to upload. Please check the list below.",
+            "startJobFailedNotification": "Failed to start the import process.",
+            "uploadSuccessNotification": "Uploaded successfully!",
+            "uploadSuccessStartJobFailed": "Uploaded successfully but failed to start the import process.",
+            "sourceType": "Source Type",
+            "totalRows": "Total Rows",
+            "processedRows": "Processed",
+            "skippedRows": "Skipped",
+            "errorRows": "Errors",
+            "recentJobsTitle": "Recent Import/Sync Jobs",
+            "uploadReportBtn": "Import Report"
         }
     },
     "analytics2": {

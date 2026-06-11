@@ -4,13 +4,13 @@ import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import { PAGE_SIZE } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
 import { useLoadingStatus } from '@/hooks/use-loading-status';
-import ConfigTab from '@/modules/report-configs/components/config-tab';
-import ImportTab from '@/modules/report-configs/components/import-tab';
-import { reportConfigQueryKeys } from '@/modules/report-configs/constants/query-keys';
-import { useGetListReportConfig } from '@/modules/report-configs/hooks/use-get-list';
+import ConfigTab from '@/modules/report-import/components/config-tab';
+import ImportTab from '@/modules/report-import/components/import-tab';
+import { reportConfigQueryKeys } from '@/modules/report-import/constants/query-keys';
+import { useGetListReportConfig } from '@/modules/report-import/hooks/use-get-list';
 import {
     ReportConfigDataFilter,
-} from '@/modules/report-configs/types';
+} from '@/modules/report-import/types';
 import { PageContainer } from '@ant-design/pro-components';
 import { Tabs, TabsProps } from 'antd';
 import { useTranslations } from 'next-intl';

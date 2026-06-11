@@ -38,6 +38,20 @@ export default function CardRelease({ data, ...props }: Props) {
             hoverable
             variant="outlined"
             // className="custom-card-body !bg-card-bg dark:!bg-card-bg-dark"
+            style={{
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                ...props.style,
+            }}
+            styles={{
+                body: {
+                    flexGrow: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                },
+            }}
             cover={
                 <Link
                     href={getReleaseDetailTabRoute(
@@ -92,15 +106,15 @@ export default function CardRelease({ data, ...props }: Props) {
                 }
                 description={
                     <div className="flex flex-col font-medium">
-                        <p className="flex justify-between">
-                            <p> {data?.albumFormat?.name} </p>
+                        <div className="flex justify-between">
+                            <span> {data?.albumFormat?.name || '\u00A0'} </span>
                             <span>
                                 {formattedDate(
                                     data.releaseDate,
                                     DATE_FORMAT.DATE_ONLY
-                                )}{' '}
+                                ) || '\u00A0'}{' '}
                             </span>
-                        </p>
+                        </div>
                     </div>
                 }
             />

@@ -64,6 +64,8 @@
         }
     },
     "common": {
+        "back": "Quay lại",
+        "close": "Đóng",
         "undetermined": "Chưa xác định",
         "partly": "Một phần",
         "none": "Không",
@@ -254,7 +256,7 @@
         "keyword": "Từ khoá",
         "setting": "Cài đặt",
         "overtime": "Quá hạn",
-        "noDataAvailable": "No data available",
+        "noDataAvailable": "Không có dữ liệu",
         "selectAssignee": "Chọn người thực hiện",
         "removeAssignee": "Gỡ bỏ người thực hiện",
         "custom": "Tùy chỉnh",
@@ -446,7 +448,13 @@
         "recentUpdates": "Cập nhật gần đây",
         "stream_by_dsp": "Lượt phát theo DSP",
         "stream_distribution_subtitle": "Phân bổ lượt phát theo nền tảng năm {year}",
-        "recentReleases": "Các bản phát hành gần đây"
+        "recentReleases": "Các bản phát hành gần đây",
+        "dspChartTitle": "DSP",
+        "dspChartSubtitle": "Biểu đồ phân phối theo DSP",
+        "labelChartTitle": "Label",
+        "labelChartSubtitle": "Biểu đồ thống kê theo Label",
+        "artistChartTitle": "Nghệ sĩ",
+        "artistChartSubtitle": "Biểu đồ thống kê theo nghệ sĩ"
     },
     "image": {
         "label": "Hình ảnh",
@@ -2420,7 +2428,7 @@
         }
     },
     "reportConfigs": {
-        "label": "Cau hinh bao cao",
+        "label": "Report import",
         "configReport": "Cấu hình báo cáo",
         "importReport": "Nhập báo cáo",
         "importReportBtn": "Nhập báo cáo",
@@ -2451,6 +2459,42 @@
         "action": {
             "create": "Tao cau hinh bao cao",
             "update": "Cap nhat cau hinh bao cao"
+        },
+        "importResult": {
+            "processingStatus": "Trạng thái xử lý báo cáo",
+            "statusPending": "Đang chờ",
+            "statusProcessing": "Đang xử lý...",
+            "statusCompleted": "Thành công",
+            "statusFailed": "Thất bại",
+            "filesUnit": "tệp",
+            "runningFile": "Đang chạy: {file}",
+            "totalRecords": "Tổng số bản ghi",
+            "processedSuccess": "Đã xử lý thành công",
+            "skipped": "Bỏ qua (Skipped)",
+            "errors": "Số lỗi (Errors)",
+            "errorDetails": "Chi tiết lỗi",
+            "sourceFile": "Tệp nguồn: {file}",
+            "duration": "Thời gian: {duration}s",
+            "uploadingMatched": "Đang tải lên {count} tệp tin hợp lệ...",
+            "uploadFailedMatched": "Tải lên thất bại {count} tệp tin hợp lệ. Vui lòng kiểm tra lại.",
+            "noValidFiles": "Không có tệp tin nào hợp lệ để tải lên. Vui lòng kiểm tra lại danh sách lỗi bên dưới.",
+            "validFiles": "Tệp tin hợp lệ ({count})",
+            "invalidFiles": "Tệp tin không hợp lệ ({count})",
+            "uploading": "Đang tải lên...",
+            "uploadSuccess": "Thành công",
+            "uploadFailed": "Thất bại",
+            "awaitingUpload": "Chờ tải lên",
+            "uploadFailedNotification": "Có tệp tin tải lên thất bại. Vui lòng kiểm tra danh sách bên dưới.",
+            "startJobFailedNotification": "Không thể khởi chạy tiến trình import.",
+            "uploadSuccessNotification": "Tải lên thành công!",
+            "uploadSuccessStartJobFailed": "Tải lên thành công nhưng không thể khởi chạy tiến trình import.",
+            "sourceType": "Loại nguồn",
+            "totalRows": "Tổng số dòng",
+            "processedRows": "Đã xử lý",
+            "skippedRows": "Bỏ qua",
+            "errorRows": "Lỗi",
+            "recentJobsTitle": "Lịch sử import/sync gần đây",
+            "uploadReportBtn": "Nhập báo cáo"
         }
     },
     "analytics2": {
