@@ -1,5 +1,4 @@
 import { showNotification } from '@/helpers/messages-helper';
-import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { DetailResponse } from '@/types/api';
 import { Form, Modal, Spin } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -30,7 +29,6 @@ export const ImportModal: React.FC<ImportModalProps> = ({
     viewJobId,
 }) => {
     const messages = useTranslations();
-    const { profile } = useAuth();
     const [form] = Form.useForm();
     const { preValidateImport, isPending } = usePreValidateImport();
     const { startImportJob } = useStartImportJob();
@@ -55,8 +53,6 @@ export const ImportModal: React.FC<ImportModalProps> = ({
     const isJobProcessing =
         jobStatus?.status === ImportJobStatus.PENDING ||
         jobStatus?.status === ImportJobStatus.PROCESSING;
-
-    const tenantId = profile?.tenantId || '';
 
     useEffect(() => {
         if (open && viewJobId) {
@@ -119,7 +115,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
         setUploadError(null);
         setUploadResults({});
         setStartedJobId(null);
-        const { allowedExtensions, files } = values;
+        const { allowedExtensions, files, tenantId: selectedTenantId } = values;
 
         const mappedFiles: PreValidateImportFile[] = (files || []).map(
             (file: any) => {
@@ -136,7 +132,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
 
         const payload = {
             files: mappedFiles,
-            tenantId,
+            tenantId: selectedTenantId,
             allowedExtensions,
         };
 

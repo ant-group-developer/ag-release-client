@@ -536,6 +536,9 @@
         "add": "Thêm kênh",
         "label": "Kênh",
         "name": "Tên kênh",
+        "validation": {
+            "nameFormat": "Tên kênh chỉ được chứa chữ cái, chữ số và bắt buộc kết thúc bằng VEVO."
+        },
         "message": {
             "success": {
                 "create": "Thêm mới kênh thành công",
