@@ -57,13 +57,6 @@ export default function LabelsRankingPage() {
         keyword: dataFilter.keyword,
     });
 
-    // Safely extract total count if available from API response
-    const total =
-        labelRankingData?.metadata?.totalItems ||
-        ((labelRankingData?.items || []).length < pageSize
-            ? (page - 1) * pageSize + (labelRankingData?.items || []).length
-            : page * pageSize + 1);
-
     const columns = [
         {
             title: messages('analytics2.rank'),
@@ -164,9 +157,9 @@ export default function LabelsRankingPage() {
                         loading={isFetching}
                         rowKey="labelId"
                         pagination={{
-                            current: page,
-                            pageSize: pageSize,
-                            total: total,
+                            current: dataFilter.page,
+                            pageSize: dataFilter.pageSize,
+                            total: labelRankingData?.metadata?.totalItems,
                             pageSizeOptions: PAGE_SIZE_OPTIONS,
                             showSizeChanger: true,
                             showTotal: (totalCount, range) =>

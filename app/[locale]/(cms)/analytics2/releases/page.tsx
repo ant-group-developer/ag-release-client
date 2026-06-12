@@ -82,19 +82,13 @@ export default function ReleasesRankingPage() {
                 page,
                 pageSize,
                 keyword: dataFilter.keyword,
+                includeOther: false,
             },
             { enabled: isRevenue }
         );
 
     const isFetching = isRevenue ? isRevenueFetching : isViewsFetching;
     const rankingData = isRevenue ? topReleaseData : releaseRankingData;
-
-    // Safely extract total count if available from API response
-    const total =
-        rankingData?.metadata?.totalItems ||
-        ((rankingData?.items || []).length < pageSize
-            ? (page - 1) * pageSize + (rankingData?.items || []).length
-            : page * pageSize + 1);
 
     const revenueColumns: ColumnsType<RevenueReleaseItem> = [
         {
@@ -340,9 +334,9 @@ export default function ReleasesRankingPage() {
                             loading={isFetching}
                             rowKey="releaseId"
                             pagination={{
-                                current: page,
-                                pageSize: pageSize,
-                                total: total,
+                                current: dataFilter.page,
+                                pageSize: dataFilter.pageSize,
+                                total: topReleaseData?.metadata?.totalItems,
                                 pageSizeOptions: PAGE_SIZE_OPTIONS,
                                 showSizeChanger: true,
                                 showTotal: (totalCount, range) =>
@@ -357,9 +351,9 @@ export default function ReleasesRankingPage() {
                             loading={isFetching}
                             rowKey="releaseId"
                             pagination={{
-                                current: page,
-                                pageSize: pageSize,
-                                total: total,
+                                current: dataFilter.page,
+                                pageSize: dataFilter.pageSize,
+                                total: releaseRankingData?.metadata?.totalItems,
                                 pageSizeOptions: PAGE_SIZE_OPTIONS,
                                 showSizeChanger: true,
                                 showTotal: (totalCount, range) =>
